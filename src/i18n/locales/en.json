@@ -5192,6 +5192,9 @@
                         "5":  "Saturated primary colors"
                     }
     },
+    "libraryFavorites": "Favorites",
+    "libraryFavoriteAdd": "Add to favorites",
+    "libraryFavoriteRemove": "Remove from favorites",
     "libraryEmpty": "Your saved generations will appear here.",
     "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",

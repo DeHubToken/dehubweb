@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { loadCloudGenerationPage, updateLibrarySelection, type LibraryOperation } from '@/lib/creator/cloudLibrary';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
+import { libraryRequest } from '@/lib/creator/libraryRequest';
 
 /** Server acknowledgements drive preferences; failed rows stay selected for retry. */
 export function LibraryManager({ wallet }: { wallet: string | null }) {
@@ -22,7 +23,7 @@ export function LibraryManager({ wallet }: { wallet: string | null }) {
     const request = ++version.current; const owner = wallet;
     inFlight.current = true; setBusy(true); setError(false);
     try {
-      const page = await loadCloudGenerationPage(owner, offset, { hidden: filter === 'hidden', favorites: filter === 'favorites' });
+      const page = await libraryRequest(loadCloudGenerationPage(owner, offset, { hidden: filter === 'hidden', favorites: filter === 'favorites' }));
       if (request !== version.current || activeWallet.current !== owner) return;
       setRows(previous => offset ? [...previous, ...page.jobs] : page.jobs); setNextOffset(page.nextOffset);
     } catch { if (request === version.current) setError(true); }
@@ -40,13 +41,16 @@ export function LibraryManager({ wallet }: { wallet: string | null }) {
     const request = ++version.current; const owner = wallet;
     inFlight.current = true; setBusy(true); setError(false);
     try {
-      const result = await updateLibrarySelection(owner, selected, operation);
-      if (request !== version.current || activeWallet.current !== owner) return;
+      const result = await libraryRequest(updateLibrarySelection(owner, selected, operation));
+      if (activeWallet.current !== owner) return;
+      if (request !== version.current) { void useGenerationStore.getState().syncLibrary(); return; }
       const done = new Set(result.completedIds);
       const patch = operation === 'favorite' || operation === 'unfavorite' ? { favorite: operation === 'favorite' } : { hidden: operation === 'hide' };
       useGenerationStore.getState().applyLibraryPreferences(result.completedIds, patch);
-      setRows(previous => previous.map(row => done.has(row.id) ? { ...row, ...patch } : row)
-        .filter(row => row.hidden === (filter === 'hidden') && (filter !== 'favorites' || row.favorite)));
+      const updated = rows.map(row => done.has(row.id) ? { ...row, ...patch } : row)
+        .filter(row => row.hidden === (filter === 'hidden') && (filter !== 'favorites' || row.favorite));
+      setRows(updated);
+      setNextOffset(offset => offset === null ? null : Math.max(0, offset - (rows.length - updated.length)));
       setSelected(previous => previous.filter(id => !done.has(id))); setError(result.incompleteIds.length > 0);
     } catch { if (request === version.current) setError(true); }
     finally { if (request === version.current) { inFlight.current = false; setBusy(false); } }
@@ -55,19 +59,19 @@ export function LibraryManager({ wallet }: { wallet: string | null }) {
   const button = 'min-h-11 rounded-lg border border-white/15 px-3 py-2 text-sm disabled:opacity-40';
   return <>
     <button type="button" className={button} onClick={() => setOpen(true)}>{t('multiPost.manage')}</button>
-    <Dialog open={open} onOpenChange={value => { if (!busy) setOpen(value); }}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-h-[85dvh] overflow-y-auto">
         <DialogHeader><DialogTitle>{t('creator.referenceLibrary')}</DialogTitle></DialogHeader>
         <div className="flex flex-wrap gap-2">
           {(['all', 'favorites', 'hidden'] as const).map(value => <button type="button" key={value} disabled={busy} aria-pressed={filter === value} className={button} onClick={() => setFilter(value)}
-            aria-label={value === 'favorites' ? t('common.save') : undefined}>{value === 'favorites' ? '★' : t(value === 'all' ? 'filters.all' : 'settings.hiddenOption')}</button>)}
+            aria-label={value === 'favorites' ? t('creator.libraryFavorites') : undefined}>{value === 'favorites' ? t('creator.libraryFavorites') : t(value === 'all' ? 'filters.all' : 'settings.hiddenOption')}</button>)}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <span>{selected.length}/100</span>
           <button type="button" disabled={busy || !rows.length} className={button} onClick={() => setSelected(rows.slice(0, 100).map(row => row.id))}>{t('migrate.selectAll')}</button>
           {(['favorite', 'unfavorite', filter === 'hidden' ? 'restore' : 'hide'] as const).map(operation => <button type="button" key={operation} disabled={busy || !selected.length} className={button} onClick={() => void change(operation)}
-            aria-label={t(operation === 'favorite' ? 'common.save' : operation === 'unfavorite' ? 'common.remove' : operation === 'hide' ? 'editor.layers.hide' : 'copy.a76e13b98392')}>
-            {operation === 'favorite' ? '★ +' : operation === 'unfavorite' ? '★ −' : t(operation === 'hide' ? 'editor.layers.hide' : 'copy.a76e13b98392')}
+            aria-label={t(operation === 'favorite' ? 'creator.libraryFavoriteAdd' : operation === 'unfavorite' ? 'creator.libraryFavoriteRemove' : operation === 'hide' ? 'editor.layers.hide' : 'copy.a76e13b98392')}>
+            {t(operation === 'favorite' ? 'creator.libraryFavoriteAdd' : operation === 'unfavorite' ? 'creator.libraryFavoriteRemove' : operation === 'hide' ? 'editor.layers.hide' : 'copy.a76e13b98392')}
           </button>)}
         </div>
         {error && <p role="alert">{t('common.somethingWentWrong')} <button type="button" disabled={busy} className="underline" onClick={() => void read()}>{t('common.retry')}</button></p>}
