@@ -45,7 +45,8 @@ import { searchNFTs, getBlockList, type DeHubNFT } from '@/lib/api/dehub';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import { resolveLikeCount, resolveViewCount } from '@/lib/engagement';
 import { fetchMusicVideoChart, MUSIC_VIDEO_CHART_SORTS, type MusicVideoChartSort } from '@/lib/music-video-chart';
-import { getPrimaryTags, getStationsByTag, getTopStations, searchStations } from '@/lib/api/radio-browser';
+import { getPrimaryTags, getTopStations } from '@/lib/api/radio-browser';
+import { searchAudioUploads, searchMusicVideos, searchRadio } from '@/lib/music-search';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import type { VideoItem } from '@/types/feed.types';
@@ -130,43 +131,6 @@ function videoRows(items: VideoItem[], withViews: boolean): ChartDeskRow[] {
     thumb: item.thumbnail,
     trailing: item.duration,
   }));
-}
-
-// How many matches a chart search pulls from its whole zone.
-const CHART_SEARCH_SIZE = 20;
-
-/** Every audio upload whose title, description or creator matches. */
-async function searchAudioUploads(query: string): Promise<VideoItem[]> {
-  const [audioRes, feedAudioRes] = await Promise.all([
-    searchNFTs({ postType: 'audio', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' }).catch(() => ({ data: [] as DeHubNFT[] })),
-    searchNFTs({ postType: 'feed-audio', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' }).catch(() => ({ data: [] as DeHubNFT[] })),
-  ]);
-  const seen = new Set<string | number>();
-  return [...(audioRes.data || []), ...(feedAudioRes.data || [])]
-    .filter(nft => {
-      const tid = nft.tokenId || nft.id || nft.token_id;
-      if (seen.has(tid) || isBlockedCreator(nft)) return false;
-      seen.add(tid);
-      return true;
-    })
-    .sort((a, b) => resolveViewCount(b) - resolveViewCount(a))
-    .map((nft, index) => ({ ...mapNFTToVideoItem(nft, index), isAudio: true }));
-}
-
-/** Every music video whose title, description or creator matches. */
-async function searchMusicVideos(query: string): Promise<VideoItem[]> {
-  const res = await searchNFTs({ category: 'Music', postType: 'video', search: query, unit: CHART_SEARCH_SIZE, sortMode: 'trending' });
-  return (res.data || []).filter(nft => !isBlockedCreator(nft)).map((nft, index) => mapNFTToVideoItem(nft, index));
-}
-
-/** Stations whose name or genre matches, from the whole radio directory. */
-async function searchRadio(query: string): Promise<RadioStation[]> {
-  const [byName, byTag] = await Promise.all([
-    searchStations(query, CHART_SEARCH_SIZE).catch(() => [] as RadioStation[]),
-    getStationsByTag(query.toLowerCase(), CHART_SEARCH_SIZE).catch(() => [] as RadioStation[]),
-  ]);
-  const seen = new Set<string>();
-  return [...byName, ...byTag].filter(station => !seen.has(station.stationuuid) && (seen.add(station.stationuuid), true));
 }
 
 function AudioChart({ items, isLoading, sort, onSort }: { items: VideoItem[]; isLoading: boolean; sort: AudioChartSort; onSort: (sort: AudioChartSort) => void }) {
