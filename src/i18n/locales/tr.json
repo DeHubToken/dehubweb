@@ -6702,13 +6702,7 @@
       "box": "Telefonların gördüğü",
       "hint": "Kutuyu sürükle ya da ok tuşlarını kullan. Canlı yayınına uygulamak için kaydet.",
       "live": "CANLI",
-      "watch": "{{name}} canlı izle",
-      "join": "Canlıya katıl",
-      "react": "Tepki ver",
-      "gift": "Hediye",
-      "chat": "Sohbet",
-      "share": "Paylaş",
-      "linkCopied": "Bağlantı kopyalandı"
+      "watch": "{{name}} canlı izle"
     },
     "destinations": {
       "title": "Çoklu yayın hedefleri",
