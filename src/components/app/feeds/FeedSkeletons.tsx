@@ -158,25 +158,6 @@ export function ImageCollageSkeleton({ cols = 3 }: { cols?: number }) {
 }
 
 // ============================================================================
-// FILTER PILLS SKELETON (GlassFilterRow style)
-// ============================================================================
-
-export function CategoryPillsSkeleton() {
-  return (
-    <div className="p-3">
-      <div className="flex gap-1.5 overflow-hidden">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton 
-            key={i} 
-            className={cn("h-8 rounded-xl flex-shrink-0", i === 0 ? "w-14" : "w-20")} 
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
 // COMPOSITE SKELETONS - Full feed loading states (collapse-aware)
 // ============================================================================
 
@@ -195,7 +176,6 @@ export function VideosFeedSkeleton() {
 
   return (
     <div className="space-y-3">
-      <CategoryPillsSkeleton />
       <div className={cn("space-y-3", isCollapsed && "sm:grid sm:grid-cols-2 sm:gap-4 sm:space-y-0")}>
         {Array.from({ length: isCollapsed ? 6 : 3 }).map((_, i) => (
           <VideoCardSkeleton key={i} />
@@ -213,7 +193,6 @@ export function ImagesFeedSkeleton() {
 
   return (
     <div className="space-y-3">
-      <CategoryPillsSkeleton />
       <ImageCollageSkeleton cols={isCollapsed ? 4 : 3} />
     </div>
   );
@@ -227,7 +206,6 @@ export function ShortsFeedSkeleton() {
 
   return (
     <div className="space-y-3">
-      <CategoryPillsSkeleton />
       <div className={cn("grid gap-1", isCollapsed ? "grid-cols-4 sm:grid-cols-5" : "grid-cols-3")}>
         {Array.from({ length: isCollapsed ? 10 : 6 }).map((_, i) => (
           <Skeleton key={i} className="aspect-[9/16] rounded-lg" />

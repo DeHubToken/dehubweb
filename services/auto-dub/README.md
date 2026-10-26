@@ -115,3 +115,24 @@ from the dub worker URL (`…/jobs` becomes `…/clips`); set
 `fonts-dejavu-core` next to ffmpeg; on the existing host install it with apt.
 Finished clips are queued for the brand accounts as `stage_clip` posts that
 wait for an admin.
+
+## Live clips
+
+Viewer clips and streamer highlights from live video streams
+(`live_clips.py`, `POST /live-clips`), driven by the `live-clips` Edge
+Function. Two job kinds:
+
+- `grab`: while a stream is live, download the newest segments of its HLS
+  playlist (up to 90 s, whatever the CDN still holds), join them and remux to
+  one MP4 with no re-encode. That file is what the clipper trims.
+- `render`: cut 3-60 s out of the grabbed MP4 or the stream's replay, fit it to
+  1080x1920 over a blurred copy, burn in the watermark and end card (same ASS
+  overlay as Stage clips), and upload the MP4, a poster frame and a 1200x630
+  share card through signed URLs to the public `live-clips` bucket.
+
+Two jobs run at a time on their own thread, with a short line behind them.
+Same secret, and the route is derived the same way (`…/jobs` becomes
+`…/live-clips`); `LIVE_CLIP_WORKER_URL` overrides. The existing nginx location
+already forwards it. To deploy on the existing host, copy `live_clips.py` and
+`server.py` into `/srv/dehub-dub/app` and restart `dehub-dub`; `GET /` then
+answers `"liveClips": true`.

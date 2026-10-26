@@ -16,6 +16,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * profile completeness, Explore by newest sign-up, empty profiles last, and
  * keeps loading as you follow, skip or scroll until nobody is left.
  *
+ * Follow is built for following a run of people in a row: the button says
+ * Following the instant it is tapped, the card folds away a beat later and the
+ * next one slides into its place, while the request runs behind it without a
+ * toast. A failed request retries on its own; only if it still fails does the
+ * card come back, with a quiet "Retry" on the notice.
+ *
  * @module components/app/mobile/MobileWhoToFollowCarousel
  */
 
@@ -27,7 +33,7 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { FollowCoverCard, suggestionName } from '@/components/app/FollowCoverCard';
-import { getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
+import { AuthenticationError, getSuggestedAccounts, getRankedSuggestions, type SuggestedAccount } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
@@ -36,8 +42,14 @@ import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
 const BATCH_SIZE = 10;
-/** How long a followed card shows "Following" before it leaves the row. */
-const FOLLOWED_LINGER_MS = 700;
+/** How long a followed card shows "Following" before it folds away. */
+const FOLLOWED_LINGER_MS = 320;
+/** The fold itself (follow-cards.css, [data-leaving]). */
+const LEAVE_MS = 280;
+/** Background attempts after the first before a follow is given up on. */
+const FOLLOW_RETRIES = 3;
+
+type CardPhase = 'following' | 'leaving';
 
 interface MobileWhoToFollowCarouselProps {
   /** Explore lists it among its sections: no empty state there, no "See all" back to Explore. */
@@ -52,7 +64,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
   const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
   const followOverrides = useFollowOverrides();
   const queryClient = useQueryClient();
-  const [justFollowed, setJustFollowed] = useState<Set<string>>(() => new Set());
+  const [phases, setPhases] = useState<ReadonlyMap<string, CardPhase>>(() => new Map());
   const lingerTimers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
   useEffect(() => {
     const timers = lingerTimers.current;
@@ -125,20 +137,39 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
     }
   }, [navigate]);
 
-  const setFollowedFlag = useCallback((address: string, on: boolean) => {
-    setJustFollowed((prev) => {
-      if (prev.has(address) === on) return prev;
-      const next = new Set(prev);
-      if (on) next.add(address); else next.delete(address);
+  const setPhase = useCallback((address: string, phase: CardPhase | null) => {
+    setPhases((prev) => {
+      if ((prev.get(address) ?? null) === phase) return prev;
+      const next = new Map(prev);
+      if (phase) next.set(address, phase); else next.delete(address);
       return next;
     });
   }, []);
 
-  const handleDismiss = useCallback((user: SuggestedAccount) => {
-    markFollowed(user.address);
-  }, [markFollowed]);
+  const clearTimer = useCallback((address: string) => {
+    const timer = lingerTimers.current.get(address);
+    if (timer) clearTimeout(timer);
+    lingerTimers.current.delete(address);
+  }, []);
 
-  const handleFollow = (user: SuggestedAccount) => {
+  /** Fold the card shut, then drop it from the row. */
+  const leave = useCallback((address: string, after: number) => {
+    clearTimer(address);
+    lingerTimers.current.set(address, setTimeout(() => {
+      setPhase(address, 'leaving');
+      lingerTimers.current.set(address, setTimeout(() => {
+        lingerTimers.current.delete(address);
+        markFollowed(address);
+        setPhase(address, null);
+      }, LEAVE_MS));
+    }, after));
+  }, [clearTimer, markFollowed, setPhase]);
+
+  const handleDismiss = useCallback((user: SuggestedAccount) => {
+    leave(user.address, 0);
+  }, [leave]);
+
+  const handleFollow = useCallback((user: SuggestedAccount) => {
     if (!isAuthenticated) {
       toast.error(_copy("copy.404bd6545a07", { defaultValue: "Please log in to follow users" }));
       return;
@@ -148,28 +179,39 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
       return;
     }
 
-    if (justFollowed.has(user.address)) return;
+    if (phases.has(user.address)) return;
 
-    // Optimistic: the card says Following straight away, then leaves the row;
-    // a failed call puts it back as it was.
-    setFollowedFlag(user.address, true);
-    lingerTimers.current.set(user.address, setTimeout(() => {
-      lingerTimers.current.delete(user.address);
-      markFollowed(user.address);
-      setFollowedFlag(user.address, false);
-    }, FOLLOWED_LINGER_MS));
+    // Optimistic: Following straight away, then the card folds and the next
+    // slides in. The request retries quietly; only a final failure brings the
+    // card back, with Retry on the notice.
+    setPhase(user.address, 'following');
+    leave(user.address, FOLLOWED_LINGER_MS);
+    const name = suggestionName(user);
     toggleFollowFor(queryClient, user.address, false, {
-      name: suggestionName(user),
-      onError: (error, info) => {
-        const timer = lingerTimers.current.get(user.address);
-        if (timer) clearTimeout(timer);
-        lingerTimers.current.delete(user.address);
-        setFollowedFlag(user.address, false);
+      name,
+      silent: true,
+      retries: FOLLOW_RETRIES,
+      onError: (error) => {
+        clearTimer(user.address);
+        setPhase(user.address, null);
         unmarkFollowed(user.address);
-        if (!info.handled) handleApiError(error, _copy("copy.f5a7643bdaac", { defaultValue: "Failed to follow user" }));
+        if (error instanceof AuthenticationError) {
+          handleApiError(error, _copy("copy.f5a7643bdaac", { defaultValue: "Failed to follow user" }));
+          return;
+        }
+        toast.error(_copy("copy.f5a7643bdaac", { defaultValue: "Failed to follow user" }), {
+          id: `follow-retry-${user.address}`,
+          description: name,
+          action: {
+            label: _copy("common.retry", { defaultValue: "Retry" }),
+            onClick: () => retryRef.current(user),
+          },
+        });
       },
     });
-  };
+  }, [isAuthenticated, followedUsers, followOverrides, phases, setPhase, leave, clearTimer, queryClient, unmarkFollowed, handleApiError, _copy]);
+  const retryRef = useRef(handleFollow);
+  retryRef.current = handleFollow;
 
   if (!isAuthenticated) {
     return null;
@@ -230,7 +272,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
           <FollowCoverCard
             key={user.address}
             user={user}
-            followed={justFollowed.has(user.address)}
+            phase={phases.get(user.address)}
             onOpen={handleUserClick}
             onFollow={handleFollow}
             onDismiss={handleDismiss}

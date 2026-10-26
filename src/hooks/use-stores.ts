@@ -5,7 +5,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * React Query hooks for stores, listings, and orders.
  */
 
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -59,24 +59,27 @@ export function useCreateStore() {
 
 // ── Listings ──────────────────────────────────────────────
 export function useBrowseListings(category?: string, sort?: string, search?: string) {
-  return useQuery({
-    queryKey: ['store-listings-browse', category, sort, search],
-    queryFn: async () => {
+  const query = useInfiniteQuery({
+    queryKey: ['store-listings-browse', 'paged', category, sort, search],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam, signal }) => {
       let q = supabase.from('store_listings').select('*, stores(name, avatar_url, wallet_address)').eq('status', 'active');
       if (category && category !== 'all') q = q.eq('category', category);
       if (search) q = q.ilike('title', `%${search}%`);
       if (sort === 'price_asc') q = q.order('price', { ascending: true });
       else if (sort === 'price_desc') q = q.order('price', { ascending: false });
       else q = q.order('created_at', { ascending: false });
-      q = q.limit(50);
-      const { data, error } = await q;
+      q = q.order('id', { ascending: true }).range(pageParam, pageParam + 49);
+      const { data, error } = await q.abortSignal(signal);
       if (error) throw error;
       return data || [];
     },
     // Category/sort/search changes keep the previous grid visible while the
     // new results load instead of flashing skeletons.
     placeholderData: keepPreviousData,
+    getNextPageParam: (lastPage, pages) => lastPage.length === 50 ? pages.length * 50 : undefined,
   });
+  return { ...query, data: query.data?.pages.flat() };
 }
 
 export function useStoreById(storeId: string | undefined) {
@@ -116,7 +119,8 @@ export function useStoreListing(listingId: string | undefined) {
     // collapsing TData to `{ id: string }` for every consumer.
     placeholderData: (previous) => {
       for (const query of queryClient.getQueryCache().findAll({ queryKey: ['store-listings-browse'] })) {
-        const rows = query.state.data as Array<{ id: string }> | undefined;
+        const cached = query.state.data as { pages?: Array<Array<{ id: string }>> } | undefined;
+        const rows = cached?.pages?.flat();
         const hit = rows?.find?.(l => l.id === listingId);
         if (hit) return hit as typeof previous;
       }

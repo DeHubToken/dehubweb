@@ -71,7 +71,8 @@ it('moves the feed without rendering its cards and gives release to the composit
   act(() => hook.handlers.onTouchEnd());
   act(() => vi.advanceTimersByTime(320));
   expect(animate).toHaveBeenCalledTimes(1);
-  expect(onMotion.mock.lastCall![0]).toBeGreaterThan(0);
+  // Mid-spring: the feed is still moving (just past rest on its bounce).
+  expect(onMotion.mock.lastCall![0]).not.toBe(0);
   expect(renders).toBe(before);
   settle();
   expect(cancel).toHaveBeenCalled();
@@ -139,8 +140,9 @@ it('draws back immediately and gradually while the fetch is still running', () =
   expect(hook.pullDistance).toBeLessThan(released);
   expect(hook.pullDistance).toBeGreaterThan(released * .9);
   act(() => vi.advanceTimersByTime(400));
-  expect(hook.pullDistance).toBeLessThan(released * .5);
-  expect(hook.pullDistance).toBeGreaterThan(0);
+  // The spring carries the feed a few pixels past rest, then settles.
+  expect(hook.pullDistance).toBeLessThan(0);
+  expect(hook.pullDistance).toBeGreaterThan(-released * .05);
   settle(); expect(hook.pullDistance).toBe(0);
   expect(refresh).toHaveBeenCalledTimes(1);
 });

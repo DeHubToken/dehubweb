@@ -41,6 +41,16 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   if (m.maxPromptLength && o.prompt.length > m.maxPromptLength) throw new Error(`Use a prompt of up to ${m.maxPromptLength} characters for ${m.name}`);
   if (m.requiresVideoInput) {
     if (o.videoUrls?.length !== 1) throw new Error('Attach one MP4 or MOV reference clip');
+    if (m.referenceMode === 'extend') {
+      if (o.sourceImage || o.referenceImageUrls?.length || o.endFrameUrl || o.audioUrls?.length || o.negativePrompt || o.seed !== undefined || o.effect || resolution !== '720p') throw new Error('Extension takes one source clip and a continuation prompt');
+      return { appId: m.falTextModel, input: {
+        prompt: o.prompt, video_url: o.videoUrls[0], extend_direction: m.extensionDirection,
+        num_frames: 121, num_context_frames: 25, frames_per_second: 24, match_input_fps: false,
+        resolution: aspect === '9:16' ? { width: 720, height: 1280 } : { width: 1280, height: 720 },
+        video_strength: 1, num_inference_steps: 15, guidance_scale: 1, generate_audio: true,
+        enable_prompt_expansion: false, enable_safety_checker: true,
+      }, durationSeconds: 4 };
+    }
     const images = [...new Set([...(o.sourceImage ? [o.sourceImage] : []), ...(o.referenceImageUrls ?? [])])];
     if (!images.length) throw new Error('Attach a character or reference image');
     if (images.length > (m.maxReferenceImages ?? 1)) throw new Error(`Attach up to ${m.maxReferenceImages ?? 1} images`);
@@ -175,12 +185,27 @@ export function creatorFalImageDimensions(aspect = '1:1'): { width: number; heig
   return { width: size[0], height: size[1] };
 }
 
+export function creatorFalImageResult(modelId: string, data: { images?: { url?: string }[]; image?: { url?: string } }): string {
+  const url = CREATOR_FAL_IMAGE_MODELS[modelId]?.outpaint ? data.image?.url : data.images?.[0]?.url;
+  if (typeof url !== 'string' || !url) throw new Error('The model returned no image');
+  return url;
+}
+
 export function buildCreatorFalImageRequest(modelId: string, prompt: string, sourceImage?: string, aspect?: string, referenceImageUrls?: string[]) {
   const m = CREATOR_FAL_IMAGE_MODELS[modelId];
   const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
   sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
   if (images.length > (m.maxReferenceImages ?? 4) || (images.length > 1 && !m.editUsesPlural)) throw new Error(`Choose a model supporting these references (up to ${m.maxReferenceImages ?? 4})`);
+  if (m.outpaint) {
+    if (!sourceImage) throw new Error('Attach one image to expand');
+    const ratio = aspect ?? '1:1';
+    if (!m.aspectRatios?.includes(ratio)) throw new Error('Unsupported expansion aspect ratio');
+    if (typeof prompt !== 'string' || prompt.length > 1000 || /[^\x09\x0a\x0d\x20-\x7e]/.test(prompt)) throw new Error('Expansion accepts an optional English prompt of up to 1000 characters');
+    const { width, height } = creatorFalImageDimensions(ratio);
+    return { appId: m.edit!, input: { image_url: sourceImage, canvas_size: [width, height], aspect_ratio: ratio,
+      ...(prompt.trim() ? { prompt: prompt.trim() } : {}) } };
+  }
   const limit = m.maxPromptLength ?? 4000;
   if (!prompt.trim() || prompt.length > limit) throw new Error(`Use an image prompt of 1 to ${limit} characters`);
   const input: Record<string, unknown> = { prompt, ...(sourceImage ? m.editExtra ?? m.extra : m.extra) };

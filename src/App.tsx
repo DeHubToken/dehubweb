@@ -20,7 +20,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, useLoginSheet } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { useNotificationClickRouting } from "@/hooks/use-notification-click-routing";
 import { useNotificationRealtime } from "@/hooks/use-notification-realtime";
@@ -37,7 +37,7 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
-import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
+import { HomeShellSkeleton, ProfileSkeleton } from "@/components/app/PageSkeletons";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -204,6 +204,8 @@ const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
+const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
+const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
@@ -226,6 +228,7 @@ const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 const VideoRemix = React.lazy(() => import("./pages/VideoRemix"));
 // Creator Flow (node canvas) is its own chunk: React Flow and its d3 deps are
 // only worth downloading once someone opens the canvas, not with /creator.
+const CreatorLearningPage = React.lazy(() => import("./pages/app/CreatorLearningPage"));
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
 const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
 const MaboroshiPage = React.lazy(() => import("./pages/app/MaboroshiPage"));
@@ -389,28 +392,13 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * Authenticated app shell — everything that needs WalletProviders / AuthProvider.
- * Only mounted after user has passed the hero (or is a returning user).
+ * The sign-in sheet and the flags that follow it. Its own component so that
+ * opening the sheet re-renders only this, not AppContent and every page under
+ * it, inside the tap.
  */
-function AppContent() {
-  useSwipeBack();
-  const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
-  const queryClient = useQueryClient();
-  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
-  // their first tap opens onto the real options, not the skeleton.
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
-  }, [authLoading, isAuthenticated]);
-  usePreloadIcons();
-  // Views are recorded by <PageViewTracker /> above <Routes>; this only
-  // attaches the signed-in address to them.
-  usePageViewAddress(walletAddress);
-  // A pushed notification focuses this tab and posts where it wanted to go.
-  useNotificationClickRouting();
-  // Session-wide, not page-wide: the bell count and the cached notifications
-  // page both go stale while the reader is anywhere else in the app.
-  useNotificationRealtime();
+function LoginSheetHost() {
+  const { isLoginModalOpen } = useLoginSheet();
+  const { closeLoginModal, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
 
   // The login flow is "active" from the modal opening until any
   // connect/redirect it started has finished, which is a little past the sheet
@@ -430,6 +418,44 @@ function AppContent() {
       scheduleBackgroundResume();
     }
   }, [isLoginModalOpen, isConnecting, isProcessingRedirect, requiresUsername]);
+
+  // Always mounted, and closed it costs nothing: ui/drawer keeps vaul's Root
+  // out of the tree until a sheet first opens, so this renders no DOM and
+  // registers no listeners until someone taps "Log in". Mounting it up front
+  // is what buys the slide-up — a vaul Root created with `open` already true
+  // renders at its final position with no transition, which is why the sheet
+  // used to appear rather than come up.
+  //
+  // `requiresUsername` opens it too: an account with no profile finishes
+  // signing up on the sheet's profile step, which used to be a separate
+  // centred dialog on top of the whole viewport. The sheet refuses to close
+  // while that flag is set.
+  return <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />;
+}
+
+/**
+ * Authenticated app shell — everything that needs WalletProviders / AuthProvider.
+ * Only mounted after user has passed the hero (or is a returning user).
+ */
+function AppContent() {
+  useSwipeBack();
+  const { t: _copy } = _useCopy();
+  const { user, walletAddress, isAuthenticated, isLoading: authLoading, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const queryClient = useQueryClient();
+  // Guests get the sign-in sheet's chunks after the page has fully loaded, so
+  // their first tap opens onto the real options, not the skeleton.
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) scheduleLoginPrefetch();
+  }, [authLoading, isAuthenticated]);
+  usePreloadIcons();
+  // Views are recorded by <PageViewTracker /> above <Routes>; this only
+  // attaches the signed-in address to them.
+  usePageViewAddress(walletAddress);
+  // A pushed notification focuses this tab and posts where it wanted to go.
+  useNotificationClickRouting();
+  // Session-wide, not page-wide: the bell count and the cached notifications
+  // page both go stale while the reader is anywhere else in the app.
+  useNotificationRealtime();
 
   const wallet = walletAddress ?? (user as { walletAddress?: string | null; address?: string | null } | null)?.walletAddress ?? (user as { address?: string | null } | null)?.address ?? null;
 
@@ -461,17 +487,7 @@ function AppContent() {
       <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
-      {/* Always mounted, and closed it costs nothing: ui/drawer keeps vaul's
-          Root out of the tree until a sheet first opens, so this renders no
-          DOM and registers no listeners until someone taps "Log in". Mounting
-          it up front is what buys the slide-up — a vaul Root created with
-          `open` already true renders at its final position with no transition,
-          which is why the sheet used to appear rather than come up. */}
-      {/* `requiresUsername` opens it too: an account with no profile finishes
-          signing up on the sheet's profile step, which used to be a separate
-          centred dialog on top of the whole viewport. The sheet refuses to
-          close while that flag is set. */}
-      <LoginModal open={isLoginModalOpen || requiresUsername} onOpenChange={closeLoginModal} />
+      <LoginSheetHost />
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
@@ -571,6 +587,7 @@ function AppContent() {
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator/remix" element={<Suspense fallback={<PageLoader />}><VideoRemix /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator/learn" element={<Suspense fallback={<PageLoader />}><CreatorLearningPage /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
           <Route path="/creator/remake" element={<Suspense fallback={<PageLoader />}><MaboroshiPage remake /></Suspense>} />
           <Route path="/creator/maboroshi" element={<Suspense fallback={<PageLoader />}><MaboroshiPage /></Suspense>} />
@@ -825,10 +842,14 @@ function AppContent() {
             {/* Stage invite links. /stages/:id is the short numeric share form
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
+            {/* Co-stream invite links: a host bringing someone on screen. */}
+            <Route path="/app/live/join/:id" element={<Suspense fallback={<PageLoader />}><CoStreamJoinPage /></Suspense>} />
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
             <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* A posted live clip, /clip/<n> (live_clips.short_id). */}
+            <Route path="/clip/:id" element={<Suspense fallback={<PageLoader />}><ClipPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
 
@@ -876,7 +897,7 @@ function AppContent() {
             <Route path="/radio" element={<Navigate to="/music" replace />} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
-            <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
+            <Route path="/:username" element={<Suspense fallback={<ProfileSkeleton />}><ProfilePage /></Suspense>} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

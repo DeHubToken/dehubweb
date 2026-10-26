@@ -24,6 +24,7 @@ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from '
 import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
 import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
 import { CinemaDirectionControls } from './CinemaDirectionControls';
+import { videoQuoteHints } from '@/lib/creator/videoQuoteHints';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { generationDraftForOwner, type GenerationDraft } from '@/lib/editor/generationDraft';
 import { useDraftReferences, type DraftReferenceAdoption } from '@/lib/editor/useDraftReferences';
@@ -174,6 +175,7 @@ interface StudioSnapshot {
   resolution: Resolution;
   audioTask: AudioTask;
   ttsModel: TtsModelKey;
+  speechExport: 'mp3_44100_128' | 'wav_24000';
   voiceId: string;
   /** Stability / similarity / style / speed, as chosen on the voice chips. */
   stability: number;
@@ -206,6 +208,7 @@ const DEFAULT_SNAPSHOT: StudioSnapshot = {
   resolution: '720p',
   audioTask: 'speech',
   ttsModel: 'eleven_multilingual_v2',
+  speechExport: 'mp3_44100_128',
   voiceId: DEFAULT_VOICE_ID,
   stability: DEFAULT_VOICE_SETTINGS.stability,
   similarity: DEFAULT_VOICE_SETTINGS.similarity,
@@ -289,6 +292,7 @@ function readSnapshot(storageKey: string): StudioSnapshot {
           : DEFAULT_SNAPSHOT.resolution,
       audioTask: isAudioTask(saved.audioTask) ? saved.audioTask : DEFAULT_SNAPSHOT.audioTask,
       ttsModel: pick(saved.ttsModel, TTS_MODELS, DEFAULT_SNAPSHOT.ttsModel),
+      speechExport: saved.speechExport === 'wav_24000' ? 'wav_24000' : 'mp3_44100_128',
       // Not validated against the voice library: it is fetched asynchronously
       // and a cloned voice the creator made is just as legitimate as a stock
       // one. A voice that has since been deleted fails loudly at generation
@@ -535,7 +539,9 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   // ── Audio workspace ───────────────────────────────────────────────────────
   const [audioTask, setAudioTask] = useState<AudioTask>(restored.audioTask);
   const [ttsModel, setTtsModel] = useState<TtsModelKey>(restored.ttsModel);
+  const [speechExport, setSpeechExport] = useState(restored.speechExport);
   const [voiceId, setVoiceId] = useState<string>(restored.voiceId);
+  const speechExportFormat = /^[a-z]{2,3}-[A-Z]{2}-Chirp3-HD-[A-Za-z]+$/.test(voiceId) ? 'mp3_44100_128' : speechExport;
   const [stability, setStability] = useState(restored.stability);
   const [similarity, setSimilarity] = useState(restored.similarity);
   const [style, setStyle] = useState(restored.style);
@@ -680,7 +686,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   );
   const surfaceEpoch = useSurfaceEpoch();
 
-  const preset = getPreset(presetId);
+  const preset = mode === 'video' && VIDEO_MODELS[videoModel]?.referenceMode === 'extend' ? null : getPreset(presetId);
   const activeVideoModel = VIDEO_MODELS[videoModel];
   const activeImageModel = IMAGE_MODELS[imageModel];
   const activeModel3d = MODEL3D_MODELS[model3dModel];
@@ -716,6 +722,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       resolution,
       audioTask,
       ttsModel,
+      speechExport,
       voiceId,
       stability,
       similarity,
@@ -751,6 +758,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     resolution,
     audioTask,
     ttsModel,
+    speechExport,
     voiceId,
     stability,
     similarity,
@@ -802,7 +810,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       // switching from a 5s model to Veo does not leave an unrenderable 5.
       setDuration((d) => snapVideoDuration(model, model.defaultDuration ?? d));
     }
-    if (model.requiresVideoInput && currentClip?.seconds) setDuration(Math.ceil(currentClip.seconds));
+    if (model.requiresVideoInput && model.referenceMode !== 'extend' && currentClip?.seconds) setDuration(Math.ceil(currentClip.seconds));
     setVideoAspect((a) => (allowedAspects.includes(a) ? a : allowedAspects[0]));
     // Charging for 1080p on a model that tops out at 720p is a refund waiting
     // to happen — the provider silently renders the lower one.
@@ -931,7 +939,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
         setVideoModel(seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit');
         setPresetFor('video', seconds > 15 ? 'reference-copy-motion' : 'reference-character-swap');
       }
-      setDuration(Math.ceil(seconds));
+      setDuration(VIDEO_MODELS[videoModel]?.referenceMode === 'extend' ? 4 : Math.ceil(seconds));
       draftReferences.modified();
       assetDraftRef.current = [...latest, { ...asset, seconds }];
       setExtraReferences(prev => ({ ...prev, video: [...prev.video, { ...asset, seconds }] }));
@@ -1139,8 +1147,9 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     // Four of the audio tasks work entirely from an upload and have no text
     // box at all, so an empty prompt is the normal state rather than a gap.
     if (mode === 'audio') return activeAudioTask.promptRole !== 'none' && !resolvedPrompt.trim();
+    if (mode === 'image' && IMAGE_MODELS[imageModel]?.outpaint) return false;
     return (mode !== '3d' || !reference) && !resolvedPrompt.trim();
-  }, [mode, reference, resolvedPrompt, activeAudioTask]);
+  }, [mode, imageModel, reference, resolvedPrompt, activeAudioTask]);
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
@@ -1151,6 +1160,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     }
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
+      if (model?.requiresImage && !reference) return t('creator.expandNeedsImage');
+      if (model?.outpaint && /[^\x09\x0a\x0d\x20-\x7e]/.test(resolvedPrompt)) return t('creator.expandEnglishOnly');
       if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
@@ -1160,14 +1171,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     if (mode === 'video') {
       const model = VIDEO_MODELS[videoModel];
       if (!model) return t('creator.pickVideoModel');
-      if (model.requiresVideoInput && !currentClip) return t('creator.referenceNeedsClip');
+      if (model.requiresVideoInput && !currentClip) return t(model.referenceMode === 'extend' ? 'creator.extensionNeedsClip' : 'creator.referenceNeedsClip');
       if (currentClip && !model.requiresVideoInput) return t('creator.referenceVideoModel');
       if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
-      if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxDuration ?? 15)) return t('creator.referenceClipLength');
+      if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxSourceDuration ?? model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
         return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
       }
-      if (!model.supports.includes('text-to-video') && !reference) {
+      if (model.referenceMode !== 'extend' && !model.supports.includes('text-to-video') && !reference) {
         return t('creator.validation.needsImageToAnimate', { model: model.name, defaultValue: '{{model}} needs an image to animate. Attach one first.' });
       }
     }
@@ -1221,7 +1232,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
 
   const generationQuote = useJobQuote(mode === 'audio'
     ? activeAudioTask.paid && activeAudioTask.quoteModelId ? { kind: 'tool', modelId: activeAudioTask.quoteModelId, quantity: audioUnits } : null
-    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect }
+    : mode === 'video' ? { kind: 'video', modelId: videoModel, durationSeconds: duration, resolution, aspectRatio: aspect,
+      ...videoQuoteHints({ videoUrls: currentClip ? [currentClip.url] : undefined }) }
     : mode === '3d' ? { kind: 'model3d', modelId: model3dModel, quality: 'standard' }
     : { kind: 'image', modelId: imageModel, quantity: batch });
   // Free starter images: the server claims one per job, this only decides
@@ -1339,6 +1351,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           text: resolvedPrompt,
           voiceId,
           modelId: ttsModel,
+          outputFormat: speechExportFormat,
           languageCode: speechLang || undefined,
           voiceSettings: voiceTuning,
         };
@@ -1372,6 +1385,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     voiceId,
     ttsModel,
     speechLang,
+    speechExport,
+    speechExportFormat,
     stability,
     similarity,
     style,
@@ -1529,7 +1544,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           resolution: activeVideoModel?.supportsResolution
             ? (options?.resolution ?? resolution)
             : undefined,
-          negativePrompt: options?.negativePrompt || preset?.negative,
+          negativePrompt: activeVideoModel?.supportsNegativePrompt ? options?.negativePrompt || preset?.negative : undefined,
           referenceImageUrls: currentImages.length > 1 || activeVideoModel?.referenceMode === 'edit' ? currentImages.map(a => a.url) : options?.referenceImageUrls,
           endFrameUrl: options?.endFrameUrl,
           audioUrls: options?.audioUrls,
@@ -1640,7 +1655,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           return {
             value: m.id,
             label: m.name,
-            detail: m.description,
+            detail: m.referenceMode === 'extend' ? t(m.id.endsWith('forward') ? 'creator.extensionForward' : 'creator.extensionBackward') : m.description,
             meta: m.provider === 'venice' ? t('creator.liveQuote', { defaultValue: 'Live quote' }) : `$${getVideoCostUsd(m, m.defaultDuration ?? 5).toFixed(2)}`,
             disabled: (needsImage && !reference && !m.requiresVideoInput) || (rejectsImage && !!reference),
             disabledReason: t(needsImage ? 'creator.needsAttachedImage' : 'creator.cannotUseAttached'),
@@ -1891,7 +1906,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                         }
                       }}
                       rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
-                      placeholder={placeholder}
+                      placeholder={mode === 'image' && IMAGE_MODELS[imageModel]?.outpaint ? t('creator.expandPromptHint') : placeholder}
                       className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-1 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
                     />
                   </>
@@ -1990,13 +2005,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                           setVideoModel(v as VideoModelKey);
                           if (v === 'kling-o3-edit') setPresetId('reference-character-swap');
                           else if (v === 'kling-3-motion') setPresetId('reference-copy-motion');
+                          else if (VIDEO_MODELS[v]?.referenceMode === 'extend') setPresetId(null);
                           else if (preset?.model && VIDEO_MODELS[preset.model]?.requiresVideoInput) setPresetId(null);
                         }
                       }}
                     />
                   )}
-                  {/* Clip workflows retain the source clip's framing. */}
-                  {(mode === 'image' || (mode === 'video' && !effectMode && !activeVideoModel?.requiresVideoInput)) && (
+                  {mode === 'video' && activeVideoModel?.referenceMode === 'extend' && <p className="basis-full text-xs opacity-70">{t('creator.extensionHelp')}</p>}
+                  {(mode === 'image' || (mode === 'video' && !effectMode && (!activeVideoModel?.requiresVideoInput || activeVideoModel.referenceMode === 'extend'))) && (
                     <SelectChip
                       label={t('creator.aspectRatio')}
                       value={aspect}
@@ -2018,6 +2034,15 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                         />
                       )}
 
+                      {audioTask === 'speech' && (
+                        <SelectChip label={t('creator.audioExportFormat')} value={speechExportFormat}
+                          display={speechExportFormat === 'wav_24000' ? t('creator.audioExportWav') : t('creator.audioExportMp3')}
+                          options={[
+                            { value: 'mp3_44100_128', label: t('creator.audioExportMp3') },
+                            ...(!/^[a-z]{2,3}-[A-Z]{2}-Chirp3-HD-[A-Za-z]+$/.test(voiceId) ? [{ value: 'wav_24000', label: t('creator.audioExportWav') }] : []),
+                          ]}
+                          onChange={(value) => setSpeechExport(value === 'wav_24000' ? value : 'mp3_44100_128')} />
+                      )}
                       {(audioTask === 'speech' || audioTask === 'dialogue') && (
                         <>
                           <SelectChip
@@ -2190,7 +2215,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
 
                   {mode === 'video' && (
                     <>
-                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="inline-flex items-center rounded-full border border-white/15 px-3 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
+                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="inline-flex items-center rounded-full border border-white/15 px-3 text-xs text-white/65">{t(activeVideoModel?.referenceMode === 'extend' ? 'creator.extensionSeconds' : 'creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
                         draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
@@ -2310,6 +2335,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
             onConfirm={runVideo}
             initialDuration={duration}
             initialResolution={resolution}
+            hasExternalVideoReferences={!!currentClip}
           />
         )}
 

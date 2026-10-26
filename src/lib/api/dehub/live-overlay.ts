@@ -1,6 +1,7 @@
 import { apiCall } from './core';
 import { parseControls, parseSubathon, type CreatorOverlay, type OverlayControls, type OverlayRenderIn, type OverlayWidget, type PublicOverlay } from '@/lib/live-overlay/types';
 import type { LiveRule } from '@/lib/live-overlay/rules';
+import { parseVerticalCrop, type VerticalCrop } from '@/lib/live-overlay/vertical-crop';
 
 /**
  * The stream overlay routes on the stream API (`/api/live-overlay`).
@@ -29,6 +30,7 @@ function publicOverlay(raw: Partial<PublicOverlay> | undefined): PublicOverlay {
     },
     controls: parseControls(raw?.controls),
     subathon: parseSubathon(raw?.subathon),
+    verticalCrop: parseVerticalCrop(raw?.verticalCrop),
   };
 }
 
@@ -41,17 +43,27 @@ export async function getStreamOverlay(streamId: string): Promise<PublicOverlay>
   return publicOverlay(unwrap(res));
 }
 
-export async function getMyOverlay(): Promise<CreatorOverlay> {
-  return unwrap(await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine', { requiresAuth: true }));
+function creatorOverlay(raw: CreatorOverlay): CreatorOverlay {
+  return { ...raw, verticalCrop: parseVerticalCrop(raw?.verticalCrop) };
 }
 
-export async function saveMyOverlay(overlay: { renderIn: OverlayRenderIn; widgets: OverlayWidget[] }): Promise<CreatorOverlay> {
-  return unwrap(
-    await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine', {
-      method: 'PUT',
-      body: { renderIn: overlay.renderIn, widgets: overlay.widgets },
-      requiresAuth: true,
-    }),
+export async function getMyOverlay(): Promise<CreatorOverlay> {
+  return creatorOverlay(unwrap(await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine', { requiresAuth: true })));
+}
+
+export async function saveMyOverlay(overlay: {
+  renderIn: OverlayRenderIn;
+  widgets: OverlayWidget[];
+  verticalCrop: VerticalCrop | null;
+}): Promise<CreatorOverlay> {
+  return creatorOverlay(
+    unwrap(
+      await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine', {
+        method: 'PUT',
+        body: { renderIn: overlay.renderIn, widgets: overlay.widgets, verticalCrop: overlay.verticalCrop },
+        requiresAuth: true,
+      }),
+    ),
   );
 }
 

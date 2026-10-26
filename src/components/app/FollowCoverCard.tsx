@@ -5,7 +5,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * One suggested account as a mini profile: their cover banner, the avatar
  * sitting over its lower edge, name and badge, @handle, two lines of bio, why
  * they were suggested (people you know who follow them, or that they follow
- * you), their follower count and a solid Follow button. A small X skips them.
+ * you), their follower count and a solid Follow button. A bare X in the
+ * banner's top corner skips them: just the glyph, no chip behind it.
  *
  * Used by the feed's follow row and by Explore. All colour, radius and glass
  * comes from styles/follow-cards.css, keyed off the theme, so this file only
@@ -34,8 +35,8 @@ import '@/styles/follow-cards.css';
 
 interface FollowCoverCardProps {
   user: SuggestedAccount;
-  /** The follow has landed; the card shows Following for a moment before it leaves. */
-  followed?: boolean;
+  /** Following: the tap landed and the button says so. Leaving: the card folds away. */
+  phase?: 'following' | 'leaving';
   onOpen: (user: SuggestedAccount) => void;
   onFollow: (user: SuggestedAccount) => void;
   onDismiss: (user: SuggestedAccount) => void;
@@ -45,7 +46,8 @@ export function suggestionName(user: SuggestedAccount) {
   return user.displayName || user.username || `${user.address.slice(0, 6)}...`;
 }
 
-function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDismiss }: FollowCoverCardProps) {
+function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: FollowCoverCardProps) {
+  const followed = phase !== undefined;
   const { t: _copy } = _useCopy();
   const name = suggestionName(user);
   const avatarPath = user.avatarImageUrl || user.avatarUrl;
@@ -67,6 +69,7 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
     <article
       data-follow-card
       data-followed={followed || undefined}
+      data-leaving={phase === 'leaving' || undefined}
       onClick={() => onOpen(user)}
       className="snap-start"
     >
@@ -82,7 +85,7 @@ function FollowCoverCardInner({ user, followed = false, onOpen, onFollow, onDism
           onDismiss(user);
         }}
       >
-        <X className="w-3.5 h-3.5" />
+        <X className="w-4 h-4" />
       </button>
 
       <Avatar data-fc-avatar className="w-14 h-14 rounded-2xl">

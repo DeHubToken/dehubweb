@@ -7,7 +7,7 @@ import { useFollowStatus, useFollowStatuses } from '@/hooks/use-follow-status';
 import { mapUserToSearchCreator } from '@/hooks/use-dehub-user-search';
 
 const auth = vi.hoisted(() => ({ walletAddress: '0xViewerA' as string | null }));
-const api = vi.hoisted(() => ({ getFollowStatus: vi.fn() }));
+const api = vi.hoisted(() => ({ getFollowStatus: vi.fn(), getFollowStatusBatch: vi.fn() }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => auth }));
 vi.mock('@/lib/api/dehub', () => api);
 
@@ -20,6 +20,7 @@ function setup() {
 beforeEach(() => {
   auth.walletAddress = '0xViewerA';
   api.getFollowStatus.mockReset().mockResolvedValue({ isFollowing: true, isFollowRequestPending: false });
+  api.getFollowStatusBatch.mockReset().mockImplementation(async (targets: string[]) => Object.fromEntries(await Promise.all(targets.map(async target => [target, await api.getFollowStatus(target)]))));
 });
 
 describe('Explore discovery categories', () => {
@@ -61,19 +62,11 @@ describe('Explore follow relationships', () => {
     await waitFor(() => expect(search.result.current.data?.isFollowing).toBe(false));
   });
 
-  it('limits a roster to four simultaneous checks', async () => {
-    let inFlight = 0;
-    let peak = 0;
-    api.getFollowStatus.mockImplementation(async () => {
-      inFlight++;
-      peak = Math.max(peak, inFlight);
-      await new Promise(resolve => setTimeout(resolve, 5));
-      inFlight--;
-      return { isFollowing: true, isFollowRequestPending: false };
-    });
+  it('resolves a roster in one viewer-scoped batch', async () => {
     const { wrapper } = setup();
     const hook = renderHook(() => useFollowStatuses(Array.from({ length: 15 }, (_, i) => `0x${i}`)), { wrapper });
     await waitFor(() => expect(Object.values(hook.result.current).filter(Boolean)).toHaveLength(15));
-    expect(peak).toBe(4);
+    expect(api.getFollowStatusBatch).toHaveBeenCalledTimes(1);
+    expect(api.getFollowStatusBatch).toHaveBeenCalledWith(Array.from({ length: 15 }, (_, i) => `0x${i}`), '0xviewera');
   });
 });
