@@ -8,7 +8,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { AtSign, Loader2, AlertTriangle, Zap, MailOpen, Mail, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon } from "lucide-react";
+import { AtSign, Loader2, AlertTriangle, Zap, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon } from "lucide-react";
 import MessageSquareText from "@/components/ui/cut-icons/messages";
 import Users from "@/components/ui/cut-icons/communities";
 import Check from "@/components/ui/cut-icons/check";
@@ -53,7 +53,7 @@ import {
   communityNotificationSentence,
   isCommunityNotificationType,
 } from '@/lib/community-notifications';
-import { formatDistanceToNow } from 'date-fns';
+import { formatTimeAgo } from '@/lib/feed-utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Link, useNavigate } from 'react-router-dom';
 import dehubMarkWhite from '@/assets/dehub-mark-white.png';
@@ -1274,18 +1274,35 @@ const NotificationItem = memo(function NotificationItem({
 
   
 
-  const isUnreadRow = !(notification.read || isClosing);
+  const isUnreadRow = hasUnread && !isClosing;
 
   return (
     <div
       onClick={handleClick}
       data-notification-row
+      data-feed-row
       data-unread={isUnreadRow ? '' : undefined}
       style={style}
-      className={`flex items-start gap-3 p-4 transition-colors duration-300 cursor-pointer ${
-        (notification.read || isClosing) ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
-      }`}
+      className="relative flex items-start gap-3 py-3 pl-[18px] pr-4 transition-colors duration-300 cursor-pointer"
     >
+      {/* Unread is a solid dot, not a filled block. It doubles as the
+          per-row "mark as read" control the old round button gave. */}
+      {isUnreadRow && (
+        <button
+          type="button"
+          data-feed-unread-dot
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsClosing(true);
+            bundle.allIds.forEach(id => onMarkAsRead(id));
+          }}
+          className="absolute left-0 top-[19px] flex h-6 w-[18px] items-center justify-center"
+          aria-label={_copy("copy.50c8b81faf51", { defaultValue: "Mark as read" })}
+          title={_copy("copy.50c8b81faf51", { defaultValue: "Mark as read" })}
+        >
+          <span className="block h-[7px] w-[7px] rounded-full" />
+        </button>
+      )}
       {/* Avatar with type icon overlay — stacked for aggregated notifications */}
       <div className="relative flex-shrink-0">
         {(() => {
@@ -1320,16 +1337,17 @@ const NotificationItem = memo(function NotificationItem({
             };
             
             return (
-              <div className="grid grid-cols-2 grid-rows-2 gap-0.5 w-12 h-12 flex-shrink-0">
-                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1, enrichedAvatars) || profileLink : profileLink, 'w-[23px] h-[23px]')}
-                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2, enrichedAvatars) : null, 'w-[23px] h-[23px]')}
+              <div data-feed-avatar-grid className="grid grid-cols-2 grid-rows-2 gap-0.5 w-[46px] h-[46px] flex-shrink-0">
+                {renderGridAvatar(avatar1Url, actor1?.display || fallbackLetter, actor1 ? resolveActorProfileLink(actor1, enrichedAvatars) || profileLink : profileLink, 'w-[22px] h-[22px]')}
+                {renderGridAvatar(avatar2Url, actor2?.display || null, actor2 ? resolveActorProfileLink(actor2, enrichedAvatars) : null, 'w-[22px] h-[22px]')}
                 {actor3 ? (
-                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[23px] h-[23px]')
+                  renderGridAvatar(avatar3Url, actor3.display, resolveActorProfileLink(actor3, enrichedAvatars), 'w-[22px] h-[22px]')
                 ) : (
-                  <span className="invisible w-[23px] h-[23px]" aria-hidden />
+                  <span className="invisible w-[22px] h-[22px]" aria-hidden />
                 )}
                 <button
-                  className="w-[23px] h-[23px] rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition-colors cursor-pointer"
+                  data-feed-type-badge
+                  className="w-[22px] h-[22px] rounded-full flex items-center justify-center transition-colors cursor-pointer [&_svg]:h-[11px] [&_svg]:w-[11px]"
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -1350,11 +1368,11 @@ const NotificationItem = memo(function NotificationItem({
           // instead of reading as somebody's round profile picture.
           if (isPlatformNotice) {
             return (
-              <div className="w-12 h-12 shrink-0 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+              <div data-feed-platform-mark className="w-[46px] h-[46px] shrink-0 rounded-full bg-black border border-white/10 flex items-center justify-center">
                 <img
                   src={DEHUB_MARK_SRC}
                   alt="DeHub"
-                  className="w-7 h-auto object-contain"
+                  className="w-6 h-auto object-contain"
                   loading="lazy"
                   decoding="async"
                 />
@@ -1365,7 +1383,7 @@ const NotificationItem = memo(function NotificationItem({
           // Single avatar (default)
           return profileLink ? (
             <Link to={profileLink} onClick={(e) => e.stopPropagation()}>
-              <Avatar className="w-12 h-12">
+              <Avatar className="w-[46px] h-[46px]">
                 <AvatarImage src={avatarUrl} />
                 <AvatarFallback className="bg-zinc-700 text-white font-medium">
                   {fallbackLetter}
@@ -1373,7 +1391,7 @@ const NotificationItem = memo(function NotificationItem({
               </Avatar>
             </Link>
           ) : (
-            <Avatar className="w-12 h-12">
+            <Avatar className="w-[46px] h-[46px]">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback className="bg-zinc-700 text-white font-medium">
                 {fallbackLetter}
@@ -1383,7 +1401,7 @@ const NotificationItem = memo(function NotificationItem({
         })()}
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
         {!isBackendAggregatedMultiActor && (
-          <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
+          <div data-feed-type-badge className="absolute -bottom-[3px] -right-[3px] flex h-5 w-5 items-center justify-center rounded-full [&_svg]:h-[11px] [&_svg]:w-[11px]">
             {getNotificationIcon(notification.type, notification.reaction)}
           </div>
         )}
@@ -1391,12 +1409,13 @@ const NotificationItem = memo(function NotificationItem({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm ${(notification.read || isClosing) ? 'text-zinc-400' : 'text-white'}`}>
+        <p data-feed-text className={`text-[14.5px] leading-[1.38] ${(notification.read || isClosing) ? 'text-white/75' : 'text-white'}`}>
           {notificationContentWithActorBadge(
             getNotificationContent(notification, bundle, t, () => setShowActorsDrawer(true), canonicalActors),
             notification,
             canonicalActors.length,
           )}
+          <span data-feed-time className="text-[13px] text-zinc-500 whitespace-nowrap">{' · '}{formatTimeAgo(String(notification.createdAt))}</span>
         </p>
         
         {/* Post preview snippet — for replies/mentions show the comment text, otherwise the post title */}
@@ -1416,8 +1435,8 @@ const NotificationItem = memo(function NotificationItem({
           if (!previewText) return null;
           return (
             <>
-              <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1 italic">
-                "{previewText}"
+              <p className="text-[13.5px] text-zinc-500 mt-0.5 line-clamp-1">
+                {previewText}
               </p>
               {/* Secondary post title context for reply/mention */}
               {isReplyOrMention && notification.tokenTitle && (
@@ -1435,9 +1454,6 @@ const NotificationItem = memo(function NotificationItem({
           </p>
         )}
         
-        <p className="text-xs text-zinc-500 mt-1">
-          {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
-        </p>
 
         {/* Settle a fraction trade from the notification that told you about it.
             Renders nothing unless this wallet actually owes the leg. */}
@@ -1448,17 +1464,19 @@ const NotificationItem = memo(function NotificationItem({
 
         {/* Follow request accept/reject buttons — inline under text on mobile */}
         {isFollowRequest && !followRequestAction && (
-          <div className="flex items-center gap-1.5 mt-2" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-2 mt-2.5" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => handleFollowRequestAction('accept')}
               disabled={followRequestLoading !== null}
-              className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+              data-feed-pill="primary"
+              className="h-[30px] px-3.5 rounded-full text-[13px] font-semibold flex items-center gap-1 transition-opacity disabled:opacity-50"
             >
               {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}{_copy("copy.89713b9c9c1b", { defaultValue: "Accept" })}</button>
             <button
               onClick={() => handleFollowRequestAction('reject')}
               disabled={followRequestLoading !== null}
-              className="h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
+              data-feed-pill="ghost"
+              className="h-[30px] px-3.5 rounded-full border border-white/20 text-white text-[13px] font-semibold flex items-center gap-1 transition-colors disabled:opacity-50"
             >
               {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}{_copy("copy.ab604a360777", { defaultValue: "Reject" })}</button>
           </div>
@@ -1478,7 +1496,8 @@ const NotificationItem = memo(function NotificationItem({
           <div className="flex items-center gap-1.5 mt-2" onClick={(e) => e.stopPropagation()}>
             <button
               onClick={() => setShowAppealDrawer(true)}
-              className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors"
+              data-feed-pill="ghost"
+              className="h-[30px] px-3.5 rounded-full border border-white/20 text-white text-[13px] font-semibold flex items-center gap-1 transition-colors"
             >
               <Scale className="w-3 h-3" />{_copy("copy.b8b66bda14ac", { defaultValue: "Appeal" })}</button>
           </div>
@@ -1508,42 +1527,11 @@ const NotificationItem = memo(function NotificationItem({
           <img 
             src={postThumbnail} 
             alt={notification.tokenTitle || _copy("copy.a5554622c655", { defaultValue: "Post" })} 
-            className="w-12 h-12 rounded-lg object-cover"
+            className="w-11 h-11 rounded-[10px] object-cover"
           />
         </Link>
       )}
 
-      <AnimatePresence mode="wait">
-        {hasUnread && (
-          <motion.button
-            key="mark-read"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsClosing(true);
-              bundle.allIds.forEach(id => onMarkAsRead(id));
-              
-            }}
-            disabled={isClosing}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
-            title={_copy("copy.50c8b81faf51", { defaultValue: "Mark as read" })}
-            initial={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } }}
-          >
-            <motion.div
-              animate={isClosing ? { rotateX: 180 } : { rotateX: 0 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              style={{ transformStyle: 'preserve-3d' }}
-              className="text-zinc-400"
-            >
-              {isClosing ? (
-                <Mail className="w-4 h-4" />
-              ) : (
-                <MailOpen className="w-4 h-4" />
-              )}
-            </motion.div>
-          </motion.button>
-        )}
-      </AnimatePresence>
 
       {/* Actors drawer — shows all users who performed this action */}
       <Drawer open={showActorsDrawer} onOpenChange={(open) => {
@@ -2303,6 +2291,23 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     </Sheet>
   );
 
+  // Day headings for the feed: everything unread sits under New, the rest by
+  // when it happened.
+  const feedGroupOf = (bundle: BundledNotification): 'new' | 'today' | 'week' | 'earlier' => {
+    if (!bundle.allNotifications.every((n) => n.read)) return 'new';
+    const at = new Date(bundle.primary.createdAt).getTime();
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    if (at >= startOfToday.getTime()) return 'today';
+    if (Date.now() - at < 7 * 86_400_000) return 'week';
+    return 'earlier';
+  };
+  const feedGroupLabel = (group: 'new' | 'today' | 'week' | 'earlier') =>
+    group === 'new' ? t('notifications.groupNew', { defaultValue: 'New' })
+      : group === 'today' ? t('notifications.groupToday', { defaultValue: 'Today' })
+      : group === 'week' ? t('notifications.groupThisWeek', { defaultValue: 'This week' })
+      : t('notifications.groupEarlier', { defaultValue: 'Earlier' });
+
   return (
     // data-notifications-page scopes the light-mode remaps in index.css; the
     // portaled settings sheet / actors drawer carry the same attribute
@@ -2356,14 +2361,14 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
 
       {/* Notifications List */}
       <PageBody frameClip={inDrawer}>
-        <div data-page-bento data-kit-section className="bg-zinc-900 overflow-hidden">
+        <div data-page-bento data-kit-section data-notification-list className="overflow-hidden">
           {isLoading ? (
             // Row skeletons that mirror the real list layout — a lone spinner
             // reads as "empty page" instead of "content on the way".
-            <div className="divide-y divide-zinc-800">
+            <div className="pt-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 p-4 animate-pulse">
-                  <div className="w-10 h-10 rounded-xl bg-zinc-800 flex-shrink-0" />
+                <div key={i} className="flex items-center gap-3 py-3 pl-[18px] pr-4 animate-pulse">
+                  <div className="w-[46px] h-[46px] rounded-full bg-zinc-800 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
                     <div className="h-3.5 w-2/3 bg-zinc-800 rounded mb-2" />
                     <div className="h-3 w-1/3 bg-zinc-800 rounded" />
@@ -2377,14 +2382,22 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
               <h3 className="text-white font-semibold text-lg mb-2">{t('notifications.noNotificationsYet')}</h3>
             </div>
           ) : (
-            <div className="divide-y divide-zinc-800">
+            <div data-notification-feed className="pb-2">
               <AnimatePresence initial={false}>
-                {bundledNotifications.map((bundle, index) => (
+                {bundledNotifications.map((bundle, index) => {
+                  const group = feedGroupOf(bundle);
+                  const showLabel = index === 0 || feedGroupOf(bundledNotifications[index - 1]) !== group;
+                  return (
                   <motion.div
                     key={bundle.primary.id}
                     layout={reduceMotion ? false : 'position'}
                     transition={{ type: 'spring', stiffness: 420, damping: 38 }}
                   >
+                    {showLabel && (
+                      <div data-feed-group-label className="px-[18px] pb-1 pt-4 text-xs font-semibold uppercase tracking-[0.06em] text-zinc-500">
+                        {feedGroupLabel(group)}
+                      </div>
+                    )}
                     <NotificationItem
                       notification={bundle.primary}
                       bundle={bundle}
@@ -2396,7 +2409,8 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
                       style={inDrawer ? undefined : offscreenRowStyle(index)}
                     />
                   </motion.div>
-                ))}
+                  );
+                })}
               </AnimatePresence>
               
               {/* Load More */}
