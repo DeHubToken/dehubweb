@@ -133,7 +133,7 @@ export const LiveSwipeSlide = memo(function LiveSwipeSlide({ stream, isActive, p
       </div>
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.45)_0%,transparent_18%,transparent_50%,rgba(0,0,0,.85)_100%)]" />
 
-      <div className="absolute left-4 top-[max(3.5rem,env(safe-area-inset-top))] flex items-center gap-2">
+      <div className="absolute left-4 top-[max(4.75rem,env(safe-area-inset-top))] flex items-center gap-2">
         <span className="rounded-md bg-red-600 px-1.5 py-1 text-xs font-extrabold leading-none tracking-wide text-white">
           {t('liveStudio.vertical.live')}
         </span>
