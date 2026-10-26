@@ -4,7 +4,10 @@ import type { DeHubPoll } from './types';
 // ─── Create Poll ──────────────────────────────────────────────────────
 
 export async function createPoll(params: {
-  tokenId: number;
+  /** The post to attach the poll to. Leave out for a chat poll. */
+  tokenId?: number;
+  /** Send the poll into this chat instead of attaching it to a post. */
+  conversationId?: string;
   question: string;
   options: string[];
   expiresAt?: string;
