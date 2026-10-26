@@ -5054,6 +5054,9 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "audioExportFormat": "Formato de exportación",
+    "audioExportMp3": "MP3 · 128 kbps",
+    "audioExportWav": "WAV · 24 kHz · mono",
     "marketing": {
     "import":  {
                    "url":  "URL de la página del producto",
