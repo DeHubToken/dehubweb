@@ -240,8 +240,8 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
                                 disabled={past}
                                 onClick={() => choose(at)}
                                 aria-label={`${dayLabel(at)} ${timeLabel(at)}: ${count}`}
-                                className={cn('h-4 rounded-[3px] text-white disabled:opacity-25', picked && 'ring-1 ring-white')}
-                                style={{ background: 'currentColor', opacity: past ? undefined : 0.12 + 0.88 * (count / max) }}
+                                className={cn('h-4 rounded-[3px] text-white ', picked && 'ring-1 ring-white')}
+                                style={{ background: 'currentColor', opacity: past ? 0.05 : 0.12 + 0.88 * (count / max) }}
                               />
                             );
                           })}
