@@ -29,6 +29,7 @@ import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { createRuleBus, RuleAudio, RuleBusContext } from '@/components/app/live/overlay/rule-bus';
 import { PollContext, useStreamPoll } from '@/components/app/live/overlay/poll';
 import { OverlayCreatorContext, SubathonContext, useStreamSubathon } from '@/components/app/live/overlay/subathon';
+import { HypeContext, useStreamHype } from '@/components/app/live/overlay/hype-train';
 
 /** How often to look for the creator going live, and for a stream ending. */
 const IDLE_POLL_MS = 10_000;
@@ -157,6 +158,7 @@ export default function ObsOverlayPage() {
   // buttons are not: they vote with `!vote 2` in chat.
   const polls = useStreamPoll(streamId, false);
   const subathon = useStreamSubathon(streamId, data?.subathon);
+  const hype = useStreamHype(streamId);
   const placed =
     data && !notFound
       ? drawOrder(
@@ -182,6 +184,7 @@ export default function ObsOverlayPage() {
       <RuleBusContext.Provider value={rules}>
         <PollContext.Provider value={{ ...polls, interactive: false }}>
         <SubathonContext.Provider value={subathon}>
+        <HypeContext.Provider value={hype}>
         <OverlayCreatorContext.Provider value={data?.creator?.address ?? ''}>
           {/* One source plays the audio: the whole scene. Live rules only when OBS is
               where the overlay is shown, or viewers' apps would play them too. */}
@@ -238,6 +241,7 @@ export default function ObsOverlayPage() {
             </pre>
           )}
         </OverlayCreatorContext.Provider>
+        </HypeContext.Provider>
         </SubathonContext.Provider>
         </PollContext.Provider>
       </RuleBusContext.Provider>
