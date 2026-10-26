@@ -111,7 +111,7 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
                       <ImageIcon className="w-7 h-7" />
                     </div>
                   )}
-                  <span className="absolute top-2 left-2 text-[10px] font-semibold bg-black/70 text-white/90 px-1.5 py-0.5 rounded backdrop-blur-sm">
+                  <span data-on-media className="absolute top-2 left-2 text-[10px] font-semibold bg-black/70 text-white/90 px-1.5 py-0.5 rounded backdrop-blur-sm">
                     {position.balance} / {TOTAL_FRACTIONS}
                   </span>
                 </div>
