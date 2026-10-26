@@ -2,6 +2,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { projectCommandHistory } from "./projectCommandHistory";
 import { projectTask } from "./projectTask";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export interface CommandCommit { capture<Result>(write: () => Result): Result; isCurrent(): boolean; ready?(): Promise<void> }
 export const commitCommand = async <Result,>(command: CommandCommit | undefined, write: () => Result): Promise<Awaited<Result>> => {
@@ -25,10 +26,10 @@ export function beginEditorCommand() {
   const unsubscribe = useEditorStore.subscribe((next, before) => { if (next.past !== before.past) group.isCurrent(); });
   const waiters = new Set<() => void>();
   const ready = () => {
-    if (!group.isCurrent()) return Promise.reject(new Error("The pending command changed or was undone"));
+    if (!group.isCurrent()) return Promise.reject(new EditorError("copy.76437e81abc1", "The pending command changed or was undone"));
     if (useEditorStore.getState().isHistorySettled()) return Promise.resolve();
     return new Promise<void>((resolve, reject) => {
-      const cancel = () => { stop(); reject(new Error("The pending command changed or was undone")); };
+      const cancel = () => { stop(); reject(new EditorError("copy.76437e81abc1", "The pending command changed or was undone")); };
       const stop = () => { off(); waiters.delete(cancel); };
       const off = useEditorStore.subscribe(() => {
         if (!group.isCurrent()) cancel();
@@ -38,12 +39,12 @@ export function beginEditorCommand() {
     });
   };
   const capture = <Result,>(write: () => Result): Result => {
-    if (!useEditorStore.getState().isHistorySettled()) throw new Error("Finish the active adjustment before applying this command");
+    if (!useEditorStore.getState().isHistorySettled()) throw new EditorError("copy.10e89fa2ae91", "Finish the active adjustment before applying this command");
     return group.capture(write);
   };
   const commit = (write: () => void) => { capture(write); };
   const store = () => {
-    if (!group.isCurrent()) throw new Error("The pending command changed or was undone");
+    if (!group.isCurrent()) throw new EditorError("copy.76437e81abc1", "The pending command changed or was undone");
     return new Proxy(useEditorStore.getState(), {
       get(target, key, receiver) {
         const value = Reflect.get(target, key, receiver);

@@ -3,6 +3,7 @@ import { findVisualHighlights, type VisualAnalyser, type VisualSampler } from ".
 import { reviewHighlights } from "./highlightReview";
 import type { CaptionWord } from "./captionLayout";
 import type { MediaClip, ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export interface HighlightChatRequest { seconds: number; focus: string; useCaptions: boolean; useVisual?: boolean; visualScope?: string }
 
@@ -84,9 +85,9 @@ export class HighlightChatSession {
       let ranges: HighlightRange[];
       if (visual) {
         const runtime = this.runtime.visual;
-        if (!runtime) throw new Error("Visual analysis unavailable");
+        if (!runtime) throw new EditorError("copy.3a8cddad37d6", "Visual analysis unavailable");
         const checkSource = () => {
-          if (!this.alive(controller) || !this.matchesSource()) throw new Error("Source changed");
+          if (!this.alive(controller) || !this.matchesSource()) throw new EditorError("copy.1ff76c54d10c", "Source changed");
         };
         ranges = await findVisualHighlights(clip, { optIn: true, seconds: request.seconds, focus: request.focus },
           (source, windows, signal, progress) => { checkSource(); return runtime.sample(source, windows, signal, progress); },

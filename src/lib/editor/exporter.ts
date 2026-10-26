@@ -28,6 +28,7 @@ import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./g
 import { GIF_WORKER } from "./gifRuntime";
 import { exportTimeRange, exportAudioSegment, type ExportRange } from "./exportRanges";
 import { cleanDecoderConfig, videoDecoderConfigFixer } from "./videoDecoderConfig";
+import { EditorError } from "./editorError";
 
 
 export type ExportFormat = "mp4" | "webm" | "gif";
@@ -131,7 +132,7 @@ async function pickVideoCodec(
       .catch(() => null);
     if (support?.supported) return candidate;
   }
-  throw new Error("This browser can't encode video at this size. Try a smaller export size, or Chrome or Edge.");
+  throw new EditorError("copy.6f0630900271", "This browser can't encode video at this size. Try a smaller export size, or Chrome or Edge.");
 }
 
 /**
@@ -179,10 +180,10 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
         v.preload = "auto";
         const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); v.onloadeddata = null; v.onerror = null; error ? reject(error) : resolve(); };
         const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
-        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+        const timer = setTimeout(() => finish(new EditorError("copy.2f35e5107bbd", "Failed to load {{name}}", { name: m.name })), 20000);
         cancelLoads.add(cancel);
         v.onloadeddata = () => finish();
-        v.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+        v.onerror = () => finish(new EditorError("copy.2f35e5107bbd", "Failed to load {{name}}", { name: m.name }));
         v.src = m.url;
         if (signal?.aborted) cancel();
         videos.set(m.id, v);
@@ -205,10 +206,10 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
         await new Promise<void>((resolve, reject) => {
           const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
           const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
-          const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+          const timer = setTimeout(() => finish(new EditorError("copy.2f35e5107bbd", "Failed to load {{name}}", { name: m.name })), 20000);
           cancelLoads.add(cancel);
           img.onload = () => finish();
-          img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+          img.onerror = () => finish(new EditorError("copy.2f35e5107bbd", "Failed to load {{name}}", { name: m.name }));
           img.src = m.url;
           if (signal?.aborted) cancel();
         });
@@ -297,7 +298,7 @@ function audioBufferSliceToInterleaved(
 export async function exportProject(opts: ExportOptions): Promise<ExportResult> {
   if (opts.format === "gif") return exportGif(opts);
   if (!isExportSupported()) {
-    throw new Error("Your browser doesn't support video export. Use an up-to-date Chrome, Edge, Firefox or Safari.");
+    throw new EditorError("copy.54b8c61ab040", "Your browser doesn't support video export. Use an up-to-date Chrome, Edge, Firefox or Safari.");
   }
 
   const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
@@ -310,7 +311,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const fullDuration = timelineDuration(settings, clips);
   const range = exportTimeRange(fullDuration, opts.range ?? (cutEndAt != null && cutEndAt > 0 ? { start: 0, end: Math.min(cutEndAt, fullDuration) } : undefined));
   const contentDuration = range.duration;
-  if (contentDuration <= 0) throw new Error("Nothing to export — the timeline is empty.");
+  if (contentDuration <= 0) throw new EditorError("copy.ac649caf0b9f", "Nothing to export — the timeline is empty.");
   const duration = contentDuration + BRAND_OUTRO_DURATION;
   const username = outroUsername(opts.username);
 
@@ -335,7 +336,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   const canvas = new OffscreenCanvas(width, height);
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not acquire canvas context");
+  if (!ctx) throw new EditorError("copy.5b5c321ac7f5", "Could not acquire canvas context");
 
   // Lazy-load the appropriate muxer.
   const trackZ = (trackId: string) => tracks.findIndex((t) => t.id === trackId);
@@ -375,7 +376,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       // A partial audio config (no description) would wipe the AAC config the muxer prefills.
       addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta?.decoderConfig ? { ...meta, decoderConfig: cleanDecoderConfig(meta.decoderConfig) } : meta) : undefined,
       finalize: () => {
-        if (!fixVideoChunk.hasConfig()) throw new Error("This browser's video encoder didn't produce a playable MP4. Try WebM, or Chrome.");
+        if (!fixVideoChunk.hasConfig()) throw new EditorError("copy.ad7c12ceda3a", "This browser's video encoder didn't produce a playable MP4. Try WebM, or Chrome.");
         m.finalize();
       },
       target,
@@ -554,9 +555,9 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const fullDuration = timelineDuration(settings, clips);
   const range = exportTimeRange(fullDuration, opts.range ?? (opts.cutEndAt != null && opts.cutEndAt > 0 ? { start: 0, end: Math.min(opts.cutEndAt, fullDuration) } : undefined));
   const contentDuration = range.duration;
-  if (contentDuration > GIF_CONTENT_LIMIT) throw new Error("GIF exports support up to 60 seconds of timeline content");
+  if (contentDuration > GIF_CONTENT_LIMIT) throw new EditorError("copy.3fe551b9fe39", "GIF exports support up to 60 seconds of timeline content");
   const plan = gifPlan(settings.width, settings.height, opts.scale, contentDuration + BRAND_OUTRO_DURATION, settings.fps);
-  if (contentDuration <= 0) throw new Error("Nothing to export");
+  if (contentDuration <= 0) throw new EditorError("copy.fd3032d65fb2", "Nothing to export");
   checkAbort(signal);
   const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
   const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
@@ -574,7 +575,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
     checkAbort(signal);
     const canvas = document.createElement("canvas"); canvas.width = plan.width; canvas.height = plan.height;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) throw new Error("Could not acquire canvas context");
+    if (!ctx) throw new EditorError("copy.5b5c321ac7f5", "Could not acquire canvas context");
     session = gifWorkerSession(plan.width, plan.height, GIF_WORKER);
     signal?.addEventListener("abort", abort, { once: true });
     await session.ready;
@@ -668,7 +669,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Could not acquire canvas context");
+  if (!ctx) throw new EditorError("copy.5b5c321ac7f5", "Could not acquire canvas context");
     if (!(format === "png" && opts.transparent)) {
       ctx.fillStyle = settings.background;
       ctx.fillRect(0, 0, width, height);
@@ -702,7 +703,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   });
   const mime = format === "png" ? "image/png" : "image/jpeg";
   const blob = await new Promise<Blob>((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new EditorError("copy.a4b29a4cc36d", "Could not encode image"))), mime, quality),
   );
   return { blob, filename: exportFilename(snapshot.title, format, "", "design"), links };
   } finally {

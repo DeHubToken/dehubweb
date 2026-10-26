@@ -44,6 +44,7 @@ import { writePdfDocument } from "@/lib/editor/pdfDocument";
 import { exportPresentation } from "@/lib/editor/exportPresentation";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
+import { EditorError, editorErrorText } from "@/lib/editor/editorError";
 
 /** Finished exports up to this size are also kept in the creator's cloud storage. */
 const BACKUP_LIMIT = 200 * 1024 * 1024;
@@ -219,7 +220,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
       onOpenChange(false);
     } catch (e) {
       if ((e as Error).name === "AbortError") toast.message(t("editor.export.cancelled"));
-      else { toast.error(e instanceof Error ? e.message : t("editor.export.failed")); console.error("Still export failed:", e); }
+      else { toast.error(editorErrorText(e, t("editor.export.failed"))); console.error("Still export failed:", e); }
     } finally {
       if (abortRef.current === ctl) abortRef.current = null;
       setBusy(false);
@@ -264,7 +265,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             },
           });
           size += result.blob.size;
-          if (size > ZIP_DOWNLOAD_LIMIT) throw new Error(t("editor.export.archiveTooLarge"));
+          if (size > ZIP_DOWNLOAD_LIMIT) throw new EditorError("editor.export.archiveTooLarge", "The download exceeds 512 MiB. Export fewer clips or choose a lower resolution.");
           files.push({ name: exportFilename(range.name, format), blob: result.blob });
         }
         const blob = files.length === 1 ? files[0].blob : await zipDownloadFiles(files, ctl.signal);
@@ -286,7 +287,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
       if ((e as Error).name === "AbortError") {
         toast.message(t("editor.export.cancelled"));
       } else {
-        toast.error(e instanceof Error ? e.message : t("editor.export.failed"));
+        toast.error(editorErrorText(e, t("editor.export.failed")));
         console.error("Export failed:", e);
       }
     } finally {
@@ -305,7 +306,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
   const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
   let pageOrderError = "";
-  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = reason instanceof Error ? reason.message : "Choose existing pages"; } }
+  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = editorErrorText(reason, t("copy.35b43efb36c1", { defaultValue: "Choose existing pages" })); } }
   const canDownload = !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (

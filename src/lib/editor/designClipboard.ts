@@ -3,6 +3,7 @@ import { groupedSelection, remapDesignGroups } from "./designGroups";
 import { getPages, pageAt } from "./pages";
 import { sliceTimelineClip } from "./timelineAgent";
 import type { Clip, ProjectSnapshot, Track } from "./types";
+import { EditorError } from "./editorError";
 
 export interface DesignClipboard {
   projectId: string;
@@ -24,7 +25,7 @@ export function captureDesignSelection(project: ProjectSnapshot, ids: readonly s
   const hidden = new Set(project.tracks.filter(track => track.hidden).map(track => track.id));
   const picked = project.clips.filter(clip => chosen.has(clip.id) && clip.kind !== "audio" && !clip.locked && !clip.hidden && !clip.isPageBackground && !hidden.has(clip.trackId) && clip.start < page.end && clip.start + clip.duration > page.start);
   if (!picked.length) return null;
-  if (picked.length > 100) throw new Error("Copy up to 100 layers at a time");
+  if (picked.length > 100) throw new EditorError("copy.3aa3bc8a9182", "Copy up to 100 layers at a time");
   const layers = picked.flatMap(clip => {
     const track = project.tracks.find(track => track.id === clip.trackId);
     if (!track) return [];
@@ -32,7 +33,7 @@ export function captureDesignSelection(project: ProjectSnapshot, ids: readonly s
     return [{ clip: sliceTimelineClip(clip, from - clip.start, to - from, clip.id, 0), track, offset: from - page.start, fillPage: clip.start <= page.start + 1e-6 && clip.start + clip.duration >= page.end - 1e-6 && (clip.kind === "text" || clip.kind === "shape" || clip.kind === "image") }];
   }).sort((a, b) => project.tracks.indexOf(a.track) - project.tracks.indexOf(b.track));
   const json = JSON.stringify({ projectId: project.id, canvas: { width: project.settings.width, height: project.settings.height, background: project.settings.background }, layers });
-  if (json.length > 2 * 1024 * 1024) throw new Error("This selection is too large to copy. Choose fewer layers");
+  if (json.length > 2 * 1024 * 1024) throw new EditorError("copy.4150ccb1e10a", "This selection is too large to copy. Choose fewer layers");
   return JSON.parse(json) as DesignClipboard;
 }
 
@@ -46,7 +47,7 @@ export function copyDesignSelection(project: ProjectSnapshot, ids: readonly stri
 
 export function pasteDesignSelection(project: ProjectSnapshot, time: number, source: DesignClipboard | null, makeId: () => string, options: { preserveProportions?: boolean } = {}): { project: ProjectSnapshot; ids: string[]; skipped: number } | null {
   if (!source?.layers.length) return null;
-  if (source.projectId !== project.id && source.layers.some(layer => layer.clip.kind === "image" || layer.clip.kind === "video")) throw new Error("Paste photos and videos within their original design. Text and shapes can be pasted into another design");
+  if (source.projectId !== project.id && source.layers.some(layer => layer.clip.kind === "image" || layer.clip.kind === "video")) throw new EditorError("copy.b3d62115764b", "Paste photos and videos within their original design. Text and shapes can be pasted into another design");
   if (options.preserveProportions !== false) source = fitDesignClipboardSource(source, project.settings);
   const page = pageAt(getPages(project.settings, project.clips), time), duration = page.end - page.start;
   const tracks: Track[] = [], copies: Clip[] = [], trackIds = new Map<string, string>();
@@ -59,8 +60,8 @@ export function pasteDesignSelection(project: ProjectSnapshot, time: number, sou
     const part = sliceTimelineClip(layer.clip, 0, Math.min(length, layer.clip.duration), makeId(), page.start + layer.offset);
     copies.push({ ...part, duration: length, trackId, locked: false, hidden: false, isPageBackground: undefined, ...(part.kind === "text" ? { pageNumber: undefined } : {}) } as Clip);
   }
-  if (!copies.length) throw new Error("The copied layers start after this page ends. Extend the page duration before pasting");
-  if (project.tracks.length + tracks.length > 200 || project.clips.length + copies.length > 10000) throw new Error("Pasting would exceed the design’s layer limit");
+  if (!copies.length) throw new EditorError("copy.505209e41f13", "The copied layers start after this page ends. Extend the page duration before pasting");
+  if (project.tracks.length + tracks.length > 200 || project.clips.length + copies.length > 10000) throw new EditorError("copy.bb664009f2ac", "Pasting would exceed the design’s layer limit");
   const clips = remapDesignGroups(copies, makeId);
   return { project: { ...project, tracks: [...project.tracks, ...tracks], clips: [...project.clips, ...clips] }, ids: clips.map(clip => clip.id), skipped };
 }
@@ -80,6 +81,6 @@ export function removeDesignSelectionFromPage(project: ProjectSnapshot, ids: rea
     return parts;
   });
   const tracks = new Set(clips.map(clip => clip.trackId));
-  if (clips.length > 10000) throw new Error("Cutting across these page boundaries would exceed the design’s layer limit");
+  if (clips.length > 10000) throw new EditorError("copy.12c8706f8c82", "Cutting across these page boundaries would exceed the design’s layer limit");
   return { ...project, settings: { ...project.settings, pages: pages.map(page => page.start), pageEnd: pages[pages.length - 1].end }, clips, tracks: project.tracks.filter(track => tracks.has(track.id) || !project.clips.some(clip => selected.has(clip.id) && clip.trackId === track.id)) };
 }

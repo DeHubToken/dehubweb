@@ -38,7 +38,7 @@ function setup(shared=false){
           const pending=links.get(local.id)?.liveDraft?.pending;expect(pending).toEqual(request);
           if(fail)throw new Error("Writer expired or response unavailable");
           const previous=receipts.get(request.requestId);if(previous)return copy(previous);
-          if(request.expectedRevision!==checkpoint.draftRevision||request.anchorRevision!==checkpoint.headRevision)throw new CloudProjectConflict("Draft moved");
+          if(request.expectedRevision!==checkpoint.draftRevision||request.anchorRevision!==checkpoint.headRevision)throw new CloudProjectConflict("copy.test", "Draft moved");
           const receipt:CloudDraftReceipt={ownerWallet:sourceOwner,projectId,draftRevision:request.expectedRevision+1,anchorRevision:request.anchorRevision,sequence:request.sequence,requestId:request.requestId,storedAt:new Date(now).toISOString()};
           receipts.set(request.requestId,receipt);checkpoint={...checkpoint,draftRevision:receipt.draftRevision,anchorRevision:receipt.anchorRevision,document:copy(request.document)};
           if(lose){lose=false;throw new Error("Response lost");}return copy(receipt);

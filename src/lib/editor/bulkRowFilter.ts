@@ -1,10 +1,11 @@
 import type { BulkData } from "./bulkCreate";
+import { EditorError } from "./editorError";
 export interface BulkRowFilter { column?: string; operation?: "equals" | "contains" | "notEmpty" | "empty"; value?: string }
 export const BULK_FILTER_OPERATIONS = [
   { id: "equals", label: "Equals" }, { id: "contains", label: "Contains" }, { id: "notEmpty", label: "Is not blank" }, { id: "empty", label: "Is blank" },
 ] as const;
 export function bulkSelectedRows(data: BulkData, first: number, last: number, filter: BulkRowFilter = {}): number[] {
-  if (!Number.isInteger(first) || !Number.isInteger(last) || first < 1 || last > data.rows.length || last < first || last - first >= 50) throw new Error("Choose a valid range of up to 50 data rows");
+  if (!Number.isInteger(first) || !Number.isInteger(last) || first < 1 || last > data.rows.length || last < first || last - first >= 50) throw new EditorError("copy.a54b07161139", "Choose a valid range of up to 50 data rows");
   const column = filter.column ? data.headers.indexOf(filter.column) : -1, needle = (filter.value ?? "").trim().toLocaleLowerCase();
   const result: number[] = [];
   for (let index = first - 1; index < last; index++) {

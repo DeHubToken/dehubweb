@@ -77,6 +77,7 @@ import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
 import { getDesignGuides } from "@/lib/editor/designGuides";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
 import { leaseMedia } from "@/lib/editor/mediaLeases";
+import { EditorError } from "@/lib/editor/editorError";
 
 function cloneMedia<T extends HTMLMediaElement>(source: T): T {
   const copy = source.cloneNode(false) as T;
@@ -186,12 +187,12 @@ export function Compositor() {
   const colourPick = useDesignColourPick(), sampling = colourPick?.projectId === previewProject;
   useEffect(() => { if (presenting && sampling) cancelDesignColourPick(colourPick.token); }, [presenting, sampling, colourPick?.token]);
   useLayoutEffect(() => registerDesignPagePreview(previewProject, async (snapshot, at, maxEdge) => {
-    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new EditorError("copy.ea1bee6586b0", "This design is no longer open");
     await ensureProjectFonts(snapshot.clips);
-    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new EditorError("copy.ea1bee6586b0", "This design is no longer open");
     const { width, height, background } = snapshot.settings, ratio = Math.min(1, maxEdge / Math.max(width, height));
     const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(width * ratio)); canvas.height = Math.max(1, Math.round(height * ratio));
-    const context = canvas.getContext("2d"); if (!context) throw new Error("Page previews are unavailable");
+    const context = canvas.getContext("2d"); if (!context) throw new EditorError("copy.318997283235", "Page previews are unavailable");
     context.scale(canvas.width / width, canvas.height / height); context.fillStyle = background; context.fillRect(0, 0, width, height);
     const hidden = new Set(snapshot.tracks.filter(track => track.hidden).map(track => track.id)), order = new Map(snapshot.tracks.map((track, index) => [track.id, index]));
     const visible = snapshot.clips.filter(clip => isVisualClip(clip) && !clip.hidden && !hidden.has(clip.trackId) && at >= clip.start && at < clip.start + clip.duration).sort((a, b) => (order.get(a.trackId) ?? 0) - (order.get(b.trackId) ?? 0));
@@ -1295,7 +1296,7 @@ export function Compositor() {
           {sampling && <div className="absolute inset-0 z-30 cursor-crosshair touch-none" onPointerDown={event => {
             if (event.button !== 0) return; event.preventDefault(); event.stopPropagation();
             const token = beginDesignColourSample(previewProject); if (token === null) return;
-            try { const canvas = canvasRef.current, point = toCanvas(event.clientX, event.clientY), context = canvas?.getContext("2d"); if (!canvas || !context) throw new Error("The canvas is not ready");
+            try { const canvas = canvasRef.current, point = toCanvas(event.clientX, event.clientY), context = canvas?.getContext("2d"); if (!canvas || !context) throw new EditorError("copy.8cdd3ee85c0e", "The canvas is not ready");
               const pixel = context.getImageData(Math.max(0, Math.min(canvas.width - 1, Math.floor(point.x))), Math.max(0, Math.min(canvas.height - 1, Math.floor(point.y))), 1, 1).data;
               finishDesignColourSample(token, "#" + Array.from(pixel.slice(0, 3)).map(value => value.toString(16).padStart(2, "0")).join(""));
             } catch { finishDesignColourSample(token, null, t("editor.colourPicker.failed", { defaultValue: "Could not read the canvas colour. Try again or enter a colour value." })); }

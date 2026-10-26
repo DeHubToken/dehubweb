@@ -1,9 +1,10 @@
 import type { ClipEffects } from "./types";
 import { FILTER_PRESETS } from "./filterPresets";
 import { matchesFilterPreset } from "./filterMatching";
+import { EditorError } from "./editorError";
 export function scaledFilterEffects(id: string, strength: number): ClipEffects {
   const preset = FILTER_PRESETS.find(preset => preset.id === id);
-  if (!preset) throw new Error("Choose an existing photo filter");
+  if (!preset) throw new EditorError("copy.0a54d5805cf2", "Choose an existing photo filter");
   const amount = Number.isFinite(strength) ? Math.max(0, Math.min(1, strength)) : 1;
   const effects: ClipEffects = {};
   for (const key of Object.keys(preset.effects) as (keyof ClipEffects)[]) {

@@ -8,6 +8,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { applyCaptionTranslation, captionTranslationKey, planCaptionTranslation, translateCaptionPlan } from "@/lib/editor/captionTranslation";
 import { subtitleClips } from "@/lib/editor/subtitles";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
+import { EditorError } from "@/lib/editor/editorError";
 
 export function CaptionTranslation({ disabled, onBusyChange }: { disabled: boolean; onBusyChange: (busy: boolean) => void }) {
   const { t, i18n } = useTranslation();
@@ -47,7 +48,7 @@ export function CaptionTranslation({ disabled, onBusyChange }: { disabled: boole
         signal: controller.signal,
         translate: async (text, targetLang) => {
           const { data, error } = await supabase.functions.invoke("translate-text", { body: { text, targetLang, public: false } });
-          if (error) throw new Error("Caption translation unavailable");
+          if (error) throw new EditorError("copy.619a45e92146", "Caption translation unavailable");
           return data?.translatedText;
         },
         onProgress: (done, total) => { if (active.current === job) setProgress({ done, total }); },

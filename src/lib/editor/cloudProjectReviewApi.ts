@@ -1,11 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { parseCloudProjectDocument, type CloudProjectVersion } from "./cloudProjectFormat";
+import { cloudServerError, parseCloudProjectDocument, type CloudProjectVersion } from "./cloudProjectFormat";
 import { projectReviewDraft, projectReviewWallet, type ProjectReviewComment, type ProjectReviewDraft, type ProjectReviewInvitation, type ProjectReviewMember, type ProjectReviewRole } from "./cloudProjectReview";
+import { EditorError } from "./editorError";
 
-export function cloudProjectReviewApi(client: SupabaseClient, wallet: string, conflict: (message: string) => Error) {
+export function cloudProjectReviewApi(client: SupabaseClient, wallet: string) {
   async function rpc<T>(name: string, args: Record<string, unknown> = {}): Promise<T> {
     const { data, error } = await client.rpc(name, args);
-    if (error) throw (error.code === "PT409" || error.code === "40001") ? conflict(error.message) : new Error(error.message);
+    if (error) throw cloudServerError(error);
     return data as T;
   }
   return {
@@ -13,12 +14,12 @@ export function cloudProjectReviewApi(client: SupabaseClient, wallet: string, co
     members: (id: string) => rpc<ProjectReviewMember[]>("editor_cloud_review_members", { p_id: id }),
     share: (id: string, member: string, role: ProjectReviewRole | "none", expectedState: number) => {
       const recipient = projectReviewWallet(member);
-      if (recipient === wallet) throw new Error("The owner already has project access");
+      if (recipient === wallet) throw new EditorError("copy.7cd93ca3042e", "The owner already has project access");
       return rpc<ProjectReviewMember>("editor_cloud_review_share", { p_id: id, p_member: recipient, p_role: role, p_expected_state: expectedState });
     },
     accept: (project: ProjectReviewInvitation) => rpc<ProjectReviewMember>("editor_cloud_review_accept", { p_owner: project.ownerWallet, p_id: project.projectId, p_expected_state: project.stateVersion }),
     leave: (project: ProjectReviewInvitation) => {
-      if (project.memberWallet !== wallet) throw new Error("Project invitation changed");
+      if (project.memberWallet !== wallet) throw new EditorError("copy.99f26fb99d4b", "Project invitation changed");
       return rpc<ProjectReviewMember>("editor_cloud_review_leave", { p_owner: projectReviewWallet(project.ownerWallet), p_id: project.projectId, p_expected_state: project.stateVersion });
     },
     async load(owner: string, id: string, revision?: number): Promise<CloudProjectVersion> {

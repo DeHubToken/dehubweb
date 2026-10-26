@@ -1,6 +1,7 @@
 import { expect, it } from "vitest";
 import { backgroundRemovalScope, matchesBackgroundRemovalScope, backgroundRemovalFailureMessage, isBackgroundRemovalCancellation } from "./backgroundRemovalFailure";
 import type { MediaClip } from "./types";
+import { EditorError } from "./editorError";
 
 const clip: MediaClip = { id: "clip", kind: "video", trackId: "video", mediaId: "source", start: 0, trimIn: 2, duration: 3 };
 
@@ -22,9 +23,9 @@ it("shows a failure only for the original project and source range", () => {
   expect(matchesBackgroundRemovalScope(null, "project", clip)).toBe(false);
 });
 
-it("retains the actionable reason and bounds long worker errors", () => {
-  expect(backgroundRemovalFailureMessage(new Error("Frame could not be decoded"), "failed")).toBe("Frame could not be decoded");
-  expect(backgroundRemovalFailureMessage(new Error(" "), "failed")).toBe("failed");
+it("retains an actionable editor reason and never shows raw worker text", () => {
+  expect(backgroundRemovalFailureMessage(new EditorError("copy.test", "Trim this clip first"), "failed")).toBe("Trim this clip first");
+  expect(backgroundRemovalFailureMessage(new Error("Frame could not be decoded"), "failed")).toBe("failed");
   expect(backgroundRemovalFailureMessage(null, "failed")).toBe("failed");
-  expect(backgroundRemovalFailureMessage(new Error("x".repeat(2000)), "failed")).toHaveLength(1000);
+  expect(backgroundRemovalFailureMessage(new EditorError("copy.test", "x".repeat(2000)), "failed")).toHaveLength(1000);
 });

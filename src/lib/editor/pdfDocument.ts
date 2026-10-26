@@ -1,5 +1,6 @@
 import { designPrintDpi } from "./documentDimensions";
 import { designPageLinkIndex, normaliseDesignLink, type DesignPdfLink } from "./designLinks";
+import { EditorError } from "./editorError";
 /** Image-backed PDF pages preserve the editor's composited appearance without external services. */
 export interface PdfPage { cropMarks?: boolean; dpi?: number; jpeg: Uint8Array; width: number; height: number; designWidth?: number; designHeight?: number; links?: DesignPdfLink[] }
 export const PDF_DOCUMENT_LIMIT = 256 * 1024 * 1024;
@@ -19,7 +20,7 @@ function pdfUnicode(value: string, limit = 500): string {
 /** Stream a standards-based PDF with one JPEG XObject per page and byte-accurate xref offsets. */
 export async function writePdfDocument(count: number, pageAt: (index: number) => Promise<PdfPage>,
   write: (value: Uint8Array) => void | Promise<void>, signal?: AbortSignal, pageIndexes?: readonly number[], options: PdfDocumentOptions = {}): Promise<void> {
-  if (!Number.isInteger(count) || count < 1 || count > 500) throw new Error("PDF supports between 1 and 500 pages");
+  if (!Number.isInteger(count) || count < 1 || count > 500) throw new EditorError("copy.212d0831402e", "PDF supports between 1 and 500 pages");
   let position = 0;
   const destinations = new Map((pageIndexes ?? Array.from({ length: count }, (_, index) => index)).map((page, index) => [page, 3 + index * 3]));
   const offsets = [0];
@@ -37,10 +38,10 @@ export async function writePdfDocument(count: number, pageAt: (index: number) =>
     }
   }
   const info = typeof options.title === "string" && options.title.trim() ? nextObject++ : null;
-  const check = () => { if (signal?.aborted) { const e = new Error("PDF export cancelled"); e.name = "AbortError"; throw e; } };
+  const check = () => { if (signal?.aborted) { const e = new EditorError("copy.ccaa907faf76", "PDF export cancelled"); e.name = "AbortError"; throw e; } };
   const emit = async (value: Uint8Array) => {
     check();
-    if (position + value.length > PDF_DOCUMENT_LIMIT) throw new Error("PDF exceeds 256 MiB");
+    if (position + value.length > PDF_DOCUMENT_LIMIT) throw new EditorError("copy.a7754b3a685a", "PDF exceeds 256 MiB");
     await write(value); position += value.length;
   };
   const text = async (value: string) => emit(bytes(value));
@@ -56,12 +57,12 @@ export async function writePdfDocument(count: number, pageAt: (index: number) =>
     check();
     const page = await pageAt(index);
     if (!Number.isInteger(page.width) || !Number.isInteger(page.height) || page.width < 1 || page.height < 1 ||
-      page.width > 32768 || page.height > 32768 || page.jpeg.length < 4 || page.jpeg[0] !== 255 || page.jpeg[1] !== 216) throw new Error("Invalid PDF page image");
+      page.width > 32768 || page.height > 32768 || page.jpeg.length < 4 || page.jpeg[0] !== 255 || page.jpeg[1] !== 216) throw new EditorError("copy.216e6a52ab80", "Invalid PDF page image");
     const id = 3 + index * 3;
     const designWidth = page.designWidth ?? page.width, designHeight = page.designHeight ?? page.height;
-    if (!Number.isFinite(designWidth) || !Number.isFinite(designHeight) || designWidth <= 0 || designHeight <= 0) throw new Error("Invalid PDF page size");
+    if (!Number.isFinite(designWidth) || !Number.isFinite(designHeight) || designWidth <= 0 || designHeight <= 0) throw new EditorError("copy.4cbd4729b60c", "Invalid PDF page size");
     const dpi = page.dpi ?? designPrintDpi({ width: designWidth, height: designHeight });
-    if (!Number.isInteger(dpi) || dpi < 72 || dpi > 600) throw new Error("Invalid PDF print resolution");
+    if (!Number.isInteger(dpi) || dpi < 72 || dpi > 600) throw new EditorError("copy.91cacf4b4f44", "Invalid PDF print resolution");
     const width = Number((designWidth * 72 / dpi).toFixed(3)), height = Number((designHeight * 72 / dpi).toFixed(3));
     const margin = page.cropMarks ? 18 : 0;
     const links = (page.links ?? []).slice(0, 500).flatMap(link => {

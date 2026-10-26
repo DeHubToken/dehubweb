@@ -5,6 +5,7 @@
  */
 import { toast } from "sonner";
 import i18n from "@/i18n";
+import { translateCopy } from "@/i18n/copy";
 import {
   captureImageThumbnail,
   captureVideoThumbnail,
@@ -45,8 +46,8 @@ export interface ImportContext {
 export async function importOneFile(file: File, ctx: ImportContext = {}): Promise<string | null> {
   if (ctx.signal?.aborted) return null;
   const kind = detectKind(file);
-  if (!kind) { toast.error(`Unsupported file: ${file.name}`); return null; }
-  if (file.size > MAX_EDITOR_MEDIA_BYTES) { toast.error(`${file.name} is too large (max 500 MB).`); return null; }
+  if (!kind) { toast.error(translateCopy("copy.9344a49b2b83", { defaultValue: "Unsupported file: {{name}}", name: file.name })); return null; }
+  if (file.size > MAX_EDITOR_MEDIA_BYTES) { toast.error(translateCopy("copy.d77ed09d4007", { defaultValue: "{{name}} is too large (max 500 MB).", name: file.name })); return null; }
 
   // Cloud quota check (best-effort — fail open if the check itself errors)
   if (ctx.wallet) {
@@ -124,14 +125,14 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
         })
         .catch((e) => {
           console.error("[editor] cloud upload failed", e);
-          toast.error(`Cloud sync failed for ${file.name}. Kept locally on this device.`);
+          toast.error(translateCopy("copy.f6b9549bd36a", { defaultValue: "Cloud sync failed for {{name}}. Kept locally on this device.", name: file.name }));
         });
     }
     return id;
   } catch (e) {
     if (ctx.signal?.aborted) return null;
     console.error("[editor] import failed", file.name, e);
-    toast.error(`Failed to import ${file.name}`);
+    toast.error(translateCopy("copy.de36a8b9fcb2", { defaultValue: "Failed to import {{name}}", name: file.name }));
     return null;
   }
 }

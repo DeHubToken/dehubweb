@@ -21,7 +21,7 @@ function setup(asOwner = false) {
   const hydration: { id: string; owner?: string; path: string }[] = [], uploads: { localId: string; owner?: string }[] = [];
   const saveVersion = async (document: CloudProjectDocument, revision: number, nonce: string) => {
     requests.push({ revision, nonce, document: clone(document) }); let saved = nonces.get(nonce);
-    if (!saved) { if (revision !== head) throw new CloudProjectConflict("Newer cloud version"); saved = ++head; versions.set(saved, clone(document)); nonces.set(nonce, saved); }
+    if (!saved) { if (revision !== head) throw new CloudProjectConflict("copy.test", "Newer cloud version"); saved = ++head; versions.set(saved, clone(document)); nonces.set(nonce, saved); }
     if (loseNext) { loseNext = false; throw new Error("Lost response"); }
     return { projectId, revision: saved, savedAt: "2026-10-08" };
   };

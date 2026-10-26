@@ -4,18 +4,19 @@ import { presentationDocumentEntries, presentationSlideSize, PRESENTATION_IMAGE_
 import { writeZipArchive, type ZipEntry } from "./zipArchive";
 import type { DesignPdfLink } from "./designLinks";
 import type { ProjectSnapshot } from "./types";
+import { EditorError } from "./editorError";
 
 export async function exportPresentation(snapshot: ProjectSnapshot, time: number, scope: PageExportScope,
   capture: (time: number) => Promise<{ blob: Blob; links: DesignPdfLink[] }>, signal?: AbortSignal, progress?: (fraction: number) => void): Promise<Blob> {
   const frames = pageExportFrames(snapshot, time, scope, "jpg"), images: ZipEntry[] = [], slides: PresentationSlide[] = [];
   presentationSlideSize(snapshot.settings.width, snapshot.settings.height);
   let total = 0;
-  const check = () => { if (signal?.aborted) { const error = new Error("Export cancelled"); error.name = "AbortError"; throw error; } };
+  const check = () => { if (signal?.aborted) { const error = new EditorError("copy.dbef83d53bfe", "Export cancelled"); error.name = "AbortError"; throw error; } };
   for (const [index, frame] of frames.entries()) {
     check(); progress?.(index / frames.length * 0.8);
     const { blob, links } = await capture(frame.time); check();
-    if (!blob.size || blob.type !== "image/jpeg") throw new Error("Presentation page capture failed");
-    total += blob.size; if (total > PRESENTATION_IMAGE_LIMIT) throw new Error("This presentation exceeds 256 MiB. Export fewer pages or choose a smaller resolution");
+    if (!blob.size || blob.type !== "image/jpeg") throw new EditorError("copy.445ea3d31d79", "Presentation page capture failed");
+    total += blob.size; if (total > PRESENTATION_IMAGE_LIMIT) throw new EditorError("copy.394a893dcc0c", "This presentation exceeds 256 MiB. Export fewer pages or choose a smaller resolution");
     const details = pageDetails(snapshot, frame.index);
     slides.push({ index: frame.index, title: details.title, notes: details.notes, hidden: details.presentationHidden, links });
     images.push({ name: `ppt/media/image${index + 1}.jpg`, size: blob.size, read: async (offset, length) => new Uint8Array(await blob.slice(offset, offset + length).arrayBuffer()) });

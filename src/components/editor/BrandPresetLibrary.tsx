@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBrandPresets } from "@/lib/editor/useBrandPresets";
 import { normaliseBrandStyles, type BrandStyles } from "@/lib/editor/brandStyles";
+import { editorErrorText } from "@/lib/editor/editorError";
 export function BrandPresetLibrary({ value, onLoad }: { value: BrandStyles; onLoad: (styles: BrandStyles) => void }) {
   const { t } = useTranslation(), library = useBrandPresets();
   const [name, setName] = useState(""), [offset, setOffset] = useState(0), [error, setError] = useState(""), [message, setMessage] = useState("");
@@ -11,7 +12,7 @@ export function BrandPresetLibrary({ value, onLoad }: { value: BrandStyles; onLo
   const first = Math.min(offset, Math.max(0, Math.floor((library.presets.length - 1) / 5) * 5)), current = JSON.stringify(normaliseBrandStyles(value));
   const filled = value.colors.length > 0 || !!value.headingFont || !!value.bodyFont;
   const report = (persisted: boolean) => { setError(""); setMessage(t(persisted ? "editor.brand.presetSaved" : "editor.brand.presetSessionOnly", { defaultValue: persisted ? "Saved brand styles" : "Storage is unavailable. These styles are saved for this visit." })); };
-  const run = (operation: () => boolean) => { try { report(operation()); } catch (reason) { setMessage(""); setError(reason instanceof Error ? reason.message : "Could not save brand styles"); } };
+  const run = (operation: () => boolean) => { try { report(operation()); } catch (reason) { setMessage(""); setError(editorErrorText(reason, t("copy.c197fdd8dc8e", { defaultValue: "Could not save brand styles" }))); } };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-2 border-b border-white/10 pb-3"><p className="text-xs font-medium text-white/80">{t("editor.brand.presetLibrary", { defaultValue: "Saved brand styles" })}</p><div className="flex gap-2"><input value={name} maxLength={60} onChange={event => setName(event.target.value)} aria-label={t("editor.brand.presetName", { defaultValue: "Brand preset name" })} placeholder={t("editor.brand.presetName", { defaultValue: "Brand preset name" })} className="min-h-9 min-w-0 flex-1 rounded-lg border border-white/20 bg-white/5 px-3 text-xs text-white" /><button type="button" disabled={!name.trim() || !filled || library.presets.length >= 20} onClick={() => run(() => { const result = library.create(name, value); setName(""); setOffset(0); return result.persisted; })} className={button}>{t("editor.brand.saveNewPreset", { defaultValue: "Save new" })}</button></div>
     <BrandStylesFileControls key={library.scope} value={value} name={name} onImport={file => { setName(file.name); onLoad(file.styles); setError(""); setMessage(""); }} />

@@ -1,3 +1,4 @@
+import { EditorError } from "./editorError";
 export type ScreenCapture = { ready: Promise<MediaStream>; dispose: () => void };
 
 /** Keep display, microphone and mixer ownership together while permission is pending. */
@@ -39,7 +40,7 @@ export function startScreenCapture(microphone: boolean, isCurrent: () => boolean
           audio: { echoCancellation: true, noiseSuppression: true }, video: false,
         }));
         check(display);
-        if (!voice.getAudioTracks().some(track => track.readyState === "live")) throw new Error("Microphone unavailable");
+        if (!voice.getAudioTracks().some(track => track.readyState === "live")) throw new EditorError("copy.f8c4acaa269d", "Microphone unavailable");
         inputs.push(...voice.getAudioTracks());
       }
       if (inputs.length <= 1) return own(new MediaStream([...display.getVideoTracks(), ...inputs]));
@@ -58,7 +59,7 @@ export function startScreenCapture(microphone: boolean, isCurrent: () => boolean
       }
       await context.resume();
       check(display);
-      if (context.state !== "running") throw new Error("Audio mixer unavailable");
+      if (context.state !== "running") throw new EditorError("copy.3dd3a33fa3c0", "Audio mixer unavailable");
       return own(new MediaStream([...display.getVideoTracks(), ...destination.stream.getAudioTracks()]));
     } catch (error) {
       dispose();

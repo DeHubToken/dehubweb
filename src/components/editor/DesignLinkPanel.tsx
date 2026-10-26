@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applyDesignLink, designPageLinkIndex, normaliseDesignLink } from "@/lib/editor/designLinks";
 import { getPages } from "@/lib/editor/pages";
+import { EditorError } from "@/lib/editor/editorError";
 
 export function DesignLinkPanel() {
   const ids = useEditorStore(s => s.selectedClipIds), clips = useEditorStore(s => s.clips);
@@ -29,7 +30,7 @@ function LinkDraft({ initial, disabled, mixed }: { initial: string; disabled: bo
   const valid = mode === "page" ? Number.isInteger(target) && pages[target] ? `#page=${target + 1}` : null : normaliseDesignLink(value);
   const [copyMessage, setCopyMessage] = useState(""), [copyError, setCopyError] = useState(""), generation = useRef(0);
   useEffect(() => { generation.current++; setCopyMessage(""); setCopyError(""); return () => { generation.current++; }; }, [valid]);
-  const copy = async () => { if (!valid) return; const request = ++generation.current; try { if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable"); await navigator.clipboard.writeText(valid); if (request === generation.current) { setCopyMessage(t("editor.links.copied", { defaultValue: "Link destination copied" })); setCopyError(""); } } catch { if (request === generation.current) { setCopyMessage(""); setCopyError(t("editor.links.copyFailed", { defaultValue: "Could not copy link destination" })); } } };
+  const copy = async () => { if (!valid) return; const request = ++generation.current; try { if (!navigator.clipboard?.writeText) throw new EditorError("copy.4ff69f6f16e0", "Clipboard unavailable"); await navigator.clipboard.writeText(valid); if (request === generation.current) { setCopyMessage(t("editor.links.copied", { defaultValue: "Link destination copied" })); setCopyError(""); } } catch { if (request === generation.current) { setCopyMessage(""); setCopyError(t("editor.links.copyFailed", { defaultValue: "Could not copy link destination" })); } } };
   return <form className="space-y-3" onSubmit={e => { e.preventDefault(); if (valid && !disabled) apply(valid); }}>
     <div className="flex gap-2">{(["url", "page"] as const).map(kind => <button key={kind} type="button" aria-pressed={mode === kind} onClick={() => setMode(kind)} className={`min-h-9 rounded-lg border px-3 text-xs ${mode === kind ? "border-cyan-300 bg-cyan-300/10 text-white" : "border-white/20 text-white/60"}`}>{t(kind === "url" ? "editor.links.mode.contactUrl" : "editor.links.mode.page", { defaultValue: kind === "url" ? "Website or contact link" : "Page in this design" })}</button>)}</div>
     {mixed && <p role="status" className="text-xs text-white/55">{t("editor.links.mixed", { defaultValue: "Selected artwork has mixed link destinations. Apply a destination to give it the same link." })}</p>}

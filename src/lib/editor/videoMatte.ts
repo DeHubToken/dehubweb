@@ -1,4 +1,5 @@
 import type { Clip, MediaClip } from "./types";
+import { EditorError } from "./editorError";
 export const VIDEO_MATTE_ASSET_PREFIX = ".dehub-video-matte-";
 export const VIDEO_MATTE_MAX_SOURCE_SECONDS = 600;
 export interface VideoMatteAtlas { columns: number; atlasWidth: number; atlasHeight: number }
@@ -17,10 +18,10 @@ export type VideoMatteResult = { plan: VideoMattePlan; dataUrl: string; matte?: 
 export function videoMattePlan(clip: MediaClip, width: number, height: number, sourceDuration: number, fps: number): VideoMattePlan {
   var speed = clip.speed == null ? 1 : clip.speed;
   var start = clip.trimIn, end = start + clip.duration * speed;
-  if (clip.kind !== "video" || !Number.isFinite(speed) || speed <= 0 || !Number.isFinite(start) || start < 0 || !Number.isFinite(end) || end <= start || !Number.isFinite(sourceDuration) || end > sourceDuration + 0.002 || !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 || !Number.isFinite(fps) || fps < 1 || fps > 120) throw new Error("Invalid video range for background removal");
+  if (clip.kind !== "video" || !Number.isFinite(speed) || speed <= 0 || !Number.isFinite(start) || start < 0 || !Number.isFinite(end) || end <= start || !Number.isFinite(sourceDuration) || end > sourceDuration + 0.002 || !Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 || !Number.isFinite(fps) || fps < 1 || fps > 120) throw new EditorError("copy.92ac7691a5d0", "Invalid video range for background removal");
   var frames = Math.ceil((end - start) * fps - 1e-8);
-  if (frames < 1) throw new Error("Video range is too short for background removal");
-  if (end - start > 600 + 1e-8 || frames > 72000) throw new Error("Trim this clip to 600 source seconds before removing its background");
+  if (frames < 1) throw new EditorError("copy.01e570b1992f", "Video range is too short for background removal");
+  if (end - start > 600 + 1e-8 || frames > 72000) throw new EditorError("copy.90f8df8b72b1", "Trim this clip to 600 source seconds before removing its background");
   var count = Math.min(600, frames);
   var scale = Math.min(1, 512 / Math.max(width, height));
   var w = Math.max(1, Math.floor(width * scale)), h = Math.max(1, Math.floor(height * scale));
@@ -31,7 +32,7 @@ export function videoMattePlan(clip: MediaClip, width: number, height: number, s
   return { sourceMediaId: clip.mediaId, start: start, end: end, fps: fps, frames: frames, width: w, height: h, columns: columns, atlasWidth: w * columns, atlasHeight: h * rows, model: "birefnet-lite-512:4a3c40c" };
 }
 export function videoMattePagePlan(plan: VideoMattePlan, pageIndex: number): VideoMattePagePlan {
-  if (!Number.isInteger(pageIndex) || pageIndex < 0 || pageIndex * 600 >= plan.frames) throw new Error("Invalid background page");
+  if (!Number.isInteger(pageIndex) || pageIndex < 0 || pageIndex * 600 >= plan.frames) throw new EditorError("copy.4634d733bfa1", "Invalid background page");
   var firstFrame = pageIndex * 600, frames = Math.min(600, plan.frames - firstFrame), columns = Math.min(plan.columns, frames);
   return { firstFrame: firstFrame, frames: frames, columns: columns, atlasWidth: columns * plan.width, atlasHeight: Math.ceil(frames / columns) * plan.height };
 }
@@ -67,9 +68,9 @@ export function assertVideoMattes(clips: Clip[], available: (id: string, width: 
   for (var clip of clips) {
     if (clip.kind !== "video" || !clip.videoMatte) continue;
     var m = clip.videoMatte, end = clip.trimIn + clip.duration * (clip.speed == null ? 1 : clip.speed);
-    if (!validVideoMatte(clip) || clip.trimIn < m.start - 1e-6 || end > m.end + 1e-6) throw new Error("Background-removal frames are missing for this range. Restore the background or remove it again before exporting.");
+    if (!validVideoMatte(clip) || clip.trimIn < m.start - 1e-6 || end > m.end + 1e-6) throw new EditorError("copy.9d06a5614401", "Background-removal frames are missing for this range. Restore the background or remove it again before exporting.");
     var pages = m.pages || [m];
-    for (var page of pages) if (!available(page.mediaId, page.atlasWidth, page.atlasHeight)) throw new Error("Background-removal frames are missing for this range. Restore the background or remove it again before exporting.");
+    for (var page of pages) if (!available(page.mediaId, page.atlasWidth, page.atlasHeight)) throw new EditorError("copy.9d06a5614401", "Background-removal frames are missing for this range. Restore the background or remove it again before exporting.");
   }
 }
 

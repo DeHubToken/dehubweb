@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { arrangeDesignPhotos, designPagePhotos, photoSourceOrder } from "@/lib/editor/photoArrangement";
+import { editorErrorText } from "@/lib/editor/editorError";
 
 export function PhotoArrangementPanel() {
   const { t } = useTranslation(), clips = useEditorStore(store => store.clips), time = useEditorStore(store => store.currentTime), settings = useEditorStore(store => store.settings), tracks = useEditorStore(store => store.tracks), selected = useEditorStore(store => store.selectedClipIds), media = useEditorStore(store => store.media);
@@ -17,7 +18,7 @@ export function PhotoArrangementPanel() {
       const chosen = action === "swap" ? [first, second] : ids;
       const next = arrangeDesignPhotos(before, chosen, action === "swap" ? [1, 0] : photoSourceOrder(chosen.length, action), new Map(store.media.map(item => [item.id, item])));
       store.applyDesignEdit(before, next); setError("");
-    } catch (reason) { setError(reason instanceof Error ? reason.message : "Could not rearrange these photos"); }
+    } catch (reason) { setError(editorErrorText(reason, t("copy.beca10f35228", { defaultValue: "Could not rearrange these photos" }))); }
   };
   const names = new Map(tracks.map(track => [track.id, track.name])), labels = new Map(photos.map((clip, index) => [clip.id, clip.label || names.get(clip.trackId) || t("editor.photos.number", { defaultValue: "Photo {{number}}", number: index + 1 })]));
   const label = (id: string) => labels.get(id) ?? "";

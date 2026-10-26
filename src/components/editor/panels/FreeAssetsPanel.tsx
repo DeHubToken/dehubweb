@@ -233,7 +233,7 @@ export function FreeAssetsPanel() {
     } catch (cause) {
       if (!ticket.current()) return;
       console.error("[editor] free asset search failed", cause);
-      setError("The free library could not load. Check your connection and try again.");
+      setError(_translateCopy("copy.d14896aa4bf8", { defaultValue: "The free library could not load. Check your connection and try again." }));
       if (!append) setItems([]);
     } finally {
       if (ticket.current()) {
