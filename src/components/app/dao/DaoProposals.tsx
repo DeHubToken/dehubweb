@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import {
   effectiveDaoProposalStatus,
   useCreateDaoProposal,
@@ -326,7 +326,8 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 
 function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | null; onOpenChange: (open: boolean) => void }) {
   const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, requestWalletUnlock } = useAuth();
+  const { requestWalletUnlock } = useAuth();
+  const { isLoginModalOpen } = useLoginSheet();
   const [selectedKey, setSelectedKey] = useState('8453:USDC');
   const [manualHash, setManualHash] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:manualHash", '', proposal?.id ?? null);
   const [manualAmount, setManualAmount] = useSurfaceDraft("src/components/app/dao/DaoProposals.tsx:manualAmount", '', proposal?.id ?? null);

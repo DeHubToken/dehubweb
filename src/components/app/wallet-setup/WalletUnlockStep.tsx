@@ -51,7 +51,7 @@ import {
 } from '@/lib/wallet-core/biometric-unlock';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import { requestSessionWalletConnect } from '@/lib/wallet-reconnect';
 import { createLogger } from '@/lib/logger';
 
@@ -76,7 +76,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   // wallet, moves the account onto it and finishes the sign-in itself, so it
   // cannot go through onComplete — which expects a key for the wallet this
   // row already names. The other two serve the no-built-in-wallet hand-off.
-  const { replaceLostWallet, isAuthenticated, loginIntent, closeLoginModal } = useAuth();
+  const { replaceLostWallet, isAuthenticated, closeLoginModal } = useAuth();
+  const { loginIntent } = useLoginSheet();
   const { t } = useTranslation();
   /**
    * This sheet is standing in front of a tip, a post or a mint rather than a

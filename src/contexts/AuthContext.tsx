@@ -118,14 +118,7 @@ export interface AuthContextType {
    * there is a single provider to reach (a wallet's in-app browser).
    */
   setWagmiAuthIntent: (value: boolean, wallet?: string | null) => void;
-  // Login modal state
-  isLoginModalOpen: boolean;
-  /**
-   * Why the sheet is open. 'add-profile' — opened from the Profiles UI while
-   * already signed in — retitles it, so the sheet doesn't read as "you were
-   * logged out" to somebody who wasn't.
-   */
-  loginIntent: 'login' | 'add-profile';
+  // Login modal state lives in LoginSheetContext (useLoginSheet below).
   openLoginModal: (options?: {
     intent?: 'login' | 'add-profile';
     /** A saved profile being signed back into, which the allowance already counts. */
@@ -147,6 +140,27 @@ export interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export interface LoginSheetState {
+  isLoginModalOpen: boolean;
+  /**
+   * Why the sheet is open. 'add-profile' — opened from the Profiles UI while
+   * already signed in — retitles it, so the sheet doesn't read as "you were
+   * logged out" to somebody who wasn't.
+   */
+  loginIntent: 'login' | 'add-profile';
+}
+
+/**
+ * Kept out of AuthContext on purpose: opening the sheet used to change the auth
+ * value, which re-rendered every useAuth() consumer on the page (hundreds in a
+ * feed) inside the tap, before the sheet could paint.
+ */
+export const LoginSheetContext = createContext<LoginSheetState>({ isLoginModalOpen: false, loginIntent: 'login' });
+
+export function useLoginSheet(): LoginSheetState {
+  return useContext(LoginSheetContext);
+}
 
 export function useAuth() {
   const context = useContext(AuthContext);
