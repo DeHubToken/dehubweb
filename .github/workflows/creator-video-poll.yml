@@ -1,0 +1,17 @@
+name: Creator video poll authorization
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/_shared/generation-poll-auth.ts'
+      - 'supabase/functions/generate-video/**'
+      - 'supabase/functions/creator-reconcile/**'
+      - '.github/workflows/creator-video-poll.yml'
+jobs:
+  poll-types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check --node-modules-dir=none supabase/functions/_shared/generation-poll-auth.ts

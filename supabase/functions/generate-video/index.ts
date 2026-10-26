@@ -6,7 +6,8 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 import { corsHeaders, rateLimitByIp, serviceClient } from "../_shared/auth.ts";
 import { isVeniceVideo, VENICE_VIDEO_MODELS, veniceVideoOptions } from '../_shared/venice-catalog.ts';
 import { quoteVenice, veniceFetch, VeniceError } from '../_shared/venice.ts';
-import { recordGeneration, settleGeneration, generationTicket } from '../_shared/generation-jobs.ts';
+import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
+import { authorizeVideoPoll } from '../_shared/generation-poll-auth.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 import { falQueueUrls } from "../_shared/fal-queue.ts";
 import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
@@ -926,20 +927,17 @@ serve(async (req) => {
       });
       if (pollLimited) return pollLimited;
 
-      const ticket = await generationTicket('generate-video', body.predictionId);
-      const provider = ticket?.provider || body.provider || 'replicate';
-      if (ticket) body.falAppId = ticket.provider_app;
+      const authorized = await authorizeVideoPoll(req, body.predictionId);
+      if (!authorized.ok) return authorized.response;
+      const ticket = authorized.ticket;
+      const provider = ticket.provider;
+      body.falAppId = ticket.provider_app;
+      if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
+        const recorded = new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        return await settleGeneration('generate-video', body.predictionId, recorded);
+      }
 
       if (provider === 'venice') {
-        const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-        const internal = !!serviceKey && req.headers.get('Authorization') === `Bearer ${serviceKey}`;
-        if (!internal) {
-          const auth = await requireDeHubAuth(req);
-          if (!auth.ok) return auth.response;
-          if (!ticket || ticket.wallet_address !== auth.wallet) return new Response(JSON.stringify({ error: 'Render not found' }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-        }
-        if (!ticket) throw new Error('Render not found');
-        if (['succeeded', 'failed'].includes(ticket.result?.status)) return new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
         return await settleGeneration('generate-video', body.predictionId, await handleVeniceStatus(body.predictionId, ticket.result, ticket.wallet_address));
       }
 
