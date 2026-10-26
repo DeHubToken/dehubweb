@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { ColourPickerButton } from "./ColourPickerButton";
 import { applySelectedTextStyle, selectedDesignText, selectedTextColour, type SelectedTextStyle } from "@/lib/editor/selectedTextStyle";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SelectedTextControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime), projectId = useEditorStore(store => store.projectId);
   const selected = useMemo(() => selectedDesignText(useEditorStore.getState().toSnapshot(), ids, time), [ids, clips, tracks, time, projectId]), first = selected[0];

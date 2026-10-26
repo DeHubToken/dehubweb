@@ -17,7 +17,8 @@ import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { bulkLinkFields, bulkPageFieldsConnected, type BulkPageFields, bulkConnected, bulkFieldText, bulkTemplateFields, bulkTextPreviewValue, createBulkPages, parseBulkData, type BulkConnections } from "@/lib/editor/bulkCreate";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function BulkCreatePanel() {
   const { t } = useTranslation();

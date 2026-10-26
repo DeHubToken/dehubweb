@@ -6,7 +6,7 @@ import { commonTableCellStyle, copyTableCellStyles, expandTableStyleRange, paste
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { applyTableCellStyle, type TableCellStyle, type TableCellStyles } from "@/lib/editor/tableCellStyles";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function TableCellControls({ value, rows, columns, onChange, focusedCell, source, merges }: { source?: string; merges?: TableMerge[]; value?: TableCellStyles; focusedCell?: string; rows: number; columns: number; onChange: (value: TableCellStyles | undefined) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState("A1"), [fill, setFill] = useState("#22d3ee"), [colour, setColour] = useState("#111111"), [error, setError] = useState("");

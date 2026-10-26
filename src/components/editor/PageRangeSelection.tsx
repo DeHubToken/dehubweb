@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parsePageSelection } from "@/lib/editor/pageExports";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PageRangeSelection({ count, selected, onChange }: { count: number; selected: readonly number[]; onChange: (indexes: number[]) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState(""), [error, setError] = useState("");
   const apply = (action: "replace" | "add" | "remove") => {

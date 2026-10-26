@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SvgSourceFileInput({ onLoad }: { onLoad: (source: string, name: string) => void }) {
   const { t } = useTranslation(), [busy, setBusy] = useState(false), [error, setError] = useState(""), request = useRef(0);
   useEffect(() => () => { request.current++; }, []);

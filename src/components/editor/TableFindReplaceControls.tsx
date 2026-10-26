@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cleanTableText, replaceTableText, type TableTextCleanup, type TableTextSearch } from "@/lib/editor/tableTextSearch";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function TableFindReplaceControls({ source, onChange }: { source: string; onChange: (source: string) => void }) {
   const { t } = useTranslation(), [options, setOptions] = useState<TableTextSearch>({ query: "", replacement: "", caseSensitive: false, wholeCell: false, range: "" }), [message, setMessage] = useState("");
   const preview = useMemo(() => { if (!options.query) return { result: null, error: "" }; try { return { result: replaceTableText(source, options), error: "" }; } catch (reason) { return { result: null, error: editorErrorText(reason, t("copy.16ad528bfe13", { defaultValue: "Could not search table cells" })) }; } }, [source, options]);

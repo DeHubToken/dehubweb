@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { parseReusableElementFile, reusableElementFile, type ReusableDesignElement } from "@/lib/editor/reusableElements";
 import type { DesignClipboard } from "@/lib/editor/designClipboard";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ReusableElementFileControls({ element, onImport, disabled = false }: { element?: ReusableDesignElement; onImport?: (name: string, source: DesignClipboard) => void; disabled?: boolean }) {
   const { t } = useTranslation(), [busy, setBusy] = useState(false), [error, setError] = useState("");

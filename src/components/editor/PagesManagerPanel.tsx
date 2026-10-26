@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { pageAt } from "@/lib/editor/pages";
 import { designPageOverview, manageDesignPages, moveDesignPagesBefore, type PageManagementAction } from "@/lib/editor/pageManagement";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PagesManagerPanel() {
   const { t } = useTranslation();

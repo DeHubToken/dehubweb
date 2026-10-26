@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { buildBulkToken, formatBulkToken, type BulkTokenFormat } from "@/lib/editor/bulkTokenFormatting";
 import { CHART_CURRENCIES, CHART_NUMBER_LOCALES, CHART_LOCALE_LABELS } from "@/lib/editor/chartValueFormat";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function BulkPlaceholderControls({ headers, row }: { headers: string[]; row?: string[] }) {
   const { t } = useTranslation();

@@ -4,7 +4,8 @@ import type { cloudProjectSession } from "./cloudProjectSession";
 import type { CloudProjectSummary } from "./cloudProjectFormat";
 import type { ProjectSnapshot } from "./types";
 import { projectReviewDraft, projectReviewSnapshotKey, projectReviewWallet, type ProjectReviewComment, type ProjectReviewDraft, type ProjectReviewInvitation, type ProjectReviewMember, type ProjectReviewRole, type ProjectReviewTarget } from "./cloudProjectReview";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 
 interface Context { current(): ProjectSnapshot | null; open(snapshot: ProjectSnapshot): Promise<void> | void; preserve(): Promise<void>; seek?(seconds: number): void; receive?(snapshot: ProjectSnapshot, expectedKey: string): number | void }

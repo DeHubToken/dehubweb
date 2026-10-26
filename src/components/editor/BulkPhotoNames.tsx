@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function BulkPhotoNames({ names }: { names: readonly string[] }) {
   const { t } = useTranslation(), [query, setQuery] = useState(""), [offset, setOffset] = useState(0), [copied, setCopied] = useState(""), [error, setError] = useState(""), request = useRef(0), filtered = names.filter(name => name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())), first = Math.min(offset, Math.max(0, Math.floor((filtered.length - 1) / 10) * 10));
   useEffect(() => () => { request.current++; }, []);

@@ -55,7 +55,7 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 import { SelectChip, CounterChip, ToggleChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
 import { soundEffectRequest, SFX_MAX_PROMPT_CHARS } from '@/lib/editor/soundEffectDraft';
 import { PanelHeading } from './DesignPanel';
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 type GenKind = 'image' | 'video' | 'voice' | 'music' | 'sfx';
 

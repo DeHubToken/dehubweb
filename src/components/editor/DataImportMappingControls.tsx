@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { importColumnName, mapDataImport, parseDataImport, type DataImportDelimiter, type DataImportOptions, type MappedDataImport } from "@/lib/editor/dataImportMapping";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function DataImportMappingControls({ source, name, mode, defaultMultiple, defaultHeader, hierarchy = false, numericX = false, dateX = false, onUse, onCancel }: { source: string; name: string; mode: "chart" | "table" | "bulk"; defaultMultiple: boolean; defaultHeader: boolean; hierarchy?: boolean; numericX?: boolean; dateX?: boolean; onUse: (value: MappedDataImport) => void; onCancel: () => void }) {
   const { t } = useTranslation();
   const [delimiter, setDelimiter] = useState<DataImportDelimiter>("auto");

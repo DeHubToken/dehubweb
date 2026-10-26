@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { TableData } from "@/lib/editor/dataVisuals";
 import { appendTableSummary, defaultTableSummaryRange, TABLE_SUMMARY_LABELS, TABLE_SUMMARY_OPERATIONS, type TableSummaryOperation } from "@/lib/editor/tableSummary";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function TableSummaryControls({ value, source, onChange, onSource }: { value: Omit<TableData, "rows">; source: string; onChange: (value: Omit<TableData, "rows">) => void; onSource: (source: string) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState(""), [operation, setOperation] = useState<TableSummaryOperation>("sum"), [error, setError] = useState("");
   const fallback = useMemo(() => { try { return defaultTableSummaryRange(source, value.header, !!value.headerColumn); } catch { return ""; } }, [source, value.header, value.headerColumn]);

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBrandPresets } from "@/lib/editor/useBrandPresets";
 import { normaliseBrandStyles, type BrandStyles } from "@/lib/editor/brandStyles";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function BrandPresetLibrary({ value, onLoad }: { value: BrandStyles; onLoad: (styles: BrandStyles) => void }) {
   const { t } = useTranslation(), library = useBrandPresets();
   const [name, setName] = useState(""), [offset, setOffset] = useState(0), [error, setError] = useState(""), [message, setMessage] = useState("");

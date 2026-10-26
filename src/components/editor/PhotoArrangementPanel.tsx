@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { arrangeDesignPhotos, designPagePhotos, photoSourceOrder } from "@/lib/editor/photoArrangement";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function PhotoArrangementPanel() {
   const { t } = useTranslation(), clips = useEditorStore(store => store.clips), time = useEditorStore(store => store.currentTime), settings = useEditorStore(store => store.settings), tracks = useEditorStore(store => store.tracks), selected = useEditorStore(store => store.selectedClipIds), media = useEditorStore(store => store.media);

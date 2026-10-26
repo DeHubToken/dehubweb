@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { nameDesignPagesFromHeadings } from "@/lib/editor/pageDetails";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PageNamingControls({ projectId, selected }: { projectId: string; selected: readonly number[] }) {
   const { t } = useTranslation(), [overwrite, setOverwrite] = useState(false), [message, setMessage] = useState(""), [error, setError] = useState("");
   const apply = () => { try { const store = useEditorStore.getState(), before = store.toSnapshot(); if (before.id !== projectId) return; const result = nameDesignPagesFromHeadings(before, selected, overwrite); if (result.project !== before && !store.applyDesignEdit(before, result.project)) return; setError(""); setMessage(t("editor.pages.namedFromHeadings", { defaultValue: "Named {{count}} pages. {{missing}} pages had no heading.", count: result.count, missing: result.missing })); } catch (reason) { setMessage(""); setError(editorErrorText(reason, t("copy.db18ccc5dcea", { defaultValue: "Could not name these pages" }))); } };

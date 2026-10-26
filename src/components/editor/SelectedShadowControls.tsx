@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applySelectedShadow, selectedShadowLayers, SHARED_SHADOW_PRESETS } from "@/lib/editor/selectedShadows";
 import type { ClipShadow } from "@/lib/editor/types";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SelectedShadowControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime), projectId = useEditorStore(store => store.projectId);
   const selected = useMemo(() => selectedShadowLayers(useEditorStore.getState().toSnapshot(), ids, time), [ids, clips, tracks, time, projectId]), first = selected[0], disabled = selected.some(clip => clip.locked) || selected.length > 100;

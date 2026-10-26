@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CHART_DATE_FORMATS, chartDateBounds } from "@/lib/editor/chartDateAxis";
 import { CHART_NUMBER_LOCALES, CHART_LOCALE_LABELS } from "@/lib/editor/chartValueFormat";
 import type { ChartData } from "@/lib/editor/dataVisuals";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 type DateAxis = Pick<ChartData, "xAxisMode" | "xDateFormat" | "xDateLocale" | "scaleXMin" | "scaleXMax">;
 export function ChartDateAxisControls({ value, onChange }: { value: DateAxis; onChange: (value: DateAxis) => void }) {
   const { t } = useTranslation(), [minimum, setMinimum] = useState(""), [maximum, setMaximum] = useState(""), [error, setError] = useState("");

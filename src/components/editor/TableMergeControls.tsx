@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { addTableMerge, tableMergeLabel, type TableMerge } from "@/lib/editor/tableMerges";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function TableMergeControls({ value, rows, columns, onChange }: { value?: TableMerge[]; rows: number; columns: number; onChange: (value: TableMerge[] | undefined) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState("A1:B1"), [error, setError] = useState("");

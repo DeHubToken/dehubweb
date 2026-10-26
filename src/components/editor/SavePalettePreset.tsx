@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBrandPresets } from "@/lib/editor/useBrandPresets";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function SavePalettePreset({ colours }: { colours: readonly string[] }) {
   const { t } = useTranslation(), library = useBrandPresets(), [name, setName] = useState(""), [message, setMessage] = useState(""), [error, setError] = useState(""), [scope, setScope] = useState(library.scope);

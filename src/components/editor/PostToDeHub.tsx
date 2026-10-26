@@ -25,7 +25,7 @@ import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 
 function filesToFileList(files: File[]): FileList {

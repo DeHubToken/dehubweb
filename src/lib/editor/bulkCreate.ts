@@ -11,7 +11,8 @@ import { remapDesignGroups } from "./designGroups";
 import { sliceTimelineClip } from "./timelineAgent";
 import { createQrGraphic, type QrGraphic } from "./qrGraphic";
 import type { Clip, ProjectSnapshot, ShapeClip, TextClip } from "./types";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { translateCopy } from "@/i18n/copy";
 
 export interface BulkData { headers: string[]; rows: string[][] }

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CHART_CATEGORY_REDUCERS, summarizeChartCategories, type ChartCategoryReducer } from "@/lib/editor/chartCategorySummary";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ChartCategorySummaryControls({ source, multiple, onChange }: { source: string; multiple: boolean; onChange: (source: string, order: number[]) => void }) {
   const { t } = useTranslation();

@@ -2,7 +2,7 @@ import { chartBenchmark, CHART_BENCHMARKS, CHART_BENCHMARK_LABELS, type ChartBen
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ChartData } from "@/lib/editor/dataVisuals";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function ChartReferenceControls({ value, percent = false, onChange, samples = [] }: { samples?: readonly number[]; value?: ChartData["referenceLine"]; percent?: boolean; onChange: (value?: ChartData["referenceLine"]) => void }) {
   const { t } = useTranslation(), [number, setNumber] = useState(value ? String(value.value) : ""), [label, setLabel] = useState(value?.label ?? ""), [colour, setColour] = useState(value?.colour ?? "#f59e0b"), [error, setError] = useState("");
   useEffect(() => { setNumber(value ? String(value.value) : ""); setLabel(value?.label ?? ""); setColour(value?.colour ?? "#f59e0b"); setError(""); }, [value]);

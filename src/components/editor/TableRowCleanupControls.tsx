@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { parseTableData, type TableData } from "@/lib/editor/dataVisuals";
 import { cleanTableRows } from "@/lib/editor/tableRowCleanup";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 type Value = { source: string; format: Omit<TableData, "rows"> };
 export function TableRowCleanupControls({ source, value, onApply }: { source: string; value: Omit<TableData, "rows">; onApply: (value: Value) => void }) {
   const { t } = useTranslation(), [column, setColumn] = useState(-1), [matchCase, setMatchCase] = useState(false), [trim, setTrim] = useState(true), [message, setMessage] = useState(""), [error, setError] = useState("");

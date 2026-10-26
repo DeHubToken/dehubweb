@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applyLayerNames, planLayerNames, type LayerNameOrder } from "@/lib/editor/layerNaming";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function LayerNamingControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime);

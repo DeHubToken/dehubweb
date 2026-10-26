@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { useReusableElements } from "@/lib/editor/useReusableElements";
 import { captureReusableElement, insertReusableElement, uniqueReusableElementName, type ReusableDesignElement } from "@/lib/editor/reusableElements";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function ReusableElementsPanel() {
   const { t } = useTranslation(), library = useReusableElements(), selected = useEditorStore(store => store.selectedClipIds);

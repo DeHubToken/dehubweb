@@ -3,7 +3,8 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import en from "@/i18n/locales/en.json";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 import { CLOUD_SERVER_MESSAGES, CloudDraftRecovery, CloudProjectConflict, cloudServerError } from "./cloudProjectFormat";
 
 const ROOT = resolve(__dirname, "../../..");

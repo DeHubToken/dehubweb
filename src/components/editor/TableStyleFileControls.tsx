@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { tableStyleFile, parseTableStyleFile, tableStylePalette, type PortableTableStyle } from "@/lib/editor/tableStyleFile";
 import type { TableData } from "@/lib/editor/dataVisuals";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function TableStyleFileControls({ value, title, onApply }: { value: TableData | null; title: string; onApply: (style: PortableTableStyle, headers: boolean) => void }) {
   const { t } = useTranslation(), [pending, setPending] = useState<ReturnType<typeof parseTableStyleFile> | null>(null), [headers, setHeaders] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState(""), request = useRef(0);
   useEffect(() => () => { request.current++; }, []);

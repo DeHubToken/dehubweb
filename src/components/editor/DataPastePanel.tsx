@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { pasteDataCells } from "@/lib/editor/dataCellPaste";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function DataPastePanel({ source, onChange, address, onAddress, maxRows, maxColumns }: { source: string; onChange: (value: string) => void; address: string; onAddress: (value: string) => void; maxRows: number; maxColumns: number }) {
   const { t } = useTranslation(), [open, setOpen] = useState(false), [data, setData] = useState(""), [message, setMessage] = useState(""), [error, setError] = useState("");

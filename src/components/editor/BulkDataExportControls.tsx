@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { bulkDataExport, type BulkDataExportScope } from "@/lib/editor/bulkDataExport";
 import type { BulkRowFilter } from "@/lib/editor/bulkRowFilter";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function BulkDataExportControls({ source, first, last, filter, title, count }: { source: string; first: number; last: number; filter: BulkRowFilter; title: string; count: number }) {
   const { t } = useTranslation(), [formulas, setFormulas] = useState(true), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState(""), working = useRef(false), mounted = useRef(true);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);

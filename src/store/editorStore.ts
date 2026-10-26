@@ -30,7 +30,8 @@ import {
   type Track,
   type TrackKind,
 } from "@/lib/editor/types";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 /** A partial update to any kind of clip. */
 export type ClipPatch = Partial<MediaClip> | Partial<TextClip> | Partial<ShapeClip>;

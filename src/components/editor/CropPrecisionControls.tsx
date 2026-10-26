@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 type Props = { focal: { x: number; y: number }; pageRatio: number; disabled?: boolean; onFocus: (x: number, y: number) => void; onAspect: (ratio: number) => boolean };
 export function CropPrecisionControls({ focal, pageRatio, disabled = false, onFocus, onAspect }: Props) {
   const { t } = useTranslation(), [width, setWidth] = useState("1"), [height, setHeight] = useState("1"), [x, setX] = useState(String(Math.round(focal.x * 1000) / 10)), [y, setY] = useState(String(Math.round(focal.y * 1000) / 10)), [error, setError] = useState("");

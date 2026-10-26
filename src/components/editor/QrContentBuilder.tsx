@@ -2,7 +2,7 @@ import { TextArtworkDownload } from "./TextArtworkDownload";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { buildQrContent, EMPTY_QR_DETAILS, qrContentFields, type QrContentKind } from "@/lib/editor/qrContentBuilder";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function QrContentBuilder({ onUse, kinds, title }: { kinds?: readonly QrContentKind[]; title?: string; onUse: (value: string) => void }) {
   const { t } = useTranslation(), [kind, setKind] = useState<QrContentKind>(kinds?.[0] ?? "wifi"), [fields, setFields] = useState({ ...EMPTY_QR_DETAILS }), [security, setSecurity] = useState<"WPA" | "WEP" | "nopass">("WPA"), [hidden, setHidden] = useState(false), [allDay, setAllDay] = useState(false), [error, setError] = useState("");
   const apply = () => { try { onUse(buildQrContent(kind, fields, { security, hidden }, { allDay })); setError(""); } catch (reason) { setError(editorErrorText(reason, t("copy.d9e378e5629d", { defaultValue: "Could not create QR content" }))); } };

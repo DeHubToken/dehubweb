@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applyDesignGuideGrid, designGuideGridPositions, getDesignGuides, type GuideGridOptions } from "@/lib/editor/designGuides";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function GuideGridControls() {
   const { t } = useTranslation(), settings = useEditorStore(s => s.settings);

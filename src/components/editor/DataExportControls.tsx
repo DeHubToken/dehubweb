@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { dataVisualExport } from "@/lib/editor/dataVisualExport";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function DataExportControls({ source, mode, multiple, title }: { source: string; mode: "chart" | "table"; multiple: boolean; title: string }) {
   const { t } = useTranslation(), [formulasAsText, setFormulasAsText] = useState(true), [message, setMessage] = useState(""), [error, setError] = useState(""), [busy, setBusy] = useState(false);
   const mounted = useRef(true), working = useRef(false);

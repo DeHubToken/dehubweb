@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { DRAWING_SHAPES, drawingShapePatch, suggestDrawingShape, type DrawingShape } from "@/lib/editor/freehandShapeConversion";
 import { SHAPE_NAMES } from "@/lib/editor/shapeGeometry";
 import type { ShapeClip } from "@/lib/editor/types";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function FreehandShapeControls({ value, onChange }: { value: ShapeClip; onChange: (patch: Partial<ShapeClip>) => void }) {
   const { t } = useTranslation(), [error, setError] = useState("");
   const suggestion = useMemo(() => suggestDrawingShape(value.points ?? [], !!value.closedPath), [value.points, value.closedPath]);

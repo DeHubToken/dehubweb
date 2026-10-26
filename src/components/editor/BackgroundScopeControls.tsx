@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { applyBackgroundToAllPages } from "@/lib/editor/pageBackgrounds";
 import { getPages } from "@/lib/editor/pages";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function BackgroundScopeControls() {
   const { t } = useTranslation();

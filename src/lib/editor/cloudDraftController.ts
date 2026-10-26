@@ -3,7 +3,8 @@ import { CloudDraftRecovery, CloudProjectConflict } from "./cloudProjectFormat";
 import { projectReviewSnapshotKey } from "./cloudProjectReview";
 import { CloudProjectTransferBusy, isCloudProjectTransferBusy, onCloudProjectTransferSettled } from "./cloudProjectTransfer";
 import type { ProjectSnapshot } from "./types";
-import { EditorError, editorErrorText } from "./editorError";
+import { EditorError } from "./editorError";
+import { editorErrorText } from "./editorErrorText";
 
 export class CloudDraftDeferred extends EditorError {}
 export interface CloudDraftEditor {

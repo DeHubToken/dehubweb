@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { photoLookFile, parsePhotoLookFile } from "@/lib/editor/photoLooks";
 import type { ClipEffects } from "@/lib/editor/types";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PhotoLookFileControls({ value, title, onApply, disabled = false }: { value: ClipEffects; title: string; disabled?: boolean; onApply: (style: ClipEffects, name: string) => boolean | void }) {
   const { t } = useTranslation(), [pending, setPending] = useState<ReturnType<typeof parsePhotoLookFile> | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState(""), request = useRef(0);
   useEffect(() => () => { request.current++; }, []);

@@ -9,7 +9,7 @@ import { DEFAULT_PAGE_NUMBER_FORMAT, pageNumberText, type PageNumberFormat } fro
 import { putPageNumbers, removePageNumbers, repeatPageElements, type PageNumberPosition } from "@/lib/editor/documentElements";
 import { getPages } from "@/lib/editor/pages";
 import type { ProjectSnapshot } from "@/lib/editor/types";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 
 export function DocumentElementsPanel() {
   const { t } = useTranslation();

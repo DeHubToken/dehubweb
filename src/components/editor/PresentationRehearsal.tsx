@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { usePresentationRehearsal, type RehearsedPageTiming } from "@/lib/editor/usePresentationRehearsal";
 import { presentationElapsedLabel } from "@/lib/editor/usePresentationStopwatch";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function PresentationRehearsal({ pageIndex, active, onStart, onApply }: { pageIndex: number; active: boolean; onStart: () => void; onApply: (entries: RehearsedPageTiming[]) => void }) {
   const { t } = useTranslation(), clock = usePresentationRehearsal(pageIndex, active), [open, setOpen] = useState(false), [error, setError] = useState("");
   const apply = () => { try { onApply(clock.read()); setError(""); } catch (reason) { setError(editorErrorText(reason, t("copy.9b2eddba56b6", { defaultValue: "Could not save rehearsal timings" }))); } };

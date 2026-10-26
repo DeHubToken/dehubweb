@@ -6,7 +6,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { MEDIA_FRAMES, MEDIA_FRAME_NAMES, mediaFramePreview } from "@/lib/editor/mediaFrames";
 import { selectedTextColour } from "@/lib/editor/selectedTextStyle";
 import { applySelectedMediaStyle, selectedDesignMedia, type SelectedMediaStyle } from "@/lib/editor/selectedMediaStyle";
-import { editorErrorText } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function SelectedMediaControls() {
   const { t } = useTranslation(), ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips), tracks = useEditorStore(store => store.tracks), time = useEditorStore(store => store.currentTime), projectId = useEditorStore(store => store.projectId);
   const selected = useMemo(() => selectedDesignMedia(useEditorStore.getState().toSnapshot(), ids, time), [ids, clips, tracks, time, projectId]), first = selected[0], locked = selected.some(clip => clip.locked), rectangular = selected.some(clip => !clip.frame || clip.frame === "rect");

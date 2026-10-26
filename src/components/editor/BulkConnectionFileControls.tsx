@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { bulkConnectionProfileFile, parseBulkConnectionProfile, planBulkConnectionProfile, type BulkConnectionContext, type BulkConnectionProfile } from "@/lib/editor/bulkConnectionProfiles";
 import { exportFilename } from "@/lib/editor/exportName";
-import { EditorError, editorErrorText } from "@/lib/editor/editorError";
+import { EditorError } from "@/lib/editor/editorError";
+import { editorErrorText } from "@/lib/editor/editorErrorText";
 export function BulkConnectionFileControls({ context, title, onApply }: { context: BulkConnectionContext; title: string; onApply: (value: ReturnType<typeof planBulkConnectionProfile>) => void }) {
   const { t } = useTranslation(), [pending, setPending] = useState<BulkConnectionProfile | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState(""), [message, setMessage] = useState(""), request = useRef(0);
   const plan = useMemo(() => pending ? planBulkConnectionProfile(pending, context) : null, [pending, context]);
