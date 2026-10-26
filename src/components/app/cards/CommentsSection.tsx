@@ -2233,6 +2233,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     const tempComment: Comment = {
       id: tempId,
       username: user.username || t('comments.youFallback'),
+      // Named the way the posted row will be, so nothing changes when it lands.
+      displayName: user.displayName || undefined,
       avatar: resolvedAvatar,
       text: newComment,
       likes: 0,
