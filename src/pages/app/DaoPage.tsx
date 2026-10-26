@@ -28,7 +28,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { DaoProposalExperience } from '@/components/app/dao/DaoProposals';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { useDaoTreasury, useContributeToDao, useOwnDhbBalance } from '@/hooks/use-dao-treasury';
@@ -115,7 +115,8 @@ function RecentRow({ item }: { item: DaoContribution }) {
 
 function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { t } = useTranslation();
-  const { isAuthenticated, isLoginModalOpen, requestWalletUnlock } = useAuth();
+  const { isAuthenticated, requestWalletUnlock } = useAuth();
+  const { isLoginModalOpen } = useLoginSheet();
   const [amount, setAmount] = useSurfaceDraft("pages/app/DaoPage.tsx:amount", '');
   const [pendingAfterUnlock, setPendingAfterUnlock] = useState<number | null>(null);
   const [unlockSheetSeen, setUnlockSheetSeen] = useState(false);

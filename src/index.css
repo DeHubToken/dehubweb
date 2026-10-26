@@ -1006,6 +1006,21 @@ body:has([id^="w3a-"]) {
   -webkit-overflow-scrolling: touch !important;
 }
 
+/* Opening any modal sheet sets this on <body> (react-remove-scroll-bar).
+   Nothing reads it, and as an inherited custom property it restyled every
+   element on the page, ~140ms on a phone, on each open and each close. */
+@property --removed-body-scroll-bar-size {
+  syntax: '*';
+  inherits: false;
+}
+
+/* The same cost from Radix's `body { pointer-events: none }` while the login
+   sheet is up: holding #root at auto stops the inherited change at #root.
+   The sheet's backdrop covers the page, so nothing behind it is reachable. */
+html[data-login-sheet] #root {
+  pointer-events: auto;
+}
+
 /* Fallback: ensure any injected elements at top of page match background */
 html, body {
   background-color: #000 !important;

@@ -73,7 +73,10 @@ html[data-system-tone="light"] .login-stack-corner {
   height: 100%;
   object-fit: cover;
   display: block;
+  opacity: 0;
+  transition: opacity 450ms ease-out;
 }
+.login-stack__video.is-ready { opacity: 1; }
 .login-stack__ai {
   position: absolute;
   left: 8px;
