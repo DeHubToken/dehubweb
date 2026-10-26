@@ -9,7 +9,15 @@
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
     <webMaster>team@dehub.io (DeHub Team)</webMaster>
-    <lastBuildDate>Mon, 26 Oct 2026 20:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2026 23:30:00 GMT</lastBuildDate>
+    <item>
+      <title>Top 100 Crypto Projects 2026, Ranked by GitHub Activity</title>
+      <description>The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.</description>
+      <link>https://dehub.io/guides/top-100-crypto-projects-2026</link>
+      <guid>https://dehub.io/guides/top-100-crypto-projects-2026</guid>
+      <pubDate>Mon, 26 Oct 2026 23:30:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
     <item>
       <title>Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity</title>
       <description>The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.</description>
@@ -160,14 +168,6 @@
       <link>https://dehub.io/guides/dehub-creator-vs-higgsfield-ai-credits</link>
       <guid>https://dehub.io/guides/dehub-creator-vs-higgsfield-ai-credits</guid>
       <pubDate>Thu, 13 Aug 2026 09:00:00 GMT</pubDate>
-      <dc:creator>DeHub Team</dc:creator>
-    </item>
-    <item>
-      <title>DeHub vs DePaul DeHUB vs Rowan DEHub: Which One Are You Looking For?</title>
-      <description>Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.</description>
-      <link>https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub</link>
-      <guid>https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub</guid>
-      <pubDate>Tue, 14 Jul 2026 09:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
   </channel>
