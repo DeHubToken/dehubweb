@@ -84,8 +84,8 @@ export interface CommentLikeResponse {
   likeCount?: number;
 }
 
-export async function followUser(walletAddress: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/request_follow", {
+export async function followUser(walletAddress: string): Promise<{ result: boolean; status?: string; isPrivateAccount?: boolean }> {
+  return apiCall<{ result: boolean; status?: string; isPrivateAccount?: boolean }>("/api/request_follow", {
     method: "POST",
     body: { following: walletAddress.toLowerCase() },
     requiresAuth: true,
@@ -212,6 +212,13 @@ export async function getFollowList(
 export interface FollowStatus {
   isFollowing: boolean;
   isFollowRequestPending: boolean;
+}
+
+export async function getFollowStatusBatch(targets: string[], viewer: string): Promise<Record<string, FollowStatus>> {
+  const response = await apiCall<{ result: Record<string, FollowStatus> }>('/api/is_following/batch', {
+    method: 'POST', body: { targets, viewer: viewer.toLowerCase() }, requiresAuth: true,
+  });
+  return response.result;
 }
 
 export async function getFollowStatus(targetAddress: string): Promise<FollowStatus> {

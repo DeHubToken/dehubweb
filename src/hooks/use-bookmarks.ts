@@ -216,7 +216,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
 
   // Saved posts query with infinite scroll
   const savedQuery = useInfiniteQuery({
-    queryKey: ['bookmarks', 'saved', type],
+    queryKey: ['bookmarks', 'saved', 'all'],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await getSavedPosts(pageParam, PAGE_SIZE);
       const data = response.result || [];
@@ -271,25 +271,38 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     staleTime: 2 * 60 * 1000,
   });
 
-  // PPV purchases query
-  const ppvQuery = useQuery({
-    queryKey: ['bookmarks', 'ppv', walletAddress],
+  // Share purchase IDs with unlock checks; only hydrate one visible page.
+  const purchaseOptions = {
+    queryKey: ['ppv-purchases-lookup', walletAddress],
     queryFn: async () => {
-      if (!walletAddress) return [];
-      const { data, error } = await supabase
-        .from('ppv_purchases')
-        .select('token_id')
-        .eq('buyer_address', walletAddress.toLowerCase())
-        .order('created_at', { ascending: false });
+      if (!walletAddress) return new Set<string>();
+      const { data, error } = await supabase.from('ppv_purchases')
+        .select('token_id').eq('buyer_address', walletAddress.toLowerCase())
+        .order('created_at', { ascending: false }).order('token_id', { ascending: true });
       if (error) throw error;
-      if (!data || data.length === 0) return [];
-      
-      // Fetch NFT info for each purchased token
-      const nfts = await Promise.all(
-        data.map(p => getNFTInfo(p.token_id).catch(() => null))
-      );
-      return nfts.filter(Boolean) as DeHubNFT[];
+      return new Set((data || []).map(p => String(p.token_id)));
     },
+    staleTime: 2 * 60 * 1000,
+  };
+  const ppvPurchasesQuery = useQuery({ ...purchaseOptions, enabled: !!walletAddress && isAuthenticated });
+  const purchasedTokenIds = ppvPurchasesQuery.data || new Set<string>();
+  const ppvQuery = useInfiniteQuery({
+    queryKey: ['bookmarks', 'ppv', 'paged', walletAddress],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const ids = [...await queryClient.ensureQueryData(purchaseOptions)];
+      const page = ids.slice(pageParam, pageParam + PAGE_SIZE);
+      const nfts: Array<DeHubNFT | null> = new Array(page.length);
+      let cursor = 0;
+      await Promise.all(Array.from({ length: Math.min(4, page.length) }, async () => {
+        while (cursor < page.length) {
+          const index = cursor++;
+          nfts[index] = await getNFTInfo(page[index]).catch(() => null);
+        }
+      }));
+      return { items: nfts.filter(Boolean) as DeHubNFT[], nextPage: pageParam + PAGE_SIZE < ids.length ? pageParam + PAGE_SIZE : undefined };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
     enabled: isAuthenticated && (type === 'ppv' || type === 'all') && !!walletAddress,
     staleTime: 2 * 60 * 1000,
   });
@@ -300,7 +313,7 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   
   // Flatten all pages into a single array
   const savedNFTs = activeQuery.data?.pages.flatMap(page => page.items) || [];
-  const ppvNFTs = ppvQuery.data || [];
+  const ppvNFTs = ppvQuery.data?.pages.flatMap(page => page.items) || [];
   
   let allNFTs: DeHubNFT[];
   if (isPPVTab) {
@@ -314,23 +327,6 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     allNFTs = savedNFTs;
   }
   
-  // Fetch user's PPV purchases to cross-reference unlock state
-  const ppvPurchasesQuery = useQuery({
-    queryKey: ['ppv-purchases-lookup', walletAddress],
-    queryFn: async () => {
-      if (!walletAddress) return new Set<string>();
-      const { data, error } = await supabase
-        .from('ppv_purchases')
-        .select('token_id')
-        .eq('buyer_address', walletAddress.toLowerCase());
-      if (error) throw error;
-      return new Set((data || []).map(p => String(p.token_id)));
-    },
-    enabled: !!walletAddress && isAuthenticated,
-    staleTime: 2 * 60 * 1000,
-  });
-  const purchasedTokenIds = ppvPurchasesQuery.data || new Set<string>();
-
   // Map to feed items
   let feedItems = allNFTs.map(mapNFTToFeedItem);
   
@@ -390,8 +386,19 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
   }
 
   const queryState = isPPVTab
-    ? { isLoading: ppvQuery.isLoading, isError: ppvQuery.isError, error: ppvQuery.error, refetch: ppvQuery.refetch, fetchNextPage: () => Promise.resolve() as any, hasNextPage: false, isFetchingNextPage: false }
+    ? { isLoading: ppvQuery.isLoading, isError: ppvQuery.isError, error: ppvQuery.error, refetch: ppvQuery.refetch, fetchNextPage: ppvQuery.fetchNextPage, hasNextPage: ppvQuery.hasNextPage, isFetchingNextPage: ppvQuery.isFetchingNextPage }
     : { isLoading: activeQuery.isLoading, isError: activeQuery.isError, error: activeQuery.error, refetch: activeQuery.refetch, fetchNextPage: activeQuery.fetchNextPage, hasNextPage: activeQuery.hasNextPage, isFetchingNextPage: activeQuery.isFetchingNextPage };
+  if (type === 'all') {
+    queryState.hasNextPage = !!activeQuery.hasNextPage || !!ppvQuery.hasNextPage;
+    queryState.isFetchingNextPage = activeQuery.isFetchingNextPage || ppvQuery.isFetchingNextPage;
+    queryState.fetchNextPage = (async () => {
+      const results = await Promise.all([
+        activeQuery.hasNextPage ? activeQuery.fetchNextPage() : Promise.resolve(undefined),
+        ppvQuery.hasNextPage ? ppvQuery.fetchNextPage() : Promise.resolve(undefined),
+      ]);
+      return results[0] ?? results[1];
+    }) as typeof queryState.fetchNextPage;
+  }
 
   return {
     bookmarks: feedItems,
