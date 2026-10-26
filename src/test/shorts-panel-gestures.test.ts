@@ -3,6 +3,12 @@ import { resolve } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import ts from 'typescript';
 import { describe, expect, it, vi } from 'vitest';
+import { commitsDismiss } from '@/lib/video-hold-gestures';
+
+function motionValue() {
+  let value = 0;
+  return { get: () => value, set: vi.fn((next: number) => { value = next; }) };
+}
 
 const source = readFileSync(resolve(__dirname, '../components/app/cards/ShortsViewer.tsx'), 'utf8');
 
@@ -11,11 +17,12 @@ function viewer(overrides: Record<string, unknown> = {}) {
   const context = {
     useCallback: (callback: unknown) => callback,
     videoContainer: { getBoundingClientRect: () => ({ top: 100, height: 800 }) },
-    window: { scrollY: 0 }, isMobile: true, overlaysHidden: true, autoHidden: false, showComments: false,
+    window: { scrollY: 0, innerHeight: 800 }, isMobile: true, overlaysHidden: true, autoHidden: false, showComments: false,
     RESTORE_ZONE_TOP: 0.61, RESTORE_ZONE_BOTTOM: 0.85,
     setDragOffset: vi.fn(), resetDragOffset: vi.fn(), setOverlaysHidden: vi.fn(), setAutoHidden: vi.fn(),
     mini: { drag: vi.fn(() => false), finish: vi.fn(() => false), cancel: vi.fn() },
-    goToNext: vi.fn(), goToPrev: vi.fn(), ...overrides,
+    goToNext: vi.fn(), goToPrev: vi.fn(), currentIndex: 3, holdOwnsGesture: { current: false },
+    leaveY: motionValue(), animate: vi.fn(), leaveViewer: vi.fn(), DISMISS_SPRING: {}, commitsDismiss, ...overrides,
   };
   const callbacks = source.slice(source.indexOf('  const isRestoreDrag ='), source.indexOf('  // Toggle play/pause'));
   const code = ts.transpileModule(callbacks + '\n({ handleDrag, handleDragEnd })', {
@@ -65,7 +72,7 @@ describe('shorts panel swipe arbitration', () => {
   });
 
   it('uses viewport coordinates when opened from a deeply scrolled feed', () => {
-    const v = viewer({ window: { scrollY: 2400 } });
+    const v = viewer({ window: { scrollY: 2400, innerHeight: 800 } });
     v.handleDragEnd({ type: 'pointerup' }, drag(2750, -100));
     expect(v.goToNext).toHaveBeenCalledTimes(1);
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
@@ -91,6 +98,40 @@ describe('shorts panel swipe arbitration', () => {
     expect(v.goToNext).not.toHaveBeenCalled();
     expect(v.goToPrev).not.toHaveBeenCalled();
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
+  });
+
+  it('drags the first short down to leave, following the finger', () => {
+    const v = viewer({ currentIndex: 0 });
+    v.handleDrag({ type: 'pointermove' }, drag(300, 320));
+    expect(v.leaveY.set).toHaveBeenLastCalledWith(320);
+    expect(v.setDragOffset).toHaveBeenLastCalledWith(0);
+    v.handleDragEnd({ type: 'pointerup' }, drag(300, 320));
+    expect(v.leaveViewer).toHaveBeenCalledWith('y');
+    expect(v.goToPrev).not.toHaveBeenCalled();
+  });
+
+  it('springs the first short back when let go early', () => {
+    const v = viewer({ currentIndex: 0 });
+    const info = { ...drag(300, 120), velocity: { x: 0, y: 100 } };
+    v.handleDrag({ type: 'pointermove' }, info);
+    v.handleDragEnd({ type: 'pointerup' }, info);
+    expect(v.leaveViewer).not.toHaveBeenCalled();
+    expect(v.animate).toHaveBeenCalledWith(v.leaveY, 0, v.DISMISS_SPRING);
+  });
+
+  it('keeps desktop dragging the pager, never leaving', () => {
+    const v = viewer({ currentIndex: 0, isMobile: false });
+    v.handleDragEnd({ type: 'pointerup' }, drag(300, 320));
+    expect(v.leaveViewer).not.toHaveBeenCalled();
+    expect(v.goToPrev).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores the pager while a side hold owns the finger', () => {
+    const v = viewer({ holdOwnsGesture: { current: true } });
+    v.handleDrag({ type: 'pointermove' }, drag(300, 120));
+    v.handleDragEnd({ type: 'pointerup' }, drag(300, 120));
+    expect(v.goToPrev).not.toHaveBeenCalled();
+    expect(v.goToNext).not.toHaveBeenCalled();
   });
 
   it.each(['pointercancel', 'touchcancel'])('cancels %s without paging or committing a mini', type => {
