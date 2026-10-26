@@ -1,10 +1,9 @@
-import { Resvg, initWasm } from '@resvg/resvg-wasm';
-import wasm from '@resvg/resvg-wasm/index_bg.wasm';
+import { Resvg } from '@resvg/resvg-wasm';
+import { resvgReady } from './resvg.js';
 import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardAssetPaths, stageCardSource } from './stage-share-card.js';
 
 const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
 const FONTS = ['/brand-kit/font/exo-500.ttf', '/brand-kit/font/exo-700.ttf', '/brand-kit/font/mono.ttf'];
-let initialized;
 let fonts;
 
 const TYPES = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
@@ -62,8 +61,7 @@ export async function handleStageShareImage(request, env, ctx, id, lookup) {
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    initialized ??= initWasm(wasm).catch((error) => { initialized = undefined; throw error; });
-    const [, fontBuffers, pictures] = await Promise.all([initialized, loadFonts(env), loadImages(env, stage)]);
+    const [, fontBuffers, pictures] = await Promise.all([resvgReady(), loadFonts(env), loadImages(env, stage)]);
     const renderer = new Resvg(renderStageCardSvg(stage, pictures), { font: { fontBuffers, defaultFontFamily: 'Exo' } });
     let png;
     try { const rendered = renderer.render(); png = rendered.asPng(); rendered.free(); }
