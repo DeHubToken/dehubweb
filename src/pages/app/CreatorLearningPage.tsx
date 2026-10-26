@@ -17,7 +17,7 @@ export default function CreatorLearningPage() {
   const draft = exercise ? learningExerciseDraft(exercise, key => t(key), walletAddress) : null;
   const passed = progress.includes(lesson.id), answer = answers?.[lesson.id];
   const button = 'rounded-xl border border-current px-4 py-2 text-sm disabled:opacity-40';
-  return <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+  return <main className="mx-auto min-h-screen max-w-5xl bg-black px-4 py-8 text-white sm:px-6">
     <SEOHead title={t('creator.learn.title')} description={t('creator.learn.intro')} />
     <Link to="/creator" className="text-sm underline">{t('creator.learn.back')}</Link>
     <h1 className="mt-5 text-3xl font-bold">{t('creator.learn.title')}</h1>
