@@ -85,9 +85,9 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [dat
 /* Create: the one solid ink key on the bar */
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-nav-create] > [aria-hidden] { background: #0b0b0d !important; border-color: transparent !important; box-shadow: 0 2px 8px rgba(0,0,0,.18) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-nav-create] svg { color: #fff !important; position: relative; }
-/* Active tab: ink, no white glow */
+/* Active tab: ink, no white glow, no chip or rim lines (the darker icon is enough) */
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-bottom-nav] svg { filter: none !important; }
-html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] a { background: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] a { background: transparent !important; box-shadow: none !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] a:not(.active) { color: rgba(11,11,13,.6) !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] [data-glass-indicator] { background: rgba(11,11,13,.065) !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; }
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] button:not(#_) { background-color: transparent !important; }
