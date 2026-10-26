@@ -519,9 +519,11 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      // A comment you just sent is already on screen under its placeholder id;
+      // when the real id swaps in, the row remounts and must not fade in twice.
+      initial={delivery?.status === 'posted' ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("relative flex items-start gap-3 py-3 cursor-pointer rounded-xl", delivery?.status === 'posted' && 'reply-text-glow bg-muted/40')}
+      className="relative flex items-start gap-3 py-3 cursor-pointer rounded-xl"
       data-comment-id={comment.id}
       /*
         Tap the comment to answer it.
@@ -648,17 +650,15 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
           )}
           <span data-war-readout className="text-zinc-500 text-[13px] leading-5">{comment.timeAgo}</span>
         </div>
-        {delivery && (
+        {/* Sending and sent look exactly like any other comment. Only a
+            failure says anything, with the way to send it again. */}
+        {delivery?.status === 'failed' && (
           <div role="status" aria-live="polite" className="flex items-center gap-2 text-xs text-zinc-400 py-1">
-            {delivery.status === 'sending' ? i18n.t('toasts.sending') : delivery.status === 'posted' ? i18n.t('toasts.comment_posted') : (
-              <>
-                <span>{delivery.error || i18n.t('toasts.failed_to_post_comment')}</span>
-                <button type="button" className="min-h-9 px-2 underline underline-offset-2" onClick={event => {
-                  event.stopPropagation();
-                  void delivery.retry?.();
-                }}>{i18n.t('common.retry')}</button>
-              </>
-            )}
+            <span>{delivery.error || i18n.t('toasts.failed_to_post_comment')}</span>
+            <button type="button" className="min-h-9 px-2 underline underline-offset-2" onClick={event => {
+              event.stopPropagation();
+              void delivery.retry?.();
+            }}>{i18n.t('common.retry')}</button>
           </div>
         )}
         {isEditing ? (
@@ -740,10 +740,10 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             )}
           </>
         )}
-        {/* Hidden rather than removed on a pending row, so the row keeps its
-            height and nothing jumps when the real one replaces it. */}
+        {/* Shown but inert on a pending row, so it looks the same as when it
+            lands and nothing jumps when the real one replaces it. */}
         <div
-          className={cn("flex items-center justify-between mt-2", isPending && "invisible")}
+          className={cn("flex items-center justify-between mt-2", isPending && "pointer-events-none")}
           aria-hidden={isPending || undefined}
         >
           <div className="flex items-center gap-4">
@@ -2233,6 +2233,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     const tempComment: Comment = {
       id: tempId,
       username: user.username || t('comments.youFallback'),
+      // Named the way the posted row will be, so nothing changes when it lands.
+      displayName: user.displayName || undefined,
       avatar: resolvedAvatar,
       text: newComment,
       likes: 0,

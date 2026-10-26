@@ -287,8 +287,8 @@ const COLUMN_CLASS =
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string; column?: boolean; scrollable?: boolean }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, column = false, scrollable = false, onPointerDownOutside, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; handleClassName?: string; noOverlay?: boolean; overlayClassName?: string; column?: boolean; scrollable?: boolean }
+>(({ className, children, glass = false, hideHandle = true, handleClassName, noOverlay = false, overlayClassName, column = false, scrollable = false, onPointerDownOutside, ...props }, ref) => {
   const rootMounted = React.useContext(DrawerRootMounted);
   const present = React.useContext(OverlayContentPresent);
   // No Root above us — this sheet is dormant (or the content escaped its
@@ -337,9 +337,10 @@ const DrawerContent = React.forwardRef<
       onPointerDownOutside={guardOutsideDismiss(onPointerDownOutside)}
     >
       {!hideHandle && (
-        <div className={cn(
+        <div data-drawer-handle className={cn(
           "mx-auto mt-3 mb-2 h-1 w-10 rounded-full shrink-0",
-          glass ? "bg-white/40" : "bg-muted"
+          glass ? "bg-white/40" : "bg-muted",
+          handleClassName,
         )} />
       )}
       {scrollable ? (
