@@ -6,6 +6,7 @@ import {
   spreadFixedCost,
   spreadMonthAmount,
   usageCostUsd,
+  cloudflareUsage,
 } from '../../supabase/functions/finance-stats/ledger';
 import { quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
 
@@ -56,14 +57,22 @@ describe('finance ledger', () => {
     expect(jobProviderCostUsd(veo!, 'veo-3.1')).toBeCloseTo(1.275, 3);
   });
 
-  it('prices paid text routes, counts free tiers as zero and refuses to guess unknown models', () => {
+  it('prices known models on any route and refuses to call unknown usage free', () => {
     const base = { day: '2026-10-06', attempts: 10, requested_model: null };
-    expect(usageCostUsd({ ...base, route: 'free', served_model: 'openai/gpt-oss-120b', input_tokens: 1e6, output_tokens: 1e6 })).toBe(0);
+    expect(usageCostUsd({ ...base, route: 'free', served_model: 'openai/gpt-oss-120b', input_tokens: 1e6, output_tokens: 1e6 })).toBeNull();
     expect(
       usageCostUsd({ ...base, route: 'gateway', served_model: 'google/gemini-2.5-flash', input_tokens: 1e6, output_tokens: 1e6 }),
     ).toBeCloseTo(2.8, 6);
     expect(usageCostUsd({ ...base, route: 'direct', served_model: 'some-new-model', input_tokens: 5, output_tokens: 5 })).toBeNull();
-    expect(usageCostUsd({ ...base, route: 'direct', served_model: 'some-new-model', input_tokens: 0, output_tokens: 0 })).toBe(0);
+    expect(usageCostUsd({ ...base, route: 'direct', served_model: 'some-new-model', input_tokens: 0, output_tokens: 0 })).toBeNull();
+  });
+
+  it('prices metered Cloudflare and Gemini 3.1 tokens even on quota routes', () => {
+    const base = { day: '2026-10-27', attempts: 1, requested_model: null, route: 'free', input_tokens: 1e6, output_tokens: 1e6 };
+    expect(usageCostUsd({ ...base, served_model: '@cf/meta/llama-3.1-8b-instruct-fp8' })).toBeCloseTo(0.439);
+    expect(cloudflareUsage({ ...base, provider: 'cloudflare/llama-3.1-8b', served_model: 'llama-3.1-8b-instruct-fp8' })).toBe(true);
+    expect(cloudflareUsage({ ...base, served_model: 'google/gemini-3.1-flash-lite' })).toBe(false);
+    expect(usageCostUsd({ ...base, served_model: 'google/gemini-3.1-flash-lite' })).toBeCloseTo(1.75);
   });
 
   it('builds a gap-filled daily series from the first entry to today', () => {

@@ -12,6 +12,7 @@
 // paid tiers exactly as before.
 
 import type { UsageMeter } from './ai-usage.ts';
+import { controlledProviderFetch, ProviderControlError } from './provider-control.ts';
 
 interface FreeProvider {
   name: string;
@@ -196,6 +197,8 @@ export interface FreeOptions {
   signal?: AbortSignal;
   /** Internal server accounting shared with the paid fallback routes. */
   meter?: UsageMeter;
+  /** Allows translation to reserve its bounded work before every model attempt. */
+  fetchProvider?: typeof controlledProviderFetch;
 }
 
 function answered(text: string, expectToolCall?: string): boolean {
@@ -239,7 +242,7 @@ export async function tryFree(
       provider: p.name, route: 'free' as const, model: p.model, status, outcome, elapsedMs: Date.now() - started,
     });
     try {
-      const res = await fetch(url, {
+      const res = await (opts.fetchProvider ?? controlledProviderFetch)(p.name, url, {
         method: 'POST',
         headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
         body: JSON.stringify(portableBody(body, p)),
@@ -256,7 +259,7 @@ export async function tryFree(
         await res.body?.cancel().catch(() => {});
         continue;
       }
-      if (res.status === 401 || res.status === 403) {
+      if (res.status === 401 || res.status === 402 || res.status === 403) {
         park(p.name, 60 * 60 * 1000);
         console.log(`${tag} ${p.name} rejected the key (${res.status}), parked for an hour`);
         await res.body?.cancel().catch(() => {});
@@ -288,6 +291,10 @@ export async function tryFree(
         headers,
       });
     } catch (e) {
+      if (e instanceof ProviderControlError) {
+        if (e.code.startsWith('TRANSLATION_BUDGET')) throw e;
+        continue;
+      }
       opts.meter?.record(attempt(0, opts.signal?.aborted ? 'aborted' : 'transport_error'));
       if (opts.signal?.aborted) throw e;
       console.log(`${tag} ${p.name} transport failed`);

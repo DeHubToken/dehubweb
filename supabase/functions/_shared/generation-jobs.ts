@@ -1,13 +1,14 @@
 import { serviceClient } from './auth.ts';
 import type { ChargeResult } from './ai-payment-guard.ts';
 import { archiveGeneration } from './archive-generation.ts';
+import { compactGenerationResult, hydrateGenerationResult } from './generation-result.ts';
 import { recoverGenerationRefund, transitionGeneration } from './generation-terminal.ts';
 
 async function saveOutput(job: any, result: Record<string, any>): Promise<void> {
   const url = result.videoUrl || result.modelUrl || result.imageUrl || result.audioUrl || result.image;
   if (!url && !result.text) return;
   try {
-    await archiveGeneration(job.wallet_address, job.id, {
+    const storagePath = await archiveGeneration(job.wallet_address, job.id, {
       id: job.id, kind: job.kind === 'tool' ? (result.audioUrl ? 'audio' : 'image') : job.kind === '3d' ? 'model3d' : job.kind,
       model: result.model || job.model, modelName: result.model || job.model, prompt: job.metadata?.prompt || job.model,
       resolvedPrompt: job.metadata?.prompt || '', aspect: job.metadata?.aspectRatio || '',
@@ -15,6 +16,7 @@ async function saveOutput(job: any, result: Record<string, any>): Promise<void> 
       ...(result.text ? { transcript: result.text } : {}),
     }, url);
     result.libraryId = job.id;
+    compactGenerationResult(result, storagePath);
     delete result.savePending;
   } catch (error) {
     result.savePending = true;
@@ -35,7 +37,7 @@ export async function recordGeneration(charge: Extract<ChargeResult, { ok: true 
       predictionId, provider: result.provider || (result.appId ? 'fal' : 'replicate'), providerApp: result.falAppId || result.appId,
     }, db);
     if (!decision.claimed && decision.job && ['succeeded','failed','canceled','cancelled','refund_pending'].includes(decision.job.status)) {
-      return new Response(JSON.stringify(decision.job.result || { status: decision.job.status === 'refund_pending' ? 'failed' : decision.job.status,
+      return new Response(JSON.stringify(await hydrateGenerationResult(decision.job, db) || { status: decision.job.status === 'refund_pending' ? 'failed' : decision.job.status,
         error: 'Check your saved generation before paying again.', paymentRestored: false }), { status: response.status, headers: response.headers });
     }
     if (completed && decision.job?.status === 'succeeded') {
@@ -80,7 +82,7 @@ export async function settleGeneration(endpoint: string, predictionId: string, r
     if (saved.error) throw saved.error;
     current = saved.data;
   }
-  return new Response(JSON.stringify(current?.result || result), { status: response.status, headers: response.headers });
+  return new Response(JSON.stringify(await hydrateGenerationResult(current, db) || result), { status: response.status, headers: response.headers });
 }
 
 /** Registered tickets choose their own provider; polling callers cannot redirect refund decisions. */

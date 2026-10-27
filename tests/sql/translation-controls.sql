@@ -1,0 +1,34 @@
+DO $$
+DECLARE first uuid := gen_random_uuid(); second uuid := gen_random_uuid(); answer jsonb;
+BEGIN
+  IF has_function_privilege('anon','public.reserve_translation_attempt(boolean,integer,integer,integer)','execute') THEN RAISE EXCEPTION 'public budget access'; END IF;
+  IF NOT public.claim_translation_work('same-key',first) OR public.claim_translation_work('same-key',second) THEN RAISE EXCEPTION 'duplicate work'; END IF;
+  PERFORM public.release_translation_work('same-key',second);
+  IF public.claim_translation_work('same-key',second) THEN RAISE EXCEPTION 'stale release'; END IF;
+  PERFORM public.release_translation_work('same-key',first);
+  IF NOT public.claim_translation_work('same-key',second) THEN RAISE EXCEPTION 'lease not released'; END IF;
+  answer := public.claim_provider_attempt('test',first);
+  IF NOT (answer->>'allowed')::boolean THEN RAISE EXCEPTION 'healthy denied'; END IF;
+  PERFORM public.finish_provider_attempt('test',first,false,3600);
+  IF (public.claim_provider_attempt('test',second)->>'allowed')::boolean THEN RAISE EXCEPTION 'cooldown ignored'; END IF;
+  UPDATE public.provider_circuits SET blocked_until=now()-interval '1 second' WHERE provider='test';
+  answer := public.claim_provider_attempt('test',first);
+  IF NOT (answer->>'probe')::boolean THEN RAISE EXCEPTION 'missing recovery probe'; END IF;
+  IF (public.claim_provider_attempt('test',second)->>'allowed')::boolean THEN RAISE EXCEPTION 'duplicate probe'; END IF;
+  PERFORM public.finish_provider_attempt('test',second,true,0);
+  IF (public.claim_provider_attempt('test',second)->>'allowed')::boolean THEN RAISE EXCEPTION 'stale probe reopened'; END IF;
+  PERFORM public.finish_provider_attempt('test',first,true,0);
+  IF NOT (public.claim_provider_attempt('test',second)->>'allowed')::boolean THEN RAISE EXCEPTION 'recovery failed'; END IF;
+  IF public.reserve_translation_attempt(false,1,1,0) THEN RAISE EXCEPTION 'zero cap ignored'; END IF;
+  IF public.reserve_translation_attempt(false,NULL,1,20) THEN RAISE EXCEPTION 'null bypass'; END IF;
+  IF NOT public.reserve_translation_attempt(true,100,4000,20) THEN RAISE EXCEPTION 'valid budget rejected'; END IF;
+  IF (SELECT sum(attempts) FROM public.translation_attempt_budgets) <> 2 THEN RAISE EXCEPTION 'bulk must debit both scopes'; END IF;
+  UPDATE public.translation_attempt_budgets SET attempts=2000 WHERE scope='i18n';
+  IF public.reserve_translation_attempt(true,1,1,20000) THEN RAISE EXCEPTION 'bulk overflow'; END IF;
+  IF NOT public.reserve_translation_attempt(false,1,1,20000) THEN RAISE EXCEPTION 'bulk exhausted reader budget'; END IF;
+  UPDATE public.translation_attempt_budgets SET output_tokens=80000000 WHERE scope='all';
+  IF public.reserve_translation_attempt(false,1,1,20000) THEN RAISE EXCEPTION 'output overflow'; END IF;
+  UPDATE public.translation_attempt_budgets SET output_tokens=0,input_bytes=200000000 WHERE scope='all';
+  IF public.reserve_translation_attempt(false,1,1,20000) THEN RAISE EXCEPTION 'input overflow'; END IF;
+END $$;
+TRUNCATE public.translation_attempt_budgets;

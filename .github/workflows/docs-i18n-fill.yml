@@ -5,7 +5,7 @@ name: docs i18n fill
 # their own workflow, i18n-fanout.yml; this runs the same guarded fill over the
 # docs bundles through scripts/docs-i18n-fill.mjs.
 #
-# One job per locale, up to 20 side by side: a bundle takes one to four hours,
+# One job per locale, up to two side by side: a bundle takes one to four hours,
 # so a job filling several in a row hit the time limit after two or three.
 # Each job only writes its own bundle; a final job gathers them into one PR.
 # No secret is needed — the translate function is called with the publishable
@@ -23,13 +23,17 @@ on:
         required: false
         default: '20'
       keys:
-        description: 'Max keys per locale in one run (blank = all missing)'
+        description: 'Max keys per locale in one run (blank = 200)'
         required: false
         default: ''
       paths:
         description: 'Comma-separated en.ts keys or arrays to fill and nothing else (blank = every missing key)'
         required: false
         default: ''
+
+concurrency:
+  group: translation-localization
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -64,7 +68,7 @@ jobs:
     timeout-minutes: 350
     strategy:
       fail-fast: false
-      max-parallel: 20
+      max-parallel: 2
       matrix:
         locale: ${{ fromJSON(needs.plan.outputs.locales) }}
     steps:
