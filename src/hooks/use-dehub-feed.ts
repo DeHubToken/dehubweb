@@ -32,6 +32,7 @@ import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { hlsUrlFor, liveProviderOf, liveThumbnailFor, noteLatencyMode } from '@/lib/live-ingest';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 // Fallback thumbnails for when API doesn't return one
@@ -201,6 +202,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     hlsUrl: isLivePost ? undefined : buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
     storyboard: toStoryboard(nft.storyboard),
+    storedAspect: storedVideoAspect(nft.videoInfo),
     audioUrl,
     audioDuration: isAudioPost ? (typeof duration === 'number' ? duration : 0) : undefined,
     isAudio: isAudioPost,

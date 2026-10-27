@@ -100,6 +100,7 @@ import { POST_STAGE_COMPOSE_EVENT, type PostStageValue } from '@/components/app/
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 
 /*
  * Only a live post ever renders this, and a live post is a small minority of
@@ -199,6 +200,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     status: nft.status,
     transcodingStatus: nft.transcodingStatus,
     storyboard: toStoryboard(nft.storyboard),
+    storedAspect: storedVideoAspect(nft.videoInfo),
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     // Same source the feed normalizer reads (use-unified-feed). Without it the

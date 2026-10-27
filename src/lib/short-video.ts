@@ -13,6 +13,7 @@ import { buildAvatarUrl, buildHlsUrl } from '@/lib/media-url';
 import { resolveViewCount } from '@/lib/engagement';
 import { shortsPhotoMedia } from '@/lib/shorts-photos';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
 
@@ -76,6 +77,7 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
       visibility: nft.visibility,
     }),
     storyboard: toStoryboard(nft.storyboard),
+    storedAspect: storedVideoAspect(nft.videoInfo),
     // Title and body separately, and both are rendered: the caption usually
     // lives in the title, but a short that has both used to show only one.
     title: nft.name || nft.title || '',
@@ -118,6 +120,7 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
     transcodingStatus: video.transcodingStatus,
     gated: videoNeedsAccess(video),
     storyboard: video.storyboard,
+    storedAspect: video.storedAspect,
     title: video.title || '',
     description: video.description || '',
     sound: 'Original Sound',
