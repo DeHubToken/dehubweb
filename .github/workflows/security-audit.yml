@@ -33,6 +33,7 @@ jobs:
           PREVIEW_TLS_CERT: /tmp/preview-cert.pem
           PREVIEW_TLS_KEY: /tmp/preview-key.pem
       - run: deno check ${{ matrix.lock }} --node-modules-dir=none supabase/functions/fetch-link-preview/index.ts
+      - run: deno test ${{ matrix.lock }} --node-modules-dir=none supabase/functions/_shared/maintenance-auth.test.ts
       - run: deno test ${{ matrix.lock }} --node-modules-dir=none supabase/functions/dehub-mcp/request-budget.test.ts
       # The older compiler cannot resolve the SDK's npm declaration exports.
       # Runtime transport tests above still run against the production version.
@@ -66,6 +67,8 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f tests/sql/signed-media-bootstrap.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027160000_signed_wallet_and_media_permissions.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/signed-media.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027170000_maintenance_request_auth.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/maintenance-auth.sql
       - name: Exactly one concurrent rate-limit winner
         run: |
           for client in $(seq 1 24); do
