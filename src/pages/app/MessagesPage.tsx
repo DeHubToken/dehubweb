@@ -337,6 +337,12 @@ export default function MessagesPage() {
   // it overlaps the conversations load below (was a serial 3-round-trip chain).
   const pendingUserPromiseRef = useRef<Promise<DeHubUser | null> | null>(null);
 
+  // `?chat=public` is the same landing in a URL, which is all a push or an
+  // email can carry: a mention in the public chat opens the room itself.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('chat') === 'public') setShowPublicChat(true);
+  }, [location.search]);
+
   useEffect(() => {
     const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string; draftBody?: string; openPublicChat?: boolean } | null;
     // Where a public-chat notification lands. Without it the card drops the

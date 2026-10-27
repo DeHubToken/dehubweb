@@ -1700,6 +1700,9 @@
     "tipTokens": "{{amount}} เหรียญ",
     "tokenAmount": "{{amount}} เหรียญ",
     "custom": {
+      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
+      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
+      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "featureLikeNamed": "{{name}}ชอบฟีเจอร์ขอความช่วยเหลือ “{{title}}”",
       "featureLike": "{{name}} เลยชอบคำขอฟีเจอร์ของคุณ",
       "featureReplyNamed": "{{name}} ตอบคุณใน “{{title}}”",

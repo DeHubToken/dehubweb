@@ -763,8 +763,15 @@ function getNotificationContent(
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
-    case 'mention':
+    case 'mention': {
+      // Where the reader was named. Every mention used to say "in a comment",
+      // including the ones in a post or a live chat.
+      const where = notification.metadata?.mentionContext;
+      if (where === 'live_chat') return tr('notifications.custom.liveChatMention', { name: actorName });
+      if (where === 'public_chat') return tr('notifications.custom.publicChatMention', { name: actorName });
+      if (where === 'post' || (!where && !notification.commentId)) return tr('notifications.custom.postMention', { name: actorName });
       return tr('notifications.custom.commentMention', { name: actorName });
+    }
     case 'tip':
       const tipAmount = notification.amount
         ? ` ${isDhb(notification.currency) ? tr('notifications.tipTokens', { amount: notification.amount }) : `${notification.amount} ${notification.currency}`}`
@@ -896,6 +903,18 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     : isCommentType
       ? '?comments=1'
       : '';
+
+  // A tag in chat opens the room at the line: the live post (its stream while
+  // it is on air, the replay after) or the public chat.
+  if (notification.type === 'mention') {
+    const where = notification.metadata?.mentionContext;
+    const line = notification.metadata?.chatMessageId;
+    const query = line ? `chatMessage=${encodeURIComponent(String(line))}` : '';
+    if (where === 'live_chat' && notification.tokenId) {
+      return `/app/post/${notification.tokenId}${query ? `?${query}` : ''}`;
+    }
+    if (where === 'public_chat') return `/app/messages?chat=public${query ? `&${query}` : ''}`;
+  }
 
   switch (notification.type) {
     case 'like':
