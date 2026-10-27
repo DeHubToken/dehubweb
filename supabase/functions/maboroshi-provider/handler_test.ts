@@ -63,3 +63,31 @@ Deno.test('provider failure never exposes credentials or payload', async () => {
   assert(response.status === 502);
   assert(! (await response.text()).includes('private'));
 });
+
+Deno.test('kie one-pass renders build the fixed 720p task and map task states', async () => {
+  const sent: Array<{url: string; body: any; auth: string | null}> = [];
+  let state = 'generating';
+  const handler = createHandler((name) => ({...values, KIE_API_KEY: 'private-kie'})[name], (async (url, options) => {
+    sent.push({url: String(url), body: options && (options as {body?: string}).body ? JSON.parse(bodyOf(options)) : null, auth: new Headers(headersOf(options)).get('Authorization')});
+    if (String(url).endsWith('/createTask')) return Response.json({code: 200, data: {taskId: 'task_wan_1'}});
+    return Response.json({code: 200, data: {state, resultJson: JSON.stringify({resultUrls: ['https://tempfile.example/result.mp4']})}});
+  }) as typeof fetch);
+  const ok = await handler(req({operation: 'kie', model: 'wan', input: {prompt: 'Replace subject', video_url: signed, image_urls: [signed], duration: 9}}));
+  assert(ok.status === 200 && (await ok.json()).requestId === 'task_wan_1');
+  assert(sent[0].auth === 'Bearer private-kie' && sent[0].body.model === 'wan/3-0-video');
+  assert(sent[0].body.input.resolution === '720P' && sent[0].body.input.reference_video_urls[0] === signed && sent[0].body.input.duration === 9);
+  assert((await handler(req({operation: 'kie', model: 'seedance', input: {prompt: 'Replace subject', video_url: signed, image_urls: [signed], duration: 6}}))).status === 200);
+  assert(sent[1].body.model === 'bytedance/seedance-2-5' && sent[1].body.input.resolution === '720p');
+  for (const bad of [{model: 'veo'}, {model: 'wan', duration: 30}, {model: 'seedance', duration: 3}]) {
+    const response = await handler(req({operation: 'kie', model: bad.model, input: {prompt: 'x', video_url: signed, image_urls: [signed], duration: bad.duration ?? 6}}));
+    assert(response.status === 400);
+  }
+  assert((await handler(req({operation: 'kie', model: 'wan', input: {prompt: 'x', video_url: 'https://example.org/a.mp4', image_urls: [signed], duration: 6}}))).status === 502);
+  assert(sent.length === 2);
+  assert((await (await handler(req({operation: 'kie_status', request_id: 'task_wan_1'}))).json()).status === 'IN_PROGRESS');
+  state = 'success';
+  const done = await (await handler(req({operation: 'kie_status', request_id: 'task_wan_1'}))).json();
+  assert(done.status === 'COMPLETED' && done.result === 'https://tempfile.example/result.mp4');
+  state = 'fail';
+  assert((await (await handler(req({operation: 'kie_status', request_id: 'task_wan_1'}))).json()).status === 'FAILED');
+});
