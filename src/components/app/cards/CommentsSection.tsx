@@ -1125,6 +1125,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // A restored draft opens the composer already expanded: the collapsed well is
   // one line tall, so anything longer would come back apparently truncated.
   const [isInputExpanded, setIsInputExpanded] = useState(() => Boolean(restoredDraft?.text));
+  // A reply, or anything typed, keeps the open layout too: a reply used to
+  // stay in the one-line well with five buttons squeezed beside the text.
+  const composerExpanded = isInputExpanded || !!replyTo || newComment.length > 0;
   const mention = useMention({
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
@@ -1145,13 +1148,13 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   const resizeInput = useCallback(() => {
     const el = inputRef.current;
     if (!el) return;
-    if (!isInputExpanded) {
+    if (!composerExpanded) {
       el.style.height = '';
       return;
     }
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, composerMaxHeight)}px`;
-  }, [isInputExpanded, composerMaxHeight]);
+  }, [composerExpanded, composerMaxHeight]);
 
   // Re-measure on every value change, not just keystrokes: the reply prefill,
   // an emoji, and a restored draft all arrive without an input event.
@@ -3011,22 +3014,21 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 data-vaul-no-drag
                 data-comment-field
                 data-glass-stack
-                data-expanded={isInputExpanded || undefined}
+                data-expanded={composerExpanded || undefined}
                 /* War dresses this as a chamfered HUD well; the hook is inert
                    under every other theme. See war-comments.css section 2. */
                 data-war-cut="sm"
                 className={cn(
                   "w-full min-w-0 backdrop-blur-xl border rounded-xl relative transition-all duration-200",
-                  isInputExpanded
-                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[1fr_auto] gap-x-2 items-stretch px-3 pb-2"
+                  composerExpanded
+                    // Text on top across the full width, then one row: tools
+                    // on the left, AI and Post on the right, all the same height.
+                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 items-center px-3 pb-2"
                     : "flex items-center flex-row px-3 pr-1 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
-                  // The expanded floor is the three-line resting size the field
-                  // sizes itself to anyway — kept so a shorter field can never
-                  // shrink the well under its own tool row.
-                  isInputExpanded ? "min-h-[118px]" : "min-h-0 h-10"
+                  composerExpanded ? "min-h-0" : "min-h-0 h-10"
                 )}>
                 <textarea
                   ref={inputRef}
@@ -3052,8 +3054,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                   }}
                   className={cn(
                     "bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full min-w-0",
-                    isInputExpanded
-                      ? cn("shrink-0 pt-2.5 pb-1 pr-1 min-h-[74px]", isMobile ? "max-h-[140px]" : "max-h-[180px]")
+                    composerExpanded
+                      ? cn("col-span-2 shrink-0 pt-2.5 pb-1 pr-1 min-h-[44px] leading-5", isMobile ? "max-h-[140px]" : "max-h-[180px]")
                       : "flex-1 self-center h-5 min-h-5 py-0 leading-5 overflow-hidden whitespace-nowrap text-ellipsis pr-0"
                   )}
                   rows={1}
@@ -3100,8 +3102,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 {/* Tools stay below the editable area; Send (and AI on phones) occupy the adjacent column. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
-                  isInputExpanded
-                    ? "col-start-1 row-start-2 min-w-0 flex-wrap shrink-0 justify-start mt-auto pt-1"
+                  composerExpanded
+                    ? "col-start-1 row-start-2 min-w-0 shrink-0 justify-start pt-1"
                     : "shrink-0 ml-1"
                 )}>
                   <button
@@ -3212,7 +3214,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     </button>
                   )}
                 </div>
-                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
+                <div data-comment-actions className={cn("shrink-0 flex items-center", composerExpanded ? "col-start-2 row-start-2 flex-row gap-1.5 pt-1" : "ml-1")}>
                   {isMobile && newComment.trim().length > 0 && (
                     <button
                       type="button"
@@ -3221,7 +3223,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       data-comment-tool="ai"
                       aria-label={t('conversation.coach.aiMenu')}
                       title={t('conversation.coach.aiMenu')}
-                      className="h-9 min-w-9 self-stretch flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                      className="h-8 w-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
                     >
                       {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                     </button>
@@ -3246,7 +3248,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     // word is swapped for a spinner and the button has no text.
                     aria-label={t('comments.post')}
                     data-comment-send
-                    className="h-9 min-w-9 px-2 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                    className="h-8 min-w-8 px-2.5 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('comments.post')}
                   </button>
