@@ -212,6 +212,8 @@ export interface DeHubNFT {
   like_count?: number;
   dislike_count?: number;
   videoDuration?: number;
+  /** Probed at upload: the source clip's coded size. See lib/video-aspect. */
+  videoInfo?: { w?: number; h?: number };
   duration?: number;
   createdAt: string;
   created_at?: string;

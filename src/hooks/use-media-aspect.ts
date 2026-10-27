@@ -60,6 +60,7 @@ export function clampAspect(ratio: number, minRatio: number = MIN_RATIO): number
  * @param posterUrl thumbnail to measure
  * @param intrinsic ratio read off the `<video>` once metadata loaded, if any
  * @param minRatio narrowest shape allowed; defaults to 9:16
+ * @param stored width/height probed at upload (lib/video-aspect), used until measured
  * @returns a clamped width/height ratio, never null — 16:9 until measured
  */
 export function useMediaAspect(
@@ -67,6 +68,7 @@ export function useMediaAspect(
   intrinsic?: number | null,
   minRatio: number = MIN_RATIO,
   mediaKey?: string,
+  stored?: number | null,
 ): number {
   const [measured, setMeasured] = useState<{ url: string; ratio: number } | null>(null);
   const shown = useRef<{ key: string | null | undefined; ratio: number } | null>(null);
@@ -74,7 +76,11 @@ export function useMediaAspect(
   const posterRatio = posterUrl
     ? (measured?.url === posterUrl ? measured.ratio : cache.get(posterUrl) ?? null)
     : null;
-  const known = intrinsic || (mediaKey ? videoAspects.get(mediaKey) : null) || posterRatio;
+  // The upload-time size wins over a poster that agrees with it within 2%, so a
+  // re-encoded thumbnail a few pixels off never nudges the frame after paint.
+  const storedRatio = stored && Number.isFinite(stored) && stored > 0 ? stored : null;
+  const poster = posterRatio && storedRatio && Math.abs(posterRatio / storedRatio - 1) < 0.02 ? storedRatio : posterRatio;
+  const known = intrinsic || (mediaKey ? videoAspects.get(mediaKey) : null) || poster || storedRatio;
   const ratio = known || (shown.current && shown.current.key === key ? shown.current.ratio : null);
   shown.current = ratio ? { key, ratio } : null;
 

@@ -121,6 +121,7 @@ import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import { FollowTagBar } from './FollowTagBar';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
@@ -1078,6 +1079,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
         storyboard: toStoryboard(item.storyboard),
+        storedAspect: storedVideoAspect(item.videoInfo),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
