@@ -128,6 +128,7 @@ const Dapp = () => {
     { id: 'audio-posts', label: t('dapp.tocAudioPosts') },
     { id: 'cinema', label: t('dapp.tocCinema') },
     { id: 'wallet', label: t('dapp.tocWallet') },
+    { id: 'stable-payments', label: t('dapp.tocStablePayments') },
     { id: 'exchange', label: t('dapp.tocExchange') },
     { id: 'marketplaces', label: t('dapp.tocMarkets') },
     { id: 'work', label: t('dapp.tocBounties') },
@@ -2013,7 +2014,19 @@ const Dapp = () => {
           </p>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="stable-payments"
+          title="dapp.stablePaymentsTitle"
+          paras={['dapp.stablePaymentsDesc']}
+          bullets={[
+            ['dapp.stablePaymentsB1', 'dapp.stablePaymentsB1Desc'],
+            ['dapp.stablePaymentsB2', 'dapp.stablePaymentsB2Desc'],
+            ['dapp.stablePaymentsB3', 'dapp.stablePaymentsB3Desc'],
+            ['dapp.stablePaymentsB4', 'dapp.stablePaymentsB4Desc']
+          ]}
+        />
+
+<GuideSection
           id="exchange"
           title="dapp.exchangeTitle"
           paras={['dapp.exchangeDesc']}
