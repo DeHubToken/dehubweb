@@ -5,6 +5,7 @@ import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js'
 
 const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
 let assets;
+let chromeAsset;
 const RENDER_REVISION = 8;
 const bytesToUri = (bytes, type) => {
   let binary = '';
@@ -13,12 +14,20 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png'].map(async (path) => {
+  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png'].map(async (path) => {
     const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
   })).catch((error) => { assets = undefined; throw error; });
   return assets;
+}
+
+async function loadProfileChrome(env) {
+  if (!chromeAsset) chromeAsset = env.ASSETS.fetch(new Request('https://dehub.io/brand/share-chrome-edge.png')).then(async response => {
+    if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png')) throw new Error('Profile artwork unavailable');
+    return new Uint8Array(await response.arrayBuffer());
+  }).catch(error => { chromeAsset = undefined; throw error; });
+  return chromeAsset;
 }
 
 async function loadCdnImage(url, { folder, limit, timeout, resize }) {
@@ -106,7 +115,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    const [, [font, mark, chrome], avatar, media, badges] = await Promise.all([
+    const [, [font, mark], avatar, media, badges] = await Promise.all([
       resvgReady(), loadAssets(env), loadAvatar(data.avatar), loadPostMedia(data.media),
       Promise.all(data.badges.map(async badge => {
         if (badge.kind === 'new') return badge;
@@ -121,7 +130,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
     const mediaMissing = !!data.media && !media;
     if (mediaMissing && !data.title && !data.body) return brandCard(request, env, headers, 'media');
     const cacheable = data.detailsComplete && !mediaMissing;
-    const svg = renderPostCardSvg(data, { logo: bytesToUri(mark, 'image/png'), chrome: bytesToUri(chrome, 'image/png'), avatar, badges, media });
+    const svg = renderPostCardSvg(data, { logo: bytesToUri(mark, 'image/png'), avatar, badges, media });
     const png = renderPng(svg, font);
     const response = new Response(png, { headers: {
       ...headers, 'Content-Type': 'image/png', 'Cache-Control': cacheable ? publicCache : 'no-store',
@@ -132,7 +141,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       'X-DeHub-Post-Badges': data.badges.map(badge => badge.name).join(','),
       'X-DeHub-Post-Poll': data.poll ? data.poll.ended ? 'closed' : 'open' : 'none',
       'X-DeHub-Poll-Votes': data.poll?.ended ? String(data.poll.totalVotes) : '',
-      'X-DeHub-Share-Artwork': 'integrated-chrome-edge',
+      'X-DeHub-Share-Artwork': 'plain-background',
     } });
     // The key is the render's own fingerprint, so the stored copy never goes
     // stale: any change to the post or its author is a different key.
@@ -168,7 +177,7 @@ export async function handleProfileShareImage(request, env, ctx, handle, fetchAc
       hit.headers.set('Cache-Control', publicCache);
       return hit;
     }
-    const [, [font, mark, chrome], avatar] = await Promise.all([resvgReady(), loadAssets(env), loadAvatar(data.avatar)]);
+    const [, [font, mark], avatar, chrome] = await Promise.all([resvgReady(), loadAssets(env), loadAvatar(data.avatar), loadProfileChrome(env)]);
     const png = renderPng(renderProfileCardSvg(data, { logo: bytesToUri(mark, 'image/png'), chrome: bytesToUri(chrome, 'image/png'), avatar }), font);
     const cacheable = !data.avatar || !!avatar;
     const response = new Response(png, { headers: {

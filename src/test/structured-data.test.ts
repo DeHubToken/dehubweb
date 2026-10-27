@@ -427,8 +427,8 @@ describe('proxied pages', () => {
     const record = { tokenId: 6127, mintername: 'jesse', description: 'Clip night', postType: 'video', videoUrl: 'videos/6127.mp4', thumbnail_url: 'images/6127.jpg' };
     network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: record }) });
     let { body } = await crawl('/app/post/6127');
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v4/6127.png');
-    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/_og/post/v4/6127.png');
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
+    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
