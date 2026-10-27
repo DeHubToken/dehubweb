@@ -14,6 +14,7 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { hasReturningWagmiSession } from '@/lib/wagmi-session';
 import { requestWalletRuntime, useWalletRuntimeRequested } from '@/lib/wallet-runtime';
+import { FeedSuperpowersProvider } from '@/contexts/FeedSuperpowersContext';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { CallProvider } from '@/contexts/CallContext';
 import { StageProvider } from '@/contexts/StageContext';
@@ -70,12 +71,14 @@ export function WalletProviders({ children }: WalletProvidersProps) {
     <>
       <WalletRuntimeHost />
       <AuthProvider>
+        <FeedSuperpowersProvider>
         <CallProvider>
           <StageProvider>
             <CallModalsHost />
             {children}
           </StageProvider>
         </CallProvider>
+        </FeedSuperpowersProvider>
       </AuthProvider>
     </>
   );

@@ -2,6 +2,7 @@
 // and are not flagged preserved (i.e. not attached to a posted DeHub video).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { maintenanceGate } from '../_shared/maintenance-auth.ts';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -10,6 +11,12 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
+  const denied = await maintenanceGate(req, async token => {
+    const { data, error } = await supabase.rpc('verify_maintenance_token', { p_action: 'editor-assets-cleanup', p_token: token });
+    if (error) throw error;
+    return data === true;
+  });
+  if (denied) return denied;
 
   const cutoff = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
   let totalDeleted = 0;

@@ -28,6 +28,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 
 import { parseSoundtrackTag } from '@/lib/soundtrack';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
@@ -80,6 +81,8 @@ export interface UnifiedFeedItem {
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   /** Seek-preview sprite sheet, raw — read through toStoryboard. */
   storyboard?: unknown;
+  /** Upload-time probe, raw — read through storedVideoAspect. */
+  videoInfo?: unknown;
   category?: string[];
   /** Absent means safe — see ContentRating. */
   contentRating?: ContentRating;
@@ -301,6 +304,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     status: item.status,
     transcodingStatus: item.transcodingStatus,
     storyboard: toStoryboard(item.storyboard),
+    storedAspect: storedVideoAspect(item.videoInfo),
     newPostId: (item as any).newPostId,
     creatorId: item.minter,
     creatorUsername: item.minterUsername || item.mintername,

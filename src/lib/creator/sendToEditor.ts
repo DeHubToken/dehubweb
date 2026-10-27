@@ -65,9 +65,9 @@ async function importJob(job: GenerationJob, options: SendToEditorOptions): Prom
     return null;
   }
 
-  // The editor timeline has no 3D track. Importing a GLB would land an
-  // undecodable file in the media library and fail at playback rather than here.
-  if (job.kind === 'model3d') {
+  // The timeline has no 3D track, so a mesh comes in as a video of one slow
+  // turn. Only glTF can be drawn in the browser; the other exports cannot.
+  if (job.kind === 'model3d' && job.exportFormat && !['glb', 'gltf'].includes(job.exportFormat)) {
     toast.error(i18n.t('creator.editorAssetUnsupported'));
     return null;
   }
@@ -77,13 +77,20 @@ async function importJob(job: GenerationJob, options: SendToEditorOptions): Prom
   const at = target.currentTime;
   try {
     assertGeneratedMediaUrl(job.url);
-    const expected = generatedMediaFormat(job.kind, job.url);
-    const title = `${job.prompt || job.resolvedPrompt || job.kind}-${job.id}`;
-    const download = await assetToFile(job.url, generatedMediaName(job.kind, title, expected.ext), expected.mime, { signal: options.signal });
+    let file: File;
+    if (job.kind === 'model3d') {
+      const { renderTurntable } = await import('@/lib/editor/modelTurntable');
+      file = await renderTurntable(job.url, { signal: options.signal });
+    } else {
+      const expected = generatedMediaFormat(job.kind, job.url);
+      const title = `${job.prompt || job.resolvedPrompt || job.kind}-${job.id}`;
+      const download = await assetToFile(job.url, generatedMediaName(job.kind, title, expected.ext), expected.mime, { signal: options.signal });
+      throwIfAssetAborted(options.signal);
+      if (!download.size) throw new Error(i18n.t('creator.editorImportFailed'));
+      const actual = generatedMediaFormat(job.kind, job.url, download.type);
+      file = new File([download], generatedMediaName(job.kind, title, actual.ext), { type: actual.mime });
+    }
     throwIfAssetAborted(options.signal);
-    if (!download.size) throw new Error(i18n.t('creator.editorImportFailed'));
-    const actual = generatedMediaFormat(job.kind, job.url, download.type);
-    const file = new File([download], generatedMediaName(job.kind, title, actual.ext), { type: actual.mime });
     const mediaId = await importOneFile(file, { wallet: options.wallet ?? null,
       badgeBalance: options.badgeBalance, username: options.username, signal: options.signal });
     throwIfAssetAborted(options.signal);

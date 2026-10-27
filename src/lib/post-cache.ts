@@ -54,6 +54,7 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     videoUrl: isLivePost ? undefined : video.videoUrl,
     // Already absolute; toStoryboard passes a full URL straight through.
     storyboard: video.storyboard,
+    videoInfo: video.storedAspect ? { w: video.storedAspect, h: 1 } : undefined,
     // Survives the round trip so the post page keeps the feed card's ladder
     // (buildHlsUrl passes the already-built URL through).
     hlsUrl: isLivePost ? undefined : video.hlsUrl,

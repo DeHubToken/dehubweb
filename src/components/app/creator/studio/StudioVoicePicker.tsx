@@ -28,12 +28,15 @@ interface StudioVoicePickerProps {
   onChange: (voiceId: string) => void;
   /** Jumps the composer to the voice-design tool. */
   onDesignVoice: () => void;
+  /** Replaces the last row's wording, for surfaces where it does something else (the editor clones). */
+  actionLabel?: string;
+  actionDetail?: string;
 }
 
 /** Sentinel option. Not a voice id — intercepted before it can be selected. */
 const DESIGN_SENTINEL = '__design__';
 
-export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoicePickerProps) {
+export function StudioVoicePicker({ value, onChange, onDesignVoice, actionLabel, actionDetail }: StudioVoicePickerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [library, setLibrary] = useState<LibraryVoice[]>([]);
@@ -97,9 +100,9 @@ export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoic
       ...mine,
       ...stock,
       ...fallback,
-      { value: DESIGN_SENTINEL, label: t('creator.designNewVoice'), detail: t('creator.designNewVoiceDetail') },
+      { value: DESIGN_SENTINEL, label: actionLabel ?? t('creator.designNewVoice'), detail: actionDetail ?? t('creator.designNewVoiceDetail') },
     ];
-  }, [customVoices, library, t, _copy]);
+  }, [customVoices, library, t, _copy, actionLabel, actionDetail]);
 
   const current = options.find((o) => o.value === value);
 

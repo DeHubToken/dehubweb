@@ -1,0 +1,13 @@
+BEGIN;
+SET LOCAL ROLE anon;
+SELECT public.assert_denied($q$SELECT public.issue_maintenance_token('editor-assets-cleanup')$q$);
+SELECT public.assert_denied($q$SELECT public.verify_maintenance_token('editor-assets-cleanup','bad')$q$);
+RESET ROLE;
+SET LOCAL ROLE service_role;
+SELECT public.assert_true(public.verify_maintenance_token('editor-assets-cleanup',public.issue_maintenance_token('editor-assets-cleanup')),'server token accepted');
+SELECT public.assert_true(NOT public.verify_maintenance_token('migrate-ai-images-to-storage',public.issue_maintenance_token('editor-assets-cleanup')),'cross-action replay denied');
+SELECT public.assert_true(NOT public.verify_maintenance_token('editor-assets-cleanup','0.'||repeat('0',64)),'expired token denied');
+SELECT public.assert_true(NOT public.verify_maintenance_token('editor-assets-cleanup',(extract(epoch FROM now())::bigint+60)::text||'.'||repeat('0',64)),'forged token denied');
+SELECT public.assert_true(NOT public.verify_maintenance_token(NULL,NULL),'null input denied');
+RESET ROLE;
+ROLLBACK;

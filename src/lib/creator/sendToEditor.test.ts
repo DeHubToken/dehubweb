@@ -2,8 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { cancelEditorImport, getEditorImportIds, sendJobToEditor, subscribeToEditorImports } from "./sendToEditor";
 import type { GenerationJob } from "@/store/generationStore";
 
-const mocks = vi.hoisted(() => ({ download: vi.fn(), import: vi.fn(), add: vi.fn(), error: vi.fn(), info: vi.fn(), state: { projectId: "original", currentTime: 2 } }));
+const mocks = vi.hoisted(() => ({ turntable: vi.fn(), download: vi.fn(), import: vi.fn(), add: vi.fn(), error: vi.fn(), info: vi.fn(), state: { projectId: "original", currentTime: 2 } }));
 vi.mock("./assetDownload", async importOriginal => ({ ...await importOriginal<typeof import('./assetDownload')>(), assetToFile: mocks.download }));
+vi.mock("@/lib/editor/modelTurntable", () => ({ renderTurntable: mocks.turntable }));
 vi.mock("@/lib/editor/importFiles", () => ({ importOneFile: mocks.import }));
 vi.mock("@/store/editorStore", () => ({ useEditorStore: { getState: () => ({ ...mocks.state, addClipFromMedia: mocks.add }) } }));
 vi.mock("sonner", () => ({ toast: { error: mocks.error, info: mocks.info } }));
@@ -92,9 +93,18 @@ describe("generated media import", () => {
   it("rejects empty responses and unsupported/missing results without editing footage", async () => {
     mocks.download.mockResolvedValue(new File([], "output", { type: "video/mp4" }));
     expect(await sendJobToEditor(job)).toBeNull();
-    expect(await sendJobToEditor({ ...job, kind: "model3d" })).toBeNull();
+    expect(await sendJobToEditor({ ...job, kind: "model3d", exportFormat: "fbx" } as GenerationJob)).toBeNull();
     expect(await sendJobToEditor({ ...job, url: undefined })).toBeNull();
     expect(await sendJobToEditor({ ...job, url: "javascript:alert(1)" })).toBeNull();
     expect(mocks.import).not.toHaveBeenCalled(); expect(mocks.add).not.toHaveBeenCalled();
+  });
+  it("brings a glTF mesh in as a turntable video clip", async () => {
+    mocks.turntable.mockResolvedValue(new File(["webm"], "3d-turntable.webm", { type: "video/webm" }));
+    const mesh = { ...job, kind: "model3d", url: "https://media.example/mesh.glb" } as GenerationJob;
+    expect(await sendJobToEditor(mesh)).toBe("media-1");
+    expect(mocks.turntable.mock.calls[0][0]).toBe("https://media.example/mesh.glb");
+    expect(mocks.download).not.toHaveBeenCalled();
+    expect((mocks.import.mock.calls[0][0] as File).type).toBe("video/webm");
+    expect(mocks.add).toHaveBeenCalledWith("media-1", undefined, 2);
   });
 });
