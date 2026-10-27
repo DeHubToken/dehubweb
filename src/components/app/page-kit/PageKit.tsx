@@ -71,7 +71,7 @@ export function PageIsland({
 
   return (
     <div data-feed-nav-outer data-kit-island-outer className={cn('sticky top-11 lg:top-0 z-50', className)}>
-      <div data-page-bento data-kit-island className="rounded-[15px] bg-zinc-900 px-3 py-2.5">
+      <div data-page-bento data-kit-island className="rounded-[22px] bg-zinc-900 px-3 pt-3 pb-2.5">
         <span data-nav-glass-backdrop aria-hidden="true" />
         <div className="flex min-h-9 items-center gap-2.5">
           {back && (

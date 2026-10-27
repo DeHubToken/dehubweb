@@ -84,6 +84,10 @@ html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_) {
   backdrop-filter: none !important;
 }
 .profile-rail-follow button { max-width: 100%; }
+/* The pinned rail is a 4px-padded pill, so Follow fills its 44px row and keeps
+   a corner 4px tighter than the rail's (12 -> 8). Square themes win on
+   specificity and stay at 0. */
+.profile-rail-follow button { height: 44px; border-radius: 8px; }
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
 }

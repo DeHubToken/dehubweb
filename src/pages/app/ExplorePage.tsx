@@ -1024,7 +1024,7 @@ export default function ExplorePage() {
             >
               {/* Category Carousel */}
               {exploreCategories.length > 0 && (
-                <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+                <div data-page-bento className="bg-zinc-900 rounded-2xl p-1">
                   <div data-fade-edges>
                   <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
                     <button
