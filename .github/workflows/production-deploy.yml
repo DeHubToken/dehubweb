@@ -42,12 +42,12 @@ jobs:
           CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
       - uses: pnpm/action-setup@v4
         with:
-          version: '9'
+          version: '9.15.9'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
       - name: Build production assets
         run: pnpm build
       - name: Recheck main before deployment

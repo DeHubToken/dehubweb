@@ -1,3 +1,4 @@
+import { useDocumentVisible } from './use-route-visible';
 /**
  * use-ad-serving
  * ==============
@@ -14,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ServedAd } from '@/lib/ads/povr';
+import { isAdSurfaceRouteVisible } from '@/lib/ads/surface-route';
 
 const ANON_KEY = 'dehub_ads_anon_id';
 
@@ -66,6 +68,7 @@ export interface UseServedAdsOptions {
  * inventory; serve tokens outlive the cache window (30 min TTL server-side).
  */
 export function useServedAds(surface: string, options: UseServedAdsOptions = {}) {
+  const visible = useDocumentVisible();
   const { walletAddress } = useAuth();
   const { count = 3, categories, enabled = true } = options;
 
@@ -75,19 +78,13 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
   // '/', '/app', '/videos', '/shorts'; the 'related' surface renders on the
   // post/video detail routes (those unmount normally, but users can dwell).
   const { pathname } = useLocation();
-  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
-  const isFeedSurfaceVisible =
-    normalizedPath === '/' || normalizedPath === '/app' ||
-    normalizedPath === '/videos' || normalizedPath === '/shorts' ||
-    // /post/ and /video/ answer with and without the /app prefix.
-    /^\/(?:app\/)?(?:post|video)\//.test(normalizedPath) ||
-    normalizedPath.startsWith('/posts/');
+  const isFeedSurfaceVisible = isAdSurfaceRouteVisible(surface, pathname);
 
   return useQuery({
-    queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count],
-    enabled,
+    queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count, categories],
+    enabled: enabled && visible && isFeedSurfaceVisible,
     staleTime: 120_000,
-    refetchInterval: isFeedSurfaceVisible ? 120_000 : false,
+    refetchInterval: enabled && visible && isFeedSurfaceVisible ? 120_000 : false,
     refetchOnWindowFocus: false,
     retry: 1,
     queryFn: async (): Promise<ServedAd[]> => {
