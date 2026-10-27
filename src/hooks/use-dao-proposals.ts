@@ -1,3 +1,4 @@
+import { useRouteVisible } from './use-route-visible';
 import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -127,11 +128,13 @@ export function effectiveDaoProposalStatus(proposal: DaoProposal, now = Date.now
 }
 
 export function useDaoProposals() {
+  const active = useRouteVisible('dao');
   const queryClient = useQueryClient();
   const { walletAddress, isAuthenticated } = useAuth();
   const wallet = walletAddress?.toLowerCase() ?? null;
 
   const proposals = useQuery({
+    enabled: active,
     queryKey: DAO_PROPOSALS_KEY,
     queryFn: async () => {
       const { data, error } = await db
@@ -143,7 +146,7 @@ export function useDaoProposals() {
       return ((data ?? []) as Record<string, unknown>[]).map(normaliseProposal);
     },
     staleTime: 15_000,
-    refetchInterval: 30_000,
+    refetchInterval: active ? 30_000 : false,
   });
 
   const myVotes = useQuery({
@@ -159,7 +162,7 @@ export function useDaoProposals() {
         { type: Number(row.vote_type) as 1 | -1, weight: numeric(row.vote_weight) },
       ]));
     },
-    enabled: isAuthenticated && !!wallet,
+    enabled: active && isAuthenticated && !!wallet,
     staleTime: 15_000,
   });
 
@@ -176,11 +179,12 @@ export function useDaoProposals() {
         numeric(row.vote_weight),
       ]));
     },
-    enabled: isAuthenticated && !!wallet,
+    enabled: active && isAuthenticated && !!wallet,
     staleTime: 30_000,
   });
 
   useEffect(() => {
+    if (!active) return;
     // A busy vote produces a burst of rows; each one used to refetch the whole
     // proposal list on every open tab. Coalesce into one refetch, and only
     // refetch the viewer's own votes when one of the rows is theirs.
@@ -217,7 +221,7 @@ export function useDaoProposals() {
       if (timer) clearTimeout(timer);
       void supabase.removeChannel(channel);
     };
-  }, [queryClient, wallet]);
+  }, [active, queryClient, wallet]);
 
   return {
     ...proposals,

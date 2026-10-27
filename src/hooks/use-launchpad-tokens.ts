@@ -1,3 +1,4 @@
+import { useRouteVisible } from './use-route-visible';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,7 +27,9 @@ const LIST_REFRESH_THROTTLE_MS = 3_000;
 export type LaunchpadFilter = 'new' | 'graduating' | 'trending' | 'graduated' | 'mine';
 
 export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string) {
+  const active = useRouteVisible('launchpad');
   const query = useQuery({
+    enabled: active,
     queryKey: ['launchpad-tokens', filter, mineAddress?.toLowerCase() ?? ''],
     queryFn: async () => {
       let q = supabase.from('launchpad_tokens').select('*').limit(100);
@@ -50,6 +53,7 @@ export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string
   refetchRef.current = query.refetch;
   const mine = filter === 'mine' ? mineAddress?.toLowerCase() : undefined;
   useEffect(() => {
+    if (!active) return;
     if (filter === 'mine' && !mine) return;
     let timer: ReturnType<typeof setTimeout> | null = null;
     let missed = false;
@@ -82,17 +86,19 @@ export function useLaunchpadTokens(filter: LaunchpadFilter, mineAddress?: string
       if (timer) clearTimeout(timer);
       supabase.removeChannel(ch);
     };
-  }, [filter, mine]);
+  }, [active, filter, mine]);
 
   return query;
 }
 
 export function useLaunchpadToken(id?: string) {
+  const active = useRouteVisible('launchpad');
   const queryClient = useQueryClient();
 
   // The row is pushed over realtime; the interval is only a fallback for a
   // dropped socket.
   useEffect(() => {
+    if (!active) return;
     if (!id) return;
     const ch = supabase.channel(`launchpad-token:${id}`)
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'launchpad_tokens', filter: `id=eq.${id}` }, (payload) => {
@@ -104,18 +110,18 @@ export function useLaunchpadToken(id?: string) {
         if (status === 'SUBSCRIBED') queryClient.invalidateQueries({ queryKey: ['launchpad-token', id] });
       });
     return () => { supabase.removeChannel(ch); };
-  }, [id, queryClient]);
+  }, [active, id, queryClient]);
 
   return useQuery({
     queryKey: ['launchpad-token', id],
-    enabled: !!id,
+    enabled: active && !!id,
     queryFn: async () => {
       const { data, error } = await supabase.from('launchpad_tokens').select('*').eq('id', id!).single();
       if (error) throw error;
       return data as unknown as LaunchpadToken;
     },
     staleTime: 5_000,
-    refetchInterval: 60_000,
+    refetchInterval: active ? 60_000 : false,
     refetchIntervalInBackground: false,
   });
 }

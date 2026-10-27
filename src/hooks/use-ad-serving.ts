@@ -1,3 +1,4 @@
+import { useDocumentVisible } from './use-route-visible';
 /**
  * use-ad-serving
  * ==============
@@ -66,6 +67,7 @@ export interface UseServedAdsOptions {
  * inventory; serve tokens outlive the cache window (30 min TTL server-side).
  */
 export function useServedAds(surface: string, options: UseServedAdsOptions = {}) {
+  const visible = useDocumentVisible();
   const { walletAddress } = useAuth();
   const { count = 3, categories, enabled = true } = options;
 
@@ -85,9 +87,9 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
 
   return useQuery({
     queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count],
-    enabled,
+    enabled: enabled && visible && isFeedSurfaceVisible,
     staleTime: 120_000,
-    refetchInterval: isFeedSurfaceVisible ? 120_000 : false,
+    refetchInterval: enabled && visible && isFeedSurfaceVisible ? 120_000 : false,
     refetchOnWindowFocus: false,
     retry: 1,
     queryFn: async (): Promise<ServedAd[]> => {

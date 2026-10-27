@@ -30,18 +30,18 @@ jobs:
           node-version: '22'
       - uses: pnpm/action-setup@v4
         with:
-          version: '9'
+          version: '9.15.9'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm install --frozen-lockfile
       - name: Generate versioned locale assets
         run: |
           node scripts/generate-blog-manifest.mjs
           node scripts/build-seo-i18n.mjs
           version=$(node -p "require('./src/i18n/public-locales.json').version")
-          git diff --name-only -z > /tmp/generated-blog-files
+          git diff --diff-filter=ACMRT --name-only -z > /tmp/generated-blog-files
           tar -czf /tmp/blog-locale-assets.tar.gz --null -T /tmp/generated-blog-files "public/locale-pages/$version"
       - uses: actions/upload-artifact@v4
         with:

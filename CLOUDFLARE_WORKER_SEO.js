@@ -1,3 +1,4 @@
+import { serveLocaleAsset } from './server/locale-assets.js';
 import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
@@ -5620,6 +5621,10 @@ async function handleRequest(request, env, ctx) {
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
+  if (pathname.startsWith('/locale-pages/')) {
+    const asset = await serveLocaleAsset(request, env);
+    if (asset) return asset;
+  }
 
   // Mirror hosts (staging, previews, aliases) serve identical content and
   // must not index as duplicates of dehub.io.
