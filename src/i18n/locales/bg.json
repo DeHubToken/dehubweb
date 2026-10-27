@@ -494,6 +494,16 @@
     "heading": "DeHub Кратки видеа"
   },
   "settings": {
+    "postLanding": "След публикуване",
+    "postLandingDesc": "Как новата ти публикация се появява в емисията",
+    "postLandingGhost": "Призрачно място",
+    "postLandingGhostDesc": "Емисията прави място и публикацията ти плавно се появява",
+    "postLandingMorph": "Превръщане",
+    "postLandingMorphDesc": "Редакторът се свива и става твоята публикация",
+    "postLandingPill": "От лента до карта",
+    "postLandingPillDesc": "Лентата за качване се разгръща в публикацията ти, щом е публикувана",
+    "postLandingDrop": "Падане",
+    "postLandingDropDesc": "Публикацията ти пада отгоре с леко подскачане",
     "sessionsRevokedMany": "{{count}} устройства са излезли от системата",
     "usernameTaken": "Името е заето",
     "postingChain": "Блокчейн за публикации",

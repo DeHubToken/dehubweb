@@ -475,6 +475,16 @@
     "heading": "فيديوهات DeHub القصيرة"
   },
   "settings": {
+    "postLanding": "بعد النشر",
+    "postLandingDesc": "كيف يظهر منشورك الجديد في موجزك",
+    "postLandingGhost": "خانة شبحية",
+    "postLandingGhostDesc": "يفسح موجزك مكانًا ويظهر منشورك تدريجيًا في موضعه",
+    "postLandingMorph": "تحوّل",
+    "postLandingMorphDesc": "يتقلّص المحرر ليصبح منشورك",
+    "postLandingPill": "من الشريط إلى البطاقة",
+    "postLandingPillDesc": "يتّسع شريط الرفع ليصبح منشورك بعد نشره",
+    "postLandingDrop": "هبوط",
+    "postLandingDropDesc": "يهبط منشورك من الأعلى مع ارتداد خفيف",
     "sessionsRevokedMany": "{{count}} جهاز/أجهزة مسجّل/مسجلين خارج",
     "usernameTaken": "الاسم مأخوذ",
     "postingChain": "شبكة النشر",

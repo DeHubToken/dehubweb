@@ -570,6 +570,16 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "postLanding": "Paylaştıktan sonra",
+    "postLandingDesc": "Yeni gönderinin akışında nasıl belirdiği",
+    "postLandingGhost": "Hayalet yuva",
+    "postLandingGhostDesc": "Akışın yer açar ve gönderin yerine yavaşça belirir",
+    "postLandingMorph": "Dönüşüm",
+    "postLandingMorphDesc": "Düzenleyici küçülerek gönderine dönüşür",
+    "postLandingPill": "Çubuktan karta",
+    "postLandingPillDesc": "Yükleme çubuğu, gönderin yayına girince açılıp gönderine dönüşür",
+    "postLandingDrop": "Düşüş",
+    "postLandingDropDesc": "Gönderin yukarıdan küçük bir sekmeyle düşer",
     "glass": "Camsı",
     "sessionsRevokedMany": "{{count}} cihaz oturumu kapatıldı",
     "usernameTaken": "Kullanıcı adı alınmış",

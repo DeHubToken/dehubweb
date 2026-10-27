@@ -494,6 +494,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Setelah memposting",
+    "postLandingDesc": "Cara postingan barumu muncul di feed",
+    "postLandingGhost": "Slot bayangan",
+    "postLandingGhostDesc": "Feed memberi ruang dan postinganmu muncul perlahan di tempatnya",
+    "postLandingMorph": "Morf",
+    "postLandingMorphDesc": "Penyusun mengecil menjadi postinganmu",
+    "postLandingPill": "Dari bilah ke kartu",
+    "postLandingPillDesc": "Bilah unggahan terbuka menjadi postinganmu setelah tayang",
+    "postLandingDrop": "Jatuh masuk",
+    "postLandingDropDesc": "Postinganmu jatuh dari atas dengan sedikit pantulan",
     "sessionsRevokedMany": "{{count}} perangkat keluar",
     "usernameTaken": "Nama pengguna sudah dipakai",
     "postingChain": "Blockchain postingan",

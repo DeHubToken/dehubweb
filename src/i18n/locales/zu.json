@@ -491,6 +491,16 @@
     "heading": "Okufushane kwe-DeHub"
   },
   "settings": {
+    "postLanding": "Ngemva kokuthumela",
+    "postLandingDesc": "Ukuthi okuthunyelwe kwakho okusha kuvela kanjani kokuphakelayo",
+    "postLandingGhost": "Isikhala somoya",
+    "postLandingGhostDesc": "Okuphakelayo kwenza isikhala, okuthunyelwe kwakho kuvele kancane",
+    "postLandingMorph": "Ukuguquka",
+    "postLandingMorphDesc": "Isibhali siyancipha sibe okuthunyelwe kwakho",
+    "postLandingPill": "Kusuka kubha kuya ekhadini",
+    "postLandingPillDesc": "Ibha yokulayisha ivuleka ibe okuthunyelwe kwakho uma sekushicilelwe",
+    "postLandingDrop": "Ukuwela",
+    "postLandingDropDesc": "Okuthunyelwe kwakho kuwela kusuka phezulu ngokugxuma okuncane",
     "sessionsRevokedMany": "{{count}} amadivayisi aphumile",
     "usernameTaken": "Igama lomsebenzisi selithathiwe",
     "postingChain": "I-blockchain yokuthumela",

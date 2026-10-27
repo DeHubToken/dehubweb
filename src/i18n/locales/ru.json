@@ -494,6 +494,16 @@
     "heading": "Клипы DeHub"
   },
   "settings": {
+    "postLanding": "После публикации",
+    "postLandingDesc": "Как ваш новый пост появляется в ленте",
+    "postLandingGhost": "Призрачное место",
+    "postLandingGhostDesc": "Лента освобождает место, и пост плавно проявляется",
+    "postLandingMorph": "Превращение",
+    "postLandingMorphDesc": "Редактор сжимается и превращается в ваш пост",
+    "postLandingPill": "Из полоски в карточку",
+    "postLandingPillDesc": "Полоса загрузки раскрывается в ваш пост, когда он опубликован",
+    "postLandingDrop": "Падение",
+    "postLandingDropDesc": "Пост падает сверху с лёгким отскоком",
     "sessionsRevokedMany": "Устройства {{count}} вышли из системы",
     "usernameTaken": "Имя пользователя занято",
     "postingChain": "Блокчейн публикаций",

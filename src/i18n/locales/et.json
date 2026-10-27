@@ -494,6 +494,16 @@
     "heading": "DeHubi lühivideod"
   },
   "settings": {
+    "postLanding": "Pärast postitamist",
+    "postLandingDesc": "Kuidas su uus postitus voogu ilmub",
+    "postLandingGhost": "Tondikoht",
+    "postLandingGhostDesc": "Voog teeb ruumi ja su postitus ilmub sujuvalt oma kohale",
+    "postLandingMorph": "Moondumine",
+    "postLandingMorphDesc": "Koostaja kahaneb su postituseks",
+    "postLandingPill": "Ribast kaardiks",
+    "postLandingPillDesc": "Üleslaadimisriba avaneb su postituseks, kui see on avaldatud",
+    "postLandingDrop": "Sisse kukkumine",
+    "postLandingDropDesc": "Su postitus kukub ülevalt väikese põrkega sisse",
     "sessionsRevokedMany": "{{count}} seadet on välja logitud",
     "usernameTaken": "Kasutajanimi on võetud",
     "postingChain": "Postituste plokiahel",

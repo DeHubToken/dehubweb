@@ -494,6 +494,16 @@
     "heading": "DeHub Σύντομα βίντεο"
   },
   "settings": {
+    "postLanding": "Μετά τη δημοσίευση",
+    "postLandingDesc": "Πώς εμφανίζεται η νέα σου ανάρτηση στη ροή",
+    "postLandingGhost": "Κενή θέση",
+    "postLandingGhostDesc": "Η ροή κάνει χώρο και η ανάρτησή σου εμφανίζεται απαλά στη θέση της",
+    "postLandingMorph": "Μεταμόρφωση",
+    "postLandingMorphDesc": "Ο επεξεργαστής μικραίνει και γίνεται η ανάρτησή σου",
+    "postLandingPill": "Από μπάρα σε κάρτα",
+    "postLandingPillDesc": "Η μπάρα μεταφόρτωσης ανοίγει στην ανάρτησή σου μόλις δημοσιευτεί",
+    "postLandingDrop": "Πτώση",
+    "postLandingDropDesc": "Η ανάρτησή σου πέφτει από πάνω με μια μικρή αναπήδηση",
     "sessionsRevokedMany": "{{count}} συσκευές αποσυνδέθηκαν",
     "usernameTaken": "Το όνομα χρήστη είναι πιασμένο",
     "postingChain": "Blockchain δημοσιεύσεων",

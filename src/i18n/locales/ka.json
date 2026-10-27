@@ -494,6 +494,16 @@
     "heading": "DeHub შორთსი"
   },
   "settings": {
+    "postLanding": "გამოქვეყნების შემდეგ",
+    "postLandingDesc": "როგორ ჩნდება ახალი პოსტი შენს არხში",
+    "postLandingGhost": "მოჩვენებითი ადგილი",
+    "postLandingGhostDesc": "არხი ადგილს ათავისუფლებს და პოსტი ნელა ჩნდება",
+    "postLandingMorph": "გარდაქმნა",
+    "postLandingMorphDesc": "რედაქტორი პატარავდება და შენს პოსტად იქცევა",
+    "postLandingPill": "ზოლიდან ბარათამდე",
+    "postLandingPillDesc": "ატვირთვის ზოლი გამოქვეყნებისას შენს პოსტად იშლება",
+    "postLandingDrop": "ჩამოვარდნა",
+    "postLandingDropDesc": "შენი პოსტი ზემოდან მსუბუქი ხტომით ჩამოდის",
     "sessionsRevokedMany": "{{count}} მოწყობილობები შესულია",
     "usernameTaken": "მომხმარებლის სახელი დაკავებულია",
     "postingChain": "პოსტების ბლოკჩეინი",

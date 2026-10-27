@@ -494,6 +494,16 @@
     "heading": "Шорты DeHub"
   },
   "settings": {
+    "postLanding": "Пасля публікацыі",
+    "postLandingDesc": "Як ваш новы допіс з’яўляецца ў стужцы",
+    "postLandingGhost": "Прывіднае месца",
+    "postLandingGhostDesc": "Стужка вызваляе месца, і допіс плаўна праяўляецца",
+    "postLandingMorph": "Пераўтварэнне",
+    "postLandingMorphDesc": "Рэдактар сціскаецца і становіцца вашым допісам",
+    "postLandingPill": "З палоскі ў картку",
+    "postLandingPillDesc": "Палоска загрузкі раскрываецца ў ваш допіс, калі ён апублікаваны",
+    "postLandingDrop": "Падзенне",
+    "postLandingDropDesc": "Допіс падае зверху з лёгкім адскокам",
     "sessionsRevokedMany": "{{count}} прыстасаванні выйшлі",
     "usernameTaken": "Імя ўжо занята",
     "postingChain": "Блокчэйн публікацый",

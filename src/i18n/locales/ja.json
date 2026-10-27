@@ -494,6 +494,16 @@
     "heading": "DeHub ショート"
   },
   "settings": {
+    "postLanding": "投稿したあと",
+    "postLandingDesc": "新しい投稿がフィードに表示されるときの動き",
+    "postLandingGhost": "ゴーストスロット",
+    "postLandingGhostDesc": "フィードに場所が空き、投稿がふわっと現れます",
+    "postLandingMorph": "モーフ",
+    "postLandingMorphDesc": "作成画面が縮んで投稿になります",
+    "postLandingPill": "バーからカードへ",
+    "postLandingPillDesc": "投稿が公開されると、アップロードバーが広がって投稿になります",
+    "postLandingDrop": "ドロップイン",
+    "postLandingDropDesc": "投稿が上から小さく弾んで落ちてきます",
     "sessionsRevokedMany": "{{count}}台のデバイスがサインアウトしました",
     "usernameTaken": "このユーザー名は使用済みです",
     "postingChain": "投稿用ブロックチェーン",

@@ -494,6 +494,16 @@
     "heading": "DeHub शॉर्ट्स"
   },
   "settings": {
+    "postLanding": "पोस्ट केल्यानंतर",
+    "postLandingDesc": "तुमची नवी पोस्ट फीडमध्ये कशी येते",
+    "postLandingGhost": "घोस्ट स्लॉट",
+    "postLandingGhostDesc": "फीड जागा करते आणि तुमची पोस्ट हळूच तिच्या जागी दिसते",
+    "postLandingMorph": "मॉर्फ",
+    "postLandingMorphDesc": "लिहिण्याची स्क्रीन आकसून तुमची पोस्ट बनते",
+    "postLandingPill": "बारपासून कार्डपर्यंत",
+    "postLandingPillDesc": "पोस्ट झाल्यावर अपलोड बार उघडून तुमची पोस्ट बनतो",
+    "postLandingDrop": "ड्रॉप इन",
+    "postLandingDropDesc": "तुमची पोस्ट वरून हलक्या उसळीसह येते",
     "sessionsRevokedMany": "{{count}} उपकरणे लॉगआउट झाली",
     "usernameTaken": "वापरकर्तानाव आधीच घेतले आहे",
     "postingChain": "पोस्टसाठी ब्लॉकचेन",

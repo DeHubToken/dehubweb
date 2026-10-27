@@ -494,6 +494,16 @@
     "heading": "DeHub Trumpieji"
   },
   "settings": {
+    "postLanding": "Paskelbus",
+    "postLandingDesc": "Kaip naujas įrašas atsiranda sraute",
+    "postLandingGhost": "Vaiduoklio vieta",
+    "postLandingGhostDesc": "Srautas padaro vietos, o įrašas švelniai išryškėja savo vietoje",
+    "postLandingMorph": "Virsmas",
+    "postLandingMorphDesc": "Rašymo langas susitraukia į tavo įrašą",
+    "postLandingPill": "Iš juostos į kortelę",
+    "postLandingPillDesc": "Įkėlimo juosta išsiskleidžia į tavo įrašą, kai jis paskelbiamas",
+    "postLandingDrop": "Įkritimas",
+    "postLandingDropDesc": "Tavo įrašas įkrenta iš viršaus su mažu atšokimu",
     "sessionsRevokedMany": "{{count}} įrenginiai atsijungė",
     "usernameTaken": "Naudotojo vardas užimtas",
     "postingChain": "Įrašų blokų grandinė",

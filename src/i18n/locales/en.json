@@ -570,6 +570,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "After you post",
+    "postLandingDesc": "How your new post lands in your feed",
+    "postLandingGhost": "Ghost slot",
+    "postLandingGhostDesc": "Your feed makes room and your post fades into place",
+    "postLandingMorph": "Morph",
+    "postLandingMorphDesc": "The composer shrinks into your post",
+    "postLandingPill": "Pill to card",
+    "postLandingPillDesc": "The upload bar opens out into your post once it is up",
+    "postLandingDrop": "Drop in",
+    "postLandingDropDesc": "Your post drops in from the top with a little bounce",
     "sessionsRevokedMany": "{{count}} devices signed out",
     "usernameTaken": "Username taken",
     "postingChain": "Posting chain",

@@ -492,6 +492,16 @@
     "heading": "DeHub షార్ట్స్"
   },
   "settings": {
+    "postLanding": "పోస్ట్ చేసిన తర్వాత",
+    "postLandingDesc": "మీ కొత్త పోస్ట్ ఫీడ్‌లో ఎలా వస్తుంది",
+    "postLandingGhost": "ఘోస్ట్ స్లాట్",
+    "postLandingGhostDesc": "ఫీడ్ చోటు ఇస్తుంది, మీ పోస్ట్ నెమ్మదిగా కనిపిస్తుంది",
+    "postLandingMorph": "మార్ఫ్",
+    "postLandingMorphDesc": "రాసే తెర కుంచించుకుని మీ పోస్ట్‌గా మారుతుంది",
+    "postLandingPill": "బార్ నుంచి కార్డ్",
+    "postLandingPillDesc": "పోస్ట్ అయ్యాక అప్‌లోడ్ బార్ విచ్చుకుని మీ పోస్ట్‌గా మారుతుంది",
+    "postLandingDrop": "డ్రాప్ ఇన్",
+    "postLandingDropDesc": "మీ పోస్ట్ పై నుంచి చిన్న ఎగురుతో పడుతుంది",
     "sessionsRevokedMany": "{{count}} పరికరాలు సైన్ అవుట్ అయ్యాయి",
     "usernameTaken": "ఈ వినియోగదారు పేరు ఇప్పటికే ఉంది",
     "postingChain": "పోస్ట్‌ల కోసం బ్లాక్‌చెయిన్",

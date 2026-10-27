@@ -498,6 +498,16 @@
     "heading": "Krátke videá DeHub"
   },
   "settings": {
+    "postLanding": "Po zverejnení",
+    "postLandingDesc": "Ako sa nový príspevok objaví vo feede",
+    "postLandingGhost": "Prázdne miesto",
+    "postLandingGhostDesc": "Feed urobí miesto a váš príspevok sa v ňom plynulo objaví",
+    "postLandingMorph": "Premena",
+    "postLandingMorphDesc": "Editor sa zmenší do vášho príspevku",
+    "postLandingPill": "Z lišty na kartu",
+    "postLandingPillDesc": "Lišta nahrávania sa po zverejnení rozvinie do vášho príspevku",
+    "postLandingDrop": "Spadnutie",
+    "postLandingDropDesc": "Váš príspevok spadne zhora s malým odrazom",
     "sessionsRevokedMany": "Zariadenia {{count}} sú odhlásené",
     "usernameTaken": "Používateľské meno je obsadené",
     "postingChain": "Blockchain príspevkov",

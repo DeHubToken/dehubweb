@@ -494,6 +494,16 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
+    "postLanding": "게시한 후",
+    "postLandingDesc": "새 게시물이 피드에 나타나는 방식",
+    "postLandingGhost": "고스트 슬롯",
+    "postLandingGhostDesc": "피드에 자리가 생기고 게시물이 부드럽게 나타납니다",
+    "postLandingMorph": "모프",
+    "postLandingMorphDesc": "작성 화면이 줄어들어 게시물이 됩니다",
+    "postLandingPill": "바에서 카드로",
+    "postLandingPillDesc": "게시되면 업로드 바가 펼쳐져 게시물이 됩니다",
+    "postLandingDrop": "드롭 인",
+    "postLandingDropDesc": "게시물이 위에서 살짝 튕기며 떨어집니다",
     "sessionsRevokedMany": "{{count}} 개의 장치에서 로그아웃됨",
     "usernameTaken": "이미 사용 중인 사용자 이름입니다",
     "postingChain": "게시물 블록체인",
