@@ -330,7 +330,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         <DrawerTitle className="sr-only">{titleText}</DrawerTitle>
       </DrawerHeader>
 
-      <div className="login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 pb-4">
+      <div className={`login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 ${stackSheet ? 'pb-2' : 'pb-4'}`}>
         {filled ? (
           <Suspense fallback={<LoginShortsStackPlaceholder />}>
             <LoginShortsStack />
@@ -345,7 +345,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </div>
       </div>
 
-      <div className="shrink-0 px-6 pt-6 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
+      {/* Phones: the legal line sits snug at the bottom and the clips above
+          take the rest. Desktop keeps its divided footer. */}
+      <div className={stackSheet
+        ? "shrink-0 px-6 pt-2 pb-[calc(1rem+env(safe-area-inset-bottom))]"
+        : "shrink-0 px-6 pt-6 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"}>
         <p className="text-xs text-white/40 text-center">{(step === 'main' || step === 'email' || step === 'email-waiting') && <>{t('loginStack.codeNote', 'We email you a code, no password needed.')} </>}{termsNotice}</p>
       </div>
     </>
