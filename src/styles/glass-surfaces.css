@@ -231,62 +231,68 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
   border-radius: inherit;
 }
 
-/* The new-posts bead hangs off the phone nav as part of it, so it wears the
-   nav's own material in every theme. Its outline is an SVG stroke along the
-   sides and bottom only (--bead-rim), leaving the top open where it joins
-   the bar. Light and Minimal keep their flat finish; War its gunmetal. */
-[data-feed-new-posts-bead-root] {
-  --bead-ink: #fff;
-  --bead-rim: rgb(255 255 255 / 0.22);
-  --bead-face-ring: rgb(var(--glass-tint, 9 9 11));
+/* The new-posts chip: a small glass capsule floating under the phone nav, in
+   the nav's own material for each theme. Its slot clips at the nav's bottom
+   edge, so when the nav hides the chip slips up behind it first (quick, ease
+   in), and when the nav comes back the chip waits a beat, then drops back out
+   with a little overshoot. */
+[data-feed-new-posts-slot='bar'] { clip-path: inset(0 -48px -48px -48px); }
+[data-feed-new-posts-slot='island'] { clip-path: inset(2.75rem -48px -48px -48px); }
+[data-feed-new-posts-chip] {
+  --chip-ink: #fff;
+  --chip-face-ring: rgb(var(--glass-tint, 9 9 11));
+  color: var(--chip-ink);
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s, opacity 0.2s ease-out 0.2s, filter 0.12s;
 }
-html[data-theme] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
-  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--bead-face-ring);
-  backdrop-filter: var(--nav-glass-blur);
+[data-feed-new-posts-chip]:active { filter: brightness(1.25); }
+html[data-nav-hidden='true'] [data-feed-new-posts-chip] {
+  transform: translateY(calc(-100% - 0.75rem)) scale(0.85);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.17s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.17s ease-in, filter 0.12s;
 }
+@media (prefers-reduced-motion: reduce) {
+  [data-feed-new-posts-chip], html[data-nav-hidden='true'] [data-feed-new-posts-chip] { transition: opacity 0.15s; transform: none; }
+}
+html[data-theme] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.04)),
+    var(--nav-glass, rgb(20 20 24 / 0.5)),
+    rgb(var(--glass-tint, 9 9 11) / 0.35);
+  backdrop-filter: var(--nav-glass-blur, blur(18px) saturate(1.7));
+  -webkit-backdrop-filter: var(--nav-glass-blur, blur(18px) saturate(1.7));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.32), inset 0 0 0 1px rgb(255 255 255 / 0.14), 0 8px 22px -8px rgb(0 0 0 / 0.55);
+  border: 0;
+}
+[data-feed-new-posts-face] { box-shadow: 0 0 0 1.5px var(--chip-face-ring); }
 [data-feed-new-posts-face],
 [data-feed-new-posts-face] > [data-avatar-fallback] {
-  background-color: var(--bead-face-ring);
+  background-color: var(--chip-face-ring);
 }
-/* Open the bar's bottom row where the bead joins (--bead-gap wide). The bead
-   overlaps that row with the same material, and its stroke carries on from
-   the bar's rim, so there is one outline and no line across the join. */
-html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']):not([data-system-tone='light'])
-  :is([data-new-posts-open] > [data-nav-glass-backdrop], [data-feed-island-surface][data-new-posts-open]) {
-  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
-  mask-position: 0 0, 50% 100%;
-  mask-size: 100% 100%, var(--bead-gap, 0px) 1px;
-  mask-repeat: no-repeat;
-  mask-composite: exclude;
+/* Light and System Light: white frost, dark ink. */
+html:is([data-theme='light'], [data-system-tone='light']) [data-feed-new-posts-chip] {
+  --chip-ink: #0b0b0d;
+  --chip-face-ring: #fff;
 }
-html[data-theme='light'] [data-feed-new-posts-bead-root] {
-  --bead-ink: var(--ink);
-  --bead-rim: var(--hairline-strong);
-  --bead-face-ring: var(--paper);
-}
-/* System Light: the same frosted white as its tab bar. */
-html[data-system-tone='light'] [data-feed-new-posts-bead-root] {
-  --bead-ink: #0b0b0d;
-  --bead-rim: rgb(0 0 0 / 0.1);
-  --bead-face-ring: #fff;
-}
-html[data-theme][data-system-tone='light'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
-  background: rgb(255 255 255 / 0.62);
+html[data-theme]:is([data-theme='light'], [data-system-tone='light']) [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
+  background: rgb(255 255 255 / 0.72);
   backdrop-filter: blur(22px) saturate(1.8);
+  -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 8px 22px -10px rgb(0 0 0 / 0.3);
 }
-html[data-theme='light'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
-  background: var(--paper);
-  backdrop-filter: none;
-}
-html[data-theme='minimal'] [data-feed-new-posts-bead-root] {
-  --bead-rim: rgb(255 255 255 / 0.69);
-  --bead-face-ring: #000;
-}
-html[data-theme='minimal'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
+/* Minimal: flat black, white hairline, square. */
+html[data-theme='minimal'] [data-feed-new-posts-chip] { --chip-face-ring: #000; }
+html[data-theme='minimal'] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
+  border-radius: 0;
   background: #000;
   backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.69);
 }
-html[data-theme='war'] [data-feed-new-posts-bead-root] { --bead-rim: rgb(79 227 224 / 0.35); }
+html[data-theme='war'] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
+  box-shadow: inset 0 0 0 1px rgb(79 227 224 / 0.35), 0 8px 22px -8px rgb(0 0 0 / 0.55);
+}
 
 /* Bentos: page bentos, side panels and post cards on every canvas theme. Only
    the fill colour changes (the theme colour mixed into a thinner smoke), so

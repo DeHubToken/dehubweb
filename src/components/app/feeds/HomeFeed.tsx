@@ -1940,9 +1940,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         return chipsBar;
       })()}
 
-      {/* The bead hangs off the phone nav (the capsule, or the tab bar) as
-          part of it. Portaling keeps it attached to the collapsing header and
-          above the feed's swallow clip. Desktop keeps its own pill below. */}
+      {/* The chip floats under the phone nav (the capsule, or the tab bar).
+          Portaling keeps it riding the collapsing header and above the feed's
+          swallow clip; its slot clips at the nav's bottom edge so it tucks
+          behind the nav when that hides. Desktop keeps its own pill below. */}
       {(() => {
         const bead = (
           <AnimatePresence initial={false}>
@@ -1951,19 +1952,17 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 key="new-posts-bead"
                 count={newPostCount}
                 authors={newPostAuthors}
-                square={theme === 'minimal'}
-                host={(newPostsTarget?.closest('[data-feed-island]')?.querySelector(':scope > [data-feed-island-surface]') as HTMLElement | null | undefined) ?? mobileNavTarget ?? null}
                 onShow={showNewPosts}
               />
             )}
           </AnimatePresence>
         );
         if (newPostsTarget) {
-          return createPortal(<div className="pointer-events-none flex justify-center pt-11">{bead}</div>, newPostsTarget);
+          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center pt-11">{bead}</div>, newPostsTarget);
         }
         if (mobileNavTarget) {
           return createPortal(
-            <div data-feed-new-posts-anchor className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{bead}</div>,
+            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{bead}</div>,
             mobileNavTarget,
           );
         }
