@@ -1,5 +1,6 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { maintenanceGate } from '../_shared/maintenance-auth.ts';
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -17,6 +18,12 @@ function b64ToBytes(b64: string): Uint8Array {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  const denied = await maintenanceGate(req, async token => {
+    const { data, error } = await supabase.rpc('verify_maintenance_token', { p_action: 'migrate-ai-images-to-storage', p_token: token });
+    if (error) throw error;
+    return data === true;
+  });
+  if (denied) return denied;
 
   const url = new URL(req.url);
   const batch = Math.min(50, Math.max(1, Number(url.searchParams.get('batch') ?? 20)));
