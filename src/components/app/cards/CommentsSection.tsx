@@ -2416,7 +2416,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           ? "flex flex-col h-full px-2 pt-2 pb-2 relative"
           : embedded
             ? "flex flex-col h-full min-h-0 p-0 mt-0 relative"
-            : "flex flex-col min-h-[280px] max-h-[600px] px-3 py-3 sm:px-4 relative"
+            // The list inside is absolutely positioned, so this min height is the
+            // visible window. Desktop (lg+) gets a ~70% taller one than tablets.
+            : "flex flex-col min-h-[280px] lg:min-h-[476px] max-h-[600px] px-3 py-3 sm:px-4 relative"
       )}
     >
 
