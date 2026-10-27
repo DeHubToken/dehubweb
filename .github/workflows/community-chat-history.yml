@@ -1,0 +1,35 @@
+name: Community chat history
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261027183000_community_chat_history.sql'
+      - 'tests/sql/community-chat-history*.sql'
+      - 'tests/sql/community-posts-bootstrap.sql'
+      - '.github/workflows/community-chat-history.yml'
+  workflow_dispatch:
+jobs:
+  database:
+    name: Group history pagination and access
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: history-test
+          POSTGRES_DB: history_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: history-test
+      PGDATABASE: history_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-chat-history-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027183000_community_chat_history.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-chat-history.sql
