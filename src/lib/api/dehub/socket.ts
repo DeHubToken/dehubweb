@@ -24,6 +24,7 @@
 
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
+import { reviveOnReturn } from '@/lib/socket-revive';
 
 export const GLOBAL_ROOM = 'global';
 
@@ -63,6 +64,7 @@ export function getSocket(roomId?: string): Socket {
   });
 
   sockets.set(key, socket);
+  reviveOnReturn(socket);
 
   socket.on('connect', () => {
     console.log('[LiveChat Socket] Connected:', key, socket.id);
