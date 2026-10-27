@@ -63,6 +63,7 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { stageLiveSentence, stageReminderSentence, stageNotificationPath } from '@/lib/stage-notifications';
 import { supabase } from '@/integrations/supabase/client';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { warmNotificationTarget } from '@/lib/notification-prefetch';
 import { SEOHead } from '@/components/SEOHead';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest, getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
@@ -810,6 +811,9 @@ function customReferenceId(notification: DeHubNotification): string | undefined 
   return (notification as DeHubNotification & { _customReferenceId?: string })._customReferenceId;
 }
 
+/** Rows about one comment: they open the comments, on that comment. */
+const COMMENT_NOTIFICATION_TYPES = new Set(['comment', 'comment_reply', 'creator_comment_reply', 'comment_like']);
+
 function getNavigationLink(notification: DeHubNotification): string | null {
   // A mini app's notification opens the app, at the page it named when it
   // named one (miniapp-notify only accepts pages on the app's own domain).
@@ -886,7 +890,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // rather than paging down to find it.
   // A mention has no suffix of its own: mentioning somebody in a post carries
   // no comment id, and opening the comments there points at nothing.
-  const isCommentType = ['comment', 'comment_reply', 'comment_like'].includes(notification.type);
+  const isCommentType = COMMENT_NOTIFICATION_TYPES.has(notification.type as string);
   const commentSuffix = notification.commentId
     ? `?comments=1&comment=${notification.commentId}`
     : isCommentType
@@ -897,6 +901,10 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'like':
     case 'comment':
     case 'comment_reply':
+    // "The creator replied to your comment" — the server sends it instead of a
+    // plain reply. It had no case here, so the row was the one reply that went
+    // nowhere when clicked.
+    case 'creator_comment_reply':
     case 'comment_like':
     case 'mention':
     case 'tip':
@@ -954,7 +962,9 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'badge_tier_down':
       return '/app/stake';
     default:
-      return null;
+      // A type this build does not know yet still names the post it is about;
+      // landing there beats a row that does nothing.
+      return notification.tokenId ? `/app/post/${notification.tokenId}${commentSuffix}` : null;
   }
 }
 
@@ -1263,6 +1273,8 @@ const NotificationItem = memo(function NotificationItem({
     // Navigate to appropriate destination
     const navLink = getNavigationLink(notification);
     if (navLink) {
+      // Keyboard activation has no press to warm on.
+      warmTarget();
       // Seed profile cache for profile-bound navigations
       const isProfileNav = ['following', 'subscription', 'ppv_purchase'].includes(notification.type);
       if (isProfileNav) {
@@ -1277,9 +1289,22 @@ const NotificationItem = memo(function NotificationItem({
 
   const isUnreadRow = hasUnread && !isClosing;
 
+  // The press is ~100ms ahead of the click, and the post page's chunk, the
+  // comments chunk and the page pinned on the linked comment can all start
+  // loading in that gap instead of one after another once the page mounts.
+  const warmTarget = () => {
+    if (!notification.tokenId || isFollowRequest) return;
+    warmNotificationTarget(queryClient, {
+      tokenId: notification.tokenId,
+      commentId: notification.commentId,
+      walletAddress,
+    });
+  };
+
   return (
     <div
       onClick={handleClick}
+      onPointerDown={warmTarget}
       data-notification-row
       data-feed-row
       data-unread={isUnreadRow ? '' : undefined}

@@ -89,7 +89,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
-import { FocusCommentProvider } from '@/lib/focus-comment';
+import { FocusCommentProvider, NoFocusComment } from '@/lib/focus-comment';
+import { bringIntoViewAndFlash } from '@/lib/focus-scroll';
 import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
@@ -1058,10 +1059,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       if (cancelled) return;
       const el = document.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        bringIntoViewAndFlash(el);
         return;
       }
-      if (attempt < 12) window.setTimeout(() => tryScroll(attempt + 1), 250);
+      // The comments list mounts after the post and fetches on its own, so
+      // give it up to six seconds on a slow connection rather than three.
+      if (attempt < 24) window.setTimeout(() => tryScroll(attempt + 1), 250);
     };
     const start = window.setTimeout(() => tryScroll(0), 150);
     const stop = window.setTimeout(() => setHighlightCommentId(undefined), 4500);
@@ -1365,7 +1368,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               {renderContent()}
             </div>
             <div className="px-2 sm:px-3">{pageComments}</div>
-            {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
+            {showRelated && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
           </div>
         ) : (
           /* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */
@@ -1392,7 +1395,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
                 </div>
                 {pageComments}
                 {/* Related Videos Feed */}
-                {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
+                {showRelated && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
               </div>
             </div>
           </div>
@@ -1562,8 +1565,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         {detailsExpanded && !commentsSplit && <div ref={retainedCommentsRef}>{pageComments}</div>}
         {/* Hidden, not unmounted, while the sheet is up: the top half shows the post alone. */}
         <div hidden={commentsSplit}>
-          {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+          {showRelated && isImagePost && id && <NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment>}
+          {showRelated && isTextPost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
         </div>
         {commentsSplitSheet}
       </section>
@@ -1578,8 +1581,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         {detailsExpanded && <div ref={retainedCommentsRef} hidden={commentsSplit}>
           {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           {!commentsSplit && pageComments}
-          {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+          {showRelated && isImagePost && id && <NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment>}
+          {showRelated && isTextPost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
         </div>}
         {commentsSplitSheet}
       </section>
@@ -1595,7 +1598,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           {post && id && parseInt(id, 10) > 0 && <div className="px-3"><PollCard tokenId={parseInt(id, 10)} /></div>}
         </div>
         <div className="px-2 sm:px-3">{pageComments}</div>
-        {showRelated && id && <div className="px-2 sm:px-3"><RelatedImagesFeed currentPostId={id} /></div>}
+        {showRelated && id && <div className="px-2 sm:px-3"><NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment></div>}
       </div>
     ) : isLivePost && isMobileView ? (
       /* The viewer is `fixed inset-0` and owns the screen: wrapping it in
@@ -1644,9 +1647,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               button in the stream's own action bar (see `chatSlot` above), so a
               broadcast has one conversation in one place instead of a chat
               slab under the player that read as the platform's. */}
-          {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {showRelated && isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
-          {showRelated && !isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <RelatedPostsFeed currentPostId={id} />}
+          {showRelated && isImagePost && id && <NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment>}
+          {showRelated && isAudioPost && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
+          {showRelated && !isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
         </div>
       </div>
     </>

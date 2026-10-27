@@ -11,6 +11,8 @@ export type NotificationType =
   | 'like'
   | 'comment'
   | 'comment_reply'
+  /** The post's creator answered your comment; sent instead of `comment_reply`. */
+  | 'creator_comment_reply'
   | 'comment_like'
   | 'mention'
   | 'following'

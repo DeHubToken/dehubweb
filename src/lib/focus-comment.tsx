@@ -24,7 +24,8 @@ interface FocusCommentValue {
   commentId?: string;
 }
 
-const FocusCommentContext = createContext<FocusCommentValue>({});
+const EMPTY: FocusCommentValue = {};
+const FocusCommentContext = createContext<FocusCommentValue>(EMPTY);
 
 export function FocusCommentProvider({
   tokenId,
@@ -40,4 +41,14 @@ export function useFocusComment(tokenId: string | undefined): string | undefined
   const { tokenId: focusTokenId, commentId } = useContext(FocusCommentContext);
   if (!commentId || !tokenId) return undefined;
   return String(focusTokenId) === String(tokenId) ? commentId : undefined;
+}
+
+/**
+ * Clears the focused comment for everything inside. The related posts under a
+ * post page can include that same post again (as a promoted card), and with
+ * the id still in context its comments opened too and pulled the page down to
+ * a second copy of the comment.
+ */
+export function NoFocusComment({ children }: { children: ReactNode }) {
+  return <FocusCommentContext.Provider value={EMPTY}>{children}</FocusCommentContext.Provider>;
 }
