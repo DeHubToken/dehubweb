@@ -19,6 +19,7 @@ import X from "@/components/ui/cut-icons/close";
 
 import { useUpdateListing, prepareStoreImage, STORE_MEDIA_CACHE_CONTROL } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 const CATEGORIES = [
@@ -37,6 +38,7 @@ interface Props {
 
 export function EditListingDrawer({ open, onClose, listing }: Props) {
   const { t } = useTranslation();
+  const { walletAddress } = useAuth();
   const [title, setTitle] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:title", '', draftIdentity(listing));
   const [description, setDescription] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:description", '', draftIdentity(listing));
   const [price, setPrice] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:price", '', draftIdentity(listing));
@@ -66,13 +68,13 @@ export function EditListingDrawer({ open, onClose, listing }: Props) {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || images.length >= 5) return;
+    if (!files || !walletAddress || images.length >= 5) return;
     setUploading(true);
     try {
       for (const rawFile of Array.from(files).slice(0, 5 - images.length)) {
         const file = await prepareStoreImage(rawFile);
         const ext = file.name.split('.').pop();
-        const path = `listings/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const path = `${walletAddress.toLowerCase()}/listings/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
         const { error } = await supabase.storage
           .from('store-media')
           .upload(path, file, { cacheControl: STORE_MEDIA_CACHE_CONTROL });

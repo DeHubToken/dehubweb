@@ -15,9 +15,9 @@ import { useEditorStore } from '@/store/editorStore';
  * paywall modals the studio uses. Voiceover runs on the storage quota, which is
  * why it generates directly.
  */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Film, ImageIcon, Loader2 } from "lucide-react";
+import { Box, Film, ImageIcon, Loader2 } from "lucide-react";
 import Music2 from "@/components/ui/cut-icons/music";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 
@@ -55,9 +55,12 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 import { SelectChip, CounterChip, ToggleChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
 import { soundEffectRequest, SFX_MAX_PROMPT_CHARS } from '@/lib/editor/soundEffectDraft';
 import { PanelHeading } from './DesignPanel';
+import { StudioVoicePicker } from '@/components/app/creator/studio/StudioVoicePicker';
+import { Model3dPaywallModal, type Model3dGenerationOptions } from '@/components/app/model3d/Model3dPaywallModal';
+import { MODEL3D_MODELS, MODEL3D_MODEL_OPTIONS, getModel3dCostUsd, type Model3dModelKey } from '@/constants/model3d-models.constants';
 import { editorErrorText } from "@/lib/editor/editorErrorText";
 
-type GenKind = 'image' | 'video' | 'voice' | 'music' | 'sfx';
+type GenKind = 'image' | 'video' | 'voice' | 'music' | 'sfx' | 'model3d';
 
 const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', get label() { return _translateCopy("copy.1aa4cb0bcca7", { defaultValue: "Image" }); }, icon: ImageIcon },
@@ -67,6 +70,13 @@ const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className
 ];
 
 KINDS.push({ id: 'sfx', get label() { return _translateCopy('creator.audioTaskSfxLabel', { defaultValue: 'Sound effect' }); }, icon: Music2 });
+KINDS.push({ id: 'model3d', get label() { return _translateCopy('editor.generate3d.label', { defaultValue: '3D' }); }, icon: Box });
+
+/** The editor only has a prompt to work from, so only models that read text are offered. */
+const TEXT_3D_MODELS = MODEL3D_MODEL_OPTIONS.filter((m) => m.supports.includes('text-to-3d'));
+
+// Loaded on demand: it pulls in the payment and Stage voice code.
+const VoiceCloneDialog = lazy(() => import('../VoiceCloneDialog').then((m) => ({ default: m.VoiceCloneDialog })));
 
 const MAX_VOICE_CHARS = 500;
 const MAX_MUSIC_PROMPT_CHARS = 2000;
@@ -79,6 +89,7 @@ export function GeneratePanel() {
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
   const startAudio = useGenerationStore((s) => s.startAudio);
+  const startModel3d = useGenerationStore((s) => s.startModel3d);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const generatePrefill = useEditorUiStore((s) => s.generatePrefill);
   const setGeneratePrefill = useEditorUiStore((s) => s.setGeneratePrefill);
@@ -96,6 +107,11 @@ export function GeneratePanel() {
   const [imagePaywallOpen, setImagePaywallOpen] = useState(false);
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
   const [voiceBusy, setVoiceBusy] = useState(false);
+  const [voiceId, setVoiceId] = useState(DEFAULT_VOICE_ID);
+  const [cloneOpen, setCloneOpen] = useState(false);
+  const [voiceListKey, setVoiceListKey] = useState(0);
+  const [model3dModel, setModel3dModel] = useState<Model3dModelKey>(TEXT_3D_MODELS[0]?.id ?? 'tripo-2.5');
+  const [model3dPaywallOpen, setModel3dPaywallOpen] = useState(false);
   const [musicSeconds, setMusicSeconds] = useState(MUSIC_DEFAULT_SECONDS);
   const [sfxSeconds, setSfxSeconds] = useState(0);
   const [sfxLoop, setSfxLoop] = useState(false);
@@ -134,6 +150,8 @@ export function GeneratePanel() {
     useCallback(() => {
       setImagePaywallOpen(false);
       setVideoPaywallOpen(false);
+      setModel3dPaywallOpen(false);
+      setCloneOpen(false);
       setMusicDraft(null);
     }, []),
   );
@@ -166,7 +184,7 @@ export function GeneratePanel() {
   const runVoice = useCallback(async () => {
     setVoiceBusy(true);
     try {
-      const { blob } = await generateAudio({ text: prompt.trim(), voiceId: DEFAULT_VOICE_ID });
+      const { blob } = await generateAudio({ text: prompt.trim(), voiceId });
       const format = generatedMediaFormat('audio', '', blob.type);
       const file = new File([blob], `voiceover-${Date.now()}.${format.ext}`, { type: format.mime });
       const id = await importOneFile(file, { wallet: quota.walletAddress,
@@ -183,7 +201,7 @@ export function GeneratePanel() {
     } finally {
       setVoiceBusy(false);
     }
-  }, [prompt, quota, setPrompt, _copy]);
+  }, [prompt, quota, setPrompt, voiceId, t, _copy]);
 
   const run = useCallback(() => {
     if (!canRun) {
@@ -192,6 +210,7 @@ export function GeneratePanel() {
     }
     if (kind === 'image') setImagePaywallOpen(true);
     else if (kind === 'video') setVideoPaywallOpen(true);
+    else if (kind === 'model3d') setModel3dPaywallOpen(true);
     else if (kind === 'music') setMusicDraft({ prompt: prompt.trim(), lengthSeconds: musicSeconds, instrumental });
     else if (kind === 'sfx') {
       const request = soundEffectRequest({ text: prompt, durationSeconds: sfxSeconds, loop: sfxLoop });
@@ -210,6 +229,17 @@ export function GeneratePanel() {
     setMusicDraft(null); setPanel('library');
     toast.success(_copy('copy.241a018b66a8', { defaultValue: 'Generating. It lands in the Generations tab.' }));
   }, [musicDraft, startAudio, setPanel, t, _copy]);
+
+  const run3d = useCallback((options: Model3dGenerationOptions | undefined, txHash: string) => {
+    setModel3dPaywallOpen(false);
+    startModel3d(
+      { prompt: prompt.trim(), model: model3dModel, textureQuality: options?.textureQuality, pbr: options?.pbr,
+        faceLimit: options?.faceLimit, quad: options?.quad, seed: options?.seed, exportFormat: 'glb', txHash },
+      { prompt: prompt.trim(), resolvedPrompt: prompt.trim(), modelName: MODEL3D_MODELS[model3dModel]?.name ?? model3dModel, aspect: '1:1' },
+    );
+    setPanel('library');
+    toast.success(t('editor.generate3d.queued'));
+  }, [prompt, model3dModel, startModel3d, setPanel, t]);
 
   const runImage = useCallback((txHash: string) => {
     setImagePaywallOpen(false);
@@ -295,7 +325,7 @@ export function GeneratePanel() {
               onClick={() => setKind(k.id)}
               className={cn(
                 'inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[12px] font-semibold transition',
-                k.id === 'sfx' && 'basis-full',
+                (k.id === 'sfx' || k.id === 'model3d') && 'basis-[45%]',
                 active ? 'bg-white text-black' : 'text-white/60 hover:bg-white/10 hover:text-white',
               )}
             >
@@ -326,6 +356,8 @@ export function GeneratePanel() {
               ? t('creator.audioTaskSfxPlaceholder')
             : kind === 'music'
               ? t('creator.audioTaskMusicPlaceholder')
+            : kind === 'model3d'
+              ? t('editor.generate3d.placeholder')
             : kind === 'video'
               ? _copy("copy.a931594a03cd", { defaultValue: "Describe the shot you want" })
               : _copy("copy.f0c4005c1962", { defaultValue: "Describe the image you want" })
@@ -334,9 +366,19 @@ export function GeneratePanel() {
       />
 
       {kind === 'voice' ? (
-        <p className="mt-1.5 px-0.5 text-right text-[11px] tabular-nums text-white/40">
-          {prompt.length} / {MAX_VOICE_CHARS}
-        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <StudioVoicePicker key={voiceListKey} value={voiceId} onChange={setVoiceId} onDesignVoice={() => setCloneOpen(true)}
+            actionLabel={t('editor.voiceClone.pickerLabel')} actionDetail={t('editor.voiceClone.pickerDetail')} />
+          <p className="ml-auto px-0.5 text-right text-[11px] tabular-nums text-white/40">
+            {prompt.length} / {MAX_VOICE_CHARS}
+          </p>
+        </div>
+      ) : kind === 'model3d' ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <SelectChip label={_copy("copy.5e2c614c23f0", { defaultValue: "Model" })} width="md" value={model3dModel}
+            options={TEXT_3D_MODELS.map((m) => ({ value: m.id, label: m.name, detail: m.description, meta: `$${getModel3dCostUsd(m).toFixed(2)}` }))}
+            onChange={(v) => setModel3dModel(v as Model3dModelKey)} />
+        </div>
       ) : kind === 'sfx' ? (
         <div className="mt-2 flex flex-wrap gap-1.5">
           <SelectChip label={t('creator.length')} value={String(sfxSeconds)} display={sfxSeconds ? `${sfxSeconds}s` : t('creator.auto')}
@@ -399,6 +441,8 @@ export function GeneratePanel() {
       <p className="mt-3 px-0.5 text-[11px] leading-relaxed text-white/40">
         {kind === 'voice'
           ? _copy("copy.b57c54362f70", { defaultValue: "Voiceovers use your storage quota and land straight in Media." })
+          : kind === 'model3d'
+            ? t('editor.generate3d.note')
           : _copy("copy.eb9f691bb8c2", { defaultValue: "Renders keep running while you edit. Finished results appear in the Generations tab, ready to drop on the timeline." })}
       </p>
 
@@ -424,6 +468,23 @@ export function GeneratePanel() {
           onModelChange={setVideoModel}
           onConfirm={runVideoJob}
         />
+      )}
+      {MODEL3D_MODELS[model3dModel] && (
+        <Model3dPaywallModal
+          key={model3dPaywallOpen ? 'model3d-open' : `model3d-${surfaceEpoch}`}
+          open={model3dPaywallOpen}
+          onOpenChange={setModel3dPaywallOpen}
+          model={MODEL3D_MODELS[model3dModel]}
+          selectedModelKey={model3dModel}
+          onModelChange={setModel3dModel}
+          onConfirm={run3d}
+        />
+      )}
+      {cloneOpen && (
+        <Suspense fallback={null}>
+          <VoiceCloneDialog open={cloneOpen} onOpenChange={setCloneOpen}
+            onCloned={(id) => { if (id) setVoiceId(id); setVoiceListKey((k) => k + 1); }} />
+        </Suspense>
       )}
       <AudioPaywallModal
         key={musicDraft ? 'music-open' : `music-${surfaceEpoch}`}

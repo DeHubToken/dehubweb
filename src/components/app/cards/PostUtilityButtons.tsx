@@ -5,8 +5,8 @@ import { FEED_ICON_CLASS } from './feed-icon-size';
  * The non-engagement actions for a post: bookmark, pin (own posts only), info.
  *
  * Two render variants:
- *  - `inline` — the small zinc icon buttons used inside the bottom ActionBar
- *    (unchanged from the original ActionBar layout).
+ *  - `inline` — the small icon buttons used inside the bottom ActionBar, in
+ *    the same white as the engagement buttons beside them.
  *  - `chip`   — glass pill buttons matching the fullscreen viewer's top-right
  *    controls (Close / Translate). Used on desktop to lift these actions up to
  *    the top-right corner for easy reach.
@@ -90,7 +90,7 @@ export function PostUtilityButtons({
         className={cn(
           isChip
             ? cn(CHIP_BASE, isBookmarked && 'text-yellow-500 hover:text-yellow-400')
-            : cn('transition-colors', isBookmarked ? 'text-yellow-500' : 'text-zinc-400 hover:text-white'),
+            : cn('transition-colors', isBookmarked ? 'text-yellow-500' : 'text-white hover:text-zinc-400'),
           isBookmarkLoading && 'opacity-50',
         )}
         aria-label={isBookmarked ? t('postOptions.removeBookmark', 'Remove bookmark') : t('postOptions.bookmark', 'Bookmark')}
@@ -115,7 +115,7 @@ export function PostUtilityButtons({
           className={cn(
             isChip
               ? cn(CHIP_BASE, isPinned && 'text-blue-400', 'disabled:opacity-40')
-              : cn('transition-colors disabled:opacity-40', isPinned ? 'text-blue-400' : 'text-zinc-400 hover:text-white'),
+              : cn('transition-colors disabled:opacity-40', isPinned ? 'text-blue-400' : 'text-white hover:text-zinc-400'),
           )}
         >
           <Pin className={cn(FEED_ICON_CLASS.pin, isPinned && 'fill-current')} />
@@ -124,7 +124,7 @@ export function PostUtilityButtons({
 
       <button
         onClick={handleInfoClick}
-        className={cn(isChip ? CHIP_BASE : 'text-zinc-400 hover:text-white transition-colors')}
+        className={cn(isChip ? CHIP_BASE : 'text-white hover:text-zinc-400 transition-colors')}
         aria-label={t('postInfo.title', 'Post info')}
       >
         <Info className={FEED_ICON_CLASS.info} />

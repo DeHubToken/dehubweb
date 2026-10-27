@@ -570,6 +570,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "After you post",
+    "postLandingDesc": "How your new post lands in your feed",
+    "postLandingGhost": "Ghost slot",
+    "postLandingGhostDesc": "Your feed makes room and your post fades into place",
+    "postLandingMorph": "Morph",
+    "postLandingMorphDesc": "The composer shrinks into your post",
+    "postLandingPill": "Pill to card",
+    "postLandingPillDesc": "The upload bar opens out into your post once it is up",
+    "postLandingDrop": "Drop in",
+    "postLandingDropDesc": "Your post drops in from the top with a little bounce",
     "sessionsRevokedMany": "{{count}} devices signed out",
     "usernameTaken": "Username taken",
     "postingChain": "Posting chain",
@@ -1230,6 +1240,9 @@
     "embedCodeCopied": "Embed code copied",
     "options": "Options",
     "aiOverview": "AI overview",
+    "refreshLinkPreview": "Refresh link preview",
+    "linkPreviewRefreshed": "Link preview refreshed",
+    "linkPreviewRefreshFailed": "Couldn't reach that site. Try again later.",
     "sendTip": "Send Tip",
     "queue": "Queue",
     "watchList": "Watch List",
@@ -2543,7 +2556,14 @@
     "resendCodePhone": "Wrong number or no code? Go back",
     "continueAs": "Continue as",
     "switchWalletAccount": "Switch account",
-    "walletLoadFailed": "Could not load wallets. Please try again."
+    "walletLoadFailed": "Could not load wallets. Please try again.",
+    "migrateWrongLogin": "That sign-in opened a different wallet, so nothing changed. Your old profile was made with {{login}}. Use that to bring it back.",
+    "googleInAppTitle": "Google won't sign in inside {{app}}",
+    "googleInAppTitleUnnamed": "Google won't sign in inside this app",
+    "googleInAppBody": "Open DeHub in your browser to use Google, or sign in with email here.",
+    "openInBrowser": "Open in browser",
+    "copyLink": "Copy link",
+    "tryAnyway": "Try anyway"
   },
   "careers": {
     "title": "Careers at DeHub",
@@ -10752,6 +10772,73 @@
         "start": "Go to start",
         "end": "Go to end"
       }
+    },
+    "speakers": {
+      "find": "Find speakers",
+      "name": "Speaker {{number}}",
+      "onlyOne": "Only one speaker found.",
+      "failed": "Could not find the speakers.",
+      "kept": "Kept only {{name}}.",
+      "editFailed": "That edit did not fit this clip.",
+      "split": "Split into {{count}} speaker shots.",
+      "keepOnly": "Keep only",
+      "splitAction": "Cut at each speaker change"
+    },
+    "generate3d": {
+      "label": "3D",
+      "placeholder": "Describe the 3D object you want",
+      "queued": "Building your 3D object. It lands in the Generations tab.",
+      "note": "3D objects come into Media as a short spinning clip with a see-through background."
+    },
+    "voiceClone": {
+      "pickerLabel": "Clone your voice",
+      "pickerDetail": "Voiceovers in your own voice",
+      "title": "Clone your voice",
+      "description": "Record yourself or pick a clip of you talking. You pay once and your voice is yours for every voiceover.",
+      "defaultName": "My voice",
+      "record": "Record a sample (30 seconds to 2 minutes)",
+      "stop": "Stop recording",
+      "fromMedia": "Or use a clip from Media",
+      "recorded": "Your recording",
+      "sample": "Sample: {{name}}",
+      "hint": "Clear speech with no music works best.",
+      "noMic": "Could not use the microphone.",
+      "sampleFailed": "Could not read the sound from that clip.",
+      "pay": "Clone for {{amount}} DHB",
+      "useFree": "Clone (already paid)",
+      "owned": "Your voice “{{name}}” is already set up. Pick it from the voice list.",
+      "useOwned": "Use my voice",
+      "ready": "“{{name}}” is ready for voiceovers.",
+      "failed": "Voice cloning failed.",
+      "paidFailed": "Your payment is saved. Open this again and the next try is free.",
+      "consent": "Only clone your own voice, or one you have permission to use."
+    },
+    "linkImport": {
+      "open": "Import from a link",
+      "placeholder": "Paste a YouTube, TikTok or other link",
+      "rights": "I own this video or have permission to use it",
+      "audioOnly": "Sound only",
+      "go": "Import",
+      "queued": "Queued…",
+      "downloading": "Downloading {{percent}}%",
+      "waiting": "Waiting on the site, trying again soon…",
+      "adding": "Adding to Media…",
+      "added": "Imported and added to the timeline.",
+      "failed": "Could not import that link."
+    },
+    "reverse": {
+      "action": "Reverse",
+      "working": "Reversing {{percent}}%",
+      "done": "Clip reversed.",
+      "failed": "Could not reverse this clip.",
+      "unsupported": "This browser can't reverse video. Try Chrome or Edge.",
+      "tooLong": "Clips up to {{seconds}} seconds can be reversed."
+    },
+    "behind": {
+      "action": "Text behind person",
+      "working": "Cutting out the person…",
+      "done": "Text and captions now sit behind the person.",
+      "failed": "Could not put text behind the person."
     }
   },
   "jungleMood": {
@@ -19353,5 +19440,81 @@
     "cancelled": "Cancelled",
     "moveFailed": "Could not move it. Try again.",
     "seeAll": "See everything you have planned"
+  },
+  "welcome": {
+    "about": {
+      "title": "Welcome to DeHub",
+      "sub": "Your birthday stays private. Pick a look, you can change it any time.",
+      "birthday": "Date of birth",
+      "pick": "Pick your birthday",
+      "day": "Day",
+      "month": "Month",
+      "year": "Year",
+      "invalid": "Enter your full date of birth.",
+      "tooYoung": "You need to be {{age}} or older to use DeHub.",
+      "theme": "Your look"
+    },
+    "name": {
+      "title": "Your name",
+      "sub": "This is the name people see on your posts.",
+      "placeholder": "Your name"
+    },
+    "username": {
+      "title": "Your @username",
+      "sub": "Letters, numbers and underscores. You can change it later.",
+      "yours": "@{{name}} is yours"
+    },
+    "photo": {
+      "title": "Your photo",
+      "sub": "Optional. People follow faces faster.",
+      "choose": "Choose a photo",
+      "change": "Choose another"
+    },
+    "interests": {
+      "title": "Your interests",
+      "sub": "Pick at least 3. They go first in your categories."
+    },
+    "people": {
+      "title": "Your people",
+      "sub": "Tap to follow. Their posts fill your Following feed.",
+      "empty": "No suggestions right now. Explore has more people to find.",
+      "followers": "{{count}} followers"
+    },
+    "done": {
+      "title": "Looking good, {{name}}",
+      "sub": "Everyone sees this card from today.",
+      "eyebrow": "Profile live"
+    },
+    "card": {
+      "name": "Your name",
+      "interests": "Your interests",
+      "following": "following",
+      "followers": "followers"
+    },
+    "topic": {
+      "music": "Music",
+      "art": "Art",
+      "gaming": "Gaming",
+      "crypto": "Crypto",
+      "sports": "Sports",
+      "travel": "Travel",
+      "comedy": "Comedy",
+      "film": "Film",
+      "anime": "Anime",
+      "cars": "Cars",
+      "podcast": "Podcast",
+      "animals": "Animals",
+      "tech": "Tech",
+      "food": "Food",
+      "news": "News",
+      "science": "Science"
+    },
+    "back": "Back",
+    "enter": "Enter DeHub",
+    "skipPhoto": "Skip for now",
+    "pickMore": "Pick {{count}} more",
+    "preview": "Preview",
+    "cardHint": "This is how people will see you",
+    "followFailed": "Could not follow. Try again."
   }
 }

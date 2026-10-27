@@ -6980,3 +6980,9 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-notifications
 html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) [data-drawer-handle] {
   background-color: rgb(24 24 27 / 0.25) !important;
 }
+
+/* An image that failed to load is hidden until a fallback loads into it
+   (image-origin-fallback.ts), so the browser's broken-image icon never shows. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
+  visibility: hidden !important;
+}

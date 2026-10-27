@@ -27,6 +27,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { closeCommentsSplit } from '@/lib/comments-split';
 import { useImagesFeedScrollView, requestImagesBackToCollage } from '@/lib/images-feed-mode';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
@@ -68,6 +69,8 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
   const isHomePage = isHomePath(location.pathname);
 
   const handleBack = useCallback(() => {
+    // An open comments sheet on a phone post page closes first.
+    if (closeCommentsSplit()) return;
     if (typeof window.history.state?.idx === 'number' && window.history.state.idx > 0) navigate(-1);
     else navigate('/app', { replace: true });
   }, [navigate]);

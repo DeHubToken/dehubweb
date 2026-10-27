@@ -183,6 +183,8 @@ export interface VideoItem extends BaseFeedItem {
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   /** Seek-preview sprite sheet — see lib/storyboard. */
   storyboard?: Storyboard;
+  /** Width/height stored at upload — see lib/video-aspect. */
+  storedAspect?: number;
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
   /** Creator's user ID for navigation */
@@ -502,6 +504,8 @@ export interface ShortVideo extends BaseFeedItem {
   transcodingStatus?: 'pending' | 'on' | 'done' | 'failed';
   /** Seek-preview sprite sheet — see lib/storyboard. */
   storyboard?: Storyboard;
+  /** Width/height stored at upload — see lib/video-aspect. */
+  storedAspect?: number;
   /**
    * The post's own title, kept apart from `description`.
    *

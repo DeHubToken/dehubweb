@@ -26,6 +26,7 @@ import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
+import { opensCommentsSplit } from '@/lib/comments-split';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
@@ -82,7 +83,7 @@ import Repeat from "@/components/ui/cut-icons/repost";
 import X from "@/components/ui/cut-icons/close";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
-import { useSuperpowers } from '@/hooks/use-superpowers';
+import { useFeedSuperpowers } from '@/contexts/FeedSuperpowersContext';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -842,7 +843,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // the one row that belongs in this half of the menu. `status.powers` is
   // the authority for whether this account has it — the badge the client
   // draws from a live wallet read deliberately over-reports.
-  const { data: superpowerStatus } = useSuperpowers(!!walletAddress);
+  const superpowerStatus = useFeedSuperpowers();
   const canGiftBoost = !!superpowerStatus?.powers.some(
     p => p.key === 'deep_current' && p.unlocked && p.available,
   );
@@ -1799,8 +1800,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     intrinsicAspect,
     isImmersive ? THIN_MIN_RATIO : undefined,
     video.id,
+    video.storedAspect,
   );
-  const resolvedVideoAspect = intrinsicAspect ?? getMeasuredMediaAspect(thumbnail);
+  const resolvedVideoAspect = intrinsicAspect ?? getMeasuredMediaAspect(thumbnail) ?? video.storedAspect ?? null;
   const mediaAspect = useFeedFrameAspect(`video:${video.id}`, video.isAudio ? DEFAULT_ASPECT : measuredAspect, containerRef, !isImmersive && !isFullscreen,
     !video.isAudio && resolvedVideoAspect != null ? measuredAspect : undefined);
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
@@ -1825,7 +1827,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
+    // Phones crop tall footage to fill the column; desktop shows the whole
+    // picture (a short stays a short, not a stretched wide crop).
+    className: `dehub-inline-video w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2357,12 +2361,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   }
               : desktopFeedHug
                 ? {
-                    // Fill the desktop column while retaining its height cap.
+                    // The frame hugs the clip, up to 75% of the screen tall,
+                    // right aligned, so a short keeps its upright shape.
                     aspectRatio: feedFrameAspect,
-                    width: '100%',
+                    width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
                     maxHeight: DESKTOP_FEED_MAX_HEIGHT,
-                    marginLeft: 0,
-                    marginRight: 'auto',
+                    marginLeft: 'auto',
+                    marginRight: 0,
                   }
               : cropFeedVideo
                 ? {
@@ -2650,7 +2655,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
+                    className={`absolute inset-0 w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
@@ -3331,6 +3336,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   onOpenComments();
                   return;
                 }
+                // Phones: an audio post opens with its comments in the bottom half.
+                if (video.isAudio && opensCommentsSplit() && window.location.pathname !== `/app/post/${video.id}`) {
+                  cacheVideoForNavigation(queryClient, video);
+                  navigate(`/app/post/${video.id}`, { state: { fromFeed: true, openComments: true } });
+                  return;
+                }
                 setCommentsInitialTab(undefined);
                 setShowComments(!showComments);
               }}
@@ -3453,6 +3464,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               tokenId={videoTokenId}
               isOwnPost={!!isOwnPost}
               onBeforeNavigate={() => setShowOptionsDrawer(false)}
+              linkText={video.description}
+              onClose={() => setShowOptionsDrawer(false)}
             />
             {!isOwnPost && (
               <button

@@ -70,7 +70,7 @@ function transcribe(audio: Float32Array, onProgress?: (p: CaptionProgress) => vo
 }
 
 /** The clip's audible section, as 16 kHz mono, in source time. */
-async function clipAudio(url: string, trimIn: number, sourceSeconds: number, signal?: AbortSignal): Promise<Float32Array> {
+export async function clipAudio(url: string, trimIn: number, sourceSeconds: number, signal?: AbortSignal): Promise<Float32Array> {
   if (signal?.aborted) throw new Error("cancelled");
   if (!(sourceSeconds > 0) || sourceSeconds > MAX_SECONDS) throw new Error("highlight_limit");
   const response = await fetch(url, { signal });

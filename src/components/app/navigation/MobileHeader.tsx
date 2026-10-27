@@ -63,6 +63,11 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   );
 });
 
+/** Drawn height of the avatar, bell and logo, so the three read as one row. */
+const TOP_BAR_ICON = 26;
+/** How far the avatar and bell sit inside the feed pill's side edges. */
+const TOP_BAR_PILL_INSET = 4;
+
 interface MobileHeaderProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -127,6 +132,33 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
   }, [showBar, islandBar]);
 
+  // The avatar and bell sit a hair inside the feed pill's side edges, and the
+  // avatar's corner is concentric with the pill's (pill radius minus that
+  // inset). Both come from the pill as drawn, since every theme gives it its
+  // own inset and radius; the CSS defaults cover the moment before it mounts.
+  const headerRef = useRef<HTMLElement>(null);
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header || !showBar || islandBar) return;
+    const sync = () => {
+      const pill = document.querySelector<HTMLElement>('[data-feed-nav]');
+      if (!pill) return;
+      const rect = pill.getBoundingClientRect();
+      if (!rect.width) return;
+      const radius = parseFloat(getComputedStyle(pill).borderTopLeftRadius) || 0;
+      header.style.setProperty('--top-bar-edge', `${Math.max(0, rect.left) + TOP_BAR_PILL_INSET}px`);
+      header.style.setProperty('--top-bar-avatar-radius', `${Math.min(TOP_BAR_ICON / 2, Math.max(0, radius - TOP_BAR_PILL_INSET))}px`);
+    };
+    sync();
+    // The pill mounts with the feed and themes restyle it after a switch.
+    const timer = window.setTimeout(sync, 400);
+    window.addEventListener('resize', sync);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('resize', sync);
+    };
+  }, [showBar, islandBar, theme, location.pathname]);
+
   // The centre logo opens the login drawer for guests. Warm it on touch-start
   // so the sheet is ready before the tap completes.
   const warmSheetForLogin = useCallback(() => {
@@ -135,7 +167,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
 
   return (
     <>
-    <header data-mobile-header data-clear-top-bar={theme === 'system' ? undefined : ''} className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}
+    <header ref={headerRef} data-mobile-header data-clear-top-bar={theme === 'system' ? undefined : ''} className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-[var(--top-bar-edge,16px)] h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}
       style={theme === 'system' && !isOpen && !anyOverlayOpen ? { transform: 'translateY(var(--system-feed-header-offset, 0px))' } : undefined}
     >
       {/* Profile — left slot.
@@ -149,29 +181,29 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             <DrawerTrigger asChild>
               {user ? (
                 <button
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg hover:opacity-80 transition-opacity"
+                  className="flex h-11 w-11 shrink-0 items-center justify-start rounded-lg hover:opacity-80 transition-opacity"
                   aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
-                  <Avatar className="w-[27px] h-[27px]">
+                  <Avatar className="w-[26px] h-[26px]" style={{ borderRadius: 'var(--top-bar-avatar-radius, 8px)' }}>
                     {user.avatarImageUrl && user.address && (
                       <AvatarImage
                         src={buildAvatarUrl(user.address, user.avatarImageUrl)}
                         alt={_copy("copy.f66ca816cb1e", { defaultValue: "{{value1}}'s avatar", value1: user.displayName || user.username })}
-                        className="object-cover"
+                        className="object-cover rounded-[inherit]"
                         loading="eager"
                       />
                     )}
-                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium rounded-[inherit]">
                       {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </button>
               ) : (
                 <button
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors"
+                  className="flex h-11 w-11 shrink-0 items-center justify-start rounded-lg transition-colors"
                   aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
-                  <Menu className="w-[27px] h-[27px] text-white" />
+                  <Menu className="w-[26px] h-[26px] text-white" />
                 </button>
               )}
             </DrawerTrigger>
@@ -206,10 +238,15 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         {isAuthenticated && (
           <button
             onClick={() => openNotificationsDrawer()}
-            className="relative flex h-11 w-11 shrink-0 items-center justify-center text-white transition-colors"
+            className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
-            <NotificationBell unread={totalNotifUnread} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
+            {/* 29 draws the bell glyph 26 tall, level with the avatar and mark. Its
+                ink sits 2px inside the box at each side and a little high, so the
+                box is pulled out and down to put the drawn bell on the line. */}
+            <span className="block -mr-[2px] translate-y-[1.5px]">
+              <NotificationBell unread={totalNotifUnread} size={29} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
+            </span>
           </button>
         )}
       </div>

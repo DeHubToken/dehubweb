@@ -63,3 +63,23 @@ export function matchRecoveredLegacyAccount(
   if (byProvider.length === 1) return byProvider[0];
   return accounts.length === 1 ? accounts[0] : undefined;
 }
+
+/** The login family an old profile was made with, or null when unrecorded. */
+export function oldLoginOf(signupMethod?: string | null): string | null {
+  const method = normalized(signupMethod);
+  if (!method) return null;
+  if (PROVIDER_ALIASES.email.includes(method)) return 'email_passwordless';
+  if (PROVIDER_ALIASES.sms.includes(method)) return 'sms_passwordless';
+  return method;
+}
+
+/**
+ * The one old login every found profile was made with. Web3Auth keys are per
+ * login, so when there is exactly one, every other option opens a different
+ * wallet. Null when profiles disagree or any of them is unrecorded.
+ */
+export function sharedOldLogin(accounts: LegacyAccountMatch[]): string | null {
+  const logins = new Set(accounts.map((account) => oldLoginOf(account.signupMethod)));
+  if (logins.size !== 1) return null;
+  return [...logins][0];
+}

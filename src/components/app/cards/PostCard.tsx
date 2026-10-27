@@ -39,6 +39,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { opensCommentsSplit } from '@/lib/comments-split';
 import { CardHeader } from './CardHeader';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { useBoostedPost } from './boosted-post';
@@ -508,6 +509,8 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}
                 onBeforeNavigate={() => setShowOptionsDrawer(false)}
+                linkText={dehubLinks.length === 0 ? post.content : undefined}
+                onClose={() => setShowOptionsDrawer(false)}
               />
               <button
                 onClick={() => setShowReportModal(true)}
@@ -834,6 +837,12 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             onComment={() => {
               if (onOpenComments) {
                 onOpenComments();
+                return;
+              }
+              // Phones: open the post with its comments in the bottom half.
+              if (opensCommentsSplit() && !isPostPage) {
+                cacheTextPostForNavigation(queryClient, post);
+                navigate(`/app/post/${post.id}`, { state: { fromFeed: true, openComments: true } });
                 return;
               }
               setCommentsInitialTab(undefined);

@@ -21,7 +21,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { getWalletBrowserName, getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { embeddedBrowserApp, systemBrowserUrl } from '@/lib/embedded-browser';
+import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
@@ -199,6 +201,9 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  // Set to the app's name ('' when unnamed) after Google was tapped inside a
+  // social app's built-in browser, where Google refuses to sign anyone in.
+  const [googleBlockedIn, setGoogleBlockedIn] = useState<string | null>(null);
   // "Migrate account" / "Import keys", chosen before signing in.
   // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
   // the wallet step once the identity exists (see lib/wallet-setup-intent).
@@ -316,7 +321,15 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     void switchToProfile(id);
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'apple') => {
+  const handleSocialLogin = async (provider: 'google' | 'apple', anyway = false) => {
+    if (provider === 'google' && !anyway) {
+      const app = embeddedBrowserApp() ?? (isWalletInAppBrowser() ? getWalletBrowserName() ?? '' : null);
+      if (app !== null) {
+        setGoogleBlockedIn(app);
+        return;
+      }
+    }
+    setGoogleBlockedIn(null);
     setActiveProvider(provider);
     try {
       // Full-page OAuth redirect — the modal reopens at the wallet step on return.
@@ -355,6 +368,8 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         setPasskeyError(t('loginModal.passkeyNotLinked', 'No account is linked to that fingerprint yet. Create a new account instead.'));
       } else if (error instanceof PasskeyLoginError && error.code === 'ALREADY_REGISTERED') {
         setPasskeyError(t('loginModal.passkeyAlreadyRegistered', 'That fingerprint already has an account. Use Sign in instead.'));
+      } else if (isChunkLoadError(error) && recoverFromChunkError() === 'reloading') {
+        // A tab from before a deploy: reloading fetches the passkey code again.
       } else {
         console.error('Passkey login failed:', error);
         setPasskeyError(error instanceof Error && error.message
@@ -569,6 +584,56 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     handleWalletConnect(connectedWalletId as WalletId, () => {});
   };
 
+  // Google answers "Access blocked" inside Instagram, TikTok, Facebook and
+  // the like, and the person is stranded on its error page. Say so before
+  // sending them there, and offer the way out: the phone's own browser.
+  const renderGoogleBlockedNotice = () => {
+    if (googleBlockedIn === null) return null;
+    const escape = systemBrowserUrl(window.location.href);
+    const copyLink = async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success(t('toasts.link_copied', 'Link copied!'));
+      } catch { /* clipboard blocked in this browser */ }
+    };
+    return (
+      <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+        <span className="shrink-0"><GoogleIcon /></span>
+        <div className="flex-1 min-w-0 space-y-2">
+          <p className="font-medium">
+            {googleBlockedIn
+              ? t('loginModal.googleInAppTitle', "Google won't sign in inside {{app}}", { app: googleBlockedIn })
+              : t('loginModal.googleInAppTitleUnnamed', "Google won't sign in inside this app")}
+          </p>
+          <p className="text-white/70">
+            {t('loginModal.googleInAppBody', 'Open DeHub in your browser to use Google, or sign in with email here.')}
+          </p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            {escape ? (
+              <a href={escape} className="font-semibold underline underline-offset-4">
+                {t('loginModal.openInBrowser', 'Open in browser')}
+              </a>
+            ) : null}
+            <button type="button" onClick={copyLink} className="font-semibold underline underline-offset-4">
+              {t('loginModal.copyLink', 'Copy link')}
+            </button>
+            <button type="button" onClick={() => handleSocialLogin('google', true)} className="text-white/60 underline underline-offset-4">
+              {t('loginModal.tryAnyway', 'Try anyway')}
+            </button>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setGoogleBlockedIn(null)}
+          aria-label={t('common.close', 'Close')}
+          className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    );
+  };
+
   const renderMainStep = () => (
     <div className="space-y-4">
       {/* Signed-out only. Over a live session this sheet is "Add a profile",
@@ -599,6 +664,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           </button>
         </div>
       )}
+      {renderGoogleBlockedNotice()}
       {setupIntent && (
         <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           {setupIntent === 'migrate'
@@ -848,6 +914,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           </button>
         </div>
       )}
+      {renderGoogleBlockedNotice()}
       {setupIntent && (
         <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />

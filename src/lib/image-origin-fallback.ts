@@ -5,6 +5,8 @@ const TRANSFORM_PREFIX = 'https://dehub.io/cdn-cgi/image/';
 const FAILURES_BEFORE_SWITCH = 3;
 
 const PROBE_TIMEOUT_MS = 6000;
+/** Styled `visibility: hidden` in index.css. */
+export const FAILED_ATTRIBUTE = 'data-image-failed';
 
 let failures = 0;
 
@@ -32,9 +34,16 @@ export function installImageOriginFallback(): void {
     markImageTransformsDown();
     document.querySelectorAll<HTMLImageElement>('img').forEach(loadOriginal);
   };
+  // A failed image is hidden until something loads into it, so the browser's
+  // broken-image icon never paints, whether or not a fallback is coming.
+  document.addEventListener('load', (event) => {
+    const img = event.target;
+    if (img instanceof HTMLImageElement && img.hasAttribute(FAILED_ATTRIBUTE)) img.removeAttribute(FAILED_ATTRIBUTE);
+  }, true);
   document.addEventListener('error', (event) => {
     const img = event.target;
     if (!(img instanceof HTMLImageElement)) return;
+    img.setAttribute(FAILED_ATTRIBUTE, '');
     if (!(img.currentSrc || img.src).startsWith(TRANSFORM_PREFIX)) return;
     loadOriginal(img);
     failures += 1;

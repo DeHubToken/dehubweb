@@ -69,6 +69,91 @@ window.renderMesh = async ({ id, url }) => {
     running = false;
   }
 };
+// One slow eased turn of the mesh, recorded as a clip for the app editor. Transparent where WebM records alpha.
+window.recordTurntable = async ({ id, url, size = 720, seconds = 6, fps = 30 }) => {
+  if (running || typeof id !== 'string' || typeof url !== 'string') return;
+  let renderer, environment, mesh, draco, canvas;
+  try {
+    if (new URL(url).protocol !== 'https:') throw new Error('Unsupported mesh URL');
+    running = true;
+    const types = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/mp4;codecs=avc1', 'video/mp4'];
+    const mime = typeof MediaRecorder === 'undefined' ? undefined : types.find((type) => MediaRecorder.isTypeSupported(type));
+    if (!mime) throw new Error('Recording unsupported');
+    const alpha = mime.startsWith('video/webm');
+    canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    document.body.appendChild(canvas);
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(1);
+    renderer.setSize(size, size, false);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.setClearColor(0x000000, alpha ? 0 : 1);
+    const scene = new THREE.Scene();
+    if (!alpha) scene.background = new THREE.Color('#18181b');
+    const room = new RoomEnvironment();
+    const generator = new THREE.PMREMGenerator(renderer);
+    environment = generator.fromScene(room, 0.04);
+    room.dispose(); generator.dispose();
+    scene.environment = environment.texture;
+    const light = new THREE.DirectionalLight(0xffffff, 2);
+    light.position.set(3, 5, 4); scene.add(light);
+    draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    mesh = (await new GLTFLoader().setDRACOLoader(draco).loadAsync(url)).scene;
+    const bounds = new THREE.Box3().setFromObject(mesh);
+    if (bounds.isEmpty()) throw new Error('Empty mesh');
+    const box = bounds.getSize(new THREE.Vector3());
+    mesh.position.sub(bounds.getCenter(new THREE.Vector3()));
+    const pivot = new THREE.Group();
+    pivot.add(mesh); scene.add(pivot);
+    const distance = box.length() / 2 / Math.sin(THREE.MathUtils.degToRad(35) / 2) * 1.05;
+    const camera = new THREE.PerspectiveCamera(35, 1, distance / 100, distance * 100);
+    camera.position.set(0, distance * 0.28, distance);
+    camera.lookAt(0, 0, 0);
+    const stream = canvas.captureStream(fps);
+    const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 3_000_000 });
+    const chunks = [];
+    recorder.ondataavailable = (event) => { if (event.data.size) chunks.push(event.data); };
+    const stopped = new Promise((resolve) => { recorder.onstop = resolve; });
+    recorder.start(250);
+    const frames = Math.round(seconds * fps);
+    for (let i = 0; i <= frames; i++) {
+      const p = i / frames;
+      pivot.rotation.y = (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2) * Math.PI * 2;
+      renderer.render(scene, camera);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => setTimeout(resolve, 1000 / fps));
+    }
+    recorder.stop();
+    await stopped;
+    stream.getTracks().forEach((track) => track.stop());
+    const blob = new Blob(chunks, { type: mime.split(';')[0] });
+    if (!blob.size) throw new Error('Empty recording');
+    const videoDataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+    reply({ id, videoDataUrl });
+  } catch { reply({ id, error: true }); }
+  finally {
+    const textures = new Set();
+    mesh?.traverse((node) => {
+      node.geometry?.dispose();
+      const materials = Array.isArray(node.material) ? node.material : node.material ? [node.material] : [];
+      for (const material of materials) {
+        for (const value of Object.values(material)) if (value?.isTexture) textures.add(value);
+        material.dispose();
+      }
+    });
+    for (const texture of textures) texture.dispose();
+    draco?.dispose(); environment?.dispose(); renderer?.dispose(); renderer?.forceContextLoss();
+    canvas?.remove();
+    running = false;
+  }
+};
 window.addEventListener('message', (event) => {
   if (event.source === parent && event.origin === location.origin) void window.renderMesh(event.data);
 });

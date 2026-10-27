@@ -11,8 +11,10 @@ type Claim = {
   failed?: boolean;
   measuredSlot?: HTMLSpanElement;
 };
-type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string>; size?: { width: number; height: number }; observer?: ResizeObserver };
+type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; stall?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string>; size?: { width: number; height: number }; observer?: ResizeObserver };
 const images = new Map<string, Entry>();
+/** How often an unfinished on-screen image is checked before switching to the original. */
+const TRANSFORM_STALL_CHECK_MS = 5000;
 
 interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'> {
   mediaKey: string;
@@ -87,6 +89,8 @@ function show(entry: Entry) {
     else if (image.getAttribute(attribute) !== String(value)) image.setAttribute(attribute, String(value));
   }
   const loaded = () => {
+    clearTimeout(entry.stall);
+    entry.stall = undefined;
     entry.failed = false;
     notifyFailure();
     const src = image.currentSrc || image.src;
@@ -106,7 +110,9 @@ function show(entry: Entry) {
     props.onImageLoad?.(image);
   };
   image.onload = loaded;
-  image.onerror = () => {
+  const failed = () => {
+    clearTimeout(entry.stall);
+    entry.stall = undefined;
     const source = entry.source;
     if (!source) return;
     const original = cdnImageSource(source);
@@ -120,7 +126,26 @@ function show(entry: Entry) {
     entry.appliedStyle = { ...entry.appliedStyle, visibility: 'hidden' };
     notifyFailure();
   };
-  if (image.complete && image.naturalWidth) loaded();
+  image.onerror = failed;
+  if (image.complete && image.naturalWidth) {
+    loaded();
+    return;
+  }
+  // A resize that stalls never errors on its own: one photo's transform hung
+  // for over a minute on a phone while the original loaded instantly. A lazy
+  // image only starts once it nears the screen, so it has to sit on screen
+  // unloaded for two checks in a row before it counts as stalled.
+  if (entry.fallback || entry.stall || !entry.source || cdnImageSource(entry.source) === entry.source) return;
+  let onScreenChecks = 0;
+  const check = () => {
+    entry.stall = undefined;
+    if (!image.isConnected || !image.getAttribute('src') || entry.fallback || (image.complete && image.naturalWidth)) return;
+    const rect = image.getBoundingClientRect();
+    onScreenChecks = rect.bottom > 0 && rect.top < window.innerHeight ? onScreenChecks + 1 : 0;
+    if (onScreenChecks >= 2) failed();
+    else entry.stall = setTimeout(check, TRANSFORM_STALL_CHECK_MS);
+  };
+  entry.stall = setTimeout(check, TRANSFORM_STALL_CHECK_MS);
 }
 
 /** Move the decoded image into the post/viewer slot and return it on close. */

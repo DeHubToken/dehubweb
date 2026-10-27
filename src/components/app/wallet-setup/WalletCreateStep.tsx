@@ -15,7 +15,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Either way the seed is encrypted client-side before anything leaves the
  * device. Ported from the Pixcellor CreateWalletDialog.
  */
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
@@ -42,6 +42,7 @@ import {
   legacyAccountForWallet,
   legacyAccountsForProvider,
   matchRecoveredLegacyAccount,
+  sharedOldLogin,
 } from '@/lib/wallet-core/legacy-match';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -83,6 +84,9 @@ const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text
  * which old login was used (and therefore which legacy account was reached). */
 const MIGRATE_PROVIDER_KEY = 'dehub_legacy_migrate_provider';
 const MIGRATE_PENDING_KEY = 'dehub_legacy_migration_pending';
+
+/** Old logins the migrate step offers, in their default order. */
+const MIGRATE_LOGINS = ['google', 'apple', 'twitter', 'discord', 'sms_passwordless', 'email_passwordless'];
 
 const OLD_LOGIN_LABELS: Record<string, string> = {
   google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
@@ -154,6 +158,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
   const [migrateProvider, setMigrateProvider] = useState<string | null>(null);
   // Address is support/debug detail now, not the identity shown by default.
   const [showMigratedAddress, setShowMigratedAddress] = useState(false);
+  // The other old logins, folded away while the original one is known.
+  const [showOtherLogins, setShowOtherLogins] = useState(false);
   // Profile picture for the matched legacy account, pulled from the public
   // account_info endpoint by username (legacy_accounts itself stores no avatar).
   const [matchedAvatarUrl, setMatchedAvatarUrl] = useState<string | null>(null);
@@ -582,6 +588,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
   const oldSmsAccounts = legacyAccountsForProvider(foundAccounts, 'sms_passwordless');
   const hasOldSmsLogin = oldSmsAccounts.length > 0;
   const knownSmsAccount = oldSmsAccounts.length === 1 ? oldSmsAccounts[0] : undefined;
+  // Web3Auth keys are per login, so when every found profile was made with
+  // the same one, any other option opens a different wallet. People who saw
+  // six equal choices picked the email box they had just signed in with and
+  // went round in circles; show the original login alone, the rest on request.
+  const sharedLogin = sharedOldLogin(foundAccounts);
+  const leadLogin = sharedLogin && MIGRATE_LOGINS.includes(sharedLogin) ? sharedLogin : null;
+  const leadLoginLabel = leadLogin ? OLD_LOGIN_LABELS[leadLogin] : undefined;
 
   const migrateProviderButton = (
     provider: 'google' | 'twitter' | 'discord' | 'apple',
@@ -596,8 +609,10 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       variant="outline"
       disabled={!!migrateBusy}
       onClick={() => handleLegacyLogin(provider)}
-      className={`w-full min-h-11 h-auto py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
-        isOldLogin ? 'ring-1 ring-green-400/50 bg-white/15' : ''
+      className={`w-full min-h-11 h-auto py-2.5 rounded-xl ${
+        provider === leadLogin
+          ? 'bg-white hover:opacity-90 text-black font-semibold border-transparent'
+          : `bg-white/10 hover:bg-white/15 text-white border-white/10 ${isOldLogin ? 'ring-1 ring-green-400/50 bg-white/15' : ''}`
       }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
@@ -605,6 +620,72 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     </Button>
     );
   };
+
+  // Every old login, original first when it is known. Key order is the
+  // default order otherwise.
+  const migrateOptions: Array<[string, ReactNode]> = [
+    ['google', migrateProviderButton('google', 'Google')],
+    ['apple', migrateProviderButton('apple', 'Apple')],
+    ['twitter', migrateProviderButton('twitter', 'X (Twitter)')],
+    ['discord', migrateProviderButton('discord', 'Discord')],
+    ['sms_passwordless', (
+      <div className="space-y-1.5">
+        <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
+          {knownSmsAccount?.username ? _copy("copy.d9bc7691fa55", { defaultValue: "Phone for @{{value1}}", value1: knownSmsAccount.username }) : _copy("copy.d65a934b6ca6", { defaultValue: "Old account phone" })}
+        </p>
+        <div className="flex gap-2">
+          <Input
+            type="tel"
+            inputMode="tel"
+            placeholder="+34 659265340"
+            value={migratePhone}
+            onChange={(e) => setMigratePhone(e.target.value)}
+            className={`${inputClass} h-11 flex-1 ${hasOldSmsLogin ? 'ring-1 ring-green-400/50' : ''}`}
+          />
+          <Button
+            variant="outline"
+            disabled={!!migrateBusy || !migratePhone}
+            onClick={() => handleLegacyLogin('sms_passwordless')}
+            className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
+          >
+            {migrateBusy === 'sms_passwordless'
+              ? <Loader2 className="w-4 h-4 animate-spin" />
+              : <ArrowDownToLine className="w-4 h-4" />}
+          </Button>
+        </div>
+        {hasOldSmsLogin && (
+          <p className="text-[11px] text-white/40 px-1">{_copy("copy.262ce5ec0785", { defaultValue: "Include the country code. It must be the same number used to create the old profile." })}</p>
+        )}
+      </div>
+    )],
+    ['email_passwordless', (
+      <div className="space-y-1.5">
+        <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
+          {knownEmailAccount?.username ? _copy("copy.2a4c72c809a7", { defaultValue: "Email for @{{value1}}", value1: knownEmailAccount.username }) : _copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
+        </p>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            placeholder={_copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
+            value={migrateEmail}
+            onChange={(e) => setMigrateEmail(e.target.value)}
+            className={`${inputClass} h-11 flex-1 ${hasOldEmailLogin ? 'ring-1 ring-green-400/50' : ''}`}
+          />
+          <Button
+            variant="outline"
+            disabled={!!migrateBusy || !migrateEmail}
+            onClick={() => handleLegacyLogin('email_passwordless')}
+            className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
+          >
+            {migrateBusy === 'email_passwordless'
+              ? <Loader2 className="w-4 h-4 animate-spin" />
+              : <ArrowDownToLine className="w-4 h-4" />}
+          </Button>
+        </div>
+      </div>
+    )],
+  ];
+  if (leadLogin) migrateOptions.sort(([a], [b]) => Number(b === leadLogin) - Number(a === leadLogin));
 
   // deriveFromSecret throws on a key it cannot parse, and legacy Web3Auth keys
   // are not always well-formed (leading zeros stripped to 63 hex chars, or not
@@ -847,62 +928,19 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
               <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ee42456bfe81", { defaultValue: " Retrieving your old wallet…" })}</p>
           ) : (
             <>
-              {migrateProviderButton('google', 'Google')}
-              {migrateProviderButton('apple', 'Apple')}
-              {migrateProviderButton('twitter', 'X (Twitter)')}
-              {migrateProviderButton('discord', 'Discord')}
-              <div className="space-y-1.5">
-                <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  {knownSmsAccount?.username ? _copy("copy.d9bc7691fa55", { defaultValue: "Phone for @{{value1}}", value1: knownSmsAccount.username }) : _copy("copy.d65a934b6ca6", { defaultValue: "Old account phone" })}
-                </p>
-                <div className="flex gap-2">
-                  <Input
-                    type="tel"
-                    inputMode="tel"
-                    placeholder="+34 659265340"
-                    value={migratePhone}
-                    onChange={(e) => setMigratePhone(e.target.value)}
-                    className={`${inputClass} h-11 flex-1 ${hasOldSmsLogin ? 'ring-1 ring-green-400/50' : ''}`}
-                  />
-                  <Button
-                    variant="outline"
-                    disabled={!!migrateBusy || !migratePhone}
-                    onClick={() => handleLegacyLogin('sms_passwordless')}
-                    className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
-                  >
-                    {migrateBusy === 'sms_passwordless'
-                      ? <Loader2 className="w-4 h-4 animate-spin" />
-                      : <ArrowDownToLine className="w-4 h-4" />}
-                  </Button>
-                </div>
-                {hasOldSmsLogin && (
-                  <p className="text-[11px] text-white/40 px-1">{_copy("copy.262ce5ec0785", { defaultValue: "Include the country code. It must be the same number used to create the old profile." })}</p>
-                )}
-              </div>
-              <div className="space-y-1.5">
-                <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  {knownEmailAccount?.username ? _copy("copy.2a4c72c809a7", { defaultValue: "Email for @{{value1}}", value1: knownEmailAccount.username }) : _copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
-                </p>
-                <div className="flex gap-2">
-                  <Input
-                    type="email"
-                    placeholder={_copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
-                    value={migrateEmail}
-                    onChange={(e) => setMigrateEmail(e.target.value)}
-                    className={`${inputClass} h-11 flex-1 ${hasOldEmailLogin ? 'ring-1 ring-green-400/50' : ''}`}
-                  />
-                  <Button
-                    variant="outline"
-                    disabled={!!migrateBusy || !migrateEmail}
-                    onClick={() => handleLegacyLogin('email_passwordless')}
-                    className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
-                  >
-                    {migrateBusy === 'email_passwordless'
-                      ? <Loader2 className="w-4 h-4 animate-spin" />
-                      : <ArrowDownToLine className="w-4 h-4" />}
-                  </Button>
-                </div>
-              </div>
+              {migrateOptions
+                .filter(([key]) => key === leadLogin || !leadLogin || showOtherLogins)
+                .map(([key, option]) => <Fragment key={key}>{option}</Fragment>)}
+              {leadLogin && !showOtherLogins && (
+                <button
+                  type="button"
+                  disabled={!!migrateBusy}
+                  onClick={() => setShowOtherLogins(true)}
+                  className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors disabled:opacity-50"
+                >
+                  <span className="underline">{_copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}</span> →
+                </button>
+              )}
               <p className="text-white/40 text-xs">{_copy("copy.9d632ebc6307", { defaultValue: "A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers." })}</p>
               <button
                 type="button"
@@ -950,7 +988,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
             >
               <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${isBlockingMismatch ? 'text-red-400' : 'text-amber-400'}`} />
               <p>
-                {cannotVerifyProfile
+                {cannotVerifyProfile && leadLoginLabel
+                  ? t(
+                    'loginModal.migrateWrongLogin',
+                    'That sign-in opened a different wallet, so nothing changed. Your old profile was made with {{login}}. Use that to bring it back.',
+                    { login: leadLoginLabel },
+                  )
+                  : cannotVerifyProfile
                   ? _copy("copy.b687690d1c4a", { defaultValue: "This login recovered a different wallet from the profiles shown above. Nothing changed. Try the original sign-in for the profile you want." })
                   : looksLikeDuplicate
                     ? t(
@@ -1010,7 +1054,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
             </div>
             <div className="flex gap-2">
               <Button
-                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); if (looksLikeDuplicate) setMode('new'); }}
+                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); setShowOtherLogins(false); if (looksLikeDuplicate) setMode('new'); }}
                 className={
                   looksLikeDuplicate
                     ? 'flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'

@@ -118,6 +118,7 @@ import { AuthContext, LoginSheetContext, type SocialProvider, type WalletProvide
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
 import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
+import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 
 const authLogger = createLogger('Auth');
 
@@ -164,21 +165,34 @@ function readsEnglish(): boolean {
  *  - "Migrate account" / "Import" was chosen on the login sheet;
  *  - this login may have an older DeHub account (the step offers to bring it
  *    back — a silent wallet here would be a second account), or the check
- *    could not answer;
+ *    could not answer (old Web3Auth storage on this browser only matters
+ *    then: a definite "none" from the backend outranks it);
  *  - this browser cannot hold the words, so nothing could reopen the wallet.
  */
 async function makeSilentSignupWallet(userId: string): Promise<string | null> {
-  if (getWalletSetupIntent()) return null;
+  // Each way out is traced: people stuck on the visible step were otherwise
+  // indistinguishable in the logs from people who simply left.
+  const keepVisibleStep = (reason: string) => {
+    authLogger.trace?.('wallet-setup-visible', { reason });
+    return null;
+  };
+  if (getWalletSetupIntent()) return keepVisibleStep('intent');
   // WalletCreateStep's MIGRATE_PENDING_KEY: a legacy migration redirect is
   // mid-flight and lands on that step.
-  try { if (sessionStorage.getItem('dehub_legacy_migration_pending')) return null; } catch { /* storage blocked */ }
-  if (hasLegacyBrowserResidue()) return null;
+  try { if (sessionStorage.getItem('dehub_legacy_migration_pending')) return keepVisibleStep('migration-pending'); } catch { /* storage blocked */ }
   const hint = await checkLegacyAccount().catch(() => null);
-  if (hint?.exists !== false) return null;
+  // Old Web3Auth storage on this browser is only a guess that an old account
+  // exists. A definite "none for this login" from the backend outranks it,
+  // exactly as it does on the visible step, which then retreats to a new
+  // account anyway. Stopping here only put a password form between these
+  // people and the app, and the logs show them leaving at it.
+  if (hint?.exists !== false) {
+    return keepVisibleStep(hint?.exists === true ? 'old-account' : hasLegacyBrowserResidue() ? 'residue-unchecked' : 'check-unavailable');
+  }
   const { generateMnemonic12, deriveFromSecret } = await import('@/lib/wallet-core/derive');
   const derived = deriveFromSecret(generateMnemonic12());
   const { saveDeviceSeed } = await loadDeviceSeed();
-  if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) return null;
+  if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) return keepVisibleStep('no-device-storage');
   // No password wrap yet, exactly like a biometrics-only wallet.
   await saveWallet(userId, derived.ethAddress, null);
   authLogger.trace?.('wallet-created-silently');
@@ -1003,6 +1017,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.trace?.('wallet-setup-required');
     } catch (e) {
       authLogger.trace?.('provision-error', { reason: e instanceof Error ? e.message : String(e) });
+      // A tab still running the build before a deploy cannot load this step's
+      // code ("Importing a module script failed"), and "Try again" re-reads
+      // the same dead file. Only a reload helps; the Supabase session survives
+      // it and the sign-in resumes.
+      if (isChunkLoadError(e) && recoverFromChunkError() === 'reloading') return;
       // A failed profile login must not escalate to decrypting or signing.
       // The identity session is still good, so retry the exchange in place
       // rather than making the person go through Google or email again.
