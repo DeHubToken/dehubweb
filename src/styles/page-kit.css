@@ -66,9 +66,15 @@ html[data-theme='minimal'] {
 @media (min-width: 640px) {
   [data-kit-island-outer] { padding: 0.5rem 0.75rem 0; }
 }
+/* Corner squares sit 12px in from the top and side, so the island's corner is
+   their 10px plus that 12px and the two curves stay concentric. */
 html[data-theme] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
-  border-radius: 15px;
+  border-radius: 22px;
   border: 0;
+}
+/* Hacker squares the island off, so its controls go square with it. */
+html[data-theme='hacker'] [data-kit-island] :is([data-kit-square], [data-kit-chip], [data-kit-button]):not(#_):not(#_):not(#_) {
+  border-radius: 0;
 }
 /* Light and minimal draw a flat island, like their home tab strip. */
 html[data-theme='light'] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {

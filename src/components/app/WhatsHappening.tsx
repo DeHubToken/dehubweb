@@ -486,7 +486,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
       {/* Globe / Country selector button at bottom */}
       {showCountrySelector && (
-        <div ref={countryDropdownRef} className="relative -mt-1">
+        <div ref={countryDropdownRef} className="relative -mt-1 -mx-4 -mb-4">
           <button
             data-view-all
             onClick={() => setShowCountryDropdown(prev => !prev)}
