@@ -63,7 +63,8 @@ function TvStatic({ label }: { label: string }) {
     <div data-media-scrim ref={rootRef} className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
       {/* Snow — noise tile re-randomizes position each step */}
       <div
-        className="absolute inset-0 opacity-90"
+        // Oversized so the moving tile never shows an edge (it moves by transform).
+        className="absolute -inset-12 opacity-90"
         style={{
           backgroundImage: `url("${NOISE_TEXTURE}")`,
           backgroundSize: '140px 140px',
