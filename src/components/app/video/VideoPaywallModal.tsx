@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { clientNavigate } from '@/lib/client-navigate';
 import { Loader2, AlertCircle, ChevronDown, Film, Hash } from "lucide-react";
 import Video from "@/components/ui/cut-icons/video";
 import Volume2 from "@/components/ui/cut-icons/volume";
@@ -836,7 +837,7 @@ export function VideoPaywallModal({
                   variant="outline"
                   size="sm"
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
-                  onClick={() => { onOpenChange(false); window.history.pushState({}, '', '/app/buy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                  onClick={() => { onOpenChange(false); clientNavigate('/app/buy'); }}
                 >
                   {t('nav.buyDhb')}
                 </Button>

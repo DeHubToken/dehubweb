@@ -21,6 +21,7 @@ import {
   DrawerDescription,
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { clientNavigate } from '@/lib/client-navigate';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, Box, AlertCircle, ChevronDown, Hash } from "lucide-react";
 import Lightbulb from "@/components/ui/cut-icons/feature-requests";
@@ -496,8 +497,7 @@ export function Model3dPaywallModal({
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
                   onClick={() => {
                     onOpenChange(false);
-                    window.history.pushState({}, '', '/app/buy');
-                    window.dispatchEvent(new PopStateEvent('popstate'));
+                    clientNavigate('/app/buy');
                   }}
                 >
                   {t('nav.buyDhb')}
