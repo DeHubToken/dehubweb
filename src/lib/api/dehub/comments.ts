@@ -343,8 +343,8 @@ export async function addGifComment(params: {
   gifUrl: string;
   content?: string;
   parentId?: string;
-}): Promise<CommentResponse> {
-  const response = await apiCall<{ result: CommentResponse } | CommentResponse>("/api/comment_gif", {
+}): Promise<ImageCommentResponse> {
+  const response = await apiCall<ImageCommentResponse>("/api/comment_gif", {
     method: "POST",
     body: {
       streamTokenId: params.tokenId,
@@ -355,10 +355,7 @@ export async function addGifComment(params: {
     requiresAuth: true,
   });
   assertCommentAccepted(response);
-  if (response && typeof response === 'object' && 'result' in response) {
-    return response.result;
-  }
-  return response as CommentResponse;
+  return response;
 }
 
 export async function deleteComment(commentId: string | number): Promise<{ result: boolean }> {
