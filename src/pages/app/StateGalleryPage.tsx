@@ -49,6 +49,8 @@ import MessagesSquare from '@/components/ui/cut-icons/chat';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
+import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
+import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
 import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
@@ -285,6 +287,29 @@ function VoiceNotesGallery() {
           <LiveMicBars stream={null} className="flex-1" />
         </div>
       </div>
+    </section>
+  );
+}
+
+/** App tokens: the wallet's DHB row, its drawer and the send dialog, with a sample history. */
+function AppTokensGallery() {
+  const queryClient = useQueryClient();
+  const [sendOpen, setSendOpen] = useState(false);
+  useState(() => queryClient.setQueryData([APP_TOKENS_QUERY_KEY, undefined], {
+    symbol: 'DHB',
+    balance: '1204500.5',
+    entries: [
+      { kind: 'receive', amount: '2500', purpose: 'tip', note: 'great stream', counterparty: { address: '0x1111111111111111111111111111111111111111', username: 'maya' }, at: '2026-10-27T21:10:00.000Z' },
+      { kind: 'send', amount: '-10000', purpose: 'transfer', counterparty: { address: '0x2222222222222222222222222222222222222222', username: 'oliver' }, at: '2026-10-27T18:42:00.000Z' },
+      { kind: 'opening', amount: '1212000.5', at: '2026-10-27T12:00:00.000Z' },
+    ],
+  }));
+  return (
+    <section data-page-bento data-app-tokens-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">App tokens</h2>
+      <AppTokensRow onSend={() => setSendOpen(true)} />
+      <Button variant="glass" className="mt-2" onClick={() => setSendOpen(true)}>Send dialog</Button>
+      <AppTokenSendDialog open={sendOpen} onOpenChange={setSendOpen} />
     </section>
   );
 }
@@ -804,6 +829,7 @@ export default function StateGalleryPage() {
         <WhenSheetGallery />
         <ToastsGallery />
         <TooltipsGallery />
+        <AppTokensGallery />
         <AudioGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
