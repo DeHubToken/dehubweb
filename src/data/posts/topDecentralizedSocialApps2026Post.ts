@@ -94,11 +94,35 @@ Users tell you where a network is today. Commits tell you where it will be next 
 49. **YakiHonne**: 11/40. Nostr long-form app. Users 2, features 5, dev 1, future 3.
 50. **Herocast**: 10/40. Farcaster power client. Users 2, features 5, dev 1, future 2.
 
-## The big open networks
+## The four kinds of decentralized social apps
+
+### The big open networks
 
 ![The big open networks: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-networks.jpg)
 
 Twelve apps on open protocols: the AT Protocol behind Bluesky, ActivityPub behind Mastodon and the fediverse, and Matrix for chat-style communities. These have the biggest audiences in decentralized social, and almost none of them pay creators.
+
+### Nostr and Bitcoin social
+
+![Nostr and Bitcoin social: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-nostr.jpg)
+
+Nostr is a simple protocol where your identity is a key pair and your posts travel through relays anyone can run. Most of these apps pay creators in bitcoin through Lightning "zaps". The audience is small, about 15,000 trusted monthly users in late 2025, but the builders are some of the busiest in the space.
+
+### Crypto social and SocialFi
+
+![Crypto social and SocialFi: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-socialfi.jpg)
+
+Apps that put tokens, coins or on-chain ownership at the centre. This is where 2026 hit hardest: two protocols changed owners, a hack drained one app, and creator coins drew heavy criticism.
+
+### Private chat and communities
+
+![Private chat and communities: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-chat.jpg)
+
+Encrypted messengers and on-chain community chat. Less public than a feed, but often where crypto communities actually live.
+
+## Every app in detail, #2 to #50
+
+Here are the other 49 apps in rank order, each with its users, features, GitHub activity and outlook.
 
 ### #2 Bluesky: 33/40
 
@@ -148,108 +172,6 @@ A photo-sharing app for the fediverse, often described as an open Instagram. Pos
 - **Outlook (7/10):** Good. Users looking to leave Instagram have few open options, and Pixelfed is the clear leader among them.
 - **Website:** [pixelfed.org](https://pixelfed.org)
 
-### #10 PeerTube: 25/40
-
-Self-hosted video platform made by French non-profit Framasoft. Each server hosts its own videos and can follow others, with peer-to-peer streaming to spread the load.
-
-- **Users (6/10):** ~50k monthly active. Source: [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621).
-- **Key features (6/10):** Video hosting, Live streaming, Peer-to-peer delivery, Channels and playlists, Subtitles, Federation, Plugins and themes, Self-hosting.
-- **Dev activity (7/10):** 413 commits in 90 days (Chocobozzz/PeerTube).
-- **Strengths:** The most contributors of any video project here, live streaming built in, and no ads.
-- **Weak spots:** Video is expensive to host, so most servers stay small. Discovery across servers is limited.
-- **Outlook (6/10):** Steady. Popular with schools, public bodies and creators who want their own home for video.
-- **Website:** [joinpeertube.org](https://joinpeertube.org)
-
-### #14 Misskey: 23/40
-
-A fediverse microblogging app from Japan with emoji reactions, drive storage and lots of customization.
-
-- **Users (6/10):** misskey.io 450k+ registered (Feb 2024). Source: [Wikipedia](https://en.wikipedia.org/wiki/Misskey).
-- **Key features (6/10):** Posts, Emoji reactions, Custom emoji, Drive file storage, Channels, Antennas (keyword feeds), Plugins and widgets, Federation.
-- **Dev activity (5/10):** 175 commits in 90 days (misskey-dev/misskey).
-- **Strengths:** Huge in Japan, with misskey.io past 450,000 accounts in 2024. Active development and a lively culture.
-- **Weak spots:** Mostly Japanese-speaking, so growth outside Japan is slow.
-- **Outlook (6/10):** Solid in its home market.
-- **Website:** [misskey-hub.net](https://misskey-hub.net)
-
-### #17 Bridgy Fed: 21/40
-
-A bridge that lets Mastodon, Bluesky and personal websites follow and reply to each other.
-
-- **Users (4/10):** Not published. Source: Not published.
-- **Key features (4/10):** Bridges Mastodon and Bluesky, Bridges personal websites, Follow across networks, Replies and likes across networks, Opt-in by design.
-- **Dev activity (7/10):** 486 commits in 90 days (snarfed/bridgy-fed).
-- **Strengths:** Makes the open networks feel like one. Very active for a small team.
-- **Weak spots:** Users have to opt in, and it depends on the goodwill of the networks it connects.
-- **Outlook (6/10):** Important plumbing. Grows as the networks it bridges grow.
-- **Website:** [fed.brid.gy](https://fed.brid.gy)
-
-### #18 Friendica: 21/40
-
-One of the oldest fediverse apps, closer to Facebook than Twitter, with long posts, groups and events.
-
-- **Users (3/10):** Small, not published. Source: Not published.
-- **Key features (6/10):** Long posts, Groups, Events, Photo albums, Private posts, Federation with Mastodon and Diaspora, Self-hosting.
-- **Dev activity (8/10):** 945 commits in 90 days (friendica/friendica).
-- **Strengths:** Very active volunteer team for its size and connects to almost every other fediverse network.
-- **Weak spots:** Small user base and an older-looking interface.
-- **Outlook (4/10):** Stable niche.
-- **Website:** [friendi.ca](https://friendi.ca)
-
-### #20 Skylight: 20/40
-
-A short-video app built on the AT Protocol, backed by Mark Cuban.
-
-- **Users (6/10):** 380k users · ~95k monthly active (Jan 2026). Source: [TechCrunch, Jan 2026](https://techcrunch.com/2026/01/26/tiktok-alternative-skylight-soars-to-380k-users-after-tiktok-u-s-deal-finalized).
-- **Key features (5/10):** Short video, Editor and effects, Curators, Bluesky login, Custom feeds, Comments.
-- **Dev activity (3/10):** Closed source.
-- **Strengths:** Jumped to 380,000 users in January 2026 when TikTok's US deal closed. Uses Bluesky accounts.
-- **Weak spots:** Monthly users were about 95,000, so many sign-ups did not stay.
-- **Outlook (6/10):** Good. Video on an open network is a real gap.
-- **Website:** [skylight.social](https://skylight.social)
-
-### #23 Blacksky: 20/40
-
-Independent infrastructure and a community on the AT Protocol, built by and for Black users of Bluesky.
-
-- **Users (3/10):** Not published. Source: Not published.
-- **Key features (5/10):** Own personal data servers, Community moderation, Custom feeds, Bluesky-compatible, Community app.
-- **Dev activity (6/10):** 332 commits in 90 days (blacksky-algorithms/rsky).
-- **Strengths:** Runs its own servers and moderation, proving the AT Protocol can work without Bluesky the company.
-- **Weak spots:** Small, focused community.
-- **Outlook (6/10):** Good. A model for other communities that want to own their corner of the network.
-- **Website:** [blacksky.community](https://blacksky.community)
-
-### #24 Lemmy: 19/40
-
-A federated link-sharing and discussion site, like an open Reddit. Boomed during the 2023 Reddit API protest.
-
-- **Users (6/10):** ~35k–43k monthly active. Source: [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621).
-- **Key features (4/10):** Communities, Up and down votes, Threaded comments, Moderation tools, Federation, Self-hosting, Mobile clients.
-- **Dev activity (4/10):** 54 commits in 90 days (LemmyNet/lemmy).
-- **Strengths:** Around 40,000 monthly users across many servers and a familiar community-and-vote format.
-- **Weak spots:** Growth has flattened since 2023 and development has slowed.
-- **Outlook (5/10):** Steady. Benefits each time Reddit upsets its users.
-- **Website:** [join-lemmy.org](https://join-lemmy.org)
-
-### #27 Bonfire: 19/40
-
-A modular fediverse app where communities pick the features they want, such as circles for private sharing or custom feeds.
-
-- **Users (2/10):** Early stage. Source: Not published.
-- **Key features (6/10):** Custom feeds, Circles for private sharing, Boundaries per post, Extensions, Federation, Self-hosting.
-- **Dev activity (6/10):** 355 commits in 90 days (bonfire-networks/bonfire-app).
-- **Strengths:** Very flexible and steadily developed by an active team.
-- **Weak spots:** Still early, with few users.
-- **Outlook (5/10):** Promising for communities that want more control than Mastodon offers.
-- **Website:** [bonfirenetworks.org](https://bonfirenetworks.org)
-
-## Nostr and Bitcoin social
-
-![Nostr and Bitcoin social: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-nostr.jpg)
-
-Nostr is a simple protocol where your identity is a key pair and your posts travel through relays anyone can run. Most of these apps pay creators in bitcoin through Lightning "zaps". The audience is small, about 15,000 trusted monthly users in late 2025, but the builders are some of the busiest in the space.
-
 ### #6 Amethyst: 28/40
 
 The most feature-rich Nostr app for Android. Nostr is a simple protocol where your identity is a key pair and posts are sent through relays anyone can run.
@@ -262,131 +184,17 @@ The most feature-rich Nostr app for Android. Nostr is a simple protocol where yo
 - **Outlook (6/10):** Good for builders and Bitcoin fans. Growth depends on Nostr as a whole reaching more people.
 - **Website:** [github.com/vitorpamplona/amethyst](https://github.com/vitorpamplona/amethyst)
 
-### #13 Damus: 24/40
+### #7 Status: 27/40
 
-The first major Nostr app for iPhone, now joined by Notedeck, a desktop client from the same team.
+A private messenger and Ethereum wallet in one app, built by one of the longest-running teams in Ethereum.
 
-- **Users (4/10):** Not disclosed (iOS-first). Source: [Nostr statistics, Oct 2025](https://glukhov.org/post/2025/10/nostr-overview-and-statistics/).
-- **Key features (6/10):** Nostr posts, Zaps, Encrypted DMs, Long-form reads, Relay control, Notedeck desktop app, Multiple accounts.
-- **Dev activity (8/10):** 1,481 commits in 90 days (damus-io/damus + notedeck).
-- **Strengths:** Simple, well-known brand in Nostr, built-in Lightning tips, and very active work on Notedeck.
-- **Weak spots:** Apple's rules on tipping have caused friction before. User numbers are not published.
-- **Outlook (6/10):** Good within Nostr. Notedeck could make it the main desktop home for the protocol.
-- **Website:** [damus.io](https://damus.io)
-
-### #22 Primal: 20/40
-
-A fast, polished Nostr app on iOS, Android and web with a built-in Bitcoin Lightning wallet.
-
-- **Users (4/10):** 50k+ Android installs · Nostr has ~14.8k monthly active trusted users. Source: [Google Play](https://play.google.com/store/apps/details?id=net.primal.android&hl=en_US).
-- **Key features (7/10):** Nostr feeds, Built-in Lightning wallet, Zaps, Trending and explore, Long-form reads, Media hosting, Premium accounts.
-- **Dev activity (3/10):** 39 commits in 90 days (PrimalHQ android + ios + web).
-- **Strengths:** Probably the easiest way into Nostr, with smooth feeds and tips.
-- **Weak spots:** Nostr's total audience is small, around 15,000 trusted monthly users in late 2025.
-- **Outlook (6/10):** Good if Nostr grows. Primal is best placed to catch new users.
-- **Website:** [primal.net](https://primal.net)
-
-### #25 Fountain: 19/40
-
-A podcast and music app that pays listeners and creators in bitcoin, with social features on Nostr.
-
-- **Users (5/10):** 100k+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=fm.fountain.apps&hl=en-US).
-- **Key features (6/10):** Podcasts, Music, Bitcoin rewards for listening, Clips, Comments on Nostr, Creator payouts.
-- **Dev activity (3/10):** Closed source.
-- **Strengths:** More than 100,000 Android installs and real payments to creators.
-- **Weak spots:** Low store ratings and closed source.
-- **Outlook (5/10):** Good niche in podcasting.
-- **Website:** [fountain.fm](https://fountain.fm)
-
-### #30 Stacker News: 18/40
-
-A Hacker News-style forum where every upvote sends real bitcoin to the poster.
-
-- **Users (3/10):** Small community. Source: Not published.
-- **Key features (5/10):** Posts and links, Sats rewards for upvotes, Territories, Bounties, Jobs board, Lightning wallet login.
-- **Dev activity (5/10):** 117 commits in 90 days (stackernews/stacker.news).
-- **Strengths:** Proves micropayments for content can work. Good discussion quality.
-- **Weak spots:** Small, mostly Bitcoin-focused audience.
-- **Outlook (5/10):** Steady niche.
-- **Website:** [stacker.news](https://stacker.news)
-
-### #34 noStrudel: 17/40
-
-A power-user Nostr web client built by one developer.
-
-- **Users (3/10):** Not disclosed. Source: Not published.
-- **Key features (5/10):** Power-user Nostr feeds, Streams, Lists, Relay tools, Many NIPs supported.
-- **Dev activity (5/10):** 135 commits in 90 days (hzrd149/nostrudel).
-- **Strengths:** Ships constantly and has many tools.
-- **Weak spots:** Not aimed at beginners.
-- **Outlook (4/10):** Steady niche.
-- **Website:** [nostrudel.ninja](https://nostrudel.ninja)
-
-### #39 Coracle: 16/40
-
-A Nostr web client focused on groups and choosing relays.
-
-- **Users (3/10):** Not disclosed. Source: Not published.
-- **Key features (5/10):** Feeds, Groups, Relay controls, Web of trust filtering.
-- **Dev activity (4/10):** 76 commits in 90 days (coracle-social/coracle).
-- **Strengths:** Good for communities.
-- **Weak spots:** Small audience.
-- **Outlook (4/10):** Niche.
-- **Website:** [coracle.social](https://coracle.social)
-
-### #40 Iris: 16/40
-
-A simple, fast Nostr web client.
-
-- **Users (3/10):** Not disclosed. Source: Not published.
-- **Key features (4/10):** Feeds, Chat, Media, Fast web app.
-- **Dev activity (5/10):** 156 commits in 90 days (irislib/iris-client).
-- **Strengths:** Easy to start with.
-- **Weak spots:** Small audience.
-- **Outlook (4/10):** Niche.
-- **Website:** [iris.to](https://iris.to)
-
-### #43 zap.stream: 15/40
-
-Live streaming over Nostr, paid in bitcoin tips.
-
-- **Users (3/10):** Not disclosed. Source: Not published.
-- **Key features (5/10):** Live streams, Zaps, Live chat, Stream clips.
-- **Dev activity (3/10):** 12 commits in 90 days (v0l/zap.stream).
-- **Strengths:** Real-time Lightning payments.
-- **Weak spots:** Small streamer base.
-- **Outlook (4/10):** Niche but useful.
-- **Website:** [zap.stream](https://zap.stream)
-
-### #45 Snort: 14/40
-
-A long-standing Nostr web client.
-
-- **Users (3/10):** Not disclosed. Source: Not published.
-- **Key features (4/10):** Feeds, Zaps, DMs, Web app.
-- **Dev activity (4/10):** 74 commits in 90 days (v0l/snort).
-- **Strengths:** Familiar, steady.
-- **Weak spots:** Small audience.
-- **Outlook (3/10):** Niche.
-- **Website:** [snort.social](https://snort.social)
-
-### #49 YakiHonne: 11/40
-
-A Nostr app for long-form posts and curated collections.
-
-- **Users (2/10):** Not disclosed. Source: Not published.
-- **Key features (5/10):** Long-form posts, Curations, Zaps, Videos, Mobile app.
-- **Dev activity (1/10):** 0 commits in 90 days (YakiHonne web + mobile).
-- **Strengths:** Good long-form tools.
-- **Weak spots:** Public repos quiet since October 2025.
-- **Outlook (3/10):** Weak.
-- **Website:** [yakihonne.com](https://yakihonne.com)
-
-## Crypto social and SocialFi
-
-![Crypto social and SocialFi: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-socialfi.jpg)
-
-Apps that put tokens, coins or on-chain ownership at the centre. This is where 2026 hit hardest: two protocols changed owners, a hack drained one app, and creator coins drew heavy criticism.
+- **Users (6/10):** 1M+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=im.status.ethereum).
+- **Key features (7/10):** Private chat, Group chats, Token-gated communities, Ethereum wallet, dApp browser, Desktop and mobile apps, No phone number needed.
+- **Dev activity (8/10):** 1,333 commits in 90 days (status-im/status-desktop).
+- **Strengths:** Large, steady engineering team, communities with token gating, and a wallet built in.
+- **Weak spots:** Downloads are modest for its age, and the app has had several big rewrites that reset momentum.
+- **Outlook (6/10):** Steady. Its Logos network plans could give it a new purpose, but mainstream adoption is unlikely soon.
+- **Website:** [status.app](https://status.app)
 
 ### #8 Audius: 26/40
 
@@ -412,6 +220,66 @@ A blockchain built for social content, created in 2020 when the community split 
 - **Outlook (5/10):** Mixed. Strong builders, but it needs a hit app to bring in new people.
 - **Website:** [hive.io](https://hive.io)
 
+### #10 PeerTube: 25/40
+
+Self-hosted video platform made by French non-profit Framasoft. Each server hosts its own videos and can follow others, with peer-to-peer streaming to spread the load.
+
+- **Users (6/10):** ~50k monthly active. Source: [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621).
+- **Key features (6/10):** Video hosting, Live streaming, Peer-to-peer delivery, Channels and playlists, Subtitles, Federation, Plugins and themes, Self-hosting.
+- **Dev activity (7/10):** 413 commits in 90 days (Chocobozzz/PeerTube).
+- **Strengths:** The most contributors of any video project here, live streaming built in, and no ads.
+- **Weak spots:** Video is expensive to host, so most servers stay small. Discovery across servers is limited.
+- **Outlook (6/10):** Steady. Popular with schools, public bodies and creators who want their own home for video.
+- **Website:** [joinpeertube.org](https://joinpeertube.org)
+
+### #11 OpenChat: 25/40
+
+A chat app that runs fully on the Internet Computer blockchain and is owned and governed by holders of its CHAT token.
+
+- **Users (4/10):** Not independently verified. Source: [DFINITY forum](https://forum.dfinity.org/t/upcoming-openchat-sns-decentralization-sale/18626).
+- **Key features (7/10):** Group chat, Communities, Video calls, Crypto transfers in chat, Bots, Diamond membership, DAO governance, Fully on-chain.
+- **Dev activity (8/10):** 927 commits in 90 days (open-chat-labs/open-chat).
+- **Strengths:** Ships almost daily, has communities, bots and in-chat crypto transfers, and is truly on-chain end to end.
+- **Weak spots:** Tied to the Internet Computer ecosystem, which is small. User numbers are not independently verified.
+- **Outlook (6/10):** Moderate. A strong technical example of a DAO-run app, but it needs users from outside its home chain.
+- **Website:** [oc.app](https://oc.app)
+
+### #12 Session: 24/40
+
+A private messenger that needs no phone number or email. Messages travel through a network of community-run nodes, similar to Tor.
+
+- **Users (8/10):** 5M+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=network.loki.messenger).
+- **Key features (5/10):** No phone or email, Onion routing, End-to-end encryption, Group chats, Voice notes, Calls, File sharing, Desktop and mobile apps.
+- **Dev activity (6/10):** 222 commits in 90 days (session-foundation/session-desktop).
+- **Strengths:** More than 5 million Android installs and high ratings. Strong privacy story with very little metadata.
+- **Weak spots:** Nearly closed in mid-2026 for lack of money, saved by donations in June. No account recovery if you lose your device.
+- **Outlook (5/10):** Fragile but alive. Long-term funding is the open question.
+- **Website:** [getsession.org](https://getsession.org)
+
+### #13 Damus: 24/40
+
+The first major Nostr app for iPhone, now joined by Notedeck, a desktop client from the same team.
+
+- **Users (4/10):** Not disclosed (iOS-first). Source: [Nostr statistics, Oct 2025](https://glukhov.org/post/2025/10/nostr-overview-and-statistics/).
+- **Key features (6/10):** Nostr posts, Zaps, Encrypted DMs, Long-form reads, Relay control, Notedeck desktop app, Multiple accounts.
+- **Dev activity (8/10):** 1,481 commits in 90 days (damus-io/damus + notedeck).
+- **Strengths:** Simple, well-known brand in Nostr, built-in Lightning tips, and very active work on Notedeck.
+- **Weak spots:** Apple's rules on tipping have caused friction before. User numbers are not published.
+- **Outlook (6/10):** Good within Nostr. Notedeck could make it the main desktop home for the protocol.
+- **Website:** [damus.io](https://damus.io)
+
+### #14 Misskey: 23/40
+
+A fediverse microblogging app from Japan with emoji reactions, drive storage and lots of customization.
+
+- **Users (6/10):** misskey.io 450k+ registered (Feb 2024). Source: [Wikipedia](https://en.wikipedia.org/wiki/Misskey).
+- **Key features (6/10):** Posts, Emoji reactions, Custom emoji, Drive file storage, Channels, Antennas (keyword feeds), Plugins and widgets, Federation.
+- **Dev activity (5/10):** 175 commits in 90 days (misskey-dev/misskey).
+- **Strengths:** Huge in Japan, with misskey.io past 450,000 accounts in 2024. Active development and a lively culture.
+- **Weak spots:** Mostly Japanese-speaking, so growth outside Japan is slow.
+- **Outlook (6/10):** Solid in its home market.
+- **Website:** [misskey-hub.net](https://misskey-hub.net)
+
 ### #15 Farcaster: 22/40
 
 A crypto-native social protocol with its own app (formerly Warpcast). Known for mini apps inside posts, built-in wallets and token launches.
@@ -436,6 +304,30 @@ Coinbase's wallet, relaunched in July 2025 as an all-in-one app combining a soci
 - **Outlook (6/10):** Uncertain. Huge distribution, but social is no longer the main focus.
 - **Website:** [base.app](https://base.app)
 
+### #17 Bridgy Fed: 21/40
+
+A bridge that lets Mastodon, Bluesky and personal websites follow and reply to each other.
+
+- **Users (4/10):** Not published. Source: Not published.
+- **Key features (4/10):** Bridges Mastodon and Bluesky, Bridges personal websites, Follow across networks, Replies and likes across networks, Opt-in by design.
+- **Dev activity (7/10):** 486 commits in 90 days (snarfed/bridgy-fed).
+- **Strengths:** Makes the open networks feel like one. Very active for a small team.
+- **Weak spots:** Users have to opt in, and it depends on the goodwill of the networks it connects.
+- **Outlook (6/10):** Important plumbing. Grows as the networks it bridges grow.
+- **Website:** [fed.brid.gy](https://fed.brid.gy)
+
+### #18 Friendica: 21/40
+
+One of the oldest fediverse apps, closer to Facebook than Twitter, with long posts, groups and events.
+
+- **Users (3/10):** Small, not published. Source: Not published.
+- **Key features (6/10):** Long posts, Groups, Events, Photo albums, Private posts, Federation with Mastodon and Diaspora, Self-hosting.
+- **Dev activity (8/10):** 945 commits in 90 days (friendica/friendica).
+- **Strengths:** Very active volunteer team for its size and connects to almost every other fediverse network.
+- **Weak spots:** Small user base and an older-looking interface.
+- **Outlook (4/10):** Stable niche.
+- **Website:** [friendi.ca](https://friendi.ca)
+
 ### #19 Odysee: 20/40
 
 A video platform that grew out of the LBRY blockchain project. Bought by Forward Research in June 2024 after LBRY lost its case with the US SEC.
@@ -447,6 +339,18 @@ A video platform that grew out of the LBRY blockchain project. Bought by Forward
 - **Weak spots:** Development has slowed, the app has low store ratings, and its blockchain roots have faded after the SEC case.
 - **Outlook (4/10):** Uncertain. It works, but new owners have not set out a bold plan.
 - **Website:** [odysee.com](https://odysee.com)
+
+### #20 Skylight: 20/40
+
+A short-video app built on the AT Protocol, backed by Mark Cuban.
+
+- **Users (6/10):** 380k users · ~95k monthly active (Jan 2026). Source: [TechCrunch, Jan 2026](https://techcrunch.com/2026/01/26/tiktok-alternative-skylight-soars-to-380k-users-after-tiktok-u-s-deal-finalized).
+- **Key features (5/10):** Short video, Editor and effects, Curators, Bluesky login, Custom feeds, Comments.
+- **Dev activity (3/10):** Closed source.
+- **Strengths:** Jumped to 380,000 users in January 2026 when TikTok's US deal closed. Uses Bluesky accounts.
+- **Weak spots:** Monthly users were about 95,000, so many sign-ups did not stay.
+- **Outlook (6/10):** Good. Video on an open network is a real gap.
+- **Website:** [skylight.social](https://skylight.social)
 
 ### #21 Paragraph: 20/40
 
@@ -460,6 +364,54 @@ A newsletter and blogging platform for crypto writers. Took over Mirror in 2024.
 - **Outlook (6/10):** Good, as long as crypto writing keeps an audience.
 - **Website:** [paragraph.com](https://paragraph.com)
 
+### #22 Primal: 20/40
+
+A fast, polished Nostr app on iOS, Android and web with a built-in Bitcoin Lightning wallet.
+
+- **Users (4/10):** 50k+ Android installs · Nostr has ~14.8k monthly active trusted users. Source: [Google Play](https://play.google.com/store/apps/details?id=net.primal.android&hl=en_US).
+- **Key features (7/10):** Nostr feeds, Built-in Lightning wallet, Zaps, Trending and explore, Long-form reads, Media hosting, Premium accounts.
+- **Dev activity (3/10):** 39 commits in 90 days (PrimalHQ android + ios + web).
+- **Strengths:** Probably the easiest way into Nostr, with smooth feeds and tips.
+- **Weak spots:** Nostr's total audience is small, around 15,000 trusted monthly users in late 2025.
+- **Outlook (6/10):** Good if Nostr grows. Primal is best placed to catch new users.
+- **Website:** [primal.net](https://primal.net)
+
+### #23 Blacksky: 20/40
+
+Independent infrastructure and a community on the AT Protocol, built by and for Black users of Bluesky.
+
+- **Users (3/10):** Not published. Source: Not published.
+- **Key features (5/10):** Own personal data servers, Community moderation, Custom feeds, Bluesky-compatible, Community app.
+- **Dev activity (6/10):** 332 commits in 90 days (blacksky-algorithms/rsky).
+- **Strengths:** Runs its own servers and moderation, proving the AT Protocol can work without Bluesky the company.
+- **Weak spots:** Small, focused community.
+- **Outlook (6/10):** Good. A model for other communities that want to own their corner of the network.
+- **Website:** [blacksky.community](https://blacksky.community)
+
+### #24 Lemmy: 19/40
+
+A federated link-sharing and discussion site, like an open Reddit. Boomed during the 2023 Reddit API protest.
+
+- **Users (6/10):** ~35k–43k monthly active. Source: [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621).
+- **Key features (4/10):** Communities, Up and down votes, Threaded comments, Moderation tools, Federation, Self-hosting, Mobile clients.
+- **Dev activity (4/10):** 54 commits in 90 days (LemmyNet/lemmy).
+- **Strengths:** Around 40,000 monthly users across many servers and a familiar community-and-vote format.
+- **Weak spots:** Growth has flattened since 2023 and development has slowed.
+- **Outlook (5/10):** Steady. Benefits each time Reddit upsets its users.
+- **Website:** [join-lemmy.org](https://join-lemmy.org)
+
+### #25 Fountain: 19/40
+
+A podcast and music app that pays listeners and creators in bitcoin, with social features on Nostr.
+
+- **Users (5/10):** 100k+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=fm.fountain.apps&hl=en-US).
+- **Key features (6/10):** Podcasts, Music, Bitcoin rewards for listening, Clips, Comments on Nostr, Creator payouts.
+- **Dev activity (3/10):** Closed source.
+- **Strengths:** More than 100,000 Android installs and real payments to creators.
+- **Weak spots:** Low store ratings and closed source.
+- **Outlook (5/10):** Good niche in podcasting.
+- **Website:** [fountain.fm](https://fountain.fm)
+
 ### #26 Mask Network: 19/40
 
 A browser extension that adds encryption and crypto tools to X, and since January 2026 the steward of Lens Protocol.
@@ -471,6 +423,18 @@ A browser extension that adds encryption and crypto tools to X, and since Januar
 - **Weak spots:** Has to prove it can turn Lens into apps people actually use.
 - **Outlook (5/10):** Depends on Lens. A turnaround would lift both.
 - **Website:** [mask.io](https://mask.io)
+
+### #27 Bonfire: 19/40
+
+A modular fediverse app where communities pick the features they want, such as circles for private sharing or custom feeds.
+
+- **Users (2/10):** Early stage. Source: Not published.
+- **Key features (6/10):** Custom feeds, Circles for private sharing, Boundaries per post, Extensions, Federation, Self-hosting.
+- **Dev activity (6/10):** 355 commits in 90 days (bonfire-networks/bonfire-app).
+- **Strengths:** Very flexible and steadily developed by an active team.
+- **Weak spots:** Still early, with few users.
+- **Outlook (5/10):** Promising for communities that want more control than Mastodon offers.
+- **Website:** [bonfirenetworks.org](https://bonfirenetworks.org)
 
 ### #28 Phaver: 18/40
 
@@ -495,6 +459,18 @@ An app on Base where every post becomes a tradable coin, and creators can launch
 - **Weak spots:** Critics call it memetic speculation, since most coins lose value fast. Content coins drew heavy debate after Base promoted them in 2025.
 - **Outlook (5/10):** Uncertain. It works best while crypto markets are hot.
 - **Website:** [zora.co](https://zora.co)
+
+### #30 Stacker News: 18/40
+
+A Hacker News-style forum where every upvote sends real bitcoin to the poster.
+
+- **Users (3/10):** Small community. Source: Not published.
+- **Key features (5/10):** Posts and links, Sats rewards for upvotes, Territories, Bounties, Jobs board, Lightning wallet login.
+- **Dev activity (5/10):** 117 commits in 90 days (stackernews/stacker.news).
+- **Strengths:** Proves micropayments for content can work. Good discussion quality.
+- **Weak spots:** Small, mostly Bitcoin-focused audience.
+- **Outlook (5/10):** Steady niche.
+- **Website:** [stacker.news](https://stacker.news)
 
 ### #31 Minds: 17/40
 
@@ -531,6 +507,18 @@ A social graph where your profile and followers are owned on-chain and shared ac
 - **Weak spots:** Daily actives fell sharply after the 2024 peak, public code has nearly stopped, and Mask Network took over in January 2026.
 - **Outlook (4/10):** Uncertain until Mask ships.
 - **Website:** [hey.xyz](https://hey.xyz)
+
+### #34 noStrudel: 17/40
+
+A power-user Nostr web client built by one developer.
+
+- **Users (3/10):** Not disclosed. Source: Not published.
+- **Key features (5/10):** Power-user Nostr feeds, Streams, Lists, Relay tools, Many NIPs supported.
+- **Dev activity (5/10):** 135 commits in 90 days (hzrd149/nostrudel).
+- **Strengths:** Ships constantly and has many tools.
+- **Weak spots:** Not aimed at beginners.
+- **Outlook (4/10):** Steady niche.
+- **Website:** [nostrudel.ninja](https://nostrudel.ninja)
 
 ### #35 Cheelee: 16/40
 
@@ -580,6 +568,30 @@ A popular mobile app for Lens, organised around clubs.
 - **Outlook (4/10):** Uncertain.
 - **Website:** [orb.club](https://orb.club)
 
+### #39 Coracle: 16/40
+
+A Nostr web client focused on groups and choosing relays.
+
+- **Users (3/10):** Not disclosed. Source: Not published.
+- **Key features (5/10):** Feeds, Groups, Relay controls, Web of trust filtering.
+- **Dev activity (4/10):** 76 commits in 90 days (coracle-social/coracle).
+- **Strengths:** Good for communities.
+- **Weak spots:** Small audience.
+- **Outlook (4/10):** Niche.
+- **Website:** [coracle.social](https://coracle.social)
+
+### #40 Iris: 16/40
+
+A simple, fast Nostr web client.
+
+- **Users (3/10):** Not disclosed. Source: Not published.
+- **Key features (4/10):** Feeds, Chat, Media, Fast web app.
+- **Dev activity (5/10):** 156 commits in 90 days (irislib/iris-client).
+- **Strengths:** Easy to start with.
+- **Weak spots:** Small audience.
+- **Outlook (4/10):** Niche.
+- **Website:** [iris.to](https://iris.to)
+
 ### #41 DeSo: 15/40
 
 A blockchain built for social apps, home to Diamond and the Focus app. Once led crypto social by sign-ups.
@@ -604,6 +616,18 @@ The flagship social app of Ice Open Network, whose mainnet launched in January 2
 - **Outlook (4/10):** Uncertain.
 - **Website:** [ice.io](https://ice.io)
 
+### #43 zap.stream: 15/40
+
+Live streaming over Nostr, paid in bitcoin tips.
+
+- **Users (3/10):** Not disclosed. Source: Not published.
+- **Key features (5/10):** Live streams, Zaps, Live chat, Stream clips.
+- **Dev activity (3/10):** 12 commits in 90 days (v0l/zap.stream).
+- **Strengths:** Real-time Lightning payments.
+- **Weak spots:** Small streamer base.
+- **Outlook (4/10):** Niche but useful.
+- **Website:** [zap.stream](https://zap.stream)
+
 ### #44 UXLINK: 14/40
 
 A Telegram-based group social tool with airdrops and a mini app.
@@ -616,71 +640,17 @@ A Telegram-based group social tool with airdrops and a mini app.
 - **Outlook (2/10):** Weak after the hack.
 - **Website:** [uxlink.io](https://uxlink.io)
 
-### #48 Steemit: 11/40
+### #45 Snort: 14/40
 
-The original 'post to earn' blog from 2016. Most of its community left for Hive in 2020.
+A long-standing Nostr web client.
 
-- **Users (4/10):** Legacy network, no recent public figures. Source: [Steemit (Wikipedia)](https://en.wikipedia.org/wiki/Steemit).
-- **Key features (4/10):** Blog posts, Upvote rewards, Communities, Wallet.
-- **Dev activity (1/10):** 0 commits in 90 days (steemit/steem).
-- **Strengths:** Pioneer brand.
-- **Weak spots:** No public core development since April 2025.
-- **Outlook (2/10):** Weak.
-- **Website:** [steemit.com](https://steemit.com)
-
-### #50 Herocast: 10/40
-
-A power client for Farcaster with multiple accounts, scheduling and analytics.
-
-- **Users (2/10):** Not published. Source: Not published.
-- **Key features (5/10):** Multiple accounts, Scheduled casts, Analytics, Keyboard shortcuts, Team tools.
-- **Dev activity (1/10):** 0 commits in 90 days (hellno/herocast).
-- **Strengths:** Useful tools for teams.
-- **Weak spots:** Repo quiet since June 2026 as Farcaster changed hands.
-- **Outlook (2/10):** Weak.
-- **Website:** [herocast.xyz](https://herocast.xyz)
-
-## Private chat and communities
-
-![Private chat and communities: decentralized social apps ranked in the DeSoc Index 2026](/media/fig-desoc-chat.jpg)
-
-Encrypted messengers and on-chain community chat. Less public than a feed, but often where crypto communities actually live.
-
-### #7 Status: 27/40
-
-A private messenger and Ethereum wallet in one app, built by one of the longest-running teams in Ethereum.
-
-- **Users (6/10):** 1M+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=im.status.ethereum).
-- **Key features (7/10):** Private chat, Group chats, Token-gated communities, Ethereum wallet, dApp browser, Desktop and mobile apps, No phone number needed.
-- **Dev activity (8/10):** 1,333 commits in 90 days (status-im/status-desktop).
-- **Strengths:** Large, steady engineering team, communities with token gating, and a wallet built in.
-- **Weak spots:** Downloads are modest for its age, and the app has had several big rewrites that reset momentum.
-- **Outlook (6/10):** Steady. Its Logos network plans could give it a new purpose, but mainstream adoption is unlikely soon.
-- **Website:** [status.app](https://status.app)
-
-### #11 OpenChat: 25/40
-
-A chat app that runs fully on the Internet Computer blockchain and is owned and governed by holders of its CHAT token.
-
-- **Users (4/10):** Not independently verified. Source: [DFINITY forum](https://forum.dfinity.org/t/upcoming-openchat-sns-decentralization-sale/18626).
-- **Key features (7/10):** Group chat, Communities, Video calls, Crypto transfers in chat, Bots, Diamond membership, DAO governance, Fully on-chain.
-- **Dev activity (8/10):** 927 commits in 90 days (open-chat-labs/open-chat).
-- **Strengths:** Ships almost daily, has communities, bots and in-chat crypto transfers, and is truly on-chain end to end.
-- **Weak spots:** Tied to the Internet Computer ecosystem, which is small. User numbers are not independently verified.
-- **Outlook (6/10):** Moderate. A strong technical example of a DAO-run app, but it needs users from outside its home chain.
-- **Website:** [oc.app](https://oc.app)
-
-### #12 Session: 24/40
-
-A private messenger that needs no phone number or email. Messages travel through a network of community-run nodes, similar to Tor.
-
-- **Users (8/10):** 5M+ Android installs. Source: [Google Play](https://play.google.com/store/apps/details?id=network.loki.messenger).
-- **Key features (5/10):** No phone or email, Onion routing, End-to-end encryption, Group chats, Voice notes, Calls, File sharing, Desktop and mobile apps.
-- **Dev activity (6/10):** 222 commits in 90 days (session-foundation/session-desktop).
-- **Strengths:** More than 5 million Android installs and high ratings. Strong privacy story with very little metadata.
-- **Weak spots:** Nearly closed in mid-2026 for lack of money, saved by donations in June. No account recovery if you lose your device.
-- **Outlook (5/10):** Fragile but alive. Long-term funding is the open question.
-- **Website:** [getsession.org](https://getsession.org)
+- **Users (3/10):** Not disclosed. Source: Not published.
+- **Key features (4/10):** Feeds, Zaps, DMs, Web app.
+- **Dev activity (4/10):** 74 commits in 90 days (v0l/snort).
+- **Strengths:** Familiar, steady.
+- **Weak spots:** Small audience.
+- **Outlook (3/10):** Niche.
+- **Website:** [snort.social](https://snort.social)
 
 ### #46 Towns: 14/40
 
@@ -705,6 +675,42 @@ A small DAO-run forum on Internet Computer.
 - **Weak spots:** Very small audience.
 - **Outlook (4/10):** Niche.
 - **Website:** [taggr.link](https://taggr.link)
+
+### #48 Steemit: 11/40
+
+The original 'post to earn' blog from 2016. Most of its community left for Hive in 2020.
+
+- **Users (4/10):** Legacy network, no recent public figures. Source: [Steemit (Wikipedia)](https://en.wikipedia.org/wiki/Steemit).
+- **Key features (4/10):** Blog posts, Upvote rewards, Communities, Wallet.
+- **Dev activity (1/10):** 0 commits in 90 days (steemit/steem).
+- **Strengths:** Pioneer brand.
+- **Weak spots:** No public core development since April 2025.
+- **Outlook (2/10):** Weak.
+- **Website:** [steemit.com](https://steemit.com)
+
+### #49 YakiHonne: 11/40
+
+A Nostr app for long-form posts and curated collections.
+
+- **Users (2/10):** Not disclosed. Source: Not published.
+- **Key features (5/10):** Long-form posts, Curations, Zaps, Videos, Mobile app.
+- **Dev activity (1/10):** 0 commits in 90 days (YakiHonne web + mobile).
+- **Strengths:** Good long-form tools.
+- **Weak spots:** Public repos quiet since October 2025.
+- **Outlook (3/10):** Weak.
+- **Website:** [yakihonne.com](https://yakihonne.com)
+
+### #50 Herocast: 10/40
+
+A power client for Farcaster with multiple accounts, scheduling and analytics.
+
+- **Users (2/10):** Not published. Source: Not published.
+- **Key features (5/10):** Multiple accounts, Scheduled casts, Analytics, Keyboard shortcuts, Team tools.
+- **Dev activity (1/10):** 0 commits in 90 days (hellno/herocast).
+- **Strengths:** Useful tools for teams.
+- **Weak spots:** Repo quiet since June 2026 as Farcaster changed hands.
+- **Outlook (2/10):** Weak.
+- **Website:** [herocast.xyz](https://herocast.xyz)
 
 ## Who fell off since 2024
 
