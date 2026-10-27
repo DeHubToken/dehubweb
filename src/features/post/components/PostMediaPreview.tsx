@@ -132,6 +132,14 @@ export function PostMediaPreview({
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
   const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
+  // Width / height of each attached video, by preview URL, so its frame can match it.
+  const [videoRatios, setVideoRatios] = useState<Record<string, number>>({});
+  const noteVideoRatio = useCallback((preview: string, video: HTMLVideoElement) => {
+    const { videoWidth, videoHeight } = video;
+    if (videoWidth <= 0 || videoHeight <= 0) return;
+    const ratio = videoWidth / videoHeight;
+    setVideoRatios(prev => prev[preview] === ratio ? prev : { ...prev, [preview]: ratio });
+  }, []);
   const [extractingFrames, setExtractingFrames] = useState<Set<number>>(new Set());
   const [fullscreenPreview, setFullscreenPreview] = useState<{ index: number; src: string; type: 'image' | 'video'; filterSettings?: FilterSettings; cropSettings?: CropSettings; currentTime?: number } | null>(null);
   const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -881,7 +889,10 @@ export function PostMediaPreview({
                   /* ==================== VIDEO + THUMBNAIL STACKED ==================== */
                   <div className="flex flex-col gap-3">
                     {/* Video preview container */}
-                    <div className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900">
+                    {/* Same height as a 16:9 preview always had, with the width taken
+                        from the video itself, so tall, square and extra-wide
+                        clips show whole instead of cropped into a 16:9 box. */}
+                    <div className="relative self-start max-w-full h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900" style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}>
                       {/* Processing overlay */}
                       {processingVideos.has(index) && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
@@ -897,16 +908,20 @@ export function PostMediaPreview({
                       {/* Always show video */}
                       <video 
                         ref={(el) => {
-                          if (el) videoRefs.current.set(index, el);
+                          if (!el) return;
+                          videoRefs.current.set(index, el);
+                          // A cached file can finish loading before React is listening.
+                          if (el.readyState >= 1) noteVideoRatio(m.preview, el);
                         }}
                         src={m.preview} 
                         playsInline
                         {...{"webkit-playsinline": ""}}
-                        className="w-full h-full object-cover rounded-2xl pointer-events-none"
+                        className="w-full h-full object-contain rounded-2xl pointer-events-none"
                         style={{ 
                           filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
                           transform: generateCropTransform(m.cropSettings),
                         }}
+                        onLoadedMetadata={(e) => noteVideoRatio(m.preview, e.currentTarget)}
                         onEnded={() => setPlayingVideoIndex(null)}
                         onPause={() => {
                           if (playingVideoIndex === index) setPlayingVideoIndex(null);
@@ -1059,7 +1074,8 @@ export function PostMediaPreview({
                     
                     {/* Thumbnail preview - same dimensions as video with drag & drop */}
                     <div 
-                      className="relative aspect-video w-[280px] sm:w-[320px] md:w-[380px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
+                      style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}
+                      className="relative self-start max-w-full h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
                       onClick={() => triggerThumbnailUpload(index)}
                       onDragOver={(e) => {
                         e.preventDefault();
@@ -1107,7 +1123,7 @@ export function PostMediaPreview({
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
                           <Upload className="w-8 h-8" />
-                          <span className="text-sm">{_copy("copy.7bc3101b4182", { defaultValue: "Drop image or click" })}</span>
+                          <span className="px-2 text-center text-sm">{_copy("copy.7bc3101b4182", { defaultValue: "Drop image or click" })}</span>
                         </div>
                       )}
                       {/* Label */}
