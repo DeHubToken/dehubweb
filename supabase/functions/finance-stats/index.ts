@@ -39,6 +39,7 @@ import {
   spreadFixedCost,
   spreadMonthAmount,
   usageCostUsd,
+  cloudflareUsage,
   type FinanceKind,
   type FixedCostItem,
   type LedgerEntry,
@@ -166,11 +167,12 @@ interface Reading {
   ledger: LedgerItem[];
   /** Source ids that were read successfully. */
   ok: Set<string>;
+  partial: Set<string>;
   notes: string[];
 }
 
 function newReading(): Reading {
-  return { entries: [], ledger: [], ok: new Set(), notes: [] };
+  return { entries: [], ledger: [], ok: new Set(), partial: new Set(), notes: [] };
 }
 
 function push(r: Reading, kind: FinanceKind, source: string, date: string | null | undefined, usd: number) {
@@ -300,14 +302,27 @@ async function readDatabase(r: Reading, dhbUsd: number) {
 
   tasks.push((async () => {
     const rows = await selectAll<UsageRow>('ai_provider_usage_daily',
-      'day, route, served_model, requested_model, attempts, input_tokens, output_tokens');
+      'day, provider, route, served_model, requested_model, attempts, input_tokens, output_tokens, usage_missing');
     let unpriced = 0;
+    let cloudflareEstimate = 0;
+    let cloudflareAttempts = 0;
     for (const u of rows) {
       const cost = usageCostUsd(u);
+      // The public finance endpoint adds Cloudflare account invoices separately.
+      // Keep token exposure visible without counting those invoices twice.
+      if (cloudflareUsage(u)) {
+        cloudflareAttempts += Number(u.attempts) || 0;
+        cloudflareEstimate += cost ?? 0;
+        continue;
+      }
       if (cost == null) unpriced += Number(u.attempts) || 0;
       else push(r, 'cost', 'ai_text_usage', u.day, cost);
     }
-    if (unpriced) r.notes.push(`${unpriced} paid AI text requests used a model with no list price yet and are not in AI text costs.`);
+    if (unpriced) r.notes.push(`${unpriced} text requests have no verified model price and are excluded from the text-cost subtotal; a free route label does not prove zero spend.`);
+    const missing = rows.reduce((total, row) => total + Number(row.usage_missing || 0), 0);
+    if (missing) r.notes.push(String(missing) + ' text requests lack complete token usage; reported costs are incomplete.');
+    if (unpriced || missing) r.partial.add('ai_text_usage');
+    if (cloudflareAttempts) r.notes.push(`Cloudflare text usage has a known list-price subtotal of $${cloudflareEstimate.toFixed(4)} before allowances; excluded from text costs because Cloudflare account billing is reported separately. This subtotal excludes missing token reports and unknown models.`);
     r.ok.add('ai_text_usage');
   })());
 
@@ -466,7 +481,7 @@ async function compute() {
   ]);
 
   const sources: SourceMeta[] = [
-    ...CATALOGUE.map((s) => ({ ...s, status: (r.ok.has(s.id) ? 'ok' : 'unavailable') as Status })),
+    ...CATALOGUE.map((s) => ({ ...s, status: (r.partial.has(s.id) ? 'partial' : r.ok.has(s.id) ? 'ok' : 'unavailable') as Status })),
     ...history.sources.map((source) => ({
       id: source.id,
       label: source.label,

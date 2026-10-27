@@ -224,7 +224,7 @@ function SourceList({
                       label={s.label}
                       value={totals.get(s.id) ?? 0}
                       max={max}
-                      formatted={s.status === 'ok' ? formatUsd(totals.get(s.id) ?? 0) : t('stats.money.sourceUnavailable', 'Unavailable')}
+                      formatted={s.status !== 'unavailable' ? (s.status === 'partial' ? '~' : '') + formatUsd(totals.get(s.id) ?? 0) : t('stats.money.sourceUnavailable', 'Unavailable')}
                     />
                   );
                   return onSelect ? (

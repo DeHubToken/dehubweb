@@ -22,7 +22,7 @@ export interface FinanceSource {
   group: string;
   origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain' | 'estimate';
   /** `unavailable` means it could not be read this time — not that it was zero. */
-  status: 'ok' | 'unavailable';
+  status: 'ok' | 'partial' | 'unavailable';
   note: string;
 }
 
@@ -130,7 +130,7 @@ export interface FinanceLedger {
   ok: true;
   fetchedAt: string;
   currency: 'USD';
-  sources: { id: string; label: string; status: 'ok' | 'unavailable'; note: string }[];
+  sources: { id: string; label: string; status: 'ok' | 'partial' | 'unavailable'; note: string }[];
   explorers: Record<ProofChain, string>;
   addresses: { label: string; address: string; chains: ProofChain[] }[];
   /** Plain-language notes on how the lines were traced (token-tax ledger only). */

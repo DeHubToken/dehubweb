@@ -1,0 +1,54 @@
+name: Cost controls
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bulk-requests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test scripts/translation-request.test.mjs
+  reservations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: cost-test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: cost-test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -c 'CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;'
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027190000_translation_cost_controls.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/translation-controls.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027190100_compact_saved_generation_images.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction.sql
+      - name: Concurrent reservations never exceed the cap
+        run: |
+          for client in $(seq 1 12); do
+            psql -v ON_ERROR_STOP=1 -Atc 'SET ROLE service_role; SELECT public.reserve_translation_attempt(false,100,4000,3);' > "/tmp/budget-$client" &
+          done
+          wait
+          test "$(cat /tmp/budget-* | grep -c '^t$')" -eq 3
+          ACTUAL=$(psql -Atc "SELECT attempts FROM public.translation_attempt_budgets WHERE scope='all'")
+          test "$ACTUAL" -eq 3
+      - name: Concurrent cache misses have one winner
+        run: |
+          for client in $(seq 1 12); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE service_role; SELECT public.claim_translation_work('concurrent',gen_random_uuid());" > "/tmp/lease-$client" &
+          done
+          wait
+          test "$(cat /tmp/lease-* | grep -c '^t$')" -eq 1
