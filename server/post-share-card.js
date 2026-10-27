@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v4';
+export const POST_CARD_VERSION = 'v5';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://dehub.io';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -275,11 +275,11 @@ function renderMediaPanel(data, media) {
 }
 
 /**
- * A continuous chrome frame around the post, with the actual profile artwork.
+ * A clean dark background around the post, with the actual profile artwork.
  * Pass `media` (the post's picture as a data URI) to show it in place of the
  * text panel; without it a media post falls back to its text.
  */
-export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges = [], media = '' }) {
+export function renderPostCardSvg(data, { logo, avatar = '', badges = [], media = '' }) {
   const showMedia = !!(media && data.media);
   const { title, body, poll } = layoutPostCardCopy(showMedia ? { ...data, title: '', body: '', poll: null } : data);
   const identity = authorIdentity(data.author, badges);
@@ -307,7 +307,6 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
     <clipPath id="copy"><rect x="410" y="109" width="708" height="385"/></clipPath>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
   <rect x="48" y="132" width="306" height="412" rx="22" fill="#111215" stroke="#292b31"/>
   <rect x="390" y="84" width="742" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
@@ -372,7 +371,7 @@ export function applyProfileShareImage(html, account) {
   });
 }
 
-/** The profile in the same chrome frame as a post: face, name, handle and following. */
+/** A profile in a chrome frame: face, name, handle and following. */
 export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
   const name = wrapPostText(data.name, 56, 640, 2);
   const nameY = name.length > 1 ? 250 : 286;

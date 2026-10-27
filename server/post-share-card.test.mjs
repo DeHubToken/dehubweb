@@ -66,14 +66,14 @@ test('mature posts and unreadable records share the brand card without their vid
     assert.ok(result.includes('summary_large_image') && result.includes('content="630"'));
   }
   const media = applyPostShareImage(html, { ...post, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/6501.jpg' });
-  assert.equal((media.match(/https:\/\/dehub.io\/_og\/post\/v4\/6501.png/g) || []).length, 3);
+  assert.equal((media.match(/https:\/\/dehub.io\/_og\/post\/v5\/6501.png/g) || []).length, 3);
   assert.ok(media.includes('og:video'), 'a safe video keeps og:video for players that use it');
 });
 
 test('both crawler tags and structured data select the same versioned PNG', () => {
   const html = '<head><meta property="og:image" content="avatar.jpg"><meta name="twitter:image" content="avatar.jpg"><script type="application/ld+json">{"@type":"SocialMediaPosting","image":"avatar.jpg"}</script></head>';
   const result = applyPostShareImage(html, post);
-  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v4\/6501.png/g) || []).length, 4);
+  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v5\/6501.png/g) || []).length, 4);
   assert.ok(result.includes('content="1200"'));
   assert.ok(result.includes('content="630"'));
   assert.ok(result.includes('summary_large_image'));
@@ -135,7 +135,7 @@ test('renders real PNGs at 1200 by 630 using the deployed font and official mark
   ]) {
     const svg = renderPostCardSvg(data, { logo, chrome, media: data.media ? photo : '' });
     if (data.media) assert.ok(svg.includes(`data-media="${data.media.video ? 'video-poster' : 'image'}"`));
-    assert.ok(svg.includes('data-brand-artwork="integrated-chrome-edge"'));
+    assert.ok(!svg.includes('integrated-chrome-edge'));
     assert.ok(!svg.includes('chrome-mask'));
     const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Exo' } });
     const image = renderer.render();
