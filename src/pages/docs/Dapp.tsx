@@ -135,6 +135,7 @@ const Dapp = () => {
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
     { id: 'ai-suite', label: t('dapp.tocAi') },
     { id: 'creator-studio', label: t('dapp.tocStudio') },
+    { id: 'creator-tools', label: t('dapp.tocCreatorTools') },
     { id: 'converter', label: t('dapp.tocConverter') },
     { id: 'mini-apps', label: t('dapp.tocMiniApps') },
     { id: 'arcade', label: t('dapp.tocArcade') },
@@ -2113,7 +2114,24 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="creator-tools"
+          title="dapp.creatorToolsTitle"
+          paras={['dapp.creatorToolsDesc']}
+          bullets={[
+            ['dapp.creatorToolsB1', 'dapp.creatorToolsB1Desc'],
+            ['dapp.creatorToolsB2', 'dapp.creatorToolsB2Desc'],
+            ['dapp.creatorToolsB3', 'dapp.creatorToolsB3Desc'],
+            ['dapp.creatorToolsB4', 'dapp.creatorToolsB4Desc'],
+            ['dapp.creatorToolsB5', 'dapp.creatorToolsB5Desc'],
+            ['dapp.creatorToolsB6', 'dapp.creatorToolsB6Desc'],
+            ['dapp.creatorToolsB7', 'dapp.creatorToolsB7Desc'],
+            ['dapp.creatorToolsB8', 'dapp.creatorToolsB8Desc'],
+            ['dapp.creatorToolsB9', 'dapp.creatorToolsB9Desc']
+          ]}
+        />
+
+<GuideSection
           id="converter"
           title="dapp.converterTitle"
           paras={['dapp.converterDesc']}
