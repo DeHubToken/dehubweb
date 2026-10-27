@@ -64,6 +64,7 @@ import { warmPostPage } from '@/lib/preload-post-page';
 // imports, not the barrel — the barrel would drag the other seven back in.
 import { HomeFeed } from '@/components/app/feeds/HomeFeed';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
+import { closeCommentsSplit } from '@/lib/comments-split';
 
 const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m => ({ default: m.VideosFeed }));
 const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
@@ -263,6 +264,8 @@ export default function HomePage() {
     !!(location.state as any)?.fromFeed;
 
   const handleOverlayBack = useCallback(() => {
+    // An open comments sheet on the post closes first.
+    if (closeCommentsSplit()) return;
     if (window.history.length > 1) navigate(-1);
     else navigate('/app');
   }, [navigate]);
