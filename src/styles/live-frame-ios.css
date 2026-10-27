@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Full-screen live viewer on iPhone / iPad Safari.
+   ==========================================================================
+   A backdrop blur over a playing video has to be redrawn for every video
+   frame. Safari on iOS does that work for each blurred pill, button and chat
+   chip in the frame, and with a dozen of them the phone drops frames, heats
+   up and the picture stutters or freezes. Over a live picture the controls
+   keep their tint and edge but skip the blur, with a slightly deeper tint so
+   they read the same.
+
+   `-webkit-touch-callout` only exists in iOS WebKit, so desktop Safari,
+   Android and every desktop browser keep the glass exactly as before.
+   ========================================================================== */
+
+@supports (-webkit-touch-callout: none) {
+  [data-live-frame] [class*='backdrop-blur'] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  [data-live-frame] [class*='backdrop-blur'][class*='bg-black/'] {
+    background-color: rgb(0 0 0 / 0.5) !important;
+  }
+
+  /* Stream overlay widgets set their own blur token on the layer. */
+  [data-live-frame] [data-overlay-widget] {
+    --ow-blur: none;
+  }
+}
