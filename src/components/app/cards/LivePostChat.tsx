@@ -53,6 +53,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import type { ChatCreatorBadge } from '@/lib/live/chat-badges';
+import { useFocusChatMessage, chatMessageDomId } from '@/hooks/use-focus-chat-message';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -181,6 +182,8 @@ const TIMEOUTS = [
 ] as const;
 
 export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
+  // A mention notification names the line that tagged the reader.
+  useFocusChatMessage();
   const { t: _copy } = _useCopy();
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
   // this chat. They share the composer's row — see live-viewer-actions.
@@ -554,6 +557,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             return (
               <div
                 key={msg.id}
+                id={chatMessageDomId(msg.id)}
                 ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
                 onContextMenu={(e) => handleMessageContextMenu(e, msg)}
                 className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}`}

@@ -1744,6 +1744,8 @@
       "fractionPurchased": "{{name}} zụrụ akụkụ nke post gị",
       "repostedPosts": "{{name}} bipụtaghachiri {{count}} nke post gị",
       "commentMention": "{{name}} kwuru gị n'okwu",
+      "liveChatMention": "{{name}} kwuru na ị na ndụ chat",
+      "publicChatMention": "{{name}} kwuru na ị na ọha chat",
       "followRequest": "{{name}} rịọrọ ka ọ soro gị",
       "bountyReplyNamed": "{{name}} zara onyinye gị “{{title}}”",
       "bountyReply": "{{name}} zara onyinye gị",
