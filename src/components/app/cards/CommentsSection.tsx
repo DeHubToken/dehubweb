@@ -2019,14 +2019,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     if (commentId.startsWith('temp-')) return;
     const found = allComments.find(c => c.id === commentId);
     if (found) {
-      if (stage) setStageComposerOpen(true);
-      setReplyTo(found);
-      setNewComment(`@${found.username} `);
-      // Just focus - let mobile browsers handle keyboard viewport adjustment natively
-      // Manual scrollIntoView causes ugly content cutoff on mobile
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      // Reveal the dock before focusing, within the same tap. Deferring focus
+      // loses the user gesture that mobile browsers require for the keyboard.
+      flushSync(() => {
+        if (stage) setStageComposerOpen(true);
+        setReplyTo(found);
+        setNewComment(current => current.length ? current : `@${found.username} `);
+      });
+      inputRef.current?.focus({ preventScroll: true });
     }
   });
 
