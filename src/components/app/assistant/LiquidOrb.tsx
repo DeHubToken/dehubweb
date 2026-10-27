@@ -158,10 +158,12 @@ export function LiquidOrb({ size, mode, getLevel, onClick, label, disabled, clas
     >
       <span ref={glowRef} className="liquid-orb__glow" aria-hidden="true" />
       <span ref={blobRef} className="liquid-orb__blob" aria-hidden="true">
-        <span ref={sheenRef} className="liquid-orb__sheen" />
-        <span ref={streakRef} className="liquid-orb__streak" />
-        <span className="liquid-orb__shade" />
-        <span className="liquid-orb__spec" />
+        <span className="liquid-orb__clip">
+          <span ref={sheenRef} className="liquid-orb__sheen" />
+          <span ref={streakRef} className="liquid-orb__streak" />
+          <span className="liquid-orb__shade" />
+          <span className="liquid-orb__spec" />
+        </span>
       </span>
     </button>
   );
