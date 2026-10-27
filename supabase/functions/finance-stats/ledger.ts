@@ -112,12 +112,14 @@ export function freeJobProviderCostUsd(model: string): number | null {
 /**
  * List price per million tokens for the models the text router pays for.
  *
- * Only `gateway` and `direct` routes are ever priced. A `free` route is a
- * provider free tier and is counted as zero — which is a claim about the tier,
- * not proof of a zero bill (see docs/provider-usage.md). A paid model missing
- * from this table is counted as unpriced and reported, never guessed.
+ * Route names do not prove a zero bill. Unknown models remain unpriced.
  */
 export const TOKEN_PRICES_PER_M: Record<string, { input: number; output: number; perRequest?: number }> = {
+  // Official list prices checked 2026-10-27: ai.google.dev/gemini-api/docs/pricing
+  'gemini-3.1-flash-lite': { input: 0.25, output: 1.50 },
+  'gemini-3.1-flash-lite-preview': { input: 0.25, output: 1.50 },
+  // developers.cloudflare.com/workers-ai/models/llama-3.1-8b-instruct-fp8/
+  'llama-3.1-8b-instruct-fp8': { input: 0.152, output: 0.287 },
   'gemini-2.5-flash': { input: 0.3, output: 2.5 },
   'gemini-2.5-flash-lite': { input: 0.1, output: 0.4 },
   'gemini-2.5-pro': { input: 1.25, output: 10 },
@@ -133,18 +135,16 @@ export interface UsageRow {
   attempts: number;
   input_tokens: number;
   output_tokens: number;
+  usage_missing?: number;
 }
 
-/** USD for one usage row, `0` for free routes, `null` when the model has no price. */
+/** List-price subtotal for reported tokens; null means unknown, never zero. */
 export function usageCostUsd(row: UsageRow): number | null {
-  if (row.route === 'free') return 0;
+
   const raw = (row.served_model || row.requested_model || '').toLowerCase();
   const model = raw.includes('/') ? raw.slice(raw.lastIndexOf('/') + 1) : raw;
   const price = TOKEN_PRICES_PER_M[model];
-  if (!price) {
-    // An attempt that reported no tokens cost nothing to price.
-    return Number(row.input_tokens) + Number(row.output_tokens) > 0 ? null : 0;
-  }
+  if (!price) return null;
   return (
     (Number(row.input_tokens) / 1e6) * price.input +
     (Number(row.output_tokens) / 1e6) * price.output +

@@ -29,8 +29,10 @@ import { languageNameFor } from "../_shared/language-names.ts";
 import { translationChunks } from "./chunks.ts";
 import { tryFree } from "../_shared/free-models.ts";
 import { createTranslationUsage, type TranslationUsage } from './usage.ts';
+import { controlRpc, controlledProviderFetch } from '../_shared/provider-control.ts';
 
 const corsHeaders = {
+  'Access-Control-Expose-Headers': 'Retry-After',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
 };
@@ -164,45 +166,6 @@ async function writeCachedTranslation(
 // 'en', 'en-US' and 'EN' are the same target as far as skipping work goes.
 function baseLang(code: string | undefined): string {
   return (code ?? '').toLowerCase().split(/[-_]/)[0];
-}
-
-// Ceiling on paid calls per UTC day, across every caller.
-//
-// The wallet gate that used to sit in front of the paid tiers is gone, so this
-// is the only thing standing between a script and the fal balance. It is not a
-// per-user quota and is not trying to be fair — it is a blast radius. Whatever
-// goes wrong, the day's loss is bounded and tomorrow starts clean.
-//
-// Sized well above real traffic on purpose. Only a (text, language) pair that
-// misses both caches gets this far, so steady-state usage is roughly "new posts
-// × languages actually being read", not "views". If this trips during normal
-// use the cache is not working and that is the bug to chase, not this number.
-const DAILY_PAID_TRANSLATION_CAP = Number(
-  Deno.env.get('TRANSLATION_DAILY_CAP') ?? '20000',
-);
-
-/**
- * Reserves one paid call against today's budget. Returns false when the day is
- * spent.
- *
- * Fails OPEN: if the counter cannot be reached the translation proceeds. A
- * broken counter should not take the feature down, and the providers have their
- * own limits underneath. The reverse — failing closed — would mean one bad
- * migration silently stops every translation on the site.
- */
-async function claimPaidTranslation(): Promise<boolean> {
-  try {
-    const { data, error } = await db.rpc('claim_paid_translation', {
-      p_cap: DAILY_PAID_TRANSLATION_CAP,
-    });
-    if (error) {
-      console.log('Spend counter unavailable, allowing:', error.message);
-      return true;
-    }
-    return data !== false;
-  } catch (_e) {
-    return true;
-  }
 }
 
 interface TranslateRequest {
@@ -418,7 +381,7 @@ async function isAlreadyInTargetLanguage(text: string, targetLang: string): Prom
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await controlledProviderFetch('mymemory', url, { signal: controller.signal });
     clearTimeout(timeout);
 
     if (!response.ok) return false;
@@ -458,7 +421,7 @@ async function translateWithMyMemory(
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000); // 5s timeout
     
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await controlledProviderFetch('mymemory', url, { signal: controller.signal });
     clearTimeout(timeout);
     
     if (!response.ok) {
@@ -568,7 +531,7 @@ async function translateWithFreeModels(
     ],
     temperature: 0.1,
     max_tokens: 4000,
-  }, { label: 'translate-text', publicContent, meter: usage.meter }).catch(() => null);
+  }, { label: 'translate-text', publicContent, meter: usage.meter, fetchProvider: usage.fetchProvider }).catch(() => null);
   if (!res) return null;
 
   try {
@@ -757,7 +720,7 @@ async function translateWithGemini(
     try {
       console.log(`Attempting translation with Gemini (direct), model ${model}`);
 
-      const response = await fetch(
+      const response = await usage.fetchProvider(`google/${model}`,
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
         {
           method: 'POST',
@@ -873,7 +836,7 @@ async function translateWithFal(
   try {
     console.log('Attempting translation with fal (openrouter/router)');
 
-    const response = await fetch('https://fal.run/openrouter/router', {
+    const response = await usage.fetchProvider('fal/claude-haiku-4.5', 'https://fal.run/openrouter/router', {
       method: 'POST',
       headers: {
         Authorization: `Key ${FAL_KEY}`,
@@ -955,7 +918,7 @@ async function translateWithAI(
       return null;
     }
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    const response = await usage.fetchProvider('lovable/translation', 'https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1024,6 +987,7 @@ serve(async (req) => {
   }
 
   let usage: TranslationUsage | undefined;
+  let lease: { key: string; token: string } | undefined;
   try {
     const { text, targetLang, sourceLang: suppliedSource, public: isPublicRequest, purpose }: TranslateRequest = await req.json();
     const isPublicText = isPublicRequest === true;
@@ -1130,6 +1094,25 @@ serve(async (req) => {
     const limited = await rateLimitByIp(req, 'translate-text', { limit: 3000, windowMs: 60 * 60 * 1000 });
     if (limited) return limited;
 
+    // Only the winner of a cache miss may generate. A failed database read is
+    // never permission to buy the same translation repeatedly.
+    const candidate = { key: `${textHash}:${targetLang}`, token: crypto.randomUUID() };
+    let claimed = false;
+    try { claimed = await controlRpc<boolean>('claim_translation_work', { p_key: candidate.key, p_token: candidate.token }); }
+    catch { return new Response(JSON.stringify({ error: 'Translation temporarily unavailable', code: 'TRANSLATION_BUDGET_UNAVAILABLE' }), {
+      status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '30' },
+    }); }
+    if (claimed !== true) return new Response(JSON.stringify({ error: 'Translation is already being prepared', code: 'TRANSLATION_IN_PROGRESS' }), {
+      status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '3' },
+    });
+    lease = candidate;
+    const workStarted = Date.now();
+    // A previous winner may have saved between our initial read and the claim.
+    const completed = await readCachedTranslation(textHash, targetLang, !isLocaleFill);
+    if (completed && !looksLikeTranslationJunk(text, completed.translatedText ?? '')) return new Response(JSON.stringify({ ...(keepVerbatimIfRewrite(text, targetLang, completed) ?? completed), cached: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
     // Try MyMemory first (most reliable free option)
     let result = await translateWithMyMemory(text, targetLang, sourceLang);
     if (result) {
@@ -1168,6 +1151,7 @@ serve(async (req) => {
         let complete = true;
         let detected: TranslateResponse['detectedLanguage'];
         for (const chunk of chunks) {
+          if (Date.now() - workStarted > 45000) { complete = false; break; }
           if (!chunk.trim() || !/\p{L}/u.test(chunk)) { translated.push(chunk); continue; }
           const part = await translateWithMyMemory(chunk, targetLang, sourceLang);
           if (!part) { complete = false; break; }
@@ -1185,21 +1169,7 @@ serve(async (req) => {
       }
     }
 
-    // Everything below here costs money.
-    //
-    // This used to require a wallet. That gate is gone: translating the feed is
-    // a public reading feature, and gating it made signed-out readers — the
-    // people most likely to need a translation — the only ones who could not
-    // have one. It also protected nothing. requireDeHubAuth resolves its token
-    // by calling an unguarded public endpoint, so any caller can present any
-    // wallet; it cost real users a feature and cost an attacker one extra HTTP
-    // request.
-    //
-    // What actually bounds the damage is a ceiling on spend, so that is what
-    // guards it now. Abuse can waste the day's budget; it cannot empty an
-    // account. Legitimate traffic never approaches the cap because the two
-    // cache layers above absorb it — only a distinct (text, language) pair that
-    // has never been seen reaches this line.
+    // Each model attempt reserves capacity before its network request.
 
     // A code the name map does not know cannot be prompted for. It used to be
     // passed through raw — "Translate to acm" — and the model's guess went into
@@ -1220,9 +1190,8 @@ serve(async (req) => {
       );
     }
 
-    // Free model tiers before the paid budget is touched: a translation they
-    // answer costs nothing and must not use up one of the day's paid slots.
-    usage = createTranslationUsage();
+    // Quota tiers share the same attempt and token ceilings as paid fallbacks.
+    usage = createTranslationUsage(isLocaleFill, workStarted + 240000);
     const free = await translateWithFreeModels(text, targetLanguageName, isPublicText, usage);
     const rawFree = free?.result ?? null;
     result = keepVerbatimIfRewrite(text, targetLang, rawFree);
@@ -1241,14 +1210,14 @@ serve(async (req) => {
       );
     }
 
-    if (!(await claimPaidTranslation())) {
+    if (usage.blocked) {
       console.warn('Daily paid translation cap reached, refusing paid tiers');
       return new Response(
         JSON.stringify({
           error: 'Translation is busy right now, try again later.',
-          code: 'TRANSLATION_BUDGET_EXHAUSTED',
+          code: usage.blocked.code,
         }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(usage.blocked.retryAfter) } },
       );
     }
     usage.skip('free', isPublicText ? 'unavailable' : 'private_unavailable');
@@ -1311,8 +1280,8 @@ serve(async (req) => {
     // All endpoints failed
     console.error('All translation endpoints failed');
     return new Response(
-      JSON.stringify({ error: 'Translation service temporarily unavailable' }),
-      { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Translation service temporarily unavailable', code: usage.blocked?.code ?? 'TRANSLATION_PROVIDER_UNAVAILABLE' }),
+      { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(usage.blocked?.retryAfter ?? 30) } }
     );
 
   } catch (error) {
@@ -1321,5 +1290,8 @@ serve(async (req) => {
       JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-  } finally { usage?.flush(); }
+  } finally {
+    usage?.flush();
+    if (lease) await controlRpc('release_translation_work', { p_key: lease.key, p_token: lease.token }).catch(() => {});
+  }
 });

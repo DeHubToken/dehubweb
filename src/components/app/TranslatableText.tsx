@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { TranslationCooldown } from '@/lib/translation-cooldown';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Translatable Text Component
@@ -655,6 +656,7 @@ type TranslateResult = {
 };
 
 const inFlightRequests = new Map<string, Promise<TranslateResult>>();
+const translationCooldown = new TranslationCooldown();
 
 /**
  * `isPublic` marks text anyone can read — a feed post, a bio. Only that may go
@@ -666,10 +668,14 @@ function requestTranslation(text: string, targetLang: string, isPublic = false):
   if (existing) return existing;
 
   const request = (async () => {
+    translationCooldown.assertReady(key);
     const { data, error } = await supabase.functions.invoke('translate-text', {
       body: isPublic ? { text, targetLang, public: true } : { text, targetLang },
     });
-    if (error) throw error;
+    if (error) {
+      await translationCooldown.observe(key, error);
+      throw error;
+    }
     return (data ?? {}) as TranslateResult;
   })();
 

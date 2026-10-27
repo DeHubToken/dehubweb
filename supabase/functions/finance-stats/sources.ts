@@ -6,7 +6,7 @@
 import type { FinanceKind } from './ledger.ts';
 
 export type Origin = 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain';
-export type Status = 'ok' | 'unavailable';
+export type Status = 'ok' | 'partial' | 'unavailable';
 
 export interface SourceMeta {
   id: string;
@@ -38,7 +38,7 @@ export const CATALOGUE: Omit<SourceMeta, 'status'>[] = [
   { id: 'work_fees', label: 'Work marketplace fees', kind: 'revenue', group: 'fees', origin: 'database', note: 'The difference between what a job poster paid and what the worker received, on confirmed payouts.' },
   // Costs
   { id: 'ai_generation_cost', label: 'AI generation providers', kind: 'cost', group: 'compute', origin: 'database', note: 'What fal, kie and Replicate billed for each successful generation — paid and free — worked back from the price and markup it ran at.' },
-  { id: 'ai_text_usage', label: 'AI text APIs', kind: 'cost', group: 'compute', origin: 'database', note: 'Metered tokens on paid chat, search and translation routes at list price. Free-tier routes count as zero.' },
+  { id: 'ai_text_usage', label: 'AI text APIs', kind: 'cost', group: 'compute', origin: 'database', note: 'Known text-model tokens at list price before account allowances, caching discounts or reseller adjustments. Incomplete prices and missing usage are reported; this is not a reconciled invoice.' },
   { id: 'digitalocean', label: 'DigitalOcean', kind: 'cost', group: 'infrastructure', origin: 'digitalocean', note: 'DigitalOcean’s own invoices, and its month-to-date usage for the month still running.' },
   { id: 'stripe_fees', label: 'Card processing', kind: 'cost', group: 'payments', origin: 'api', note: 'Stripe’s fee on each card purchase of DHB.' },
 ];

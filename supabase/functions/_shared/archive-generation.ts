@@ -1,11 +1,11 @@
 import { serviceClient } from './auth.ts';
 
 /** Copy provider output to the owner's private library before its URL expires. */
-export async function archiveGeneration(wallet: string, id: string, metadata: Record<string, unknown>, url?: string): Promise<void> {
+export async function archiveGeneration(wallet: string, id: string, metadata: Record<string, unknown>, url?: string): Promise<string | null> {
   const db = serviceClient();
-  const existing = await db.from('creator_assets').select('ready').eq('wallet_address', wallet).eq('id', id).maybeSingle();
+  const existing = await db.from('creator_assets').select('ready,storage_path').eq('wallet_address', wallet).eq('id', id).maybeSingle();
   if (existing.error) throw existing.error;
-  if (existing.data?.ready) return;
+  if (existing.data?.ready) return existing.data.storage_path;
   let path: string | null = null;
   if (url) {
     if (!url.startsWith('data:')) {
@@ -42,4 +42,5 @@ export async function archiveGeneration(wallet: string, id: string, metadata: Re
   }
   const { error } = await db.from('creator_assets').upsert({ id, wallet_address: wallet, storage_path: path, metadata, ready: true });
   if (error) throw error;
+  return path;
 }
