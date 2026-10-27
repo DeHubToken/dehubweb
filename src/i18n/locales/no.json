@@ -3235,6 +3235,7 @@
   },
   "communities": {
     "shareLink": "Del lenke",
+    "pinnedMore": "Flere",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invitere følgere",
