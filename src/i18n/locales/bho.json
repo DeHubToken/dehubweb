@@ -3175,6 +3175,8 @@
   "communities": {
     "shareLink": "लिंक साझा कइल जाय",
     "pinnedMore": "अउरी बात करीं",
+    "showFirst": "पहिले देखाईं",
+    "pinUpdateFailed": "पिन अपडेट ना हो पावल",
     "chatTab": "चैट",
     "followerInvites": {
       "title": "फॉलोअर्स को इवाइट करें",

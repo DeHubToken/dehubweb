@@ -3246,6 +3246,8 @@
   "communities": {
     "shareLink": "Havolani ulashish",
     "pinnedMore": "Ko'proq",
+    "showFirst": "Birinchi ko'rsatish",
+    "pinUpdateFailed": "Mahkamlashni yangilab bo'lmadi",
     "chatTab": "Suhbat",
     "followerInvites": {
       "title": "Izdoshlarni taklif qiling",

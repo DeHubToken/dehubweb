@@ -3235,6 +3235,8 @@
   "communities": {
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
+    "showFirst": "प्रथम दाखवा",
+    "pinUpdateFailed": "पिन अद्ययावत करता आला नाही",
     "chatTab": "चॅट",
     "followerInvites": {
       "title": "फॉलोअर्सना आमंत्रित करा",

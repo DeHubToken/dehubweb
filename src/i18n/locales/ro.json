@@ -3236,6 +3236,8 @@
   "communities": {
     "shareLink": "Distribuie linkul",
     "pinnedMore": "Mai multe",
+    "showFirst": "Afișează prima",
+    "pinUpdateFailed": "Fixarea nu a putut fi actualizată",
     "chatTab": "Discută",
     "followerInvites": {
       "title": "Invită urmăritori",

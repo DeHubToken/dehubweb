@@ -3237,6 +3237,8 @@
   "communities": {
     "shareLink": "Podijeli poveznicu",
     "pinnedMore": "Više",
+    "showFirst": "Prikaži prvo",
+    "pinUpdateFailed": "Nije moguće ažurirati prikvačivanje",
     "chatTab": "Razgovor",
     "followerInvites": {
       "title": "Upozorite sledbenike",

@@ -3208,6 +3208,8 @@
   "communities": {
     "shareLink": "حصيداري ڪريو لنڪ",
     "pinnedMore": "وڌيڪ",
+    "showFirst": "پهرين ڏيکاريو",
+    "pinUpdateFailed": "پن اپڊيٽ ٿي نه سگهيو",
     "chatTab": "چيٽ",
     "followerInvites": {
       "title": "فالوورز کي دعوت ڏيو",

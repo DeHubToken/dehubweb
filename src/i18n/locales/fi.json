@@ -3235,6 +3235,8 @@
   "communities": {
     "shareLink": "Jaa linkki",
     "pinnedMore": "Lisää",
+    "showFirst": "Näytä ensin",
+    "pinUpdateFailed": "Kiinnityksen päivitys epäonnistui",
     "chatTab": "Keskustelu",
     "followerInvites": {
       "title": "Kutsu seuraajia",

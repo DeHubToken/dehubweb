@@ -3239,6 +3239,8 @@
   "communities": {
     "shareLink": "URLをシェア",
     "pinnedMore": "その他",
+    "showFirst": "最初に表示",
+    "pinUpdateFailed": "ピン留めを更新できませんでした",
     "chatTab": "チャット",
     "followerInvites": {
       "title": "フォロワーを招待する",

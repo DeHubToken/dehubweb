@@ -3220,6 +3220,8 @@
   "communities": {
     "shareLink": "Link ni link ni",
     "pinnedMore": "Ka tɛmɛ o kan",
+    "showFirst": "A jira fɔlɔ",
+    "pinUpdateFailed": "Nɔrɔli ma se ka kura",
     "chatTab": "Baro",
     "followerInvites": {
       "title": "I ka ladonw wele",

@@ -3248,6 +3248,8 @@
   "communities": {
     "shareLink": "Падзяліцца спасылкай",
     "pinnedMore": "Больш",
+    "showFirst": "Паказваць першым",
+    "pinUpdateFailed": "Не ўдалося абнавіць замацаванне",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Прапануем сваім фолловерам",

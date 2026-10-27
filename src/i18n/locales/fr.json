@@ -3247,6 +3247,8 @@
   "communities": {
     "shareLink": "Partager le lien",
     "pinnedMore": "Plus",
+    "showFirst": "Afficher en premier",
+    "pinUpdateFailed": "Impossible de mettre à jour l'épingle",
     "chatTab": "Discussion",
     "followerInvites": {
       "title": "Inviter des abonnés",

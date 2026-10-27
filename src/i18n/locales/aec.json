@@ -3163,6 +3163,8 @@
   "communities": {
     "shareLink": "شارك اللينك",
     "pinnedMore": "أكتر",
+    "showFirst": "اعرضه الأول",
+    "pinUpdateFailed": "ماقدرناش نحدّث التثبيت",
     "chatTab": "الشات",
     "followerInvites": {
       "title": "دعوة للمتابعين",

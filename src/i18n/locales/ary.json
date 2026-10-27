@@ -3265,6 +3265,8 @@
   "communities": {
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
+    "showFirst": "بيّنو هو اللول",
+    "pinUpdateFailed": "ماقدرناش نحدّثو التثبيت",
     "chatTab": "الشات",
     "followerInvites": {
       "title": "دعوة متابعين",

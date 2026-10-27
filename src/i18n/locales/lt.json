@@ -3237,6 +3237,8 @@
   "communities": {
     "shareLink": "Dalytis nuoroda",
     "pinnedMore": "Daugiau",
+    "showFirst": "Rodyti pirmą",
+    "pinUpdateFailed": "Nepavyko atnaujinti prisegimo",
     "chatTab": "Pokalbis",
     "followerInvites": {
       "title": "Pakviesti sekėjų",

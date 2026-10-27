@@ -3236,6 +3236,8 @@
   "communities": {
     "shareLink": "Del lenke",
     "pinnedMore": "Flere",
+    "showFirst": "Vis først",
+    "pinUpdateFailed": "Kunne ikke oppdatere festingen",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invitere følgere",

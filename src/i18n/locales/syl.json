@@ -3304,6 +3304,8 @@
   "communities": {
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
+    "showFirst": "আগে দেখাও",
+    "pinUpdateFailed": "পিন হালনাগাদ করা গেছে না",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "ফলোয়ার্স ইনভাইট করুন",

@@ -3233,6 +3233,8 @@
   "communities": {
     "shareLink": "Холбоос хуваалцах",
     "pinnedMore": "Илүү",
+    "showFirst": "Эхэнд харуулах",
+    "pinUpdateFailed": "Бэхэлгээг шинэчилж чадсангүй",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Дагагчдыг урих",

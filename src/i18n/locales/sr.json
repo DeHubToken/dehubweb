@@ -3240,6 +3240,8 @@
   "communities": {
     "shareLink": "Подијели link",
     "pinnedMore": "Више",
+    "showFirst": "Прикажи прво",
+    "pinUpdateFailed": "Није могуће ажурирати качење",
     "chatTab": "Ћаскање",
     "followerInvites": {
       "title": "Позови пратитеље",

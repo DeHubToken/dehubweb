@@ -3237,6 +3237,8 @@
   "communities": {
     "shareLink": "ਲਿੰਕ ਸਾਂਝਾ ਕਰੋ",
     "pinnedMore": "ਹੋਰ",
+    "showFirst": "ਪਹਿਲਾਂ ਦਿਖਾਓ",
+    "pinUpdateFailed": "ਪਿੰਨ ਅੱਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
     "chatTab": "ਚੈਟ",
     "followerInvites": {
       "title": "ਚੇਲਿਆਂ ਨੂੰ ਸੱਦਾ ਦਿਓ",

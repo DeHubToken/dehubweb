@@ -3192,6 +3192,8 @@
   "communities": {
     "shareLink": "ସଂଯୋଗ ସହଭାଗ କରନ୍ତୁ",
     "pinnedMore": "ଅଧିକ",
+    "showFirst": "ପ୍ରଥମେ ଦେଖାନ୍ତୁ",
+    "pinUpdateFailed": "ପିନ ଅପଡେଟ କରାଯାଇ ପାରିଲା ନାହିଁ",
     "chatTab": "ଚାଟ",
     "followerInvites": {
       "title": "ଅନୁଗାମୀମାନଙ୍କୁ ନିମନ୍ତ୍ରଣ କରନ୍ତୁ",
