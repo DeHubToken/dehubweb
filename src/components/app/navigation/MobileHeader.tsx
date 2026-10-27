@@ -63,8 +63,6 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   );
 });
 
-/** Drawn height of the avatar, bell and logo, so the three read as one row. */
-const TOP_BAR_ICON = 26;
 /** How far the avatar and bell sit inside the feed pill's side edges. */
 const TOP_BAR_PILL_INSET = 4;
 
@@ -132,10 +130,9 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
   }, [showBar, islandBar]);
 
-  // The avatar and bell sit a hair inside the feed pill's side edges, and the
-  // avatar's corner is concentric with the pill's (pill radius minus that
-  // inset). Both come from the pill as drawn, since every theme gives it its
-  // own inset and radius; the CSS defaults cover the moment before it mounts.
+  // The avatar and bell sit a hair inside the feed pill's side edges. Read off
+  // the pill as drawn, since every theme gives it its own inset; the CSS
+  // default covers the moment before it mounts.
   const headerRef = useRef<HTMLElement>(null);
   useLayoutEffect(() => {
     const header = headerRef.current;
@@ -145,9 +142,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
       if (!pill) return;
       const rect = pill.getBoundingClientRect();
       if (!rect.width) return;
-      const radius = parseFloat(getComputedStyle(pill).borderTopLeftRadius) || 0;
       header.style.setProperty('--top-bar-edge', `${Math.max(0, rect.left) + TOP_BAR_PILL_INSET}px`);
-      header.style.setProperty('--top-bar-avatar-radius', `${Math.min(TOP_BAR_ICON / 2, Math.max(0, radius - TOP_BAR_PILL_INSET))}px`);
     };
     sync();
     // The pill mounts with the feed and themes restyle it after a switch.
@@ -184,16 +179,16 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
                   className="flex h-11 w-11 shrink-0 items-center justify-start rounded-lg hover:opacity-80 transition-opacity"
                   aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
-                  <Avatar className="w-[26px] h-[26px]" style={{ borderRadius: 'var(--top-bar-avatar-radius, 8px)' }}>
+                  <Avatar className="w-[26px] h-[26px]">
                     {user.avatarImageUrl && user.address && (
                       <AvatarImage
                         src={buildAvatarUrl(user.address, user.avatarImageUrl)}
                         alt={_copy("copy.f66ca816cb1e", { defaultValue: "{{value1}}'s avatar", value1: user.displayName || user.username })}
-                        className="object-cover rounded-[inherit]"
+                        className="object-cover"
                         loading="eager"
                       />
                     )}
-                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium rounded-[inherit]">
+                    <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
                       {(user.displayName || user.username)?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -241,11 +236,13 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
-            {/* 29 draws the bell glyph 26 tall, level with the avatar and mark. Its
-                ink sits 2px inside the box at each side and a little high, so the
-                box is pulled out and down to put the drawn bell on the line. */}
-            <span className="block -mr-[2px] translate-y-[1.5px]">
-              <NotificationBell unread={totalNotifUnread} size={29} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
+            {/* The bell's body (not the clapper below it) spans the mark's height:
+                at 32 it runs y 0.5 to 26.3 and x 2.5 to 29.5 of its box, so the
+                box moves down 2.7px and out 2.5px to sit the body's bottom on
+                the mark's bottom and its side on the pill-inset edge. A flex
+                box, not a block, or a line box taller than the bell lifts it. */}
+            <span className="flex h-8 w-8 -mr-[2.5px] translate-y-[2.7px]">
+              <NotificationBell unread={totalNotifUnread} size={32} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
             </span>
           </button>
         )}
