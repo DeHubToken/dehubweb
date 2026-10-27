@@ -59,7 +59,8 @@ import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
 import { verticalCropStyle, type VerticalCrop } from '@/lib/live-overlay/vertical-crop';
 import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
-import { ClipButton } from '../live/ClipButton';
+import { useLiveClip } from '../live/ClipButton';
+import Scissors from '@/components/ui/cut-icons/trim';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
@@ -456,6 +457,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     () => (streamEnded && replayRef.current ? replayRef.current.currentTime : undefined),
     [streamEnded],
   );
+  const liveClip = useLiveClip(stream.id, getReplayTime);
   const containerRef = useRef<HTMLDivElement>(null);
   const { isFullscreen, toggleFullscreen } = useVideoFullscreen(videoRef, containerRef, { escapeAncestors: true });
   // Records the view once the player has been on screen long enough to mean it.
@@ -1286,7 +1288,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
+            {/* Above the full-bleed viewer (z-[55]); the menu's own z-50 drew it
+                behind the picture on phones. */}
+            <DropdownMenuContent align="end" className={cn("bg-zinc-800 border-zinc-700", immersive && "z-[60]")}>
               {/* Bookmark / Post info. Also on the action bar as icons on desktop —
                   the menu carries them at every width so there is one
                   reliable place to look. */}
@@ -1313,6 +1317,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               >
                 <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
               </DropdownMenuItem>
+              {clippable && (
+                <DropdownMenuItem
+                  onClick={() => { void liveClip.start(); }}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <Scissors className="w-4 h-4" /> {t('liveClips.button', 'Clip this moment')}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => setShowActivityLog(true)}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
@@ -1801,16 +1813,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
         >
           <LiveViewerActionsProvider
             value={
-              /* One row with the composer: Clip first, sized and filled like
-                 the gift, share and thumb buttons beside it. */
               <div className="flex items-center gap-2">
-              {clippable && (
-                <ClipButton
-                  tokenId={stream.id}
-                  getReplayTime={getReplayTime}
-                  className="h-[46px] w-[46px] shrink-0 rounded-xl border border-white/15 bg-black/40 text-white backdrop-blur-md hover:bg-black/60"
-                />
-              )}
               <ActionBar
                 compact
                 onLiveReaction={sendLiveReaction}
@@ -1851,15 +1854,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             onComment={() => setShowComments(prev => !prev)}
             className="p-0 mb-2"
           />
-          {clippable && (
-            <ClipButton
-              tokenId={stream.id}
-              getReplayTime={getReplayTime}
-              className="mb-2 gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/15"
-              iconClassName="h-4 w-4"
-              withLabel
-            />
-          )}
           {!streamEnded && (
             // "Tuned in" is everyone who has ever opened this live, not the
             // room right now; the room is the "watching" figure in the chat.
@@ -2141,6 +2135,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
           imageUrl: stream.thumbnail
         }}
       />
+
+      {clippable && liveClip.sheet}
 
       {/* Report Modal */}
       <ReportModal
