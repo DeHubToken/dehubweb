@@ -136,6 +136,7 @@ const Dapp = () => {
     { id: 'ai-suite', label: t('dapp.tocAi') },
     { id: 'creator-studio', label: t('dapp.tocStudio') },
     { id: 'creator-tools', label: t('dapp.tocCreatorTools') },
+    { id: 'editor-additions', label: t('dapp.tocEditorAdditions') },
     { id: 'converter', label: t('dapp.tocConverter') },
     { id: 'mini-apps', label: t('dapp.tocMiniApps') },
     { id: 'arcade', label: t('dapp.tocArcade') },
@@ -2130,6 +2131,19 @@ const Dapp = () => {
             ['dapp.creatorToolsB9', 'dapp.creatorToolsB9Desc']
           ]}
         />
+
+<GuideSection
+  id="editor-additions"
+  title="dapp.editorAdditionsTitle"
+  paras={['dapp.editorAdditionsDesc']}
+  bullets={[
+    ['dapp.editorAdditionsB1', 'dapp.editorAdditionsB1Desc'],
+    ['dapp.editorAdditionsB2', 'dapp.editorAdditionsB2Desc'],
+    ['dapp.editorAdditionsB3', 'dapp.editorAdditionsB3Desc'],
+    ['dapp.editorAdditionsB4', 'dapp.editorAdditionsB4Desc'],
+    ['dapp.editorAdditionsB5', 'dapp.editorAdditionsB5Desc']
+  ]}
+/>
 
 <GuideSection
           id="converter"
