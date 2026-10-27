@@ -114,6 +114,11 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
           </div>
         )}
       </div>
+      {isValid && (
+        <span className="relative flex-shrink-0 rounded-full bg-white/[0.12] px-3 py-1.5 text-xs font-semibold text-white">
+          {_copy("communities.join")}
+        </span>
+      )}
     </button>
   );
 }
