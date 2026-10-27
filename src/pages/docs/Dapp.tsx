@@ -124,6 +124,7 @@ const Dapp = () => {
     { id: 'stages', label: t('dapp.stagesTitle') },
     { id: 'tv-radio', label: t('dapp.tvRadioTitle') },
     { id: 'music-charts', label: t('dapp.tocMusicCharts') },
+    { id: 'scheduling', label: t('dapp.tocScheduling') },
     { id: 'cinema', label: t('dapp.tocCinema') },
     { id: 'wallet', label: t('dapp.tocWallet') },
     { id: 'exchange', label: t('dapp.tocExchange') },
@@ -1958,6 +1959,18 @@ const Dapp = () => {
             ['dapp.musicChartsB6', 'dapp.musicChartsB6Desc']
           ]}
         />
+
+<GuideSection
+  id="scheduling"
+  title="dapp.schedulingTitle"
+  paras={['dapp.schedulingDesc']}
+  bullets={[
+    ['dapp.schedulingB1', 'dapp.schedulingB1Desc'],
+    ['dapp.schedulingB2', 'dapp.schedulingB2Desc'],
+    ['dapp.schedulingB3', 'dapp.schedulingB3Desc'],
+    ['dapp.schedulingB4', 'dapp.schedulingB4Desc']
+  ]}
+/>
 
 <GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
 
