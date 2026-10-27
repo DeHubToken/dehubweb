@@ -54,6 +54,8 @@ export interface ApiCommentResponse {
    * comment that has never been anchored, which is nearly all of them.
    */
   anchoredUntil?: string | null;
+  /** Sent with a tip on the post; only ever set by the server after the tip confirmed. */
+  tip?: { amount: number; symbol: string; chainId: number; txHash: string; value: number } | null;
   writor: {
     username: string;
     displayName?: string;
@@ -371,4 +373,63 @@ export async function recordCommentViews(commentIds: number[]): Promise<{ result
     method: "POST",
     body: { commentIds },
   });
+}
+
+/**
+ * Tip messages: write the message before sending the tip, bind the tx hash
+ * after it confirms. The server posts it (as a comment with `tip`, or only in
+ * the creator's notification when private) once the tip is seen on-chain, so
+ * nothing shows for a tip that never landed.
+ */
+export const TIP_MESSAGE_MAX_LENGTH = 280;
+
+export interface TipMessageResult {
+  result: boolean;
+  error?: string;
+  messageId?: string;
+  status?: 'pending' | 'confirming' | 'posted' | 'private' | 'refused';
+  commentId?: string;
+}
+
+export async function registerTipMessage(params: {
+  tokenId: string | number;
+  amount: number;
+  content: string;
+  isPrivate?: boolean;
+}): Promise<TipMessageResult> {
+  return apiCall<TipMessageResult>('/api/tip_message', {
+    method: 'POST',
+    body: {
+      streamTokenId: Number(params.tokenId),
+      amount: params.amount,
+      content: params.content,
+      isPrivate: !!params.isPrivate,
+    },
+    requiresAuth: true,
+  });
+}
+
+export async function bindTipMessage(messageId: string, txHash: string): Promise<TipMessageResult> {
+  return apiCall<TipMessageResult>('/api/tip_message', {
+    method: 'POST',
+    body: { messageId, txHash },
+    requiresAuth: true,
+  });
+}
+
+/** Drop a message whose tip never went out, so it can't ride on a later one. */
+export async function cancelTipMessage(messageId: string): Promise<TipMessageResult> {
+  return apiCall<TipMessageResult>('/api/tip_message', {
+    method: 'POST',
+    body: { messageId, cancel: true },
+    requiresAuth: true,
+  });
+}
+
+/** A post's tipped top-level comments, biggest tip first. */
+export async function getTipWall(tokenId: string, address?: string): Promise<ApiCommentResponse[]> {
+  const response = await apiCall<{ result?: ApiCommentResponse[] }>(`/api/nft/${tokenId}/tip_wall`, {
+    params: { ...(address ? { address } : {}) },
+  });
+  return Array.isArray(response?.result) ? response.result : [];
 }

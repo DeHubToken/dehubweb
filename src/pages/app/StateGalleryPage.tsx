@@ -37,6 +37,8 @@ import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
+import { TipWall, TipChip } from '@/components/app/comments/TipWall';
+import type { Comment as GalleryComment } from '@/lib/comment-mapper';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { ScheduleSheet, type ScheduleKind } from '@/features/post/components/ScheduleSheet';
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
@@ -411,6 +413,43 @@ function StageCoversGallery() {
  * Toasts: raises the real "new version" toast (and a plain one) so its text
  * and buttons can be checked against every theme's toast glass.
  */
+const TipModal = lazy(() => import('@/components/app/modals/TipModal').then(m => ({ default: m.TipModal })));
+
+const galleryTipCard = (id: string, name: string, text: string, amount: number, symbol = 'DHB'): GalleryComment => ({
+  id, username: name, displayName: name, text, likes: 0, dislikes: 0, views: 0, timeAgo: '1m', createdAt: new Date(),
+  tip: { amount, symbol, chainId: 8453, txHash: '0x', value: symbol === 'DHB' ? amount : amount * 1000 },
+});
+const GALLERY_TIP_WALL: GalleryComment[] = [
+  galleryTipCard('9001', 'mal', 'This beat goes so hard 🔥 more of this', 5000),
+  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 1000),
+  galleryTipCard('9003', 'legouffre', 'merci 🙏', 5, 'USDC'),
+];
+
+/** Tip with a message: the sheet's message box and the tip wall cards. */
+function TipMessageGallery() {
+  const [open, setOpen] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [landed, setLanded] = useState<string | null>('9001');
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-tip-message-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Tip messages</h2>
+      <div className="-mx-4">
+        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(id) => setOpenId(c => (c === id ? null : id))} landedId={landed} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-3 text-white">
+        <TipChip tip={{ amount: 5000, symbol: 'DHB' }} />
+        <Button variant="glass" size="sm" onClick={() => { setLanded(null); window.setTimeout(() => setLanded('9001'), 30); }}>Replay landing</Button>
+        <Button variant="glass" size="sm" data-open-tip-sheet onClick={() => setOpen(true)}>Open tip sheet</Button>
+      </div>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <Suspense fallback={null}>
+          {open ? <TipModal open={open} onOpenChange={setOpen} creatorAddress="0x00000000000000000000000000000000000000aa" creatorName="angela" tokenId="5581" /> : null}
+        </Suspense>
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
 function WhenSheetGallery() {
   const { t } = useTranslation();
   const [kind, setKind] = useState<ScheduleKind | null>(null);
@@ -826,6 +865,7 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <TipMessageGallery />
         <WhenSheetGallery />
         <ToastsGallery />
         <TooltipsGallery />

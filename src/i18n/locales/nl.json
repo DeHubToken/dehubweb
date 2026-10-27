@@ -1420,7 +1420,16 @@
     "payDirect": "Rechtstreeks naar {{name}} gestuurd in {{symbol}} op {{chain}}. Geen swap.",
     "payDirectNoName": "Rechtstreeks naar de maker gestuurd in {{symbol}} op {{chain}}. Geen swap.",
     "payViaBridgeDpay": "Verplaatst naar Base en betaald aan DeHub Pay, tokens komen aan in ongeveer een minuut",
-    "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
+    "dmSent": "{{amount}} tokens verzonden naar {{name}}!",
+    "addMessage": "Voeg een bericht toe (optioneel)",
+    "messagePlaceholder": "Zeg iets bij je fooi",
+    "messagePublic": "Openbaar",
+    "messagePrivate": "Alleen {{name}}",
+    "theCreator": "de maker",
+    "messageWallNote": "Verschijnt op de fooienmuur zodra de fooi rond is.",
+    "sendWithMessage": "Versturen met bericht",
+    "messageFailed": "Je bericht kon niet worden toegevoegd. Er is geen fooi verstuurd.",
+    "wallLabel": "Fooiberichten"
   },
   "postOptions": {
     "liveAlertsOn": "Je volgt nu {{name}}. Je krijgt een melding wanneer ze live gaan.",
