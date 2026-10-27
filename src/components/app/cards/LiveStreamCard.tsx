@@ -15,6 +15,7 @@ import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/p
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
+import { useDarkSurface } from '@/contexts/ThemeContext';
 import { AppState } from '@/components/app/AppState';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
@@ -192,6 +193,9 @@ const giftCostIn = (dhb: number) => Math.round(dhb * DHB_PRELISTING_USD * 1e6) /
 export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
+  // Live is a dark room in every theme: a light theme runs as its dark twin
+  // while the stream is open, chat, sheets and portals included.
+  useDarkSurface();
   // Full-bleed sits `fixed` over the post page, so a swipe on it (or past the
   // end of the chat) scrolled the page underneath and woke its videos. Hold
   // the page still while the stream owns the screen.
