@@ -509,6 +509,8 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}
                 onBeforeNavigate={() => setShowOptionsDrawer(false)}
+                linkText={dehubLinks.length === 0 ? post.content : undefined}
+                onClose={() => setShowOptionsDrawer(false)}
               />
               <button
                 onClick={() => setShowReportModal(true)}
