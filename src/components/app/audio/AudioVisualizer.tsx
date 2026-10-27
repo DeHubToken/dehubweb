@@ -4,6 +4,7 @@ import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
 import './audio-studio.css';
+import './glass-hold.css';
 import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ import {
 import { ChevronDown, MicVocal, Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
 import { AudioLyrics } from "./AudioLyrics";
 import { VolumeSoundCue } from "./VolumeSoundCue";
+import { useGlassHold } from "./glass-hold";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -368,6 +370,8 @@ export function AudioVisualizer({
   const listenerRef = useRef<AudioListener | null>(null);
   const extraStateRef = useRef<Record<string, unknown>>({});
   const [hue, setHue] = useState(0);
+  const hueHold = useGlassHold();
+  const volumeHold = useGlassHold();
   const [reducedMotion, setReducedMotion] = useState(false);
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -1151,9 +1155,9 @@ export function AudioVisualizer({
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
           {(showVolume || showStylePicker) && <div data-audio-studio-levels>
-            {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue />}
+            {showStylePicker && <input type="range" min="0" max="360" value={hue} aria-label={_copy('copy.89a167dad6da', { defaultValue: 'Visualizer colour' })} onChange={e => setHue(Number(e.target.value))} data-audio-hue {...hueHold} />}
             {showVolume && <div data-audio-studio-volume style={{ '--volume-fill': isEffectivelyMuted ? 0 : volume } as React.CSSProperties}>
-              <input aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />
+              <input {...volumeHold} aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} type="range" min="0" max="100" value={isEffectivelyMuted ? 0 : Math.round(volume * 100)} onChange={e => { const value = Number(e.target.value); setVolume(value / 100); setSelfMuted(value === 0); videoPlaybackManager.globalMuted = value === 0; onMuteChange?.(value === 0); }} />
               <VolumeSoundCue level={isEffectivelyMuted ? 0 : volume} active={isPlaying && !isEffectivelyMuted} trackHeight={8} thumbRadius={7.5} />
             </div>}
           </div>}
@@ -1201,6 +1205,7 @@ export function AudioVisualizer({
               max={360}
               step={1}
               onValueChange={(value) => setHue(value[0])}
+              {...hueHold}
               aria-label={_copy("copy.89a167dad6da", { defaultValue: "Visualizer colour" })}
               /* Root overflows the track vertically so the grab area is
                  26px rather than 6px. Targets Slider's own data-* hooks —
@@ -1264,6 +1269,7 @@ export function AudioVisualizer({
                     min={0}
                     max={100}
                     step={1}
+                    {...volumeHold}
                     aria-label={_copy("copy.b10fb966d720", { defaultValue: "Volume" })}
                     onValueChange={(value) => {
                       setVolume(value[0] / 100);
