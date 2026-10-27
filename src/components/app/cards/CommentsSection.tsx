@@ -2612,7 +2612,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       </div>
 
       {/* Content Area - scrollable, takes remaining space */}
-      <div className={`relative flex-1 min-h-0 ${!isMobile && activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
+      <div data-comments-list className={`relative flex-1 min-h-0 ${!isMobile && activeTab === 'search' ? 'max-h-[272px]' : ''}`}>
         {/* Replies Tab */}
         {activeTab === 'replies' && (
           <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>

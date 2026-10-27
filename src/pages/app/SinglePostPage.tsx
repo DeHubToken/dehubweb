@@ -47,7 +47,7 @@ import Gem from "@/components/ui/cut-icons/diamond";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useTranslation as useI18n } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
@@ -94,6 +94,8 @@ import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
+import { PostCommentsSplit } from '@/components/app/post-stage/PostCommentsSplit';
+import type { CommentsSplitRouteState } from '@/lib/comments-split';
 import { POST_STAGE_COMPOSE_EVENT, type PostStageValue } from '@/components/app/post-stage/post-stage-context';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
@@ -807,15 +809,40 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const retainedCommentsRef = useRef<HTMLDivElement>(null);
   const scrollToRetainedComments = useRef(false);
-  useLayoutEffect(() => { setDetailsExpanded(false); }, [id]);
+  // Phone posts opened from the feed show comments in a half-screen sheet
+  // under the post (PostCommentsSplit), like Shorts.
+  const [commentsSplit, setCommentsSplit] = useState(false);
+  const closeCommentsSplitSheet = useCallback(() => setCommentsSplit(false), []);
+  const splitPhone = usePostStagePhone();
+  useLayoutEffect(() => { setDetailsExpanded(false); setCommentsSplit(false); }, [id]);
   useLayoutEffect(() => {
     if (!detailsOnly || !id) return;
     return bindRetainedComments(String(id), tab => {
+      handleOpenPageComments(tab);
+      if (splitPhone) {
+        setCommentsSplit(true);
+        return;
+      }
       scrollToRetainedComments.current = true;
       setDetailsExpanded(true);
-      handleOpenPageComments(tab);
     });
-  }, [detailsOnly, id, handleOpenPageComments]);
+  }, [detailsOnly, id, handleOpenPageComments, splitPhone]);
+  // A feed card's comments button opens the post with the sheet already up.
+  const splitLocation = useLocation();
+  const splitRouteState = splitLocation.state as CommentsSplitRouteState | null;
+  const splitRouteKey = splitLocation.key;
+  useLayoutEffect(() => {
+    if (!detailsOnly || !id || !splitPhone || !splitRouteState?.openComments) return;
+    handleOpenPageComments('replies');
+    setCommentsSplit(true);
+    // Once per visit: the route key changes on every navigation.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [detailsOnly, id, splitPhone, splitRouteKey]);
+  // The sheet starts at the post's top, under the pill.
+  useLayoutEffect(() => {
+    if (!commentsSplit) return;
+    document.querySelector('[data-post-overlay][data-scroll-nav-source]')?.scrollTo({ top: 0 });
+  }, [commentsSplit]);
   
   // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
   // sheet on mobile; it is now the same page it is on desktop, so this only
@@ -1513,6 +1540,14 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
+  const commentsSplitSheet = (
+    <AnimatePresence>
+      {commentsSplit && pageComments && (
+        <PostCommentsSplit key="comments-split" onClose={closeCommentsSplitSheet}>{pageComments}</PostCommentsSplit>
+      )}
+    </AnimatePresence>
+  );
+
   const renderPostContent = () => (
     detailsOnly && isStagePhone && (isTextPost || isImagePost) ? (
       /* Phone text and image posts opened from the feed: no "more" toggle and
@@ -1520,9 +1555,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
          comments (with their composer) appear only when the comment button asks. */
       <section data-retained-post-details className="pt-3">
         {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
-        {detailsExpanded && <div ref={retainedCommentsRef}>{pageComments}</div>}
-        {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-        {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+        {detailsExpanded && !commentsSplit && <div ref={retainedCommentsRef}>{pageComments}</div>}
+        {/* Hidden, not unmounted, while the sheet is up: the top half shows the post alone. */}
+        <div hidden={commentsSplit}>
+          {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
+          {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+        </div>
+        {commentsSplitSheet}
       </section>
     ) : detailsOnly ? (
       <section data-retained-post-details className="pt-3">
@@ -1532,12 +1571,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl text-white hover:bg-white/10">
           <More className="h-5 w-5" />
         </button>
-        {detailsExpanded && <div ref={retainedCommentsRef}>
+        {detailsExpanded && <div ref={retainedCommentsRef} hidden={commentsSplit}>
           {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
-          {pageComments}
+          {!commentsSplit && pageComments}
           {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
         </div>}
+        {commentsSplitSheet}
       </section>
     ) : useStage ? (
       renderStage()

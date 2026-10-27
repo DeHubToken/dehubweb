@@ -51,6 +51,7 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { opensCommentsSplit } from '@/lib/comments-split';
 import { cdnImage, cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -1486,6 +1487,12 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           onComment={() => {
             if (onOpenComments) {
               onOpenComments();
+              return;
+            }
+            // Phones: open the post with its comments in the bottom half.
+            if (opensCommentsSplit() && !postPage && window.location.pathname !== `/app/post/${post.id}`) {
+              cacheImageForNavigation(queryClient, post);
+              navigate(`/app/post/${post.id}`, { state: { fromFeed: true, openComments: true } });
               return;
             }
             setCommentsInitialTab(undefined);
