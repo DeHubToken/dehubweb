@@ -39,9 +39,5 @@ where p.version > 0
 group by p.id
 on conflict (project_id, version) do nothing;
 
--- Private apps must not linger in the public Storage mirror.
-delete from storage.objects o
-using public.builder_projects p
-where o.bucket_id = 'builder-apps'
-  and p.is_public = false
-  and o.name like p.id::text || '/%';
+-- Private apps are kept out of the public Storage mirror by builder-api
+-- (storage.objects cannot be deleted from SQL). None existed at migration time.
