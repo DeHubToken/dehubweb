@@ -1211,7 +1211,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {/* The same placeholder the shell shows while this chunk is in flight,
           so the wait for the chunk and the wait for the probes read as one
           beat rather than two — and the options appear once, complete. */}
-      {inlineLayout && (probes ? renderStackMainStep() : <LoginBodySkeleton />)}
+      {inlineLayout && (probes ? renderStackMainStep() : <LoginBodySkeleton layout="stack" />)}
       {step === 'main' && !inlineLayout && (probes ? renderMainStep() : <LoginBodySkeleton />)}
       {step === 'passkey' && !inlineLayout && renderPasskeyStep()}
       {step === 'email' && !inlineLayout && renderEmailStep()}
