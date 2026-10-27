@@ -933,7 +933,6 @@ const MessageBubble = memo(function MessageBubble({
               )}
             </button>
           )}
-          {message.isEdited && <span className="text-zinc-600">{_copy("copy.0d79ff168b4a", { defaultValue: "· edited" })}</span>}
           {message.encrypted && (
             <Lock className="w-3 h-3 text-zinc-600" aria-label={tr('messages.encrypted')} />
           )}
