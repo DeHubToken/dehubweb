@@ -70,7 +70,7 @@ async function dispatch(...args) {
 }
 
 try {
-  const url = 'https://dehub.io/_og/post/v4/6501.png';
+  const url = 'https://dehub.io/_og/post/v5/6501.png';
   const response = await dispatch(url);
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(response.headers.get('Content-Type'), 'image/png');
@@ -79,8 +79,8 @@ try {
   assert.equal(response.headers.get('X-DeHub-Post-Badges'), 'Megalodon');
   assert.equal(response.headers.get('X-DeHub-Post-Poll'), 'closed');
   assert.equal(response.headers.get('X-DeHub-Poll-Votes'), '123');
-  assert.equal(response.headers.get('X-DeHub-Share-Artwork'), 'integrated-chrome-edge');
-  assert.equal(response.headers.get('X-DeHub-Share-Card'), 'v4');
+  assert.equal(response.headers.get('X-DeHub-Share-Artwork'), 'plain-background');
+  assert.equal(response.headers.get('X-DeHub-Share-Card'), 'v5');
   const png = Buffer.from(await response.arrayBuffer());
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
@@ -175,11 +175,11 @@ try {
   assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
   assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
   await noPoll.arrayBuffer();
-  for (const version of ['v1', 'v2', 'v3']) {
+  for (const version of ['v1', 'v2', 'v3', 'v4']) {
     const legacy = await mf.dispatchFetch(`https://dehub.io/_og/post/${version}/6501.png`);
     assert.equal(legacy.status, 200);
-    assert.equal(legacy.headers.get('X-DeHub-Share-Artwork'), 'integrated-chrome-edge');
-    assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v4');
+    assert.equal(legacy.headers.get('X-DeHub-Share-Artwork'), 'plain-background');
+    assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v5');
     await legacy.arrayBuffer();
   }
   profile = { ...profile, followers: 2048, avatarImageUrl: 'avatars/mal.jpg' };
