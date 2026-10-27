@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { Crown, Clock } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
 import Lock from "@/components/ui/cut-icons/privacy";
-import LinkIcon from "@/components/ui/cut-icons/link";
+import { DescriptionWithLinks } from "./DescriptionWithLinks";
 
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
@@ -21,21 +21,6 @@ function formatRelativeTime(dateString: string): string {
   return `${Math.floor(diffDays / 365)}y`;
 }
 
-const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
-
-function extractUrls(text: string): string[] {
-  return text.match(URL_REGEX) || [];
-}
-
-function cleanUrl(url: string): string {
-  try {
-    const u = new URL(url);
-    return u.hostname.replace(/^www\./, '') + (u.pathname !== '/' ? u.pathname : '');
-  } catch {
-    return url.replace(/^https?:\/\/(www\.)?/, '');
-  }
-}
-
 interface CommunityCardProps {
   community: Community;
   isMember: boolean;
@@ -51,8 +36,6 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
   const isLight = theme === 'light' || themeChoice === 'system-light';
   const isOwner = role === 'owner';
   const description = community.description || '';
-  const links = extractUrls(description);
-  const descWithoutLinks = description.replace(URL_REGEX, '').trim();
 
   return (
     <button
@@ -96,23 +79,10 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
         </div>
-        <p className="text-xs truncate text-white">{descWithoutLinks || t('communities.noDescription')}</p>
-        {links.length > 0 && (
-          <div className="flex items-center gap-2 mt-0.5">
-            {links.slice(0, 3).map((url, i) => (
-              <a
-                key={i}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => e.stopPropagation()}
-                className="flex items-center gap-1 text-[11px] text-zinc-300 hover:text-white transition-colors truncate max-w-[140px]"
-              >
-                <LinkIcon className="w-3 h-3 shrink-0 text-zinc-300" />
-                <span className="truncate text-zinc-300">{cleanUrl(url)}</span>
-              </a>
-            ))}
-          </div>
+        {description ? (
+          <DescriptionWithLinks text={description} singleLine className="text-xs text-white" />
+        ) : (
+          <p className="text-xs truncate text-white">{t('communities.noDescription')}</p>
         )}
         <div className="flex items-center gap-3 mt-0.5">
           <span className="text-white text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>

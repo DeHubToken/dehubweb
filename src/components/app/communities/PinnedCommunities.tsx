@@ -15,6 +15,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import type { Community } from '@/hooks/use-communities';
 import { useTranslation } from 'react-i18next';
 import { storageImage, deviceWidth } from '@/lib/media-url';
+import { DescriptionWithLinks } from '@/components/app/communities/DescriptionWithLinks';
 
 interface PinnedCommunitiesProps {
   walletAddress: string;
@@ -139,7 +140,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, a
         <div className="relative flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{community.name}</p>
           {community.description && (
-            <p className="text-xs truncate mt-0.5 text-zinc-400">{community.description}</p>
+            <DescriptionWithLinks text={community.description} singleLine className="text-xs mt-0.5 text-zinc-400" />
           )}
           <div className="flex items-center gap-1.5 mt-1">
             <Users className="w-3 h-3 text-zinc-500" />
