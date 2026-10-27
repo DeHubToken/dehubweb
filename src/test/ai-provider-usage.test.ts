@@ -24,6 +24,9 @@ beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(() => {});
   provider = async (_url, request) => completed(request.model);
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: RequestInit) => {
+    if (url.endsWith('/rpc/claim_provider_attempt')) return Response.json({ allowed: true, probe: false });
+    if (url.endsWith('/rpc/finish_provider_attempt') || url.endsWith('/rpc/release_translation_work')) return new Response(null, { status: 204 });
+    if (url.endsWith('/rpc/claim_translation_work') || url.endsWith('/rpc/reserve_translation_attempt')) return Response.json(true);
     const request = JSON.parse(String(init.body));
     if (url.endsWith('/rpc/record_ai_provider_usage')) { batches.push(request.p_rows); return new Response(null, { status: 204 }); }
     requests.push({ url, body: request, headers: new Headers(init.headers) });

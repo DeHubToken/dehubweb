@@ -1,3 +1,4 @@
+import { hydrateGenerationResult } from './generation-result.ts';
 /**
  * Charge a wallet before running a generation.
  * ============================================
@@ -150,7 +151,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     if (previous.data) {
       const job = previous.data;
       if (job.wallet_address !== guard.wallet || job.tx_hash !== txHash || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
-      return { ok: false, response: jsonResponse(job.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
+      return { ok: false, response: jsonResponse(await hydrateGenerationResult(job, supabase) || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
     }
   }
 
@@ -275,7 +276,7 @@ export async function chargeCredits(
     if (previous.data) {
       const job = previous.data;
       if (job.wallet_address !== wallet || job.payment_source !== 'credits' || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
-      return { ok: false, response: jsonResponse(job.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
+      return { ok: false, response: jsonResponse(await hydrateGenerationResult(job, supabase) || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
     }
   }
 
@@ -298,7 +299,7 @@ export async function chargeCredits(
       const previous = await supabase.from('ai_generation_jobs').select('*').eq('id', jobId).maybeSingle();
       if (!previous.error && previous.data?.wallet_address === wallet && previous.data?.credit_debit_key === key
         && previous.data.model === opts.modelId && previous.data.endpoint === opts.actionType) {
-        return { ok: false, response: jsonResponse(previous.data.result || { error: 'This generation is already being submitted. Check your library before retrying.' }, previous.data.result ? 200 : 409) };
+        return { ok: false, response: jsonResponse(await hydrateGenerationResult(previous.data, supabase) || { error: 'This generation is already being submitted. Check your library before retrying.' }, previous.data.result ? 200 : 409) };
       }
       return { ok: false, response: jsonResponse({ error: 'Could not reserve this generation. Check your library before retrying.' }, 503) };
     }

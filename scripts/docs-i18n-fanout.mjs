@@ -28,13 +28,14 @@
  * cleanly.
  */
 import fs from 'node:fs';
+import { requestTranslationBatch } from './translation-request.mjs';
 import path from 'node:path';
 
 const I18N = 'src/i18n';
 const FN_URL = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/translate-text';
 const BATCH_LINES = 20;
 const PAUSE_MS = 350;
-const MAX_RETRIES = 3;
+
 
 const args = process.argv.slice(2);
 const flag = (n) => args.includes(`--${n}`);
@@ -126,28 +127,11 @@ const escape = (v, q) =>
   v.replace(/\\/g, '\\\\').split(q).join('\\' + q).replace(/\n/g, '\\n');
 
 async function translateBatch(lines, targetLang, key) {
-  // The app's own copy is public, so free tiers that train on input may take it.
-  // purpose keeps this traffic out of the translation cache's read counters.
-  const body = JSON.stringify({ text: lines.join('\n'), targetLang, sourceLang: 'en', public: true, purpose: 'i18n' });
-  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      const res = await fetch(FN_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', apikey: key, Authorization: `Bearer ${key}` },
-        body,
-      });
-      if (res.status === 429) { await sleep(2000 * attempt); continue; }
-      if (!res.ok) { await sleep(600 * attempt); continue; }
-      const json = await res.json();
-      const text = json?.translatedText;
-      if (typeof text !== 'string') return null;
-      const out = text.split('\n');
-      return out.length === lines.length ? out : null;
-    } catch {
-      await sleep(600 * attempt);
-    }
-  }
-  return null;
+  const json = await requestTranslationBatch(FN_URL, key, lines, targetLang);
+  if (typeof json?.translatedText !== 'string') return null;
+  const text = json.translatedText;
+  const out = text.split('\n');
+  return out.length === lines.length ? out : null;
 }
 
 /* ---------- inputs ---------- */
