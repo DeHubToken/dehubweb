@@ -1,3 +1,4 @@
+import { hasStreamEnded } from '@/lib/live-status';
 import Minimize from "@/components/ui/cut-icons/exit-fullscreen";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
@@ -1488,7 +1489,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
           /* Past live with nothing recorded: show the stream's cover image if
              there is one, otherwise a staticy TV screen — never an empty
              black frame. */
-          <LiveEndedMedia thumbnail={stream.thumbnail} label={_copy("copy.a5813ef6159a", { defaultValue: "Stream ended" })} rounded="rounded-none" hideBadge={immersive} />
+          <LiveEndedMedia
+            thumbnail={stream.thumbnail}
+            // A status that is not live but not ended either (the post is out
+            // before ingest connects, or the broadcaster is reconnecting) is
+            // re-read every few seconds and flips back on its own; calling it
+            // ended there told viewers to leave a stream that was about to play.
+            label={!stream.liveStatus || hasStreamEnded({ status: stream.liveStatus })
+              ? _copy("copy.a5813ef6159a", { defaultValue: "Stream ended" })
+              : t('stages.startingSoon', 'Starting soon')}
+            rounded="rounded-none"
+            hideBadge={immersive}
+          />
         ) : (
           <>
             <video
