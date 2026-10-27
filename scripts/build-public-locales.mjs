@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { createHash } from 'node:crypto';
 import ts from 'typescript';
 import { mdToHtml } from './markdown-html.mjs';
+import { pruneLocaleVersions } from './locale-retention.mjs';
 import * as streamerPage from '../src/lib/streamer-page.js';
 import * as dehubAppPage from '../src/lib/dehub-app-page.js';
 
@@ -215,11 +216,18 @@ export function buildPublicLocales(root) {
 }
 
 export function writePublicLocales(root, built = buildPublicLocales(root)) {
+  const manifestFile = path.join(root, 'src/i18n/public-locales.json');
+  let previousVersion;
+  try {
+    const previous = readJson(manifestFile).version;
+    previousVersion = previous !== built.manifest.version ? previous : readJson(path.join(root, 'public/locale-pages/current.json')).previousVersion;
+  } catch { /* First generation has no preceding version. */ }
   for (const [asset, page] of Object.entries(built.assets)) {
     const destination = path.join(root, 'public', asset);
     fs.mkdirSync(path.dirname(destination), { recursive: true });
     fs.writeFileSync(destination, `${JSON.stringify(page)}\n`);
   }
-  fs.writeFileSync(path.join(root, 'src/i18n/public-locales.json'), `${JSON.stringify(built.manifest, null, 2)}\n`);
+  fs.writeFileSync(manifestFile, `${JSON.stringify(built.manifest, null, 2)}\n`);
+  pruneLocaleVersions(root, built.manifest.version, previousVersion);
   return built;
 }
