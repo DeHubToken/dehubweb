@@ -3242,6 +3242,7 @@
   },
   "communities": {
     "shareLink": "Share link",
+    "pinnedMore": "More",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invite followers",

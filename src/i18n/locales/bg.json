@@ -3240,6 +3240,7 @@
   },
   "communities": {
     "shareLink": "Споделяне на връзка",
+    "pinnedMore": "Още",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Пригласете следователи",

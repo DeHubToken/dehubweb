@@ -3246,6 +3246,7 @@
   },
   "communities": {
     "shareLink": "Partager le lien",
+    "pinnedMore": "Plus",
     "chatTab": "Discussion",
     "followerInvites": {
       "title": "Inviter des abonnés",
