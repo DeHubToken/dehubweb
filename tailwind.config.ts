@@ -3,6 +3,10 @@ import type { Config } from "tailwindcss";
 const EMOJI_FONTS = ['"DeHub Pistol"', '"Apple Color Emoji"', '"Noto Color Emoji"', '"Segoe UI Emoji"'];
 
 export default {
+  // A tap on a phone leaves `:hover` on whatever the finger touched until the
+  // next tap elsewhere, so drawer rows kept their hover fill after a scroll.
+  // Hover styles only apply where a real pointer can hover.
+  future: { hoverOnlyWhenSupported: true },
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
