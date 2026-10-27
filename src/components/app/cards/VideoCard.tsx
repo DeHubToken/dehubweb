@@ -1828,8 +1828,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
     // Phones crop tall footage to fill the column; desktop shows the whole
-    // picture (a short stays a short, not a stretched wide crop).
-    className: `dehub-inline-video w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`,
+    // picture on the left (a short stays a short, not a stretched wide crop).
+    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : 'object-contain object-left'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2362,12 +2362,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               : desktopFeedHug
                 ? {
                     // The frame hugs the clip, up to 75% of the screen tall,
-                    // right aligned, so a short keeps its upright shape.
+                    // left aligned, so a short keeps its upright shape.
                     aspectRatio: feedFrameAspect,
                     width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
                     maxHeight: DESKTOP_FEED_MAX_HEIGHT,
-                    marginLeft: 'auto',
-                    marginRight: 0,
+                    marginLeft: 0,
+                    marginRight: 'auto',
                   }
               : cropFeedVideo
                 ? {
@@ -2655,7 +2655,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`}
+                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : 'object-contain object-left'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
