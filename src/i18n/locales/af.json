@@ -494,6 +494,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Nadat jy geplaas het",
+    "postLandingDesc": "Hoe jou nuwe plasing in jou voer verskyn",
+    "postLandingGhost": "Spookplek",
+    "postLandingGhostDesc": "Jou voer maak plek en jou plasing vervaag in op sy plek",
+    "postLandingMorph": "Morf",
+    "postLandingMorphDesc": "Die opsteller krimp tot jou plasing",
+    "postLandingPill": "Van balk tot kaart",
+    "postLandingPillDesc": "Die oplaaibalk vou oop tot jou plasing sodra dit aanlyn is",
+    "postLandingDrop": "Val in",
+    "postLandingDropDesc": "Jou plasing val van bo af in met 'n klein wip",
     "sessionsRevokedMany": "{{count}} toestelle uitgeteken",
     "usernameTaken": "Gebruikersnaam is geneem",
     "postingChain": "Blokketting vir plasings",

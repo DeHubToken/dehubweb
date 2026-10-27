@@ -485,6 +485,16 @@
     "heading": "Gajerun bidiyon DeHub"
   },
   "settings": {
+    "postLanding": "Bayan ka wallafa",
+    "postLandingDesc": "Yadda sabon rubutunka yake bayyana a cikin labarai",
+    "postLandingGhost": "Gurbin fatalwa",
+    "postLandingGhostDesc": "Labarai suna ba da wuri, rubutunka ya bayyana a hankali",
+    "postLandingMorph": "Canjin siffa",
+    "postLandingMorphDesc": "Allon rubutu yana raguwa ya zama rubutunka",
+    "postLandingPill": "Daga sanda zuwa kati",
+    "postLandingPillDesc": "Sandar lodawa tana buɗewa ta zama rubutunka da zarar an wallafa",
+    "postLandingDrop": "Faɗowa",
+    "postLandingDropDesc": "Rubutunka yana faɗowa daga sama da ɗan tsalle",
     "sessionsRevokedMany": "{{count}} na'urorin da aka sanya hannu",
     "usernameTaken": "An riga an ɗauki sunan",
     "postingChain": "Blockchain na wallafawa",

@@ -497,6 +497,16 @@
     "heading": "วิดีโอสั้น DeHub"
   },
   "settings": {
+    "postLanding": "หลังจากโพสต์",
+    "postLandingDesc": "โพสต์ใหม่ของคุณปรากฏในฟีดอย่างไร",
+    "postLandingGhost": "ช่องว่างเงา",
+    "postLandingGhostDesc": "ฟีดเว้นที่ให้ แล้วโพสต์ของคุณค่อย ๆ ปรากฏขึ้น",
+    "postLandingMorph": "มอร์ฟ",
+    "postLandingMorphDesc": "หน้าต่างเขียนโพสต์ย่อลงกลายเป็นโพสต์ของคุณ",
+    "postLandingPill": "จากแถบเป็นการ์ด",
+    "postLandingPillDesc": "เมื่อโพสต์ขึ้นแล้ว แถบอัปโหลดจะขยายออกเป็นโพสต์ของคุณ",
+    "postLandingDrop": "ตกลงมา",
+    "postLandingDropDesc": "โพสต์ของคุณตกลงมาจากด้านบนพร้อมเด้งเล็กน้อย",
     "sessionsRevokedMany": "{{count}} ออกจากระบบแล้ว",
     "usernameTaken": "ชื่อผู้ใช้นี้ถูกใช้แล้ว",
     "postingChain": "บล็อกเชนสำหรับโพสต์",

@@ -494,6 +494,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Selepas menyiarkan",
+    "postLandingDesc": "Cara siaran baharu anda muncul dalam suapan",
+    "postLandingGhost": "Slot bayang",
+    "postLandingGhostDesc": "Suapan memberi ruang dan siaran anda muncul perlahan di tempatnya",
+    "postLandingMorph": "Morf",
+    "postLandingMorphDesc": "Penyusun mengecil menjadi siaran anda",
+    "postLandingPill": "Dari bar ke kad",
+    "postLandingPillDesc": "Bar muat naik terbuka menjadi siaran anda selepas ia disiarkan",
+    "postLandingDrop": "Jatuh masuk",
+    "postLandingDropDesc": "Siaran anda jatuh dari atas dengan sedikit lantunan",
     "sessionsRevokedMany": "Peranti {{count}} dilog keluar",
     "usernameTaken": "Nama pengguna telah diambil",
     "postingChain": "Rantaian blok siaran",

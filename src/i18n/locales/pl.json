@@ -493,6 +493,16 @@
     "heading": "Krótkie filmy DeHub"
   },
   "settings": {
+    "postLanding": "Po opublikowaniu",
+    "postLandingDesc": "Jak nowy post pojawia się w Twoim feedzie",
+    "postLandingGhost": "Puste miejsce",
+    "postLandingGhostDesc": "Feed robi miejsce, a Twój post płynnie się w nim pojawia",
+    "postLandingMorph": "Przemiana",
+    "postLandingMorphDesc": "Edytor kurczy się w Twój post",
+    "postLandingPill": "Z paska w kartę",
+    "postLandingPillDesc": "Pasek przesyłania rozwija się w Twój post, gdy już jest opublikowany",
+    "postLandingDrop": "Wpadnięcie",
+    "postLandingDropDesc": "Twój post wpada z góry z lekkim odbiciem",
     "sessionsRevokedMany": "Wylogowano {{count}} urządzeń",
     "usernameTaken": "Nazwa użytkownika zajęta",
     "postingChain": "Blockchain postów",

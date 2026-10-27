@@ -494,6 +494,16 @@
     "heading": "Curtas do DeHub"
   },
   "settings": {
+    "postLanding": "Depois de publicar",
+    "postLandingDesc": "Como sua nova publicação aparece no seu feed",
+    "postLandingGhost": "Espaço fantasma",
+    "postLandingGhostDesc": "Seu feed abre espaço e sua publicação surge suavemente no lugar",
+    "postLandingMorph": "Transformação",
+    "postLandingMorphDesc": "O editor encolhe até virar sua publicação",
+    "postLandingPill": "Da barra ao cartão",
+    "postLandingPillDesc": "A barra de envio se abre na sua publicação quando ela estiver no ar",
+    "postLandingDrop": "Queda",
+    "postLandingDropDesc": "Sua publicação cai do topo com um leve quique",
     "sessionsRevokedMany": "{{count}} dispositivos terminaram sessão",
     "usernameTaken": "Nome de usuário em uso",
     "postingChain": "Blockchain das publicações",

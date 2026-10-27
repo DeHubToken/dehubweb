@@ -494,6 +494,16 @@
     "heading": "Shkurtimëtra DeHub"
   },
   "settings": {
+    "postLanding": "Pas postimit",
+    "postLandingDesc": "Si shfaqet postimi yt i ri në rrjedhë",
+    "postLandingGhost": "Vend fantazmë",
+    "postLandingGhostDesc": "Rrjedha bën vend dhe postimi yt shfaqet butë në vendin e tij",
+    "postLandingMorph": "Shndërrim",
+    "postLandingMorphDesc": "Redaktori zvogëlohet dhe bëhet postimi yt",
+    "postLandingPill": "Nga shiriti te karta",
+    "postLandingPillDesc": "Shiriti i ngarkimit hapet në postimin tënd pasi publikohet",
+    "postLandingDrop": "Rënie",
+    "postLandingDropDesc": "Postimi yt bie nga lart me një kërcim të vogël",
     "sessionsRevokedMany": "{{count}} pajisjet janë çregjistruar",
     "usernameTaken": "Emri i përdoruesit është i zënë",
     "postingChain": "Blockchain për postimet",

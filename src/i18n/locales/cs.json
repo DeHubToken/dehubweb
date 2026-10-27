@@ -495,6 +495,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Po zveřejnění",
+    "postLandingDesc": "Jak se nový příspěvek objeví ve feedu",
+    "postLandingGhost": "Prázdné místo",
+    "postLandingGhostDesc": "Feed udělá místo a váš příspěvek se v něm plynule objeví",
+    "postLandingMorph": "Proměna",
+    "postLandingMorphDesc": "Editor se zmenší do vašeho příspěvku",
+    "postLandingPill": "Z lišty na kartu",
+    "postLandingPillDesc": "Lišta nahrávání se po zveřejnění rozvine do vašeho příspěvku",
+    "postLandingDrop": "Spadnutí",
+    "postLandingDropDesc": "Váš příspěvek spadne shora s malým odrazem",
     "sessionsRevokedMany": "Zařízení {{count}} odhlášená",
     "usernameTaken": "Uživatelské jméno je obsazené",
     "postingChain": "Blockchain příspěvků",

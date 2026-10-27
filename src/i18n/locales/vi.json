@@ -494,6 +494,16 @@
     "heading": "Video ngắn DeHub"
   },
   "settings": {
+    "postLanding": "Sau khi đăng",
+    "postLandingDesc": "Cách bài viết mới xuất hiện trong bảng tin",
+    "postLandingGhost": "Ô trống ma",
+    "postLandingGhostDesc": "Bảng tin chừa chỗ và bài viết của bạn hiện dần vào đúng vị trí",
+    "postLandingMorph": "Biến hình",
+    "postLandingMorphDesc": "Khung soạn thảo thu nhỏ thành bài viết của bạn",
+    "postLandingPill": "Từ thanh thành thẻ",
+    "postLandingPillDesc": "Thanh tải lên mở ra thành bài viết khi bài đã đăng",
+    "postLandingDrop": "Thả xuống",
+    "postLandingDropDesc": "Bài viết rơi từ trên xuống với một cú nảy nhẹ",
     "sessionsRevokedMany": "{{count}} thiết bị đã đăng xuất",
     "usernameTaken": "Tên người dùng đã có người dùng",
     "postingChain": "Chuỗi khối đăng bài",

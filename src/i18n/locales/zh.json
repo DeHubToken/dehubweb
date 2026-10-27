@@ -494,6 +494,16 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
+    "postLanding": "发布之后",
+    "postLandingDesc": "新帖子出现在动态中的方式",
+    "postLandingGhost": "幽灵空位",
+    "postLandingGhostDesc": "动态让出位置，帖子渐渐浮现",
+    "postLandingMorph": "变形",
+    "postLandingMorphDesc": "编辑器缩小成你的帖子",
+    "postLandingPill": "从进度条到卡片",
+    "postLandingPillDesc": "帖子发布后，上传进度条展开成你的帖子",
+    "postLandingDrop": "落入",
+    "postLandingDropDesc": "帖子从顶部落下，轻轻弹一下",
     "sessionsRevokedMany": "{{count}}台设备已注销",
     "usernameTaken": "用户名已被占用",
     "postingChain": "发帖区块链",

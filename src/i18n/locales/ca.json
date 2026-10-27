@@ -494,6 +494,16 @@
     "heading": "Curts de DeHub"
   },
   "settings": {
+    "postLanding": "Després de publicar",
+    "postLandingDesc": "Com apareix la teva nova publicació al feed",
+    "postLandingGhost": "Espai fantasma",
+    "postLandingGhostDesc": "El feed fa lloc i la teva publicació apareix suaument",
+    "postLandingMorph": "Transformació",
+    "postLandingMorphDesc": "L’editor s’encongeix fins a ser la teva publicació",
+    "postLandingPill": "De la barra a la targeta",
+    "postLandingPillDesc": "La barra de pujada s’obre en la teva publicació quan ja és en línia",
+    "postLandingDrop": "Caiguda",
+    "postLandingDropDesc": "La teva publicació cau des de dalt amb un petit rebot",
     "sessionsRevokedMany": "Dispositius {{count}} tancats",
     "usernameTaken": "Nom d'usuari ocupat",
     "postingChain": "Cadena de blocs de les publicacions",

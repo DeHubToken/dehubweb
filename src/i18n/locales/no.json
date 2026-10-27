@@ -495,6 +495,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Etter at du har publisert",
+    "postLandingDesc": "Hvordan det nye innlegget ditt dukker opp i feeden",
+    "postLandingGhost": "Spøkelsesplass",
+    "postLandingGhostDesc": "Feeden gir plass, og innlegget ditt toner fram på plassen sin",
+    "postLandingMorph": "Forvandling",
+    "postLandingMorphDesc": "Redigeringsvinduet krymper til innlegget ditt",
+    "postLandingPill": "Fra linje til kort",
+    "postLandingPillDesc": "Opplastingslinjen åpner seg til innlegget ditt når det er publisert",
+    "postLandingDrop": "Fall inn",
+    "postLandingDropDesc": "Innlegget ditt faller inn ovenfra med et lite sprett",
     "sessionsRevokedMany": "{{count}} enheter logget ut",
     "usernameTaken": "Brukernavnet er opptatt",
     "postingChain": "Blokkjede for innlegg",
