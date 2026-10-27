@@ -3205,6 +3205,8 @@
   "communities": {
     "shareLink": "Baglaýyş paýla",
     "pinnedMore": "Mundan artyk",
+    "showFirst": "Ilki bilen görkez",
+    "pinUpdateFailed": "Berkidilen täzelenip bilmedi",
     "chatTab": "Söhbet",
     "followerInvites": {
       "title": "Şägirtleri çagyrmak",

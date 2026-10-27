@@ -3263,6 +3263,8 @@
   "communities": {
     "shareLink": "አገናኝ ያጋሩ",
     "pinnedMore": "ተጨማሪ",
+    "showFirst": "መጀመሪያ አሳይ",
+    "pinUpdateFailed": "ፒን ማዘመን አልተቻለም",
     "chatTab": "ውይይት",
     "followerInvites": {
       "title": "ተከታዮችን ይጋብዙ",

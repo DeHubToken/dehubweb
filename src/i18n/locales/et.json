@@ -3236,6 +3236,8 @@
   "communities": {
     "shareLink": "Jaga linki",
     "pinnedMore": "Veel",
+    "showFirst": "Näita esimesena",
+    "pinUpdateFailed": "Kinnitamise uuendamine ebaõnnestus",
     "chatTab": "Vestlus",
     "followerInvites": {
       "title": "Kutsu jälgijaid",

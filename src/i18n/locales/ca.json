@@ -3237,6 +3237,8 @@
   "communities": {
     "shareLink": "Comparteix l'enllaç",
     "pinnedMore": "Més",
+    "showFirst": "Mostra primer",
+    "pinUpdateFailed": "No s'ha pogut actualitzar la fixació",
     "chatTab": "Xat",
     "followerInvites": {
       "title": "Invita seguidors",

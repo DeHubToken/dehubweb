@@ -3204,6 +3204,8 @@
   "communities": {
     "shareLink": "कड़ी जोड़ल गेल",
     "pinnedMore": "देखीलऽ अधिकई बतिया",
+    "showFirst": "पहिले देखावऽ",
+    "pinUpdateFailed": "पिन अपडेट नै भ' पेलै",
     "chatTab": "चैट",
     "followerInvites": {
       "title": "Follower को Invite करे/प्रोत्साहित करे",

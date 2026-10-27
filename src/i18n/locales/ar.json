@@ -3251,6 +3251,8 @@
   "communities": {
     "shareLink": "مشاركة الرابط",
     "pinnedMore": "المزيد",
+    "showFirst": "اعرض أولاً",
+    "pinUpdateFailed": "تعذّر تحديث التثبيت",
     "chatTab": "دردشة",
     "followerInvites": {
       "title": "دعوة المتابعين",

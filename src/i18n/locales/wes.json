@@ -3136,6 +3136,8 @@
   "communities": {
     "shareLink": "Share di link",
     "pinnedMore": "More",
+    "showFirst": "Show am fus",
+    "pinUpdateFailed": "I no fit update di pin",
     "chatTab": "Tok-tok",
     "followerInvites": {
       "title": "Invite followers",

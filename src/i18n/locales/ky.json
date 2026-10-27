@@ -3227,6 +3227,8 @@
   "communities": {
     "shareLink": "Шилтемени бөлүшүү",
     "pinnedMore": "Көбүрөөк",
+    "showFirst": "Биринчи көрсөтүү",
+    "pinUpdateFailed": "Бекитүүнү жаңылоо мүмкүн болбоду",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Ээлерди чакыруу",

@@ -3262,6 +3262,8 @@
   "communities": {
     "shareLink": "แชร์ลิงค์",
     "pinnedMore": "เพิ่มเติม",
+    "showFirst": "แสดงเป็นอันดับแรก",
+    "pinUpdateFailed": "อัปเดตการปักหมุดไม่สำเร็จ",
     "chatTab": "แชท",
     "followerInvites": {
       "title": "เชิญผู้ติดตาม",

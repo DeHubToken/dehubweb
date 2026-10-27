@@ -3236,6 +3236,8 @@
   "communities": {
     "shareLink": "Nosūtīt saiti",
     "pinnedMore": "Vairāk",
+    "showFirst": "Rādīt pirmo",
+    "pinUpdateFailed": "Neizdevās atjaunināt piespraudi",
     "chatTab": "Tērzēšana",
     "followerInvites": {
       "title": "Aicināt sekotājus",

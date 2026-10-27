@@ -3243,6 +3243,8 @@
   "communities": {
     "shareLink": "Compartir enlace",
     "pinnedMore": "Más",
+    "showFirst": "Mostrar primero",
+    "pinUpdateFailed": "No se pudo actualizar el fijado",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invitar seguidores",

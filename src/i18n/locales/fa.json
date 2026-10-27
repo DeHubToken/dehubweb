@@ -3266,6 +3266,8 @@
   "communities": {
     "shareLink": "اشتراک گذاری",
     "pinnedMore": "بیشتر",
+    "showFirst": "نمایش در ابتدا",
+    "pinUpdateFailed": "به‌روزرسانی سنجاق ناموفق بود",
     "chatTab": "گفتگو",
     "followerInvites": {
       "title": "دعوت از دنبال‌کنندگان",

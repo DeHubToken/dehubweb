@@ -3214,6 +3214,8 @@
   "communities": {
     "shareLink": "Мубодилаи пайванд",
     "pinnedMore": "Бештар",
+    "showFirst": "Аввал нишон додан",
+    "pinUpdateFailed": "Сӯзан нав карда нашуд",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Даъват кардани пайравон",

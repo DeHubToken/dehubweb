@@ -3433,6 +3433,8 @@
   "communities": {
     "shareLink": "Link delen",
     "pinnedMore": "Meer",
+    "showFirst": "Eerst tonen",
+    "pinUpdateFailed": "Vastzetten bijwerken mislukt",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Volgers uitnodigen",

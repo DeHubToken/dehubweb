@@ -550,6 +550,32 @@ export function usePinCommunity() {
   });
 }
 
+/** Moves one pin to the top of the owner's list; the rest keep their order. */
+export function useShowPinFirst() {
+  const { t } = _useCopy();
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ communityId, orderedIds }: { communityId: string; orderedIds: string[] }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const order = [communityId, ...orderedIds.filter(id => id !== communityId)];
+      const results = await Promise.all(order.map((id, index) => withWalletHeader(
+        supabase
+          .from('pinned_communities')
+          .update({ display_order: index })
+          .eq('community_id', id)
+          .eq('wallet_address', walletAddress.toLowerCase()),
+        walletAddress
+      )));
+      const failed = results.find(result => result.error);
+      if (failed?.error) throw failed.error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['communities', 'pinned'] }),
+    onError: () => toast.error(t('communities.pinUpdateFailed')),
+  });
+}
+
 export function useUnpinCommunity() {
   const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();

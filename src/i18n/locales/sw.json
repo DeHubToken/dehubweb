@@ -3236,6 +3236,8 @@
   "communities": {
     "shareLink": "Shiriki kiunganishi",
     "pinnedMore": "Zaidi",
+    "showFirst": "Onyesha kwanza",
+    "pinUpdateFailed": "Imeshindwa kusasisha pini",
     "chatTab": "Soga",
     "followerInvites": {
       "title": "Tuma wafuasi",

@@ -9,7 +9,7 @@ import Users from "@/components/ui/cut-icons/communities";
 import Plus from "@/components/ui/cut-icons/add";
 import X from "@/components/ui/cut-icons/close";
 
-import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
+import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity, useShowPinFirst } from '@/hooks/use-communities';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import type { Community } from '@/hooks/use-communities';
@@ -39,6 +39,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
   const moreOpen = moreOpenProp ?? moreOpenState;
   const setMoreOpen = onMoreOpenChange ?? setMoreOpenState;
   const { t } = useTranslation();
+  const showFirst = useShowPinFirst();
 
   if (pinned.length === 0 && !isOwnProfile) return null;
 
@@ -46,7 +47,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
   // One pin shows; the rest wait behind More instead of stacking.
   const shownPin = featuredId ? null : remainingPins[0] ?? null;
   const morePins = shownPin ? remainingPins.slice(1) : remainingPins;
-  const card = (pin: typeof pinned[number], onMore?: () => void) => {
+  const card = (pin: typeof pinned[number], action?: { label: string; onClick: () => void }) => {
     const community = pin.communities as Community;
     return (
       <PinnedCommunityCard
@@ -55,14 +56,14 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
         onClick={() => { setMoreOpen(false); navigate(`/app/communities/${community.slug}`); }}
         isOwnProfile={isOwnProfile}
         onManagePins={() => { setMoreOpen(false); setPickerOpen(true); }}
-        onMore={onMore}
+        action={action}
       />
     );
   };
 
   return (
     <div className={shownPin || pinned.length === 0 ? 'mt-3' : undefined}>
-      {shownPin && card(shownPin, morePins.length > 0 ? () => setMoreOpen(true) : undefined)}
+      {shownPin && card(shownPin, morePins.length > 0 ? { label: t('communities.pinnedMore'), onClick: () => setMoreOpen(true) } : undefined)}
       <Drawer open={moreOpen && morePins.length > 0} onOpenChange={setMoreOpen}>
         <DrawerContent column glass hideHandle>
           <div className="px-4 pt-4 pb-2">
@@ -71,7 +72,13 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
             </DrawerHeader>
           </div>
           <div className="px-4 pb-6 space-y-2 max-h-[50vh] overflow-y-auto">
-            {morePins.map(pin => card(pin))}
+            {morePins.map(pin => card(pin, isOwnProfile ? {
+              label: t('communities.showFirst'),
+              onClick: () => {
+                setMoreOpen(false);
+                showFirst.mutate({ communityId: pin.community_id, orderedIds: pinned.map(p => p.community_id) });
+              },
+            } : undefined))}
           </div>
         </DrawerContent>
       </Drawer>
@@ -97,7 +104,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
   );
 }
 
-function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, onMore, className }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void; onMore?: () => void; className?: string }) {
+function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, action, className }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void; action?: { label: string; onClick: () => void }; className?: string }) {
   const { t } = useTranslation();
 
   return (
@@ -106,7 +113,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, o
         onClick={onClick}
         data-profile-art={community.banner_url ? '' : undefined}
         data-keep-dark={community.banner_url ? '' : undefined}
-        className={`w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden${onMore ? (isOwnProfile ? ' pr-36' : ' pr-24') : ''}`}
+        className={`w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden${action ? (isOwnProfile ? ' pr-44' : ' pr-32') : ''}`}
       >
         {community.banner_url && (
           <div
@@ -142,7 +149,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, o
           </div>
         </div>
       </button>
-      {onMore ? (
+      {action ? (
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
           {isOwnProfile && onManagePins && (
             <button
@@ -157,10 +164,10 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, o
           <button
             type="button"
             data-keep-dark
-            onClick={onMore}
-            className="h-8 rounded-[10px] border border-white/20 bg-white/10 px-3 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+            onClick={action.onClick}
+            className="h-8 whitespace-nowrap rounded-[10px] border border-white/20 bg-white/10 px-3 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
           >
-            {t('communities.pinnedMore')}
+            {action.label}
           </button>
         </div>
       ) : isOwnProfile && onManagePins && (

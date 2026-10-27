@@ -3210,6 +3210,8 @@
   "communities": {
     "shareLink": "සබැඳිය බෙදා ගන්න",
     "pinnedMore": "තවත්",
+    "showFirst": "මුලින්ම පෙන්වන්න",
+    "pinUpdateFailed": "පින් යාවත්කාලීන කිරීමට නොහැකි විය",
     "chatTab": "කතාබහ",
     "followerInvites": {
       "title": "අනුරෝධ අත්වාසිය",

@@ -3234,6 +3234,8 @@
   "communities": {
     "shareLink": "Linki paylaşın",
     "pinnedMore": "Daha çox",
+    "showFirst": "Birinci göstər",
+    "pinUpdateFailed": "Sancaq yenilənə bilmədi",
     "chatTab": "Söhbət",
     "followerInvites": {
       "title": "Təqibçiləri dəvət edin",

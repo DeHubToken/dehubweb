@@ -3220,6 +3220,8 @@
   "communities": {
     "shareLink": "ലിങ്ക് പങ്കിടുക",
     "pinnedMore": "കൂടുതൽ",
+    "showFirst": "ആദ്യം കാണിക്കുക",
+    "pinUpdateFailed": "പിൻ പുതുക്കാൻ കഴിഞ്ഞില്ല",
     "chatTab": "ചാറ്റ്",
     "followerInvites": {
       "title": "അനുയായികളെ ക്ഷണിക്കുക",
