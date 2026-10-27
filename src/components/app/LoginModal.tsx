@@ -21,6 +21,7 @@
  * `wagmi`, which must stay behind the WalletProviders lazy boundary.
  */
 
+import { createPortal } from 'react-dom';
 import React, { Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -36,6 +37,7 @@ import dehubLogo from '@/assets/dehub-logo-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { beginAuthTrace, readAuthTrace } from '@/lib/auth-trace';
 import { createLogger } from '@/lib/logger';
+import '@/styles/welcome-flow.css';
 
 const flowLog = createLogger('LoginFlow');
 
@@ -397,6 +399,23 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
     </>
   );
+
+  // A brand-new account finishes signing up in the welcome flow, which takes
+  // the whole screen (a live profile card beside one question at a time)
+  // instead of the sheet. Same rules as the sheet: it cannot be dismissed while
+  // the account has no profile.
+  if (open && step === 'profile') {
+    return createPortal(
+      <div data-welcome-flow role="dialog" aria-modal="true" aria-label={titleText} className="fixed inset-0 z-[2147483646] overflow-y-auto overscroll-contain">
+        <div className="mx-auto flex min-h-[100dvh] max-w-[1100px] flex-col pt-[env(safe-area-inset-top)]">
+          <Suspense fallback={<div className="grid flex-1 place-items-center"><DeHubPageLoader /></div>}>
+            <LoginProfileStep />
+          </Suspense>
+        </div>
+      </div>,
+      document.body,
+    );
+  }
 
   if (usesDesktopUnlockPanel) {
     return (

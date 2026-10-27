@@ -122,6 +122,7 @@ import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
 import { FollowTagBar } from './FollowTagBar';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -769,10 +770,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // A safety-net timer flips the gate regardless so a stalled feed can't blank the rails.
   const [railsEnabled, setRailsEnabled] = useState(false);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories
   const { data: categories = [] } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 5 * 60 * 1000,
     enabled: railsEnabled,
   });
