@@ -98,6 +98,9 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
             <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span>{_copy("copy.0240fc224d27", { defaultValue: " Members" })}</span>
         </div>
       </div>
+      <span className="relative flex-shrink-0 rounded-full bg-white/[0.12] px-3 py-1.5 text-xs font-semibold text-white">
+        {_copy("wallet.view")}
+      </span>
     </button>
   );
 }

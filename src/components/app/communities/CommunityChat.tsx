@@ -58,6 +58,7 @@ import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useCommunityChat, type CommunityChatMessage } from '@/hooks/use-community-chat';
+import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { useCommunityAbilities } from '@/hooks/use-community-admin';
 import type { Community, CommunityMember } from '@/hooks/use-communities';
 import { useNavigate } from 'react-router-dom';
@@ -77,6 +78,27 @@ import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 
 /** "Forever" mutes are stored as a date far in the future rather than as null. */
 const FOREVER_YEAR = 9000;
+
+/**
+ * A text message with its DeHub links carded. A shared community or invite
+ * leads and the words follow, matching the DM bubble and the app; before this
+ * the channel printed an invite as a lone 🔗 with nothing behind it.
+ */
+function CommunityMessageBody({ content }: { content: string }) {
+  const { links, displayText } = useDehubLinks(content);
+  return (
+    <>
+      {links.length > 0 && (
+        <div className="w-[288px] max-w-full mb-1 [&>*:first-child]:!mt-1">
+          <DehubLinkEmbeds links={links} compact />
+        </div>
+      )}
+      {displayText.trim() && (
+        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" />
+      )}
+    </>
+  );
+}
 
 /** mm:ss once we are past a minute, plain seconds below it. */
 function formatCountdown(seconds: number): string {
@@ -883,7 +905,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                             </button>
                           </div>
                         ) : (
-                          <TranslatableText text={msg.content} className="text-xs text-zinc-300 break-words" as="p" />
+                          <CommunityMessageBody content={msg.content} />
                         )}
                         {msg.reactions && Object.keys(msg.reactions).length > 0 && (
                           <ChatReactions
