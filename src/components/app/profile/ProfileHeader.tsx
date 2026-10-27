@@ -184,6 +184,8 @@ export function ProfileHeader({
   const { data: pinnedCommunities = [] } = usePinnedCommunities(profile.walletAddress);
   const featuredCommunity = featuredPinnedCommunity(pinnedCommunities);
   const [pinPickerOpen, setPinPickerOpen] = useState(false);
+  const [pinMoreOpen, setPinMoreOpen] = useState(false);
+  const hasMorePins = pinnedCommunities.filter(pin => pin.communities).length > 1;
 
   return (
     <div data-profile-header data-profile-art={featuredCommunity ? true : undefined} data-keep-dark={featuredCommunity ? true : undefined} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
@@ -431,6 +433,8 @@ export function ProfileHeader({
             featuredId={featuredCommunity?.id}
               pickerOpen={pinPickerOpen}
               onPickerOpenChange={setPinPickerOpen}
+              moreOpen={pinMoreOpen}
+              onMoreOpenChange={setPinMoreOpen}
             />
           )}
           
@@ -528,6 +532,7 @@ export function ProfileHeader({
           community={featuredCommunity}
           onOpen={() => navigate(`/app/communities/${featuredCommunity.slug}`)}
           onManagePins={isViewingOwnProfile ? () => setPinPickerOpen(true) : undefined}
+          onMore={hasMorePins ? () => setPinMoreOpen(true) : undefined}
         />
       )}
 

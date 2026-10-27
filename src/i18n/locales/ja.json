@@ -3238,6 +3238,7 @@
   },
   "communities": {
     "shareLink": "URLをシェア",
+    "pinnedMore": "その他",
     "chatTab": "チャット",
     "followerInvites": {
       "title": "フォロワーを招待する",
