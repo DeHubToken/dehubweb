@@ -1729,8 +1729,10 @@ export type Database = {
           error: string | null
           id: string
           is_public: boolean
+          miniapp_app_id: string | null
           name: string
           prompt: string
+          slug: string | null
           status: string
           status_detail: string | null
           updated_at: string
@@ -1743,8 +1745,10 @@ export type Database = {
           error?: string | null
           id?: string
           is_public?: boolean
+          miniapp_app_id?: string | null
           name?: string
           prompt: string
+          slug?: string | null
           status?: string
           status_detail?: string | null
           updated_at?: string
@@ -1757,15 +1761,25 @@ export type Database = {
           error?: string | null
           id?: string
           is_public?: boolean
+          miniapp_app_id?: string | null
           name?: string
           prompt?: string
+          slug?: string | null
           status?: string
           status_detail?: string | null
           updated_at?: string
           version?: number
           wallet?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "builder_projects_miniapp_app_id_fkey"
+            columns: ["miniapp_app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       builder_usage: {
         Row: {
@@ -1784,6 +1798,44 @@ export type Database = {
           wallet?: string
         }
         Relationships: []
+      }
+      builder_versions: {
+        Row: {
+          created_at: string
+          emoji: string
+          files: Json
+          name: string
+          project_id: string
+          summary: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          files: Json
+          name: string
+          project_id: string
+          summary?: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          files?: Json
+          name?: string
+          project_id?: string
+          summary?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_versions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "builder_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       buy_bot_state: {
         Row: {
