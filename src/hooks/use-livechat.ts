@@ -426,8 +426,24 @@ export function useLiveChatMessages(roomId: string | null) {
     // platform chat, and never echoed back, so the box kept the sent text.
     // The socket re-joins by itself on every (re)connect.
     joinRoom(roomId);
-    const onConnect = () => setIsConnected(true);
-    const onDisconnect = () => setIsConnected(false);
+    // A reconnect re-joins the room but the socket does not replay what was
+    // said while it was away (a background tab, a dropped network), so read
+    // the gap back over REST.
+    let droppedOnce = false;
+    const onConnect = () => {
+      setIsConnected(true);
+      if (droppedOnce) void fetchMessages(false);
+    };
+    const onDisconnect = () => { droppedOnce = true; setIsConnected(false); };
+    // Back in a tab that sat in the background: catch up even if the socket
+    // never noticed it was throttled.
+    let hiddenAt = 0;
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
+      if (hiddenAt && Date.now() - hiddenAt > 10_000) void fetchMessages(false);
+      hiddenAt = 0;
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -582,6 +598,7 @@ export function useLiveChatMessages(roomId: string | null) {
       unsubDebug();
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      document.removeEventListener('visibilitychange', onVisibility);
       setIsConnected(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

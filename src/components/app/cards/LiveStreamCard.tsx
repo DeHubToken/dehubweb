@@ -10,7 +10,9 @@ import { tokenLabel } from '@/lib/token-label';
  */
 
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
+import { useFeedPlaybackAllowed, useLivePlaybackAllowed, visualActivity } from '@/lib/visual-activity';
+import { canPictureInPicture, catchUpToLiveEdge, onReturnToTab, togglePictureInPicture, useAutoPictureInPicture } from '@/lib/live-background';
+import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
@@ -32,6 +34,7 @@ import Ban from "@/components/ui/cut-icons/blocked";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Info from "@/components/ui/cut-icons/information";
 
@@ -329,9 +332,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   const [balanceLoading, setBalanceLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const playbackAllowed = useFeedPlaybackAllowed();
+  // The live itself keeps playing with the tab in the background or the
+  // window unfocused (see lib/live-background); only a call or leaving the
+  // page stops it. The replay below is a normal video and keeps the feed rule.
+  const livePlaybackAllowed = useLivePlaybackAllowed();
   useEffect(() => {
-    if (!playbackAllowed && (!isVideoInPictureInPicture(videoRef.current) || visualActivity.isCallBusy())) videoRef.current?.pause();
-  }, [playbackAllowed]);
+    if (!livePlaybackAllowed && (!isVideoInPictureInPicture(videoRef.current) || visualActivity.isCallBusy())) videoRef.current?.pause();
+  }, [livePlaybackAllowed]);
   // Full-bleed only. A live can't be paused, so the picture itself is the
   // clear button: a tap on it, or a swipe down over the lower half as the
   // shorts viewer does, clears the chrome. Only a small rotate button stays,
@@ -670,14 +677,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
           return;
         }
         video.srcObject = session.stream;
-        if (playbackRequestedRef.current && visualActivity.isFeedPlaybackAllowed()) {
+        if (playbackRequestedRef.current && visualActivity.isLivePlaybackAllowed()) {
           await video.play().catch(() => setIsBuffering(false));
         }
         videoPlaybackManager.register(videoId, () => {
           playbackRequestedRef.current = false;
           video.pause();
           setIsPlaying(false);
-        }, undefined, undefined, () => video);
+        }, undefined, undefined, () => video, true);
       } catch (e) {
         void failOver((e as Error)?.message || 'subscribe failed');
       }
@@ -713,7 +720,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       currentUrl: currentUrl(),
     });
     const resumePlayback = () => {
-      if (!playbackRequestedRef.current || !visualActivity.isFeedPlaybackAllowed()) return;
+      if (!playbackRequestedRef.current || !visualActivity.isLivePlaybackAllowed()) return;
       setIsBuffering(true);
       void video.play().catch(() => setIsBuffering(false));
     };
@@ -769,7 +776,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
         playbackRequestedRef.current = false;
         video.pause();
         setIsPlaying(false);
-      }, undefined, undefined, () => video);
+      }, undefined, undefined, () => video, true);
       return () => {
         nativeTimeouts.forEach(clearTimeout);
         video.removeEventListener('error', onNativeError);
@@ -896,7 +903,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       playbackRequestedRef.current = false;
       video.pause();
       setIsPlaying(false);
-    }, undefined, undefined, () => video);
+    }, undefined, undefined, () => video, true);
 
     return () => {
       disposed = true;
@@ -913,7 +920,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   }, [stream.isLive, stream.thumbnail, videoId, hasPlaybackUrl, urlsToTry, streamEnded, transport, bigEvent]);
 
   const togglePlay = useCallback(() => {
-    if (!visualActivity.isFeedPlaybackAllowed()) return;
+    if (!visualActivity.isLivePlaybackAllowed()) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -934,6 +941,39 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       });
     }
   }, [isPlaying, isBuffering, videoId]);
+
+  /**
+   * Back from another tab or app: still the same player and the same room,
+   * so carry on from the live edge — no reload, no spinner. Also covers a
+   * browser that paused the element on its own while hidden, and a bfcache
+   * restore after `pagehide` stopped every player on the page.
+   */
+  useEffect(() => {
+    if (streamEnded) return;
+    const resume = () => {
+      const video = videoRef.current;
+      if (!video || !playbackRequestedRef.current || !visualActivity.isLivePlaybackAllowed()) return;
+      catchUpToLiveEdge(video, hlsRef.current);
+      if (video.paused) void video.play().catch(() => undefined);
+    };
+    const stopListening = onReturnToTab(resume);
+    return stopListening;
+  }, [streamEnded]);
+  useEffect(() => {
+    if (!livePlaybackAllowed || streamEnded) return;
+    const video = videoRef.current;
+    if (video?.paused && playbackRequestedRef.current && (video.srcObject || video.currentSrc)) {
+      void video.play().catch(() => undefined);
+    }
+  }, [livePlaybackAllowed, streamEnded]);
+
+  // Switching tabs drops the live into a floating window where the browser
+  // can (Chrome/Edge/Safari); the button below does it by hand anywhere.
+  useAutoPictureInPicture(videoRef, isPlaying && !streamEnded);
+  const inPictureInPicture = usePictureInPicture(videoRef);
+  const [pipAvailable, setPipAvailable] = useState(false);
+  useEffect(() => { setPipAvailable(canPictureInPicture(videoRef.current)); }, [streamEnded, transport]);
+  const togglePip = useCallback(() => { void togglePictureInPicture(videoRef.current); }, []);
 
   /**
    * Hold the OS media session while this stream is audible, keyed on the
@@ -1461,11 +1501,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               muted={isMuted}
               poster={handoff?.poster || stream.thumbnail || undefined}
               onPlay={(e) => {
-                if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
+                if (!visualActivity.isLivePlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setIsPlaying(true); setIsBuffering(true);
               }}
               onPlaying={(e) => {
-                if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
+                if (!visualActivity.isLivePlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setIsPlaying(true); setIsBuffering(false); setError(null);
               }}
               onWaiting={() => setIsBuffering(true)}
@@ -1521,6 +1561,17 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
                   >
                     {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                   </button>
+                  {pipAvailable && (
+                    <button
+                      onClick={togglePip}
+                      aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
+                      aria-pressed={inPictureInPicture}
+                      title={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
+                      className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+                    >
+                      <PictureInPicture2 className="w-5 h-5" />
+                    </button>
+                  )}
                   <button
                     onClick={toggleFullscreen}
                     aria-label={isFullscreen ? t('stages.exitFullscreen', 'Exit fullscreen') : t('stages.fullscreen', 'Fullscreen')}
@@ -1631,6 +1682,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
+            onTogglePictureInPicture={pipAvailable && !streamEnded ? togglePip : undefined}
+            inPictureInPicture={inPictureInPicture}
             optionsSlot={optionsMenu}
             likeCount={stream.likeCount}
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
