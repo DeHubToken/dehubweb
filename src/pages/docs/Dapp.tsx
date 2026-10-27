@@ -111,6 +111,7 @@ const Dapp = () => {
     { id: 'dao-treasury', label: t('dapp.tocDao') },
     { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
     { id: 'live-studio', label: t('dapp.tocLiveStudio') },
+    { id: 'live-gifts', label: t('dapp.tocLiveGifts') },
     { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
     { id: 'messages', label: t('dapp.messagesTitle') },
     { id: 'superpowers', label: t('dapp.superPowersTitle') },
@@ -1247,6 +1248,23 @@ const Dapp = () => {
               ['dapp.liveStudioB8', 'dapp.liveStudioB8Desc']
             ]}
           />
+
+<GuideSection
+  id="live-gifts"
+  title="dapp.liveGiftsTitle"
+  paras={['dapp.liveGiftsDesc']}
+  bullets={[
+    ['dapp.liveGiftsB1', 'dapp.liveGiftsB1Desc'],
+    ['dapp.liveGiftsB2', 'dapp.liveGiftsB2Desc'],
+    ['dapp.liveGiftsB3', 'dapp.liveGiftsB3Desc'],
+    ['dapp.liveGiftsB4', 'dapp.liveGiftsB4Desc'],
+    ['dapp.liveGiftsB5', 'dapp.liveGiftsB5Desc'],
+    ['dapp.liveGiftsB6', 'dapp.liveGiftsB6Desc'],
+    ['dapp.liveGiftsB7', 'dapp.liveGiftsB7Desc'],
+    ['dapp.liveGiftsB8', 'dapp.liveGiftsB8Desc'],
+    ['dapp.liveGiftsB9', 'dapp.liveGiftsB9Desc']
+  ]}
+/>
 
 <section id="subscriptions" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
