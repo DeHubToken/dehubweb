@@ -145,6 +145,7 @@ const Dapp = () => {
     { id: 'arcade', label: t('dapp.tocArcade') },
     { id: 'encryption', label: t('dapp.tocEncryption') },
     { id: 'depin', label: t('dapp.tocDepin') },
+    { id: 'agents', label: t('dapp.tocAgentsGuide') },
     { id: 'advertising', label: t('dapp.tocAds') },
     { id: 'feature-requests', label: t('dapp.tocRequests') },
     { id: 'connect', label: t('dapp.tocConnect') },
@@ -2223,7 +2224,18 @@ const Dapp = () => {
           <DePIN />
         </section>
 
-        <section id="advertising" className="scroll-mt-32">
+                <GuideSection
+          id="agents"
+          title="dapp.agentsGuideTitle"
+          paras={['dapp.agentsGuideDesc']}
+          bullets={[
+            ['dapp.agentsGuideB1', 'dapp.agentsGuideB1Desc'],
+            ['dapp.agentsGuideB2', 'dapp.agentsGuideB2Desc'],
+            ['dapp.agentsGuideB3', 'dapp.agentsGuideB3Desc']
+          ]}
+        />
+
+<section id="advertising" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
           <Shot src="/media/docs-ads.png" alt={t('dapp.altAds')} />
