@@ -1,3 +1,4 @@
+import { useRouteVisible } from '@/hooks/use-route-visible';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Flame, TrendingUp } from 'lucide-react';
@@ -56,6 +57,7 @@ function CoinCard({
 }
 
 export function TrendingBar() {
+  const active = useRouteVisible('launchpad');
   const { t } = useTranslation();
   const base = getLaunchpadBase(useLocation().pathname);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -63,6 +65,7 @@ export function TrendingBar() {
   const touchStartX = useRef(0);
 
   const { data: tokens = [] } = useQuery({
+    enabled: active,
     queryKey: ['launchpad-trending-bar'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -74,7 +77,7 @@ export function TrendingBar() {
       return (data ?? []) as unknown as LaunchpadToken[];
     },
     staleTime: 30_000,
-    refetchInterval: 30_000,
+    refetchInterval: active ? 30_000 : false,
   });
 
   const pause = useCallback(() => {

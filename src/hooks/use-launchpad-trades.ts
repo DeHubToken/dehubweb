@@ -1,3 +1,4 @@
+import { useRouteVisible } from './use-route-visible';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,8 +16,10 @@ export type LaunchpadTrade = {
 };
 
 export function useLaunchpadTrades(tokenId?: string, limit = 50) {
+  const active = useRouteVisible('launchpad');
   const qc = useQueryClient();
   const query = useQuery({
+    enabled: active,
     queryKey: ['launchpad-trades', tokenId ?? 'all'],
     queryFn: async () => {
       let q = supabase.from('launchpad_trades').select('*').order('created_at', { ascending: false }).limit(limit);
@@ -29,6 +32,7 @@ export function useLaunchpadTrades(tokenId?: string, limit = 50) {
   });
 
   useEffect(() => {
+    if (!active) return;
     const ch = supabase.channel(`launchpad-trades-${tokenId ?? 'all'}`)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'launchpad_trades', ...(tokenId ? { filter: `token_id=eq.${tokenId}` } : {}) }, () => {
         qc.invalidateQueries({ queryKey: ['launchpad-trades', tokenId ?? 'all'] });
@@ -38,7 +42,7 @@ export function useLaunchpadTrades(tokenId?: string, limit = 50) {
         if (status === 'SUBSCRIBED') qc.invalidateQueries({ queryKey: ['launchpad-trades', tokenId ?? 'all'] });
       });
     return () => { supabase.removeChannel(ch); };
-  }, [tokenId, qc]);
+  }, [active, tokenId, qc]);
 
   return query;
 }

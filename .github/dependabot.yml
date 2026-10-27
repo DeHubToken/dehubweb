@@ -9,18 +9,10 @@ version: 2
 # version-update PRs while leaving security updates (and the grouping below)
 # fully active.
 #
-# Grouping matters more here than in most repos. The tree carries three npm
-# lockfiles and they are not interchangeable:
-#
-#   package-lock.json  what production installs from — the Workers Build for
-#                      `dehub-migration` runs `npm run build`
-#   pnpm-lock.yaml     CI typecheck only (`pnpm install --no-frozen-lockfile`),
-#                      and already drifted from package.json on main
-#   bun.lock           referenced by nothing in CI or deploy
-#
-# Dependabot scans the first two, so its alert count does track real production
-# exposure. bun.lock is not scanned and will drift silently — if it is not
-# actually needed, deleting it is the honest fix.
+# Production and hosted CI use pnpm 9.15.9 with a frozen pnpm-lock.yaml.
+# package-lock.json remains for the security-resolution workflow and the
+# managed frontend integration. Any dependency edit must reconcile both locks;
+# the production workflow never silently repairs the pnpm lock at install time.
 updates:
   - package-ecosystem: npm
     directory: /
