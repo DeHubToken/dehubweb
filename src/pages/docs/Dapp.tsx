@@ -97,6 +97,7 @@ const Dapp = () => {
     { id: 'getting-started', label: t('dapp.tocIntro') },
     { id: 'accounts', label: t('dapp.tocAccounts') },
     { id: 'post-controls', label: t('dapp.tocPostControls') },
+    { id: 'fediverse', label: t('dapp.tocFediverse') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -393,6 +394,19 @@ const Dapp = () => {
             ['dapp.postControlsB10', 'dapp.postControlsB10Desc']
           ]}
         />
+
+<GuideSection
+  id="fediverse"
+  title="dapp.fediverseTitle"
+  paras={['dapp.fediverseDesc']}
+  bullets={[
+    ['dapp.fediverseB1', 'dapp.fediverseB1Desc'],
+    ['dapp.fediverseB2', 'dapp.fediverseB2Desc'],
+    ['dapp.fediverseB3', 'dapp.fediverseB3Desc'],
+    ['dapp.fediverseB4', 'dapp.fediverseB4Desc'],
+    ['dapp.fediverseB5', 'dapp.fediverseB5Desc']
+  ]}
+/>
 
 <section id="feeds" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
