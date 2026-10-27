@@ -87,6 +87,7 @@ import { checkImpersonation } from '@/lib/impersonation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookBoost, useSuperpowers } from '@/hooks/use-superpowers';
 import { BadgedName } from '@/components/app/BadgedName';
+import { parseBadgeLock } from '@/lib/staking-badges';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, type ApiCommentResponse } from '@/lib/api/dehub';
@@ -2144,6 +2145,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       imageUrl: commentImagePreview || commentGifUrl || undefined,
       replyToId: replyTo?.id,
       address: userAddress,
+      // Carry the badge the posted row will carry, so it is there from the
+      // first frame instead of appearing after the refetch.
+      badgeBalance: user.hideBadgeAndBalance ? 0 : user.badgeBalance,
+      badgeLock: user.hideBadgeAndBalance ? null : parseBadgeLock(user.badgeLock),
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
