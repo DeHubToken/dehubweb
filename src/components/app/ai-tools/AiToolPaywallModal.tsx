@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { clientNavigate } from '@/lib/client-navigate';
 import { Loader2, AlertCircle, ChevronDown } from 'lucide-react';
 import { AiToolModel, AiToolCategory, getToolCostUsd, getToolCostDhb, getToolsByCategory, CATEGORY_LABELS } from '@/constants/ai-tools.constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -283,7 +284,7 @@ export function AiToolPaywallModal({
                 variant="outline"
                 size="sm"
                 className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs"
-                onClick={() => { onOpenChange(false); window.history.pushState({}, '', '/app/buy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+                onClick={() => { onOpenChange(false); clientNavigate('/app/buy'); }}
               >
                 {t('nav.buyDhb')}
               </Button>
