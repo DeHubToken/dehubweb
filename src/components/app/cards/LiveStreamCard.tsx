@@ -89,6 +89,7 @@ import {
   BIG_EVENT_HLS_CONFIG,
 } from '@/lib/live-ingest';
 import type { WhepState, WhepSubscription } from '@/lib/livepeer/whep';
+import { nativeLiveEdge, watchLiveProgress } from '@/lib/live/stall-watchdog';
 import { peekLiveSession, takeLiveSession } from '@/lib/live-handoff';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
@@ -144,6 +145,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import type { LiveStream } from '@/types/feed.types';
+import '@/styles/live-frame-ios.css';
 
 const logger = createLogger('LiveStreamCard');
 
@@ -246,10 +248,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
-  const urlsToTry = useMemo(() => [
+  // Keyed on the URLs' text, not the array: every refetch of the post builds
+  // a fresh playbackUrls array, and the playback effects below (keyed on
+  // urlsToTry) tore the player down and reloaded the stream each time, a
+  // visible freeze every ~15 seconds while watching.
+  const urlsKey = [
     stream.playbackUrl,
     ...(stream.playbackUrls || []).filter((u): u is string => !!u && u !== stream.playbackUrl),
-  ].filter((u): u is string => !!u && u.includes('.m3u8')), [stream.playbackUrl, stream.playbackUrls]);
+  ].filter((u): u is string => !!u && u.includes('.m3u8')).join('\n');
+  const urlsToTry = useMemo(() => (urlsKey ? urlsKey.split('\n') : []), [urlsKey]);
   const hasPlaybackUrl = urlsToTry.length > 0;
   // The feed card that was just tapped may have left its running WebRTC
   // session behind for this page (lib/live-handoff). It decides the transport
@@ -693,9 +700,19 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
 
     void start(whepEndpointFor);
 
+    // A session can stay "connected" while the picture stops (common on
+    // iPhones switching networks). Once frames have flowed, a still picture
+    // for a few seconds is a failure like any other.
+    const stopWatch = watchLiveProgress(video, {
+      stallMs: 6000,
+      shouldWatch: () => playbackRequestedRef.current && video.videoWidth > 0,
+      onStall: () => void failOver('frozen picture'),
+    });
+
     return () => {
       cancelled = true;
       clearTimeout(timer);
+      stopWatch();
       videoPlaybackManager.unregister(videoId);
       releaseAfterPictureInPicture(video, () => {
         void session?.stop();
@@ -769,8 +786,34 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
         nativeRetries = 0;
         setError(null);
       };
+      // Safari can fire `ended` on a live playlist that missed a refresh. The
+      // broadcast is still going (its status says when it really stops), so
+      // pick the playlist back up instead of showing "Stream ended".
+      const onNativeEnded = () => {
+        if (!stream.isLive) return;
+        nativeUrlIndex = 0;
+        scheduleNative(loadCurrent, 1500);
+      };
+      // Native HLS has no stall recovery of its own: a missed segment leaves
+      // the picture frozen on `waiting` forever. Jump to the live edge first,
+      // reload the playlist if that does not get it moving.
+      const stopWatch = watchLiveProgress(video, {
+        stallMs: 8000,
+        shouldWatch: () => playbackRequestedRef.current,
+        onStall: (count) => {
+          const edge = count === 1 ? nativeLiveEdge(video) : null;
+          logger.info('Live picture frozen', { streamId: stream.id, count, native: true });
+          if (edge != null && edge > video.currentTime + 1) {
+            video.currentTime = edge;
+            resumePlayback();
+          } else {
+            loadCurrent();
+          }
+        },
+      });
       video.addEventListener('error', onNativeError);
       video.addEventListener('playing', onNativePlaying);
+      video.addEventListener('ended', onNativeEnded);
       video.src = urlsToTry[0];
       resumePlayback();
       videoPlaybackManager.register(videoId, () => {
@@ -780,13 +823,16 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       }, undefined, undefined, () => video, true);
       return () => {
         nativeTimeouts.forEach(clearTimeout);
+        stopWatch();
         video.removeEventListener('error', onNativeError);
         video.removeEventListener('playing', onNativePlaying);
+        video.removeEventListener('ended', onNativeEnded);
         videoPlaybackManager.unregister(videoId);
       };
     }
 
     let disposed = false;
+    let stopHlsWatch: (() => void) | undefined;
     // Retry timers must die with the effect — a timer firing after cleanup
     // would call loadSource/startLoad on a destroyed hls instance.
     const retryTimeouts = new Set<ReturnType<typeof setTimeout>>();
@@ -891,6 +937,24 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
         }
       });
 
+      // hls.js nudges small gaps itself; a longer freeze gets the live sync
+      // point, then a fresh playlist load.
+      stopHlsWatch = watchLiveProgress(video, {
+        stallMs: 10000,
+        shouldWatch: () => playbackRequestedRef.current && stream.isLive,
+        onStall: (count) => {
+          if (disposed) return;
+          const sync = hls.liveSyncPosition;
+          if (count === 1 && sync != null && sync > video.currentTime + 1) {
+            video.currentTime = sync;
+            resumePlayback();
+          } else {
+            hls.loadSource(currentUrl());
+            hls.startLoad();
+          }
+        },
+      });
+
       hlsRef.current = hls;
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = currentUrl();
@@ -908,6 +972,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
 
     return () => {
       disposed = true;
+      stopHlsWatch?.();
       retryTimeouts.forEach(clearTimeout);
       retryTimeouts.clear();
       const hls = hlsRef.current;
@@ -1303,6 +1368,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   return (
     <div
       style={keyboardFit}
+      data-live-frame={immersive ? '' : undefined}
       className={cn(
         immersive
           ? // The picture is the screen. `fixed` rather than a tall block in
@@ -1522,7 +1588,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               }}
               onWaiting={() => setIsBuffering(true)}
               onPause={() => { setIsPlaying(false); setIsBuffering(false); }}
-              onEnded={() => setStreamEnded(true)}
+              /* A live element "ends" whenever its source does: a WebRTC
+                 session closed during failover, or a playlist Safari gave up
+                 on. Only a finished broadcast latches the ended screen; the
+                 live status flip (liveNow) is what says a live one stopped. */
+              onEnded={() => { if (!liveNow) setStreamEnded(true); }}
             />
             {/* Inline cards offer an unmute prompt. The immersive playback
                 screen already has its sound control in the top-right header. */}

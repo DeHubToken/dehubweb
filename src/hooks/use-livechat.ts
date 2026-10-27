@@ -414,7 +414,9 @@ export function useLiveChatMessages(roomId: string | null) {
 
     initialLoadDone.current = false;
 
-    const unsubDebug = debugSocketEvents(roomId);
+    // Every socket event logged with its payload is real work per chat line
+    // and reaction on a busy stream; keep it to local dev.
+    const unsubDebug = import.meta.env.DEV ? debugSocketEvents(roomId) : () => {};
     const socket = getSocket(roomId);
     setIsConnected(socket.connected);
 
