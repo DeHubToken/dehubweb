@@ -33,7 +33,7 @@
 }
 [data-material='light'] [data-audio-studio-pill]:not(#_) { background:#14202a08; box-shadow:inset 0 1px 0 #fff,inset 0 0 0 1px var(--studio-edge); }
 [data-material='light'] [data-audio-studio-options] [data-audio-studio-volume] input {
-  background:linear-gradient(90deg,#394955 calc(7.5px + var(--volume-fill) * (100% - 15px)),#14202a26 0);
+  background:linear-gradient(90deg,#394955 calc(var(--glass-thumb, 15px) / 2 + var(--volume-fill) * (100% - var(--glass-thumb, 15px))),#14202a26 0);
 }
 [data-material='light'] [data-audio-studio-volume] input::-webkit-slider-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
 [data-material='light'] [data-audio-studio-volume] input::-moz-range-thumb { background:#394955; box-shadow:0 1px 3px #14202a33; }
@@ -97,7 +97,8 @@ html:is([data-theme='light'],[data-system-tone='light']) [data-audio-studio-styl
 [data-audio-studio-options] input { min-width:0; width:calc(50% - 6px); flex:1 1 calc(50% - 6px); accent-color:#dce4e7; height:18px; cursor:pointer; }
 /* Volume is as thick as the colour bar beside it, so the sound cue has room inside. */
 [data-audio-studio-volume] { position:relative; display:flex; align-items:center; min-width:0; flex:1 1 calc(50% - 6px); }
-[data-audio-studio-options] [data-audio-studio-volume] input { appearance:none; width:100%; flex:1 1 auto; height:8px; border-radius:99px; background:linear-gradient(90deg,#dce4e7 calc(7.5px + var(--volume-fill) * (100% - 15px)),rgb(255 255 255 / .2) 0); }
+[data-audio-studio-options] [data-audio-studio-volume] input { appearance:none; width:100%; flex:1 1 auto; height:8px; border-radius:99px; background:linear-gradient(90deg,#dce4e7 calc(var(--glass-thumb, 15px) / 2 + var(--volume-fill) * (100% - var(--glass-thumb, 15px))),rgb(255 255 255 / .2) 0); }
+[data-audio-studio-volume] input[data-glass-held] { --glass-thumb: 30px; }
 [data-audio-studio-volume] input::-webkit-slider-thumb { appearance:none; width:15px; height:15px; border-radius:50%; background:#dce4e7; box-shadow:0 1px 4px #0009; }
 [data-audio-studio-volume] input::-moz-range-thumb { width:15px; height:15px; border:0; border-radius:50%; background:#dce4e7; box-shadow:0 1px 4px #0009; }
 [data-audio-studio-options] [data-audio-hue] { appearance:none; background:linear-gradient(90deg,#fff 0%,#f66 7%,#ffdc60 22%,#75e88a 38%,#68dfe9 52%,#6a8ff5 68%,#ca7af2 83%,#f66 100%); height:8px; border-radius:99px; }
