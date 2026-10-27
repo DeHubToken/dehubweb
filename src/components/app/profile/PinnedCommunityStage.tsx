@@ -13,12 +13,13 @@ import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 import { storageImage } from '@/lib/media-url';
 
-/** The first pinned community with art is the one the header wears. */
+/**
+ * The owner's top pin dresses the header when it has art. Without art it
+ * leads the list as a card instead, so the chosen order always holds.
+ */
 export function featuredPinnedCommunity(pins: Array<{ communities?: Community | null }>): Community | null {
-  for (const pin of pins) {
-    if (pin.communities?.banner_url) return pin.communities;
-  }
-  return null;
+  const top = pins.find(pin => pin.communities)?.communities;
+  return top?.banner_url ? top : null;
 }
 
 /** Sits behind the profile details; the parent must be positioned and isolated. */

@@ -3240,6 +3240,8 @@
   "communities": {
     "shareLink": "Condividi link",
     "pinnedMore": "Altro",
+    "showFirst": "Mostra per prima",
+    "pinUpdateFailed": "Impossibile aggiornare il fissaggio",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Invita follower",

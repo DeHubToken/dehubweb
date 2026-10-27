@@ -3160,6 +3160,8 @@
   "communities": {
     "shareLink": "لنک شیئر کرو",
     "pinnedMore": "ہور",
+    "showFirst": "پہلے ڈکھاؤ",
+    "pinUpdateFailed": "پن اپڈیٹ کائنی تھی سگیا",
     "chatTab": "چیٹ",
     "followerInvites": {
       "title": "دوستوں کو دعوت دیں",

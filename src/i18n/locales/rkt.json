@@ -3364,6 +3364,8 @@
   "communities": {
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরো",
+    "showFirst": "আগোত দেখাও",
+    "pinUpdateFailed": "পিন হালনাগাদ করা গেইল না",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "আপনার অনুসারীদের আমন্ত্রণ জানান",

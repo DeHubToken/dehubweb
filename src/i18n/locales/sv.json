@@ -3239,6 +3239,8 @@
   "communities": {
     "shareLink": "Dela länk",
     "pinnedMore": "Mer",
+    "showFirst": "Visa först",
+    "pinUpdateFailed": "Kunde inte uppdatera fästningen",
     "chatTab": "Chatt",
     "followerInvites": {
       "title": "Bjud in följare",

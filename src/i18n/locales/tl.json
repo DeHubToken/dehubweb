@@ -3281,6 +3281,8 @@
   "communities": {
     "shareLink": "Ibahagi ang link",
     "pinnedMore": "Higit pa",
+    "showFirst": "Ipakita muna",
+    "pinUpdateFailed": "Nabigong i-update ang pin",
     "chatTab": "Mag-chat",
     "followerInvites": {
       "title": "Mag - imbita ng mga tagasunod",

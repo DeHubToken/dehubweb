@@ -3243,6 +3243,8 @@
   "communities": {
     "shareLink": "Поделиться ссылкой",
     "pinnedMore": "Еще",
+    "showFirst": "Показывать первым",
+    "pinUpdateFailed": "Не удалось обновить закрепление",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Пригласить подписчиков",

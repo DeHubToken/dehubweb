@@ -3247,6 +3247,8 @@
   "communities": {
     "shareLink": "SHARE Rohy",
     "pinnedMore": "BEBE KOKOA",
+    "showFirst": "Asehoy voalohany",
+    "pinUpdateFailed": "Tsy afaka nanavao ny fanindronana",
     "chatTab": "Resaka",
     "followerInvites": {
       "title": "Mag-imbita ng mga tagasunod",

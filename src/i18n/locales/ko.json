@@ -3242,6 +3242,8 @@
   "communities": {
     "shareLink": "링크 공유하기",
     "pinnedMore": "더 보기",
+    "showFirst": "맨 앞에 표시",
+    "pinUpdateFailed": "고정을 업데이트하지 못했습니다",
     "chatTab": "채팅",
     "followerInvites": {
       "title": "팔로워 초대",

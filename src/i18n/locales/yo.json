@@ -3216,6 +3216,8 @@
   "communities": {
     "shareLink": "Pin ọna asopọ",
     "pinnedMore": "Sí i",
+    "showFirst": "Fihan ni akọkọ",
+    "pinUpdateFailed": "Kò lè ṣàtúnṣe pinni",
     "chatTab": "Ìbánisọ̀rọ̀",
     "followerInvites": {
       "title": "Pe àwọn ọmọlẹ́yìn",

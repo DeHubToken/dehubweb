@@ -3250,6 +3250,8 @@
   "communities": {
     "shareLink": "Chia sẻ liên kết",
     "pinnedMore": "Thêm",
+    "showFirst": "Hiển thị đầu tiên",
+    "pinUpdateFailed": "Không cập nhật được ghim",
     "chatTab": "Trò chuyện",
     "followerInvites": {
       "title": "Mời người theo dõi",

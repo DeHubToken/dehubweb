@@ -3219,6 +3219,8 @@
   "communities": {
     "shareLink": "Tūhono tohatoha",
     "pinnedMore": "Ētahi atu",
+    "showFirst": "Whakaaturia tuatahi",
+    "pinUpdateFailed": "Kāore i taea te whakahou i te pine",
     "chatTab": "Kōrerorero",
     "followerInvites": {
       "title": "Pōwhiritia ngā kaiwhai",

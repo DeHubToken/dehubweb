@@ -3270,6 +3270,8 @@
   "communities": {
     "shareLink": "Deel skakel",
     "pinnedMore": "Meer",
+    "showFirst": "Wys eerste",
+    "pinUpdateFailed": "Kon nie die vasspeld opdateer nie",
     "chatTab": "Klets",
     "followerInvites": {
       "title": "Nooi volgelinge uit",

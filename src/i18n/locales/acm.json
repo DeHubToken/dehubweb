@@ -3198,6 +3198,8 @@
   "communities": {
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
+    "showFirst": "اعرضه أولاً",
+    "pinUpdateFailed": "ماكدرنا نحدّث التثبيت",
     "chatTab": "الدردشة",
     "followerInvites": {
       "title": "دعوة المتابعين",

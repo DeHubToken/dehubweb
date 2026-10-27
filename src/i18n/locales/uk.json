@@ -3597,6 +3597,8 @@
   "communities": {
     "shareLink": "Поділитися посиланням",
     "pinnedMore": "Більше",
+    "showFirst": "Показувати першою",
+    "pinUpdateFailed": "Не вдалося оновити закріплення",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Запросити підписників",

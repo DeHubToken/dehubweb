@@ -3224,6 +3224,8 @@
   "communities": {
     "shareLink": "ចែករំលែកតំណ",
     "pinnedMore": "ច្រើនទៀត",
+    "showFirst": "បង្ហាញមុនគេ",
+    "pinUpdateFailed": "មិនអាចធ្វើបច្ចុប្បន្នភាពការខ្ទាស់បានទេ",
     "chatTab": "ជជែក",
     "followerInvites": {
       "title": "អញ្ជើញអ្នកតាមដាន",

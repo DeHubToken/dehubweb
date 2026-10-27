@@ -3262,6 +3262,8 @@
   "communities": {
     "shareLink": "Κοινοποίηση συνδέσμου",
     "pinnedMore": "Περισσότερα",
+    "showFirst": "Εμφάνιση πρώτα",
+    "pinUpdateFailed": "Αποτυχία ενημέρωσης καρφιτσώματος",
     "chatTab": "Συνομιλία",
     "followerInvites": {
       "title": "Επιβάλλετε συνδρομητές",

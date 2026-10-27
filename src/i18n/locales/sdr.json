@@ -3190,6 +3190,8 @@
   "communities": {
     "shareLink": "लिंक शेअर करा",
     "pinnedMore": "अधिक",
+    "showFirst": "पहिले देखाव",
+    "pinUpdateFailed": "پن نہیں بدل پائل",
     "chatTab": "بات چیت",
     "followerInvites": {
       "title": "अनुयायियों को आमंत्रित करो",

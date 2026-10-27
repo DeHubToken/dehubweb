@@ -3232,6 +3232,8 @@
   "communities": {
     "shareLink": "లింక్ ‌ ను షేర్ చేయండి",
     "pinnedMore": "మరిన్ని",
+    "showFirst": "ముందుగా చూపించు",
+    "pinUpdateFailed": "పిన్‌ను నవీకరించడం విఫలమైంది",
     "chatTab": "చాట్",
     "followerInvites": {
       "title": "అనుమతించే అనుయాయులను పిలుపుమిమ్మల్ని",

@@ -3197,6 +3197,8 @@
   "communities": {
     "shareLink": "लिङ्कम् बाँट्यताम्",
     "pinnedMore": "अधिकम्",
+    "showFirst": "प्रथमं दर्शय",
+    "pinUpdateFailed": "पिनः न अद्यतनीकृतः",
     "chatTab": "वार्तालापः",
     "followerInvites": {
       "title": "अनुयायी निमन्त्रणा",
