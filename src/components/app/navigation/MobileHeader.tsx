@@ -236,13 +236,13 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
-            {/* The bell's ink sits 2px inside its box at each side and about 1px above
-                its centre, so the box is pulled out and down to put the drawn
-                bell on the avatar and mark's centre line. A flex box, not a
-                block: a block wraps the bell in a line box taller than the bell,
-                which lifted it 2px. */}
-            <span className="flex h-[29px] w-[29px] -mr-[2px] translate-y-[0.9px]">
-              <NotificationBell unread={totalNotifUnread} size={29} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
+            {/* The bell's body (not the clapper below it) spans the mark's height:
+                at 32 it runs y 0.5 to 26.3 and x 2.5 to 29.5 of its box, so the
+                box moves down 2.7px and out 2.5px to sit the body's bottom on
+                the mark's bottom and its side on the pill-inset edge. A flex
+                box, not a block, or a line box taller than the bell lifts it. */}
+            <span className="flex h-8 w-8 -mr-[2.5px] translate-y-[2.7px]">
+              <NotificationBell unread={totalNotifUnread} size={32} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
             </span>
           </button>
         )}
