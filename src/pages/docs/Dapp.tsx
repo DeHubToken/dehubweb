@@ -150,6 +150,7 @@ const Dapp = () => {
     { id: 'feature-requests', label: t('dapp.tocRequests') },
     { id: 'connect', label: t('dapp.tocConnect') },
     { id: 'notifications', label: t('dapp.tocNotifications') },
+    { id: 'notifications-new', label: t('dapp.tocNotificationsNew') },
     { id: 'kids-mode', label: t('dapp.tocKids') },
     { id: 'themes', label: t('dapp.tocThemes') },
     { id: 'settings', label: t('dapp.tocSettings') },
@@ -2272,7 +2273,19 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="notifications-new"
+          title="dapp.notificationsNewTitle"
+          paras={['dapp.notificationsNewDesc']}
+          bullets={[
+            ['dapp.notificationsNewB1', 'dapp.notificationsNewB1Desc'],
+            ['dapp.notificationsNewB2', 'dapp.notificationsNewB2Desc'],
+            ['dapp.notificationsNewB3', 'dapp.notificationsNewB3Desc'],
+            ['dapp.notificationsNewB4', 'dapp.notificationsNewB4Desc']
+          ]}
+        />
+
+<GuideSection
           id="kids-mode"
           title="dapp.kidsTitle"
           paras={['dapp.kidsDesc']}
