@@ -3242,6 +3242,7 @@
   },
   "communities": {
     "shareLink": "Поделиться ссылкой",
+    "pinnedMore": "Еще",
     "chatTab": "Чат",
     "followerInvites": {
       "title": "Пригласить подписчиков",

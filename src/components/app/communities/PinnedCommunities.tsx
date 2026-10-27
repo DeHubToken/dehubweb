@@ -24,37 +24,57 @@ interface PinnedCommunitiesProps {
   /** Lets the header's strip open the same picker. */
   pickerOpen?: boolean;
   onPickerOpenChange?: (open: boolean) => void;
+  /** Lets the header's strip open the rest of the pins. */
+  moreOpen?: boolean;
+  onMoreOpenChange?: (open: boolean) => void;
 }
 
-export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pickerOpen: pickerOpenProp, onPickerOpenChange }: PinnedCommunitiesProps) {
+export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pickerOpen: pickerOpenProp, onPickerOpenChange, moreOpen: moreOpenProp, onMoreOpenChange }: PinnedCommunitiesProps) {
   const navigate = useNavigate();
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const [pickerOpenState, setPickerOpenState] = useState(false);
   const pickerOpen = pickerOpenProp ?? pickerOpenState;
   const setPickerOpen = onPickerOpenChange ?? setPickerOpenState;
+  const [moreOpenState, setMoreOpenState] = useState(false);
+  const moreOpen = moreOpenProp ?? moreOpenState;
+  const setMoreOpen = onMoreOpenChange ?? setMoreOpenState;
   const { t } = useTranslation();
 
   if (pinned.length === 0 && !isOwnProfile) return null;
 
   const remainingPins = pinned.filter(p => p.communities && p.community_id !== featuredId);
+  // One pin shows; the rest wait behind More instead of stacking.
+  const shownPin = featuredId ? null : remainingPins[0] ?? null;
+  const morePins = shownPin ? remainingPins.slice(1) : remainingPins;
+  const card = (pin: typeof pinned[number], onMore?: () => void) => {
+    const community = pin.communities as Community;
+    return (
+      <PinnedCommunityCard
+        key={pin.id}
+        community={community}
+        onClick={() => { setMoreOpen(false); navigate(`/app/communities/${community.slug}`); }}
+        isOwnProfile={isOwnProfile}
+        onManagePins={() => { setMoreOpen(false); setPickerOpen(true); }}
+        onMore={onMore}
+      />
+    );
+  };
 
   return (
-    <div className={remainingPins.length > 0 || pinned.length === 0 ? 'mt-3' : undefined}>
-      <div className="space-y-2">
-        {remainingPins.map(pin => {
-          const community = pin.communities as Community | undefined;
-          if (!community) return null;
-          return (
-            <PinnedCommunityCard
-              key={pin.id}
-              community={community}
-              onClick={() => navigate(`/app/communities/${community.slug}`)}
-              isOwnProfile={isOwnProfile}
-              onManagePins={() => setPickerOpen(true)}
-            />
-          );
-        })}
-      </div>
+    <div className={shownPin || pinned.length === 0 ? 'mt-3' : undefined}>
+      {shownPin && card(shownPin, morePins.length > 0 ? () => setMoreOpen(true) : undefined)}
+      <Drawer open={moreOpen && morePins.length > 0} onOpenChange={setMoreOpen}>
+        <DrawerContent column glass hideHandle>
+          <div className="px-4 pt-4 pb-2">
+            <DrawerHeader className="p-0">
+              <DrawerTitle className="text-white font-medium text-sm">{t('comments.pinnedBadge')}</DrawerTitle>
+            </DrawerHeader>
+          </div>
+          <div className="px-4 pb-6 space-y-2 max-h-[50vh] overflow-y-auto">
+            {morePins.map(pin => card(pin))}
+          </div>
+        </DrawerContent>
+      </Drawer>
       {isOwnProfile && pinned.length === 0 && (
         <button
           onClick={() => setPickerOpen(true)}
@@ -77,7 +97,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pic
   );
 }
 
-function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, className }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void; className?: string }) {
+function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, onMore, className }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void; onMore?: () => void; className?: string }) {
   const { t } = useTranslation();
 
   return (
@@ -86,7 +106,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, c
         onClick={onClick}
         data-profile-art={community.banner_url ? '' : undefined}
         data-keep-dark={community.banner_url ? '' : undefined}
-        className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
+        className={`w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden${onMore ? (isOwnProfile ? ' pr-36' : ' pr-24') : ''}`}
       >
         {community.banner_url && (
           <div
@@ -122,7 +142,28 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, c
           </div>
         </div>
       </button>
-      {isOwnProfile && onManagePins && (
+      {onMore ? (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+          {isOwnProfile && onManagePins && (
+            <button
+              type="button"
+              onClick={onManagePins}
+              aria-label={t('communities.pinToProfile')}
+              className="w-8 h-8 rounded-[10px] bg-black/60 backdrop-blur-sm border border-white/[0.1] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <Pin className="w-3.5 h-3.5" />
+            </button>
+          )}
+          <button
+            type="button"
+            data-keep-dark
+            onClick={onMore}
+            className="h-8 rounded-[10px] border border-white/20 bg-white/10 px-3 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+          >
+            {t('communities.pinnedMore')}
+          </button>
+        </div>
+      ) : isOwnProfile && onManagePins && (
         <button
           onClick={(e) => { e.stopPropagation(); onManagePins(); }}
           className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/60 backdrop-blur-sm border border-white/[0.1] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"

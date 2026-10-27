@@ -39,11 +39,14 @@ export function PinnedCommunityStrip({
   community,
   onOpen,
   onManagePins,
+  onMore,
 }: {
   community: Community;
   onOpen: () => void;
   /** Own profile only. */
   onManagePins?: () => void;
+  /** The other pins open in a drawer instead of stacking in the header. */
+  onMore?: () => void;
 }) {
   const { t } = useTranslation();
   if (!community.banner_url) return null;
@@ -94,6 +97,16 @@ export function PinnedCommunityStrip({
       >
         {t('wallet.view')}
       </button>
+      {onMore && (
+        <button
+          type="button"
+          data-keep-dark
+          onClick={onMore}
+          className="relative h-8 flex-shrink-0 rounded-[10px] border border-white/20 bg-white/10 px-3 text-[13px] font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20"
+        >
+          {t('communities.pinnedMore')}
+        </button>
+      )}
     </div>
   );
 }
