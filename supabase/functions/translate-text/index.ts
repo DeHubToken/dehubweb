@@ -29,7 +29,7 @@ import { languageNameFor } from "../_shared/language-names.ts";
 import { translationChunks } from "./chunks.ts";
 import { tryFree } from "../_shared/free-models.ts";
 import { createTranslationUsage, type TranslationUsage } from './usage.ts';
-import { controlRpc, controlledProviderFetch } from '../_shared/provider-control.ts';
+import { controlRpc, controlledProviderFetch, ProviderControlError } from '../_shared/provider-control.ts';
 
 const corsHeaders = {
   'Access-Control-Expose-Headers': 'Retry-After',
@@ -790,6 +790,8 @@ async function translateWithGemini(
     } catch (error) {
       record(0, 'transport_error');
       console.log('Gemini failed:', error instanceof Error ? error.message : 'Unknown error');
+      // Another isolate may already have parked an unavailable model ID.
+      if (error instanceof ProviderControlError && error.code === 'PROVIDER_COOLDOWN') continue;
       return null;
     }
   }
