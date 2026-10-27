@@ -111,6 +111,7 @@ const Dapp = () => {
     { id: 'badges', label: t('dapp.tocBadges') },
     { id: 'tipping', label: t('dapp.tocTipping') },
     { id: 'governance', label: t('dapp.tocGovernance') },
+    { id: 'governance-new', label: t('dapp.tocGovernanceNew') },
     { id: 'dao-treasury', label: t('dapp.tocDao') },
     { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
     { id: 'live-studio', label: t('dapp.tocLiveStudio') },
@@ -1082,7 +1083,20 @@ const Dapp = () => {
           </div>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="governance-new"
+          title="dapp.governanceNewTitle"
+          paras={['dapp.governanceNewDesc']}
+          bullets={[
+            ['dapp.governanceNewB1', 'dapp.governanceNewB1Desc'],
+            ['dapp.governanceNewB2', 'dapp.governanceNewB2Desc'],
+            ['dapp.governanceNewB3', 'dapp.governanceNewB3Desc'],
+            ['dapp.governanceNewB4', 'dapp.governanceNewB4Desc'],
+            ['dapp.governanceNewB5', 'dapp.governanceNewB5Desc']
+          ]}
+        />
+
+<GuideSection
           id="dao-treasury"
           title="dapp.daoTitle"
           paras={['dapp.daoDesc']}
