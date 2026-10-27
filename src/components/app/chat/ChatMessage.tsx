@@ -480,7 +480,6 @@ export const ChatMessage = memo(function ChatMessage({
               <AssetRefCards refs={chatAssetRefs} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                 {!isTooShort && (
                   isTranslateLoading ? (
                     <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -515,7 +514,6 @@ export const ChatMessage = memo(function ChatMessage({
             )}
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
               {message.content && !isTooShort && (
                 isTranslateLoading ? (
                   <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -548,7 +546,6 @@ export const ChatMessage = memo(function ChatMessage({
             <VoiceWaveformPlayer src={message.audioUrl} />
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
             </div>
           </div>
         )}
