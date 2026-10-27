@@ -20,6 +20,8 @@ vi.mock('@/lib/creator/generationEngine', () => ({ DEFAULT_VOICE_ID: 'voice', ge
 vi.mock('@/lib/editor/importFiles', () => ({ importOneFile: vi.fn() }));
 vi.mock('@/components/app/image/ImagePaywallModal', () => ({ ImagePaywallModal: () => null }));
 vi.mock('@/components/app/video/VideoPaywallModal', () => ({ VideoPaywallModal: () => null }));
+vi.mock('@/components/app/model3d/Model3dPaywallModal', () => ({ Model3dPaywallModal: () => null }));
+vi.mock('@/components/app/creator/studio/StudioVoicePicker', () => ({ StudioVoicePicker: () => null }));
 vi.mock('@/components/app/audio/AudioPaywallModal', () => ({ AudioPaywallModal: ({ open, units, quantityLabel, onConfirm, onOpenChange }: { open: boolean; units: number; quantityLabel: string; onConfirm: (hash: string) => void; onOpenChange: (open: boolean) => void }) => open ? <div><output aria-label="Music quote">{units}:{quantityLabel}</output><button onClick={() => onConfirm('paid-music')}>Pay for music</button><button onClick={() => onOpenChange(false)}>Cancel music</button></div> : null }));
 vi.mock('@/components/app/creator/studio/StudioChip', () => ({ SelectChip: ({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void }) => <select aria-label={label} value={value} onChange={event => onChange(event.target.value)}>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select>,
   CounterChip: ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => <input aria-label={label} type="number" value={value} onChange={event => onChange(Number(event.target.value))} />,

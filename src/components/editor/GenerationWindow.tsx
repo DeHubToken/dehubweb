@@ -36,9 +36,9 @@ export function GenerationWindow() {
       }
       if (job.status === 'failed' || job.status === 'cancelled') { pending.current.delete(job.id); continue; }
       if (job.status !== 'done' || !job.url) continue;
-      // Meshes and transcripts remain available in the gallery. Uploads accepts playable media.
+      // Meshes arrive as a turntable video; other 3D formats stay in the gallery.
       pending.current.delete(job.id);
-      if (job.kind === 'model3d') continue;
+      if (job.kind === 'model3d' && job.exportFormat && !['glb', 'gltf'].includes(job.exportFormat)) continue;
       importing.current.add(job.id);
       void sendJobToEditor(job, { wallet: quota.walletAddress, badgeBalance: quota.badgeBalance,
         username: quota.username, addToTimeline: false, signal: controller.current.signal })

@@ -11,6 +11,7 @@ import { findRetakes, removeRetakes } from "@/lib/editor/retakes";
 import { highlightCaptionWords, highlightSentences } from "@/lib/editor/highlights";
 import { transcribeClipWords } from "@/lib/editor/captions";
 import type { MediaClip } from "@/lib/editor/types";
+import { SpeakerTools } from "./SpeakerTools";
 
 /** Detach audio and remove black bars for the selected video clip. */
 export function ClipFixTools({ clip }: { clip: MediaClip }) {
@@ -91,6 +92,7 @@ export function ClipFixTools({ clip }: { clip: MediaClip }) {
   };
 
   return (
+    <>
     <div className="grid grid-cols-2 gap-1.5 pt-2">
       <Button size="sm" variant="ghost" disabled={clip.locked || silent} onClick={detach}
         className="h-7 rounded-md border border-white/10 text-[11px] text-white/80 hover:bg-white/5 hover:text-white disabled:opacity-40">
@@ -110,5 +112,7 @@ export function ClipFixTools({ clip }: { clip: MediaClip }) {
         {busy === "retakes" ? t("editor.clipFix.listening") : t("editor.clipFix.retakes")}
       </Button>
     </div>
+    <SpeakerTools clip={clip} />
+    </>
   );
 }
