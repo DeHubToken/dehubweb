@@ -99,6 +99,7 @@ const Dapp = () => {
     { id: 'post-controls', label: t('dapp.tocPostControls') },
     { id: 'fediverse', label: t('dapp.tocFediverse') },
     { id: 'video-playback', label: t('dapp.tocVideoPlayback') },
+    { id: 'feeds-photos', label: t('dapp.tocFeedsPhotos') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -430,6 +431,19 @@ const Dapp = () => {
     ['dapp.videoPlaybackB4', 'dapp.videoPlaybackB4Desc'],
     ['dapp.videoPlaybackB5', 'dapp.videoPlaybackB5Desc'],
     ['dapp.videoPlaybackB6', 'dapp.videoPlaybackB6Desc']
+  ]}
+/>
+
+<GuideSection
+  id="feeds-photos"
+  title="dapp.feedsPhotosTitle"
+  paras={['dapp.feedsPhotosDesc']}
+  bullets={[
+    ['dapp.feedsPhotosB1', 'dapp.feedsPhotosB1Desc'],
+    ['dapp.feedsPhotosB2', 'dapp.feedsPhotosB2Desc'],
+    ['dapp.feedsPhotosB3', 'dapp.feedsPhotosB3Desc'],
+    ['dapp.feedsPhotosB4', 'dapp.feedsPhotosB4Desc'],
+    ['dapp.feedsPhotosB5', 'dapp.feedsPhotosB5Desc']
   ]}
 />
 
