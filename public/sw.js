@@ -28,7 +28,9 @@
 // v4 drops the unbounded v3 asset cache: it kept every chunk of every deploy
 // (over 1GB on a regular visitor), which made each cache lookup slow enough to
 // hold page chunks for several seconds behind the worker.
-const VERSION = 'dehub-sw-v4';
+// v5 drops media entries stored as opaque responses: an opaque error looks
+// exactly like an opaque photo, so one failed fetch broke that photo for good.
+const VERSION = 'dehub-sw-v5';
 const SHELL_CACHE = `${VERSION}-shell`;
 const ASSET_CACHE = `${VERSION}-assets`;
 const MEDIA_CACHE = `${VERSION}-media`;
@@ -108,6 +110,28 @@ async function cacheFirst(req, cacheName, maxEntries, isCacheable) {
 }
 
 /**
+ * The Spaces CDN answers dehub.io with CORS headers, so the photo is fetched
+ * in cors mode and only a real 200 is stored. The page's own no-cors request
+ * would come back opaque, and an opaque 403 or 5xx cached here never retried.
+ * Any other origin, or a CORS failure, goes to the network uncached.
+ */
+async function mediaCacheFirst(req) {
+  const cache = await caches.open(MEDIA_CACHE);
+  const hit = await cache.match(req, { ignoreVary: true });
+  if (hit) return hit;
+  try {
+    const res = await fetch(req.url, { mode: 'cors', credentials: 'omit' });
+    if (res.ok) {
+      cache.put(req, res.clone());
+      trimCache(MEDIA_CACHE, MEDIA_MAX_ENTRIES);
+    }
+    return res;
+  } catch {
+    return fetch(req);
+  }
+}
+
+/**
  * Nothing under /assets/ is ever an HTML document — it holds content-hashed JS,
  * CSS, fonts and images. An HTML body there means the request missed and the
  * SPA catch-all answered in its place, which the origin serves as 200 with
@@ -170,7 +194,7 @@ self.addEventListener('fetch', (event) => {
 
   // 3. Immutable CDN images (never videos) → CacheFirst, capped.
   if (url.hostname === CDN_HOST && MEDIA_PATH_RE.test(url.pathname)) {
-    event.respondWith(cacheFirst(req, MEDIA_CACHE, MEDIA_MAX_ENTRIES));
+    event.respondWith(mediaCacheFirst(req));
     return;
   }
 

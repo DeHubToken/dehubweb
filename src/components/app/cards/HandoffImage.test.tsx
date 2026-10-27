@@ -39,6 +39,23 @@ describe('image recovery', () => {
     fireEvent.click(screen.getByRole('button', { name: 'common.retry' }));
     expect(image.getAttribute('src')).toBe(transformed);
   });
+  it('switches a resize that never finishes on screen to the original', () => {
+    vi.useFakeTimers();
+    try {
+      const original = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7-1.jpg';
+      const transformed = `https://dehub.io/cdn-cgi/image/width=1080/${original}`;
+      const { container } = render(<HandoffImage mediaKey="stall-test" src={transformed} />);
+      const image = container.querySelector('img')!;
+      vi.spyOn(image, 'getBoundingClientRect').mockReturnValue({ top: 100, bottom: 400 } as DOMRect);
+      vi.advanceTimersByTime(5000);
+      expect(image.getAttribute('src')).toBe(transformed);
+      vi.advanceTimersByTime(5000);
+      expect(image.getAttribute('src')).toBe(original);
+      expect(screen.queryByRole('button', { name: 'common.retry' })).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
   it('does not append a cache buster to a signed source', () => {
     const signed = 'https://api.dehub.io/image/42?token=signature';
     const { container } = render(<HandoffImage mediaKey="signed-test" src={signed} />);
