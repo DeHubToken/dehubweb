@@ -31,6 +31,7 @@ import VolumeX from "@/components/ui/cut-icons/mute";
 
 import ChevronRight from "@/components/ui/cut-icons/next";
 import X from "@/components/ui/cut-icons/close";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 
 import { formatDistanceToNow } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -99,6 +100,9 @@ export interface ImmersiveLiveChromeProps {
   startedAt?: string | number | Date | null;
   isMuted: boolean;
   onToggleMute: () => void;
+  /** Float the live in Picture in Picture; absent where the browser has none. */
+  onTogglePictureInPicture?: () => void;
+  inPictureInPicture?: boolean;
   /** The three-dot menu, handed in so it stays the post's real options menu. */
   optionsSlot?: React.ReactNode;
   /** 0..1 of the replay. Undefined for a stream that is genuinely on air. */
@@ -126,6 +130,8 @@ export function ImmersiveLiveChrome({
   startedAt,
   isMuted,
   onToggleMute,
+  onTogglePictureInPicture,
+  inPictureInPicture,
   optionsSlot,
   progress,
   onSeek,
@@ -326,6 +332,18 @@ export function ImmersiveLiveChrome({
           >
             {isMuted ? <VolumeX className="h-[18px] w-[18px]" /> : <Volume2 className="h-[18px] w-[18px]" />}
           </button>
+          {onTogglePictureInPicture ? (
+            <button
+              type="button"
+              onClick={onTogglePictureInPicture}
+              aria-label={t('copy.c49677dc5ccd', 'Picture in picture')}
+              aria-pressed={!!inPictureInPicture}
+              data-live-pip
+              className={CIRCLE}
+            >
+              <PictureInPicture2 className="h-[18px] w-[18px]" />
+            </button>
+          ) : null}
           {optionsSlot}
           <button
             type="button"

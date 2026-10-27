@@ -24,6 +24,7 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import { liveReactionType, type LiveReactionType } from '@/lib/live/reaction-flow';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { reviveOnReturn } from '@/lib/socket-revive';
 
 /** Matches LivestreamEvents on the backend. These strings are the contract. */
 const EVENT = {
@@ -164,6 +165,7 @@ export function acquireStreamSocket(): StreamConnection {
         timeout: 20000,
       }),
     };
+    reviveOnReturn(active.socket);
   }
 
   active.refs += 1;
