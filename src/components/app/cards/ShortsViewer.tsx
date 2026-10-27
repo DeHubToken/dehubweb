@@ -278,14 +278,14 @@ function ShortCaption({
             }`}
           >
             {shownTitle && (
-              <p className={`text-white text-sm font-semibold leading-relaxed drop-shadow-lg ${
+              <p className={`text-white text-sm font-semibold leading-relaxed [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] ${
                 expanded ? 'whitespace-pre-wrap' : 'line-clamp-1'
               }`}>
                 {shownTitle}
               </p>
             )}
             {shownBody && (
-              <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
+              <p className={`text-white text-sm leading-relaxed [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] ${
                 expanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
               }`}>
                 {shownBody}
@@ -1763,9 +1763,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       </button>
                       <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
                         {currentShort.displayName && (
-                          <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
+                          <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
                         )}
-                        <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
+                        <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
                     </div>
                     <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
@@ -1783,7 +1783,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   {/* Views */}
                   <div className="flex items-center gap-1">
                     <Eye className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{currentShort.views || '0'}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{currentShort.views || '0'}</span>
                   </div>
 
                   {/* Tip */}
@@ -1793,7 +1793,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(tipCount)}</span>
                   </button>
 
                   {/* Share */}
@@ -1803,7 +1803,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(displayShareCount)}</span>
                   </button>
 
                   {/* Comments, fullscreen only — windowed, the panel beside the
@@ -1815,7 +1815,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                     >
                       <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(currentShort.comments || 0)}</span>
                     </button>
                   )}
 
@@ -1856,7 +1856,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
@@ -2010,9 +2010,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex flex-col items-start text-left min-w-0"
                     >
                       {currentShort.displayName && (
-                        <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
+                        <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
                       )}
-                      <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
+                      <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                     </button>
                   </div>
                   
@@ -2039,7 +2039,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   {/* Views */}
                   <div className="flex items-center gap-1">
                     <Eye className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{currentShort.views || '0'}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{currentShort.views || '0'}</span>
                   </div>
 
                   {/* Tip */}
@@ -2049,7 +2049,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(tipCount)}</span>
                   </button>
 
                   {/* Share */}
@@ -2059,7 +2059,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(displayShareCount)}</span>
                   </button>
 
                   {/* Comments */}
@@ -2069,7 +2069,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                   >
                     <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(currentShort.comments || 0)}</span>
                   </button>
 
                   {/* Like — furthest right for easy thumb reach, like feed cards */}
@@ -2109,7 +2109,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
