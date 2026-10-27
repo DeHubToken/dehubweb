@@ -136,6 +136,7 @@ const Dapp = () => {
     { id: 'marketplaces', label: t('dapp.tocMarkets') },
     { id: 'work', label: t('dapp.tocBounties') },
     { id: 'stores', label: t('dapp.storesTitle') },
+    { id: 'sharing', label: t('dapp.tocSharing') },
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
     { id: 'ai-suite', label: t('dapp.tocAi') },
     { id: 'creator-studio', label: t('dapp.tocStudio') },
@@ -2115,7 +2116,19 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="affiliate" className="scroll-mt-32">
+                <GuideSection
+          id="sharing"
+          title="dapp.sharingTitle"
+          paras={['dapp.sharingDesc']}
+          bullets={[
+            ['dapp.sharingB1', 'dapp.sharingB1Desc'],
+            ['dapp.sharingB2', 'dapp.sharingB2Desc'],
+            ['dapp.sharingB3', 'dapp.sharingB3Desc'],
+            ['dapp.sharingB4', 'dapp.sharingB4Desc']
+          ]}
+        />
+
+<section id="affiliate" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
