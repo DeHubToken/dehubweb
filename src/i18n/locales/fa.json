@@ -493,6 +493,16 @@
     "heading": "شورتز DeHub"
   },
   "settings": {
+    "postLanding": "بعد از انتشار",
+    "postLandingDesc": "پست تازه‌تان چطور در فید ظاهر می‌شود",
+    "postLandingGhost": "جای خالی",
+    "postLandingGhostDesc": "فید جا باز می‌کند و پست شما آرام در جایش ظاهر می‌شود",
+    "postLandingMorph": "دگرگونی",
+    "postLandingMorphDesc": "پنجره نوشتن کوچک می‌شود و به پست شما تبدیل می‌شود",
+    "postLandingPill": "از نوار تا کارت",
+    "postLandingPillDesc": "نوار بارگذاری پس از انتشار باز می‌شود و به پست شما تبدیل می‌شود",
+    "postLandingDrop": "فرود",
+    "postLandingDropDesc": "پست شما با کمی جهش از بالا فرود می‌آید",
     "sessionsRevokedMany": "{{count}} دستگاه‌ها از سیستم خارج شدند",
     "usernameTaken": "این نام کاربری گرفته شده",
     "postingChain": "بلاک‌چین انتشار پست",

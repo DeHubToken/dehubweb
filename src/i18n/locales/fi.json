@@ -494,6 +494,16 @@
     "heading": "DeHub Lyhyet"
   },
   "settings": {
+    "postLanding": "Julkaisun jälkeen",
+    "postLandingDesc": "Miten uusi julkaisusi ilmestyy syötteeseen",
+    "postLandingGhost": "Haamupaikka",
+    "postLandingGhostDesc": "Syöte tekee tilaa ja julkaisusi häivyttyy paikalleen",
+    "postLandingMorph": "Muodonmuutos",
+    "postLandingMorphDesc": "Kirjoitusnäkymä kutistuu julkaisuksesi",
+    "postLandingPill": "Palkista kortiksi",
+    "postLandingPillDesc": "Latauspalkki avautuu julkaisuksesi, kun se on julkaistu",
+    "postLandingDrop": "Pudotus",
+    "postLandingDropDesc": "Julkaisusi putoaa ylhäältä pienellä pomppauksella",
     "sessionsRevokedMany": "{{count}} laitetta kirjautui ulos",
     "usernameTaken": "Käyttäjänimi on varattu",
     "postingChain": "Julkaisujen lohkoketju",

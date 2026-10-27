@@ -493,6 +493,16 @@
     "heading": "Shorts ng DeHub"
   },
   "settings": {
+    "postLanding": "Pagkatapos mag-post",
+    "postLandingDesc": "Kung paano lumalabas ang bago mong post sa feed",
+    "postLandingGhost": "Ghost slot",
+    "postLandingGhostDesc": "Nagbibigay-puwang ang feed at dahan-dahang lumilitaw ang post mo",
+    "postLandingMorph": "Morph",
+    "postLandingMorphDesc": "Lumiliit ang composer hanggang maging post mo",
+    "postLandingPill": "Mula bar hanggang card",
+    "postLandingPillDesc": "Bumubukas ang upload bar para maging post mo kapag naka-post na ito",
+    "postLandingDrop": "Drop in",
+    "postLandingDropDesc": "Bumabagsak ang post mo mula sa itaas nang may kaunting talbog",
     "sessionsRevokedMany": "Nag - sign out ang {{count}} device",
     "usernameTaken": "Nakuha na ang username",
     "postingChain": "Blockchain para sa mga post",

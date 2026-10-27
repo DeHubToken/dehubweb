@@ -3,6 +3,7 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
+import { beginPostLanding, preparePostLanding } from '@/lib/post-landing';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
@@ -2419,6 +2420,9 @@ export function usePostForm(
 
       // Create optimistic post using the real token ID so it matches the API feed item
       const optimisticId = String(mintResponse.createdTokenId);
+      // Its card waits out of sight until the composer closes (lib/post-landing).
+      // A post that goes on air opens the live console instead of landing.
+      if (!isQuoting && !(liveMode && onLiveStreamReady)) preparePostLanding(optimisticId);
       const username = user?.username || user?.displayName || 'You';
       // Use proper avatar resolution - extract path from all possible fields and build CDN URL
       // This matches the exact pattern used in ProfilePage and other components
@@ -2568,6 +2572,10 @@ export function usePostForm(
         });
         return;
       }
+
+      // The new post lands at the top of the feed in the viewer's chosen
+      // style (lib/post-landing); a morph starts from the composer itself.
+      if (!isQuoting) beginPostLanding(optimisticId, document.querySelector<HTMLElement>('[data-post-modal]'));
 
       onClose();
 

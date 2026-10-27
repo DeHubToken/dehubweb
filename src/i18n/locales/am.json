@@ -493,6 +493,16 @@
     "heading": "DeHub ሾርትስ"
   },
   "settings": {
+    "postLanding": "ከለጠፉ በኋላ",
+    "postLandingDesc": "አዲሱ ልጥፍዎ በምግብዎ ውስጥ እንዴት እንደሚታይ",
+    "postLandingGhost": "ባዶ ቦታ",
+    "postLandingGhostDesc": "ምግቡ ቦታ ይሰጣል፣ ልጥፍዎም ቀስ ብሎ ይታያል",
+    "postLandingMorph": "ቅርጽ መለወጥ",
+    "postLandingMorphDesc": "የመጻፊያው ገጽ ተኮማትሮ ልጥፍዎ ይሆናል",
+    "postLandingPill": "ከአሞሌ ወደ ካርድ",
+    "postLandingPillDesc": "ልጥፉ ሲለጠፍ የመስቀያው አሞሌ ተዘርግቶ ልጥፍዎ ይሆናል",
+    "postLandingDrop": "መውደቅ",
+    "postLandingDropDesc": "ልጥፍዎ ከላይ በትንሽ ዝላይ ይወርዳል",
     "sessionsRevokedMany": "{{count}} መሣሪያዎች ተፈራርመዋል",
     "usernameTaken": "የተጠቃሚ ስሙ ተይዟል",
     "postingChain": "የልጥፍ ብሎክቼይን",

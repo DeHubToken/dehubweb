@@ -493,6 +493,16 @@
     "heading": "DeHub শর্টস"
   },
   "settings": {
+    "postLanding": "পোস্ট করার পরে",
+    "postLandingDesc": "আপনার নতুন পোস্ট ফিডে কীভাবে আসে",
+    "postLandingGhost": "ঘোস্ট স্লট",
+    "postLandingGhostDesc": "ফিড জায়গা করে দেয় আর আপনার পোস্ট ধীরে ধীরে নিজের জায়গায় ফুটে ওঠে",
+    "postLandingMorph": "মর্ফ",
+    "postLandingMorphDesc": "লেখার পর্দা ছোট হয়ে আপনার পোস্ট হয়ে যায়",
+    "postLandingPill": "বার থেকে কার্ড",
+    "postLandingPillDesc": "পোস্ট হয়ে গেলে আপলোড বার খুলে আপনার পোস্ট হয়ে যায়",
+    "postLandingDrop": "ড্রপ ইন",
+    "postLandingDropDesc": "আপনার পোস্ট ওপর থেকে হালকা লাফিয়ে নেমে আসে",
     "sessionsRevokedMany": "{{count}} ডিভাইসগুলি সাইন আউট হয়ে গেছে",
     "usernameTaken": "ইউজারনেম নেওয়া হয়ে গেছে",
     "postingChain": "পোস্টের ব্লকচেইন",

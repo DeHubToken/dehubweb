@@ -494,6 +494,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Efter du har slået op",
+    "postLandingDesc": "Hvordan dit nye opslag dukker op i dit feed",
+    "postLandingGhost": "Spøgelsesplads",
+    "postLandingGhostDesc": "Dit feed gør plads, og dit opslag toner frem på sin plads",
+    "postLandingMorph": "Forvandling",
+    "postLandingMorphDesc": "Editoren skrumper til dit opslag",
+    "postLandingPill": "Fra bjælke til kort",
+    "postLandingPillDesc": "Upload-bjælken folder sig ud til dit opslag, når det er online",
+    "postLandingDrop": "Fald ind",
+    "postLandingDropDesc": "Dit opslag falder ind fra toppen med et lille hop",
     "sessionsRevokedMany": "{{count}}-enheder er logget ud",
     "usernameTaken": "Brugernavnet er taget",
     "postingChain": "Blockchain til opslag",

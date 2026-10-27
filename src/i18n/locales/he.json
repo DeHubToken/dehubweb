@@ -492,6 +492,16 @@
     "heading": "הקצרים של DeHub"
   },
   "settings": {
+    "postLanding": "אחרי הפרסום",
+    "postLandingDesc": "איך הפוסט החדש שלך מופיע בפיד",
+    "postLandingGhost": "משבצת רפאים",
+    "postLandingGhostDesc": "הפיד מפנה מקום והפוסט שלך מופיע בהדרגה במקומו",
+    "postLandingMorph": "התמרה",
+    "postLandingMorphDesc": "חלון הכתיבה מתכווץ והופך לפוסט שלך",
+    "postLandingPill": "מפס לכרטיס",
+    "postLandingPillDesc": "פס ההעלאה נפתח והופך לפוסט שלך ברגע שהוא מתפרסם",
+    "postLandingDrop": "נפילה",
+    "postLandingDropDesc": "הפוסט שלך נופל מלמעלה עם קפיצה קטנה",
     "sessionsRevokedMany": "{{count}} מכשירים מנותקים",
     "usernameTaken": "שם המשתמש תפוס",
     "postingChain": "בלוקצ׳יין לפרסום",

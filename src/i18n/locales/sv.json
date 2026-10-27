@@ -494,6 +494,16 @@
     "heading": "Shorts på DeHub"
   },
   "settings": {
+    "postLanding": "Efter att du publicerat",
+    "postLandingDesc": "Hur ditt nya inlägg dyker upp i flödet",
+    "postLandingGhost": "Spökplats",
+    "postLandingGhostDesc": "Flödet gör plats och ditt inlägg tonas in på sin plats",
+    "postLandingMorph": "Förvandling",
+    "postLandingMorphDesc": "Redigeraren krymper till ditt inlägg",
+    "postLandingPill": "Från list till kort",
+    "postLandingPillDesc": "Uppladdningslisten öppnas till ditt inlägg när det är publicerat",
+    "postLandingDrop": "Fall in",
+    "postLandingDropDesc": "Ditt inlägg faller in uppifrån med en liten studs",
     "sessionsRevokedMany": "{{count}} -enheter loggade ut",
     "usernameTaken": "Användarnamnet är upptaget",
     "postingChain": "Blockkedja för inlägg",

@@ -492,6 +492,16 @@
     "heading": "DeHub qisqa videolari"
   },
   "settings": {
+    "postLanding": "Joylagandan keyin",
+    "postLandingDesc": "Yangi postingiz lentada qanday paydo bo‘ladi",
+    "postLandingGhost": "Arvoh joy",
+    "postLandingGhostDesc": "Lenta joy bo‘shatadi va postingiz asta paydo bo‘ladi",
+    "postLandingMorph": "O‘zgarish",
+    "postLandingMorphDesc": "Yozish oynasi kichrayib, postingizga aylanadi",
+    "postLandingPill": "Chiziqdan kartaga",
+    "postLandingPillDesc": "Post joylangach, yuklash chizig‘i ochilib postingizga aylanadi",
+    "postLandingDrop": "Tushish",
+    "postLandingDropDesc": "Postingiz yuqoridan biroz sakrab tushadi",
     "sessionsRevokedMany": "{{count}} qurilmalar tizimdan chiqdi",
     "usernameTaken": "Bu foydalanuvchi nomi band",
     "postingChain": "Postlar blokcheyni",

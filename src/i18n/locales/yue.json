@@ -492,6 +492,16 @@
     "heading": "DeHub 短片"
   },
   "settings": {
+    "postLanding": "發佈之後",
+    "postLandingDesc": "新帖子喺動態入面出現嘅方式",
+    "postLandingGhost": "幽靈空位",
+    "postLandingGhostDesc": "動態讓出位置，帖子慢慢浮現",
+    "postLandingMorph": "變形",
+    "postLandingMorphDesc": "編輯器縮細變成你嘅帖子",
+    "postLandingPill": "由進度條變卡片",
+    "postLandingPillDesc": "帖子發佈之後，上載進度條展開變成你嘅帖子",
+    "postLandingDrop": "落入",
+    "postLandingDropDesc": "帖子由頂部跌落，輕輕彈一下",
     "sessionsRevokedMany": "{{count}} 裝置已經登出",
     "usernameTaken": "用戶名已被使用",
     "postingChain": "發帖區塊鏈",

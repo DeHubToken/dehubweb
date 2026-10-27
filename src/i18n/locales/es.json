@@ -570,6 +570,16 @@
     "heading": "Cortos de DeHub"
   },
   "settings": {
+    "postLanding": "Después de publicar",
+    "postLandingDesc": "Cómo aparece tu nueva publicación en tu feed",
+    "postLandingGhost": "Hueco fantasma",
+    "postLandingGhostDesc": "Tu feed hace espacio y tu publicación aparece suavemente en su lugar",
+    "postLandingMorph": "Transformación",
+    "postLandingMorphDesc": "El editor se encoge hasta convertirse en tu publicación",
+    "postLandingPill": "De barra a tarjeta",
+    "postLandingPillDesc": "La barra de subida se abre hasta convertirse en tu publicación cuando ya está publicada",
+    "postLandingDrop": "Caída",
+    "postLandingDropDesc": "Tu publicación cae desde arriba con un pequeño rebote",
     "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} dispositivos desconectados",
     "usernameTaken": "Nombre de usuario ocupado",
