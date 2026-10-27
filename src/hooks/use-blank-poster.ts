@@ -1,3 +1,4 @@
+import { LruCache } from '@/lib/lru-cache';
 /**
  * useBlankPoster
  * ==============
@@ -18,7 +19,7 @@
  */
 import { useEffect, useState } from 'react';
 
-const cache = new Map<string, boolean>();
+const cache = new LruCache<string, boolean>(500);
 
 /** Luminance spread below this (0–255) reads as a flat, contentless frame. */
 const UNIFORM_THRESHOLD = 12;
@@ -35,16 +36,16 @@ const UNIFORM_THRESHOLD = 12;
 export const BLANK_PROBE_WIDTH = 64;
 
 export function useBlankPoster(url?: string | null): boolean {
-  const [blank, setBlank] = useState<boolean>(() => (url ? cache.get(url) ?? false : false));
+  const [measured, setMeasured] = useState<{ url: string; blank: boolean } | null>(null);
+  const blank = url ? (measured?.url === url ? measured.blank : cache.get(url) ?? false) : false;
 
   useEffect(() => {
     if (!url) {
-      setBlank(false);
       return;
     }
     const cached = cache.get(url);
     if (cached !== undefined) {
-      setBlank(cached);
+      setMeasured({ url, blank: cached });
       return;
     }
 
@@ -64,7 +65,7 @@ export function useBlankPoster(url?: string | null): boolean {
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         if (!ctx) {
           cache.set(url, false);
-          setBlank(false);
+          setMeasured({ url, blank: false });
           return;
         }
         ctx.drawImage(img, 0, 0, w, h);
@@ -79,15 +80,15 @@ export function useBlankPoster(url?: string | null): boolean {
         }
         const isBlank = max - min < UNIFORM_THRESHOLD;
         cache.set(url, isBlank);
-        setBlank(isBlank);
+        setMeasured({ url, blank: isBlank });
       } catch {
         // Tainted canvas (missing CORS) or other read failure — do not flag.
         cache.set(url, false);
-        setBlank(false);
+        setMeasured({ url, blank: false });
       }
     };
     img.onerror = () => {
-      if (!cancelled) setBlank(false);
+      if (!cancelled) setMeasured({ url, blank: false });
     };
     img.src = url;
 
