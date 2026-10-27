@@ -23,6 +23,7 @@ import ShieldCheck from "@/components/ui/cut-icons/security";
 import type { ReactNode } from 'react';
 import { useInvitePreview } from '@/hooks/use-community-admin';
 import { storageImage, deviceWidth } from '@/lib/media-url';
+import { DescriptionWithLinks } from '@/components/app/communities/DescriptionWithLinks';
 
 interface CommunityInviteEmbedProps {
   code: string;
@@ -96,7 +97,7 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
           {isValid ? name : _copy("copy.47e4ea17be3b", { defaultValue: "This invite cannot be used" })}
         </p>
         {isValid && preview.description && (
-          <p className="text-xs truncate mt-0.5 text-slate-50">{preview.description}</p>
+          <DescriptionWithLinks text={preview.description} singleLine className="text-xs mt-0.5 text-slate-50" />
         )}
         {isValid && (
           <div className="flex items-center gap-3 mt-1">
