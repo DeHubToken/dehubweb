@@ -84,6 +84,7 @@ import { isDhbListingQuery } from '@/lib/market/dhb-listing';
 import type { VideoItem, ImagePost } from '@/types/feed.types';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { scrollDocumentTo } from '@/lib/document-scroll';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // Brand-related search terms where @d should be pinned first
 const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
@@ -270,10 +271,14 @@ export default function ExplorePage() {
   const [categoryLimit, setCategoryLimit] = useState(24);
   const [filters, setFilters] = useState<SearchFilterState>(DEFAULT_SEARCH_FILTERS);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories for the carousel
   const { data: exploreCategories = [] } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 5 * 60 * 1000,
   });
 

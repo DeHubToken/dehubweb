@@ -17,7 +17,7 @@ import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
+import { useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -95,6 +95,7 @@ import {
 } from '@/hooks/use-unified-feed';
 import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { scrollDocumentTo } from '@/lib/document-scroll';
+import { holdPostLanding, isPostLandingWaiting, onPostLandingBegin, releasePostLanding, runPostLanding, takePostLanding } from '@/lib/post-landing';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import { useBoostQueue } from '@/hooks/use-superpowers';
@@ -120,7 +121,9 @@ import type { ServedAd } from '@/lib/ads/povr';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import { FollowTagBar } from './FollowTagBar';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
 // TYPES & CONSTANTS
@@ -768,10 +771,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // A safety-net timer flips the gate regardless so a stalled feed can't blank the rails.
   const [railsEnabled, setRailsEnabled] = useState(false);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories
   const { data: categories = [] } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 5 * 60 * 1000,
     enabled: railsEnabled,
   });
@@ -1072,6 +1079,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
         storyboard: toStoryboard(item.storyboard),
+        storedAspect: storedVideoAspect(item.videoInfo),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',
@@ -1419,10 +1427,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       }
     });
   }, [items, optimisticPosts, removeOptimisticPost, heldOptimisticIds]);
-  const listedItems = useMemo(
-    () => heldOptimisticIds.size ? items.filter(item => !heldOptimisticIds.has(feedItemId(item))) : items,
-    [items, heldOptimisticIds],
-  );
+  // Every post still shown as its optimistic card is kept out, not only the
+  // held ones, so the two copies never show at once for the frame between the
+  // server's copy arriving and the card being removed.
+  const listedItems = useMemo(() => {
+    if (optimisticPosts.length === 0) return items;
+    const shown = new Set(optimisticPosts.map(op => op.id));
+    return items.filter(item => !shown.has(feedItemId(item)));
+  }, [items, optimisticPosts]);
 
   // ============================================================================
   // INFINITE SCROLL
@@ -1547,6 +1559,50 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // ============================================================================
 
   const visibleOptimisticPosts = optimisticPosts.filter(op => !getDeletedPostIds().has(op.id));
+
+  // A post of the viewer's own lands in the slot above the feed in their
+  // chosen style (lib/post-landing). Its card waits out of sight while the
+  // composer is still open, and comes in once it closes and Home is showing.
+  const optimisticSlotRef = useRef<HTMLDivElement>(null);
+  const optimisticIdsKey = visibleOptimisticPosts.map(op => op.id).join(',');
+  const landPending = useCallback(() => {
+    const slot = optimisticSlotRef.current;
+    if (!slot || !optimisticIdsKey) return true;
+    const ids = optimisticIdsKey.split(',');
+    const lone = ids.length === 1 ? slot : null;
+    let found = true;
+    for (const id of ids) {
+      const card = slot.querySelector<HTMLElement>(`[data-feed-token-id="${CSS.escape(id)}"]`);
+      if (!card) {
+        found = false;
+        continue;
+      }
+      if (isPostLandingWaiting(id)) {
+        holdPostLanding(card, lone);
+        continue;
+      }
+      if (!isHomeActive) continue;
+      const landing = takePostLanding(id);
+      if (!landing) {
+        releasePostLanding(card, lone);
+        continue;
+      }
+      scrollDocumentTo(0);
+      runPostLanding(landing, card, lone);
+    }
+    return found;
+  }, [isHomeActive, optimisticIdsKey]);
+  useLayoutEffect(() => {
+    // A card that moves into its page surface does so a frame later.
+    const frame = landPending() ? 0 : requestAnimationFrame(() => { landPending(); });
+    // A composer that never closed on it lets a waiting card go.
+    const late = optimisticIdsKey ? window.setTimeout(landPending, 10_500) : 0;
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(late);
+    };
+  }, [landPending, optimisticIdsKey]);
+  useEffect(() => onPostLandingBegin(() => { landPending(); }), [landPending]);
 
   const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false) => {
     const firstFeedPost = isFirstVisibleFeedCard(section, index, visibleOptimisticPosts.length, !!pinnedItem);
@@ -2046,7 +2102,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
               {visibleOptimisticPosts.length > 0 && (
-                <div className="mb-3">
+                <div ref={optimisticSlotRef} className="mb-3">
                   {renderMasonryGrid(visibleOptimisticPosts.map((op, index) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
                     return renderFeedItem(feedItem, index, 'optimistic');

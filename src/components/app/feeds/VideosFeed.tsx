@@ -55,6 +55,8 @@ import { LIVE_GAMES } from '@/constants/live-games';
 import { FEED_TOGGLES_RELOAD_EVENT } from '@/lib/feed-defaults';
 import { resolveViewCount } from '@/lib/engagement';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
 // TYPES
@@ -523,10 +525,14 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
     resetContentFilters();
   }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 1000 * 60 * 30,
     retry: 2,
     enabled: showFilters,
@@ -695,6 +701,7 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
         storyboard: toStoryboard(item.storyboard),
+        storedAspect: storedVideoAspect(item.videoInfo),
         // Both, not one: the caption usually lives in the title, and a short
         // that carried a title AND a description only ever showed the second.
         title: item.name || '',

@@ -97,6 +97,10 @@ const Dapp = () => {
     { id: 'getting-started', label: t('dapp.tocIntro') },
     { id: 'accounts', label: t('dapp.tocAccounts') },
     { id: 'post-controls', label: t('dapp.tocPostControls') },
+    { id: 'fediverse', label: t('dapp.tocFediverse') },
+    { id: 'video-playback', label: t('dapp.tocVideoPlayback') },
+    { id: 'feeds-photos', label: t('dapp.tocFeedsPhotos') },
+    { id: 'first-run', label: t('dapp.tocFirstRun') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -109,36 +113,47 @@ const Dapp = () => {
     { id: 'badges', label: t('dapp.tocBadges') },
     { id: 'tipping', label: t('dapp.tocTipping') },
     { id: 'governance', label: t('dapp.tocGovernance') },
+    { id: 'governance-new', label: t('dapp.tocGovernanceNew') },
     { id: 'dao-treasury', label: t('dapp.tocDao') },
     { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
     { id: 'live-studio', label: t('dapp.tocLiveStudio') },
     { id: 'live-gifts', label: t('dapp.tocLiveGifts') },
     { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
     { id: 'messages', label: t('dapp.messagesTitle') },
+    { id: 'messages-new', label: t('dapp.tocMessagesNew') },
     { id: 'superpowers', label: t('dapp.superPowersTitle') },
     { id: 'fees', label: t('dapp.tocFees') },
     { id: 'communities', label: t('dapp.communitiesTitle') },
     { id: 'packs', label: t('dapp.tocPacks') },
     { id: 'stages', label: t('dapp.stagesTitle') },
     { id: 'tv-radio', label: t('dapp.tvRadioTitle') },
+    { id: 'music-charts', label: t('dapp.tocMusicCharts') },
+    { id: 'scheduling', label: t('dapp.tocScheduling') },
+    { id: 'audio-posts', label: t('dapp.tocAudioPosts') },
     { id: 'cinema', label: t('dapp.tocCinema') },
     { id: 'wallet', label: t('dapp.tocWallet') },
+    { id: 'stable-payments', label: t('dapp.tocStablePayments') },
     { id: 'exchange', label: t('dapp.tocExchange') },
     { id: 'marketplaces', label: t('dapp.tocMarkets') },
     { id: 'work', label: t('dapp.tocBounties') },
     { id: 'stores', label: t('dapp.storesTitle') },
+    { id: 'sharing', label: t('dapp.tocSharing') },
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
     { id: 'ai-suite', label: t('dapp.tocAi') },
     { id: 'creator-studio', label: t('dapp.tocStudio') },
+    { id: 'creator-tools', label: t('dapp.tocCreatorTools') },
+    { id: 'editor-additions', label: t('dapp.tocEditorAdditions') },
     { id: 'converter', label: t('dapp.tocConverter') },
     { id: 'mini-apps', label: t('dapp.tocMiniApps') },
     { id: 'arcade', label: t('dapp.tocArcade') },
     { id: 'encryption', label: t('dapp.tocEncryption') },
     { id: 'depin', label: t('dapp.tocDepin') },
+    { id: 'agents', label: t('dapp.tocAgentsGuide') },
     { id: 'advertising', label: t('dapp.tocAds') },
     { id: 'feature-requests', label: t('dapp.tocRequests') },
     { id: 'connect', label: t('dapp.tocConnect') },
     { id: 'notifications', label: t('dapp.tocNotifications') },
+    { id: 'notifications-new', label: t('dapp.tocNotificationsNew') },
     { id: 'kids-mode', label: t('dapp.tocKids') },
     { id: 'themes', label: t('dapp.tocThemes') },
     { id: 'settings', label: t('dapp.tocSettings') },
@@ -393,6 +408,57 @@ const Dapp = () => {
             ['dapp.postControlsB10', 'dapp.postControlsB10Desc']
           ]}
         />
+
+<GuideSection
+  id="fediverse"
+  title="dapp.fediverseTitle"
+  paras={['dapp.fediverseDesc']}
+  bullets={[
+    ['dapp.fediverseB1', 'dapp.fediverseB1Desc'],
+    ['dapp.fediverseB2', 'dapp.fediverseB2Desc'],
+    ['dapp.fediverseB3', 'dapp.fediverseB3Desc'],
+    ['dapp.fediverseB4', 'dapp.fediverseB4Desc'],
+    ['dapp.fediverseB5', 'dapp.fediverseB5Desc']
+  ]}
+/>
+
+<GuideSection
+  id="video-playback"
+  title="dapp.videoPlaybackTitle"
+  paras={['dapp.videoPlaybackDesc']}
+  bullets={[
+    ['dapp.videoPlaybackB1', 'dapp.videoPlaybackB1Desc'],
+    ['dapp.videoPlaybackB2', 'dapp.videoPlaybackB2Desc'],
+    ['dapp.videoPlaybackB3', 'dapp.videoPlaybackB3Desc'],
+    ['dapp.videoPlaybackB4', 'dapp.videoPlaybackB4Desc'],
+    ['dapp.videoPlaybackB5', 'dapp.videoPlaybackB5Desc'],
+    ['dapp.videoPlaybackB6', 'dapp.videoPlaybackB6Desc']
+  ]}
+/>
+
+<GuideSection
+  id="feeds-photos"
+  title="dapp.feedsPhotosTitle"
+  paras={['dapp.feedsPhotosDesc']}
+  bullets={[
+    ['dapp.feedsPhotosB1', 'dapp.feedsPhotosB1Desc'],
+    ['dapp.feedsPhotosB2', 'dapp.feedsPhotosB2Desc'],
+    ['dapp.feedsPhotosB3', 'dapp.feedsPhotosB3Desc'],
+    ['dapp.feedsPhotosB4', 'dapp.feedsPhotosB4Desc'],
+    ['dapp.feedsPhotosB5', 'dapp.feedsPhotosB5Desc']
+  ]}
+/>
+
+<GuideSection
+  id="first-run"
+  title="dapp.firstRunTitle"
+  paras={['dapp.firstRunDesc']}
+  bullets={[
+    ['dapp.firstRunB1', 'dapp.firstRunB1Desc'],
+    ['dapp.firstRunB2', 'dapp.firstRunB2Desc'],
+    ['dapp.firstRunB3', 'dapp.firstRunB3Desc']
+  ]}
+/>
 
 <section id="feeds" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
@@ -1046,7 +1112,20 @@ const Dapp = () => {
           </div>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="governance-new"
+          title="dapp.governanceNewTitle"
+          paras={['dapp.governanceNewDesc']}
+          bullets={[
+            ['dapp.governanceNewB1', 'dapp.governanceNewB1Desc'],
+            ['dapp.governanceNewB2', 'dapp.governanceNewB2Desc'],
+            ['dapp.governanceNewB3', 'dapp.governanceNewB3Desc'],
+            ['dapp.governanceNewB4', 'dapp.governanceNewB4Desc'],
+            ['dapp.governanceNewB5', 'dapp.governanceNewB5Desc']
+          ]}
+        />
+
+<GuideSection
           id="dao-treasury"
           title="dapp.daoTitle"
           paras={['dapp.daoDesc']}
@@ -1627,7 +1706,19 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="superpowers" className="mt-12 scroll-mt-32">
+                    <GuideSection
+            id="messages-new"
+            title="dapp.messagesNewTitle"
+            paras={['dapp.messagesNewDesc']}
+            bullets={[
+              ['dapp.messagesNewB1', 'dapp.messagesNewB1Desc'],
+              ['dapp.messagesNewB2', 'dapp.messagesNewB2Desc'],
+              ['dapp.messagesNewB3', 'dapp.messagesNewB3Desc'],
+              ['dapp.messagesNewB4', 'dapp.messagesNewB4Desc']
+            ]}
+          />
+
+<section id="superpowers" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
 
             <div className="space-y-6">
@@ -1915,7 +2006,45 @@ const Dapp = () => {
           <Shot src="/media/docs-music.png" alt={t('dapp.altMusic')} />
         </section>
 
-        <GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
+                <GuideSection
+          id="music-charts"
+          title="dapp.musicChartsTitle"
+          paras={['dapp.musicChartsDesc']}
+          bullets={[
+            ['dapp.musicChartsB1', 'dapp.musicChartsB1Desc'],
+            ['dapp.musicChartsB2', 'dapp.musicChartsB2Desc'],
+            ['dapp.musicChartsB3', 'dapp.musicChartsB3Desc'],
+            ['dapp.musicChartsB4', 'dapp.musicChartsB4Desc'],
+            ['dapp.musicChartsB5', 'dapp.musicChartsB5Desc'],
+            ['dapp.musicChartsB6', 'dapp.musicChartsB6Desc']
+          ]}
+        />
+
+<GuideSection
+  id="scheduling"
+  title="dapp.schedulingTitle"
+  paras={['dapp.schedulingDesc']}
+  bullets={[
+    ['dapp.schedulingB1', 'dapp.schedulingB1Desc'],
+    ['dapp.schedulingB2', 'dapp.schedulingB2Desc'],
+    ['dapp.schedulingB3', 'dapp.schedulingB3Desc'],
+    ['dapp.schedulingB4', 'dapp.schedulingB4Desc']
+  ]}
+/>
+
+<GuideSection
+  id="audio-posts"
+  title="dapp.audioPostsTitle"
+  paras={['dapp.audioPostsDesc']}
+  bullets={[
+    ['dapp.audioPostsB1', 'dapp.audioPostsB1Desc'],
+    ['dapp.audioPostsB2', 'dapp.audioPostsB2Desc'],
+    ['dapp.audioPostsB3', 'dapp.audioPostsB3Desc'],
+    ['dapp.audioPostsB4', 'dapp.audioPostsB4Desc']
+  ]}
+/>
+
+<GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
 
         <section id="wallet" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
@@ -1941,7 +2070,19 @@ const Dapp = () => {
           </p>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="stable-payments"
+          title="dapp.stablePaymentsTitle"
+          paras={['dapp.stablePaymentsDesc']}
+          bullets={[
+            ['dapp.stablePaymentsB1', 'dapp.stablePaymentsB1Desc'],
+            ['dapp.stablePaymentsB2', 'dapp.stablePaymentsB2Desc'],
+            ['dapp.stablePaymentsB3', 'dapp.stablePaymentsB3Desc'],
+            ['dapp.stablePaymentsB4', 'dapp.stablePaymentsB4Desc']
+          ]}
+        />
+
+<GuideSection
           id="exchange"
           title="dapp.exchangeTitle"
           paras={['dapp.exchangeDesc']}
@@ -1987,7 +2128,19 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="affiliate" className="scroll-mt-32">
+                <GuideSection
+          id="sharing"
+          title="dapp.sharingTitle"
+          paras={['dapp.sharingDesc']}
+          bullets={[
+            ['dapp.sharingB1', 'dapp.sharingB1Desc'],
+            ['dapp.sharingB2', 'dapp.sharingB2Desc'],
+            ['dapp.sharingB3', 'dapp.sharingB3Desc'],
+            ['dapp.sharingB4', 'dapp.sharingB4Desc']
+          ]}
+        />
+
+<section id="affiliate" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
@@ -2043,7 +2196,37 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="creator-tools"
+          title="dapp.creatorToolsTitle"
+          paras={['dapp.creatorToolsDesc']}
+          bullets={[
+            ['dapp.creatorToolsB1', 'dapp.creatorToolsB1Desc'],
+            ['dapp.creatorToolsB2', 'dapp.creatorToolsB2Desc'],
+            ['dapp.creatorToolsB3', 'dapp.creatorToolsB3Desc'],
+            ['dapp.creatorToolsB4', 'dapp.creatorToolsB4Desc'],
+            ['dapp.creatorToolsB5', 'dapp.creatorToolsB5Desc'],
+            ['dapp.creatorToolsB6', 'dapp.creatorToolsB6Desc'],
+            ['dapp.creatorToolsB7', 'dapp.creatorToolsB7Desc'],
+            ['dapp.creatorToolsB8', 'dapp.creatorToolsB8Desc'],
+            ['dapp.creatorToolsB9', 'dapp.creatorToolsB9Desc']
+          ]}
+        />
+
+<GuideSection
+  id="editor-additions"
+  title="dapp.editorAdditionsTitle"
+  paras={['dapp.editorAdditionsDesc']}
+  bullets={[
+    ['dapp.editorAdditionsB1', 'dapp.editorAdditionsB1Desc'],
+    ['dapp.editorAdditionsB2', 'dapp.editorAdditionsB2Desc'],
+    ['dapp.editorAdditionsB3', 'dapp.editorAdditionsB3Desc'],
+    ['dapp.editorAdditionsB4', 'dapp.editorAdditionsB4Desc'],
+    ['dapp.editorAdditionsB5', 'dapp.editorAdditionsB5Desc']
+  ]}
+/>
+
+<GuideSection
           id="converter"
           title="dapp.converterTitle"
           paras={['dapp.converterDesc']}
@@ -2081,7 +2264,18 @@ const Dapp = () => {
           <DePIN />
         </section>
 
-        <section id="advertising" className="scroll-mt-32">
+                <GuideSection
+          id="agents"
+          title="dapp.agentsGuideTitle"
+          paras={['dapp.agentsGuideDesc']}
+          bullets={[
+            ['dapp.agentsGuideB1', 'dapp.agentsGuideB1Desc'],
+            ['dapp.agentsGuideB2', 'dapp.agentsGuideB2Desc'],
+            ['dapp.agentsGuideB3', 'dapp.agentsGuideB3Desc']
+          ]}
+        />
+
+<section id="advertising" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
           <Shot src="/media/docs-ads.png" alt={t('dapp.altAds')} />
@@ -2118,7 +2312,19 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <GuideSection
+                <GuideSection
+          id="notifications-new"
+          title="dapp.notificationsNewTitle"
+          paras={['dapp.notificationsNewDesc']}
+          bullets={[
+            ['dapp.notificationsNewB1', 'dapp.notificationsNewB1Desc'],
+            ['dapp.notificationsNewB2', 'dapp.notificationsNewB2Desc'],
+            ['dapp.notificationsNewB3', 'dapp.notificationsNewB3Desc'],
+            ['dapp.notificationsNewB4', 'dapp.notificationsNewB4Desc']
+          ]}
+        />
+
+<GuideSection
           id="kids-mode"
           title="dapp.kidsTitle"
           paras={['dapp.kidsDesc']}
