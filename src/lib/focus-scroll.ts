@@ -11,12 +11,12 @@
  *
  * So: centre it, watch the page for size changes and re-centre after each one,
  * and stop as soon as the reader scrolls, taps or types themselves, or after a
- * few seconds. Then flash the row, once it is actually where they can see it.
+ * few seconds. The row flashes the first time it comes to rest on screen.
  *
  * @module lib/focus-scroll
  */
 
-const SETTLE_MS = 3500;
+const SETTLE_MS = 6000;
 const QUIET_MS = 450;
 const FLASH_CLASS = 'focus-target-flash';
 const FLASH_MS = 2200;
@@ -58,13 +58,20 @@ export function bringIntoViewAndFlash(el: Element): () => void {
     observer?.disconnect();
     for (const type of USER_EVENTS) window.removeEventListener(type, onUser, true);
     active.delete(el);
-    if (showFlash && el.isConnected) flash(el);
+    if (showFlash && !flashed && el.isConnected) flash(el);
   };
 
-  // The page is quiet once the row stops moving for a beat.
+  // Flash once the row first stops moving for a beat. Keep watching after
+  // that: the author thread and the other threads can still land above it a
+  // second later, and the row must not be left under them.
+  let flashed = false;
   const armQuiet = () => {
     window.clearTimeout(quietTimer);
-    quietTimer = window.setTimeout(() => finish(true), QUIET_MS);
+    quietTimer = window.setTimeout(() => {
+      if (flashed || stopped || !el.isConnected) return;
+      flashed = true;
+      flash(el);
+    }, QUIET_MS);
   };
 
   const recentre = () => {
