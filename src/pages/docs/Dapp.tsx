@@ -100,6 +100,7 @@ const Dapp = () => {
     { id: 'fediverse', label: t('dapp.tocFediverse') },
     { id: 'video-playback', label: t('dapp.tocVideoPlayback') },
     { id: 'feeds-photos', label: t('dapp.tocFeedsPhotos') },
+    { id: 'first-run', label: t('dapp.tocFirstRun') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -445,6 +446,17 @@ const Dapp = () => {
     ['dapp.feedsPhotosB3', 'dapp.feedsPhotosB3Desc'],
     ['dapp.feedsPhotosB4', 'dapp.feedsPhotosB4Desc'],
     ['dapp.feedsPhotosB5', 'dapp.feedsPhotosB5Desc']
+  ]}
+/>
+
+<GuideSection
+  id="first-run"
+  title="dapp.firstRunTitle"
+  paras={['dapp.firstRunDesc']}
+  bullets={[
+    ['dapp.firstRunB1', 'dapp.firstRunB1Desc'],
+    ['dapp.firstRunB2', 'dapp.firstRunB2Desc'],
+    ['dapp.firstRunB3', 'dapp.firstRunB3Desc']
   ]}
 />
 
