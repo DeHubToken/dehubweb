@@ -973,7 +973,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       } as unknown as DeHubNFT;
     },
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    // A stream that has not ended is never trusted from cache: reopening it or
+    // coming back to the tab asks again, so an old "not live" answer can't stick.
+    staleTime: (query) => {
+      const stream = (query.state.data as any)?.stream;
+      return stream && !hasStreamEnded(stream) ? 0 : 5 * 60 * 1000;
+    },
     refetchInterval: (query) => streamRefreshInterval((query.state.data as any)?.stream),
     retry: 1,
     // Instant open: if any feed cache already holds THIS post, paint it
