@@ -1,7 +1,8 @@
 import { LruCache } from '../lru-cache';
 import { supabase } from "@/integrations/supabase/client";
-import { fetchPredictionPreview, parsePredictionLink, type PredictionPreview } from '../predictions';
-import { fetchRichPreview, parseRichLink, extractShareUrls, type RichDetails } from '../rich-links';
+import { parseDehubLink } from '../dehub-links';
+import { fetchPredictionPreview, forgetPredictionPreview, parsePredictionLink, type PredictionPreview } from '../predictions';
+import { fetchRichPreview, forgetRichPreview, parseRichLink, extractShareUrls, type RichDetails } from '../rich-links';
 
 export interface LinkPreviewData {
   url: string;
@@ -15,6 +16,7 @@ export interface LinkPreviewData {
 
 const previewCache = new LruCache<string, LinkPreviewData>(256);
 const pendingPreviews = new Map<string, Promise<LinkPreviewData | null>>();
+const refreshListeners = new Set<(url: string) => void>();
 
 export function getLinkPreviewFavicon(url: string): string | null {
   try {
@@ -63,15 +65,57 @@ async function loadLinkPreview(url: string): Promise<LinkPreviewData | null> {
   if (rich) return fetchRichPreview(rich);
   const cached = previewCache.get(url);
   if (cached) return cached;
+  return crawlLinkPreview(url, false);
+}
 
+/**
+ * A site that swaps its share image usually keeps the same image address, so
+ * the browser keeps painting the old picture. A refreshed card asks for the
+ * image with a one-off query mark, which sends it past every cache on the way.
+ */
+export function markRefreshedImage(image: string | null, stamp: number): string | null {
+  if (!image) return image;
+  try {
+    const parsed = new URL(image);
+    if (!/^https?:$/.test(parsed.protocol)) return image;
+    parsed.searchParams.set('dhr', String(stamp));
+    return parsed.href;
+  } catch {
+    return image;
+  }
+}
+
+/** Cards showing a link re-read it when somebody refreshes it from a post menu. */
+export function subscribeLinkPreviewRefresh(listener: (url: string) => void): () => void {
+  refreshListeners.add(listener);
+  return () => { refreshListeners.delete(listener); };
+}
+
+/**
+ * Crawls the link again and repaints every card showing it. Returns false when
+ * the site could not be read, so the menu can say so instead of claiming success.
+ */
+export async function refreshLinkPreview(url: string): Promise<boolean> {
+  pendingPreviews.delete(url);
+  let ok = true;
+  const prediction = parsePredictionLink(url);
+  const rich = parseRichLink(url);
+  if (prediction) forgetPredictionPreview(prediction.url);
+  else if (rich) await forgetRichPreview(rich.url);
+  else ok = (await crawlLinkPreview(url, true)) !== null;
+  refreshListeners.forEach((listener) => listener(url));
+  return ok;
+}
+
+async function crawlLinkPreview(url: string, refresh: boolean): Promise<LinkPreviewData | null> {
   try {
     const { data, error } = await supabase.functions.invoke('fetch-link-preview', {
-      body: { url },
+      body: refresh ? { url, refresh: true } : { url },
     });
 
     if (error || !data || data.error) {
       console.error('Error fetching link preview:', error);
-      return compactPreview(url);
+      return refresh ? null : compactPreview(url);
     }
 
     const preview: LinkPreviewData = {
@@ -80,7 +124,7 @@ async function loadLinkPreview(url: string): Promise<LinkPreviewData | null> {
       description: data.description || '',
       // The preview endpoint can return an HTML-escaped OG URL. Its query
       // parameters must be decoded before the image renderer receives them.
-      image: getLinkPreviewImage(url, data.image),
+      image: refresh ? markRefreshedImage(getLinkPreviewImage(url, data.image), Date.now()) : getLinkPreviewImage(url, data.image),
       siteName: data.siteName || compactPreview(url).siteName,
     };
 
@@ -90,10 +134,15 @@ async function loadLinkPreview(url: string): Promise<LinkPreviewData | null> {
     return preview;
   } catch (error) {
     console.error('Error fetching link preview:', error);
-    return compactPreview(url);
+    return refresh ? null : compactPreview(url);
   }
 }
 
 export function extractUrlsFromText(text: string): string[] {
   return extractShareUrls(text);
+}
+
+/** The outside link whose card a post shows, if it shows one. DeHub links render as entity cards. */
+export function previewedLinkUrl(text: string | null | undefined): string | undefined {
+  return text ? extractUrlsFromText(text).find((url) => !parseDehubLink(url)) : undefined;
 }
