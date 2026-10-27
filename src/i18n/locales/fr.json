@@ -570,6 +570,16 @@
     "heading": "Courts DeHub"
   },
   "settings": {
+    "postLanding": "Après la publication",
+    "postLandingDesc": "Comment votre nouvelle publication arrive dans votre fil",
+    "postLandingGhost": "Emplacement fantôme",
+    "postLandingGhostDesc": "Votre fil fait de la place et votre publication apparaît en fondu",
+    "postLandingMorph": "Métamorphose",
+    "postLandingMorphDesc": "L’éditeur se réduit pour devenir votre publication",
+    "postLandingPill": "De la barre à la carte",
+    "postLandingPillDesc": "La barre d’envoi s’ouvre pour devenir votre publication une fois en ligne",
+    "postLandingDrop": "Chute",
+    "postLandingDropDesc": "Votre publication tombe d’en haut avec un léger rebond",
     "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} appareils déconnectés",
     "usernameTaken": "Nom d'utilisateur déjà pris",
@@ -1230,6 +1240,9 @@
     "embedCodeCopied": "Code d'intégration copié",
     "options": "Options",
     "aiOverview": "Vue d'ensemble de l'IA",
+    "refreshLinkPreview": "Actualiser l'aperçu du lien",
+    "linkPreviewRefreshed": "Aperçu du lien actualisé",
+    "linkPreviewRefreshFailed": "Impossible d'accéder à ce site. Réessayez plus tard.",
     "sendTip": "Envoyer un pourboire",
     "queue": "File d'attente",
     "watchList": "Liste de suivi",
@@ -2547,7 +2560,14 @@
     "resendCodePhone": "Mauvais numéro ou aucun code ? Retour",
     "continueAs": "Continuer en tant que",
     "switchWalletAccount": "Changer de compte",
-    "walletLoadFailed": "Impossible de charger les portefeuilles. Veuillez réessayer."
+    "walletLoadFailed": "Impossible de charger les portefeuilles. Veuillez réessayer.",
+    "migrateWrongLogin": "Cette connexion a ouvert un autre portefeuille, donc rien n'a changé. Votre ancien profil a été créé avec {{login}}. Utilisez-le pour le récupérer.",
+    "googleInAppTitle": "Google ne permet pas de se connecter dans {{app}}",
+    "googleInAppTitleUnnamed": "Google ne permet pas de se connecter dans cette app",
+    "googleInAppBody": "Ouvrez DeHub dans votre navigateur pour utiliser Google, ou connectez-vous par e-mail ici.",
+    "openInBrowser": "Ouvrir dans le navigateur",
+    "copyLink": "Copier le lien",
+    "tryAnyway": "Essayer quand même"
   },
   "careers": {
     "title": "Carrières chez DeHub",
@@ -10757,6 +10777,73 @@
         "start": "Aller au début",
         "end": "Aller à la fin"
       }
+    },
+    "speakers": {
+      "find": "Trouver les intervenants",
+      "name": "Intervenant {{number}}",
+      "onlyOne": "Un seul intervenant trouvé.",
+      "failed": "Impossible de trouver les intervenants.",
+      "kept": "Seul {{name}} est conservé.",
+      "editFailed": "Cette modification ne convient pas à ce clip.",
+      "split": "Découpé en {{count}} plans par intervenant.",
+      "keepOnly": "Garder seul",
+      "splitAction": "Couper à chaque changement d'intervenant"
+    },
+    "generate3d": {
+      "label": "3D",
+      "placeholder": "Décris l'objet 3D que tu veux",
+      "queued": "Création de ton objet 3D. Il arrivera dans l'onglet Générations.",
+      "note": "Les objets 3D arrivent dans Médias sous forme de court clip qui tourne, sur fond transparent."
+    },
+    "voiceClone": {
+      "pickerLabel": "Clone ta voix",
+      "pickerDetail": "Des voix off avec ta propre voix",
+      "title": "Clone ta voix",
+      "description": "Enregistre-toi ou choisis un clip où tu parles. Tu paies une fois et ta voix sert pour toutes tes voix off.",
+      "defaultName": "Ma voix",
+      "record": "Enregistre un extrait (30 secondes à 2 minutes)",
+      "stop": "Arrêter l'enregistrement",
+      "fromMedia": "Ou utilise un clip de Médias",
+      "recorded": "Ton enregistrement",
+      "sample": "Extrait : {{name}}",
+      "hint": "Une voix claire sans musique donne le meilleur résultat.",
+      "noMic": "Impossible d'utiliser le micro.",
+      "sampleFailed": "Impossible de lire le son de ce clip.",
+      "pay": "Cloner pour {{amount}} DHB",
+      "useFree": "Cloner (déjà payé)",
+      "owned": "Ta voix « {{name}} » est déjà prête. Choisis-la dans la liste des voix.",
+      "useOwned": "Utiliser ma voix",
+      "ready": "« {{name}} » est prête pour les voix off.",
+      "failed": "Le clonage de la voix a échoué.",
+      "paidFailed": "Ton paiement est conservé. Rouvre ceci et le prochain essai est gratuit.",
+      "consent": "Ne clone que ta propre voix, ou une voix que tu as le droit d'utiliser."
+    },
+    "linkImport": {
+      "open": "Importer depuis un lien",
+      "placeholder": "Colle un lien YouTube, TikTok ou autre",
+      "rights": "Cette vidéo m'appartient ou j'ai le droit de l'utiliser",
+      "audioOnly": "Son uniquement",
+      "go": "Importer",
+      "queued": "En file…",
+      "downloading": "Téléchargement {{percent}} %",
+      "waiting": "En attente du site, nouvel essai bientôt…",
+      "adding": "Ajout à Médias…",
+      "added": "Importé et ajouté à la timeline.",
+      "failed": "Impossible d'importer ce lien."
+    },
+    "reverse": {
+      "action": "Inverser",
+      "working": "Inversion {{percent}} %",
+      "done": "Clip inversé.",
+      "failed": "Impossible d’inverser ce clip.",
+      "unsupported": "Ce navigateur ne peut pas inverser la vidéo. Essayez Chrome ou Edge.",
+      "tooLong": "Les clips jusqu’à {{seconds}} secondes peuvent être inversés."
+    },
+    "behind": {
+      "action": "Texte derrière la personne",
+      "working": "Détourage de la personne…",
+      "done": "Le texte et les sous-titres passent maintenant derrière la personne.",
+      "failed": "Impossible de placer le texte derrière la personne."
     }
   },
   "jungleMood": {
@@ -15063,8 +15150,8 @@
     "1b52b1397dee": "Retour à ",
     "9e9ae626652a": "Lettres, chiffres, tirets et underscores. Jusqu'à 30 caractères.",
     "dc85af8f2b1d": "Enregistrement en cours...",
-    "08b6a3efc2b5": "Fantôme",
-    "2ef54eee0edd": "Portefeuille de confiance",
+    "08b6a3efc2b5": "Phantom",
+    "2ef54eee0edd": "Trust Wallet",
     "bcbaa814d3ca": "Mentionner un utilisateur",
     "8f1aa08d3a21": "Tapez pour rechercher des utilisateurs",
     "3457098e7042": "Vous suit",
@@ -16348,7 +16435,7 @@
     "b98adf20f5f3": "Portefeuille — Gérer vos actifs cryptographiques",
     "00787feeb046": "Affichez les soldes, envoyez et recevez des jetons et gérez vos actifs cryptographiques sur plusieurs chaînes sur DeHub.",
     "112e22b0fd15": "Portefeuille DeHub — Médias sociaux décentralisés, résistance à la censure et liberté d'expression",
-    "5dc85dbc155e": "Chaîne BNB",
+    "5dc85dbc155e": "BNB Chain",
     "6b8a9141538a": "En staking",
     "228fc4afbce4": "Cadeau (verrouillé)",
     "911c67ed8f19": "Acheter via Coinbase — Visa, Mastercard, Apple Pay",
@@ -16566,7 +16653,7 @@
     "b62c681738d1": "Cu",
     "b602b7029be6": "Pt",
     "d8d91b2e06df": "NG",
-    "f223faa96f22": "Apple 🍎",
+    "f223faa96f22": "Apple",
     "c7bac46904be": "Microsoft",
     "6850f76b953d": "Berkshire Hathaway",
     "00fb5022b75a": "TSMC",
@@ -19358,5 +19445,81 @@
     "cancelled": "Annulé",
     "moveFailed": "Impossible de le déplacer. Réessaie.",
     "seeAll": "Voir tout ce que tu as planifié"
+  },
+  "welcome": {
+    "about": {
+      "title": "Bienvenue sur DeHub",
+      "sub": "Ta date de naissance reste privée. Choisis un style, tu pourras le changer à tout moment.",
+      "birthday": "Date de naissance",
+      "pick": "Choisis ta date de naissance",
+      "day": "Jour",
+      "month": "Mois",
+      "year": "Année",
+      "invalid": "Saisis ta date de naissance complète.",
+      "tooYoung": "Tu dois avoir {{age}} ans ou plus pour utiliser DeHub.",
+      "theme": "Ton style"
+    },
+    "name": {
+      "title": "Ton nom",
+      "sub": "C'est le nom que les gens voient sur tes publications.",
+      "placeholder": "Ton nom"
+    },
+    "username": {
+      "title": "Ton @pseudo",
+      "sub": "Lettres, chiffres et tirets bas. Tu pourras le changer plus tard.",
+      "yours": "@{{name}} est à toi"
+    },
+    "photo": {
+      "title": "Ta photo",
+      "sub": "Facultatif. On suit plus vite quand on voit un visage.",
+      "choose": "Choisir une photo",
+      "change": "En choisir une autre"
+    },
+    "interests": {
+      "title": "Tes centres d'intérêt",
+      "sub": "Choisis-en au moins 3. Ils passent en premier dans tes catégories."
+    },
+    "people": {
+      "title": "Tes gens",
+      "sub": "Touche pour suivre. Leurs publications rempliront ton fil Abonnements.",
+      "empty": "Aucune suggestion pour le moment. Explorer t'en propose davantage.",
+      "followers": "{{count}} abonnés"
+    },
+    "done": {
+      "title": "Super, {{name}}",
+      "sub": "Tout le monde voit cette carte dès aujourd'hui.",
+      "eyebrow": "Profil en ligne"
+    },
+    "card": {
+      "name": "Ton nom",
+      "interests": "Tes centres d'intérêt",
+      "following": "abonnements",
+      "followers": "abonnés"
+    },
+    "topic": {
+      "music": "Musique",
+      "art": "Art",
+      "gaming": "Jeux vidéo",
+      "crypto": "Crypto",
+      "sports": "Sport",
+      "travel": "Voyage",
+      "comedy": "Humour",
+      "film": "Cinéma",
+      "anime": "Anime",
+      "cars": "Voitures",
+      "podcast": "Podcast",
+      "animals": "Animaux",
+      "tech": "Tech",
+      "food": "Cuisine",
+      "news": "Actualités",
+      "science": "Science"
+    },
+    "back": "Retour",
+    "enter": "Entrer dans DeHub",
+    "skipPhoto": "Passer pour l'instant",
+    "pickMore": "Encore {{count}} à choisir",
+    "preview": "Aperçu",
+    "cardHint": "Voici comment les gens te verront",
+    "followFailed": "Impossible de suivre. Réessaie."
   }
 }

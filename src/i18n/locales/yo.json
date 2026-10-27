@@ -492,6 +492,16 @@
     "heading": "Fídíò kúkúrú DeHub"
   },
   "settings": {
+    "postLanding": "Lẹ́yìn tí o bá fi ránṣẹ́",
+    "postLandingDesc": "Bí àtẹ̀jáde tuntun rẹ ṣe ń farahàn nínú ìkànnì rẹ",
+    "postLandingGhost": "Àyè iwin",
+    "postLandingGhostDesc": "Ìkànnì náà ṣe àyè, àtẹ̀jáde rẹ sì farahàn díẹ̀díẹ̀",
+    "postLandingMorph": "Ìyípadà",
+    "postLandingMorphDesc": "Ojú-ìkọ̀wé náà dínkù di àtẹ̀jáde rẹ",
+    "postLandingPill": "Láti ìlà sí káàdì",
+    "postLandingPillDesc": "Ìlà ìgbéjáde ṣí di àtẹ̀jáde rẹ nígbà tí ó bá ti jáde",
+    "postLandingDrop": "Ìjábọ́",
+    "postLandingDropDesc": "Àtẹ̀jáde rẹ jábọ́ láti òkè pẹ̀lú ìfò kékeré",
     "sessionsRevokedMany": "{{count}} awọn ẹrọ fowo si jade",
     "usernameTaken": "A ti gba orúkọ olùmúlò yìí",
     "postingChain": "Blockchain fún àwọn àtẹ̀jáde",

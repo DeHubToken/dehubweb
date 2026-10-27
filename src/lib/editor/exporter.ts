@@ -107,7 +107,7 @@ type AudioCodecChoice = { codec: string; muxerCodec: "aac" | "opus" };
  * H.264 (most compatible), then VP9 or AV1 inside MP4 for browsers without an
  * H.264 encoder (Firefox and Chromium on many Linux machines).
  */
-async function pickVideoCodec(
+export async function pickVideoCodec(
   format: ExportFormat,
   width: number,
   height: number,
@@ -140,7 +140,7 @@ async function pickVideoCodec(
  * Chromium on Linux or in Firefox, so MP4 falls back to Opus, which MP4 also
  * carries. Returns null when no audio encoder exists, so the video still exports.
  */
-async function pickAudioCodec(format: ExportFormat, bitrate: number): Promise<AudioCodecChoice | null> {
+export async function pickAudioCodec(format: ExportFormat, bitrate: number): Promise<AudioCodecChoice | null> {
   if (typeof AudioEncoder !== "function") return null;
   const candidates: AudioCodecChoice[] = format === "mp4"
     ? [{ codec: "mp4a.40.2", muxerCodec: "aac" }, { codec: "opus", muxerCodec: "opus" }]

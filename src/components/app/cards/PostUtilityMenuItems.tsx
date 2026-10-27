@@ -1,7 +1,8 @@
 /**
  * Post Utility Menu Items
  * =======================
- * AI overview, bookmark, pin (own posts) and post info as three-dot-menu rows.
+ * AI overview, bookmark, pin (own posts), refresh link preview (posts with an
+ * outside link card) and post info as three-dot-menu rows.
  * AI overview has no action-bar twin: the menu is its only home.
  *
  * The same three actions render as icon buttons in the card's action bar via
@@ -20,12 +21,16 @@ import Info from "@/components/ui/cut-icons/information";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 
 import Bookmark from "@/components/ui/cut-icons/save";
+import Refresh from "@/components/ui/cut-icons/refresh";
 
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin, useIsPostPinned } from '@/hooks/use-pins';
+import { previewedLinkUrl, refreshLinkPreview } from '@/lib/api/link-preview';
 
 interface PostUtilityMenuItemsProps {
   postId?: string;
@@ -40,6 +45,13 @@ interface PostUtilityMenuItemsProps {
   onBeforeNavigate?: () => void;
   /** Opens the post's AI chat. The host closes its menu and gates sign-in. */
   onAskAI?: () => void;
+  /**
+   * The post's text. When it carries an outside link card, a row re-crawls the
+   * link so a site's new share image, title and description show up.
+   */
+  linkText?: string | null;
+  /** Closes the host's menu, so the refreshed card is visible underneath. */
+  onClose?: () => void;
 }
 
 const ROW =
@@ -51,12 +63,26 @@ export function PostUtilityMenuItems({
   isOwnPost = false,
   onBeforeNavigate,
   onAskAI,
+  linkText,
+  onClose,
 }: PostUtilityMenuItemsProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
   const togglePinMutation = useTogglePin();
   const isPinned = useIsPostPinned(tokenId);
+  const linkUrl = previewedLinkUrl(linkText);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const refreshLink = async () => {
+    if (!linkUrl || isRefreshing) return;
+    setIsRefreshing(true);
+    onClose?.();
+    const ok = await refreshLinkPreview(linkUrl);
+    setIsRefreshing(false);
+    if (ok) toast.success(t('postOptions.linkPreviewRefreshed', 'Link preview refreshed'));
+    else toast.error(t('postOptions.linkPreviewRefreshFailed', "Couldn't reach that site. Try again later."));
+  };
 
   return (
     <>
@@ -88,6 +114,13 @@ export function PostUtilityMenuItems({
         >
           <Pin className={cn('w-5 h-5', isPinned && 'fill-current')} />
           {isPinned ? t('postOptions.unpinPost', 'Unpin from your profile') : t('postOptions.pinPost', 'Pin to your profile')}
+        </button>
+      )}
+
+      {linkUrl && (
+        <button onClick={refreshLink} disabled={isRefreshing} className={cn(ROW, 'text-white disabled:opacity-50')}>
+          <Refresh className={cn('w-5 h-5', isRefreshing && 'animate-spin')} />
+          {t('postOptions.refreshLinkPreview', 'Refresh link preview')}
         </button>
       )}
 

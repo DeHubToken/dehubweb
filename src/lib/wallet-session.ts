@@ -12,10 +12,8 @@
  * wallet's session attached. Edge function calls are left alone — they verify
  * the DeHub token themselves.
  *
- * Until enforcement is switched on server-side, a request that goes out without
- * a session still works exactly as before, so a mint failure never breaks a
- * page. The first request for a wallet waits briefly for its session so that,
- * once enforcement is on, nothing races ahead unsigned.
+ * Wallet-scoped requests fail closed when their signature is unavailable.
+ * Anonymous public reads remain available without a wallet header.
  */
 import { supabase } from '@/integrations/supabase/client';
 import { defaultRelayBase, SUPABASE_RELAY_PREFIX } from '@/integrations/supabase/relayFetch';
@@ -31,15 +29,13 @@ const REFRESH_MARGIN_MS = 60 * 60 * 1000;
 /** After a failed mint (signed out, offline), wait before asking again. */
 const RETRY_AFTER_MS = 60 * 1000;
 /** How long the first request for a wallet waits for its session. */
-const FIRST_WAIT_MS = 4000;
+const FIRST_WAIT_MS = 12000;
 
 interface Session { token: string; expiresAt: number }
 
 /**
- * Why a wallet-scoped request went out without a session. Enforcement can only
- * be switched on once almost nothing lands here, so the reasons have to be told
- * apart: no_token is a sign-in problem, mint_error a server refusal or wallet
- * mismatch, timeout a mint that was merely slow.
+ * Why a wallet-scoped request was blocked: no_token is a sign-in problem,
+ * mint_error a server refusal or wallet mismatch, timeout a slow mint.
  */
 export type UnsignedReason = 'no_token' | 'mint_error' | 'timeout';
 interface MintFailure { reason: UnsignedReason; detail: string }
@@ -207,6 +203,15 @@ export function installWalletSessionFetch(): void {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
     if (!isRestOrStorage(url)) return next.call(this, input, init);
     const headers = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined));
+    const method = (init?.method ?? (input instanceof Request ? input.method : 'GET')).toUpperCase();
+    // Storage uploads often use the shared client. Scope only mutations to the
+    // signed-in wallet; public downloads must stay anonymous and cacheable.
+    if (!headers.has('x-wallet-address') && url.includes('/storage/v1/object/') && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+      try {
+        const current = localStorage.getItem('dehub_wallet')?.toLowerCase();
+        if (current && /^0x[a-f0-9]{40}$/.test(current)) headers.set('x-wallet-address', current);
+      } catch { /* The server rejects unsigned mutations. */ }
+    }
     const wallet = headers.get('x-wallet-address')?.toLowerCase();
     if (!wallet || headers.has('x-wallet-session')) return next.call(this, input, init);
     // A still-valid session goes out now and is refreshed behind the request;
@@ -214,14 +219,12 @@ export function installWalletSessionFetch(): void {
     const valid = sessions.get(wallet);
     const usable = valid && valid.expiresAt - 30_000 > Date.now() ? valid : null;
     if (usable && !fresh(wallet)) void ensureWalletSession(wallet);
-    const protectedRequest=/\/rest\/v1\/(?:call_sessions|callback_requests|audio_spaces|space_participants|raise_hand_requests|stage_reminders|(?:rpc\/)?work_)(?:[/?]|$)/.test(url) || /\/rest\/v1\/(?:rpc\/)?work_/.test(url);
-    const session = usable ?? (await timeout(ensureWalletSession(wallet), protectedRequest ? 12000 : FIRST_WAIT_MS));
+    const session = usable ?? (await timeout(ensureWalletSession(wallet), FIRST_WAIT_MS));
     if (!session || session === TIMED_OUT) {
       reportUnsigned(wallet, url, session === TIMED_OUT
         ? { reason: 'timeout', detail: `no session within ${FIRST_WAIT_MS}ms` }
         : lastFailure.get(wallet) ?? { reason: 'mint_error', detail: 'unknown' });
-      if(protectedRequest) return new Response(JSON.stringify({message:_translateCopy('copy.25038f9d0520', { defaultValue: 'Session verification is temporarily unavailable. Please retry.' }),code:'42501'}),{status:401,headers:{'Content-Type':'application/json'}});
-      return next.call(this, input, init);
+      return new Response(JSON.stringify({message:_translateCopy('copy.25038f9d0520', { defaultValue: 'Session verification is temporarily unavailable. Please retry.' }),code:'42501'}),{status:401,headers:{'Content-Type':'application/json'}});
     }
     headers.set('x-wallet-session', session.token);
     if (input instanceof Request && !init) return next.call(this, new Request(input, { headers }));

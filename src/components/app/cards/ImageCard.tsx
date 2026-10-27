@@ -51,6 +51,7 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { opensCommentsSplit } from '@/lib/comments-split';
 import { cdnImage, cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -527,7 +528,9 @@ function ImageCarousel({
   // A feed gallery is framed: the strip is as tall as its tallest photo, in a
   // thin outline, so posts with mixed photo sizes look the same.
   const framed = hasMultiple && !immersive;
-  const measuredAspects = useGalleryAspects(images, framed);
+  // A single photo is probed too: the card mounts long before it scrolls in,
+  // so its frame takes the real shape instead of a square that snaps later.
+  const measuredAspects = useGalleryAspects(images, !immersive);
   const tallestAspect = useMemo(() => {
     const known = measuredAspects.filter((ratio): ratio is number => !!ratio);
     return known.length ? Math.min(...known) : undefined;
@@ -1105,6 +1108,8 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}
                 onBeforeNavigate={() => setShowOptionsDrawer(false)}
+                linkText={[post.title, post.description].filter(Boolean).join('\n')}
+                onClose={() => setShowOptionsDrawer(false)}
               />
               {!isOwnPost && (
                 <button
@@ -1486,6 +1491,12 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           onComment={() => {
             if (onOpenComments) {
               onOpenComments();
+              return;
+            }
+            // Phones: open the post with its comments in the bottom half.
+            if (opensCommentsSplit() && !postPage && window.location.pathname !== `/app/post/${post.id}`) {
+              cacheImageForNavigation(queryClient, post);
+              navigate(`/app/post/${post.id}`, { state: { fromFeed: true, openComments: true } });
               return;
             }
             setCommentsInitialTab(undefined);

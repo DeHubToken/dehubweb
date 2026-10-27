@@ -205,16 +205,11 @@ function JobTile({ job, sending, onSend, onCancelImport, onCancel, onRetry }: Jo
         <Icon className="h-2.5 w-2.5 text-white" />
       </span>
 
-      {/* The timeline has no 3D track, so a mesh gets an explanation rather than
-          an Add button that can only fail. It stays visible in this panel
-          because this is the shared library, and it is viewable on /creator. */}
-      {job.kind === 'model3d' ? (
-        // Still a real link, not a hover-only caption: on a phone there is no
-        // hover, and by keyboard a bare thumbnail is unreachable and unlabelled.
+      {/* A mesh comes in as a short turntable video; see renderTurntable. */}
+      {job.kind === 'model3d' && job.exportFormat && !['glb', 'gltf'].includes(job.exportFormat) ? (
         <a
           href="/creator"
           title={_copy("copy.023e45b5489c", { defaultValue: "View \"{{value1}}\" on Creator", value1: job.prompt })}
-          aria-label={_copy("copy.be0c54989fce", { defaultValue: "View 3D model \"{{value1}}\" on Creator", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
             'opacity-100 sm:opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',

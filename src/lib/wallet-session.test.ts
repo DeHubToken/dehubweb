@@ -36,6 +36,16 @@ beforeEach(() => {
 });
 
 describe('wallet session fetch', () => {
+  it('signs shared-client storage mutations but leaves public downloads anonymous', async () => {
+    await setup();
+    localStorage.setItem('dehub_wallet', WALLET);
+    const storage = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/store-media/' + WALLET + '/a.png';
+    await window.fetch(storage, { method: 'POST', body: 'fixture' });
+    expect(sentHeaders().get('x-wallet-address')).toBe(WALLET);
+    expect(sentHeaders().get('x-wallet-session')).toBe(`${WALLET}.9999999999.sig`);
+    await window.fetch(storage);
+    expect(sentHeaders(1).get('x-wallet-session')).toBeNull();
+  });
   it('attaches the minted session to a wallet-scoped REST request', async () => {
     await setup();
     await window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });
@@ -59,12 +69,11 @@ describe('wallet session fetch', () => {
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 
-  it('still sends the request when a session cannot be minted', async () => {
+  it('blocks the request when a session cannot be minted', async () => {
     mocks.invoke.mockResolvedValue({ data: null, error: new Error('signed out') });
     await setup();
     await window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });
-    expect(mocks.base).toHaveBeenCalledTimes(1);
-    expect(sentHeaders().get('x-wallet-session')).toBeNull();
+    expect(mocks.base).not.toHaveBeenCalled();
   });
 
   it('ignores a session minted for a different wallet', async () => {
@@ -74,7 +83,7 @@ describe('wallet session fetch', () => {
     });
     await setup();
     await window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });
-    expect(sentHeaders().get('x-wallet-session')).toBeNull();
+    expect(mocks.base).not.toHaveBeenCalled();
   });
 
   it.each(['call_sessions', 'callback_requests', 'audio_spaces', 'space_participants', 'raise_hand_requests', 'stage_reminders'])('blocks unsigned %s requests on direct and relay routes', async (table) => {
@@ -122,9 +131,9 @@ describe('wallet session fetch', () => {
       mocks.invoke.mockReturnValue(new Promise(() => { /* never settles */ }));
       await setup();
       const sent = window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });
-      await vi.advanceTimersByTimeAsync(4000);
+      await vi.advanceTimersByTimeAsync(12000);
       await sent;
-      expect(sentHeaders().get('x-wallet-session')).toBeNull();
+      expect(mocks.base).not.toHaveBeenCalled();
       expect(mocks.warn).toHaveBeenCalledWith('Unsigned wallet request (timeout)', expect.objectContaining({ reason: 'timeout' }));
     } finally {
       vi.useRealTimers();
