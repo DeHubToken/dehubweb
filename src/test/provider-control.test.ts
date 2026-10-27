@@ -49,4 +49,3 @@ it('does not require a translation budget for other controlled callers', async (
   await controlledProviderFetch('test', 'https://provider.invalid', init);
   expect(calls.some(c => c.url.endsWith('reserve_translation_attempt'))).toBe(false);
 });
-

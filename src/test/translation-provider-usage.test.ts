@@ -28,6 +28,7 @@ let requests: string[];
 let batches: any[][];
 let pending: Promise<unknown>[];
 let provider: (url: string) => Response;
+let reserve: () => Response;
 const translated = 'Esta es una frase para nuestra comunidad.';
 const source = 'This is a sentence for our community.';
 const native = (text = translated) => new Response(JSON.stringify({
@@ -50,10 +51,12 @@ beforeEach(() => {
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'warn').mockImplementation(() => {});
   provider = url => url.includes('googleapis') ? native() : gateway();
+  reserve = () => Response.json(true);
   vi.stubGlobal('fetch', vi.fn(async (url: string, init: RequestInit) => {
     if (url.endsWith('/rpc/claim_provider_attempt')) return Response.json({ allowed: true, probe: false });
     if (url.endsWith('/rpc/finish_provider_attempt') || url.endsWith('/rpc/release_translation_work')) return new Response(null, { status: 204 });
-    if (url.endsWith('/rpc/claim_translation_work') || url.endsWith('/rpc/reserve_translation_attempt')) return Response.json(true);
+    if (url.endsWith('/rpc/claim_translation_work')) return Response.json(true);
+    if (url.endsWith('/rpc/reserve_translation_attempt')) return reserve();
     if (url.endsWith('/rpc/record_ai_provider_usage')) {
       batches.push(JSON.parse(String(init.body)).p_rows); return new Response(null, { status: 204 });
     }
@@ -63,6 +66,27 @@ beforeEach(() => {
   }));
 });
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+
+it('stops the paid fallback ladder when a later reservation is denied', async () => {
+  env.FAL_KEY = 'fixture-fal-key';
+  let remaining = 1;
+  reserve = () => Response.json(remaining-- > 0);
+  provider = () => new Response(null, { status: 503 });
+  await import('../../supabase/functions/translate-text/index');
+  const response = await hooks.handler!(request());
+  expect(response.status).toBe(503);
+  expect(await response.json()).toMatchObject({ code: 'TRANSLATION_BUDGET_EXHAUSTED' });
+  expect(requests.filter(url => !url.includes('mymemory'))).toHaveLength(1);
+  expect(requests.some(url => url.includes('fal.run') || url.includes('lovable.dev'))).toBe(false);
+});
+
+it('never calls a model when the reservation database is unavailable', async () => {
+  reserve = () => new Response(null, { status: 503 });
+  await import('../../supabase/functions/translate-text/index');
+  const response = await hooks.handler!(request());
+  expect(await response.json()).toMatchObject({ code: 'TRANSLATION_BUDGET_UNAVAILABLE' });
+  expect(requests.filter(url => !url.includes('mymemory'))).toHaveLength(0);
+});
 
 it('meters native translation and serves repeat L1/L2 hits without another provider or aggregate write', async () => {
   await import('../../supabase/functions/translate-text/index');

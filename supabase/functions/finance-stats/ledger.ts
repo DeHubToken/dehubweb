@@ -128,6 +128,7 @@ export const TOKEN_PRICES_PER_M: Record<string, { input: number; output: number;
 };
 
 export interface UsageRow {
+  provider?: string;
   day: string;
   route: string;
   served_model: string | null;
@@ -138,9 +139,12 @@ export interface UsageRow {
   usage_missing?: number;
 }
 
+export function cloudflareUsage(row: UsageRow): boolean {
+  return (row.provider ?? '').startsWith('cloudflare') || (row.requested_model ?? '').startsWith('@cf/') || (row.served_model ?? '').startsWith('@cf/');
+}
+
 /** List-price subtotal for reported tokens; null means unknown, never zero. */
 export function usageCostUsd(row: UsageRow): number | null {
-
   const raw = (row.served_model || row.requested_model || '').toLowerCase();
   const model = raw.includes('/') ? raw.slice(raw.lastIndexOf('/') + 1) : raw;
   const price = TOKEN_PRICES_PER_M[model];

@@ -6,6 +6,7 @@ import {
   spreadFixedCost,
   spreadMonthAmount,
   usageCostUsd,
+  cloudflareUsage,
 } from '../../supabase/functions/finance-stats/ledger';
 import { quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
 
@@ -69,6 +70,8 @@ describe('finance ledger', () => {
   it('prices metered Cloudflare and Gemini 3.1 tokens even on quota routes', () => {
     const base = { day: '2026-10-27', attempts: 1, requested_model: null, route: 'free', input_tokens: 1e6, output_tokens: 1e6 };
     expect(usageCostUsd({ ...base, served_model: '@cf/meta/llama-3.1-8b-instruct-fp8' })).toBeCloseTo(0.439);
+    expect(cloudflareUsage({ ...base, provider: 'cloudflare/llama-3.1-8b', served_model: 'llama-3.1-8b-instruct-fp8' })).toBe(true);
+    expect(cloudflareUsage({ ...base, served_model: 'google/gemini-3.1-flash-lite' })).toBe(false);
     expect(usageCostUsd({ ...base, served_model: 'google/gemini-3.1-flash-lite' })).toBeCloseTo(1.75);
   });
 
