@@ -176,6 +176,11 @@ export function useCommunityChat(
           filter: `community_id=eq.${communityId}`,
         },
         (payload) => {
+          const currentPin = queryClient.getQueryData<CommunityChatHistory<CommunityChatMessage>>(messagesKey)?.pages[0]?.pinned_message?.id;
+          if ((payload.eventType === 'UPDATE' && (payload.new.pinned_at || payload.new.id === currentPin))
+            || (payload.eventType === 'DELETE' && payload.old.id === currentPin)) {
+            void queryClient.invalidateQueries({ queryKey: messagesKey });
+          }
           if (payload.eventType === 'INSERT' && !history.isHistoryWindow) {
             updateCommunityChatCache<CommunityChatMessage>(queryClient,
               messagesKey,
@@ -253,6 +258,7 @@ export function useCommunityChat(
           ? old : [...old, inserted as CommunityChatMessage]);
     }
     void queryClient.invalidateQueries({ queryKey: messagesKey });
+    if (history.isHistoryWindow) void history.showLatest().catch(() => {});
 
     // Mentions are notified after the message is safely stored, and a failure
     // here never surfaces as a send failure: the message is already posted and
@@ -267,7 +273,7 @@ export function useCommunityChat(
         walletAddress,
       });
     }
-  }, [communityId, walletAddress, queryClient, messagesKey, history.isHistoryWindow]);
+  }, [communityId, walletAddress, queryClient, messagesKey, history.isHistoryWindow, history.showLatest]);
 
   // Add reaction
   const addReaction = useCallback(async (messageId: string, emoji: string) => {
