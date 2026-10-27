@@ -43,6 +43,19 @@
   transition: box-shadow 0.4s ease;
 }
 
+/* Holds the metal layers and clips them to the wobbling outline. Safari
+   leaves moving layers (sheen, streak) unclipped by overflow alone, so the
+   ball showed as a square; the fully opaque mask makes WebKit clip them.
+   It sits inside the blob so the mask does not cut off the drop shadow. */
+.liquid-orb__clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  isolation: isolate;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
 /* The reflection: chrome mirrors a horizon, bright sky over a dark band.
    It sways with the liquid, so the line bends as the ball moves. */
 .liquid-orb__sheen {

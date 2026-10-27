@@ -231,67 +231,69 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
   border-radius: inherit;
 }
 
-/* The new-posts chip: a small glass capsule floating under the phone nav, in
-   the nav's own material for each theme. Its slot clips at the nav's bottom
-   edge, so when the nav hides the chip slips up behind it first (quick, ease
-   in), and when the nav comes back the chip waits a beat, then drops back out
-   with a little overshoot. */
+/* The new-posts drawer pulls out from under the phone nav pill, in the
+   pill's own tint. Its slot clips at the pill's bottom edge and the drawer's
+   top runs up under it, so the pill's border is untouched and nothing shows
+   between the two; the pill casts a soft shade onto the drawer's top instead
+   of a line. When the nav hides the drawer slides back under it first (quick,
+   ease in); when the nav returns it waits a beat, then pulls back out. */
 [data-feed-new-posts-slot='bar'] { clip-path: inset(0 -48px -48px -48px); }
 [data-feed-new-posts-slot='island'] { clip-path: inset(2.75rem -48px -48px -48px); }
 [data-feed-new-posts-chip] {
   --chip-ink: #fff;
   --chip-face-ring: rgb(var(--glass-tint, 9 9 11));
+  --chip-shade: rgb(0 0 0 / 0.45);
   color: var(--chip-ink);
-  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s, opacity 0.2s ease-out 0.2s, filter 0.12s;
+  transition: transform 0.36s cubic-bezier(0.2, 0.9, 0.3, 1.08) 0.2s, filter 0.12s;
 }
-[data-feed-new-posts-chip]:active { filter: brightness(1.25); }
+[data-feed-new-posts-chip]:active { filter: brightness(1.2); }
 html[data-nav-hidden='true'] [data-feed-new-posts-chip] {
-  transform: translateY(calc(-100% - 0.75rem)) scale(0.85);
-  opacity: 0;
+  transform: translateY(-100%);
   pointer-events: none;
-  transition: transform 0.17s cubic-bezier(0.5, 0, 0.75, 0), opacity 0.17s ease-in, filter 0.12s;
+  transition: transform 0.17s cubic-bezier(0.5, 0, 0.75, 0), filter 0.12s;
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-feed-new-posts-chip], html[data-nav-hidden='true'] [data-feed-new-posts-chip] { transition: opacity 0.15s; transform: none; }
+  [data-feed-new-posts-chip], html[data-nav-hidden='true'] [data-feed-new-posts-chip] { transition: none; }
 }
 html[data-theme] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
-  border-radius: 999px;
+  border-radius: 0 0 14px 14px;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.04)),
-    var(--nav-glass, rgb(20 20 24 / 0.5)),
-    rgb(var(--glass-tint, 9 9 11) / 0.35);
-  backdrop-filter: var(--nav-glass-blur, blur(18px) saturate(1.7));
-  -webkit-backdrop-filter: var(--nav-glass-blur, blur(18px) saturate(1.7));
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.32), inset 0 0 0 1px rgb(255 255 255 / 0.14), 0 8px 22px -8px rgb(0 0 0 / 0.55);
-  border: 0;
+    linear-gradient(180deg, var(--chip-shade), transparent 14px) 0 12px / 100% 100% no-repeat,
+    linear-gradient(var(--nav-glass, transparent), var(--nav-glass, transparent)),
+    rgb(var(--glass-tint, 9 9 11) / 0.94);
+  backdrop-filter: none;
+  border: 1px solid rgb(255 255 255 / 0.16);
+  border-top: 0;
+  box-shadow: 0 10px 22px -12px rgb(0 0 0 / 0.6);
 }
 [data-feed-new-posts-face] { box-shadow: 0 0 0 1.5px var(--chip-face-ring); }
 [data-feed-new-posts-face],
 [data-feed-new-posts-face] > [data-avatar-fallback] {
   background-color: var(--chip-face-ring);
 }
-/* Light and System Light: white frost, dark ink. */
+/* Light and System Light: near-white, dark ink, a lighter shade. */
 html:is([data-theme='light'], [data-system-tone='light']) [data-feed-new-posts-chip] {
   --chip-ink: #0b0b0d;
   --chip-face-ring: #fff;
+  --chip-shade: rgb(0 0 0 / 0.1);
 }
 html[data-theme]:is([data-theme='light'], [data-system-tone='light']) [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
-  background: rgb(255 255 255 / 0.72);
-  backdrop-filter: blur(22px) saturate(1.8);
-  -webkit-backdrop-filter: blur(22px) saturate(1.8);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 8px 22px -10px rgb(0 0 0 / 0.3);
+  background:
+    linear-gradient(180deg, var(--chip-shade), transparent 12px) 0 12px / 100% 100% no-repeat,
+    rgb(250 250 252 / 0.97);
+  border-color: rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 22px -14px rgb(0 0 0 / 0.3);
 }
-/* Minimal: flat black, white hairline, square. */
-html[data-theme='minimal'] [data-feed-new-posts-chip] { --chip-face-ring: #000; }
+/* Minimal: flat black, its white hairline, square. */
+html[data-theme='minimal'] [data-feed-new-posts-chip] { --chip-face-ring: #000; --chip-shade: transparent; }
 html[data-theme='minimal'] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
   border-radius: 0;
   background: #000;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.69);
+  border-color: rgb(255 255 255 / 0.69);
+  box-shadow: none;
 }
 html[data-theme='war'] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
-  box-shadow: inset 0 0 0 1px rgb(79 227 224 / 0.35), 0 8px 22px -8px rgb(0 0 0 / 0.55);
+  border-color: rgb(79 227 224 / 0.35);
 }
 
 /* Bentos: page bentos, side panels and post cards on every canvas theme. Only

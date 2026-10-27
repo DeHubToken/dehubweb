@@ -96,6 +96,7 @@ const Dapp = () => {
   const tocItems: Array<{ id: string; label: string }> = [
     { id: 'getting-started', label: t('dapp.tocIntro') },
     { id: 'accounts', label: t('dapp.tocAccounts') },
+    { id: 'post-controls', label: t('dapp.tocPostControls') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -375,7 +376,25 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="feeds" className="scroll-mt-32">
+                <GuideSection
+          id="post-controls"
+          title="dapp.postControlsTitle"
+          paras={['dapp.postControlsDesc']}
+          bullets={[
+            ['dapp.postControlsB1', 'dapp.postControlsB1Desc'],
+            ['dapp.postControlsB2', 'dapp.postControlsB2Desc'],
+            ['dapp.postControlsB3', 'dapp.postControlsB3Desc'],
+            ['dapp.postControlsB4', 'dapp.postControlsB4Desc'],
+            ['dapp.postControlsB5', 'dapp.postControlsB5Desc'],
+            ['dapp.postControlsB6', 'dapp.postControlsB6Desc'],
+            ['dapp.postControlsB7', 'dapp.postControlsB7Desc'],
+            ['dapp.postControlsB8', 'dapp.postControlsB8Desc'],
+            ['dapp.postControlsB9', 'dapp.postControlsB9Desc'],
+            ['dapp.postControlsB10', 'dapp.postControlsB10Desc']
+          ]}
+        />
+
+<section id="feeds" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc2')}</p>
