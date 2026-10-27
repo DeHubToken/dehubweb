@@ -17,6 +17,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInvitePreview, useJoinViaInvite } from '@/hooks/use-community-admin';
 import { storageImage, deviceWidth } from '@/lib/media-url';
+import { DescriptionWithLinks } from '@/components/app/communities/DescriptionWithLinks';
 
 export default function CommunityInvitePage() {
   const { t: _copy } = _useCopy();
@@ -164,7 +165,7 @@ export default function CommunityInvitePage() {
           </div>
 
           {preview.description && (
-            <p className="text-zinc-400 text-sm whitespace-pre-wrap break-words">{preview.description}</p>
+            <DescriptionWithLinks text={preview.description} className="text-zinc-400" />
           )}
 
           <Button
