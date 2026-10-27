@@ -53,6 +53,7 @@ import { SORT_OPTIONS, DEFAULT_FEED_SORT, SHORTS_RESET_SORT, DATE_FILTER_OPTIONS
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
 // CONSTANTS
@@ -349,10 +350,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
   }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, beginFilterTransition]);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 1000 * 60 * 30,
     retry: 2,
     enabled: showFilters,

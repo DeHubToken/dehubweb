@@ -55,6 +55,7 @@ import { LIVE_GAMES } from '@/constants/live-games';
 import { FEED_TOGGLES_RELOAD_EVENT } from '@/lib/feed-defaults';
 import { resolveViewCount } from '@/lib/engagement';
 import { toStoryboard } from '@/lib/storyboard';
+import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
 // TYPES
@@ -523,10 +524,14 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
     resetContentFilters();
   }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
+  // Topics picked while signing up go first in every category bar.
+  const feedInterests = useFeedInterests();
+  const putInterestsFirst = useCallback((list: DeHubCategory[]) => orderByInterests(list, feedInterests), [feedInterests]);
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
     queryKey: ['dehub-categories'],
     queryFn: getCategories,
+    select: putInterestsFirst,
     staleTime: 1000 * 60 * 30,
     retry: 2,
     enabled: showFilters,
