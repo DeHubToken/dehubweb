@@ -992,6 +992,7 @@ export function ActionBar({
       {onTip ? (
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}
+          data-tipped={viewerTipped || tipBurst > 0 ? '' : undefined}
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
@@ -1221,7 +1222,11 @@ export function ActionBar({
   }
 
   return (
-    <div className={cn(
+    <div
+      // Idle buttons take the view counter's grey (post-meta-grey.css). Not
+      // in the fullscreen viewer, where the row sits over the picture.
+      data-feed-actions={quickRepost ? undefined : ''}
+      className={cn(
       "p-3",
       showBorder && "border-t border-zinc-800",
       className

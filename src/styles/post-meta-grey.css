@@ -1,0 +1,22 @@
+/* One quiet grey for the strip under a post: time, views, "Show original"
+   and the idle action buttons (tip, share, comments, like, save, info) all
+   share it, in every theme. System had it for the metadata row only
+   (system-immersive.css); everywhere else the muted-text lift turned the
+   row and the buttons white. Engaged buttons (liked, reposted, saved,
+   pinned, tipped) keep their own colour, and hover still lights a button. */
+html {
+  --post-meta-grey: #a1a1aa; /* 7.8:1 on black */
+}
+html:is([data-theme='light'], [data-system-tone='light']) {
+  --post-meta-grey: #71717a; /* 4.8:1 on white */
+}
+
+html:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)),
+html:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*='bg-']), button:not(.text-red-400)) * {
+  color: var(--post-meta-grey) !important;
+}
+
+html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], [data-tipped], :hover),
+html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], [data-tipped], :hover) > :is(svg, span) {
+  color: var(--post-meta-grey) !important;
+}
