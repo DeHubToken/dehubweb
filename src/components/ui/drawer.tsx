@@ -319,8 +319,11 @@ const DrawerContent = React.forwardRef<
            every class instead, which is how this started overriding the height
            each sheet was designed at: share, save-to-folder, the mobile menu and
            the delete/report dialogs all ask for half or three-quarters of the
-           screen, and all of them grew to fill it. */
-        "max-h-[calc(100dvh_-_env(safe-area-inset-top))]",
+           screen, and all of them grew to fill it.
+
+           The cap stops short of the full height: a sheet that reached the top
+           left no backdrop to tap, and once scrolled, no way to drag it shut. */
+        "max-h-[calc(92dvh_-_env(safe-area-inset-top))]",
         glass
           ? "bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl"
           : "border bg-background",
