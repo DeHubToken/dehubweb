@@ -2554,7 +2554,13 @@
     "continueAs": "Şu hesapla devam et",
     "switchWalletAccount": "Hesap değiştir",
     "walletLoadFailed": "Cüzdanlar yüklenemedi. Lütfen tekrar deneyin.",
-    "migrateWrongLogin": "Bu oturum açma farklı bir cüzdan açtı, bu yüzden hiçbir şey değişmedi. Eski profiliniz {{login}} ile oluşturuldu. Geri getirmek için onu kullanın."
+    "migrateWrongLogin": "Bu oturum açma farklı bir cüzdan açtı, bu yüzden hiçbir şey değişmedi. Eski profiliniz {{login}} ile oluşturuldu. Geri getirmek için onu kullanın.",
+    "googleInAppTitle": "Google, {{app}} içinde oturum açmaya izin vermiyor",
+    "googleInAppTitleUnnamed": "Google bu uygulama içinde oturum açmaya izin vermiyor",
+    "googleInAppBody": "Google'ı kullanmak için DeHub'ı tarayıcınızda açın veya burada e-postayla oturum açın.",
+    "openInBrowser": "Tarayıcıda aç",
+    "copyLink": "Bağlantıyı kopyala",
+    "tryAnyway": "Yine de dene"
   },
   "careers": {
     "title": "DeHub'da Kariyer",
