@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { PageBody, PageIsland, PageSection, PageEmpty, KitButton } from '@/components/app/page-kit/PageKit';
 import { Input } from '@/components/ui/input';
-import { CATEGORIES, FEATURES, PLATFORMS, REVIEWED_ON, SOURCES, STATUS_LABELS, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
+import { CATEGORIES, FEATURES, PLATFORMS, REVIEWED_ON, SOURCES, STATUS_LABELS, comparisonCoverage, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
 
 const PAGE_SIZE = 20;
 export default function ComparePage() {
@@ -18,6 +18,7 @@ export default function ComparePage() {
   const [visible, setVisible] = useState(PAGE_SIZE);
   const filtered = useMemo(() => filterFeatures(query, category), [query, category]);
   const peers = PLATFORMS.filter(p => platform === 'all' || p.id === platform);
+  const coverage = comparisonCoverage(platform);
   const update = (key: string, value: string) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value); else next.delete(key);
@@ -33,6 +34,7 @@ export default function ComparePage() {
       <p className="text-sm leading-relaxed text-muted-foreground">{entry.note}</p>
       {restricted && <p className="text-xs leading-relaxed text-muted-foreground">{copy('ios', 'Purchase and reward actions are unavailable in the iOS app.')}</p>}
       {entry.source && SOURCES[entry.source] && <a className="inline-block text-xs underline underline-offset-4 hover:text-foreground" href={SOURCES[entry.source].url} target="_blank" rel="noopener noreferrer">{SOURCES[entry.source].title}</a>}
+      {entry.relatedSources?.map(source => SOURCES[source] && <a key={source} className="block text-xs underline underline-offset-4 hover:text-foreground" href={SOURCES[source].url} target="_blank" rel="noopener noreferrer">{SOURCES[source].title}</a>)}
     </div>
   );
   return (
@@ -66,13 +68,15 @@ export default function ComparePage() {
           <details className="mt-5 text-sm text-muted-foreground">
             <summary className="cursor-pointer font-medium text-foreground">{copy('method', 'How to read this comparison')}</summary>
             <div className="mt-3 space-y-3 leading-relaxed">
-              <p>{copy('methodBody', 'Documented means described by the linked first-party source. Conditional means eligibility, device, region or a narrower feature applies. Related product means a companion app, integration or ecosystem implementation. Not verified is an open research item, never a claim that a feature is absent.')}</p>
+              <p>{copy('methodBody', 'Documented means described by linked first-party documentation or implementation. Conditional means eligibility, device, region or a narrower feature applies. Related product means a companion app, integration or ecosystem implementation. Not verified is an open research item, never a claim that a feature is absent.')}</p>
               <p>{copy('scope', 'This is a growing catalogue of DeHub capabilities, not a score or an exhaustive audit of every competitor. Platform documentation can lag product changes. Older sources establish a feature, not its current price or limits.')}</p>
               <p>{copy('parity', 'DeHub web, Android and iOS capabilities differ. The iOS app does not offer crypto purchases or reward actions. Device-specific notes remain beside the relevant features. Documentation is not a guarantee of availability or earnings.')}</p>
+              <p>{copy('auditLimit', 'DeHub coverage includes product documentation, web routes, native screens, settings and editor tools. Code references identify the reviewed revisions. Every feature has not been exercised in production or on every device, and competitor research is incomplete. Counts describe catalogue entries, not unique advantages or a feature score.')}</p>
               <a href="/feedback" className="inline-block underline underline-offset-4">{copy('correction', 'Suggest a correction')}</a>
             </div>
           </details>
         </PageSection>
+        <p className="px-4 text-xs leading-relaxed text-muted-foreground">{coverage.verified} / {coverage.total} {copy('coverage', 'competitor entries have source evidence. Remaining entries need verification.')}</p>
         <p role="status" className="px-4 text-sm text-muted-foreground">{filtered.length} {copy('matching', 'matching features')}</p>
         {filtered.slice(0, visible).map(feature => <PageSection key={feature.id}>
           <div id={feature.id} className="scroll-mt-36">
