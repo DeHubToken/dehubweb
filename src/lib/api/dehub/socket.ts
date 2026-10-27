@@ -39,11 +39,10 @@ export function getSocket(roomId?: string): Socket {
   const key = keyOf(roomId);
   const token = getAuthToken();
 
-  // A token change re-authenticates every room, not just the one asked for.
   if (currentToken !== token) {
-    for (const s of sockets.values()) s.disconnect();
-    sockets.clear();
+    const prev = currentToken;
     currentToken = token;
+    rekeySockets(prev, token);
   }
 
   const existing = sockets.get(key);
@@ -59,7 +58,10 @@ export function getSocket(roomId?: string): Socket {
     reconnection: true,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    reconnectionAttempts: 20,
+    // Never give up. A chat that stopped after twenty tries stayed dead until
+    // the tab was hidden and shown again, which on a streamer's always-open
+    // page is never: viewers' lines simply stopped arriving.
+    reconnectionAttempts: Infinity,
     timeout: 20000,
   });
 
@@ -75,6 +77,10 @@ export function getSocket(roomId?: string): Socket {
 
   socket.on('disconnect', (reason) => {
     console.log('[LiveChat Socket] Disconnected:', key, reason);
+    // The server closing us is the one drop Socket.IO does not retry by itself.
+    if (reason === 'io server disconnect') {
+      setTimeout(() => { if (sockets.get(key) === socket && !socket.connected) socket.connect(); }, 2000);
+    }
   });
 
   socket.on('connect_error', (err) => {
@@ -94,6 +100,41 @@ export function getSocket(roomId?: string): Socket {
   socket.on('livechat:error', errorHandler);
 
   return socket;
+}
+
+/** The wallet a JWT was issued to, or '' when it cannot be read. */
+function tokenAddress(token: string | null): string {
+  if (!token) return '';
+  try {
+    const part = token.split('.')[1] || '';
+    const json = JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')));
+    return String(json?.address || json?.sub || '').toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Carry every open connection over to a new token, in place.
+ *
+ * The access token rotates every fifteen minutes. Each rotation used to
+ * disconnect and drop every room's connection, while the chats on screen kept
+ * their listeners on the old, now closed, ones: a stream's chat went silent a
+ * quarter of an hour in and stayed that way until something remounted it.
+ *
+ * The same person's fresh token only has to be used on the next handshake, so
+ * the connection is left alone. A different person (sign in, sign out, profile
+ * switch) reconnects the SAME socket under the new identity, so every listener
+ * stays attached and the room is re-joined on connect.
+ */
+function rekeySockets(prev: string | null, next: string | null) {
+  const sameUser = !!prev && !!next && tokenAddress(prev) !== '' && tokenAddress(prev) === tokenAddress(next);
+  for (const s of sockets.values()) {
+    s.auth = next ? { token: next } : {};
+    s.io.opts.query = next ? { token: next } : {};
+    if (sameUser) continue;
+    if (s.connected) s.io.engine?.close();
+  }
 }
 
 // Support both legacy and namespaced event names — the backend listens on both.
