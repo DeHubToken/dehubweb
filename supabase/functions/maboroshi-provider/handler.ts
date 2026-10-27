@@ -4,6 +4,16 @@ const KLING = 'https://queue.fal.run/fal-ai/kling-video/o3/pro/video-to-video/ed
 const REPLICATE = 'https://api.replicate.com/v1';
 const AUDIO_VERSION = '25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953';
 const MASK_VERSION = '408f82fc20c300aac5d61d2e34ddb34cd0181e810e9f609d250aed14d5f81269';
+const KIE = 'https://api.kie.ai/api/v1/jobs';
+// One-pass recasts on kie, which bills about 35% under fal for the same
+// Seedance 2.5 render. Both take the source as a reference video, are billed on
+// input plus output seconds, and are rendered at 720p.
+const KIE_MODELS: Record<string, (p: Json, duration: number) => {model: string; input: Json}> = {
+  seedance: (p, duration) => ({model: 'bytedance/seedance-2-5', input: {prompt: p.prompt, reference_video_urls: [p.video_url],
+    reference_image_urls: p.image_urls, resolution: '720p', aspect_ratio: 'adaptive', duration, generate_audio: false}}),
+  wan: (p, duration) => ({model: 'wan/3-0-video', input: {prompt: p.prompt, reference_video_urls: [p.video_url],
+    reference_image_urls: p.image_urls, resolution: '720P', aspect_ratio: 'adaptive', duration, audio: false}}),
+};
 type Env = (name: string) => string | undefined;
 type Json = Record<string, any>;
 
@@ -38,6 +48,12 @@ function identifier(value: unknown): string {
   return id;
 }
 
+function kieTask(value: unknown): string {
+  const id = text(value, 100);
+  if (!/^[a-zA-Z0-9_-]+$/.test(id)) throw new Error('Invalid request ID');
+  return id;
+}
+
 export async function authorized(supplied: string, expected: string): Promise<boolean> {
   if (expected.length < 20 || !supplied || supplied.length > 4096) return false;
   const digest = async (s: string) => new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
@@ -67,18 +83,39 @@ export function createHandler(env: Env, fetcher: typeof fetch = fetch, payment?:
     }
     const replicateKey = env('REPLICATE_API_KEY');
     const falKey = env('FAL_KEY');
+    const kieKey = env('KIE_API_KEY');
     if (body.operation === 'health') return reply({ready: Boolean(replicateKey && falKey)});
     if (!replicateKey || !falKey) return reply({error: 'Processing unavailable'}, 503);
-    const request = async (url: string, provider: 'replicate' | 'fal', payload?: Json): Promise<Json> => {
+    const request = async (url: string, provider: 'replicate' | 'fal' | 'kie', payload?: Json): Promise<Json> => {
       const response = await fetcher(url, {
         method: payload ? 'POST' : 'GET', redirect: 'error', signal: AbortSignal.timeout(60000),
-        headers: {'Authorization': provider === 'fal' ? `Key ${falKey}` : `Bearer ${replicateKey}`, 'Content-Type': 'application/json'},
+        headers: {'Authorization': provider === 'fal' ? `Key ${falKey}` : `Bearer ${provider === 'kie' ? kieKey : replicateKey}`, 'Content-Type': 'application/json'},
         ...(payload ? {body: JSON.stringify(payload)} : {}),
       });
       if (!response.ok) throw new Error('Provider unavailable');
       return await response.json();
     };
     try {
+      if (body.operation === 'kie') {
+        const p = body.input;
+        const build = KIE_MODELS[body.model];
+        if (!kieKey) return reply({error: 'Processing unavailable'}, 503);
+        if (!build || !p || !Array.isArray(p.image_urls) || p.image_urls.length < 1 || p.image_urls.length > 2
+            || !Number.isSafeInteger(p.duration) || p.duration < (body.model === 'wan' ? 2 : 4) || p.duration > 15) return reply({error: 'Invalid render'}, 400);
+        const task = build({prompt: text(p.prompt, 8000), video_url: media(p.video_url), image_urls: p.image_urls.map(media)}, p.duration);
+        const result = await request(`${KIE}/createTask`, 'kie', task);
+        if (result.code !== 200) throw new Error('Provider rejected');
+        return reply({requestId: kieTask(result.data?.taskId), provider: 'kie'});
+      }
+      if (body.operation === 'kie_status') {
+        if (!kieKey) return reply({error: 'Processing unavailable'}, 503);
+        const result = await request(`${KIE}/recordInfo?taskId=${kieTask(body.request_id)}`, 'kie');
+        const state = result.data?.state;
+        if (state === 'fail') return reply({status: 'FAILED'});
+        if (state !== 'success') return reply({status: 'IN_PROGRESS'});
+        const url = JSON.parse(result.data.resultJson || '{}').resultUrls?.[0];
+        return reply(typeof url === 'string' && url.startsWith('https://') ? {status: 'COMPLETED', result: url} : {status: 'FAILED'});
+      }
       if (body.operation === 'kling') {
         const p = body.input;
         if (!p || !Array.isArray(p.image_urls) || p.image_urls.length < 1 || p.image_urls.length > 2) return reply({error: 'Invalid Kling references'}, 400);
