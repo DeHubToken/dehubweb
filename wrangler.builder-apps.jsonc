@@ -1,0 +1,17 @@
+{
+  "name": "dehub-builder-apps",
+  "main": "./workers/builder-apps/index.js",
+  "compatibility_date": "2026-07-18",
+  // Every DeHub Builder app on its own origin: https://<slug>.dehub.app.
+  // dehub.app is a separate registrable domain from dehub.io on purpose — the
+  // apps run AI-written code and must never share cookies, storage or link
+  // trust with the main site.
+  //
+  // A route, not a custom domain (custom domains cannot be wildcards). It needs
+  // the proxied wildcard DNS record `*.dehub.app`, which the deploy workflow
+  // ensures. The apex keeps serving the APK download page; www passes through.
+  "routes": [
+    { "pattern": "*.dehub.app/*", "zone_name": "dehub.app" }
+  ],
+  "workers_dev": false
+}
