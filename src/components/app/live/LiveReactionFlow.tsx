@@ -84,6 +84,8 @@ function ReactionParticleView({ item, lane, still }: { item: ReactionParticle; l
   return <motion.span data-live-reaction={item.type}
     className="absolute bottom-0 leading-none will-change-transform"
     style={{ right: reactionColumn(seed), fontSize: size, x, y, rotate, scale, opacity,
-      filter: 'drop-shadow(0 2px 6px rgba(0,0,0,.45))' }}
+      // text-shadow, not a drop-shadow filter: a filter on a moving glyph is
+      // an offscreen repaint every frame in Safari, over a playing video.
+      textShadow: '0 2px 6px rgba(0,0,0,.45)' }}
   >{LIVE_REACTION_EMOJI[item.type]}</motion.span>;
 }

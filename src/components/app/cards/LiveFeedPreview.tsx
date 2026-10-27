@@ -29,6 +29,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { nativeLiveEdge, watchLiveProgress } from '@/lib/live/stall-watchdog';
 import { useFeedPlaybackAllowed, useLivePlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
@@ -251,6 +252,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
     const el = videoRef.current;
     if (transport !== 'hls' || !el || !src || !visible || postOpen || failed) return;
     let cancelled = false;
+    let stopWatch: (() => void) | undefined;
     setLoading(true);
 
     const attach = async () => {
@@ -261,6 +263,17 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
       // browser without Opus is handed — plays natively like Livepeer's.
       if ((!selfHosted || isAacCopyUrl(src)) && el.canPlayType('application/vnd.apple.mpegurl')) {
         el.src = src;
+        // Safari's native HLS never recovers a stalled live playlist on its
+        // own: jump to the live edge, then reload, instead of a frozen tile.
+        stopWatch = watchLiveProgress(el, {
+          stallMs: 8000,
+          onStall: (count) => {
+            const edge = count === 1 ? nativeLiveEdge(el) : null;
+            if (edge != null && edge > el.currentTime + 1) el.currentTime = edge;
+            else { el.src = src; el.load(); }
+            void el.play().catch(() => undefined);
+          },
+        });
       } else {
         const { default: HlsCtor } = await import('hls.js');
         if (cancelled || !HlsCtor.isSupported()) {
@@ -295,6 +308,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
     return () => {
       cancelled = true;
+      stopWatch?.();
       const hls = hlsRef.current;
       hlsRef.current = null;
       releaseAfterPictureInPicture(el, () => {

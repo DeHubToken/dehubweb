@@ -195,13 +195,6 @@ export function ImmersiveLiveChrome({
     return Number.isFinite(ms) ? ms : null;
   }, [startedAt]);
   const running = isLive && !isEnded && startedMs != null;
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    if (!running) return;
-    setNow(Date.now());
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, [running]);
 
 
   const [audienceOpen, setAudienceOpen] = useState(false);
@@ -372,7 +365,7 @@ export function ImmersiveLiveChrome({
               {t('stages.live', 'LIVE')}
             </span>
             {running && startedMs != null ? (
-              <span className="text-[11px] font-semibold text-white/90">{elapsedLabel(now - startedMs)}</span>
+              <LiveElapsed startedMs={startedMs} />
             ) : null}
           </span>
         ) : null}
@@ -466,3 +459,17 @@ export function ImmersiveLiveChrome({
 }
 
 export default ImmersiveLiveChrome;
+
+/**
+ * The running clock in the LIVE tag. Its own component so the once-a-second
+ * tick re-renders one span, not the whole chrome over a playing video.
+ */
+function LiveElapsed({ startedMs }: { startedMs: number }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    setNow(Date.now());
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [startedMs]);
+  return <span className="text-[11px] font-semibold text-white/90">{elapsedLabel(now - startedMs)}</span>;
+}
