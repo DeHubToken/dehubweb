@@ -2553,7 +2553,8 @@
     "resendCodePhone": "¿Número incorrecto o no recibiste el código? Volver",
     "continueAs": "Continuar como",
     "switchWalletAccount": "Cambiar de cuenta",
-    "walletLoadFailed": "No se pudieron cargar las carteras. Por favor, inténtalo de nuevo."
+    "walletLoadFailed": "No se pudieron cargar las carteras. Por favor, inténtalo de nuevo.",
+    "migrateWrongLogin": "Ese inicio de sesión abrió otra billetera, así que no cambió nada. Tu perfil anterior se creó con {{login}}. Úsalo para recuperarlo."
   },
   "careers": {
     "title": "Carreras en DeHub",
@@ -15135,7 +15136,7 @@
     "9e9ae626652a": "Letras, números, guiones y guiones bajos. Hasta 30 caracteres.",
     "dc85af8f2b1d": "Guardando...",
     "08b6a3efc2b5": "Phantom",
-    "2ef54eee0edd": "Billetera Trust",
+    "2ef54eee0edd": "Trust Wallet",
     "bcbaa814d3ca": "Menciona a un usuario",
     "8f1aa08d3a21": "Escribe para buscar usuarios",
     "3457098e7042": "Te sigue",
@@ -16419,7 +16420,7 @@
     "b98adf20f5f3": "Cartera — Gestiona tus Activos Cripto",
     "00787feeb046": "Mira saldos, envía y recibe tokens, y gestiona tus activos cripto en múltiples cadenas en DeHub.",
     "112e22b0fd15": "Cartera DeHub — Redes Sociales Descentralizadas, Resistente a la Censura y Libertad de Expresión",
-    "5dc85dbc155e": "Cadena BNB",
+    "5dc85dbc155e": "BNB Chain",
     "6b8a9141538a": "En staking",
     "228fc4afbce4": "Sorteo (bloqueado)",
     "911c67ed8f19": "Compra vía Coinbase — Visa, Mastercard, Apple Pay",
