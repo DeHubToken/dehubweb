@@ -2558,7 +2558,13 @@
     "continueAs": "Continuer en tant que",
     "switchWalletAccount": "Changer de compte",
     "walletLoadFailed": "Impossible de charger les portefeuilles. Veuillez réessayer.",
-    "migrateWrongLogin": "Cette connexion a ouvert un autre portefeuille, donc rien n'a changé. Votre ancien profil a été créé avec {{login}}. Utilisez-le pour le récupérer."
+    "migrateWrongLogin": "Cette connexion a ouvert un autre portefeuille, donc rien n'a changé. Votre ancien profil a été créé avec {{login}}. Utilisez-le pour le récupérer.",
+    "googleInAppTitle": "Google ne permet pas de se connecter dans {{app}}",
+    "googleInAppTitleUnnamed": "Google ne permet pas de se connecter dans cette app",
+    "googleInAppBody": "Ouvrez DeHub dans votre navigateur pour utiliser Google, ou connectez-vous par e-mail ici.",
+    "openInBrowser": "Ouvrir dans le navigateur",
+    "copyLink": "Copier le lien",
+    "tryAnyway": "Essayer quand même"
   },
   "careers": {
     "title": "Carrières chez DeHub",

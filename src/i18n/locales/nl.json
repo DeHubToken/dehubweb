@@ -2744,7 +2744,13 @@
     "continueAs": "Doorgaan als",
     "switchWalletAccount": "Account wisselen",
     "walletLoadFailed": "Kon portemonnees niet laden. Probeer het opnieuw.",
-    "migrateWrongLogin": "Die aanmelding opende een andere wallet, dus er is niets veranderd. Je oude profiel is gemaakt met {{login}}. Gebruik die om het terug te halen."
+    "migrateWrongLogin": "Die aanmelding opende een andere wallet, dus er is niets veranderd. Je oude profiel is gemaakt met {{login}}. Gebruik die om het terug te halen.",
+    "googleInAppTitle": "Google laat je niet inloggen in {{app}}",
+    "googleInAppTitleUnnamed": "Google laat je niet inloggen in deze app",
+    "googleInAppBody": "Open DeHub in je browser om Google te gebruiken, of log hier in met e-mail.",
+    "openInBrowser": "Openen in browser",
+    "copyLink": "Link kopiëren",
+    "tryAnyway": "Toch proberen"
   },
   "careers": {
     "title": "Vacatures bij DeHub",

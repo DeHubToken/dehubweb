@@ -2554,7 +2554,13 @@
     "continueAs": "Continuar como",
     "switchWalletAccount": "Cambiar de cuenta",
     "walletLoadFailed": "No se pudieron cargar las carteras. Por favor, inténtalo de nuevo.",
-    "migrateWrongLogin": "Ese inicio de sesión abrió otra billetera, así que no cambió nada. Tu perfil anterior se creó con {{login}}. Úsalo para recuperarlo."
+    "migrateWrongLogin": "Ese inicio de sesión abrió otra billetera, así que no cambió nada. Tu perfil anterior se creó con {{login}}. Úsalo para recuperarlo.",
+    "googleInAppTitle": "Google no permite iniciar sesión dentro de {{app}}",
+    "googleInAppTitleUnnamed": "Google no permite iniciar sesión dentro de esta app",
+    "googleInAppBody": "Abre DeHub en tu navegador para usar Google, o inicia sesión con tu correo aquí.",
+    "openInBrowser": "Abrir en el navegador",
+    "copyLink": "Copiar enlace",
+    "tryAnyway": "Intentar de todos modos"
   },
   "careers": {
     "title": "Carreras en DeHub",
