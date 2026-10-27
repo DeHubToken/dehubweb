@@ -1,15 +1,19 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { NewPostAuthor } from '@/hooks/use-unified-feed';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const FACE = 22;
 const FACE_OVERLAP = 7;
+/** How far the drawer's top runs up under the pill. Its slot clips at the
+ *  pill's bottom edge, so this part never shows: no seam, no gap. */
+const TUCK = 12;
+const HEIGHT = 36;
 
-/** "N new" with up to three faces: a small glass capsule floating just under
- *  the phone nav. Its slot clips at the nav's bottom edge, so when the nav
- *  hides (html[data-nav-hidden]) the chip slips up behind it first, and drops
+/** "N new posts" with up to three faces: a drawer that pulls out from under
+ *  the phone nav pill, in the pill's own material. The pill's own border is
+ *  untouched; it casts a soft shade onto the drawer's top. When the nav hides
+ *  (html[data-nav-hidden]) the drawer slides back under it first, and pulls
  *  back out after the nav returns (glass-surfaces.css). Tapping it loads the
  *  new posts. */
 export function NewPostsBead({ count, authors, onShow }: {
@@ -25,17 +29,18 @@ export function NewPostsBead({ count, authors, onShow }: {
   return (
     <motion.div
       data-feed-new-posts-chip-root
-      initial={{ y: -46, opacity: 0, scale: 0.8 }}
-      animate={{ y: 0, opacity: 1, scale: 1 }}
-      exit={{ y: -46, opacity: 0, scale: 0.8, pointerEvents: 'none' }}
-      transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 30, mass: 0.7 }}
-      className="pointer-events-none flex justify-center pt-2"
+      initial={{ y: '-100%' }}
+      animate={{ y: 0 }}
+      exit={{ y: '-100%', pointerEvents: 'none' }}
+      transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 32, mass: 0.8 }}
+      className="pointer-events-none flex justify-center"
     >
       <button
         type="button"
         data-feed-new-posts-chip
         onClick={onShow}
-        className="pointer-events-auto flex h-[34px] items-center whitespace-nowrap gap-2 pl-1.5 pr-3 text-[13px] font-semibold tabular-nums"
+        className="pointer-events-auto flex min-w-[180px] items-end justify-center whitespace-nowrap gap-2 pl-2 pr-3.5 pb-[7px] text-[13px] font-semibold tabular-nums"
+        style={{ marginTop: -TUCK, height: HEIGHT + TUCK }}
       >
         {faces.length > 0 && (
           <span className="flex">
@@ -55,7 +60,6 @@ export function NewPostsBead({ count, authors, onShow }: {
         <span className={faces.length ? undefined : 'pl-1.5'}>
           {label}
         </span>
-        <ArrowUp aria-hidden="true" className="h-3.5 w-3.5 opacity-80" strokeWidth={2.5} />
       </button>
     </motion.div>
   );
