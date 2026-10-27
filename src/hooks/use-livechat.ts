@@ -202,6 +202,11 @@ const MAX_LIVECHAT_MESSAGES = 300;
  */
 const FLUSH_INTERVAL_MS = 16;
 
+/** How often a stream's chat is read back over REST to catch anything the socket missed. */
+const STREAM_GAP_CHECK_MS = 20_000;
+/** The same, while the socket is down and nothing is arriving at all. */
+const DISCONNECTED_GAP_CHECK_MS = 5_000;
+
 /**
  * Key an optimistic row by who sent it and what it said.
  *
@@ -376,6 +381,29 @@ export function useLiveChatMessages(roomId: string | null) {
   }, [roomId]);
 
   /**
+   * Fold the room's newest lines in without replacing what is on screen, so a
+   * busy room keeps its scrollback while the gap check runs.
+   */
+  const catchUp = useCallback(async () => {
+    if (!roomId) return;
+    try {
+      const apiMessages = await fetchApiMessages(roomId, { limit: 50 });
+      if (!apiMessages.length) return;
+      const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
+      setMessages((prev) => {
+        const known = new Set(prev.map((m) => m.id));
+        const fresh = mapped.filter((m) => !known.has(m.id));
+        if (!fresh.length) return prev;
+        const next = mergeIncoming(prev, fresh);
+        cacheRoomMessages(roomId, next);
+        return next;
+      });
+    } catch (err) {
+      console.error('[LiveChat] REST catch-up failed:', err);
+    }
+  }, [roomId]);
+
+  /**
    * One reconciliation per burst of sends, not one per send.
    *
    * A message the gateway neither broadcast back nor refused leaves an
@@ -447,6 +475,22 @@ export function useLiveChatMessages(roomId: string | null) {
     };
     document.addEventListener('visibilitychange', onVisibility);
 
+    // A safety net under the socket. A connection can look healthy and still
+    // not deliver (a room membership lost on the server, a proxy holding a
+    // dead long-poll), and nothing on screen says so: a streamer just stops
+    // seeing their viewers. Every so often the room is read back over REST and
+    // anything missed is folded in. Quicker while the socket is known to be
+    // down. A stream's room only: the platform chat is open in every tab.
+    let lastPoll = Date.now();
+    const gapCheck = setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      const due = socket.connected ? STREAM_GAP_CHECK_MS : DISCONNECTED_GAP_CHECK_MS;
+      if (!roomId.startsWith('stream:') && socket.connected) return;
+      if (Date.now() - lastPoll < due) return;
+      lastPoll = Date.now();
+      void catchUp();
+    }, DISCONNECTED_GAP_CHECK_MS);
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
@@ -499,7 +543,10 @@ export function useLiveChatMessages(roomId: string | null) {
       if (pending.length > MAX_LIVECHAT_MESSAGES) {
         pending.splice(0, pending.length - MAX_LIVECHAT_MESSAGES);
       }
-      if (flushHandle === null) flushHandle = setTimeout(flush, FLUSH_INTERVAL_MS);
+      // A hidden tab's timers can be held back for up to a minute, so there
+      // the batch goes in now rather than waiting on one.
+      if (document.visibilityState === 'hidden') flush();
+      else if (flushHandle === null) flushHandle = setTimeout(flush, FLUSH_INTERVAL_MS);
     });
 
     const unsubEdited = onMessageEdited(roomId, (msg) => {
@@ -601,6 +648,7 @@ export function useLiveChatMessages(roomId: string | null) {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       document.removeEventListener('visibilitychange', onVisibility);
+      clearInterval(gapCheck);
       setIsConnected(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
