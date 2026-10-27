@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { FEATURES, PLATFORMS, SOURCES, filterFeatures, entryFor, comparisonCoverage } from '../data/platform-comparison';
 
@@ -39,11 +39,18 @@ describe('public platform comparison', () => {
     for (const feature of FEATURES) if (feature.implementation) {
       expect(existsSync(resolve(process.cwd(), feature.implementation.web)), feature.id).toBe(true);
       expect(SOURCES[feature.dehub.source!].url).toContain('/blob/');
-      for (const source of feature.dehub.relatedSources ?? []) expect(SOURCES[source]?.url).toMatch(/^https:\/\/github.com\/DeHubToken\/dehub-mobile\/blob\//);
+      expect(feature.dehub.relatedSources?.some(source => SOURCES[source]?.url.startsWith('https://github.com/DeHubToken/dehub-mobile/blob/'))).toBe(true);
     }
     const all = comparisonCoverage('all');
     expect(all.total).toBe(FEATURES.length * PLATFORMS.length);
     expect(all.verified).toBeGreaterThan(0);
     expect(all.verified).toBeLessThan(all.total);
+  });
+  it('accounts for every capability in the editor guide', () => {
+    const coverage = JSON.parse(readFileSync(resolve(process.cwd(), 'docs/comparison-editor-coverage.json'), 'utf8')) as Record<string, string>;
+    const guide = readFileSync(resolve(process.cwd(), 'src/lib/editor/editorGuide.ts'), 'utf8');
+    const ids = [...guide.matchAll(/\{ id: "([^"]+)", title:/g)].map(match => match[1]);
+    expect(Object.keys(coverage).sort()).toEqual(ids.sort());
+    for (const id of Object.values(coverage)) expect(FEATURES.some(feature => feature.id === id), id).toBe(true);
   });
 });
