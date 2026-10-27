@@ -1115,9 +1115,20 @@ export default function HomePage() {
                 aria-label={isPostOverlayActive ? _copy("copy.34c445f7d739", { defaultValue: "Back to feed" }) : isImagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
                 aria-expanded={showNavBack ? undefined : islandFiltersOpen}
               >
+                {/* Phones: a soft glow behind the icon says filters are on
+                    without looking like a second selected tab. Desktop keeps
+                    the glass pill. */}
+                {hasActiveFilters && !showNavBack && (
+                  <span
+                    aria-hidden
+                    data-feed-filters-glow
+                    className="lg:hidden pointer-events-none absolute inset-x-1.5 inset-y-1 rounded-full blur-[2px]"
+                    style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, currentColor 55%, transparent), color-mix(in srgb, currentColor 15%, transparent) 60%, transparent)' }}
+                  />
+                )}
                 {hasActiveFilters && !showNavBack && (
                   <div className={cn(
-                    "absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                    "hidden lg:block absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
                     isLightTheme
                       ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
                       : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
