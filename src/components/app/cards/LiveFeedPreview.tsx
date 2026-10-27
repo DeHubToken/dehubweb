@@ -29,7 +29,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
+import { useFeedPlaybackAllowed, useLivePlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
@@ -99,6 +99,11 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
+/** Feed rule, except an audible live keeps going behind another tab. */
+function mayPlayNow(el: HTMLVideoElement, muted: boolean): boolean {
+  return visualActivity.isFeedPlaybackAllowed() || isVideoInPictureInPicture(el) || (!muted && visualActivity.isLivePlaybackAllowed());
+}
+
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, muted = true, controlsVisible = false, onToggleMute, streamId, streamStatus, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
   const { t: _copy } = _useCopy();
   const { pathname } = useLocation();
@@ -118,7 +123,13 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
   const hlsRef = useRef<Hls | null>(null);
   const [intersecting, setVisible] = useState(false);
   const playbackAllowed = useFeedPlaybackAllowed();
-  const visible = (intersecting && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
+  // A live someone has turned the sound up on is being listened to: switching
+  // tabs or clicking into another window must not hang it up (and drop them
+  // from the room). A muted preview still lets go, as every feed video does.
+  const livePlaybackAllowed = useLivePlaybackAllowed();
+  const visible = (intersecting && (playbackAllowed || (!muted && livePlaybackAllowed))) || (inPiP && !visualActivity.isCallBusy());
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -207,7 +218,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         }
         el.srcObject = session.stream;
         await el.play().catch(() => { if (!cancelled) setLoading(false); });
-        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
+        if (cancelled || (!mayPlayNow(el, mutedRef.current))) el.pause();
       } catch {
         fallBack();
       }
@@ -276,7 +287,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         hls.attachMedia(el);
       }
       void el.play().then(() => {
-        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
+        if (cancelled || (!mayPlayNow(el, mutedRef.current))) el.pause();
       }).catch(() => { if (!cancelled) setLoading(false); });
     };
 
@@ -327,7 +338,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         preload="none"
         poster={thumbnail}
         onPlaying={(e) => {
-          if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
+          if (!mayPlayNow(e.currentTarget, mutedRef.current)) { e.currentTarget.pause(); return; }
           setPlaying(true); setPaused(false); setLoading(false);
         }}
         onWaiting={() => setLoading(true)}
