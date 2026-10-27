@@ -118,6 +118,7 @@ import { AuthContext, LoginSheetContext, type SocialProvider, type WalletProvide
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
 import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
 import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
+import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 
 const authLogger = createLogger('Auth');
 
@@ -1016,6 +1017,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       authLogger.trace?.('wallet-setup-required');
     } catch (e) {
       authLogger.trace?.('provision-error', { reason: e instanceof Error ? e.message : String(e) });
+      // A tab still running the build before a deploy cannot load this step's
+      // code ("Importing a module script failed"), and "Try again" re-reads
+      // the same dead file. Only a reload helps; the Supabase session survives
+      // it and the sign-in resumes.
+      if (isChunkLoadError(e) && recoverFromChunkError() === 'reloading') return;
       // A failed profile login must not escalate to decrypting or signing.
       // The identity session is still good, so retry the exchange in place
       // rather than making the person go through Google or email again.
