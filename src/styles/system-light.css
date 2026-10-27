@@ -78,6 +78,10 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
 html[data-theme="system"][data-system-tone="light"] header:not([data-docs-header]) img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img { filter: invert(1); }
 /* Media keeps its own white chrome */
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-media-full], [data-on-media], [data-video-controls], [data-video-topbar]) :is(*, svg):not([data-shorts-panel] *) { color: #fff !important; }
+/* The profile back arrow keeps the media white over a cover, but once it rides
+   the pale pinned bar it is ink like the tab icons next to it. */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-profile-single-row], [data-profile-collapse][data-collapsed="true"]) [data-swipe-back] { background: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-profile-single-row], [data-profile-collapse][data-collapsed="true"]) [data-swipe-back] :is(*, svg) { color: var(--sl-ink) !important; }
 
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::before,
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::after { display:none !important; }
