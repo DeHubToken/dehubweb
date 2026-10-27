@@ -1514,7 +1514,17 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const isLivePost = contentType === 'live';
 
   const renderPostContent = () => (
-    detailsOnly ? (
+    detailsOnly && isStagePhone && (isTextPost || isImagePost) ? (
+      /* Phone text and image posts opened from the feed: no "more" toggle and
+         no composer. The ad and then more posts follow the post straight away;
+         comments (with their composer) appear only when the comment button asks. */
+      <section data-retained-post-details className="pt-3">
+        {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+        {detailsExpanded && <div ref={retainedCommentsRef}>{pageComments}</div>}
+        {showRelated && isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
+        {showRelated && isTextPost && id && <RelatedPostsFeed currentPostId={id} />}
+      </section>
+    ) : detailsOnly ? (
       <section data-retained-post-details className="pt-3">
         <button type="button" data-retained-details-toggle aria-expanded={detailsExpanded}
           aria-label={_copy('common.more', { defaultValue: 'More' })}
