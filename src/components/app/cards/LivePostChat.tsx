@@ -39,6 +39,7 @@ import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { useLiveAudience } from '@/hooks/use-live-audience';
 import { LiveAudienceSheet } from '@/components/app/live/LiveAudienceSheet';
 import { useAuth } from '@/contexts/AuthContext';
+import '@/styles/tip-wall.css';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
 import { addStreamModerator, banFromStreams, pinLiveChatMessage, timeOutInStream, unpinLiveChatMessage, streamChatRoomId } from '@/lib/api/dehub/livechat';
@@ -256,6 +257,15 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // the host's own overlay. Null when the caller has no stream ObjectId to
   // resolve, and then nothing is drawn: no number beats a wrong one.
   const watching = useStreamAudience(liveStreamId, !isOffline);
+  // Lines already in the chat when it loaded sit still; anything after glides
+  // in, and your own line or gift lands with the soft glow.
+  const settledIdsRef = useRef<Set<string> | null>(null);
+  if (settledIdsRef.current === null && !isLoading) settledIdsRef.current = new Set(messages.map((m) => m.id));
+  const landClass = (msg: SupabaseLiveChatMessage) => {
+    const settled = settledIdsRef.current;
+    if (!settled || settled.has(msg.id)) return '';
+    return isMine(msg) ? ' dh-chat-land dh-land-glow' : ' dh-chat-land';
+  };
   // Tapping the count opens Who's here, the same sheet the phone live page
   // and the app open from their "N here" pill. Fetched only while open.
   const [audienceOpen, setAudienceOpen] = useState(false);
@@ -524,7 +534,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                 || (msg.sender_address ? `${msg.sender_address.slice(0, 6)}…${msg.sender_address.slice(-4)}` : _copy("copy.f541591bfa86", { defaultValue: "A viewer" }));
               const face = msg.sender_avatar_url ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url) : undefined;
               return (
-                <div key={msg.id} className="flex items-start gap-2 py-1 px-1">
+                <div key={msg.id} className={`flex items-start gap-2 py-1 px-1 rounded-lg${landClass(msg)}`}>
                   <LiveChatAvatar src={face} address={msg.sender_address || undefined} name={who} />
                   <div className="flex-1 min-w-0 text-xs">
                     <span className="font-semibold text-white">{who}</span>
@@ -556,7 +566,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                 key={msg.id}
                 ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
                 onContextMenu={(e) => handleMessageContextMenu(e, msg)}
-                className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}`}
+                className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}${landClass(msg)}`}
               >
                 <div className="flex items-start gap-2">
                   <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />

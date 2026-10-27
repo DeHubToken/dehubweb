@@ -45,8 +45,8 @@ interface UseTipPaymentOptions {
    *  confirmation. Live gifting uses this to record the tip on the stream's
    *  activity feed without waiting out a confirmation the viewer won't. */
   onSubmitted?: (txHash: string, amount: number) => void;
-  /** Called after on-chain confirmation + DB save succeeds (background) */
-  onConfirmed?: () => void;
+  /** Called after on-chain confirmation + DB save succeeds (background), with the transaction hash. */
+  onConfirmed?: (txHash?: string) => void;
 }
 
 /**
@@ -172,7 +172,7 @@ export function useTipPayment({
 
             if (token) {
               toast.success(_copy("copy.a8537f3a1a4a", { defaultValue: "{{value1}} {{value2}} tip sent!", value1: confirmedTip.amount.toLocaleString(), value2: unit }), { id: 'tip-payment' });
-              onConfirmed?.();
+              onConfirmed?.(confirmedTxHash);
               return;
             }
 
@@ -197,7 +197,7 @@ export function useTipPayment({
 
             // DB saved — reconcile UI
             toast.success(dhbText(_copy("copy.76a7616a1518", { defaultValue: "DHB {{value1}} tip sent!", value1: amount.toLocaleString() })), { id: 'tip-payment' });
-            onConfirmed?.();
+            onConfirmed?.(confirmedTxHash);
           } catch (err) {
             console.error('[Tip] Background confirmation failed:', err);
             if ((err as any)?.code === 'TRANSACTION_REVERTED') {
