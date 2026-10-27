@@ -48,7 +48,8 @@ export function bringIntoViewAndFlash(el: Element): () => void {
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let stopped = false;
   let quietTimer = 0;
-  let lastTop = Number.NaN;
+  /** Where the row sat after the last correction, to spot one that did nothing. */
+  let lastOff = Number.NaN;
 
   const finish = (showFlash: boolean) => {
     if (stopped) return;
@@ -74,13 +75,20 @@ export function bringIntoViewAndFlash(el: Element): () => void {
     }, QUIET_MS);
   };
 
+  // How far the row's middle sits from the screen's middle.
+  const offCentre = () => {
+    const r = el.getBoundingClientRect();
+    return r.top + r.height / 2 - window.innerHeight / 2;
+  };
+
   const recentre = () => {
     if (stopped || !el.isConnected) return finish(false);
-    const top = el.getBoundingClientRect().top;
-    // Nothing above it moved: nothing to correct.
-    if (Math.abs(top - lastTop) < 2) return;
+    const off = offCentre();
+    // Close enough, or the page cannot scroll any further toward it: a call
+    // that moved nothing last time will move nothing now.
+    if (Math.abs(off) < 40 || Math.abs(off - lastOff) < 2) return;
     centre(el, false);
-    lastTop = el.getBoundingClientRect().top;
+    lastOff = offCentre();
     armQuiet();
   };
 
@@ -104,9 +112,11 @@ export function bringIntoViewAndFlash(el: Element): () => void {
   // where it is, so the first resize after it does not count as a shift.
   window.setTimeout(() => {
     if (stopped) return;
-    lastTop = el.getBoundingClientRect().top;
+    lastOff = Number.NaN;
+    // A layout shift can cut a smooth scroll short; finish the job.
+    recentre();
     armQuiet();
-  }, reduceMotion ? 0 : 350);
+  }, reduceMotion ? 0 : 450);
   const hardStop = window.setTimeout(() => finish(true), SETTLE_MS);
 
   return () => finish(false);
