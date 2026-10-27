@@ -123,6 +123,7 @@ const Dapp = () => {
     { id: 'packs', label: t('dapp.tocPacks') },
     { id: 'stages', label: t('dapp.stagesTitle') },
     { id: 'tv-radio', label: t('dapp.tvRadioTitle') },
+    { id: 'music-charts', label: t('dapp.tocMusicCharts') },
     { id: 'cinema', label: t('dapp.tocCinema') },
     { id: 'wallet', label: t('dapp.tocWallet') },
     { id: 'exchange', label: t('dapp.tocExchange') },
@@ -1944,7 +1945,21 @@ const Dapp = () => {
           <Shot src="/media/docs-music.png" alt={t('dapp.altMusic')} />
         </section>
 
-        <GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
+                <GuideSection
+          id="music-charts"
+          title="dapp.musicChartsTitle"
+          paras={['dapp.musicChartsDesc']}
+          bullets={[
+            ['dapp.musicChartsB1', 'dapp.musicChartsB1Desc'],
+            ['dapp.musicChartsB2', 'dapp.musicChartsB2Desc'],
+            ['dapp.musicChartsB3', 'dapp.musicChartsB3Desc'],
+            ['dapp.musicChartsB4', 'dapp.musicChartsB4Desc'],
+            ['dapp.musicChartsB5', 'dapp.musicChartsB5Desc'],
+            ['dapp.musicChartsB6', 'dapp.musicChartsB6Desc']
+          ]}
+        />
+
+<GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
 
         <section id="wallet" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
