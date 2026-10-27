@@ -1,4 +1,4 @@
-import { apiCall } from './core';
+import { apiCall, DEHUB_API_REQUEST_BASE, ensureFreshToken } from './core';
 
 export interface YoutubeImportParams {
   url: string;
@@ -7,6 +7,8 @@ export interface YoutubeImportParams {
    * the source's own default, which is what every client sent before the
    * choice existed. */
   mediaKind?: 'video' | 'audio' | 'image';
+  /** `editor` downloads the clip for the video editor instead of posting it. */
+  destination?: 'post' | 'editor';
   name?: string;
   description?: string;
   rotation?: 0 | 90 | 180 | 270;
@@ -94,7 +96,13 @@ export interface YoutubeImportStatusResponse {
    * will, and no client should have to know Bull's rules to tell them apart. */
   willRetry?: boolean;
   queuedAt?: number;
-  result?: { createdTokenId?: string; duplicate?: boolean; [key: string]: unknown };
+  result?: {
+    createdTokenId?: string;
+    duplicate?: boolean;
+    /** Editor imports: the private download, fetched once with downloadEditorImport. */
+    editorFile?: { mimeType?: string; fileName?: string; title?: string; durationSeconds?: number; bytes?: number };
+    [key: string]: unknown;
+  };
   failedReason?: string;
 }
 
@@ -120,4 +128,17 @@ export async function listYoutubeImports(): Promise<YoutubeImportStatusResponse[
     requiresAuth: true,
   });
   return res?.imports ?? [];
+}
+
+/** The finished file of an editor import. The server deletes its copy once sent. */
+export async function downloadEditorImport(jobId: string | number, fileName?: string, signal?: AbortSignal): Promise<File> {
+  const token = await ensureFreshToken();
+  const res = await fetch(`${DEHUB_API_REQUEST_BASE}/api/youtube_import/${jobId}/file`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
+    signal,
+  });
+  if (!res.ok) throw new Error(`Import download failed (${res.status})`);
+  const blob = await res.blob();
+  return new File([blob], fileName || `import-${jobId}.mp4`, { type: blob.type || 'video/mp4' });
 }

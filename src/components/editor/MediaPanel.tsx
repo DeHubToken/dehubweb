@@ -23,6 +23,7 @@ import { formatBytes } from "@/lib/editor/quota";
 import { deleteEditorAsset } from "@/lib/editor/cloudMedia";
 import { AppState } from "@/components/app/AppState";
 import { RecordingPanel } from "@/components/editor/RecordingPanel";
+import { LinkImport } from "@/components/editor/LinkImport";
 import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
 
 function formatDuration(s?: number | null) {
@@ -144,6 +145,7 @@ export function MediaPanel() {
       </div>
 
       <RecordingPanel />
+      <LinkImport />
 
       {/* Storage quota bar */}
       {quota.isAuthenticated ? (
