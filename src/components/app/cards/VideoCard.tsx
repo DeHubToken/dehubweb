@@ -3461,6 +3461,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               tokenId={videoTokenId}
               isOwnPost={!!isOwnPost}
               onBeforeNavigate={() => setShowOptionsDrawer(false)}
+              linkText={video.description}
+              onClose={() => setShowOptionsDrawer(false)}
             />
             {!isOwnPost && (
               <button

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { fetchPublicPage } from "./public-page.ts";
+import { pinnedHttp } from "./pinned-http.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
@@ -80,7 +81,12 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { url, html } = await fetchPublicPage(body?.url);
+    // A refresh from a post menu asks the site's own cache for a fresh page,
+    // so a share image the author just changed is the one read back.
+    const fresh = body?.refresh === true;
+    const { url, html } = fresh
+      ? await fetchPublicPage(body?.url, undefined, (target, address, signal) => pinnedHttp(target, address.address, signal, true))
+      : await fetchPublicPage(body?.url);
 
     // Extract OG metadata with fallbacks
     const title = extractMetaContent(html, 'title') 

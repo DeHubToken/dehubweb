@@ -1433,6 +1433,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
                 tokenId={id ? parseInt(id, 10) || undefined : undefined}
                 isOwnPost={!!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase())}
                 onBeforeNavigate={() => setShowDesktopOptionsDrawer(false)}
+                linkText={videoData.description}
+                onClose={() => setShowDesktopOptionsDrawer(false)}
               />
               {!(walletAddress && videoData.creatorId?.toLowerCase() === walletAddress.toLowerCase()) && (
                 <button
