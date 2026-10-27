@@ -1827,7 +1827,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
+    // Phones crop tall footage to fill the column; desktop shows the whole
+    // picture (a short stays a short, not a stretched wide crop).
+    className: `dehub-inline-video w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2359,12 +2361,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   }
               : desktopFeedHug
                 ? {
-                    // Fill the desktop column while retaining its height cap.
+                    // The frame hugs the clip, up to 75% of the screen tall,
+                    // right aligned, so a short keeps its upright shape.
                     aspectRatio: feedFrameAspect,
-                    width: '100%',
+                    width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
                     maxHeight: DESKTOP_FEED_MAX_HEIGHT,
-                    marginLeft: 0,
-                    marginRight: 'auto',
+                    marginLeft: 'auto',
+                    marginRight: 0,
                   }
               : cropFeedVideo
                 ? {
@@ -2652,7 +2655,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
+                    className={`absolute inset-0 w-full h-full ${isFullscreen || !isPhone ? 'object-contain' : 'object-cover'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
