@@ -78,6 +78,7 @@ doc.md
 # written without this exception and silently never shipped, freezing the
 # bot-visible blog at Feb 2026 — keep every build-referenced script negated.
 scripts/*
+!scripts/locale-retention.mjs
 !scripts/edge-route-recovery.mjs
 !scripts/patch-vaul-scroll.mjs
 !scripts/patch-radix-focus-guards.mjs
