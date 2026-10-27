@@ -6083,6 +6083,14 @@ async function handleRequest(request, env, ctx) {
 
   // Cloudflare canonicalizes index.html to the directory URL. Both entry
   // responses must revalidate while fingerprinted assets remain immutable.
+  // The 3D preview page the Creator studio (iframe) and the app (WebView) load
+  // to draw mesh thumbnails and record turntables. Assets answer the .html
+  // path with a 307 to the bare path, and the bare path is not an app route,
+  // so both spellings are served the file straight from assets.
+  if (pathname === '/creator-mesh-preview.html' || pathname === '/creator-mesh-preview') {
+    return env.ASSETS.fetch(new Request(new URL('/creator-mesh-preview', url), request));
+  }
+
   if (pathname === '/gods-eye-game/index.html' || pathname === '/gods-eye-game/') {
     const resp = await guardNext();
     const out = new Response(resp.body, resp);
