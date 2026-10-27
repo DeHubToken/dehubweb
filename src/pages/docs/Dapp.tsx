@@ -98,6 +98,7 @@ const Dapp = () => {
     { id: 'accounts', label: t('dapp.tocAccounts') },
     { id: 'post-controls', label: t('dapp.tocPostControls') },
     { id: 'fediverse', label: t('dapp.tocFediverse') },
+    { id: 'video-playback', label: t('dapp.tocVideoPlayback') },
     { id: 'feeds', label: t('dapp.tocFeeds') },
     { id: 'uploading', label: t('dapp.tocUploading') },
     { id: 'articles', label: t('dapp.tocArticles') },
@@ -405,6 +406,20 @@ const Dapp = () => {
     ['dapp.fediverseB3', 'dapp.fediverseB3Desc'],
     ['dapp.fediverseB4', 'dapp.fediverseB4Desc'],
     ['dapp.fediverseB5', 'dapp.fediverseB5Desc']
+  ]}
+/>
+
+<GuideSection
+  id="video-playback"
+  title="dapp.videoPlaybackTitle"
+  paras={['dapp.videoPlaybackDesc']}
+  bullets={[
+    ['dapp.videoPlaybackB1', 'dapp.videoPlaybackB1Desc'],
+    ['dapp.videoPlaybackB2', 'dapp.videoPlaybackB2Desc'],
+    ['dapp.videoPlaybackB3', 'dapp.videoPlaybackB3Desc'],
+    ['dapp.videoPlaybackB4', 'dapp.videoPlaybackB4Desc'],
+    ['dapp.videoPlaybackB5', 'dapp.videoPlaybackB5Desc'],
+    ['dapp.videoPlaybackB6', 'dapp.videoPlaybackB6Desc']
   ]}
 />
 
