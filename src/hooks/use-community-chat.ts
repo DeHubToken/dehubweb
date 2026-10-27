@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Uses community_chat_messages table with realtime subscriptions.
  */
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +16,8 @@ import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { notifyCommunityMentions } from '@/lib/community-mention-notify';
 import { toast } from 'sonner';
+import { useCommunityChatHistory } from './use-community-chat-history';
+import { updateCommunityChatCache, type CommunityChatHistory, type CommunityChatCursor, type CommunityChatPage } from '@/lib/community-chat-history';
 
 export interface CommunityChatMessage {
   id: string;
@@ -41,7 +43,21 @@ export interface CommunityChatMessage {
   };
 }
 
-const QUERY_KEY = 'community-chat-messages';
+
+async function readCommunityPage({ communityId, walletAddress, cursor, anchorId, signal }: {
+  communityId: string; walletAddress: string | null; cursor: CommunityChatCursor | null;
+  anchorId: string | null; signal: AbortSignal;
+}): Promise<CommunityChatPage<CommunityChatMessage>> {
+  const { data, error } = await withWalletHeader(
+    (supabase as any).rpc('community_chat_page_v1', {
+      _community_id: communityId, _before_at: cursor?.created_at ?? null,
+      _before_id: cursor?.id ?? null, _anchor_id: anchorId, _limit: 50,
+    }).abortSignal(signal), walletAddress,
+  );
+  if (error) throw error;
+  return data as CommunityChatPage<CommunityChatMessage>;
+}
+
 
 export function useCommunityChat(
   communityId: string | undefined,
@@ -51,12 +67,10 @@ export function useCommunityChat(
   const { walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
   const isPrivate = !!options?.isPrivate;
-  // The wallet is part of the key because the message SELECT policy filters by
-  // it — one account's visible history must not be served to the next.
-  const messagesKey = useMemo(
-    () => [QUERY_KEY, communityId, walletAddress] as const,
-    [communityId, walletAddress],
-  );
+  const history = useCommunityChatHistory({
+    communityId, walletAddress: walletAddress ?? null, isPrivate, readPage: readCommunityPage,
+  });
+  const { rawMessages, referenceMessages, messagesKey, isLoading } = history;
 
   // Latest profile fields for the current user — used to overlay onto their own
   // messages so display name / username / avatar updates reflect immediately
@@ -65,39 +79,6 @@ export function useCommunityChat(
   const myDisplayName = (user as any)?.displayName ?? null;
   const myUsername = (user as any)?.username ?? null;
   const myAvatarUrl = (user as any)?.avatarImageUrl ?? (user as any)?.avatarUrl ?? null;
-
-  // Fetch messages
-  const { data: rawMessages = [], isLoading } = useQuery({
-    queryKey: messagesKey,
-    queryFn: async () => {
-      if (!communityId) return [];
-      // A private community's history is no longer world-readable, so this read
-      // has to identify the caller or it comes back empty for members too.
-      //
-      // Newest 200, then flipped back into reading order. Ordering ascending and
-      // limiting takes the OLDEST 200 -- a community past that many messages
-      // would open on its first ever conversation and never reach the current
-      // one, taking the pinned banner and reply resolution down with it.
-      const { data, error } = await withWalletHeader(
-        supabase
-          .from('community_chat_messages')
-          .select('*')
-          .eq('community_id', communityId)
-          .order('created_at', { ascending: false })
-          .limit(200),
-        walletAddress
-      );
-      if (error) throw error;
-      return ((data || []) as CommunityChatMessage[]).slice().reverse();
-    },
-    enabled: !!communityId,
-    staleTime: 30_000,
-    // Realtime replication evaluates the same SELECT policy but has no way to
-    // carry a request header, so a private community receives no live events at
-    // all. Poll there; public communities keep the socket and no polling.
-    refetchInterval: isPrivate ? 15_000 : false,
-    refetchIntervalInBackground: false,
-  });
 
   // Collect unique sender wallet addresses (excluding the current user — we
   // already have their fresh profile from useAuth) so we can fetch each one's
@@ -136,7 +117,7 @@ export function useCommunityChat(
   // from the cached DeHub profile lookup. Messages store a snapshot at insert
   // time, so this keeps display name / username / avatar fresh after renames.
   // Memoized: this double map (plus reply resolution below) used to rebuild
-  // 200 message objects on every render — including each composer keystroke.
+  // message objects on every render — including each composer keystroke.
   const messages: CommunityChatMessage[] = useMemo(() => {
     const overlaid = rawMessages.map(msg => {
       const addr = msg.wallet_address?.toLowerCase();
@@ -164,7 +145,7 @@ export function useCommunityChat(
 
     // Resolve reply_to data client-side (using overlaid values for fresh
     // names) — via an id map instead of a find() per reply (was O(n²)).
-    const byId = new Map(overlaid.map(m => [m.id, m]));
+    const byId = new Map([...referenceMessages, ...overlaid].map(m => [m.id, m]));
     return overlaid.map(msg => {
       if (!msg.reply_to_id) return msg;
       const parent = byId.get(msg.reply_to_id);
@@ -178,11 +159,11 @@ export function useCommunityChat(
         },
       };
     });
-  }, [rawMessages, senderProfileMap, myAddress, myDisplayName, myUsername, myAvatarUrl]);
+  }, [rawMessages, referenceMessages, senderProfileMap, myAddress, myDisplayName, myUsername, myAvatarUrl]);
 
   // Realtime subscription
   useEffect(() => {
-    if (!communityId) return;
+    if (!communityId || isPrivate) return;
 
     const channel = supabase
       .channel(`community-chat-${communityId}`)
@@ -195,8 +176,8 @@ export function useCommunityChat(
           filter: `community_id=eq.${communityId}`,
         },
         (payload) => {
-          if (payload.eventType === 'INSERT') {
-            queryClient.setQueryData<CommunityChatMessage[]>(
+          if (payload.eventType === 'INSERT' && !history.isHistoryWindow) {
+            updateCommunityChatCache<CommunityChatMessage>(queryClient,
               messagesKey,
               (old = []) => {
                 if (old.some(m => m.id === (payload.new as CommunityChatMessage).id)) return old;
@@ -204,12 +185,12 @@ export function useCommunityChat(
               }
             );
           } else if (payload.eventType === 'UPDATE') {
-            queryClient.setQueryData<CommunityChatMessage[]>(
+            updateCommunityChatCache<CommunityChatMessage>(queryClient,
               messagesKey,
               (old = []) => old.map(m => m.id === (payload.new as CommunityChatMessage).id ? { ...m, ...payload.new as CommunityChatMessage } : m)
             );
           } else if (payload.eventType === 'DELETE') {
-            queryClient.setQueryData<CommunityChatMessage[]>(
+            updateCommunityChatCache<CommunityChatMessage>(queryClient,
               messagesKey,
               (old = []) => old.filter(m => m.id !== (payload.old as any).id)
             );
@@ -223,7 +204,7 @@ export function useCommunityChat(
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [communityId, queryClient, messagesKey]);
+  }, [communityId, isPrivate, history.isHistoryWindow, queryClient, messagesKey]);
 
   // Send message
   const sendMessage = useCallback(async (
@@ -253,7 +234,7 @@ export function useCommunityChat(
       supabase
         .from('community_chat_messages')
         .insert(msg as any)
-        .select('id')
+        .select('*')
         .single(),
       walletAddress
     );
@@ -265,6 +246,13 @@ export function useCommunityChat(
       toast.error(adminErrorMessage(error, _translateCopy("copy.66b8e077d85f", { defaultValue: "Failed to send message" })));
       throw error;
     }
+
+    if (inserted && !history.isHistoryWindow) {
+      updateCommunityChatCache<CommunityChatMessage>(queryClient, messagesKey,
+        old => old.some(row => row.id === (inserted as CommunityChatMessage).id)
+          ? old : [...old, inserted as CommunityChatMessage]);
+    }
+    void queryClient.invalidateQueries({ queryKey: messagesKey });
 
     // Mentions are notified after the message is safely stored, and a failure
     // here never surfaces as a send failure: the message is already posted and
@@ -279,7 +267,7 @@ export function useCommunityChat(
         walletAddress,
       });
     }
-  }, [communityId, walletAddress]);
+  }, [communityId, walletAddress, queryClient, messagesKey, history.isHistoryWindow]);
 
   // Add reaction
   const addReaction = useCallback(async (messageId: string, emoji: string) => {
@@ -293,8 +281,8 @@ export function useCommunityChat(
     reactions[emoji] = [...addresses, walletAddress.toLowerCase()];
 
     // Optimistic update
-    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
-    queryClient.setQueryData<CommunityChatMessage[]>(
+    const prev = queryClient.getQueryData<CommunityChatHistory<CommunityChatMessage>>(messagesKey);
+    updateCommunityChatCache<CommunityChatMessage>(queryClient,
       messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
     );
@@ -311,7 +299,7 @@ export function useCommunityChat(
       toast.error(adminErrorMessage(error, _translateCopy("copy.13931898084d", { defaultValue: "Failed to react" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
-  }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
+  }, [rawMessages, walletAddress, communityId, queryClient, messagesKey]);
 
   // Remove reaction
   const removeReaction = useCallback(async (messageId: string, emoji: string) => {
@@ -325,8 +313,8 @@ export function useCommunityChat(
     if (reactions[emoji].length === 0) delete reactions[emoji];
 
     // Optimistic update
-    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
-    queryClient.setQueryData<CommunityChatMessage[]>(
+    const prev = queryClient.getQueryData<CommunityChatHistory<CommunityChatMessage>>(messagesKey);
+    updateCommunityChatCache<CommunityChatMessage>(queryClient,
       messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
     );
@@ -343,7 +331,7 @@ export function useCommunityChat(
       toast.error(adminErrorMessage(error, _translateCopy("copy.bf206a215a1f", { defaultValue: "Failed to remove reaction" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
-  }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
+  }, [rawMessages, walletAddress, communityId, queryClient, messagesKey]);
 
   // Edit message
   const editMessage = useCallback(async (messageId: string, newContent: string) => {
@@ -352,7 +340,7 @@ export function useCommunityChat(
     if (!trimmed) return false;
 
     // Optimistic update
-    queryClient.setQueryData<CommunityChatMessage[]>(
+    updateCommunityChatCache<CommunityChatMessage>(queryClient,
       messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, content: trimmed } : m)
     );
@@ -373,14 +361,14 @@ export function useCommunityChat(
       return false;
     }
     return true;
-  }, [walletAddress, communityId, queryClient, _copy]);
+  }, [walletAddress, communityId, queryClient, messagesKey, _copy]);
 
   // Delete message (own message, or a moderator deleting anyone's). Goes through
   // the RPC so a refusal actually raises instead of matching zero rows.
   const deleteMessage = useCallback(async (messageId: string) => {
     if (!walletAddress || !communityId) return;
-    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
-    queryClient.setQueryData<CommunityChatMessage[]>(
+    const prev = queryClient.getQueryData<CommunityChatHistory<CommunityChatMessage>>(messagesKey);
+    updateCommunityChatCache<CommunityChatMessage>(queryClient,
       messagesKey,
       (old = []) => old.filter(m => m.id !== messageId)
     );
@@ -393,7 +381,7 @@ export function useCommunityChat(
       toast.error(adminErrorMessage(error, _translateCopy("copy.5ce4aeba4357", { defaultValue: "Failed to delete message" })));
       if (prev) queryClient.setQueryData(messagesKey, prev);
     }
-  }, [walletAddress, communityId, queryClient]);
+  }, [walletAddress, communityId, queryClient, messagesKey]);
 
   // Pin / unpin. Only ever reaches the server for someone holding pin_messages.
   const setPinned = useCallback(async (messageId: string, pinned: boolean) => {
@@ -406,22 +394,24 @@ export function useCommunityChat(
       toast.error(adminErrorMessage(error, pinned ? _translateCopy("copy.675c5fe95089", { defaultValue: "Failed to pin message" }) : _translateCopy("copy.3b69de078742", { defaultValue: "Failed to unpin message" })));
       return;
     }
-    queryClient.setQueryData<CommunityChatMessage[]>(
+    updateCommunityChatCache<CommunityChatMessage>(queryClient,
       messagesKey,
       (old = []) => old.map(m => m.id === messageId
         ? { ...m, pinned_at: pinned ? new Date().toISOString() : null, pinned_by: pinned ? walletAddress.toLowerCase() : null }
         : m),
     );
+    void queryClient.invalidateQueries({ queryKey: messagesKey });
     toast.success(pinned ? _translateCopy("copy.480e61cdab71", { defaultValue: "Message pinned" }) : _translateCopy("copy.dc1e29e33dc7", { defaultValue: "Message unpinned" }));
-  }, [walletAddress, communityId, queryClient]);
+  }, [walletAddress, communityId, queryClient, messagesKey]);
 
   // Newest pin wins, matching the single-pin banner the chat renders.
   const pinnedMessage = useMemo(
-    () => messages.filter(m => m.pinned_at).sort((a, b) => (b.pinned_at ?? '').localeCompare(a.pinned_at ?? ''))[0] ?? null,
-    [messages],
+    () => [...messages, ...(history.pinned ? [history.pinned] : [])].filter(m => m.pinned_at).sort((a, b) => (b.pinned_at ?? '').localeCompare(a.pinned_at ?? ''))[0] ?? null,
+    [messages, history.pinned],
   );
 
   return {
+    ...history,
     messages,
     pinnedMessage,
     isLoading,
