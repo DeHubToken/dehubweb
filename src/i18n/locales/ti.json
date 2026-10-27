@@ -3202,6 +3202,8 @@
   "communities": {
     "shareLink": "ርክባት ምዝርጋሕ",
     "pinnedMore": "ዝያዳ",
+    "showFirst": "ቀዳማይ ኣርኢ",
+    "pinUpdateFailed": "ፒን ክሕደስ ኣይከኣለን",
     "chatTab": "ዝርርብ",
     "followerInvites": {
       "title": "ሰዓብቲ ዓድም",

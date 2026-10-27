@@ -3263,6 +3263,8 @@
   "communities": {
     "shareLink": "Yabelana ngesixhumanisi",
     "pinnedMore": "Okwengeziwe",
+    "showFirst": "Bonisa kuqala",
+    "pinUpdateFailed": "Yehlulekile ukubuyekeza isikhonkwane",
     "chatTab": "Ingxoxo",
     "followerInvites": {
       "title": "Mwaleta abafumanekeli",

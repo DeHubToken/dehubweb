@@ -3248,6 +3248,8 @@
   "communities": {
     "shareLink": "लिंक शेयर करें",
     "pinnedMore": "और",
+    "showFirst": "पहले दिखाएँ",
+    "pinUpdateFailed": "पिन अपडेट नहीं हो सका",
     "chatTab": "चैट",
     "followerInvites": {
       "title": "फॉलोवर्स को आमंत्रित करें",

@@ -3219,6 +3219,8 @@
   "communities": {
     "shareLink": "ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳಿ",
     "pinnedMore": "ಇನ್ನಷ್ಟು",
+    "showFirst": "ಮೊದಲು ತೋರಿಸಿ",
+    "pinUpdateFailed": "ಪಿನ್ ನವೀಕರಿಸಲು ವಿಫಲವಾಗಿದೆ",
     "chatTab": "ಚಾಟ್",
     "followerInvites": {
       "title": "ಅನುಯಾಯಿಗಳನ್ನು ಆಹ್ವಾನಿಸಿ",

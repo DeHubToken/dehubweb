@@ -3237,6 +3237,8 @@
   "communities": {
     "shareLink": "Ndaj linkun",
     "pinnedMore": "Më shumë",
+    "showFirst": "Shfaq të parën",
+    "pinUpdateFailed": "Fiksimi nuk u përditësua dot",
     "chatTab": "Biseda",
     "followerInvites": {
       "title": "Faqja e përsëritur",

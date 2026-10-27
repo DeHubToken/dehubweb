@@ -3242,6 +3242,8 @@
   "communities": {
     "shareLink": "Sdílet odkaz",
     "pinnedMore": "Více",
+    "showFirst": "Zobrazit jako první",
+    "pinUpdateFailed": "Připnutí se nepodařilo aktualizovat",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Pozvěte následovníky",

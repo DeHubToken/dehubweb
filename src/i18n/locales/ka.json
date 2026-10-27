@@ -3247,6 +3247,8 @@
   "communities": {
     "shareLink": "ბმულის გაზიარება",
     "pinnedMore": "მეტი",
+    "showFirst": "პირველად ჩვენება",
+    "pinUpdateFailed": "მიმაგრების განახლება ვერ მოხერხდა",
     "chatTab": "ჩატი",
     "followerInvites": {
       "title": "მოწოდების მოყვარულები",

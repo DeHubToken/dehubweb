@@ -3344,6 +3344,8 @@
   "communities": {
     "shareLink": "Zdieľať odkaz",
     "pinnedMore": "Viac",
+    "showFirst": "Zobraziť ako prvú",
+    "pinUpdateFailed": "Pripnutie sa nepodarilo aktualizovať",
     "chatTab": "Rozhovor",
     "followerInvites": {
       "title": "Pozvaj nasledovníkov",

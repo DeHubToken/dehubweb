@@ -3270,6 +3270,8 @@
   "communities": {
     "shareLink": "লিঙ্ক শেয়ার করুন",
     "pinnedMore": "আরও",
+    "showFirst": "আগে দেহাও",
+    "pinUpdateFailed": "পিন হালনাগাদ গরা যায় ন",
     "chatTab": "চ্যাট",
     "followerInvites": {
       "title": "অনুসারীদের আমন্ত্রণ জানান",

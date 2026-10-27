@@ -3200,6 +3200,8 @@
   "communities": {
     "shareLink": "Bagikan tautan",
     "pinnedMore": "Luwih akeh",
+    "showFirst": "Tampilake dhisik",
+    "pinUpdateFailed": "Gagal nganyari pin",
     "chatTab": "Obrolan",
     "followerInvites": {
       "title": "Undang pengikut",

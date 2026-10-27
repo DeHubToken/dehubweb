@@ -3490,6 +3490,8 @@
   "communities": {
     "shareLink": "Kongsi pautan",
     "pinnedMore": "Lagi",
+    "showFirst": "Tunjukkan dahulu",
+    "pinUpdateFailed": "Gagal mengemas kini pin",
     "chatTab": "Sembang",
     "followerInvites": {
       "title": "Undang pengikut",

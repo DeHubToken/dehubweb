@@ -3233,6 +3233,8 @@
   "communities": {
     "shareLink": "લિંક શેર કરો",
     "pinnedMore": "વધુ",
+    "showFirst": "પહેલા બતાવો",
+    "pinUpdateFailed": "પિન અપડેટ કરવામાં નિષ્ફળ",
     "chatTab": "ચેટ",
     "followerInvites": {
       "title": "અનુયાયીઓને આમંત્રિત કરો",

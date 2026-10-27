@@ -3162,6 +3162,8 @@
   "communities": {
     "shareLink": "لنک شیئر کریں",
     "pinnedMore": "مزید",
+    "showFirst": "پہلے دکھاؤ",
+    "pinUpdateFailed": "پن اپڈیٹ نہیں ہو سکا",
     "chatTab": "چیٹ",
     "followerInvites": {
       "title": "ایکشن لینے کے لیے ہمارے پیغامات کو فالو کریں",

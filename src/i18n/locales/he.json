@@ -3235,6 +3235,8 @@
   "communities": {
     "shareLink": "שיתוף הקישור",
     "pinnedMore": "עוד",
+    "showFirst": "הצג ראשון",
+    "pinUpdateFailed": "לא ניתן היה לעדכן את הנעיצה",
     "chatTab": "צ'אט",
     "followerInvites": {
       "title": "בקש אחרונים",

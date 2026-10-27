@@ -3231,6 +3231,8 @@
   "communities": {
     "shareLink": "分享連結",
     "pinnedMore": "多啲",
+    "showFirst": "優先顯示",
+    "pinUpdateFailed": "更新唔到置頂",
     "chatTab": "傾偈",
     "followerInvites": {
       "title": "邀請追隨者",

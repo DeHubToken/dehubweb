@@ -3217,6 +3217,8 @@
   "communities": {
     "shareLink": "Share njikọ",
     "pinnedMore": "Ọzọ",
+    "showFirst": "Gosi nke mbụ",
+    "pinUpdateFailed": "Enweghị ike imelite ntụtụ",
     "chatTab": "Mkparịta Ụka",
     "followerInvites": {
       "title": "Kpọọ ndị na-eso ụzọ",

@@ -3204,6 +3204,8 @@
   "communities": {
     "shareLink": "संकली साझा करव",
     "pinnedMore": "अधिक",
+    "showFirst": "पहिली देखाव",
+    "pinUpdateFailed": "पिन अपडेट नइ हो पाइस",
     "chatTab": "गोठ-बात",
     "followerInvites": {
       "title": "अनुयायी को आमंत्रित करें",

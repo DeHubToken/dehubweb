@@ -3211,6 +3211,8 @@
   "communities": {
     "shareLink": "ແບ່ງປັນລິ້ງ",
     "pinnedMore": "ເພີ່ມເຕີມ",
+    "showFirst": "ສະແດງກ່ອນ",
+    "pinUpdateFailed": "ບໍ່ສາມາດອັບເດດການປັກໝຸດໄດ້",
     "chatTab": "ແຊັດ",
     "followerInvites": {
       "title": "ກະສິນທີ່ຫານາງຂາຍ",

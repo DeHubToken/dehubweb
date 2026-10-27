@@ -3243,6 +3243,8 @@
   "communities": {
     "shareLink": "Bağlantıyı paylaş",
     "pinnedMore": "Daha fazla",
+    "showFirst": "Önce göster",
+    "pinUpdateFailed": "Sabitleme güncellenemedi",
     "chatTab": "Sohbet",
     "followerInvites": {
       "title": "Takipçileri davet et",

@@ -3205,6 +3205,8 @@
   "communities": {
     "shareLink": "لینک شریک کړئ",
     "pinnedMore": "نور ډیر څه",
+    "showFirst": "لومړی یې وښیه",
+    "pinUpdateFailed": "پن نوی نه شو",
     "chatTab": "چت",
     "followerInvites": {
       "title": "د پیروانو لپاره غوښتنه وکړئ",

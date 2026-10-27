@@ -3245,6 +3245,8 @@
   "communities": {
     "shareLink": "Partilhar ligação",
     "pinnedMore": "Mais",
+    "showFirst": "Mostrar primeiro",
+    "pinUpdateFailed": "Não foi possível atualizar a fixação",
     "chatTab": "Chat",
     "followerInvites": {
       "title": "Convidar seguidores",

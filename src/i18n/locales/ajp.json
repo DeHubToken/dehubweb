@@ -3185,6 +3185,8 @@
   "communities": {
     "shareLink": "شارك الرابط",
     "pinnedMore": "المزيد",
+    "showFirst": "اعرضه أول",
+    "pinUpdateFailed": "ما قدرنا نحدّث التثبيت",
     "chatTab": "الدردشة",
     "followerInvites": {
       "title": "دعي المتابعين",
