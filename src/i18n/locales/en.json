@@ -2553,7 +2553,8 @@
     "resendCodePhone": "Wrong number or no code? Go back",
     "continueAs": "Continue as",
     "switchWalletAccount": "Switch account",
-    "walletLoadFailed": "Could not load wallets. Please try again."
+    "walletLoadFailed": "Could not load wallets. Please try again.",
+    "migrateWrongLogin": "That sign-in opened a different wallet, so nothing changed. Your old profile was made with {{login}}. Use that to bring it back."
   },
   "careers": {
     "title": "Careers at DeHub",

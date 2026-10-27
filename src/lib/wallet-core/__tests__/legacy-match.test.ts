@@ -3,6 +3,7 @@ import {
   legacyAccountForWallet,
   legacyAccountsForProvider,
   matchRecoveredLegacyAccount,
+  sharedOldLogin,
 } from '../legacy-match';
 import type { LegacyAccountMatch } from '../legacy-detect';
 
@@ -64,5 +65,19 @@ describe('legacy account wallet matching', () => {
   it('treats passwordless email aliases as the same old login', () => {
     expect(legacyAccountsForProvider([googleAccount, emailAccount], 'email_passwordless'))
       .toEqual([emailAccount]);
+  });
+});
+
+describe('the old login to lead with', () => {
+  it('is the one login every found profile was made with', () => {
+    expect(sharedOldLogin([googleAccount])).toBe('google');
+    expect(sharedOldLogin([emailAccount, { ...emailAccount, signupMethod: 'email_passwordless' }])).toBe('email_passwordless');
+    expect(sharedOldLogin([{ ...googleAccount, signupMethod: 'phone' }])).toBe('sms_passwordless');
+  });
+
+  it('is nothing when profiles disagree or one is unrecorded', () => {
+    expect(sharedOldLogin([googleAccount, emailAccount])).toBeNull();
+    expect(sharedOldLogin([googleAccount, { ...googleAccount, signupMethod: undefined }])).toBeNull();
+    expect(sharedOldLogin([])).toBeNull();
   });
 });
