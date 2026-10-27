@@ -20,6 +20,7 @@ import {
   rateLimitByIp,
   serviceClient,
 } from "../_shared/auth.ts";
+import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } from "../_shared/builder-host.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
@@ -228,65 +229,90 @@ async function log(db: Db, projectId: string, content: string, role = "log") {
   await db.from("builder_messages").insert({ project_id: projectId, role, content });
 }
 
-// The generated app is ALSO written to a public Storage bucket, because the
-// functions origin force-downgrades text/html → text/plain (Supabase
-// anti-phishing), so raw HTML never renders there. Storage honors the object's
-// content-type, so the app renders both in the preview iframe and at its public
-// share link (builder-serve 302-redirects to these objects). This is the
-// equivalent of Rilable's Daytona static host.
+// Builder apps are served from https://<slug>.dehub.app (builder-serve reads
+// builder_files directly). PUBLIC apps are also mirrored to the public
+// `builder-apps` Storage bucket, because share links and app builds from before
+// subdomains render from there. Private apps are never mirrored — the bucket is
+// public, so a mirrored private app would not be private.
 export const BUILDER_BUCKET = "builder-apps";
-
-const STORAGE_CONTENT_TYPES: Record<string, string> = {
-  html: "text/html; charset=utf-8",
-  htm: "text/html; charset=utf-8",
-  js: "text/javascript; charset=utf-8",
-  mjs: "text/javascript; charset=utf-8",
-  css: "text/css; charset=utf-8",
-  json: "application/json; charset=utf-8",
-  svg: "image/svg+xml",
-  txt: "text/plain; charset=utf-8",
-};
-
-function storageContentType(path: string): string {
-  const ext = path.split(".").pop()?.toLowerCase() ?? "";
-  return STORAGE_CONTENT_TYPES[ext] ?? "text/plain; charset=utf-8";
-}
 
 async function ensureBucket(db: Db) {
   // Idempotent: ignores the "already exists" error on every call after the first.
   await db.storage.createBucket(BUILDER_BUCKET, { public: true }).catch(() => {});
 }
 
-async function saveFiles(db: Db, projectId: string, files: AppFile[]) {
-  // 1) Source of truth for the code view + edit loop.
-  await db.from("builder_files").delete().eq("project_id", projectId);
-  await db.from("builder_files").insert(
-    files.map((f) => ({ project_id: projectId, path: f.path, content: f.content })),
-  );
-
-  // 2) Rendered host. Replace the whole prefix so deleted files don't linger.
+async function mirrorToStorage(db: Db, projectId: string, files: AppFile[]) {
   await ensureBucket(db);
-  const prefix = `${projectId}/`;
-  const { data: existing } = await db.storage.from(BUILDER_BUCKET).list(projectId, { limit: 100 });
-  if (existing?.length) {
-    await db.storage
-      .from(BUILDER_BUCKET)
-      .remove(existing.map((o: { name: string }) => `${prefix}${o.name}`))
-      .catch(() => {});
-  }
+  // Replace the whole prefix so deleted files don't linger.
+  await removeStorage(db, projectId);
   await Promise.all(
     files.map((f) => {
-      const type = storageContentType(f.path);
+      const type = contentTypeFor(f.path);
       // The Blob MUST carry the type: with a typeless Blob the storage client
       // ignores the contentType option and the object is served as
       // text/plain / octet-stream, so the app won't render.
-      return db.storage.from(BUILDER_BUCKET).upload(`${prefix}${f.path}`, new Blob([f.content], { type }), {
+      return db.storage.from(BUILDER_BUCKET).upload(`${projectId}/${f.path}`, new Blob([f.content], { type }), {
         contentType: type,
         cacheControl: "0",
         upsert: true,
       });
     }),
   );
+}
+
+async function saveFiles(db: Db, projectId: string, files: AppFile[]) {
+  // Source of truth for the host, the code view and the edit loop.
+  await db.from("builder_files").delete().eq("project_id", projectId);
+  await db.from("builder_files").insert(
+    files.map((f) => ({ project_id: projectId, path: f.path, content: f.content })),
+  );
+  const { data: project } = await db.from("builder_projects").select("is_public").eq("id", projectId).maybeSingle();
+  if (project?.is_public) await mirrorToStorage(db, projectId, files);
+  else await removeStorage(db, projectId);
+}
+
+async function loadFiles(db: Db, projectId: string): Promise<AppFile[]> {
+  const { data } = await db.from("builder_files").select("path, content").eq("project_id", projectId).order("path");
+  return data ?? [];
+}
+
+/** Give the app its subdomain the first time it builds (kept on later edits). */
+async function ensureSlug(db: Db, projectId: string, name: string): Promise<string> {
+  const { data: project } = await db.from("builder_projects").select("slug").eq("id", projectId).maybeSingle();
+  if (project?.slug) return project.slug;
+  let base = slugify(name);
+  if (slugProblem(base)) base = "app";
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const candidate = attempt === 0 && base !== "app" ? base : `${base.slice(0, 33)}-${crypto.randomUUID().slice(0, 5)}`;
+    const { data } = await db
+      .from("builder_projects")
+      .update({ slug: candidate })
+      .eq("id", projectId)
+      .is("slug", null)
+      .select("slug");
+    if (data?.length) return candidate;
+    const { data: now } = await db.from("builder_projects").select("slug").eq("id", projectId).maybeSingle();
+    if (now?.slug) return now.slug;
+  }
+  throw new Error("Could not reserve an address for this app");
+}
+
+/** Keep every version a build or restore produced, so any of them can come back. */
+async function snapshot(
+  db: Db,
+  projectId: string,
+  version: number,
+  app: { name: string; emoji: string; summary: string },
+  files: AppFile[],
+) {
+  await db.from("builder_versions").upsert({
+    project_id: projectId,
+    version,
+    name: app.name,
+    emoji: app.emoji,
+    summary: app.summary.slice(0, 500),
+    files,
+  });
 }
 
 async function removeStorage(db: Db, projectId: string) {
@@ -314,6 +340,7 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
     const raw = await callGateway(GENERATE_SYSTEM, `Build this web app: ${prompt}`, model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
+    const slug = await ensureSlug(db, projectId, app.name);
     await log(
       db,
       projectId,
@@ -325,6 +352,8 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
       .select("version")
       .eq("id", projectId)
       .maybeSingle();
+    const version = (project?.version ?? 0) + 1;
+    await snapshot(db, projectId, version, app, app.files);
     await db
       .from("builder_projects")
       .update({
@@ -333,14 +362,15 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
         status: "live",
         status_detail: "Live",
         error: null,
-        version: (project?.version ?? 0) + 1,
+        version,
         updated_at: new Date().toISOString(),
       })
       .eq("id", projectId);
+    const home = `${appOrigin(slug)}/`;
     await log(
       db,
       projectId,
-      app.summary ? `✅ ${app.name} is live! ${app.summary}` : `✅ ${app.name} is live!`,
+      app.summary ? `✅ ${app.name} is live at ${home} ${app.summary}` : `✅ ${app.name} is live at ${home}`,
       "agent",
     );
   } catch (err) {
@@ -383,6 +413,9 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
     const raw = await callGateway(EDIT_SYSTEM, editUserPrompt(files, conversation, request), model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
+    await ensureSlug(db, projectId, app.name);
+    const version = (project?.version ?? 0) + 1;
+    await snapshot(db, projectId, version, app, app.files);
     await db
       .from("builder_projects")
       .update({
@@ -391,7 +424,7 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
         status: "live",
         status_detail: "Live",
         error: null,
-        version: (project?.version ?? 0) + 1,
+        version,
         updated_at: new Date().toISOString(),
       })
       .eq("id", projectId);
@@ -450,6 +483,110 @@ async function loadAllowance(db: Db, wallet: string, token: string): Promise<All
 
 const BUSY_STATUSES = new Set(["queued", "generating", "publishing", "updating"]);
 
+const PROJECT_FIELDS =
+  "id, name, emoji, prompt, status, status_detail, error, version, is_public, slug, miniapp_app_id, created_at, updated_at";
+
+// ---------------------------------------------------------------------------
+// Ownership, publishing to the mini app store
+// ---------------------------------------------------------------------------
+
+type OwnedProject = {
+  id: string;
+  name: string;
+  emoji: string;
+  status: string;
+  version: number;
+  is_public: boolean;
+  slug: string | null;
+  miniapp_app_id: string | null;
+};
+
+const OWNED_FIELDS = "id, name, emoji, status, version, is_public, slug, miniapp_app_id";
+
+async function ownedProject(db: Db, projectId: string | undefined, wallet: string): Promise<OwnedProject | null> {
+  if (!projectId) return null;
+  const { data } = await db
+    .from("builder_projects")
+    .select(OWNED_FIELDS)
+    .eq("id", projectId)
+    .eq("wallet", wallet)
+    .maybeSingle();
+  return data ?? null;
+}
+
+function listingFields(project: OwnedProject) {
+  const origin = appOrigin(project.slug!);
+  return {
+    domain: new URL(origin).hostname,
+    home_url: `${origin}/`,
+    name: project.name,
+    icon_url: `${origin}/icon.svg`,
+    description: `${project.name} — built with DeHub Builder.`,
+    manifest: { builderProjectId: project.id, name: project.name, homeUrl: `${origin}/` },
+    updated_at: new Date().toISOString(),
+  };
+}
+
+/**
+ * List the app in the mini app store. A Builder app skips the dehub.json
+ * ownership signature other apps need: the wallet that built it on DeHub is
+ * its owner by definition. Like any new submission it starts `unlisted`
+ * (shareable, marked Unreviewed) until staff promote it.
+ */
+async function publishListing(db: Db, project: OwnedProject, wallet: string) {
+  const fields = listingFields(project);
+  if (project.miniapp_app_id) {
+    const { data: existing } = await db
+      .from("miniapp_apps")
+      .select("id, slug, status, tier")
+      .eq("id", project.miniapp_app_id)
+      .maybeSingle();
+    if (existing) {
+      if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact DeHub support.");
+      await db.from("miniapp_apps").update({ ...fields, status: "live", review_note: null }).eq("id", existing.id);
+      return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://dehub.io/apps/${existing.slug}` };
+    }
+  }
+  let appSlug = project.slug!;
+  const { data: clash } = await db.from("miniapp_apps").select("id").eq("slug", appSlug).maybeSingle();
+  if (clash) appSlug = `${appSlug.slice(0, 33)}-${crypto.randomUUID().slice(0, 5)}`;
+  const { data: created, error } = await db
+    .from("miniapp_apps")
+    .insert({
+      ...fields,
+      slug: appSlug,
+      owner_wallet: wallet,
+      submitted_by: wallet,
+      source: "dehub",
+      category: "utility",
+      tier: "unlisted",
+      status: "live",
+    })
+    .select("id, slug, tier")
+    .single();
+  if (error || !created) throw new Error(error?.message ?? "Could not publish this app");
+  await db.from("builder_projects").update({ miniapp_app_id: created.id }).eq("id", project.id);
+  return { appSlug: created.slug, tier: created.tier, storeUrl: `https://dehub.io/apps/${created.slug}` };
+}
+
+/** Take the app out of the store, keeping its listing so republishing restores it. */
+async function unpublish(db: Db, projectId: string) {
+  const { data: project } = await db.from("builder_projects").select("miniapp_app_id").eq("id", projectId).maybeSingle();
+  if (!project?.miniapp_app_id) return;
+  await db
+    .from("miniapp_apps")
+    .update({ status: "pending", review_note: "Unpublished by its owner", updated_at: new Date().toISOString() })
+    .eq("id", project.miniapp_app_id)
+    .neq("status", "suspended");
+}
+
+/** After a rename, restore or new address, keep the store listing in step. */
+async function syncListing(db: Db, projectId: string) {
+  const { data: project } = await db.from("builder_projects").select(OWNED_FIELDS).eq("id", projectId).maybeSingle();
+  if (!project?.miniapp_app_id || !project.slug) return;
+  await db.from("miniapp_apps").update(listingFields(project)).eq("id", project.miniapp_app_id);
+}
+
 // ---------------------------------------------------------------------------
 // Request handling
 // ---------------------------------------------------------------------------
@@ -499,6 +636,8 @@ Deno.serve(async (req) => {
     content?: string;
     model?: string;
     isPublic?: boolean;
+    slug?: string;
+    version?: number;
   };
   try {
     body = await req.json();
@@ -515,7 +654,7 @@ Deno.serve(async (req) => {
       case "list": {
         const { data } = await db
           .from("builder_projects")
-          .select("id, name, emoji, prompt, status, status_detail, error, version, is_public, created_at, updated_at")
+          .select(PROJECT_FIELDS)
           .eq("wallet", wallet)
           .order("updated_at", { ascending: false })
           .limit(100);
@@ -636,7 +775,7 @@ Deno.serve(async (req) => {
         if (!projectId) return jsonResponse({ error: "projectId required" }, 400);
         const { data: project } = await db
           .from("builder_projects")
-          .select("id, name, emoji, status, status_detail, error, version, updated_at")
+          .select("id, name, emoji, status, status_detail, error, version, slug, is_public, updated_at")
           .eq("id", projectId)
           .eq("wallet", wallet)
           .maybeSingle();
@@ -657,7 +796,7 @@ Deno.serve(async (req) => {
         if (!projectId) return jsonResponse({ error: "projectId required" }, 400);
         const { data: project } = await db
           .from("builder_projects")
-          .select("id, name, emoji, prompt, status, status_detail, error, version, is_public, created_at, updated_at")
+          .select(PROJECT_FIELDS)
           .eq("id", projectId)
           .eq("wallet", wallet)
           .maybeSingle();
@@ -673,7 +812,16 @@ Deno.serve(async (req) => {
           .select("path, content")
           .eq("project_id", projectId)
           .order("path");
-        return jsonResponse({ project, messages: messages ?? [], files: files ?? [] });
+        const { data: listing } = project.miniapp_app_id
+          ? await db.from("miniapp_apps").select("slug, status, tier").eq("id", project.miniapp_app_id).maybeSingle()
+          : { data: null };
+        return jsonResponse({
+          project,
+          url: project.slug ? `${appOrigin(project.slug)}/` : null,
+          listing: listing ? { ...listing, published: listing.status === "live" } : null,
+          messages: messages ?? [],
+          files: files ?? [],
+        });
       }
 
       case "remove": {
@@ -687,8 +835,110 @@ Deno.serve(async (req) => {
           .eq("wallet", wallet)
           .maybeSingle();
         if (!owned) return jsonResponse({ error: "Project not found" }, 404);
+        await unpublish(db, projectId);
         await removeStorage(db, projectId);
         await db.from("builder_projects").delete().eq("id", projectId).eq("wallet", wallet);
+        return jsonResponse({ ok: true });
+      }
+
+      case "versions": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        const { data } = await db
+          .from("builder_versions")
+          .select("version, name, emoji, summary, created_at")
+          .eq("project_id", project.id)
+          .order("version", { ascending: false })
+          .limit(100);
+        return jsonResponse({ current: project.version, versions: data ?? [] });
+      }
+
+      case "restore": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        if (BUSY_STATUSES.has(project.status)) {
+          return jsonResponse({ error: "Hold on — a build is already running for this app." }, 409);
+        }
+        const { data: snap } = await db
+          .from("builder_versions")
+          .select("version, name, emoji, files")
+          .eq("project_id", project.id)
+          .eq("version", Number(body.version))
+          .maybeSingle();
+        if (!snap) return jsonResponse({ error: "That version does not exist" }, 404);
+        await saveFiles(db, project.id, snap.files);
+        const version = project.version + 1;
+        await snapshot(db, project.id, version, { name: snap.name, emoji: snap.emoji, summary: `Restored v${snap.version}` }, snap.files);
+        await db
+          .from("builder_projects")
+          .update({ name: snap.name, emoji: snap.emoji, version, status: "live", status_detail: "Live", error: null, updated_at: new Date().toISOString() })
+          .eq("id", project.id);
+        await log(db, project.id, `⏪ Restored version ${snap.version}`, "agent");
+        await syncListing(db, project.id);
+        return jsonResponse({ ok: true, version });
+      }
+
+      case "set_visibility": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        const isPublic = body.isPublic === true;
+        await db.from("builder_projects").update({ is_public: isPublic, updated_at: new Date().toISOString() }).eq("id", project.id);
+        if (isPublic) {
+          await mirrorToStorage(db, project.id, await loadFiles(db, project.id));
+        } else {
+          // A private app cannot stay in the store.
+          await unpublish(db, project.id);
+          await removeStorage(db, project.id);
+        }
+        return jsonResponse({ ok: true, isPublic });
+      }
+
+      case "set_slug": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        const slug = (body.slug ?? "").trim().toLowerCase();
+        const problem = slugProblem(slug);
+        if (problem) return jsonResponse({ error: problem }, 400);
+        if (slug !== project.slug) {
+          const { error } = await db
+            .from("builder_projects")
+            .update({ slug, updated_at: new Date().toISOString() })
+            .eq("id", project.id);
+          // The unique index is the real check; two people racing for a name both get here.
+          if (error) return jsonResponse({ error: "That address is taken." }, 409);
+          await syncListing(db, project.id);
+        }
+        return jsonResponse({ ok: true, slug, url: `${appOrigin(slug)}/` });
+      }
+
+      case "preview_url": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        if (!project.slug) return jsonResponse({ error: "This app has not finished its first build yet." }, 409);
+        const home = `${appOrigin(project.slug)}/`;
+        if (project.is_public) return jsonResponse({ url: home, publicUrl: home, expiresAt: null });
+        const { token, expiresAt } = await signPreviewToken(project.id);
+        return jsonResponse({ url: `${appOrigin(project.slug)}/~t/${token}/`, publicUrl: home, expiresAt });
+      }
+
+      case "publish": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        if (!project.slug || project.version < 1) {
+          return jsonResponse({ error: "Build the app before publishing it." }, 409);
+        }
+        if (!project.is_public) {
+          await db.from("builder_projects").update({ is_public: true }).eq("id", project.id);
+          await mirrorToStorage(db, project.id, await loadFiles(db, project.id));
+        }
+        const listing = await publishListing(db, { ...project, is_public: true }, wallet);
+        return jsonResponse({ ok: true, ...listing });
+      }
+
+      case "unpublish": {
+        const project = await ownedProject(db, body.projectId, wallet);
+        if (!project) return jsonResponse({ error: "Project not found" }, 404);
+        await unpublish(db, project.id);
         return jsonResponse({ ok: true });
       }
 
