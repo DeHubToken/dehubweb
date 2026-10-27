@@ -23,6 +23,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { getWalletBrowserName, getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { embeddedBrowserApp, systemBrowserUrl } from '@/lib/embedded-browser';
+import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
@@ -367,6 +368,8 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         setPasskeyError(t('loginModal.passkeyNotLinked', 'No account is linked to that fingerprint yet. Create a new account instead.'));
       } else if (error instanceof PasskeyLoginError && error.code === 'ALREADY_REGISTERED') {
         setPasskeyError(t('loginModal.passkeyAlreadyRegistered', 'That fingerprint already has an account. Use Sign in instead.'));
+      } else if (isChunkLoadError(error) && recoverFromChunkError() === 'reloading') {
+        // A tab from before a deploy: reloading fetches the passkey code again.
       } else {
         console.error('Passkey login failed:', error);
         setPasskeyError(error instanceof Error && error.message
