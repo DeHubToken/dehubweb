@@ -5920,6 +5920,20 @@ specificity animation declarations above.
   .reply-text-glow { animation: none; }
 }
 
+/* The row a notification opened, flashed once it has come to rest on screen
+   (lib/focus-scroll). Background only, so the row keeps its geometry and the
+   thread connectors stay put. */
+@keyframes focus-target-flash {
+  0%, 35% { background-color: color-mix(in srgb, currentColor 14%, transparent); }
+  100% { background-color: transparent; }
+}
+.focus-target-flash {
+  animation: focus-target-flash 2000ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-target-flash { animation-duration: 1ms; }
+}
+
 /* Artwork backing — light themes only
    ===================================
    The badge and medal artwork is drawn for a dark canvas: the silver and chrome

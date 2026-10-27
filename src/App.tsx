@@ -452,7 +452,7 @@ function AppContent() {
   // attaches the signed-in address to them.
   usePageViewAddress(walletAddress);
   // A pushed notification focuses this tab and posts where it wanted to go.
-  useNotificationClickRouting();
+  useNotificationClickRouting(walletAddress);
   // Session-wide, not page-wide: the bell count and the cached notifications
   // page both go stale while the reader is anywhere else in the app.
   useNotificationRealtime();
