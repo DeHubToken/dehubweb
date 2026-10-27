@@ -98,7 +98,7 @@ export async function renderTurntable(url: string, options: TurntableOptions = {
       const part = node as unknown as { geometry?: Disposable; material?: Disposable | Disposable[] };
       part.geometry?.dispose();
       for (const material of Array.isArray(part.material) ? part.material : part.material ? [part.material] : []) {
-        for (const value of Object.values(material)) if ((value as { isTexture?: boolean } | null)?.isTexture) textures.add(value as Disposable);
+        for (const value of Object.values(material)) if ((value as { isTexture?: boolean } | null)?.isTexture) textures.add(value as unknown as Disposable);
         material.dispose();
       }
     });
