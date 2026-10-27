@@ -608,7 +608,6 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
-                      {msg.is_edited && <span className="ml-1">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                     </span>
                   </div>
                   {/* Your own line — edit and remove, on hover like the host's pin */}

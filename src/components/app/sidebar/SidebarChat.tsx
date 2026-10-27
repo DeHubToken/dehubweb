@@ -544,7 +544,6 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
-                        {msg.is_edited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                       </span>
                       {editingId === msg.id ? (
                         <div className="mt-0.5">
