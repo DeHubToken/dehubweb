@@ -2557,7 +2557,8 @@
     "resendCodePhone": "Mauvais numéro ou aucun code ? Retour",
     "continueAs": "Continuer en tant que",
     "switchWalletAccount": "Changer de compte",
-    "walletLoadFailed": "Impossible de charger les portefeuilles. Veuillez réessayer."
+    "walletLoadFailed": "Impossible de charger les portefeuilles. Veuillez réessayer.",
+    "migrateWrongLogin": "Cette connexion a ouvert un autre portefeuille, donc rien n'a changé. Votre ancien profil a été créé avec {{login}}. Utilisez-le pour le récupérer."
   },
   "careers": {
     "title": "Carrières chez DeHub",
@@ -15140,8 +15141,8 @@
     "1b52b1397dee": "Retour à ",
     "9e9ae626652a": "Lettres, chiffres, tirets et underscores. Jusqu'à 30 caractères.",
     "dc85af8f2b1d": "Enregistrement en cours...",
-    "08b6a3efc2b5": "Fantôme",
-    "2ef54eee0edd": "Portefeuille de confiance",
+    "08b6a3efc2b5": "Phantom",
+    "2ef54eee0edd": "Trust Wallet",
     "bcbaa814d3ca": "Mentionner un utilisateur",
     "8f1aa08d3a21": "Tapez pour rechercher des utilisateurs",
     "3457098e7042": "Vous suit",
@@ -16425,7 +16426,7 @@
     "b98adf20f5f3": "Portefeuille — Gérer vos actifs cryptographiques",
     "00787feeb046": "Affichez les soldes, envoyez et recevez des jetons et gérez vos actifs cryptographiques sur plusieurs chaînes sur DeHub.",
     "112e22b0fd15": "Portefeuille DeHub — Médias sociaux décentralisés, résistance à la censure et liberté d'expression",
-    "5dc85dbc155e": "Chaîne BNB",
+    "5dc85dbc155e": "BNB Chain",
     "6b8a9141538a": "En staking",
     "228fc4afbce4": "Cadeau (verrouillé)",
     "911c67ed8f19": "Acheter via Coinbase — Visa, Mastercard, Apple Pay",
@@ -16643,7 +16644,7 @@
     "b62c681738d1": "Cu",
     "b602b7029be6": "Pt",
     "d8d91b2e06df": "NG",
-    "f223faa96f22": "Apple 🍎",
+    "f223faa96f22": "Apple",
     "c7bac46904be": "Microsoft",
     "6850f76b953d": "Berkshire Hathaway",
     "00fb5022b75a": "TSMC",
