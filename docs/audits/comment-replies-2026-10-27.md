@@ -8,6 +8,8 @@ Production client logs for nickrookie contain no comment/reply failure in the pr
 
 The web and Android fixes in PRs #3361 and #2525 published successfully. Production desktop verification confirmed that the comment-level Reply button opens the correct target, focuses the composer, and preserves an existing draft. On a physical Samsung SM-S926B running native version 1.18.6/build 90, an ADB-driven tap on that same comment's Reply button displayed “Replying to mal”, focused the reply field, and reported `mInputShown=true`. The empty reply was cancelled after the check.
 
+The same physical phone also passed in Samsung Internet on production: tapping the comment's speech bubble directly displayed “Replying to @maldoteth”, placed the caret after the mention, and opened the Android keyboard (`mInputShown=true`). No post-level Comment-button workaround was needed. The unsent mention was cleared after verification.
+
 ## Confirmed defects addressed
 
 | Surface | Trigger and failure | Correction |
