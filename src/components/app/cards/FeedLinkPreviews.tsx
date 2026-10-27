@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
+import { fetchLinkPreview, extractUrlsFromText, subscribeLinkPreviewRefresh, type LinkPreviewData } from '@/lib/api/link-preview';
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
@@ -36,6 +36,13 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const url = externalUrls(text)[0];
+  // Bumped when this link is refreshed from a post menu, so the card re-reads it.
+  const [refreshes, setRefreshes] = useState(0);
+
+  useEffect(() => {
+    if (!url) return;
+    return subscribeLinkPreviewRefresh((refreshed) => { if (refreshed === url) setRefreshes((n) => n + 1); });
+  }, [url]);
 
   useEffect(() => {
     let cancelled = false;
@@ -56,7 +63,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [url]);
+  }, [url, refreshes]);
 
   const urls = externalUrls(text);
   if (urls.length === 0) return null;

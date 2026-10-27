@@ -108,7 +108,7 @@ export async function readHtmlResponse(conn: Pick<Deno.Conn, 'read'>) {
   return { status, html: new TextDecoder().decode(body.subarray(0, size)) };
 }
 
-export async function pinnedHttp(url: URL, address: string, signal: AbortSignal) {
+export async function pinnedHttp(url: URL, address: string, signal: AbortSignal, fresh = false) {
   let conn: Deno.Conn | undefined;
   const close = () => { try { conn?.close(); } catch { /* already closed */ } };
   signal.throwIfAborted();
@@ -123,7 +123,7 @@ export async function pinnedHttp(url: URL, address: string, signal: AbortSignal)
       conn = await Deno.startTls(tcp, { hostname: url.hostname.replace(/^\[|\]$/g, ''), alpnProtocols: ['http/1.1'] });
       signal.throwIfAborted();
     }
-    const request = new TextEncoder().encode(`GET ${url.pathname}${url.search} HTTP/1.1\r\nHost: ${url.host}\r\nUser-Agent: DeHubLinkPreview/1.0\r\nAccept: text/html,application/xhtml+xml\r\nAccept-Encoding: identity\r\nConnection: close\r\n\r\n`);
+    const request = new TextEncoder().encode(`GET ${url.pathname}${url.search} HTTP/1.1\r\nHost: ${url.host}\r\nUser-Agent: DeHubLinkPreview/1.0\r\nAccept: text/html,application/xhtml+xml\r\nAccept-Encoding: identity\r\n${fresh ? 'Cache-Control: no-cache\r\nPragma: no-cache\r\n' : ''}Connection: close\r\n\r\n`);
     let sent = 0;
     while (sent < request.length) sent += await conn.write(request.subarray(sent));
     return await readHtmlResponse(conn);

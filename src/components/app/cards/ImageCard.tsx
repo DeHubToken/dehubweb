@@ -1108,6 +1108,8 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}
                 onBeforeNavigate={() => setShowOptionsDrawer(false)}
+                linkText={[post.title, post.description].filter(Boolean).join('\n')}
+                onClose={() => setShowOptionsDrawer(false)}
               />
               {!isOwnPost && (
                 <button
