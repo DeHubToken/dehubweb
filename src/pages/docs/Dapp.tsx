@@ -117,6 +117,7 @@ const Dapp = () => {
     { id: 'live-gifts', label: t('dapp.tocLiveGifts') },
     { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
     { id: 'messages', label: t('dapp.messagesTitle') },
+    { id: 'messages-new', label: t('dapp.tocMessagesNew') },
     { id: 'superpowers', label: t('dapp.superPowersTitle') },
     { id: 'fees', label: t('dapp.tocFees') },
     { id: 'communities', label: t('dapp.communitiesTitle') },
@@ -1662,7 +1663,19 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="superpowers" className="mt-12 scroll-mt-32">
+                    <GuideSection
+            id="messages-new"
+            title="dapp.messagesNewTitle"
+            paras={['dapp.messagesNewDesc']}
+            bullets={[
+              ['dapp.messagesNewB1', 'dapp.messagesNewB1Desc'],
+              ['dapp.messagesNewB2', 'dapp.messagesNewB2Desc'],
+              ['dapp.messagesNewB3', 'dapp.messagesNewB3Desc'],
+              ['dapp.messagesNewB4', 'dapp.messagesNewB4Desc']
+            ]}
+          />
+
+<section id="superpowers" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
 
             <div className="space-y-6">
