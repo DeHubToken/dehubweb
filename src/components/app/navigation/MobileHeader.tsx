@@ -236,13 +236,12 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
-            {/* The bell's body (not the clapper below it) spans the mark's height:
-                at 32 it runs y 0.5 to 26.3 and x 2.5 to 29.5 of its box, so the
-                box moves down 2.7px and out 2.5px to sit the body's bottom on
-                the mark's bottom and its side on the pill-inset edge. A flex
-                box, not a block, or a line box taller than the bell lifts it. */}
-            <span className="flex h-8 w-8 -mr-[2.5px] translate-y-[2.7px]">
-              <NotificationBell unread={totalNotifUnread} size={32} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
+            {/* The bell's body (not the clapper below it) sits on the mark's
+                bottom edge: at 31 it runs y 0.5 to 25.5 and x 2.4 to 28.6 of its
+                box, so the box moves down 3px and out 2.4px. A flex box, not a
+                block, or a line box taller than the bell lifts it. */}
+            <span className="flex h-[31px] w-[31px] -mr-[2.4px] translate-y-[3px]">
+              <NotificationBell unread={totalNotifUnread} size={31} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
             </span>
           </button>
         )}
