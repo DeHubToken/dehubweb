@@ -570,6 +570,16 @@
     "heading": "Courts DeHub"
   },
   "settings": {
+    "postLanding": "Après la publication",
+    "postLandingDesc": "Comment votre nouvelle publication arrive dans votre fil",
+    "postLandingGhost": "Emplacement fantôme",
+    "postLandingGhostDesc": "Votre fil fait de la place et votre publication apparaît en fondu",
+    "postLandingMorph": "Métamorphose",
+    "postLandingMorphDesc": "L’éditeur se réduit pour devenir votre publication",
+    "postLandingPill": "De la barre à la carte",
+    "postLandingPillDesc": "La barre d’envoi s’ouvre pour devenir votre publication une fois en ligne",
+    "postLandingDrop": "Chute",
+    "postLandingDropDesc": "Votre publication tombe d’en haut avec un léger rebond",
     "glass": "Glassy",
     "sessionsRevokedMany": "{{count}} appareils déconnectés",
     "usernameTaken": "Nom d'utilisateur déjà pris",

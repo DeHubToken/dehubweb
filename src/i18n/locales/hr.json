@@ -494,6 +494,16 @@
     "heading": "DeHub kratki videozapisi"
   },
   "settings": {
+    "postLanding": "Nakon objave",
+    "postLandingDesc": "Kako se nova objava pojavljuje u feedu",
+    "postLandingGhost": "Prazno mjesto",
+    "postLandingGhostDesc": "Feed napravi mjesta i tvoja se objava polako pojavi",
+    "postLandingMorph": "Preobrazba",
+    "postLandingMorphDesc": "Uređivač se smanji u tvoju objavu",
+    "postLandingPill": "Od trake do kartice",
+    "postLandingPillDesc": "Traka za prijenos otvori se u tvoju objavu kad je objavljena",
+    "postLandingDrop": "Upadanje",
+    "postLandingDropDesc": "Tvoja objava upadne odozgo uz mali odskok",
     "sessionsRevokedMany": "Uređaji korisnika {{count}} su odjavljeni",
     "usernameTaken": "Korisničko ime je zauzeto",
     "postingChain": "Blockchain za objave",

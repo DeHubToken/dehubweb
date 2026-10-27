@@ -493,6 +493,16 @@
     "heading": "DeHub Շորթս"
   },
   "settings": {
+    "postLanding": "Հրապարակելուց հետո",
+    "postLandingDesc": "Ինչպես է նոր գրառումդ հայտնվում հոսքում",
+    "postLandingGhost": "Ուրվական տեղ",
+    "postLandingGhostDesc": "Հոսքը տեղ է բացում, և գրառումդ մեղմ հայտնվում է",
+    "postLandingMorph": "Կերպարանափոխում",
+    "postLandingMorphDesc": "Խմբագիրը փոքրանում է ու դառնում քո գրառումը",
+    "postLandingPill": "Գոտուց քարտ",
+    "postLandingPillDesc": "Վերբեռնման գոտին բացվում է քո գրառման մեջ՝ հրապարակվելուն պես",
+    "postLandingDrop": "Վայրէջք",
+    "postLandingDropDesc": "Գրառումդ իջնում է վերևից թեթև ցատկով",
     "sessionsRevokedMany": "{{count}} սարքերը դուրս են եկել",
     "usernameTaken": "Օգտանունը զբաղված է",
     "postingChain": "Գրառումների բլոկչեյն",

@@ -494,6 +494,16 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postLanding": "Dopo la pubblicazione",
+    "postLandingDesc": "Come arriva il tuo nuovo post nel feed",
+    "postLandingGhost": "Spazio fantasma",
+    "postLandingGhostDesc": "Il feed fa spazio e il tuo post appare in dissolvenza al suo posto",
+    "postLandingMorph": "Trasformazione",
+    "postLandingMorphDesc": "L’editor si rimpicciolisce fino a diventare il tuo post",
+    "postLandingPill": "Dalla barra alla scheda",
+    "postLandingPillDesc": "La barra di caricamento si apre nel tuo post quando è online",
+    "postLandingDrop": "Caduta",
+    "postLandingDropDesc": "Il tuo post scende dall’alto con un piccolo rimbalzo",
     "sessionsRevokedMany": "{{count}} dispositivi disconnessi",
     "usernameTaken": "Nome utente già in uso",
     "postingChain": "Blockchain dei post",

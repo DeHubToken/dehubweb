@@ -493,6 +493,16 @@
     "heading": "DeHub Богино"
   },
   "settings": {
+    "postLanding": "Нийтэлсний дараа",
+    "postLandingDesc": "Шинэ нийтлэл тань хэрхэн мэдээллийн урсгалд гарч ирэх",
+    "postLandingGhost": "Сүнсэн байр",
+    "postLandingGhostDesc": "Урсгал зай гаргаж, нийтлэл тань зөөлөн гарч ирнэ",
+    "postLandingMorph": "Хувирал",
+    "postLandingMorphDesc": "Бичих цонх жижгэрч нийтлэл тань болно",
+    "postLandingPill": "Зурваснаас карт руу",
+    "postLandingPillDesc": "Нийтлэгдмэгц байршуулах зурвас дэлгэгдэж нийтлэл тань болно",
+    "postLandingDrop": "Унах",
+    "postLandingDropDesc": "Нийтлэл тань дээрээс бага зэрэг ойж унана",
     "sessionsRevokedMany": "{{count}} devices гарын үсэг зурлаа",
     "usernameTaken": "Энэ нэр аль хэдийн эзэлсэн",
     "postingChain": "Нийтлэлийн блокчейн",

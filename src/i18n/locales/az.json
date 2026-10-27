@@ -493,6 +493,16 @@
     "heading": "DeHub Qısalar"
   },
   "settings": {
+    "postLanding": "Paylaşdıqdan sonra",
+    "postLandingDesc": "Yeni paylaşımının lentdə necə göründüyü",
+    "postLandingGhost": "Xəyali yer",
+    "postLandingGhostDesc": "Lent yer açır və paylaşımın yavaşca yerində görünür",
+    "postLandingMorph": "Çevrilmə",
+    "postLandingMorphDesc": "Redaktor kiçilərək paylaşımına çevrilir",
+    "postLandingPill": "Zolaqdan karta",
+    "postLandingPillDesc": "Paylaşım dərc olunanda yükləmə zolağı açılıb paylaşımına çevrilir",
+    "postLandingDrop": "Düşmə",
+    "postLandingDropDesc": "Paylaşımın yuxarıdan kiçik sıçrayışla düşür",
     "sessionsRevokedMany": "{{count}} cihazlar imzalandı",
     "usernameTaken": "Bu ad tutulub",
     "postingChain": "Paylaşım blokçeyni",

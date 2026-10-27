@@ -570,6 +570,16 @@
     "heading": "DeHub-shorts"
   },
   "settings": {
+    "postLanding": "Na het plaatsen",
+    "postLandingDesc": "Hoe je nieuwe bericht in je feed verschijnt",
+    "postLandingGhost": "Spookplek",
+    "postLandingGhostDesc": "Je feed maakt ruimte en je bericht vervaagt op zijn plek",
+    "postLandingMorph": "Morph",
+    "postLandingMorphDesc": "De editor krimpt tot je bericht",
+    "postLandingPill": "Van balk naar kaart",
+    "postLandingPillDesc": "De uploadbalk opent zich tot je bericht zodra het online staat",
+    "postLandingDrop": "Invallen",
+    "postLandingDropDesc": "Je bericht valt van boven in met een kleine stuiter",
     "glass": "Glasachtig",
     "sessionsRevokedMany": "{{count}} apparaten zijn uitgelogd",
     "usernameTaken": "Gebruikersnaam is bezet",

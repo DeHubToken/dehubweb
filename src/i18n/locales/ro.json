@@ -494,6 +494,16 @@
     "heading": "Shorts pe DeHub"
   },
   "settings": {
+    "postLanding": "După ce postezi",
+    "postLandingDesc": "Cum apare noua ta postare în flux",
+    "postLandingGhost": "Loc fantomă",
+    "postLandingGhostDesc": "Fluxul face loc și postarea ta apare treptat la locul ei",
+    "postLandingMorph": "Transformare",
+    "postLandingMorphDesc": "Editorul se micșorează și devine postarea ta",
+    "postLandingPill": "De la bară la card",
+    "postLandingPillDesc": "Bara de încărcare se deschide în postarea ta după ce este publicată",
+    "postLandingDrop": "Cădere",
+    "postLandingDropDesc": "Postarea ta cade de sus cu o mică săritură",
     "sessionsRevokedMany": "{{count}} dispozitive deconectate",
     "usernameTaken": "Numele de utilizator este ocupat",
     "postingChain": "Blockchain pentru postări",

@@ -489,6 +489,16 @@
     "heading": "DeHub шорттары"
   },
   "settings": {
+    "postLanding": "Жариялағаннан кейін",
+    "postLandingDesc": "Жаңа жазбаңыз лентада қалай пайда болады",
+    "postLandingGhost": "Елес орын",
+    "postLandingGhostDesc": "Лента орын босатады да, жазбаңыз ақырын пайда болады",
+    "postLandingMorph": "Өзгеру",
+    "postLandingMorphDesc": "Жазу терезесі кішірейіп, жазбаңызға айналады",
+    "postLandingPill": "Жолақтан картаға",
+    "postLandingPillDesc": "Жарияланғанда жүктеу жолағы ашылып, жазбаңызға айналады",
+    "postLandingDrop": "Түсу",
+    "postLandingDropDesc": "Жазбаңыз жоғарыдан сәл секіріп түседі",
     "sessionsRevokedMany": "{{count}}Құрылғыларға қол қойылды",
     "usernameTaken": "Бұл ат бос емес",
     "postingChain": "Жарияланымдар блокчейні",

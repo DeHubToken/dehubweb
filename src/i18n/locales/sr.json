@@ -493,6 +493,16 @@
     "heading": "DeHub кратки видео"
   },
   "settings": {
+    "postLanding": "После објаве",
+    "postLandingDesc": "Како се нова објава појављује у фиду",
+    "postLandingGhost": "Празно место",
+    "postLandingGhostDesc": "Фид направи места и твоја објава се полако појави",
+    "postLandingMorph": "Преображај",
+    "postLandingMorphDesc": "Уређивач се смањи у твоју објаву",
+    "postLandingPill": "Од траке до картице",
+    "postLandingPillDesc": "Трака за отпремање се отвори у твоју објаву када је објављена",
+    "postLandingDrop": "Упадање",
+    "postLandingDropDesc": "Твоја објава упадне одозго уз мали одскок",
     "sessionsRevokedMany": "Уређаји {{count}} су одјављени",
     "usernameTaken": "Корисничко име је заузето",
     "postingChain": "Блокчејн за објаве",
