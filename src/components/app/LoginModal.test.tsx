@@ -32,23 +32,24 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-it.each([390, 820, 1280])('keeps signup in one sheet at %i px and prevents abandoning the required profile', async (width) => {
+it.each([390, 820, 1280])('moves signup into the full-screen welcome flow at %i px and keeps the required profile from being abandoned', async (width) => {
   vi.stubGlobal('innerWidth', width);
   const close = vi.fn();
   const view = render(<LoginModal open onOpenChange={close} />);
   await screen.findByRole('button', { name: 'Sign in with Apple' });
-  const sheet = screen.getByTestId('sheet');
+  expect(screen.getByTestId('sheet')).toHaveAttribute('data-dismissible', 'true');
   auth.requiresUsername = true;
   view.rerender(<LoginModal open onOpenChange={close} />);
   await screen.findByRole('textbox', { name: 'Username' });
-  expect(screen.getByTestId('sheet')).toBe(sheet);
-  expect(sheet).toHaveAttribute('data-dismissible', 'false');
+  // The profile step takes the whole screen, with no sheet to swipe or close.
+  const flow = screen.getByRole('dialog');
+  expect(flow).toHaveAttribute('data-welcome-flow');
+  expect(screen.queryByTestId('sheet')).toBeNull();
   expect(screen.queryByRole('button', { name: 'Sign in with Apple' })).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Close sheet' }));
   expect(close).not.toHaveBeenCalled();
 
   auth.requiresUsername = false;
   view.rerender(<LoginModal open onOpenChange={close} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Close sheet' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Close sheet' }));
   expect(close).toHaveBeenCalledWith(false);
 });

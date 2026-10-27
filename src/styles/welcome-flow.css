@@ -1,0 +1,65 @@
+/*
+ * Welcome flow (components/app/login/LoginProfileStep.tsx, mounted full screen
+ * by LoginModal). A frosted layer over the app, so each theme's own backdrop
+ * still tints it, with the theme's bento surface on the profile card.
+ */
+[data-welcome-flow] {
+  background: rgb(0 0 0 / 0.62);
+  -webkit-backdrop-filter: blur(36px) saturate(150%);
+  backdrop-filter: blur(36px) saturate(150%);
+  color: #fff;
+}
+
+/* Theme stylesheets recolour white buttons and chips (Osaka, Jungle, System),
+   so the call to action and picked chips set their colours outright. */
+[data-welcome-flow] :is([data-welcome-cta], [data-welcome-chip="on"]) { background: #fff !important; color: #0b0b0d !important; border-color: #fff !important; }
+[data-welcome-cta][data-off] { opacity: 0.4; }
+
+/* Each step slides in from the side it comes from; card pieces pop in as
+   they are filled (photo, topic artwork, chips, follow count). */
+[data-welcome-body][data-dir="fwd"] { animation: welcome-in-fwd 320ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+[data-welcome-body][data-dir="back"] { animation: welcome-in-back 320ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+[data-welcome-pop] { animation: welcome-pop 380ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+[data-welcome-card] { transition: transform 300ms ease; }
+[data-welcome-flow] button:active { transform: scale(0.97); }
+[data-welcome-flow] button { transition: transform 120ms ease, background-color 160ms ease, color 160ms ease, opacity 160ms ease; }
+[data-welcome-caret] { animation: welcome-caret 1s steps(1) infinite; }
+
+@keyframes welcome-in-fwd {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes welcome-in-back {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes welcome-pop {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes welcome-caret { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-welcome-body], [data-welcome-caret], [data-welcome-pop] { animation: none !important; }
+}
+
+/* Light looks: the page is light, so the layer, the CTA and the picked chips
+   flip to dark ink. Text colours are remapped by system-light.css, which
+   already covers [role="dialog"]. */
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] {
+  background: rgb(255 255 255 / 0.78);
+  color: #0b0b0d;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] :is([data-welcome-cta], [data-welcome-chip="on"]) {
+  background: #0b0b0d !important;
+  color: #fff !important;
+  border-color: #0b0b0d !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] [data-welcome-dot="on"] { background: #0b0b0d; }
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] :is(.border-white\/15, .border-white\/20, .border-white\/12) {
+  border-color: rgb(0 0 0 / 0.14) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] :is(.bg-white\/\[0\.06\], .bg-white\/\[0\.07\], .bg-white\/\[0\.05\], .bg-white\/10) {
+  background: rgb(0 0 0 / 0.05) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-welcome-flow] [data-welcome-caret] { background: #0b0b0d; }
