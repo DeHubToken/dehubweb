@@ -8,6 +8,7 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
@@ -43,6 +44,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     hlsUrl: buildHlsUrl(nft.hlsUrl),
     transcodingStatus: nft.transcodingStatus,
     storyboard: toStoryboard(nft.storyboard),
+    storedAspect: storedVideoAspect(nft.videoInfo),
     duration: formatDuration(nft.videoDuration || nft.duration),
     title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
     description: nft.description || undefined,

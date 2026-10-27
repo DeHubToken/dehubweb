@@ -66,6 +66,7 @@ import lock3dIcon from '@/assets/lock-3d.webp';
 import home3dIcon from '@/assets/icons/home-3d-icon.webp';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.webp';
 import { toStoryboard } from '@/lib/storyboard';
+import { storedVideoAspect } from '@/lib/video-aspect';
 
 /** Empty-state copy when the channel toolbar's sort/search is what emptied the tab. */
 const NO_MATCHES_COPY = {
@@ -1054,6 +1055,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           hlsUrl: buildHlsUrl(post.hlsUrl),
           transcodingStatus: post.transcodingStatus,
           storyboard: toStoryboard((post as { storyboard?: unknown }).storyboard),
+          storedAspect: storedVideoAspect((post as { videoInfo?: unknown }).videoInfo),
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || _translateCopy("copy.b764cdc0eab7", { defaultValue: "Unknown" }),
           channelAvatar: avatar, verified: false,

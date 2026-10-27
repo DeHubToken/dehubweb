@@ -528,7 +528,9 @@ function ImageCarousel({
   // A feed gallery is framed: the strip is as tall as its tallest photo, in a
   // thin outline, so posts with mixed photo sizes look the same.
   const framed = hasMultiple && !immersive;
-  const measuredAspects = useGalleryAspects(images, framed);
+  // A single photo is probed too: the card mounts long before it scrolls in,
+  // so its frame takes the real shape instead of a square that snaps later.
+  const measuredAspects = useGalleryAspects(images, !immersive);
   const tallestAspect = useMemo(() => {
     const known = measuredAspects.filter((ratio): ratio is number => !!ratio);
     return known.length ? Math.min(...known) : undefined;

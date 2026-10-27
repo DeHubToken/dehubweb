@@ -1800,8 +1800,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     intrinsicAspect,
     isImmersive ? THIN_MIN_RATIO : undefined,
     video.id,
+    video.storedAspect,
   );
-  const resolvedVideoAspect = intrinsicAspect ?? getMeasuredMediaAspect(thumbnail);
+  const resolvedVideoAspect = intrinsicAspect ?? getMeasuredMediaAspect(thumbnail) ?? video.storedAspect ?? null;
   const mediaAspect = useFeedFrameAspect(`video:${video.id}`, video.isAudio ? DEFAULT_ASPECT : measuredAspect, containerRef, !isImmersive && !isFullscreen,
     !video.isAudio && resolvedVideoAspect != null ? measuredAspect : undefined);
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
