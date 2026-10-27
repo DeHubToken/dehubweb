@@ -90,6 +90,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { VideoItem, ImagePost, TextPost, LiveStream } from '@/types/feed.types';
 import { hlsUrlFor, liveProviderOf, noteLatencyMode } from '@/lib/live-ingest';
 import { FocusCommentProvider } from '@/lib/focus-comment';
+import { bringIntoViewAndFlash } from '@/lib/focus-scroll';
 import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
@@ -1058,10 +1059,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       if (cancelled) return;
       const el = document.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        bringIntoViewAndFlash(el);
         return;
       }
-      if (attempt < 12) window.setTimeout(() => tryScroll(attempt + 1), 250);
+      // The comments list mounts after the post and fetches on its own, so
+      // give it up to six seconds on a slow connection rather than three.
+      if (attempt < 24) window.setTimeout(() => tryScroll(attempt + 1), 250);
     };
     const start = window.setTimeout(() => tryScroll(0), 150);
     const stop = window.setTimeout(() => setHighlightCommentId(undefined), 4500);

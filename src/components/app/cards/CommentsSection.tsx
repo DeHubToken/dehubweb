@@ -55,6 +55,7 @@ import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage
 import { VoiceStripPlayer } from '../audio/VoiceStripPlayer';
 import { LiveMicBars } from '../audio/LiveMicBars';
 import { useFocusComment } from '@/lib/focus-comment';
+import { bringIntoViewAndFlash } from '@/lib/focus-scroll';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import {
@@ -1800,7 +1801,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     const row = root.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
     if (!row) return;
     scrolledToFocusRef.current = focusCommentId;
-    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    bringIntoViewAndFlash(row);
   }, [focusCommentId, filteredGroupedComments]);
 
   /**
