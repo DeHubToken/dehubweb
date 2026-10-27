@@ -256,6 +256,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     messages,
     pinnedMessage,
     isLoading,
+    hasOlderMessages, isLoadingOlder, loadOlder, showMessage, showLatest, isHistoryWindow, error: historyError, refreshHistory,
     sendMessage,
     editMessage,
     deleteMessage,
@@ -367,7 +368,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     return filteredMessages.slice(filteredMessages.length - visibleCount);
   }, [filteredMessages, visibleCount, searchQuery]);
 
-  const hasMore = !searchQuery.trim() && filteredMessages.length > displayedMessages.length;
+  const hasMore = !searchQuery.trim() && (filteredMessages.length > displayedMessages.length || hasOlderMessages);
 
   // Initial scroll to bottom once messages first load
   useEffect(() => {
@@ -434,16 +435,21 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
 
   // Jumping to the pinned message: if it sits above the paginated window we
   // widen the window first and finish the jump once its node exists.
-  const jumpToMessage = useCallback((messageId: string) => {
+  const jumpToMessage = useCallback(async (messageId: string) => {
     const node = messageRefs.current[messageId];
     if (node) {
       node.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setHighlight({ id: messageId, nonce: Date.now() });
       return;
     }
-    pendingJumpRef.current = messageId;
-    setVisibleCount((c) => Math.max(c, messages.length));
-  }, [messages.length]);
+    try {
+      await showMessage(messageId);
+      pendingJumpRef.current = messageId;
+      setVisibleCount(Math.max(messages.length, 50));
+    } catch {
+      toast.error(t('common.failedToLoad'));
+    }
+  }, [showMessage, messages.length, t]);
 
   useEffect(() => {
     const pending = pendingJumpRef.current;
@@ -466,23 +472,42 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     return () => window.clearTimeout(timer);
   }, [highlight]);
 
+  const loadEarlier = useCallback(async () => {
+    if (isLoadingOlder) return;
+    const el = scrollRef.current;
+    if (el) prevScrollHeightRef.current = el.scrollHeight;
+    try {
+      if (visibleCount >= messages.length && !(await loadOlder())) {
+        prevScrollHeightRef.current = null;
+        return;
+      }
+      setVisibleCount(c => c + PAGE_SIZE);
+    } catch {
+      prevScrollHeightRef.current = null;
+      toast.error(t('common.failedToLoad'));
+    }
+  }, [isLoadingOlder, visibleCount, messages.length, loadOlder, t]);
+
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
     setShowJumpToLatest(distanceFromBottom > 100);
     if (distanceFromBottom < 50) setNewMessageCount(0);
-    if (el.scrollTop <= 0 && hasMore) {
-      prevScrollHeightRef.current = el.scrollHeight;
-      setVisibleCount((c) => c + PAGE_SIZE);
-    }
-  }, [hasMore]);
+    if (el.scrollTop <= 0 && hasMore) void loadEarlier();
+  }, [hasMore, loadEarlier]);
 
-  const scrollToBottom = useCallback(() => {
-    const el = scrollRef.current;
-    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-    setNewMessageCount(0);
-    setShowJumpToLatest(false);
-  }, []);
+  const scrollToBottom = useCallback(async () => {
+    try {
+      await showLatest();
+      setVisibleCount(PAGE_SIZE);
+      requestAnimationFrame(() => {
+        const el = scrollRef.current;
+        if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      });
+      setNewMessageCount(0);
+      setShowJumpToLatest(false);
+    } catch { toast.error(t('common.failedToLoad')); }
+  }, [showLatest, t]);
 
   const handleSetPinned = useCallback(async (messageId: string, pinned: boolean) => {
     setPinPendingId(messageId);
@@ -703,6 +728,11 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         {/* Messages area */}
         <div className="relative flex-1">
           <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+            {historyError && (
+              <button onClick={() => void refreshHistory()} className="mx-3 px-3 py-2 text-sm" role="alert">
+                {t('common.failedToLoad')} — {t('common.retry')}
+              </button>
+            )}
             {/* Pinned message banner */}
             {pinnedMessage && (
               <div className="sticky top-0 z-20 mx-3 flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/85 backdrop-blur-xl px-2.5 py-1.5">
@@ -770,11 +800,9 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 {hasMore && (
                   <div className="flex justify-center py-1">
                     <button
-                      onClick={() => {
-                        const el = scrollRef.current;
-                        if (el) prevScrollHeightRef.current = el.scrollHeight;
-                        setVisibleCount((c) => c + PAGE_SIZE);
-                      }}
+                      onClick={() => void loadEarlier()}
+                      disabled={isLoadingOlder}
+                      aria-busy={isLoadingOlder}
                       className="text-[11px] text-zinc-500 hover:text-white px-2 py-1 rounded-md hover:bg-white/[0.04] transition-colors"
                     >{_copy("copy.f17671d83db0", { defaultValue: "Load older messages" })}</button>
                   </div>
@@ -1062,7 +1090,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
           </div>
 
           {/* Jump to latest — appears when scrolled up, like DMs */}
-          {(showJumpToLatest || newMessageCount > 0) && (
+          {(showJumpToLatest || newMessageCount > 0 || isHistoryWindow) && (
             <button
               onClick={scrollToBottom}
               className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 px-3 py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium shadow-lg border border-white/10 transition-colors"
