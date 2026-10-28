@@ -437,7 +437,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   // widen the window first and finish the jump once its node exists.
   const jumpToMessage = useCallback(async (messageId: string) => {
     const node = messageRefs.current[messageId];
-    if (node) {
+    if (node && !searchQuery.trim()) {
       node.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setHighlight({ id: messageId, nonce: Date.now() });
       return;
@@ -445,11 +445,12 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     try {
       await showMessage(messageId);
       pendingJumpRef.current = messageId;
+      setSearchQuery('');
       setVisibleCount(Math.max(messages.length, 50));
     } catch {
       toast.error(t('common.failedToLoad'));
     }
-  }, [showMessage, messages.length, t]);
+  }, [showMessage, messages.length, searchQuery, setSearchQuery, t]);
 
   useEffect(() => {
     const pending = pendingJumpRef.current;
@@ -499,6 +500,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const scrollToBottom = useCallback(async () => {
     try {
       await showLatest();
+      setSearchQuery('');
       setVisibleCount(PAGE_SIZE);
       requestAnimationFrame(() => {
         const el = scrollRef.current;
@@ -507,7 +509,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
       setNewMessageCount(0);
       setShowJumpToLatest(false);
     } catch { toast.error(t('common.failedToLoad')); }
-  }, [showLatest, t]);
+  }, [showLatest, setSearchQuery, t]);
 
   const handleSetPinned = useCallback(async (messageId: string, pinned: boolean) => {
     setPinPendingId(messageId);
@@ -869,11 +871,16 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                     className={`group relative px-3 py-0.5 rounded-xl transition-shadow duration-300 ${isHighlighted ? 'ring-1 ring-white/30' : ''}`}
                   >
                     {msg.reply_to && (
-                      <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-9 mb-0.5">
+                      <button
+                        type="button"
+                        onClick={() => void jumpToMessage(msg.reply_to!.id)}
+                        aria-label={t('communities.chat.jumpToReply', { defaultValue: 'Jump to replied message' })}
+                        className="flex max-w-full items-center gap-1 text-left text-[10px] text-zinc-500 hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 ml-9 mb-0.5"
+                      >
                         <CornerDownRight className="w-2.5 h-2.5" />
                         <span className="font-medium">{msg.reply_to.sender_name}</span>
                         <span className="truncate max-w-[200px]">{msg.reply_to.content}</span>
-                      </div>
+                      </button>
                     )}
                     <div className="flex items-start gap-2">
                       <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
