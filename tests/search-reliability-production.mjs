@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const require = createRequire(`${process.env.PERFORMANCE_BROWSER_ROOT}/package.json`);
 const { chromium } = require('playwright');
+const { PNG } = require('pngjs');
 const browser = await chromium.launch();
 await fs.mkdir('search-results', { recursive: true });
 const results = [];
@@ -39,7 +40,29 @@ try {
     }
     if (first.content.pagination.hasMore) assert.ok(requests.some(request => request.type === 'content' && request.page === '2'), 'Scrolling must request the second API page');
     assert.equal(errors.length, 0, 'Search raised page errors');
-    await page.screenshot({ path: `search-results/${phone ? 'phone' : 'desktop'}.png` });
+    // Scrolling can finish between compositor frames. Preserve both the immediate
+    // capture and settled frame, and fail if the page remains blank.
+    const layout = phone ? 'phone' : 'desktop';
+    await page.screenshot({ path: `search-results/${layout}-scroll.png` });
+    await page.waitForTimeout(2000);
+    result.viewport = await page.evaluate(() => ({
+      scrollY: window.scrollY,
+      explore: (() => {
+        const element = document.querySelector('[data-explore-page]');
+        const rect = element?.getBoundingClientRect();
+        return rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : null;
+      })(),
+      visibleText: [0.15, 0.5, 0.85].map(fraction =>
+        document.elementFromPoint(innerWidth / 2, innerHeight * fraction)?.textContent?.slice(0, 150)),
+    }));
+    const screenshot = await page.screenshot({ path: `search-results/${layout}.png` });
+    const png = PNG.sync.read(screenshot);
+    let visiblePixels = 0;
+    for (let i = 0; i < png.data.length; i += 4) {
+      if (Math.max(png.data[i], png.data[i + 1], png.data[i + 2]) > 40) visiblePixels++;
+    }
+    result.visiblePixelFraction = visiblePixels / (png.width * png.height);
+    assert.ok(result.visiblePixelFraction > 0.01, 'Search viewport must not remain blank after scrolling');
     result.firstPageCount = first.content.items.length;
     await context.close();
   }
