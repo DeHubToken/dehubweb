@@ -3457,6 +3457,36 @@ function buildDuetsHtml(post, tokenId) {
   });
 }
 
+/** Every reaction to one video, recorded and live: /app/post/<id>/reactions. The original's own share card. */
+const REACTIONS_PATH = /^\/(?:app\/)?post\/(\d{1,15})\/reactions\/?$/;
+
+function buildReactionsHtml(post, tokenId) {
+  const canonicalUrl = `${APP_URL}/app/post/${tokenId}/reactions`;
+  const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
+  const creator = post.minterUsername || post.mintername || '';
+  const title = creator ? `Reactions to ${name} by @${creator}` : `Reactions to ${name}`;
+  const description = truncate(`Watch creators react to ${creator ? `@${creator}'s` : 'this'} video on DeHub, recorded and live, or record your own reaction.`, 200);
+  return entityHtml({
+    canonicalUrl,
+    title: `${title} — DeHub`,
+    description,
+    image: postShareImageUrl(tokenId),
+    ogType: 'website',
+    heading: title,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+      about: { '@type': 'VideoObject', name, url: `${APP_URL}/app/post/${tokenId}` },
+    },
+  });
+}
+
 /** A posted live clip, /clip/<n>. Columns are the ones anon may read. */
 const LIVE_CLIP_PATH = /^\/clip\/(\d{1,15})\/?$/;
 const LIVE_CLIP_COLUMNS = 'short_id,title,stream_title,stream_token_id,streamer_username,clipper_username,kind,video_url,poster_url,card_url,duration_seconds,post_token_id,posted_at';
@@ -4764,6 +4794,8 @@ function shouldServeSSR(pathname) {
   if (LIVE_CLIP_PATH.test(pathname)) return true;
   // A video's duets list: its own title and card, not the post page's.
   if (DUETS_PATH.test(pathname)) return true;
+  // Same for its reactions list.
+  if (REACTIONS_PATH.test(pathname)) return true;
   // Bounties, /bounty/<job_number>. Needed here for exactly the reason stages
   // were: `bounty` is a reserved ROUTE_SEGMENT, so the profile fall-through at
   // the foot of this function rejects it and the SPA shell would go out under
@@ -6927,6 +6959,14 @@ async function handleRequest(request, env, ctx) {
   if (duetsMatch) {
     const post = await fetchPostRecord(duetsMatch[1]);
     if (post && post.postType !== 'live') return guard(new Response(buildDuetsHtml(post, duetsMatch[1]), { status: 200, headers: blogHeaders }));
+    return entityNotFound();
+  }
+
+  // A video's reactions list, with the original's title and share card.
+  const reactionsMatch = cleanPath.match(REACTIONS_PATH);
+  if (reactionsMatch) {
+    const post = await fetchPostRecord(reactionsMatch[1]);
+    if (post && post.postType !== 'live') return guard(new Response(buildReactionsHtml(post, reactionsMatch[1]), { status: 200, headers: blogHeaders }));
     return entityNotFound();
   }
 

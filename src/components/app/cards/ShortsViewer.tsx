@@ -78,8 +78,9 @@ import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
-import { RemixMenuItems } from './RemixMenuItems';
+import { RemixMenuItems } from './LazyRemixMenuItems';
 import { DuetCredit } from './DuetCredit';
+import { ReactionOfChip, ReactionsLink } from '../remix/LazyReactionChips';
 import { StitchAttribution } from './StitchAttribution';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
@@ -242,7 +243,13 @@ function ShortCaption({
     [shownTitle, shownBody] = splitTranslatedTitleAndBody(translatedText, title || undefined, body || undefined);
   }
 
-  if (!shownTitle && !shownBody) return null;
+  const reactionChips = (
+    <div className="mt-1.5 flex flex-wrap gap-1.5 empty:hidden">
+      <ReactionOfChip tokenId={short.id} />
+      <ReactionsLink tokenId={short.id} />
+    </div>
+  );
+  if (!shownTitle && !shownBody) return reactionChips;
 
   // Auto-translate is on by default, so the control this surface needs is the
   // way back — not a button asking for something that already happened. Taking
@@ -302,6 +309,7 @@ function ShortCaption({
           )}
         </button>
         {control}
+        {reactionChips}
       </div>
     );
   }
@@ -315,6 +323,7 @@ function ShortCaption({
       )}
       {shownBody && <ExpandableDescription text={shownBody} />}
       {control}
+      {reactionChips}
     </div>
   );
 }

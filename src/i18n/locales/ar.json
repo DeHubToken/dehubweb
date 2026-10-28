@@ -6846,7 +6846,13 @@
         "circle": "دائرة",
         "rounded": "حواف مستديرة",
         "rect": "مربع"
-      }
+      },
+      "addReaction": "تفاعل مع فيديو",
+      "reactPlaceholder": "الصق رابط فيديو من DeHub",
+      "reactAdd": "عرض",
+      "reactInvalid": "الصق رابطًا لفيديو على DeHub.",
+      "reactNotLive": "ابدأ البث المباشر أولًا ثم أضف الفيديو.",
+      "reactNoBubble": "تعذّر فتح الكاميرا مرتين هنا. غيّر حجم الفيديو ليظهر وجهك."
     },
     "audio": {
       "title": "خلاط الصوت",
@@ -19783,6 +19789,31 @@
     "errorNoRecipient": "لم يُعثر على حساب DeHub",
     "errorSelf": "لا يمكنك الإرسال إلى نفسك",
     "errorGeneric": "تعذّر الإرسال. حاول مرة أخرى."
+  },
+  "reactions": {
+    "reactionTo": "تفاعل مع",
+    "reactingTo": "يتفاعل مع",
+    "count_one": "{{count}} تفاعل",
+    "count_other": "{{count}} تفاعلات",
+    "allow": "السماح بالتفاعلات",
+    "allowDescription": "اسمح لصنّاع المحتوى الآخرين بالتفاعل مع فيديوهاتك، مسجلة أو مباشرة. يمكنك تغيير ذلك في كل منشور.",
+    "pageTitle": "التفاعلات مع {{title}} — DeHub",
+    "pageDescription": "شاهد صنّاع المحتوى يتفاعلون مع «{{title}}» من {{creator}} على DeHub، مسجلًا ومباشرًا.",
+    "heading": "التفاعلات",
+    "backToVideo": "العودة إلى الفيديو",
+    "empty": "لا توجد تفاعلات بعد. افتح قائمة Remix للفيديو واختر تفاعل لتكون الأول.",
+    "more": "عرض المزيد",
+    "liveNow": "مباشر",
+    "wasLive": "كان مباشرًا",
+    "untitled": "تفاعل",
+    "thisVideo": "هذا الفيديو",
+    "policy": {
+      "everyone": "الجميع",
+      "followers": "المتابعون",
+      "nobody": "لا أحد",
+      "default": "الإعداد الافتراضي للحساب ({{value}})"
+    },
+    "remixesSection": "الريمكسات"
   },
   "connectGuide": {
     "title": "اربط DeHub بمساعد الذكاء الاصطناعي",

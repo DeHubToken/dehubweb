@@ -163,8 +163,9 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
-import { RemixMenuItems } from './RemixMenuItems';
+import { RemixMenuItems } from './LazyRemixMenuItems';
 import { DuetCredit } from './DuetCredit';
+import { ReactionOfChip, ReactionsLink } from '../remix/LazyReactionChips';
 import { StitchAttribution } from './StitchAttribution';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -3282,6 +3283,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           })()}
         </SharedTranslationProvider>
         </div>
+        {!video.isAudio && parseInt(video.id, 10) > 0 && (
+          <div data-video-reactions className="mt-2 flex flex-wrap gap-1.5 empty:hidden">
+            <ReactionOfChip tokenId={video.id} className="bg-white/10" />
+            <ReactionsLink tokenId={video.id} className="bg-white/10" />
+          </div>
+        )}
         {!video.isAudio && !video.isAd && <StitchAttribution tokenId={video.id} postPage={postPage} className="mt-2" />}
         <div data-video-metadata className="mb-3">
           <PostMetadata 
