@@ -66,6 +66,8 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
+import { DuetSetting } from '@/components/app/settings/DuetSetting';
+import { StitchPolicySetting } from '@/components/app/settings/StitchPolicySetting';
 import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
 import { usePostingChain } from '@/hooks/use-posting-chain';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
@@ -140,7 +142,6 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useLeftHanded } from '@/hooks/use-left-handed';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PostLandingSetting } from '@/components/app/settings/PostLandingSetting';
-import { StitchPolicySetting } from '@/components/app/settings/StitchPolicySetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
@@ -1941,10 +1942,11 @@ function PrivacySettings() {
         </div>
       </div>
 
-      {/* Remixes of your videos */}
+      {/* Remixes: duets and stitches */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('remixLinks.settingsHeading', 'Remixes')}</h3>
         <div className="space-y-4">
+          <DuetSetting address={user?.address} />
           <StitchPolicySetting />
         </div>
       </div>

@@ -78,6 +78,7 @@ import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { RemixMenuItems } from './RemixMenuItems';
+import { DuetCredit } from './DuetCredit';
 import { StitchAttribution } from './StitchAttribution';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
@@ -1769,6 +1770,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                         <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
                     </div>
+                    <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                     <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
                     <StitchAttribution key={`stitch-${currentShort.id}`} tokenId={currentShort.id} onNavigate={onClose} className="mt-2" />
                   </div>
@@ -2019,6 +2021,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </div>
                   
                   {/* Title + description - tap to expand/collapse */}
+                  <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                   <ShortCaption
                     key={currentShort.id}
                     short={currentShort}
@@ -2224,6 +2227,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
               </button>
+              <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
               <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
               <StitchAttribution key={`stitch-${currentShort.id}`} tokenId={currentShort.id} onNavigate={onClose} className="mt-2" />
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
@@ -2373,7 +2377,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               && visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public')
               && (isOwnShort || !currentShort.quotePolicy || currentShort.quotePolicy === 'public') && (
               <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://dehub.io/app/post/${currentShort.id}`,
-                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username }}
+                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username,
+                tokenId: String(currentShort.id), creatorAddress: currentShort.creatorId }}
+                isOwner={!!isOwnShort}
                 onStart={() => { setIsPaused(true); setShareSheetOpen(false); onClose(); }} />
             )}
             {visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public') && (

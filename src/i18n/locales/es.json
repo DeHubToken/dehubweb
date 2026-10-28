@@ -1,4 +1,37 @@
 {
+  "duet": {
+    "with": "Dúo con @{{username}}",
+    "withOriginal": "Dúo · ver original",
+    "unavailable": "Este video ya no está disponible para dúos.",
+    "allowLabel": "Permitir dúos",
+    "allowDescription": "Quién puede grabar un dúo junto a tus videos. También puedes cambiarlo en cada publicación.",
+    "settingsSection": "Dúos",
+    "policyDefault": "Ajuste de la cuenta",
+    "policyEveryone": "Todos",
+    "policyFollowers": "Seguidores",
+    "policyNobody": "Nadie",
+    "saveFailed": "No se pudo guardar. Inténtalo de nuevo.",
+    "count_one": "{{count}} dúo",
+    "count_other": "{{count}} dúos",
+    "pageHeading": "Dúos",
+    "pageTitle": "Dúos de {{title}} de @{{creator}}",
+    "pageTitleNoCreator": "Dúos de {{title}}",
+    "pageDescription": "Mira todos los dúos de este video en DeHub o graba el tuyo lado a lado.",
+    "empty": "Aún no hay dúos. Abre las opciones del video y elige Remix → Dúo para hacer el primero.",
+    "loadMore": "Cargar más",
+    "video": "Video",
+    "notFound": "Este video no está disponible.",
+    "notFoundTitle": "Video no encontrado — DeHub",
+    "browseShorts": "Ver Shorts"
+  },
+  "videoRemix": {
+    "menu": "Remix",
+    "duet": "Dúo",
+    "green-screen": "Pantalla verde",
+    "sound": "Usar este sonido",
+    "stitch": "Stitch",
+    "selectSource": "Abre las opciones de un video y elige Remix para empezar."
+  },
   "remixLinks": {
     "shareFailed": "Tu propina se envió, pero la parte del creador original no se completó.",
     "notify": {

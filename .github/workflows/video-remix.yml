@@ -6,6 +6,7 @@ on:
       - 'src/lib/editor/remixStudioHtml.ts'
       - 'src/pages/VideoRemix.tsx'
       - 'tests/video-remix-browser.mjs'
+      - 'src/components/app/cards/RemixMenuItems.tsx'
       - '.github/workflows/video-remix.yml'
   workflow_dispatch:
 permissions:
@@ -26,7 +27,7 @@ jobs:
           "$RUNNER_TEMP/remix-browser/node_modules/.bin/playwright" install --with-deps chromium
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-      - name: Record every mode and inspect encoded output
+      - name: Record every mode and duet layout and inspect encoded output
         env:
           REMIX_BROWSER_ROOT: ${{ runner.temp }}/remix-browser
         run: node --experimental-strip-types tests/video-remix-browser.mjs

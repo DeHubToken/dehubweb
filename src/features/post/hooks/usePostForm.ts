@@ -12,7 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
-import { recordRemixLink, saveRemixSettings, type RemixKind, type RemixPolicy } from '@/lib/remix-links';
+import { saveRemixSettings, type RemixPolicy } from '@/lib/remix-links';
 import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
@@ -318,8 +318,8 @@ export function usePostForm(
    * hidden by the modal and never sent.
    */
   quotedPost?: DeHubNFT | null,
-  /** Set when this post is a remix (a stitch, a duet...): linked to its source once it has a tokenId. */
-  remixLink?: { kind: RemixKind; sourceTokenId: string } | null,
+  /** The new post's token id, once the server has it (a duet links itself to its source here). */
+  onPosted?: (tokenId: string) => void,
 ): UsePostFormReturn {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
@@ -2054,6 +2054,13 @@ export function usePostForm(
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
       }
+      onPosted?.(String(mintResponse.createdTokenId));
+      // A Supabase row of its own, so it cannot ride on the mint. Reported, not thrown: the post is up.
+      if (stitchPolicy && postType === 'video' && !mintResponse.duplicate) {
+        void saveRemixSettings({ tokenId: String(mintResponse.createdTokenId), allowStitch: stitchPolicy }).catch(() => {
+          toast.error(_copy("remixLinks.stitch.settingFailed", { defaultValue: "Your post is up, but its stitch setting was not saved. Change it from Edit post." }));
+        });
+      }
 
       /**
        * Put the picked store listings on the post, now that it has a tokenId.
@@ -2081,25 +2088,6 @@ export function usePostForm(
               );
             }
           });
-      }
-
-      /**
-       * Remix bookkeeping, once the post has a tokenId. Neither blocks: the
-       * post is up, and a failed link or setting is reported, not thrown.
-       */
-      if (!mintResponse.duplicate) {
-        const createdTokenId = String(mintResponse.createdTokenId);
-        if (stitchPolicy && postType === 'video') {
-          void saveRemixSettings({ tokenId: createdTokenId, allowStitch: stitchPolicy }).catch(() => {
-            toast.error(_copy("remixLinks.stitch.settingFailed", { defaultValue: "Your post is up, but its stitch setting was not saved. Change it from Edit post." }));
-          });
-        }
-        if (remixLink) {
-          void recordRemixLink({ kind: remixLink.kind, sourceTokenId: remixLink.sourceTokenId, remixTokenId: createdTokenId })
-            .catch((error: Error & { refused?: boolean }) => {
-              toast.error(error.refused ? error.message : _copy("remixLinks.linkFailed", { defaultValue: "Your post is up, but it could not be linked to the original video." }));
-            });
-        }
       }
 
       // Never for a followers-only or direct post: another network would publish
@@ -2772,7 +2760,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy, remixLink,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 

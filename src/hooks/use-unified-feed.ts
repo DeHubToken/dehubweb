@@ -30,6 +30,7 @@ import { parseSoundtrackTag } from '@/lib/soundtrack';
 import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { duetOfPost } from '@/lib/duet';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
@@ -346,6 +347,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     quoteRevoked: item.quoteRevoked,
     replyPolicy: item.replyPolicy,
     forKids: item.forKids,
+    duetOf: duetOfPost(item as any),
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
