@@ -50,7 +50,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { ReactionEmoji } from './ReactionEmoji';
+import { ReactionEmoji, preloadAnimatedReaction } from './ReactionEmoji';
 import { ReactionPicker } from './ReactionPicker';
 import { maybeShowReactionTip } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
@@ -813,6 +813,15 @@ export function ActionBar({
     ? resolveThumbReaction(localReactionCounts, myReaction)
     : resolveLeadReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
+  /**
+   * A plain like turns the thumb into the moving 👍, the same way every other
+   * reaction you cast shows as its moving emoji, and pumps it upward on a loop.
+   */
+  const thumbGlyph = leadReaction ?? (isLiked ? 'like' : null);
+  const thumbPumps = thumbGlyph === 'like' && (myReaction === 'like' || !leadReaction);
+  useEffect(() => {
+    preloadAnimatedReaction('like').catch(() => {});
+  }, []);
   /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -992,11 +1001,10 @@ export function ActionBar({
       {onTip ? (
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}
-          data-tipped={viewerTipped || tipBurst > 0 ? '' : undefined}
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
-          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} />
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} quiet />
           {/* Counts come off over a video: the icons are the controls, and a
               tally beside each one is three more numbers on someone's frame. */}
           {!compact && (
@@ -1128,7 +1136,7 @@ export function ActionBar({
           animate={justVoted === 'like' || (reactionsEnabled && justVoted === 'dislike') ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {leadReaction ? (
+          {thumbGlyph ? (
             <span
               /* Marks the glyph so a theme can light the reaction without also
                  lighting the count, which is a sibling span in the same row.
@@ -1138,7 +1146,9 @@ export function ActionBar({
               className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
-              <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
+              <span className={cn('flex h-full w-full items-center justify-center', thumbPumps && 'dehub-like-pump')}>
+                <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction || !leadReaction} />
+              </span>
             </span>
           ) : (
             <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && "fill-current")} />

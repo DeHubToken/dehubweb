@@ -1,0 +1,28 @@
+name: Production search reliability
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare hosted browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/search-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/search-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify live search on desktop and phone layouts
+        env:
+          PERFORMANCE_BROWSER_ROOT: ${{ runner.temp }}/search-browser
+        run: node tests/search-reliability-production.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: production-search-reliability
+          path: search-results/
+          retention-days: 14

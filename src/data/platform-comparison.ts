@@ -1,6 +1,9 @@
 /** Keep identical to dehub-mobile/libs/platform-comparison.ts. */
 import { AUDIT_REVISIONS, DETAIL_GROUPS } from './platform-comparison-details';
+import { CATEGORY_FAMILIES, COMPETITOR_REVIEWED_ON, RESEARCH_SOURCES, REVIEW_SCOPES, REVIEWED_FEATURE_IDS, researchedEntry } from './platform-comparison-research';
+import { PRODUCT_REVIEW, PRODUCT_REVIEWED_ON } from './platform-comparison-product-review';
 export { AUDIT_REVISIONS } from './platform-comparison-details';
+export { COMPETITOR_REVIEWED_ON, REVIEWED_FEATURE_IDS } from './platform-comparison-research';
 export const REVIEWED_ON = '2026-10-27';
 export const PLATFORMS = [
   { id: 'youtube', name: 'YouTube' }, { id: 'x', name: 'X / Twitter' },
@@ -11,11 +14,13 @@ export const PLATFORMS = [
   { id: 'farcaster', name: 'Farcaster' },
 ] as const;
 export type PlatformId = typeof PLATFORMS[number]['id'];
-export type Status = 'documented' | 'code' | 'limited' | 'ecosystem' | 'unverified';
+export type Status = 'documented' | 'code' | 'limited' | 'ecosystem' | 'unverified' | 'not_documented' | 'not_offered' | 'announced';
 export const STATUS_LABELS: Record<Status, string> = {
   documented: 'Documented', code: 'Source reviewed', limited: 'Conditional', ecosystem: 'Related product', unverified: 'Not verified',
+  not_documented: 'Not established by sources', not_offered: 'Explicit limitation', announced: 'Announced / availability unconfirmed',
 };
 export const SOURCES: Record<string, { title: string; url: string }> = {
+  ...RESEARCH_SOURCES,
   dehub: { title: 'DeHub product guide', url: 'https://dehub.io/docs/dapps' },
   dehubLaunchpad: { title: 'DeHub Launchpad', url: 'https://dehub.io/launchpad' },
   dehubEncryption: { title: 'DeHub encrypted messaging implementation', url: `https://github.com/DeHubToken/dehubweb/blob/${AUDIT_REVISIONS.web}/src/lib/dm-e2ee/media-send.ts` },
@@ -80,6 +85,11 @@ export const SOURCES: Record<string, { title: string; url: string }> = {
   twitchVod: { title: 'Twitch on-demand content', url: 'https://help.twitch.tv/s/article/video-on-demand' },
   farcaster: { title: 'Farcaster protocol and sign in', url: 'https://docs.farcaster.xyz/' },
   fcApps: { title: 'Farcaster Mini Apps and wallets', url: 'https://miniapps.farcaster.xyz/' },
+  fbLive: { title: 'Go live on Facebook', url: 'https://www.facebook.com/help/1636872026560015' },
+  fbShare: { title: 'Share and manage posts on Facebook', url: 'https://www.facebook.com/help/1640261589632787' },
+  ytReport: { title: 'Report content on YouTube', url: 'https://support.google.com/youtube/answer/2802027' },
+  ytNotifications: { title: 'Manage YouTube notifications', url: 'https://support.google.com/youtube/answer/3382248' },
+  ytDark: { title: 'YouTube dark theme', url: 'https://support.google.com/youtube/answer/7385323' },
 };
 export interface ComparisonEntry { status: Status; note: string; source?: string; relatedSources?: string[] }
 export interface ComparisonFeature {
@@ -316,6 +326,30 @@ const ADDITIONAL_EVIDENCE: Record<string, Partial<Record<PlatformId, ComparisonE
   'content-default': { mastodon: e('mastodonPreferences', 'Default posting visibility, language and media sensitivity.') },
   'autoplay-preference': { mastodon: e('mastodonPreferences', 'Animated media and reduced-motion preferences; video behavior varies by client.', 'limited') },
 };
+/** Core capabilities confirmed on first-party help pages after the bulk review; these win over a not-established finding. */
+const CORE_EVIDENCE: Record<string, Partial<Record<PlatformId, ComparisonEntry>>> = {
+  live: { facebook: e('fbLive', 'Go live from a profile, Page or group.') },
+  reposts: { facebook: e('fbShare', 'Share posts to your profile, groups or Messenger.') },
+  report: { youtube: e('ytReport', 'Report videos, channels, comments and other content.') },
+  notifications: { youtube: e('ytNotifications', 'Choose which channel and account notifications you get.') },
+  themes: { youtube: e('ytDark', 'Light, dark and device appearance; not theme packs.', 'limited') },
+};
+/** Applies the hands-on product review where the documentation pass found no equivalent; never downgrades an entry. */
+function productReviewed(feature: ComparisonFeature, platform: PlatformId, entry: ComparisonEntry | undefined): ComparisonEntry | undefined {
+  const found = PRODUCT_REVIEW[platform].get(feature.id);
+  if (!found) return entry;
+  const has = entry && ['documented', 'code', 'limited'].includes(entry.status);
+  if (has || (found === 'partial' && entry?.status === 'ecosystem')) return entry;
+  const scope = REVIEW_SCOPES[platform][CATEGORY_FAMILIES[feature.category]];
+  return {
+    status: found === 'yes' ? 'documented' : 'ecosystem',
+    note: found === 'yes'
+      ? `Confirmed in the live product and its help centre on ${PRODUCT_REVIEWED_ON}.`
+      : `Partly available, or through a separate app, as of ${PRODUCT_REVIEWED_ON}.`,
+    source: entry?.source ?? scope.sources[0],
+    relatedSources: entry?.relatedSources ?? scope.sources.slice(1),
+  };
+}
 const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => detail.rows.map(([id, name, note, file = '', mobileOverride]) => {
   const web = detail.web + file, mobile = mobileOverride ?? detail.mobile + file;
   const webSource = `web:${web}`, mobileSource = `mobile:${mobile}`;
@@ -323,10 +357,25 @@ const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => d
   SOURCES[mobileSource] = { title: 'DeHub mobile implementation', url: `https://github.com/DeHubToken/dehub-mobile/blob/${AUDIT_REVISIONS.mobile}/${mobile}` };
   return { id, category: detail.category, name, dehub: { ...e(webSource, note, detail.paid ? 'limited' : 'code'), relatedSources: [mobileSource, 'dehub'] }, peers: {}, iosRestricted: !!detail.paid, implementation: { web, mobile } };
 }));
-export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES].map(feature => ({
+/** Popular features other platforms have and DeHub does not offer yet, so the chart is not one-sided. */
+const NOT_YET: ComparisonFeature[] = ([
+  ['stories', 'Stories that disappear after 24 hours'],
+  ['duets', 'Duets and side-by-side remixes'],
+  ['face-effects', 'Camera face effects and AR filters'],
+  ['collab-posts', 'Co-authored collab posts'],
+  ['location-map', 'Location tags and a friends map'],
+  ['raids', 'Live raids into another channel'],
+  ['live-predictions', 'Live predictions with channel points'],
+  ['live-rewind', 'Rewind a live stream while it is live'],
+  ['community-notes', 'Community Notes fact-checks'],
+  ['disappearing-messages', 'Disappearing messages'],
+] as const).map(([id, name]) => ({
+  id, category: 'Features DeHub does not have yet', name, dehub: e('dehub', 'Not available on DeHub yet.', 'not_offered'), peers: {}, iosRestricted: false,
+}));
+export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES, ...NOT_YET].map(feature => ({
   ...feature,
   dehub: feature.id === 'encrypted-text' ? e('dehubEncryption', feature.dehub.note, 'limited') : feature.id === 'encrypted-attachments' ? { ...feature.dehub, status: 'limited' as const } : feature.dehub,
-  peers: { ...feature.peers, ...ADDITIONAL_EVIDENCE[feature.id] },
+  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).map(([id, entry]) => [id, CORE_EVIDENCE[feature.id]?.[id as PlatformId] ?? productReviewed(feature, id as PlatformId, entry as ComparisonEntry | undefined)]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
 }));
 export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))];
 export function entryFor(feature: ComparisonFeature, platform: PlatformId | 'dehub'): ComparisonEntry {
@@ -341,5 +390,30 @@ export function filterFeatures(query: string, category: string): ComparisonFeatu
 }
 export function comparisonCoverage(platform: PlatformId | 'all') {
   const platforms = platform === 'all' ? PLATFORMS.map(p => p.id) : [platform];
-  return { verified: FEATURES.reduce((total, feature) => total + platforms.filter(id => feature.peers[id] && feature.peers[id]!.status !== 'unverified').length, 0), total: FEATURES.length * platforms.length };
+  const supported = new Set<Status>(['documented', 'limited', 'ecosystem', 'code']);
+  return {
+    verified: FEATURES.reduce((total, feature) => total + platforms.filter(id => feature.peers[id] && supported.has(feature.peers[id]!.status)).length, 0),
+    reviewed: FEATURES.filter(feature => REVIEWED_FEATURE_IDS.includes(feature.id)).length * platforms.length,
+    total: FEATURES.length * platforms.length,
+    reviewedOn: COMPETITOR_REVIEWED_ON,
+  };
+}
+
+/** Matrix marks: a tick for documented or conditional support, partial for related products or announcements. */
+export type Mark = 'yes' | 'partial' | 'no' | 'unknown';
+export function markFor(entry: ComparisonEntry): Mark {
+  if (entry.status === 'documented' || entry.status === 'code' || entry.status === 'limited') return 'yes';
+  if (entry.status === 'ecosystem' || entry.status === 'announced') return 'partial';
+  if (entry.status === 'not_offered') return 'no';
+  return 'unknown';
+}
+export function featureTotals(features: ComparisonFeature[] = FEATURES) {
+  const totals: Record<PlatformId | 'dehub', { yes: number; partial: number }> = Object.fromEntries(
+    (['dehub', ...PLATFORMS.map(p => p.id)] as const).map(id => [id, { yes: 0, partial: 0 }]),
+  ) as Record<PlatformId | 'dehub', { yes: number; partial: number }>;
+  for (const feature of features) for (const id of Object.keys(totals) as (PlatformId | 'dehub')[]) {
+    const mark = markFor(entryFor(feature, id));
+    if (mark === 'yes') totals[id].yes++; else if (mark === 'partial') totals[id].partial++;
+  }
+  return totals;
 }

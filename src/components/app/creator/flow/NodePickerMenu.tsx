@@ -29,10 +29,11 @@ interface Props {
 
 /** Which input on `targetType` a wire from `sourceType`/`sourceHandle` lands on. */
 function targetHandleFor(sourceType: string | undefined, sourceHandle: string | null, targetType: string): string | null {
-  const textSource = sourceType === 'promptNode' || sourceType === 'assistantNode';
+  const textSource = sourceType === 'promptNode' || sourceType === 'assistantNode' || sourceType === 'audioGenNode' && sourceHandle === 'prompt';
   const imageSource = sourceType === 'imageInputNode' || sourceType === 'imageGenNode' || sourceHandle === 'frame';
   const videoSource = sourceHandle === 'video';
-  if (textSource) return targetType === 'imageGenNode' || targetType === 'videoGenNode' || targetType === 'assistantNode' ? 'prompt' : null;
+  if (textSource) return targetType === 'imageGenNode' || targetType === 'videoGenNode' || targetType === 'assistantNode' || targetType === 'audioGenNode' ? 'prompt' : null;
+  if (sourceHandle === 'audio') return targetType === 'audioGenNode' ? 'audio' : null;
   if (imageSource) {
     if (targetType === 'videoGenNode') return 'startFrame';
     if (targetType === 'imageGenNode') return 'image';
@@ -53,6 +54,8 @@ function sourceTypesFor(targetHandle: string | null): string[] {
       return ['imageInputNode', 'imageGenNode', 'videoInputNode', 'videoGenNode'];
     case 'referenceVideo':
       return ['videoInputNode', 'videoGenNode'];
+    case 'audio':
+      return ['audioInputNode', 'audioGenNode'];
     default:
       return [];
   }
@@ -99,11 +102,12 @@ export default function NodePickerMenu({ dropState, onClose }: Props) {
       type,
       position: { x, y: pos.y - size.h / 2 },
       style: type === 'imageInputNode' || type === 'videoInputNode' ? { width: size.w } : { width: size.w, height: size.h },
-      data: { label: '', status: 'idle', ...getLastNodeSettings(type, state.nodes) },
+      data: { label: '', status: 'idle', ...getLastNodeSettings(type, state.nodes),
+        ...(type === 'audioGenNode' ? { audioTask: !dropState.isInputHandle && dropState.sourceHandleId === 'audio' ? 'isolate' : 'speech' } : {}) },
     });
 
     if (dropState.isInputHandle) {
-      const sourceHandle = type === 'videoInputNode' || type === 'videoGenNode' ? (dropState.sourceHandleId === 'referenceVideo' ? 'video' : 'frame') : undefined;
+      const sourceHandle = type === 'audioInputNode' || type === 'audioGenNode' ? 'audio' : type === 'videoInputNode' || type === 'videoGenNode' ? (dropState.sourceHandleId === 'referenceVideo' ? 'video' : 'frame') : undefined;
       insertEdge({
         id: `edge-${uid()}`,
         source: id,

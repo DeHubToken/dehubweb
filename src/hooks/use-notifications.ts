@@ -6,7 +6,7 @@
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getNotifications,
@@ -72,9 +72,11 @@ export function useNotifications(
   });
 
   // Flatten pages into single array, filtering out any undefined items
-  const notifications = query.data?.pages
+  const notifications = useMemo(() => query.data?.pages
     .flatMap((page) => page?.items || [])
-    .filter((item): item is DeHubNotification => Boolean(item && item.id)) || [];
+    .filter((item): item is DeHubNotification => Boolean(item && item.id)) || [], [query.data]);
+  const processedData = useRef<typeof query.data>();
+  const initialized = useRef(false);
 
   // Never announce from a filtered feed: it returns a different slice of the
   // same data, so with a tab active every row absent from the previously seen
@@ -91,9 +93,11 @@ export function useNotifications(
   // what they were going to reconstruct anyway.
   useEffect(() => {
     if (!notifyOnNew) return;
-    if (!notifications.length) return;
+    if (!query.data || processedData.current === query.data) return;
+    processedData.current = query.data;
     const lastSeen = getLastSeenTimestamp();
-    const isFirstLoad = prevIdsRef.current.size === 0;
+    const isFirstLoad = !initialized.current;
+    initialized.current = true;
 
     const arrived: { at: number; id: string; item: DigestItem }[] = [];
 
@@ -149,9 +153,11 @@ export function useNotifications(
 
     // Update refs
     prevIdsRef.current = new Set(notifications.map(n => n.id));
-    // Update last seen to now
-    setLastSeenTimestamp(Date.now());
-  }, [notifications, showNotification, notifyOnNew, t]);
+    // Only fetched rows advance the watermark; rendering must not acknowledge
+    // notifications that the next fetch has not returned yet.
+    setLastSeenTimestamp(notifications.reduce((latest, n) =>
+      Math.max(latest, new Date(n.createdAt || 0).getTime() || 0), lastSeen));
+  }, [query.data, notifications, showNotification, notifyOnNew, t]);
 
   return {
     notifications,

@@ -1,0 +1,27 @@
+import { act, cleanup, renderHook, waitFor } from '@testing-library/react';
+import React from 'react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useNotifications } from '@/hooks/use-notifications';
+const mocks = vi.hoisted(() => ({ notify: vi.fn(), seen: 0, rows: [] as any[] }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('@/hooks/use-browser-notifications', () => ({ useBrowserNotifications: () => ({ showNotification: mocks.notify }), getLastSeenTimestamp: () => mocks.seen, setLastSeenTimestamp: (n: number) => { mocks.seen = n; } }));
+vi.mock('@/lib/api/dehub', () => ({ getNotifications: async () => ({ items: mocks.rows, hasMore: false }) }));
+afterEach(cleanup);
+it('does not acknowledge an unseen notification during an unrelated rerender', async () => {
+  mocks.seen = 0; mocks.notify.mockClear();
+  mocks.rows = [{ id: 'old', createdAt: new Date(1000).toISOString(), read: false }];
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } });
+  const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client, children });
+  const hook = renderHook(() => useNotifications(), { wrapper });
+  await waitFor(() => expect(mocks.seen).toBe(1000));
+  hook.rerender();
+  expect(mocks.seen).toBe(1000);
+  mocks.rows = [{ id: 'new', createdAt: new Date(2000).toISOString(), read: false, content: 'New' }, ...mocks.rows];
+  await act(async () => { await hook.result.current.refetch(); });
+  await waitFor(() => expect(mocks.notify).toHaveBeenCalledTimes(1));
+  hook.rerender();
+  expect(mocks.notify).toHaveBeenCalledTimes(1);
+  hook.unmount(); client.clear();
+});

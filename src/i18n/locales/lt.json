@@ -3246,6 +3246,7 @@
     "followerInvites": {
       "title": "Pakviesti sekėjų",
       "detail": "Partijoje gali pasirinkti iki 50 sekėjų. Mokami arba uždaryti DM praleidžiami. Prieš bandydami dar kartą, patikrinkite, ar pokalbyje nėra nepatvirtintų siuntimų.",
+      "note": "Pridėkite žinutę prie kvietimo (neprivaloma)",
       "selectAll": "Pasirinkti šį puslapį",
       "clear": "Ištrinti",
       "previous": "Atgal",

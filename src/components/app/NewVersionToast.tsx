@@ -74,9 +74,11 @@ export function showUpdateToast(version: BuildVersion, note: string, isMobile: b
   return toast.message('New version available', {
     id: 'app-new-version',
     onDismiss,
-    // Never auto-dismiss. The whole point is that it is still there when the
-    // user next looks at the tab.
-    duration: Infinity,
+    // Long enough to read the note and press Refresh, then it goes like every
+    // other toast. Going away on its own counts as dismissing it, so the same
+    // deploy is not raised again on the next check.
+    duration: 15_000,
+    onAutoClose: onDismiss,
     closeButton: true,
     // Desktop parks it out of the way in the bottom-right instead of over the
     // top of the page. Mobile keeps the shared toaster's placement, where a

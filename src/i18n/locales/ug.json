@@ -3227,6 +3227,7 @@
     "followerInvites": {
       "title": "Qidiruvchilarni chaqiring",
       "detail": "Har bir batchda 50 dan kamroq qidiruvchilarni tanlang. To'lov qilingan yoki yopiq DMlar o'tkazib yuboriladi. Yuborilganlar tasdiqlanmaganlar uchun so'zlashuvni tekshiring.",
+      "note": "تەكلىپىڭىزگە ئىزاھات قوشۇڭ (ئىختىيارى)",
       "selectAll": "Bu sahifani tanlang",
       "clear": "Tozalang",
       "previous": "Oldingi",
