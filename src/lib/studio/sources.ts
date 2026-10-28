@@ -28,7 +28,7 @@ export interface SourceConfig {
   /** video: a hosted file instead of a picked one — a DeHub video the stream is reacting to. */
   url?: string;
   /** video: the DeHub post on screen, for the "Reacting to" chip and the original's credit. */
-  reaction?: { tokenId: number; creator: string | null; title: string };
+  reaction?: { tokenId: number; creator: string | null; title: string; linkId?: string };
 }
 
 export const MAX_SOURCES = 6;

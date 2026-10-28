@@ -17,6 +17,7 @@ import {
   type SourceConfig,
 } from '@/lib/studio/sources';
 import { createLogger } from '@/lib/logger';
+import { endLiveReaction } from '@/lib/remix-links';
 
 const logger = createLogger('StudioSources');
 
@@ -40,6 +41,8 @@ export interface StudioSources {
 export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null, enabled: boolean): StudioSources {
   const [configs, setConfigs] = useState<SourceConfig[]>(() => (enabled ? loadSourceConfigs() : []));
   const live = useRef(new Map<string, Live>());
+  const latest = useRef(configs);
+  latest.current = configs;
   const [, bump] = useState(0);
   const rerender = useCallback(() => bump((n) => n + 1), []);
 
@@ -140,6 +143,8 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
   // Released with the broadcast.
   useEffect(
     () => () => {
+      // A DeHub video still on screen when the broadcast ends is no longer being reacted to.
+      for (const c of latest.current) if (c.reaction?.linkId) void endLiveReaction(c.reaction.linkId).catch(() => undefined);
       live.current.forEach((l) => l.release());
       live.current.clear();
       program.setSources([]);

@@ -1,59 +1,74 @@
 /**
- * "Allow reactions": whether other creators may react to a video, recorded or
- * live. On a post it is that post's choice; in Settings it is the account
- * default for every post without one. The remix-links function enforces it,
- * and turning it off also takes the video off any stream showing it now.
+ * "Allow reactions": who may react to a creator's videos, recorded or live.
+ * In Settings it is the account default; on a post's edit sheet it is that
+ * post's own choice, or "Account default" to inherit. Stored and enforced by
+ * the shared remix links (remix_settings), next to duets and stitches.
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MonitorPlay } from 'lucide-react';
 import { toast } from 'sonner';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { SettingsRow } from '@/components/app/settings/SettingsRow';
+import { SettingsRow, SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
-import { getReactionSetting, setReactionSetting } from '@/lib/api/remix-links';
+import { getRemixSettings, saveRemixSettings, type RemixPolicy, type RemixPolicySetting } from '@/lib/remix-links';
 
-function useAllowReactions(tokenId: string | number | undefined, wallet: string | null | undefined, enabled: boolean) {
-  const [allow, setAllow] = useState<boolean | null>(null);
+const POLICIES: RemixPolicy[] = ['everyone', 'followers', 'nobody'];
+
+function useReactPolicy(wallet: string | null | undefined, tokenId: string | number | null, enabled: boolean) {
+  const [setting, setSetting] = useState<RemixPolicySetting | null>(null);
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !wallet) return;
     let live = true;
-    const load = tokenId != null
-      ? getReactionSetting(tokenId).then((s) => s.allowReact)
-      : wallet
-        ? Promise.resolve(supabase.from('remix_settings' as never).select('allow_react')
-          .eq('owner_address', wallet.toLowerCase()).eq('token_id', 0).maybeSingle())
-          .then(({ data }) => (data as { allow_react?: boolean } | null)?.allow_react ?? true)
-        : Promise.resolve(true);
-    load.then((v) => { if (live) setAllow(v); }).catch(() => { if (live) setAllow(true); });
+    getRemixSettings(wallet.toLowerCase(), tokenId)
+      .then((r) => { if (live) setSetting(r.settings.react); })
+      .catch(() => { if (live) setSetting({ post: null, account: null, effective: 'everyone' }); });
     return () => { live = false; };
-  }, [tokenId, wallet, enabled]);
+  }, [wallet, tokenId, enabled]);
 
-  const change = async (next: boolean) => {
-    const before = allow;
-    setAllow(next);
+  const save = async (value: RemixPolicy | null) => {
+    const before = setting;
     try {
-      await setReactionSetting(next, tokenId);
+      const r = await saveRemixSettings({ tokenId, allowReact: value });
+      setSetting(r.settings.react);
     } catch (error) {
-      setAllow(before);
+      setSetting(before);
       toast.error(error instanceof Error ? error.message : 'Could not save this setting.');
     }
   };
-  return [allow, change] as const;
+  return [setting, save] as const;
 }
 
-/** One post's switch, for its edit sheet. Saves as soon as it is flipped. */
+function usePolicyLabels() {
+  const { t } = useTranslation();
+  return {
+    everyone: t('reactions.policy.everyone', 'Everyone'),
+    followers: t('reactions.policy.followers', 'Followers'),
+    nobody: t('reactions.policy.nobody', 'No one'),
+  } satisfies Record<RemixPolicy, string>;
+}
+
+/** One post's choice, for its edit sheet. Saves as soon as it changes. */
 export function PostAllowReactions({ tokenId, open }: { tokenId: string | number; open: boolean }) {
   const { t } = useTranslation();
-  const [allow, change] = useAllowReactions(tokenId, null, open);
+  const { walletAddress } = useAuth();
+  const labels = usePolicyLabels();
+  const [setting, save] = useReactPolicy(walletAddress, tokenId, open);
+  if (!walletAddress) return null;
+  const id = `allow-reactions-${tokenId}`;
   return (
     <div className="flex items-center justify-between gap-3">
-      <Label htmlFor={`allow-reactions-${tokenId}`} className="text-sm font-medium text-zinc-300">
-        {t('reactions.allow', 'Allow reactions')}
-      </Label>
-      <Switch id={`allow-reactions-${tokenId}`} checked={allow ?? true} disabled={allow === null} onCheckedChange={(v) => void change(v)} />
+      <Label htmlFor={id} className="text-sm font-medium text-zinc-300">{t('reactions.allow', 'Allow reactions')}</Label>
+      <select
+        id={id}
+        disabled={!setting}
+        value={setting?.post ?? ''}
+        onChange={(e) => void save((e.target.value || null) as RemixPolicy | null)}
+        className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none"
+      >
+        <option value="">{t('reactions.policy.default', { value: labels[setting?.account ?? 'everyone'], defaultValue: 'Account default ({{value}})' })}</option>
+        {POLICIES.map((p) => <option key={p} value={p}>{labels[p]}</option>)}
+      </select>
     </div>
   );
 }
@@ -62,17 +77,26 @@ export function PostAllowReactions({ tokenId, open }: { tokenId: string | number
 export function AccountAllowReactions() {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [allow, change] = useAllowReactions(undefined, walletAddress, !!walletAddress);
+  const labels = usePolicyLabels();
+  const [setting, save] = useReactPolicy(walletAddress, null, !!walletAddress);
   if (!walletAddress) return null;
   return (
     <SettingsRow
-      as="label"
-      className="cursor-pointer"
       anchor="allow-reactions"
       icon={<MonitorPlay />}
       title={t('reactions.allow', 'Allow reactions')}
       description={t('reactions.allowDescription', 'Let other creators react to your videos, recorded or live. You can still change it on each post.')}
-      action={<Switch checked={allow ?? true} disabled={allow === null} onCheckedChange={(v) => void change(v)} />}
+      action={
+        <select
+          aria-label={t('reactions.allow', 'Allow reactions')}
+          disabled={!setting}
+          value={setting?.account ?? 'everyone'}
+          onChange={(e) => void save(e.target.value as RemixPolicy)}
+          className={SETTINGS_CONTROL_CLASS}
+        >
+          {POLICIES.map((p) => <option key={p} value={p}>{labels[p]}</option>)}
+        </select>
+      }
     />
   );
 }

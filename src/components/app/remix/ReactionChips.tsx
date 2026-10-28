@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { MonitorPlay } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFeedViewTrackingCallback } from '@/hooks/use-view-tracking';
-import { currentLiveReaction, reactionSummary, type ReactionSummary } from '@/lib/api/remix-links';
+import { currentLiveReaction, reactionSummary, type ReactionSummary } from '@/lib/remix/reactions';
 
 function useSummary(tokenId: string | number | undefined) {
   const [summary, setSummary] = useState<ReactionSummary | null>(null);

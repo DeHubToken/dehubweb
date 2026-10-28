@@ -20,7 +20,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { PostModal } from "@/features/post";
-import { tokenIdFromPostUrl } from "@/lib/api/remix-links";
+import { tokenIdFromPostUrl } from "@/lib/remix/reactions";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
