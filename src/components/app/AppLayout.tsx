@@ -271,13 +271,19 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const rail = w >= 1536 ? 352 : w >= 1280 ? 320 : w >= 1024 ? 288 : 0;
       return Math.max(0, shell - sidebar - rail);
     };
+    // A custom property on <html> is inherited by every element, so any write
+    // there restyles the whole page (~2,300 elements on Home, the biggest
+    // single cost of a tab tap on an iPhone). Write only values that moved.
+    const write = (name: string, value: string) => {
+      if (root.getPropertyValue(name) !== value) root.setProperty(name, value);
+    };
     const updateBounds = () => {
       const rect = mainEl.getBoundingClientRect();
       const width = isWideMainRoute ? Math.min(rect.width, standardColumnWidth(rect)) : rect.width;
       const left = rect.left + (rect.width - width) / 2;
-      root.setProperty('--app-main-left', `${left}px`);
-      root.setProperty('--app-main-width', `${width}px`);
-      root.setProperty('--app-main-center-x', `${left + width / 2}px`);
+      write('--app-main-left', `${left}px`);
+      write('--app-main-width', `${width}px`);
+      write('--app-main-center-x', `${left + width / 2}px`);
     };
 
     updateBounds();
@@ -287,11 +293,14 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', updateBounds);
-      root.removeProperty('--app-main-left');
-      root.removeProperty('--app-main-width');
-      root.removeProperty('--app-main-center-x');
     };
   }, [location.pathname, isCollapsed]);
+  useEffect(() => () => {
+    const root = document.documentElement.style;
+    root.removeProperty('--app-main-left');
+    root.removeProperty('--app-main-width');
+    root.removeProperty('--app-main-center-x');
+  }, []);
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
     if ('scrollRestoration' in history) {
