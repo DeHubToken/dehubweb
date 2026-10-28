@@ -3225,6 +3225,7 @@
     "followerInvites": {
       "title": "Pe àwọn ọmọlẹ́yìn",
       "detail": "Yan ọmọlẹ́yìn tó tó 50 fún ìpele kọ̀ọ̀kan. A ó fò àwọn DM tí a ti sanwó fún tàbí tí a ti sé mọ́. Ṣàyẹ̀wò ìjíròrò fún àwọn ìránṣẹ́ tí a kò tíì fìdí rẹ̀ múlẹ̀ kí o tó gbìyànjú lẹ́ẹ̀kan sí i.",
+      "note": "Fi àkọsílẹ̀ kún ìpè rẹ (àṣàyàn)",
       "selectAll": "Yan ojú-ewé yìí",
       "clear": "Pa rẹ́",
       "previous": "Ṣáájú",

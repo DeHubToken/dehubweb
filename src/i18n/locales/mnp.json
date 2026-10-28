@@ -3163,6 +3163,7 @@
     "chatTab": "聊天",
     "followerInvites": {
       "detail": "选择每批不超过50个粉丝。付费或关闭的私信会被跳过。检查聊天记录前先确认发送。",
+      "note": "俵汝其邀請加一句話（可選）",
       "selectAll": "选择这个页面",
       "clear": "清除",
       "previous": "上一个",

@@ -3245,6 +3245,7 @@
     "followerInvites": {
       "title": "Kutsu jälgijaid",
       "detail": "Vali kuni 50 jälgijat partii kohta. Makstud või suletud DM-id jäetakse vahele. Enne uuesti proovimist kontrolli, kas vestluses on kinnitamata saadetisi.",
+      "note": "Lisa kutsele märkus (valikuline)",
       "selectAll": "Vali see leht",
       "clear": "Tühjenda",
       "previous": "Eelmine",

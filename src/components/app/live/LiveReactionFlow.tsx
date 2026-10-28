@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
 import { useReactionFlow } from '@/hooks/use-reaction-flow';
 import { LIVE_REACTION_EMOJI, REACTION_LANE_WIDTH, REACTION_MOTION, REACTION_SIZE, REACTION_SIZE_BIG, reactionColumn, reactionPose, type ReactionParticle } from '@/lib/live/reaction-flow';
@@ -58,11 +59,58 @@ export function LiveReactionFlow({ streamId, enabled, bottom = 24, self }: {
     addReaction(self.type, self.weight ?? 1);
   }, [self, addReaction]);
 
+  // The lane stays in the picture as an empty anchor: it says where the
+  // emoji start and how far they climb. The emoji themselves draw on a layer
+  // outside the video, so the media box's rounded edge, the close button and
+  // the bottom controls can no longer cut them; they rise over all of it and
+  // drift lightly past the card's edge.
   const lane = useRef<HTMLDivElement>(null);
-  return <div ref={lane} aria-hidden="true" data-live-reaction-flow className="pointer-events-none absolute right-1 z-20 overflow-hidden"
-    style={{ bottom, width: REACTION_LANE_WIDTH, height: `min(52%, 400px)` }}>
-    {reactions.map(item => <ReactionParticleView key={item.id} item={item} lane={lane} still={!!reducedMotion} />)}
-  </div>;
+  const layer = useRef<HTMLDivElement>(null);
+  const [host, setHost] = useState<{ el: HTMLElement; fixed: boolean } | null>(null);
+  const active = reactions.length > 0;
+
+  useLayoutEffect(() => {
+    if (!active || !lane.current) { setHost(null); return; }
+    // Inside a full-screen viewer, draw in that viewer so the layer stays in
+    // its stacking order (under its sheets and menus). In the feed, the page.
+    let el: HTMLElement | null = lane.current.parentElement;
+    while (el && el !== document.body && getComputedStyle(el).position !== 'fixed') el = el.parentElement;
+    setHost(el && el !== document.body ? { el, fixed: false } : { el: document.body, fixed: true });
+  }, [active]);
+
+  // Layout effect, so the first frame is already in place and never flashes
+  // in the corner of the page.
+  useLayoutEffect(() => {
+    if (!host) return;
+    let frame = 0;
+    // Follows the lane while anything is flying, so a scrolling feed carries
+    // the emoji with its card. Idle, nothing runs.
+    const sync = () => {
+      const from = lane.current?.getBoundingClientRect();
+      const to = layer.current;
+      if (from && to) {
+        const base = host.fixed ? { left: 0, top: 0 } : host.el.getBoundingClientRect();
+        to.style.transform = `translate3d(${from.left - base.left}px, ${from.top - base.top}px, 0)`;
+        to.style.width = `${from.width}px`;
+        to.style.height = `${from.height}px`;
+      }
+      frame = requestAnimationFrame(sync);
+    };
+    sync();
+    return () => cancelAnimationFrame(frame);
+  }, [host]);
+
+  return <>
+    <div ref={lane} aria-hidden="true" data-live-reaction-flow className="pointer-events-none absolute right-1"
+      style={{ bottom, width: REACTION_LANE_WIDTH, height: `min(52%, 400px)` }} />
+    {host && createPortal(
+      <div ref={layer} aria-hidden="true" data-live-reaction-layer
+        className={`pointer-events-none left-0 top-0 ${host.fixed ? 'fixed z-40' : 'absolute z-[60]'}`}>
+        {reactions.map(item => <ReactionParticleView key={item.id} item={item} lane={lane} still={!!reducedMotion} />)}
+      </div>,
+      host.el,
+    )}
+  </>;
 }
 
 /** One emoji on its climb. Driven by reactionPose, the same curve the app draws. */

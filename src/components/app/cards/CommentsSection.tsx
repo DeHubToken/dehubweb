@@ -25,13 +25,14 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { Square, Loader2, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { Square, Loader2, RotateCcw, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
 import Quote from "@/components/ui/cut-icons/quote";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Link from "@/components/ui/cut-icons/link";
 import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
+import { useHoldMenu } from '@/hooks/use-hold-menu';
 import Languages from "@/components/ui/cut-icons/language";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
@@ -51,6 +52,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { createPortal, flushSync } from 'react-dom';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage-context';
 import { VoiceStripPlayer } from '../audio/VoiceStripPlayer';
 import { LiveMicBars } from '../audio/LiveMicBars';
@@ -459,6 +461,12 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
   const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
 
+  // Translate lives in the row's menu, not on the row. Holding the comment on
+  // a phone, or right-clicking it on desktop, opens that same menu.
+  const canTranslate = !!comment.text && !translation.isTooShort;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hold = useHoldMenu(() => setMenuOpen(true), !isEditing && !isPending);
+
   return (
     <motion.div
       // A comment you just sent is already on screen under its placeholder id;
@@ -467,8 +475,9 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={isPending ? { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } : undefined}
       // The one you just sent lands with the soft glow, wherever it lands.
-      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl${isPending ? ' dh-land-glow' : ''}`}
+      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl [-webkit-touch-callout:none]${isPending ? ' dh-land-glow' : ''}`}
       data-comment-id={comment.id}
+      {...hold}
       /*
         Tap the comment to answer it.
 
@@ -655,6 +664,24 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 auto={false}
               />
             )}
+            {/* No Translate button on the row — that is in the menu. The row
+                only says what happened: translating, or translated with the
+                way back. */}
+            {canTranslate && (translation.isLoading || translation.isTranslated) && (
+              translation.isLoading ? (
+                <span className="mt-0.5 flex items-center gap-1 text-xs text-white/60" role="status">
+                  <Loader2 className="w-3 h-3 animate-spin" />{i18n.t('common.translating')}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={translation.handleShowOriginal}
+                  className="mt-0.5 flex items-center gap-1 text-xs text-white/60 hover:text-white transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />{i18n.t('common.showOriginal')}
+                </button>
+              )
+            )}
             <DehubLinkEmbeds links={commentLinks} />
             <FeedLinkPreviews text={commentBody} />
             <AssetRefCards refs={commentAssetRefs} />
@@ -818,7 +845,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 </button>
               </>
             )}
-            <DropdownMenu>
+            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
@@ -859,6 +886,15 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                   <Quote className="w-4 h-4" />
                   {i18n.t('comments.copyText')}
                 </DropdownMenuItem>
+                {canTranslate && (
+                  <DropdownMenuItem
+                    onClick={() => { void (translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()); }}
+                    className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                  >
+                    {translation.isTranslated ? <RotateCcw className="w-4 h-4" /> : <Languages className="w-4 h-4" />}
+                    {translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}
+                  </DropdownMenuItem>
+                )}
                 {onReport && !isOwnComment && (
                   <DropdownMenuItem
                     onClick={() => onReport(comment.id)}
@@ -870,30 +906,6 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-            {comment.text && !translation.isTooShort && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
-                    className={cn(
-                      COMMENT_ACTION_HIT,
-                      "transition-colors",
-                      translation.isLoading ? "text-white/60" : 
-                      translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
-                    )}
-                    aria-label={i18n.t('comments.translate')}
-                    disabled={translation.isLoading}
-                  >
-                    {translation.isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Languages className="w-4 h-4" />
-                    )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}</TooltipContent>
-              </Tooltip>
-            )}
             {/* Views on the comment itself, recorded by the observer below
                 when the row scrolls into a reader's viewport.
 
@@ -932,6 +944,54 @@ const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
+
+/**
+ * Moves a <body>-portalled `fixed bottom-0` bar where `sticky bottom-0` would
+ * hold it: on the screen's bottom edge while the section is in view, released
+ * at the slot it left behind, never above the section's top.
+ */
+function useFloatingPin(
+  on: boolean,
+  barRef: React.RefObject<HTMLDivElement | null>,
+  slotRef: React.RefObject<HTMLDivElement | null>,
+  sectionRef: React.RefObject<HTMLDivElement | null>,
+) {
+  useLayoutEffect(() => {
+    const bar = barRef.current, slot = slotRef.current, section = sectionRef.current;
+    if (!on || !bar || !slot || !section) return;
+    let frame = 0;
+    const place = () => {
+      frame = 0;
+      const h = bar.offsetHeight;
+      slot.style.height = `${h}px`;
+      if (!section.getClientRects().length) { bar.style.visibility = 'hidden'; return; }
+      bar.style.visibility = '';
+      const stickTop = window.innerHeight - (parseFloat(getComputedStyle(bar).bottom) || 0) - h;
+      const top = Math.max(section.getBoundingClientRect().top, Math.min(slot.getBoundingClientRect().top, stickTop));
+      bar.style.transform = top === stickTop ? '' : `translate3d(0,${Math.round(top - stickTop)}px,0)`;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(place); };
+    // A page that slides in moves the section without a scroll or resize.
+    const settleUntil = performance.now() + 700;
+    const settle = () => { place(); if (performance.now() < settleUntil) frame = requestAnimationFrame(settle); };
+    settle();
+    const resize = new ResizeObserver(schedule);
+    resize.observe(bar);
+    resize.observe(section);
+    window.addEventListener('scroll', schedule, { passive: true, capture: true });
+    window.addEventListener('resize', schedule);
+    bar.addEventListener('transitionend', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      window.removeEventListener('scroll', schedule, { capture: true });
+      window.removeEventListener('resize', schedule);
+      bar.removeEventListener('transitionend', schedule);
+      bar.style.transform = '';
+      bar.style.visibility = '';
+    };
+  }, [on, barRef, slotRef, sectionRef]);
+}
 
 function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
@@ -1007,8 +1067,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // On the phone post page the composer docks to the screen. It is portalled
   // to <body> because canvas themes put filters/transforms on the page frame,
   // which would turn `position: fixed` into "fixed to that frame".
+  // The phone page's reply bar goes to <body> too: the page clips what scrolls
+  // under the top pill, and Chrome draws no backdrop blur inside a clip-path,
+  // so a bar left in there shows the comments under it as plain text. An
+  // empty slot keeps its place in the page and it follows it (useFloatingPin).
+  const isActivePage = useContext(CachedPageActiveContext);
+  const floatPin = page && isMobile && isActivePage;
   const dockComposer = (el: React.ReactElement) =>
-    stage && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
+    (stage || floatPin) && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
   /** Cleared by "Show all comments", and by arriving with nothing to focus. */
   const [showAllThreads, setShowAllThreads] = useState(!focusCommentId);
   useEffect(() => {
@@ -1484,6 +1550,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
 
   // Record comment views when visible (#9)
   const sectionRef = useRef<HTMLDivElement>(null);
+  const pinBarRef = useRef<HTMLDivElement>(null);
+  const pinSlotRef = useRef<HTMLDivElement>(null);
+  useFloatingPin(floatPin, pinBarRef, pinSlotRef, sectionRef);
   const viewedIdsRef = useRef(new Set<number>());
   const pendingViewsRef = useRef<number[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -2971,7 +3040,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           data-comment-composer
           data-comment-composer-pin={page || undefined}
           data-stage-composer={stage || undefined}
-          ref={stage ? composerRootRef : undefined}
+          ref={stage ? composerRootRef : floatPin ? pinBarRef : undefined}
           className={cn(
             // Hidden, not unmounted: a photo picker opened from it must still
             // be able to hand its file back.
@@ -2980,6 +3049,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
               // Docked to the bottom of the screen for the whole page, over a
               // translucent blur (post-stage.css). The bottom nav is hidden here.
               ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+              : floatPin
+              ? "fixed inset-x-0 bottom-0 z-20 px-2 sm:px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
               : page
               // The app's reply bar: full width, pinned to the bottom of the
               // screen while the thread is in view, released at its end.
@@ -3368,6 +3439,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           </div>
         </div>
         )}
+        {floatPin && !commentsDisabled && !kidsOnlyThread && <div ref={pinSlotRef} data-comment-composer-slot aria-hidden />}
 
         {/* Common Ground steps, opened by the first Post of the session on a
             thread that has the mode on. Its own Post button sends the reply. */}

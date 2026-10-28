@@ -3245,6 +3245,7 @@
     "followerInvites": {
       "title": "Aicināt sekotājus",
       "detail": "Izvēlieties līdz 50 sekotājus vienlaicīgi. Apmaksātie vai aizvērtie ziņojumi tiek pārskatīti. Pārbaudiet ziņojumu sarakstu, lai pēc tam mēģinātu vēlreiz.",
+      "note": "Pievieno ielūgumam piezīmi (nav obligāti)",
       "selectAll": "Izvēliet šo lapu",
       "clear": "Tīkls",
       "previous": "Iepriekšējā lapa",

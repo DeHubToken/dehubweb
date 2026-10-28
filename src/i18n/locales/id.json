@@ -3250,6 +3250,7 @@
     "followerInvites": {
       "title": "Undang pengikut",
       "detail": "Pilih hingga 50 pengikut per batch. Pesan DM yang dibayar atau tertutup dilewati. Periksa obrolan untuk mengirimkan yang belum dikonfirmasi sebelum mencoba lagi.",
+      "note": "Tambahkan catatan ke undanganmu (opsional)",
       "selectAll": "Pilih halaman ini",
       "clear": "Bersihkan",
       "previous": "Sebelumnya",
