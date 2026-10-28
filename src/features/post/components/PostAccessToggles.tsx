@@ -5,7 +5,8 @@ import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply } from "lucide-react";
+import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply, Scissors } from "lucide-react";
+import type { RemixPolicy } from "@/lib/remix-links";
 import type { PostVisibility, QuotePolicy, ReplyPolicy } from "@/lib/api/dehub/types";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Eye from "@/components/ui/cut-icons/visibility";
@@ -87,6 +88,9 @@ interface PostAccessTogglesProps {
   /** Who may quote the post. The row is left out where this is not passed (a live stream). */
   quotePolicy?: QuotePolicy;
   setQuotePolicy?: (value: QuotePolicy) => void;
+  /** Who may stitch this video; null follows the account setting. Only passed for video posts. */
+  stitchPolicy?: RemixPolicy | null;
+  setStitchPolicy?: (value: RemixPolicy | null) => void;
   /** Who may reply. Left out, like quotes, where this is not passed. */
   replyPolicy?: ReplyPolicy;
   setReplyPolicy?: (value: ReplyPolicy) => void;
@@ -170,6 +174,8 @@ export function PostAccessToggles({
   setIsMature,
   quotePolicy = 'public',
   setQuotePolicy,
+  stitchPolicy = null,
+  setStitchPolicy,
   replyPolicy = 'public',
   setReplyPolicy,
   visibility = 'public',
@@ -771,6 +777,28 @@ export function PostAccessToggles({
             <option value="public">{t('quotePolicy.public')}</option>
             <option value="followers">{t('quotePolicy.followers')}</option>
             <option value="nobody">{t('quotePolicy.nobody')}</option>
+          </select>
+        </label>
+        )}
+
+        {/* Who may stitch the video — up to 5 seconds of it, then their own clip. */}
+        {setStitchPolicy && visibility === 'public' && (
+        <label className="flex items-center justify-between py-0.5 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Scissors className="w-4 h-4 text-white shrink-0" />
+            <span className="text-sm text-white">{t('remixLinks.stitch.allow', 'Allow stitches')}</span>
+          </div>
+          <select
+            value={stitchPolicy ?? ''}
+            onChange={(e) => setStitchPolicy((e.target.value || null) as RemixPolicy | null)}
+            onClick={e => e.stopPropagation()}
+            aria-label={t('remixLinks.stitch.allow', 'Allow stitches')}
+            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
+          >
+            <option value="">{t('remixLinks.policy.default', 'My default')}</option>
+            <option value="everyone">{t('remixLinks.policy.everyone', 'Everyone')}</option>
+            <option value="followers">{t('remixLinks.policy.followers', 'Followers')}</option>
+            <option value="nobody">{t('remixLinks.policy.nobody', 'No one')}</option>
           </select>
         </label>
         )}

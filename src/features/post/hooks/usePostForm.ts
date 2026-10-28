@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
+import { recordRemixLink, saveRemixSettings, type RemixKind, type RemixPolicy } from '@/lib/remix-links';
 import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
@@ -317,6 +318,8 @@ export function usePostForm(
    * hidden by the modal and never sent.
    */
   quotedPost?: DeHubNFT | null,
+  /** Set when this post is a remix (a stitch, a duet...): linked to its source once it has a tokenId. */
+  remixLink?: { kind: RemixKind; sourceTokenId: string } | null,
 ): UsePostFormReturn {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
@@ -363,6 +366,8 @@ export function usePostForm(
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   // Who may reply. Anyone, unless the creator narrows it.
   const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>('public');
+  // Who may stitch a video post. null follows the account's setting.
+  const [stitchPolicy, setStitchPolicy] = useState<RemixPolicy | null>(null);
   // Who may see the post. Everyone, unless the creator narrows it; fixed once posted.
   const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -1223,6 +1228,7 @@ export function usePostForm(
     setContentWarning(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
+    setStitchPolicy(null);
     setVisibility('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
@@ -2077,6 +2083,25 @@ export function usePostForm(
           });
       }
 
+      /**
+       * Remix bookkeeping, once the post has a tokenId. Neither blocks: the
+       * post is up, and a failed link or setting is reported, not thrown.
+       */
+      if (!mintResponse.duplicate) {
+        const createdTokenId = String(mintResponse.createdTokenId);
+        if (stitchPolicy && postType === 'video') {
+          void saveRemixSettings({ tokenId: createdTokenId, allowStitch: stitchPolicy }).catch(() => {
+            toast.error(_copy("remixLinks.stitch.settingFailed", { defaultValue: "Your post is up, but its stitch setting was not saved. Change it from Edit post." }));
+          });
+        }
+        if (remixLink) {
+          void recordRemixLink({ kind: remixLink.kind, sourceTokenId: remixLink.sourceTokenId, remixTokenId: createdTokenId })
+            .catch((error: Error & { refused?: boolean }) => {
+              toast.error(error.refused ? error.message : _copy("remixLinks.linkFailed", { defaultValue: "Your post is up, but it could not be linked to the original video." }));
+            });
+        }
+      }
+
       // Never for a followers-only or direct post: another network would publish
       // it to everyone there.
       if (!mintResponse.duplicate && !liveMode && !isQuoting && visibility === 'public') {
@@ -2747,7 +2772,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy, remixLink,
     , _copy
   ]);
 
@@ -2783,6 +2808,7 @@ export function usePostForm(
       contentWarning,
       quotePolicy,
       replyPolicy,
+      stitchPolicy,
       visibility,
       isEnhancing,
       isPosting,
@@ -2825,6 +2851,7 @@ export function usePostForm(
       setPoll,
       setContentWarning,
       setQuotePolicy,
+      setStitchPolicy,
       setReplyPolicy,
       setVisibility,
       handleImageSelect,

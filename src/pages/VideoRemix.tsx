@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { buildRemixStudioHtml, type RemixStudioConfig } from '@/lib/editor/remixStudioHtml';
+import { buildRemixStudioHtml, type RemixMode, type RemixStudioConfig } from '@/lib/editor/remixStudioHtml';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { importOneFile } from '@/lib/editor/importFiles';
 import { useEditorStore } from '@/store/editorStore';
@@ -11,9 +11,12 @@ import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { DEFAULT_SETTINGS, type ProjectSnapshot } from '@/lib/editor/types';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
+import { checkRemix } from '@/lib/remix-links';
 
-async function checkSource(sourceUrl: string) {
-  const post = await getNFTInfo(decodeURIComponent(new URL(sourceUrl).pathname.split('/').pop()!));
+const sourceTokenId = (sourceUrl: string) => decodeURIComponent(new URL(sourceUrl).pathname.split('/').pop()!);
+
+async function checkSource(sourceUrl: string, mode: RemixMode) {
+  const post = await getNFTInfo(sourceTokenId(sourceUrl));
   const extra = post as typeof post & { plansDetails?: unknown[]; plans?: unknown[]; deleted?: boolean };
   if (!post || post.postType !== 'video' || post.isHidden || extra.deleted || post.is_live || post.status === 'live'
     || post.stream?.isActive || post.spoilerText || (post.contentRating && post.contentRating !== 'safe')
@@ -22,6 +25,11 @@ async function checkSource(sourceUrl: string) {
       isLocked: post.is_locked || post.streamInfo?.isLockContent,
       lockedPrice: post.locked_price ?? post.streamInfo?.lockContentAmount,
       subscriberPlans: extra.plansDetails ?? extra.plans })) throw new Error('This video is unavailable for remixing.');
+  // The creator's "Allow stitches" setting (per post, then account), checked on entry and again on save.
+  if (mode === 'stitch' && !post.isOwner) {
+    const verdict = await checkRemix(sourceTokenId(sourceUrl), 'stitch');
+    if (!verdict.allowed) throw new Error(verdict.reason || 'This creator has turned off stitches for this video.');
+  }
 }
 
 export default function VideoRemix() {
@@ -46,7 +54,7 @@ export default function VideoRemix() {
   useEffect(() => {
     let cancelled = false;
     setAvailable(false);
-    if (config) void checkSource(config.sourceUrl).then(() => { if (!cancelled) setAvailable(true); })
+    if (config) void checkSource(config.sourceUrl, config.mode).then(() => { if (!cancelled) setAvailable(true); })
       .catch(failure => { if (!cancelled) setError(failure instanceof Error ? failure.message : 'Could not open this video.'); });
     return () => { cancelled = true; };
   }, [config]);
@@ -64,7 +72,7 @@ export default function VideoRemix() {
       if (data.type !== 'recorded' || busy.current) return;
       busy.current = true;
       try {
-        await checkSource(config.sourceUrl);
+        await checkSource(config.sourceUrl, config.mode);
         if (closed) return;
         if (typeof data.dataUrl !== 'string' || data.dataUrl.length > 34 * 1024 * 1024
           || !/^data:video\/(webm|mp4);base64,[A-Za-z0-9+/]+=*$/.test(data.dataUrl)
@@ -81,9 +89,10 @@ export default function VideoRemix() {
         const previous = useEditorStore.getState().toSnapshot();
         if (previous.clips.length) await saveProject(previous);
         const project: ProjectSnapshot = {
-          id: crypto.randomUUID(), title: `${config.mode}: ${config.title}`, updatedAt: Date.now(),
+          id: crypto.randomUUID(), title: `${config.mode === 'stitch' ? 'Stitch' : config.mode}: ${config.title}`, updatedAt: Date.now(),
           settings: { ...DEFAULT_SETTINGS, width: 720, height: data.height, aspectPreset: data.height === 720 ? '1:1' : '9:16',
-            remixSource: { url: config.sourceUrl, creator: config.creator, title: config.title } },
+            remixSource: { url: config.sourceUrl, creator: config.creator, title: config.title,
+              ...(config.mode === 'stitch' ? { mode: 'stitch' as const, tokenId: sourceTokenId(config.sourceUrl) } : {}) } },
           tracks: [{ id: 'remix', kind: 'video', name: 'Remix', muted: false, hidden: false }],
           clips: [{ id: crypto.randomUUID(), trackId: 'remix', kind: 'video', mediaId, start: 0,
             trimIn: 0, duration: data.duration, sourceDuration: data.duration, label: `Remix: ${config.title}`, href: config.sourceUrl }],
