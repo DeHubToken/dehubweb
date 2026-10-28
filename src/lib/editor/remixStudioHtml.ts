@@ -38,8 +38,10 @@ const mask = document.createElement('canvas'), person = document.createElement('
 const maskCtx = mask.getContext('2d'), personCtx = person.getContext('2d');
 let stream = null, segmenter = null, audio = null, mix = null, sourceGain = null, micGain = null, monitor = null, micNode = null;
 let recorder = null, capture = null, result = null, resultUrl = null, chunks = [], recordedBytes = 0, lastFrame = -1;
-let ready = false, busy = false, recording = false, counting = false, closed = false, discarded = false, facing = 'user';
-let started = 0, measured = 0, samplePlaying = false, animation = 0, countTimer = 0, recordTimer = 0;
+let ready = false, busy = false, recording = false, counting = false, draining = false, closed = false, discarded = false, facing = 'user';
+let started = 0, measured = 0, samplePlaying = false, animation = 0, countTimer = 0, recordTimer = 0, drainTimer = 0;
+/** A slow encoder runs behind the canvas; stopping at once drops its backlog, so a finished take waits this long. */
+const DRAIN_MS = 1200;
 let subject = {x:.5,y:.6,scale:.8}, pointers = new Map(), pinch = null;
 const names = {'green-screen':'Green screen',duet:'Duet',sound:'Use this sound',cut:'Cut this video'};
 const DUET_MAX = ${DUET_MAX_SECONDS};
@@ -52,7 +54,7 @@ function duetLayout() { return config.mode==='duet' ? $('layout').value : ''; }
 function needsSegmenter() { return config.mode==='green-screen' || duetLayout()==='behind'; }
 function movable() { return config.mode==='green-screen' || duetLayout()==='behind' || duetLayout()==='pip'; }
 function liveError(error) { if(closed)return; status(error.message || String(error), true); if(recording) stop(true); send('error',{error:error.message || String(error)}); }
-function controls() { $('settings').disabled = busy || recording || counting || !!result; $('record').disabled = !ready || !stream || busy || counting || !!result; $('camera').disabled = !ready || busy; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || !!result; $('retake').hidden = !result; $('use').hidden = !result; }
+function controls() { $('settings').disabled = busy || recording || counting || draining || !!result; $('record').disabled = !ready || !stream || busy || counting || draining || !!result; $('camera').disabled = !ready || busy; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || draining || !!result; $('retake').hidden = !result; $('use').hidden = !result; }
 function cover(context, image, x,y,w,h, mirror = false) {
   const iw=image.videoWidth || image.width, ih=image.videoHeight || image.height; if(!iw || !ih)return;
   const scale=Math.max(w/iw,h/ih), sw=w/scale, sh=h/scale;
@@ -79,7 +81,7 @@ function drawPerson(now,w,h) {
 }
 function draw(now) {
   if(closed)return; animation=requestAnimationFrame(draw);
-  if(result)return;
+  if(result || draining)return;
   const w=canvas.width,h=canvas.height,r=range(), elapsed=recording?(now-started)/1000:0;
   if(recording && elapsed >= (config.mode==='cut' ? Math.min(60,r.cut+limit()) : r.duration)){stop();return;}
   if(recording && config.mode==='cut' && elapsed>=r.cut){ source.pause(); if(sourceGain)sourceGain.gain.value=0; }
@@ -152,7 +154,14 @@ async function start() {
     const r=range();recordTimer=setTimeout(()=>stop(),1000*(config.mode==='cut'?Math.min(60,r.cut+limit()):r.duration));
   }catch(error){counting=false;recording=false;capture?.getTracks().forEach(t=>t.stop());capture=null;source.pause();if(monitor)monitor.gain.value=0;liveError(error);controls();}
 }
-function stop(discard=false){discarded ||= discard;counting=false;clearTimeout(recordTimer);if(recording)measured=(performance.now()-started)/1000;recording=false;source.pause();if(monitor)monitor.gain.value=0;if(recorder && recorder.state!=='inactive')recorder.stop();else{capture?.getTracks().forEach(t=>t.stop());capture=null;controls();}}
+function stop(discard=false){discarded ||= discard;counting=false;clearTimeout(recordTimer);const wasRecording=recording;if(recording)measured=(performance.now()-started)/1000;recording=false;source.pause();if(monitor)monitor.gain.value=0;
+  if(recorder && recorder.state!=='inactive'){
+    if(wasRecording && !discarded){
+      // Freeze the picture (no repaint, no new frames) and silence the mix while the encoder catches up; the editor trims the take to its measured length.
+      draining=true;capture?.getAudioTracks().forEach(t=>{t.enabled=false;});controls();status('Finishing your take…');
+      drainTimer=setTimeout(()=>{draining=false;if(recorder && recorder.state!=='inactive')recorder.stop();},DRAIN_MS);
+    }else{clearTimeout(drainTimer);draining=false;recorder.stop();}
+  }else{capture?.getTracks().forEach(t=>t.stop());capture=null;controls();}}
 function dispose(){if(closed)return;closed=true;stop(true);clearTimeout(countTimer);cancelAnimationFrame(animation);stream?.getTracks().forEach(t=>t.stop());stream=null;segmenter?.close();segmenter=null;audio?.close();if(resultUrl)URL.revokeObjectURL(resultUrl);source.removeAttribute('src');source.load();}
 $('title').textContent=names[config.mode] || 'Remix';$('credit').textContent='Source: '+(config.creator ? '@'+config.creator+' · ' : '')+config.title;
 $('hint').textContent=config.mode==='green-screen'?'Your background is removed live. Drag to move yourself; pinch or scroll to resize.':config.mode==='duet'?'Records for the length of the video. Drag to move yourself in Picture in picture and Green screen behind.':'Choose your source range and layout, then record your response.';
