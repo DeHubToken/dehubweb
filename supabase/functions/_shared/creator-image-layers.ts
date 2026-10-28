@@ -48,22 +48,25 @@ export async function archiveLayerSet(job: any, result: any, db = serviceClient(
     const previous = await db.from('creator_assets').select('ready,storage_path,metadata').eq('wallet_address', wallet).eq('id', id).maybeSingle();
     if (previous.error) throw previous.error;
     let width: number, height: number;
-    if (previous.data?.ready && previous.data.storage_path === path && previous.data.metadata?.layerSetId === job.id && previous.data.metadata?.layerIndex === index) {
+    if ((previous.data?.ready || previous.data?.metadata?.layerValidated === true) && previous.data.storage_path === path && previous.data.metadata?.layerSetId === job.id && previous.data.metadata?.layerIndex === index) {
       ({ width, height } = previous.data.metadata);
     } else {
       const output = await downloadLayer(urls[index]); ({ width, height } = output);
       if (layers.length && (layers[0].width !== width || layers[0].height !== height)) throw new LayerValidationError('Layer canvas sizes do not match');
       const uploaded = await db.storage.from('creator-assets').upload(path, new Blob([output.bytes], { type: 'image/png' }), { upsert: true, contentType: 'image/png' });
       if (uploaded.error) throw uploaded.error;
-      const saved = await db.from('creator_assets').upsert({ id, wallet_address: wallet, storage_path: path, ready: true,
+      const saved = await db.from('creator_assets').upsert({ id, wallet_address: wallet, storage_path: path, ready: false,
         metadata: { kind: 'image', model: LAYER_MODEL, modelName: 'Qwen Image Layers', prompt: `Layer ${index + 1}`, createdAt: Date.parse(job.created_at),
-          layerSetId: job.id, layerIndex: index, layerCount: LAYER_COUNT, width, height } });
+          layerSetId: job.id, layerIndex: index, layerCount: LAYER_COUNT, layerValidated: true, width, height } });
       if (saved.error) throw saved.error;
     }
     if (!Number.isInteger(width) || !Number.isInteger(height) || layers.length && (layers[0].width !== width || layers[0].height !== height)) throw new Error('Layer canvas sizes do not match');
     layerCanvas(width, height);
     layers.push({ id, index, width, height });
   }
+  // Publish the validated set atomically. Partial or rejected sets stay private staging rows.
+  const published = await db.from('creator_assets').update({ ready: true }).eq('wallet_address', wallet).in('id', layers.map(layer => layer.id)).select('id');
+  if (published.error || published.data?.length !== LAYER_COUNT) throw published.error || new Error('Could not publish every saved layer');
   // The terminal guard permits only these delivery fields to change after success.
   // Keep the original manifest and provider result immutable for durable recovery.
   result.libraryId = job.id; delete result.savePending;
