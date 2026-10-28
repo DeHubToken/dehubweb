@@ -815,10 +815,17 @@ export function ActionBar({
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
   /**
    * A plain like turns the thumb into the moving 👍, the same way every other
-   * reaction you cast shows as its moving emoji, and pumps it upward on a loop.
+   * reaction you cast shows as its moving emoji. Your own 👍 or 👎 also plays
+   * the emperor's verdict on a loop: the fist held sideways, then the thumb
+   * snapping up (or down) with a pop.
    */
   const thumbGlyph = leadReaction ?? (isLiked ? 'like' : null);
-  const thumbPumps = thumbGlyph === 'like' && (myReaction === 'like' || !leadReaction);
+  const thumbVerdict =
+    thumbGlyph === 'like' && (myReaction === 'like' || !leadReaction)
+      ? 'dehub-thumb-verdict-up'
+      : thumbGlyph === 'dislike' && myReaction === 'dislike'
+        ? 'dehub-thumb-verdict-down'
+        : null;
   useEffect(() => {
     preloadAnimatedReaction('like').catch(() => {});
   }, []);
@@ -1146,7 +1153,7 @@ export function ActionBar({
               className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
-              <span className={cn('flex h-full w-full items-center justify-center', thumbPumps && 'dehub-like-pump')}>
+              <span className={cn('flex h-full w-full items-center justify-center', thumbVerdict)}>
                 <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction || !leadReaction} />
               </span>
             </span>
