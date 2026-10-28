@@ -1532,7 +1532,8 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     (options: VideoGenerationOptions | undefined, txHash: string) => {
       setVideoPaywallOpen(false);
       if (videoModel === 'kling-avatar-v2' && options?.avatar) {
-        startVideo({ prompt: resolvedPrompt, model: videoModel, avatar: options.avatar, clientJobId: options.avatar.clientJobId, txHash }, { prompt: resolvedPrompt, resolvedPrompt, modelName: 'Kling Avatar v2', aspect: '1:1' });
+        const savedPrompt = options.avatar.prompt ?? resolvedPrompt;
+        startVideo({ prompt: savedPrompt, model: videoModel, avatar: options.avatar, clientJobId: options.avatar.clientJobId, txHash }, { prompt: savedPrompt, resolvedPrompt: savedPrompt, modelName: 'Kling Avatar v2', aspect: '1:1' });
         return;
       }
       startVideo(

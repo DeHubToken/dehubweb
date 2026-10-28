@@ -1,4 +1,4 @@
-import { AVATAR_ENDPOINT, prepareAvatar, verifyAvatarQuote } from './creator-avatar.ts';
+import { AVATAR_ENDPOINT, prepareAvatar, verifyAvatarQuote, avatarDeliveryReleased } from './creator-avatar.ts';
 import { frameSpeechPcm, pcmSpeechSamples } from './speech-audio.ts';
 import { quotePriceDhb } from './ai-pricing.ts';
 function assert(value: unknown, message = 'Assertion failed'): asserts value { if (!value) throw new Error(message); }
@@ -65,4 +65,27 @@ Deno.test('PNG bytes and CRC must validate, not only its claimed MIME type and d
   const source=await input(), bytes=Uint8Array.from(atob(source.imageDataUrl.split(',')[1]),c=>c.charCodeAt(0));
   bytes[32]^=1;
   await rejects(()=>prepareAvatar({...source,imageDataUrl:'data:image/png;base64,'+encode(bytes)}));
+});
+Deno.test('PNG rejects unknown critical chunks and nonconsecutive compressed data even with valid CRCs',async()=>{
+  const source=await input(), bytes=Uint8Array.from(atob(source.imageDataUrl.split(',')[1]),c=>c.charCodeAt(0));
+  const parts: Uint8Array[]=[];
+  for(let pos=8;pos<bytes.length;) { const size=new DataView(bytes.buffer).getUint32(pos);parts.push(bytes.slice(pos,pos+12+size));pos+=12+size; }
+  const packed=(chunks:Uint8Array[])=>{const out=new Uint8Array(8+chunks.reduce((n,c)=>n+c.length,0));out.set(bytes.slice(0,8));let pos=8;for(const c of chunks){out.set(c,pos);pos+=c.length;}return 'data:image/png;base64,'+encode(out);};
+  const [header,data,end]=parts, compressed=data.slice(8,-4), middle=Math.floor(compressed.length/2);
+  for(const chunks of [
+    [header,chunk('ABCD',new Uint8Array()),data,end],
+    [header,chunk('IDAT',compressed.slice(0,middle)),chunk('tEXt',new Uint8Array()),chunk('IDAT',compressed.slice(middle)),end],
+    [header,data,chunk('PLTE',new Uint8Array(3)),end],
+    [header,chunk('PLTE',new Uint8Array(3)),chunk('PLTE',new Uint8Array(3)),data,end],
+    [header,chunk('abca',new Uint8Array()),data,end],
+  ]) await rejects(()=>prepareAvatar({...source,imageDataUrl:packed(chunks)}));
+  await prepareAvatar({...source,imageDataUrl:packed([header,chunk('IDAT',compressed.slice(0,middle)),chunk('IDAT',compressed.slice(middle)),end])});
+});
+Deno.test('new paid input is released only after durable output or confirmed refund',()=>{
+  assert(!avatarDeliveryReleased({status:'succeeded',result:{savePending:true}}));
+  assert(!avatarDeliveryReleased({status:'succeeded',result:{libraryId:'saved',savePending:true}}));
+  assert(!avatarDeliveryReleased({status:'failed',result:{paymentRestored:false}}));
+  assert(!avatarDeliveryReleased({status:'refund_pending',result:{paymentRestored:true}}));
+  assert(avatarDeliveryReleased({status:'succeeded',result:{libraryId:'saved'}}));
+  assert(avatarDeliveryReleased({status:'failed',result:{paymentRestored:true}}));
 });

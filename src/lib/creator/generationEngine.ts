@@ -36,7 +36,7 @@ export interface ImageRequest {
 }
 
 export interface VideoRequest {
-  avatar?: { clientJobId?: string; imageDataUrl: string; audioDataUrl: string; rightsConfirmed: boolean; inputDigest?: string; acceptedPriceDhb?: number };
+  avatar?: import('./avatar').AvatarSubmission;
   effect?: string;
   clientJobId?: string;
   prompt: string;
@@ -441,7 +441,7 @@ export async function generateVideo(
   const start = await invokeAi('generate-video', {
     body: {
       clientJobId: req.avatar?.clientJobId ?? req.clientJobId,
-      prompt: req.prompt,
+      prompt: req.avatar?.prompt ?? req.prompt,
       ...(req.avatar ? { avatar: req.avatar } : {}),
       model: req.model,
       duration: `${req.duration ?? 5}s`,
