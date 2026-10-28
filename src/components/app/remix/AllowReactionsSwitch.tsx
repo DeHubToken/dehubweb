@@ -83,7 +83,6 @@ export function AccountAllowReactions() {
   if (!walletAddress) return null;
   return (
     <SettingsRow
-      anchor="allow-reactions"
       icon={<MonitorPlay />}
       title={t('reactions.allow', 'Allow reactions')}
       description={t('reactions.allowDescription', 'Let other creators react to your videos, recorded or live. You can still change it on each post.')}
