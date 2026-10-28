@@ -1,4 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { AuthContext } from '@/contexts/AuthContext';
+import { ReviewedBatchButton } from './ReviewedBatchButton';
+import { campaignReviewedBatch } from '@/lib/creator/reviewedBatchDrafts';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { CAMPAIGN_VARIANT_FIELDS, CAMPAIGN_VARIANT_LIMIT, EMPTY_CAMPAIGN_PLAN, campaignFieldLimit, campaignVariantDraft, normalizeCampaignPlan, type CampaignPlan, type CampaignVariant, type CampaignVariantField } from '@/lib/creator/campaignPlan';
 import { MARKETING_FORMATS, type MarketingBrief } from '@/lib/creator/marketingBrief';
@@ -8,6 +12,7 @@ const labels: Record<CampaignVariantField, string> = { title: 'creator.campaignV
 
 export function CampaignPlanPanel({ brief, onPrepare }: { brief: MarketingBrief; onPrepare: (draft: GenerationDraft) => void }) {
   const { t } = useTranslation();
+  const owner = useContext(AuthContext)?.walletAddress?.toLowerCase() || null;
   const [saved, setSaved] = useSurfaceDraft<CampaignPlan>('creator.campaignPlan.v1', EMPTY_CAMPAIGN_PLAN, 'campaign');
   const plan = normalizeCampaignPlan(saved);
   const update = (id: string, patch: Partial<CampaignVariant>) => setSaved({ ...plan, variants: plan.variants.map(item => item.id === id ? { ...item, ...patch } : item) });
@@ -36,5 +41,6 @@ export function CampaignPlanPanel({ brief, onPrepare }: { brief: MarketingBrief;
         </div>
       </li>)}
     </ol>
+    {plan.variants.length > 0 && <ReviewedBatchButton owner={owner} scope={JSON.stringify([brief, plan])} label="creator.batchReviewCampaign" create={() => campaignReviewedBatch(brief, plan, owner || '')} />}
   </section>;
 }

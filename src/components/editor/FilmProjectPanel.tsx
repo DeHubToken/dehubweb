@@ -6,6 +6,8 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { saveProject } from '@/lib/editor/projectStore';
 import { filmShotDraft, filmProjectMediaIds, removeFilmProjectMedia, validFilmProject, type FilmProject, type FilmShot } from '@/lib/editor/filmProject';
 import { CinemaDirectionControls } from '../app/creator/studio/CinemaDirectionControls';
+import { ReviewedBatchButton } from '../app/creator/ReviewedBatchButton';
+import { filmReviewedBatch } from '@/lib/creator/reviewedBatchDrafts';
 
 export function FilmProjectPanel() {
   const { t } = useTranslation();
@@ -13,6 +15,7 @@ export function FilmProjectPanel() {
   const owner = useRef(walletAddress); owner.current = walletAddress;
   const settings = useEditorStore(state => state.settings);
   const media = useEditorStore(state => state.media);
+  const projectId = useEditorStore(state => state.projectId);
   const [selected, setSelected] = useState<string | null>(null);
   const [preparing, setPreparing] = useState(false);
   const [issue, setIssue] = useState(false);
@@ -86,5 +89,9 @@ export function FilmProjectPanel() {
       </div>
     </div>}
     {issue && <p role="alert" className="mt-3 text-xs">{t('editor.film.issue')}</p>}
+    {film.shots.length > 0 && <div className="mt-3 flex flex-wrap gap-3">{(['image', 'video'] as const).map(kind => <ReviewedBatchButton key={kind} owner={walletAddress?.toLowerCase() || null}
+      scope={JSON.stringify([projectId, film, media.map(item => [item.id, item.url]), settings.aspectPreset])} label={kind === 'image' ? 'creator.batchReviewFilmImages' : 'creator.batchReviewFilmVideos'}
+      create={() => filmReviewedBatch(film, kind, media, settings.aspectPreset, projectId, walletAddress || '')}
+      beforePrepare={() => saveProject(useEditorStore.getState().toSnapshot())} />)}</div>}
   </section>;
 }
