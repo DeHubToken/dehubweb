@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { RetainedPostDock, RetainedPostSurface } from './RetainedPostSurface';
 import { bindRetainedComments, getRetainedPost, RetainedPostActivityContext, useRetainedPost, type RetainedCommentsTab } from '@/lib/retained-post-surface';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
@@ -70,6 +70,22 @@ describe('retained feed post', () => {
     result.rerender(view(false));
     fireEvent.click(screen.getByRole('button', { name: 'Quotes' }));
     expect(openComments).toHaveBeenCalledTimes(1);
+    unbind();
+  });
+
+  it('leaves the card its own inline comments on desktop', () => {
+    const realMatchMedia = window.matchMedia;
+    window.matchMedia = ((query: string) => ({ ...realMatchMedia(query), matches: query === '(min-width: 1024px)' })) as typeof window.matchMedia;
+    onTestFinished(() => { window.matchMedia = realMatchMedia; });
+    const mounted = vi.fn();
+    render(<>
+      <RetainedPostSurface id="retained-desktop"><StatefulCard mounted={mounted} /></RetainedPostSurface>
+      <Dock id="retained-desktop" />
+    </>);
+    const openComments = vi.fn();
+    const unbind = bindRetainedComments('retained-desktop', openComments);
+    fireEvent.click(screen.getByRole('button', { name: 'Quotes' }));
+    expect(openComments).not.toHaveBeenCalled();
     unbind();
   });
 
