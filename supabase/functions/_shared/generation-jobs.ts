@@ -3,8 +3,13 @@ import type { ChargeResult } from './ai-payment-guard.ts';
 import { archiveGeneration } from './archive-generation.ts';
 import { compactGenerationResult, hydrateGenerationResult } from './generation-result.ts';
 import { recoverGenerationRefund, transitionGeneration } from './generation-terminal.ts';
+import { archiveLayerSet, LAYER_MODEL } from './creator-image-layers.ts';
 
 async function saveOutput(job: any, result: Record<string, any>): Promise<void> {
+  if (job.model === LAYER_MODEL) {
+    try { await archiveLayerSet(job, result); } catch (error) { result.savePending = true; console.error('[generation] layer archive pending', job.id, String(error)); }
+    return;
+  }
   const url = result.videoUrl || result.modelUrl || result.imageUrl || result.audioUrl || result.image;
   if (!url && !result.text) return;
   try {
@@ -56,7 +61,7 @@ export async function retryGenerationSave(job: any): Promise<void> {
   if (loaded.error) throw loaded.error;
   if (!loaded.data?.result) return;
   const current = loaded.data, expected = current.result;
-  if (expected.libraryId && !expected.savePending) return;
+  if ((expected.libraryId || expected.layerSet) && !expected.savePending) return;
   const result = { ...expected };
   await saveOutput(current, result);
   const { error } = await db.rpc('ai_generation_save_result', { p_job_id: current.id, p_expected_result: expected, p_result: result });
