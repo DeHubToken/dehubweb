@@ -31,6 +31,7 @@ import { canManageAgents } from '@/lib/agent-access';
 import { AgentActivity, AgentTasksPanel } from './AgentTasksPanel';
 import { AgentProfilePanel } from './AgentProfilePanel';
 import { AgentLifePanel } from './AgentLifePanel';
+import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AgentWorkspacePanel } from './AgentWorkspacePanel';
 
 interface AIAgent {
@@ -418,6 +419,7 @@ export default function AgentsPage() {
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
                   <AgentLifePanel wallet={walletAddress} agentId={agent.id} />
+                  <AgentWelcomePanel agentName={agent.name} />
                   <details open={openConnections.has(agent.id)} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
                     <summary onClick={event => {
                       event.preventDefault();
