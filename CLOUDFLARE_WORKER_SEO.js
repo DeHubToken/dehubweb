@@ -159,7 +159,7 @@ const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
 // image. Anything absent here still falls back to SHARE_IMAGE, so adding a
 // route without its card is safe.
 const OG_CARD_ROUTES = new Set([
-  'arcade/gods-eye',
+  'arcade/gods-eye', 'compare',
   'home', 'fallback', 'blog', 'docs',
   'docs/overview', 'docs/dapps', 'docs/games', 'docs/token/overview',
   'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
