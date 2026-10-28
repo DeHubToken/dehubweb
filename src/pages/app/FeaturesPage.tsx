@@ -14,6 +14,7 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import type { MutableRefObject } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -106,7 +107,7 @@ const SORTS: { id: FeatureSort; labelKey: string }[] = [
 
 // Statuses worth surfacing on an open request. `open` is the default and adds
 // no information, and shipped/completed live on their own tab with their own
-// badge — so both are deliberately absent here and render nothing.
+// badge â€” so both are deliberately absent here and render nothing.
 //
 // Hues match mobile's STATUS_COLORS (dehub-mobile/hooks/useFeatureRequests.ts)
 // so the same request reads the same on both clients: amber = under review,
@@ -127,7 +128,7 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
  * A single attachment, with its space reserved before it arrives.
  *
  * These images are lazy, and an `<img>` that has not loaded has no intrinsic
- * height — so `w-full max-h-64` alone gave a box 677px wide and 0px tall. A
+ * height â€” so `w-full max-h-64` alone gave a box 677px wide and 0px tall. A
  * card whose screenshot has not scrolled into view therefore rendered as if it
  * had no attachment at all, which is exactly how "see screenshot" reports get
  * read as having no screenshot. Holding 16rem (the same 64 the loaded image is
@@ -144,7 +145,7 @@ function LazyAttachmentImage({ url }: { url: string }) {
         alt={_copy("copy.040d2b3689dd", { defaultValue: "Attachment" })}
         loading="lazy"
         onLoad={() => setLoaded(true)}
-        // Errors must not strand the skeleton pulsing forever — settle the box
+        // Errors must not strand the skeleton pulsing forever â€” settle the box
         // and let the browser show its own broken-image state.
         onError={() => setLoaded(true)}
         className={cn(
@@ -215,9 +216,9 @@ function formatTimeAgo(dateStr: string): string {
   return formatRelativeTime(dateStr, i18n.language, 'short');
 }
 
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Feature Card Component (PostCard-style UI)
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function FeatureCard({
   feature,
   currentVote,
@@ -230,7 +231,7 @@ function FeatureCard({
   currentVote: number | undefined;
   onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
   voteDisabled: boolean;
-  /** Open the comments on mount — set by a comment notification's deep link. */
+  /** Open the comments on mount â€” set by a comment notification's deep link. */
   defaultCommentsOpen?: boolean;
   /** The comment that deep link was about, ringed once the thread is open. */
   focusCommentId?: string | null;
@@ -387,7 +388,7 @@ function FeatureCard({
         </div>
       )}
 
-      {/* Content — editable or read-only */}
+      {/* Content â€” editable or read-only */}
       <div className="pt-1 space-y-2">
         {isEditing ? (
           <div className="space-y-3">
@@ -445,7 +446,7 @@ function FeatureCard({
             <TranslatableText publicContent text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
             {feature.description !== feature.title && <TranslatableText publicContent text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />}
 
-            {/* Attached media — one full-width, several as a grid */}
+            {/* Attached media â€” one full-width, several as a grid */}
             <FeatureAttachments feature={feature} />
 
         {/* Category + status badges - liquid glass style */}
@@ -485,7 +486,7 @@ function FeatureCard({
           </>
         )}
 
-        {/* Comments — the post comment section's thread, on this board's data. */}
+        {/* Comments â€” the post comment section's thread, on this board's data. */}
         <AnimatePresence>
           {showComments && (
             <motion.div
@@ -510,9 +511,9 @@ function FeatureCard({
   );
 }
 
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Submit Feature Drawer
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCategory?: FeatureCategory; focusRequest: number; onPosted: () => void }) {
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
@@ -603,7 +604,7 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
       <div className={cn('rounded-xl border border-white/15 bg-black/10 p-3 transition-colors focus-within:border-white/40', dragging && 'ring-2 ring-current')}>
         <textarea ref={promptRef} value={description} onChange={e => setDescription(e.target.value)}
           aria-label={t('features.promptLabel', 'Your prompt')}
-          placeholder={t('features.promptPlaceholder', 'Describe an idea, improvement, or bug…')}
+          placeholder={t('features.promptPlaceholder', 'Describe an idea, improvement, or bugâ€¦')}
           maxLength={1000} rows={4} disabled={submitMutation.isPending}
           onKeyDown={e => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); handleSubmit(); } }}
           onPaste={e => { const files = Array.from(e.clipboardData.files); if (files.length) { e.preventDefault(); addFiles(files); } }}
@@ -640,7 +641,7 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
         </div>
       </div>
       <div className="flex justify-between gap-3 mt-2 text-[11px] text-zinc-500">
-        <span>{description.length}/1000</span><span className="hidden sm:inline">{t('features.promptShortcut', 'Ctrl / ⌘ + Enter to post')}</span>
+        <span>{description.length}/1000</span><span className="hidden sm:inline">{t('features.promptShortcut', 'Ctrl / âŒ˜ + Enter to post')}</span>
       </div>
       {error && <p role="alert" className="text-sm text-red-400 mt-2">{error}</p>}
       <details className="mt-2 text-xs text-zinc-400" open={initialCategory === 'bug_fix' ? true : undefined}>
@@ -677,9 +678,9 @@ function FeatureSkeletons() {
   );
 }
 
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Shipped Feature Card (simpler, no voting)
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ShippedCard({ feature }: { feature: FeatureRequest }) {
   const { t } = useI18n();
   const { isTranslated: isShippedTranslated, isLoading: isShippedTranslateLoading, error: shippedTranslateError, handleTranslate: handleShippedTranslate, handleShowOriginal: handleShippedShowOriginal } = useSharedTranslationControl();
@@ -728,9 +729,9 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
   );
 }
 
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Infinite Scroll Sentinel
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () => void; isFetching: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -752,9 +753,9 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
   );
 }
 
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Main Page
-// ──────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function FeaturesPage() {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
@@ -765,13 +766,23 @@ export default function FeaturesPage() {
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('newest');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
-  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
+  // Sort and category chips share one scroll row, so both indicators measure
+  // against the same layer. The tab is the layout-shift key for categories:
+  // the sort chips in front of them only exist on the Prompts tab.
+  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category, activeTab);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
-  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
+  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort, activeTab);
+  const setFilterLayerRef = useCallback((el: HTMLDivElement | null) => {
+    (featuresCatLayerRef as MutableRefObject<HTMLDivElement | null>).current = el;
+    (featuresSortLayerRef as MutableRefObject<HTMLDivElement | null>).current = el;
+  }, [featuresCatLayerRef, featuresSortLayerRef]);
+  const onFilterRowScroll = useCallback(() => {
+    onFeaturesCatScroll();
+    onFeaturesSortScroll();
+  }, [onFeaturesCatScroll, onFeaturesSortScroll]);
   const [searchInput, setSearchInput] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [composerFocus, setComposerFocus] = useState(0);
-  const [showFilters, setShowFilters] = useState(false);
   const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
 
   // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
@@ -801,8 +812,8 @@ export default function FeaturesPage() {
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
 
   // A notification about one request pins it above the board. The list query
-  // could never be relied on to hold it — it may be shipped, declined, outside
-  // the active category, or pages down the infinite scroll — so it is fetched
+  // could never be relied on to hold it â€” it may be shipped, declined, outside
+  // the active category, or pages down the infinite scroll â€” so it is fetched
   // by id and rendered on its own, then removed from whichever list would
   // otherwise show it twice.
   const focusedRequestId = searchParams.get('request');
@@ -914,12 +925,12 @@ export default function FeaturesPage() {
 
   return (
     <div data-requests-page className="min-h-screen">
-      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
+      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting â€” DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features â€” Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
           mobile; `data-nav-hide-desktop` opts this one into the same thing on
-          desktop too. Because this header is a full bento — title, search,
-          three tabs, category pills and sort tabs — `data-nav-return-top`
+          desktop too. Because this header is a full bento â€” title, search,
+          three tabs, category pills and sort tabs â€” `data-nav-return-top`
           keeps it hidden until the page reaches the top instead of covering a
           request after any small upward correction. */}
       <div data-feed-nav-outer data-nav-hide-desktop data-nav-return-top className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
@@ -948,7 +959,7 @@ export default function FeaturesPage() {
         <div className="relative mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
-            placeholder={t('features.promptSearch', 'Search prompts…')}
+            placeholder={t('features.promptSearch', 'Search promptsâ€¦')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -1025,21 +1036,38 @@ export default function FeaturesPage() {
             hiding them there left ~136 rows with no way to narrow them at all.
             Sort stays Requests-only: Shipping and Shipped are ordered by ship
             date, which is the order people expect on a changelog. */}
-        <>
-            <Button variant="ghost" size="sm" className="mb-2 rounded-lg" aria-expanded={showFilters} onClick={() => setShowFilters(value => !value)}>
-              {t('features.promptFilters', 'Filter by category')}{category !== 'all' && ` · ${CATEGORY_LABELS[category]}`}
-            </Button>
-            {showFilters && <>
-            {/* Category Pills */}
-            <div className="relative mb-3">
-              <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        {/* One scrollable row: sort chips first (Requests only), then every
+            category, with the GitHub link pinned bottom-right. Sort and
+            category each keep their own glass indicator in the shared layer,
+            so both selections stay visible and independent. */}
+        <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <div ref={setFilterLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+                {activeTab === 'requests' && <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />}
                 <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
                 <div
                   ref={featuresCatFadeRef}
-                  className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1"
+                  className="relative z-20 flex items-center gap-2 overflow-x-auto scrollbar-invisible"
                   style={featuresCatFadeStyle}
-                  onScroll={onFeaturesCatScroll}
+                  onScroll={onFilterRowScroll}
                 >
+                  {activeTab === 'requests' && <>
+                    {SORTS.map((s) => (
+                      <button
+                        key={s.id}
+                        ref={setFeaturesSortRef(s.id)}
+                        type="button"
+                        onClick={() => setSort(s.id)}
+                        aria-pressed={sort === s.id}
+                        className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                          sort === s.id ? 'text-white' : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        <span className="relative z-10">{t(s.labelKey)}</span>
+                      </button>
+                    ))}
+                    <span aria-hidden="true" className="shrink-0 self-stretch w-px my-1.5 bg-white/10" />
+                  </>}
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
@@ -1058,36 +1086,6 @@ export default function FeaturesPage() {
                 </div>
               </div>
             </div>
-
-            </>}
-            {/* Sort tabs (Requests only) on the left, the GitHub link pinned to
-                the bento's bottom-right corner on every tab. */}
-            <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1">
-            {activeTab === 'requests' && (
-            <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-              <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
-              <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
-                {SORTS.map((s) => {
-                  const isActive = sort === s.id;
-                  return (
-                    <button
-                      key={s.id}
-                      ref={setFeaturesSortRef(s.id)}
-                      type="button"
-                      onClick={() => setSort(s.id)}
-                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                      }`}
-                    >
-                      <span className="relative z-10">{t(s.labelKey)}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            )}
-            </div>
             <a
               href={DEHUB_GITHUB_URL}
               target="_blank"
@@ -1098,8 +1096,7 @@ export default function FeaturesPage() {
               {t('commandCentre.viewAll')}
               <Github className="w-4 h-4" aria-hidden="true" />
             </a>
-            </div>
-        </>
+        </div>
         </div>
       </div>
 
