@@ -7,7 +7,7 @@ import { defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
 
 // src/lib/mcp/tools/feed.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z } from "npm:zod@^4.6.6";
+import { z } from "npm:zod@^4.6.7";
 
 // src/lib/mcp/tools/dehub-rpc.ts
 var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
@@ -78,7 +78,7 @@ var feed_default = defineTool({
 
 // src/lib/mcp/tools/post.ts
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z2 } from "npm:zod@^4.6.6";
+import { z as z2 } from "npm:zod@^4.6.7";
 var post_default = defineTool2({
   name: "dehub_post",
   title: "Get DeHub post",
@@ -95,7 +95,7 @@ var post_default = defineTool2({
 
 // src/lib/mcp/tools/comments.ts
 import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z3 } from "npm:zod@^4.6.6";
+import { z as z3 } from "npm:zod@^4.6.7";
 var comments_default = defineTool3({
   name: "dehub_comments",
   title: "Read post comments",
@@ -114,7 +114,7 @@ var comments_default = defineTool3({
 
 // src/lib/mcp/tools/search.ts
 import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z4 } from "npm:zod@^4.6.6";
+import { z as z4 } from "npm:zod@^4.6.7";
 var search_default = defineTool4({
   name: "dehub_search",
   title: "Search DeHub",
@@ -133,7 +133,7 @@ var search_default = defineTool4({
 
 // src/lib/mcp/tools/profile.ts
 import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z5 } from "npm:zod@^4.6.6";
+import { z as z5 } from "npm:zod@^4.6.7";
 var profile_default = defineTool5({
   name: "dehub_profile",
   title: "Get DeHub profile",
