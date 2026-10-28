@@ -31,6 +31,7 @@ import {
   type ThreadedComment,
 } from '@/lib/comment-threads';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { patchFeatureRow } from '@/hooks/use-feature-requests';
 
 export interface FeatureRequestComment extends ThreadedComment {
   feature_request_id: string;
@@ -263,16 +264,7 @@ export function useSubmitComment() {
       }
 
       // Optimistically bump comment count without refetching the list (avoids reordering)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
-        if (!old?.pages) return old;
-        return {
-          ...old,
-          pages: old.pages.map((page: any[]) =>
-            page.map((fr) => fr.id === variables.featureRequestId ? { ...fr, comment_count: (fr.comment_count || 0) + 1 } : fr)
-          ),
-        };
-      });
+      patchFeatureRow(queryClient, variables.featureRequestId, (fr) => ({ ...fr, comment_count: (fr.comment_count || 0) + 1 }));
     },
     onError: () => {
       toast.error(_copy("copy.791ab06be905", { defaultValue: "Failed to post comment" }));
@@ -325,16 +317,7 @@ export function useDeleteComment() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
       // Optimistically decrement comment count without refetching the list
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
-        if (!old?.pages) return old;
-        return {
-          ...old,
-          pages: old.pages.map((page: any[]) =>
-            page.map((fr) => fr.id === variables.featureRequestId ? { ...fr, comment_count: Math.max(0, (fr.comment_count || 0) - 1) } : fr)
-          ),
-        };
-      });
+      patchFeatureRow(queryClient, variables.featureRequestId, (fr) => ({ ...fr, comment_count: Math.max(0, (fr.comment_count || 0) - 1) }));
       toast.success(_copy("copy.7199a134a339", { defaultValue: "Comment deleted" }));
     },
     onError: () => {
