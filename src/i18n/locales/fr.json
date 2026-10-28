@@ -29,7 +29,7 @@
     "duet": "Duo",
     "green-screen": "Fond vert",
     "sound": "Utiliser ce son",
-    "cut": "Couper cette vidéo",
+    "stitch": "Stitch",
     "selectSource": "Ouvre les options d'une vidéo et choisis Remix pour commencer."
   },
   "remixLinks": {
@@ -39,6 +39,27 @@
       "stitch": "{{name}} a fait un stitch de ta vidéo",
       "react": "{{name}} a réagi à ta vidéo",
       "reactLive": "{{name}} réagit en direct à ta vidéo"
+    },
+    "linkFailed": "Ta publication est en ligne, mais elle n’a pas pu être liée à la vidéo d’origine.",
+    "settingsHeading": "Remix",
+    "policy": {
+      "default": "Mon réglage par défaut",
+      "everyone": "Tout le monde",
+      "followers": "Abonnés",
+      "nobody": "Personne"
+    },
+    "stitch": {
+      "allow": "Autoriser les stitchs",
+      "allowDesc": "Qui peut utiliser jusqu’à 5 secondes de tes vidéos dans les siennes. Tu peux aussi le changer pour chaque publication.",
+      "saveFailed": "Impossible d’enregistrer ton réglage de stitch. Réessaie.",
+      "settingFailed": "Ta publication est en ligne, mais son réglage de stitch n’a pas été enregistré. Modifie-le depuis Modifier la publication.",
+      "from": "Stitch de {{name}}",
+      "count_one": "{{count}} stitch",
+      "count_other": "{{count}} stitchs",
+      "listTitle": "Stitchs",
+      "listFailed": "Impossible de charger les stitchs. Réessaie.",
+      "listEmpty": "Aucun stitch pour l’instant.",
+      "unavailable": "Cette vidéo n’est plus disponible pour les stitchs."
     }
   },
   "dehubAppPage": {
@@ -408,7 +429,7 @@
   },
   "accountConnect": {
     "title": "Connecter votre compte DeHub",
-    "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 24 heures. Vous pouvez les révoquer à tout moment.",
+    "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 30 jours. Vous pouvez les révoquer à tout moment.",
     "read": "Consulter votre compte, vos publications, notifications et créations",
     "profile": "Modifier votre profil, vos images et vos paramètres de confidentialité",
     "social": "Publier, commenter, suivre des personnes et enregistrer des favoris",

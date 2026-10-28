@@ -350,8 +350,8 @@ export interface ProjectSettings {
   /** Original post retained when a recorded remix is edited and published. */
   remixSource?: {
     url: string; creator?: string; title: string;
-    /** Set for a duet (posts as a quote of this token) or a reaction (linked to it once posted). */
-    mode?: 'duet' | 'react'; tokenId?: string; layout?: string;
+    /** Set for a duet (posted as a quote of this token), a stitch or a reaction; each is linked to it once posted. */
+    mode?: 'duet' | 'stitch' | 'react'; tokenId?: string; layout?: string;
   };
   /** Physical page sizing for PDF downloads. */
   printDpi?: number;

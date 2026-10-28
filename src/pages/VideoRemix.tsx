@@ -27,9 +27,9 @@ export default function VideoRemix() {
   const [error, setError] = useState('');
   const [available, setAvailable] = useState(false);
   const config = useMemo<RemixStudioConfig | null>(() => {
-    // "collab" is the old name of duet; keep links and history entries working.
-    const mode: RemixMode | undefined = state?.mode === 'collab' ? 'duet' : state?.mode;
-    if (!state || !mode || !['green-screen', 'duet', 'sound', 'cut', 'react'].includes(mode)
+    // "collab" and "cut" are the old names of duet and stitch; keep links and history entries working.
+    const mode: RemixMode | undefined = state?.mode === 'collab' ? 'duet' : state?.mode === 'cut' ? 'stitch' : state?.mode;
+    if (!state || !mode || !['green-screen', 'duet', 'sound', 'stitch', 'react'].includes(mode)
       || typeof state.videoUrl !== 'string' || !state.videoUrl.startsWith('https://')
       || typeof state.sourceUrl !== 'string' || !/^https:\/\/dehub\.io\/app\/post\/[^/?#]+$/.test(state.sourceUrl)) return null;
     return { mode, videoUrl: state.videoUrl, sourceUrl: state.sourceUrl,
@@ -66,7 +66,7 @@ export default function VideoRemix() {
           ? (data.width === 720 && data.height === 1280) || (data.width === 1280 && data.height === 720)
           : data.width === 720 && [720, 1280].includes(data.height);
         const handedBlob = react && data.blob instanceof Blob && /^video\/(webm|mp4)/.test(data.blob.type);
-        const maxSeconds = react ? REACT_MAX_SECONDS : config.mode === 'duet' ? DUET_MAX_SECONDS + 1 : 61;
+        const maxSeconds = react ? REACT_MAX_SECONDS : config.mode === 'duet' ? DUET_MAX_SECONDS + 1 : config.mode === 'stitch' ? 66 : 61;
         if ((!handedBlob && (typeof data.dataUrl !== 'string' || data.dataUrl.length > (react ? REACT_MAX_BYTES * 1.4 : 34 * 1024 * 1024)
           || !/^data:video\/(webm|mp4);base64,[A-Za-z0-9+/]+=*$/.test(data.dataUrl)))
           || !Number.isFinite(data.duration) || data.duration <= .25 || data.duration > maxSeconds
@@ -81,12 +81,13 @@ export default function VideoRemix() {
         const previous = useEditorStore.getState().toSnapshot();
         if (previous.clips.length) await saveProject(previous);
         const project: ProjectSnapshot = {
-          id: crypto.randomUUID(), title: `${config.mode === 'duet' ? 'Duet' : config.mode}: ${config.title}`, updatedAt: Date.now(),
+          id: crypto.randomUUID(), title: `${config.mode === 'duet' ? 'Duet' : config.mode === 'stitch' ? 'Stitch' : config.mode}: ${config.title}`, updatedAt: Date.now(),
           settings: { ...DEFAULT_SETTINGS, width: data.width, height: data.height,
             aspectPreset: data.width > data.height ? '16:9' : data.height === 720 ? '1:1' : '9:16',
             remixSource: { url: config.sourceUrl, creator: config.creator, title: config.title,
               ...(config.mode === 'duet' ? { mode: 'duet' as const, tokenId: sourceTokenId(config.sourceUrl),
                 layout: typeof data.layout === 'string' ? data.layout : undefined } : {}),
+              ...(config.mode === 'stitch' ? { mode: 'stitch' as const, tokenId: sourceTokenId(config.sourceUrl) } : {}),
               ...(react ? { mode: 'react' as const, tokenId: sourceTokenId(config.sourceUrl) } : {}) } },
           tracks: [{ id: 'remix', kind: 'video', name: 'Remix', muted: false, hidden: false }],
           clips: [{ id: crypto.randomUUID(), trackId: 'remix', kind: 'video', mediaId, start: 0,

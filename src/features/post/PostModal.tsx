@@ -389,6 +389,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setQuotePolicy={actions.setQuotePolicy}
         replyPolicy={state.replyPolicy}
         setReplyPolicy={actions.setReplyPolicy}
+        stitchPolicy={state.stitchPolicy}
+        setStitchPolicy={state.media.some(m => m.type === 'video') ? actions.setStitchPolicy : undefined}
         visibility={state.visibility}
         // A quote and a livestream are always public.
         setVisibility={isQuoting || state.liveMode ? undefined : actions.setVisibility}

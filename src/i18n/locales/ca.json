@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Connecta el teu compte de DeHub",
-    "body": "Vincula el teu compte per gestionar el teu perfil, publicar publicacions i crear contingut des del xat. Les connexions caduquen en un termini de 24 hores. Pots desconnectar-te quan vulguis.",
+    "body": "Vincula el teu compte per gestionar el teu perfil, publicar publicacions i crear contingut des del xat. Les connexions caduquen en un termini de 30 dies. Pots desconnectar-te quan vulguis.",
     "read": "Llegeix el teu compte, les publicacions, les notificacions i la biblioteca de creadors",
     "profile": "Modifica el teu perfil, les imatges i la configuració de privacitat",
     "social": "Publica publicacions i comentaris, segueix persones i desa les adreces d'interès",

@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { StitchPolicyPostSelect } from '@/components/app/settings/StitchPolicySetting';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -361,6 +362,13 @@ export function EditPostModal({
           </div>
 
           {canReplaceVideo && <PostAllowReactions tokenId={tokenId} open={open} />}
+          {/* Who may stitch the video from now on. Saved as soon as it changes. */}
+          {canReplaceVideo && open && (
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor={`stitch-policy-${tokenId}`} className="text-sm font-medium text-zinc-300">{t('remixLinks.stitch.allow', 'Allow stitches')}</Label>
+            <StitchPolicyPostSelect tokenId={tokenId} className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none" />
+          </div>
+          )}
 
           {/* Who may reply from now on, while comments are on. Replies already made stay. */}
           <div className="flex items-center justify-between gap-3">

@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 import { canonicalOriginRequest } from '../../CLOUDFLARE_WORKER_SEO.js';
+import { handleAccountMcp } from '../../server/account-mcp.js';
 
 describe('direct origin URL semantics', () => {
   it('preserves the canonical path, query and request headers', () => {
@@ -22,5 +23,11 @@ describe('direct origin URL semantics', () => {
     }
     const req = new Request('https://origin.dehub.io/app');
     expect(canonicalOriginRequest(req)).toBe(req);
+  });
+  it('serves the account MCP for public dehub.io requests forwarded through the gateway', async () => {
+    const req = new Request('https://origin.dehub.io/.well-known/oauth-protected-resource/mcp', { headers: { 'X-DeHub-Public-Host': 'dehub.io' } });
+    const res = await handleAccountMcp(canonicalOriginRequest(req), {});
+    expect(res.status).toBe(200);
+    expect((await res.json()).resource).toBe('https://dehub.io/mcp');
   });
 });
