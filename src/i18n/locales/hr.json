@@ -3246,6 +3246,7 @@
     "followerInvites": {
       "title": "Upozorite sledbenike",
       "detail": "Izaberite do 50 sledbenika po grupi. Plaćeni ili zatvoreni privatni poruke se preskaču. Provjerite chat za nepotvrđene slanje prije nego pokušate ponovo.",
+      "note": "Dodajte bilješku pozivnici (nije obavezno)",
       "selectAll": "Odaberi ovu stranicu",
       "clear": "Očisti",
       "previous": "Prethodni",

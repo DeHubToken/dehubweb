@@ -3353,6 +3353,7 @@
     "followerInvites": {
       "title": "Pozvaj nasledovníkov",
       "detail": "Vyberte až 50 nasledovníkov v jednom balíčku. Platné alebo uzavreté správy sú prechádzané. Zkontrolujte konverzáciu pred ďalším pokúšaním.",
+      "note": "Pridajte k pozvánke poznámku (nepovinné)",
       "selectAll": "Vyberte túto stránku",
       "clear": "Zmazať",
       "previous": "Predošlá",

@@ -3259,6 +3259,7 @@
     "followerInvites": {
       "title": "Mời người theo dõi",
       "detail": "Chọn tối đa 50 người theo dõi mỗi lần. Tin nhắn trả tiền hoặc đóng đã bỏ qua. Kiểm tra cuộc trò chuyện trước khi thử lại.",
+      "note": "Thêm lời nhắn vào lời mời (không bắt buộc)",
       "selectAll": "Chọn trang này",
       "clear": "Xóa",
       "previous": "Trước đó",
