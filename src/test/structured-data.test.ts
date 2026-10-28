@@ -279,6 +279,22 @@ describe('entity pages', () => {
     expect(types(body)).toContain('CollectionPage');
   });
 
+  it('gives a video\'s reactions list its own title, canonical and the original\'s share card', async () => {
+    network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
+    const { res, body } = await crawl('/app/post/6127/reactions');
+    expect(res.status).toBe(200);
+    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal — DeHub');
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
+    expect(body).toContain('<link rel="canonical" href="https://dehub.io/app/post/6127/reactions">');
+    expect(types(body)).toContain('CollectionPage');
+  });
+
+  it('answers 404 for the reactions of a missing video', async () => {
+    network({});
+    const { res } = await crawl('/app/post/999999/reactions');
+    expect(res.status).toBe(404);
+  });
+
   it('answers 404 for the duets of a missing video', async () => {
     network({});
     const { res } = await crawl('/app/post/999999/duets');
