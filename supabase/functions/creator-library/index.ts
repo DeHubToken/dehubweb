@@ -26,7 +26,8 @@ Deno.serve(async (req) => {
         .eq('metadata->>sourceAssetId', body.sourceAssetId).order('created_at', { ascending: false }).limit(20);
       if (jobs.error) throw jobs.error;
       return jsonResponse({ jobs: (jobs.data || []).map(job => ({ id: job.id, status: job.status, createdAt: job.created_at,
-        savePending: job.result?.savePending === true, sourceDigest:job.metadata?.sourceDigest, requestId: job.prediction_id, appId: job.provider_app })) });
+        savePending: job.result?.savePending === true, delivered:job.status==='succeeded' && !!job.result?.libraryId && !job.result?.savePending,
+        paymentRestored:job.result?.paymentRestored===true, sourceDigest:job.metadata?.sourceDigest, requestId: job.prediction_id, appId: job.provider_app })) });
     }
     if (body.action === 'layer-set') {
       const { data: job, error } = await db.from('ai_generation_jobs').select('*').eq('wallet_address', auth.wallet).eq('id', String(body.id || '')).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools').maybeSingle();

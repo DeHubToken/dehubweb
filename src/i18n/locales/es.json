@@ -5188,6 +5188,7 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "layerNewAttempt": "Revisar un nuevo intento",
     "layerPngRequired": "Elige una imagen PNG guardada, de hasta 12 MiB y cuatro megapíxeles.",
     "layerTitle": "Separar capas de imagen",
     "layerSource": "Imagen original",

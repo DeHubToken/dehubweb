@@ -5,7 +5,7 @@ import { payForJob } from '@/lib/ai-payment';
 import { collectLayers, exportLayers, importLayers, layerJobs, submitLayers, type LayerJob } from '@/lib/creator/imageLayers';
 import type { ImageLayerSet, LayerChoice } from '@/lib/creator/imageLayersContract';
 import type { GenerationJob } from '@/store/generationStore';
-import { resumeLayerSubmission } from '@/lib/creator/layerSubmission';
+import { beginNewLayerAttempt, resumeLayerSubmission } from '@/lib/creator/layerSubmission';
 import { useNavigate } from 'react-router-dom';
 import { callCreatorLibrary } from '@/lib/creator/cloudLibrary';
 
@@ -16,6 +16,7 @@ export function ImageLayersPanel({ wallet, source, onOpenEditor }: { wallet: str
   const [jobs, setJobs] = useState<LayerJob[]>([]), [set, setSet] = useState<ImageLayerSet | null>(null);
   const [choices, setChoices] = useState<LayerChoice[]>([]), [busy, setBusy] = useState(true), [error, setError] = useState('');
   const [preparedSource,setPreparedSource] = useState<{sourceDigest:string;sourcePreviewUrl:string} | null>(null);
+  const [newAttempt,setNewAttempt] = useState(false);
   const preparationKey = `creator-layers:${wallet.toLowerCase()}:${source.id}`;
   const active = useRef({ wallet, id: source.id }); active.current = { wallet, id: source.id };
   const controller = useRef(new AbortController());
@@ -25,13 +26,16 @@ export function ImageLayersPanel({ wallet, source, onOpenEditor }: { wallet: str
     const found:LayerJob[] = source.layerSetId ? [{ id: source.layerSetId, status: 'succeeded' }] : await layerJobs(wallet, source.id);
     if (!current()) return;
     setJobs(found);
+    const activePreparation = JSON.parse(localStorage.getItem(preparationKey) || 'null');
+    const freshAttempt = !!activePreparation && !found.some(job=>job.id===activePreparation.id);
+    setNewAttempt(freshAttempt);
     if (!source.layerSetId && !preparedSource) {
       const saved = JSON.parse(localStorage.getItem(preparationKey) || 'null');
       const sourceDigest = saved?.sourceDigest || found[0]?.sourceDigest;
       const prepared = await callCreatorLibrary(wallet,{action:'layer-source',sourceAssetId:source.id,...(sourceDigest?{sourceDigest}:{})});
       if (!current()) return; setPreparedSource(prepared);
     }
-    if (found[0]) {
+    if (found[0] && !freshAttempt) {
       const manifest = await collectLayers(wallet, found[0]);
       if (!current()) return;
       if (manifest) { setSet(manifest); setChoices(previous => previous.length ? previous : manifest.layers.map(layer => ({ id: layer.id, hidden: false }))); }
@@ -73,16 +77,29 @@ export function ImageLayersPanel({ wallet, source, onOpenEditor }: { wallet: str
     return next;
   });
   const button = 'min-h-11 rounded-lg border border-white/15 px-3 py-2 text-sm disabled:opacity-40';
-  const pending = jobs.some(job => !['failed','canceled','cancelled'].includes(job.status));
+  const pending = !newAttempt && jobs.some(job => !['failed','canceled','cancelled'].includes(job.status));
+  const startNew = async () => {
+    if (!preparedSource || !jobs[0] || !navigator.locks) return;
+    await navigator.locks.request(preparationKey,{ifAvailable:true},async lock=>{
+      if (!lock) throw new Error('This image already has a payment in progress');
+      const found = await layerJobs(wallet,source.id), terminal=found[0];
+      if (!terminal || terminal.id!==jobs[0].id || !current()) throw new Error('Collect the current job first');
+      await beginNewLayerAttempt({read:async()=>JSON.parse(localStorage.getItem(preparationKey)||'null'),write:async value=>{localStorage.setItem(preparationKey,JSON.stringify(value));},
+        archive:async value=>{const key=`${preparationKey}:history:${value.id}`, raw=JSON.stringify(value), previous=localStorage.getItem(key);if(previous && previous!==raw)throw new Error('Saved receipt needs recovery');localStorage.setItem(key,raw);}},terminal,preparedSource.sourceDigest,()=>crypto.randomUUID());
+      await fetchJobQuote(quoteRequest);
+      if(current()){setNewAttempt(true);setSet(null);setChoices([]);}
+    });
+  };
   return <section className="space-y-3 rounded-xl border border-white/15 p-3">
     <h3>{t('creator.layerTitle', { defaultValue: 'Separate image layers' })}</h3>
     <p className="text-sm">{t('creator.layerPngRequired', { defaultValue: 'Choose a saved PNG image, up to 12 MiB and four megapixels.' })}</p>
     {!source.layerSetId && preparedSource && <img src={preparedSource.sourcePreviewUrl} alt={t('creator.layerSource', { defaultValue: 'Original image' })} className="max-h-32 object-contain" />}
     <p className="text-sm">{t('creator.layerDescription', { defaultValue: 'Four transparent PNG layers. Text remains part of each image.' })}</p>
     {error && <p role="alert">{error}</p>}
-    {!pending && !source.layerSetId && <button className={button} disabled={busy || !preparedSource || quote.isLoading || !!quote.error || !quote.priceDhb} onClick={() => void run(separate)}>
+    {!pending && !source.layerSetId && (newAttempt || jobs.length===0) && <button className={button} disabled={busy || !preparedSource || quote.isLoading || !!quote.error || !quote.priceDhb} onClick={() => void run(separate)}>
       {t('creator.layerSeparate', { defaultValue: 'Separate layers' })} · {quote.priceDhb || '…'} DHB
     </button>}
+    {!newAttempt && !source.layerSetId && (jobs[0]?.delivered || jobs[0]?.paymentRestored) && <button className={button} disabled={busy} onClick={()=>void run(startNew)}>{t('creator.layerNewAttempt',{defaultValue:'Review a new attempt'})}</button>}
     {jobs.length > 0 && !set && <p role="status">{t('creator.layerPending', { defaultValue: 'Saved job: {{status}}. Collect or retry saving without another payment.', status: jobs[0].status })}</p>}
     <button className={button} disabled={busy} onClick={() => void run(refresh)}>{t('creator.layerCollect', { defaultValue: 'Collect / retry save' })}</button>
     {set && <>

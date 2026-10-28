@@ -5192,6 +5192,7 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "layerNewAttempt": "Examiner une nouvelle tentative",
     "layerPngRequired": "Choisissez une image PNG enregistrée, de 12 Mio et quatre mégapixels maximum.",
     "layerTitle": "Séparer les calques de l’image",
     "layerSource": "Image d’origine",
