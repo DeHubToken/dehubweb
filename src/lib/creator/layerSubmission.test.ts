@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { resumeLayerSubmission, withLayerAdmission, type LayerSubmission } from './layerSubmission';
 const id = '00000000-0000-4000-8000-000000000001';
 describe('layer payment recovery', () => {
+  it('revalidates quote after durable paying state and resets safely before wallet entry', async () => {
+    const order:string[]=[];let value:LayerSubmission|null=null,paid=0;
+    await expect(resumeLayerSubmission({read:async()=>value,write:async next=>{value=next;order.push(next.phase);}},{uuid:()=>id,current:()=>true,
+      beforePay:async()=>{order.push('fresh-quote');throw new Error('quote changed');},pay:async()=>{paid++;return 'credits';},submit:async()=>{}})).rejects.toThrow('quote changed');
+    expect(order).toEqual(['prepared','paying','fresh-quote','prepared']);expect(paid).toBe(0);
+  });
   it('never pays again after interruption at the wallet boundary', async () => {
     let value: LayerSubmission | null = null, paid = 0;
     const storage = { read: async () => value, write: async (next: LayerSubmission) => { value = next; } };

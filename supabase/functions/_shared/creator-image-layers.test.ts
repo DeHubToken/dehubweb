@@ -1,6 +1,7 @@
 import { archiveLayerSet, layerInput, layerManifest, layerOutputs } from './creator-image-layers.ts';
 import { layerCanvas, validateLayerPng } from './creator-layer-png.ts';
 import { hydrateGenerationResult } from './generation-result.ts';
+import { prepareLayerSource, layerSourceFormat } from './creator-layer-source.ts';
 const assert = (value: unknown) => { if (!value) throw new Error('Assertion failed'); };
 async function rejects(action: () => unknown) { try { await action(); } catch { return; } throw new Error('Expected rejection'); }
 function chunk(type: string, data = new Uint8Array()) {
@@ -18,6 +19,29 @@ async function png(raw = new Uint8Array([0,0,0,0,0]), middle: Uint8Array[] = [])
 }
 Deno.test('fixed decomposition sends four PNG layers with safety enabled and no prompt synthesis', () => {
   assert(JSON.stringify(layerInput('https://owned/image')) === JSON.stringify({ image_url:'https://owned/image',num_layers:4,output_format:'png',num_inference_steps:28,guidance_scale:5,acceleration:'regular',enable_safety_checker:true,sync_mode:false }));
+});
+Deno.test('source accepts complete PNG only and rejects header-only JPEG/WebP', async () => {
+  assert(await layerSourceFormat(await png())==='image/png');
+  await rejects(()=>layerSourceFormat(new Uint8Array([255,216,255,192,0,8,8,0,1,0,1,3,255,217])));
+  const webp=new Uint8Array(30);webp.set(new TextEncoder().encode('RIFF'));new DataView(webp.buffer).setUint32(4,22,true);webp.set(new TextEncoder().encode('WEBPVP8X'),8);
+  await rejects(()=>layerSourceFormat(webp));
+});
+Deno.test('review binds an immutable private source and rejects another owner or changed digest', async () => {
+  const good=await png(), objects=new Map<string,Uint8Array>([['owner/source-image/original',good]]), paths:string[]=[];
+  const originalFetch=globalThis.fetch;
+  globalThis.fetch=async input=>{const path=new URL(String(input)).pathname.slice(1), bytes=objects.get(path);return bytes?new Response(Uint8Array.from(bytes).buffer):new Response('missing',{status:404});};
+  const query:any={select(){return this;},eq(){return this;},async maybeSingle(){return {data:{metadata:{kind:'image'},storage_path:'owner/source-image/original'},error:null};}};
+  const db:any={from:()=>query,storage:{from:()=>({createSignedUrl:async(path:string)=>{paths.push(path);return {data:{signedUrl:`https://private.test/${path}`},error:null};},upload:async(path:string,blob:Blob)=>{objects.set(path,new Uint8Array(await blob.arrayBuffer()));return {error:null};}})}};
+  try {
+    const prepared=await prepareLayerSource('owner','source-image',undefined,db);
+    objects.set('owner/source-image/original',new Uint8Array([1,2,3]));
+    const recovered=await prepareLayerSource('owner','source-image',prepared.sourceDigest,db);
+    assert(recovered.sourceDigest===prepared.sourceDigest && recovered.sourcePreviewUrl.includes('/__layer_sources/'));
+    await rejects(()=>prepareLayerSource('other','source-image',prepared.sourceDigest,db));
+    const wrong='0'.repeat(64);objects.set(`owner/__layer_sources/source-image/${wrong}/original`,good);
+    await rejects(()=>prepareLayerSource('owner','source-image',wrong,db));
+    assert(paths.some(path=>path.startsWith('other/__layer_sources/')));
+  } finally {globalThis.fetch=originalFetch;}
 });
 Deno.test('layer output rejects truncation, bad CRC, animation, noncontiguous data, invalid filters and decompression overflow', async () => {
   const good = await png(); assert((await validateLayerPng(good)).width === 1);
