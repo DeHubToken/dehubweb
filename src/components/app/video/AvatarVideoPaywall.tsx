@@ -24,6 +24,8 @@ export function AvatarVideoPaywall({ open, onOpenChange, onConfirm, avatarPrompt
   const epoch = scope.current.epoch;
   const admissionScope = useRef({ key, open, owner: walletAddress, epoch });
   admissionScope.current = { key, open, owner: walletAddress, epoch };
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   const pending = !!input.clientJobId && input.phase !== 'prepared';
   useEffect(() => { setQuote(null); }, [key]);
   useEffect(() => {
@@ -32,7 +34,7 @@ export function AvatarVideoPaywall({ open, onOpenChange, onConfirm, avatarPrompt
     if (walletAddress && open) void loadPreparedAvatar(walletAddress).then(saved => { if (!cancelled && saved) setInput(previous => previous.imageDataUrl || previous.audioDataUrl ? previous : saved); }).catch(() => {});
     return () => { cancelled = true; };
   }, [walletAddress, open]);
-  const current = (captured: typeof admissionScope.current) => captured.epoch === admissionScope.current.epoch && captured.owner === admissionScope.current.owner && captured.key === admissionScope.current.key && admissionScope.current.open;
+  const current = (captured: typeof admissionScope.current) => mounted.current && captured.epoch === admissionScope.current.epoch && captured.owner === admissionScope.current.owner && captured.key === admissionScope.current.key && admissionScope.current.open;
   const jobState = async (id: string) => {
     const result = await invokeAi('generate-video', { body: { avatarStatus: id } });
     if (result.error || !result.data || (result.data as { error?: string }).error) throw new Error(t('creatorFlow.recoveryPending'));
