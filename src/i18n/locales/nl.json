@@ -2397,6 +2397,8 @@
     "returnHome": "Terug naar home"
   },
   "profile": {
+    "mutualsOne": "{{count}} gemeenschappelijk:",
+    "mutualsMany": "{{count}} gemeenschappelijk:",
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
