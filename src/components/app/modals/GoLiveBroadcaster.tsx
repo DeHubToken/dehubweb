@@ -14,7 +14,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow, UserPlus, LayoutTemplate, Layers, SlidersHorizontal } from "lucide-react";
+import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow, LayoutTemplate, Layers, SlidersHorizontal } from "lucide-react";
+import UserPlus from "@/components/ui/cut-icons/add-account";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 import Video from "@/components/ui/cut-icons/video";
 import VideoOff from "@/components/ui/cut-icons/video-off";
