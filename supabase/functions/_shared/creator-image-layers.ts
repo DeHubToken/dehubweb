@@ -64,7 +64,10 @@ export async function archiveLayerSet(job: any, result: any, db = serviceClient(
     layerCanvas(width, height);
     layers.push({ id, index, width, height });
   }
-  // Publish the validated set atomically. Partial or rejected sets stay private staging rows.
+  // Processing work only stages. A terminal cancellation may have won while these
+  // files downloaded; only an immutable succeeded decision grants publication.
+  if (job.status !== 'succeeded') { result.savePending = true; return; }
+  // Publish the validated set atomically after terminal success owns delivery.
   const published = await db.from('creator_assets').update({ ready: true }).eq('wallet_address', wallet).in('id', layers.map(layer => layer.id)).select('id');
   if (published.error || published.data?.length !== LAYER_COUNT) throw published.error || new Error('Could not publish every saved layer');
   // The terminal guard permits only these delivery fields to change after success.

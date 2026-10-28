@@ -6,9 +6,9 @@ import { recoverGenerationRefund, transitionGeneration } from './generation-term
 import { archiveLayerSet, LAYER_MODEL } from './creator-image-layers.ts';
 import { LayerValidationError } from './creator-layer-png.ts';
 
-async function saveOutput(job: any, result: Record<string, any>): Promise<void> {
+async function saveOutput(job: any, result: Record<string, any>, db = serviceClient()): Promise<void> {
   if (job.model === LAYER_MODEL) {
-    try { await archiveLayerSet(job, result); } catch (error) { result.savePending = true; console.error('[generation] layer archive pending', job.id, String(error)); }
+    try { await archiveLayerSet(job, result, db); } catch (error) { result.savePending = true; console.error('[generation] layer archive pending', job.id, String(error)); }
     return;
   }
   const url = result.videoUrl || result.modelUrl || result.imageUrl || result.audioUrl || result.image;
@@ -56,25 +56,23 @@ export async function recordGeneration(charge: Extract<ChargeResult, { ok: true 
   return response;
 }
 
-export async function retryGenerationSave(job: any): Promise<void> {
-  const db = serviceClient();
+export async function retryGenerationSave(job: any, db = serviceClient()): Promise<void> {
   const loaded = await db.from('ai_generation_jobs').select('*').eq('id', job.id).eq('status', 'succeeded').maybeSingle();
   if (loaded.error) throw loaded.error;
   if (!loaded.data?.result) return;
   const current = loaded.data, expected = current.result;
   if ((expected.libraryId || expected.layerSet) && !expected.savePending) return;
   const result = { ...expected };
-  await saveOutput(current, result);
+  await saveOutput(current, result, db);
   const { error } = await db.rpc('ai_generation_save_result', { p_job_id: current.id, p_expected_result: expected, p_result: result });
   if (error) throw error;
 }
 
 /** A confirmed provider failure releases exactly that job's draw once. */
-export async function settleGeneration(endpoint: string, predictionId: string, response: Response): Promise<Response> {
+export async function settleGeneration(endpoint: string, predictionId: string, response: Response, db = serviceClient()): Promise<Response> {
   if (!response.ok) return response;
   const result = await response.clone().json();
   if (!['failed', 'canceled', 'cancelled', 'succeeded'].includes(result.status)) return response;
-  const db = serviceClient();
   const { data: job, error } = await db.from('ai_generation_jobs').select('*')
     .eq('endpoint', endpoint).eq('prediction_id', predictionId).maybeSingle();
   if (error) throw new Error('Could not reconcile the render. Reconnect to collect it.');
@@ -93,14 +91,12 @@ export async function settleGeneration(endpoint: string, predictionId: string, r
       output.status = 'succeeded';
       const saved = await transitionGeneration(job.id, 'succeeded', output, { expectedStatuses: ['processing'] }, db);
       if (saved.job?.status === 'succeeded') {
-        const delivered = { ...saved.job.result }; delete delivered.savePending;
-        const recorded = await db.rpc('ai_generation_save_result', { p_job_id: job.id, p_expected_result: saved.job.result, p_result: delivered });
-        if (recorded.error) throw recorded.error;
+        await retryGenerationSave(saved.job,db);
         const current = await db.from('ai_generation_jobs').select('*').eq('id', job.id).single();
         if (current.error) throw current.error;
         return new Response(JSON.stringify(await hydrateGenerationResult(current.data, db)), { headers: response.headers });
       }
-      return new Response(JSON.stringify(saved.job?.result), { headers: response.headers });
+      return new Response(JSON.stringify(await hydrateGenerationResult(saved.job,db)), { headers: response.headers });
     } catch (error) {
       if (error instanceof LayerValidationError) {
         const failed = await transitionGeneration(job.id, 'failed', { ...raw, status: 'failed', error: error.message, savePending: false }, { expectedStatuses: ['processing'] }, db);
