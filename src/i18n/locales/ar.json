@@ -2211,6 +2211,8 @@
     "returnHome": "العودة للرئيسية"
   },
   "profile": {
+    "mutualsOne": "{{count}} متابع مشترك:",
+    "mutualsMany": "{{count}} متابعين مشتركين:",
     "back": "رجوع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل للحصول عليه",
