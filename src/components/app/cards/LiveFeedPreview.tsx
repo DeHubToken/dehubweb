@@ -30,6 +30,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { nativeLiveEdge, watchLiveProgress } from '@/lib/live/stall-watchdog';
+import { forgetWhepSilent, hasRealPicture, rememberWhepSilent, whepRecentlySilent } from '@/lib/live/whep-memory';
 import { useFeedPlaybackAllowed, useLivePlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
@@ -87,7 +88,7 @@ interface LiveFeedPreviewProps {
 }
 
 /** A negotiated session that never delivers a frame is the worst case. */
-const WHEP_START_TIMEOUT_MS = 6000;
+const WHEP_START_TIMEOUT_MS = 3500;
 
 /**
  * Concurrent WebRTC sessions this page will hold for feed previews.
@@ -158,7 +159,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
   // One WebRTC attempt per card: the transport only ever moves whep → hls, so
   // a failure cannot trade the element back and forth with the ladder.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    !bigEvent && typeof RTCPeerConnection !== 'undefined' && !!source ? 'whep' : 'hls',
+    !bigEvent && typeof RTCPeerConnection !== 'undefined' && !!source && !whepRecentlySilent(source.playbackId) ? 'whep' : 'hls',
   );
 
   // Only attach while the card is on screen. A feed can hold dozens of live
@@ -196,7 +197,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
     // Negotiated but silent: no error to catch and nothing on screen.
     const timer = setTimeout(() => {
-      if (!cancelled && !el.videoWidth) fallBack();
+      if (cancelled) return;
+      if (hasRealPicture(el)) { forgetWhepSilent(source.playbackId); return; }
+      rememberWhepSilent(source.playbackId);
+      fallBack();
     }, WHEP_START_TIMEOUT_MS);
 
     const start = async () => {
