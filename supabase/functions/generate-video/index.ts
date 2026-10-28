@@ -14,7 +14,7 @@ import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
 import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision, seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
 import { quotePriceDhb } from '../_shared/ai-pricing.ts';
-import { AVATAR_MODEL, AVATAR_ENDPOINT, prepareAvatar, verifyAvatarQuote, type AvatarInputs } from '../_shared/creator-avatar.ts';
+import { AVATAR_MODEL, AVATAR_ENDPOINT, prepareAvatar, verifyAvatarQuote, avatarDeliveryReleased, type AvatarInputs } from '../_shared/creator-avatar.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -906,6 +906,16 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
+    if (body.avatarStatus) {
+      const auth = await requireDeHubAuth(req);
+      if (!auth.ok) return auth.response;
+      const limited = await rateLimitByIp(req, 'creator-avatar-status', { limit: 60, windowMs: 60 * 60 * 1000 });
+      if (limited) return limited;
+      if (typeof body.avatarStatus !== 'string' || !/^[a-f0-9-]{36}$/i.test(body.avatarStatus)) return new Response(JSON.stringify({ error: 'Invalid avatar job' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      const job = await serviceClient().from('ai_generation_jobs').select('status,result,tx_hash,payment_source').eq('id', body.avatarStatus).eq('wallet_address',auth.wallet).eq('model',AVATAR_MODEL).eq('endpoint','generate-video').maybeSingle();
+      if (job.error) return new Response(JSON.stringify({ error: 'Avatar recovery is unavailable' }), { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ canStartNew: !!job.data && avatarDeliveryReleased(job.data), txHash: job.data?.payment_source === 'credits' ? 'credits' : job.data?.tx_hash || undefined }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
     // ─── Status check ───
     // Polling must not share the generation budget. This route serves two very
