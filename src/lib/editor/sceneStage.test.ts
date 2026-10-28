@@ -22,6 +22,12 @@ describe('editable physical scene stage',()=>{
     scene.objects.push({kind:'box',x:0,y:3,z:2.5,scale:1,yaw:0,color:'#ffffff'});
     expect(center(scene)[0]).toBeLessThan(lit-30);
   });
+  it('renders the exit surface when the camera is inside either supported solid',()=>{
+    for(const kind of ['box','sphere'] as const){const scene=base();scene.camera.distance=3;
+      scene.objects=[{kind,x:0,y:1.25,z:3,scale:3,yaw:0,color:'#ff0000'}];
+      const pixel=center(scene);expect(pixel[0]).toBeGreaterThan(pixel[2]+30);
+    }
+  });
   it('camera, placement, rotation, color, intensity and diffusion change rendered pixels',()=>{
     const original=newSceneStage(),pixels=Array.from(renderSceneStage(original,32,18).pixels);
     const variants: SceneStage[]=[{...original,camera:{...original.camera,yaw:-40}},{...original,objects:original.objects.map((o,i)=>i?o:{...o,x:-3})},
