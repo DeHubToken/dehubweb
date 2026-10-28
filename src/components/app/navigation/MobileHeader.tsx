@@ -242,9 +242,9 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
           >
             {/* The bell's body (not the clapper below it) sits on the mark's
                 bottom edge: at 29.75 it runs y 0.5 to 24.5 and x 2.3 to 27.4 of its
-                box, so the box moves down 3.4px and out 2.4px. A flex box, not a
+                box, so the box moves down 3.2px (0.2px above that edge) and out 2.4px. A flex box, not a
                 block, or a line box taller than the bell lifts it. */}
-            <span className="flex h-[29.75px] w-[29.75px] -mr-[2.4px] translate-y-[3.4px]">
+            <span className="flex h-[29.75px] w-[29.75px] -mr-[2.4px] translate-y-[3.2px]">
               <NotificationBell unread={totalNotifUnread} size={29.75} active={showBar && navVisible && !anyOverlayOpen && !isOpen} />
             </span>
           </button>
