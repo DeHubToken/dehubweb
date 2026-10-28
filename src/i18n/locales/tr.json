@@ -6838,7 +6838,13 @@
         "circle": "Daire",
         "rounded": "Yuvarlak köşe",
         "rect": "Kare"
-      }
+      },
+      "addReaction": "Bir videoya tepki ver",
+      "reactPlaceholder": "Bir DeHub video bağlantısı yapıştır",
+      "reactAdd": "Göster",
+      "reactInvalid": "Bir DeHub videosunun bağlantısını yapıştır.",
+      "reactNotLive": "Önce canlı yayına başla, sonra videoyu ekle.",
+      "reactNoBubble": "Kameran burada iki kez açılamadı. Yüzünün görünmesi için videoyu yeniden boyutlandır."
     },
     "audio": {
       "title": "Ses mikseri",
@@ -19775,6 +19781,31 @@
     "errorNoRecipient": "DeHub hesabı bulunamadı",
     "errorSelf": "Kendine gönderemezsin",
     "errorGeneric": "Gönderilemedi. Tekrar dene."
+  },
+  "reactions": {
+    "reactionTo": "Tepki:",
+    "reactingTo": "Tepki veriyor:",
+    "count_one": "{{count}} tepki",
+    "count_other": "{{count}} tepki",
+    "allow": "Tepkilere izin ver",
+    "allowDescription": "Diğer içerik üreticilerinin videolarına kayıtlı veya canlı tepki vermesine izin ver. Her gönderide ayrıca değiştirebilirsin.",
+    "pageTitle": "{{title}} için tepkiler — DeHub",
+    "pageDescription": "DeHub’da {{creator}} tarafından paylaşılan “{{title}}” videosuna verilen kayıtlı ve canlı tepkileri izle.",
+    "heading": "Tepkiler",
+    "backToVideo": "Videoya dön",
+    "empty": "Henüz tepki yok. İlk olmak için videonun Remix menüsünü açıp Tepki ver’i seç.",
+    "more": "Daha fazla göster",
+    "liveNow": "Canlı",
+    "wasLive": "Canlıydı",
+    "untitled": "Tepki",
+    "thisVideo": "bu video",
+    "policy": {
+      "everyone": "Herkes",
+      "followers": "Takipçiler",
+      "nobody": "Hiç kimse",
+      "default": "Hesap varsayılanı ({{value}})"
+    },
+    "remixesSection": "Remiksler"
   },
   "connectGuide": {
     "title": "DeHub’ı yapay zekâ asistanına bağla",

@@ -20,6 +20,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { PostModal } from "@/features/post";
+import { tokenIdFromPostUrl } from "@/lib/remix/reactions";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
@@ -132,6 +133,20 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
       });
   };
 
+  // A reaction is its own post; once it exists it is linked to the original,
+  // which credits it, notifies its creator and shares tips with them.
+  const reactionSourceId = settings.remixSource?.mode === 'react'
+    ? settings.remixSource.tokenId ?? tokenIdFromPostUrl(settings.remixSource.url)
+    : null;
+  const linkReaction = (tokenId: string) => {
+    if (!reactionSourceId) return;
+    void recordRemixLink({ kind: 'react', sourceTokenId: reactionSourceId, remixTokenId: tokenId })
+      .catch((error: Error & { refused?: boolean }) => {
+        console.warn('[React] link failed', error);
+        if (error.refused) toast.error(error.message);
+      });
+  };
+
   const startRender = async () => {
     if (!(await prepareDuet())) return;
     setRenderOpen(true);
@@ -233,9 +248,9 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         isOpen={postOpen}
         onClose={() => { setPostOpen(false); setFiles(null); }}
         initialFiles={files}
-        initialText={duet ? duetCaption(duet.creator) : stitch ? stitchCaption(stitch.creator) : settings.remixSource ? `Remix of ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        initialText={duet ? duetCaption(duet.creator) : stitch ? stitchCaption(stitch.creator) : settings.remixSource ? `${reactionSourceId ? 'Reaction to' : 'Remix of'} ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
         quotedPost={duet ? duetSource : undefined}
-        onPosted={duet ? linkDuet : stitch ? linkStitch : undefined}
+        onPosted={duet ? linkDuet : stitch ? linkStitch : reactionSourceId ? linkReaction : undefined}
         onFilesProcessed={() => setFiles(null)}
       />
     </>

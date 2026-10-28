@@ -1,4 +1,4 @@
-export type RemixMode = 'green-screen' | 'duet' | 'sound' | 'stitch';
+export type RemixMode = 'green-screen' | 'duet' | 'sound' | 'stitch' | 'react';
 export type DuetLayout = 'side' | 'stacked' | 'pip' | 'behind';
 /** Longest duet take; long sources record at a lower bitrate to stay under the upload cap. */
 export const DUET_MAX_SECONDS = 180;
@@ -26,6 +26,7 @@ export function buildRemixStudioHtml(config: RemixStudioConfig): string {
 <label>Source volume <input id="sourceVolume" type="range" min="0" max="1" step="0.05" value="0.7"></label><label>Microphone <input id="micVolume" type="range" min="0" max="1" step="0.05" value="1"></label>
 <div class="row"><button id="sample" disabled>Play sample</button><button id="camera" disabled>Enable camera</button><button id="flip" disabled>Flip camera</button><label><input id="countdown" type="checkbox" checked>3 sec timer</label><label class="upload" id="uploadLabel" hidden><input id="upload" type="file" accept="video/*">Upload a clip</label><button id="clearUpload" hidden>Use camera instead</button></div>
 <small id="hint"></small></fieldset>
+<div class="row" id="reactControls" hidden><button id="sourcePlay" aria-label="Play or pause the video">Pause video</button><input id="sourcePos" type="range" min="0" max="0" step="0.1" value="0" aria-label="Video position" style="flex:1;accent-color:#ddd"><output id="sourceTime">0:00</output></div>
 <div class="row" style="margin-top:12px"><button class="primary" id="record" disabled>Record</button><button id="stop" hidden>Stop</button><strong id="clock"></strong><button id="retake" hidden>Retake</button><button class="primary" id="use" hidden>Use video</button></div>
 </section><video id="source" class="capture" playsinline crossorigin="anonymous" preload="auto"></video><video id="cameraVideo" class="capture" autoplay playsinline muted></video><video id="uploadVideo" class="capture" playsinline preload="auto"></video>
 <script>const config = ${json};</script><script type="module">${REMIX_STUDIO_RUNTIME}</script></body></html>`;
@@ -44,21 +45,35 @@ let uploadUrl = null, uploaded = false, uploadGain = null, uploadStarted = false
 /** A slow encoder runs behind the canvas; stopping at once drops its backlog, so a finished take waits this long. */
 const DRAIN_MS = 1200;
 let subject = {x:.5,y:.6,scale:.8}, pointers = new Map(), pinch = null;
-const names = {'green-screen':'Green screen',duet:'Duet',sound:'Use this sound',stitch:'Stitch'};
+const names = {'green-screen':'Green screen',duet:'Duet',sound:'Use this sound',stitch:'Stitch',react:'React'};
+const REACT = config.mode==='react';
 const stitch = config.mode==='stitch', MAX_REPLY = 60;
 const DUET_MAX = ${DUET_MAX_SECONDS};
-const MAX_BYTES = 24 * 1024 * 1024;
+// A reaction runs up to ten minutes, so it gets a bigger cap and hands the file over as a Blob.
+const MAX_BYTES = (REACT ? 160 : 24) * 1024 * 1024;
 function send(type, data = {}) { const packet = {key:config.bridgeKey,type,...data}; if(window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(packet)); else parent.postMessage(packet, '*'); }
 function status(text, error = false) { $('status').textContent = text; $('status').className = error ? 'error' : ''; }
 function limit() { return $('length').value==='full' ? DUET_MAX : Number($('length').value); }
-function range() { const start = Number($('trim').value), remaining = Math.max(0, source.duration - start); return {start, duration:Math.min(limit(),remaining), cut:Math.min(Number($('cutLength').value),remaining)}; }
+function range() { const start = Number($('trim').value), remaining = Math.max(0, source.duration - start); return {start, duration:REACT ? limit() : Math.min(limit(),remaining), cut:Math.min(Number($('cutLength').value),remaining)}; }
 /** Stitch: the source clip, then the reply (an uploaded clip plays in full, a camera take up to the chosen length). */
 function total() { const r=range(); return stitch ? r.cut+(uploaded?Math.min(MAX_REPLY,upload.duration):Math.min(MAX_REPLY,limit())) : r.duration; }
 function duetLayout() { return config.mode==='duet' ? $('layout').value : ''; }
 function needsSegmenter() { return config.mode==='green-screen' || duetLayout()==='behind'; }
 function movable() { return config.mode==='green-screen' || duetLayout()==='behind' || duetLayout()==='pip'; }
+function clock(seconds) { const s = Math.max(0, Math.floor(seconds)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function contain(context, image, x,y,w,h) {
+  const iw=image.videoWidth || image.width, ih=image.videoHeight || image.height; if(!iw || !ih)return;
+  const scale=Math.min(w/iw,h/ih), dw=iw*scale, dh=ih*scale;
+  context.drawImage(image,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+}
+function bubble(context, w, h) {
+  const d=Math.min(w,h)*subject.scale, cx=w*subject.x, cy=h*subject.y;
+  context.save(); context.beginPath(); context.arc(cx,cy,d/2,0,Math.PI*2); context.closePath(); context.clip();
+  cover(context,camera,cx-d/2,cy-d/2,d,d,facing==='user'); context.restore();
+  context.save(); context.beginPath(); context.arc(cx,cy,d/2,0,Math.PI*2); context.lineWidth=Math.max(4,d*.025); context.strokeStyle='rgba(255,255,255,.9)'; context.stroke(); context.restore();
+}
 function liveError(error) { if(closed)return; status(error.message || String(error), true); if(recording) stop(true); send('error',{error:error.message || String(error)}); }
-function controls() { $('settings').disabled = busy || recording || counting || draining || !!result; $('record').disabled = !ready || !(stream || uploaded) || busy || counting || draining || !!result; $('camera').disabled = !ready || busy || uploaded; $('clearUpload').hidden = !uploaded; $('length').closest('label').hidden = stitch && uploaded; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || draining || !!result; $('retake').hidden = !result; $('use').hidden = !result; }
+function controls() { $('settings').disabled = busy || recording || counting || draining || !!result; $('record').disabled = !ready || !(stream || uploaded) || busy || counting || draining || !!result; $('camera').disabled = !ready || busy || uploaded; $('clearUpload').hidden = !uploaded; $('length').closest('label').hidden = stitch && uploaded; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || draining || !!result; $('retake').hidden = !result; $('use').hidden = !result; if(REACT){$('reactControls').hidden = !ready || !!result; $('sourcePlay').textContent = source.paused ? 'Play video' : 'Pause video';} }
 function cover(context, image, x,y,w,h, mirror = false) {
   const iw=image.videoWidth || image.width, ih=image.videoHeight || image.height; if(!iw || !ih)return;
   const scale=Math.max(w/iw,h/ih), sw=w/scale, sh=h/scale;
@@ -93,7 +108,12 @@ function draw(now) {
   if(stitch && source.duration)$('playhead').style.left=(100*source.currentTime/source.duration)+'%';
   ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
   const cameraReady=camera.readyState>=2 && stream;
-  if(config.mode==='green-screen' || duetLayout()==='behind') {
+  if(REACT) {
+    contain(ctx,source,0,0,w,h);
+    if(cameraReady)bubble(ctx,w,h);
+    if(document.activeElement!==$('sourcePos'))$('sourcePos').value=String(source.currentTime);
+    $('sourceTime').textContent=clock(source.currentTime)+' / '+clock(source.duration);
+  } else if(config.mode==='green-screen' || duetLayout()==='behind') {
     cover(ctx,source,0,0,w,h);
     if(cameraReady && segmenter && !drawPerson(now,w,h))return;
   } else if(duetLayout()==='pip') {
@@ -171,13 +191,14 @@ function stop(discard=false){discarded ||= discard;counting=false;clearTimeout(r
   }else{capture?.getTracks().forEach(t=>t.stop());capture=null;controls();}}
 function dispose(){if(closed)return;closed=true;stop(true);clearTimeout(countTimer);cancelAnimationFrame(animation);stream?.getTracks().forEach(t=>t.stop());stream=null;segmenter?.close();segmenter=null;audio?.close();if(resultUrl)URL.revokeObjectURL(resultUrl);if(uploadUrl)URL.revokeObjectURL(uploadUrl);source.removeAttribute('src');source.load();}
 $('title').textContent=names[config.mode] || 'Remix';$('credit').textContent='Source: '+(config.creator ? '@'+config.creator+' · ' : '')+config.title;
-$('hint').textContent=config.mode==='green-screen'?'Your background is removed live. Drag to move yourself; pinch or scroll to resize.':config.mode==='duet'?'Records for the length of the video. Drag to move yourself in Picture in picture and Green screen behind.':stitch?'Pick up to 5 seconds of this video, then record or upload your reply. They play back to back as one video.':'Choose your source range and layout, then record your response.';
+$('hint').textContent=config.mode==='green-screen'?'Your background is removed live. Drag to move yourself; pinch or scroll to resize.':REACT?'Drag your camera bubble to move it; pinch or scroll to resize. Pause or scrub the video while you record.':config.mode==='duet'?'Records for the length of the video. Drag to move yourself in Picture in picture and Green screen behind.':stitch?'Pick up to 5 seconds of this video, then record or upload your reply. They play back to back as one video.':'Choose your source range and layout, then record your response.';
+if(REACT){$('length').innerHTML='';for(const [value,label] of [[60,'1 minute'],[180,'3 minutes'],[300,'5 minutes'],[600,'10 minutes']])$('length').add(new Option(label,String(value)));$('length').value='600';$('trim').closest('label').firstChild.textContent='Start at ';}
 if(config.mode==='duet'){$('length').add(new Option('Full video','full'),0);$('length').value='full';}
 $('cutLabel').hidden=!stitch;$('trimmer').hidden=!stitch;$('uploadLabel').hidden=!stitch;$('layoutLabel').hidden=config.mode==='sound'||stitch;
 if(stitch)$('length').closest('label').firstChild.textContent='Reply ';
-for(const [value,label] of (config.mode==='duet'?[['side','Left / right'],['stacked','Top / bottom'],['pip','Picture in picture'],['behind','Green screen behind']]:[['full','Full screen'],['corner','Corner'],['square','Square']])){$('layout').add(new Option(label,value));}
+for(const [value,label] of (REACT?[['portrait','Portrait'],['landscape','Landscape']]:config.mode==='duet'?[['side','Left / right'],['stacked','Top / bottom'],['pip','Picture in picture'],['behind','Green screen behind']]:[['full','Full screen'],['corner','Corner'],['square','Square']])){$('layout').add(new Option(label,value));}
 if(config.mode==='duet' && ['side','stacked','pip','behind'].includes(config.layout))$('layout').value=config.layout;
-function applyLayout(){const value=$('layout').value;canvas.height=value==='square'?720:1280;subject=value==='corner'||value==='pip'?{x:.78,y:.76,scale:.48}:{x:.5,y:.6,scale:.8};}
+function applyLayout(){const value=$('layout').value;if(REACT){const wide=value==='landscape';canvas.width=wide?1280:720;canvas.height=wide?720:1280;subject={x:.78,y:.8,scale:.34};return;}canvas.height=value==='square'?720:1280;subject=value==='corner'||value==='pip'?{x:.78,y:.76,scale:.48}:{x:.5,y:.6,scale:.8};}
 applyLayout();
 $('layout').onchange=async()=>{applyLayout();if(stream && needsSegmenter() && !segmenter){busy=true;controls();try{await loadSegmenter();status('Ready. Use headphones to keep the source out of your microphone.');}catch(error){liveError(error);}finally{busy=false;controls();}}};
 $('trim').oninput=()=>{$('trimValue').textContent=Number($('trim').value).toFixed(1)+'s';source.pause();samplePlaying=false;source.currentTime=Number($('trim').value);trimWindow();};
@@ -198,21 +219,24 @@ $('sourceVolume').oninput=()=>{if(sourceGain)sourceGain.gain.value=Number($('sou
 $('sample').onclick=async()=>{try{await initAudio();await seek();monitor.gain.value=1;await source.play();samplePlaying=true;}catch(error){liveError(error);}};
 $('camera').onclick=enableCamera;$('flip').onclick=()=>{facing=facing==='user'?'environment':'user';void enableCamera();};$('record').onclick=start;$('stop').onclick=()=>stop();
 $('retake').onclick=()=>{if(resultUrl)URL.revokeObjectURL(resultUrl);resultUrl=null;result=null;$('review').pause();$('review').removeAttribute('src');$('review').hidden=true;$('stage').hidden=false;$('clock').textContent='';status('Ready for another take.');controls();};
-$('use').onclick=async()=>{if(!result || busy)return;busy=true;controls();$('use').disabled=true;status('Preparing your video…');try{const reader=new FileReader();reader.onload=()=>{send('recorded',{dataUrl:reader.result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height,layout:duetLayout()||undefined});};reader.onerror=()=>{busy=false;$('use').disabled=false;liveError(new Error('Could not prepare the take.'));controls();};reader.readAsDataURL(result);}catch(error){busy=false;liveError(error);controls();}};
+$('use').onclick=async()=>{if(!result || busy)return;busy=true;controls();$('use').disabled=true;status('Preparing your video…');try{if(REACT && !window.ReactNativeWebView){send('recorded',{blob:result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height});return;}const reader=new FileReader();reader.onload=()=>{send('recorded',{dataUrl:reader.result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height,layout:duetLayout()||undefined});};reader.onerror=()=>{busy=false;$('use').disabled=false;liveError(new Error('Could not prepare the take.'));controls();};reader.readAsDataURL(result);}catch(error){busy=false;liveError(error);controls();}};
 function hostMessage(event){let data=event.data;try{if(typeof data==='string')data=JSON.parse(data);}catch{return;}if(data?.key!==config.bridgeKey)return;if(data.type==='save-failed'){busy=false;$('use').disabled=false;status(data.error||'Could not save. Your take is ready to retry.',true);controls();}if(data.type==='dispose')dispose();}
 window.addEventListener('message',hostMessage);document.addEventListener('message',hostMessage);
 $('close').onclick=()=>{dispose();send('cancel');};window.addEventListener('pagehide',dispose);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(recording||counting)stop();stream?.getTracks().forEach(t=>t.stop());stream=null;source.pause();controls();status('Camera stopped while this screen was hidden. Enable it to continue.');}});
-canvas.onpointerdown=event=>{if(!movable()||recording)return;canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});};
-canvas.onpointermove=event=>{if(!pointers.has(event.pointerId))return;const before=pointers.get(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});const box=canvas.getBoundingClientRect();if(pointers.size===1){subject.x=Math.max(0,Math.min(1,subject.x+(event.clientX-before.x)/box.width));subject.y=Math.max(0,Math.min(1,subject.y+(event.clientY-before.y)/box.height));}else{const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)subject.scale=Math.max(.2,Math.min(2,subject.scale*distance/pinch));pinch=distance;}};
-canvas.onpointerup=canvas.onpointercancel=event=>{pointers.delete(event.pointerId);pinch=null;};canvas.onwheel=event=>{if(movable()&&!recording){event.preventDefault();subject.scale=Math.max(.2,Math.min(2,subject.scale-event.deltaY*.001));}};
+canvas.onpointerdown=event=>{if(!(REACT||(movable()&&!recording)))return;canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});};
+canvas.onpointermove=event=>{if(!pointers.has(event.pointerId))return;const before=pointers.get(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});const box=canvas.getBoundingClientRect();if(pointers.size===1){subject.x=Math.max(0,Math.min(1,subject.x+(event.clientX-before.x)/box.width));subject.y=Math.max(0,Math.min(1,subject.y+(event.clientY-before.y)/box.height));}else{const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)subject.scale=Math.max(REACT?.12:.2,Math.min(REACT?.9:2,subject.scale*distance/pinch));pinch=distance;}};
+canvas.onpointerup=canvas.onpointercancel=event=>{pointers.delete(event.pointerId);pinch=null;};canvas.onwheel=event=>{if(REACT||(movable()&&!recording)){event.preventDefault();subject.scale=Math.max(REACT?.12:.2,Math.min(REACT?.9:2,subject.scale-event.deltaY*.001));}};
+$('sourcePlay').onclick=async()=>{try{await initAudio();if(source.paused){if(monitor)monitor.gain.value=1;await source.play();}else source.pause();}catch(error){liveError(error);}controls();};
+$('sourcePos').oninput=()=>{source.currentTime=Number($('sourcePos').value);};
+source.addEventListener('play',controls);source.addEventListener('pause',controls);
 source.addEventListener('error',()=>liveError(new Error('This video cannot be loaded for remixing. Try a different source.')));
-source.addEventListener('waiting',()=>{if(recording && (!stitch||(performance.now()-started)/1000<range().cut))liveError(new Error('Source playback stalled. Please retry after it has loaded.'));});
+source.addEventListener('waiting',()=>{if(recording && !REACT && (!stitch||(performance.now()-started)/1000<range().cut))liveError(new Error('Source playback stalled. Please retry after it has loaded.'));});
 try {
-  if(!['green-screen','duet','sound','stitch'].includes(config.mode)||!/^https:\/\//.test(config.videoUrl))throw new Error('Invalid remix source.');
+  if(!['green-screen','duet','sound','stitch','react'].includes(config.mode)||!/^https:\/\//.test(config.videoUrl))throw new Error('Invalid remix source.');
   if(!navigator.mediaDevices?.getUserMedia || !canvas.captureStream || typeof MediaRecorder==='undefined')throw new Error('Live recording is unavailable in this browser. Use the latest Chrome or the DeHub app.');
   await waitMedia(source,'loadeddata',()=>{source.src=config.videoUrl;source.muted=true;});
   if(!Number.isFinite(source.duration)||source.duration<.25)throw new Error('Choose a finished video with a known duration.');
-  $('trim').max=String(Math.max(0,source.duration-(stitch?1:.5)));ready=true;$('sample').disabled=false;trimWindow();controls();status(stitch?'Pick the part to stitch, then enable your camera or upload a clip.':'Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
+  $('trim').max=String(Math.max(0,source.duration-(stitch?1:.5)));$('sourcePos').max=String(source.duration);if(REACT && source.videoWidth>source.videoHeight){$('layout').value='landscape';applyLayout();}ready=true;$('sample').disabled=false;trimWindow();controls();status(stitch?'Pick the part to stitch, then enable your camera or upload a clip.':'Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
 }catch(error){liveError(error);}
 `;
