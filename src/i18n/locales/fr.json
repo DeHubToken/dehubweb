@@ -5098,6 +5098,13 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "avatarTitle": "Portrait parlant",
+    "avatarRequirements": "Portrait PNG carré de 512–2048 pixels, jusqu\u0027à 5 Mo. WAV PCM mono 24 kHz 16 bits, de 5–30 secondes. La dernière fraction de seconde est complétée par du silence.",
+    "avatarPortrait": "Choisir un portrait PNG",
+    "avatarAudio": "Choisir une voix WAV",
+    "avatarPermission": "J\u0027ai l\u0027autorisation d\u0027animer ce portrait et d\u0027utiliser cet audio.",
+    "avatarQuote": "{{seconds}} secondes avec le silence · {{amount}} DHB",
+    "avatarPrepare": "Préparer et vérifier le prix",
     "audioExportFormat": "Format d’exportation",
     "audioExportMp3": "MP3 · 128 kbit/s",
     "audioExportWav": "WAV · 24 kHz · mono",

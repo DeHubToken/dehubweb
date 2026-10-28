@@ -39,6 +39,11 @@ function assertContract(request: { appId: string; input: Record<string, unknown>
 describe('creator fal video requests', () => {
   for (const model of Object.values(CREATOR_FAL_VIDEO_MODELS)) {
     it(`${model.name} accepts the options exposed by the creator`, () => {
+      if (model.family === 'avatar') {
+        expect(() => buildCreatorFalVideoRequest(model.id, { prompt: 'Speak' })).toThrow('reviewed inline');
+        expect(quotePriceDhb('video', model.id, { durationSeconds: 5 })).toBe(338);
+        return;
+      }
       const durations = model.allowedDurations ?? [model.minDuration, model.defaultDuration, model.maxDuration];
       for (const duration of durations) for (const resolution of model.resolutions) for (const aspectRatio of model.aspectRatios) {
         for (const sourceImage of model.referenceMode === 'extend' ? [undefined] : model.requiresVideoInput || !model.supports.includes('text-to-video') ? ['https://example.com/start.jpg'] : [undefined, 'https://example.com/start.jpg']) {

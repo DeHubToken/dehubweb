@@ -20,6 +20,7 @@ export interface CreatorFalVideoOptions {
 export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoOptions) {
   const m = CREATOR_FAL_VIDEO_MODELS[modelId];
   if (!m) throw new Error('Unknown creator video model');
+  if (m.family === 'avatar') throw new Error('Avatar requires reviewed inline portrait/audio inputs');
   const rawDuration = String(o.duration ?? m.defaultDuration);
   const duration = /^\d+s?$/.test(rawDuration) ? Number(rawDuration.replace(/s$/, '')) : NaN;
   if (!Number.isInteger(duration) || duration < m.minDuration || duration > m.maxDuration || (m.allowedDurations && !m.allowedDurations.includes(duration))) {
