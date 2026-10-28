@@ -31,6 +31,7 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
 import dehubMark from '@/assets/dehub-logo-compact.png';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FeedIslandCapsule } from './FeedIslandCapsule';
+import { usePostFeedLook } from '@/lib/post-feed-look';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenticated }: {
   onClick: (e: React.MouseEvent) => void;
@@ -124,7 +125,10 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   //
   // Hidden, not unmounted: the menu drawer lives inside, and a menu item
   // navigates away while the sheet is still sliding shut.
-  const showBar = isHomeFeedRoute(location.pathname) || isOverlayFromFeed;
+  // A phone text, image or audio post opened from anywhere else (a
+  // notification, a profile) keeps the bar too, so it looks the same.
+  const postFeedLook = usePostFeedLook();
+  const showBar = isHomeFeedRoute(location.pathname) || isOverlayFromFeed || (isPostPage && postFeedLook);
   // Pages read this to drop the bar's 2.75rem clearance (index.css).
   useLayoutEffect(() => {
     document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
