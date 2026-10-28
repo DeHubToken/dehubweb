@@ -139,24 +139,12 @@ function matchesPath(config: CachedPageConfig, pathname: string): boolean {
   return paths.some(p => normalized === p);
 }
 
-/**
- * A hidden page keeps reading the route it last showed.
- *
- * Every useLocation/useNavigate below a cached page re-renders on every
- * navigation, hidden or not, so leaving Home re-drew its whole feed (every
- * card, video, badge and closed menu) inside the tap, twice, and so did every
- * later tap while Home sat hidden. On an iPhone that was most of the freeze
- * between the tap and the next page. Holding the router contexts still while
- * the page is hidden lets React skip the subtree; the page catches up in one
- * render when it shows again.
- */
+/** Hidden pages keep the route they last showed, so a tap elsewhere never re-renders them. */
 const HeldRoute = memo(function HeldRoute({ live, children }: { live: boolean; children: ReactNode }) {
   const location = useContext(UNSAFE_LocationContext);
   const route = useContext(UNSAFE_RouteContext);
   const held = useRef({ location, route });
-  // The router also hands out fresh but identical values on the way out (the
-  // outer splat route's params change first), so a visible page only takes
-  // values for a location it is not already showing.
+  // The router re-issues identical values on the way out; ignore those too.
   const was = held.current.location.location;
   const now = location.location;
   const moved = now.key !== was.key || now.pathname !== was.pathname || now.search !== was.search
@@ -189,8 +177,7 @@ const CachedPage = memo(function CachedPage({
 }) {
   const Component = config.component;
   const SkeletonComponent = config.skeleton;
-  // One element for the page's life: a show/hide re-render of this wrapper
-  // must not re-render the page itself (see HeldRoute).
+  // Show/hide must not re-render the page itself.
   const page = useMemo(() => <Component />, [Component]);
   const { isCollapsed } = useSidebarCollapse();
 
@@ -201,10 +188,8 @@ const CachedPage = memo(function CachedPage({
   // tab bar remains at the top — this is what makes the transition feel seamless.
   const shouldStayVisible = isActive || forceVisible;
 
-  // Telling a page it went inactive re-renders everything that listens (every
-  // feed card on Home), and that ran inside the tap that opened the next page.
-  // Switching on stays immediate; switching off waits for a background render
-  // after the new page is on screen. Media is still stopped right away below.
+  // Going inactive re-renders every listener (each feed card): do it after the
+  // next page paints. Media still stops right away below.
   const activeNow = shouldStayVisible && !retainedPostKey;
   const activeSettled = useDeferredValue(activeNow);
   const contextActive = activeNow || activeSettled;
