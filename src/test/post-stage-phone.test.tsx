@@ -177,8 +177,8 @@ describe('the stage page shell', () => {
       let blur = false;
       let tint = false;
       rule.walkDecls((d) => {
-        if (d.prop === 'backdrop-filter' && /blur\(28px\)/.test(d.value)) blur = true;
-        if (d.prop === 'background' && /color-mix\(.*20%, transparent\)/.test(d.value)) tint = true;
+        if (d.prop === 'backdrop-filter' && /--float-glass-blur/.test(d.value)) blur = true;
+        if (d.prop === 'background' && /color-mix\(.*72%, transparent\)/.test(d.value)) tint = true;
       });
       if (blur && tint) composerGlass = true;
     });

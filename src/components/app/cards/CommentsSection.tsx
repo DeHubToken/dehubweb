@@ -52,6 +52,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { createPortal, flushSync } from 'react-dom';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage-context';
 import { VoiceStripPlayer } from '../audio/VoiceStripPlayer';
 import { LiveMicBars } from '../audio/LiveMicBars';
@@ -944,6 +945,54 @@ const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
 // MAIN COMPONENT
 // ============================================================================
 
+/**
+ * Moves a <body>-portalled `fixed bottom-0` bar where `sticky bottom-0` would
+ * hold it: on the screen's bottom edge while the section is in view, released
+ * at the slot it left behind, never above the section's top.
+ */
+function useFloatingPin(
+  on: boolean,
+  barRef: React.RefObject<HTMLDivElement | null>,
+  slotRef: React.RefObject<HTMLDivElement | null>,
+  sectionRef: React.RefObject<HTMLDivElement | null>,
+) {
+  useLayoutEffect(() => {
+    const bar = barRef.current, slot = slotRef.current, section = sectionRef.current;
+    if (!on || !bar || !slot || !section) return;
+    let frame = 0;
+    const place = () => {
+      frame = 0;
+      const h = bar.offsetHeight;
+      slot.style.height = `${h}px`;
+      if (!section.getClientRects().length) { bar.style.visibility = 'hidden'; return; }
+      bar.style.visibility = '';
+      const stickTop = window.innerHeight - (parseFloat(getComputedStyle(bar).bottom) || 0) - h;
+      const top = Math.max(section.getBoundingClientRect().top, Math.min(slot.getBoundingClientRect().top, stickTop));
+      bar.style.transform = top === stickTop ? '' : `translate3d(0,${Math.round(top - stickTop)}px,0)`;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(place); };
+    // A page that slides in moves the section without a scroll or resize.
+    const settleUntil = performance.now() + 700;
+    const settle = () => { place(); if (performance.now() < settleUntil) frame = requestAnimationFrame(settle); };
+    settle();
+    const resize = new ResizeObserver(schedule);
+    resize.observe(bar);
+    resize.observe(section);
+    window.addEventListener('scroll', schedule, { passive: true, capture: true });
+    window.addEventListener('resize', schedule);
+    bar.addEventListener('transitionend', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      window.removeEventListener('scroll', schedule, { capture: true });
+      window.removeEventListener('resize', schedule);
+      bar.removeEventListener('transitionend', schedule);
+      bar.style.transform = '';
+      bar.style.visibility = '';
+    };
+  }, [on, barRef, slotRef, sectionRef]);
+}
+
 function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
   // A kids post's thread is open to Kids Mode only. The post's own author is
@@ -1018,8 +1067,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // On the phone post page the composer docks to the screen. It is portalled
   // to <body> because canvas themes put filters/transforms on the page frame,
   // which would turn `position: fixed` into "fixed to that frame".
+  // The phone page's reply bar goes to <body> too: the page clips what scrolls
+  // under the top pill, and Chrome draws no backdrop blur inside a clip-path,
+  // so a bar left in there shows the comments under it as plain text. An
+  // empty slot keeps its place in the page and it follows it (useFloatingPin).
+  const isActivePage = useContext(CachedPageActiveContext);
+  const floatPin = page && isMobile && isActivePage;
   const dockComposer = (el: React.ReactElement) =>
-    stage && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
+    (stage || floatPin) && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
   /** Cleared by "Show all comments", and by arriving with nothing to focus. */
   const [showAllThreads, setShowAllThreads] = useState(!focusCommentId);
   useEffect(() => {
@@ -1495,6 +1550,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
 
   // Record comment views when visible (#9)
   const sectionRef = useRef<HTMLDivElement>(null);
+  const pinBarRef = useRef<HTMLDivElement>(null);
+  const pinSlotRef = useRef<HTMLDivElement>(null);
+  useFloatingPin(floatPin, pinBarRef, pinSlotRef, sectionRef);
   const viewedIdsRef = useRef(new Set<number>());
   const pendingViewsRef = useRef<number[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -2982,7 +3040,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           data-comment-composer
           data-comment-composer-pin={page || undefined}
           data-stage-composer={stage || undefined}
-          ref={stage ? composerRootRef : undefined}
+          ref={stage ? composerRootRef : floatPin ? pinBarRef : undefined}
           className={cn(
             // Hidden, not unmounted: a photo picker opened from it must still
             // be able to hand its file back.
@@ -2991,6 +3049,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
               // Docked to the bottom of the screen for the whole page, over a
               // translucent blur (post-stage.css). The bottom nav is hidden here.
               ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+              : floatPin
+              ? "fixed inset-x-0 bottom-0 z-20 px-2 sm:px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
               : page
               // The app's reply bar: full width, pinned to the bottom of the
               // screen while the thread is in view, released at its end.
@@ -3379,6 +3439,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           </div>
         </div>
         )}
+        {floatPin && !commentsDisabled && !kidsOnlyThread && <div ref={pinSlotRef} data-comment-composer-slot aria-hidden />}
 
         {/* Common Ground steps, opened by the first Post of the session on a
             thread that has the mode on. Its own Post button sends the reply. */}
