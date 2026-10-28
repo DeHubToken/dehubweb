@@ -5649,7 +5649,7 @@ function ssrCachePut(ctx, key, resp) {
 async function handleRequest(request, env, ctx) {
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
-  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(request, env);
+  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(canonicalOriginRequest(request), env);
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
     return handleEditorPresence(canonicalOriginRequest(request), env);
   }
