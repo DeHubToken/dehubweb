@@ -134,7 +134,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
+  const { broadcastPaused, broadcastEnded, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
   const wasBroadcastPaused = useRef(broadcastPaused);
   useEffect(() => {
     if (wasBroadcastPaused.current && !broadcastPaused) setFailed(false);
@@ -176,7 +176,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
   // ── WebRTC ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (transport !== 'whep' || !visible || postOpen || failed || !source) return;
+    if (transport !== 'whep' || !visible || postOpen || failed || !source || broadcastEnded) return;
     const el = videoRef.current;
     if (!el) return;
     if (whepSessionsOpen >= MAX_CONCURRENT_WHEP) {
@@ -245,12 +245,12 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
       if (el.srcObject) el.srcObject = null;
       });
     };
-  }, [transport, visible, postOpen, failed, source]);
+  }, [transport, visible, postOpen, failed, source, broadcastEnded]);
 
   // ── HLS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     const el = videoRef.current;
-    if (transport !== 'hls' || !el || !src || !visible || postOpen || failed) return;
+    if (transport !== 'hls' || !el || !src || !visible || postOpen || failed || broadcastEnded) return;
     let cancelled = false;
     let stopWatch: (() => void) | undefined;
     setLoading(true);
@@ -317,10 +317,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         el.load();
       });
     };
-  }, [transport, src, visible, postOpen, failed, selfHosted, bigEvent]);
+  }, [transport, src, visible, postOpen, failed, selfHosted, bigEvent, broadcastEnded]);
 
-  if (!src) {
-    return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;
+  if (!src || broadcastEnded) {
+    return <LiveEndedMedia thumbnail={thumbnail} label={broadcastEnded ? undefined : fallbackLabel} />;
   }
 
   return (
