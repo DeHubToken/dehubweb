@@ -58,9 +58,19 @@ function toLink(row: any): RemixLink {
   };
 }
 
-/** Whether the signed-in viewer may remix this video, and why not. */
-export function checkRemix(sourceTokenId: string | number, kind: RemixKind) {
-  return call<{ allowed: boolean; reason?: string; policy?: RemixPolicy }>({ action: 'check', sourceTokenId: String(sourceTokenId), kind }, true);
+/**
+ * Whether the signed-in viewer may remix this video, and why not. When the
+ * service itself cannot answer, the backend's own quote policy is the only
+ * gate left, so this says allowed (with `unchecked`) rather than blocking.
+ */
+export async function checkRemix(sourceTokenId: string | number, kind: RemixKind): Promise<{ allowed: boolean; reason?: string; policy?: RemixPolicy; unchecked?: boolean }> {
+  try {
+    return await call({ action: 'check', sourceTokenId: String(sourceTokenId), kind }, true);
+  } catch (error) {
+    if ((error as { refused?: boolean }).refused) return { allowed: false, reason: (error as Error).message };
+    console.warn('[remix-links] check unavailable', error);
+    return { allowed: true, unchecked: true };
+  }
 }
 
 /** Link a posted remix to its source. Refused (error.refused) when the creator does not allow it. */
