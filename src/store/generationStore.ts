@@ -64,6 +64,7 @@ export interface GenerationJob {
   cloudSaved?: boolean;
   favorite?: boolean;
   hidden?: boolean;
+  layerSetId?: string;
   saveError?: string;
   error?: string;
   createdAt: number;

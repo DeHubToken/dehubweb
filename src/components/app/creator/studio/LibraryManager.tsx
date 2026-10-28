@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { loadCloudGenerationPage, updateLibrarySelection, type LibraryOperation } from '@/lib/creator/cloudLibrary';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { libraryRequest } from '@/lib/creator/libraryRequest';
+import { ImageLayersPanel } from './ImageLayersPanel';
 
 /** Server acknowledgements drive preferences; failed rows stay selected for retry. */
 export function LibraryManager({ wallet }: { wallet: string | null }) {
@@ -79,6 +80,7 @@ export function LibraryManager({ wallet }: { wallet: string | null }) {
           <input type="checkbox" disabled={busy || (!selected.includes(row.id) && selected.length >= 100)} checked={selected.includes(row.id)} onChange={event => setSelected(previous => event.target.checked ? [...previous, row.id] : previous.filter(id => id !== row.id))} />
           <span className="min-w-0 truncate">{row.favorite ? '★ ' : ''}{row.prompt || row.modelName}</span>
         </label></li>)}</ul>
+        {selected.length === 1 && rows.find(row => row.id === selected[0])?.kind === 'image' && <ImageLayersPanel key={`${wallet}:${selected[0]}`} wallet={wallet} source={rows.find(row => row.id === selected[0])!} />}
         {busy && <p role="status">{t('common.loading')}</p>}
         {nextOffset !== null && <button type="button" className={button} disabled={busy} onClick={() => void read(nextOffset)}>{t('common.loadMore')}</button>}
       </DialogContent>
