@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Ton pourboire a été envoyé, mais la part du créateur original n'est pas passée.",
+    "notify": {
+      "duet": "{{name}} a fait un duo avec ta vidéo",
+      "stitch": "{{name}} a fait un stitch de ta vidéo",
+      "react": "{{name}} a réagi à ta vidéo",
+      "reactLive": "{{name}} réagit en direct à ta vidéo"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Télécharger dans l'App Store",
