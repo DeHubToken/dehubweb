@@ -26,6 +26,7 @@ import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
+import { installFirstTap } from '@/lib/first-tap';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { GlassBackground } from '@/components/app/GlassBackground';
 import Eye from "@/components/ui/cut-icons/visibility";
@@ -78,6 +79,7 @@ import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { RemixMenuItems } from './RemixMenuItems';
+import { DuetCredit } from './DuetCredit';
 import { ReactionOfChip, ReactionsLink } from '../remix/ReactionChips';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
@@ -472,6 +474,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
+  // Back, like, share, mute... answer the first tap even straight after a
+  // flick, when the browser drops that tap's click. See lib/first-tap.
+  useEffect(() => {
+    const root = containerRef.current;
+    return root ? installFirstTap(root) : undefined;
+  }, []);
   // Turns the trackpad's continuous wheel stream into one step per swipe — see
   // the wheel effect below and `createWheelGesture` for why it is not a timer.
   // Lazily built into a ref rather than a memo: it carries the live gesture,
@@ -1777,6 +1785,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                         <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
                     </div>
+                    <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                     <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
                   </div>
                 )}
@@ -2026,6 +2035,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </div>
                   
                   {/* Title + description - tap to expand/collapse */}
+                  <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                   <ShortCaption
                     key={currentShort.id}
                     short={currentShort}
@@ -2230,6 +2240,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
               </button>
+              <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
               <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
                 <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>
@@ -2378,7 +2389,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               && visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public')
               && (isOwnShort || !currentShort.quotePolicy || currentShort.quotePolicy === 'public') && (
               <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://dehub.io/app/post/${currentShort.id}`,
-                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username }}
+                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username,
+                tokenId: String(currentShort.id), creatorAddress: currentShort.creatorId }}
+                isOwner={!!isOwnShort}
                 onStart={() => { setIsPaused(true); setShareSheetOpen(false); onClose(); }} />
             )}
             {visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public') && (

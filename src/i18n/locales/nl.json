@@ -1,4 +1,37 @@
 {
+  "duet": {
+    "with": "Duet met @{{username}}",
+    "withOriginal": "Duet · bekijk origineel",
+    "unavailable": "Deze video is niet meer beschikbaar voor duetten.",
+    "allowLabel": "Duetten toestaan",
+    "allowDescription": "Wie een duet naast je video's mag opnemen. Je kunt het ook per post aanpassen.",
+    "settingsSection": "Duetten",
+    "policyDefault": "Accountinstelling",
+    "policyEveryone": "Iedereen",
+    "policyFollowers": "Volgers",
+    "policyNobody": "Niemand",
+    "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+    "count_one": "{{count}} duet",
+    "count_other": "{{count}} duetten",
+    "pageHeading": "Duetten",
+    "pageTitle": "Duetten van {{title}} door @{{creator}}",
+    "pageTitleNoCreator": "Duetten van {{title}}",
+    "pageDescription": "Bekijk elk duet van deze video op DeHub, of neem je eigen duet naast elkaar op.",
+    "empty": "Nog geen duetten. Open de opties van de video en kies Remix → Duet om de eerste te maken.",
+    "loadMore": "Meer laden",
+    "video": "Video",
+    "notFound": "Deze video is niet beschikbaar.",
+    "notFoundTitle": "Video niet gevonden — DeHub",
+    "browseShorts": "Shorts bekijken"
+  },
+  "videoRemix": {
+    "menu": "Remix",
+    "duet": "Duet",
+    "green-screen": "Green screen",
+    "sound": "Dit geluid gebruiken",
+    "cut": "Deze video knippen",
+    "selectSource": "Open de opties van een video en kies Remix om te beginnen."
+  },
   "remixLinks": {
     "shareFailed": "Je fooi is verstuurd, maar het deel voor de oorspronkelijke maker is niet gelukt.",
     "notify": {

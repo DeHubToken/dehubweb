@@ -66,6 +66,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
+import { DuetSetting } from '@/components/app/settings/DuetSetting';
 import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
 import { usePostingChain } from '@/hooks/use-posting-chain';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
@@ -1938,6 +1939,14 @@ function PrivacySettings() {
             onCheckedChange={(checked) => updateSettings({ ai_scraping: checked ? 'allow' : 'deny' })}
             disabled={isUpdating || isLoading}
           />
+        </div>
+      </div>
+
+      {/* Duets */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('duet.settingsSection', 'Duets')}</h3>
+        <div className="space-y-4">
+          <DuetSetting address={user?.address} />
         </div>
       </div>
 

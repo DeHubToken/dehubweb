@@ -54,7 +54,6 @@ import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/a
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
-import { recordRemixLink } from '@/lib/remix-links';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -318,8 +317,8 @@ export function usePostForm(
    * hidden by the modal and never sent.
    */
   quotedPost?: DeHubNFT | null,
-  /** Set when this post is a reaction recorded in the remix studio: it is linked to its source once minted. */
-  remixLink?: { sourceTokenId: number } | null,
+  /** The new post's token id, once the server has it (a duet links itself to its source here). */
+  onPosted?: (tokenId: string) => void,
 ): UsePostFormReturn {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
@@ -2051,6 +2050,7 @@ export function usePostForm(
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
       }
+      onPosted?.(String(mintResponse.createdTokenId));
 
       /**
        * Put the picked store listings on the post, now that it has a tokenId.
@@ -2078,13 +2078,6 @@ export function usePostForm(
               );
             }
           });
-      }
-
-      // A reaction recorded in the remix studio: credit its source and tell its
-      // creator. The post is up either way.
-      if (remixLink && !mintResponse.duplicate && !liveMode) {
-        void recordRemixLink({ kind: 'react', sourceTokenId: remixLink.sourceTokenId, remixTokenId: mintResponse.createdTokenId })
-          .catch((error) => console.warn('[Mint] Reaction link failed', error));
       }
 
       // Never for a followers-only or direct post: another network would publish
