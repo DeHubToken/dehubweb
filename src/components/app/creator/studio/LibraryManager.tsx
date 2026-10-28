@@ -80,7 +80,7 @@ export function LibraryManager({ wallet }: { wallet: string | null }) {
           <input type="checkbox" disabled={busy || (!selected.includes(row.id) && selected.length >= 100)} checked={selected.includes(row.id)} onChange={event => setSelected(previous => event.target.checked ? [...previous, row.id] : previous.filter(id => id !== row.id))} />
           <span className="min-w-0 truncate">{row.favorite ? '★ ' : ''}{row.prompt || row.modelName}</span>
         </label></li>)}</ul>
-        {selected.length === 1 && rows.find(row => row.id === selected[0])?.kind === 'image' && <ImageLayersPanel key={`${wallet}:${selected[0]}`} wallet={wallet} source={rows.find(row => row.id === selected[0])!} />}
+        {open && selected.length === 1 && rows.find(row => row.id === selected[0])?.kind === 'image' && <ImageLayersPanel key={`${wallet}:${selected[0]}`} wallet={wallet} source={rows.find(row => row.id === selected[0])!} onOpenEditor={() => setOpen(false)} />}
         {busy && <p role="status">{t('common.loading')}</p>}
         {nextOffset !== null && <button type="button" className={button} disabled={busy} onClick={() => void read(nextOffset)}>{t('common.loadMore')}</button>}
       </DialogContent>

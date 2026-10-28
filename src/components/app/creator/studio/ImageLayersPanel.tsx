@@ -9,7 +9,7 @@ import { resumeLayerSubmission } from '@/lib/creator/layerSubmission';
 import { useNavigate } from 'react-router-dom';
 
 const quoteRequest = { kind: 'tool' as const, modelId: 'qwen-image-layered', quantity: 1 };
-export function ImageLayersPanel({ wallet, source }: { wallet: string; source: GenerationJob }) {
+export function ImageLayersPanel({ wallet, source, onOpenEditor }: { wallet: string; source: GenerationJob; onOpenEditor(): void }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<LayerJob[]>([]), [set, setSet] = useState<ImageLayerSet | null>(null);
@@ -76,7 +76,7 @@ export function ImageLayersPanel({ wallet, source }: { wallet: string; source: G
         <button className={button} disabled={busy || index === 0} onClick={() => move(index, -1)}>↑</button><button className={button} disabled={busy || index === 3} onClick={() => move(index, 1)}>↓</button>
         <button className={button} disabled={busy} aria-pressed={choice.hidden} onClick={() => setChoices(previous => previous.map(c => c.id === choice.id ? { ...c, hidden: !c.hidden } : c))}>{t(choice.hidden ? 'editor.layers.show' : 'editor.layers.hide', { defaultValue: choice.hidden ? 'Show' : 'Hide' })}</button>
       </div>; })}</div>
-      <button className={button} disabled={busy} onClick={() => void run(async () => { const fresh = await collectLayers(wallet, { id: set.id, status: 'succeeded' }); if (fresh) { await importLayers(fresh, choices, wallet, current, controller.current.signal); if (current()) navigate('/editor'); } })}>{t('creator.layerOpen', { defaultValue: 'Open layers in editor' })}</button>
+      <button className={button} disabled={busy} onClick={() => void run(async () => { const fresh = await collectLayers(wallet, { id: set.id, status: 'succeeded' }); if (fresh) { await importLayers(fresh, choices, wallet, current, controller.current.signal); if (current()) { onOpenEditor(); navigate('/editor'); } } })}>{t('creator.layerOpen', { defaultValue: 'Open layers in editor' })}</button>
       <button className={button} disabled={busy} onClick={() => void run(async () => { const fresh = await collectLayers(wallet, { id: set.id, status: 'succeeded' }); if (fresh) await exportLayers(fresh, choices, controller.current.signal); })}>{t('creator.layerExport', { defaultValue: 'Export PNG layers + manifest ZIP' })}</button>
     </>}
   </section>;
