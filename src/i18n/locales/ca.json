@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Connecta el teu compte de DeHub",
-    "body": "Vincula el teu compte per gestionar el teu perfil, publicar publicacions i crear contingut des del xat. Les connexions caduquen en un termini de 24 hores. Pots desconnectar-te quan vulguis.",
+    "body": "Vincula el teu compte per gestionar el teu perfil, publicar publicacions i crear contingut des del xat. Les connexions caduquen en un termini de 30 dies. Pots desconnectar-te quan vulguis.",
     "read": "Llegeix el teu compte, les publicacions, les notificacions i la biblioteca de creadors",
     "profile": "Modifica el teu perfil, les imatges i la configuració de privacitat",
     "social": "Publica publicacions i comentaris, segueix persones i desa les adreces d'interès",
@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} ha comprat fraccions del teu post",
       "repostedPosts": "{{name}} ha repostejat {{count}} dels teus posts",
       "commentMention": "{{name}} et va mencionar en un comentari",
+      "postMention": "{{name}} t'ha esmentat en una publicació",
+      "liveChatMention": "{{name}} t'ha esmentat al xat en directe",
+      "publicChatMention": "{{name}} t'ha esmentat al xat públic",
       "followRequest": "{{name}} ha sol·licitat seguir-te",
       "bountyReplyNamed": "{{name}} t'ha respondut sobre el teu bounty “{{title}}”",
       "bountyReply": "{{name}} t'ha respondut sobre el teu bounty",
@@ -3243,6 +3246,7 @@
     "followerInvites": {
       "title": "Invita seguidors",
       "detail": "Selecciona fins a 50 seguidors per lot. Els missatges privats de pagament o tancats es salten. Revisa el xat per enviarments no confirmats abans de tornar a intentar-ho.",
+      "note": "Afegeix una nota a la invitació (opcional)",
       "selectAll": "Selecciona aquesta pàgina",
       "clear": "Esborra",
       "previous": "Anterior",

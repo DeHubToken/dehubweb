@@ -20,6 +20,7 @@ export interface CreatorFalVideoOptions {
 export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoOptions) {
   const m = CREATOR_FAL_VIDEO_MODELS[modelId];
   if (!m) throw new Error('Unknown creator video model');
+  if (m.family === 'avatar') throw new Error('Avatar requires reviewed inline portrait/audio inputs');
   const rawDuration = String(o.duration ?? m.defaultDuration);
   const duration = /^\d+s?$/.test(rawDuration) ? Number(rawDuration.replace(/s$/, '')) : NaN;
   if (!Number.isInteger(duration) || duration < m.minDuration || duration > m.maxDuration || (m.allowedDurations && !m.allowedDurations.includes(duration))) {
@@ -196,6 +197,7 @@ export function buildCreatorFalImageRequest(modelId: string, prompt: string, sou
   const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
   sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
+  if (m.requiresImage && !sourceImage) throw new Error('Attach one image to use this model');
   if (images.length > (m.maxReferenceImages ?? 4) || (images.length > 1 && !m.editUsesPlural)) throw new Error(`Choose a model supporting these references (up to ${m.maxReferenceImages ?? 4})`);
   if (m.outpaint) {
     if (!sourceImage) throw new Error('Attach one image to expand');

@@ -3239,6 +3239,7 @@
     "followerInvites": {
       "title": "Şopîneran vexwîne",
       "detail": "Di her komekê de heta 50 şopîneran hilbijêre. Peyamên taybet ên bi pere an girtî tên derbaskirin. Berî ku dîsa biceribînî, di sohbetê de li şandinên nepiştrastkirî binêre.",
+      "note": "Têbînîyekê li vexwendina xwe zêde bike (vebijarkî)",
       "selectAll": "Vê rûpelê hilbijêre",
       "clear": "Paqij bike",
       "previous": "Paşve",
@@ -5081,6 +5082,7 @@
     "extensionForward": "Nêzîkî çar çirkeyan piştî klîpa xwe ya çavkaniyê zêde bike",
     "extensionBackward": "Nêzîkî çar çirkeyan berî klîpa xwe ya çavkaniyê zêde bike",
     "expandDescription": "Sînorên nû yên wêneyê çêke. Prompta bi Îngilîzî vebijarkî ye; yek wêneyê çavkaniyê.",
+    "relightDescription": "Ronahiya wêneyekê li gorî danasîna te ya ronahî û paşzemînê biguherîne.",
     "expandPromptHint": "Yek wêneyî pêve bike û rêjeya wê ya nû ya dîmenê hilbijêre. Prompta bi Îngilîzî vebijarkî ye.",
     "expandEnglishOnly": "Ev modela berfirehkirinê promptên bi Îngilîzî qebûl dike. Ji bo berfirehkirina xweber promptê vala bihêle.",
     "expandNeedsImage": "Ji bo berfirehkirinê wêneyekî pêve bike.",

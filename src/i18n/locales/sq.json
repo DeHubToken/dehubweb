@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} ka blerë pjesë të postit tuaj",
       "repostedPosts": "{{name}} ka ripostuar {{count}} të postimeve tuaj",
       "commentMention": "{{name}} ju ka përmendur në një koment",
+      "postMention": "{{name}} të përmendi në një postim",
+      "liveChatMention": "{{name}} të përmendi në live chat",
+      "publicChatMention": "{{name}} të përmendi në bisedën publike",
       "followRequest": "{{name}} ka kërkuar të ju ndjekë",
       "bountyReplyNamed": "{{name}} ka përgjigjur në ofertën tuaj “{{title}}”",
       "bountyReply": "{{name}} ka përgjigjur në ofertën tuaj",
@@ -3243,6 +3246,7 @@
     "followerInvites": {
       "title": "Faqja e përsëritur",
       "detail": "Zgjidh deri në 50 pasioninë për batch. Mësimet e paguara ose të mbyllura janë të braktisura. Kontrolloni çatin për sendet e pa konfirmuara para se të provoni përsëri.",
+      "note": "Shtoni një shënim në ftesën tuaj (opsionale)",
       "selectAll": "Zgjidh këtë faqe",
       "clear": "E pastroni",
       "previous": "Më parë",

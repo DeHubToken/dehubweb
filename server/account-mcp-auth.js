@@ -1,6 +1,10 @@
-import { ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, pkce, random, readJson, verifySession } from './account-mcp.js';
+import { API, ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, pkce, random, readJson, verifySession } from './account-mcp.js';
 
 const HOUR = 3600000, DAY = 24 * HOUR;
+// A grant stays linked while it is used: each refresh pushes the deadline out.
+const GRANT_TTL = 30 * DAY;
+// DeHub access tokens last 15 minutes, so rotate the connector's own session early.
+const SESSION_REFRESH_AFTER = 12 * 60000;
 const oauthError = (message, code = 'invalid_request', status = 400) => json({ error: code, error_description: message }, status);
 const result = payload => ({ content: [{ type: 'text', text: JSON.stringify(payload) }], structuredContent: payload });
 const fail = message => ({ ...result({ error: message }), isError: true });
@@ -10,6 +14,11 @@ export function validRedirect(value) {
 }
 const live = row => row && row.expires > Date.now() ? row.value : null;
 const record = (value, ttl) => ({ value, expires: Date.now() + ttl });
+// Clients may omit the RFC 8707 resource or add a trailing slash; anything else is refused.
+const resourceOk = value => value === null || value.replace(/\/$/, '') === RESOURCE;
+// dehub.io reaches the Worker through the direct gateway, so CF-Connecting-IP is the
+// gateway for every visitor. The gateway sets X-Real-IP; only used for rate limits.
+const clientIp = request => (request.headers.get('X-DeHub-Public-Host') === 'dehub.io' && request.headers.get('X-Real-IP')) || request.headers.get('CF-Connecting-IP') || 'unknown';
 const scopeList = value => [...new Set(String(value || '').split(' ').filter(Boolean))];
 
 // Only this Durable Object can read connection credentials. Nothing uses a caller-
@@ -54,13 +63,50 @@ export class AccountMcpAuth {
     const access = await this.get(`access:${await hash(match[1])}`);
     const grant = access && await this.get(`grant:${access.grant}`);
     if (!grant) throw new Error('Expired or revoked connection. Link your DeHub account again.');
-    if (await verifySession(grant.token, this.fetcher) !== grant.wallet) throw new Error('DeHub session changed. Link your account again.');
-    return { ...grant, id: access.grant };
+    const current = await this.fresh(access.grant, grant);
+    if (await verifySession(current.token, this.fetcher) !== current.wallet) throw new Error('DeHub session changed. Link your account again.');
+    return { ...current, id: access.grant };
+  }
+  // The connector gets its own DeHub session (listed in Active sessions) so it
+  // outlives the 15 minute browser token it was approved with. Older backends
+  // without the endpoint fall back to that browser token.
+  async connectorSession(token, clientName) {
+    try {
+      const response = await this.fetcher(`${API}/auth/connector-session`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientName }), signal: AbortSignal.timeout(12000) });
+      const data = response.ok ? await response.json() : null;
+      if (typeof data?.token === 'string' && typeof data?.refreshToken === 'string') return { token: data.token, session: data.refreshToken, at: Date.now() };
+    } catch { /* fall back below */ }
+    return { token, session: null, at: Date.now() };
+  }
+  // Rotates the connector's DeHub session once per grant at a time; concurrent
+  // callers share the same rotation so a refresh token is never used twice.
+  async fresh(grantId, grant) {
+    if (!grant.session || Date.now() - grant.at < SESSION_REFRESH_AFTER) return grant;
+    this.rotations ??= new Map();
+    let rotation = this.rotations.get(grantId);
+    if (!rotation) {
+      rotation = (async () => {
+        const current = await this.get(`grant:${grantId}`);
+        if (!current?.session || Date.now() - current.at < SESSION_REFRESH_AFTER) return current || grant;
+        try {
+          const response = await this.fetcher(`${API}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: current.session }), signal: AbortSignal.timeout(12000) });
+          const data = await response.json().catch(() => null);
+          if (!response.ok || typeof data?.accessToken !== 'string' || typeof data?.refreshToken !== 'string') return current;
+          const next = { ...current, token: data.accessToken, session: data.refreshToken, at: Date.now() };
+          await this.put(`grant:${grantId}`, next, Math.max(1, next.deadline - Date.now()));
+          return next;
+        } catch { return current; }
+      })().finally(() => this.rotations.delete(grantId));
+      this.rotations.set(grantId, rotation);
+    }
+    return rotation;
   }
   async issue(grantId, grant) {
     const access = `dhm_${random()}`, refresh = `dhr_${random()}`;
     await this.put(`access:${await hash(access)}`, { grant: grantId }, HOUR);
-    await this.put(`refresh:${await hash(refresh)}`, { grant: grantId, client: grant.client }, Math.min(DAY, grant.deadline - Date.now()));
+    await this.put(`refresh:${await hash(refresh)}`, { grant: grantId, client: grant.client }, Math.max(1, grant.deadline - Date.now()));
     return { access_token: access, token_type: 'Bearer', expires_in: 3600, refresh_token: refresh, scope: grant.scopes.join(' ') };
   }
   async once(wallet, kind, id, args, operation) {
@@ -173,11 +219,11 @@ export class AccountMcpAuth {
   async oauth(request, url) {
     const route = url.pathname.slice('/mcp/oauth/'.length);
     if (route === 'register' && request.method === 'POST') {
-      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-      if (!await this.budget(`register:${await hash(ip)}`, 10, HOUR)) return oauthError('Registration rate limit reached.', 'temporarily_unavailable', 429);
+      const ip = clientIp(request);
+      // Chat apps register from shared server addresses, so allow a few per minute.
+      if (!await this.budget(`register:${await hash(ip)}`, 60, HOUR)) return oauthError('Registration rate limit reached.', 'temporarily_unavailable', 429);
       const input = await request.json();
       if (!Array.isArray(input.redirect_uris) || !input.redirect_uris.length || input.redirect_uris.length > 5 || !input.redirect_uris.every(validRedirect)) return oauthError('Register 1-5 exact HTTPS callback URLs.');
-      if (input.token_endpoint_auth_method && input.token_endpoint_auth_method !== 'none') return oauthError('Only public clients with PKCE are supported.');
       const client_id = random(), client_name = String(input.client_name || 'DeHub connection').slice(0, 100);
       await this.put(`client:${client_id}`, { redirects: input.redirect_uris, name: client_name }, 90 * DAY);
       return json({ client_id, client_name, redirect_uris: input.redirect_uris, token_endpoint_auth_method: 'none', grant_types: ['authorization_code','refresh_token'], response_types: ['code'], scope: SCOPES.join(' ') }, 201);
@@ -188,10 +234,10 @@ export class AccountMcpAuth {
       // Never redirect an OAuth error until the client's exact callback is known.
       if (!client || !client.redirects.includes(redirect)) return oauthError('Unknown client or callback URL.');
       if (url.searchParams.get('response_type') !== 'code' || url.searchParams.get('code_challenge_method') !== 'S256' || !/^[A-Za-z0-9_-]{43}$/.test(url.searchParams.get('code_challenge') || '')) return oauthError('Authorization code with S256 PKCE is required.');
-      if (url.searchParams.get('resource') !== RESOURCE) return oauthError('The resource must be https://dehub.io/mcp.', 'invalid_target');
+      if (!resourceOk(url.searchParams.get('resource'))) return oauthError('The resource must be https://dehub.io/mcp.', 'invalid_target');
       const scopes = scopeList(url.searchParams.get('scope') || SCOPES.join(' '));
       if (!scopes.length || scopes.some(s => !SCOPES.includes(s))) return oauthError('Unsupported permission requested.', 'invalid_scope');
-      const ip = await hash(request.headers.get('CF-Connecting-IP') || 'unknown');
+      const ip = await hash(clientIp(request));
       if (!await this.budget(`authorize:${ip}`, 30)) return oauthError('Please wait before connecting again.', 'temporarily_unavailable', 429);
       const pending = random();
       await this.put(`pending:${pending}`, { client: url.searchParams.get('client_id'), clientName: client.name, redirect, scopes,
@@ -237,7 +283,7 @@ export class AccountMcpAuth {
     }
     if (route === 'token' && request.method === 'POST') {
       const body = new URLSearchParams(await request.text());
-      if (body.get('resource') !== RESOURCE) return oauthError('Wrong resource.', 'invalid_target');
+      if (!resourceOk(body.get('resource'))) return oauthError('Wrong resource.', 'invalid_target');
       if (!/^[a-f0-9]{64}$/.test(body.get('client_id') || '')) return oauthError('Unknown client.', 'invalid_client');
       if (body.get('grant_type') === 'authorization_code') {
         const verifier = body.get('code_verifier') || '';
@@ -245,17 +291,21 @@ export class AccountMcpAuth {
         const digest = await pkce(verifier);
         const code = await this.consume(`code:${await hash(body.get('code') || '')}`, row => row.client === body.get('client_id') && row.redirect === body.get('redirect_uri') && row.challenge === digest && row.resource === RESOURCE);
         if (!code) return oauthError('Invalid or used authorization code.', 'invalid_grant');
-        const grantId = random(), grant = { client: code.client, clientName: code.clientName, wallet: code.wallet, token: code.token, scopes: code.scopes, deadline: Date.now() + DAY };
-        await this.put(`grant:${grantId}`, grant, DAY);
-        await this.put(`owner:${grant.wallet}:${grantId}`, grantId, DAY);
+        const session = await this.connectorSession(code.token, code.clientName);
+        const grantId = random(), grant = { client: code.client, clientName: code.clientName, wallet: code.wallet, ...session, scopes: code.scopes, deadline: Date.now() + GRANT_TTL };
+        await this.put(`grant:${grantId}`, grant, GRANT_TTL);
+        await this.put(`owner:${grant.wallet}:${grantId}`, grantId, GRANT_TTL);
         return json(await this.issue(grantId, grant));
       }
       if (body.get('grant_type') === 'refresh_token') {
         const refresh = await this.consume(`refresh:${await hash(body.get('refresh_token') || '')}`, row => row.client === body.get('client_id'));
-        const grant = refresh && await this.get(`grant:${refresh.grant}`);
-        if (!grant) return oauthError('Connection expired or revoked.', 'invalid_grant');
+        const stored = refresh && await this.get(`grant:${refresh.grant}`);
+        if (!stored) return oauthError('Connection expired or revoked.', 'invalid_grant');
+        const grant = { ...await this.fresh(refresh.grant, stored), deadline: Date.now() + GRANT_TTL };
         if (body.has('scope') && body.get('scope') !== grant.scopes.join(' ')) return oauthError('Reconnect to change permissions.', 'invalid_scope');
         if (await verifySession(grant.token, this.fetcher) !== grant.wallet) return oauthError('Sign in again.', 'invalid_grant');
+        await this.put(`grant:${refresh.grant}`, grant, GRANT_TTL);
+        await this.put(`owner:${grant.wallet}:${refresh.grant}`, refresh.grant, GRANT_TTL);
         return json(await this.issue(refresh.grant, grant));
       }
       return oauthError('Unsupported grant type.', 'unsupported_grant_type');
@@ -276,6 +326,7 @@ export class AccountMcpAuth {
       if (url.pathname.startsWith('/mcp/oauth/')) return await this.oauth(request, url);
       if (url.pathname === '/mcp/health' && request.method === 'GET') return json({ status: 'ok', version: '3.0.0', tools: accountTools.length });
       if (url.pathname !== '/mcp') return json({ error: 'Unknown route.' }, 404);
+      if (request.method === 'GET' && (request.headers.get('Accept') || '').includes('text/html')) return new Response(null, { status: 302, headers: { Location: `${ORIGIN}/connect`, 'Cache-Control': 'no-store' } });
       if (request.method !== 'POST') return json({ error: 'Use Streamable HTTP POST.' }, 405, { Allow: 'POST, OPTIONS' });
       let grant;
       try { grant = await this.bearer(request); } catch { return json({ error: 'Link your DeHub account again.' }, 401, { 'WWW-Authenticate': challenge() }); }
@@ -287,12 +338,12 @@ export class AccountMcpAuth {
       if (rpc.method.startsWith('notifications/') && rpc.id === undefined) return new Response(null, { status: 202 });
       const reply = value => json({ jsonrpc: '2.0', id: rpc.id ?? null, result: value });
       if (rpc.method === 'initialize') return reply({ protocolVersion: ['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(rpc.params?.protocolVersion) ? rpc.params.protocolVersion : '2025-06-18', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dehub-mcp', title: 'DeHub', version: '3.0.0' },
-        instructions: 'Browse DeHub publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections expire after at most 24 hours and can be disconnected on dehub.io/connect/chatgpt.' });
+        instructions: 'Browse DeHub publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections renew while used, expire after 30 days unused, and can be disconnected on dehub.io/connect/chatgpt.' });
       if (rpc.method === 'ping') return reply({});
       if (rpc.method === 'tools/list') return reply({ tools: accountTools.map(t => t.descriptor) });
       if (['resources/list','resources/templates/list','prompts/list'].includes(rpc.method)) return reply({ [rpc.method === 'resources/templates/list' ? 'resourceTemplates' : rpc.method.split('/')[0]]: [] });
       if (rpc.method !== 'tools/call') return json({ jsonrpc: '2.0', id: rpc.id ?? null, error: { code: -32601, message: 'Method not found' } });
-      if (!await this.budget(`tools:${grant?.wallet || await hash(request.headers.get('CF-Connecting-IP') || 'unknown')}`, grant ? 120 : 60)) return reply(fail('Rate limit reached. Please wait a minute.'));
+      if (!await this.budget(`tools:${grant?.wallet || await hash(clientIp(request))}`, grant ? 120 : 60)) return reply(fail('Rate limit reached. Please wait a minute.'));
       const ctx = { fetch: this.fetcher, token: grant?.token || '', wallet: grant?.wallet, scopes: grant?.scopes || [],
         once: (kind, id, args, operation) => this.once(grant.wallet, kind, id, args, operation),
         generate: args => this.generate(args, ctx), generationStatus: id => this.generationStatus(id, ctx) };

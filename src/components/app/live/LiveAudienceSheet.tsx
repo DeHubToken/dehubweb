@@ -20,6 +20,7 @@ import Eye from "@/components/ui/cut-icons/visibility";
 import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import dehubCoin from '@/assets/dehub-coin.png';
+import { useDrawerPullDismiss } from '@/hooks/use-drawer-pull-dismiss';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -95,6 +96,9 @@ export function LiveAudienceSheet({ open, onOpenChange, audience, loading }: Pro
     [navigate, onOpenChange],
   );
 
+  // The whole sheet drags shut; the list hands over once it is at the top.
+  const pullRef = useDrawerPullDismiss<HTMLDivElement>(() => onOpenChange(false));
+
   const host = audience?.host;
   const tippers = audience?.topTippers ?? [];
   const active = audience?.mostActive ?? [];
@@ -106,74 +110,76 @@ export function LiveAudienceSheet({ open, onOpenChange, audience, loading }: Pro
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass scrollable className="max-h-[82dvh] pb-[max(1rem,env(safe-area-inset-bottom))]" data-live-audience>
-        <div className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-white/25" />
-        <div className="flex items-center justify-between px-4 pb-2.5 pt-2">
-          <DrawerTitle className="text-base font-extrabold" data-live-audience-ink>{t('liveAudience.whosHere', "Who's here")}</DrawerTitle>
-          <span className="flex items-center gap-1.5 text-[13px] font-semibold" data-live-audience-muted>
-            <Eye className="h-3.5 w-3.5" />
-            {t('liveAudience.watchingCount', { formatted: compact(audience?.watching ?? 0), defaultValue: '{{formatted}} watching' })}
-          </span>
-        </div>
+      <DrawerContent column glass className="max-h-[82dvh] pb-[max(1rem,env(safe-area-inset-bottom))]" data-live-audience>
+        <div ref={pullRef} data-vaul-no-drag className="flex min-h-0 flex-auto flex-col [touch-action:pan-y]">
+          <div className="mx-auto mt-2.5 h-1 w-10 shrink-0 rounded-full bg-white/25" />
+          <div className="flex shrink-0 items-center justify-between px-4 pb-2.5 pt-2">
+            <DrawerTitle className="text-base font-extrabold" data-live-audience-ink>{t('liveAudience.whosHere', "Who's here")}</DrawerTitle>
+            <span className="flex items-center gap-1.5 text-[13px] font-semibold" data-live-audience-muted>
+              <Eye className="h-3.5 w-3.5" />
+              {t('liveAudience.watchingCount', { formatted: compact(audience?.watching ?? 0), defaultValue: '{{formatted}} watching' })}
+            </span>
+          </div>
 
-        <div className="overflow-y-auto">
-          {host ? (
-            <section data-live-audience-section>
-              <h4 data-live-audience-label>{t('liveAudience.host', 'Host')}</h4>
-              <Row
-                account={host}
-                large
-                onOpen={openProfile}
-                meta={ago(host.startedAt) ? t('liveAudience.startedAgo', { time: ago(host.startedAt), defaultValue: 'Started {{time}}' }) : null}
-              />
-            </section>
-          ) : null}
-
-          {tippers.length ? (
-            <section data-live-audience-section>
-              <h4 data-live-audience-label>{t('liveAudience.topTippers', 'Top tippers')}</h4>
-              {tippers.slice(0, 5).map((p, i) => (
+          <div className="min-h-0 flex-auto overflow-y-auto overscroll-contain [touch-action:pan-y]" data-live-audience-list>
+            {host ? (
+              <section data-live-audience-section>
+                <h4 data-live-audience-label>{t('liveAudience.host', 'Host')}</h4>
                 <Row
-                  key={p.address}
-                  account={p}
+                  account={host}
+                  large
                   onOpen={openProfile}
-                  meta={<><img src={dehubCoin} alt="" className="h-[11px] w-[11px]" />{compact(p.total)}</>}
-                  right={i === 0 ? <Crown className="h-4 w-4" data-live-audience-accent /> : rank(i)}
+                  meta={ago(host.startedAt) ? t('liveAudience.startedAgo', { time: ago(host.startedAt), defaultValue: 'Started {{time}}' }) : null}
                 />
-              ))}
-            </section>
-          ) : null}
+              </section>
+            ) : null}
 
-          {active.length ? (
+            {tippers.length ? (
+              <section data-live-audience-section>
+                <h4 data-live-audience-label>{t('liveAudience.topTippers', 'Top tippers')}</h4>
+                {tippers.slice(0, 5).map((p, i) => (
+                  <Row
+                    key={p.address}
+                    account={p}
+                    onOpen={openProfile}
+                    meta={<><img src={dehubCoin} alt="" className="h-[11px] w-[11px]" />{compact(p.total)}</>}
+                    right={i === 0 ? <Crown className="h-4 w-4" data-live-audience-accent /> : rank(i)}
+                  />
+                ))}
+              </section>
+            ) : null}
+
+            {active.length ? (
+              <section data-live-audience-section>
+                <h4 data-live-audience-label>{t('liveAudience.mostActive', 'Most active')}</h4>
+                {active.slice(0, 5).map((p, i) => (
+                  <Row
+                    key={p.address}
+                    account={p}
+                    onOpen={openProfile}
+                    meta={<><MessageCircle className="h-[11px] w-[11px]" />{compact(p.messages)}</>}
+                    right={rank(i)}
+                  />
+                ))}
+              </section>
+            ) : null}
+
             <section data-live-audience-section>
-              <h4 data-live-audience-label>{t('liveAudience.mostActive', 'Most active')}</h4>
-              {active.slice(0, 5).map((p, i) => (
-                <Row
-                  key={p.address}
-                  account={p}
-                  onOpen={openProfile}
-                  meta={<><MessageCircle className="h-[11px] w-[11px]" />{compact(p.messages)}</>}
-                  right={rank(i)}
-                />
-              ))}
+              <h4 data-live-audience-label>{t('liveAudience.hereNow', 'Here now')}</h4>
+              {here.length ? (
+                here.slice(0, 30).map((p) => (
+                  <Row
+                    key={p.address}
+                    account={p}
+                    onOpen={openProfile}
+                    meta={t('liveAudience.joinedAgo', { time: ago(p.joinedAt) ?? '', defaultValue: 'joined {{time}}' })}
+                  />
+                ))
+              ) : (
+                <p className="py-2 text-[13px]" data-live-audience-muted>{loading ? '…' : t('liveAudience.nobodyYet', 'No one yet')}</p>
+              )}
             </section>
-          ) : null}
-
-          <section data-live-audience-section>
-            <h4 data-live-audience-label>{t('liveAudience.hereNow', 'Here now')}</h4>
-            {here.length ? (
-              here.slice(0, 30).map((p) => (
-                <Row
-                  key={p.address}
-                  account={p}
-                  onOpen={openProfile}
-                  meta={t('liveAudience.joinedAgo', { time: ago(p.joinedAt) ?? '', defaultValue: 'joined {{time}}' })}
-                />
-              ))
-            ) : (
-              <p className="py-2 text-[13px]" data-live-audience-muted>{loading ? '…' : t('liveAudience.nobodyYet', 'No one yet')}</p>
-            )}
-          </section>
+          </div>
         </div>
       </DrawerContent>
     </Drawer>

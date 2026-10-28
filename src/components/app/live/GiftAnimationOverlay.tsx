@@ -382,7 +382,7 @@ const CornerFloat = memo(({ tier, count }: { tier: GiftTier; count: number }) =>
       {particles.map((p) => (
         <span
           key={p.i}
-          className="absolute select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+          className="absolute select-none [text-shadow:0_2px_8px_rgba(0,0,0,0.6)]"
           style={p.style}
         >
           {tier.emoji}
@@ -464,7 +464,7 @@ Shockwave.displayName = 'Shockwave';
 const Hero = memo(({ glyph, durationMs, keyframe = 'dhg-drop' }: { glyph: string; durationMs: number; keyframe?: string }) => (
   <div className="absolute inset-0 flex items-center justify-center">
     <span
-      className="select-none leading-none drop-shadow-[0_8px_24px_rgba(0,0,0,0.65)]"
+      className="select-none leading-none [text-shadow:0_8px_24px_rgba(0,0,0,0.65)]"
       style={{ fontSize: w(0.42), animation: `${keyframe} ${durationMs}ms cubic-bezier(0.2, 0.8, 0.3, 1) both` }}
     >
       {glyph}
@@ -533,7 +533,7 @@ const ChocolateBox = memo(({ durationMs }: { durationMs: number }) => (
     <Wash durationMs={durationMs} className="bg-amber-900/25" />
     <div className="absolute inset-0 flex items-center justify-center">
       <span
-        className="select-none leading-none drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)]"
+        className="select-none leading-none [text-shadow:0_8px_20px_rgba(0,0,0,0.6)]"
         style={{ fontSize: w(0.34), animation: `dhg-lid ${durationMs * 0.72}ms ease-out both` }}
       >
         🎁
@@ -611,7 +611,7 @@ const RingFlight = memo(({ durationMs }: { durationMs: number }) => (
     <Wash durationMs={durationMs} className="bg-gradient-to-r from-purple-500/25 via-fuchsia-400/12 to-purple-500/25" />
     <div className="absolute inset-0 flex items-center justify-center">
       <span
-        className="select-none leading-none drop-shadow-[0_0_24px_rgba(216,180,254,0.9)]"
+        className="select-none leading-none [text-shadow:0_0_24px_rgba(216,180,254,0.9)]"
         style={{ fontSize: w(0.32), animation: `dhg-fly ${durationMs}ms cubic-bezier(0.3,0.1,0.3,1) both` }}
       >
         💍
@@ -639,7 +639,7 @@ const SpartanWall = memo(({ durationMs }: { durationMs: number }) => (
       {Array.from({ length: 9 }, (_, i) => (
         <span
           key={i}
-          className="select-none drop-shadow-[0_4px_10px_rgba(0,0,0,0.7)]"
+          className="select-none [text-shadow:0_4px_10px_rgba(0,0,0,0.7)]"
           style={{
             fontSize: w(0.16),
             animation: `dhg-step ${600 + (i % 3) * 70}ms ease-in-out ${i * 60}ms infinite`,
@@ -688,7 +688,7 @@ const PartyScreen = memo(({ durationMs }: { durationMs: number }) => {
       <FallField count={26} glyphs={CONFETTI} durationMs={durationMs} sizeFrom={0.045} sizeTo={0.1} />
       <div className="absolute inset-x-0 top-0 flex justify-center">
         <span
-          className="select-none drop-shadow-[0_6px_18px_rgba(255,255,255,0.6)]"
+          className="select-none [text-shadow:0_6px_18px_rgba(255,255,255,0.6)]"
           style={{ fontSize: w(0.2), transformOrigin: 'top center', animation: `dhg-swing ${durationMs}ms ease-in-out both` }}
         >
           🪩

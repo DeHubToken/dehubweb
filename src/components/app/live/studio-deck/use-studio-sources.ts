@@ -17,6 +17,7 @@ import {
   type SourceConfig,
 } from '@/lib/studio/sources';
 import { createLogger } from '@/lib/logger';
+import { endLiveReaction } from '@/lib/remix-links';
 
 const logger = createLogger('StudioSources');
 
@@ -40,6 +41,8 @@ export interface StudioSources {
 export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null, enabled: boolean): StudioSources {
   const [configs, setConfigs] = useState<SourceConfig[]>(() => (enabled ? loadSourceConfigs() : []));
   const live = useRef(new Map<string, Live>());
+  const latest = useRef(configs);
+  latest.current = configs;
   const [, bump] = useState(0);
   const rerender = useCallback(() => bump((n) => n + 1), []);
 
@@ -69,16 +72,17 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
           },
         };
       }
-      if (config.kind === 'video' && file) {
-        const url = URL.createObjectURL(file);
+      if (config.kind === 'video' && (file || config.url)) {
+        const url = file ? URL.createObjectURL(file) : config.url!;
         const video = document.createElement('video');
+        // Before src: a hosted file must load with CORS or it taints the program canvas.
+        video.crossOrigin = 'anonymous';
         video.src = url;
         video.loop = config.loop ?? true;
         video.playsInline = true;
         // The sound reaches viewers through the audio desk; locally it stays
         // silent so the creator's speakers do not feed it back into the mic.
         video.muted = !(config.withSound ?? true) || !desk;
-        video.crossOrigin = 'anonymous';
         await video.play().catch(() => undefined);
         return {
           element: video,
@@ -86,7 +90,7 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
             video.pause();
             video.removeAttribute('src');
             video.load();
-            URL.revokeObjectURL(url);
+            if (file) URL.revokeObjectURL(url);
           },
         };
       }
@@ -139,6 +143,8 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
   // Released with the broadcast.
   useEffect(
     () => () => {
+      // A DeHub video still on screen when the broadcast ends is no longer being reacted to.
+      for (const c of latest.current) if (c.reaction?.linkId) void endLiveReaction(c.reaction.linkId).catch(() => undefined);
       live.current.forEach((l) => l.release());
       live.current.clear();
       program.setSources([]);
@@ -148,9 +154,14 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
     [],
   );
 
-  const persist = (next: SourceConfig[]) => {
-    setConfigs(next);
-    saveSourceConfigs(next);
+  // Functional updates: a reaction removes the old one and adds a video and a
+  // camera in one go, before React has re-rendered with the earlier change.
+  const persist = (change: (prev: SourceConfig[]) => SourceConfig[]) => {
+    setConfigs((prev) => {
+      const next = change(prev);
+      saveSourceConfigs(next);
+      return next;
+    });
   };
 
   return {
@@ -159,19 +170,18 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
       const opened = await open(config, file);
       if (!opened) return false;
       live.current.set(config.id, opened);
-      persist([...configs, config]);
+      persist((prev) => [...prev, config]);
       return true;
     },
     update: (id, change) => {
-      const next = configs.map((c) => (c.id === id ? { ...c, ...change } : c));
       const l = live.current.get(id);
       if (l?.element instanceof HTMLVideoElement && change.loop !== undefined) l.element.loop = change.loop;
-      persist(next);
+      persist((prev) => prev.map((c) => (c.id === id ? { ...c, ...change } : c)));
     },
     remove: (id) => {
       live.current.get(id)?.release();
       live.current.delete(id);
-      persist(configs.filter((c) => c.id !== id));
+      persist((prev) => prev.filter((c) => c.id !== id));
     },
     playing: (id) => {
       const el = live.current.get(id)?.element;

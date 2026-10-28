@@ -1763,6 +1763,9 @@
       "fractionPurchased": "{{name}}はあなたの投稿の分数を購入しました",
       "repostedPosts": "{{name}}はあなたの投稿の{{count}}をリポストしました",
       "commentMention": "{{name}}はあなたをコメントで紹介しました",
+      "postMention": "{{name}}さんが投稿であなたをメンションしました",
+      "liveChatMention": "{{name}}さんがライブチャットであなたをメンションしました",
+      "publicChatMention": "{{name}}さんが公開チャットであなたをメンションしました",
       "followRequest": "{{name}}はあなたをフォローすることを求めました",
       "bountyReplyNamed": "{{name}}はあなたのボーナス「{{title}}」への返信をしました",
       "bountyReply": "{{name}}はあなたのボーナスへの返信をしました",
@@ -3245,6 +3248,7 @@
     "followerInvites": {
       "title": "フォロワーを招待する",
       "detail": "最大50人のフォロワーを選択できます。有料または閉鎖されたDMはスキップされます。未確認の送信を確認するチャットを確認してから再試行してください。",
+      "note": "招待にメッセージを添える（任意）",
       "selectAll": "このページを選択",
       "clear": "クリア",
       "previous": "前へ",

@@ -39,6 +39,7 @@ import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assist
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useFocusChatMessage } from '@/hooks/use-focus-chat-message';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +60,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     userHandle: msg.sender_username || undefined,
     userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     badgeBalance: msg.sender_badge_balance,
+    badgeLock: msg.sender_badge_lock,
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',
@@ -94,6 +96,8 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
 const ROOM_MANAGEMENT_ENABLED = false;
 
 export function PublicChat({ onBack }: PublicChatProps) {
+  // A mention notification names the line that tagged the reader.
+  useFocusChatMessage();
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);

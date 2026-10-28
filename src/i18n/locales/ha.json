@@ -1745,6 +1745,9 @@
       "fractionPurchased": "{{name}} sayi sassan post ɗinku",
       "repostedPosts": "{{name}} reposted {{count}} na sakonninku",
       "commentMention": "{{name}} ya ambace ku a cikin sharhi",
+      "postMention": "{{name}} ya ambace ku a cikin wani post",
+      "liveChatMention": "{{name}} ya ambace ku a cikin tattaunawar kai tsaye",
+      "publicChatMention": "{{name}} ya ambace ku a cikin tattaunawar jama'a",
       "followRequest": "{{name}} ya nemi ya bi ka",
       "bountyReplyNamed": "{{name}} ya amsa wa falalar ka \"{{title}}\"",
       "bountyReply": "{{name}} ya amsawa ga falalar ku",
@@ -3223,6 +3226,7 @@
     "followerInvites": {
       "title": "Gayyaci mabiya",
       "detail": "Zaɓi har zuwa mabiya 50 a kowace batch. Biyan kuɗi ko DMs da aka rufe suna tsallakewa. Duba tattaunawar don aikawa da ba a tabbatar ba kafin sake gwadawa.",
+      "note": "Ƙara bayani ga gayyatarka (na zaɓi)",
       "selectAll": "Zaɓi wannan shafin",
       "clear": "Bayyanannu",
       "previous": "Na baya",

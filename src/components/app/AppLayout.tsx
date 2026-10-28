@@ -134,7 +134,7 @@ const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
 // (/videos, /shorts) — all backed by the same cached HomePage. Layout that's
 // specific to the home feed (full-bleed mosaic, collapsed-mode global nav)
 // must treat all of them the same. The route list is shared with
-// FriendsOnStageBar and HomeFeed — see lib/home-routes.
+// LiveNowBar and HomeFeed — see lib/home-routes.
 
 // The post layer tracks <main>'s live box (the gap between the sidebars) via the
 // CSS vars published below — the same ones the login modal centers against.
@@ -271,13 +271,17 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const rail = w >= 1536 ? 352 : w >= 1280 ? 320 : w >= 1024 ? 288 : 0;
       return Math.max(0, shell - sidebar - rail);
     };
+    // Any write on <html> restyles every element: write only changes.
+    const write = (name: string, value: string) => {
+      if (root.getPropertyValue(name) !== value) root.setProperty(name, value);
+    };
     const updateBounds = () => {
       const rect = mainEl.getBoundingClientRect();
       const width = isWideMainRoute ? Math.min(rect.width, standardColumnWidth(rect)) : rect.width;
       const left = rect.left + (rect.width - width) / 2;
-      root.setProperty('--app-main-left', `${left}px`);
-      root.setProperty('--app-main-width', `${width}px`);
-      root.setProperty('--app-main-center-x', `${left + width / 2}px`);
+      write('--app-main-left', `${left}px`);
+      write('--app-main-width', `${width}px`);
+      write('--app-main-center-x', `${left + width / 2}px`);
     };
 
     updateBounds();
@@ -287,11 +291,14 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', updateBounds);
-      root.removeProperty('--app-main-left');
-      root.removeProperty('--app-main-width');
-      root.removeProperty('--app-main-center-x');
     };
   }, [location.pathname, isCollapsed]);
+  useEffect(() => () => {
+    const root = document.documentElement.style;
+    root.removeProperty('--app-main-left');
+    root.removeProperty('--app-main-width');
+    root.removeProperty('--app-main-center-x');
+  }, []);
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -425,12 +432,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const retainedPost = useRetainedPost(overlayPostId);
 
   const isCached = isCachedPageRoute(location.pathname);
-  // An open DM hides the mobile bottom nav, so <main> must drop the pb-16
-  // reserved for that nav too — otherwise the page is 64px taller than the
-  // viewport and the whole conversation scrolls under a dead black band.
-  const mobileChatOpen =
-    location.pathname === '/app/messages' &&
-    new URLSearchParams(location.search).get('chat') === '1';
+  // Messages owns its viewport and scrollable nav clearance, both for the
+  // inbox and open chats. Outer padding would add a dead band below it.
+  const isMessagesRoute = location.pathname === '/app/messages';
   // Dynamic routes: post overlay, single post, post info, or username profiles
   const isDynamicRoute = !isCached && !showHomePagePersisted;
 
@@ -457,7 +461,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         
          <main ref={mainRef} data-main-panel data-post-route={isPostRoute ? '' : undefined} className={cn(
           "flex-1 min-h-screen lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative",
-          mobileChatOpen ? "pb-0" : "pb-16"
+          isMessagesRoute ? "pb-0" : "pb-16"
          )}>
           <GlobalFeedNavProvider>
             {/* Global feed nav — only shown on the home feed in collapsed mode.

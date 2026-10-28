@@ -47,9 +47,11 @@ class FakeSocket {
 
 let sockets: FakeSocket[] = [];
 let token: string | null = 'token-a';
+let lastOptions: { auth?: unknown } = {};
 
 vi.mock('socket.io-client', () => ({
-  io: () => {
+  io: (_url: string, options: { auth?: unknown }) => {
+    lastOptions = options;
     const s = new FakeSocket();
     sockets.push(s);
     return s;
@@ -434,5 +436,17 @@ describe('overlay control room join', () => {
     watchOverlayControl('A'.repeat(24), 'obs', { onJoined: (ok) => answers.push(ok) });
     sockets[0].acks[0]({ ok: false });
     expect(answers).toEqual([false]);
+  });
+
+  it('reconnects with the newest login, not the one the socket was built with', async () => {
+    const { joinStreamPresence } = await import('@/lib/api/dehub/stream-presence');
+    const presence = joinStreamPresence('fresh-auth-stream');
+    const auth = lastOptions.auth as (cb: (data: unknown) => void) => void;
+    expect(typeof auth).toBe('function');
+    token = 'token-rotated';
+    let sent: unknown;
+    auth((data) => { sent = data; });
+    expect(sent).toEqual({ token: 'token-rotated' });
+    presence.leave();
   });
 });

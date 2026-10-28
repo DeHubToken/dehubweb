@@ -1748,6 +1748,9 @@
       "fractionPurchased": "{{name}} ayaa iibsaday qaybo ka mid ah qoraalkaaga",
       "repostedPosts": "{{name}} ayaa dib u soo dhigay {{count}} ka mid ah qoraalladaada",
       "commentMention": "{{name}} ayaa kugu xusay faallo",
+      "postMention": "{{name}} ku xuseen qoraal",
+      "liveChatMention": "{{name}} ku xusay chat live ah",
+      "publicChatMention": "{{name}} ku xuseen sheeko dadweyne",
       "followRequest": "{{name}} ayaa codsaday inuu ku raaco",
       "bountyReplyNamed": "{{name}} ayaa kaaga jawaabay abaalmarintaada “{{title}}”",
       "bountyReply": "{{name}} ayaa kaaga jawaabay abaalmarintaada",
@@ -3220,6 +3223,7 @@
     "chatTab": "Sheekaysi",
     "followerInvites": {
       "detail": "Dooro ilaa 50 taageerayaal halkii dufcaddii. DM-yada la bixiyo ama la xiro waa la jeexjeexay. Hubi sheekada dirista aan la xaqiijin ka hor intaadan isku dayin mar kale.",
+      "note": "Ku dar qoraal martiqaadkaaga (ikhtiyaari)",
       "selectAll": "Dooro boggan",
       "clear": "Cadee",
       "previous": "Hore",

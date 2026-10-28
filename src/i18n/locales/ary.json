@@ -1759,6 +1759,9 @@
       "fractionPurchased": "{{name}} اشترت أجزاء من منشورك",
       "repostedPosts": "{{name}} reposted {{count}} من منشوراتك",
       "commentMention": "{{name}} ذكرتك في تعليق",
+      "postMention": "أشار إليك {{name}} في منشور",
+      "liveChatMention": "أشار إليك {{name}} في الدردشة المباشرة",
+      "publicChatMention": "أشار إليك {{name}} في الدردشة العامة",
       "followRequest": "{{name}} طلبت منك اتباعها",
       "bountyReplyNamed": "{{name}} ردت عليك في منحة “{{title}}”",
       "bountyReply": "{{name}} ردت عليك في منحة",
@@ -3271,6 +3274,7 @@
     "followerInvites": {
       "title": "دعوة متابعين",
       "detail": "اختر ما يصل إلى 50 متابعًا لكل دفعة. يتم تخطي الرسائل المباشرة المدفوعة أو المغلقة. تحقق من الدردشة بحثًا عن عمليات الإرسال غير المؤكدة قبل المحاولة مرة أخرى.",
+      "note": "زيد شي ملاحظة للدعوة ديالك (اختياري)",
       "selectAll": "اختر هذه الصفحة",
       "clear": "مسح",
       "previous": "السابق",

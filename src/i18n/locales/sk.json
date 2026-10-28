@@ -1803,6 +1803,9 @@
       "fractionPurchased": "{{name}} si kúpil zlomky vášho príspevku",
       "repostedPosts": "{{name}} reposted {{count}} vašich príspevkov",
       "commentMention": "{{name}} vás spomenul v komentári",
+      "postMention": "{{name}} vás spomenul v príspevku",
+      "liveChatMention": "{{name}} vás spomenul v živom chate",
+      "publicChatMention": "{{name}} vás spomenul vo verejnom chate",
       "followRequest": "{{name}} vás chce sledovať",
       "bountyReplyNamed": "{{name}} odpovedal na vašu odmenu „{{title}}“",
       "bountyReply": "{{name}} odpovedal na vašu ponuku",
@@ -3350,6 +3353,7 @@
     "followerInvites": {
       "title": "Pozvaj nasledovníkov",
       "detail": "Vyberte až 50 nasledovníkov v jednom balíčku. Platné alebo uzavreté správy sú prechádzané. Zkontrolujte konverzáciu pred ďalším pokúšaním.",
+      "note": "Pridajte k pozvánke poznámku (nepovinné)",
       "selectAll": "Vyberte túto stránku",
       "clear": "Zmazať",
       "previous": "Predošlá",

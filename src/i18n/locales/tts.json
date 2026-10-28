@@ -1700,6 +1700,9 @@
     "tipTokens": "{{amount}} เหรียญ",
     "tokenAmount": "{{amount}} เหรียญ",
     "custom": {
+      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
+      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
+      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "featureLikeNamed": "{{name}}ชอบฟีเจอร์ขอความช่วยเหลือ “{{title}}”",
       "featureLike": "{{name}} เลยชอบคำขอฟีเจอร์ของคุณ",
       "featureReplyNamed": "{{name}} ตอบคุณใน “{{title}}”",
@@ -3182,6 +3185,7 @@
     "chatTab": "แชท",
     "followerInvites": {
       "detail": "เลือกผู้ติดตามได้สูงสุด 50 คนต่อครั้ง คำสั่ง DM ที่ชำระเงินหรือปิดกั้นจะถูกข้ามไป ควรตรวจสอบช่องสนทนาถึงการส่งที่ยังไม่ยืนยันก่อนจะลองอีกครั้ง",
+      "note": "เพิ่มข้อความใส่คำเชิญของเจ้า (บ่บังคับ)",
       "selectAll": "เลือกหน้านี้",
       "clear": "ล้าง",
       "previous": "ก่อนหน้า",

@@ -1183,9 +1183,13 @@ html[data-theme='osaka'] #app-root [data-engaged] > svg.fill-current {
   fill: currentColor;
 }
 
-/* An emoji carries its own colour, so the cycle reaches it as a halo only. */
-html[data-theme='osaka'] #app-root [data-engaged] > [data-engaged-glyph] {
+/* An emoji carries its own colour and its own motion, so it takes no halo:
+   reaction emoji move, they never glow. */
+html[data-theme='osaka'] #app-root [data-engaged] > [data-engaged-glyph]:not(#_) {
   color: inherit;
+  animation: none;
+  filter: none;
+  will-change: auto;
 }
 
 /* Untagged engaged glyphs elsewhere in the feed (comment likes, review votes)

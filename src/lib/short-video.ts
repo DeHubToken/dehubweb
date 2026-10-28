@@ -16,6 +16,7 @@ import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
 import type { ShortVideo, VideoItem } from '@/types/feed.types';
 import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
+import { duetOfPost } from '@/lib/duet';
 
 export function formatLikes(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
@@ -95,6 +96,7 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
     displayName: nft.minterDisplayName || undefined,
     isLiked: nft.isLiked ?? voteType === 'for',
     isDisliked: nft.isDisliked ?? voteType === 'against',
+    duetOf: duetOfPost(nft),
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
 }
 
@@ -108,6 +110,7 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
     type: 'short',
     visibility: video.visibility,
     quotePolicy: video.quotePolicy,
+    duetOf: video.duetOf,
     spoilerText: video.spoilerText,
     username: video.channel || video.creatorUsername || 'user',
     verified: !!video.verified,

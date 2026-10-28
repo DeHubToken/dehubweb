@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} je kupio frakcije vašeg posta",
       "repostedPosts": "{{name}} je ponovo objavio {{count}} vaših posta",
       "commentMention": "{{name}} je spominjao vas u komentarju",
+      "postMention": "{{name}} vas spominje u objavi",
+      "liveChatMention": "{{name}} vas spominje u chatu uživo",
+      "publicChatMention": "{{name}} vas spominje u javnom chatu",
       "followRequest": "{{name}} je zahtijevao da vas slijedi",
       "bountyReplyNamed": "{{name}} je odgovorio na vašu nagradu “{{title}}”",
       "bountyReply": "{{name}} je odgovorio na vašu nagradu",
@@ -3243,6 +3246,7 @@
     "followerInvites": {
       "title": "Upozorite sledbenike",
       "detail": "Izaberite do 50 sledbenika po grupi. Plaćeni ili zatvoreni privatni poruke se preskaču. Provjerite chat za nepotvrđene slanje prije nego pokušate ponovo.",
+      "note": "Dodajte bilješku pozivnici (nije obavezno)",
       "selectAll": "Odaberi ovu stranicu",
       "clear": "Očisti",
       "previous": "Prethodni",

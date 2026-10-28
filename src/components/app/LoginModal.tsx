@@ -297,13 +297,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
 
-  // Only the sign-in options are worth sketching. Every other step is a wait or
-  // a form the user has already been told about, so it gets the site loader —
-  // the same mark the resume itself uses.
-  const fallback = step === 'main'
-    ? <LoginBodySkeleton />
-    : <DeHubPageLoader size={56} minHeight="180px" />;
-
   // A wallet password is a focused security interruption, not a page-wide
   // task. On desktop it therefore lives as a compact panel centred inside the
   // app's middle column. The mobile flow deliberately remains a bottom sheet,
@@ -314,6 +307,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // desktop's existing middle-column drawer and the phone's full-screen sheet.
   const stackSheet = isMobile && loginIntent !== 'add-profile';
   const stackLayout = loginIntent !== 'add-profile' && isInlineLoginStep(step);
+
+  // Only the sign-in options hold their space; it stays blank (the real list
+  // replaces it). Every other step is a wait or a form the user has already
+  // been told about, so it gets the site loader, the mark the resume uses.
+  const fallback = step === 'main'
+    ? <LoginBodySkeleton layout={stackLayout ? 'stack' : undefined} />
+    : <DeHubPageLoader size={56} minHeight="180px" />;
 
   const termsNotice = (
     <Trans

@@ -29,7 +29,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
+import { nativeLiveEdge, watchLiveProgress } from '@/lib/live/stall-watchdog';
+import { forgetWhepSilent, hasRealPicture, rememberWhepSilent, whepRecentlySilent } from '@/lib/live/whep-memory';
+import { useFeedPlaybackAllowed, useLivePlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { useLocation } from 'react-router-dom';
 import type Hls from 'hls.js';
 import { LiveEndedMedia } from './LiveEndedMedia';
@@ -86,7 +88,7 @@ interface LiveFeedPreviewProps {
 }
 
 /** A negotiated session that never delivers a frame is the worst case. */
-const WHEP_START_TIMEOUT_MS = 6000;
+const WHEP_START_TIMEOUT_MS = 3500;
 
 /**
  * Concurrent WebRTC sessions this page will hold for feed previews.
@@ -98,6 +100,11 @@ const WHEP_START_TIMEOUT_MS = 6000;
  */
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
+
+/** Feed rule, except an audible live keeps going behind another tab. */
+function mayPlayNow(el: HTMLVideoElement, muted: boolean): boolean {
+  return visualActivity.isFeedPlaybackAllowed() || isVideoInPictureInPicture(el) || (!muted && visualActivity.isLivePlaybackAllowed());
+}
 
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, muted = true, controlsVisible = false, onToggleMute, streamId, streamStatus, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
   const { t: _copy } = _useCopy();
@@ -118,11 +125,17 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
   const hlsRef = useRef<Hls | null>(null);
   const [intersecting, setVisible] = useState(false);
   const playbackAllowed = useFeedPlaybackAllowed();
-  const visible = (intersecting && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
+  // A live someone has turned the sound up on is being listened to: switching
+  // tabs or clicking into another window must not hang it up (and drop them
+  // from the room). A muted preview still lets go, as every feed video does.
+  const livePlaybackAllowed = useLivePlaybackAllowed();
+  const visible = (intersecting && (playbackAllowed || (!muted && livePlaybackAllowed))) || (inPiP && !visualActivity.isCallBusy());
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
+  const { broadcastPaused, broadcastEnded, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
   const wasBroadcastPaused = useRef(broadcastPaused);
   useEffect(() => {
     if (wasBroadcastPaused.current && !broadcastPaused) setFailed(false);
@@ -146,7 +159,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
   // One WebRTC attempt per card: the transport only ever moves whep → hls, so
   // a failure cannot trade the element back and forth with the ladder.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    !bigEvent && typeof RTCPeerConnection !== 'undefined' && !!source ? 'whep' : 'hls',
+    !bigEvent && typeof RTCPeerConnection !== 'undefined' && !!source && !whepRecentlySilent(source.playbackId) ? 'whep' : 'hls',
   );
 
   // Only attach while the card is on screen. A feed can hold dozens of live
@@ -164,7 +177,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
   // ── WebRTC ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (transport !== 'whep' || !visible || postOpen || failed || !source) return;
+    if (transport !== 'whep' || !visible || postOpen || failed || !source || broadcastEnded) return;
     const el = videoRef.current;
     if (!el) return;
     if (whepSessionsOpen >= MAX_CONCURRENT_WHEP) {
@@ -184,7 +197,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
     // Negotiated but silent: no error to catch and nothing on screen.
     const timer = setTimeout(() => {
-      if (!cancelled && !el.videoWidth) fallBack();
+      if (cancelled) return;
+      if (hasRealPicture(el)) { forgetWhepSilent(source.playbackId); return; }
+      rememberWhepSilent(source.playbackId);
+      fallBack();
     }, WHEP_START_TIMEOUT_MS);
 
     const start = async () => {
@@ -207,7 +223,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         }
         el.srcObject = session.stream;
         await el.play().catch(() => { if (!cancelled) setLoading(false); });
-        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
+        if (cancelled || (!mayPlayNow(el, mutedRef.current))) el.pause();
       } catch {
         fallBack();
       }
@@ -233,13 +249,14 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
       if (el.srcObject) el.srcObject = null;
       });
     };
-  }, [transport, visible, postOpen, failed, source]);
+  }, [transport, visible, postOpen, failed, source, broadcastEnded]);
 
   // ── HLS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     const el = videoRef.current;
-    if (transport !== 'hls' || !el || !src || !visible || postOpen || failed) return;
+    if (transport !== 'hls' || !el || !src || !visible || postOpen || failed || broadcastEnded) return;
     let cancelled = false;
+    let stopWatch: (() => void) | undefined;
     setLoading(true);
 
     const attach = async () => {
@@ -250,6 +267,17 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
       // browser without Opus is handed — plays natively like Livepeer's.
       if ((!selfHosted || isAacCopyUrl(src)) && el.canPlayType('application/vnd.apple.mpegurl')) {
         el.src = src;
+        // Safari's native HLS never recovers a stalled live playlist on its
+        // own: jump to the live edge, then reload, instead of a frozen tile.
+        stopWatch = watchLiveProgress(el, {
+          stallMs: 8000,
+          onStall: (count) => {
+            const edge = count === 1 ? nativeLiveEdge(el) : null;
+            if (edge != null && edge > el.currentTime + 1) el.currentTime = edge;
+            else { el.src = src; el.load(); }
+            void el.play().catch(() => undefined);
+          },
+        });
       } else {
         const { default: HlsCtor } = await import('hls.js');
         if (cancelled || !HlsCtor.isSupported()) {
@@ -276,7 +304,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         hls.attachMedia(el);
       }
       void el.play().then(() => {
-        if (cancelled || (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(el))) el.pause();
+        if (cancelled || (!mayPlayNow(el, mutedRef.current))) el.pause();
       }).catch(() => { if (!cancelled) setLoading(false); });
     };
 
@@ -284,6 +312,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
 
     return () => {
       cancelled = true;
+      stopWatch?.();
       const hls = hlsRef.current;
       hlsRef.current = null;
       releaseAfterPictureInPicture(el, () => {
@@ -292,10 +321,10 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         el.load();
       });
     };
-  }, [transport, src, visible, postOpen, failed, selfHosted, bigEvent]);
+  }, [transport, src, visible, postOpen, failed, selfHosted, bigEvent, broadcastEnded]);
 
-  if (!src) {
-    return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;
+  if (!src || broadcastEnded) {
+    return <LiveEndedMedia thumbnail={thumbnail} label={broadcastEnded ? undefined : fallbackLabel} />;
   }
 
   return (
@@ -327,7 +356,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel, mut
         preload="none"
         poster={thumbnail}
         onPlaying={(e) => {
-          if (!visualActivity.isFeedPlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
+          if (!mayPlayNow(e.currentTarget, mutedRef.current)) { e.currentTarget.pause(); return; }
           setPlaying(true); setPaused(false); setLoading(false);
         }}
         onWaiting={() => setLoading(true)}

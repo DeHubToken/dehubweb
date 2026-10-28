@@ -1760,6 +1760,9 @@
       "fractionPurchased": "{{name}} gosa postii kee bitateera",
       "repostedPosts": "{{name}} postiiwwan kee keessaa {{count}} irra deebi'ee maxxanseera",
       "commentMention": "{{name}} yaada keessatti si caqaseera",
+      "postMention": "{{name}} barreeffama tokko keessatti si kaase",
+      "liveChatMention": "{{name}} live chat irratti si kaase",
+      "publicChatMention": "{{name}} marii ummataa irratti si kaase",
       "followRequest": "{{name}} si hordofuuf gaafateera",
       "bountyReplyNamed": "{{name}} badhaasa kee “{{title}}” irratti deebii kenneera",
       "bountyReply": "{{name}} badhaasa kee irratti deebii kenneera",
@@ -3241,6 +3244,7 @@
     "followerInvites": {
       "title": "Hordoftoota affeeri",
       "detail": "Gadii dhihaan 50 irraa dhihaattiin. Dhihaattiin gadii dhihaanuun, dhihaattiin gadii kalaqaattiin.",
+      "note": "Affeerraa keessaniif yaadannoo dabalaa (filannoo)",
       "selectAll": "Fuula kana filadhu",
       "clear": "Ifaa",
       "previous": "Kan duraa",

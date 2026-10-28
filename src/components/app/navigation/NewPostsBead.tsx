@@ -11,7 +11,7 @@ const TUCK = 12;
 const HEIGHT = 36;
 
 /** "N new posts" with up to three faces: a drawer that pulls out from under
- *  the phone nav pill, in the pill's own material. The pill's own border is
+ *  the phone nav pill, in the pill's own liquid glass. The pill's own border is
  *  untouched; it casts a soft shade onto the drawer's top. When the nav hides
  *  (html[data-nav-hidden]) the drawer slides back under it first, and pulls
  *  back out after the nav returns (glass-surfaces.css). Tapping it loads the
@@ -42,6 +42,10 @@ export function NewPostsBead({ count, authors, onShow }: {
         className="pointer-events-auto flex min-w-[180px] items-end justify-center whitespace-nowrap gap-2 pl-2 pr-3.5 pb-[7px] text-[13px] font-semibold tabular-nums"
         style={{ marginTop: -TUCK, height: HEIGHT + TUCK }}
       >
+        {/* The pill's own glass layer (glass-surfaces.css): same blur, tint
+            and rim, so the drawer's border is the pill's border. */}
+        <span data-nav-glass-backdrop aria-hidden="true" />
+        <span data-feed-new-posts-shade aria-hidden="true" />
         {faces.length > 0 && (
           <span className="flex">
             {faces.map((author, i) => (

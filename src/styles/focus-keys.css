@@ -1,0 +1,14 @@
+/* Focus rings only while someone is moving with the keyboard (focus-keys.ts).
+   After a tap or click, Radix returns focus to the trigger and Chrome marks it
+   :focus-visible, which drew a white ring on every pressed button. Text fields
+   keep their focus look, since you tap those to type. :not(#_) lifts this
+   above the theme rings (jungle, osaka, war use #app-root + !important), and
+   the ring variables cover Tailwind's focus-visible:ring-* utilities. */
+html:not([data-focus-keys]) :is(:focus-visible, :focus):not(input, textarea, select, [contenteditable='true'], [contenteditable='']):not(#_):not(#_) {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+html:not([data-focus-keys])[data-theme='war'] [data-filter-chip]:focus-visible:not(#_):not(#_) {
+  box-shadow: none !important;
+}

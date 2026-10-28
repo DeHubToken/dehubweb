@@ -1760,6 +1760,9 @@
       "fractionPurchased": "{{name}} iegādājās jūsu posta daļas",
       "repostedPosts": "{{name}} atkārtoti {{count}} no jūsu postu",
       "commentMention": "{{name}} norāda jūsu komentārā",
+      "postMention": "{{name}} pieminēja jūs ierakstā",
+      "liveChatMention": "{{name}} pieminēja jūs tiešsaistes tērzēšanā",
+      "publicChatMention": "{{name}} pieminēja jūs publiskajā tērzēšanā",
       "followRequest": "{{name}} pieprasīja, lai jūs sekotu",
       "bountyReplyNamed": "{{name}} atbildēja uz jūsu \"bounty {{title}}\"",
       "bountyReply": "{{name}} atbildēja uz jūsu bountiju",
@@ -3242,6 +3245,7 @@
     "followerInvites": {
       "title": "Aicināt sekotājus",
       "detail": "Izvēlieties līdz 50 sekotājus vienlaicīgi. Apmaksātie vai aizvērtie ziņojumi tiek pārskatīti. Pārbaudiet ziņojumu sarakstu, lai pēc tam mēģinātu vēlreiz.",
+      "note": "Pievieno ielūgumam piezīmi (nav obligāti)",
       "selectAll": "Izvēliet šo lapu",
       "clear": "Tīkls",
       "previous": "Iepriekšējā lapa",

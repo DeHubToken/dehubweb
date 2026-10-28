@@ -193,6 +193,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const DocsSurface = React.lazy(() => import("./pages/DocsSurface"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
+const PostReactionsPage = React.lazy(() => import("./pages/app/PostReactionsPage"));
 const SinglePostPage = React.lazy(() => import('@/lib/preload-post-page').then(module => module.loadPostPage()));
 const NewPostPage = React.lazy(() => import("./pages/app/NewPostPage"));
 const UploadPage = React.lazy(() => import("./pages/app/UploadPage"));
@@ -205,10 +206,12 @@ const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPa
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
+const DuetsPage = React.lazy(() => import("./pages/app/DuetsPage"));
 const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
+const ComparePage = React.lazy(() => import("./pages/app/ComparePage"));
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
@@ -662,6 +665,8 @@ function AppContent() {
             <Route path="/stats/money" element={<Navigate to="/stats" replace />} />
             <Route path="/features" element={null} />
             <Route path="/feedback" element={null} />
+            <Route path="/compare" element={<Suspense fallback={<PageLoader />}><ComparePage /></Suspense>} />
+            <Route path="/app/compare" element={<Suspense fallback={<PageLoader />}><ComparePage /></Suspense>} />
             <Route path="/governance" element={null} />
             <Route path="/dao" element={null} />
             <Route path="/stake" element={null} />
@@ -764,6 +769,8 @@ function AppContent() {
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
+              <Route path="post/:postId/duets" element={<Suspense fallback={<PageLoader />}><DuetsPage /></Suspense>} />
+              <Route path="post/:postId/reactions" element={<Suspense fallback={<PageLoader />}><PostReactionsPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
               <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
                 <Route path="create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
@@ -838,6 +845,7 @@ function AppContent() {
             <Route path="/packs/:slug" element={<Suspense fallback={<PageLoader />}><PackPage /></Suspense>} />
             <Route path="/post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
             <Route path="/post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
+            <Route path="/post/:postId/reactions" element={<Suspense fallback={<PageLoader />}><PostReactionsPage /></Suspense>} />
             <Route path="/video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
 
 

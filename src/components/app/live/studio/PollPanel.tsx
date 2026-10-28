@@ -8,7 +8,8 @@
 import { useEffect, useId, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from '@tanstack/react-query';
-import { Plus, X } from 'lucide-react';
+import { X } from 'lucide-react';
+import Plus from "@/components/ui/cut-icons/add";
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

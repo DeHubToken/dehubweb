@@ -1762,6 +1762,9 @@
       "fractionOfferRejected": "{{name}}는 분수 제안을 거절했습니다",
       "fractionPurchased": "{{name}}는 게시물의 분수를 구매했습니다",
       "commentMention": "{{name}}는 제 댓글에 언급했습니다",
+      "postMention": "{{name}} 님이 포스트에서 나를 언급했습니다.",
+      "liveChatMention": "{{name}} 님이 실시간 채팅에서 회원님을 언급했습니다",
+      "publicChatMention": "{{name}} 님이 공개 채팅에서 회원님을 언급했습니다",
       "followRequest": "{{name}}는 제 팔로우를 요청했습니다",
       "bountyReplyNamed": "{{name}}는 보너티 \"{{title}}\"에 대한 답변을 보냈습니다",
       "bountyReply": "{{name}}는 보너티에 대한 답변을 보냈습니다",
@@ -3248,6 +3251,7 @@
     "followerInvites": {
       "title": "팔로워 초대",
       "detail": "최대 50명의 팔로워를 선택할 수 있습니다. 유료 또는 폐쇄된 DM은 무시됩니다. 확인되지 않은 보낸 메시지를 채팅에서 확인하기 전에 다시 시도해 주세요.",
+      "note": "초대에 메모 추가 (선택)",
       "selectAll": "페이지 선택",
       "clear": "지우기",
       "previous": "이전",

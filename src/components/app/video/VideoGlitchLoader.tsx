@@ -107,7 +107,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
       <>
       {/* TV static — noise tile jitters position/opacity in discrete steps */}
       <div
-        className="absolute inset-0 mix-blend-screen"
+        className="absolute -inset-12 mix-blend-screen"
         style={{
           backgroundImage: `url("${NOISE_TEXTURE}")`,
           backgroundSize: '140px 140px',

@@ -113,7 +113,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { NewMembersCarousel } from '@/components/app/NewMembersCarousel';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
-import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
+import { LiveNowBar } from '@/components/app/feeds/LiveNowBar';
 import { PromptFlowModalLazy as PromptFlowModal } from '@/components/app/feeds/PromptFlowModalLazy';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
@@ -988,7 +988,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // ROUTE rather than the sort, because PersistentPageCache keeps this
   // component mounted for the rest of the session once home is visited — and
   // held behind railsEnabled so it never competes with the first page.
-  const { newPostCount, atCap: newPostsAtCap, newPostAuthors } = useNewPostsSignal({
+  const { newPostCount: polledNewPostCount, atCap: newPostsAtCap, newPostAuthors, latestNewAt } = useNewPostsSignal({
     ...commonParams,
     postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: isHomeActive && railsEnabled,
@@ -997,7 +997,19 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     getVisibleTokenIds: visibleFeedTokenIds,
   });
 
+  // A tapped chip goes away at once and stays away until a post newer than
+  // the ones it offered turns up, even when the refreshed list still renders
+  // an older head (a filter or the ranking keeps those posts off the top).
+  const [newPostsTappedAt, setNewPostsTappedAt] = useState(0);
+  const newPostCount = latestNewAt > newPostsTappedAt ? polledNewPostCount : 0;
+  // A pull or logo refresh loads the same posts, so it clears the chip too.
+  const latestNewAtRef = useRef(latestNewAt);
+  latestNewAtRef.current = latestNewAt;
+  useEffect(() => {
+    if (isRefreshing) setNewPostsTappedAt(latestNewAtRef.current);
+  }, [isRefreshing]);
   const showNewPosts = useCallback(() => {
+    setNewPostsTappedAt(latestNewAt);
     setShortsVisit(value => value + 1);
     // Drop every page but the first before refetching, so the reader lands on
     // a fresh top of feed rather than waiting for ten loaded pages to re-fetch
@@ -1010,7 +1022,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     void singleFeed.refetch();
     // window.scrollTo is a no-op here — body is the scrolling element.
     scrollDocumentTo(0);
-  }, [queryClient, singleFeed]);
+  }, [queryClient, singleFeed, latestNewAt]);
 
   // Classics feed no longer needed (trending removed)
   const classicsFeed = { data: undefined } as any;
@@ -2014,12 +2026,17 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           </AnimatePresence>
         );
         if (newPostsTarget) {
-          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center pt-11">{bead}</div>, newPostsTarget);
+          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center mt-11">{bead}</div>, newPostsTarget);
         }
         if (mobileNavTarget) {
+          // System wraps the bar in an anchor exactly its size. Hang the chip
+          // from that, not from inside the bar: System Light's bar blurs
+          // itself, and a blur inside it only sees the bar, so the chip came
+          // out clear. Under the bar and the filter drawer, never over them.
+          const anchor = mobileNavTarget.parentElement?.closest<HTMLElement>('[data-home-filter-anchor]');
           return createPortal(
-            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{bead}</div>,
-            mobileNavTarget,
+            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className={cn("pointer-events-none absolute inset-x-0 top-full flex justify-center", anchor ? "-z-10" : "z-20")}>{bead}</div>,
+            anchor ?? mobileNavTarget,
           );
         }
         if (newPostCount <= 0) return null;
@@ -2064,8 +2081,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         <FeedCardSkeletonList count={6} columns={colCount} />
       ) : (
         <>
-      {/* Friends on Stage notification */}
-      <FriendsOnStageBar />
+      {/* Everyone live: Stages and livestreams in one row */}
+      <LiveNowBar />
 
           {/* Follow groups. Only in Following mode, and only once there is a
               group to pick — an empty row would be a permanent nudge to use a

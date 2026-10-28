@@ -24,6 +24,7 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import { liveReactionType, type LiveReactionType } from '@/lib/live/reaction-flow';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { reviveOnReturn } from '@/lib/socket-revive';
 
 /** Matches LivestreamEvents on the backend. These strings are the contract. */
 const EVENT = {
@@ -63,7 +64,7 @@ export interface StreamReactionBroadcast {
   address: string | null;
 }
 
-export function watchStreamPlayback(streamId: string, onPaused: (paused: boolean) => void): StreamPresence {
+export function watchStreamPlayback(streamId: string, onPaused: (paused: boolean) => void, onEnded?: () => void): StreamPresence {
   const conn = acquireStreamSocket();
   const socket = conn.socket;
   const join = () => socket.emit(EVENT.joinRoom, { streamId });
@@ -72,10 +73,16 @@ export function watchStreamPlayback(streamId: string, onPaused: (paused: boolean
   };
   const pause = update(true);
   const resume = update(false);
+  // The creator pressed End, or the pause grace ran out. Without this a card
+  // sat on "Waiting for live video" until the feed next refetched.
+  const end = (data: { streamId?: string }) => {
+    if (data?.streamId && String(data.streamId) === streamId) onEnded?.();
+  };
   socket.on('connect', join);
   socket.on('stream.paused', pause);
   socket.on('stream.resumed', resume);
   socket.on('stream.start', resume);
+  socket.on('stream.end', end);
   if (socket.connected) join();
   let left = false;
   return { leave: () => {
@@ -85,6 +92,7 @@ export function watchStreamPlayback(streamId: string, onPaused: (paused: boolean
     socket.off('stream.paused', pause);
     socket.off('stream.resumed', resume);
     socket.off('stream.start', resume);
+    socket.off('stream.end', end);
     releaseStreamSocket(conn);
   } };
 }
@@ -154,16 +162,26 @@ export function acquireStreamSocket(): StreamConnection {
       refs: 0,
       viewers: new Map(),
       socket: io(DEHUB_API_BASE, {
-        auth: token ? { token } : {},
+        // Read the token at every handshake. Logins rotate every 15 minutes,
+        // and a socket that reconnected after an idle spell still offered the
+        // token it was built with: the gateway refused its rejoin as expired
+        // and the viewer read "0 here" while still watching.
+        auth: token ? (cb) => cb({ token: getAuthToken() || token }) : {},
         query: token ? { token } : {},
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        reconnectionAttempts: 20,
+        reconnectionAttempts: Infinity,
         timeout: 20000,
       }),
     };
+    const socket = active.socket;
+    // socket.io never retries a disconnect the server started on its own.
+    socket.on('disconnect', (reason) => {
+      if (reason === 'io server disconnect') socket.connect();
+    });
+    reviveOnReturn(socket);
   }
 
   active.refs += 1;

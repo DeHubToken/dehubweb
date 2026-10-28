@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 import { transcriptKey } from '@/hooks/use-transcript';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { LiveNowRow, LiveNowList, type LiveNowItem } from '@/components/app/feeds/LiveNowBar';
 import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
@@ -37,6 +38,8 @@ import { ActionBar } from '@/components/app/cards/ActionBar';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
+import { TipWall, TipChip } from '@/components/app/comments/TipWall';
+import type { Comment as GalleryComment } from '@/lib/comment-mapper';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { ScheduleSheet, type ScheduleKind } from '@/features/post/components/ScheduleSheet';
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
@@ -46,9 +49,12 @@ import { LinkPreviews } from '@/features/post/components/LinkPreviews';
 import Trophy from '@/components/ui/cut-icons/leaderboard';
 import Star from '@/components/ui/cut-icons/new-members';
 import MessagesSquare from '@/components/ui/cut-icons/chat';
+import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
+import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
+import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
 import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
@@ -94,6 +100,7 @@ function FollowCardsGallery() {
     { address: '0x2222222222222222222222222222222222222222', username: '0xkai', displayName: '0xKai', avatarImageUrl: abs(followAvatarKai), aboutMe: 'Lo-fi beats and late night streams. Live most Fridays.', followers: 3100, badgeBalance: 0, reason: 'follows_you', followsYou: true },
     { address: '0x3333333333333333333333333333333333333333', username: 'xluna', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna), coverImageUrl: abs(followCoverLuna), aboutMe: '', followers: 51200, badgeBalance: 600_000, reason: 'suggested' },
     { address: '0x4444444444444444444444444444444444444444', username: 'riooo', displayName: 'Rio', avatarImageUrl: abs(followAvatarRio), aboutMe: 'Travel shorts from 40 countries and counting.', followers: 890, badgeBalance: 0, reason: 'engagement_overlap' },
+    { address: '0x5555555555555555555555555555555555555555', username: 'nova', displayName: 'Nova', aboutMe: '', followers: 42, badgeBalance: 0, reason: 'suggested' },
   ];
   const noop = () => {};
   return (
@@ -209,6 +216,14 @@ const SAMPLE_DISLIKED_REACTIONS: ReactionCounts = { like: 2, love: 1, dislike: 9
  * the thumbs-up. One row as a stranger sees it, one as somebody who disliked
  * the post — the thumb wears their 👎, since there is no thumbs-down button.
  */
+const SAMPLE_LIVE_NOW: LiveNowItem[] = [
+  { kind: 'stream', id: '1', title: 'Late night beat making', wallet: '0xmaya', username: 'maya', avatar: null, count: '214', followed: true, size: 214 },
+  { kind: 'stage', id: '2', title: 'DHB weekly AMA', wallet: '0xdehub', username: 'dehub', avatar: null, count: '88', followed: true, size: 88 },
+  { kind: 'stream', id: '3', title: 'Ranked grind to Diamond', wallet: '0xkai', username: 'kai', avatar: null, count: '41', followed: false, size: 41 },
+  { kind: 'stage', id: '4', title: 'Builders hangout', wallet: '0xsora', username: 'sora', avatar: null, count: '12', followed: false, size: 12 },
+  { kind: 'stream', id: '5', title: 'Painting a city at dusk', wallet: '0xjun', username: 'jun', avatar: null, count: '9', followed: false, size: 9 },
+];
+
 /**
  * The ripple a live person's avatar wears, at the sizes it ships in: feed
  * header (36), side panel Live tab (32), post page (40), chat list (48) and
@@ -234,6 +249,12 @@ function LiveAvatarsGallery() {
           {face('w-12 h-12', 'T')}
           <span className="text-[11px] text-zinc-500">{_copy("copy.cf7d0ae846cb", { defaultValue: "Not live" })}</span>
         </div>
+      </div>
+      {/* Top of Home: one row for everyone live, then the sheet it opens. */}
+      <div data-live-now-gallery className="mt-4 flex flex-col gap-3 max-w-md">
+        <LiveNowRow items={SAMPLE_LIVE_NOW} onOpen={() => {}} onSeeAll={() => {}} />
+        <LiveNowRow items={SAMPLE_LIVE_NOW.slice(0, 1)} onOpen={() => {}} onSeeAll={() => {}} />
+        <LiveNowList items={SAMPLE_LIVE_NOW} onOpen={() => {}} />
       </div>
     </section>
   );
@@ -285,6 +306,29 @@ function VoiceNotesGallery() {
           <LiveMicBars stream={null} className="flex-1" />
         </div>
       </div>
+    </section>
+  );
+}
+
+/** App tokens: the wallet's DHB row, its drawer and the send dialog, with a sample history. */
+function AppTokensGallery() {
+  const queryClient = useQueryClient();
+  const [sendOpen, setSendOpen] = useState(false);
+  useState(() => queryClient.setQueryData([APP_TOKENS_QUERY_KEY, undefined], {
+    symbol: 'DHB',
+    balance: '1204500.5',
+    entries: [
+      { kind: 'receive', amount: '2500', purpose: 'tip', note: 'great stream', counterparty: { address: '0x1111111111111111111111111111111111111111', username: 'maya' }, at: '2026-10-27T21:10:00.000Z' },
+      { kind: 'send', amount: '-10000', purpose: 'transfer', counterparty: { address: '0x2222222222222222222222222222222222222222', username: 'oliver' }, at: '2026-10-27T18:42:00.000Z' },
+      { kind: 'opening', amount: '1212000.5', at: '2026-10-27T12:00:00.000Z' },
+    ],
+  }));
+  return (
+    <section data-page-bento data-app-tokens-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">App tokens</h2>
+      <AppTokensRow onSend={() => setSendOpen(true)} />
+      <Button variant="glass" className="mt-2" onClick={() => setSendOpen(true)}>Send dialog</Button>
+      <AppTokenSendDialog open={sendOpen} onOpenChange={setSendOpen} />
     </section>
   );
 }
@@ -386,6 +430,43 @@ function StageCoversGallery() {
  * Toasts: raises the real "new version" toast (and a plain one) so its text
  * and buttons can be checked against every theme's toast glass.
  */
+const TipModal = lazy(() => import('@/components/app/modals/TipModal').then(m => ({ default: m.TipModal })));
+
+const galleryTipCard = (id: string, name: string, text: string, amount: number, symbol = 'DHB'): GalleryComment => ({
+  id, username: name, displayName: name, text, likes: 0, dislikes: 0, views: 0, timeAgo: '1m', createdAt: new Date(),
+  tip: { amount, symbol, chainId: 8453, txHash: '0x', value: symbol === 'DHB' ? amount : amount * 1000 },
+});
+const GALLERY_TIP_WALL: GalleryComment[] = [
+  galleryTipCard('9001', 'mal', 'This beat goes so hard 🔥 more of this', 5000),
+  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 1000),
+  galleryTipCard('9003', 'legouffre', 'merci 🙏', 5, 'USDC'),
+];
+
+/** Tip with a message: the sheet's message box and the tip wall cards. */
+function TipMessageGallery() {
+  const [open, setOpen] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [landed, setLanded] = useState<string | null>('9001');
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-tip-message-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Tip messages</h2>
+      <div className="-mx-4">
+        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(id) => setOpenId(c => (c === id ? null : id))} landedId={landed} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-3 text-white">
+        <TipChip tip={{ amount: 5000, symbol: 'DHB' }} />
+        <Button variant="glass" size="sm" onClick={() => { setLanded(null); window.setTimeout(() => setLanded('9001'), 30); }}>Replay landing</Button>
+        <Button variant="glass" size="sm" data-open-tip-sheet onClick={() => setOpen(true)}>Open tip sheet</Button>
+      </div>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <Suspense fallback={null}>
+          {open ? <TipModal open={open} onOpenChange={setOpen} creatorAddress="0x00000000000000000000000000000000000000aa" creatorName="angela" tokenId="5581" /> : null}
+        </Suspense>
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
 function WhenSheetGallery() {
   const { t } = useTranslation();
   const [kind, setKind] = useState<ScheduleKind | null>(null);
@@ -492,6 +573,7 @@ function ReactionsGallery() {
     { id: '990001', label: _copy("copy.5735e3593d23", { defaultValue: "No reaction yet" }), myReaction: null },
     { id: '990002', label: _copy("copy.bf74a035bfa2", { defaultValue: "You disliked it" }), myReaction: 'dislike' as const },
     { id: '990003', label: '👍 3 · 👎 9', myReaction: null, counts: SAMPLE_DISLIKED_REACTIONS, likes: 3, dislikes: 9 },
+    { id: '990004', label: '👍', myReaction: 'like' as const, counts: { like: 26 } },
   ];
   return (
     <AuthContext.Provider value={GALLERY_AUTH}>
@@ -510,6 +592,7 @@ function ReactionsGallery() {
               reactionCounts={'counts' in row ? row.counts : SAMPLE_REACTIONS}
               myReaction={row.myReaction}
               isDisliked={row.myReaction === 'dislike'}
+              isLiked={row.myReaction === 'like'}
               hideUtility
             />
           </div>
@@ -801,9 +884,11 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <TipMessageGallery />
         <WhenSheetGallery />
         <ToastsGallery />
         <TooltipsGallery />
+        <AppTokensGallery />
         <AudioGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
@@ -928,6 +1013,11 @@ function LiveViewerGallery() {
             startedAt={minutesAgo(24)}
             isMuted
             onToggleMute={noop}
+            optionsSlot={
+              <button type="button" aria-label="Post options" className="flex h-10 w-10 items-center justify-center text-white [filter:drop-shadow(0_1px_2px_rgb(0_0_0/0.7))]">
+                <MoreVertical className="h-[23.5px] w-[23.5px]" />
+              </button>
+            }
             hidden={false}
             streamId={GALLERY_STREAM_ID}
           />

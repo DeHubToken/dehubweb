@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Conectați contul dvs. DeHub",
-    "body": "Legați contul pentru a gestiona profilul, publica postări și crea conținut din chat. Conexiunile expiră în 24 de ore. Puteți dezactiva oricând.",
+    "body": "Legați contul pentru a gestiona profilul, publica postări și crea conținut din chat. Conexiunile expiră în 30 de zile. Puteți dezactiva oricând.",
     "read": "Cititi contul, postările, notificările și biblioteca Creator.",
     "profile": "Modificați profilul, imaginile și setările de confidențialitate",
     "social": "Publicați postări și comentarii, urmați oameni și salvați marcările",
@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} a cumpărat fracțiuni din postarea dvs.",
       "repostedPosts": "{{name}} a repostat {{count}} din postările dvs.",
       "commentMention": "{{name}} v-a menționat într-un comentariu",
+      "postMention": "{{name}} te-a menționat într-o postare",
+      "liveChatMention": "{{name}} te-a menționat în chatul live",
+      "publicChatMention": "{{name}} te-a menționat în chatul public",
       "followRequest": "{{name}} a cerut să vă urmeze",
       "bountyReplyNamed": "{{name}} a răspuns la bursa dvs. “{{title}}”",
       "bountyReply": "{{name}} a răspuns la bursa dvs.",
@@ -3242,6 +3245,7 @@
     "followerInvites": {
       "title": "Invită urmăritori",
       "detail": "Alegeți până la 50 de urmăritori pe lot. ZM plătite sau închise sunt omise. Verificați chat-ul pentru trimiteri neconfirmate înainte de a încerca din nou.",
+      "note": "Adaugă o notă la invitație (opțional)",
       "selectAll": "Selectează această pagină",
       "clear": "Clar",
       "previous": "Înapoi",

@@ -1740,6 +1740,9 @@
       "fractionPurchased": "{{name}} 购买了你帖子的份额",
       "repostedPosts": "{{name}} 转发了你的 {{count}} 条帖子",
       "commentMention": "{{name}} 在评论中提到了你",
+      "postMention": "{{name}} 在一条帖子中提到了你",
+      "liveChatMention": "{{name}} 在实时聊天中提到了你",
+      "publicChatMention": "{{name}} 在公开聊天中提到了你",
       "followRequest": "{{name}} 请求关注你",
       "bountyReplyNamed": "{{name}} 回复了你的悬赏“{{title}}”",
       "bountyReply": "{{name}} 回复了你的悬赏",
@@ -3218,6 +3221,7 @@
     "followerInvites": {
       "title": "邀请粉丝",
       "detail": "选择每批次不超过50个粉丝。付费或已关闭的私信将被跳过。检查聊天记录前再试一次。",
+      "note": "给你嘅邀请加句话（可选）",
       "selectAll": "选择此页面",
       "clear": "清除",
       "previous": "上一页",

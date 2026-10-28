@@ -21,7 +21,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Loader2, ChevronDown, ImageIcon, Square, XCircle, Zap, AudioLines, LifeBuoy } from "lucide-react";
+import { Loader2, ChevronDown, ImageIcon, XCircle, Zap, AudioLines, LifeBuoy } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Copy from "@/components/ui/cut-icons/copy";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -39,7 +39,6 @@ import More from "@/components/ui/cut-icons/more";
 import Plus from "@/components/ui/cut-icons/add";
 import Settings from "@/components/ui/cut-icons/settings";
 import Download from "@/components/ui/cut-icons/download";
-import Mic from "@/components/ui/cut-icons/mic";
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -454,6 +453,8 @@ function AssistantPageForAccount() {
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
+  // Which "what's on your mind" line greets this visit; a new one each time.
+  const [greetingIndex] = useState(() => Math.floor(Math.random() * 8));
   const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
   // ElevenLabs voice selection: { type: 'browser', preset } or { type: 'elevenlabs', voiceId }
   const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(() => {
@@ -759,11 +760,8 @@ function AssistantPageForAccount() {
     isRecording,
     isSpeaking,
     transcript,
-    startRecording,
-    stopRecording,
     speak,
     stopSpeaking,
-    isSupported: isVoiceSupported,
   } = useVoiceChat({
     voicePreference: selectedVoice as 'female' | 'male' | 'neutral',
     onTranscript: (text) => {
@@ -2054,6 +2052,13 @@ function AssistantPageForAccount() {
     if (voiceAssistant.isVoiceMode) voiceAssistant.stopVoiceMode();
     else void voiceAssistant.startVoiceMode();
   };
+  // The ball works like a record button: tap to start, tap again to send what
+  // you said, tap while it talks to skip. Stop Voice Chat under it ends it.
+  const handleOrbTap = () => {
+    if (!voiceAssistant.isVoiceMode) { void voiceAssistant.startVoiceMode(); return; }
+    if (voiceAssistant.status === 'listening') void voiceAssistant.finishTurn();
+    else if (voiceAssistant.status === 'speaking') voiceAssistant.stopSpeaking();
+  };
 
   // One message box for both spots: the middle of the empty screen, and the
   // bottom once a chat is going. Only one is ever mounted, so the refs hold.
@@ -2221,19 +2226,9 @@ function AssistantPageForAccount() {
           >
             <Paperclip className="w-[18px] h-[18px]" />
           </button>
-          {isVoiceSupported && (
-            <button
-              type="button"
-              onClick={isRecording ? stopRecording : startRecording}
-              disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
-              className={cn(composerIconBtn, isRecording && 'text-red-500 hover:text-red-400')}
-              aria-label={isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}
-              title={isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}
-            >
-              {isRecording ? <Square className="w-3.5 h-3.5 fill-current animate-pulse" /> : <Mic className="w-[18px] h-[18px]" />}
-            </button>
-          )}
-          <button
+          {/* On the start screen the ball is the voice button; once a chat is
+              going this is the way back to it. */}
+          {!showVoiceStage && <button
             type="button"
             onClick={toggleVoiceMode}
             disabled={isLoading && !voiceAssistant.isVoiceMode}
@@ -2242,7 +2237,7 @@ function AssistantPageForAccount() {
             title={voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}
           >
             <AudioLines className="w-[18px] h-[18px]" />
-          </button>
+          </button>}
           <span className="flex-1" />
           {isSpeaking && (
             <button
@@ -2277,10 +2272,20 @@ function AssistantPageForAccount() {
     : 'thinking';
   const voiceStatusLine: Record<LiquidOrbMode, string> = {
     idle: _copy("copy.1607715e45ed", { defaultValue: "Tap the ball to talk, or type below" }),
-    listening: _copy("copy.2efa9bd92658", { defaultValue: "Listening..." }),
+    listening: _copy("copy.c9f2a4e7d1b5", { defaultValue: "Listening... tap the ball to send" }),
     thinking: _copy("copy.b4739a4f0865", { defaultValue: "Thinking..." }),
     speaking: _copy("copy.f2ef1cac7f88", { defaultValue: "Speaking..." }),
   };
+  const greetings = [
+    _copy("copy.d1a0c7e2f301", { defaultValue: "What's on your mind today?" }),
+    _copy("copy.d1a0c7e2f302", { defaultValue: "What are you thinking about today?" }),
+    _copy("copy.d1a0c7e2f303", { defaultValue: "What's on your mind?" }),
+    _copy("copy.d1a0c7e2f304", { defaultValue: "Got something on your mind?" }),
+    _copy("copy.d1a0c7e2f305", { defaultValue: "What's on your mind right now?" }),
+    _copy("copy.d1a0c7e2f306", { defaultValue: "What are we thinking today?" }),
+    _copy("copy.d1a0c7e2f307", { defaultValue: "Anything on your mind today?" }),
+    _copy("copy.d1a0c7e2f308", { defaultValue: "What's on your mind this time?" }),
+  ];
   const lastReply = [...messages].reverse().find((m) => m.role === 'assistant' && m.content)?.content ?? '';
   const startTiles: Array<{ icon: ThemeIconKey; label: string; onClick: () => void }> = [
     { icon: 'images', label: _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }), onClick: () => {
@@ -2721,9 +2726,12 @@ function AssistantPageForAccount() {
                 size={isMobile ? 136 : 176}
                 mode={orbMode}
                 getLevel={voiceAssistant.getLevel}
-                onClick={toggleVoiceMode}
+                onClick={handleOrbTap}
                 disabled={isLoading && !voiceAssistant.isVoiceMode}
-                label={voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}
+                label={orbMode === 'listening' ? _copy("copy.b3e8d1c6f0a2", { defaultValue: "Tap to send" })
+                  : orbMode === 'speaking' ? _copy("copy.28d03596d24e", { defaultValue: "Skip" })
+                  : orbMode === 'thinking' ? _copy("copy.b4739a4f0865", { defaultValue: "Thinking..." })
+                  : _copy("copy.a7c1e0f4b2d9", { defaultValue: "Tap to talk" })}
               />
               {voiceAssistant.isVoiceMode ? (
                 <div className="flex w-full flex-col items-center gap-3 text-center px-2">
@@ -2759,7 +2767,7 @@ function AssistantPageForAccount() {
                 <>
                   <div className="text-center px-2">
                     <h2 className="text-[22px] lg:text-[28px] font-extrabold leading-tight text-white [text-wrap:balance]">
-                      {t('creatorFlow.assistantEmptyTitle')}
+                      {greetings[greetingIndex]}
                     </h2>
                     <p className="mt-1.5 text-sm text-white/55">{voiceStatusLine.idle}</p>
                   </div>

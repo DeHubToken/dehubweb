@@ -119,6 +119,11 @@ export interface NotificationMetadata {
    * nobody chose a lapse, so nobody should be blamed for it.
    */
   reason?: string;
+  /** Where a mention was made: 'post', 'comment', 'live_chat' or 'public_chat'. */
+  mentionContext?: string;
+  /** A chat mention: the room and the line that tagged the reader. */
+  roomId?: string;
+  chatMessageId?: string;
   [key: string]: unknown;
 }
 

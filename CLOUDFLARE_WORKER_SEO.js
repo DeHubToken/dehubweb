@@ -3,7 +3,7 @@ import { localizePublicChrome, localizeStructuredData } from './server/public-pa
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { stageShareImageUrl } from './server/stage-share-card.js';
-import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
+import { applyPostShareImage, applyProfileShareImage, postShareImageUrl } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
@@ -159,7 +159,7 @@ const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
 // image. Anything absent here still falls back to SHARE_IMAGE, so adding a
 // route without its card is safe.
 const OG_CARD_ROUTES = new Set([
-  'arcade/gods-eye',
+  'arcade/gods-eye', 'compare',
   'home', 'fallback', 'blog', 'docs',
   'docs/overview', 'docs/dapps', 'docs/games', 'docs/token/overview',
   'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
@@ -1546,6 +1546,12 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'DeHub Glossary',
     bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and DeHub tokens. Written for creators, not engineers.</p>`,
+  },
+  'compare': {
+    title: 'Compare DeHub with YouTube, X, Twitch and more',
+    description: 'Compare DeHub features with YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. Sources and conditions included.',
+    heading: 'Compare DeHub',
+    bodyHtml: `<p>Compare publishing, live video and audio, creator income, communities, studio tools, ownership, automation, safety and entertainment across DeHub and eleven other platforms.</p><p>Choose a platform, search for a feature or browse every category. Each documented entry links to a first-party source. Conditional features and related products are distinguished from native capabilities. An unverified entry is a research gap, not a claim that a feature is absent.</p><p>DeHub web, Android and iOS capabilities differ. Crypto purchase and reward actions are unavailable in the iOS app. This growing research catalogue was reviewed on 27 October 2026.</p>`,
   },
   'bridge': {
     title: 'Bridge — Transfer tokens Cross-Chain',
@@ -3421,6 +3427,66 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
   });
 }
 
+/** Every duet of one video, /app/post/<id>/duets. The original's own share card. */
+const DUETS_PATH = /^\/(?:app\/)?post\/(\d{1,15})\/duets\/?$/;
+
+function buildDuetsHtml(post, tokenId) {
+  const canonicalUrl = `${APP_URL}/app/post/${tokenId}/duets`;
+  const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
+  const creator = post.minterUsername || post.mintername || '';
+  const title = creator ? `Duets of ${name} by @${creator}` : `Duets of ${name}`;
+  const description = truncate(`Watch every duet of ${creator ? `@${creator}'s` : 'this'} video on DeHub, or record your own side by side.`, 200);
+  return entityHtml({
+    canonicalUrl,
+    title: `${title} — DeHub`,
+    description,
+    image: postShareImageUrl(tokenId),
+    ogType: 'website',
+    heading: title,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+      about: { '@type': 'VideoObject', name, url: `${APP_URL}/app/post/${tokenId}` },
+    },
+  });
+}
+
+/** Every reaction to one video, recorded and live: /app/post/<id>/reactions. The original's own share card. */
+const REACTIONS_PATH = /^\/(?:app\/)?post\/(\d{1,15})\/reactions\/?$/;
+
+function buildReactionsHtml(post, tokenId) {
+  const canonicalUrl = `${APP_URL}/app/post/${tokenId}/reactions`;
+  const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
+  const creator = post.minterUsername || post.mintername || '';
+  const title = creator ? `Reactions to ${name} by @${creator}` : `Reactions to ${name}`;
+  const description = truncate(`Watch creators react to ${creator ? `@${creator}'s` : 'this'} video on DeHub, recorded and live, or record your own reaction.`, 200);
+  return entityHtml({
+    canonicalUrl,
+    title: `${title} — DeHub`,
+    description,
+    image: postShareImageUrl(tokenId),
+    ogType: 'website',
+    heading: title,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+      about: { '@type': 'VideoObject', name, url: `${APP_URL}/app/post/${tokenId}` },
+    },
+  });
+}
+
 /** A posted live clip, /clip/<n>. Columns are the ones anon may read. */
 const LIVE_CLIP_PATH = /^\/clip\/(\d{1,15})\/?$/;
 const LIVE_CLIP_COLUMNS = 'short_id,title,stream_title,stream_token_id,streamer_username,clipper_username,kind,video_url,poster_url,card_url,duration_seconds,post_token_id,posted_at';
@@ -4726,6 +4792,10 @@ function shouldServeSSR(pathname) {
   // A posted live clip. `clip` is a reserved ROUTE_SEGMENT, so without this
   // the profile fall-through rejects it and the SPA shell goes out instead.
   if (LIVE_CLIP_PATH.test(pathname)) return true;
+  // A video's duets list: its own title and card, not the post page's.
+  if (DUETS_PATH.test(pathname)) return true;
+  // Same for its reactions list.
+  if (REACTIONS_PATH.test(pathname)) return true;
   // Bounties, /bounty/<job_number>. Needed here for exactly the reason stages
   // were: `bounty` is a reserved ROUTE_SEGMENT, so the profile fall-through at
   // the foot of this function rejects it and the SPA shell would go out under
@@ -5611,7 +5681,7 @@ function ssrCachePut(ctx, key, resp) {
 async function handleRequest(request, env, ctx) {
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
-  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(request, env);
+  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(canonicalOriginRequest(request), env);
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
     return handleEditorPresence(canonicalOriginRequest(request), env);
   }
@@ -6882,6 +6952,22 @@ async function handleRequest(request, env, ctx) {
     const clip = await supabaseLookup(`live_clips?short_id=eq.${liveClipMatch[1]}&status=eq.posted&select=${LIVE_CLIP_COLUMNS}&limit=1`);
     if (clip) return guard(new Response(buildClipHtml(clip), { status: 200, headers: blogHeaders }));
     return entityMiss(clip);
+  }
+
+  // A video's duets list, with the original's title and share card.
+  const duetsMatch = cleanPath.match(DUETS_PATH);
+  if (duetsMatch) {
+    const post = await fetchPostRecord(duetsMatch[1]);
+    if (post && post.postType !== 'live') return guard(new Response(buildDuetsHtml(post, duetsMatch[1]), { status: 200, headers: blogHeaders }));
+    return entityNotFound();
+  }
+
+  // A video's reactions list, with the original's title and share card.
+  const reactionsMatch = cleanPath.match(REACTIONS_PATH);
+  if (reactionsMatch) {
+    const post = await fetchPostRecord(reactionsMatch[1]);
+    if (post && post.postType !== 'live') return guard(new Response(buildReactionsHtml(post, reactionsMatch[1]), { status: 200, headers: blogHeaders }));
+    return entityNotFound();
   }
 
   // Stage invite links: /stages/<n> is the short share form

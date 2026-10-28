@@ -17,7 +17,20 @@ class Storage {
 }
 function fixture(extra) {
   const calls = [], store = new Storage();
+  const sessions = [];
   const fetcher = async (url, init = {}) => {
+    // The connector's own DeHub session is plumbing, kept out of `calls`.
+    if (String(url).endsWith('/auth/connector-session')) {
+      const token = new Headers(init.headers).get('Authorization')?.slice(7);
+      sessions.push({ kind: 'issue', token });
+      return Response.json({ status: true, token, refreshToken: `session-${token}-0` });
+    }
+    if (String(url).endsWith('/auth/refresh')) {
+      const { refreshToken } = JSON.parse(init.body);
+      sessions.push({ kind: 'refresh', refreshToken });
+      const [, token, n] = /^session-(\w+)-(\d+)$/.exec(refreshToken);
+      return Response.json({ status: true, accessToken: token, refreshToken: `session-${token}-${Number(n) + 1}` });
+    }
     calls.push({ url: String(url), init });
     if (String(url).endsWith('/auth/verify')) {
       const token = new Headers(init.headers).get('Authorization');
@@ -27,7 +40,7 @@ function fixture(extra) {
     if (extra) return extra(String(url), init);
     throw new Error(`Unexpected upstream request: ${url}`);
   };
-  return { service: new AccountMcpAuth({ storage: store }, {}, fetcher), store, calls, fetcher };
+  return { service: new AccountMcpAuth({ storage: store }, {}, fetcher), store, calls, sessions, fetcher };
 }
 const req = (path, method = 'GET', body, headers = {}) => new Request(ORIGIN + path, {
   method, headers: { ...(body && typeof body !== 'string' ? { 'Content-Type': 'application/json' } : {}), ...headers },
@@ -75,6 +88,13 @@ test('OAuth metadata and tool descriptors are explicit about account scopes and 
     for (const key of ['readOnlyHint','destructiveHint','openWorldHint']) assert.equal(typeof descriptor.annotations[key], 'boolean');
   }
   assert.equal(accountTools.find(t => t.name === 'dehub_update_profile').descriptor.annotations.destructiveHint, true);
+});
+test('opening /mcp in a browser lands on the connect guide; chat apps still get the MCP reply', async () => {
+  const f = fixture();
+  const page = await f.service.fetch(req('/mcp', 'GET', undefined, { Accept: 'text/html,application/xhtml+xml' }));
+  assert.equal(page.status, 302);
+  assert.equal(page.headers.get('Location'), `${ORIGIN}/connect`);
+  assert.equal((await f.service.fetch(req('/mcp', 'GET', undefined, { Accept: 'text/event-stream' }))).status, 405);
 });
 test('anonymous private access returns a linking challenge without calling backend', async () => {
   const f = fixture();
@@ -191,4 +211,35 @@ test('expired connections are rejected and old records are collected', async () 
   assert.equal((await rpc(f, 'dehub_account', {}, c.access_token)).status, 401);
   await f.service.alarm();
   assert.equal([...f.store.data.keys()].some(key => key.startsWith('grant:')), false);
+});
+test('chat apps that send a client secret method or no resource can still connect', async () => {
+  const f = fixture();
+  const redirect = 'https://claude.ai/api/mcp/auth_callback';
+  const registration = await f.service.fetch(req('/mcp/oauth/register', 'POST', { client_name: 'Chat app', redirect_uris: [redirect], token_endpoint_auth_method: 'client_secret_post' }));
+  assert.equal(registration.status, 201);
+  const { client_id, token_endpoint_auth_method } = await registration.json();
+  assert.equal(token_endpoint_auth_method, 'none');
+  const verifier = 'a'.repeat(64);
+  const params = new URLSearchParams({ client_id, redirect_uri: redirect, response_type: 'code', code_challenge_method: 'S256', code_challenge: await pkce(verifier) });
+  const authorize = await f.service.fetch(req('/mcp/oauth/authorize?' + params));
+  assert.equal(authorize.status, 302);
+  const flow = { client_id, redirect, verifier, request_id: new URL(authorize.headers.get('Location')).searchParams.get('authorization') };
+  const code = new URL((await (await approve(f, flow)).json()).redirect).searchParams.get('code');
+  const body = new URLSearchParams({ grant_type: 'authorization_code', code, client_id, redirect_uri: redirect, code_verifier: verifier, resource: RESOURCE + '/' });
+  const token = await f.service.fetch(req('/mcp/oauth/token', 'POST', body.toString()));
+  assert.equal(token.status, 200);
+});
+test('a connection keeps working past the 15 minute DeHub token by rotating its own session once', async () => {
+  const f = fixture();
+  const c = await connect(f, { scope: 'dehub:read' });
+  assert.deepEqual(f.sessions, [{ kind: 'issue', token: 'one' }]);
+  const [grantKey] = [...f.store.data.keys()].filter(key => key.startsWith('grant:'));
+  const grant = f.store.data.get(grantKey);
+  assert.equal(grant.value.session, 'session-one-0');
+  assert.ok(grant.expires - Date.now() > 29 * 24 * 3600000);
+  grant.value.at = Date.now() - 20 * 60000;
+  const [a, b] = await Promise.all([f.service.bearer(new Request(ORIGIN + '/mcp', { headers: { Authorization: `Bearer ${c.access_token}` } })),
+    f.service.bearer(new Request(ORIGIN + '/mcp', { headers: { Authorization: `Bearer ${c.access_token}` } }))]);
+  assert.equal(a.session, 'session-one-1'); assert.equal(b.session, 'session-one-1');
+  assert.equal(f.sessions.filter(s => s.kind === 'refresh').length, 1);
 });

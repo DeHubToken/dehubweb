@@ -163,7 +163,10 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
-import { RemixMenuItems } from './RemixMenuItems';
+import { RemixMenuItems } from './LazyRemixMenuItems';
+import { DuetCredit } from './DuetCredit';
+import { ReactionOfChip, ReactionsLink } from '../remix/LazyReactionChips';
+import { StitchAttribution } from './StitchAttribution';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
@@ -3234,6 +3237,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           />
           </div>
         )}
+        {video.duetOf && <DuetCredit duetOf={video.duetOf} className="mb-1.5" />}
         <div className="relative" data-card-caption={(video.title || ownDescription) && !/https?:\/\/|0x[0-9a-fA-F]{40}/.test(`${video.title ?? ''} ${ownDescription ?? ''}`) ? '' : undefined} data-no-navigate {...captionTapGestures} onClick={(event) => event.stopPropagation()}>
         {!hideActions && !isContentGated && <TapReactionBurst postId={video.id} />}
         <SharedTranslationProvider>
@@ -3279,6 +3283,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           })()}
         </SharedTranslationProvider>
         </div>
+        {!video.isAudio && parseInt(video.id, 10) > 0 && (
+          <div data-video-reactions className="mt-2 flex flex-wrap gap-1.5 empty:hidden">
+            <ReactionOfChip tokenId={video.id} className="bg-white/10" />
+            <ReactionsLink tokenId={video.id} className="bg-white/10" />
+          </div>
+        )}
+        {!video.isAudio && !video.isAd && <StitchAttribution tokenId={video.id} postPage={postPage} className="mt-2" />}
         <div data-video-metadata className="mb-3">
           <PostMetadata 
             className="!mt-3"
@@ -3452,7 +3463,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               && !contentWarning.hidden && (!video.visibility || video.visibility === 'public')
               && (isOwnPost || !video.quotePolicy || video.quotePolicy === 'public') && playableVideoUrl && (
               <RemixMenuItems source={{ videoUrl: playableVideoUrl, sourceUrl: `https://dehub.io/app/post/${video.id}`,
-                title: video.title || 'Video', creator: video.creatorUsername }}
+                title: video.title || 'Video', creator: video.creatorUsername, tokenId: String(video.id), creatorAddress: video.creatorId }}
+                isOwner={!!isOwnPost}
                 onStart={() => { videoRef.current?.pause(); setShowOptionsDrawer(false); }} />
             )}
             {/* Bookmark / pin / post info. Also on the action bar as icons on

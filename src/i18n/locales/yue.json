@@ -1757,6 +1757,9 @@
       "fractionPurchased": "{{name}} 購買咗你嘅分數",
       "repostedPosts": "{{name}} 重發 {{count}} 個你嘅帖子",
       "commentMention": "{{name}} 提到咗你喺一則留言",
+      "postMention": "{{name}} 喺個 post 度提過你",
+      "liveChatMention": "{{name}} 喺即時通訊入面提過你",
+      "publicChatMention": "{{name}} 喺公開聊天中提到過你",
       "followRequest": "{{name}} 要求追隨你",
       "bountyReplyNamed": "{{name}} 回覆咗你嘅淨佣金 “{{title}}”",
       "bountyReply": "{{name}} 回覆咗你嘅淨佣金",
@@ -3237,6 +3240,7 @@
     "followerInvites": {
       "title": "邀請追隨者",
       "detail": "每批最多可以揀50個追蹤者。系統會略過付費或者關閉嘅 DM 。喺再試之前，請檢查即時通訊入面有冇未確認嘅傳送。",
+      "note": "喺你嘅邀請加句說話（可選）",
       "selectAll": "揀呢個頁面",
       "clear": "清晰",
       "previous": "之前",

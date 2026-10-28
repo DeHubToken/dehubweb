@@ -1744,6 +1744,9 @@
       "fractionPurchased": "{{name}} het Bruchteile uf dämmere Post gkauft",
       "repostedPosts": "{{name}} het {{count}} vo dämmere Posts witergäbt",
       "commentMention": "{{name}} het uf dämmere Kommentar uf eme erwähnt",
+      "postMention": "{{name}} hät di i enem Post erwähnt",
+      "liveChatMention": "{{name}} hät di im Live-Chat erwähnt",
+      "publicChatMention": "{{name}} het di im öffentliche Chat erwähnt",
       "followRequest": "{{name}} het uf dämmere uf Folge gschriibe",
       "bountyReplyNamed": "{{name}} het uf dämmere Bounty “{{title}}” antworte",
       "bountyReply": "{{name}} het uf dämmere Bounty antworte",
@@ -3247,6 +3250,7 @@
     "followerInvites": {
       "title": "Lade Follower i",
       "detail": "Wähle bis zu 50 Follower pro Batch. Bezahlte oder gschlosse DMs wärde übergange. Überprüf dä Chat vor em Widerprobieren.",
+      "note": "Füeg dinere Iiladig e Notiz derzue (optional)",
       "selectAll": "Wähle dä Säit",
       "clear": "Lösch",
       "previous": "Vorherige",
