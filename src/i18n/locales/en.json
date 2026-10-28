@@ -12310,6 +12310,9 @@
   },
   "copy": {
     "1607715e45ed": "Tap the ball to talk, or type below",
+    "a7c1e0f4b2d9": "Tap to talk",
+    "b3e8d1c6f0a2": "Tap to send",
+    "c9f2a4e7d1b5": "Listening... tap the ball to send",
     "00140a37bd26": "Transactions on that network are temporarily unavailable. Please try again.",
     "002286513398": "You do not have permission to manage events",
     "002d8f205c6a": "Rejected {{value1}}'s follow request",
