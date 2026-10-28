@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import type { Flow, FlowEdge, FlowNode, Viewport } from './types';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { durableFlowNodes } from './graphContract';
 
 export interface PublicFlow {
   id: string;
@@ -82,7 +83,7 @@ export function serialiseFlow(flow: Flow) {
     name: flow.name,
     isPublic: flow.isPublic ?? false,
     data: {
-      nodes: flow.nodes.map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } })),
+      nodes: durableFlowNodes(flow.nodes).map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } })),
       edges: flow.edges,
       nodeCounters: flow.nodeCounters,
       viewport: flow.viewport,

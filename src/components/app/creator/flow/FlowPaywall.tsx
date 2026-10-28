@@ -6,7 +6,7 @@
  * job. Nothing reaches a provider before the transfer confirms, and a node
  * that fails releases its share back onto the receipt.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -22,22 +22,24 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   /** Receives the transfer hash (undefined for a free run). */
-  onConfirm: (txHash: string | undefined) => void;
+  onConfirm: (txHash: string | undefined, retryInterruptedFree: boolean) => void;
 }
 
 export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [paying, setPaying] = useState(false);
+  const [retryInterruptedFree, setRetryInterruptedFree] = useState(false);
+  useEffect(() => { setRetryInterruptedFree(false); }, [plan]);
   const { walletDhb, isLoading: walletLoading } = useSpendableDhb();
 
-  const total = plan?.totalDhb ?? 0;
+  const total = plan?.resumeTxHash ? 0 : plan?.totalDhb ?? 0;
   const paid = plan?.items.filter((i) => i.priceDhb > 0) ?? [];
   const free = plan?.items.filter((i) => i.priceDhb === 0) ?? [];
   const needsTokens = !walletLoading && total > 0 && walletDhb < total;
 
   async function confirm() {
-    if (!plan) return;
+    if (!plan || plan.requiresFreeRetry && !retryInterruptedFree) return;
     if (needsTokens) {
       onOpenChange(false);
       navigate('/app/buy');
@@ -48,10 +50,10 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
       let txHash: string | undefined;
       if (total > 0) {
         toast.loading(t('creatorFlow.paying', { amount: formatDhb(total) }), { id: 'flow-run-payment' });
-        txHash = await payForPlan(plan);
-        toast.success(t('creatorFlow.paymentConfirmed'), { id: 'flow-run-payment' });
       }
-      onConfirm(txHash);
+      txHash = await payForPlan(plan);
+      if (total > 0) toast.success(t('creatorFlow.paymentConfirmed'), { id: 'flow-run-payment' });
+      onConfirm(txHash, retryInterruptedFree);
     } catch (e) {
       toast.dismiss('flow-run-payment');
       toast.error(e instanceof Error ? e.message : t('creatorFlow.paymentFailed'));
@@ -107,10 +109,14 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
           </p>
         )}
 
+        {plan?.requiresFreeRetry && <label className="flex gap-2 text-xs text-zinc-300">
+          <input type="checkbox" checked={retryInterruptedFree} onChange={event => setRetryInterruptedFree(event.target.checked)} />
+          {t('creatorFlow.confirmInterruptedRetry')}
+        </label>}
         <button
           type="button"
           onClick={confirm}
-          disabled={paying || !plan}
+          disabled={paying || !plan || plan.requiresFreeRetry && !retryInterruptedFree}
           className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 text-[14px] font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 disabled:opacity-50"
         >
           {paying && <Loader2 className="h-4 w-4 animate-spin" />}
