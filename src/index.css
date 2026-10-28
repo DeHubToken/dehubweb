@@ -7032,33 +7032,3 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
   visibility: hidden !important;
 }
 
-/* The arena verdict (EmperorThumb), one slow 7s cycle: the fist rests with
-   the thumb tucked over the fingers, the thumb slowly turns out to point up
-   (the 👎 is the same hand flipped), holds with one small pulse, draws back
-   in, and the fist rests again. Transform only, so it is cheap on Safari. */
-.dehub-emperor { overflow: visible; }
-.dehub-emperor--down { transform: scaleY(-1); }
-.dehub-emperor-hand {
-  transform-box: view-box;
-  transform-origin: 16px 20px;
-  animation: dehub-emperor-pulse 7s ease-in-out -0.6s infinite;
-}
-.dehub-emperor-thumb {
-  transform-box: view-box;
-  transform-origin: 10px 14px;
-  transform: rotate(90deg);
-  animation: dehub-emperor-thumb 7s ease-in-out -0.6s infinite;
-}
-@keyframes dehub-emperor-thumb {
-  0%, 14% { transform: rotate(90deg); }
-  30%, 58% { transform: rotate(0deg); }
-  72%, 100% { transform: rotate(90deg); }
-}
-@keyframes dehub-emperor-pulse {
-  0%, 34%, 44%, 100% { transform: none; }
-  39% { transform: scale(1.07); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dehub-emperor-hand { animation: none; }
-  .dehub-emperor-thumb { animation: none; transform: none; }
-}
