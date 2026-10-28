@@ -317,6 +317,8 @@ export function usePostForm(
    * hidden by the modal and never sent.
    */
   quotedPost?: DeHubNFT | null,
+  /** The new post's token id, once the server has it (a duet links itself to its source here). */
+  onPosted?: (tokenId: string) => void,
 ): UsePostFormReturn {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
@@ -2048,6 +2050,7 @@ export function usePostForm(
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
       }
+      onPosted?.(String(mintResponse.createdTokenId));
 
       /**
        * Put the picked store listings on the post, now that it has a tokenId.

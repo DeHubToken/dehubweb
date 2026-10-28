@@ -1,4 +1,37 @@
 {
+  "duet": {
+    "with": "دويتو مع @{{username}}",
+    "withOriginal": "دويتو · عرض الأصلي",
+    "unavailable": "لم يعد هذا الفيديو متاحًا للدويتو.",
+    "allowLabel": "السماح بالدويتو",
+    "allowDescription": "من يمكنه تسجيل دويتو بجانب مقاطع الفيديو الخاصة بك. يمكنك تغييره لكل منشور أيضًا.",
+    "settingsSection": "الدويتو",
+    "policyDefault": "إعداد الحساب",
+    "policyEveryone": "الجميع",
+    "policyFollowers": "المتابعون",
+    "policyNobody": "لا أحد",
+    "saveFailed": "تعذر الحفظ. حاول مرة أخرى.",
+    "count_one": "دويتو واحد",
+    "count_other": "{{count}} دويتو",
+    "pageHeading": "الدويتو",
+    "pageTitle": "دويتو {{title}} من @{{creator}}",
+    "pageTitleNoCreator": "دويتو {{title}}",
+    "pageDescription": "شاهد كل دويتو لهذا الفيديو على DeHub، أو سجّل دويتو خاصًا بك جنبًا إلى جنب.",
+    "empty": "لا يوجد دويتو بعد. افتح خيارات الفيديو واختر ريمكس ← دويتو لتكون الأول.",
+    "loadMore": "تحميل المزيد",
+    "video": "فيديو",
+    "notFound": "هذا الفيديو غير متاح.",
+    "notFoundTitle": "الفيديو غير موجود — DeHub",
+    "browseShorts": "تصفح Shorts"
+  },
+  "videoRemix": {
+    "menu": "ريمكس",
+    "duet": "دويتو",
+    "green-screen": "شاشة خضراء",
+    "sound": "استخدم هذا الصوت",
+    "cut": "قص هذا الفيديو",
+    "selectSource": "افتح خيارات فيديو واختر ريمكس للبدء."
+  },
   "remixLinks": {
     "shareFailed": "تم إرسال إكراميتك، لكن حصة المنشئ الأصلي لم تُرسل.",
     "notify": {

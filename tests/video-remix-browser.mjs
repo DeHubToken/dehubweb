@@ -26,7 +26,13 @@ const browser = await chromium.launch({ headless: true, args: [
 ] });
 const results = [];
 try {
-  for (const mode of ['collab', 'sound', 'cut', 'green-screen']) {
+  // `full` lets a duet run to the end of the 6 s source on its own instead of pressing Stop.
+  const cases = [
+    { mode: 'duet', layout: 'side' }, { mode: 'duet', layout: 'pip', full: true }, { mode: 'duet', layout: 'behind' },
+    { mode: 'sound' }, { mode: 'cut' }, { mode: 'green-screen' },
+  ];
+  for (const { mode, layout, full } of cases) {
+    const name = layout ? `${mode}-${layout}` : mode;
     const context = await browser.newContext({ permissions: ['camera', 'microphone'], viewport: { width: 430, height: 900 } });
     const page = await context.newPage();
     const logs = [], errors = [], requests = [];
@@ -34,26 +40,30 @@ try {
     page.on('pageerror', error => errors.push(String(error)));
     page.on('requestfailed', request => logs.push(`request failed: ${request.url()} ${request.failure()?.errorText}`));
     page.on('response', response => { if (/mediapipe|\.tflite/.test(response.url())) requests.push({ url: response.url(), status: response.status() }); });
-    const key = `recording-test-${mode}`;
+    const key = `recording-test-${name}`;
     await page.addInitScript(() => {
       window.remixPackets = [];
       window.addEventListener('message', event => { if (event.data?.type) window.remixPackets.push(event.data); });
     });
     await page.route('https://media.remix.test/source.mp4', route => route.fulfill({ status: 200, contentType: 'video/mp4', headers: { 'access-control-allow-origin': '*', 'cache-control': 'no-store' }, body: source }));
-    await page.route('https://remix.test/', route => route.fulfill({ status: 200, contentType: 'text/html', body: buildRemixStudioHtml({ mode, videoUrl: 'https://media.remix.test/source.mp4', sourceUrl: 'https://dehub.io/app/post/fixture', title: 'Recording fixture', creator: 'fixture', bridgeKey: key }) }));
+    await page.route('https://remix.test/', route => route.fulfill({ status: 200, contentType: 'text/html', body: buildRemixStudioHtml({ mode, videoUrl: 'https://media.remix.test/source.mp4', sourceUrl: 'https://dehub.io/app/post/fixture', title: 'Recording fixture', creator: 'fixture', bridgeKey: key, layout }) }));
     try {
       await page.goto('https://remix.test/');
       await page.waitForFunction(() => window.remixPackets.some(packet => packet.type === 'ready'), undefined, { timeout: 30000 });
       await page.locator('#countdown').uncheck();
       if (mode === 'cut') await page.locator('#cutLength').selectOption('1');
       if (mode === 'green-screen') await page.locator('#layout').selectOption('square');
+      if (mode === 'duet') {
+        assert.equal(await page.locator('#layout').inputValue(), layout, `${name}: initial layout from the menu`);
+        assert.equal(await page.locator('#length').inputValue(), 'full', `${name}: a duet records the whole source by default`);
+      }
       await page.locator('#camera').click();
       await page.locator('#status').filter({ hasText: 'Ready. Use headphones' }).waitFor({ timeout: 120000 });
       await page.waitForFunction(() => !document.querySelector('#record').disabled, undefined, { timeout: 15000 });
-      await page.screenshot({ path: path.join(output, `${mode}-preview.png`) });
+      await page.screenshot({ path: path.join(output, `${name}-preview.png`) });
       await page.locator('#record').click();
       await page.waitForFunction(() => Number.parseFloat(document.querySelector('#clock').textContent) >= 2, undefined, { timeout: 20000 });
-      await page.locator('#stop').click();
+      if (!full) await page.locator('#stop').click();
       await page.locator('#use').waitFor({ state: 'visible', timeout: 15000 });
       await page.locator('#use').click();
       await page.waitForFunction(() => window.remixPackets.some(packet => packet.type === 'recorded'), undefined, { timeout: 15000 });
@@ -61,12 +71,14 @@ try {
       assert.equal(packet.key, key);
       assert.equal(packet.width, 720);
       assert.equal(packet.height, mode === 'green-screen' ? 720 : 1280);
-      assert(packet.duration >= 1.8 && packet.duration <= 5, `${mode}: unexpected recording length ${packet.duration}`);
+      if (full) assert(packet.duration >= 5.3 && packet.duration <= 6.8, `${name}: should stop at the end of the source, got ${packet.duration}`);
+      else assert(packet.duration >= 1.8 && packet.duration <= 5, `${name}: unexpected recording length ${packet.duration}`);
+      if (mode === 'duet') assert.equal(packet.layout, layout, `${name}: layout is reported with the take`);
       const match = /^data:(video\/(?:webm|mp4));base64,([A-Za-z0-9+/]+=*)$/.exec(packet.dataUrl);
       assert(match, `${mode}: normalized video data URL is required`);
       const bytes = Buffer.from(match[2], 'base64');
       assert(bytes.length > 1000 && bytes.length <= 24 * 1024 * 1024);
-      const file = path.join(output, `${mode}.${match[1] === 'video/mp4' ? 'mp4' : 'webm'}`);
+      const file = path.join(output, `${name}.${match[1] === 'video/mp4' ? 'mp4' : 'webm'}`);
       await writeFile(file, bytes);
       const probe = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', file], { encoding: 'utf8' }));
       const video = probe.streams.find(stream => stream.codec_type === 'video');
@@ -78,11 +90,11 @@ try {
       // MediaRecorder WebM may omit container duration; count decoded frames instead.
       const frames = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-count_frames', '-show_entries', 'stream=nb_read_frames', '-of', 'json', file], { encoding: 'utf8' }));
       assert(Number(frames.streams[0]?.nb_read_frames) >= 12, `${mode}: recording must contain moving frames`);
-      ffmpeg(['-i', file, '-ss', '0.5', '-frames:v', '1', path.join(output, `${mode}-recorded.png`)]);
+      ffmpeg(['-i', file, '-ss', '0.5', '-frames:v', '1', path.join(output, `${name}-recorded.png`)]);
       const frameTimes = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'frame=best_effort_timestamp_time', '-of', 'json', file], { encoding: 'utf8' }));
       const lastTimestamp = Number(frameTimes.frames.at(-1)?.best_effort_timestamp_time);
       assert(lastTimestamp >= 1.5 && Math.abs(lastTimestamp - packet.duration) < 0.75, `${mode}: decoded duration must match reported duration`);
-      if (mode === 'green-screen') {
+      if (mode === 'green-screen' || layout === 'behind') {
         assert(requests.some(request => request.url.includes('@mediapipe/tasks-vision@0.10.21/') && request.status === 200), 'Pinned real MediaPipe runtime must load');
         assert(requests.some(request => request.url.endsWith('selfie_segmenter.tflite') && request.status === 200), 'Real selfie model must load');
       }
@@ -94,13 +106,13 @@ try {
       assert.deepEqual(await page.evaluate(() => window.remixPackets.filter(packet => packet.type === 'error').map(packet => packet.error)), []);
       await page.evaluate(key => window.postMessage({ key, type: 'dispose' }, '*'), key);
       await page.waitForFunction(() => [...(document.querySelector('#cameraVideo').srcObject?.getTracks() || [])].every(track => track.readyState === 'ended'));
-      results.push({ mode, bytes: bytes.length, width: video.width, height: video.height, duration: packet.duration, decodedDuration: lastTimestamp, videoCodec: video.codec_name, audioCodec: audio.codec_name, modelRequests: requests });
+      results.push({ mode: name, bytes: bytes.length, width: video.width, height: video.height, duration: packet.duration, decodedDuration: lastTimestamp, videoCodec: video.codec_name, audioCodec: audio.codec_name, modelRequests: requests });
     } catch (error) {
-      await page.screenshot({ path: path.join(output, `${mode}-failure.png`) }).catch(() => {});
-      await writeFile(path.join(output, `${mode}-failure.txt`), `${error.stack}\n${await page.locator('body').innerText().catch(() => '')}\n${logs.join('\n')}\n${errors.join('\n')}`);
+      await page.screenshot({ path: path.join(output, `${name}-failure.png`) }).catch(() => {});
+      await writeFile(path.join(output, `${name}-failure.txt`), `${error.stack}\n${await page.locator('body').innerText().catch(() => '')}\n${logs.join('\n')}\n${errors.join('\n')}`);
       throw error;
     } finally {
-      await writeFile(path.join(output, `${mode}-console.txt`), logs.join('\n'));
+      await writeFile(path.join(output, `${name}-console.txt`), logs.join('\n'));
       await writeFile(path.join(output, 'results.json'), JSON.stringify(results, null, 2));
       await context.close();
     }

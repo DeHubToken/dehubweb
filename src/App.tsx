@@ -205,6 +205,7 @@ const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPa
 const PairTestPage = React.lazy(() => import("./pages/app/PairTestPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const ClipPage = React.lazy(() => import("./pages/app/ClipPage"));
+const DuetsPage = React.lazy(() => import("./pages/app/DuetsPage"));
 const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
@@ -767,6 +768,7 @@ function AppContent() {
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
+              <Route path="post/:postId/duets" element={<Suspense fallback={<PageLoader />}><DuetsPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
               <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
                 <Route path="create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
