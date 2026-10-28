@@ -4,9 +4,10 @@ import { Camera, Columns2, Music2, Scissors } from 'lucide-react';
 import type { RemixMode } from '@/lib/editor/remixStudioHtml';
 
 export interface RemixSource { videoUrl: string; sourceUrl: string; title: string; creator?: string }
+// Stitch: up to 5 seconds of the source, then your own clip, as one video.
 const modes = [
   ['green-screen', 'Green screen', Camera], ['collab', 'Collab', Columns2],
-  ['sound', 'Use this sound', Music2], ['cut', 'Cut this video', Scissors],
+  ['sound', 'Use this sound', Music2], ['stitch', 'Stitch', Scissors],
 ] as const;
 
 export function RemixMenuItems({ source, onStart }: { source: RemixSource; onStart: () => void }) {
