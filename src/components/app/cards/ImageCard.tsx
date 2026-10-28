@@ -949,25 +949,28 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
+    // A post opened from the feed keeps this feed card on its page, so being
+    // on the post's own URL counts as the post page: the photo opens full screen.
+    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}`;
     // The picture itself opens full screen; the bento around it (here, the
     // space beside a narrow photo) opens the post page.
-    if (!onPicture && !postPage && !imagesFeedScrollView && !gated) {
+    if (!onPicture && !onPostPage && !imagesFeedScrollView && !gated) {
       openPost();
       return;
     }
     // Phones open a plain photo full screen over the feed, so closing it lands
     // back on the same card. Desktop still opens the post page.
-    if (!postPage && isPhone && !post.soundtrackUrl && !gated) {
+    if (!onPostPage && isPhone && !post.soundtrackUrl && !gated) {
       setFullscreenIndex(index);
       setFullscreenOpen(true);
       return;
     }
     // Only photos with a song continue in the shorts viewer; plain photos open their post.
-    if (!postPage && (!post.soundtrackUrl || gated)) {
+    if (!onPostPage && (!post.soundtrackUrl || gated)) {
       openPost();
       return;
     }
-    if (!postPage) {
+    if (!onPostPage) {
       rememberGalleryIndex(String(post.id), index);
       openBrainrotFeed(post.id, {
         ...post,
