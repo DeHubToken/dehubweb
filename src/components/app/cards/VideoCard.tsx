@@ -163,9 +163,9 @@ const SubscriberGateDrawer = lazy(() =>
 );
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
-import { RemixMenuItems } from './RemixMenuItems';
+import { RemixMenuItems } from './LazyRemixMenuItems';
 import { DuetCredit } from './DuetCredit';
-import { ReactionOfChip, ReactionsLink } from '../remix/ReactionChips';
+import { ReactionOfChip, ReactionsLink } from '../remix/LazyReactionChips';
 import { StitchAttribution } from './StitchAttribution';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
