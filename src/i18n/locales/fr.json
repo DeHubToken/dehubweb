@@ -7780,6 +7780,7 @@
     "retryFreeTask": "Réessayer la tâche gratuite",
     "previewSavedMedia": "Aperçu des médias enregistrés",
     "audioSavePending": "L’audio est prêt, mais son enregistrement dans la bibliothèque privée est en attente. Reprenez pour le récupérer.",
+    "confirmInterruptedRetry": "Réessayer la tâche audio ou d’assistant interrompue. Son résultat précédent est inconnu et cette action peut répéter le traitement. Le paiement et les identifiants des tâches payantes seront réutilisés.",
     "freeResultUnknown": "La réponse de la tâche gratuite a été interrompue. Elle ne sera pas soumise à nouveau automatiquement. Choisissez Réessayer la tâche gratuite, puis reprenez ; votre paiement et les autres travaux sont conservés.",
     "formAuthor": "Modifier le flux",
     "formAuthorHint": "Créez un flux avec des entrées compatibles. Enregistrez-le ici ou organisez-le sur le canevas web.",

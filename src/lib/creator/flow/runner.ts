@@ -56,6 +56,7 @@ export interface RunPlan {
   signature: string;
   resumeTxHash?: string;
   scopeVersion: number;
+  requiresFreeRetry?: boolean;
 }
 
 export interface NodeIssue {
@@ -171,7 +172,7 @@ async function stageInlineInputs(nodeIds: string[]) {
 
 /** Price every paid node in the run. Throws when signed out. */
 export async function planRun(nodeIds: string[]): Promise<RunPlan> {
-  const { nodes, edges } = store();
+  let { nodes, edges } = store();
   try { graphOrder(nodes, edges); } catch { throw new FlowRunError(i18n.t('creatorFlow.invalidGraph'), 'INVALID'); }
   const wallet = localStorage.getItem('dehub_wallet')?.toLowerCase();
   const flowId = store().activeFlowId;
@@ -183,6 +184,12 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   if (receipt && (receipt.txHash || receipt.started.length)) {
     if (receipt.signature !== signature) throw new FlowRunError('Restore the saved Flow graph before resuming its run.', 'INVALID');
     nodeIds = receipt.nodeIds;
+    for (const id of receipt.completed) {
+      const output = receipt.outputs?.[id];
+      if (!output) throw new FlowRunError('The saved run has no recoverable output for a completed node.', 'INVALID');
+      store().updateNodeData(id, { ...output, status: 'done' });
+    }
+    ({ nodes, edges } = store());
   }
   const inputs = nodes.filter(node => edges.some(edge => edge.source === node.id && nodeIds.includes(edge.target)) && (!(GEN_NODE_TYPES.has(node.type || '') && nodeIds.includes(node.id)) || receipt?.completed.includes(node.id)));
   const ids = inputs.map(flowAssetId).filter(Boolean);
@@ -248,7 +255,8 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
   }
   const totalDhb = items.reduce((s, i) => s + i.priceDhb, 0);
   assertOwner(wallet, flowId, scopeVersion);
-  return { items, waves, totalDhb: receipt?.txHash ? receipt.totalDhb : totalDhb, wallet, flowId, signature: graphSignature(store().nodes, store().edges), resumeTxHash: receipt?.txHash, scopeVersion };
+  return { items, waves, totalDhb: receipt?.txHash ? receipt.totalDhb : totalDhb, wallet, flowId, signature: graphSignature(store().nodes, store().edges), resumeTxHash: receipt?.txHash, scopeVersion,
+    requiresFreeRetry: receipt?.started.some(id => !receipt.completed.includes(id) && !receipt.expectedPaidNodeIds.includes(id)) };
 }
 
 async function runAudioNode(node: FlowNode) {
@@ -284,16 +292,17 @@ async function runAudioNode(node: FlowNode) {
     };
     if (!check()) unsubscribe = useGenerationStore.subscribe(check);
   });
+  updateNodeData(node.id, {});
   settleGeneration(node.id, slot, saved.transcript || saved.url || '');
   updateNodeData(node.id, { status: 'done', audioAssetId: saved.id, audioUrl: saved.url, outputText: saved.transcript, jobId: undefined });
 }
 
 /** Wait for a queued job to settle. */
 function waitForJob(jobId: string): Promise<GenerationJob> {
-  const wallet = localStorage.getItem('dehub_wallet')?.toLowerCase() || '', flowId = store().activeFlowId;
+  const wallet = localStorage.getItem('dehub_wallet')?.toLowerCase() || '', flowId = store().activeFlowId, scopeVersion = store().scopeVersion;
   return new Promise((resolve, reject) => {
     const check = (jobs: GenerationJob[]) => {
-      try { assertOwner(wallet, flowId); } catch (error) { reject(error); return true; }
+      try { assertOwner(wallet, flowId, scopeVersion); } catch (error) { reject(error); return true; }
       const job = jobs.find((j) => j.id === jobId);
       if (!job) {
         reject(new Error(_translateCopy("copy.cda7e5fa6275", { defaultValue: "The job was removed before it finished." })));
@@ -358,6 +367,7 @@ async function runImageNode(node: FlowNode, txHash: string | undefined, clientJo
     },
     { prompt: resolvedPrompt, resolvedPrompt, modelName: IMAGE_MODELS[model]?.name ?? model, aspect: aspectRatio },
   ));
+  updateNodeData(node.id, {});
   if (job.status === 'done' && job.url) {
     settleGeneration(node.id, slot, job.url);
     updateNodeData(node.id, { status: 'done', imageUrl: job.url, outputAssetId: job.id, jobId: undefined });
@@ -401,6 +411,7 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined, clientJo
     },
     { prompt: resolvedPrompt, resolvedPrompt, modelName: cfg?.name ?? model, aspect: aspectRatio },
   ));
+  updateNodeData(node.id, {});
   if (job.status === 'done' && job.url) {
     settleGeneration(node.id, slot, job.url);
     updateNodeData(node.id, { status: 'done', videoUrl: job.url, outputAssetId: job.id, capturedFrameUrl: undefined, jobId: undefined });
@@ -439,6 +450,7 @@ export async function runAssistantNode(node: FlowNode, signal?: AbortSignal) {
 
 export interface RunProgress {
   onLog?: (text: string, ok?: boolean) => void;
+  retryInterruptedFree?: boolean;
 }
 
 /**
@@ -449,6 +461,7 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
   assertOwner(plan.wallet, plan.flowId, plan.scopeVersion);
   if (graphSignature(store().nodes, store().edges) !== plan.signature) throw new FlowRunError('The Flow changed. Review the run again.', 'INVALID');
   const receipt = reserveReceipt(plan.wallet, plan.flowId, plan.signature, plan.items.map(item => item.nodeId), plan.items.filter(item => item.kind === 'image' || item.kind === 'video').map(item => item.nodeId), plan.totalDhb);
+  if (receipt.started.some(id => !receipt.completed.includes(id) && !receipt.expectedPaidNodeIds.includes(id)) && !progress.retryInterruptedFree) throw new FlowRunError('Confirm retry of the interrupted audio or assistant task before resuming.', 'INVALID');
   if (plan.totalDhb > 0 && !receipt.txHash) throw new FlowRunError('Payment is required before this run can resume.', 'PAYMENT');
   txHash = receipt.txHash || txHash;
   const { setIsRunning, updateNodeData } = scopedStore();
@@ -495,6 +508,8 @@ export async function executeRun(plan: RunPlan, txHash: string | undefined, prog
             else if (node.type === 'assistantNode') await runAssistantNode(node);
             else if (node.type === 'audioGenNode') await runAudioNode(node);
             assertOwner(plan.wallet, plan.flowId, plan.scopeVersion);
+            const result = store().nodes.find(node => node.id === id)?.data;
+            receipt.outputs[id] = { audioAssetId: result?.audioAssetId, outputAssetId: result?.outputAssetId, outputText: result?.outputText };
             receipt.completed.push(id);
             saveReceipt(receipt);
             log(_translateCopy("copy.59c7c1fa6f67", { defaultValue: "[{{value1}}] done", value1: node.data.label }));
@@ -524,6 +539,7 @@ export async function payForPlan(plan: RunPlan): Promise<string | undefined> {
   const pay = async () => {
     assertOwner(plan.wallet, plan.flowId, plan.scopeVersion);
     const pending = readReceipt(plan.wallet, plan.flowId);
+    if (graphSignature(store().nodes, store().edges) !== plan.signature) throw new FlowRunError('The Flow changed. Review the run again.', 'INVALID');
     if (pending?.txHash) {
       if (pending.signature !== plan.signature) throw new FlowRunError('Restore the saved Flow graph before resuming its run.', 'INVALID');
       return pending.txHash;
@@ -541,5 +557,6 @@ export async function payForPlan(plan: RunPlan): Promise<string | undefined> {
     return hash;
   };
   if (navigator.locks) return navigator.locks.request(`flow-payment:${plan.wallet}:${plan.flowId}`, pay);
-  return pay();
+  if (plan.totalDhb <= 0 || readReceipt(plan.wallet, plan.flowId)?.txHash) return pay();
+  throw new FlowRunError('This browser cannot safely coordinate a Flow payment. Use a current browser and retry.', 'PAYMENT');
 }

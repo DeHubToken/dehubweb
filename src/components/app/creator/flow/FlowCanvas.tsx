@@ -573,14 +573,14 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
   );
 
   const confirmRun = useCallback(
-    async (txHash: string | undefined) => {
+    async (txHash: string | undefined, retryInterruptedFree: boolean) => {
       const p = plan;
       setPlan(null);
       if (!p) return;
       setLog([]);
       push(t('creatorFlow.logRunning'));
       let failures: number;
-      try { ({ failures } = await executeRun(p, txHash, { onLog: push })); }
+      try { ({ failures } = await executeRun(p, txHash, { onLog: push, retryInterruptedFree })); }
       catch (error) { toast.error(error instanceof Error ? error.message : t('creatorFlow.planFailed')); return; }
       push(failures > 0 ? t('creatorFlow.logFinishedWithFailures', { count: failures }) : t('creatorFlow.logComplete'), failures === 0);
       if (failures > 0) toast.error(t('creatorFlow.runFailures', { count: failures }));
@@ -836,7 +836,7 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
         )}
 
         <ShareModal flowId={activeFlowId} open={shareOpen} onOpenChange={setShareOpen} canPublish={signedIn} onSyncNow={onSyncNow} />
-        <FlowPaywall plan={plan} open={plan !== null} onOpenChange={(o) => { if (!o) setPlan(null); }} onConfirm={(tx) => void confirmRun(tx)} />
+        <FlowPaywall plan={plan} open={plan !== null} onOpenChange={(o) => { if (!o) setPlan(null); }} onConfirm={(tx, retry) => void confirmRun(tx, retry)} />
       </div>
     </FlowActionsContext.Provider>
   );
