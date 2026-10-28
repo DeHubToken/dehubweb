@@ -140,6 +140,7 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useLeftHanded } from '@/hooks/use-left-handed';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PostLandingSetting } from '@/components/app/settings/PostLandingSetting';
+import { StitchPolicySetting } from '@/components/app/settings/StitchPolicySetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
@@ -1937,6 +1938,14 @@ function PrivacySettings() {
             onCheckedChange={(checked) => updateSettings({ ai_scraping: checked ? 'allow' : 'deny' })}
             disabled={isUpdating || isLoading}
           />
+        </div>
+      </div>
+
+      {/* Remixes of your videos */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('remixLinks.settingsHeading', 'Remixes')}</h3>
+        <div className="space-y-4">
+          <StitchPolicySetting />
         </div>
       </div>
 

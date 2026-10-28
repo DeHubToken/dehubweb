@@ -50,9 +50,11 @@ interface PostModalProps {
    * quote cannot be: a livestream, stage, article, scheduled or paywalled post.
    */
   quotedPost?: DeHubNFT | null;
+  /** This post is a remix of another video; linked to it once posted. */
+  remixLink?: { kind: import('@/lib/remix-links').RemixKind; sourceTokenId: string } | null;
 }
 
-function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost }: PostModalProps & { draftScope: string }) {
+function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost, remixLink }: PostModalProps & { draftScope: string }) {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
@@ -64,7 +66,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
   const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
-  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost);
+  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost, remixLink);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
@@ -387,6 +389,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setQuotePolicy={actions.setQuotePolicy}
         replyPolicy={state.replyPolicy}
         setReplyPolicy={actions.setReplyPolicy}
+        stitchPolicy={state.stitchPolicy}
+        setStitchPolicy={state.media.some(m => m.type === 'video') ? actions.setStitchPolicy : undefined}
         visibility={state.visibility}
         // A quote and a livestream are always public.
         setVisibility={isQuoting || state.liveMode ? undefined : actions.setVisibility}

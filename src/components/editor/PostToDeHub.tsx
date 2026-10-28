@@ -186,7 +186,9 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         isOpen={postOpen}
         onClose={() => { setPostOpen(false); setFiles(null); }}
         initialFiles={files}
-        initialText={settings.remixSource ? `Remix of ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        initialText={settings.remixSource ? `${settings.remixSource.mode === 'stitch' ? 'Stitched from' : 'Remix of'} ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        remixLink={settings.remixSource?.mode === 'stitch' && settings.remixSource.tokenId
+          ? { kind: 'stitch', sourceTokenId: settings.remixSource.tokenId } : undefined}
         onFilesProcessed={() => setFiles(null)}
       />
     </>

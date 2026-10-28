@@ -164,6 +164,7 @@ const SubscriberGateDrawer = lazy(() =>
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { RemixMenuItems } from './RemixMenuItems';
+import { StitchAttribution } from './StitchAttribution';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
@@ -3279,6 +3280,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           })()}
         </SharedTranslationProvider>
         </div>
+        {!video.isAudio && !video.isAd && <StitchAttribution tokenId={video.id} postPage={postPage} className="mt-2" />}
         <div data-video-metadata className="mb-3">
           <PostMetadata 
             className="!mt-3"
