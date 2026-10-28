@@ -84,6 +84,11 @@ export const SOURCES: Record<string, { title: string; url: string }> = {
   twitchVod: { title: 'Twitch on-demand content', url: 'https://help.twitch.tv/s/article/video-on-demand' },
   farcaster: { title: 'Farcaster protocol and sign in', url: 'https://docs.farcaster.xyz/' },
   fcApps: { title: 'Farcaster Mini Apps and wallets', url: 'https://miniapps.farcaster.xyz/' },
+  fbLive: { title: 'Go live on Facebook', url: 'https://www.facebook.com/help/1636872026560015' },
+  fbShare: { title: 'Share and manage posts on Facebook', url: 'https://www.facebook.com/help/1640261589632787' },
+  ytReport: { title: 'Report content on YouTube', url: 'https://support.google.com/youtube/answer/2802027' },
+  ytNotifications: { title: 'Manage YouTube notifications', url: 'https://support.google.com/youtube/answer/3382248' },
+  ytDark: { title: 'YouTube dark theme', url: 'https://support.google.com/youtube/answer/7385323' },
 };
 export interface ComparisonEntry { status: Status; note: string; source?: string; relatedSources?: string[] }
 export interface ComparisonFeature {
@@ -320,6 +325,14 @@ const ADDITIONAL_EVIDENCE: Record<string, Partial<Record<PlatformId, ComparisonE
   'content-default': { mastodon: e('mastodonPreferences', 'Default posting visibility, language and media sensitivity.') },
   'autoplay-preference': { mastodon: e('mastodonPreferences', 'Animated media and reduced-motion preferences; video behavior varies by client.', 'limited') },
 };
+/** Core capabilities confirmed on first-party help pages after the bulk review; these win over a not-established finding. */
+const CORE_EVIDENCE: Record<string, Partial<Record<PlatformId, ComparisonEntry>>> = {
+  live: { facebook: e('fbLive', 'Go live from a profile, Page or group.') },
+  reposts: { facebook: e('fbShare', 'Share posts to your profile, groups or Messenger.') },
+  report: { youtube: e('ytReport', 'Report videos, channels, comments and other content.') },
+  notifications: { youtube: e('ytNotifications', 'Choose which channel and account notifications you get.') },
+  themes: { youtube: e('ytDark', 'Light, dark and device appearance; not theme packs.', 'limited') },
+};
 const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => detail.rows.map(([id, name, note, file = '', mobileOverride]) => {
   const web = detail.web + file, mobile = mobileOverride ?? detail.mobile + file;
   const webSource = `web:${web}`, mobileSource = `mobile:${mobile}`;
@@ -330,7 +343,7 @@ const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => d
 export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES].map(feature => ({
   ...feature,
   dehub: feature.id === 'encrypted-text' ? e('dehubEncryption', feature.dehub.note, 'limited') : feature.id === 'encrypted-attachments' ? { ...feature.dehub, status: 'limited' as const } : feature.dehub,
-  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
+  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).map(([id, entry]) => [id, CORE_EVIDENCE[feature.id]?.[id as PlatformId] ?? entry]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
 }));
 export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))];
 export function entryFor(feature: ComparisonFeature, platform: PlatformId | 'dehub'): ComparisonEntry {
@@ -352,4 +365,23 @@ export function comparisonCoverage(platform: PlatformId | 'all') {
     total: FEATURES.length * platforms.length,
     reviewedOn: COMPETITOR_REVIEWED_ON,
   };
+}
+
+/** Matrix marks: a tick for documented or conditional support, partial for related products or announcements. */
+export type Mark = 'yes' | 'partial' | 'no' | 'unknown';
+export function markFor(entry: ComparisonEntry): Mark {
+  if (entry.status === 'documented' || entry.status === 'code' || entry.status === 'limited') return 'yes';
+  if (entry.status === 'ecosystem' || entry.status === 'announced') return 'partial';
+  if (entry.status === 'not_offered') return 'no';
+  return 'unknown';
+}
+export function featureTotals(features: ComparisonFeature[] = FEATURES) {
+  const totals: Record<PlatformId | 'dehub', { yes: number; partial: number }> = Object.fromEntries(
+    (['dehub', ...PLATFORMS.map(p => p.id)] as const).map(id => [id, { yes: 0, partial: 0 }]),
+  ) as Record<PlatformId | 'dehub', { yes: number; partial: number }>;
+  for (const feature of features) for (const id of Object.keys(totals) as (PlatformId | 'dehub')[]) {
+    const mark = markFor(entryFor(feature, id));
+    if (mark === 'yes') totals[id].yes++; else if (mark === 'partial') totals[id].partial++;
+  }
+  return totals;
 }
