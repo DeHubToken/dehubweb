@@ -5,7 +5,7 @@ import { payForJob } from '@/lib/ai-payment';
 import { collectLayers, exportLayers, importLayers, layerJobs, submitLayers, type LayerJob } from '@/lib/creator/imageLayers';
 import type { ImageLayerSet, LayerChoice } from '@/lib/creator/imageLayersContract';
 import type { GenerationJob } from '@/store/generationStore';
-import { beginNewLayerAttempt, resumeLayerSubmission } from '@/lib/creator/layerSubmission';
+import { beginNewLayerAttempt, latestReviewedLayerJob, resumeLayerSubmission } from '@/lib/creator/layerSubmission';
 import { useNavigate } from 'react-router-dom';
 import { callCreatorLibrary } from '@/lib/creator/cloudLibrary';
 
@@ -82,7 +82,7 @@ export function ImageLayersPanel({ wallet, source, onOpenEditor }: { wallet: str
     if (!preparedSource || !jobs[0] || !navigator.locks) return;
     await navigator.locks.request(preparationKey,{ifAvailable:true},async lock=>{
       if (!lock) throw new Error('This image already has a payment in progress');
-      const found = await layerJobs(wallet,source.id), terminal=found[0];
+      const found = await layerJobs(wallet,source.id), terminal=latestReviewedLayerJob(found,jobs[0].id);
       if (!terminal || terminal.id!==jobs[0].id || !current()) throw new Error('Collect the current job first');
       await beginNewLayerAttempt({read:async()=>JSON.parse(localStorage.getItem(preparationKey)||'null'),write:async value=>{localStorage.setItem(preparationKey,JSON.stringify(value));},
         archive:async value=>{const key=`${preparationKey}:history:${value.id}`, raw=JSON.stringify(value), previous=localStorage.getItem(key);if(previous && previous!==raw)throw new Error('Saved receipt needs recovery');localStorage.setItem(key,raw);}},terminal,preparedSource.sourceDigest,()=>crypto.randomUUID());
