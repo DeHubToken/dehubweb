@@ -72,6 +72,15 @@ it('blocks a fresh payment when cross-tab locking is unavailable', async () => {
   await expect(payForPlan(plan)).rejects.toThrow('safely coordinate');
   expect(mocks.pay).not.toHaveBeenCalled();
 });
+it('does not settle an old assistant into a graph reopened after an account switchback', async () => {
+  const plan = await planRun(['free', 'paid']); const hash = await payForPlan(plan);
+  const reopened = (mocks.state.nodes as FlowNode[]).map(node => ({ ...node, data: { ...node.data, outputText: 'New account view' } }));
+  mocks.assistant.mockImplementationOnce(async () => { mocks.state.scopeVersion = 2; mocks.state.nodes = reopened; return 'Old response'; });
+  await expect(executeRun(plan, hash)).rejects.toThrow('original account');
+  expect(reopened[0].data.outputText).toBe('New account view');
+  expect(mocks.startImage).not.toHaveBeenCalled();
+  expect(readReceipt('owner', 'flow')!.txHash).toBe(hash);
+});
 it('rejects changed prices and a switch away and back during the fresh quote before payment', async () => {
   const plan = await planRun(['free', 'paid']);
   mocks.quote.mockResolvedValueOnce({ priceDhb: 200 });
