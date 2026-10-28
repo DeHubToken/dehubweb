@@ -649,20 +649,15 @@ serve(async (req) => {
                 // title byte-matches its NOT_FOUND_TITLES list, and the old generic
                 // "Post by someone on DeHub" collided with it for REAL posts that
                 // have a blank title and an anonymous minter.
-                // /app/post/<id>/reactions: the post's own card, retitled for its reactions page.
-                const isReactions = !isNewPost && /\/post\/[^/]+\/reactions\/?$/.test(cleanPath);
-                const baseTitle = (nft.title || nft.name || "").trim() || `Post #${postId} by ${posterName} on DeHub`;
-                const title = isReactions ? `Reactions to ${baseTitle}` : baseTitle;
+                const title = (nft.title || nft.name || "").trim() || `Post #${postId} by ${posterName} on DeHub`;
                 // Prefer the post's own body text as the description. Only fall
                 // back to the author-bio boilerplate when the post has no text
                 // at all — Google flags identical author-bio meta descriptions
                 // across 1,000s of URLs as low-quality/duplicate content.
                 const rawBody = (nft.description || "").trim();
-                const bodyForDesc = rawBody && rawBody.toLowerCase() !== baseTitle.toLowerCase() ? rawBody : "";
-                const description = isReactions
-                    ? `Watch creators react to “${baseTitle}” by ${posterName} on DeHub, recorded and live.`.slice(0, 280)
-                    : (bodyForDesc || `Post by ${posterName} on DeHub — join the decentralized creator network.`).slice(0, 280);
-                const postUrl = isNewPost ? `${APP_URL}/newpost/${slug}` : `${APP_URL}/app/post/${postId}${isReactions ? "/reactions" : ""}`;
+                const bodyForDesc = rawBody && rawBody.toLowerCase() !== title.toLowerCase() ? rawBody : "";
+                const description = (bodyForDesc || `Post by ${posterName} on DeHub — join the decentralized creator network.`).slice(0, 280);
+                const postUrl = isNewPost ? `${APP_URL}/newpost/${slug}` : `${APP_URL}/app/post/${postId}`;
 
                 const isAudio = nft.postType === "feed-audio";
                 const videoUrl = isAudio ? null : buildVideoUrl(nft);
