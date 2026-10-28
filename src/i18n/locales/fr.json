@@ -1,4 +1,37 @@
 {
+  "duet": {
+    "with": "Duo avec @{{username}}",
+    "withOriginal": "Duo · voir l'original",
+    "unavailable": "Cette vidéo n'est plus disponible pour les duos.",
+    "allowLabel": "Autoriser les duos",
+    "allowDescription": "Qui peut enregistrer un duo à côté de tes vidéos. Tu peux aussi le changer sur chaque publication.",
+    "settingsSection": "Duos",
+    "policyDefault": "Réglage du compte",
+    "policyEveryone": "Tout le monde",
+    "policyFollowers": "Abonnés",
+    "policyNobody": "Personne",
+    "saveFailed": "Impossible d'enregistrer. Réessaie.",
+    "count_one": "{{count}} duo",
+    "count_other": "{{count}} duos",
+    "pageHeading": "Duos",
+    "pageTitle": "Duos de {{title}} par @{{creator}}",
+    "pageTitleNoCreator": "Duos de {{title}}",
+    "pageDescription": "Regarde tous les duos de cette vidéo sur DeHub, ou enregistre le tien côte à côte.",
+    "empty": "Pas encore de duo. Ouvre les options de la vidéo et choisis Remix → Duo pour faire le premier.",
+    "loadMore": "Charger plus",
+    "video": "Vidéo",
+    "notFound": "Cette vidéo n'est pas disponible.",
+    "notFoundTitle": "Vidéo introuvable — DeHub",
+    "browseShorts": "Voir les Shorts"
+  },
+  "videoRemix": {
+    "menu": "Remix",
+    "duet": "Duo",
+    "green-screen": "Fond vert",
+    "sound": "Utiliser ce son",
+    "stitch": "Stitch",
+    "selectSource": "Ouvre les options d'une vidéo et choisis Remix pour commencer."
+  },
   "remixLinks": {
     "shareFailed": "Ton pourboire a été envoyé, mais la part du créateur original n'est pas passée.",
     "notify": {

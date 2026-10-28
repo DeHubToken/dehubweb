@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { duetOfPost } from '@/lib/duet';
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
@@ -48,6 +49,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    duetOf: duetOfPost(nft as any),
     visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,
