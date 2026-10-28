@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import { POST_STAGE_PHONE_QUERY } from '@/hooks/use-post-stage-phone';
 
 /**
@@ -31,3 +32,10 @@ export interface CommentsSplitRouteState {
   fromFeed?: boolean;
   openComments?: boolean;
 }
+
+/**
+ * True inside the sheet. The comments there keep their reply bar in the sheet
+ * instead of docking it to the screen: a docked bar sits under the sheet (and
+ * behind its glass), out of reach, and Safari pans the page away from it.
+ */
+export const CommentsSplitContext = createContext(false);
