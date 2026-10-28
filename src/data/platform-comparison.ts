@@ -1,6 +1,8 @@
 /** Keep identical to dehub-mobile/libs/platform-comparison.ts. */
 import { AUDIT_REVISIONS, DETAIL_GROUPS } from './platform-comparison-details';
+import { COMPETITOR_REVIEWED_ON, RESEARCH_SOURCES, REVIEWED_FEATURE_IDS, researchedEntry } from './platform-comparison-research';
 export { AUDIT_REVISIONS } from './platform-comparison-details';
+export { COMPETITOR_REVIEWED_ON, REVIEWED_FEATURE_IDS } from './platform-comparison-research';
 export const REVIEWED_ON = '2026-10-27';
 export const PLATFORMS = [
   { id: 'youtube', name: 'YouTube' }, { id: 'x', name: 'X / Twitter' },
@@ -11,11 +13,13 @@ export const PLATFORMS = [
   { id: 'farcaster', name: 'Farcaster' },
 ] as const;
 export type PlatformId = typeof PLATFORMS[number]['id'];
-export type Status = 'documented' | 'code' | 'limited' | 'ecosystem' | 'unverified';
+export type Status = 'documented' | 'code' | 'limited' | 'ecosystem' | 'unverified' | 'not_documented' | 'not_offered' | 'announced';
 export const STATUS_LABELS: Record<Status, string> = {
   documented: 'Documented', code: 'Source reviewed', limited: 'Conditional', ecosystem: 'Related product', unverified: 'Not verified',
+  not_documented: 'Not established by sources', not_offered: 'Explicit limitation', announced: 'Announced / availability unconfirmed',
 };
 export const SOURCES: Record<string, { title: string; url: string }> = {
+  ...RESEARCH_SOURCES,
   dehub: { title: 'DeHub product guide', url: 'https://dehub.io/docs/dapps' },
   dehubLaunchpad: { title: 'DeHub Launchpad', url: 'https://dehub.io/launchpad' },
   dehubEncryption: { title: 'DeHub encrypted messaging implementation', url: `https://github.com/DeHubToken/dehubweb/blob/${AUDIT_REVISIONS.web}/src/lib/dm-e2ee/media-send.ts` },
@@ -326,7 +330,7 @@ const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => d
 export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES].map(feature => ({
   ...feature,
   dehub: feature.id === 'encrypted-text' ? e('dehubEncryption', feature.dehub.note, 'limited') : feature.id === 'encrypted-attachments' ? { ...feature.dehub, status: 'limited' as const } : feature.dehub,
-  peers: { ...feature.peers, ...ADDITIONAL_EVIDENCE[feature.id] },
+  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
 }));
 export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))];
 export function entryFor(feature: ComparisonFeature, platform: PlatformId | 'dehub'): ComparisonEntry {
@@ -341,5 +345,11 @@ export function filterFeatures(query: string, category: string): ComparisonFeatu
 }
 export function comparisonCoverage(platform: PlatformId | 'all') {
   const platforms = platform === 'all' ? PLATFORMS.map(p => p.id) : [platform];
-  return { verified: FEATURES.reduce((total, feature) => total + platforms.filter(id => feature.peers[id] && feature.peers[id]!.status !== 'unverified').length, 0), total: FEATURES.length * platforms.length };
+  const supported = new Set<Status>(['documented', 'limited', 'ecosystem', 'code']);
+  return {
+    verified: FEATURES.reduce((total, feature) => total + platforms.filter(id => feature.peers[id] && supported.has(feature.peers[id]!.status)).length, 0),
+    reviewed: FEATURES.filter(feature => REVIEWED_FEATURE_IDS.includes(feature.id)).length * platforms.length,
+    total: FEATURES.length * platforms.length,
+    reviewedOn: COMPETITOR_REVIEWED_ON,
+  };
 }
