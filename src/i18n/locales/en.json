@@ -2207,6 +2207,8 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "mutualsOne": "{{count}} Mutual:",
+    "mutualsMany": "{{count}} Mutuals:",
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",

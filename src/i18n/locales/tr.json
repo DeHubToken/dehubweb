@@ -2207,6 +2207,8 @@
     "returnHome": "Ana Sayfaya Dön"
   },
   "profile": {
+    "mutualsOne": "{{count}} ortak:",
+    "mutualsMany": "{{count}} ortak:",
     "back": "Geri",
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
