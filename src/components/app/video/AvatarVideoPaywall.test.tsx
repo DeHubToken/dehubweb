@@ -28,6 +28,7 @@ it('invalidates a quote from owner A after switching to B and back to A',async()
 });
 it('retains a signed receipt for A without submitting after an A to B to A switch during wallet signing',async()=>{
   let resolve!:(value:string)=>void,locked=false;
+  vi.stubGlobal('crypto',{randomUUID:()=> '22222222-2222-4222-8222-222222222222'});
   vi.stubGlobal('navigator',{locks:{request:async (_name:string,_options:unknown,run:(lock:object|null)=>Promise<unknown>)=>{
     if(locked)return run(null);locked=true;try{return await run({});}finally{locked=false;}
   }}});
