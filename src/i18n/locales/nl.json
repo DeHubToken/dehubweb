@@ -5378,6 +5378,7 @@
     "sellYourFractions": "Verkoop uw fracties ({{held}} in bezit)"
   },
   "creator": {
+    "layerNewAttempt": "Een nieuwe poging beoordelen",
     "layerPngRequired": "Kies een opgeslagen PNG-afbeelding van maximaal 12 MiB en vier megapixels.",
     "layerTitle": "Afbeeldingslagen scheiden",
     "layerSource": "Originele afbeelding",

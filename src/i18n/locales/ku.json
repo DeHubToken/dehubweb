@@ -5073,6 +5073,7 @@
     "sellYourFractions": "Perçeyên xwe bifiroşe ({{held}} li cem te)"
   },
   "creator": {
+    "layerNewAttempt": "هەوڵێکی نوێ پێداچوونەوە بکە",
     "layerPngRequired": "وێنەیەکی PNGی پاشەکەوتکراو هەڵبژێرە، تا ١٢ میبیبایت و چوار مێگاپیکسڵ.",
     "layerTitle": "قاتەکانی وێنە جیا بکەرەوە",
     "layerSource": "وێنەی ڕەسەن",

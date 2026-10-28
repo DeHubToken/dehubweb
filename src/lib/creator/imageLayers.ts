@@ -6,7 +6,7 @@ import { useEditorStore } from '@/store/editorStore';
 import { zipFiles } from '@/lib/editor/zip';
 import { validateLayerSet, selectedLayers, layerExportManifest, type ImageLayerSet, type LayerChoice } from './imageLayersContract';
 
-export interface LayerJob { id: string; status: string; savePending?: boolean; sourceDigest?: string; requestId?: string; appId?: string }
+export interface LayerJob { id: string; status: string; savePending?: boolean; delivered?:boolean; paymentRestored?:boolean; sourceDigest?: string; requestId?: string; appId?: string }
 export async function layerJobs(wallet: string, sourceAssetId: string): Promise<LayerJob[]> {
   return (await callCreatorLibrary(wallet, { action: 'layer-jobs', sourceAssetId })).jobs;
 }
