@@ -32,7 +32,7 @@ export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
   'dex', 'builder', 'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'apps', 'apps/dev', 'arcade/gods-eye', 'arcade/kings-gambit',
   'arcade/claude-of-duty', 'arcade/jungle-trail', 'arcade/street-slayer',
-  'arcade/trenchstar', 'guide', 'apk', 'admin-manual', 'packs', 'cinema', 'stake',
+  'arcade/trenchstar', 'arcade/love-lock-bridge', 'guide', 'apk', 'admin-manual', 'packs', 'cinema', 'stake',
   'raffle', 'live-studio', 'dehub-app', 'stream', 'compare',
 ]);
 

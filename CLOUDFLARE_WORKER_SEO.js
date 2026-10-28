@@ -179,7 +179,7 @@ const OG_CARD_ROUTES = new Set([
   'raffle', 'stake', 'usernames',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
-  'arcade/trenchstar',
+  'arcade/trenchstar', 'arcade/love-lock-bridge',
   'apps', 'apps/dev',
   // App surfaces that had no card of their own and unfurled as the homepage.
   // `superpowers` art was rendered when the page shipped and was never added
@@ -1259,6 +1259,19 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
 <p><a href="${APP_URL}/arcade/jungle-trail">Walk the trail</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
+  },
+  'arcade/love-lock-bridge': {
+    // Unlisted while it is tested: the link unfurls with its own card, but
+    // the page is noindex, is not in the sitemap and the grid copy does not
+    // link it. See UNLISTED_ARCADE_GAMES in src/config/arcade-games.ts.
+    noindex: true,
+    title: 'Love Lock Bridge | DeHub Arcade',
+    description: 'Walk Love Lock Bridge on DeHub — a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
+    heading: 'Love Lock Bridge — Leave A Lock Above The Clouds',
+    ...arcadeGameLd('/arcade/love-lock-bridge.webp'),
+    bodyHtml: `<p>A first-person walk across a gilded bridge through rose gardens, a river and lake, Paris terraces and drifting cloud. Choose a spot on either golden railing, write up to 64 characters and leave your lock.</p>
+<p>Walk with WASD or the arrow keys and drag to look. On a phone, hold the on-screen arrows or tap the paving to walk.</p>
+<p><a href="${APP_URL}/arcade/love-lock-bridge">Walk the bridge</a>.</p>`,
   },
   'arcade/street-slayer': {
     title: 'Street Slayer | DeHub Arcade',
