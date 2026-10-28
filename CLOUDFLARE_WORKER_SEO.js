@@ -3,7 +3,7 @@ import { localizePublicChrome, localizeStructuredData } from './server/public-pa
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { stageShareImageUrl } from './server/stage-share-card.js';
-import { applyPostShareImage, applyProfileShareImage } from './server/post-share-card.js';
+import { applyPostShareImage, applyProfileShareImage, postShareImageUrl } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
@@ -3427,6 +3427,36 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
   });
 }
 
+/** Every duet of one video, /app/post/<id>/duets. The original's own share card. */
+const DUETS_PATH = /^\/(?:app\/)?post\/(\d{1,15})\/duets\/?$/;
+
+function buildDuetsHtml(post, tokenId) {
+  const canonicalUrl = `${APP_URL}/app/post/${tokenId}/duets`;
+  const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
+  const creator = post.minterUsername || post.mintername || '';
+  const title = creator ? `Duets of ${name} by @${creator}` : `Duets of ${name}`;
+  const description = truncate(`Watch every duet of ${creator ? `@${creator}'s` : 'this'} video on DeHub, or record your own side by side.`, 200);
+  return entityHtml({
+    canonicalUrl,
+    title: `${title} — DeHub`,
+    description,
+    image: postShareImageUrl(tokenId),
+    ogType: 'website',
+    heading: title,
+    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    bodyHtml: `<p>${escHtml(description)}</p>
+<p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+      about: { '@type': 'VideoObject', name, url: `${APP_URL}/app/post/${tokenId}` },
+    },
+  });
+}
+
 /** A posted live clip, /clip/<n>. Columns are the ones anon may read. */
 const LIVE_CLIP_PATH = /^\/clip\/(\d{1,15})\/?$/;
 const LIVE_CLIP_COLUMNS = 'short_id,title,stream_title,stream_token_id,streamer_username,clipper_username,kind,video_url,poster_url,card_url,duration_seconds,post_token_id,posted_at';
@@ -4732,6 +4762,8 @@ function shouldServeSSR(pathname) {
   // A posted live clip. `clip` is a reserved ROUTE_SEGMENT, so without this
   // the profile fall-through rejects it and the SPA shell goes out instead.
   if (LIVE_CLIP_PATH.test(pathname)) return true;
+  // A video's duets list: its own title and card, not the post page's.
+  if (DUETS_PATH.test(pathname)) return true;
   // Bounties, /bounty/<job_number>. Needed here for exactly the reason stages
   // were: `bounty` is a reserved ROUTE_SEGMENT, so the profile fall-through at
   // the foot of this function rejects it and the SPA shell would go out under
@@ -6888,6 +6920,14 @@ async function handleRequest(request, env, ctx) {
     const clip = await supabaseLookup(`live_clips?short_id=eq.${liveClipMatch[1]}&status=eq.posted&select=${LIVE_CLIP_COLUMNS}&limit=1`);
     if (clip) return guard(new Response(buildClipHtml(clip), { status: 200, headers: blogHeaders }));
     return entityMiss(clip);
+  }
+
+  // A video's duets list, with the original's title and share card.
+  const duetsMatch = cleanPath.match(DUETS_PATH);
+  if (duetsMatch) {
+    const post = await fetchPostRecord(duetsMatch[1]);
+    if (post && post.postType !== 'live') return guard(new Response(buildDuetsHtml(post, duetsMatch[1]), { status: 200, headers: blogHeaders }));
+    return entityNotFound();
   }
 
   // Stage invite links: /stages/<n> is the short share form
