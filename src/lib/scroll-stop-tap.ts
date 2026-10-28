@@ -121,8 +121,14 @@ function onClick(e: MouseEvent): void {
   holding = false;
 }
 
+/** iOS does this natively, and its late scroll events made this eat real taps. */
+function nativeGlideStop(): boolean {
+  const ua = navigator.userAgent;
+  return /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+
 export function installScrollStopTap(): () => void {
-  if (typeof window === 'undefined') return () => {};
+  if (typeof window === 'undefined' || nativeGlideStop()) return () => {};
   const passive = { capture: true, passive: true } as const;
   const active = { capture: true, passive: false } as const;
   window.addEventListener('scroll', onScroll, passive);

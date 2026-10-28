@@ -133,6 +133,10 @@ registerServiceWorker();
 // See lib/scroll-freeze-watchdog.ts.
 installScrollFreezeWatchdog();
 
+// iOS Safari only shows a pressed (:active) state on elements under a
+// touchstart listener; one passive no-op on the document covers everything.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // A touch that stops a gliding feed only stops it, like a native app.
 // See lib/scroll-stop-tap.ts.
 installScrollStopTap();
