@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { beginNewLayerAttempt, resumeLayerSubmission, withLayerAdmission, type LayerSubmission } from './layerSubmission';
+import { beginNewLayerAttempt, latestReviewedLayerJob, resumeLayerSubmission, withLayerAdmission, type LayerSubmission } from './layerSubmission';
 const id = '00000000-0000-4000-8000-000000000001';
 describe('layer payment recovery', () => {
+  it('rejects a reviewed terminal when another device has a newer pending job',()=>{
+    const terminal={id,status:'failed',paymentRestored:true}, pending={id:'new-job',status:'processing'};
+    expect(()=>latestReviewedLayerJob([pending,terminal],id)).toThrow('Collect');
+    expect(latestReviewedLayerJob([terminal],id)).toBe(terminal);
+  });
   it('archives a confirmed refunded receipt before preparing a new UUID and refuses unresolved or foreign active jobs', async()=>{
     const digest='a'.repeat(64), original:LayerSubmission={id,phase:'submitted',txHash:'credits',sourceDigest:digest};let value:LayerSubmission|null=original;const archive:LayerSubmission[]=[];
     const storage={read:async()=>value,write:async(next:LayerSubmission)=>{value=next;},archive:async(next:LayerSubmission)=>{archive.push(next);}};
