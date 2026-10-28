@@ -1286,7 +1286,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   const optionsMenu = (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-black/30 text-white backdrop-blur-md" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center text-white [filter:drop-shadow(0_1px_2px_rgb(0_0_0/0.7))]" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>

@@ -48,6 +48,7 @@ import { LinkPreviews } from '@/features/post/components/LinkPreviews';
 import Trophy from '@/components/ui/cut-icons/leaderboard';
 import Star from '@/components/ui/cut-icons/new-members';
 import MessagesSquare from '@/components/ui/cut-icons/chat';
+import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
@@ -995,6 +996,11 @@ function LiveViewerGallery() {
             startedAt={minutesAgo(24)}
             isMuted
             onToggleMute={noop}
+            optionsSlot={
+              <button type="button" aria-label="Post options" className="flex h-10 w-10 items-center justify-center text-white [filter:drop-shadow(0_1px_2px_rgb(0_0_0/0.7))]">
+                <MoreVertical className="h-[23.5px] w-[23.5px]" />
+              </button>
+            }
             hidden={false}
             streamId={GALLERY_STREAM_ID}
           />
