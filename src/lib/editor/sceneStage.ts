@@ -52,13 +52,14 @@ export function renderSceneStage(scene: SceneStage, width = 320, height = 180) {
         const b = dot(p,d), disc = b*b-dot(p,p)+r*r;
         if (disc >= 0) { const near=-b-Math.sqrt(disc), far=-b+Math.sqrt(disc); t=near>0.001?near:far; n=norm(add(p,mul(d,t))); }
       } else {
-        let near=-1e6, far=1e6, axis=0, sign=1;
+        let near=-1e6, far=1e6, axis=0, sign=1, farAxis=0, farSign=1;
         for (let i=0;i<3;i++) {
           if (Math.abs(d[i])<1e-8) { if (Math.abs(p[i])>r) { far=-1e6; break; } continue; }
           const a=(-r-p[i])/d[i], b=(r-p[i])/d[i], low=Math.min(a,b), high=Math.max(a,b);
-          if (low>near) { near=low; axis=i; sign=d[i]>0?-1:1; } far=Math.min(far,high);
+          if (low>near) { near=low; axis=i; sign=d[i]>0?-1:1; }
+          if(high<far){far=high;farAxis=i;farSign=d[i]>0?1:-1;}
         }
-        if (far>=near && near>0.001) { t=near; n=[0,0,0]; n[axis]=sign; }
+        if (far>=near && far>0.001) {const inside=near<=0.001;t=inside?far:near;n=[0,0,0];n[inside?farAxis:axis]=inside?farSign:sign;}
       }
       if (t>0.001 && t<distance) { distance=t; normal=rotate(n,mesh.angle); material=mesh.rgb; }
     }
