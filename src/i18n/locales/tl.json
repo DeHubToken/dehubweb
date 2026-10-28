@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Iugnay ang iyong DeHub account",
-    "body": "Iugnay ang iyong account para pamahalaan ang iyong profile, mag-publish ng mga post at lumikha ng nilalaman mula sa chat. Ang mga koneksyon ay mag-eexpire sa loob ng 24 na oras. Maaari mong i-disconnect anumang oras.",
+    "body": "Iugnay ang iyong account para pamahalaan ang iyong profile, mag-publish ng mga post at lumikha ng nilalaman mula sa chat. Ang mga koneksyon ay mag-eexpire sa loob ng 30 araw. Maaari mong i-disconnect anumang oras.",
     "read": "Basahin ang iyong account, mga post, mga notification at ang Creator library",
     "profile": "I-edit ang iyong profile, mga larawan at mga setting ng privacy",
     "social": "Mag-publish ng mga post at komento, sundan ang mga tao at mag-save ng mga bookmark",

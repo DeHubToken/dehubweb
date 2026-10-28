@@ -408,7 +408,7 @@
   },
   "accountConnect": {
     "title": "Conecta tu cuenta de DeHub",
-    "body": "Conecta tu cuenta para gestionar tu perfil, publicar y crear contenido desde el chat. Las conexiones caducan en 24 horas. Puedes desconectarlas cuando quieras.",
+    "body": "Conecta tu cuenta para gestionar tu perfil, publicar y crear contenido desde el chat. Las conexiones caducan en 30 días. Puedes desconectarlas cuando quieras.",
     "read": "Leer tu cuenta, publicaciones, notificaciones y biblioteca de Creator",
     "profile": "Editar tu perfil, imágenes y ajustes de privacidad",
     "social": "Publicar y comentar, seguir personas y guardar favoritos",

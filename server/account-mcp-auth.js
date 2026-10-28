@@ -1,6 +1,10 @@
-import { ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, pkce, random, readJson, verifySession } from './account-mcp.js';
+import { API, ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge, edge, hash, json, pkce, random, readJson, verifySession } from './account-mcp.js';
 
 const HOUR = 3600000, DAY = 24 * HOUR;
+// A grant stays linked while it is used: each refresh pushes the deadline out.
+const GRANT_TTL = 30 * DAY;
+// DeHub access tokens last 15 minutes, so rotate the connector's own session early.
+const SESSION_REFRESH_AFTER = 12 * 60000;
 const oauthError = (message, code = 'invalid_request', status = 400) => json({ error: code, error_description: message }, status);
 const result = payload => ({ content: [{ type: 'text', text: JSON.stringify(payload) }], structuredContent: payload });
 const fail = message => ({ ...result({ error: message }), isError: true });
@@ -59,13 +63,50 @@ export class AccountMcpAuth {
     const access = await this.get(`access:${await hash(match[1])}`);
     const grant = access && await this.get(`grant:${access.grant}`);
     if (!grant) throw new Error('Expired or revoked connection. Link your DeHub account again.');
-    if (await verifySession(grant.token, this.fetcher) !== grant.wallet) throw new Error('DeHub session changed. Link your account again.');
-    return { ...grant, id: access.grant };
+    const current = await this.fresh(access.grant, grant);
+    if (await verifySession(current.token, this.fetcher) !== current.wallet) throw new Error('DeHub session changed. Link your account again.');
+    return { ...current, id: access.grant };
+  }
+  // The connector gets its own DeHub session (listed in Active sessions) so it
+  // outlives the 15 minute browser token it was approved with. Older backends
+  // without the endpoint fall back to that browser token.
+  async connectorSession(token, clientName) {
+    try {
+      const response = await this.fetcher(`${API}/auth/connector-session`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientName }), signal: AbortSignal.timeout(12000) });
+      const data = response.ok ? await response.json() : null;
+      if (typeof data?.token === 'string' && typeof data?.refreshToken === 'string') return { token: data.token, session: data.refreshToken, at: Date.now() };
+    } catch { /* fall back below */ }
+    return { token, session: null, at: Date.now() };
+  }
+  // Rotates the connector's DeHub session once per grant at a time; concurrent
+  // callers share the same rotation so a refresh token is never used twice.
+  async fresh(grantId, grant) {
+    if (!grant.session || Date.now() - grant.at < SESSION_REFRESH_AFTER) return grant;
+    this.rotations ??= new Map();
+    let rotation = this.rotations.get(grantId);
+    if (!rotation) {
+      rotation = (async () => {
+        const current = await this.get(`grant:${grantId}`);
+        if (!current?.session || Date.now() - current.at < SESSION_REFRESH_AFTER) return current || grant;
+        try {
+          const response = await this.fetcher(`${API}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: current.session }), signal: AbortSignal.timeout(12000) });
+          const data = await response.json().catch(() => null);
+          if (!response.ok || typeof data?.accessToken !== 'string' || typeof data?.refreshToken !== 'string') return current;
+          const next = { ...current, token: data.accessToken, session: data.refreshToken, at: Date.now() };
+          await this.put(`grant:${grantId}`, next, Math.max(1, next.deadline - Date.now()));
+          return next;
+        } catch { return current; }
+      })().finally(() => this.rotations.delete(grantId));
+      this.rotations.set(grantId, rotation);
+    }
+    return rotation;
   }
   async issue(grantId, grant) {
     const access = `dhm_${random()}`, refresh = `dhr_${random()}`;
     await this.put(`access:${await hash(access)}`, { grant: grantId }, HOUR);
-    await this.put(`refresh:${await hash(refresh)}`, { grant: grantId, client: grant.client }, Math.min(DAY, grant.deadline - Date.now()));
+    await this.put(`refresh:${await hash(refresh)}`, { grant: grantId, client: grant.client }, Math.max(1, grant.deadline - Date.now()));
     return { access_token: access, token_type: 'Bearer', expires_in: 3600, refresh_token: refresh, scope: grant.scopes.join(' ') };
   }
   async once(wallet, kind, id, args, operation) {
@@ -250,17 +291,21 @@ export class AccountMcpAuth {
         const digest = await pkce(verifier);
         const code = await this.consume(`code:${await hash(body.get('code') || '')}`, row => row.client === body.get('client_id') && row.redirect === body.get('redirect_uri') && row.challenge === digest && row.resource === RESOURCE);
         if (!code) return oauthError('Invalid or used authorization code.', 'invalid_grant');
-        const grantId = random(), grant = { client: code.client, clientName: code.clientName, wallet: code.wallet, token: code.token, scopes: code.scopes, deadline: Date.now() + DAY };
-        await this.put(`grant:${grantId}`, grant, DAY);
-        await this.put(`owner:${grant.wallet}:${grantId}`, grantId, DAY);
+        const session = await this.connectorSession(code.token, code.clientName);
+        const grantId = random(), grant = { client: code.client, clientName: code.clientName, wallet: code.wallet, ...session, scopes: code.scopes, deadline: Date.now() + GRANT_TTL };
+        await this.put(`grant:${grantId}`, grant, GRANT_TTL);
+        await this.put(`owner:${grant.wallet}:${grantId}`, grantId, GRANT_TTL);
         return json(await this.issue(grantId, grant));
       }
       if (body.get('grant_type') === 'refresh_token') {
         const refresh = await this.consume(`refresh:${await hash(body.get('refresh_token') || '')}`, row => row.client === body.get('client_id'));
-        const grant = refresh && await this.get(`grant:${refresh.grant}`);
-        if (!grant) return oauthError('Connection expired or revoked.', 'invalid_grant');
+        const stored = refresh && await this.get(`grant:${refresh.grant}`);
+        if (!stored) return oauthError('Connection expired or revoked.', 'invalid_grant');
+        const grant = { ...await this.fresh(refresh.grant, stored), deadline: Date.now() + GRANT_TTL };
         if (body.has('scope') && body.get('scope') !== grant.scopes.join(' ')) return oauthError('Reconnect to change permissions.', 'invalid_scope');
         if (await verifySession(grant.token, this.fetcher) !== grant.wallet) return oauthError('Sign in again.', 'invalid_grant');
+        await this.put(`grant:${refresh.grant}`, grant, GRANT_TTL);
+        await this.put(`owner:${grant.wallet}:${refresh.grant}`, refresh.grant, GRANT_TTL);
         return json(await this.issue(refresh.grant, grant));
       }
       return oauthError('Unsupported grant type.', 'unsupported_grant_type');
@@ -292,7 +337,7 @@ export class AccountMcpAuth {
       if (rpc.method.startsWith('notifications/') && rpc.id === undefined) return new Response(null, { status: 202 });
       const reply = value => json({ jsonrpc: '2.0', id: rpc.id ?? null, result: value });
       if (rpc.method === 'initialize') return reply({ protocolVersion: ['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(rpc.params?.protocolVersion) ? rpc.params.protocolVersion : '2025-06-18', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dehub-mcp', title: 'DeHub', version: '3.0.0' },
-        instructions: 'Browse DeHub publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections expire after at most 24 hours and can be disconnected on dehub.io/connect/chatgpt.' });
+        instructions: 'Browse DeHub publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections renew while used, expire after 30 days unused, and can be disconnected on dehub.io/connect/chatgpt.' });
       if (rpc.method === 'ping') return reply({});
       if (rpc.method === 'tools/list') return reply({ tools: accountTools.map(t => t.descriptor) });
       if (['resources/list','resources/templates/list','prompts/list'].includes(rpc.method)) return reply({ [rpc.method === 'resources/templates/list' ? 'resourceTemplates' : rpc.method.split('/')[0]]: [] });

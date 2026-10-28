@@ -408,7 +408,7 @@
   },
   "accountConnect": {
     "title": "Connect your DeHub account",
-    "body": "Link your account to manage your profile, publish posts and create content from chat. Connections expire within 24 hours. You can disconnect at any time.",
+    "body": "Link your account to manage your profile, publish posts and create content from chat. Connections stay linked while you use them and expire after 30 days unused. You can disconnect at any time.",
     "read": "Read your account, posts, notifications and Creator library",
     "profile": "Edit your profile, images and privacy settings",
     "social": "Publish posts and comments, follow people and save bookmarks",
