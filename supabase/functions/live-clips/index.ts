@@ -29,7 +29,7 @@
 // Without a worker URL and secret, live capture and rendering say so and stop.
 import { admin, corsHeaders, DEHUB_API_BASE, json } from '../_shared/transcripts.ts';
 import { checkRateLimit, requireDeHubAuth } from '../_shared/auth.ts';
-import { buildAss } from '../stage-clips/highlights.ts';
+import { buildAss } from '../_shared/clip-highlights.ts';
 import { findSpikes, liveSpike, type StreamEvent } from './spikes.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
