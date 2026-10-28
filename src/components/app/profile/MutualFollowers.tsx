@@ -33,8 +33,14 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
     }
   };
 
+  const count = mutuals.length;
+  const countLabel = count === 1
+    ? _copy('profile.mutualsOne', { defaultValue: '{{count}} Mutual:', count })
+    : _copy('profile.mutualsMany', { defaultValue: '{{count}} Mutuals:', count });
+
   return (
     <div className="flex items-center gap-2 mt-2">
+      <span className="text-zinc-500 text-xs leading-tight whitespace-nowrap shrink-0">{countLabel}</span>
       {/* Stacked avatars */}
       <div className="flex -space-x-2">
         {displayed.map((item) => {
