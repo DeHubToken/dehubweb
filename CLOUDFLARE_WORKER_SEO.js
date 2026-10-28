@@ -1548,8 +1548,8 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and DeHub tokens. Written for creators, not engineers.</p>`,
   },
   'compare': {
-    title: 'Compare DeHub with YouTube, X, Twitch and more',
-    description: 'Compare DeHub features with YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. Sources and conditions included.',
+    title: 'DeHub vs YouTube, X, TikTok, Twitch and more: every feature compared',
+    description: 'One chart of every feature across DeHub, YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. See who has the most.',
     heading: 'Compare DeHub',
     bodyHtml: `<p>Compare publishing, live video and audio, creator income, communities, studio tools, ownership, automation, safety and entertainment across DeHub and eleven other platforms.</p><p>Choose a platform, search for a feature or browse every category. Each documented entry links to a first-party source. Conditional features and related products are distinguished from native capabilities. An unverified entry is a research gap, not a claim that a feature is absent.</p><p>DeHub web, Android and iOS capabilities differ. Crypto purchase and reward actions are unavailable in the iOS app. This growing research catalogue was reviewed on 27 October 2026.</p>`,
   },
