@@ -4,7 +4,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useCachedVideoDub } from '@/hooks/use-cached-video-dub';
 import { supabase } from '@/integrations/supabase/client';
-vi('@/integrations/supabase/client', () => ({ supabase: {
+vi.mock('@/integrations/supabase/client', () => ({ supabase: {
   from: vi.fn(), channel: vi.fn(), removeChannel: vi.fn(), functions: { invoke: vi.fn() },
 } }));
 
