@@ -50,9 +50,11 @@ interface PostModalProps {
    * quote cannot be: a livestream, stage, article, scheduled or paywalled post.
    */
   quotedPost?: DeHubNFT | null;
+  /** A reaction from the remix studio: linked to its source once minted. */
+  remixLink?: { sourceTokenId: number } | null;
 }
 
-function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost }: PostModalProps & { draftScope: string }) {
+function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost, remixLink }: PostModalProps & { draftScope: string }) {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
@@ -64,7 +66,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
   const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
-  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost);
+  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost, remixLink);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);

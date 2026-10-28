@@ -8,7 +8,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { AtSign, Loader2, AlertTriangle, Zap, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon } from "lucide-react";
+import { AtSign, Loader2, AlertTriangle, Zap, Star, ShoppingBag, Scale, Siren, Award, ChevronDown, Filter as FilterIcon, MonitorPlay } from "lucide-react";
 import MessageSquareText from "@/components/ui/cut-icons/messages";
 import Users from "@/components/ui/cut-icons/communities";
 import Check from "@/components/ui/cut-icons/check";
@@ -289,7 +289,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
-  reposts: ['repost', 'quote'],
+  reposts: ['repost', 'quote', 'video_reaction'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
@@ -394,6 +394,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <Gem className="w-4 h-4 text-white/70" />;
     case 'video_milestone':
       return <Trophy className="w-4 h-4 text-white/70" />;
+    case 'video_reaction':
+      return <MonitorPlay className="w-4 h-4 text-white/70" />;
     case 'account_warning':
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'livestream_start':
@@ -640,6 +642,16 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title, tr);
   }
+  if ((notification.type as string) === 'video_reaction') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    const live = /live/.test(String((notification as any).content ?? ''));
+    const key = live ? 'reactions.notifyLive' : 'reactions.notify';
+    return tr(key, {
+      name: actorName,
+      title: title || tr('reactions.yourVideo', { defaultValue: 'your video' }),
+      defaultValue: live ? '{{name}} is reacting live to {{title}}' : '{{name}} reacted to {{title}}',
+    });
+  }
   if ((notification.type as string) === 'stage_reminder') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageReminderSentence(title, tr);
@@ -882,6 +894,11 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   if ((notification.type as string).startsWith('dao_')) {
     const refId = customReferenceId(notification);
     return refId ? `/dao?proposal=${encodeURIComponent(refId)}` : '/dao';
+  }
+  // A reaction opens the reaction post, or the stream that is reacting.
+  if ((notification.type as string) === 'video_reaction') {
+    const refId = customReferenceId(notification);
+    return refId && /^\d+$/.test(refId) ? `/app/post/${refId}` : null;
   }
   if ((notification.type as string) === 'stage_live' || (notification.type as string) === 'stage_reminder') {
     // Shared with the live toast and the OS notification so all three land on

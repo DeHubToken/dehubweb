@@ -1,4 +1,4 @@
-export type RemixMode = 'green-screen' | 'collab' | 'sound' | 'cut';
+export type RemixMode = 'green-screen' | 'collab' | 'sound' | 'cut' | 'react';
 export interface RemixStudioConfig {
   mode: RemixMode;
   videoUrl: string;
@@ -21,6 +21,7 @@ export function buildRemixStudioHtml(config: RemixStudioConfig): string {
 <label>Source volume <input id="sourceVolume" type="range" min="0" max="1" step="0.05" value="0.7"></label><label>Microphone <input id="micVolume" type="range" min="0" max="1" step="0.05" value="1"></label>
 <div class="row"><button id="sample" disabled>Play sample</button><button id="camera" disabled>Enable camera</button><button id="flip" disabled>Flip camera</button><label><input id="countdown" type="checkbox" checked>3 sec timer</label></div>
 <small id="hint"></small></fieldset>
+<div class="row" id="reactControls" hidden><button id="sourcePlay" aria-label="Play or pause the video">Pause video</button><input id="sourcePos" type="range" min="0" max="0" step="0.1" value="0" aria-label="Video position" style="flex:1;accent-color:#ddd"><output id="sourceTime">0:00</output></div>
 <div class="row" style="margin-top:12px"><button class="primary" id="record" disabled>Record</button><button id="stop" hidden>Stop</button><strong id="clock"></strong><button id="retake" hidden>Retake</button><button class="primary" id="use" hidden>Use video</button></div>
 </section><video id="source" class="capture" playsinline crossorigin="anonymous" preload="auto"></video><video id="cameraVideo" class="capture" autoplay playsinline muted></video>
 <script>const config = ${json};</script><script type="module">${REMIX_STUDIO_RUNTIME}</script></body></html>`;
@@ -36,13 +37,27 @@ let recorder = null, capture = null, result = null, resultUrl = null, chunks = [
 let ready = false, busy = false, recording = false, counting = false, closed = false, discarded = false, facing = 'user';
 let started = 0, measured = 0, samplePlaying = false, animation = 0, countTimer = 0, recordTimer = 0;
 let subject = {x:.5,y:.6,scale:.8}, pointers = new Map(), pinch = null;
-const names = {'green-screen':'Green screen',collab:'Collab',sound:'Use this sound',cut:'Cut this video'};
-const MAX_BYTES = 24 * 1024 * 1024;
+const names = {'green-screen':'Green screen',collab:'Collab',sound:'Use this sound',cut:'Cut this video',react:'React'};
+const REACT = config.mode==='react';
+// A reaction runs up to ten minutes, so it records at a lower bitrate and hands the file over as a Blob.
+const MAX_BYTES = (REACT ? 160 : 24) * 1024 * 1024;
 function send(type, data = {}) { const packet = {key:config.bridgeKey,type,...data}; if(window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(packet)); else parent.postMessage(packet, '*'); }
 function status(text, error = false) { $('status').textContent = text; $('status').className = error ? 'error' : ''; }
-function range() { const start = Number($('trim').value), remaining = Math.max(0, source.duration - start); return {start, duration:Math.min(Number($('length').value),remaining), cut:Math.min(Number($('cutLength').value),remaining)}; }
+function range() { const start = Number($('trim').value), remaining = Math.max(0, source.duration - start); return {start, duration:REACT ? Number($('length').value) : Math.min(Number($('length').value),remaining), cut:Math.min(Number($('cutLength').value),remaining)}; }
+function clock(seconds) { const s = Math.max(0, Math.floor(seconds)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function contain(context, image, x,y,w,h) {
+  const iw=image.videoWidth || image.width, ih=image.videoHeight || image.height; if(!iw || !ih)return;
+  const scale=Math.min(w/iw,h/ih), dw=iw*scale, dh=ih*scale;
+  context.drawImage(image,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+}
+function bubble(context, w, h) {
+  const d=Math.min(w,h)*subject.scale, cx=w*subject.x, cy=h*subject.y;
+  context.save(); context.beginPath(); context.arc(cx,cy,d/2,0,Math.PI*2); context.closePath(); context.clip();
+  cover(context,camera,cx-d/2,cy-d/2,d,d,facing==='user'); context.restore();
+  context.save(); context.beginPath(); context.arc(cx,cy,d/2,0,Math.PI*2); context.lineWidth=Math.max(4,d*.025); context.strokeStyle='rgba(255,255,255,.9)'; context.stroke(); context.restore();
+}
 function liveError(error) { if(closed)return; status(error.message || String(error), true); if(recording) stop(true); send('error',{error:error.message || String(error)}); }
-function controls() { $('settings').disabled = busy || recording || counting || !!result; $('record').disabled = !ready || !stream || busy || counting || !!result; $('camera').disabled = !ready || busy; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || !!result; $('retake').hidden = !result; $('use').hidden = !result; }
+function controls() { $('settings').disabled = busy || recording || counting || !!result; $('record').disabled = !ready || !stream || busy || counting || !!result; $('camera').disabled = !ready || busy; $('flip').disabled = !stream || busy; $('stop').hidden = !recording && !counting; $('record').hidden = recording || counting || !!result; $('retake').hidden = !result; $('use').hidden = !result; if(REACT){$('reactControls').hidden = !ready || !!result; $('sourcePlay').textContent = source.paused ? 'Play video' : 'Pause video';} }
 function cover(context, image, x,y,w,h, mirror = false) {
   const iw=image.videoWidth || image.width, ih=image.videoHeight || image.height; if(!iw || !ih)return;
   const scale=Math.max(w/iw,h/ih), sw=w/scale, sh=h/scale;
@@ -59,7 +74,12 @@ function draw(now) {
   if(samplePlaying && source.currentTime>=r.start+(config.mode==='cut'?r.cut:r.duration)){source.pause();samplePlaying=false;}
   ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);
   const cameraReady=camera.readyState>=2 && stream;
-  if(config.mode==='green-screen') {
+  if(REACT) {
+    contain(ctx,source,0,0,w,h);
+    if(cameraReady)bubble(ctx,w,h);
+    if(document.activeElement!==$('sourcePos')){$('sourcePos').value=String(source.currentTime);}
+    $('sourceTime').textContent=clock(source.currentTime)+' / '+clock(source.duration);
+  } else if(config.mode==='green-screen') {
     cover(ctx,source,0,0,w,h);
     if(cameraReady && segmenter) {
       if(camera.currentTime!==lastFrame) {
@@ -123,7 +143,7 @@ async function start() {
     for(const track of mix.stream.getAudioTracks())capture.addTrack(track.clone());
     const mime=['video/webm;codecs=vp8,opus','video/mp4','video/webm'].find(type=>MediaRecorder.isTypeSupported(type));
     if(!mime)throw new Error('Video recording is unavailable on this device.');
-    recorder=new MediaRecorder(capture,{mimeType:mime,videoBitsPerSecond:2000000,audioBitsPerSecond:128000});
+    recorder=new MediaRecorder(capture,{mimeType:mime,videoBitsPerSecond:REACT?1500000:2000000,audioBitsPerSecond:128000});
     recorder.ondataavailable=event=>{if(event.data.size){recordedBytes+=event.data.size;if(recordedBytes>MAX_BYTES){discarded=true;liveError(new Error('Recording is too large. Please use a shorter take.'));return;}chunks.push(event.data);}};
     recorder.onerror=()=>liveError(new Error('Recording failed. Please try another take.'));
     recorder.onstop=()=>{capture?.getTracks().forEach(t=>t.stop());capture=null;source.pause();if(monitor)monitor.gain.value=0;if(!discarded && chunks.length && measured>.25){result=new Blob(chunks,{type:mime.split(';')[0]});resultUrl=URL.createObjectURL(result);$('review').src=resultUrl;$('review').hidden=false;$('stage').hidden=true;status('Review your take before using it.');}chunks=[];controls();};
@@ -136,30 +156,34 @@ async function start() {
 function stop(discard=false){discarded ||= discard;counting=false;clearTimeout(recordTimer);if(recording)measured=(performance.now()-started)/1000;recording=false;source.pause();if(monitor)monitor.gain.value=0;if(recorder && recorder.state!=='inactive')recorder.stop();else{capture?.getTracks().forEach(t=>t.stop());capture=null;controls();}}
 function dispose(){if(closed)return;closed=true;stop(true);clearTimeout(countTimer);cancelAnimationFrame(animation);stream?.getTracks().forEach(t=>t.stop());stream=null;segmenter?.close();segmenter=null;audio?.close();if(resultUrl)URL.revokeObjectURL(resultUrl);source.removeAttribute('src');source.load();}
 $('title').textContent=names[config.mode] || 'Remix';$('credit').textContent='Source: '+(config.creator ? '@'+config.creator+' · ' : '')+config.title;
-$('hint').textContent=config.mode==='green-screen'?'Your background is removed live. Drag to move yourself; pinch or scroll to resize.':'Choose your source range and layout, then record your response.';
+$('hint').textContent=config.mode==='green-screen'?'Your background is removed live. Drag to move yourself; pinch or scroll to resize.':REACT?'Drag your camera bubble to move it; pinch or scroll to resize. Pause or scrub the video while you record.':'Choose your source range and layout, then record your response.';
+if(REACT){$('length').innerHTML='';for(const [value,label] of [[60,'1 minute'],[180,'3 minutes'],[300,'5 minutes'],[600,'10 minutes']])$('length').add(new Option(label,String(value)));$('length').value='600';$('trim').closest('label').firstChild.textContent='Start at ';subject={x:.78,y:.8,scale:.34};}
 $('cutLabel').hidden=config.mode!=='cut';$('layoutLabel').hidden=config.mode==='sound'||config.mode==='cut';
-for(const [value,label] of (config.mode==='collab'?[['side','Side by side'],['stacked','Stacked']]:[['full','Full screen'],['corner','Corner'],['square','Square']])){$('layout').add(new Option(label,value));}
-$('layout').onchange=()=>{canvas.height=$('layout').value==='square'?720:1280;subject=$('layout').value==='corner'?{x:.73,y:.74,scale:.48}:{x:.5,y:.6,scale:.8};};
+for(const [value,label] of (config.mode==='collab'?[['side','Side by side'],['stacked','Stacked']]:REACT?[['portrait','Portrait'],['landscape','Landscape']]:[['full','Full screen'],['corner','Corner'],['square','Square']])){$('layout').add(new Option(label,value));}
+$('layout').onchange=()=>{if(REACT){const wide=$('layout').value==='landscape';canvas.width=wide?1280:720;canvas.height=wide?720:1280;return;}canvas.height=$('layout').value==='square'?720:1280;subject=$('layout').value==='corner'?{x:.73,y:.74,scale:.48}:{x:.5,y:.6,scale:.8};};
 $('trim').oninput=()=>{$('trimValue').textContent=Number($('trim').value).toFixed(1)+'s';source.pause();samplePlaying=false;source.currentTime=Number($('trim').value);};
 $('sourceVolume').oninput=()=>{if(sourceGain)sourceGain.gain.value=Number($('sourceVolume').value);};
 $('sample').onclick=async()=>{try{await initAudio();await seek();monitor.gain.value=1;await source.play();samplePlaying=true;}catch(error){liveError(error);}};
 $('camera').onclick=enableCamera;$('flip').onclick=()=>{facing=facing==='user'?'environment':'user';void enableCamera();};$('record').onclick=start;$('stop').onclick=()=>stop();
 $('retake').onclick=()=>{if(resultUrl)URL.revokeObjectURL(resultUrl);resultUrl=null;result=null;$('review').pause();$('review').removeAttribute('src');$('review').hidden=true;$('stage').hidden=false;$('clock').textContent='';status('Ready for another take.');controls();};
-$('use').onclick=async()=>{if(!result || busy)return;busy=true;controls();$('use').disabled=true;status('Preparing your video…');try{const reader=new FileReader();reader.onload=()=>{send('recorded',{dataUrl:reader.result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height});};reader.onerror=()=>{busy=false;$('use').disabled=false;liveError(new Error('Could not prepare the take.'));controls();};reader.readAsDataURL(result);}catch(error){busy=false;liveError(error);controls();}};
+$('use').onclick=async()=>{if(!result || busy)return;busy=true;controls();$('use').disabled=true;status('Preparing your video…');try{if(REACT && !window.ReactNativeWebView){send('recorded',{blob:result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height});return;}const reader=new FileReader();reader.onload=()=>{send('recorded',{dataUrl:reader.result,duration:measured,mime:result.type,width:canvas.width,height:canvas.height});};reader.onerror=()=>{busy=false;$('use').disabled=false;liveError(new Error('Could not prepare the take.'));controls();};reader.readAsDataURL(result);}catch(error){busy=false;liveError(error);controls();}};
 function hostMessage(event){let data=event.data;try{if(typeof data==='string')data=JSON.parse(data);}catch{return;}if(data?.key!==config.bridgeKey)return;if(data.type==='save-failed'){busy=false;$('use').disabled=false;status(data.error||'Could not save. Your take is ready to retry.',true);controls();}if(data.type==='dispose')dispose();}
 window.addEventListener('message',hostMessage);document.addEventListener('message',hostMessage);
 $('close').onclick=()=>{dispose();send('cancel');};window.addEventListener('pagehide',dispose);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(recording||counting)stop();stream?.getTracks().forEach(t=>t.stop());stream=null;source.pause();controls();status('Camera stopped while this screen was hidden. Enable it to continue.');}});
-canvas.onpointerdown=event=>{if(config.mode!=='green-screen'||recording)return;canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});};
-canvas.onpointermove=event=>{if(!pointers.has(event.pointerId))return;const before=pointers.get(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});const box=canvas.getBoundingClientRect();if(pointers.size===1){subject.x=Math.max(0,Math.min(1,subject.x+(event.clientX-before.x)/box.width));subject.y=Math.max(0,Math.min(1,subject.y+(event.clientY-before.y)/box.height));}else{const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)subject.scale=Math.max(.2,Math.min(2,subject.scale*distance/pinch));pinch=distance;}};
-canvas.onpointerup=canvas.onpointercancel=event=>{pointers.delete(event.pointerId);pinch=null;};canvas.onwheel=event=>{if(config.mode==='green-screen'&&!recording){event.preventDefault();subject.scale=Math.max(.2,Math.min(2,subject.scale-event.deltaY*.001));}};
+canvas.onpointerdown=event=>{if(!(REACT||(config.mode==='green-screen'&&!recording)))return;canvas.setPointerCapture(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});};
+canvas.onpointermove=event=>{if(!pointers.has(event.pointerId))return;const before=pointers.get(event.pointerId);pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});const box=canvas.getBoundingClientRect();if(pointers.size===1){subject.x=Math.max(0,Math.min(1,subject.x+(event.clientX-before.x)/box.width));subject.y=Math.max(0,Math.min(1,subject.y+(event.clientY-before.y)/box.height));}else{const [a,b]=[...pointers.values()],distance=Math.hypot(a.x-b.x,a.y-b.y);if(pinch)subject.scale=Math.max(REACT?.12:.2,Math.min(REACT?.9:2,subject.scale*distance/pinch));pinch=distance;}};
+canvas.onpointerup=canvas.onpointercancel=event=>{pointers.delete(event.pointerId);pinch=null;};canvas.onwheel=event=>{if(REACT||(config.mode==='green-screen'&&!recording)){event.preventDefault();subject.scale=Math.max(REACT?.12:.2,Math.min(REACT?.9:2,subject.scale-event.deltaY*.001));}};
+$('sourcePlay').onclick=async()=>{try{await initAudio();if(source.paused){if(monitor)monitor.gain.value=1;await source.play();}else source.pause();}catch(error){liveError(error);}controls();};
+$('sourcePos').oninput=()=>{source.currentTime=Number($('sourcePos').value);};
+source.addEventListener('play',controls);source.addEventListener('pause',controls);
 source.addEventListener('error',()=>liveError(new Error('This video cannot be loaded for remixing. Try a different source.')));
-source.addEventListener('waiting',()=>{if(recording && (config.mode!=='cut'||(performance.now()-started)/1000<range().cut))liveError(new Error('Source playback stalled. Please retry after it has loaded.'));});
+source.addEventListener('waiting',()=>{if(recording && !REACT && (config.mode!=='cut'||(performance.now()-started)/1000<range().cut))liveError(new Error('Source playback stalled. Please retry after it has loaded.'));});
 try {
-  if(!['green-screen','collab','sound','cut'].includes(config.mode)||!/^https:\/\//.test(config.videoUrl))throw new Error('Invalid remix source.');
+  if(!['green-screen','collab','sound','cut','react'].includes(config.mode)||!/^https:\/\//.test(config.videoUrl))throw new Error('Invalid remix source.');
   if(!navigator.mediaDevices?.getUserMedia || !canvas.captureStream || typeof MediaRecorder==='undefined')throw new Error('Live recording is unavailable in this browser. Use the latest Chrome or the DeHub app.');
   await waitMedia(source,'loadeddata',()=>{source.src=config.videoUrl;source.muted=true;});
   if(!Number.isFinite(source.duration)||source.duration<.25)throw new Error('Choose a finished video with a known duration.');
-  $('trim').max=String(Math.max(0,source.duration-.5));ready=true;$('sample').disabled=false;controls();status('Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
+  $('trim').max=String(Math.max(0,source.duration-.5));$('sourcePos').max=String(source.duration);ready=true;$('sample').disabled=false;controls();status('Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
 }catch(error){liveError(error);}
 `;

@@ -266,6 +266,7 @@ import { usePendingAction } from '@/hooks/use-pending-action';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 import { KeywordFiltersSection } from '@/components/app/settings/KeywordFiltersSection';
+import { AccountAllowReactions } from '@/components/app/remix/AllowReactionsSwitch';
 import { NotificationFiltersSetting } from '@/components/app/settings/NotificationFiltersSetting';
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
@@ -2038,6 +2039,11 @@ function PrivacySettings() {
       {/* Blocked Users */}
       <div data-setting-anchor="blocked-users">
         <BlockedUsersSection />
+      </div>
+
+      {/* Who may react to my videos — the default for posts without their own choice. */}
+      <div data-setting-anchor="allow-reactions">
+        <AccountAllowReactions />
       </div>
 
       {/* Muted words — keyword filters */}

@@ -6772,7 +6772,13 @@
         "circle": "Cercle",
         "rounded": "Arrondi",
         "rect": "Carré"
-      }
+      },
+      "addReaction": "Réagir à une vidéo",
+      "reactPlaceholder": "Collez un lien de vidéo DeHub",
+      "reactAdd": "Afficher",
+      "reactInvalid": "Collez un lien vers une vidéo DeHub.",
+      "reactNotLive": "Passez d’abord en direct, puis ajoutez la vidéo.",
+      "reactNoBubble": "Votre caméra ne peut pas s’ouvrir deux fois ici. Redimensionnez la vidéo pour garder votre visage à l’écran."
     },
     "audio": {
       "title": "Mixeur audio",
@@ -19700,5 +19706,26 @@
     "errorNoRecipient": "Aucun compte DeHub trouvé",
     "errorSelf": "Vous ne pouvez pas vous envoyer à vous-même",
     "errorGeneric": "Envoi impossible. Réessayez."
+  },
+  "reactions": {
+    "reactionTo": "Réaction à",
+    "reactingTo": "Réagit à",
+    "count_one": "{{count}} réaction",
+    "count_other": "{{count}} réactions",
+    "allow": "Autoriser les réactions",
+    "allowDescription": "Permettez aux autres créateurs de réagir à vos vidéos, enregistrées ou en direct. Vous pouvez le modifier sur chaque publication.",
+    "notify": "{{name}} a réagi à {{title}}",
+    "notifyLive": "{{name}} réagit en direct à {{title}}",
+    "yourVideo": "votre vidéo",
+    "pageTitle": "Réactions à {{title}} — DeHub",
+    "pageDescription": "Regardez les créateurs réagir à « {{title}} » de {{creator}} sur DeHub, en vidéo et en direct.",
+    "heading": "Réactions",
+    "backToVideo": "Retour à la vidéo",
+    "empty": "Aucune réaction pour l’instant. Ouvrez le menu Remix de la vidéo et choisissez Réagir pour être le premier.",
+    "more": "Voir plus",
+    "liveNow": "En direct",
+    "wasLive": "Était en direct",
+    "untitled": "Réaction",
+    "thisVideo": "cette vidéo"
   }
 }

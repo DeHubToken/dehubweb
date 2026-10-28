@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Camera, Columns2, Music2, Scissors } from 'lucide-react';
+import { Camera, Columns2, MonitorPlay, Music2, Scissors } from 'lucide-react';
 import type { RemixMode } from '@/lib/editor/remixStudioHtml';
 
 export interface RemixSource { videoUrl: string; sourceUrl: string; title: string; creator?: string }
 const modes = [
   ['green-screen', 'Green screen', Camera], ['collab', 'Collab', Columns2],
   ['sound', 'Use this sound', Music2], ['cut', 'Cut this video', Scissors],
+  ['react', 'React', MonitorPlay],
 ] as const;
 
 export function RemixMenuItems({ source, onStart }: { source: RemixSource; onStart: () => void }) {
