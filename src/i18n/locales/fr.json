@@ -7779,6 +7779,8 @@
     "footerNote": "La participation à DePin est un service de contribution et non un produit d'investissement. La disponibilité, l'admissibilité et les récompenses peuvent changer."
   },
   "creatorFlow": {
+    "signInForAudioLibrary": "Connectez-vous pour ouvrir votre bibliothèque audio privée.",
+    "audioLibraryFailed": "Impossible de charger votre audio enregistré. Réessayez.",
     "retryFreeTask": "Réessayer la tâche gratuite",
     "previewSavedMedia": "Aperçu des médias enregistrés",
     "audioSavePending": "L’audio est prêt, mais son enregistrement dans la bibliothèque privée est en attente. Reprenez pour le récupérer.",

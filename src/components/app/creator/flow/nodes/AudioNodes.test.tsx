@@ -1,0 +1,30 @@
+import React from 'react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+const mocks = vi.hoisted(() => ({ wallet: null as string | null, page: vi.fn(), update: vi.fn() }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: mocks.wallet }) }));
+vi.mock('@/lib/creator/cloudLibrary', () => ({ loadCloudGenerationPage: mocks.page }));
+vi.mock('@/lib/creator/flow/assets', () => ({ loadFlowAssets: vi.fn() }));
+vi.mock('@/lib/creator/generationEngine', () => ({ DEFAULT_VOICE_ID: 'voice' }));
+vi.mock('@/store/creatorFlowStore', () => ({ useCreatorFlowStore: (selector: (state: unknown) => unknown) => selector({ updateNodeData: mocks.update }) }));
+vi.mock('../FlowActionsContext', () => ({ useFlowActions: () => ({ readOnly: false }) }));
+vi.mock('../NodeChrome', () => ({ NodeCard: ({ children }: { children: React.ReactNode }) => <div>{children}</div>, AboveLabel: () => null, CornerResizer: () => null, IoHandle: () => null, useHandleConnected: () => false }));
+import { AudioInputNode } from './AudioNodes';
+const node = () => <AudioInputNode {...({ id: 'audio', data: { label: 'Audio' } } as React.ComponentProps<typeof AudioInputNode>)} />;
+beforeEach(() => { vi.resetAllMocks(); mocks.wallet = null; });
+afterEach(cleanup);
+it('explains that signing in is required when a guest opens the saved audio library', () => {
+  render(node());
+  fireEvent.click(screen.getByRole('button', { name: 'creator.referenceLibrary' }));
+  expect(screen.getByRole('alert')).toHaveTextContent('creatorFlow.signInForAudioLibrary');
+  expect(mocks.page).not.toHaveBeenCalled();
+});
+it('shows a library failure instead of silently swallowing it and clears it on account change', async () => {
+  mocks.wallet = 'owner'; mocks.page.mockRejectedValue(new Error('Network unavailable'));
+  const ui = render(node());
+  fireEvent.click(screen.getByRole('button', { name: 'creator.referenceLibrary' }));
+  await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('creatorFlow.audioLibraryFailed'));
+  mocks.wallet = null; ui.rerender(node());
+  expect(screen.queryByRole('alert')).toBeNull();
+});

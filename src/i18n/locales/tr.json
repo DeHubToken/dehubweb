@@ -7775,6 +7775,8 @@
     "footerNote": "DePin katılımı bir katkı hizmetidir, yatırım ürünü değildir. Erişilebilirlik, uygunluk ve ödüller değişebilir."
   },
   "creatorFlow": {
+    "signInForAudioLibrary": "Özel kayıtlı ses kitaplığınızı açmak için giriş yapın.",
+    "audioLibraryFailed": "Kayıtlı sesleriniz yüklenemedi. Yeniden deneyin.",
     "retryFreeTask": "Ücretsiz görevi yeniden dene",
     "previewSavedMedia": "Kayıtlı medyayı önizle",
     "audioSavePending": "Ses hazır ancak özel kitaplığa kaydedilmesi bekleniyor. Sonucu almak için sürdürün.",

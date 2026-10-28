@@ -7728,6 +7728,8 @@
     "footerNote": "DePin participation is a contribution service, not an investment product. Availability, eligibility and rewards may change."
   },
   "creatorFlow": {
+    "signInForAudioLibrary": "Sign in to open your private saved audio library.",
+    "audioLibraryFailed": "Your saved audio could not be loaded. Try again.",
     "retryFreeTask": "Retry free task",
     "previewSavedMedia": "Preview saved media",
     "audioSavePending": "The audio is ready, but its private library save is pending. Resume to collect it.",
