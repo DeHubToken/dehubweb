@@ -11972,6 +11972,7 @@ $('#tdGo').addEventListener('click',async()=>{
   }
   td.busy=false;tdRender();
 });
+function escH(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function renderFills(){
   const box=$('#tdLog');box.innerHTML='';
   if(!fills.length){box.innerHTML='<div id="tdEmpty">NO FILLS FROM THIS DESK YET</div>';return;}
@@ -11980,10 +11981,10 @@ function renderFills(){
   for(const f of visibleFills.slice(0,40)){
     const d=document.createElement('div');d.className='fill';
     const st=f.status||'SENT';
-    d.innerHTML='<span class="side '+f.side+'">'+f.side.toUpperCase()+'</span><b>'+f.sym+'</b>'+
-      '<span>'+f.inQty+' '+f.inUnit+' → '+f.outUnit+'</span>'+
-      '<span class="ch">'+(CHAINS[f.chain]?CHAINS[f.chain].label:f.chain)+'</span>'+
-      '<a href="'+txUrl(f.chain,f.hash)+'" target="_blank" rel="noopener">'+f.hash.slice(0,8)+'…</a>'+
+    d.innerHTML='<span class="side '+escH(f.side)+'">'+escH(String(f.side).toUpperCase())+'</span><b>'+escH(f.sym)+'</b>'+
+      '<span>'+escH(f.inQty)+' '+escH(f.inUnit)+' → '+escH(f.outUnit)+'</span>'+
+      '<span class="ch">'+escH(CHAINS[f.chain]?CHAINS[f.chain].label:f.chain)+'</span>'+
+      '<a href="'+escH(txUrl(f.chain,f.hash))+'" target="_blank" rel="noopener">'+escH(String(f.hash).slice(0,8))+'…</a>'+
       '<span class="st '+(st==='CONFIRMED'?'ok':st==='FAILED'?'bad':'')+'">'+st+'</span>';
     box.appendChild(d);
   }
@@ -12362,7 +12363,7 @@ async function bnxPrepareOrder(){
   const q=$('#bnOrderMsg');
   if(!sym||!isFinite(quote)||quote<=0){q.textContent='ENTER A SYMBOL AND AMOUNT.';return;}
   bnx.pending={symbol:sym,side,type:'MARKET',quoteOrderQty:quote};
-  q.innerHTML='<b style="color:var(--amber)">CONFIRM:</b> '+side+' '+quote+' USDT OF '+sym+
+  q.innerHTML='<b style="color:var(--amber)">CONFIRM:</b> '+escH(side)+' '+escH(quote)+' USDT OF '+escH(sym)+
     ' AT MARKET ON '+(bnx.net==='test'?'TESTNET':'<b style="color:var(--down)">LIVE MONEY</b>')+
     '<br>PRESS SEND AGAIN TO PLACE IT.';
   $('#bnSend').textContent='SEND ORDER';
@@ -12608,7 +12609,7 @@ function renderAlerts(){
   alerts.forEach((a,i)=>{
     const d=document.createElement('div');
     d.className='aItem '+(a.fired?'done':'armed');
-    d.innerHTML='<b>'+alertText(a)+'</b><span style="color:var(--dim)">'+
+    d.innerHTML='<b>'+escH(alertText(a))+'</b><span style="color:var(--dim)">'+
       (a.fired?'FIRED':'ARMED')+'</span><span class="x" data-i="'+i+'">✕</span>';
     box.appendChild(d);
   });
