@@ -22,8 +22,9 @@ describe('cached route glass lifecycle', () => {
 
   it('keeps cached content mounted and the feed visible underneath post overlays', () => {
     expect(source).toContain('const shouldStayVisible = isActive || forceVisible');
-    expect(source).toContain('<CachedPageActiveContext.Provider value={shouldStayVisible && !retainedPostKey}>');
-    expect(source).toContain('<Component />');
+    expect(source).toContain('const activeNow = shouldStayVisible && !retainedPostKey');
+    expect(source).toContain('<CachedPageActiveContext.Provider value={contextActive}>');
+    expect(source).toContain('useMemo(() => <Component />, [Component])');
     expect(source).not.toMatch(/(?:isActive|shouldStayVisible)\s*&&\s*<Component/);
   });
 });
