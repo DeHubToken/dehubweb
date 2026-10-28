@@ -320,6 +320,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
     'street slayer', 'beat em up', 'fighting', 'trenchstar', 'chartopia', 'trading floor',
   ],
   Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
+  'Compare DeHub': ['comparison', 'compare', 'youtube', 'twitter', 'kick', 'twitch', 'facebook', 'instagram', 'tiktok', 'rumble', 'mastodon', 'bluesky', 'farcaster'],
   Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
   Feedback: ['feedback', 'experience', 'give feedback', 'testimonial'],
   Stats: ['analytics', 'metrics', 'live stats', 'charts', 'numbers', 'price', 'supply', 'holders', 'volume'],

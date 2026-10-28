@@ -209,6 +209,7 @@ const CoStreamJoinPage = React.lazy(() => import("./pages/app/CoStreamJoinPage")
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedStreaming = React.lazy(() => import("./pages/BestDecentralizedStreaming"));
+const ComparePage = React.lazy(() => import("./pages/app/ComparePage"));
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
@@ -662,6 +663,8 @@ function AppContent() {
             <Route path="/stats/money" element={<Navigate to="/stats" replace />} />
             <Route path="/features" element={null} />
             <Route path="/feedback" element={null} />
+            <Route path="/compare" element={<Suspense fallback={<PageLoader />}><ComparePage /></Suspense>} />
+            <Route path="/app/compare" element={<Suspense fallback={<PageLoader />}><ComparePage /></Suspense>} />
             <Route path="/governance" element={null} />
             <Route path="/dao" element={null} />
             <Route path="/stake" element={null} />

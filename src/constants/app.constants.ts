@@ -97,6 +97,7 @@ export const NAV_ITEMS: NavItem[] = [
   // The converter's batch twin: one link there, a whole channel here.
   { icon: FolderInput, label: 'Migrate', path: '/migrate-youtube' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
+  { icon: BarChart3, label: 'Compare DeHub', path: '/compare' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },
   { icon: BookOpen, label: 'Docs', path: '/docs' },
