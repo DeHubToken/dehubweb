@@ -11,10 +11,11 @@ import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { DEFAULT_SETTINGS, type ProjectSnapshot } from '@/lib/editor/types';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
+import { checkRemix } from '@/lib/remix-links';
 
 const sourceTokenId = (sourceUrl: string) => decodeURIComponent(new URL(sourceUrl).pathname.split('/').pop()!);
 
-async function checkSource(sourceUrl: string) {
+async function checkSource(sourceUrl: string, mode: RemixMode) {
   const post = await getNFTInfo(sourceTokenId(sourceUrl));
   const extra = post as typeof post & { plansDetails?: unknown[]; plans?: unknown[]; deleted?: boolean };
   if (!post || post.postType !== 'video' || post.isHidden || extra.deleted || post.is_live || post.status === 'live'
@@ -24,6 +25,11 @@ async function checkSource(sourceUrl: string) {
       isLocked: post.is_locked || post.streamInfo?.isLockContent,
       lockedPrice: post.locked_price ?? post.streamInfo?.lockContentAmount,
       subscriberPlans: extra.plansDetails ?? extra.plans })) throw new Error('This video is unavailable for remixing.');
+  // The creator's "Allow duets" setting, checked by the server for this viewer.
+  if (mode === 'duet') {
+    const verdict = await checkRemix(sourceTokenId(sourceUrl), 'duet');
+    if (!verdict.allowed) throw new Error(verdict.reason || 'The creator does not allow duets on this video.');
+  }
 }
 
 export default function VideoRemix() {
@@ -51,7 +57,7 @@ export default function VideoRemix() {
   useEffect(() => {
     let cancelled = false;
     setAvailable(false);
-    if (config) void checkSource(config.sourceUrl).then(() => { if (!cancelled) setAvailable(true); })
+    if (config) void checkSource(config.sourceUrl, config.mode).then(() => { if (!cancelled) setAvailable(true); })
       .catch(failure => { if (!cancelled) setError(failure instanceof Error ? failure.message : 'Could not open this video.'); });
     return () => { cancelled = true; };
   }, [config]);
@@ -69,7 +75,7 @@ export default function VideoRemix() {
       if (data.type !== 'recorded' || busy.current) return;
       busy.current = true;
       try {
-        await checkSource(config.sourceUrl);
+        await checkSource(config.sourceUrl, config.mode);
         if (closed) return;
         if (typeof data.dataUrl !== 'string' || data.dataUrl.length > 34 * 1024 * 1024
           || !/^data:video\/(webm|mp4);base64,[A-Za-z0-9+/]+=*$/.test(data.dataUrl)
