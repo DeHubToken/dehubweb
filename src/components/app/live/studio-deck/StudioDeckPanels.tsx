@@ -36,7 +36,8 @@ import type { StudioSources } from './use-studio-sources';
 import type { BackgroundMode, BackgroundOptions } from '@/lib/studio/background';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { buildVideoUrl } from '@/lib/media-url';
-import { startLiveReaction, stopLiveReaction, tokenIdFromPostUrl } from '@/lib/api/remix-links';
+import { remixLinksUnavailable, startLiveReaction, stopLiveReaction, tokenIdFromPostUrl } from '@/lib/api/remix-links';
+import { checkRemixSource } from '@/lib/remix/checkRemixSource';
 
 const chip = (on: boolean) =>
   cn(
@@ -298,8 +299,14 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
     }
     setAdding(true);
     try {
+      await checkRemixSource(`https://dehub.io/app/post/${tokenId}`, 'react');
       const post = await getNFTInfo(String(tokenId));
-      await startLiveReaction(streamTokenId, tokenId);
+      // Marks the stream for the viewers' chip and the original's credit. If the
+      // service is not reachable the checks above have passed and the video
+      // still goes on screen, just without the chip.
+      await startLiveReaction(streamTokenId, tokenId).catch((error) => {
+        if (!remixLinksUnavailable(error)) throw error;
+      });
       for (const c of sources.configs) if (c.reaction) sources.remove(c.id);
       const creator = post?.mintername || post?.minterUsername || null;
       const ok = await sources.add({

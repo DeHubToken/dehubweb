@@ -9,32 +9,12 @@ import { saveProject, setLastProjectId } from '@/lib/editor/projectStore';
 import { writeEditorRecovery } from '@/lib/editor/draftRecovery';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { DEFAULT_SETTINGS, type ProjectSnapshot } from '@/lib/editor/types';
-import { getNFTInfo } from '@/lib/api/dehub';
-import { videoNeedsAccess } from '@/lib/api/dehub/video-access';
-import { checkReactionSource, tokenIdFromPostUrl } from '@/lib/api/remix-links';
+import { checkRemixSource as checkSource } from '@/lib/remix/checkRemixSource';
 
 const REMIX_MODES = ['green-screen', 'collab', 'sound', 'cut', 'react'];
 /** Reactions run long: up to ten minutes, handed over as a Blob rather than a data URL. */
 const REACT_MAX_SECONDS = 601;
 const REACT_MAX_BYTES = 160 * 1024 * 1024;
-
-async function checkSource(sourceUrl: string, mode: string) {
-  const post = await getNFTInfo(decodeURIComponent(new URL(sourceUrl).pathname.split('/').pop()!));
-  const extra = post as typeof post & { plansDetails?: unknown[]; plans?: unknown[]; deleted?: boolean };
-  if (!post || post.postType !== 'video' || post.isHidden || extra.deleted || post.is_live || post.status === 'live'
-    || post.stream?.isActive || post.spoilerText || (post.contentRating && post.contentRating !== 'safe')
-    || (post.quotePolicy && post.quotePolicy !== 'public' && !post.isOwner)
-    || videoNeedsAccess({ visibility: post.visibility, isPPV: post.is_ppv || post.streamInfo?.isPayPerView,
-      isLocked: post.is_locked || post.streamInfo?.isLockContent,
-      lockedPrice: post.locked_price ?? post.streamInfo?.lockContentAmount,
-      subscriberPlans: extra.plansDetails ?? extra.plans })) throw new Error('This video is unavailable for remixing.');
-  // The creator's "Allow reactions" switch lives with the remix links; the server says no for them.
-  if (mode === 'react') {
-    const tokenId = tokenIdFromPostUrl(sourceUrl);
-    const verdict = tokenId ? await checkReactionSource(tokenId) : { allowed: false, reason: null };
-    if (!verdict.allowed) throw new Error(verdict.reason || 'This video is unavailable for reactions.');
-  }
-}
 
 export default function VideoRemix() {
   const { state } = useLocation();

@@ -22,15 +22,33 @@ export interface RemixLink {
   createdAt: string;
 }
 
+/** `status` is the function's HTTP answer; none means it could not be reached at all. */
+export class RemixLinksError extends Error {
+  constructor(message: string, readonly status?: number) {
+    super(message);
+  }
+}
+
+/**
+ * The service itself is missing or down (not deployed yet, a 5xx, offline),
+ * as opposed to it answering no. Callers that already ran the same checks in
+ * the browser may carry on; a real refusal is a 4xx and still stops them.
+ */
+export function remixLinksUnavailable(error: unknown): boolean {
+  if (!(error instanceof RemixLinksError)) return false;
+  return error.status === undefined || error.status === 404 || error.status >= 500;
+}
+
 async function call<T>(body: Record<string, unknown>, signedIn: boolean): Promise<T> {
   const headers: Record<string, string> = {};
   if (signedIn) headers['x-dehub-token'] = await ensureFreshToken();
   const { data, error } = await supabase.functions.invoke('remix-links', { body, headers });
-  if (data?.error) throw new Error(data.error);
+  if (data?.error) throw new RemixLinksError(data.error, 400);
   if (error) {
     const context = (error as { context?: Response }).context;
+    const status = context && typeof context.status === 'number' ? context.status : undefined;
     const reason = context && typeof context.json === 'function' ? await context.json().catch(() => null) : null;
-    throw new Error(reason?.error || error.message || 'Reaction request failed');
+    throw new RemixLinksError(reason?.error || error.message || 'Reaction request failed', status);
   }
   return data as T;
 }
