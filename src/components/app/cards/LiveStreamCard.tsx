@@ -60,7 +60,7 @@ import { verticalCropStyle, type VerticalCrop } from '@/lib/live-overlay/vertica
 import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
 import { useLiveClip } from '../live/ClipButton';
-import { ReactingToChip } from '../remix/ReactionChips';
+import { ReactingToChip } from '../remix/LazyReactionChips';
 import Scissors from '@/components/ui/cut-icons/trim';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
