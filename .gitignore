@@ -78,6 +78,9 @@ doc.md
 # written without this exception and silently never shipped, freezing the
 # bot-visible blog at Feb 2026 — keep every build-referenced script negated.
 scripts/*
+!scripts/patch-security-dependencies.cjs
+!scripts/security-dependencies.test.cjs
+!scripts/security/
 !scripts/translation-request.mjs
 !scripts/translation-request.test.mjs
 !scripts/locale-retention.mjs
