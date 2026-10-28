@@ -1,7 +1,7 @@
 name: Creator image layers
 on:
   pull_request:
-    paths: ['supabase/functions/_shared/creator-image-layers*', 'supabase/functions/_shared/creator-layer-*', 'supabase/functions/_shared/generation-*.ts', 'supabase/functions/fal-ai-tools/**', 'supabase/functions/creator-library/**', 'supabase/functions/creator-reconcile/**', 'tests/sql/creator-image-layers.sql', '.github/workflows/creator-image-layers.yml']
+    paths: ['supabase/functions/_shared/creator-image-layers*', 'supabase/functions/_shared/creator-layer-*', 'supabase/functions/_shared/generation-*.ts', 'supabase/functions/fal-ai-tools/**', 'supabase/functions/creator-library/**', 'supabase/functions/creator-reconcile/**', 'tests/sql/creator-image-layer*', '.github/workflows/creator-image-layers.yml']
   workflow_dispatch:
 jobs:
   layers:
@@ -26,3 +26,9 @@ jobs:
           sed -n '/CREATE OR REPLACE FUNCTION public.ai_generation_terminal_guard()/,/CREATE TRIGGER ai_generation_terminal_guard/p' supabase/migrations/20261026020000_generation_terminal_ownership.sql | psql -v ON_ERROR_STOP=1
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/creator-image-layers.sql
+          psql -v ON_ERROR_STOP=1 -c 'DROP TABLE public.ai_generation_jobs,public.creator_assets CASCADE;'
+          sed '1d' tests/sql/generation-terminal-bootstrap.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026020000_generation_terminal_ownership.sql
+          psql -v ON_ERROR_STOP=1 -c "CREATE TABLE public.creator_assets(id text,wallet_address text,storage_path text,ready boolean NOT NULL DEFAULT false,metadata jsonb DEFAULT '{}',PRIMARY KEY(wallet_address,id));"
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/creator-image-layer-delivery.sql

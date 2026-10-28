@@ -2,6 +2,7 @@ import { archiveLayerSet, layerInput, layerManifest, layerOutputs } from './crea
 import { layerCanvas, validateLayerPng } from './creator-layer-png.ts';
 import { hydrateGenerationResult } from './generation-result.ts';
 import { prepareLayerSource, layerSourceFormat } from './creator-layer-source.ts';
+import { retryGenerationSave, settleGeneration } from './generation-jobs.ts';
 const assert = (value: unknown) => { if (!value) throw new Error('Assertion failed'); };
 async function rejects(action: () => unknown) { try { await action(); } catch { return; } throw new Error('Expected rejection'); }
 function chunk(type: string, data = new Uint8Array()) {
@@ -68,7 +69,7 @@ Deno.test('archive recovery reuses owner-scoped ready children and changes only 
   const immutable=JSON.stringify({...result,savePending:undefined});
   let index=-1,publishing=false; const eqs:unknown[]=[];
   const query:any={select(){if(publishing)return Promise.resolve({data:Array.from({length:4},()=>({id:'saved'})),error:null});index++;return this;},update(){publishing=true;return this;},in(){return this;},eq(key:string,value:unknown){eqs.push([key,value]);return this;},async maybeSingle(){return {data:{ready:true,storage_path:`owner/${id}-layer-${index}/original`,metadata:{layerSetId:id,layerIndex:index,width:1024,height:1024}},error:null};}};
-  await archiveLayerSet({id,wallet_address:'owner'},result,{from:()=>query} as any);
+  await archiveLayerSet({id,wallet_address:'owner',status:'succeeded'},result,{from:()=>query} as any);
   assert(result.libraryId===id && !result.savePending);
   const {libraryId,savePending,...after}=result; assert(JSON.stringify(after)===immutable);
   assert(eqs.filter((entry:any)=>entry[0]==='wallet_address'&&entry[1]==='owner').length===5);
@@ -88,4 +89,54 @@ Deno.test('a malformed final PNG never publishes the earlier staged children', a
     await rejects(()=>archiveLayerSet({id,wallet_address:'owner',created_at:'2026-10-28'}, {layerImages:images,layerSafety:[false,false,false,false],layerSet:layerManifest(id,'source-asset',images)},db));
     assert(staged.length===3 && staged.every(row=>row.ready===false&&row.metadata.layerValidated===true));assert(published===0);
   } finally {globalThis.fetch=originalFetch;}
+});
+
+async function deliveryRaceFixture(cancelDuringStage: boolean, failFirstPublish: boolean) {
+  const id='00000000-0000-4000-8000-000000000001', bytes=await png();
+  const images=Array.from({length:4},(_,index)=>({url:`https://fal.media/${index}.png`}));
+  const raw:any={status:'processing',providerCompleted:true,savePending:true,layerImages:images,layerSafety:[false,false,false,false],layerSet:layerManifest(id,'source-image',images)};
+  const job:any={id,wallet_address:'owner',status:'processing',model:'qwen-image-layered',created_at:'2026-10-28',result:raw};
+  const rows=new Map<string,any>();let published=0,downloads=0;
+  const originalFetch=globalThis.fetch;globalThis.fetch=async()=>{downloads++;return new Response(bytes);};
+  const db:any={from:(table:string)=>{
+    const filters:Record<string,any>={};let update:any;
+    const query:any={eq(key:string,value:any){filters[key]=value;return this;},in(){return this;},
+      select(){if(update){if(failFirstPublish){failFirstPublish=false;return Promise.resolve({data:null,error:new Error('storage publication unavailable')});}for(const row of rows.values())row.ready=true;published++;return Promise.resolve({data:[...rows.values()].map(row=>({id:row.id})),error:null});}return this;},
+      update(value:any){update=value;return this;},
+      async maybeSingle(){return {data:table==='ai_generation_jobs'?(!filters.status||job.status===filters.status?structuredClone(job):null):rows.get(filters.id)||null,error:null};},
+      async single(){return {data:structuredClone(job),error:null};},
+      async upsert(row:any){rows.set(row.id,row);if(cancelDuringStage&&rows.size===4){job.status='refund_pending';job.result={...raw,status:'cancelled',paymentRestored:false};}return {error:null};}};return query;},
+    storage:{from:()=>({upload:async()=>({error:null}),createSignedUrl:async(path:string)=>({data:{signedUrl:`https://private.test/storage/v1/object/sign/creator-assets/${path}`},error:null})})},
+    rpc:async(name:string,args:any)=>{
+      if(name==='ai_generation_transition'){
+        if(['succeeded','failed','cancelled','refund_pending'].includes(job.status))return {data:{claimed:false,job:structuredClone(job)},error:null};
+        job.status=args.p_status;job.result={...args.p_result,...(job.status==='succeeded'?{savePending:true}:{})};return {data:{claimed:true,job:structuredClone(job)},error:null};
+      }
+      if(name==='ai_generation_save_result'){
+        assert(job.status==='succeeded');const strip=(value:any)=>{const {libraryId,savePending,...rest}=value;return rest;};
+        assert(JSON.stringify(strip(args.p_expected_result))===JSON.stringify(strip(args.p_result)));job.result=structuredClone(args.p_result);return {data:true,error:null};
+      }
+      throw new Error(`Unexpected RPC ${name}`);
+    }};
+  return {job,rows,db,response:()=>new Response(JSON.stringify({...raw,status:'succeeded'})),published:()=>published,downloads:()=>downloads,restore:()=>{globalThis.fetch=originalFetch;}};
+}
+Deno.test('cancellation winning during staging prevents publication of every usable layer',async()=>{
+  const fixture=await deliveryRaceFixture(true,false);
+  try {
+    const response=await settleGeneration('fal-ai-tools','ticket',fixture.response(),fixture.db);
+    assert(fixture.job.status==='refund_pending'&&fixture.published()===0&&fixture.rows.size===4);
+    assert([...fixture.rows.values()].every(row=>row.ready===false));
+    assert((await response.json()).savePending===false);
+  }finally{fixture.restore();}
+});
+Deno.test('success owns delivery before publication; failed publication retries staged bytes without provider replay',async()=>{
+  const fixture=await deliveryRaceFixture(false,true);
+  try{
+    await settleGeneration('fal-ai-tools','ticket',fixture.response(),fixture.db);
+    assert(fixture.job.status==='succeeded'&&fixture.job.result.savePending===true&&fixture.published()===0);
+    assert([...fixture.rows.values()].every(row=>row.ready===false));
+    await retryGenerationSave(fixture.job,fixture.db);
+    assert(!fixture.job.result.savePending&&fixture.published()===1&&fixture.downloads()===4);
+    assert([...fixture.rows.values()].every(row=>row.ready===true));
+  }finally{fixture.restore();}
 });
