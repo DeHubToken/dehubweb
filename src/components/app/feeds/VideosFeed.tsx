@@ -673,12 +673,14 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
     (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
 
   // Map shorts data (same mapping as HomeFeed)
-  const shorts = useMemo((): ShortVideo[] => {
-    if (!scrollFeed.data?.pages) return [];
+  // The row shows ten, one per creator; its viewer then carries on through
+  // everything loaded (`shortsPool`) and asks for more pages behind it.
+  const { shorts, shortsPool } = useMemo((): { shorts: ShortVideo[]; shortsPool: ShortVideo[] } => {
+    if (!scrollFeed.data?.pages) return { shorts: [], shortsPool: [] };
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    return uniqueShortsCreators(nonPPV).slice(0, 10).map((item) => {
+    const toShort = (item: UnifiedFeedItem): ShortVideo => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
@@ -717,7 +719,8 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
         isLiked: (item as any).isLiked ?? voteType === 'for',
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
-    });
+    };
+    return { shorts: uniqueShortsCreators(nonPPV).slice(0, 10).map(toShort), shortsPool: nonPPV.map(toShort) };
   }, [scrollFeed.data]);
 
   // Check if any client-side filters are active
@@ -897,7 +900,9 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
               
               // Insert shorts carousel after 10 posts (index 9)
               if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
-                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "sm:col-span-2")}><ShortsReel shorts={shorts} /></div>);
+                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "sm:col-span-2")}><ShortsReel shorts={shorts} pool={shortsPool}
+                  onLoadMore={() => { if (!scrollFeed.isFetching) void scrollFeed.fetchNextPage(); }}
+                  hasMore={!!scrollFeed.hasNextPage} isLoadingMore={scrollFeed.isFetchingNextPage} /></div>);
               }
               
               return elements;
