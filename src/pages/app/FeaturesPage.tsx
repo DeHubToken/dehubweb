@@ -95,6 +95,8 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
 
 type PageTab = 'requests' | 'shipping' | 'shipped';
 
+const SHIPPED_PAGE_SIZE = 20;
+
 const SORTS: { id: FeatureSort; labelKey: string }[] = [
   { id: 'most_voted', labelKey: 'features.mostVoted' },
   { id: 'newest', labelKey: 'features.newest' },
@@ -839,6 +841,19 @@ export default function FeaturesPage() {
     () => withoutFocused(shippedFeatures).filter(matchesFilters),
     [shippedFeatures, withoutFocused, matchesFilters],
   );
+  // Shipped holds nearly the whole board. Mounting every card at once built
+  // ~20k nodes and froze the tab switch, so it reveals a page at a time like the
+  // Prompts list does.
+  const [shippedLimit, setShippedLimit] = useState(SHIPPED_PAGE_SIZE);
+  useEffect(() => setShippedLimit(SHIPPED_PAGE_SIZE), [category, search]);
+  const shippedDeepLink = searchParams.get('feature');
+  useEffect(() => {
+    if (!shippedDeepLink) return;
+    const index = visibleShipped.findIndex((feature) => feature.id === shippedDeepLink);
+    if (index >= 0) setShippedLimit((limit) => Math.max(limit, index + 1));
+  }, [shippedDeepLink, visibleShipped]);
+  const renderedShipped = useMemo(() => visibleShipped.slice(0, shippedLimit), [visibleShipped, shippedLimit]);
+  const showMoreShipped = useCallback(() => setShippedLimit((limit) => limit + SHIPPED_PAGE_SIZE), []);
 
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
@@ -1189,7 +1204,7 @@ export default function FeaturesPage() {
             <FeatureSkeletons />
           ) : visibleShipped.length > 0 ? (
             <div className="space-y-3">
-              {visibleShipped.map((feature) => (
+              {renderedShipped.map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}
@@ -1199,6 +1214,12 @@ export default function FeaturesPage() {
                   />
                 </SharedTranslationProvider>
               ))}
+              {renderedShipped.length < visibleShipped.length && (
+                <InfiniteScrollSentinel
+                  onIntersect={showMoreShipped}
+                  isFetching={false}
+                />
+              )}
             </div>
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
