@@ -39,7 +39,8 @@ const REVIEW: Record<PlatformId, string> = {
     paste-media post-audiences? profile-content-tabs profile-pins follow-groups author-threads comment-reactions comment-reports
     adaptive-video video-speed video-subtitles video-fullscreen video-download?
     account-export active-sessions connected-apps ai-training settings-search autoplay-preference data-saver language-settings
-    push-notifications email-notifications notification-categories notification-filters notification-unread`,
+    push-notifications email-notifications notification-categories notification-filters notification-unread
+    work chat-media-gallery`,
   kick: `
     raids live-predictions
     video? shorts? live live-chat replays clips multistream? live-polls gifts gift-subs stream-moderation
@@ -71,7 +72,8 @@ const REVIEW: Record<PlatformId, string> = {
     gallery-order edit-cover post-audiences profile-content-tabs profile-pins profile-badges follow-groups comment-reactions comment-reports
     adaptive-video video-speed video-subtitles video-fullscreen video-dubbing
     account-export active-sessions connected-apps quiet-hours settings-search data-saver language-settings follow-list-privacy
-    push-notifications email-notifications notification-categories notification-unread sms-notifications?`,
+    push-notifications email-notifications notification-categories notification-unread sms-notifications?
+    live-scheduling stream-moderation photo-looks photo-tone chat-media-gallery`,
   instagram: `
     stories duets face-effects collab-posts location-map community-notes disappearing-messages
     text? images video shorts polls? comments reposts bookmarks feeds search hashtags drafts scheduled translate soundtracks
@@ -86,7 +88,8 @@ const REVIEW: Record<PlatformId, string> = {
     gallery-order edit-cover profile-content-tabs profile-pins follow-groups comment-pins comment-reactions comment-reports
     adaptive-video video-speed video-subtitles video-fullscreen video-download? video-dubbing photo-shorts
     account-export active-sessions connected-apps quiet-hours settings-search data-saver language-settings
-    push-notifications email-notifications notification-categories notification-unread`,
+    push-notifications email-notifications notification-categories notification-unread
+    photo-looks photo-tone chat-media-gallery`,
   tiktok: `
     stories duets face-effects collab-posts? location-map community-notes
     text images video shorts polls? comments reposts bookmarks feeds search hashtags drafts scheduled translate playlists soundtracks
@@ -102,7 +105,8 @@ const REVIEW: Record<PlatformId, string> = {
     adaptive-video video-speed video-subtitles video-fullscreen video-download video-dubbing? shorts-gestures photo-shorts upload-queue
     exact-cuts clip-retime caption-transcription voice-cleanup beat-sync
     account-export active-sessions connected-apps quiet-hours data-saver language-settings follow-list-privacy
-    push-notifications notification-categories notification-unread`,
+    push-notifications notification-categories notification-unread
+    photo-looks`,
   rumble: `
     video comments reactions search playlists scheduled
     live live-chat replays guests multistream gifts gift-subs stream-moderation live-scheduling
@@ -110,7 +114,8 @@ const REVIEW: Record<PlatformId, string> = {
     embeds report notifications mute-block?
     earnings-dashboard ads
     adaptive-video video-speed video-fullscreen
-    push-notifications email-notifications`,
+    push-notifications email-notifications
+    delete`,
   mastodon: `
     text images video audio polls comments quotes reposts bookmarks feeds search hashtags reactions scheduled? translate
     dm
@@ -128,7 +133,8 @@ const REVIEW: Record<PlatformId, string> = {
     profile-content-tabs profile-pins follow-groups author-threads comment-reports
     video-subtitles video-fullscreen
     account-export autoplay-preference language-settings
-    push-notifications notification-categories notification-unread`,
+    push-notifications notification-categories notification-unread
+    adaptive-video`,
   farcaster: `
     text images video comments quotes reposts bookmarks feeds search polls?
     communities dm groups
