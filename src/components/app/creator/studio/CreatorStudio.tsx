@@ -1178,7 +1178,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       if (!model.supports.includes('image-to-video') && reference) {
         return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
       }
-      if (model.referenceMode !== 'extend' && !model.supports.includes('text-to-video') && !reference) {
+      if (model.id !== 'kling-avatar-v2' && model.referenceMode !== 'extend' && !model.supports.includes('text-to-video') && !reference) {
         return t('creator.validation.needsImageToAnimate', { model: model.name, defaultValue: '{{model}} needs an image to animate. Attach one first.' });
       }
     }
@@ -1531,6 +1531,10 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
   const runVideo = useCallback(
     (options: VideoGenerationOptions | undefined, txHash: string) => {
       setVideoPaywallOpen(false);
+      if (videoModel === 'kling-avatar-v2' && options?.avatar) {
+        startVideo({ prompt: resolvedPrompt, model: videoModel, avatar: options.avatar, clientJobId: options.avatar.clientJobId, txHash }, { prompt: resolvedPrompt, resolvedPrompt, modelName: 'Kling Avatar v2', aspect: '1:1' });
+        return;
+      }
       startVideo(
         {
           prompt: resolvedPrompt,
@@ -2332,7 +2336,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
             model={activeVideoModel}
             selectedModelKey={videoModel}
             onModelChange={setVideoModel}
-            onConfirm={runVideo}
+            onConfirm={runVideo} avatarPrompt={resolvedPrompt}
             initialDuration={duration}
             initialResolution={resolution}
             hasExternalVideoReferences={!!currentClip}

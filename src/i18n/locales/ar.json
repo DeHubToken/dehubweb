@@ -5102,6 +5102,13 @@
     "sellYourFractions": "بِع أجزاءك ({{held}} بحوزتك)"
   },
   "creator": {
+    "avatarTitle": "صورة ناطقة",
+    "avatarRequirements": "صورة PNG مربعة بدقة 512–2048 بكسل، حتى 5 ميغابايت. صوت WAV أحادي PCM بدقة 24 كيلوهرتز و16 بت، مدته 5–30 ثانية. يُستكمل الجزء الأخير من الثانية بالصمت.",
+    "avatarPortrait": "اختيار صورة PNG",
+    "avatarAudio": "اختيار صوت WAV",
+    "avatarPermission": "لدي إذن لتحريك هذه الصورة واستخدام هذا الصوت.",
+    "avatarQuote": "{{seconds}} ثانية بما فيها الصمت · {{amount}} DHB",
+    "avatarPrepare": "إعداد السعر ومراجعته",
     "audioExportFormat": "صيغة التصدير",
     "audioExportMp3": "MP3 · ‏128 كيلوبت/ثانية",
     "audioExportWav": "WAV · ‏24 كيلوهرتز · أحادي",
