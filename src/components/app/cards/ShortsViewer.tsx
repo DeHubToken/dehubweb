@@ -1444,6 +1444,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // What the overlay actually reads. The gesture handlers stay keyed on
   // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
   const chromeHidden = overlaysHidden || autoHidden;
+  // The auto-clear only fades the buttons: they keep taking taps, so Back,
+  // mute or like work on the first tap instead of first fetching the chrome
+  // back. A deliberate swipe-down clear (overlaysHidden) still switches them off.
+  const chromeInert = overlaysHidden;
 
   const handleCopyLink = () => {
     const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
@@ -1524,6 +1528,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         } : {}),
         ...mini.frame,
       }}
+      // Pressing a faded button also brings the rest of the chrome back.
+      onPointerDownCapture={autoHidden ? (event) => { if ((event.target as Element).closest?.('button')) setAutoHidden(false); } : undefined}
       onTouchStart={mini.minimized ? undefined : handleTouchStart}
       onTouchMove={mini.minimized ? undefined : handleTouchMove}
       onTouchEnd={mini.minimized ? undefined : handleTouchEnd}
@@ -1698,7 +1704,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Fullscreen sits at `right-[3.75rem]` and is `w-10`, so it
                   // ends 6.25rem in; 0.5rem gap after that.
                   "right-[6.75rem]",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={t('postOptions.options')}
               >
@@ -1712,7 +1718,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Immediately left of mute: that one is `w-10` at `right-3`,
                   // so it ends 3.25rem in, leaving a 0.5rem gap.
                   "right-[3.75rem]",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={isFullscreen ? _copy("copy.37fd4e355ba3", { defaultValue: "Exit fullscreen" }) : _copy("copy.4a56b3cb6008", { defaultValue: "Enter fullscreen" })}
               >
@@ -1728,7 +1734,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 className={cn(
                   CORNER_CONTROL,
                   "right-3",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
               >
@@ -1761,7 +1767,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {isFullscreen && (
                   <div className={cn(
                     "relative px-4 pb-3 max-w-3xl",
-                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                    chromeInert ? "pointer-events-none" : "pointer-events-auto",
                   )}>
                     <div className="flex items-center gap-3 mb-2">
                       <button onClick={() => handleNavigateToProfile()} className="flex-shrink-0">
@@ -1788,7 +1794,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   data-on-media
                   className={cn(
                     "relative flex items-center justify-between px-4 pt-2",
-                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                    chromeInert ? "pointer-events-none" : "pointer-events-auto",
                   )}
                 >
                   {/* Views */}
@@ -1889,7 +1895,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <div
                 className={cn(
                   "absolute left-3 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-3 transition-opacity duration-300",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
               >
                 <button
@@ -2000,7 +2006,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Hidden chrome is opacity-0, which still takes taps — kill
                   // pointer events too so a restore tap can't hit an invisible
                   // avatar / follow button on its way in.
-                  className={cn("px-4 pointer-events-auto", !isDescriptionExpanded && "touch-none", (showComments || chromeHidden) && "pointer-events-none")}
+                  className={cn("px-4 pointer-events-auto", !isDescriptionExpanded && "touch-none", (showComments || chromeInert) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                   onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
@@ -2044,7 +2050,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div
                   data-shorts-actions
                   data-on-media
-                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
+                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeInert) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                   onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
@@ -2288,11 +2294,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {/* Mobile top header controls - TikTok style - animated with chromeHidden.
           A live slide is the stream's own room, with its own close and sound. */}
       {isMobile && !isLiveSlide && (
+        // Its own layer above the video. Mid-fade, opacity turns this wrapper
+        // into a stacking context at the page's level, and the buttons' z-20
+        // stopped counting: the playing video's slot (z-2) sat on top of them,
+        // so a tap on Back while the chrome faded in or out hit the video.
         <motion.div
-          className="pointer-events-auto"
+          className={cn("absolute inset-0 z-20 pointer-events-none", !(chromeInert || showComments) && "[&>*]:pointer-events-auto")}
           animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          style={{ pointerEvents: (chromeHidden || showComments) ? 'none' : 'auto' }}
         >
           {/* Back button - top left. All four buttons wear the black/50 square
               and cut icons of the app's picture-in-picture button. */}
