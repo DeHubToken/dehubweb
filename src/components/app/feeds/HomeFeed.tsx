@@ -988,7 +988,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // ROUTE rather than the sort, because PersistentPageCache keeps this
   // component mounted for the rest of the session once home is visited — and
   // held behind railsEnabled so it never competes with the first page.
-  const { newPostCount, atCap: newPostsAtCap, newPostAuthors } = useNewPostsSignal({
+  const { newPostCount: polledNewPostCount, atCap: newPostsAtCap, newPostAuthors, latestNewAt } = useNewPostsSignal({
     ...commonParams,
     postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: isHomeActive && railsEnabled,
@@ -997,7 +997,13 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     getVisibleTokenIds: visibleFeedTokenIds,
   });
 
+  // A tapped chip goes away at once and stays away until a post newer than
+  // the ones it offered turns up, even when the refreshed list still renders
+  // an older head (a filter or the ranking keeps those posts off the top).
+  const [newPostsTappedAt, setNewPostsTappedAt] = useState(0);
+  const newPostCount = latestNewAt > newPostsTappedAt ? polledNewPostCount : 0;
   const showNewPosts = useCallback(() => {
+    setNewPostsTappedAt(latestNewAt);
     setShortsVisit(value => value + 1);
     // Drop every page but the first before refetching, so the reader lands on
     // a fresh top of feed rather than waiting for ten loaded pages to re-fetch
@@ -1010,7 +1016,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     void singleFeed.refetch();
     // window.scrollTo is a no-op here — body is the scrolling element.
     scrollDocumentTo(0);
-  }, [queryClient, singleFeed]);
+  }, [queryClient, singleFeed, latestNewAt]);
 
   // Classics feed no longer needed (trending removed)
   const classicsFeed = { data: undefined } as any;
@@ -2014,7 +2020,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           </AnimatePresence>
         );
         if (newPostsTarget) {
-          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center pt-11">{bead}</div>, newPostsTarget);
+          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center mt-11">{bead}</div>, newPostsTarget);
         }
         if (mobileNavTarget) {
           return createPortal(

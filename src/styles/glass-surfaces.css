@@ -151,7 +151,7 @@ html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
   display: none;
 }
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav], [data-kit-island]):has(> [data-nav-glass-backdrop]):not(#_):not(#_) {
+  :is([data-feed-nav], [data-kit-island], [data-feed-new-posts-chip]):has(> [data-nav-glass-backdrop]):not(#_):not(#_) {
   position: relative;
   isolation: isolate;
   background: transparent !important;
@@ -160,7 +160,7 @@ html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'],
   box-shadow: none !important;
 }
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav], [data-kit-island]) > [data-nav-glass-backdrop] {
+  :is([data-feed-nav], [data-kit-island], [data-feed-new-posts-chip]) > [data-nav-glass-backdrop] {
   display: block;
   position: absolute;
   inset: 0;
@@ -174,7 +174,7 @@ html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'],
    blur texture's boundary away from the pill avoids exposing its edge during
    scroll/selection repaints. The tint and highlight retain the pill's size. */
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav], [data-kit-island]) > [data-nav-glass-backdrop]::before {
+  :is([data-feed-nav], [data-kit-island], [data-feed-new-posts-chip]) > [data-nav-glass-backdrop]::before {
   content: '';
   position: absolute;
   inset: -48px;
@@ -182,7 +182,7 @@ html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'],
   backdrop-filter: var(--nav-glass-blur);
 }
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav], [data-kit-island]) > [data-nav-glass-backdrop]::after {
+  :is([data-feed-nav], [data-kit-island], [data-feed-new-posts-chip]) > [data-nav-glass-backdrop]::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -236,9 +236,15 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
    top runs up under it, so the pill's border is untouched and nothing shows
    between the two; the pill casts a soft shade onto the drawer's top instead
    of a line. When the nav hides the drawer slides back under it first (quick,
-   ease in); when the nav returns it waits a beat, then pulls back out. */
-[data-feed-new-posts-slot='bar'] { clip-path: inset(0 -48px -48px -48px); }
-[data-feed-new-posts-slot='island'] { clip-path: inset(2.75rem -48px -48px -48px); }
+   ease in); when the nav returns it waits a beat, then pulls back out.
+   The slot clips with overflow, not clip-path: clip-path makes a backdrop
+   root, and the drawer's glass then had nothing to blur. The slot reaches
+   48px past each side and below so only its top edge cuts. */
+[data-feed-new-posts-slot] {
+  overflow: hidden;
+  margin-inline: -48px;
+  padding: 0 48px 48px;
+}
 [data-feed-new-posts-chip] {
   --chip-ink: #fff;
   --chip-face-ring: rgb(var(--glass-tint, 9 9 11));
@@ -265,6 +271,23 @@ html[data-theme] [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
   border: 1px solid rgb(255 255 255 / 0.16);
   border-top: 0;
   box-shadow: 0 10px 22px -12px rgb(0 0 0 / 0.6);
+}
+/* Glass themes: the drawer carries the pill's glass layer (the
+   [data-nav-glass-backdrop] rules above), so only the pill's shade is its own. */
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']):not([data-system-tone='light'])
+  [data-feed-new-posts-chip]:not(#_):not(#_):not(#_) {
+  border: 0;
+}
+[data-feed-new-posts-shade] { display: none; }
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']):not([data-system-tone='light'])
+  [data-feed-new-posts-shade] {
+  display: block;
+  position: absolute;
+  inset: 12px 0 auto;
+  height: 14px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--chip-shade), transparent);
 }
 [data-feed-new-posts-face] { box-shadow: 0 0 0 1.5px var(--chip-face-ring); }
 [data-feed-new-posts-face],
