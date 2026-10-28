@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { Toaster as Sonner, toast } from "sonner";
+import { Toaster as Sonner, toast, useSonner } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ButtonLoader } from "@/components/app/DeHubLoader";
 import {
@@ -15,8 +16,53 @@ import {
   SLOT_BUTTON_CLASSES,
   CLOSE_CLASSES,
 } from "@/components/ui/toast-classes";
+import { toastLifetimeMs, toastStateKey } from "@/lib/toast-lifetime";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
+
+const TOASTER_DURATION_MS = 3000;
+
+/**
+ * A second clock on every toast that hover cannot pause and `Infinity` cannot
+ * stop; see lib/toast-lifetime for why sonner's own timer is not enough.
+ * Restarts whenever the toast changes state, so a loading toast that becomes a
+ * success is timed as the success.
+ */
+function ToastLifetimeGuard() {
+  const { toasts } = useSonner();
+  const clocks = useRef(new Map<string | number, { key: string; timer: ReturnType<typeof setTimeout> }>());
+
+  useEffect(() => {
+    const live = new Set(toasts.map((t) => t.id));
+    for (const [id, clock] of clocks.current) {
+      if (!live.has(id)) {
+        clearTimeout(clock.timer);
+        clocks.current.delete(id);
+      }
+    }
+    for (const t of toasts) {
+      const key = toastStateKey(t);
+      const clock = clocks.current.get(t.id);
+      if (clock?.key === key) continue;
+      if (clock) clearTimeout(clock.timer);
+      const timer = setTimeout(() => {
+        clocks.current.delete(t.id);
+        // Same callback sonner fires when its own timer runs out, so prompts
+        // that snooze on auto-close still do.
+        if (t.type !== "loading") t.onAutoClose?.(t);
+        toast.dismiss(t.id);
+      }, toastLifetimeMs(t, TOASTER_DURATION_MS));
+      clocks.current.set(t.id, { key, timer });
+    }
+  }, [toasts]);
+
+  useEffect(() => {
+    const running = clocks.current;
+    return () => running.forEach((clock) => clearTimeout(clock.timer));
+  }, []);
+
+  return null;
+}
 
 /**
  * The app's single toaster. Every toast in the app is raised through sonner and
@@ -39,38 +85,41 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const { t: _copy } = _useCopy();
 
   return (
-    <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className={["toaster group", isMobile ? "" : TOASTER_COLUMN_CLASSES].join(" ")}
-      position={isMobile ? "top-right" : "top-center"}
-      style={isMobile ? undefined : ({ "--width": TOASTER_DESKTOP_WIDTH } as React.CSSProperties)}
-      duration={3000}
-      visibleToasts={3}
-      expand
-      containerAriaLabel={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
-      icons={{ loading: <ButtonLoader size={16} /> }}
-      toastOptions={{
-        classNames: {
-          // `group` is what ICON_CLASSES selects the loading case from.
-          toast: [
-            "group toast",
-            "bg-zinc-950/70 backdrop-blur-xl border border-white/20 text-white",
-            "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-xl",
-            TOAST_CLASSES,
-            isMobile ? "" : TOAST_FIT_CLASSES,
-          ].join(" "),
-          title: TITLE_CLASSES,
-          content: CONTENT_CLASSES,
-          description: DESCRIPTION_CLASSES,
-          icon: ICON_CLASSES,
-          actionButton: SLOT_BUTTON_CLASSES,
-          cancelButton: SLOT_BUTTON_CLASSES,
-          closeButton: CLOSE_CLASSES,
-          loader: "text-white",
-        },
-      }}
-      {...props}
-    />
+    <>
+      <ToastLifetimeGuard />
+      <Sonner
+        theme={theme as ToasterProps["theme"]}
+        className={["toaster group", isMobile ? "" : TOASTER_COLUMN_CLASSES].join(" ")}
+        position={isMobile ? "top-right" : "top-center"}
+        style={isMobile ? undefined : ({ "--width": TOASTER_DESKTOP_WIDTH } as React.CSSProperties)}
+        duration={TOASTER_DURATION_MS}
+        visibleToasts={3}
+        expand
+        containerAriaLabel={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
+        icons={{ loading: <ButtonLoader size={16} /> }}
+        toastOptions={{
+          classNames: {
+            // `group` is what ICON_CLASSES selects the loading case from.
+            toast: [
+              "group toast",
+              "bg-zinc-950/70 backdrop-blur-xl border border-white/20 text-white",
+              "shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-xl",
+              TOAST_CLASSES,
+              isMobile ? "" : TOAST_FIT_CLASSES,
+            ].join(" "),
+            title: TITLE_CLASSES,
+            content: CONTENT_CLASSES,
+            description: DESCRIPTION_CLASSES,
+            icon: ICON_CLASSES,
+            actionButton: SLOT_BUTTON_CLASSES,
+            cancelButton: SLOT_BUTTON_CLASSES,
+            closeButton: CLOSE_CLASSES,
+            loader: "text-white",
+          },
+        }}
+        {...props}
+      />
+    </>
   );
 };
 
