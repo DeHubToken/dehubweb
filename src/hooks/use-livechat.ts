@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
+import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 
 /** Shape of a livechat message used internally in the UI */
 export interface SupabaseLiveChatMessage {
@@ -33,6 +34,12 @@ export interface SupabaseLiveChatMessage {
   sender_display_name: string | null;
   sender_avatar_url: string | null;
   sender_badge_balance?: number | null;
+  /**
+   * The sender's grandfathered tier. Most holders' badge comes from this, and
+   * a provided balance skips the account lookup, so without it the line
+   * draws no badge at all.
+   */
+  sender_badge_lock?: BadgeLock | null;
   /** Badges earned from the stream's creator, in a stream's chat. */
   sender_creator_badges?: ChatCreatorBadge[];
   content: string;
@@ -139,6 +146,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? raw.senderDisplayName ?? raw.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? raw.senderAvatarUrl ?? raw.sender_avatar_url ?? null) as string | null,
     sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? raw.senderBadgeBalance ?? raw.sender_badge_balance ?? 0) || null,
+    sender_badge_lock: parseBadgeLock(sender?.badgeLock ?? sender?.badge_lock ?? raw.senderBadgeLock ?? raw.sender_badge_lock),
     sender_creator_badges: parseChatBadges(sender?.creatorBadges),
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: normalizeMsgType(msg.type || msg.messageType),
@@ -311,6 +319,7 @@ export function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChat
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? m.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? m.senderAvatarUrl ?? m.sender_avatar_url ?? null) as string | null,
     sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? m.senderBadgeBalance ?? m.sender_badge_balance ?? 0) || null,
+    sender_badge_lock: parseBadgeLock(sender?.badgeLock ?? sender?.badge_lock ?? m.senderBadgeLock ?? m.sender_badge_lock),
     sender_creator_badges: parseChatBadges(sender?.creatorBadges),
     content: (m.content ?? '') as string,
     message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
