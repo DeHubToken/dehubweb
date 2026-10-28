@@ -558,6 +558,7 @@ function ReactionsGallery() {
     { id: '990001', label: _copy("copy.5735e3593d23", { defaultValue: "No reaction yet" }), myReaction: null },
     { id: '990002', label: _copy("copy.bf74a035bfa2", { defaultValue: "You disliked it" }), myReaction: 'dislike' as const },
     { id: '990003', label: '👍 3 · 👎 9', myReaction: null, counts: SAMPLE_DISLIKED_REACTIONS, likes: 3, dislikes: 9 },
+    { id: '990004', label: '👍', myReaction: 'like' as const, counts: { like: 26 } },
   ];
   return (
     <AuthContext.Provider value={GALLERY_AUTH}>
@@ -576,6 +577,7 @@ function ReactionsGallery() {
               reactionCounts={'counts' in row ? row.counts : SAMPLE_REACTIONS}
               myReaction={row.myReaction}
               isDisliked={row.myReaction === 'dislike'}
+              isLiked={row.myReaction === 'like'}
               hideUtility
             />
           </div>
