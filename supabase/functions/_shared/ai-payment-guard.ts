@@ -105,7 +105,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   // already parsed it hands it over; otherwise cloning leaves the original
   // readable, so nothing downstream had to learn about payment.
   const body = (opts.body
-    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown };
+    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown; sourceAssetId?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
 
   // `txHash: "credits"` is a sentinel the web client sends through the existing field.
@@ -203,7 +203,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     p_tx_hash: txHash,
     p_wallet: guard.wallet,
     p_dhb: priceDhb,
-    ...(journalled ? { p_job_id: jobId, p_kind: opts.kind, p_model: opts.modelId, p_endpoint: opts.actionType, p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '' } } : {}),
+    ...(journalled ? { p_job_id: jobId, p_kind: opts.kind, p_model: opts.modelId, p_endpoint: opts.actionType, p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId } : {}) } } : {}),
   });
 
   if (error) {
@@ -261,7 +261,7 @@ export async function chargeCredits(
   wallet: string,
   priceDhb: number,
   opts: ChargeRequest,
-  body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown },
+  body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; sourceAssetId?: unknown },
   dependencies: { db?: ReturnType<typeof serviceClient>; debit?: typeof debitCredits } = {},
 ): Promise<ChargeResult> {
   const supabase = dependencies.db || serviceClient();
@@ -289,7 +289,7 @@ export async function chargeCredits(
       p_kind: opts.kind,
       p_model: opts.modelId,
       p_endpoint: opts.actionType,
-      p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '' },
+      p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId } : {}) },
       p_debit_key: key,
     });
     if (error) {

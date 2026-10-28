@@ -1,0 +1,35 @@
+import { describe, expect, it } from 'vitest';
+import { resumeLayerSubmission, withLayerAdmission, type LayerSubmission } from './layerSubmission';
+const id = '00000000-0000-4000-8000-000000000001';
+describe('layer payment recovery', () => {
+  it('never pays again after interruption at the wallet boundary', async () => {
+    let value: LayerSubmission | null = null, paid = 0;
+    const storage = { read: async () => value, write: async (next: LayerSubmission) => { value = next; } };
+    const actions = { uuid: () => id, current: () => true, pay: async () => { paid++; throw new Error('interrupted'); }, submit: async () => {} };
+    await expect(resumeLayerSubmission(storage, actions)).rejects.toThrow('interrupted');
+    await expect(resumeLayerSubmission(storage, actions)).rejects.toThrow('Payment confirmation');
+    expect(paid).toBe(1);
+  });
+  it('retries submission with the same receipt and UUID after network loss', async () => {
+    let value: LayerSubmission | null = null, paid = 0; const submitted: string[][] = [];
+    const storage = { read: async () => value, write: async (next: LayerSubmission) => { value = next; } };
+    const actions = { uuid: () => id, current: () => true, pay: async () => { paid++; return 'credits'; }, submit: async (job: string, tx: string) => { submitted.push([job,tx]); if (submitted.length===1) throw new Error('network'); } };
+    await expect(resumeLayerSubmission(storage, actions)).rejects.toThrow('network');
+    await resumeLayerSubmission(storage, actions);
+    expect(paid).toBe(1); expect(submitted).toEqual([[id,'credits'],[id,'credits']]);
+  });
+  it('admits one concurrent payer for the same saved image', async () => {
+    let release!: () => void; const held = new Promise<void>(resolve => { release = resolve; });
+    const first = withLayerAdmission('owner/source', () => held);
+    await expect(withLayerAdmission('owner/source', async () => {})).rejects.toThrow('in progress');
+    release(); await first;
+    await withLayerAdmission('owner/source', async () => {});
+  });
+  it('does not submit a paid receipt after the target scope is invalidated', async () => {
+    let valid = true, submits = 0, value: LayerSubmission | null = null;
+    await resumeLayerSubmission({ read: async () => value, write: async next => { value=next; } }, {
+      uuid: () => id, current: () => valid, pay: async () => { valid=false; return 'credits'; }, submit: async () => { submits++; },
+    });
+    expect(submits).toBe(0); expect(value).toMatchObject({ phase:'paid',txHash:'credits' });
+  });
+});

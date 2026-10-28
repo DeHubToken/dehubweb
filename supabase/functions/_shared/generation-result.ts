@@ -1,4 +1,5 @@
 import { serviceClient } from './auth.ts';
+import { layerCanvas } from './creator-layer-png.ts';
 
 const mediaFields = ['imageUrl', 'image', 'videoUrl', 'audioUrl', 'modelUrl'] as const;
 
@@ -27,9 +28,10 @@ export async function hydrateGenerationResult(job: any, db = serviceClient()): P
       if (asset.error || !asset.data?.ready || asset.data.storage_path !== `${job.wallet_address}/${layer.id}/original` || meta?.layerSetId !== job.id || !Number.isInteger(meta.width) || !Number.isInteger(meta.height)) throw new Error('Saved layers are temporarily unavailable');
       if (index && (result.layerSet.width !== meta.width || result.layerSet.height !== meta.height)) throw new Error('Invalid layer canvas');
       result.layerSet.width = meta.width; result.layerSet.height = meta.height;
+      layerCanvas(meta.width, meta.height);
       const signed = await db.storage.from('creator-assets').createSignedUrl(`${job.wallet_address}/${layer.id}/original`, 3600);
       if (signed.error || !signed.data?.signedUrl) throw new Error('Saved layers are temporarily unavailable');
-      result.layerSet.layers.push({ ...layer, width: meta.width, height: meta.height, url: signed.data.signedUrl });
+      result.layerSet.layers.push({ id: layer.id, index, width: meta.width, height: meta.height, url: signed.data.signedUrl });
     }
     delete result.layerImages; delete result.layerSafety;
     return result;

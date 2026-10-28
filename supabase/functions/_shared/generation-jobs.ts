@@ -4,6 +4,7 @@ import { archiveGeneration } from './archive-generation.ts';
 import { compactGenerationResult, hydrateGenerationResult } from './generation-result.ts';
 import { recoverGenerationRefund, transitionGeneration } from './generation-terminal.ts';
 import { archiveLayerSet, LAYER_MODEL } from './creator-image-layers.ts';
+import { LayerValidationError } from './creator-layer-png.ts';
 
 async function saveOutput(job: any, result: Record<string, any>): Promise<void> {
   if (job.model === LAYER_MODEL) {
@@ -78,6 +79,38 @@ export async function settleGeneration(endpoint: string, predictionId: string, r
     .eq('endpoint', endpoint).eq('prediction_id', predictionId).maybeSingle();
   if (error) throw new Error('Could not reconcile the render. Reconnect to collect it.');
   if (!job) return response;
+  if (job.model === LAYER_MODEL && (result.status === 'succeeded' || job.result?.providerCompleted)) {
+    // Preserve accepted provider bytes before any download, without claiming delivery.
+    const raw = job.result?.providerCompleted ? job.result : { ...result, status: 'processing', providerCompleted: true, savePending: true };
+    const journal = await transitionGeneration(job.id, 'processing', raw, { expectedStatuses: ['starting','processing'] }, db);
+    if (journal.job?.status === 'succeeded' || journal.job?.status === 'refund_pending' || journal.job?.status === 'failed') {
+      return new Response(JSON.stringify(await hydrateGenerationResult(journal.job, db)), { headers: response.headers });
+    }
+    if (!journal.job?.result?.providerCompleted) throw new Error('Could not preserve the layer result. Reconnect without paying again.');
+    const output = { ...journal.job.result };
+    try {
+      await archiveLayerSet(journal.job, output, db);
+      output.status = 'succeeded';
+      const saved = await transitionGeneration(job.id, 'succeeded', output, { expectedStatuses: ['processing'] }, db);
+      if (saved.job?.status === 'succeeded') {
+        const delivered = { ...saved.job.result }; delete delivered.savePending;
+        const recorded = await db.rpc('ai_generation_save_result', { p_job_id: job.id, p_expected_result: saved.job.result, p_result: delivered });
+        if (recorded.error) throw recorded.error;
+        const current = await db.from('ai_generation_jobs').select('*').eq('id', job.id).single();
+        if (current.error) throw current.error;
+        return new Response(JSON.stringify(await hydrateGenerationResult(current.data, db)), { headers: response.headers });
+      }
+      return new Response(JSON.stringify(saved.job?.result), { headers: response.headers });
+    } catch (error) {
+      if (error instanceof LayerValidationError) {
+        const failed = await transitionGeneration(job.id, 'failed', { ...raw, status: 'failed', error: error.message, savePending: false }, { expectedStatuses: ['processing'] }, db);
+        const final = failed.job?.status === 'refund_pending' ? await recoverGenerationRefund(job.id, db) : failed.job;
+        return new Response(JSON.stringify(final?.result), { headers: response.headers });
+      }
+      console.error('[generation] layer archive pending', job.id, String(error));
+      return new Response(JSON.stringify({ status: 'saving', savePending: true, jobId: job.id }), { headers: response.headers });
+    }
+  }
   const decision = await transitionGeneration(job.id, result.status, result, {}, db);
   let current = decision.job;
   if (current?.status === 'refund_pending') current = await recoverGenerationRefund(job.id, db);

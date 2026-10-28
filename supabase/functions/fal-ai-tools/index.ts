@@ -237,6 +237,9 @@ serve(async (req) => {
       const ticket = authorized.ticket;
       sourceAssetId = ticket.result?.sourceAssetId;
       layerJobId = ticket.result?.jobId;
+      if (ticket.result?.providerCompleted) {
+        return await settleGeneration('fal-ai-tools', body.requestId, new Response(JSON.stringify({ ...ticket.result, status: 'succeeded' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
+      }
       if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
         return await settleGeneration('fal-ai-tools', body.requestId, new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
       }
@@ -272,7 +275,7 @@ serve(async (req) => {
         status: mappedStatus,
         requestId,
         ...result,
-        ...(statusAppId === LAYER_ENDPOINT ? { sourceAssetId, ...(mappedStatus === 'succeeded' ? { layerSet: layerManifest(layerJobId!, sourceAssetId) } : {}) } : {}),
+        ...(statusAppId === LAYER_ENDPOINT ? { sourceAssetId, ...(mappedStatus === 'succeeded' ? { layerSet: layerManifest(layerJobId!, sourceAssetId, result.layerImages), savePending: true } : {}) } : {}),
         ...(mappedStatus === 'failed' && { error: 'Processing failed on fal.ai' }),
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -286,6 +289,7 @@ serve(async (req) => {
 
     const toolConfig = TOOLS[tool];
     if (tool === LAYER_MODEL) {
+      if (body.acceptedPriceDhb !== 60) throw new Error('Review the current layer separation quote');
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.clientJobId || '') || typeof sourceAssetId !== 'string' || !/^[a-zA-Z0-9_-]{6,80}$/.test(sourceAssetId)) throw new Error('Choose one saved image');
       const owner = await requireDeHubAuth(req); if (!owner.ok) return owner.response;
       const db = serviceClient();
@@ -314,6 +318,7 @@ serve(async (req) => {
       if (toolConfig.async) {
         // Queue-based async execution
         const submission = await falQueueSubmit(FAL_KEY, toolConfig.appId, input);
+        if (tool === LAYER_MODEL && (typeof submission.request_id !== 'string' || !submission.request_id)) throw new Error('Provider submission confirmation is incomplete');
         console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
         console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
 

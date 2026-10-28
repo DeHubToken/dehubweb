@@ -108,6 +108,7 @@ interface EditorState extends EditableState {
    * layer on the page) instead of appending it on the first video track.
    */
   addClipFromMedia: (mediaId: string, trackId?: string, start?: number, opts?: { layer?: boolean }) => string | null;
+  addImageLayers: (layers: { mediaId: string; label: string; hidden: boolean }[], at: number) => void;
   /** Canva-style duplicate: same moment in time, one layer up, nudged on the canvas. */
   duplicateOnCanvas: () => void;
   /**
@@ -421,6 +422,17 @@ export const useEditorStore = create<EditorState>((set, get) => {
     arr.splice(clamped, 0, item);
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], tracks: arr });
+  },
+
+  addImageLayers: (layers, at) => {
+    const s = get();
+    if (layers.length !== 4 || layers.some(layer => !s.media.some(m => m.id === layer.mediaId && m.kind === 'image'))) throw new Error('Incomplete layer import');
+    const groupId = nanoid(10);
+    const tracks: Track[] = layers.map(layer => ({ id: nanoid(8), kind: 'video', name: layer.label, muted: false, hidden: false }));
+    const clips: MediaClip[] = layers.map((layer, index) => ({ id: nanoid(10), kind: 'image', mediaId: layer.mediaId, trackId: tracks[index].id,
+      start: at, duration: 5, trimIn: 0, groupId, label: layer.label, hidden: layer.hidden, fit: 'contain' }));
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], tracks: [...s.tracks, ...tracks],
+      clips: [...s.clips, ...clips], selectedClipIds: clips.map(c => c.id) });
   },
 
   addClipFromMedia: (mediaId, trackId, start, opts) => {

@@ -1,0 +1,28 @@
+name: Creator image layers
+on:
+  pull_request:
+    paths: ['supabase/functions/_shared/creator-image-layers*', 'supabase/functions/_shared/creator-layer-png*', 'supabase/functions/_shared/generation-*.ts', 'supabase/functions/fal-ai-tools/**', 'supabase/functions/creator-library/**', 'supabase/functions/creator-reconcile/**', 'tests/sql/creator-image-layers.sql', '.github/workflows/creator-image-layers.yml']
+  workflow_dispatch:
+jobs:
+  layers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env: { PGHOST: localhost, PGPORT: 5432, PGUSER: postgres, PGPASSWORD: postgres, PGDATABASE: postgres }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: deno test --node-modules-dir=none --allow-env supabase/functions/_shared/creator-image-layers.test.ts
+      - run: deno check --node-modules-dir=none supabase/functions/fal-ai-tools/index.ts supabase/functions/creator-library/index.ts supabase/functions/creator-reconcile/index.ts
+      - run: |
+          psql -v ON_ERROR_STOP=1 -c 'CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;'
+          psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction-bootstrap.sql
+          sed -n '/CREATE OR REPLACE FUNCTION public.ai_generation_terminal_guard()/,/CREATE TRIGGER ai_generation_terminal_guard/p' supabase/migrations/20261026020000_generation_terminal_ownership.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/creator-image-layers.sql
