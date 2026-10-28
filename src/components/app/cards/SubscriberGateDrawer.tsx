@@ -21,7 +21,7 @@
  * locked out. So the fetched rows are narrowed to the ids the post carries, and
  * to the ones that can actually be bought.
  */
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Star } from 'lucide-react';
 import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
@@ -80,8 +80,23 @@ export function SubscriberGateDrawer({
     if (isSubscribed) onSubscribed();
   }, [isSubscribed, onSubscribed]);
 
+  // Subscribe opens a confirm dialog. Left alone, this sheet stayed up with
+  // the dialog stuck behind it: two panels stacked for one decision. So the
+  // sheet steps out of view while the confirm is open and comes back if the
+  // reader cancels; a finished purchase closes it through onSubscribed.
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [confirming, setConfirming] = useState(false);
+  useEffect(() => {
+    const sheet = rootRef.current?.closest<HTMLElement>('[data-vaul-drawer], [role="dialog"]');
+    if (!sheet) return;
+    sheet.style.visibility = confirming ? 'hidden' : '';
+    return () => {
+      sheet.style.visibility = '';
+    };
+  }, [confirming]);
+
   return (
-    <>
+    <div ref={rootRef} className="contents">
       <DrawerHeader className="pb-3">
         <DrawerTitle className="text-white text-lg flex items-center gap-2">
           <Star className="w-5 h-5 text-white" />
@@ -99,7 +114,7 @@ export function SubscriberGateDrawer({
       ) : gatingPlans.length ? (
         <div className="flex flex-col gap-3 pb-2">
           {gatingPlans.map((plan: any) => (
-            <PlanCard key={plan.id ?? plan._id} plan={plan} />
+            <PlanCard key={plan.id ?? plan._id} plan={plan} onConfirmOpenChange={setConfirming} />
           ))}
         </div>
       ) : (
@@ -110,6 +125,6 @@ export function SubscriberGateDrawer({
           {t('subscriptions.creatorNoPlans', { creator: creatorName })}
         </p>
       )}
-    </>
+    </div>
   );
 }
