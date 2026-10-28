@@ -10,6 +10,11 @@ export function validRedirect(value) {
 }
 const live = row => row && row.expires > Date.now() ? row.value : null;
 const record = (value, ttl) => ({ value, expires: Date.now() + ttl });
+// Clients may omit the RFC 8707 resource or add a trailing slash; anything else is refused.
+const resourceOk = value => value === null || value.replace(/\/$/, '') === RESOURCE;
+// dehub.io reaches the Worker through the direct gateway, so CF-Connecting-IP is the
+// gateway for every visitor. The gateway sets X-Real-IP; only used for rate limits.
+const clientIp = request => (request.headers.get('X-DeHub-Public-Host') === 'dehub.io' && request.headers.get('X-Real-IP')) || request.headers.get('CF-Connecting-IP') || 'unknown';
 const scopeList = value => [...new Set(String(value || '').split(' ').filter(Boolean))];
 
 // Only this Durable Object can read connection credentials. Nothing uses a caller-
@@ -173,11 +178,11 @@ export class AccountMcpAuth {
   async oauth(request, url) {
     const route = url.pathname.slice('/mcp/oauth/'.length);
     if (route === 'register' && request.method === 'POST') {
-      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-      if (!await this.budget(`register:${await hash(ip)}`, 10, HOUR)) return oauthError('Registration rate limit reached.', 'temporarily_unavailable', 429);
+      const ip = clientIp(request);
+      // Chat apps register from shared server addresses, so allow a few per minute.
+      if (!await this.budget(`register:${await hash(ip)}`, 60, HOUR)) return oauthError('Registration rate limit reached.', 'temporarily_unavailable', 429);
       const input = await request.json();
       if (!Array.isArray(input.redirect_uris) || !input.redirect_uris.length || input.redirect_uris.length > 5 || !input.redirect_uris.every(validRedirect)) return oauthError('Register 1-5 exact HTTPS callback URLs.');
-      if (input.token_endpoint_auth_method && input.token_endpoint_auth_method !== 'none') return oauthError('Only public clients with PKCE are supported.');
       const client_id = random(), client_name = String(input.client_name || 'DeHub connection').slice(0, 100);
       await this.put(`client:${client_id}`, { redirects: input.redirect_uris, name: client_name }, 90 * DAY);
       return json({ client_id, client_name, redirect_uris: input.redirect_uris, token_endpoint_auth_method: 'none', grant_types: ['authorization_code','refresh_token'], response_types: ['code'], scope: SCOPES.join(' ') }, 201);
@@ -188,10 +193,10 @@ export class AccountMcpAuth {
       // Never redirect an OAuth error until the client's exact callback is known.
       if (!client || !client.redirects.includes(redirect)) return oauthError('Unknown client or callback URL.');
       if (url.searchParams.get('response_type') !== 'code' || url.searchParams.get('code_challenge_method') !== 'S256' || !/^[A-Za-z0-9_-]{43}$/.test(url.searchParams.get('code_challenge') || '')) return oauthError('Authorization code with S256 PKCE is required.');
-      if (url.searchParams.get('resource') !== RESOURCE) return oauthError('The resource must be https://dehub.io/mcp.', 'invalid_target');
+      if (!resourceOk(url.searchParams.get('resource'))) return oauthError('The resource must be https://dehub.io/mcp.', 'invalid_target');
       const scopes = scopeList(url.searchParams.get('scope') || SCOPES.join(' '));
       if (!scopes.length || scopes.some(s => !SCOPES.includes(s))) return oauthError('Unsupported permission requested.', 'invalid_scope');
-      const ip = await hash(request.headers.get('CF-Connecting-IP') || 'unknown');
+      const ip = await hash(clientIp(request));
       if (!await this.budget(`authorize:${ip}`, 30)) return oauthError('Please wait before connecting again.', 'temporarily_unavailable', 429);
       const pending = random();
       await this.put(`pending:${pending}`, { client: url.searchParams.get('client_id'), clientName: client.name, redirect, scopes,
@@ -237,7 +242,7 @@ export class AccountMcpAuth {
     }
     if (route === 'token' && request.method === 'POST') {
       const body = new URLSearchParams(await request.text());
-      if (body.get('resource') !== RESOURCE) return oauthError('Wrong resource.', 'invalid_target');
+      if (!resourceOk(body.get('resource'))) return oauthError('Wrong resource.', 'invalid_target');
       if (!/^[a-f0-9]{64}$/.test(body.get('client_id') || '')) return oauthError('Unknown client.', 'invalid_client');
       if (body.get('grant_type') === 'authorization_code') {
         const verifier = body.get('code_verifier') || '';
@@ -292,7 +297,7 @@ export class AccountMcpAuth {
       if (rpc.method === 'tools/list') return reply({ tools: accountTools.map(t => t.descriptor) });
       if (['resources/list','resources/templates/list','prompts/list'].includes(rpc.method)) return reply({ [rpc.method === 'resources/templates/list' ? 'resourceTemplates' : rpc.method.split('/')[0]]: [] });
       if (rpc.method !== 'tools/call') return json({ jsonrpc: '2.0', id: rpc.id ?? null, error: { code: -32601, message: 'Method not found' } });
-      if (!await this.budget(`tools:${grant?.wallet || await hash(request.headers.get('CF-Connecting-IP') || 'unknown')}`, grant ? 120 : 60)) return reply(fail('Rate limit reached. Please wait a minute.'));
+      if (!await this.budget(`tools:${grant?.wallet || await hash(clientIp(request))}`, grant ? 120 : 60)) return reply(fail('Rate limit reached. Please wait a minute.'));
       const ctx = { fetch: this.fetcher, token: grant?.token || '', wallet: grant?.wallet, scopes: grant?.scopes || [],
         once: (kind, id, args, operation) => this.once(grant.wallet, kind, id, args, operation),
         generate: args => this.generate(args, ctx), generationStatus: id => this.generationStatus(id, ctx) };

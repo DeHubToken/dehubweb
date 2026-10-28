@@ -192,3 +192,20 @@ test('expired connections are rejected and old records are collected', async () 
   await f.service.alarm();
   assert.equal([...f.store.data.keys()].some(key => key.startsWith('grant:')), false);
 });
+test('chat apps that send a client secret method or no resource can still connect', async () => {
+  const f = fixture();
+  const redirect = 'https://claude.ai/api/mcp/auth_callback';
+  const registration = await f.service.fetch(req('/mcp/oauth/register', 'POST', { client_name: 'Chat app', redirect_uris: [redirect], token_endpoint_auth_method: 'client_secret_post' }));
+  assert.equal(registration.status, 201);
+  const { client_id, token_endpoint_auth_method } = await registration.json();
+  assert.equal(token_endpoint_auth_method, 'none');
+  const verifier = 'a'.repeat(64);
+  const params = new URLSearchParams({ client_id, redirect_uri: redirect, response_type: 'code', code_challenge_method: 'S256', code_challenge: await pkce(verifier) });
+  const authorize = await f.service.fetch(req('/mcp/oauth/authorize?' + params));
+  assert.equal(authorize.status, 302);
+  const flow = { client_id, redirect, verifier, request_id: new URL(authorize.headers.get('Location')).searchParams.get('authorization') };
+  const code = new URL((await (await approve(f, flow)).json()).redirect).searchParams.get('code');
+  const body = new URLSearchParams({ grant_type: 'authorization_code', code, client_id, redirect_uri: redirect, code_verifier: verifier, resource: RESOURCE + '/' });
+  const token = await f.service.fetch(req('/mcp/oauth/token', 'POST', body.toString()));
+  assert.equal(token.status, 200);
+});
