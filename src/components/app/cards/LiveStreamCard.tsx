@@ -1317,6 +1317,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               >
                 <Info className="w-4 h-4" /> {t("postInfo.title", "Post info")}
               </DropdownMenuItem>
+              {pipAvailable && !streamEnded && (
+                <DropdownMenuItem
+                  onClick={togglePip}
+                  className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+                >
+                  <PictureInPicture2 className="w-4 h-4" />
+                  {_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
+                </DropdownMenuItem>
+              )}
               {clippable && (
                 <DropdownMenuItem
                   onClick={() => { void liveClip.start(); }}
@@ -1655,17 +1664,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
                   >
                     {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
                   </button>
-                  {pipAvailable && (
-                    <button
-                      onClick={togglePip}
-                      aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
-                      aria-pressed={inPictureInPicture}
-                      title={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
-                      className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-                    >
-                      <PictureInPicture2 className="w-5 h-5" />
-                    </button>
-                  )}
                   <button
                     onClick={toggleFullscreen}
                     aria-label={isFullscreen ? t('stages.exitFullscreen', 'Exit fullscreen') : t('stages.fullscreen', 'Fullscreen')}
@@ -1776,8 +1774,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
             onToggleMute={toggleMute}
-            onTogglePictureInPicture={pipAvailable && !streamEnded ? togglePip : undefined}
-            inPictureInPicture={inPictureInPicture}
             optionsSlot={optionsMenu}
             likeCount={stream.likeCount}
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
