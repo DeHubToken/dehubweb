@@ -7,6 +7,8 @@ function setup(overflow = 'auto') {
   const shell = document.createElement('div');
   shell.style.overscrollBehaviorY = 'none';
   const strip = document.createElement('div');
+  // Three photos side by side, showing the first.
+  Object.defineProperties(strip, { scrollWidth: { value: 1500 }, clientWidth: { value: 500 } });
   page.append(shell);
   shell.append(strip);
   document.body.append(page);
@@ -56,6 +58,34 @@ describe('vertical wheel over a horizontal gallery', () => {
     chainVerticalWheel(wheel, strip);
     expect(page.scrollTop).toBe(0);
     expect(wheel.defaultPrevented).toBe(false);
+  });
+
+  it('sends a sideways swipe down the page once the gallery is at its last photo', () => {
+    const { page, strip } = setup();
+    strip.scrollLeft = 1000;
+    const wheel = new WheelEvent('wheel', { deltaX: 100, deltaY: 60, cancelable: true });
+    chainVerticalWheel(wheel, strip);
+    expect(page.scrollTop).toBe(60);
+    expect(wheel.defaultPrevented).toBe(true);
+  });
+
+  it('treats overscroll-behavior on body as the app setting, not an overlay', () => {
+    // root (scrolls) > body (overflow auto, overscroll none, no room) > strip
+    const root = document.createElement('div');
+    root.style.overflowY = 'auto';
+    Object.defineProperties(root, { scrollHeight: { value: 2000 }, clientHeight: { value: 500 } });
+    const body = document.createElement('div');
+    body.style.overflowY = 'auto';
+    body.style.overscrollBehaviorY = 'none';
+    const strip = document.createElement('div');
+    root.append(body);
+    body.append(strip);
+    document.documentElement.append(root);
+    vi.spyOn(document, 'body', 'get').mockReturnValue(body as unknown as HTMLBodyElement);
+    const wheel = new WheelEvent('wheel', { deltaY: 100, cancelable: true });
+    chainVerticalWheel(wheel, strip);
+    expect(root.scrollTop).toBe(100);
+    root.remove();
   });
 
   it('does not move a locked page or escape a contained overlay', () => {
