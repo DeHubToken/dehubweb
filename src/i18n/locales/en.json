@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Your tip was sent, but the original creator's share didn't go through.",
+    "notify": {
+      "duet": "{{name}} duetted your video",
+      "stitch": "{{name}} stitched your video",
+      "react": "{{name}} reacted to your video",
+      "reactLive": "{{name}} is reacting live to your video"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download on the App Store",
