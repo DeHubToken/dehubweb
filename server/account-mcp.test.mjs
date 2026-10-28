@@ -89,6 +89,13 @@ test('OAuth metadata and tool descriptors are explicit about account scopes and 
   }
   assert.equal(accountTools.find(t => t.name === 'dehub_update_profile').descriptor.annotations.destructiveHint, true);
 });
+test('opening /mcp in a browser lands on the connect guide; chat apps still get the MCP reply', async () => {
+  const f = fixture();
+  const page = await f.service.fetch(req('/mcp', 'GET', undefined, { Accept: 'text/html,application/xhtml+xml' }));
+  assert.equal(page.status, 302);
+  assert.equal(page.headers.get('Location'), `${ORIGIN}/connect`);
+  assert.equal((await f.service.fetch(req('/mcp', 'GET', undefined, { Accept: 'text/event-stream' }))).status, 405);
+});
 test('anonymous private access returns a linking challenge without calling backend', async () => {
   const f = fixture();
   const response = await rpc(f, 'dehub_account', {});
