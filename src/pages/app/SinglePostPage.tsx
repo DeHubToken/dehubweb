@@ -95,6 +95,7 @@ import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
+import { setPostFeedLook } from '@/lib/post-feed-look';
 import { PostCommentsSplit } from '@/components/app/post-stage/PostCommentsSplit';
 import type { CommentsSplitRouteState } from '@/lib/comments-split';
 import { POST_STAGE_COMPOSE_EVENT, type PostStageValue } from '@/components/app/post-stage/post-stage-context';
@@ -1101,7 +1102,18 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const isFullBleedLive = contentType === 'live' && isMobileView;
   // An image post opens the same way a video post does on phone and tablet:
   // picture first, full width, the app's top chrome out of the way.
-  const isImmersiveImage = !detailsOnly && isImagePost && isMobileView;
+  // Phones: a text, image or audio post opened from outside the home feed (a
+  // notification, a profile, a link) looks like one opened from the feed: logo
+  // bar and pill with Back on top, the same bento card, no floating back
+  // square or options square. Video keeps its own player page.
+  const feedLookPhone = isStagePhone && !inOverlay && !detailsOnly && !!post &&
+    post.status !== 'pending' && (isTextPost || isImagePost || isAudioPost);
+  useLayoutEffect(() => {
+    if (!feedLookPhone) return;
+    setPostFeedLook(true);
+    return () => setPostFeedLook(false);
+  }, [feedLookPhone]);
+  const isImmersiveImage = !detailsOnly && isImagePost && isMobileView && !feedLookPhone;
   useEffect(() => {
     const cls = isFullBleedLive ? 'immersive-live-mode' : (isVideoPost || isImmersiveImage) ? 'immersive-video-mode' : null;
     if (cls) document.body.classList.add(cls);
@@ -1221,7 +1233,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
    * sheet's "View quotes / View reposts" rows switch the same section to the
    * existing quotes and reposters lists.
    */
-  const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
+  const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live' && !feedLookPhone;
 
   const revealStageComments = useCallback((focusComposer: boolean) => {
     // The composer is put away until asked for. Raised inside the tap so the
@@ -1627,9 +1639,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               the flat comments under it. No [data-feed-item] either, or the
               canvas themes' glass would paint the box straight back. */}
           <div
-            data-feed-item={isMobileView ? undefined : true}
-            data-post-flat={isMobileView || undefined}
-            className={isMobileView ? 'px-1 sm:px-0 pt-1' : 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'}
+            data-feed-item={isMobileView && !feedLookPhone ? undefined : true}
+            data-post-flat={(isMobileView && !feedLookPhone) || undefined}
+            className={isMobileView && !feedLookPhone ? 'px-1 sm:px-0 pt-1' : 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'}
           >
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
