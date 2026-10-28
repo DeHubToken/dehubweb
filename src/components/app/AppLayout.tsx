@@ -271,9 +271,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       const rail = w >= 1536 ? 352 : w >= 1280 ? 320 : w >= 1024 ? 288 : 0;
       return Math.max(0, shell - sidebar - rail);
     };
-    // A custom property on <html> is inherited by every element, so any write
-    // there restyles the whole page (~2,300 elements on Home, the biggest
-    // single cost of a tab tap on an iPhone). Write only values that moved.
+    // Any write on <html> restyles every element: write only changes.
     const write = (name: string, value: string) => {
       if (root.getPropertyValue(name) !== value) root.setProperty(name, value);
     };

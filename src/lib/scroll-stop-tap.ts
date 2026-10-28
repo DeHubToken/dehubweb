@@ -121,12 +121,7 @@ function onClick(e: MouseEvent): void {
   holding = false;
 }
 
-/**
- * iOS already does this natively: a touch that halts momentum never becomes a
- * click there. Its scroll events also reach the page late whenever the main
- * thread is busy, so the gap check below read a page at rest as still gliding
- * and ate the next real tap on a feed button ("buttons sometimes don't work").
- */
+/** iOS does this natively, and its late scroll events made this eat real taps. */
 function nativeGlideStop(): boolean {
   const ua = navigator.userAgent;
   return /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
