@@ -7022,30 +7022,33 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
   visibility: hidden !important;
 }
 
-/* The emperor's verdict, on a loop, for your own 👍 / 👎 on a post: the fist
-   held sideways, then the thumb snapping up (or down) with a pop, a beat at
-   rest, and back to the side. Transform only, so it costs nothing on Safari. */
-.dehub-thumb-verdict-up,
-.dehub-thumb-verdict-down {
-  transform-origin: 50% 55%;
-  animation: dehub-thumb-verdict-up 2.6s cubic-bezier(.3, 1.3, .5, 1) infinite;
+/* The arena verdict (EmperorThumb), one slow 7s cycle: the fist rests with
+   the thumb tucked over the fingers, the thumb slowly turns out to point up
+   (the 👎 is the same hand flipped), holds with one small pulse, draws back
+   in, and the fist rests again. Transform only, so it is cheap on Safari. */
+.dehub-emperor { overflow: visible; }
+.dehub-emperor--down { transform: scaleY(-1); }
+.dehub-emperor-hand {
+  transform-box: view-box;
+  transform-origin: 16px 20px;
+  animation: dehub-emperor-pulse 7s ease-in-out -0.6s infinite;
 }
-.dehub-thumb-verdict-down { animation-name: dehub-thumb-verdict-down; }
-@keyframes dehub-thumb-verdict-up {
-  0%, 10% { transform: rotate(-90deg) scale(.86); }
-  24% { transform: translateY(-3px) rotate(10deg) scale(1.28); }
-  32% { transform: rotate(-5deg) scale(1.06); }
-  40%, 80% { transform: none; }
-  92%, 100% { transform: rotate(-90deg) scale(.86); }
+.dehub-emperor-thumb {
+  transform-box: view-box;
+  transform-origin: 10px 14px;
+  transform: rotate(90deg);
+  animation: dehub-emperor-thumb 7s ease-in-out -0.6s infinite;
 }
-@keyframes dehub-thumb-verdict-down {
-  0%, 10% { transform: rotate(90deg) scale(.86); }
-  24% { transform: translateY(3px) rotate(-10deg) scale(1.28); }
-  32% { transform: rotate(5deg) scale(1.06); }
-  40%, 80% { transform: none; }
-  92%, 100% { transform: rotate(90deg) scale(.86); }
+@keyframes dehub-emperor-thumb {
+  0%, 14% { transform: rotate(90deg); }
+  30%, 58% { transform: rotate(0deg); }
+  72%, 100% { transform: rotate(90deg); }
+}
+@keyframes dehub-emperor-pulse {
+  0%, 34%, 44%, 100% { transform: none; }
+  39% { transform: scale(1.07); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dehub-thumb-verdict-up,
-  .dehub-thumb-verdict-down { animation: none; }
+  .dehub-emperor-hand { animation: none; }
+  .dehub-emperor-thumb { animation: none; transform: none; }
 }
