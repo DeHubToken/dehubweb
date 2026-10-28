@@ -60,6 +60,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     userHandle: msg.sender_username || undefined,
     userAvatar: buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url) || undefined,
     badgeBalance: msg.sender_badge_balance,
+    badgeLock: msg.sender_badge_lock,
     content: msg.content || '',
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',

@@ -40,6 +40,7 @@ import { AppState } from '@/components/app/AppState';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
+import type { BadgeLock } from '@/lib/staking-badges';
 import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
@@ -103,8 +104,8 @@ function SidebarAvatar({ src, address, name }: { src?: string | null; address?: 
 }
 
 /** Sidebar chat badge */
-function SidebarChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
+function SidebarChatBadge({ badgeBalance, badgeLock, username }: { badgeBalance?: number | null; badgeLock?: BadgeLock | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} badgeLock={badgeLock} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Compact reaction pills for sidebar */
@@ -541,7 +542,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                       <span className="inline-flex items-baseline gap-1.5">
                         <span className="relative inline-flex items-baseline gap-1 shrink min-w-0 pr-3">
                           <button onClick={goToProfile} disabled={!handle} className={`text-xs font-semibold text-white truncate ${handle ? 'hover:underline cursor-pointer' : 'cursor-default'}`}>{name}</button>
-                          <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
+                          <SidebarChatBadge badgeBalance={msg.sender_badge_balance} badgeLock={msg.sender_badge_lock} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                       </span>
