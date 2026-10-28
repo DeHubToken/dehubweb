@@ -7,6 +7,9 @@ permissions:
   contents: read
 jobs:
   link-preview:
+    env:
+      # Edge imports are explicit; frontend packages belong to the pnpm jobs.
+      DENO_NO_PACKAGE_JSON: '1'
     strategy:
       matrix:
         include:
