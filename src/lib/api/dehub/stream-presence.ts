@@ -155,17 +155,26 @@ export function acquireStreamSocket(): StreamConnection {
       refs: 0,
       viewers: new Map(),
       socket: io(DEHUB_API_BASE, {
-        auth: token ? { token } : {},
+        // Read the token at every handshake. Logins rotate every 15 minutes,
+        // and a socket that reconnected after an idle spell still offered the
+        // token it was built with: the gateway refused its rejoin as expired
+        // and the viewer read "0 here" while still watching.
+        auth: token ? (cb) => cb({ token: getAuthToken() || token }) : {},
         query: token ? { token } : {},
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        reconnectionAttempts: 20,
+        reconnectionAttempts: Infinity,
         timeout: 20000,
       }),
     };
-    reviveOnReturn(active.socket);
+    const socket = active.socket;
+    // socket.io never retries a disconnect the server started on its own.
+    socket.on('disconnect', (reason) => {
+      if (reason === 'io server disconnect') socket.connect();
+    });
+    reviveOnReturn(socket);
   }
 
   active.refs += 1;
