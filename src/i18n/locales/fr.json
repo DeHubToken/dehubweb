@@ -408,7 +408,7 @@
   },
   "accountConnect": {
     "title": "Connecter votre compte DeHub",
-    "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 24 heures. Vous pouvez les révoquer à tout moment.",
+    "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 30 jours. Vous pouvez les révoquer à tout moment.",
     "read": "Consulter votre compte, vos publications, notifications et créations",
     "profile": "Modifier votre profil, vos images et vos paramètres de confidentialité",
     "social": "Publier, commenter, suivre des personnes et enregistrer des favoris",

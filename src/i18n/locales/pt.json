@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Conecte sua conta DeHub",
-    "body": "Linkar sua conta para gerenciar seu perfil, publicar posts e criar conteúdo do chat. As conexões expiram dentro de 24 horas. Você pode desconectar a qualquer momento.",
+    "body": "Linkar sua conta para gerenciar seu perfil, publicar posts e criar conteúdo do chat. As conexões expiram dentro de 30 dias. Você pode desconectar a qualquer momento.",
     "read": "Ler sua conta, posts, notificações e Biblioteca do Criador",
     "profile": "Editar seu perfil, imagens e configurações de privacidade",
     "social": "Publicar posts e comentários, seguir pessoas e salvar marcadores",
