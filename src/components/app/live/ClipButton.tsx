@@ -24,7 +24,12 @@ interface Props {
   withLabel?: boolean;
 }
 
-export function ClipButton({ tokenId, getReplayTime, className, iconClassName, withLabel }: Props) {
+/**
+ * The clip flow without its own button, for the live three-dot menu: `start`
+ * runs from the menu row and `sheet` is rendered outside the menu, which
+ * unmounts on select.
+ */
+export function useLiveClip(tokenId: string | number, getReplayTime?: () => number | undefined) {
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const [open, setOpen] = useState(false);
@@ -50,6 +55,13 @@ export function ClipButton({ tokenId, getReplayTime, className, iconClassName, w
     }
   };
 
+  return { start, sheet: <ClipEditorSheet clip={clip} open={open} onOpenChange={setOpen} /> };
+}
+
+export function ClipButton({ tokenId, getReplayTime, className, iconClassName, withLabel }: Props) {
+  const { t } = useTranslation();
+  const { start, sheet } = useLiveClip(tokenId, getReplayTime);
+
   return (
     <>
       <button
@@ -62,7 +74,7 @@ export function ClipButton({ tokenId, getReplayTime, className, iconClassName, w
         <Scissors className={cn('h-5 w-5', iconClassName)} />
         {withLabel && <span>{t('liveClips.title', 'Clip')}</span>}
       </button>
-      <ClipEditorSheet clip={clip} open={open} onOpenChange={setOpen} />
+      {sheet}
     </>
   );
 }
