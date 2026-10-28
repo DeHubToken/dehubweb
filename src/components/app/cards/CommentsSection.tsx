@@ -1,6 +1,7 @@
 import ArrowUpDown from '@/components/ui/cut-icons/sort';
 import ImagePlus from '@/components/ui/cut-icons/images';
 import { COMMENT_ICON_CLASS } from './feed-icon-size';
+import { CommentsSplitContext } from '@/lib/comments-split';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -1073,7 +1074,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // so a bar left in there shows the comments under it as plain text. An
   // empty slot keeps its place in the page and it follows it (useFloatingPin).
   const isActivePage = useContext(CachedPageActiveContext);
-  const floatPin = page && isMobile && isActivePage;
+  const inCommentsSplit = useContext(CommentsSplitContext);
+  const floatPin = page && isMobile && isActivePage && !inCommentsSplit;
   const dockComposer = (el: React.ReactElement) =>
     (stage || floatPin) && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
   /** Cleared by "Show all comments", and by arriving with nothing to focus. */
