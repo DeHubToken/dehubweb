@@ -1131,6 +1131,8 @@ export type Database = {
           price_dhb: number
           provider: string | null
           provider_app: string | null
+          refund_lease_until: string | null
+          refund_token: string | null
           result: Json | null
           status: string
           tx_hash: string | null
@@ -1150,6 +1152,8 @@ export type Database = {
           price_dhb: number
           provider?: string | null
           provider_app?: string | null
+          refund_lease_until?: string | null
+          refund_token?: string | null
           result?: Json | null
           status?: string
           tx_hash?: string | null
@@ -1169,6 +1173,8 @@ export type Database = {
           price_dhb?: number
           provider?: string | null
           provider_app?: string | null
+          refund_lease_until?: string | null
+          refund_token?: string | null
           result?: Json | null
           status?: string
           tx_hash?: string | null
@@ -1723,8 +1729,10 @@ export type Database = {
           error: string | null
           id: string
           is_public: boolean
+          miniapp_app_id: string | null
           name: string
           prompt: string
+          slug: string | null
           status: string
           status_detail: string | null
           updated_at: string
@@ -1737,8 +1745,10 @@ export type Database = {
           error?: string | null
           id?: string
           is_public?: boolean
+          miniapp_app_id?: string | null
           name?: string
           prompt: string
+          slug?: string | null
           status?: string
           status_detail?: string | null
           updated_at?: string
@@ -1751,15 +1761,25 @@ export type Database = {
           error?: string | null
           id?: string
           is_public?: boolean
+          miniapp_app_id?: string | null
           name?: string
           prompt?: string
+          slug?: string | null
           status?: string
           status_detail?: string | null
           updated_at?: string
           version?: number
           wallet?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "builder_projects_miniapp_app_id_fkey"
+            columns: ["miniapp_app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       builder_usage: {
         Row: {
@@ -1778,6 +1798,44 @@ export type Database = {
           wallet?: string
         }
         Relationships: []
+      }
+      builder_versions: {
+        Row: {
+          created_at: string
+          emoji: string
+          files: Json
+          name: string
+          project_id: string
+          summary: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          files: Json
+          name: string
+          project_id: string
+          summary?: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          files?: Json
+          name?: string
+          project_id?: string
+          summary?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_versions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "builder_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       buy_bot_state: {
         Row: {
@@ -2551,6 +2609,8 @@ export type Database = {
       creator_assets: {
         Row: {
           created_at: string
+          favorite: boolean
+          hidden: boolean
           id: string
           metadata: Json
           ready: boolean
@@ -2559,6 +2619,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          favorite?: boolean
+          hidden?: boolean
           id: string
           metadata?: Json
           ready?: boolean
@@ -2567,6 +2629,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          favorite?: boolean
+          hidden?: boolean
           id?: string
           metadata?: Json
           ready?: boolean
@@ -4619,6 +4683,93 @@ export type Database = {
           },
         ]
       }
+      growth_autopost_queue: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          link: string | null
+          media: Json
+          platforms: string[]
+          posted_at: string | null
+          results: Json | null
+          reviewed_by: string | null
+          scheduled_for: string
+          source_ref: string
+          status: string
+          text: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          link?: string | null
+          media?: Json
+          platforms?: string[]
+          posted_at?: string | null
+          results?: Json | null
+          reviewed_by?: string | null
+          scheduled_for?: string
+          source_ref: string
+          status?: string
+          text?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          link?: string | null
+          media?: Json
+          platforms?: string[]
+          posted_at?: string | null
+          results?: Json | null
+          reviewed_by?: string | null
+          scheduled_for?: string
+          source_ref?: string
+          status?: string
+          text?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      growth_autopost_settings: {
+        Row: {
+          auto_approve: boolean
+          daily_caps: Json
+          daily_total_cap: number
+          enabled_kinds: string[]
+          id: boolean
+          live_min_audience: number
+          platforms: Json
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          auto_approve?: boolean
+          daily_caps?: Json
+          daily_total_cap?: number
+          enabled_kinds?: string[]
+          id?: boolean
+          live_min_audience?: number
+          platforms?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          auto_approve?: boolean
+          daily_caps?: Json
+          daily_total_cap?: number
+          enabled_kinds?: string[]
+          id?: boolean
+          live_min_audience?: number
+          platforms?: Json
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       job_applications: {
         Row: {
           created_at: string
@@ -5355,6 +5506,9 @@ export type Database = {
           id: number
           path: string
           prev_path: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
           viewer_id: string
         }
         Insert: {
@@ -5364,6 +5518,9 @@ export type Database = {
           id?: never
           path: string
           prev_path?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           viewer_id: string
         }
         Update: {
@@ -5373,6 +5530,9 @@ export type Database = {
           id?: never
           path?: string
           prev_path?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
           viewer_id?: string
         }
         Relationships: []
@@ -5718,6 +5878,30 @@ export type Database = {
         }
         Relationships: []
       }
+      provider_circuits: {
+        Row: {
+          blocked_until: string
+          failures: number
+          probe_token: string | null
+          probe_until: string
+          provider: string
+        }
+        Insert: {
+          blocked_until?: string
+          failures?: number
+          probe_token?: string | null
+          probe_until?: string
+          provider: string
+        }
+        Update: {
+          blocked_until?: string
+          failures?: number
+          probe_token?: string | null
+          probe_until?: string
+          provider?: string
+        }
+        Relationships: []
+      }
       raise_hand_requests: {
         Row: {
           avatar: string | null
@@ -5853,6 +6037,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      signup_attribution: {
+        Row: {
+          created_at: string
+          first_seen_at: string | null
+          is_new_account: boolean
+          landing_path: string | null
+          ref_code: string | null
+          referrer_host: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          first_seen_at?: string | null
+          is_new_account?: boolean
+          landing_path?: string | null
+          ref_code?: string | null
+          referrer_host?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          first_seen_at?: string | null
+          is_new_account?: boolean
+          landing_path?: string | null
+          ref_code?: string | null
+          referrer_host?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
       }
       social_credit_topups: {
         Row: {
@@ -6108,6 +6337,74 @@ export type Database = {
           {
             foreignKeyName: "stage_chat_messages_space_id_fkey"
             columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "audio_spaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stage_clips: {
+        Row: {
+          attempts: number
+          created_at: string
+          duration_seconds: number | null
+          end_seconds: number
+          error: string | null
+          hook: string
+          id: string
+          idx: number
+          job_id: string | null
+          last_attempt_at: string | null
+          queued_at: string | null
+          stage_id: string
+          start_seconds: number
+          status: string
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          duration_seconds?: number | null
+          end_seconds: number
+          error?: string | null
+          hook?: string
+          id?: string
+          idx: number
+          job_id?: string | null
+          last_attempt_at?: string | null
+          queued_at?: string | null
+          stage_id: string
+          start_seconds: number
+          status?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          duration_seconds?: number | null
+          end_seconds?: number
+          error?: string | null
+          hook?: string
+          id?: string
+          idx?: number
+          job_id?: string | null
+          last_attempt_at?: string | null
+          queued_at?: string | null
+          stage_id?: string
+          start_seconds?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_clips_stage_id_fkey"
+            columns: ["stage_id"]
             isOneToOne: false
             referencedRelation: "audio_spaces"
             referencedColumns: ["id"]
@@ -7081,6 +7378,30 @@ export type Database = {
         }
         Relationships: []
       }
+      translation_attempt_budgets: {
+        Row: {
+          attempts: number
+          day: string
+          input_bytes: number
+          output_tokens: number
+          scope: string
+        }
+        Insert: {
+          attempts?: number
+          day: string
+          input_bytes?: number
+          output_tokens?: number
+          scope: string
+        }
+        Update: {
+          attempts?: number
+          day?: string
+          input_bytes?: number
+          output_tokens?: number
+          scope?: string
+        }
+        Relationships: []
+      }
       translation_spend_daily: {
         Row: {
           day: string
@@ -7093,6 +7414,24 @@ export type Database = {
         Update: {
           day?: string
           paid_calls?: number
+        }
+        Relationships: []
+      }
+      translation_work_leases: {
+        Row: {
+          cache_key: string
+          expires_at: string
+          token: string
+        }
+        Insert: {
+          cache_key: string
+          expires_at: string
+          token: string
+        }
+        Update: {
+          cache_key?: string
+          expires_at?: string
+          token?: string
         }
         Relationships: []
       }
@@ -8798,6 +9137,39 @@ export type Database = {
         }
         Returns: boolean
       }
+      ai_generation_debit_canceled: {
+        Args: { p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_debit_declined: {
+        Args: { p_job_id: string }
+        Returns: Json
+      }
+      ai_generation_refund_claim: {
+        Args: { p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_refund_finish: {
+        Args: { p_credit_restored?: boolean; p_job_id: string; p_token: string }
+        Returns: Json
+      }
+      ai_generation_save_result: {
+        Args: { p_expected_result: Json; p_job_id: string; p_result: Json }
+        Returns: Json
+      }
+      ai_generation_transition: {
+        Args: {
+          p_created_before?: string
+          p_expected_statuses?: string[]
+          p_job_id: string
+          p_prediction_id?: string
+          p_provider?: string
+          p_provider_app?: string
+          p_result: Json
+          p_status: string
+        }
+        Returns: Json
+      }
       ai_job_record_credits: {
         Args: {
           p_debit_key: string
@@ -8864,7 +9236,15 @@ export type Database = {
       claim_agent_life: { Args: never; Returns: string }
       claim_agent_task: { Args: never; Returns: Json }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
+      claim_provider_attempt: {
+        Args: { p_provider: string; p_token: string }
+        Returns: Json
+      }
       claim_reaction_tip: { Args: never; Returns: boolean }
+      claim_translation_work: {
+        Args: { p_key: string; p_token: string }
+        Returns: boolean
+      }
       claim_video_dub_tip: { Args: never; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
@@ -8890,6 +9270,16 @@ export type Database = {
           _until?: string
         }
         Returns: undefined
+      }
+      community_chat_page_v1: {
+        Args: {
+          _anchor_id?: string
+          _before_at?: string
+          _before_id?: string
+          _community_id: string
+          _limit?: number
+        }
+        Returns: Json
       }
       community_claim_invite: {
         Args: { _community_id: string; _recipient: string }
@@ -9079,6 +9469,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      compact_saved_generation_images: {
+        Args: { p_limit?: number }
+        Returns: number
       }
       complete_wallet_replacement: {
         Args: { p_new_address: string }
@@ -9376,6 +9770,15 @@ export type Database = {
         Returns: undefined
       }
       evict_stale_post_translations: { Args: never; Returns: number }
+      finish_provider_attempt: {
+        Args: {
+          p_cooldown_seconds: number
+          p_probe: boolean
+          p_provider: string
+          p_token: string
+        }
+        Returns: undefined
+      }
       get_affiliate_cta_stats: {
         Args: never
         Returns: {
@@ -9451,6 +9854,10 @@ export type Database = {
         Args: { token?: string; wallet: string }
         Returns: boolean
       }
+      growth_autopost_scheduler_authorized: {
+        Args: { p_token: string }
+        Returns: boolean
+      }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_stage_listens: {
         Args: { p_space_id: string }
@@ -9474,6 +9881,7 @@ export type Database = {
       }
       is_signed_stage_host: { Args: { p_space_id: string }; Returns: boolean }
       is_stage_host: { Args: { p_space_id: string }; Returns: boolean }
+      issue_maintenance_token: { Args: { p_action: string }; Returns: string }
       issue_wallet_session: {
         Args: {
           p_app_version?: string
@@ -9562,6 +9970,10 @@ export type Database = {
         Args: { p_listing_id: string; p_quantity: number }
         Returns: undefined
       }
+      release_translation_work: {
+        Args: { p_key: string; p_token: string }
+        Returns: undefined
+      }
       replace_user_wallet: {
         Args: {
           p_encrypted_seed: string
@@ -9608,6 +10020,15 @@ export type Database = {
       reserve_fraction_listing: {
         Args: { p_listing_id: string; p_quantity: number }
         Returns: number
+      }
+      reserve_translation_attempt: {
+        Args: {
+          p_bulk: boolean
+          p_cap?: number
+          p_input_bytes: number
+          p_output_tokens: number
+        }
+        Returns: boolean
       }
       resolve_due_dao_proposals: { Args: never; Returns: number }
       resolve_due_governance_proposals: { Args: never; Returns: number }
@@ -9726,6 +10147,10 @@ export type Database = {
       upsert_phone_otp: {
         Args: { p_code_hash: string; p_phone: string; p_ttl_ms: number }
         Returns: undefined
+      }
+      verify_maintenance_token: {
+        Args: { p_action: string; p_token: string }
+        Returns: boolean
       }
       work_action: {
         Args: {
