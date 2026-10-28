@@ -1,6 +1,6 @@
 /**
  * Whether a DeHub video may be remixed: a finished, public, free video with
- * nothing gated behind it. For a duet or a reaction the creator's allow
+ * nothing gated behind it. For a duet, stitch or reaction the creator's allow
  * setting is asked of the shared remix links too; if that service cannot
  * answer the browser checks here still stand, and a real "no" still stops it.
  */
@@ -19,9 +19,9 @@ export async function checkRemixSource(sourceUrl: string, mode: string) {
       isLocked: post.is_locked || post.streamInfo?.isLockContent,
       lockedPrice: post.locked_price ?? post.streamInfo?.lockContentAmount,
       subscriberPlans: extra.plansDetails ?? extra.plans })) throw new Error('This video is unavailable for remixing.');
-  // The creator's "Allow duets" / "Allow reactions" setting, checked by the server for this viewer.
-  if (mode === 'duet' || mode === 'react') {
+  // The creator's "Allow duets" / "Allow stitches" / "Allow reactions" setting, checked by the server for this viewer.
+  if (mode === 'duet' || mode === 'stitch' || mode === 'react') {
     const verdict = await checkRemix(id, mode);
-    if (!verdict.allowed) throw new Error(verdict.reason || `The creator does not allow ${mode === 'duet' ? 'duets' : 'reactions'} on this video.`);
+    if (!verdict.allowed) throw new Error(verdict.reason || `The creator does not allow ${mode === 'duet' ? 'duets' : mode === 'stitch' ? 'stitches' : 'reactions'} on this video.`);
   }
 }

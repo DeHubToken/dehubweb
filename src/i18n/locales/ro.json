@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Conectați contul dvs. DeHub",
-    "body": "Legați contul pentru a gestiona profilul, publica postări și crea conținut din chat. Conexiunile expiră în 24 de ore. Puteți dezactiva oricând.",
+    "body": "Legați contul pentru a gestiona profilul, publica postări și crea conținut din chat. Conexiunile expiră în 30 de zile. Puteți dezactiva oricând.",
     "read": "Cititi contul, postările, notificările și biblioteca Creator.",
     "profile": "Modificați profilul, imaginile și setările de confidențialitate",
     "social": "Publicați postări și comentarii, urmați oameni și salvați marcările",

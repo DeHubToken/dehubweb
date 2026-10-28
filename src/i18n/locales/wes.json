@@ -290,7 +290,7 @@
     "stillCounting": "Still counting: gifts can take a minute to confirm."
   },
   "accountConnect": {
-    "body": "Link yu account fo manage yu profile, post post an create content from chat. Connection go expire after 24 hour. Yu can disconnect any time.",
+    "body": "Link yu account fo manage yu profile, post post an create content from chat. Connection go expire after 30 day. Yu can disconnect any time.",
     "social": "Pamela post, koment, follow pipo, save bukmark.",
     "generate": "Mek media wit yor credz, konfirm paymant or elijibl free imajez.",
     "signIn": "Sign in tu DeHub",

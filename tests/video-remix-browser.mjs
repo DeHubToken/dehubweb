@@ -18,6 +18,9 @@ const microphonePath = path.join(output, 'microphone.wav');
 ffmpeg(['-f', 'lavfi', '-i', 'color=c=0x174b91:s=720x1280:r=24', '-f', 'lavfi', '-i', 'sine=frequency=440:sample_rate=48000', '-t', '6', '-vf', 'drawbox=x=100:y=150:w=120:h=120:color=yellow:t=fill', '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-movflags', '+faststart', sourcePath]);
 ffmpeg(['-f', 'lavfi', '-i', 'testsrc2=size=320x480:rate=24', '-t', '3', '-pix_fmt', 'yuv420p', cameraPath]);
 ffmpeg(['-f', 'lavfi', '-i', 'sine=frequency=880:sample_rate=48000', '-t', '6', '-ac', '1', microphonePath]);
+// A phone clip picked from the library for a stitch reply.
+const replyPath = path.join(output, 'reply.mp4');
+ffmpeg(['-f', 'lavfi', '-i', 'color=c=0xb3263b:s=720x1280:r=24', '-f', 'lavfi', '-i', 'sine=frequency=660:sample_rate=48000', '-t', '2', '-c:v', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-movflags', '+faststart', replyPath]);
 const source = await readFile(sourcePath);
 const browser = await chromium.launch({ headless: true, args: [
   '--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream',
@@ -29,10 +32,10 @@ try {
   // `full` lets a duet run to the end of the 6 s source on its own instead of pressing Stop.
   const cases = [
     { mode: 'duet', layout: 'side' }, { mode: 'duet', layout: 'pip', full: true }, { mode: 'duet', layout: 'behind' },
-    { mode: 'sound' }, { mode: 'cut' }, { mode: 'green-screen' }, { mode: 'react' },
+    { mode: 'sound' }, { mode: 'stitch' }, { mode: 'stitch', upload: true }, { mode: 'green-screen' }, { mode: 'react' },
   ];
-  for (const { mode, layout, full } of cases) {
-    const name = layout ? `${mode}-${layout}` : mode;
+  for (const { mode, layout, full, upload } of cases) {
+    const name = layout ? `${mode}-${layout}` : upload ? `${mode}-upload` : mode;
     const context = await browser.newContext({ permissions: ['camera', 'microphone'], viewport: { width: 430, height: 900 } });
     const page = await context.newPage();
     const logs = [], errors = [], requests = [];
@@ -58,14 +61,29 @@ try {
       await page.goto('https://remix.test/');
       await page.waitForFunction(() => window.remixPackets.some(packet => packet.type === 'ready'), undefined, { timeout: 30000 });
       await page.locator('#countdown').uncheck();
-      if (mode === 'cut') await page.locator('#cutLength').selectOption('1');
+      if (mode === 'stitch') {
+        // Drag the trim box to the middle, then shrink it to one second.
+        const track = await page.locator('#track').boundingBox();
+        await page.mouse.move(track.x + track.width * 0.3, track.y + track.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(track.x + track.width * 0.5, track.y + track.height / 2, { steps: 4 });
+        await page.mouse.up();
+        assert(Number(await page.locator('#trim').inputValue()) > 0.5, 'dragging the box moves the stitch start');
+        await page.locator('#cutLength').evaluate(input => { input.value = '1'; input.dispatchEvent(new Event('input')); });
+        assert.equal(await page.locator('#cutValue').textContent(), '1.0s');
+      }
       if (mode === 'green-screen') await page.locator('#layout').selectOption('square');
       if (mode === 'duet') {
         assert.equal(await page.locator('#layout').inputValue(), layout, `${name}: initial layout from the menu`);
         assert.equal(await page.locator('#length').inputValue(), 'full', `${name}: a duet records the whole source by default`);
       }
-      await page.locator('#camera').click();
-      await page.locator('#status').filter({ hasText: 'Ready. Use headphones' }).waitFor({ timeout: 120000 });
+      if (upload) {
+        await page.locator('#upload').setInputFiles(replyPath);
+        await page.locator('#status').filter({ hasText: 'Clip ready' }).waitFor({ timeout: 20000 });
+      } else {
+        await page.locator('#camera').click();
+        await page.locator('#status').filter({ hasText: 'Ready. Use headphones' }).waitFor({ timeout: 120000 });
+      }
       await page.waitForFunction(() => !document.querySelector('#record').disabled, undefined, { timeout: 15000 });
       await page.screenshot({ path: path.join(output, `${name}-preview.png`) });
       await page.locator('#record').click();
@@ -79,8 +97,9 @@ try {
         await page.locator('#sourcePlay').click();
         await page.waitForFunction(() => !document.querySelector('#source').paused);
       }
+      // An uploaded reply stops by itself after 1 s of source plus the 2 s clip.
       await page.waitForFunction(() => Number.parseFloat(document.querySelector('#clock').textContent) >= 2, undefined, { timeout: 20000 });
-      if (!full) await page.locator('#stop').click();
+      if (!full && !upload) await page.locator('#stop').click();
       await page.locator('#use').waitFor({ state: 'visible', timeout: 15000 });
       await page.locator('#use').click();
       await page.waitForFunction(() => window.remixPackets.some(packet => packet.type === 'recorded'), undefined, { timeout: 15000 });
@@ -96,6 +115,7 @@ try {
       assert.equal(packet.width, 720);
       assert.equal(packet.height, mode === 'green-screen' ? 720 : 1280);
       if (full) assert(packet.duration >= 5.3 && packet.duration <= 6.8, `${name}: should stop at the end of the source, got ${packet.duration}`);
+      else if (upload) assert(packet.duration >= 2.7 && packet.duration <= 3.4, `${name}: stitched clip should be 1 s + 2 s, got ${packet.duration}`);
       else assert(packet.duration >= 1.8 && packet.duration <= 5, `${name}: unexpected recording length ${packet.duration}`);
       if (mode === 'duet') assert.equal(packet.layout, layout, `${name}: layout is reported with the take`);
       const match = /^data:(video\/(?:webm|mp4));base64,([A-Za-z0-9+/]+=*)$/.exec(packet.dataUrl);
@@ -115,9 +135,19 @@ try {
       const frames = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-count_frames', '-show_entries', 'stream=nb_read_frames', '-of', 'json', file], { encoding: 'utf8' }));
       assert(Number(frames.streams[0]?.nb_read_frames) >= 12, `${mode}: recording must contain moving frames`);
       ffmpeg(['-i', file, '-ss', '0.5', '-frames:v', '1', path.join(output, `${name}-recorded.png`)]);
+      if (mode === 'stitch') {
+        // The first second is the source (blue), then the reply.
+        const pixel = at => execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-ss', String(at), '-i', file, '-frames:v', '1', '-vf', 'crop=1:1:600:1100,format=rgb24', '-f', 'rawvideo', '-'], { maxBuffer: 1024 });
+        const [r0, , b0] = pixel(0.4);
+        assert(b0 > 100 && r0 < 80, `${name}: stitched part shows the source first (rgb ${[...pixel(0.4)]})`);
+        if (upload) {
+          const [r1, , b1] = pixel(2);
+          assert(r1 > 120 && b1 < 100, `${name}: the uploaded clip follows the source (rgb ${[...pixel(2)]})`);
+        }
+      }
       const frameTimes = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-show_entries', 'frame=best_effort_timestamp_time', '-of', 'json', file], { encoding: 'utf8' }));
       const lastTimestamp = Number(frameTimes.frames.at(-1)?.best_effort_timestamp_time);
-      assert(lastTimestamp >= 1.5 && Math.abs(lastTimestamp - packet.duration) < 0.75, `${mode}: decoded duration must match reported duration`);
+      assert(lastTimestamp >= 1.5 && Math.abs(lastTimestamp - packet.duration) < 0.75, `${name}: decoded duration ${lastTimestamp} must match reported duration ${packet.duration}`);
       if (mode === 'green-screen' || layout === 'behind') {
         assert(requests.some(request => request.url.includes('@mediapipe/tasks-vision@0.10.21/') && request.status === 200), 'Pinned real MediaPipe runtime must load');
         assert(requests.some(request => request.url.endsWith('selfie_segmenter.tflite') && request.status === 200), 'Real selfie model must load');

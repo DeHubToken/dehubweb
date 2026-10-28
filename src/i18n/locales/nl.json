@@ -29,7 +29,7 @@
     "duet": "Duet",
     "green-screen": "Green screen",
     "sound": "Dit geluid gebruiken",
-    "cut": "Deze video knippen",
+    "stitch": "Stitch",
     "selectSource": "Open de opties van een video en kies Remix om te beginnen."
   },
   "remixLinks": {
@@ -39,6 +39,27 @@
       "stitch": "{{name}} heeft je video gestitcht",
       "react": "{{name}} heeft op je video gereageerd",
       "reactLive": "{{name}} reageert live op je video"
+    },
+    "linkFailed": "Je bericht staat online, maar kon niet aan de originele video worden gekoppeld.",
+    "settingsHeading": "Remixes",
+    "policy": {
+      "default": "Mijn standaard",
+      "everyone": "Iedereen",
+      "followers": "Volgers",
+      "nobody": "Niemand"
+    },
+    "stitch": {
+      "allow": "Stitches toestaan",
+      "allowDesc": "Wie tot 5 seconden van je video's in hun eigen video mag gebruiken. Je kunt dit ook per bericht wijzigen.",
+      "saveFailed": "Je stitch-instelling kon niet worden opgeslagen. Probeer het opnieuw.",
+      "settingFailed": "Je bericht staat online, maar de stitch-instelling is niet opgeslagen. Wijzig deze via Bericht bewerken.",
+      "from": "Stitch van {{name}}",
+      "count_one": "{{count}} stitch",
+      "count_other": "{{count}} stitches",
+      "listTitle": "Stitches",
+      "listFailed": "Stitches konden niet worden geladen. Probeer het opnieuw.",
+      "listEmpty": "Nog geen stitches.",
+      "unavailable": "Deze video is niet meer beschikbaar voor stitches."
     }
   },
   "dehubAppPage": {

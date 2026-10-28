@@ -67,6 +67,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { DuetSetting } from '@/components/app/settings/DuetSetting';
+import { StitchPolicySetting } from '@/components/app/settings/StitchPolicySetting';
 import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
 import { usePostingChain } from '@/hooks/use-posting-chain';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
@@ -1942,11 +1943,12 @@ function PrivacySettings() {
         </div>
       </div>
 
-      {/* Duets */}
+      {/* Remixes: duets and stitches */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('reactions.remixesSection', 'Remixes')}</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('remixLinks.settingsHeading', 'Remixes')}</h3>
         <div className="space-y-4">
           <DuetSetting address={user?.address} />
+          <StitchPolicySetting />
           <div data-setting-anchor="allow-reactions"><AccountAllowReactions /></div>
         </div>
       </div>

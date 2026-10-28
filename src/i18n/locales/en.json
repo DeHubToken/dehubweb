@@ -29,7 +29,7 @@
     "duet": "Duet",
     "green-screen": "Green screen",
     "sound": "Use this sound",
-    "cut": "Cut this video",
+    "stitch": "Stitch",
     "selectSource": "Open a video’s options and choose Remix to start."
   },
   "remixLinks": {
@@ -39,6 +39,27 @@
       "stitch": "{{name}} stitched your video",
       "react": "{{name}} reacted to your video",
       "reactLive": "{{name}} is reacting live to your video"
+    },
+    "linkFailed": "Your post is up, but it could not be linked to the original video.",
+    "settingsHeading": "Remixes",
+    "policy": {
+      "default": "My default",
+      "everyone": "Everyone",
+      "followers": "Followers",
+      "nobody": "No one"
+    },
+    "stitch": {
+      "allow": "Allow stitches",
+      "allowDesc": "Who can use up to 5 seconds of your videos in their own. You can change it per post too.",
+      "saveFailed": "Could not save your stitch setting. Try again.",
+      "settingFailed": "Your post is up, but its stitch setting was not saved. Change it from Edit post.",
+      "from": "Stitched from {{name}}",
+      "count_one": "{{count}} Stitch",
+      "count_other": "{{count}} Stitches",
+      "listTitle": "Stitches",
+      "listFailed": "Could not load stitches. Try again.",
+      "listEmpty": "No stitches yet.",
+      "unavailable": "This video is no longer available for stitches."
     }
   },
   "dehubAppPage": {
@@ -408,7 +429,7 @@
   },
   "accountConnect": {
     "title": "Connect your DeHub account",
-    "body": "Link your account to manage your profile, publish posts and create content from chat. Connections expire within 24 hours. You can disconnect at any time.",
+    "body": "Link your account to manage your profile, publish posts and create content from chat. Connections stay linked while you use them and expire after 30 days unused. You can disconnect at any time.",
     "read": "Read your account, posts, notifications and Creator library",
     "profile": "Edit your profile, images and privacy settings",
     "social": "Publish posts and comments, follow people and save bookmarks",

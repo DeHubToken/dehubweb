@@ -1,5 +1,5 @@
 // dehub-builder-apps — serves every DeHub Builder app on its own origin,
-// https://<slug>.dehub.app.
+// https://<slug>.dhb.gg.
 //
 // The bytes come from the builder-serve edge function (builder_files is the
 // source of truth). Supabase's functions origin downgrades text/html to
@@ -10,11 +10,11 @@
 // builder-api: /~t/<token>/<file>. The token rides in the path, not a cookie,
 // so relative assets inherit it and it works inside a cross-site iframe.
 //
-// The apex (dehub.app, the APK download page) and www are not ours: the route
-// is *.dehub.app/* and www passes straight through to its origin.
+// The apex (dhb.gg) and www are not apps: the route
+// is *.dhb.gg/* and www passes straight through to its origin.
 
 const FUNCTIONS = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/builder-serve';
-const APPS_DOMAIN = 'dehub.app';
+const APPS_DOMAIN = 'dhb.gg';
 const PASS_THROUGH = new Set(['www']);
 
 function page(status, title, message) {
@@ -30,7 +30,7 @@ export default {
     const url = new URL(request.url);
     const host = url.hostname.toLowerCase();
     const labels = host.split('.');
-    // Only <slug>.dehub.app — deeper names and the reserved hosts are not apps.
+    // Only <slug>.dhb.gg — deeper names and the reserved hosts are not apps.
     if (!host.endsWith(`.${APPS_DOMAIN}`) || labels.length !== 3 || PASS_THROUGH.has(labels[0])) {
       return fetch(request);
     }
