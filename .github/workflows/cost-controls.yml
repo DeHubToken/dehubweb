@@ -36,7 +36,7 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction-bootstrap.sql
           sed -n '/CREATE OR REPLACE FUNCTION public.ai_generation_terminal_guard()/,/CREATE TRIGGER ai_generation_terminal_guard/p' supabase/migrations/20261026020000_generation_terminal_ownership.sql | psql -v ON_ERROR_STOP=1
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027190100_compact_saved_generation_images.sql
-          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261028190000_generation_compaction_terminal_guard.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction.sql
       - name: Concurrent reservations never exceed the cap
         run: |
