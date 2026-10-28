@@ -4,6 +4,7 @@ import { buildCreatorFalImageRequest, buildCreatorFalVideoRequest, creatorFalIma
 import { quotePriceDhb } from '../../supabase/functions/_shared/ai-pricing';
 import fixture from './fixtures/provider-schema-20261026.json';
 import expandFixture from './fixtures/bria-expand-schema.json';
+import relightFixture from './fixtures/iclight-v2-schema.json';
 
 type Schema = Record<string, any>;
 /** Public input contracts captured26 October2026, independently of our builders. */
@@ -31,7 +32,7 @@ function validate(value: unknown, schema: Schema, definitions: Record<string, Sc
   return true;
 }
 function assertContract(request: { appId: string; input: Record<string, unknown> }) {
-  const contract = request.appId === 'fal-ai/bria/expand' ? expandFixture : (fixture as Record<string, { input: Schema; schemas: Record<string, Schema> }>)[request.appId];
+  const contract = request.appId === 'fal-ai/iclight-v2' ? relightFixture : request.appId === 'fal-ai/bria/expand' ? expandFixture : (fixture as Record<string, { input: Schema; schemas: Record<string, Schema> }>)[request.appId];
   expect(contract, request.appId).toBeDefined();
   expect(validate(request.input, contract.input, contract.schemas), `${request.appId}: ${JSON.stringify(request.input)}`).toBe(true);
 }
@@ -83,6 +84,21 @@ describe('creator fal video requests', () => {
 });
 
 describe('creator fal image requests', () => {
+  it('requires a relighting photo and caps every output to the quoted megapixel', () => {
+    const model = CREATOR_FAL_IMAGE_MODELS['iclight-v2'];
+    expect(() => buildCreatorFalImageRequest(model.id, 'Soft light from the left')).toThrow('Attach one image');
+    expect(() => buildCreatorFalImageRequest(model.id, 'Soft light', 'one.png', '1:1', ['two.png'])).toThrow('references');
+    for (const aspect of creatorFalImageAspects(model.id)) {
+      const request = buildCreatorFalImageRequest(model.id, 'Soft light from the left', 'https://media/source.png', aspect);
+      assertContract(request);
+      expect(request).toMatchObject({ appId: 'fal-ai/iclight-v2', input: { image_url: 'https://media/source.png', num_images: 1, enable_hr_fix: false, enable_safety_checker: true, output_format: 'png' } });
+      const size = request.input.image_size as { width: number; height: number };
+      expect(size.width * size.height).toBeLessThanOrEqual(1_000_000);
+      expect(model.baseCostUsd).toBeGreaterThanOrEqual(Math.ceil(size.width * size.height / 1_000_000) * 0.10);
+    }
+    expect(quotePriceDhb('image', model.id)).toBe(120);
+    expect(quotePriceDhb('image', model.id, { quantity: 4 })).toBe(480);
+  });
   for (const model of Object.values(CREATOR_FAL_IMAGE_MODELS)) {
     it(`${model.name} sends only documented fields`, () => {
       for (const aspect of creatorFalImageAspects(model.id)) {
