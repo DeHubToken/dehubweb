@@ -3249,6 +3249,7 @@
     "followerInvites": {
       "title": "Invita follower",
       "detail": "Scegli fino a 50 follower per batch. I DM pagati o chiusi vengono ignorati. Controlla il chat per le spedizioni non confermate prima di riprovare.",
+      "note": "Aggiungi una nota al tuo invito (facoltativo)",
       "selectAll": "Seleziona questa pagina",
       "clear": "Cancella",
       "previous": "Precedente",

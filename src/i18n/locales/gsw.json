@@ -3250,6 +3250,7 @@
     "followerInvites": {
       "title": "Lade Follower i",
       "detail": "Wähle bis zu 50 Follower pro Batch. Bezahlte oder gschlosse DMs wärde übergange. Überprüf dä Chat vor em Widerprobieren.",
+      "note": "Füeg dinere Iiladig e Notiz derzue (optional)",
       "selectAll": "Wähle dä Säit",
       "clear": "Lösch",
       "previous": "Vorherige",

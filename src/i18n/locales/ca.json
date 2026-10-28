@@ -3246,6 +3246,7 @@
     "followerInvites": {
       "title": "Invita seguidors",
       "detail": "Selecciona fins a 50 seguidors per lot. Els missatges privats de pagament o tancats es salten. Revisa el xat per enviarments no confirmats abans de tornar a intentar-ho.",
+      "note": "Afegeix una nota a la invitació (opcional)",
       "selectAll": "Selecciona aquesta pàgina",
       "clear": "Esborra",
       "previous": "Anterior",

@@ -3206,6 +3206,7 @@
     "followerInvites": {
       "title": "Undang pengikut",
       "detail": "Pilih maksimal 50 pengikut per batch. DM bayar atau tertutup di skip. Cek obrolan untuk kiriman yang belum dikonfirmasi sebelum coba lagi.",
+      "note": "Tambahna cathetan ing undanganmu (opsional)",
       "selectAll": "Pilih halaman ini",
       "clear": "Hapus",
       "previous": "Sebelumnya",

@@ -3250,6 +3250,7 @@
     "followerInvites": {
       "title": "Újra invitálja a követőket",
       "detail": "Legfeljebb 50 követőt választhat ki egy csomagban. A fizetett vagy zárva tartott DM-ek áttekintve lesznek. Ellenőrizze a csatban a megerősítetlen küldéseket, mielőtt újra próbálkozna.",
+      "note": "Adj hozzá üzenetet a meghívódhoz (nem kötelező)",
       "selectAll": "Válassza ki ezt az oldalt",
       "clear": "Töröl",
       "previous": "Előző",

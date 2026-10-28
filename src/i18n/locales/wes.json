@@ -9589,6 +9589,7 @@
       "colour": "Colour for path",
       "data": "SVG markup or data for path (d)",
       "detail": "Detail for curve",
+      "note": "Add small note for ya invite (if you want)",
       "filled": "Closed geometry wey get fill",
       "hint": "Paste path d data or basic SVG markup like path, rectangle, circle, ellipse, line, polygon. Move, line, cubic, quadratic, smooth, and arc commands fit. SVG matrix, translate, scale, rotate, and skew transformations keep shape same. Shape use your pick color; original fill, stroke, and view box not come. Curves turn to sample draw points. Close path with Z to fill. Separate closed SVG parts can fill together. Many parts turn to group, edit layers; compound holes no support.",
       "insert": "Put geometry wey you fit edit",

@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Dialog,DialogContent,DialogHeader,DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { getFollowList } from '@/lib/api/dehub/social';
 import { inviteCommunityFollowers } from '@/lib/community-invites';
-import type { InviteOutcome } from '@/lib/community-invites-core';
+import { INVITE_NOTE_MAX, type InviteOutcome } from '@/lib/community-invites-core';
 import { dehubLinkFor } from '@/lib/dehub-links';
 
 export function InviteFollowers({open,onOpenChange,communityId,slug,wallet}:{open:boolean;onOpenChange:(open:boolean)=>void;communityId:string;slug:string;wallet:string}) {
@@ -13,6 +14,8 @@ export function InviteFollowers({open,onOpenChange,communityId,slug,wallet}:{ope
   const [page,setPage]=useState(1);
   const [selected,setSelected]=useState<string[]>([]);
   const [results,setResults]=useState<Record<string,InviteOutcome>>({});
+  const [note,setNote]=useState('');
+  useEffect(()=>{setNote('');},[communityId]);
   const [busy,setBusy]=useState(false);
   const [failed,setFailed]=useState(false);
   const active=useRef(false);
@@ -27,14 +30,18 @@ export function InviteFollowers({open,onOpenChange,communityId,slug,wallet}:{ope
     if(running.current||!selected.length)return;
     running.current=true;setBusy(true);setFailed(false);
     const batch=generation.current;
-    try { const outcome=await inviteCommunityFollowers(communityId,wallet,dehubLinkFor.community(slug),selected,()=>active.current&&generation.current===batch);
+    try { const outcome=await inviteCommunityFollowers(communityId,wallet,dehubLinkFor.community(slug),selected,()=>active.current&&generation.current===batch,note);
       if(generation.current===batch){setResults(outcome);setSelected(selected.filter(address=>outcome[address.toLowerCase()]==='failed'));}
     } catch {if(generation.current===batch)setFailed(true);} finally {running.current=false;setBusy(false);}
   };
-  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-w-md">
+  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-w-md text-white">
     <DialogHeader><DialogTitle>{t('communities.followerInvites.title')}</DialogTitle></DialogHeader>
     <p className="text-sm text-muted-foreground">{t('communities.followerInvites.detail')}</p>
-    <p className="text-xs break-all">{dehubLinkFor.community(slug)}</p>
+    <p className="text-xs break-all text-zinc-400">{dehubLinkFor.community(slug)}</p>
+    <div className="relative">
+      <Textarea value={note} disabled={busy} rows={2} maxLength={INVITE_NOTE_MAX} aria-label={t('communities.followerInvites.note')} placeholder={t('communities.followerInvites.note')} onChange={event=>setNote(event.target.value.slice(0,INVITE_NOTE_MAX))} className="min-h-[64px] resize-none rounded-xl border-white/10 bg-white/5 pb-5 text-sm text-white placeholder:text-zinc-500"/>
+      {!!note&&<span className="pointer-events-none absolute bottom-1.5 right-2.5 text-[10px] text-zinc-500 tabular-nums">{note.length}/{INVITE_NOTE_MAX}</span>}
+    </div>
     <div className="flex gap-2"><Button variant="outline" disabled={busy||followers.isFetching} onClick={()=>setSelected(rows.map(row=>row.address!.toLowerCase()))}>{t('communities.followerInvites.selectAll')}</Button><Button variant="ghost" disabled={busy} onClick={()=>setSelected([])}>{t('communities.followerInvites.clear')}</Button></div>
     <div className="max-h-72 overflow-y-auto space-y-1">
       {followers.isLoading?<p>{t('common.loading')}</p>:followers.isError?<Button onClick={()=>followers.refetch()}>{t('common.retry')}</Button>:rows.length===0?<p>{t('communities.followerInvites.empty')}</p>:rows.map(row=>{

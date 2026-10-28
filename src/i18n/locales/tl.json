@@ -3290,6 +3290,7 @@
     "followerInvites": {
       "title": "Mag - imbita ng mga tagasunod",
       "detail": "Pumili ng hanggang sa 50 mga tagasunod sa bawat batch. Laktawan ang Paid or Closed DMs. Suriin ang chat para sa mga hindi nakumpirmang padala bago subukang muli.",
+      "note": "Magdagdag ng mensahe sa iyong imbitasyon (opsyonal)",
       "selectAll": "Piliin ang pahinang ito",
       "clear": "Tama",
       "previous": "Nakaraan",

@@ -3228,6 +3228,7 @@
     "followerInvites": {
       "title": "Pōwhiritia ngā kaiwhai",
       "detail": "Kōwhiria kia 50 ngā kaiwhai mō ia rōpū. Ka pekea ngā karere tūmataiti kua utua, kua katia rānei. Tirohia te kōrerorero mō ngā tukunga kāore anō kia whakatūturutia i mua i te whakamātau anō.",
+      "note": "Tāpirihia he kōrero ki tō pōwhiri (kōwhiringa)",
       "selectAll": "Tīpakohia tēnei whārangi",
       "clear": "Ūkui",
       "previous": "O mua",
