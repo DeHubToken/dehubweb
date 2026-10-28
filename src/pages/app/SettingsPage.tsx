@@ -1944,9 +1944,10 @@ function PrivacySettings() {
 
       {/* Duets */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('duet.settingsSection', 'Duets')}</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('reactions.remixesSection', 'Remixes')}</h3>
         <div className="space-y-4">
           <DuetSetting address={user?.address} />
+          <AccountAllowReactions />
         </div>
       </div>
 
@@ -2048,11 +2049,6 @@ function PrivacySettings() {
       {/* Blocked Users */}
       <div data-setting-anchor="blocked-users">
         <BlockedUsersSection />
-      </div>
-
-      {/* Who may react to my videos — the default for posts without their own choice. */}
-      <div data-setting-anchor="allow-reactions">
-        <AccountAllowReactions />
       </div>
 
       {/* Muted words — keyword filters */}
