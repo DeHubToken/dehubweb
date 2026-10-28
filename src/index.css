@@ -139,6 +139,16 @@ All colors MUST be HSL.
   * {
     -webkit-tap-highlight-color: transparent;
   }
+  /* With the tap highlight off, a phone gave no sign a press landed until the
+     next page or sheet was drawn, which on a busy iPhone can be a few hundred
+     ms. Pressed controls dim while the finger is down. :where() keeps this at
+     zero specificity, so a control with its own opacity or press style wins.
+     (iOS only applies :active with a touchstart listener: see main.tsx.) */
+  @media (hover: none) and (pointer: coarse) {
+    :where(button, a[href], [role="button"], [role="tab"], [role="menuitem"], [data-opens-page]):active {
+      opacity: 0.7;
+    }
+  }
   :focus:not(:focus-visible) {
     outline: none;
   }
