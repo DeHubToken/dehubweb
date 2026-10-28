@@ -31,7 +31,7 @@ export function reverseFrameTime(start: number, end: number, index: number, fram
 }
 
 /** One channel of samples, reversed, between two sample offsets. */
-export function reversedSamples(channel: Float32Array, from: number, to: number): Float32Array {
+export function reversedSamples(channel: Float32Array, from: number, to: number): Float32Array<ArrayBuffer> {
   const out = new Float32Array(Math.max(0, to - from));
   for (let i = 0; i < out.length; i++) out[i] = channel[to - 1 - i];
   return out;
