@@ -262,8 +262,13 @@ export async function planRun(nodeIds: string[]): Promise<RunPlan> {
 async function runAudioNode(node: FlowNode) {
   const { nodes, edges, updateNodeData } = scopedStore();
   const input = resolveInputs(node.id, nodes, edges), task = node.data.audioTask || 'speech';
+  const existing = node.data.jobId && useGenerationStore.getState().jobs.find(job => job.id === node.data.jobId && job.kind === 'audio' && (job.status === 'done' || job.status === 'running'));
   let request: AudioRequest;
-  if (task === 'transcribe' || task === 'isolate') {
+  if (existing) {
+    // A response waiting for its private save can be collected without another
+    // provider call. Unknown interrupted outcomes still require explicit retry.
+    request = { task: 'speech', text: '', voiceId: DEFAULT_VOICE_ID };
+  } else if (task === 'transcribe' || task === 'isolate') {
     if (!input.audioUrl) throw new Error(i18n.t('creatorFlow.issueInputEmpty'));
     const file = await downloadFlowAudio(input.audioUrl);
     if (!file.type.startsWith('audio/') || !file.size) throw new Error(i18n.t('creatorFlow.issueInputEmpty'));
@@ -273,12 +278,13 @@ async function runAudioNode(node: FlowNode) {
     if (!text) throw new Error(i18n.t('creatorFlow.issuePromptEmpty'));
     request = task === 'sfx' ? { task, text, durationSeconds: node.data.duration } : { task: 'speech', text, voiceId: node.data.voiceId || DEFAULT_VOICE_ID };
   }
-  const slot = pushGeneration(node.id, null);
+  const slot = pushGeneration(node.id, null, updateNodeData);
   updateNodeData(node.id, { status: 'running', errorMsg: undefined });
-  const jobId = useGenerationStore.getState().startAudio(request, { prompt: input.prompt || task, resolvedPrompt: input.prompt || task, modelName: task, aspect: 'audio' });
+  const jobId = existing ? existing.id : useGenerationStore.getState().startAudio(request, { prompt: input.prompt || task, resolvedPrompt: input.prompt || task, modelName: task, aspect: 'audio' });
   updateNodeData(node.id, { jobId });
   const job = await waitForJob(jobId);
   if (job.status !== 'done') throw new Error(job.error || i18n.t('creator.editorImportFailed'));
+  if (!job.cloudSaved) await useGenerationStore.getState().save(jobId);
   // The generation store saves audio bytes privately. Wait for that existing
   // save rather than issuing a second upload or storing a temporary blob URL.
   const saved = await new Promise<GenerationJob>((resolve, reject) => {
@@ -293,7 +299,7 @@ async function runAudioNode(node: FlowNode) {
     if (!check()) unsubscribe = useGenerationStore.subscribe(check);
   });
   updateNodeData(node.id, {});
-  settleGeneration(node.id, slot, saved.transcript || saved.url || '');
+  settleGeneration(node.id, slot, saved.transcript || saved.url || '', updateNodeData);
   updateNodeData(node.id, { status: 'done', audioAssetId: saved.id, audioUrl: saved.url, outputText: saved.transcript, jobId: undefined });
 }
 
@@ -331,19 +337,19 @@ async function paidJob(clientJobId: string | undefined, start: () => string): Pr
   return waitForJob(start());
 }
 
-function pushGeneration(nodeId: string, entry: GenEntry): number {
+function pushGeneration(nodeId: string, entry: GenEntry, updateNodeData: ReturnType<typeof store>['updateNodeData']): number {
   const node = store().nodes.find((n) => n.id === nodeId);
   const gens = [...(((node?.data.generations as GenEntry[] | undefined) ?? []))];
   gens.push(entry);
-  store().updateNodeData(nodeId, { generations: gens, currentGenIdx: gens.length - 1 });
+  updateNodeData(nodeId, { generations: gens, currentGenIdx: gens.length - 1 });
   return gens.length - 1;
 }
 
-function settleGeneration(nodeId: string, slot: number, entry: GenEntry) {
+function settleGeneration(nodeId: string, slot: number, entry: GenEntry, updateNodeData: ReturnType<typeof store>['updateNodeData']) {
   const node = store().nodes.find((n) => n.id === nodeId);
   const gens = [...(((node?.data.generations as GenEntry[] | undefined) ?? []))];
   gens[slot] = entry;
-  store().updateNodeData(nodeId, { generations: gens, currentGenIdx: slot });
+  updateNodeData(nodeId, { generations: gens, currentGenIdx: slot });
 }
 
 async function runImageNode(node: FlowNode, txHash: string | undefined, clientJobId?: string) {
@@ -352,7 +358,7 @@ async function runImageNode(node: FlowNode, txHash: string | undefined, clientJo
   const { resolvedPrompt, orderedUrls } = resolveMentions(upstream.prompt ?? '', upstream.imageNodeLabels, upstream.imageUrls);
   const model = (node.data.model as string) || DEFAULT_IMAGE_MODEL;
   const aspectRatio = (node.data.aspectRatio as string) || '1:1';
-  const slot = pushGeneration(node.id, null);
+  const slot = pushGeneration(node.id, null, updateNodeData);
   updateNodeData(node.id, { status: 'running', errorMsg: undefined, prompt: resolvedPrompt, pendingGenerate: false });
 
   const job = await paidJob(clientJobId, () => useGenerationStore.getState().startImage(
@@ -369,12 +375,12 @@ async function runImageNode(node: FlowNode, txHash: string | undefined, clientJo
   ));
   updateNodeData(node.id, {});
   if (job.status === 'done' && job.url) {
-    settleGeneration(node.id, slot, job.url);
+    settleGeneration(node.id, slot, job.url, updateNodeData);
     updateNodeData(node.id, { status: 'done', imageUrl: job.url, outputAssetId: job.id, jobId: undefined });
     return;
   }
   const message = job.error || _translateCopy("copy.78257562583c", { defaultValue: "Generation failed" });
-  settleGeneration(node.id, slot, { error: message });
+  settleGeneration(node.id, slot, { error: message }, updateNodeData);
   updateNodeData(node.id, { status: 'error', errorMsg: message, jobId: undefined });
   throw new Error(message);
 }
@@ -390,7 +396,7 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined, clientJo
   const resolutions = getVideoResolutions(cfg);
   const resolution = resolutions.includes(node.data.resolution ?? '') ? node.data.resolution! : resolutions.includes('720p') ? '720p' : resolutions[0];
   const duration = cfg ? snapVideoDuration(cfg, (node.data.duration as number) || cfg.defaultDuration || 5) : (node.data.duration as number) || 5;
-  const slot = pushGeneration(node.id, null);
+  const slot = pushGeneration(node.id, null, updateNodeData);
   updateNodeData(node.id, { status: 'running', errorMsg: undefined, prompt: resolvedPrompt, pendingGenerate: false });
 
   const job = await paidJob(clientJobId, () => useGenerationStore.getState().startVideo(
@@ -413,12 +419,12 @@ async function runVideoNode(node: FlowNode, txHash: string | undefined, clientJo
   ));
   updateNodeData(node.id, {});
   if (job.status === 'done' && job.url) {
-    settleGeneration(node.id, slot, job.url);
+    settleGeneration(node.id, slot, job.url, updateNodeData);
     updateNodeData(node.id, { status: 'done', videoUrl: job.url, outputAssetId: job.id, capturedFrameUrl: undefined, jobId: undefined });
     return;
   }
   const message = job.error || _translateCopy("copy.78257562583c", { defaultValue: "Generation failed" });
-  settleGeneration(node.id, slot, { error: message });
+  settleGeneration(node.id, slot, { error: message }, updateNodeData);
   updateNodeData(node.id, { status: 'error', errorMsg: message, jobId: undefined });
   throw new Error(message);
 }
