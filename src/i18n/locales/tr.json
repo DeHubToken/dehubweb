@@ -12357,6 +12357,9 @@
   },
   "copy": {
     "1607715e45ed": "Konuşmak için topa dokunun ya da aşağıya yazın",
+    "a7c1e0f4b2d9": "Konuşmak için dokun",
+    "b3e8d1c6f0a2": "Göndermek için dokun",
+    "c9f2a4e7d1b5": "Dinleniyor... göndermek için topa dokun",
     "00140a37bd26": "İşlem o an geçici olarak kullanılamıyor. Lütfen tekrar deneyin.",
     "002286513398": "Olayları yönetme izniniz yok",
     "002d8f205c6a": "{{value1}}'un takip etme isteğiniz reddedildi",
