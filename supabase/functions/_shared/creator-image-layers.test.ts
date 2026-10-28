@@ -1,5 +1,6 @@
 import { archiveLayerSet, layerInput, layerManifest, layerOutputs } from './creator-image-layers.ts';
 import { layerCanvas, validateLayerPng } from './creator-layer-png.ts';
+import { hydrateGenerationResult } from './generation-result.ts';
 const assert = (value: unknown) => { if (!value) throw new Error('Assertion failed'); };
 async function rejects(action: () => unknown) { try { await action(); } catch { return; } throw new Error('Expected rejection'); }
 function chunk(type: string, data = new Uint8Array()) {
@@ -41,10 +42,26 @@ Deno.test('archive recovery reuses owner-scoped ready children and changes only 
   const images=Array.from({length:4},(_,index)=>({url:`https://fal.media/${index}.png`}));
   const result:any={status:'succeeded',layerImages:images,layerSafety:[false,false,false,false],layerSet:layerManifest(id,'source-asset',images),savePending:true};
   const immutable=JSON.stringify({...result,savePending:undefined});
-  let index=-1; const eqs:unknown[]=[];
-  const query:any={select(){index++;return this;},eq(key:string,value:unknown){eqs.push([key,value]);return this;},async maybeSingle(){return {data:{ready:true,storage_path:`owner/${id}-layer-${index}/original`,metadata:{layerSetId:id,layerIndex:index,width:1024,height:1024}},error:null};}};
+  let index=-1,publishing=false; const eqs:unknown[]=[];
+  const query:any={select(){if(publishing)return Promise.resolve({data:Array.from({length:4},()=>({id:'saved'})),error:null});index++;return this;},update(){publishing=true;return this;},in(){return this;},eq(key:string,value:unknown){eqs.push([key,value]);return this;},async maybeSingle(){return {data:{ready:true,storage_path:`owner/${id}-layer-${index}/original`,metadata:{layerSetId:id,layerIndex:index,width:1024,height:1024}},error:null};}};
   await archiveLayerSet({id,wallet_address:'owner'},result,{from:()=>query} as any);
   assert(result.libraryId===id && !result.savePending);
   const {libraryId,savePending,...after}=result; assert(JSON.stringify(after)===immutable);
-  assert(eqs.filter((entry:any)=>entry[0]==='wallet_address'&&entry[1]==='owner').length===4);
+  assert(eqs.filter((entry:any)=>entry[0]==='wallet_address'&&entry[1]==='owner').length===5);
+});
+Deno.test('a permanently invalid refunded layer job rehydrates as failed without exposing raw outputs', async () => {
+  const result = await hydrateGenerationResult({ id:'job',status:'failed',result:{status:'failed',error:'Unsafe layers',paymentRestored:true,layerSet:{rawUrl:'https://fal.media/raw'}} },{} as any);
+  assert(result.status==='failed' && result.paymentRestored===true && result.savePending===false && !result.layerSet);
+});
+Deno.test('a malformed final PNG never publishes the earlier staged children', async () => {
+  const id='00000000-0000-4000-8000-000000000001', good=await png(), bad=good.slice();bad[30]^=1;
+  const originalFetch=globalThis.fetch;let downloads=0,published=0;const staged:any[]=[];
+  globalThis.fetch=async()=>new Response(downloads++===3?bad:good,{headers:{'content-type':'image/png'}});
+  const query:any={select(){return this;},eq(){return this;},async maybeSingle(){return {data:null,error:null};},async upsert(row:any){staged.push(row);return {error:null};},update(){published++;return this;},in(){return this;}};
+  const db:any={from:()=>query,storage:{from:()=>({upload:async()=>({error:null})})}};
+  const images=Array.from({length:4},(_,index)=>({url:`https://fal.media/${index}.png`}));
+  try {
+    await rejects(()=>archiveLayerSet({id,wallet_address:'owner',created_at:'2026-10-28'}, {layerImages:images,layerSafety:[false,false,false,false],layerSet:layerManifest(id,'source-asset',images)},db));
+    assert(staged.length===3 && staged.every(row=>row.ready===false&&row.metadata.layerValidated===true));assert(published===0);
+  } finally {globalThis.fetch=originalFetch;}
 });

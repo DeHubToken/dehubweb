@@ -18,6 +18,10 @@ export function compactGenerationResult(result: Record<string, any>, storagePath
 /** Keep the existing web/mobile response contract, including old saved tickets. */
 export async function hydrateGenerationResult(job: any, db = serviceClient()): Promise<any> {
   if (job?.result?.layerSet) {
+    if (['failed','canceled','cancelled','refund_pending'].includes(job.status)) return {
+      status: job.status === 'refund_pending' ? 'failed' : job.status, jobId: job.id, error: job.result.error,
+      paymentRestored: job.result.paymentRestored === true, savePending: false,
+    };
     if (job.result.savePending || !job.result.libraryId) return { status: 'saving', savePending: true, jobId: job.id };
     const result = { ...job.result, layerSet: { ...job.result.layerSet, layers: [] } };
     if (job.result.layerSet.id !== job.id || job.result.layerSet.layers?.length !== 4) throw new Error('Invalid layer manifest');
