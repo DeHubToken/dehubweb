@@ -1116,14 +1116,9 @@ const MARKETING_PAGES = {
   },
   'connect': {
     title: 'Connect DeHub to your AI assistant',
-    description: 'Use DeHub from ChatGPT, Claude, Cursor or any MCP app. Browse without an account, or sign in so your assistant can post, reply and create for you.',
+    description: 'Connect ChatGPT, Claude, or any MCP-compatible assistant to DeHub with a single URL.',
     heading: 'Connect DeHub to your AI assistant',
-    bodyHtml: `<p>DeHub's Model Context Protocol (MCP) server lives at <code>https://dehub.io/mcp</code>. Paste it into ChatGPT, Claude, Cursor or any MCP app. Without signing in, assistants can browse posts, search and look up profiles; after DeHub sign-in (OAuth) they can post, reply, follow, manage your profile and create with your credits.</p>
-<ol>
-<li><strong>ChatGPT</strong>: Settings, Apps &amp; Connectors, Advanced, turn on Developer mode, then Create a connector named DeHub with the URL above and OAuth sign-in.</li>
-<li><strong>Claude</strong>: Customize, Connectors, Add custom connector, paste the URL, then Connect and allow access on DeHub.</li>
-<li><strong>Claude Code</strong>: <code>claude mcp add --transport http dehub https://dehub.io/mcp</code></li>
-</ol>
+    bodyHtml: `<p>DeHub ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public DeHub posts, search topics and look up creator profiles.</p>
 <ul>
 <li><a href="${APP_URL}/connect/chatgpt">DeHub for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
 <li><a href="${APP_URL}/connect/claude">DeHub for Claude</a> — add the connector to Claude in one click.</li>
