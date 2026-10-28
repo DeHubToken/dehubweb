@@ -19778,6 +19778,7 @@
       "followers": "Abonnés",
       "nobody": "Personne",
       "default": "Par défaut du compte ({{value}})"
-    }
+    },
+    "remixesSection": "Remix"
   }
 }

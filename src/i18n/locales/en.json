@@ -19686,6 +19686,7 @@
     "count_one": "{{count}} reaction",
     "count_other": "{{count}} reactions",
     "allow": "Allow reactions",
+    "remixesSection": "Remixes",
     "allowDescription": "Let other creators react to your videos, recorded or live. You can still change it on each post.",
     "policy": {"everyone": "Everyone", "followers": "Followers", "nobody": "No one", "default": "Account default ({{value}})"},
     "pageTitle": "Reactions to {{title}} — DeHub",

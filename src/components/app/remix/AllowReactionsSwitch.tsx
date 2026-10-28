@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { MonitorPlay } from 'lucide-react';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
-import { SettingsRow, SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
+import { SettingsRow } from '@/components/app/settings/SettingsRow';
+import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
 import { useAuth } from '@/contexts/AuthContext';
 import { getRemixSettings, saveRemixSettings, type RemixPolicy, type RemixPolicySetting } from '@/lib/remix-links';
 
@@ -87,15 +88,13 @@ export function AccountAllowReactions() {
       title={t('reactions.allow', 'Allow reactions')}
       description={t('reactions.allowDescription', 'Let other creators react to your videos, recorded or live. You can still change it on each post.')}
       action={
-        <select
-          aria-label={t('reactions.allow', 'Allow reactions')}
-          disabled={!setting}
+        <SettingDrawerSelect
           value={setting?.account ?? 'everyone'}
-          onChange={(e) => void save(e.target.value as RemixPolicy)}
-          className={SETTINGS_CONTROL_CLASS}
-        >
-          {POLICIES.map((p) => <option key={p} value={p}>{labels[p]}</option>)}
-        </select>
+          onValueChange={(v) => void save(v as RemixPolicy)}
+          disabled={!setting}
+          title={t('reactions.allow', 'Allow reactions')}
+          options={POLICIES.map((p) => ({ value: p, label: labels[p] }))}
+        />
       }
     />
   );
