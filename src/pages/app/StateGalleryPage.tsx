@@ -98,6 +98,7 @@ function FollowCardsGallery() {
     { address: '0x2222222222222222222222222222222222222222', username: '0xkai', displayName: '0xKai', avatarImageUrl: abs(followAvatarKai), aboutMe: 'Lo-fi beats and late night streams. Live most Fridays.', followers: 3100, badgeBalance: 0, reason: 'follows_you', followsYou: true },
     { address: '0x3333333333333333333333333333333333333333', username: 'xluna', displayName: 'Luna', avatarImageUrl: abs(followAvatarLuna), coverImageUrl: abs(followCoverLuna), aboutMe: '', followers: 51200, badgeBalance: 600_000, reason: 'suggested' },
     { address: '0x4444444444444444444444444444444444444444', username: 'riooo', displayName: 'Rio', avatarImageUrl: abs(followAvatarRio), aboutMe: 'Travel shorts from 40 countries and counting.', followers: 890, badgeBalance: 0, reason: 'engagement_overlap' },
+    { address: '0x5555555555555555555555555555555555555555', username: 'nova', displayName: 'Nova', aboutMe: '', followers: 42, badgeBalance: 0, reason: 'suggested' },
   ];
   const noop = () => {};
   return (
