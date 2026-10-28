@@ -27,10 +27,12 @@ import { useJobQuote, fetchJobQuote, type QuoteRequest } from '@/hooks/use-ai-qu
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
+import { AvatarVideoPaywall } from './AvatarVideoPaywall';
 import { Slider } from '@/components/ui/slider';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export interface VideoGenerationOptions {
+  avatar?: import('@/lib/creator/avatar').AvatarSubmission;
   duration?: number;
   resolution?: string;
   negativePrompt?: string;
@@ -41,7 +43,8 @@ export interface VideoGenerationOptions {
   seed?: number;
 }
 
-interface VideoPaywallModalProps {
+export interface VideoPaywallModalProps {
+  avatarPrompt?: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   model: VideoModel;
@@ -70,7 +73,7 @@ async function uploadToStorage(file: File, folder: string): Promise<string> {
   return data.publicUrl;
 }
 
-export function VideoPaywallModal({ 
+function StandardVideoPaywallModal({
   open, 
   onOpenChange, 
   model, 
@@ -878,3 +881,5 @@ export function VideoPaywallModal({
     </Drawer>
   );
 }
+
+export function VideoPaywallModal(props: VideoPaywallModalProps) { return props.model.id === 'kling-avatar-v2' ? <AvatarVideoPaywall {...props} /> : <StandardVideoPaywallModal {...props} />; }
