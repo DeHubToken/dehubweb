@@ -197,6 +197,7 @@ export const CATEGORY_FAMILIES: Record<string, Family> = {
   'Open web and automation': 'open', 'Safety and personalization': 'safety', 'Entertainment and platform tools': 'entertainment',
   'Playback and uploads': 'playback', 'Video editing': 'editing', 'Design and documents': 'design',
   'Charts and data': 'data', 'Presentations and exports': 'presentation', 'Accounts, privacy and preferences': 'account', 'Notifications': 'notifications',
+  'Features DeHub does not have yet': 'social',
 };
 interface Scope { sources: string[]; note: string }
 type ScopeSet = Record<Family, Scope>;
