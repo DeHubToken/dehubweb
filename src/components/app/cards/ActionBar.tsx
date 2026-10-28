@@ -51,7 +51,6 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
-import { EmperorThumb } from './EmperorThumb';
 import { ReactionPicker } from './ReactionPicker';
 import { maybeShowReactionTip } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
@@ -815,17 +814,12 @@ export function ActionBar({
     : resolveLeadReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
   /**
-   * Your own like (or the 👎 picked from the tray) shows as the arena verdict:
-   * a fist held out sideways whose thumb slowly comes out up (or down), holds,
-   * and goes back in. Any other reaction you cast shows as its moving emoji.
+   * Your own like turns the thumb into the moving 👍 (and a 👎 picked from the
+   * tray into the moving 👎), playing once every 5 seconds. Any other reaction
+   * you cast shows as its moving emoji.
    */
-  const thumbVerdict: 'up' | 'down' | null =
-    isLiked && !leadReaction
-      ? 'up'
-      : leadReaction === 'dislike' && myReaction === 'dislike'
-        ? 'down'
-        : null;
-  const thumbGlyph = thumbVerdict ? null : leadReaction;
+  const thumbGlyph = leadReaction ?? (isLiked ? 'like' : null);
+  const thumbGlyphMine = thumbGlyph === myReaction || !leadReaction;
   /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -1140,15 +1134,7 @@ export function ActionBar({
           animate={justVoted === 'like' || (reactionsEnabled && justVoted === 'dislike') ? { scale: [1, 1.3, 1] } : {}}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {thumbVerdict ? (
-            <span
-              data-engaged-glyph
-              className="w-[24.64px] h-[24.64px] flex items-center justify-center"
-              aria-hidden="true"
-            >
-              <EmperorThumb down={thumbVerdict === 'down'} className="h-full w-full" />
-            </span>
-          ) : thumbGlyph ? (
+          {thumbGlyph ? (
             <span
               /* Marks the glyph so a theme can light the reaction without also
                  lighting the count, which is a sibling span in the same row.
@@ -1158,7 +1144,11 @@ export function ActionBar({
               className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
-              <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction} />
+              <ReactionEmoji
+                reaction={thumbGlyph}
+                animate={thumbGlyphMine}
+                slow={thumbGlyphMine && (thumbGlyph === 'like' || thumbGlyph === 'dislike')}
+              />
             </span>
           ) : (
             <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && "fill-current")} />
