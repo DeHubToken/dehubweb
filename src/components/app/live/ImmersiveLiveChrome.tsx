@@ -8,7 +8,7 @@
  * edge to edge, everything else floating on it — and this is that layout on
  * the web, component for component:
  *
- *   header      creator capsule · follow · audience · collapse · close
+ *   header      face + glass Follow · name · mute · options · close
  *   pills       state · elapsed · title, on one scrolling line
  *   (chat and the action bar are the caller's — they sit under this)
  *   scrub line  the foot of the screen
@@ -19,8 +19,8 @@
  * Styling comes from the shorts viewer's kit — rounded squares, white icons,
  * no hue — so a phone viewer opening a short and a phone viewer opening a
  * stream see one app. The mobile app's ViewerChrome was derived from the same
- * numbers, which is why the two platforms land in the same place. The fill is
- * lighter here and every control on the header row is one height; see CIRCLE.
+ * numbers, which is why the two platforms land in the same place. Controls
+ * are bare icons with no box, so no blur is needed anywhere; see CIRCLE.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +31,7 @@ import VolumeX from "@/components/ui/cut-icons/mute";
 
 import ChevronRight from "@/components/ui/cut-icons/next";
 import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { formatDistanceToNow } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -63,22 +64,24 @@ const elapsedLabel = (ms: number) => {
   return h > 0 ? `${h}:${two(m)}:${two(s)}` : `${m}:${two(s)}`;
 };
 
-/** One circle of chrome. Same size and fill as the shorts viewer's buttons. */
 /**
- * The same shape and size it always was, with most of the fill taken out.
+ * A control on the frame: a bare white icon with a soft shadow, no box.
  *
- * At zinc-900/60 every icon sat on its own little slab and the head of the
- * frame read as a row of cards laid on the broadcast. At black/20 the shape
- * is still there — it still groups the icon and still says 'control' — but
- * the picture reads straight through it. The scrim at the top and a drop
- * shadow carry the contrast the fill used to, which is what the mobile
- * viewer does with TEXT_SHADOW.
+ * The boxes used to be black/30 under a backdrop blur. iPhone Safari can't
+ * afford a blur over a playing live (live-frame-ios.css switches it off), so
+ * there each box turned into a flat dark slab while Android kept the glass.
+ * Bare icons need no blur, so every phone draws the same thing. The scrim at
+ * the top and the shadow carry the contrast, as the shorts viewer does.
  */
 const CIRCLE =
-  'w-10 h-10 rounded-xl bg-black/30 border border-white/15 backdrop-blur-md flex items-center justify-center text-white shrink-0';
+  'w-10 h-10 flex items-center justify-center text-white shrink-0 [filter:drop-shadow(0_1px_2px_rgb(0_0_0/0.7))]';
 
+/** Status on the second line: text straight on the picture, no chip. */
 const PILL =
-  'h-7 shrink-0 rounded-[10px] bg-black/30 border border-white/15 backdrop-blur-md px-2.5 flex items-center gap-1.5 text-white';
+  'h-7 shrink-0 px-1 flex items-center gap-1.5 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.8),0_0_8px_rgb(0_0_0/0.4)]';
+
+/** Name and "Started" line over the picture. */
+const TEXT_SHADOW = '[text-shadow:0_1px_2px_rgb(0_0_0/0.8),0_0_8px_rgb(0_0_0/0.4)]';
 
 export interface ImmersiveLiveChromeProps {
   streamerName: string;
@@ -269,48 +272,47 @@ export function ImmersiveLiveChrome({
           hidden && 'invisible pointer-events-none opacity-0'
         )}
       >
-        {/* Takes the row's spare width and gives it up before the controls
-            do. Without `flex-1` this shrank to min-content and the name,
-            which truncates, rendered at zero width — a capsule with an
-            avatar and nothing beside it. */}
-        {/* One capsule for who started this: face with the live ripple, name
-            and badge, when they went live, and Follow inside it. */}
-        <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-[14px] border border-white/15 bg-black/30 py-1 pl-1 pr-1.5 backdrop-blur-md">
-          <button type="button" onClick={openCreatorProfile} className="flex min-w-0 flex-1 items-center gap-2 text-left">
-            {/* Same broadcast ripple every other live avatar wears. */}
-            <LiveRipple live={!!isLive && !isEnded} className="m-px rounded-lg">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={avatar} alt={streamerName} />
-                <AvatarFallback className="bg-zinc-700 text-[11px] font-medium text-white">
-                  {streamerName?.[0]?.toUpperCase() || '?'}
-                </AvatarFallback>
-              </Avatar>
-            </LiveRipple>
-            <span className="min-w-0 flex-1">
-              <span className="flex min-w-0 items-baseline gap-1 text-[14px] font-extrabold leading-tight text-white">
-                <span className="truncate">{streamerName}</span>
-                <BadgeIcon badgeBalance={badgeBalance} username={creatorUsername} className="h-[11px] w-[11px] shrink-0" />
-              </span>
-              {startedLabel ? (
-                <span className="block truncate text-[11px] font-semibold leading-tight text-white/75">{startedLabel}</span>
-              ) : null}
-            </span>
-          </button>
-          {/* Gone once following: an already-followed creator does not need a
-              button parked on their own stream. */}
-          {!isSelf && !isFollowing && creatorId ? (
-            <button
-              type="button"
-              onClick={handleFollow}
-              data-live-follow
-              className="h-[30px] shrink-0 rounded-[9px] px-3 text-[12.5px] font-extrabold"
-            >
-              {t('follow.follow', 'Follow')}
+        {/* Who started this, straight on the picture: the face with the live
+            ripple and Follow as a small glass + on it, then name, badge and
+            when they went live. No capsule, so nothing boxes the top left. */}
+        <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5 pl-1">
+          <span className="relative shrink-0">
+            <button type="button" onClick={openCreatorProfile} aria-label={streamerName} className="block">
+              {/* Same broadcast ripple every other live avatar wears. */}
+              <LiveRipple live={!!isLive && !isEnded} className="m-px rounded-lg">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={avatar} alt={streamerName} />
+                  <AvatarFallback className="bg-zinc-700 text-[12px] font-medium text-white">
+                    {streamerName?.[0]?.toUpperCase() || '?'}
+                  </AvatarFallback>
+                </Avatar>
+              </LiveRipple>
             </button>
-          ) : null}
+            {/* Gone once following: an already-followed creator does not need
+                a button parked on their own stream. */}
+            {!isSelf && !isFollowing && creatorId ? (
+              <button
+                type="button"
+                onClick={handleFollow}
+                data-live-follow
+                aria-label={t('follow.follow', 'Follow')}
+              >
+                <Plus className="h-3 w-3" />
+              </button>
+            ) : null}
+          </span>
+          <button type="button" onClick={openCreatorProfile} className={cn('min-w-0 flex-1 text-left', TEXT_SHADOW)}>
+            <span className="flex min-w-0 items-baseline gap-1 text-[14px] font-extrabold leading-tight text-white">
+              <span className="truncate">{streamerName}</span>
+              <BadgeIcon badgeBalance={badgeBalance} username={creatorUsername} className="h-[11px] w-[11px] shrink-0" />
+            </span>
+            {startedLabel ? (
+              <span className="block truncate text-[11px] font-semibold leading-tight text-white/80">{startedLabel}</span>
+            ) : null}
+          </button>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5">
           <button
             type="button"
             onClick={onToggleMute}
@@ -336,7 +338,7 @@ export function ImmersiveLiveChrome({
           off the right edge without pushing anything around. */}
       <div
         className={cn(
-          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+68px)] z-20 flex gap-1 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
+          'absolute inset-x-0 top-[calc(env(safe-area-inset-top,0px)+68px)] z-20 flex gap-2 overflow-x-auto px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-opacity duration-300',
           hidden && 'invisible pointer-events-none opacity-0'
         )}
       >
