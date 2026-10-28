@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Your tip was sent, but the original creator's share didn't go through.",
+    "notify": {
+      "duet": "{{name}} duetted your video",
+      "stitch": "{{name}} stitched your video",
+      "react": "{{name}} reacted to your video",
+      "reactLive": "{{name}} is reacting live to your video"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download on the App Store",
@@ -19645,9 +19654,7 @@
     "count_other": "{{count}} reactions",
     "allow": "Allow reactions",
     "allowDescription": "Let other creators react to your videos, recorded or live. You can still change it on each post.",
-    "notify": "{{name}} reacted to {{title}}",
-    "notifyLive": "{{name}} is reacting live to {{title}}",
-    "yourVideo": "your video",
+    "policy": {"everyone": "Everyone", "followers": "Followers", "nobody": "No one", "default": "Account default ({{value}})"},
     "pageTitle": "Reactions to {{title}} — DeHub",
     "pageDescription": "Watch creators react to “{{title}}” by {{creator}} on DeHub, recorded and live.",
     "heading": "Reactions",

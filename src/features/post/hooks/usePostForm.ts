@@ -54,7 +54,7 @@ import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/a
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
-import { linkReactionPost } from '@/lib/api/remix-links';
+import { recordRemixLink } from '@/lib/remix-links';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -2083,7 +2083,7 @@ export function usePostForm(
       // A reaction recorded in the remix studio: credit its source and tell its
       // creator. The post is up either way.
       if (remixLink && !mintResponse.duplicate && !liveMode) {
-        void linkReactionPost(remixLink.sourceTokenId, mintResponse.createdTokenId)
+        void recordRemixLink({ kind: 'react', sourceTokenId: remixLink.sourceTokenId, remixTokenId: mintResponse.createdTokenId })
           .catch((error) => console.warn('[Mint] Reaction link failed', error));
       }
 

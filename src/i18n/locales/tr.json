@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Bahşişin gönderildi, ancak asıl içerik üreticisinin payı gönderilemedi.",
+    "notify": {
+      "duet": "{{name}} videonla düet yaptı",
+      "stitch": "{{name}} videonu stitch'ledi",
+      "react": "{{name}} videona tepki verdi",
+      "reactLive": "{{name}} videona canlı tepki veriyor"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store'dan indirin",
@@ -19717,9 +19726,6 @@
     "count_other": "{{count}} tepki",
     "allow": "Tepkilere izin ver",
     "allowDescription": "Diğer içerik üreticilerinin videolarına kayıtlı veya canlı tepki vermesine izin ver. Her gönderide ayrıca değiştirebilirsin.",
-    "notify": "{{name}}, {{title}} için tepki verdi",
-    "notifyLive": "{{name}}, {{title}} için canlı tepki veriyor",
-    "yourVideo": "videon",
     "pageTitle": "{{title}} için tepkiler — DeHub",
     "pageDescription": "DeHub’da {{creator}} tarafından paylaşılan “{{title}}” videosuna verilen kayıtlı ve canlı tepkileri izle.",
     "heading": "Tepkiler",
@@ -19729,6 +19735,12 @@
     "liveNow": "Canlı",
     "wasLive": "Canlıydı",
     "untitled": "Tepki",
-    "thisVideo": "bu video"
+    "thisVideo": "bu video",
+    "policy": {
+      "everyone": "Herkes",
+      "followers": "Takipçiler",
+      "nobody": "Hiç kimse",
+      "default": "Hesap varsayılanı ({{value}})"
+    }
   }
 }

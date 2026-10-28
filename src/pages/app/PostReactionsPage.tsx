@@ -9,7 +9,7 @@ import { ArrowLeft, Loader2, MonitorPlay, Radio } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { buildImageUrl } from '@/lib/media-url';
-import { listReactions, type RemixLink } from '@/lib/api/remix-links';
+import { getRemixCounts, listRemixes, type RemixLink } from '@/lib/remix-links';
 
 function ReactionRow({ link }: { link: RemixLink }) {
   const { t } = useTranslation();
@@ -55,13 +55,18 @@ export default function PostReactionsPage() {
   });
   const reactions = useInfiniteQuery({
     queryKey: ['reactions', postId],
-    queryFn: ({ pageParam }) => listReactions(postId, pageParam),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (last) => (last.hasMore ? last.reactions.at(-1)?.createdAt : undefined),
+    queryFn: ({ pageParam }) => listRemixes(postId, 'react', pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (last, pages) => (last.hasMore ? pages.length : undefined),
     enabled: /^\d+$/.test(postId),
   });
-  const rows = reactions.data?.pages.flatMap((p) => p.reactions) ?? [];
-  const total = reactions.data?.pages[0]?.total ?? 0;
+  const { data: counts } = useQuery({
+    queryKey: ['remix-counts', postId],
+    queryFn: () => getRemixCounts([postId]),
+    enabled: /^\d+$/.test(postId),
+  });
+  const rows = reactions.data?.pages.flatMap((p) => p.links) ?? [];
+  const total = counts?.[postId]?.reactions ?? rows.length;
   const title = original?.name?.trim() || t('reactions.thisVideo', 'this video');
   const creator = original?.mintername || original?.minterUsername;
   const url = `https://dehub.io/app/post/${postId}/reactions`;
@@ -104,7 +109,7 @@ export default function PostReactionsPage() {
         <p className="py-12 text-center text-sm text-white/60">{t('reactions.empty', 'No reactions yet. Open the video’s Remix menu and choose React to be the first.')}</p>
       ) : (
         <ul className="mt-4 space-y-1">
-          {rows.map((link) => <ReactionRow key={`${link.kind}:${link.remixTokenId ?? link.streamTokenId}:${link.createdAt}`} link={link} />)}
+          {rows.map((link) => <ReactionRow key={link.id} link={link} />)}
         </ul>
       )}
       {reactions.hasNextPage && (

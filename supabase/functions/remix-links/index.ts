@@ -1,264 +1,299 @@
 // deno-lint-ignore-file no-explicit-any
 //
-// Remix links: reactions (and later duets and stitches) to DeHub videos.
+// Remix links: duets, stitches and reactions made from another creator's video.
 //
-// A recorded reaction is an ordinary video post; once it is minted the client
-// reports it here and the row ties it to its source. A live reaction is a
-// DeHub video the streamer put on screen as a studio source; the row is
-// active while it is there, and viewers read it for the "Reacting to" chip.
+// The remix itself is an ordinary DeHub post (a duet posts as a quote of its
+// source). This function keeps the link between the two, which is what the
+// original creator gets back: credit on the remix, the lists and counts, a
+// notification, and split_bps of every tip on the remix (see use-tip-payment).
 //
-// Every write checks the source again: a public, finished video, not sold per
-// view, locked, subscriber-only, hidden or adult, whose creator allows
-// reactions (remix_settings: the post's own row, else the account default).
-// The original creator is told through custom_notifications.
+// Every write re-checks the source: it must be a public, ungated video, and
+// its creator's allow setting (per post, then account, then 'everyone') must
+// let the caller in. 'followers' asks the DeHub API whether the caller follows.
 //
 // Actions (POST JSON):
-//   check     { sourceTokenId }                   anyone: may this be reacted to?
-//   posted    { sourceTokenId, remixTokenId }     signed in, the remix's minter
-//   live      { sourceTokenId, streamTokenId }    signed in, the stream's minter
-//   live-stop { streamTokenId }                   the same
-//   current   { streamTokenId }                   anyone: what the stream is reacting to
-//   list      { sourceTokenId, before? }          anyone: reactions to a post
-//   settings  { tokenId? }                        anyone: the allow switch
-//   set       { tokenId?, allowReact }            signed in, the owner
+//   check        { sourceTokenId, kind }               may the caller remix it? signed in.
+//   record       { sourceTokenId, kind, remixTokenId, details? }   signed in, the remix's minter.
+//   live-start   { sourceTokenId, streamTokenId }      signed in, a live reaction.
+//   live-end     { id }                                the reactor.
+//   attach       { id, remixTokenId }                  the reactor, once the replay is a post.
+//   list         { sourceTokenId, kind?, page? }       public.
+//   counts       { sourceTokenIds }                    public, up to 100.
+//   links        { remixTokenIds }                     public, up to 100: what each post remixes.
+//   settings-get { owner, tokenId? }                   public: the effective policy.
+//   settings-set { tokenId?, allowDuet?, allowStitch?, allowReact? }   signed in, the owner.
 import { admin, corsHeaders, DEHUB_API_BASE, json } from '../_shared/transcripts.ts';
 import { checkRateLimit, requireDeHubAuth } from '../_shared/auth.ts';
-import { blockedReason } from './source-policy.ts';
 
 const LOG = '[remix-links]';
+const KINDS = ['duet', 'stitch', 'react'] as const;
+type Kind = typeof KINDS[number];
+type Policy = 'everyone' | 'followers' | 'nobody';
+const POLICIES: Policy[] = ['everyone', 'followers', 'nobody'];
+const COLUMN: Record<Kind, string> = { duet: 'allow_duet', stitch: 'allow_stitch', react: 'allow_react' };
+const NOUN: Record<string, string> = { duet: 'duetted', stitch: 'stitched', react: 'reacted to', react_live: 'is reacting live to' };
+/** Share of each tip on a remix that goes to the source creator. */
+const SPLIT_BPS = Math.max(0, Math.min(5000, Number(Deno.env.get('REMIX_SPLIT_BPS') ?? 1000) || 0));
 const PAGE = 30;
+const COLUMNS = 'id, kind, source_token_id, source_address, source_username, remixer_address, remixer_username, '
+  + 'remix_token_id, stream_token_id, active, split_bps, details, created_at';
+
+const tokenIdOf = (v: unknown) => (/^\d{1,15}$/.test(String(v ?? '')) ? Number(v) : null);
+const kindOf = (v: unknown): Kind | null => (KINDS.includes(v as Kind) ? v as Kind : null);
+const lower = (v: unknown) => String(v ?? '').trim().toLowerCase();
 
 async function fetchJson(url: string): Promise<any | null> {
   try {
     const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(10000) });
-    if (!res.ok) {
-      await res.body?.cancel();
-      return null;
-    }
+    if (!res.ok) { await res.body?.cancel(); return null; }
     return await res.json();
   } catch {
     return null;
   }
 }
 
-const tokenIdOf = (v: unknown): number | null => {
-  const n = typeof v === 'string' ? Number(v) : v;
-  return typeof n === 'number' && Number.isSafeInteger(n) && n > 0 ? n : null;
-};
-
 async function post(tokenId: number): Promise<any | null> {
-  const body = await fetchJson(`${DEHUB_API_BASE}/api/nft_info/${tokenId}`);
-  const p = body?.result ?? body;
-  return p?.tokenId ? p : null;
+  const p = await fetchJson(`${DEHUB_API_BASE}/api/nft_info/${tokenId}`);
+  const value = p?.result ?? p;
+  return value && typeof value === 'object' && value.minter ? value : null;
 }
 
-interface Source {
-  tokenId: number;
-  owner: string;
-  username: string | null;
-  title: string;
+const username = (p: any): string | null => p?.minterUsername || p?.mintername || p?.minterUser?.username || null;
+
+/** The same gate the recorder and the cards apply: only open, finished videos. */
+function restricted(p: any): string | null {
+  if (p.postType && p.postType !== 'video') return 'Only videos can be remixed.';
+  if (p.isHidden || p.deleted || p.is_live || p.status === 'live' || p.stream?.isActive) return 'This video is unavailable.';
+  if (p.visibility && p.visibility !== 'public') return 'This video is not public.';
+  const s = p.streamInfo ?? {};
+  const locked = (p.is_locked || s.isLockContent) && Number(p.locked_price ?? s.lockContentAmount ?? 0) > 0;
+  if (p.is_ppv || s.isPayPerView || locked || (p.plansDetails ?? p.plans ?? []).length) return 'This video is gated.';
+  if (p.spoilerText || (p.contentRating && p.contentRating !== 'safe')) return 'This video is unavailable.';
+  return null;
 }
 
-async function allowsReact(db: any, owner: string, tokenId: number): Promise<boolean> {
-  const { data } = await db.from('remix_settings').select('token_id, allow_react')
-    .eq('owner_address', owner).in('token_id', [0, tokenId]);
-  const rows = (data ?? []) as { token_id: number; allow_react: boolean }[];
-  const own = rows.find((r) => Number(r.token_id) === tokenId);
-  const account = rows.find((r) => Number(r.token_id) === 0);
-  return (own ?? account)?.allow_react ?? true;
+async function policyFor(db: any, owner: string, tokenId: number | null, kind: Kind): Promise<Policy> {
+  const column = COLUMN[kind];
+  let query = db.from('remix_settings').select(`token_id, ${column}`).eq('owner_address', owner);
+  query = tokenId == null ? query.is('token_id', null) : query.or(`token_id.is.null,token_id.eq.${tokenId}`);
+  const { data } = await query;
+  const rows = data ?? [];
+  const forPost = rows.find((r: any) => r.token_id != null)?.[column];
+  const forAccount = rows.find((r: any) => r.token_id == null)?.[column];
+  return forPost || forAccount || 'everyone';
 }
 
-async function source(db: any, tokenId: number | null): Promise<{ source?: Source; error?: string }> {
-  if (!tokenId) return { error: 'A source video is required.' };
-  const p = await post(tokenId);
-  const reason = blockedReason(p);
-  if (reason) return { error: reason };
-  const owner = String(p.minter ?? '').toLowerCase();
-  if (!owner) return { error: 'Video not found.' };
-  if (!(await allowsReact(db, owner, tokenId))) return { error: 'The creator has turned off reactions to this video.' };
-  return {
-    source: {
-      tokenId,
-      owner,
-      username: p.mintername || p.minterUser?.username || null,
-      title: String(p.name ?? p.title ?? '').trim().slice(0, 200),
-    },
-  };
+async function follows(follower: string, owner: string): Promise<boolean> {
+  const info = await fetchJson(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(owner)}?address=${encodeURIComponent(follower)}`);
+  return (info?.result ?? info)?.isFollowing === true;
 }
 
-async function account(wallet: string): Promise<{ username: string | null; avatar: string | null }> {
-  const body = await fetchJson(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(wallet)}`);
-  const a = body?.result ?? body;
-  return { username: a?.username || null, avatar: a?.avatarImageUrl || a?.avatarUrl || null };
+/** Whether `wallet` may remix `source` as `kind`, with the reason when not. */
+async function allowed(db: any, wallet: string, source: any, tokenId: number, kind: Kind) {
+  const owner = lower(source.minter);
+  if (owner === wallet) return { allowed: true, policy: 'everyone' as Policy };
+  const blocked = restricted(source);
+  if (blocked) return { allowed: false, reason: blocked };
+  if (kind === 'duet' && source.quotePolicy === 'nobody') return { allowed: false, reason: 'The creator turned off duets for this video.' };
+  const policy = await policyFor(db, owner, tokenId, kind);
+  if (policy === 'nobody') return { allowed: false, policy, reason: `The creator turned off ${kind === 'react' ? 'reactions' : kind + 's'} for this video.` };
+  if ((policy === 'followers' || (kind === 'duet' && source.quotePolicy === 'followers')) && !(await follows(wallet, owner))) {
+    return { allowed: false, policy, reason: 'Only the creator’s followers can do this.' };
+  }
+  return { allowed: true, policy };
 }
 
-async function notify(db: any, src: Source, actor: string, referenceId: string, live: boolean) {
-  if (src.owner === actor) return;
-  const who = await account(actor);
+async function notify(db: any, row: any) {
+  if (row.source_address === row.remixer_address) return;
   const { error } = await db.from('custom_notifications').insert({
-    recipient_address: src.owner,
-    actor_address: actor,
-    actor_username: who.username,
-    actor_avatar: who.avatar,
-    type: 'video_reaction',
-    content: live ? 'is reacting live to your video.' : 'reacted to your video.',
-    reference_id: referenceId,
-    reference_title: src.title || null,
+    recipient_address: row.source_address,
+    actor_address: row.remixer_address,
+    actor_username: row.remixer_username,
+    type: 'remix',
+    content: `${NOUN[row.kind] ?? 'remixed'} your video`,
+    reference_id: String(row.remix_token_id ?? row.stream_token_id),
+    reference_title: row.kind,
   });
   if (error) console.warn(`${LOG} notification failed`, error);
 }
 
-function view(row: any) {
-  return {
-    kind: row.kind,
-    sourceTokenId: Number(row.source_token_id),
-    sourceUsername: row.source_username,
-    sourceTitle: row.source_title,
-    remixTokenId: row.remix_token_id == null ? null : Number(row.remix_token_id),
-    streamTokenId: row.stream_token_id == null ? null : Number(row.stream_token_id),
-    remixerAddress: row.remixer_address,
-    remixerUsername: row.remixer_username,
-    active: !!row.active,
-    createdAt: row.created_at,
-  };
+/* ──────────────────────────────── signed in ─────────────────────────────── */
+
+async function check(db: any, wallet: string, body: any) {
+  const tokenId = tokenIdOf(body?.sourceTokenId);
+  const kind = kindOf(body?.kind);
+  if (tokenId == null || !kind) return json({ error: 'sourceTokenId and kind required' }, 400);
+  const source = await post(tokenId);
+  if (!source) return json({ allowed: false, reason: 'This video is unavailable.' });
+  return json(await allowed(db, wallet, source, tokenId, kind));
 }
 
-const COLUMNS = 'kind, source_token_id, source_username, source_title, remix_token_id, stream_token_id, remixer_address, remixer_username, active, created_at';
-
-async function posted(db: any, wallet: string, body: any) {
+async function record(db: any, wallet: string, body: any) {
+  const sourceTokenId = tokenIdOf(body?.sourceTokenId);
   const remixTokenId = tokenIdOf(body?.remixTokenId);
-  if (!remixTokenId) return json({ error: 'A reaction post is required.' }, 400);
-  const remix = await post(remixTokenId);
-  if (!remix || String(remix.minter ?? '').toLowerCase() !== wallet) {
-    return json({ error: 'Only the creator of the reaction can link it.' }, 403);
+  const kind = kindOf(body?.kind);
+  if (sourceTokenId == null || remixTokenId == null || !kind) return json({ error: 'sourceTokenId, remixTokenId and kind required' }, 400);
+  if (sourceTokenId === remixTokenId) return json({ error: 'A video cannot remix itself.' }, 400);
+  if (!(await checkRateLimit(db, wallet, 'remix-links:record', { limit: 30, windowMs: 3_600_000 })).allowed) return json({ error: 'Too many remixes. Try again later.' }, 429);
+
+  const { data: existing } = await db.from('remix_links').select(COLUMNS).eq('remix_token_id', remixTokenId).maybeSingle();
+  if (existing) {
+    return existing.remixer_address === wallet ? json({ link: existing }) : json({ error: 'That post is already linked.' }, 409);
   }
-  const { source: src, error } = await source(db, tokenIdOf(body?.sourceTokenId));
-  if (!src) return json({ error }, 409);
-  if (src.tokenId === remixTokenId) return json({ error: 'A video cannot react to itself.' }, 400);
-  const me = await account(wallet);
-  const { data, error: insertError } = await db.from('remix_links').upsert({
-    kind: 'react',
-    source_token_id: src.tokenId,
-    source_address: src.owner,
-    source_username: src.username,
-    source_title: src.title,
-    remix_token_id: remixTokenId,
-    remixer_address: wallet,
-    remixer_username: me.username,
-  }, { onConflict: 'remix_token_id', ignoreDuplicates: true }).select(COLUMNS);
-  if (insertError) {
-    console.error(`${LOG} link failed`, insertError);
-    return json({ error: 'Could not link this reaction.' }, 500);
+  const [source, remix] = await Promise.all([post(sourceTokenId), post(remixTokenId)]);
+  if (!source) return json({ error: 'The original video is unavailable.' }, 404);
+  if (!remix || lower(remix.minter) !== wallet) return json({ error: 'That post is not yours.' }, 403);
+  // A duet is posted as a quote of its source; that link is the backend's own.
+  if (kind === 'duet' && remix.quotedTokenId != null && Number(remix.quotedTokenId) !== sourceTokenId) {
+    return json({ error: 'That post does not quote this video.' }, 400);
   }
-  // A repeat report of the same post inserts nothing and notifies nobody.
-  if (data?.length) await notify(db, src, wallet, String(remixTokenId), false);
-  return json({ link: data?.[0] ? view(data[0]) : null });
+  const verdict = await allowed(db, wallet, source, sourceTokenId, kind);
+  if (!verdict.allowed) return json({ error: verdict.reason, refused: true }, 403);
+
+  const details = body?.details && typeof body.details === 'object' ? JSON.parse(JSON.stringify(body.details).slice(0, 2000)) : {};
+  const row = {
+    kind, source_token_id: sourceTokenId, source_address: lower(source.minter), source_username: username(source),
+    remixer_address: wallet, remixer_username: username(remix), remix_token_id: remixTokenId,
+    split_bps: lower(source.minter) === wallet ? 0 : SPLIT_BPS, details,
+  };
+  const { data, error } = await db.from('remix_links').insert(row).select(COLUMNS).single();
+  if (error) {
+    console.error(`${LOG} insert failed`, error);
+    return json({ error: 'Could not link this post.' }, 500);
+  }
+  await notify(db, data);
+  return json({ link: data });
 }
 
-async function streamOf(wallet: string, streamTokenId: number | null) {
-  if (!streamTokenId) return { error: 'A live stream is required.' };
-  const p = await post(streamTokenId);
-  if (!p || p.postType !== 'live') return { error: 'Live stream not found.' };
-  if (String(p.minter ?? '').toLowerCase() !== wallet) return { error: 'Only the streamer can change this.' };
-  return { tokenId: streamTokenId };
-}
-
-async function live(db: any, wallet: string, body: any) {
-  const stream = await streamOf(wallet, tokenIdOf(body?.streamTokenId));
-  if (!stream.tokenId) return json({ error: stream.error }, 403);
-  const { source: src, error } = await source(db, tokenIdOf(body?.sourceTokenId));
-  if (!src) return json({ error }, 409);
-  const now = new Date().toISOString();
-  await db.from('remix_links').update({ active: false, ended_at: now })
-    .eq('stream_token_id', stream.tokenId).eq('active', true);
-  const me = await account(wallet);
-  const { data, error: insertError } = await db.from('remix_links').insert({
-    kind: 'react_live',
-    source_token_id: src.tokenId,
-    source_address: src.owner,
-    source_username: src.username,
-    source_title: src.title,
-    stream_token_id: stream.tokenId,
-    remixer_address: wallet,
-    remixer_username: me.username,
-    active: true,
+async function liveStart(db: any, wallet: string, body: any) {
+  const sourceTokenId = tokenIdOf(body?.sourceTokenId);
+  const streamTokenId = tokenIdOf(body?.streamTokenId);
+  if (sourceTokenId == null || streamTokenId == null) return json({ error: 'sourceTokenId and streamTokenId required' }, 400);
+  const [source, stream] = await Promise.all([post(sourceTokenId), post(streamTokenId)]);
+  if (!source) return json({ error: 'The original video is unavailable.' }, 404);
+  if (!stream || lower(stream.minter) !== wallet) return json({ error: 'That stream is not yours.' }, 403);
+  const verdict = await allowed(db, wallet, source, sourceTokenId, 'react');
+  if (!verdict.allowed) return json({ error: verdict.reason, refused: true }, 403);
+  await db.from('remix_links').update({ active: false }).eq('stream_token_id', streamTokenId).eq('remixer_address', wallet).eq('active', true);
+  const { data, error } = await db.from('remix_links').insert({
+    kind: 'react_live', source_token_id: sourceTokenId, source_address: lower(source.minter), source_username: username(source),
+    remixer_address: wallet, remixer_username: username(stream), stream_token_id: streamTokenId,
+    split_bps: lower(source.minter) === wallet ? 0 : SPLIT_BPS,
   }).select(COLUMNS).single();
-  if (insertError) {
-    console.error(`${LOG} live link failed`, insertError);
-    return json({ error: 'Could not start this reaction.' }, 500);
-  }
-  // Once per source per stream: taking it off and back on is not news.
-  const { count } = await db.from('remix_links').select('id', { count: 'exact', head: true })
-    .eq('stream_token_id', stream.tokenId).eq('source_token_id', src.tokenId);
-  if ((count ?? 0) <= 1) await notify(db, src, wallet, String(stream.tokenId), true);
-  return json({ link: view(data) });
+  if (error) return json({ error: 'Could not start the live reaction.' }, 500);
+  await notify(db, data);
+  return json({ link: data });
 }
 
-async function liveStop(db: any, wallet: string, body: any) {
-  const stream = await streamOf(wallet, tokenIdOf(body?.streamTokenId));
-  if (!stream.tokenId) return json({ error: stream.error }, 403);
-  await db.from('remix_links').update({ active: false, ended_at: new Date().toISOString() })
-    .eq('stream_token_id', stream.tokenId).eq('active', true);
+async function ownLive(db: any, wallet: string, id: unknown) {
+  if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const { data } = await db.from('remix_links').select(COLUMNS).eq('id', id).maybeSingle();
+  return data && data.remixer_address === wallet && data.kind === 'react_live' ? data : null;
+}
+
+async function liveEnd(db: any, wallet: string, body: any) {
+  const row = await ownLive(db, wallet, body?.id);
+  if (!row) return json({ error: 'Not found.' }, 404);
+  await db.from('remix_links').update({ active: false }).eq('id', row.id);
   return json({ ok: true });
 }
 
-async function current(db: any, body: any) {
-  const streamTokenId = tokenIdOf(body?.streamTokenId);
-  if (!streamTokenId) return json({ link: null });
-  const { data } = await db.from('remix_links').select(COLUMNS)
-    .eq('stream_token_id', streamTokenId).eq('active', true).maybeSingle();
-  return json({ link: data ? view(data) : null });
+async function attach(db: any, wallet: string, body: any) {
+  const row = await ownLive(db, wallet, body?.id);
+  const remixTokenId = tokenIdOf(body?.remixTokenId);
+  if (!row || remixTokenId == null) return json({ error: 'Not found.' }, 404);
+  const remix = await post(remixTokenId);
+  if (!remix || lower(remix.minter) !== wallet) return json({ error: 'That post is not yours.' }, 403);
+  const { data, error } = await db.from('remix_links').update({ remix_token_id: remixTokenId, active: false })
+    .eq('id', row.id).select(COLUMNS).single();
+  if (error) return json({ error: 'Could not attach the replay.' }, 409);
+  return json({ link: data });
 }
+
+async function settingsSet(db: any, wallet: string, body: any) {
+  const tokenId = body?.tokenId == null ? null : tokenIdOf(body.tokenId);
+  if (body?.tokenId != null && tokenId == null) return json({ error: 'Invalid tokenId' }, 400);
+  if (tokenId != null) {
+    const p = await post(tokenId);
+    if (!p || lower(p.minter) !== wallet) return json({ error: 'That post is not yours.' }, 403);
+  }
+  const values: Record<string, Policy | null> = {};
+  for (const [field, column] of [['allowDuet', 'allow_duet'], ['allowStitch', 'allow_stitch'], ['allowReact', 'allow_react']]) {
+    if (!(field in (body ?? {}))) continue;
+    const v = body[field];
+    if (v !== null && !POLICIES.includes(v)) return json({ error: `Invalid ${field}` }, 400);
+    values[column] = v;
+  }
+  if (!Object.keys(values).length) return json({ error: 'Nothing to save' }, 400);
+  let existing = db.from('remix_settings').select('owner_address').eq('owner_address', wallet);
+  existing = tokenId == null ? existing.is('token_id', null) : existing.eq('token_id', tokenId);
+  const { data: found } = await existing.maybeSingle();
+  const stamp = { ...values, updated_at: new Date().toISOString() };
+  const write = found
+    ? (tokenId == null
+      ? db.from('remix_settings').update(stamp).eq('owner_address', wallet).is('token_id', null)
+      : db.from('remix_settings').update(stamp).eq('owner_address', wallet).eq('token_id', tokenId))
+    : db.from('remix_settings').insert({ owner_address: wallet, token_id: tokenId, ...stamp });
+  const { error } = await write;
+  if (error) return json({ error: 'Could not save.' }, 500);
+  return await settingsGet(db, { owner: wallet, tokenId });
+}
+
+/* ───────────────────────────────── public ───────────────────────────────── */
 
 async function list(db: any, body: any) {
-  const sourceTokenId = tokenIdOf(body?.sourceTokenId);
-  if (!sourceTokenId) return json({ error: 'A source video is required.' }, 400);
-  let q = db.from('remix_links').select(COLUMNS, { count: 'exact' })
-    .eq('source_token_id', sourceTokenId).in('kind', ['react', 'react_live'])
-    .order('created_at', { ascending: false }).limit(PAGE);
-  if (typeof body?.before === 'string' && !Number.isNaN(Date.parse(body.before))) q = q.lt('created_at', body.before);
-  const { data, count, error } = await q;
-  if (error) return json({ error: 'Could not load reactions.' }, 500);
-  const rows = (data ?? []).map(view);
-  return json({ reactions: rows, total: count ?? rows.length, hasMore: rows.length === PAGE });
+  const tokenId = tokenIdOf(body?.sourceTokenId);
+  if (tokenId == null) return json({ error: 'sourceTokenId required' }, 400);
+  const page = Math.max(0, Math.min(100, Number(body?.page) || 0));
+  let query = db.from('remix_links').select(COLUMNS).eq('source_token_id', tokenId);
+  const kind = body?.kind;
+  if (kind === 'react') query = query.in('kind', ['react', 'react_live']);
+  else if (kindOf(kind)) query = query.eq('kind', kind);
+  query = query.or('remix_token_id.not.is.null,active.eq.true');
+  const { data } = await query.order('created_at', { ascending: false }).range(page * PAGE, page * PAGE + PAGE);
+  const rows = data ?? [];
+  return json({ links: rows.slice(0, PAGE), hasMore: rows.length > PAGE });
 }
 
-async function settings(db: any, body: any) {
-  const tokenId = tokenIdOf(body?.tokenId);
-  if (!tokenId) return json({ error: 'A post is required.' }, 400);
-  const p = await post(tokenId);
-  if (!p) return json({ error: 'Post not found.' }, 404);
-  const owner = String(p.minter ?? '').toLowerCase();
-  return json({ allowReact: await allowsReact(db, owner, tokenId), blocked: blockedReason(p) });
+const ids = (v: unknown) => (Array.isArray(v) ? v.map(tokenIdOf).filter((n): n is number => n != null).slice(0, 100) : []);
+
+async function counts(db: any, body: any) {
+  const list = ids(body?.sourceTokenIds);
+  if (!list.length) return json({ counts: {} });
+  const { data } = await db.from('remix_counts').select('*').in('source_token_id', list);
+  const out: Record<string, { duets: number; stitches: number; reactions: number }> = {};
+  for (const r of data ?? []) out[r.source_token_id] = { duets: Number(r.duets), stitches: Number(r.stitches), reactions: Number(r.reactions) };
+  return json({ counts: out });
 }
 
-async function set(db: any, wallet: string, body: any) {
-  if (typeof body?.allowReact !== 'boolean') return json({ error: 'allowReact must be true or false.' }, 400);
-  const tokenId = body?.tokenId == null ? 0 : tokenIdOf(body.tokenId);
-  if (tokenId === null) return json({ error: 'Invalid post.' }, 400);
-  if (tokenId) {
-    const p = await post(tokenId);
-    if (!p || String(p.minter ?? '').toLowerCase() !== wallet) return json({ error: 'Only the creator can change this.' }, 403);
-  }
-  const { error } = await db.from('remix_settings').upsert({
-    owner_address: wallet, token_id: tokenId, allow_react: body.allowReact, updated_at: new Date().toISOString(),
-  });
-  if (error) return json({ error: 'Could not save this setting.' }, 500);
-  // Turning reactions off also takes the video off any stream showing it now.
-  if (!body.allowReact) {
-    let q = db.from('remix_links').update({ active: false, ended_at: new Date().toISOString() })
-      .eq('source_address', wallet).eq('active', true);
-    if (tokenId) q = q.eq('source_token_id', tokenId);
-    await q;
-  }
-  return json({ allowReact: body.allowReact });
+async function links(db: any, body: any) {
+  const list = ids(body?.remixTokenIds);
+  if (!list.length) return json({ links: [] });
+  const { data } = await db.from('remix_links').select(COLUMNS).in('remix_token_id', list);
+  return json({ links: data ?? [] });
 }
+
+async function settingsGet(db: any, body: any) {
+  const owner = lower(body?.owner);
+  if (!/^0x[0-9a-f]{40}$/.test(owner) && !/^[1-9a-hj-np-z]{32,44}$/i.test(owner)) return json({ error: 'owner required' }, 400);
+  const tokenId = body?.tokenId == null ? null : tokenIdOf(body.tokenId);
+  let query = db.from('remix_settings').select('token_id, allow_duet, allow_stitch, allow_react').eq('owner_address', owner);
+  query = tokenId == null ? query.is('token_id', null) : query.or(`token_id.is.null,token_id.eq.${tokenId}`);
+  const { data } = await query;
+  const rows = data ?? [];
+  const account = rows.find((r: any) => r.token_id == null) ?? {};
+  const forPost = rows.find((r: any) => r.token_id != null) ?? {};
+  const pick = (c: string) => ({ post: forPost[c] ?? null, account: account[c] ?? null, effective: forPost[c] || account[c] || 'everyone' });
+  return json({ settings: { duet: pick('allow_duet'), stitch: pick('allow_stitch'), react: pick('allow_react') }, splitBps: SPLIT_BPS });
+}
+
+/* ─────────────────────────────── handler ────────────────────────────────── */
 
 const SIGNED_IN: Record<string, (db: any, wallet: string, body: any) => Promise<Response>> = {
-  posted,
-  live,
-  'live-stop': liveStop,
-  set,
+  check, record, 'live-start': liveStart, 'live-end': liveEnd, attach, 'settings-set': settingsSet,
+};
+const PUBLIC: Record<string, (db: any, body: any) => Promise<Response>> = {
+  list, counts, links, 'settings-get': settingsGet,
 };
 
 Deno.serve(async (req) => {
@@ -268,19 +303,11 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const db = admin();
     const action = String(body?.action ?? '');
-    if (action === 'check') {
-      const { error } = await source(db, tokenIdOf(body?.sourceTokenId));
-      return json({ allowed: !error, reason: error ?? null });
-    }
-    if (action === 'current') return await current(db, body);
-    if (action === 'list') return await list(db, body);
-    if (action === 'settings') return await settings(db, body);
+    if (PUBLIC[action]) return await PUBLIC[action](db, body);
     const handler = SIGNED_IN[action];
     if (!handler) return json({ error: 'unknown action' }, 400);
     const auth = await requireDeHubAuth(req);
     if (!auth.ok) return auth.response;
-    const limit = await checkRateLimit(db, auth.wallet, 'remix-links', { limit: 60, windowMs: 600_000 });
-    if (!limit.allowed) return json({ error: 'Too many requests. Try again in a few minutes.' }, 429);
     return await handler(db, auth.wallet, body);
   } catch (e: any) {
     console.error(`${LOG} error`, e);

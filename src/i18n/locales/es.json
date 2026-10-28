@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Tu propina se envió, pero la parte del creador original no se completó.",
+    "notify": {
+      "duet": "{{name}} hizo un dúo con tu video",
+      "stitch": "{{name}} hizo un stitch de tu video",
+      "react": "{{name}} reaccionó a tu video",
+      "reactLive": "{{name}} está reaccionando en directo a tu video"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Descárgalo en el App Store",
@@ -19717,9 +19726,6 @@
     "count_other": "{{count}} reacciones",
     "allow": "Permitir reacciones",
     "allowDescription": "Deja que otros creadores reaccionen a tus vídeos, grabados o en directo. Puedes cambiarlo en cada publicación.",
-    "notify": "{{name}} reaccionó a {{title}}",
-    "notifyLive": "{{name}} está reaccionando en directo a {{title}}",
-    "yourVideo": "tu vídeo",
     "pageTitle": "Reacciones a {{title}} — DeHub",
     "pageDescription": "Mira cómo los creadores reaccionan a «{{title}}» de {{creator}} en DeHub, grabado y en directo.",
     "heading": "Reacciones",
@@ -19729,6 +19735,12 @@
     "liveNow": "En directo",
     "wasLive": "Fue en directo",
     "untitled": "Reacción",
-    "thisVideo": "este vídeo"
+    "thisVideo": "este vídeo",
+    "policy": {
+      "everyone": "Todos",
+      "followers": "Seguidores",
+      "nobody": "Nadie",
+      "default": "Predeterminado de la cuenta ({{value}})"
+    }
   }
 }

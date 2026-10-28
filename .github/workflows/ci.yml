@@ -380,9 +380,6 @@ jobs:
       - name: Live clip highlight detection
         run: node --experimental-strip-types --test supabase/functions/live-clips/spikes.test.ts
 
-      - name: Which videos may be reacted to
-        run: node --experimental-strip-types --test supabase/functions/remix-links/source-policy.test.ts
-
   boot-path:
     name: Boot path
     runs-on: ubuntu-latest

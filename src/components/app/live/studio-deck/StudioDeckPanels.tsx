@@ -36,7 +36,8 @@ import type { StudioSources } from './use-studio-sources';
 import type { BackgroundMode, BackgroundOptions } from '@/lib/studio/background';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { buildVideoUrl } from '@/lib/media-url';
-import { remixLinksUnavailable, startLiveReaction, stopLiveReaction, tokenIdFromPostUrl } from '@/lib/api/remix-links';
+import { endLiveReaction, startLiveReaction } from '@/lib/remix-links';
+import { tokenIdFromPostUrl } from '@/lib/remix/reactions';
 import { checkRemixSource } from '@/lib/remix/checkRemixSource';
 
 const chip = (on: boolean) =>
@@ -301,20 +302,22 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
     try {
       await checkRemixSource(`https://dehub.io/app/post/${tokenId}`, 'react');
       const post = await getNFTInfo(String(tokenId));
-      // Marks the stream for the viewers' chip and the original's credit. If the
-      // service is not reachable the checks above have passed and the video
-      // still goes on screen, just without the chip.
-      await startLiveReaction(streamTokenId, tokenId).catch((error) => {
-        if (!remixLinksUnavailable(error)) throw error;
+      // Marks the stream for the viewers' chip, the original's credit and its
+      // tip share. A refusal (reactions off, gated) stops here; if the service
+      // cannot answer at all the checks above have passed and the video still
+      // goes on screen, just without the chip.
+      const link = await startLiveReaction(tokenId, streamTokenId).catch((error) => {
+        if ((error as { refused?: boolean }).refused) throw error;
+        return null;
       });
-      for (const c of sources.configs) if (c.reaction) sources.remove(c.id);
+      for (const c of sources.configs) if (c.reaction) removeSource(c);
       const creator = post?.mintername || post?.minterUsername || null;
       const ok = await sources.add({
         id: newSourceId(),
         kind: 'video',
         name: (creator ? `@${creator} · ` : '') + (post?.name || t('studioDeck.sources.clip')).slice(0, 40),
         url: buildVideoUrl(tokenId),
-        reaction: { tokenId, creator, title: String(post?.name ?? '').slice(0, 120) },
+        reaction: { tokenId, creator, title: String(post?.name ?? '').slice(0, 120), linkId: link?.id },
         rect: { x: 0, y: 0, w: 1, h: 1 },
         shape: 'rect',
         visible: true,
@@ -322,7 +325,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
         loop: false,
       });
       if (!ok) {
-        void stopLiveReaction(streamTokenId).catch(() => undefined);
+        if (link) void endLiveReaction(link.id).catch(() => undefined);
         toast.error(t('studioDeck.sources.failed'));
         return;
       }
@@ -350,7 +353,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
 
   const removeSource = (c: SourceConfig) => {
     sources.remove(c.id);
-    if (c.reaction && streamTokenId) void stopLiveReaction(streamTokenId).catch(() => undefined);
+    if (c.reaction?.linkId) void endLiveReaction(c.reaction.linkId).catch(() => undefined);
   };
 
   const move = (c: SourceConfig, position: SourcePosition, size: SourceSize) => {
