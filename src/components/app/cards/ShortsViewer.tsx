@@ -26,6 +26,7 @@ import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
+import { installFirstTap } from '@/lib/first-tap';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { GlassBackground } from '@/components/app/GlassBackground';
 import Eye from "@/components/ui/cut-icons/visibility";
@@ -463,6 +464,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
+  // Back, like, share, mute... answer the first tap even straight after a
+  // flick, when the browser drops that tap's click. See lib/first-tap.
+  useEffect(() => {
+    const root = containerRef.current;
+    return root ? installFirstTap(root) : undefined;
+  }, []);
   // Turns the trackpad's continuous wheel stream into one step per swipe — see
   // the wheel effect below and `createWheelGesture` for why it is not a timer.
   // Lazily built into a ref rather than a memo: it carries the live gesture,
