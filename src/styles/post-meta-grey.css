@@ -3,7 +3,7 @@
    share it, in every theme. System had it for the metadata row only
    (system-immersive.css); everywhere else the muted-text lift turned the
    row and the buttons white. Engaged buttons (liked, reposted, saved,
-   pinned, tipped) keep their own colour, and hover still lights a button. */
+   pinned) keep their own colour; a tipped gem fills in, still grey, and hover still lights a button. */
 html {
   --post-meta-grey: #a1a1aa; /* 7.8:1 on black */
 }
@@ -16,7 +16,7 @@ html:not(#_):not(#_):not(#_):not(#_) [data-post-metadata] > :is(span:not([class*
   color: var(--post-meta-grey) !important;
 }
 
-html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], [data-tipped], :hover),
-html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], [data-tipped], :hover) > :is(svg, span) {
+html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], :hover),
+html:not(#_):not(#_):not(#_):not(#_) [data-feed-actions] button:not([data-engaged], :hover) > :is(svg, span) {
   color: var(--post-meta-grey) !important;
 }
