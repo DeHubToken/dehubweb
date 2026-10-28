@@ -270,7 +270,9 @@ jobs:
       # auth, engagement counts and profile switching, had never executed in
       # CI. A suite nobody runs is worse than no suite: it reads as coverage.
       - name: Run tests
-        run: pnpm test
+        run: |
+          node --test scripts/security-dependencies.test.cjs
+          pnpm test
 
       - name: Render text post share cards
         run: |
