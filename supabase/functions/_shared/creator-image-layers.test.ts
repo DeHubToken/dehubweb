@@ -14,7 +14,7 @@ async function png(raw = new Uint8Array([0,0,0,0,0]), middle: Uint8Array[] = [])
   const header = new Uint8Array(13), view = new DataView(header.buffer); view.setUint32(0,1); view.setUint32(4,1); header[8]=8; header[9]=6;
   const compressed = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer());
   const parts = [new Uint8Array([137,80,78,71,13,10,26,10]), chunk('IHDR',header), chunk('IDAT',compressed), ...middle, chunk('IEND')];
-  return new Uint8Array(await new Blob(parts).arrayBuffer());
+  return new Uint8Array(await new Blob(parts.map(part => Uint8Array.from(part).buffer)).arrayBuffer());
 }
 Deno.test('fixed decomposition sends four PNG layers with safety enabled and no prompt synthesis', () => {
   assert(JSON.stringify(layerInput('https://owned/image')) === JSON.stringify({ image_url:'https://owned/image',num_layers:4,output_format:'png',num_inference_steps:28,guidance_scale:5,acceleration:'regular',enable_safety_checker:true,sync_mode:false }));
