@@ -35,7 +35,7 @@ export default function VideoRemix() {
   const [error, setError] = useState('');
   const [available, setAvailable] = useState(false);
   const config = useMemo<RemixStudioConfig | null>(() => {
-    if (!state || !['green-screen', 'collab', 'sound', 'cut'].includes(state.mode)
+    if (!state || !['green-screen', 'collab', 'sound', 'stitch'].includes(state.mode)
       || typeof state.videoUrl !== 'string' || !state.videoUrl.startsWith('https://')
       || typeof state.sourceUrl !== 'string' || !/^https:\/\/dehub\.io\/app\/post\/[^/?#]+$/.test(state.sourceUrl)) return null;
     return { mode: state.mode, videoUrl: state.videoUrl, sourceUrl: state.sourceUrl,
@@ -68,7 +68,7 @@ export default function VideoRemix() {
         if (closed) return;
         if (typeof data.dataUrl !== 'string' || data.dataUrl.length > 34 * 1024 * 1024
           || !/^data:video\/(webm|mp4);base64,[A-Za-z0-9+/]+=*$/.test(data.dataUrl)
-          || !Number.isFinite(data.duration) || data.duration <= .25 || data.duration > 61
+          || !Number.isFinite(data.duration) || data.duration <= .25 || data.duration > (config.mode === 'stitch' ? 66 : 61)
           || data.width !== 720 || ![720, 1280].includes(data.height)) throw new Error('Invalid recording. Please try another take.');
         const response = await fetch(data.dataUrl);
         const blob = await response.blob();
