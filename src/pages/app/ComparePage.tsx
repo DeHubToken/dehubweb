@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { PageBody, PageIsland, PageSection, PageEmpty, KitButton } from '@/components/app/page-kit/PageKit';
 import { Input } from '@/components/ui/input';
-import { CATEGORIES, FEATURES, PLATFORMS, REVIEWED_ON, SOURCES, STATUS_LABELS, comparisonCoverage, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
+import { CATEGORIES, FEATURES, PLATFORMS, REVIEWED_ON, COMPETITOR_REVIEWED_ON, SOURCES, STATUS_LABELS, comparisonCoverage, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
 
 const PAGE_SIZE = 20;
 export default function ComparePage() {
@@ -68,15 +68,16 @@ export default function ComparePage() {
           <details className="mt-5 text-sm text-muted-foreground">
             <summary className="cursor-pointer font-medium text-foreground">{copy('method', 'How to read this comparison')}</summary>
             <div className="mt-3 space-y-3 leading-relaxed">
-              <p>{copy('methodBody', 'Documented means described by first-party documentation. Source reviewed means supported by the linked client implementation, with production availability still to be tested. Conditional means eligibility, device, region or a narrower feature applies. Related product means a companion app, integration or ecosystem implementation. Not verified is an open research item, never a claim that a feature is absent.')}</p>
+              <p>{copy('researchMethod', 'Each catalogue feature has been reviewed against the cited official documentation for all eleven competitors. Documented, Conditional and Related product describe supported or partial equivalents. Explicit limitation requires a source that states the restriction. Not established by sources means this documentary review did not establish an equivalent; it does not mean the product definitely lacks it. Announcements and unresolved availability are labelled separately.')}</p>
               <p>{copy('scope', 'This is a growing catalogue of DeHub capabilities, not a score or an exhaustive audit of every competitor. Platform documentation can lag product changes. Older sources establish a feature, not its current price or limits.')}</p>
               <p>{copy('parity', 'DeHub web, Android and iOS capabilities differ. The iOS app does not offer crypto purchases or reward actions. Device-specific notes remain beside the relevant features. Documentation is not a guarantee of availability or earnings.')}</p>
-              <p>{copy('auditLimit', 'DeHub coverage includes product documentation, web routes, native screens, settings and editor tools. Code references identify the reviewed revisions. Every feature has not been exercised in production or on every device, and competitor research is incomplete. Counts describe catalogue entries, not unique advantages or a feature score.')}</p>
+              <p>{copy('researchLimit', 'This is a documentation comparison, not an end-to-end test of every account, region or device. DeHub source references pin the reviewed code revisions. Independent editors and payment providers count only where explicitly identified as related products. Counts describe catalogue rows, not unique advantages or a feature score.')}</p>
+              <p>{copy('peerReviewDate', 'Competitor documentation reviewed:')} {COMPETITOR_REVIEWED_ON}</p>
               <a href="/feedback" className="inline-block underline underline-offset-4">{copy('correction', 'Suggest a correction')}</a>
             </div>
           </details>
         </PageSection>
-        <p className="px-4 text-xs leading-relaxed text-muted-foreground">{coverage.verified} / {coverage.total} {copy('coverage', 'competitor entries have source evidence. Remaining entries need verification.')}</p>
+        <p className="px-4 text-xs leading-relaxed text-muted-foreground">{coverage.reviewed} / {coverage.total} {copy('researchCoverage', 'competitor entries reviewed against documentation.')} {coverage.verified} {copy('researchMatches', 'documented, conditional or related-product matches.')}</p>
         <p role="status" className="px-4 text-sm text-muted-foreground">{filtered.length} {copy('matching', 'matching features')}</p>
         {filtered.slice(0, visible).map(feature => <PageSection key={feature.id}>
           <div id={feature.id} className="scroll-mt-36">
