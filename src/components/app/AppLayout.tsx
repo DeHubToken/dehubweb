@@ -134,7 +134,7 @@ const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
 // (/videos, /shorts) — all backed by the same cached HomePage. Layout that's
 // specific to the home feed (full-bleed mosaic, collapsed-mode global nav)
 // must treat all of them the same. The route list is shared with
-// FriendsOnStageBar and HomeFeed — see lib/home-routes.
+// LiveNowBar and HomeFeed — see lib/home-routes.
 
 // The post layer tracks <main>'s live box (the gap between the sidebars) via the
 // CSS vars published below — the same ones the login modal centers against.

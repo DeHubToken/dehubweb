@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom';
 import { transcriptKey } from '@/hooks/use-transcript';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { LiveNowRow, LiveNowList, type LiveNowItem } from '@/components/app/feeds/LiveNowBar';
 import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
@@ -215,6 +216,14 @@ const SAMPLE_DISLIKED_REACTIONS: ReactionCounts = { like: 2, love: 1, dislike: 9
  * the thumbs-up. One row as a stranger sees it, one as somebody who disliked
  * the post — the thumb wears their 👎, since there is no thumbs-down button.
  */
+const SAMPLE_LIVE_NOW: LiveNowItem[] = [
+  { kind: 'stream', id: '1', title: 'Late night beat making', wallet: '0xmaya', username: 'maya', avatar: null, count: '214', followed: true, size: 214 },
+  { kind: 'stage', id: '2', title: 'DHB weekly AMA', wallet: '0xdehub', username: 'dehub', avatar: null, count: '88', followed: true, size: 88 },
+  { kind: 'stream', id: '3', title: 'Ranked grind to Diamond', wallet: '0xkai', username: 'kai', avatar: null, count: '41', followed: false, size: 41 },
+  { kind: 'stage', id: '4', title: 'Builders hangout', wallet: '0xsora', username: 'sora', avatar: null, count: '12', followed: false, size: 12 },
+  { kind: 'stream', id: '5', title: 'Painting a city at dusk', wallet: '0xjun', username: 'jun', avatar: null, count: '9', followed: false, size: 9 },
+];
+
 /**
  * The ripple a live person's avatar wears, at the sizes it ships in: feed
  * header (36), side panel Live tab (32), post page (40), chat list (48) and
@@ -240,6 +249,12 @@ function LiveAvatarsGallery() {
           {face('w-12 h-12', 'T')}
           <span className="text-[11px] text-zinc-500">{_copy("copy.cf7d0ae846cb", { defaultValue: "Not live" })}</span>
         </div>
+      </div>
+      {/* Top of Home: one row for everyone live, then the sheet it opens. */}
+      <div data-live-now-gallery className="mt-4 flex flex-col gap-3 max-w-md">
+        <LiveNowRow items={SAMPLE_LIVE_NOW} onOpen={() => {}} onSeeAll={() => {}} />
+        <LiveNowRow items={SAMPLE_LIVE_NOW.slice(0, 1)} onOpen={() => {}} onSeeAll={() => {}} />
+        <LiveNowList items={SAMPLE_LIVE_NOW} onOpen={() => {}} />
       </div>
     </section>
   );
