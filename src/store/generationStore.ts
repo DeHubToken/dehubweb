@@ -394,8 +394,8 @@ interface GenerationState {
 
 export const useGenerationStore = create<GenerationState>((set, get) => {
   /** Insert a running job and return its id. */
-  function open(kind: JobKind, model: string, meta: JobMeta, sourceImage?: string): string {
-    const id = crypto.randomUUID();
+  function open(kind: JobKind, model: string, meta: JobMeta, sourceImage?: string, reservedId?: string): string {
+    const id = reservedId || crypto.randomUUID();
     const job: GenerationJob = {
       id,
       kind,
@@ -410,7 +410,8 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       createdAt: Date.now(),
       sourceImage,
     };
-    set((s) => ({ jobs: trimJobs([job, ...s.jobs], s.focusedId) }));
+    set((s) => ({ jobs: trimJobs([job, ...s.jobs.filter(existing => existing.id !== id)], s.focusedId) }));
+    persist(get().jobs);
     return id;
   }
 
@@ -493,7 +494,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     },
 
     startImage: (req, meta) => {
-      const id = open('image', req.model, meta, req.sourceImage);
+      const id = open('image', req.model, meta, req.sourceImage, req.clientJobId);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
       finish(
@@ -507,7 +508,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     },
 
     startVideo: (req, meta) => {
-      const id = open('video', req.model, meta, req.sourceImage);
+      const id = open('video', req.model, meta, req.sourceImage, req.clientJobId);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
       finish(
