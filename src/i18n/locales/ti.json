@@ -1731,6 +1731,8 @@
       "fractionPurchased": "{{name}} ክፋላት ናይ ጽሑፍካ ዓዲጉ",
       "repostedPosts": "{{name}} ካብ ጽሑፋትካ {{count}} ዳግማይ ኣስፊሩ",
       "commentMention": "{{name}} ኣብ ርኢቶ ጠቒሱካ",
+      "liveChatMention": "{{name}} ኣብ ህያው ቻት ጠቒሱካ",
+      "publicChatMention": "{{name}} ኣብ ህዝባዊ ዝርርብ ጠቒሱካ",
       "followRequest": "{{name}} ክስዕበካ ሓቲቱ",
       "bountyReplyNamed": "{{name}} ኣብ ሽልማትካ “{{title}}” መሊሱልካ",
       "bountyReply": "{{name}} ኣብ ሽልማትካ መሊሱልካ",
