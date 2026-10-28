@@ -14,6 +14,7 @@ import { CREATOR_FAL_VIDEO_MODELS } from '../_shared/creator-fal-catalog.ts';
 import { buildCreatorFalVideoRequest } from '../_shared/creator-fal-input.ts';
 import { buildSeedance2Input, buildSeedance2Request, seedance2RoutingDecision, seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
 import { quotePriceDhb } from '../_shared/ai-pricing.ts';
+import { AVATAR_MODEL, AVATAR_ENDPOINT, prepareAvatar, verifyAvatarQuote, type AvatarInputs } from '../_shared/creator-avatar.ts';
 import { referenceVideoDuration } from '../_shared/creator-reference-video.ts';
 import { requireDeHubAuth } from '../_shared/auth.ts';
 import {
@@ -974,6 +975,7 @@ serve(async (req) => {
       );
     }
 
+    let preparedAvatar: Awaited<ReturnType<typeof prepareAvatar>> | undefined;
     let validatedDuration: number | undefined;
     let providerPriceDhb: number | undefined;
     let seedanceRoute: ReturnType<typeof seedance2QuoteRoute> | undefined;
@@ -1006,7 +1008,18 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: (error as Error).message }), { status: error instanceof VeniceError ? 503 : 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
     }
-    if (CREATOR_FAL_VIDEO_MODELS[model]) {
+    if (model === AVATAR_MODEL) {
+      try {
+        if (!Deno.env.get('FAL_KEY')) throw new Error('Avatar generation is unavailable');
+        if (sourceImage || endFrameUrl || referenceImageUrls?.length || audioUrls?.length || videoUrls?.length || negativePrompt || seed !== undefined || effect) throw new Error('Avatar takes only the reviewed portrait, audio and prompt');
+        preparedAvatar = await prepareAvatar(body.avatar, prompt);
+        validatedDuration = preparedAvatar.durationSeconds;
+        providerPriceDhb = quotePriceDhb('video', model, { durationSeconds: validatedDuration }) ?? undefined;
+        if (!providerPriceDhb) throw new Error('Avatar pricing is unavailable');
+        verifyAvatarQuote(body.avatar as AvatarInputs, preparedAvatar, providerPriceDhb);
+      } catch (error) { return new Response(JSON.stringify({ status: 'failed', error: (error as Error).message }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }); }
+    }
+    if (CREATOR_FAL_VIDEO_MODELS[model] && model !== AVATAR_MODEL) {
       try {
         validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect }).durationSeconds;
         if (CREATOR_FAL_VIDEO_MODELS[model].requiresVideoInput) {
@@ -1041,6 +1054,12 @@ serve(async (req) => {
     // the cost tables assume those jobs land there — and anything it cannot
     // or will not take runs on the model's declared provider as before.
     try {
+      if (preparedAvatar) {
+        const key = Deno.env.get('FAL_KEY');
+        if (!key) throw new Error('FAL_KEY is not configured');
+        const ticket = await falSubmit(key, AVATAR_ENDPOINT, preparedAvatar.input);
+        return await recordGeneration(charged, new Response(JSON.stringify({ status: 'starting', predictionId: ticket.request_id, provider: 'fal', falAppId: AVATAR_ENDPOINT, statusUrl: ticket.status_url, responseUrl: ticket.response_url }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
+      }
       if (veniceInput) {
         const submission = await veniceFetch('/video/queue', { ...veniceInput, prompt, ...(sourceImage ? { image_url: sourceImage } : {}) }, true);
         const result = await submission.json();

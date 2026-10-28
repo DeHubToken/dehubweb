@@ -19,6 +19,15 @@ html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_
   color: #242428 !important;
   background: #eeeef1 !important;
 }
+/* The light "selected chip" rule (theme-controls.css) whitens the icons of a
+   bg-white + dark-label key, but the pale fill above wins its background, so
+   keys like the composer's Post button showed a white icon on white. */
+html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
+  :is([role='dialog'], [role='alertdialog'], [role='menu'], [data-sonner-toast])
+  :is(button, a[role='button']).bg-white:is(.text-black, .text-zinc-900, .text-zinc-950):is([class*='bg-white/'], [class*='bg-zinc-'], [data-button]):not([data-primary-cta]):not([data-contrast-solid]):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media] *)
+  :is([class*='text-black'], [class*='text-zinc-'], .text-white, svg) {
+  color: #0b0b0d !important;
+}
 
 html:is([data-theme='light'], [data-system-tone='light']):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_)
   :is([data-login-modal] button.bg-white, [data-contrast-solid], [data-sonner-toast] [data-description] :is(button, a):first-child) {
