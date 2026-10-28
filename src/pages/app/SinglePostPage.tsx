@@ -842,10 +842,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     // Once per visit: the route key changes on every navigation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailsOnly, id, splitPhone, splitRouteKey]);
-  // The sheet starts at the post's top, under the pill.
+  // The sheet starts at the post's top, under the pill. On a post opened from
+  // a link (or after a refresh) the page itself is the scroller.
   useLayoutEffect(() => {
     if (!commentsSplit) return;
-    document.querySelector('[data-post-overlay][data-scroll-nav-source]')?.scrollTo({ top: 0 });
+    const overlay = document.querySelector('[data-post-overlay][data-scroll-nav-source]');
+    if (overlay) overlay.scrollTo({ top: 0 });
+    else scrollDocumentTo(0);
   }, [commentsSplit]);
   
   // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
@@ -1158,6 +1161,22 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     : 'pb-8 lg:pt-0';
 
   // Determine content type and render appropriate card
+  // Phones: every post page's comment button opens the comments sheet, not
+  // just posts opened from the feed. A post opened from a link, a
+  // notification or after a refresh used to toggle the inline list (nothing
+  // visible on a post with no comments) or, on video posts, flash the docked
+  // "Type here" bar. Live keeps its chat.
+  const splitComments = splitPhone && contentType !== 'live';
+  const openPageComments = useCallback((tab?: 'replies' | 'quotes' | 'reposts' | 'search') => {
+    if (!splitComments) {
+      handleOpenPageComments(tab);
+      return;
+    }
+    setPageCommentsInitialTab(tab ?? 'replies');
+    setShowPageComments(true);
+    setCommentsSplit(true);
+  }, [splitComments, handleOpenPageComments]);
+
   const renderContent = () => {
     // Only show loading if we have no data at all (not even cached)
     if (isLoading && !hasCachedData) return <LoadingState />;
@@ -1178,9 +1197,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
+        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={openPageComments} />;
       case 'image':
-        return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={handleOpenPageComments} />;
+        return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={openPageComments} />;
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
@@ -1218,7 +1237,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         return (
           <PostCard
             post={toTextPost(post)}
-            onOpenComments={handleOpenPageComments}
+            onOpenComments={openPageComments}
             threadSlot={
               id ? <AuthorThread tokenId={String(id)} authorAddress={post.minter} highlightId={highlightCommentId} /> : undefined
             }
@@ -1249,23 +1268,26 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     registerOptions: registerPostOptions,
     openOptions: postOptions ?? undefined,
     openComments: () => {
+      if (splitComments) return openPageComments('replies');
       setShowPageComments(true);
       setPageCommentsInitialTab('replies');
       revealStageComments(true);
     },
     openQuotes: () => {
+      if (splitComments) return openPageComments('quotes');
       setShowPageComments(true);
       setPageCommentsInitialTab('quotes');
       revealStageComments(false);
     },
     openReposts: () => {
+      if (splitComments) return openPageComments('reposts');
       setShowPageComments(true);
       setPageCommentsInitialTab('reposts');
       revealStageComments(false);
     },
     quoteCount: Number(post?.quotes ?? 0) || 0,
     repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
-  }), [goBack, registerPostOptions, postOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+  }), [goBack, registerPostOptions, postOptions, revealStageComments, splitComments, openPageComments, post?.quotes, post?.totalReposts, post?.reposts]);
 
   const pageComments = post && id ? (
     <CommentsWrapper
@@ -1280,6 +1302,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       forceInline
     />
   ) : null;
+  const commentsSplitSheet = (
+    <AnimatePresence>
+      {commentsSplit && pageComments && (
+        <PostCommentsSplit key="comments-split" onClose={closeCommentsSplitSheet}>{pageComments}</PostCommentsSplit>
+      )}
+    </AnimatePresence>
+  );
   useLayoutEffect(() => {
     if (!detailsOnly || !detailsExpanded || !post || !scrollToRetainedComments.current) return;
     scrollToRetainedComments.current = false;
@@ -1321,7 +1350,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           thumbnail={thumbnail}
           padded={isText}
           related={showRelated ? <StageRelated kind={kind} postId={id} /> : null}
-          comments={
+          comments={commentsSplit ? null : (
             <CommentsWrapper
               open
               onOpenChange={() => {}}
@@ -1336,11 +1365,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               stageCount={commentCount}
               onStageTabChange={setPageCommentsInitialTab}
             />
-          }
+          )}
         >
           {renderContent()}
           {contentType === 'image' && parseInt(id, 10) > 0 && <div className="px-3"><PollCard tokenId={parseInt(id, 10)} /></div>}
         </PostStagePhone>
+        {commentsSplitSheet}
       </div>
     );
   };
@@ -1564,14 +1594,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const commentsSplitSheet = (
-    <AnimatePresence>
-      {commentsSplit && pageComments && (
-        <PostCommentsSplit key="comments-split" onClose={closeCommentsSplitSheet}>{pageComments}</PostCommentsSplit>
-      )}
-    </AnimatePresence>
-  );
-
   const renderPostContent = () => (
     detailsOnly && isStagePhone && (isTextPost || isImagePost) ? (
       /* Phone text and image posts opened from the feed: no "more" toggle and
@@ -1650,7 +1672,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               It used to have comments as well, so what people said during the
               broadcast and what they said "about the post" were two lists that
               never met. Old comments were folded into the chat room. */}
-          {!isLivePost && pageComments}
+          {!isLivePost && !commentsSplit && pageComments}
+          {!isLivePost && commentsSplitSheet}
           {/* Shop rail sits between the player and the chat: close enough to the
               stream to read as part of it, above the chat so a busy room does
               not push it off screen. The host sees the manager instead — they
