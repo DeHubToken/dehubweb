@@ -24,6 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
 import i18n from 'i18next';
 import type { DirectTipToken } from '@/lib/direct-tip-tokens';
+import { getRemixLink, splitRemixTip, type RemixLink } from '@/lib/remix-links';
 
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
@@ -31,6 +32,21 @@ export const MIN_DIRECT_TIP = 0.1;
 export const DIRECT_QUICK_AMOUNTS = [1, 5, 10, 25, 50, 100];
 
 const MAX_DB_RETRIES = 3;
+
+/**
+ * The original creator's cut when the tipped post is a duet, stitch or
+ * reaction of their video. Never blocks a tip: no answer in time means no split.
+ */
+async function remixShareFor(tokenId: string | undefined, creatorAddress: string, tipper: string): Promise<RemixLink | null> {
+  if (!tokenId || !/^[1-9]\d*$/.test(tokenId)) return null;
+  const link = await Promise.race([
+    getRemixLink(tokenId).catch(() => null),
+    new Promise<null>(resolve => setTimeout(() => resolve(null), 2500)),
+  ]);
+  if (!link || link.splitBps <= 0 || link.remixerAddress !== creatorAddress.toLowerCase()) return null;
+  // Tipping your own video's remix just sends the whole tip to the remixer.
+  return link.sourceAddress === tipper.toLowerCase() ? null : link;
+}
 
 interface UseTipPaymentOptions {
   creatorAddress?: string;
@@ -87,6 +103,36 @@ async function persistTipRecord(
     }
   }
   return false;
+}
+
+/** Send the original creator's share of a remix tip, once the main tip is confirmed. */
+async function sendRemixShare(params: {
+  remix: RemixLink; amount: number; chainId: ChainId; tipChainId: ChainId; walletAddress: string; token?: DirectTipToken | null;
+  warn: () => void;
+}) {
+  const [{ sendTip }, { readConfirmedTipDetails }] = await Promise.all([
+    import('@/lib/contracts/stream-controller'),
+    import('@/lib/contracts/read-tip-transaction'),
+  ]);
+  const { remix, token } = params;
+  try {
+    const shareResult = await sendTip({
+      tokenId: remix.sourceTokenId,
+      amount: params.amount,
+      to: remix.sourceAddress,
+      chainId: params.tipChainId,
+      signerAddress: params.walletAddress,
+      ...(token ? { tokenAddress: token.address, decimals: token.decimals } : {}),
+    });
+    const hash = await shareResult.confirmed;
+    if (token) return;
+    const confirmed = await readConfirmedTipDetails(hash, params.tipChainId);
+    await persistTipRecord({ walletAddress: params.walletAddress, creatorAddress: confirmed.receiverAddress, amount: confirmed.amount,
+      chainId: params.chainId, txHash: hash, tokenId: String(remix.sourceTokenId), commentId: null });
+  } catch (error) {
+    console.error('[Tip] Remix share failed:', error);
+    params.warn();
+  }
 }
 
 export function useTipPayment({
@@ -151,9 +197,15 @@ export function useTipPayment({
 
         toast.loading(_copy("copy.b278b8ea1c8c", { defaultValue: "Sending tip..." }), { id: 'tip-payment' });
 
+        // A comment tip goes to the comment's author, never into a remix split.
+        const remix = commentId ? null : await remixShareFor(tokenId, creatorAddress, walletAddress);
+        const split = splitRemixTip(amount, remix);
+        const sourceShare = remix && split.source >= 0.01 ? Math.round(split.source * 1e6) / 1e6 : 0;
+        const creatorShare = sourceShare ? Math.round((amount - sourceShare) * 1e6) / 1e6 : amount;
+
         const tipResult = await sendTip({
           tokenId: tokenId || 0,
-          amount,
+          amount: creatorShare,
           to: creatorAddress,
           chainId: tipChainId,
           signerAddress: walletAddress,
@@ -168,6 +220,10 @@ export function useTipPayment({
         (async () => {
           try {
             const confirmedTxHash = await tipResult.confirmed;
+            if (remix && sourceShare) {
+              void sendRemixShare({ remix, amount: sourceShare, chainId, tipChainId, walletAddress, token,
+                warn: () => toast.warning(_copy('remixLinks.shareFailed', { defaultValue: "Your tip was sent, but the original creator's share didn't go through." })) });
+            }
             const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, tipChainId, token ?? undefined);
 
             if (token) {
