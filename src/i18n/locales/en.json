@@ -1,4 +1,37 @@
 {
+  "duet": {
+    "with": "Duet with @{{username}}",
+    "withOriginal": "Duet · see original",
+    "unavailable": "This video is no longer available for duets.",
+    "allowLabel": "Allow duets",
+    "allowDescription": "Who can record a duet next to your videos. You can change it on each post too.",
+    "settingsSection": "Duets",
+    "policyDefault": "Account setting",
+    "policyEveryone": "Everyone",
+    "policyFollowers": "Followers",
+    "policyNobody": "No one",
+    "saveFailed": "Could not save. Try again.",
+    "count_one": "{{count}} duet",
+    "count_other": "{{count}} duets",
+    "pageHeading": "Duets",
+    "pageTitle": "Duets of {{title}} by @{{creator}}",
+    "pageTitleNoCreator": "Duets of {{title}}",
+    "pageDescription": "Watch every duet of this video on DeHub, or record your own side by side.",
+    "empty": "No duets yet. Open the video’s options and choose Remix → Duet to make the first one.",
+    "loadMore": "Load more",
+    "video": "Video",
+    "notFound": "This video is not available.",
+    "notFoundTitle": "Video not found — DeHub",
+    "browseShorts": "Browse Shorts"
+  },
+  "videoRemix": {
+    "menu": "Remix",
+    "duet": "Duet",
+    "green-screen": "Green screen",
+    "sound": "Use this sound",
+    "cut": "Cut this video",
+    "selectSource": "Open a video’s options and choose Remix to start."
+  },
   "remixLinks": {
     "shareFailed": "Your tip was sent, but the original creator's share didn't go through.",
     "notify": {

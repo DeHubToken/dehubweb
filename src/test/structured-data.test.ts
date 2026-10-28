@@ -269,6 +269,22 @@ describe('edge-rendered pages', () => {
 });
 
 describe('entity pages', () => {
+  it('gives a video\'s duets list its own title, canonical and the original\'s share card', async () => {
+    network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
+    const { res, body } = await crawl('/app/post/6127/duets');
+    expect(res.status).toBe(200);
+    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal — DeHub');
+    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
+    expect(body).toContain('<link rel="canonical" href="https://dehub.io/app/post/6127/duets">');
+    expect(types(body)).toContain('CollectionPage');
+  });
+
+  it('answers 404 for the duets of a missing video', async () => {
+    network({});
+    const { res } = await crawl('/app/post/999999/duets');
+    expect(res.status).toBe(404);
+  });
+
   it('marks a store as an OnlineStore with a declared 1200x630 card', async () => {
     network({
       'https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/stores': json([

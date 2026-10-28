@@ -34,7 +34,7 @@ function OriginalLink({ tokenId, username, label, className }: { tokenId: number
   // The tracker is typed for the feed's divs; it only observes the element.
   const credit = useFeedViewTrackingCallback(String(tokenId)) as unknown as (element: HTMLAnchorElement | null) => void;
   return (
-    <Link ref={credit} to={`/app/post/${tokenId}`} className={cn(chipClass, className)} onClick={(e) => e.stopPropagation()}>
+    <Link ref={credit} to={`/app/post/${tokenId}`} className={cn(chipClass, className)} data-no-navigate onClick={(e) => e.stopPropagation()}>
       <MonitorPlay className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       <span className="truncate">{username ? `${label} @${username}` : label}</span>
     </Link>
@@ -54,7 +54,7 @@ export function ReactionsLink({ tokenId, className }: { tokenId: string | number
   const summary = useSummary(tokenId);
   if (!summary?.reactions) return null;
   return (
-    <Link to={`/app/post/${tokenId}/reactions`} className={cn(chipClass, className)} onClick={(e) => e.stopPropagation()}>
+    <Link to={`/app/post/${tokenId}/reactions`} className={cn(chipClass, className)} data-no-navigate onClick={(e) => e.stopPropagation()}>
       <MonitorPlay className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       {t('reactions.count', { count: summary.reactions, defaultValue: summary.reactions === 1 ? '1 reaction' : '{{count}} reactions' })}
     </Link>
