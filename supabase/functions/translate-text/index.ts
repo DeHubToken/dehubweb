@@ -1281,9 +1281,10 @@ serve(async (req) => {
 
     // All endpoints failed
     console.error('All translation endpoints failed');
+    const blockedInfo = (usage as { blocked?: { code?: string; retryAfter?: number } | null }).blocked;
     return new Response(
-      JSON.stringify({ error: 'Translation service temporarily unavailable', code: usage.blocked?.code ?? 'TRANSLATION_PROVIDER_UNAVAILABLE' }),
-      { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(usage.blocked?.retryAfter ?? 30) } }
+      JSON.stringify({ error: 'Translation service temporarily unavailable', code: blockedInfo?.code ?? 'TRANSLATION_PROVIDER_UNAVAILABLE' }),
+      { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': String(blockedInfo?.retryAfter ?? 30) } }
     );
 
   } catch (error) {
