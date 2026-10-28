@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "postinstall": "node scripts/patch-vaul-scroll.mjs && node scripts/patch-radix-focus-guards.mjs",
+    "postinstall": "node scripts/patch-vaul-scroll.mjs && node scripts/patch-radix-focus-guards.mjs && node scripts/patch-security-dependencies.cjs",
     "dev": "vite",
     "build": "node scripts/production-routing.mjs --config-only && node scripts/build-locale-packs.mjs && NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/copy-seo-assets.mjs && node scripts/check-entry-bundle.mjs && node scripts/check-seo-build.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",
@@ -123,7 +123,7 @@
     "viem": "2.44.4",
     "wagmi": "^2.19.5",
     "webm-muxer": "^5.1.4",
-    "zod": "^4.6.6",
+    "zod": "4.6.7",
     "zod-to-json-schema": "3.25.2",
     "zustand": "^5.0.14",
     "react-router-dom": "7.18.5"
@@ -213,9 +213,23 @@
     "fast-uri@3": "3.1.9",
     "undici@6": "6.29.1",
     "node-forge": "1.4.2",
-    "tmp@0.2": "0.2.7",
     "brace-expansion@1": "1.1.21",
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "zod@3": "3.25.76",
+    "zod@4": "4.6.7",
+    "body-parser@2": "2.3.1",
+    "uuid@7": "11.1.1",
+    "ip-address": "10.7.4",
+    "basic-ftp": "6.2.3",
+    "tmp": "0.2.7",
+    "file-type": "21.3.2",
+    "fast-xml-parser@4": "5.11.2",
+    "fast-xml-parser@5": "5.11.2",
+    "deepmerge": "4.3.1",
+    "elliptic": "6.6.1",
+    "decode-uri-component": "0.2.2",
+    "stream-json": "1.9.1",
+    "bigint-buffer": "1.1.5"
   },
   "pnpm": {
     "overrides": {
@@ -271,9 +285,23 @@
       "fast-uri@3": "3.1.9",
       "undici@6": "6.29.1",
       "node-forge": "1.4.2",
-      "tmp@0.2": "0.2.7",
       "brace-expansion@1": "1.1.21",
-      "esbuild": "0.28.2"
+      "esbuild": "0.28.2",
+      "zod@3": "3.25.76",
+      "zod@4": "4.6.7",
+      "body-parser@2": "2.3.1",
+      "uuid@7": "11.1.1",
+      "ip-address": "10.7.4",
+      "basic-ftp": "6.2.3",
+      "tmp": "0.2.7",
+      "file-type": "21.3.2",
+      "fast-xml-parser@4": "5.11.2",
+      "fast-xml-parser@5": "5.11.2",
+      "deepmerge": "4.3.1",
+      "elliptic": "6.6.1",
+      "decode-uri-component": "0.2.2",
+      "stream-json": "1.9.1",
+      "bigint-buffer": "1.1.5"
     }
   }
 }

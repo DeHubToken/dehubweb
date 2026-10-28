@@ -736,6 +736,18 @@ export async function authedUpload<T>(
     signal,
   } = options;
 
+  let bytes = 0;
+  formData.forEach(value => {
+    if (typeof value === "string") return;
+    bytes += value.size;
+    if ((value.type.startsWith("image/") && value.size > 42_069_000) || bytes > 100_000_000) {
+      throw new UploadHttpError(
+        "Images must be 42.069 MB or smaller; this upload must total 100 MB or less. Larger videos require resumable upload. Please retry when it is available.",
+        413, "UPLOAD_TOO_LARGE",
+      );
+    }
+  });
+
   const url = new URL(endpoint, DEHUB_API_BASE).toString();
   const xhrOpts = { method, timeoutMs, unwrapResult, onProgress, signal };
 
