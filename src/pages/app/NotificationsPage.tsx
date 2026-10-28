@@ -289,7 +289,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
-  reposts: ['repost', 'quote'],
+  reposts: ['repost', 'quote', 'remix'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
   communities: ['community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
@@ -380,6 +380,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <Blocks className="w-4 h-4 text-white/70" />;
     case 'tip':
       return <Gem className="w-4 h-4 text-white/70" />;
+    case 'remix':
+      return <Repeat2 className="w-4 h-4 text-white/70" />;
     case 'subscription':
     case 'ppv_purchase':
       return <Users className="w-4 h-4 text-white/70" />;
@@ -644,6 +646,12 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageReminderSentence(title, tr);
   }
+  // A duet, stitch or reaction of the recipient's video; the kind is in the title slot.
+  if ((notification.type as string) === 'remix') {
+    const kind = (notification as any)._customReferenceTitle;
+    const key = kind === 'stitch' ? 'stitch' : kind === 'react' ? 'react' : kind === 'react_live' ? 'reactLive' : 'duet';
+    return tr(`remixLinks.notify.${key}`, { name: actorName });
+  }
   if ((notification.type as string) === 'governance_vote') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.governanceVoteNamed' : 'notifications.custom.governanceVote', { name: actorName, title });
@@ -878,6 +886,10 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     return commentId
       ? `/app/governance/${refId}?comment=${encodeURIComponent(commentId)}`
       : `/app/governance/${refId}`;
+  }
+  if ((notification.type as string) === 'remix') {
+    const refId = customReferenceId(notification);
+    return refId ? `/app/post/${refId}` : null;
   }
   if ((notification.type as string).startsWith('dao_')) {
     const refId = customReferenceId(notification);

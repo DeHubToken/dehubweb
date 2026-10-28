@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Bahşişin gönderildi, ancak asıl içerik üreticisinin payı gönderilemedi.",
+    "notify": {
+      "duet": "{{name}} videonla düet yaptı",
+      "stitch": "{{name}} videonu stitch'ledi",
+      "react": "{{name}} videona tepki verdi",
+      "reactLive": "{{name}} videona canlı tepki veriyor"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store'dan indirin",

@@ -1,4 +1,13 @@
 {
+  "remixLinks": {
+    "shareFailed": "Je fooi is verstuurd, maar het deel voor de oorspronkelijke maker is niet gelukt.",
+    "notify": {
+      "duet": "{{name}} heeft een duet gemaakt met je video",
+      "stitch": "{{name}} heeft je video gestitcht",
+      "react": "{{name}} heeft op je video gereageerd",
+      "reactLive": "{{name}} reageert live op je video"
+    }
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download in de App Store",
