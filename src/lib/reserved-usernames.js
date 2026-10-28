@@ -40,7 +40,7 @@
 export const ROUTE_SEGMENTS = [
   // --- SPA top-level routes (src/App.tsx) ---
   'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'apps', 'arcade', 'assistant',
-  'auth', 'bounty', 'bridge', 'builder', 'cinema', 'clip', 'communities', 'connect', 'converter', 'creator', 'creators',
+  'auth', 'bounty', 'bridge', 'builder', 'cinema', 'clip', 'communities', 'compare', 'connect', 'converter', 'creator', 'creators',
   'dehub-app', 'delete-account', 'depin', 'desktop-logo-preview', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
   'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'live-studio',
   'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'overlay', 'packs', 'posts', 'premium', 'pricing',
