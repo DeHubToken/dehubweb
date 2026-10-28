@@ -72,6 +72,20 @@
   .dh-land-glow { animation: none; }
 }
 
+/* A comment the viewer just sent: the text itself glows and settles. Text
+   shadow only, about two thirds of the old row glow, so the row has no edge
+   for the sheet to clip. */
+@keyframes dh-sent-text-glow {
+  0% { text-shadow: 0 0 0 transparent; }
+  30% { text-shadow: 0 0 8px color-mix(in srgb, currentColor 45%, transparent); }
+  70% { text-shadow: 0 0 5px color-mix(in srgb, currentColor 20%, transparent); }
+  100% { text-shadow: 0 0 0 transparent; }
+}
+.dh-sent-text-glow { animation: dh-sent-text-glow 1.6s cubic-bezier(.3,.7,.2,1) 0.15s both; }
+@media (prefers-reduced-motion: reduce) {
+  .dh-sent-text-glow { animation: none; }
+}
+
 /* A new line in a chat glides up into its place. */
 @keyframes dh-chat-land {
   from { opacity: 0; transform: translateY(12px) scale(0.98); }
