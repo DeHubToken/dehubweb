@@ -9,7 +9,7 @@
 [data-live-ripple] > [data-live-ripple-ring] {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   border-radius: inherit;
   border: 2px solid var(--live-ripple-color);
   pointer-events: none;
@@ -20,6 +20,15 @@
 }
 [data-live-ripple='sm'] > [data-live-ripple-ring] { border-width: 1.5px; }
 
+/* The photo sits above the rings by an explicit z-index. A ring at z-index -1
+   behind an unpositioned photo is the textbook order, but Safari composites
+   the animating ring into its own layer and then paints it OVER the photo,
+   so every cycle drew a hard red line across the photo's edge: the flash. */
+[data-live-ripple] > :not([data-live-ripple-ring]) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Profile page: the avatar is 4x a feed avatar, so the feed ripple (scale 1.6)
    flew far past it. Here it is one thin, faint outline that drifts a few
    pixels out and fades, slower. */
@@ -29,13 +38,18 @@
 }
 [data-live-ripple='lg'] > [data-live-ripple-ring] + [data-live-ripple-ring] { display: none; }
 
+/* Each outline fades IN as it leaves the avatar instead of starting at full
+   strength. Starting at 0.95 on the avatar's edge made every cycle open with
+   a hard red outline hugging the photo; easing in reads as a clean pulse. */
 @keyframes live-ripple {
-  0% { transform: scale(1); opacity: 0.95; }
+  0% { transform: scale(1); opacity: 0; }
+  18% { transform: scale(1.12); opacity: 0.9; }
   100% { transform: scale(1.6); opacity: 0; }
 }
 
 @keyframes live-ripple-soft {
-  0% { transform: scale(1); opacity: 0.55; }
+  0% { transform: scale(1); opacity: 0; }
+  25% { transform: scale(1.03); opacity: 0.55; }
   100% { transform: scale(1.1); opacity: 0; }
 }
 
