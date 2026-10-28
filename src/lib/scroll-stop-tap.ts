@@ -19,6 +19,8 @@ const CLICK_WINDOW_MS = 450;
 
 const tops = new WeakMap<object, number>();
 let lastScrollAt = -Infinity;
+/** What was gliding: a scroller element, or the document itself. */
+let glider: object | null = null;
 let lastLiftAt = -Infinity;
 let fingers = 0;
 let holding = false;
@@ -40,7 +42,10 @@ function onScroll(e: Event): void {
   const before = tops.get(key);
   tops.set(key, top);
   // Only vertical travel: a carousel sliding sideways is not the feed moving.
-  if (before !== undefined && before !== top) lastScrollAt = performance.now();
+  if (before !== undefined && before !== top) {
+    lastScrollAt = performance.now();
+    glider = key;
+  }
 }
 
 /** True while a lifted finger has left the page still gliding. */
@@ -55,10 +60,24 @@ export function isScrollStopTouch(): boolean {
   return holding;
 }
 
-function begin(): void {
+/**
+ * Whether the finger landed on the thing that is gliding. A button fixed over
+ * the page (a top bar, a viewer's Back, the bottom nav) does not move with the
+ * glide, so stopping the feed is no reason to eat its tap.
+ */
+function landsOnGlide(target: EventTarget | null): boolean {
+  if (!(target instanceof Element)) return true;
+  if (glider instanceof Element) return glider.contains(target);
+  for (let node: Element | null = target; node && node !== document.body; node = node.parentElement) {
+    if (getComputedStyle(node).position === 'fixed') return false;
+  }
+  return true;
+}
+
+function begin(target: EventTarget | null): void {
   if (fingers > 0 || holding) return;
   window.clearTimeout(releaseTimer);
-  holding = isPageGliding();
+  holding = isPageGliding() && landsOnGlide(target);
 }
 
 function swallow(e: Event): void {
@@ -68,7 +87,7 @@ function swallow(e: Event): void {
 
 function onPointerDown(e: PointerEvent): void {
   if (e.pointerType !== 'touch') return;
-  begin();
+  begin(e.target);
   swallow(e);
 }
 
@@ -77,7 +96,7 @@ function onPointer(e: PointerEvent): void {
 }
 
 function onTouchStart(e: TouchEvent): void {
-  begin();
+  begin(e.target);
   fingers = e.touches.length;
   swallow(e);
 }
@@ -129,6 +148,7 @@ export function installScrollStopTap(): () => void {
     window.removeEventListener('click', onClick, active);
     window.clearTimeout(releaseTimer);
     holding = false;
+    glider = null;
     fingers = 0;
   };
 }
