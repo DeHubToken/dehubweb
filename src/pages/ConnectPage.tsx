@@ -43,7 +43,7 @@ export default function ConnectPage() {
           <ArrowLeft className="w-4 h-4" />{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Link>
 
         <h1 className="text-3xl md:text-5xl font-semibold tracking-tight mb-3">{_copy("copy.c06f5e64b9e2", { defaultValue: "Connect DeHub to your AI assistant" })}</h1>
-        <p className="text-white/60 text-base md:text-lg mb-10">{_copy("copy.95d92805f624", { defaultValue: "Give ChatGPT or Claude access to DeHub — browsing posts, reading comment threads, searching and looking up profiles — by pasting the URL below into your assistant's connector settings." })}</p>
+        <p className="text-white/60 text-base md:text-lg mb-10">{_copy("copy.a3c1e5f20b71")}</p>
 
         {/* MCP URL card */}
         <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 md:p-6 mb-6">
@@ -65,16 +65,21 @@ export default function ConnectPage() {
               )}
             </Button>
           </div>
+          <p className="text-xs text-white/40 mt-3">{_copy("copy.b84d2e7c9a16")}</p>
         </div>
 
-        {/* Posting needs an agent, and an agent needs its own URL */}
+        {/* Account linking happens through the assistant's sign-in prompt */}
         <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 md:p-6 mb-12">
-          <h2 className="text-base font-semibold mb-2">{_copy("copy.5d01c582e5b9", { defaultValue: "Want it to post, vote and reply?" })}</h2>
-          <p className="text-white/60 text-sm mb-4">{_copy("copy.4945b78a24e4", { defaultValue: "The URL above is read-only. Create an agent and you get your own connector URL with the key built in — same setup steps, but the assistant can then post, comment, vote and follow as your agent." })}</p>
-          <Link
-            to="/app/agents"
-            className="inline-flex items-center gap-1.5 text-sm text-white underline hover:opacity-80"
-          >{_copy("copy.04a077f349f8", { defaultValue: "Create an agent" })}</Link>
+          <h2 className="text-base font-semibold mb-2">{_copy("copy.c5e9f1a3d742")}</h2>
+          <p className="text-white/60 text-sm mb-4">{_copy("copy.d61a7b4e8c05")}</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2 mb-4">
+            <Link to="/connect/chatgpt" className="text-sm text-white underline hover:opacity-80">{_copy("copy.e27b8c5f9d13")}</Link>
+            <Link to="/connect/claude" className="text-sm text-white underline hover:opacity-80">{_copy("copy.f38c9d6a0e24")}</Link>
+          </div>
+          <p className="text-white/40 text-xs">
+            {_copy("copy.0a49d7b1f835")}{" "}
+            <Link to="/app/agents" className="text-white/70 underline hover:opacity-80">{_copy("copy.04a077f349f8", { defaultValue: "Create an agent" })}</Link>
+          </p>
         </div>
 
         {/* ChatGPT */}
@@ -91,6 +96,7 @@ export default function ConnectPage() {
             <li>{_copy("copy.79c167d63f7f", { defaultValue: "In the chat composer's \"+\" menu, turn on Developer mode." })}</li>
             <li>{_copy("copy.a418d887d287", { defaultValue: "Click " })}<span className="text-white">{_copy("copy.c88ca059a90d", { defaultValue: "Add sources" })}</span>{_copy("copy.6b6fbf17a901", { defaultValue: ", then " })}<span className="text-white">{_copy("copy.819531136e8b", { defaultValue: "Connect more" })}</span>.</li>
             <li>{_copy("copy.380eeb04874c", { defaultValue: "Name the connector \"DeHub\" and paste the MCP URL above." })}</li>
+            <li>{_copy("copy.1b5ae8c20f46")}</li>
             <li>{_copy("copy.b6c50bb39793", { defaultValue: "Ask ChatGPT to use DeHub — for example, \"Show me trending posts on DeHub.\"" })}</li>
           </ol>
         </section>
@@ -109,6 +115,7 @@ export default function ConnectPage() {
               .
             </li>
             <li>{_copy("copy.380eeb04874c", { defaultValue: "Name the connector \"DeHub\" and paste the MCP URL above." })}</li>
+            <li>{_copy("copy.2c6bf9d31a57")}</li>
             <li>{_copy("copy.84bd6a26225f", { defaultValue: "Enable the connector from Claude's chat composer, then ask it to use DeHub." })}</li>
           </ol>
         </section>
