@@ -298,10 +298,11 @@ html [data-stage-plain]:not(#_):not(#_) svg {
 }
 
 /* --- Docked composer ------------------------------------------------------
-   A thin theme tint over blur lets the post remain visible beneath the dock. */
+   Liquid glass in the theme's tint: the post stays visible as colour under
+   the dock, but comments scrolling beneath it never read through. */
 html [data-stage-composer]:not(#_):not(#_) {
-  background: color-mix(in srgb, var(--stage-solid) 20%, transparent);
-  backdrop-filter: blur(28px) saturate(1.5);
+  background: color-mix(in srgb, var(--stage-solid) 72%, transparent);
+  backdrop-filter: var(--float-glass-blur);
   border: 0;
   box-shadow: 0 -4px 32px -12px rgb(0 0 0 / 0.08);
   /* It also carries the page pin, which lifts it over the bottom nav; that
@@ -311,6 +312,7 @@ html [data-stage-composer]:not(#_):not(#_) {
 }
 html [data-stage-composer] [data-comment-field]:not(#_):not(#_) {
   background: color-mix(in srgb, var(--stage-field) 40%, transparent);
+  backdrop-filter: none;
   border: 0;
 }
 html [data-stage-composer] [data-comment-field] textarea:not(#_):not(#_) {
