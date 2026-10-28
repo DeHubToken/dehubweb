@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
 import { PageBody, PageIsland, PageSection, PageEmpty, KitButton } from '@/components/app/page-kit/PageKit';
 import { Input } from '@/components/ui/input';
-import { CATEGORIES, FEATURES, PLATFORMS, REVIEWED_ON, COMPETITOR_REVIEWED_ON, SOURCES, STATUS_LABELS, comparisonCoverage, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
+import { CATEGORIES, FEATURES, PLATFORMS, COMPETITOR_REVIEWED_ON, SOURCES, STATUS_LABELS, comparisonCoverage, entryFor, filterFeatures, type PlatformId, type ComparisonEntry } from '@/data/platform-comparison';
 
 const PAGE_SIZE = 20;
 export default function ComparePage() {
@@ -45,7 +45,7 @@ export default function ComparePage() {
       </PageIsland>
       <PageBody>
         <PageSection>
-          <p className="text-xs text-muted-foreground">{copy('edition', 'English research edition')} · {REVIEWED_ON}</p>
+          <p className="text-xs text-muted-foreground">{copy('edition', 'English research edition')} · {COMPETITOR_REVIEWED_ON}</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground">{copy('headline', 'Find your fit, feature by feature.')}</h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{copy('intro', 'Explore publishing, live streaming, creator tools, communities and ownership across DeHub and eleven other platforms.')}</p>
           <p className="mt-3 text-sm font-medium text-foreground">{FEATURES.length} {copy('features', 'features')} · {CATEGORIES.length} {copy('categories', 'categories')} · {PLATFORMS.length} {copy('platforms', 'other platforms')}</p>
@@ -92,7 +92,7 @@ export default function ComparePage() {
         {filtered.length === 0 && <PageEmpty icon="search" title={copy('empty', 'No matching features')} body={copy('emptyBody', 'Try another phrase or clear the category filter.')} action={<KitButton onClick={() => { setParams({ platform }); setVisible(PAGE_SIZE); }}>{copy('reset', 'Clear filters')}</KitButton>} />}
         {visible < filtered.length && <div className="px-4 pb-6"><KitButton onClick={() => setVisible(value => value + PAGE_SIZE)}>{copy('more', 'Show more features')}</KitButton></div>}
         <PageSection title={copy('sources', 'Sources and coverage')}>
-          <p className="text-sm leading-relaxed text-muted-foreground">{copy('sourcesBody', 'Sources are linked beside each documented entry. Unverified cells remain visible so gaps cannot be mistaken for a platform disadvantage. Research reviewed on')} {REVIEWED_ON}.</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{copy('sourcesBody', 'Sources are linked beside each documented entry. Unverified cells remain visible so gaps cannot be mistaken for a platform disadvantage. Research reviewed on')} {COMPETITOR_REVIEWED_ON}.</p>
           <details className="mt-3"><summary className="cursor-pointer text-sm">{copy('sourceList', 'Browse all sources')}</summary><ul className="mt-3 space-y-2 text-sm">{Object.entries(SOURCES).map(([id, source]) => <li key={id}><a className="underline underline-offset-4" href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a></li>)}</ul></details>
         </PageSection>
       </PageBody>
