@@ -147,7 +147,7 @@ html[data-theme='glass'][data-theme] :is([data-feed-item], [data-page-bento], [d
   background-image: var(--glass-highlight) !important;
   box-shadow: var(--glass-edge) !important;
 }
-html[data-theme='glass'][data-theme] :is([data-feed-nav], [data-kit-island]) > [data-nav-glass-backdrop]::after {
+html[data-theme='glass'][data-theme] :is([data-feed-nav], [data-kit-island], [data-feed-new-posts-chip]) > [data-nav-glass-backdrop]::after {
   box-shadow: var(--glass-edge-flat);
 }
 html[data-theme='glass'] :is([data-theme-button], [data-theme-control-surface]):not([data-on-media]):not([data-button-variant='ghost']):not([data-button-variant='destructive']) {
