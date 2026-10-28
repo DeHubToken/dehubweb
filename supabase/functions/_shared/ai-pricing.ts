@@ -158,6 +158,8 @@ export const MODEL3D_COST_USD: Record<
 
 /** Provider cost per single-shot tool run (audio, upscale, matting, STT). */
 export const TOOL_COST_USD: Record<string, number> = {
+  // Authenticated fal pricing metadata, 28 Oct 2026: $0.05 per input image decomposition.
+  'qwen-image-layered': 0.05,
   'birefnet': 0.02,
   'whisper': 0.03,
   'dia-tts': 0.04,

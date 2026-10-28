@@ -1,5 +1,7 @@
 import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, checkRateLimit } from '../_shared/auth.ts';
 import { parseLibraryAction, updateLibraryAssets } from './actions.ts';
+import { retryGenerationSave } from '../_shared/generation-jobs.ts';
+import { hydrateGenerationResult } from '../_shared/generation-result.ts';
 
 const BUCKET = 'creator-assets';
 const ID = /^[a-zA-Z0-9_-]{6,80}$/;
@@ -15,6 +17,17 @@ Deno.serve(async (req) => {
   if (!limited.allowed) return jsonResponse({ error: 'Please wait before saving more generations.' }, 429);
   try {
     const body = await req.json();
+    if (body.action === 'layer-set') {
+      const { data: job, error } = await db.from('ai_generation_jobs').select('*').eq('wallet_address', auth.wallet).eq('id', String(body.id || '')).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools').maybeSingle();
+      if (error) throw error;
+      if (!job) return jsonResponse({ error: 'Layer set was not found' }, 404);
+      if (job.status !== 'succeeded') return jsonResponse({ status: job.status, requestId: job.prediction_id, appId: job.provider_app });
+      await retryGenerationSave(job);
+      const current = await db.from('ai_generation_jobs').select('*').eq('id', job.id).eq('wallet_address', auth.wallet).single();
+      if (current.error) throw current.error;
+      const result = await hydrateGenerationResult(current.data, db);
+      return jsonResponse({ status: result?.layerSet ? 'succeeded' : 'saving', layerSet: result?.layerSet, savePending: !!result?.savePending });
+    }
     if (body.action === 'update-selection') {
       let selection;
       try { selection = parseLibraryAction(body); }

@@ -6,7 +6,8 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 // The shared list — the only one that names x-wallet-address and x-dehub-token,
 // which chargeForJob requires and the browser will not send unless the preflight
 // says they are allowed. A local copy silently drops them; see auth.ts.
-import { corsHeaders } from "../_shared/auth.ts";
+import { corsHeaders, requireDeHubAuth, serviceClient } from "../_shared/auth.ts";
+import { layerInput, layerManifest, LAYER_MODEL, LAYER_ENDPOINT } from '../_shared/creator-image-layers.ts';
 
 // ─── Tool definitions ───
 
@@ -21,6 +22,11 @@ interface ToolConfig {
 }
 
 const TOOLS: Record<string, ToolConfig> = {
+  'qwen-image-layered': {
+    appId: LAYER_ENDPOINT, name: 'Qwen Image Layers', async: true,
+    buildInput: p => layerInput(String(p.ownedImageUrl)),
+    extractResult: d => ({ layerImages: d.images, layerSafety: d.has_nsfw_concepts, seed: d.seed }),
+  },
   // ─── Music Generation ───
   'minimax-music': {
     appId: 'fal-ai/minimax-music/v2',
@@ -166,7 +172,7 @@ async function falQueueSubmit(
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`fal.ai submit error (${res.status}): ${text}`);
+    throw Object.assign(new Error(`fal.ai submit error (${res.status}): ${text}`), { providerRejected: true });
   }
   return res.json();
 }
@@ -221,12 +227,16 @@ serve(async (req) => {
     if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
     const body = await req.json();
+    let sourceAssetId = body.sourceAssetId;
+    let layerJobId: string | undefined;
     // txHash and purpose are payment fields, not tool inputs — pulled out here
     // so they never reach buildInput and get forwarded to the provider.
     if (body.requestId) {
       const authorized = await authorizeGenerationPoll(req, 'fal-ai-tools', body.requestId);
       if (!authorized.ok) return authorized.response;
       const ticket = authorized.ticket;
+      sourceAssetId = ticket.result?.sourceAssetId;
+      layerJobId = ticket.result?.jobId;
       if (['succeeded', 'failed', 'canceled', 'cancelled'].includes(ticket.result?.status)) {
         return await settleGeneration('fal-ai-tools', body.requestId, new Response(JSON.stringify(ticket.result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
       }
@@ -262,6 +272,7 @@ serve(async (req) => {
         status: mappedStatus,
         requestId,
         ...result,
+        ...(statusAppId === LAYER_ENDPOINT ? { sourceAssetId, ...(mappedStatus === 'succeeded' ? { layerSet: layerManifest(layerJobId!, sourceAssetId) } : {}) } : {}),
         ...(mappedStatus === 'failed' && { error: 'Processing failed on fal.ai' }),
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -274,6 +285,17 @@ serve(async (req) => {
     }
 
     const toolConfig = TOOLS[tool];
+    if (tool === LAYER_MODEL) {
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.clientJobId || '') || typeof sourceAssetId !== 'string' || !/^[a-zA-Z0-9_-]{6,80}$/.test(sourceAssetId)) throw new Error('Choose one saved image');
+      const owner = await requireDeHubAuth(req); if (!owner.ok) return owner.response;
+      const db = serviceClient();
+      const source = await db.from('creator_assets').select('metadata,storage_path').eq('wallet_address', owner.wallet).eq('id', sourceAssetId).eq('ready', true).maybeSingle();
+      if (source.error) throw source.error;
+      if (source.data?.metadata?.kind !== 'image' || source.data.storage_path !== `${owner.wallet}/${sourceAssetId}/original`) throw new Error('Choose one saved image');
+      const signed = await db.storage.from('creator-assets').createSignedUrl(source.data.storage_path, 3600);
+      if (signed.error || !signed.data?.signedUrl) throw new Error('Saved image is temporarily unavailable');
+      params.ownedImageUrl = signed.data.signedUrl;
+    }
     const input = toolConfig.buildInput(params);
     console.log(`[fal-tools] ${toolConfig.name}: ${JSON.stringify(input).substring(0, 200)}`);
 
@@ -302,6 +324,7 @@ serve(async (req) => {
           statusUrl: submission.status_url,
           responseUrl: submission.response_url,
           tool,
+          ...(tool === LAYER_MODEL ? { sourceAssetId, jobId: charged.jobId } : {}),
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }));
@@ -320,6 +343,10 @@ serve(async (req) => {
         }));
       }
     } catch (providerError) {
+      if (tool === LAYER_MODEL && !(providerError as { providerRejected?: boolean }).providerRejected) {
+        return new Response(JSON.stringify({ status: 'processing', jobId: charged.jobId, submissionUnconfirmed: true,
+          error: 'Submission confirmation was interrupted. Keep this job for recovery.' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
       await charged.refund();
       throw providerError;
     }
