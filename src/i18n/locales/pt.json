@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Conecte sua conta DeHub",
-    "body": "Linkar sua conta para gerenciar seu perfil, publicar posts e criar conteúdo do chat. As conexões expiram dentro de 24 horas. Você pode desconectar a qualquer momento.",
+    "body": "Linkar sua conta para gerenciar seu perfil, publicar posts e criar conteúdo do chat. As conexões expiram dentro de 30 dias. Você pode desconectar a qualquer momento.",
     "read": "Ler sua conta, posts, notificações e Biblioteca do Criador",
     "profile": "Editar seu perfil, imagens e configurações de privacidade",
     "social": "Publicar posts e comentários, seguir pessoas e salvar marcadores",
@@ -1765,6 +1765,9 @@
       "fractionPurchased": "{{name}} comprou frações de sua publicação",
       "repostedPosts": "{{name}} republicou {{count}} de suas publicações",
       "commentMention": "{{name}} mencionou você em um comentário",
+      "postMention": "{{name}} mencionou-o numa publicação",
+      "liveChatMention": "{{name}} mencionou-o no chat ao vivo",
+      "publicChatMention": "{{name}} mencionou-o no chat público",
       "followRequest": "{{name}} solicitou para seguir você",
       "bountyReplyNamed": "{{name}} respondeu ao seu bônus “{{title}}”",
       "bountyReply": "{{name}} respondeu ao seu bônus",
@@ -3251,6 +3254,7 @@
     "followerInvites": {
       "title": "Convidar seguidores",
       "detail": "Escolha até 50 seguidores por lote. DMs pagas ou fechadas são ignoradas. Verifique o chat para envios não confirmados antes de tentar novamente.",
+      "note": "Adicione uma nota ao seu convite (opcional)",
       "selectAll": "Selecionar esta página",
       "clear": "Limpar",
       "previous": "Anterior",

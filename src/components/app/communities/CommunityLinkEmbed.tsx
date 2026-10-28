@@ -13,6 +13,7 @@ import type { ReactNode } from 'react';
 import { useCommunity } from '@/hooks/use-communities';
 import { findDehubLinks, stripDehubLinks } from '@/lib/dehub-links';
 import { storageImage, deviceWidth } from '@/lib/media-url';
+import { DescriptionWithLinks } from '@/components/app/communities/DescriptionWithLinks';
 
 // ── Legacy detection helpers ────────────────────────────────────────────────
 //
@@ -90,7 +91,7 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-white truncate">{community.name}</p>
         {community.description && (
-          <p className="text-xs truncate mt-0.5 text-slate-50">{community.description}</p>
+          <DescriptionWithLinks text={community.description} singleLine className="text-xs mt-0.5 text-slate-50" />
         )}
         <div className="flex items-center gap-1.5 mt-1">
           <Users className="w-3 h-3 text-zinc-500" />

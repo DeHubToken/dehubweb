@@ -34,7 +34,7 @@ export interface CreatorFalVideoModel {
   maxSourceDuration?: number;
   extensionDirection?: 'forward' | 'backward';
   maxPromptLength?: number;
-  family: 'klingturbo' | 'viduq3' | 'flux3' | 'omni' | 'h3' | 'grok' | 'wan3' | 'horse' | 'klingo3' | 'ray3' | 'pixverse6' | 'ltx23' | 'ltxextend' | 'klingedit' | 'klingmotion' | 'pixverseeffects';
+  family: 'avatar' | 'klingturbo' | 'viduq3' | 'flux3' | 'omni' | 'h3' | 'grok' | 'wan3' | 'horse' | 'klingo3' | 'ray3' | 'pixverse6' | 'ltx23' | 'ltxextend' | 'klingedit' | 'klingmotion' | 'pixverseeffects';
   falTextModel: string;
   falImageModel: string;
   falEndFrameModel?: string;
@@ -53,6 +53,14 @@ function video(spec: VideoSpec): CreatorFalVideoModel {
 }
 
 export const CREATOR_FAL_VIDEO_MODELS: Record<string, CreatorFalVideoModel> = {
+  'kling-avatar-v2': {
+    ...video({ id: 'kling-avatar-v2', name: 'Kling Avatar v2', description: 'A square portrait animated by 5-30 seconds of WAV speech',
+      vendor: 'Kling', emoji: 'Video', tier: 'standard', family: 'avatar',
+      falTextModel: 'fal-ai/kling-video/ai-avatar/v2/standard', falImageModel: 'fal-ai/kling-video/ai-avatar/v2/standard',
+      minDuration: 5, maxDuration: 30, defaultDuration: 5, perSecondCostUsd: 0.0562,
+      resolutions: ['720p'], aspectRatios: ['1:1'], hasAudio: true, maxPromptLength: 1000 }),
+    supports: ['image-to-video'],
+  },
   ...Object.fromEntries((['forward', 'backward'] as const).map(direction => {
     const id = `ltx-extend-${direction}`;
     return [id, {
@@ -268,6 +276,7 @@ export interface CreatorFalImageModel {
   supportsEdit: boolean;
   requiresImage?: boolean;
   outpaint?: boolean;
+  relight?: boolean;
   text: string;
   edit?: string;
   sizing: 'image_size' | 'aspect_ratio';
@@ -283,6 +292,15 @@ export interface CreatorFalImageModel {
   aspectRatios?: string[];
 }
 export const CREATOR_FAL_IMAGE_MODELS: Record<string, CreatorFalImageModel> = {
+  'iclight-v2': {
+    id: 'iclight-v2', name: 'ICLight Relight', vendor: 'ICLight', emoji: '💡', tier: 'standard',
+    description: 'Relight one photo from your lighting and background description.',
+    // fal.ai/models/fal-ai/iclight-v2: $0.10/MP. Explicit dimensions stay below 1 MP.
+    baseCostUsd: 0.10, supportsEdit: true, requiresImage: true, relight: true,
+    text: 'fal-ai/iclight-v2', edit: 'fal-ai/iclight-v2', sizing: 'image_size', exactImageSize: true,
+    maxReferenceImages: 1, maxPromptLength: 4000,
+    extra: { initial_latent: 'None', enable_hr_fix: false, enable_safety_checker: true, output_format: 'png' },
+  },
   'bria-expand': {
     id: 'bria-expand', name: 'Bria Expand', vendor: 'Bria', emoji: '↔', tier: 'standard',
     description: 'Generate new image borders. Optional English prompt; one source image.',

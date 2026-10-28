@@ -5,7 +5,8 @@
  * sparkles — the same acknowledgement a reaction gets, so a tip never lands
  * silently. A diamond already lit on load keeps
  * looping but skips the swirl. Reduced motion, or a failed file, gets a filled
- * static gem.
+ * static gem. `quiet` (the strip under a post) keeps it in the strip's grey:
+ * a tipped gem fills in, the way a liked thumb does, and still swirls.
  */
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -27,9 +28,11 @@ interface TipGemIconProps {
   className?: string;
   /** Colour of the unlit outline. */
   plainClassName?: string;
+  /** Tipped reads as a filled gem in the surrounding colour, not the 💎. */
+  quiet?: boolean;
 }
 
-export function TipGemIcon({ tipped, burstKey = 0, className = 'w-[17px] h-[17px]', plainClassName = 'text-white' }: TipGemIconProps) {
+export function TipGemIcon({ tipped, burstKey = 0, className = 'w-[17px] h-[17px]', plainClassName = 'text-white', quiet = false }: TipGemIconProps) {
   const reduceMotion = useReducedMotion();
   const [failed, setFailed] = useState(false);
   if (!tipped) return <Gem className={cn(className, plainClassName)} />;
@@ -44,7 +47,9 @@ export function TipGemIcon({ tipped, burstKey = 0, className = 'w-[17px] h-[17px
         animate={play ? { rotate: [-200, 20, 0], scale: [0.4, 1.35, 1] } : {}}
         transition={{ duration: 0.75, times: [0, 0.65, 1], ease: [0.22, 1, 0.36, 1] }}
       >
-        {reduceMotion || failed ? (
+        {quiet ? (
+          <Gem className="w-full h-full fill-current" />
+        ) : reduceMotion || failed ? (
           <Gem className="w-full h-full fill-cyan-400 text-cyan-200" />
         ) : (
           <img
@@ -75,7 +80,7 @@ export function TipGemIcon({ tipped, burstKey = 0, className = 'w-[17px] h-[17px
           }}
           transition={{ duration: 0.8, delay: 0.15 + s.delay, ease: 'easeOut' }}
         >
-          <Sparkle className="fill-cyan-200 text-cyan-100" style={{ width: s.size, height: s.size }} />
+          <Sparkle className={quiet ? 'fill-current' : 'fill-cyan-200 text-cyan-100'} style={{ width: s.size, height: s.size }} />
         </motion.span>
       ))}
     </span>

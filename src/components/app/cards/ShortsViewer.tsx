@@ -26,6 +26,7 @@ import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
 import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
+import { installFirstTap } from '@/lib/first-tap';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { GlassBackground } from '@/components/app/GlassBackground';
 import Eye from "@/components/ui/cut-icons/visibility";
@@ -77,7 +78,10 @@ import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
 import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
-import { RemixMenuItems } from './RemixMenuItems';
+import { RemixMenuItems } from './LazyRemixMenuItems';
+import { DuetCredit } from './DuetCredit';
+import { ReactionOfChip, ReactionsLink } from '../remix/LazyReactionChips';
+import { StitchAttribution } from './StitchAttribution';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
@@ -239,7 +243,13 @@ function ShortCaption({
     [shownTitle, shownBody] = splitTranslatedTitleAndBody(translatedText, title || undefined, body || undefined);
   }
 
-  if (!shownTitle && !shownBody) return null;
+  const reactionChips = (
+    <div className="mt-1.5 flex flex-wrap gap-1.5 empty:hidden">
+      <ReactionOfChip tokenId={short.id} />
+      <ReactionsLink tokenId={short.id} />
+    </div>
+  );
+  if (!shownTitle && !shownBody) return reactionChips;
 
   // Auto-translate is on by default, so the control this surface needs is the
   // way back — not a button asking for something that already happened. Taking
@@ -278,14 +288,14 @@ function ShortCaption({
             }`}
           >
             {shownTitle && (
-              <p className={`text-white text-sm font-semibold leading-relaxed drop-shadow-lg ${
+              <p className={`text-white text-sm font-semibold leading-relaxed [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] ${
                 expanded ? 'whitespace-pre-wrap' : 'line-clamp-1'
               }`}>
                 {shownTitle}
               </p>
             )}
             {shownBody && (
-              <p className={`text-white text-sm leading-relaxed drop-shadow-lg ${
+              <p className={`text-white text-sm leading-relaxed [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] ${
                 expanded ? 'whitespace-pre-wrap' : 'line-clamp-2'
               }`}>
                 {shownBody}
@@ -299,6 +309,7 @@ function ShortCaption({
           )}
         </button>
         {control}
+        {reactionChips}
       </div>
     );
   }
@@ -312,6 +323,7 @@ function ShortCaption({
       )}
       {shownBody && <ExpandableDescription text={shownBody} />}
       {control}
+      {reactionChips}
     </div>
   );
 }
@@ -463,6 +475,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
+  // Back, like, share, mute... answer the first tap even straight after a
+  // flick, when the browser drops that tap's click. See lib/first-tap.
+  useEffect(() => {
+    const root = containerRef.current;
+    return root ? installFirstTap(root) : undefined;
+  }, []);
   // Turns the trackpad's continuous wheel stream into one step per swipe — see
   // the wheel effect below and `createWheelGesture` for why it is not a timer.
   // Lazily built into a ref rather than a memo: it carries the live gesture,
@@ -1435,6 +1453,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // What the overlay actually reads. The gesture handlers stay keyed on
   // `overlaysHidden` alone, so the tap-to-restore band belongs to the swipe.
   const chromeHidden = overlaysHidden || autoHidden;
+  // The auto-clear only fades the buttons: they keep taking taps, so Back,
+  // mute or like work on the first tap instead of first fetching the chrome
+  // back. A deliberate swipe-down clear (overlaysHidden) still switches them off.
+  const chromeInert = overlaysHidden;
 
   const handleCopyLink = () => {
     const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
@@ -1515,6 +1537,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         } : {}),
         ...mini.frame,
       }}
+      // Pressing a faded button also brings the rest of the chrome back.
+      onPointerDownCapture={autoHidden ? (event) => { if ((event.target as Element).closest?.('button')) setAutoHidden(false); } : undefined}
       onTouchStart={mini.minimized ? undefined : handleTouchStart}
       onTouchMove={mini.minimized ? undefined : handleTouchMove}
       onTouchEnd={mini.minimized ? undefined : handleTouchEnd}
@@ -1689,7 +1713,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Fullscreen sits at `right-[3.75rem]` and is `w-10`, so it
                   // ends 6.25rem in; 0.5rem gap after that.
                   "right-[6.75rem]",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={t('postOptions.options')}
               >
@@ -1703,7 +1727,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Immediately left of mute: that one is `w-10` at `right-3`,
                   // so it ends 3.25rem in, leaving a 0.5rem gap.
                   "right-[3.75rem]",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={isFullscreen ? _copy("copy.37fd4e355ba3", { defaultValue: "Exit fullscreen" }) : _copy("copy.4a56b3cb6008", { defaultValue: "Enter fullscreen" })}
               >
@@ -1719,7 +1743,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 className={cn(
                   CORNER_CONTROL,
                   "right-3",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
                 aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
               >
@@ -1752,7 +1776,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {isFullscreen && (
                   <div className={cn(
                     "relative px-4 pb-3 max-w-3xl",
-                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                    chromeInert ? "pointer-events-none" : "pointer-events-auto",
                   )}>
                     <div className="flex items-center gap-3 mb-2">
                       <button onClick={() => handleNavigateToProfile()} className="flex-shrink-0">
@@ -1763,12 +1787,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       </button>
                       <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
                         {currentShort.displayName && (
-                          <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
+                          <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
                         )}
-                        <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
+                        <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
                     </div>
+                    <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                     <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
+                    <StitchAttribution key={`stitch-${currentShort.id}`} tokenId={currentShort.id} onNavigate={onClose} className="mt-2" />
                   </div>
                 )}
 
@@ -1777,13 +1803,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   data-on-media
                   className={cn(
                     "relative flex items-center justify-between px-4 pt-2",
-                    chromeHidden ? "pointer-events-none" : "pointer-events-auto",
+                    chromeInert ? "pointer-events-none" : "pointer-events-auto",
                   )}
                 >
                   {/* Views */}
                   <div className="flex items-center gap-1">
                     <Eye className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{currentShort.views || '0'}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{currentShort.views || '0'}</span>
                   </div>
 
                   {/* Tip */}
@@ -1793,7 +1819,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(tipCount)}</span>
                   </button>
 
                   {/* Share */}
@@ -1803,7 +1829,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(displayShareCount)}</span>
                   </button>
 
                   {/* Comments, fullscreen only — windowed, the panel beside the
@@ -1815,7 +1841,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                     >
                       <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(currentShort.comments || 0)}</span>
                     </button>
                   )}
 
@@ -1856,7 +1882,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
@@ -1878,7 +1904,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               <div
                 className={cn(
                   "absolute left-3 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-3 transition-opacity duration-300",
-                  chromeHidden && "opacity-0 pointer-events-none",
+                  chromeHidden && "opacity-0", chromeInert && "pointer-events-none",
                 )}
               >
                 <button
@@ -1989,7 +2015,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Hidden chrome is opacity-0, which still takes taps — kill
                   // pointer events too so a restore tap can't hit an invisible
                   // avatar / follow button on its way in.
-                  className={cn("px-4 pointer-events-auto", !isDescriptionExpanded && "touch-none", (showComments || chromeHidden) && "pointer-events-none")}
+                  className={cn("px-4 pointer-events-auto", !isDescriptionExpanded && "touch-none", (showComments || chromeInert) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                   onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
@@ -2010,13 +2036,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex flex-col items-start text-left min-w-0"
                     >
                       {currentShort.displayName && (
-                        <span className="text-white font-semibold text-base drop-shadow-lg truncate leading-tight">{currentShort.displayName}</span>
+                        <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
                       )}
-                      <span className="text-white/70 text-sm drop-shadow-lg truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
+                      <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                     </button>
                   </div>
                   
                   {/* Title + description - tap to expand/collapse */}
+                  <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
                   <ShortCaption
                     key={currentShort.id}
                     short={currentShort}
@@ -2024,6 +2051,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     expanded={isDescriptionExpanded}
                     onToggleExpanded={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
                   />
+                  <StitchAttribution key={`stitch-${currentShort.id}`} tokenId={currentShort.id} onNavigate={onClose} className="mt-2" />
                 </div>
 
                 {/* Action bar — horizontal row evenly spread across the bottom,
@@ -2031,7 +2059,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <div
                   data-shorts-actions
                   data-on-media
-                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
+                  className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeInert) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
                   onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
@@ -2039,7 +2067,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   {/* Views */}
                   <div className="flex items-center gap-1">
                     <Eye className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{currentShort.views || '0'}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{currentShort.views || '0'}</span>
                   </div>
 
                   {/* Tip */}
@@ -2049,7 +2077,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(tipCount)}</span>
                   </button>
 
                   {/* Share */}
@@ -2059,7 +2087,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(displayShareCount)}</span>
                   </button>
 
                   {/* Comments */}
@@ -2069,7 +2097,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                   >
                     <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
+                    <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(currentShort.comments || 0)}</span>
                   </button>
 
                   {/* Like — furthest right for easy thumb reach, like feed cards */}
@@ -2109,7 +2137,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                           isLiked ? "fill-white text-white" : "text-white"
                         )} />
                       )}
-                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(thumbCount)}</span>
+                      <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>
                     </motion.button>
                   </span>
                 </div>
@@ -2221,7 +2249,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
               </button>
+              <DuetCredit duetOf={currentShort.duetOf} className="mb-1.5" />
               <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
+              <StitchAttribution key={`stitch-${currentShort.id}`} tokenId={currentShort.id} onNavigate={onClose} className="mt-2" />
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
                 <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>
               ) : (
@@ -2273,11 +2303,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {/* Mobile top header controls - TikTok style - animated with chromeHidden.
           A live slide is the stream's own room, with its own close and sound. */}
       {isMobile && !isLiveSlide && (
+        // Its own layer above the video. Mid-fade, opacity turns this wrapper
+        // into a stacking context at the page's level, and the buttons' z-20
+        // stopped counting: the playing video's slot (z-2) sat on top of them,
+        // so a tap on Back while the chrome faded in or out hit the video.
         <motion.div
-          className="pointer-events-auto"
+          className={cn("absolute inset-0 z-20 pointer-events-none", !(chromeInert || showComments) && "[&>*]:pointer-events-auto")}
           animate={{ opacity: (chromeHidden || showComments) ? 0 : 1 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          style={{ pointerEvents: (chromeHidden || showComments) ? 'none' : 'auto' }}
         >
           {/* Back button - top left. All four buttons wear the black/50 square
               and cut icons of the app's picture-in-picture button. */}
@@ -2369,7 +2402,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               && visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public')
               && (isOwnShort || !currentShort.quotePolicy || currentShort.quotePolicy === 'public') && (
               <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://dehub.io/app/post/${currentShort.id}`,
-                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username }}
+                title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username,
+                tokenId: String(currentShort.id), creatorAddress: currentShort.creatorId }}
+                isOwner={!!isOwnShort}
                 onStart={() => { setIsPaused(true); setShareSheetOpen(false); onClose(); }} />
             )}
             {visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public') && (

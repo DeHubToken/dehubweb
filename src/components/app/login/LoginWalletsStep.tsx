@@ -102,7 +102,7 @@ export function LoginWalletsStep({
 
   // The curated connectors are not in the boot config (lib/wagmi-wallets):
   // WalletButton throws "Connector not found" for a wallet that is missing,
-  // so the rows wait for them. One skeleton frame on a warm cache.
+  // so the rows wait for them, holding their space blank (no grey pills).
   const [connectorsReady, setConnectorsReady] = useState(false);
   const [connectorError, setConnectorError] = useState(false);
   const [connectorAttempt, setConnectorAttempt] = useState(0);
@@ -199,9 +199,9 @@ export function LoginWalletsStep({
 
   if (!connectorsReady) {
     return (
-      <div className="space-y-3" aria-hidden>
+      <div className="space-y-3 invisible" aria-hidden>
         {[0, 1, 2].map((i) => (
-          <div key={i} className="w-full h-12 rounded-xl theme-skeleton animate-pulse" />
+          <div key={i} className="w-full h-12" />
         ))}
       </div>
     );

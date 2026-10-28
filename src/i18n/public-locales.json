@@ -1,5 +1,5 @@
 {
-  "version": "84415ad1d727e81d",
+  "version": "1cee5dbe96697247",
   "routes": {
     "/": [
       "ar",
@@ -154,6 +154,27 @@
       "fr",
       "nl",
       "tr"
+    ],
+    "/compare": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr",
+      "de",
+      "ha",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt",
+      "ru",
+      "th",
+      "tl",
+      "vi",
+      "zh"
     ],
     "/connect": [
       "ar",

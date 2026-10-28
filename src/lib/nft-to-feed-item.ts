@@ -3,6 +3,7 @@
  * Used by bookmarks, notifications, and anywhere we need to convert raw DeHubNFT to renderable feed cards.
  */
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildHlsUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { duetOfPost } from '@/lib/duet';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
@@ -34,6 +35,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     mediaDescriptions: nft.mediaDescriptions,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
+    duetOf: duetOfPost(nft as any),
     visibility: nft.visibility,
     quoteRevoked: nft.quoteRevoked,
     replyPolicy: nft.replyPolicy,

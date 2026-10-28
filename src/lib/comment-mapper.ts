@@ -75,6 +75,17 @@ export interface Comment {
    * it. The client has to know about the anchor to keep honouring it.
    */
   anchoredUntil?: Date;
+  /** The tip this comment was sent with; set by the server once the tip confirmed. */
+  tip?: CommentTip;
+}
+
+export interface CommentTip {
+  amount: number;
+  symbol: string;
+  chainId: number;
+  txHash: string;
+  /** DHB at the sale peg, what the tip wall sorts by. */
+  value: number;
 }
 
 /** Map an API comment row to the UI shape. */
@@ -156,5 +167,6 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     isPinned: apiComment.isPinned === true,
     creatorReplied: apiComment.creatorReplied === true,
     anchoredUntil: apiComment.anchoredUntil ? new Date(apiComment.anchoredUntil) : undefined,
+    tip: apiComment.tip && Number(apiComment.tip.amount) > 0 ? apiComment.tip : undefined,
   };
 }

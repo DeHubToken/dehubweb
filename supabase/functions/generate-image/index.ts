@@ -58,7 +58,7 @@ interface GenerateImageRequest {
  * edit a supplied image, so those fall through to diffusion by design.
  */
 function isFreeTemplateRequest(body: Partial<GenerateImageRequest>): boolean {
-  return body.bannerRenderer === 'template' && !body.sourceImage && !body.referenceImageUrls?.length;
+  return !CREATOR_FAL_IMAGE_MODELS[body.model || '']?.requiresImage && body.bannerRenderer === 'template' && !body.sourceImage && !body.referenceImageUrls?.length;
 }
 
 // ─── fal.ai image catalogue ──────────────────────────────────────────────────
@@ -376,6 +376,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     let { prompt, sourceImage, referenceImageUrls, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
 
     const outpaint = !!CREATOR_FAL_IMAGE_MODELS[model]?.outpaint;
+    const sourceTransform = outpaint || !!CREATOR_FAL_IMAGE_MODELS[model]?.relight;
     if (outpaint && prompt == null) prompt = '';
     if (!prompt && !outpaint) {
       throw new Error('Prompt is required');
@@ -388,7 +389,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
 
     // Read before the sourceImage → logoImage promotion below mutates it, so
     // this matches exactly what the wrapper priced from the raw body.
-    const freeTemplate = isFreeTemplateRequest({ bannerRenderer, sourceImage });
+    const freeTemplate = isFreeTemplateRequest({ model, bannerRenderer, sourceImage, referenceImageUrls });
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
@@ -400,7 +401,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
 
     // Build context from conversation history
     let contextualPrompt = prompt;
-    if (conversationHistory.length > 0 && !outpaint) {
+    if (conversationHistory.length > 0 && !sourceTransform) {
       const recentHistory = conversationHistory.slice(-6);
       const contextSummary = recentHistory
         .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`)
@@ -416,12 +417,12 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
     //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
-    if (!outpaint && brandKeywordHit && sourceImage && !logoImage && !referenceImageUrls?.length) {
+    if (!sourceTransform && brandKeywordHit && sourceImage && !logoImage && !referenceImageUrls?.length) {
       logoImage = sourceImage;
       sourceImage = undefined;
       console.log('[dehub-poster] Promoted sourceImage → logoImage for brand pipeline');
     }
-    const brandIntent = !outpaint && (brandKeywordHit || !!logoImage);
+    const brandIntent = !sourceTransform && (brandKeywordHit || !!logoImage);
     let brandPromptOverride: string | null = null;
     // Brand intent ALWAYS runs the brand pipeline. Previously we bypassed it when
     // a sourceImage was present without an explicit logoImage — that dropped every
@@ -757,7 +758,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
     }
 
 
-    if (aspectRatio && ASPECT_FRAMING[aspectRatio]) {
+    if (!sourceTransform && aspectRatio && ASPECT_FRAMING[aspectRatio]) {
       contextualPrompt = `${contextualPrompt}\n\nFRAMING: ${ASPECT_FRAMING[aspectRatio]}`;
     }
 
@@ -787,7 +788,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
     if (FAL_IMAGE_MODELS[model]) {
       const appId = sourceImage ? FAL_IMAGE_MODELS[model].edit! : FAL_IMAGE_MODELS[model].text;
-      if (outpaint) return success({ imageUrl: await generateWithFal(model, prompt, sourceImage, bannerFormat, aspectRatio, referenceImageUrls), provider: 'fal', model: appId });
+      if (outpaint || CREATOR_FAL_IMAGE_MODELS[model]?.relight) return success({ imageUrl: await generateWithFal(model, prompt, sourceImage, bannerFormat, aspectRatio, referenceImageUrls), provider: 'fal', model: appId });
       return success(await resilientImage(imageRequest, {
         provider: 'fal', model: appId,
         generate: async signal => ({ imageUrl: await generateWithFal(model, contextualPrompt, sourceImage,

@@ -1759,6 +1759,9 @@
       "fractionPurchased": "{{name}} የልጥፍህን ክፍልፋዮች ገዝቷል",
       "repostedPosts": "{{name}} ከልጥፎችህ {{count}}ቱን እንደገና ለጥፏል",
       "commentMention": "{{name}} በአስተያየት ውስጥ ጠቅሶሃል",
+      "postMention": "{{name}} በአንድ ልጥፍ ውስጥ ጠቅሶዎታል",
+      "liveChatMention": "{{name}} በቀጥታ ውይይት ውስጥ ጠቅሶዎታል",
+      "publicChatMention": "{{name}} በአደባባይ ውይይት ውስጥ ጠቅሶሃል",
       "followRequest": "{{name}} እንዲከተልህ ጠይቋል",
       "bountyReplyNamed": "{{name}} ለሽልማትህ “{{title}}” መልስ ሰጥቷል",
       "bountyReply": "{{name}} ለሽልማትህ መልስ ሰጥቷል",
@@ -3269,6 +3272,7 @@
     "followerInvites": {
       "title": "ተከታዮችን ይጋብዙ",
       "detail": "በአንድ ባች እስከ 50 ተከታዮችን ይምረጡ ። የተከፈለ ወይም የተዘጉ ዲኤምዎች ተዘግተዋል ። እንደገና ከመሞከርዎ በፊት ያልተረጋገጡ ላኪዎች ውይይቱን ያረጋግጡ ።",
+      "note": "ለግብዣዎ ማስታወሻ ያክሉ (አማራጭ)",
       "selectAll": "ይህን ገጽ ይምረጡ",
       "clear": "አጽዳ",
       "previous": "ቀዳሚ",

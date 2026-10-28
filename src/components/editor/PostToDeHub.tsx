@@ -20,12 +20,18 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { PostModal } from "@/features/post";
+import { tokenIdFromPostUrl } from "@/lib/remix/reactions";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
 import { startExportJournal } from "@/lib/editor/exportJournal";
 import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
 import { editorErrorText } from "@/lib/editor/editorErrorText";
+import { getNFTInfo } from "@/lib/api/dehub";
+import type { DeHubNFT } from "@/lib/api/dehub/types";
+import { checkRemix, recordRemixLink } from "@/lib/remix-links";
+import { duetCaption } from "@/lib/duet";
+import { stitchCaption } from "@/lib/stitch";
 
 
 function filesToFileList(files: File[]): FileList {
@@ -56,6 +62,12 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
   const [files, setFiles] = useState<FileList | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const wasAuthRef = useRef(isAuthenticated);
+  // A duet posts as a quote of its source, so the backend keeps the link and
+  // applies the creator's quote policy; remix-links records it as a duet.
+  const duet = settings.remixSource?.mode === 'duet' && settings.remixSource.tokenId ? settings.remixSource : null;
+  // A stitch is an ordinary post; remix-links records what it stitched.
+  const stitch = settings.remixSource?.mode === 'stitch' && settings.remixSource.tokenId ? settings.remixSource : null;
+  const [duetSource, setDuetSource] = useState<DeHubNFT | null>(null);
 
   // If the user signs in after we asked, continue the flow automatically.
   useEffect(() => {
@@ -86,7 +98,57 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
     void startRender();
   };
 
+  /** Re-checked here, right before posting: the creator may have turned duets or stitches off since recording. */
+  const prepareDuet = async (): Promise<boolean> => {
+    if (stitch?.tokenId) {
+      const verdict = await checkRemix(stitch.tokenId, 'stitch');
+      if (!verdict.allowed) toast.error(verdict.reason || _copy('remixLinks.stitch.unavailable', { defaultValue: 'This video is no longer available for stitches.' }));
+      return verdict.allowed;
+    }
+    if (!duet?.tokenId) return true;
+    const [verdict, source] = await Promise.all([checkRemix(duet.tokenId, 'duet'), getNFTInfo(duet.tokenId).catch(() => null)]);
+    if (!verdict.allowed || !source) {
+      toast.error(verdict.reason || _copy('duet.unavailable', { defaultValue: 'This video is no longer available for duets.' }));
+      return false;
+    }
+    setDuetSource(source);
+    return true;
+  };
+
+  const linkStitch = (tokenId: string) => {
+    if (!stitch?.tokenId) return;
+    void recordRemixLink({ kind: 'stitch', sourceTokenId: stitch.tokenId, remixTokenId: tokenId })
+      .catch((error: Error & { refused?: boolean }) => {
+        console.warn('[Stitch] link failed', error);
+        toast.error(error.refused ? error.message : _copy('remixLinks.linkFailed', { defaultValue: 'Your post is up, but it could not be linked to the original video.' }));
+      });
+  };
+
+  const linkDuet = (tokenId: string) => {
+    if (!duet?.tokenId) return;
+    void recordRemixLink({ kind: 'duet', sourceTokenId: duet.tokenId, remixTokenId: tokenId, details: duet.layout ? { layout: duet.layout } : undefined })
+      .catch((error: Error & { refused?: boolean }) => {
+        console.warn('[Duet] link failed', error);
+        if (error.refused) toast.error(error.message);
+      });
+  };
+
+  // A reaction is its own post; once it exists it is linked to the original,
+  // which credits it, notifies its creator and shares tips with them.
+  const reactionSourceId = settings.remixSource?.mode === 'react'
+    ? settings.remixSource.tokenId ?? tokenIdFromPostUrl(settings.remixSource.url)
+    : null;
+  const linkReaction = (tokenId: string) => {
+    if (!reactionSourceId) return;
+    void recordRemixLink({ kind: 'react', sourceTokenId: reactionSourceId, remixTokenId: tokenId })
+      .catch((error: Error & { refused?: boolean }) => {
+        console.warn('[React] link failed', error);
+        if (error.refused) toast.error(error.message);
+      });
+  };
+
   const startRender = async () => {
+    if (!(await prepareDuet())) return;
     setRenderOpen(true);
     setProgress(0);
     setLabel("Preparing…");
@@ -186,7 +248,9 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         isOpen={postOpen}
         onClose={() => { setPostOpen(false); setFiles(null); }}
         initialFiles={files}
-        initialText={settings.remixSource ? `Remix of ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        initialText={duet ? duetCaption(duet.creator) : stitch ? stitchCaption(stitch.creator) : settings.remixSource ? `${reactionSourceId ? 'Reaction to' : 'Remix of'} ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        quotedPost={duet ? duetSource : undefined}
+        onPosted={duet ? linkDuet : stitch ? linkStitch : reactionSourceId ? linkReaction : undefined}
         onFilesProcessed={() => setFiles(null)}
       />
     </>

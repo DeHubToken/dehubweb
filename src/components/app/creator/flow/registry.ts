@@ -9,6 +9,7 @@ import ImageGenNode from './nodes/ImageGenNode';
 import VideoGenNode from './nodes/VideoGenNode';
 import AssistantNode from './nodes/AssistantNode';
 import GroupNode from './nodes/GroupNode';
+import { AudioGenNode, AudioInputNode } from './nodes/AudioNodes';
 import CuttableEdge from './CuttableEdge';
 
 export const nodeTypes = {
@@ -19,6 +20,8 @@ export const nodeTypes = {
   videoGenNode: VideoGenNode,
   assistantNode: AssistantNode,
   groupNode: GroupNode,
+  audioInputNode: AudioInputNode,
+  audioGenNode: AudioGenNode,
 };
 
 export const edgeTypes = {

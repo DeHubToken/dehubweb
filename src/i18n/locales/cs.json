@@ -1762,6 +1762,9 @@
       "fractionPurchased": "{{name}} koupil/a frakce vašeho příspěvku",
       "repostedPosts": "{{name}} zarepostoval/a {{count}} z vašich příspěvků",
       "commentMention": "{{name}} zmínil/a vás ve komentáři",
+      "postMention": "{{name}} vás zmínil/a v příspěvku",
+      "liveChatMention": "{{name}} vás zmínil v živém chatu",
+      "publicChatMention": "{{name}} vás zmínil ve veřejném chatu",
       "followRequest": "{{name}} požádal/a o sledování",
       "bountyReplyNamed": "{{name}} odpověděl/a na vaši odměnu „{{title}}“",
       "bountyReply": "{{name}} odpověděl/a na vaši odměnu",
@@ -3248,6 +3251,7 @@
     "followerInvites": {
       "title": "Pozvěte následovníky",
       "detail": "Vyberte až 50 následovníků na jednu sadu. Platné nebo uzavřené DM jsou přeskočeny. Zkontrolujte chat pro nepotvrzené odeslání před pokusem znovu.",
+      "note": "Přidejte k pozvánce poznámku (nepovinné)",
       "selectAll": "Zvolte tuto stránku",
       "clear": "Vyčistit",
       "previous": "Předchozí",

@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Filter, UserCheck, UserPlus, UserX } from 'lucide-react';
+import { Filter, UserCheck, UserX } from 'lucide-react';
+import UserPlus from "@/components/ui/cut-icons/add-account";
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';

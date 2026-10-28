@@ -1749,6 +1749,9 @@
       "fractionPurchased": "{{name}} اشترى حصص من نشرتك",
       "repostedPosts": "{{name}} أعاد نشر {{count}} من نشراتك",
       "commentMention": "{{name}} ذكرك في تعليق",
+      "postMention": "{{name}} ذكرّك بمنشور",
+      "liveChatMention": "{{name}} ذكرّك بالدردشة الحية",
+      "publicChatMention": "{{name}} ذكرّك بالدردشة العامة",
       "followRequest": "{{name}} طلب يتبعك",
       "bountyReplyNamed": "{{name}} أجاب على مكافأتك “{{title}}”",
       "bountyReply": "{{name}} أجاب على مكافأة",
@@ -3204,6 +3207,7 @@
     "followerInvites": {
       "title": "دعوة المتابعين",
       "detail": "اختر حتى 50 متابعاً في كل دفعة. يتم تجاهل DMs المدفوعة أو مغلقة. تحقق من المحادثة قبل محاولة مرة أخرى.",
+      "note": "أضف ملاحظة لدعوتك (اختياري)",
       "selectAll": "اختر هذه الصفحة",
       "clear": "حسناً",
       "previous": "السابق",

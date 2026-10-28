@@ -1756,6 +1756,9 @@
       "fractionPurchased": "{{name}} רכשה חלקים של הפוסט שלך",
       "repostedPosts": "{{name}} השתמשה ב-{{count}} מתוך הפוסטים שלך",
       "commentMention": "{{name}} התייחסה אליך בתגובה",
+      "postMention": "{{name}} הזכיר/ה אותך בפוסט",
+      "liveChatMention": "{{name}} הזכרתם את עצמכם בצ'אט בזמן אמת",
+      "publicChatMention": "{{name}} ציינו אתכם בצ'אט הציבורי",
       "followRequest": "{{name}} ביקשה להצטרף אליך",
       "bountyReplyNamed": "{{name}} השיבה לבונוס שלך “{{title}}”",
       "bountyReply": "{{name}} השיבה לבונוס שלך",
@@ -3241,6 +3244,7 @@
     "followerInvites": {
       "title": "בקש אחרונים",
       "detail": "בחר עד 50 אחרונים לפי גליון. DM שמותקנים או סגורים נעלמים. תקן את השיחת לפני שתנסה שוב.",
+      "note": "הוסיפו הערה להזמנה (לא חובה)",
       "selectAll": "בחר דף זה",
       "clear": "ניקוי",
       "previous": "הקודם",

@@ -14,6 +14,7 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import type { MutableRefObject } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -22,7 +23,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { Loader2, CheckCircle2, MoreVertical, ImagePlus } from "lucide-react";
+import { Loader2, CheckCircle2, MoreVertical, ImagePlus, Github } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Pencil from "@/components/ui/cut-icons/edit";
@@ -94,6 +95,10 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
 ];
 
 type PageTab = 'requests' | 'shipping' | 'shipped';
+
+const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
+
+const SHIPPED_PAGE_SIZE = 20;
 
 const SORTS: { id: FeatureSort; labelKey: string }[] = [
   { id: 'most_voted', labelKey: 'features.mostVoted' },
@@ -761,13 +766,23 @@ export default function FeaturesPage() {
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('newest');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
-  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
+  // Sort and category chips share one scroll row, so both indicators measure
+  // against the same layer. The tab is the layout-shift key for categories:
+  // the sort chips in front of them only exist on the Prompts tab.
+  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category, activeTab);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
-  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
+  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort, activeTab);
+  const setFilterLayerRef = useCallback((el: HTMLDivElement | null) => {
+    (featuresCatLayerRef as MutableRefObject<HTMLDivElement | null>).current = el;
+    (featuresSortLayerRef as MutableRefObject<HTMLDivElement | null>).current = el;
+  }, [featuresCatLayerRef, featuresSortLayerRef]);
+  const onFilterRowScroll = useCallback(() => {
+    onFeaturesCatScroll();
+    onFeaturesSortScroll();
+  }, [onFeaturesCatScroll, onFeaturesSortScroll]);
   const [searchInput, setSearchInput] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [composerFocus, setComposerFocus] = useState(0);
-  const [showFilters, setShowFilters] = useState(false);
   const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
 
   // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
@@ -839,6 +854,19 @@ export default function FeaturesPage() {
     () => withoutFocused(shippedFeatures).filter(matchesFilters),
     [shippedFeatures, withoutFocused, matchesFilters],
   );
+  // Shipped holds nearly the whole board. Mounting every card at once built
+  // ~20k nodes and froze the tab switch, so it reveals a page at a time like the
+  // Prompts list does.
+  const [shippedLimit, setShippedLimit] = useState(SHIPPED_PAGE_SIZE);
+  useEffect(() => setShippedLimit(SHIPPED_PAGE_SIZE), [category, search]);
+  const shippedDeepLink = searchParams.get('feature');
+  useEffect(() => {
+    if (!shippedDeepLink) return;
+    const index = visibleShipped.findIndex((feature) => feature.id === shippedDeepLink);
+    if (index >= 0) setShippedLimit((limit) => Math.max(limit, index + 1));
+  }, [shippedDeepLink, visibleShipped]);
+  const renderedShipped = useMemo(() => visibleShipped.slice(0, shippedLimit), [visibleShipped, shippedLimit]);
+  const showMoreShipped = useCallback(() => setShippedLimit((limit) => limit + SHIPPED_PAGE_SIZE), []);
 
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
@@ -1008,21 +1036,38 @@ export default function FeaturesPage() {
             hiding them there left ~136 rows with no way to narrow them at all.
             Sort stays Requests-only: Shipping and Shipped are ordered by ship
             date, which is the order people expect on a changelog. */}
-        <>
-            <Button variant="ghost" size="sm" className="mb-2 rounded-lg" aria-expanded={showFilters} onClick={() => setShowFilters(value => !value)}>
-              {t('features.promptFilters', 'Filter by category')}{category !== 'all' && ` · ${CATEGORY_LABELS[category]}`}
-            </Button>
-            {showFilters && <>
-            {/* Category Pills */}
-            <div className="relative mb-3">
-              <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        {/* One scrollable row: sort chips first (Requests only), then every
+            category, with the GitHub link pinned bottom-right. Sort and
+            category each keep their own glass indicator in the shared layer,
+            so both selections stay visible and independent. */}
+        <div className="flex items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <div ref={setFilterLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+                {activeTab === 'requests' && <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />}
                 <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
                 <div
                   ref={featuresCatFadeRef}
-                  className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1"
+                  className="relative z-20 flex items-center gap-2 overflow-x-auto scrollbar-invisible"
                   style={featuresCatFadeStyle}
-                  onScroll={onFeaturesCatScroll}
+                  onScroll={onFilterRowScroll}
                 >
+                  {activeTab === 'requests' && <>
+                    {SORTS.map((s) => (
+                      <button
+                        key={s.id}
+                        ref={setFeaturesSortRef(s.id)}
+                        type="button"
+                        onClick={() => setSort(s.id)}
+                        aria-pressed={sort === s.id}
+                        className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                          sort === s.id ? 'text-white' : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        <span className="relative z-10">{t(s.labelKey)}</span>
+                      </button>
+                    ))}
+                    <span aria-hidden="true" className="shrink-0 self-stretch w-px my-1.5 bg-white/10" />
+                  </>}
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}
@@ -1041,33 +1086,17 @@ export default function FeaturesPage() {
                 </div>
               </div>
             </div>
-
-            </>}
-            {/* Sort Tabs */}
-            {activeTab === 'requests' && (
-            <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-              <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
-              <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
-                {SORTS.map((s) => {
-                  const isActive = sort === s.id;
-                  return (
-                    <button
-                      key={s.id}
-                      ref={setFeaturesSortRef(s.id)}
-                      type="button"
-                      onClick={() => setSort(s.id)}
-                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                      }`}
-                    >
-                      <span className="relative z-10">{t(s.labelKey)}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            )}
-        </>
+            <a
+              href={DEHUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${t('commandCentre.viewAll')} GitHub`}
+              className="shrink-0 inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+            >
+              {t('commandCentre.viewAll')}
+              <Github className="w-4 h-4" aria-hidden="true" />
+            </a>
+        </div>
         </div>
       </div>
 
@@ -1189,7 +1218,7 @@ export default function FeaturesPage() {
             <FeatureSkeletons />
           ) : visibleShipped.length > 0 ? (
             <div className="space-y-3">
-              {visibleShipped.map((feature) => (
+              {renderedShipped.map((feature) => (
                 <SharedTranslationProvider key={feature.id}>
                   <FeatureCard
                     feature={feature}
@@ -1199,6 +1228,12 @@ export default function FeaturesPage() {
                   />
                 </SharedTranslationProvider>
               ))}
+              {renderedShipped.length < visibleShipped.length && (
+                <InfiniteScrollSentinel
+                  onIntersect={showMoreShipped}
+                  isFetching={false}
+                />
+              )}
             </div>
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">

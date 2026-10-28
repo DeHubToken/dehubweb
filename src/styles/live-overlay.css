@@ -97,7 +97,8 @@
   flex: none;
   font-size: calc(var(--ow-h) * 0.46);
   line-height: 1;
-  filter: drop-shadow(0 calc(var(--ow-h) * 0.03) calc(var(--ow-h) * 0.06) rgb(0 0 0 / 0.45));
+  /* text-shadow, not a filter: a glyph shadow without an offscreen pass. */
+  text-shadow: 0 calc(var(--ow-h) * 0.03) calc(var(--ow-h) * 0.06) rgb(0 0 0 / 0.45);
 }
 
 /* The big number on the trailing side of an alert. */

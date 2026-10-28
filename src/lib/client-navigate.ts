@@ -27,6 +27,9 @@ export function setClientNavigate(fn: NavigateFunction | null): void {
 }
 
 export function clientNavigate(path: string): void {
+  // Only paths on this site. Callers build these from post text, so a
+  // `//host` or `javascript:` value must never reach the browser.
+  if (typeof path !== 'string' || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) return;
   if (routerNavigate) {
     routerNavigate(path);
     return;

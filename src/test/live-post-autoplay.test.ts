@@ -14,7 +14,13 @@ describe('live post HLS startup', () => {
   });
 
   it('keeps a visible manual start when autoplay is blocked', () => {
-    expect(source).toContain("isPlaying ? 'opacity-0 hover:opacity-100 focus-within:opacity-100' : 'opacity-100'");
+    expect(source).toContain("isPlaying ? 'bg-black/30 opacity-0 hover:opacity-100 focus-within:opacity-100' : 'bg-black/30 opacity-100'");
+    // Blocked autoplay clears buffering, so the Play button is what shows.
+    expect(source).toContain("void video.play().catch(() => setIsBuffering(false));");
+  });
+
+  it('never draws the play/pause button over the loading spinner', () => {
+    expect(source).toContain("isBuffering && !error && !broadcastPaused\n                ? 'opacity-0'");
     expect(source).toContain("aria-label={isPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}");
     expect(source).not.toContain('setIsPlaying(!isPlaying)');
   });

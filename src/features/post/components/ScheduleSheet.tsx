@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Clock, Minus, Plus, Sparkles } from "lucide-react";
+import { Clock, Sparkles } from "lucide-react";
+import Minus from "@/components/ui/cut-icons/minus";
+import Plus from "@/components/ui/cut-icons/add";
 import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Link } from 'react-router-dom';

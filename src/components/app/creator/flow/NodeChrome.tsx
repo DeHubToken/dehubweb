@@ -7,7 +7,7 @@
  */
 import React, { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Handle, NodeResizeControl, Position, useStore as useFlowStore } from '@xyflow/react';
-import { AlertTriangle, ChevronDown, Film, Loader2, Type } from "lucide-react";
+import { AlertTriangle, ChevronDown, Film, Loader2, Type, Volume2 } from "lucide-react";
 import ImageIcon from "@/components/ui/cut-icons/images";
 
 import { useTranslation } from 'react-i18next';
@@ -187,12 +187,13 @@ export function MissingInputWarning({ messages }: { messages: string[] }) {
 
 // ── Handles ──────────────────────────────────────────────────────────────────
 
-export type HandleKind = 'prompt' | 'image' | 'video';
+export type HandleKind = 'prompt' | 'image' | 'video' | 'audio';
 
 export const HANDLE_ICON: Record<HandleKind, ReactNode> = {
   prompt: <Type size={12} strokeWidth={2} />,
   image: <ImageIcon size={12} strokeWidth={2} />,
   video: <Film size={12} strokeWidth={2} />,
+  audio: <Volume2 size={12} strokeWidth={2} />,
 };
 
 interface IoHandleProps {

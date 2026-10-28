@@ -1,4 +1,4 @@
-// DeHub Builder host — the origin behind https://<slug>.dehub.app.
+// DeHub Builder host — the origin behind https://<slug>.dhb.gg.
 //
 // Subdomain mode (what the dehub-builder-apps Worker calls):
 //   GET /functions/v1/builder-serve?host=<slug>&path=<file>[&t=<previewToken>]

@@ -1,16 +1,16 @@
 // DeHub Builder app hosting — shared by builder-api and builder-serve.
 //
-// Every Builder app is served from its own subdomain, https://<slug>.dehub.app,
-// by the dehub-builder-apps Cloudflare Worker (workers/builder-apps). dehub.app
+// Every Builder app is served from its own subdomain, https://<slug>.dhb.gg,
+// by the dehub-builder-apps Cloudflare Worker (workers/builder-apps). dhb.gg
 // is a separate registrable domain on purpose: the apps run AI-written code, so
 // they must never share a site with dehub.io (cookies, storage, link trust).
 //
 // Private apps are only reachable through a signed preview path the owner gets
-// from builder-api: https://<slug>.dehub.app/~t/<token>/ — the token sits in the
+// from builder-api: https://<slug>.dhb.gg/~t/<token>/ — the token sits in the
 // path rather than a cookie so relative assets (app.js, style.css) inherit it,
 // and so it still works inside a cross-site iframe where cookies are blocked.
 
-export const BUILDER_APPS_DOMAIN = "dehub.app";
+export const BUILDER_APPS_DOMAIN = "dhb.gg";
 
 /** Subdomains a Builder app may never take. */
 const RESERVED_SLUGS = new Set([

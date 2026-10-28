@@ -95,6 +95,7 @@ import { canonicalUrl } from '@/lib/seo/route-meta';
 import { usePostStagePhone } from '@/hooks/use-post-stage-phone';
 import { StageRelated } from '@/components/app/post-stage/StageRelated';
 import { PostStagePhone } from '@/components/app/post-stage/PostStagePhone';
+import { setPostFeedLook } from '@/lib/post-feed-look';
 import { PostCommentsSplit } from '@/components/app/post-stage/PostCommentsSplit';
 import type { CommentsSplitRouteState } from '@/lib/comments-split';
 import { POST_STAGE_COMPOSE_EVENT, type PostStageValue } from '@/components/app/post-stage/post-stage-context';
@@ -841,10 +842,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     // Once per visit: the route key changes on every navigation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [detailsOnly, id, splitPhone, splitRouteKey]);
-  // The sheet starts at the post's top, under the pill.
+  // The sheet starts at the post's top, under the pill. On a post opened from
+  // a link (or after a refresh) the page itself is the scroller.
   useLayoutEffect(() => {
     if (!commentsSplit) return;
-    document.querySelector('[data-post-overlay][data-scroll-nav-source]')?.scrollTo({ top: 0 });
+    const overlay = document.querySelector('[data-post-overlay][data-scroll-nav-source]');
+    if (overlay) overlay.scrollTo({ top: 0 });
+    else scrollDocumentTo(0);
   }, [commentsSplit]);
   
   // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
@@ -973,7 +977,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       } as unknown as DeHubNFT;
     },
     enabled: !!id,
-    staleTime: 5 * 60 * 1000,
+    // A stream that has not ended is never trusted from cache: reopening it or
+    // coming back to the tab asks again, so an old "not live" answer can't stick.
+    staleTime: (query) => {
+      const stream = (query.state.data as any)?.stream;
+      return stream && !hasStreamEnded(stream) ? 0 : 5 * 60 * 1000;
+    },
     refetchInterval: (query) => streamRefreshInterval((query.state.data as any)?.stream),
     retry: 1,
     // Instant open: if any feed cache already holds THIS post, paint it
@@ -1096,7 +1105,18 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const isFullBleedLive = contentType === 'live' && isMobileView;
   // An image post opens the same way a video post does on phone and tablet:
   // picture first, full width, the app's top chrome out of the way.
-  const isImmersiveImage = !detailsOnly && isImagePost && isMobileView;
+  // Phones: a text, image or audio post opened from outside the home feed (a
+  // notification, a profile, a link) looks like one opened from the feed: logo
+  // bar and pill with Back on top, the same bento card, no floating back
+  // square or options square. Video keeps its own player page.
+  const feedLookPhone = isStagePhone && !inOverlay && !detailsOnly && !!post &&
+    post.status !== 'pending' && (isTextPost || isImagePost || isAudioPost);
+  useLayoutEffect(() => {
+    if (!feedLookPhone) return;
+    setPostFeedLook(true);
+    return () => setPostFeedLook(false);
+  }, [feedLookPhone]);
+  const isImmersiveImage = !detailsOnly && isImagePost && isMobileView && !feedLookPhone;
   useEffect(() => {
     const cls = isFullBleedLive ? 'immersive-live-mode' : (isVideoPost || isImmersiveImage) ? 'immersive-video-mode' : null;
     if (cls) document.body.classList.add(cls);
@@ -1141,6 +1161,22 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     : 'pb-8 lg:pt-0';
 
   // Determine content type and render appropriate card
+  // Phones: every post page's comment button opens the comments sheet, not
+  // just posts opened from the feed. A post opened from a link, a
+  // notification or after a refresh used to toggle the inline list (nothing
+  // visible on a post with no comments) or, on video posts, flash the docked
+  // "Type here" bar. Live keeps its chat.
+  const splitComments = splitPhone && contentType !== 'live';
+  const openPageComments = useCallback((tab?: 'replies' | 'quotes' | 'reposts' | 'search') => {
+    if (!splitComments) {
+      handleOpenPageComments(tab);
+      return;
+    }
+    setPageCommentsInitialTab(tab ?? 'replies');
+    setShowPageComments(true);
+    setCommentsSplit(true);
+  }, [splitComments, handleOpenPageComments]);
+
   const renderContent = () => {
     // Only show loading if we have no data at all (not even cached)
     if (isLoading && !hasCachedData) return <LoadingState />;
@@ -1161,9 +1197,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
+        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={openPageComments} />;
       case 'image':
-        return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={handleOpenPageComments} />;
+        return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={openPageComments} />;
       case 'live': {
         if (!liveData) return <NotFoundState />;
         return (
@@ -1201,7 +1237,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         return (
           <PostCard
             post={toTextPost(post)}
-            onOpenComments={handleOpenPageComments}
+            onOpenComments={openPageComments}
             threadSlot={
               id ? <AuthorThread tokenId={String(id)} authorAddress={post.minter} highlightId={highlightCommentId} /> : undefined
             }
@@ -1216,7 +1252,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
    * sheet's "View quotes / View reposts" rows switch the same section to the
    * existing quotes and reposters lists.
    */
-  const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live';
+  const useStage = isStagePhone && !!post && post.status !== 'pending' && contentType !== 'live' && !feedLookPhone;
 
   const revealStageComments = useCallback((focusComposer: boolean) => {
     // The composer is put away until asked for. Raised inside the tap so the
@@ -1232,23 +1268,26 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     registerOptions: registerPostOptions,
     openOptions: postOptions ?? undefined,
     openComments: () => {
+      if (splitComments) return openPageComments('replies');
       setShowPageComments(true);
       setPageCommentsInitialTab('replies');
       revealStageComments(true);
     },
     openQuotes: () => {
+      if (splitComments) return openPageComments('quotes');
       setShowPageComments(true);
       setPageCommentsInitialTab('quotes');
       revealStageComments(false);
     },
     openReposts: () => {
+      if (splitComments) return openPageComments('reposts');
       setShowPageComments(true);
       setPageCommentsInitialTab('reposts');
       revealStageComments(false);
     },
     quoteCount: Number(post?.quotes ?? 0) || 0,
     repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
-  }), [goBack, registerPostOptions, postOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+  }), [goBack, registerPostOptions, postOptions, revealStageComments, splitComments, openPageComments, post?.quotes, post?.totalReposts, post?.reposts]);
 
   const pageComments = post && id ? (
     <CommentsWrapper
@@ -1263,6 +1302,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       forceInline
     />
   ) : null;
+  const commentsSplitSheet = (
+    <AnimatePresence>
+      {commentsSplit && pageComments && (
+        <PostCommentsSplit key="comments-split" onClose={closeCommentsSplitSheet}>{pageComments}</PostCommentsSplit>
+      )}
+    </AnimatePresence>
+  );
   useLayoutEffect(() => {
     if (!detailsOnly || !detailsExpanded || !post || !scrollToRetainedComments.current) return;
     scrollToRetainedComments.current = false;
@@ -1304,7 +1350,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           thumbnail={thumbnail}
           padded={isText}
           related={showRelated ? <StageRelated kind={kind} postId={id} /> : null}
-          comments={
+          comments={commentsSplit ? null : (
             <CommentsWrapper
               open
               onOpenChange={() => {}}
@@ -1319,11 +1365,12 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               stageCount={commentCount}
               onStageTabChange={setPageCommentsInitialTab}
             />
-          }
+          )}
         >
           {renderContent()}
           {contentType === 'image' && parseInt(id, 10) > 0 && <div className="px-3"><PollCard tokenId={parseInt(id, 10)} /></div>}
         </PostStagePhone>
+        {commentsSplitSheet}
       </div>
     );
   };
@@ -1547,14 +1594,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const commentsSplitSheet = (
-    <AnimatePresence>
-      {commentsSplit && pageComments && (
-        <PostCommentsSplit key="comments-split" onClose={closeCommentsSplitSheet}>{pageComments}</PostCommentsSplit>
-      )}
-    </AnimatePresence>
-  );
-
   const renderPostContent = () => (
     detailsOnly && isStagePhone && (isTextPost || isImagePost) ? (
       /* Phone text and image posts opened from the feed: no "more" toggle and
@@ -1622,9 +1661,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               the flat comments under it. No [data-feed-item] either, or the
               canvas themes' glass would paint the box straight back. */}
           <div
-            data-feed-item={isMobileView ? undefined : true}
-            data-post-flat={isMobileView || undefined}
-            className={isMobileView ? 'px-1 sm:px-0 pt-1' : 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'}
+            data-feed-item={isMobileView && !feedLookPhone ? undefined : true}
+            data-post-flat={(isMobileView && !feedLookPhone) || undefined}
+            className={isMobileView && !feedLookPhone ? 'px-1 sm:px-0 pt-1' : 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3'}
           >
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
@@ -1633,7 +1672,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               It used to have comments as well, so what people said during the
               broadcast and what they said "about the post" were two lists that
               never met. Old comments were folded into the chat room. */}
-          {!isLivePost && pageComments}
+          {!isLivePost && !commentsSplit && pageComments}
+          {!isLivePost && commentsSplitSheet}
           {/* Shop rail sits between the player and the chat: close enough to the
               stream to read as part of it, above the chat so a busy room does
               not push it off screen. The host sees the manager instead — they

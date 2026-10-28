@@ -25,6 +25,13 @@ export function createVisualActivity() {
     isForeground: () => foreground && focused,
     isCallBusy: () => callBusy,
     isFeedPlaybackAllowed: () => foreground && focused && settled && !callBusy,
+    /**
+     * A live someone is watching keeps playing with the tab in the background
+     * or the window unfocused: a live has nothing to come back to, so pausing
+     * it is the same as dropping the viewer out of the room. Only a call
+     * stops it.
+     */
+    isLivePlaybackAllowed: () => !callBusy,
     setForeground: (next: boolean) => { if (foreground !== next) { foreground = next; settle(); } },
     setFocused: (next: boolean) => { if (focused !== next) { focused = next; settle(); } },
     setCall: (busy: boolean, covered: boolean) => {
@@ -41,6 +48,12 @@ export const visualActivity = createVisualActivity();
 export const useFeedPlaybackAllowed = () => {
   const surfaceActive = useContext(CachedPageActiveContext);
   const appActive = useSyncExternalStore(visualActivity.subscribe, visualActivity.isFeedPlaybackAllowed, () => true);
+  return surfaceActive && appActive;
+};
+/** {@link useFeedPlaybackAllowed} for a live the viewer is watching: hidden tabs and blur don't stop it. */
+export const useLivePlaybackAllowed = () => {
+  const surfaceActive = useContext(CachedPageActiveContext);
+  const appActive = useSyncExternalStore(visualActivity.subscribe, visualActivity.isLivePlaybackAllowed, () => true);
   return surfaceActive && appActive;
 };
 export const useCallInProgress = () =>

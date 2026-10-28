@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} købte dele af din post",
       "repostedPosts": "{{name}} genudsendte {{count}} af dine posts",
       "commentMention": "{{name}} nævnte dig i en kommentar",
+      "postMention": "{{name}} nævnte dig i et opslag",
+      "liveChatMention": "{{name}} nævnte dig i livechat",
+      "publicChatMention": "{{name}} nævnte dig i en offentlig chat",
       "followRequest": "{{name}} bad om at følge dig",
       "bountyReplyNamed": "{{name}} svarede på din bounty “{{title}}”",
       "bountyReply": "{{name}} svarede på din bounty",
@@ -3247,6 +3250,7 @@
     "followerInvites": {
       "title": "Inviter følgere",
       "detail": "Vælg op til 50 følgere pr. batch. Betalte eller lukkede privatbeskeder overskrides. Kontrollér chatten for uafstemte sendte beskeder før du prøver igen.",
+      "note": "Tilføj en note til din invitation (valgfrit)",
       "selectAll": "Vælg denne side",
       "clear": "Ryd",
       "previous": "Forrige",

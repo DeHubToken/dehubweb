@@ -1759,6 +1759,9 @@
       "fractionPurchased": "{{name}} osti osia julkaisustasi",
       "repostedPosts": "{{name}} julkaisi uudelleen {{count}} julkaisuistasi",
       "commentMention": "{{name}} mainitsi sinut kommentissa",
+      "postMention": "{{name}} mainitsi sinut julkaisussa",
+      "liveChatMention": "{{name}} mainitsi sinut live-chatissa",
+      "publicChatMention": "{{name}} mainitsi sinut julkisessa chatissa",
       "followRequest": "{{name}} pyysi seuraamaan sinua",
       "bountyReplyNamed": "{{name}} vastasi palkkioosi \"{{title}}\"",
       "bountyReply": "{{name}} vastasi palkkionne",
@@ -3241,6 +3244,7 @@
     "followerInvites": {
       "title": "Kutsu seuraajia",
       "detail": "Valitse enintään 50 seuraajaa kerralla. Maksettu tai suljettu viestit ohitetaan. Tarkista keskustelu ennen yrittämistä uudelleen.",
+      "note": "Lisää kutsuun viesti (valinnainen)",
       "selectAll": "Valitse tämä sivu",
       "clear": "Tyhjennä",
       "previous": "Edellinen",

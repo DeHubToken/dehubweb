@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Public renderer for a Builder app — /builder/preview/:id
  *
- * Each app lives on its own origin, https://<slug>.dehub.app, so the page
+ * Each app lives on its own origin, https://<slug>.dhb.gg, so the page
  * frames that address directly: it is a different site from dehub.io, so the
  * app keeps real localStorage without being able to touch dehub.io's. Private
  * apps open only for their owner, through a signed preview address.

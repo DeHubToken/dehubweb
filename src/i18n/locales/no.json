@@ -1760,6 +1760,9 @@
       "fractionPurchased": "{{name}} kjøpte deler av din post",
       "repostedPosts": "{{name}} gjentok {{count}} av dine innlegg",
       "commentMention": "{{name}} nevnte deg i en kommentar",
+      "postMention": "{{name}} nevnte deg i et innlegg",
+      "liveChatMention": "{{name}} nevnte deg i live chat",
+      "publicChatMention": "{{name}} nevnte deg i en offentlig chat",
       "followRequest": "{{name}} forespørte å følge deg",
       "bountyReplyNamed": "{{name}} svarte på din premie “{{title}}”",
       "bountyReply": "{{name}} svarte på din premie",
@@ -3242,6 +3245,7 @@
     "followerInvites": {
       "title": "Invitere følgere",
       "detail": "Velg opp til 50 følgere per batch. Betalte eller lukkede DMs blir unntatt. Kontrollér chatte for uavbehandlet sendt før du prøver igjen.",
+      "note": "Legg til en melding i invitasjonen (valgfritt)",
       "selectAll": "Velg denne siden",
       "clear": "Rens",
       "previous": "Forrige",

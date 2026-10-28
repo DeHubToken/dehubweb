@@ -87,6 +87,8 @@ export interface PostFormState {
   quotePolicy: import('@/lib/api/dehub/types').QuotePolicy;
   /** Who may reply to the post. */
   replyPolicy: import('@/lib/api/dehub/types').ReplyPolicy;
+  /** Who may stitch a video post; null follows the account setting. */
+  stitchPolicy: import('@/lib/remix-links').RemixPolicy | null;
   /** Who may see the post. Fixed once it is posted. */
   visibility: import('@/lib/api/dehub/types').PostVisibility;
   isEnhancing: boolean;
@@ -117,6 +119,7 @@ export interface PostFormActions {
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   setContentWarning: (value: string | null) => void;
   setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
+  setStitchPolicy: (value: import('@/lib/remix-links').RemixPolicy | null) => void;
   setReplyPolicy: (value: import('@/lib/api/dehub/types').ReplyPolicy) => void;
   setVisibility: (value: import('@/lib/api/dehub/types').PostVisibility) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

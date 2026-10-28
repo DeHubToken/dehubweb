@@ -7,7 +7,8 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Copy, Loader2, Mic, MicOff, Swords, UserPlus, Users, X } from 'lucide-react';
+import { Check, Copy, Loader2, Mic, MicOff, Swords, Users, X } from 'lucide-react';
+import UserPlus from "@/components/ui/cut-icons/add-account";
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { searchUsers } from '@/lib/api/dehub/users';

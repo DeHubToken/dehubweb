@@ -6,7 +6,7 @@
  * instance. Anything that has to treat "is the home feed on screen" as a single
  * question reads it from here.
  *
- * This lived in three places (AppLayout, FriendsOnStageBar, HomeFeed) behind a
+ * This lived in three places (AppLayout, the home live bar, HomeFeed) behind a
  * "keep in sync" comment. It is one list.
  *
  * The gate matters beyond layout: PersistentPageCache never unmounts a visited

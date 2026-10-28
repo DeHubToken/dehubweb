@@ -1731,6 +1731,8 @@
       "fractionPurchased": "{{name}} ክፋላት ናይ ጽሑፍካ ዓዲጉ",
       "repostedPosts": "{{name}} ካብ ጽሑፋትካ {{count}} ዳግማይ ኣስፊሩ",
       "commentMention": "{{name}} ኣብ ርኢቶ ጠቒሱካ",
+      "liveChatMention": "{{name}} ኣብ ህያው ቻት ጠቒሱካ",
+      "publicChatMention": "{{name}} ኣብ ህዝባዊ ዝርርብ ጠቒሱካ",
       "followRequest": "{{name}} ክስዕበካ ሓቲቱ",
       "bountyReplyNamed": "{{name}} ኣብ ሽልማትካ “{{title}}” መሊሱልካ",
       "bountyReply": "{{name}} ኣብ ሽልማትካ መሊሱልካ",
@@ -3208,6 +3210,7 @@
     "followerInvites": {
       "title": "ሰዓብቲ ዓድም",
       "detail": "ኣብ ነፍሲ ወከፍ ጉጅለ ክሳብ 50 ሰዓብቲ ምረጽ። ዝተኸፍለሎም ወይ ዝተዓጽዉ መልእኽታት (DMs) ይዝለሉ። ዳግማይ ቅድሚ ምፍታንካ ንዘይተረጋገጹ መልእኽታት ኣብ ቻት ኣረጋግጽ።",
+      "note": "ኣብ ዕድመኹም መዘኻኸሪ ወስኹ (ኣማራጺ)",
       "selectAll": "ነዚ ገጽ ምረጽ",
       "clear": "ኣጽሪ",
       "previous": "ቅድሚ ሕጂ",

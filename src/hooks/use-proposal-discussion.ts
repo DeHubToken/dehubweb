@@ -18,8 +18,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getAuthToken } from '@/lib/api/dehub';
-import { ensureFreshToken } from '@/lib/api/dehub/core';
 import {
   attachReactions,
   buildThreads,
@@ -111,9 +109,7 @@ export function useSubmitProposalComment() {
       parentId?: string | null;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await ensureFreshToken();
-      const token = getAuthToken();
-      if (!token) throw new Error('Not authenticated');
+      // The Supabase fetch attaches a verified wallet session for this address.
       const address = walletAddress.toLowerCase();
       const avatarPath = await resolveCommentAvatar(address, user?.avatarImageUrl, user?.username);
 
@@ -129,8 +125,7 @@ export function useSubmitProposalComment() {
         })
         .select()
         .single()
-        .setHeader('x-wallet-address', address)
-        .setHeader('x-dehub-token', token);
+        .setHeader('x-wallet-address', address);
       if (error) throw error;
       return data;
     },
@@ -155,15 +150,11 @@ export function useEditProposalComment() {
   return useMutation({
     mutationFn: async ({ commentId, content }: { commentId: string; content: string; proposalId: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
-      await ensureFreshToken();
-      const token = getAuthToken();
-      if (!token) throw new Error('Not authenticated');
       const { error } = await supabase
         .from('governance_comments')
         .update({ content: content.trim(), updated_at: new Date().toISOString() })
         .eq('id', commentId)
-        .setHeader('x-wallet-address', walletAddress.toLowerCase())
-        .setHeader('x-dehub-token', token);
+        .setHeader('x-wallet-address', walletAddress.toLowerCase());
       if (error) throw error;
     },
     onSuccess: (_data, variables) => {

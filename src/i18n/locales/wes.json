@@ -290,7 +290,7 @@
     "stillCounting": "Still counting: gifts can take a minute to confirm."
   },
   "accountConnect": {
-    "body": "Link yu account fo manage yu profile, post post an create content from chat. Connection go expire after 24 hour. Yu can disconnect any time.",
+    "body": "Link yu account fo manage yu profile, post post an create content from chat. Connection go expire after 30 day. Yu can disconnect any time.",
     "social": "Pamela post, koment, follow pipo, save bukmark.",
     "generate": "Mek media wit yor credz, konfirm paymant or elijibl free imajez.",
     "signIn": "Sign in tu DeHub",
@@ -1696,6 +1696,7 @@
       "fractionPurchased": "{{name}} buy fractions blong post blong yu",
       "repostedPosts": "{{name}} repost {{count}} blong post blong yu",
       "commentMention": "{{name}} mention yu long koment",
+      "postMention": "{{name}} mention you for one post",
       "followRequest": "{{name}} ask to follo yu",
       "bountyReplyNamed": "{{name}} replai to yu bounty “{{title}}”",
       "bountyReply": "{{name}} replai to yu bounty",
@@ -9588,6 +9589,7 @@
       "colour": "Colour for path",
       "data": "SVG markup or data for path (d)",
       "detail": "Detail for curve",
+      "note": "Add small note for ya invite (if you want)",
       "filled": "Closed geometry wey get fill",
       "hint": "Paste path d data or basic SVG markup like path, rectangle, circle, ellipse, line, polygon. Move, line, cubic, quadratic, smooth, and arc commands fit. SVG matrix, translate, scale, rotate, and skew transformations keep shape same. Shape use your pick color; original fill, stroke, and view box not come. Curves turn to sample draw points. Close path with Z to fill. Separate closed SVG parts can fill together. Many parts turn to group, edit layers; compound holes no support.",
       "insert": "Put geometry wey you fit edit",

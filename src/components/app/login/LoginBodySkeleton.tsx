@@ -1,38 +1,31 @@
-import '@/styles/skeleton.css';
 /**
- * What the sheet shows in the beat before the sign-in options are ready: the
- * shape of the list, not a spinner.
+ * What the sheet holds in the beat before the sign-in options are ready:
+ * nothing visible, just their space.
  *
- * Its job is to be the same height as the thing replacing it. The real list is
- * four to six full-width pills, an "or" divider, the wallet button and the
- * two-up Migrate / Import row — so this is five pills (the median), a divider,
- * a pill and a two-up row. The swap then changes what the rows say and never
- * how tall the sheet is.
+ * It used to sketch the list as grey pulsing pills, which read as an old,
+ * broken login screen flashing before the real one. Now it only reserves the
+ * height of what replaces it, so the sheet does not change size: the full list
+ * (five pills, the "or" divider, the wallet pill and the two-up row), or for
+ * the email-first `stack` layout its email box, button and icon row.
  *
  * Lives in the entry bundle with the shell, not in the lazy body chunk: it has
  * to be on screen before that chunk arrives.
  */
 
-const ROW = 'h-12 rounded-xl theme-skeleton border border-border animate-pulse';
+const ROW = 'h-12';
 
-export function LoginBodySkeleton() {
+export function LoginBodySkeleton({ layout }: { layout?: 'stack' } = {}) {
+  if (layout === 'stack') return <div className="h-[250px]" aria-hidden data-login-placeholder />;
   return (
-    <div className="space-y-4" aria-hidden>
+    <div className="space-y-4 invisible" aria-hidden data-login-placeholder>
       <div className="space-y-3">
         {[0, 1, 2, 3, 4].map((i) => (
           <div key={i} className={ROW} />
         ))}
       </div>
-      <div className="flex items-center gap-3 py-2">
-        <div className="h-px flex-1 theme-skeleton" />
-        <div className="h-3 w-6 rounded theme-skeleton" />
-        <div className="h-px flex-1 theme-skeleton" />
-      </div>
-      <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
-        <div className="h-12 rounded-xl theme-skeleton border border-border animate-pulse" />
-      </div>
+      <div className="h-7" />
+      <div className={ROW} />
+      <div className={ROW} />
     </div>
   );
 }

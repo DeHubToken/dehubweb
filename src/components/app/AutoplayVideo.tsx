@@ -227,8 +227,11 @@ export const AutoplayVideo = memo(function AutoplayVideo({
 
   return (
     <div ref={containerRef} className={cn("relative isolate", className)}>
-      {/* Skeleton shimmer — visible until video has loaded data */}
-      {!hasLoaded && (
+      {/* Skeleton shimmer — visible until video has loaded data, and only
+          while it is actually loading. A tile waiting for its turn shows the
+          <video> poster still; a pulse on every waiting tile (a Shorts row
+          has ~20) kept Safari repainting the feed forever. */}
+      {!hasLoaded && (shouldLoad || !poster) && (
         <div className="absolute inset-0 z-[1]">
           <VideoGlitchLoader poster={poster} />
         </div>

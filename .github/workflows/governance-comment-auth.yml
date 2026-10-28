@@ -1,0 +1,34 @@
+name: Governance comment authentication
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/*governance*'
+      - 'tests/sql/governance-comment-auth*'
+      - '.github/workflows/governance-comment-auth.yml'
+  workflow_dispatch:
+jobs:
+  signed-comments:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: governance-test
+          POSTGRES_DB: governance_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: governance-test
+      PGDATABASE: governance_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/governance-comment-auth-bootstrap.sql
+          sed '/CREATE OR REPLACE FUNCTION public.get_my_agents()/,$d' supabase/migrations/20260929093849_7f219ea4-80f1-4f9f-8809-1e8e709b55a9.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_governance_signed_comment_auth.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/governance-comment-auth.sql

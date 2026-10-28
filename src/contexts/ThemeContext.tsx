@@ -49,6 +49,14 @@ function stampTheme(choice: string) {
   root.style.colorScheme = choice === 'light' || choice === SYSTEM_LIGHT ? 'light' : 'dark';
 }
 
+/**
+ * Live is a dark room in every theme. While a screen holds a dark surface
+ * (useDarkSurface), a light choice runs as its dark twin: System Light as
+ * System, Minimal Light as Minimal. Nothing is saved; the choice comes back
+ * the moment the screen closes.
+ */
+const DARK_TWIN: Record<string, string> = { [SYSTEM_LIGHT]: 'system', light: 'minimal' };
+
 type ThemeContextValue = {
   /** The theme that styles the app (System Light reads as 'system'). */
   theme: string;
@@ -71,6 +79,8 @@ type ThemeContextValue = {
   brandColors: string[];
   /** Replace the stored brand palette (up to 3 hex colours). */
   setBrandColors: (colors: string[]) => void;
+  /** Run a light theme as its dark twin until the returned release is called. */
+  holdDarkSurface?: () => () => void;
 };
 
 function readStoredBrandColors(): string[] {
@@ -105,12 +115,25 @@ function readStoredHues(): Record<string, number> {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<string>(() => {
+  const [savedTheme, setThemeState] = useState<string>(() => {
     if (typeof window === 'undefined') return 'system';
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY) || 'system';
     // Migrate old 'christmas' theme name to 'winter'.
     return stored === 'christmas' ? 'winter' : stored;
   });
+
+  const [darkHolds, setDarkHolds] = useState(0);
+  const holdDarkSurface = useCallback(() => {
+    setDarkHolds((n) => n + 1);
+    let released = false;
+    return () => {
+      if (released) return;
+      released = true;
+      setDarkHolds((n) => n - 1);
+    };
+  }, []);
+  // What paints the app: the saved choice, or its dark twin while a live room is open.
+  const theme = darkHolds > 0 ? DARK_TWIN[savedTheme] ?? savedTheme : savedTheme;
 
   const [dimLights, setDimLightsState] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -147,7 +170,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setThemeState(val);
     try { window.localStorage.setItem(THEME_STORAGE_KEY, val); } catch { /* ignore */ }
   }, []);
-  const { push: pushTheme } = useSyncedPreference('theme', theme, applyTheme, 'system', { resetOnLogout: true });
+  const { push: pushTheme } = useSyncedPreference('theme', savedTheme, applyTheme, 'system', { resetOnLogout: true });
 
   const applyDimLights = useCallback((v: unknown) => {
     const val = v === true || v === '1' || v === 1;
@@ -291,8 +314,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Memoized: ThemeProvider wraps the whole app and its consumers include the
   // feed and every themed component — a fresh value literal re-renders them all.
   const value = useMemo(
-    () => ({ theme: effectiveTheme(theme), themeChoice: theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors }),
-    [theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors],
+    () => ({ theme: effectiveTheme(theme), themeChoice: theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors, holdDarkSurface }),
+    [theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors, holdDarkSurface],
   );
 
   return (
@@ -353,4 +376,17 @@ export function useAppTheme() {
     } as ThemeContextValue;
   }
   return ctx;
+}
+
+/**
+ * Keep this screen dark in every theme while it is mounted and `active`: a
+ * light choice runs as its dark twin (see DARK_TWIN), so the page, its sheets
+ * and its portals all paint exactly as they do in the dark theme.
+ */
+export function useDarkSurface(active = true) {
+  const hold = useContext(ThemeContext)?.holdDarkSurface;
+  useLayoutEffect(() => {
+    if (!active || !hold) return;
+    return hold();
+  }, [active, hold]);
 }

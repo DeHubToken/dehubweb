@@ -486,7 +486,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
       {/* Globe / Country selector button at bottom */}
       {showCountrySelector && (
-        <div ref={countryDropdownRef} className="relative -mt-1 -mx-4 -mb-4">
+        <div ref={countryDropdownRef} className="relative z-20 -mt-1 -mx-4 -mb-4">
+          {/* z-20: the tab box above stacks its active tab at z-10, which
+              painted over this button's top 4px (the -mt-1 overlap). */}
           <button
             data-view-all
             onClick={() => setShowCountryDropdown(prev => !prev)}
@@ -534,7 +536,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         </div>
       )}
       {!showCountrySelector && (
-        <div data-view-all>
+        <div data-view-all className="relative z-20">
           <LiquidGlassBubble2
             label={t('commandCentre.viewAll', 'View all')}
             onClick={() => {

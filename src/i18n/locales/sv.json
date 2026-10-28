@@ -1760,6 +1760,9 @@
       "fractionPurchased": "{{name}} köpte fraktioner av ditt inlägg",
       "repostedPosts": "{{name}} ompublicerade {{count}} av dina inlägg",
       "commentMention": "{{name}} nämnde dig i en kommentar",
+      "postMention": "{{name}} nämnde dig i ett inlägg",
+      "liveChatMention": "{{name}} nämnde dig i livechatten",
+      "publicChatMention": "{{name}} nämnde dig i den offentliga chatten",
       "followRequest": "{{name}} begärde att följa dig",
       "bountyReplyNamed": "{{name}} svarade på din belöning “{{title}}”",
       "bountyReply": "{{name}} svarade på din belöning",
@@ -3245,6 +3248,7 @@
     "followerInvites": {
       "title": "Bjud in följare",
       "detail": "Välj upp till 50 följare per batch. Betalda eller stängda DM:er hoppas över. Kontrollera chatt för obekräftade skickningar innan du försöker igen.",
+      "note": "Lägg till en hälsning i din inbjudan (valfritt)",
       "selectAll": "Välj denna sida",
       "clear": "Rensa",
       "previous": "Föregående",

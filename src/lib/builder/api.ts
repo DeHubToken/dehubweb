@@ -3,7 +3,7 @@
  *
  * Builds are started from Messages — @assistant calls the builder-api function
  * on the user's behalf. Each app is served from its own origin,
- * https://<slug>.dehub.app. Public apps are also mirrored to Storage, which
+ * https://<slug>.dhb.gg. Public apps are also mirrored to Storage, which
  * older share links and app builds still render from.
  */
 import { supabase } from '@/integrations/supabase/client';
@@ -12,7 +12,7 @@ import { ensureFreshToken } from '@/lib/api/dehub/core';
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || "https://aigxuutjaqsywioxjefr.supabase.co";
 
-export const BUILDER_APPS_DOMAIN = 'dehub.app';
+export const BUILDER_APPS_DOMAIN = 'dhb.gg';
 
 /** Public Storage directory the generated files live in (trailing slash). */
 export function builderStorageBase(projectId: string): string {
@@ -38,7 +38,7 @@ export async function resolvePublicApp(projectId: string): Promise<PublicBuilder
   return res.json();
 }
 
-/** True once <slug>.dehub.app answers — false while DNS is still moving. */
+/** True once <slug>.dhb.gg answers — false while DNS is still moving. */
 export async function appHostReachable(url: string): Promise<boolean> {
   try {
     const res = await fetch(url, { method: 'HEAD', cache: 'no-store', signal: AbortSignal.timeout(4000) });

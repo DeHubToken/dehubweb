@@ -20,6 +20,7 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
+import type { BadgeLock } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
   DropdownMenu,
@@ -75,6 +76,8 @@ export interface Message {
   userHandle?: string;
   userAvatar?: string;
   badgeBalance?: number | null;
+  /** Grandfathered tier, when the payload carries one. */
+  badgeLock?: BadgeLock | null;
   content: string;
   timestamp: Date;
   type: 'text' | 'image' | 'gif' | 'audio';
@@ -121,8 +124,8 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
 }
 
 /** Inline staking badge for chat messages */
-function StakingBadgeInline({ badgeBalance, username }: { badgeBalance?: number | null; username?: string }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
+function StakingBadgeInline({ badgeBalance, badgeLock, username }: { badgeBalance?: number | null; badgeLock?: BadgeLock | null; username?: string }) {
+  return <BadgeIcon badgeBalance={badgeBalance} badgeLock={badgeLock} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Reaction pills displayed below a message */
@@ -314,7 +317,7 @@ export const ChatMessage = memo(function ChatMessage({
             >
               {message.userName}
             </button>
-            <StakingBadgeInline badgeBalance={message.badgeBalance} username={message.userHandle} />
+            <StakingBadgeInline badgeBalance={message.badgeBalance} badgeLock={message.badgeLock} username={message.userHandle} />
           </span>
           <ModeratorBadge address={message.userId} moderators={moderators} />
 

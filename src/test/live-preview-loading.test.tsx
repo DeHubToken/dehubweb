@@ -5,7 +5,7 @@ import { LiveFeedPreview } from '@/components/app/cards/LiveFeedPreview';
 
 vi.mock('@/components/app/cards/LiveEndedMedia', () => ({ LiveEndedMedia: () => <div>Poster</div> }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, walletAddress: 'viewer' }) }));
-const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.fn(() => ({ leave: vi.fn() })), playback: vi.fn((_id: string, _callback: (paused: boolean) => void) => ({ leave: vi.fn() })) }));
+const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.fn(() => ({ leave: vi.fn() })), playback: vi.fn((_id: string, _callback: (paused: boolean) => void, _ended?: () => void) => ({ leave: vi.fn() })) }));
 vi.mock('@/lib/api/dehub/stream-presence', () => ({
   joinStreamPresence: presence.join,
   watchStreamReactions: presence.observe,
@@ -43,6 +43,14 @@ describe('live preview loading feedback', () => {
     expect(screen.getByRole('status', { name: 'Live paused' })).toBeVisible();
     act(() => playback(false));
     expect(screen.queryByRole('status', { name: 'Live paused' })).toBeNull();
+  });
+  it('swaps to the ended state the moment the room says the broadcast is over', async () => {
+    mount('stream-a');
+    await waitFor(() => expect(presence.playback).toHaveBeenCalled());
+    const ended = presence.playback.mock.calls[0][2]!;
+    act(() => ended());
+    expect(screen.getByText('Poster')).toBeVisible();
+    expect(document.querySelector('video')).toBeNull();
   });
   it('joins on actual playback and leaves when paused or scrolled out of view', async () => {
     const video = mount('stream-a');

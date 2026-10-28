@@ -17,6 +17,8 @@ type VideoInstance = {
   /** Whether this video is the one on screen; only such a video is handed the sound. */
   isProminent: () => boolean;
   element?: () => HTMLVideoElement | null;
+  /** A live being watched: a hidden tab or an unfocused window doesn't stop it, only a call. */
+  keepsPlayingInBackground?: boolean;
 };
 
 class VideoPlaybackManager {
@@ -48,8 +50,8 @@ class VideoPlaybackManager {
    * Register a video instance with the manager.
    * Now requires a mute callback so the manager can force-mute non-owners.
    */
-  register(id: string, pause: () => void, mute?: (muted: boolean) => void, isProminent?: () => boolean, element?: () => HTMLVideoElement | null): void {
-    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}), isProminent: isProminent ?? (() => true), element });
+  register(id: string, pause: () => void, mute?: (muted: boolean) => void, isProminent?: () => boolean, element?: () => HTMLVideoElement | null, keepsPlayingInBackground?: boolean): void {
+    this.registeredVideos.set(id, { id, pause, mute: mute ?? (() => {}), isProminent: isProminent ?? (() => true), element, keepsPlayingInBackground });
   }
 
   unregister(id: string): void {
@@ -146,7 +148,7 @@ class VideoPlaybackManager {
   pauseAll(): void {
     const videos = [...this.registeredVideos.values()];
     videos.forEach(video => {
-      if (!visualActivity.isCallBusy() && isVideoInPictureInPicture(video.element?.() ?? null)) return;
+      if (!visualActivity.isCallBusy() && (video.keepsPlayingInBackground || isVideoInPictureInPicture(video.element?.() ?? null))) return;
       this.activeVideos.delete(video.id);
       if (this.audioOwnerId === video.id) this.audioOwnerId = null;
       try { video.pause(); } catch {}

@@ -1,0 +1,14 @@
+name: Creator avatar input and pricing
+on:
+  pull_request:
+    paths: ['supabase/functions/_shared/creator-avatar*', 'supabase/functions/_shared/speech-audio.ts', 'supabase/functions/ai-quote/**', 'supabase/functions/generate-video/**', '.github/workflows/creator-avatar.yml']
+jobs:
+  avatar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: deno test --node-modules-dir=none supabase/functions/_shared/creator-avatar.test.ts
+      - run: deno check --node-modules-dir=none supabase/functions/ai-quote/index.ts supabase/functions/generate-video/index.ts

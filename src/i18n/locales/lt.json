@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} nupirko jūsų posto dalis",
       "repostedPosts": "{{name}} atkartojė jūsų  {{count}} postų",
       "commentMention": "{{name}} paminėjo jūsą komentare",
+      "postMention": "{{name}} paminėjo jus įraše",
+      "liveChatMention": "{{name}} paminėjo jus tiesioginiame pokalbyje",
+      "publicChatMention": "{{name}} paminėjo jus viešame pokalbyje",
       "followRequest": "{{name}} prašė, kad sekotų jūsą",
       "bountyReplyNamed": "{{name}} atsakė jūsų „{{title}}” premijai",
       "bountyReply": "{{name}} atsakė jūsų premijai",
@@ -3243,6 +3246,7 @@
     "followerInvites": {
       "title": "Pakviesti sekėjų",
       "detail": "Partijoje gali pasirinkti iki 50 sekėjų. Mokami arba uždaryti DM praleidžiami. Prieš bandydami dar kartą, patikrinkite, ar pokalbyje nėra nepatvirtintų siuntimų.",
+      "note": "Pridėkite žinutę prie kvietimo (neprivaloma)",
       "selectAll": "Pasirinkti šį puslapį",
       "clear": "Ištrinti",
       "previous": "Atgal",

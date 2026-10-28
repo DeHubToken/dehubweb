@@ -1,6 +1,6 @@
 /**
  * Owner controls for a Builder app, opened from its preview page: the app's
- * own address (<slug>.dehub.app), public/private, publishing to the DeHub app
+ * own address (<slug>.dhb.gg), public/private, publishing to the DeHub app
  * store, and every saved version with one-tap restore.
  */
 import { useCallback, useEffect, useState } from 'react';

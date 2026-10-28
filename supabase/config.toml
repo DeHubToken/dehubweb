@@ -448,3 +448,5 @@ verify_jwt = false
 
 [functions.cashout-webhook]
 verify_jwt = false
+[functions.remix-links]
+verify_jwt = false

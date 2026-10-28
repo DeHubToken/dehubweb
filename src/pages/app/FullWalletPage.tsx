@@ -65,6 +65,8 @@ import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 import { TradeSheet } from '@/components/app/wallet/TradeSheet';
 import { SubscriptionTokensRow } from '@/components/app/wallet/SubscriptionTokensRow';
+import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
+import { useAppTokens, useAppTokensEnabled } from '@/hooks/use-app-tokens';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const CHAIN_OPTIONS: { id: WalletChainId; name: string; icon: string }[] = [
@@ -133,6 +135,14 @@ export default function FullWalletPage() {
   // Settings row and the badge ladder cannot drift apart again.
   const holdings = useDhbHoldings();
 
+  // App tokens: when the server switches them on, DHB is the in-app balance
+  // (opened from what was held and staked at launch) and Send moves app
+  // tokens only. Onchain DHB stays in the wallet but is not shown or sent here.
+  const appTokensOn = useAppTokensEnabled();
+  const { data: appTokens } = useAppTokens(appTokensOn);
+  const appDhb = Number(appTokens?.balance ?? 0);
+  const [appSendOpen, setAppSendOpen] = useState(false);
+
   // Twitter World Cup giveaway credit — folded into the DHB balance for winners
   // (shown like staked DHB: part of the total, itemised as a locked line in the
   // breakdown). Held custodially; transfers once the DHB contract goes live.
@@ -166,6 +176,7 @@ export default function FullWalletPage() {
   // sat under. Both are DHB, so both price off the DHB quote.
   const totalUsd = useMemo(() => {
     const walletUsd = allTokens.reduce((sum, token) => {
+      if (appTokensOn && token.symbol === 'DHB') return sum;
       const price = prices[token.symbol] ?? 0;
       const value = tokenAmount(token) * price;
       return sum + (isNaN(value) ? 0 : value);
@@ -173,10 +184,10 @@ export default function FullWalletPage() {
     const dhbPrice = prices.DHB ?? 0;
     // `walletUsd` already priced the DHB sitting in the wallet, so only the
     // off-wallet halves are added here.
-    const offWalletDhb = holdings.staked + holdings.giveaway;
+    const offWalletDhb = appTokensOn ? appDhb : holdings.staked + holdings.giveaway;
     const offWalletUsd = offWalletDhb * dhbPrice;
     return walletUsd + (isNaN(offWalletUsd) ? 0 : offWalletUsd);
-  }, [allTokens, prices, holdings.staked, holdings.giveaway]);
+  }, [allTokens, prices, holdings.staked, holdings.giveaway, appTokensOn, appDhb]);
 
   // Group tokens by symbol across chains
   // Tokens may have different decimals across chains (e.g. USDT: 6 on Base, 18 on BNB)
@@ -217,8 +228,8 @@ export default function FullWalletPage() {
 
   // Use raw balances so even holdings below the display precision remain visible.
   const withBalance = useMemo(
-    () => filteredGrouped.filter(g => g.totalBalance > BigInt(0)),
-    [filteredGrouped],
+    () => filteredGrouped.filter(g => g.totalBalance > BigInt(0) && !(appTokensOn && g.symbol === 'DHB')),
+    [filteredGrouped, appTokensOn],
   );
 
   const [copied, setCopied] = useState(false);
@@ -339,7 +350,9 @@ export default function FullWalletPage() {
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt={tokenLabel()} className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
-                {isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
+                {appTokensOn
+                  ? Math.floor(appDhb).toLocaleString()
+                  : isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
               </p>
               <button
                 onClick={() => setShowBalanceBreakdown(!showBalanceBreakdown)}
@@ -377,7 +390,9 @@ export default function FullWalletPage() {
             animate={{ opacity: 1, height: 'auto' }}
             className="mt-3 pt-3 border-t border-zinc-800 space-y-1.5"
           >
-            {(() => {
+            {appTokensOn ? (
+              <p className="text-xs leading-relaxed text-zinc-500">{t('appTokens.explainer')}</p>
+            ) : (() => {
               const dhb = groupedTokens.find(t => t.symbol === 'DHB');
               const baseBal = dhb?.chains.find(c => c.chainId === BASE_CHAIN_ID);
               const bnbBal = dhb?.chains.find(c => c.chainId === BNB_CHAIN_ID);
@@ -420,7 +435,8 @@ export default function FullWalletPage() {
           <span className="max-w-full truncate text-xs">{t('wallet.receive')}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => {
-          if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
+          if (appTokensOn) setAppSendOpen(true);
+          else if (allWithBalance.length > 0) handleSend(allWithBalance[0]);
           else toast.info(t('wallet.noTokensToSend'));
         }}>
           <Send className="w-5 h-5" />
@@ -470,10 +486,11 @@ export default function FullWalletPage() {
           </div>
         ) : (
           <>
+            {appTokensOn && !searchQuery.trim() && <AppTokensRow onSend={() => setAppSendOpen(true)} />}
             {withBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
-            {!isLoading && !withBalance.length && !failedChains.length && (
+            {!isLoading && !withBalance.length && !failedChains.length && !(appTokensOn && !searchQuery.trim()) && (
               <p className="py-8 text-center text-sm text-zinc-400">{t(searchQuery.trim() ? 'common.noResults' : 'wallet.zeroBalance')}</p>
             )}
             <SubscriptionTokensRow />
@@ -510,6 +527,8 @@ export default function FullWalletPage() {
         }}
         walletAddress={walletAddress}
       />
+
+      {appTokensOn && <AppTokenSendDialog open={appSendOpen} onOpenChange={setAppSendOpen} />}
 
       <TradeSheet open={tradeOpen} onOpenChange={setTradeOpen} tokens={allTokens} />
 

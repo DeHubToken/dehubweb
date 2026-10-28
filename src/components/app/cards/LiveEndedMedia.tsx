@@ -63,7 +63,8 @@ function TvStatic({ label }: { label: string }) {
     <div data-media-scrim ref={rootRef} className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
       {/* Snow — noise tile re-randomizes position each step */}
       <div
-        className="absolute inset-0 opacity-90"
+        // Oversized so the moving tile never shows an edge (it moves by transform).
+        className="absolute -inset-12 opacity-90"
         style={{
           backgroundImage: `url("${NOISE_TEXTURE}")`,
           backgroundSize: '140px 140px',
@@ -131,7 +132,7 @@ export function LiveEndedMedia({
           {/* "Live ended" badge — top-left, so a past live is never mistaken
               for a still-live or still-loading card */}
           {hideBadge ? null : (
-            <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/15 rounded-lg px-2 py-1">
+            <div data-keep-dark className="absolute top-2 left-2 flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/15 rounded-lg px-2 py-1">
               <Radio className="w-3 h-3 text-white/70" />
               <span className="text-white/80 text-[10px] font-semibold uppercase tracking-wide">
                 {label}

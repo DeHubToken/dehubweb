@@ -9,8 +9,8 @@
  * - Skeleton loaders on first visit while lazy components load
  */
 
-import React, { Suspense, useState, useEffect, useMemo, useRef, memo } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import React, { Suspense, useState, useEffect, useMemo, useRef, useContext, useDeferredValue, memo, type ReactNode } from 'react';
+import { useLocation, useParams, UNSAFE_LocationContext, UNSAFE_RouteContext } from 'react-router-dom';
 import { BUY_PATHS } from '@/lib/buy-route';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
@@ -139,6 +139,24 @@ function matchesPath(config: CachedPageConfig, pathname: string): boolean {
   return paths.some(p => normalized === p);
 }
 
+/** Hidden pages keep the route they last showed, so a tap elsewhere never re-renders them. */
+const HeldRoute = memo(function HeldRoute({ live, children }: { live: boolean; children: ReactNode }) {
+  const location = useContext(UNSAFE_LocationContext);
+  const route = useContext(UNSAFE_RouteContext);
+  const held = useRef({ location, route });
+  // The router re-issues identical values on the way out; ignore those too.
+  const was = held.current.location.location;
+  const now = location.location;
+  const moved = now.key !== was.key || now.pathname !== was.pathname || now.search !== was.search
+    || now.hash !== was.hash || now.state !== was.state;
+  if (live && moved) held.current = { location, route };
+  return (
+    <UNSAFE_LocationContext.Provider value={held.current.location}>
+      <UNSAFE_RouteContext.Provider value={held.current.route}>{children}</UNSAFE_RouteContext.Provider>
+    </UNSAFE_LocationContext.Provider>
+  );
+});
+
 /** Wrapper that shows skeleton on first Suspense load */
 const CachedPage = memo(function CachedPage({
   config,
@@ -159,6 +177,8 @@ const CachedPage = memo(function CachedPage({
 }) {
   const Component = config.component;
   const SkeletonComponent = config.skeleton;
+  // Show/hide must not re-render the page itself.
+  const page = useMemo(() => <Component />, [Component]);
   const { isCollapsed } = useSidebarCollapse();
 
   // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
@@ -167,6 +187,12 @@ const CachedPage = memo(function CachedPage({
   // When a post overlay is open on top of home, keep home visible so its sticky
   // tab bar remains at the top — this is what makes the transition feel seamless.
   const shouldStayVisible = isActive || forceVisible;
+
+  // Going inactive re-renders every listener (each feed card): do it after the
+  // next page paints. Media still stops right away below.
+  const activeNow = shouldStayVisible && !retainedPostKey;
+  const activeSettled = useDeferredValue(activeNow);
+  const contextActive = activeNow || activeSettled;
 
   // A hidden page stays MOUNTED and `visibility: hidden` does not pause media,
   // so media is stopped on the way out — once, here, for every page. Home stays
@@ -216,8 +242,8 @@ const CachedPage = memo(function CachedPage({
         <Suspense fallback={<SkeletonComponent />}>
           {/* Only the active page may write document metadata — see the context. */}
           <RetainedPostActivityContext.Provider value={retainedPostKey ?? null}>
-            <CachedPageActiveContext.Provider value={shouldStayVisible && !retainedPostKey}>
-              <Component />
+            <CachedPageActiveContext.Provider value={contextActive}>
+              <HeldRoute live={shouldStayVisible}>{page}</HeldRoute>
             </CachedPageActiveContext.Provider>
           </RetainedPostActivityContext.Provider>
         </Suspense>

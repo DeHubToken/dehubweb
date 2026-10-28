@@ -16,11 +16,12 @@
  * shows it before sign-in.
  */
 
-import { handleCorsPreflight, jsonResponse } from '../_shared/auth.ts';
+import { handleCorsPreflight, jsonResponse, requireDeHubAuth, rateLimitByIp } from '../_shared/auth.ts';
 import { DHB_USD_PEG, dhbToUsd, quotePriceDhb, type JobKind } from '../_shared/ai-pricing.ts';
 import { isVeniceImage, isVeniceVideo } from '../_shared/venice-catalog.ts';
 import { quoteVenice } from '../_shared/venice.ts';
 import { seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
+import { AVATAR_MODEL, prepareAvatar } from '../_shared/creator-avatar.ts';
 import { kieKey } from '../_shared/kie.ts';
 
 Deno.serve(async (req) => {
@@ -35,6 +36,18 @@ Deno.serve(async (req) => {
       return jsonResponse({ ...await quoteVenice(modelId, body), pegUsd: DHB_USD_PEG });
     }
 
+    if (body.kind === 'video' && modelId === AVATAR_MODEL) {
+      try {
+        const auth = await requireDeHubAuth(req);
+        if (!auth.ok) return auth.response;
+        const limited = await rateLimitByIp(req, 'creator-avatar-quote', { limit: 30, windowMs: 60 * 60 * 1000 });
+        if (limited) return limited;
+        const prepared = await prepareAvatar(body.avatar, body.avatarPrompt);
+        const priceDhb = quotePriceDhb('video', modelId, { durationSeconds: prepared.durationSeconds });
+        if (!priceDhb) throw new Error('Avatar pricing is unavailable');
+        return jsonResponse({ priceDhb, priceUsd: dhbToUsd(priceDhb), pegUsd: DHB_USD_PEG, inputDigest: prepared.inputDigest, durationSeconds: prepared.durationSeconds });
+      } catch (error) { return jsonResponse({ error: (error as Error).message }, 400); }
+    }
     let videoProvider: 'kie' | 'fal' | undefined;
     if (body.kind === 'video' && ['seedance-2.0', 'seedance-2.0-fast'].includes(modelId)) {
       try { videoProvider = seedance2QuoteRoute(modelId, body, !!kieKey()).provider; }

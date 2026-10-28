@@ -82,11 +82,12 @@ function bodyFor(pushState: WebPushState): string {
 
 function show(goToSettings: () => void, pushState: WebPushState): void {
   const id = toast.message(i18n.t('toasts.push_blocked_title', 'Notifications are not reaching you'), {
-    duration: Infinity,
+    duration: 15_000,
     closeButton: true,
     position: 'bottom-right',
-    // The X is an answer too.
+    // The X is an answer too, and so is letting it time out.
     onDismiss: () => snooze(),
+    onAutoClose: () => snooze(),
     description: (
       <span className="flex flex-col gap-3">
         <span>{bodyFor(pushState)}</span>

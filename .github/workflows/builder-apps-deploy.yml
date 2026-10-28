@@ -1,7 +1,7 @@
 name: Deploy builder app host
 
-# Ships workers/builder-apps — the Worker behind https://<slug>.dehub.app.
-# Until the dehub.app zone is on this Cloudflare account it reports that and
+# Ships workers/builder-apps — the Worker behind https://<slug>.dhb.gg.
+# Until the dhb.gg zone is on this Cloudflare account it reports that and
 # exits cleanly, so merges stay green while DNS moves.
 
 on:
@@ -34,7 +34,7 @@ jobs:
         env:
           CLOUDFLARE_APITOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
           CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
-      - name: Find the dehub.app zone and ensure the wildcard record
+      - name: Find the dhb.gg zone and ensure the wildcard record
         id: zone
         run: |
           node --input-type=module <<'JS'
@@ -43,29 +43,29 @@ jobs:
             ...init,
             headers: { Authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`, 'Content-Type': 'application/json' },
           }).then(r => r.json());
-          const zones = await api('/zones?name=dehub.app');
+          const zones = await api('/zones?name=dhb.gg');
           const zone = zones.result?.[0];
           if (!zone) {
-            console.log('::warning::dehub.app is not on this Cloudflare account yet — skipping deploy. Move its nameservers to Cloudflare, then re-run this workflow.');
+            console.log('::warning::dhb.gg is not on this Cloudflare account yet — skipping deploy. Move its nameservers to Cloudflare, then re-run this workflow.');
             appendFileSync(process.env.GITHUB_OUTPUT, 'ready=false\n');
             process.exit(0);
           }
           if (zone.status !== 'active') {
-            console.log(`::warning::dehub.app zone is ${zone.status} (nameservers not switched yet) — deploying anyway; apps go live once it activates.`);
+            console.log(`::warning::dhb.gg zone is ${zone.status} (nameservers not switched yet) — deploying anyway; apps go live once it activates.`);
           }
-          const existing = await api(`/zones/${zone.id}/dns_records?name=*.dehub.app`);
+          const existing = await api(`/zones/${zone.id}/dns_records?name=*.dhb.gg`);
           if (!existing.success) {
-            console.log('::warning::Token cannot read dehub.app DNS. Add Zone.DNS edit for dehub.app to the token, or create a proxied AAAA record * -> 100:: by hand.');
+            console.log('::warning::Token cannot read dhb.gg DNS. Add Zone.DNS edit for dhb.gg to the token, or create a proxied AAAA record * -> 100:: by hand.');
           } else if (!existing.result.length) {
             // 100:: is the documented discard address: the Worker answers, nothing is behind it.
             const created = await api(`/zones/${zone.id}/dns_records`, {
               method: 'POST',
               body: JSON.stringify({ type: 'AAAA', name: '*', content: '100::', proxied: true, comment: 'DeHub Builder apps (dehub-builder-apps Worker)' }),
             });
-            if (!created.success) console.log('::warning::Could not create *.dehub.app: ' + JSON.stringify(created.errors));
-            else console.log('Created proxied *.dehub.app record.');
+            if (!created.success) console.log('::warning::Could not create *.dhb.gg: ' + JSON.stringify(created.errors));
+            else console.log('Created proxied *.dhb.gg record.');
           } else {
-            console.log('*.dehub.app record already exists.');
+            console.log('*.dhb.gg record already exists.');
           }
           appendFileSync(process.env.GITHUB_OUTPUT, 'ready=true\n');
           JS

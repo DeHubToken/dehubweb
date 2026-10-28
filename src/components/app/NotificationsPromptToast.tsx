@@ -118,8 +118,9 @@ function decline(id: string | number): void {
 
 function showPrompt(): void {
   const id = toast.message('Turn on desktop notifications?', {
-    // Sits until answered or waved away, like the version toast.
-    duration: Infinity,
+    // Up long enough to answer, then it goes; timing out counts as "not now".
+    duration: 15_000,
+    onAutoClose: () => snooze(),
     closeButton: true,
     position: 'bottom-right',
     // The X counts as "not now". `snooze` no-ops after `markDone`, so the

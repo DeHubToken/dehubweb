@@ -72,6 +72,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     emoji: '◈', tier: 'fast' as const, baseCostUsd: model.baseCostUsd, supportsEdit: false,
   }])),
   ...CREATOR_FAL_IMAGE_MODELS,
+  'iclight-v2': { ...CREATOR_FAL_IMAGE_MODELS['iclight-v2'],
+    get description() { return _translateCopy('creator.relightDescription', { defaultValue: 'Relight one photo from your lighting and background description.' }); } },
   'bria-expand': { ...CREATOR_FAL_IMAGE_MODELS['bria-expand'],
     get description() { return _translateCopy('creator.expandDescription', { defaultValue: 'Generate new image borders. Optional English prompt; one source image.' }); } },
   'gemini-2.5-flash': {

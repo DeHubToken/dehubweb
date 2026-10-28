@@ -51,11 +51,11 @@ export function showRecordingSaved(): void {
   });
 }
 
-/** Both upload attempts failed. Sticky: this is the host's only witness. */
+/** Both upload attempts failed. Held longest of any toast: this is the host's only witness. */
 export function showRecordingFailed(): void {
   toast.message(_translateCopy('copy.051a9db4009d', { defaultValue: 'Recording could not be saved' }), {
     id: TOAST_ID,
-    duration: Infinity,
+    duration: 15_000,
     closeButton: true,
     ...corner(),
     description: _translateCopy('copy.826efabad5e7', { defaultValue: 'The recording could not be kept after retrying.' }),

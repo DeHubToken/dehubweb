@@ -1771,6 +1771,9 @@
       "fractionPurchased": "{{name}} nividy fractions ny post nao",
       "repostedPosts": "{{name}} nampindra indray {{count}} ny posts nao",
       "commentMention": "{{name}} nampahafantara anao amin'ny fanehoan-kevitra",
+      "postMention": "{{name}} nanamarika anao tao anaty lahatsoratra iray",
+      "liveChatMention": "{{name}} nanonona anao tamin'ny chat mivantana",
+      "publicChatMention": "{{name}} nanonona anao teny amin'ny karajia ho an'ny daholobe",
       "followRequest": "{{name}} nangataka hanaraka anao",
       "bountyReplyNamed": "{{name}} namaly ny bounty \"{{title}}\" nao",
       "bountyReply": "{{name}} namaly ny bounty nao",
@@ -3253,6 +3256,7 @@
     "followerInvites": {
       "title": "Mag-imbita ng mga tagasunod",
       "detail": "Pumili ng hanggang 50 tagasunod bawat batch. Ang mga bayad o saradong DM ay linalampas. Suriin ang chat para sa mga hindi kumpirmadong pagpapadala bago subukan ulit.",
+      "note": "Ampio fanamarihana ny fanasanao (tsy voatery)",
       "selectAll": "Piliin ang pahinang ito",
       "clear": "Burahin",
       "previous": "Nakaraan",

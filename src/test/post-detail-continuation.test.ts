@@ -12,7 +12,7 @@ describe('dedicated post continuation', () => {
   it('opens one page-owned comments surface by default', () => {
     expect(detail).toContain('const [showPageComments, setShowPageComments] = useState(true)');
     expect(detail).toContain('forceInline');
-    expect(detail.match(/onOpenComments=\{handleOpenPageComments\}/g)).toHaveLength(3);
+    expect(detail.match(/onOpenComments=\{openPageComments\}/g)).toHaveLength(3);
   });
 
   it('keeps the page-owned comments surface inline on phones and immersive video', () => {

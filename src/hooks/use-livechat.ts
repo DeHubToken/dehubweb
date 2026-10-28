@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
+import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 
 /** Shape of a livechat message used internally in the UI */
 export interface SupabaseLiveChatMessage {
@@ -33,6 +34,12 @@ export interface SupabaseLiveChatMessage {
   sender_display_name: string | null;
   sender_avatar_url: string | null;
   sender_badge_balance?: number | null;
+  /**
+   * The sender's grandfathered tier. Most holders' badge comes from this, and
+   * a provided balance skips the account lookup, so without it the line
+   * draws no badge at all.
+   */
+  sender_badge_lock?: BadgeLock | null;
   /** Badges earned from the stream's creator, in a stream's chat. */
   sender_creator_badges?: ChatCreatorBadge[];
   content: string;
@@ -139,6 +146,7 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? raw.senderDisplayName ?? raw.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? raw.senderAvatarUrl ?? raw.sender_avatar_url ?? null) as string | null,
     sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? raw.senderBadgeBalance ?? raw.sender_badge_balance ?? 0) || null,
+    sender_badge_lock: parseBadgeLock(sender?.badgeLock ?? sender?.badge_lock ?? raw.senderBadgeLock ?? raw.sender_badge_lock),
     sender_creator_badges: parseChatBadges(sender?.creatorBadges),
     content: msg.content || (typeof gifUrl === 'string' ? gifUrl : ''),
     message_type: normalizeMsgType(msg.type || msg.messageType),
@@ -201,6 +209,11 @@ const MAX_LIVECHAT_MESSAGES = 300;
  * anything a reader can perceive, and enough that a burst lands together.
  */
 const FLUSH_INTERVAL_MS = 16;
+
+/** How often a stream's chat is read back over REST to catch anything the socket missed. */
+const STREAM_GAP_CHECK_MS = 20_000;
+/** The same, while the socket is down and nothing is arriving at all. */
+const DISCONNECTED_GAP_CHECK_MS = 5_000;
 
 /**
  * Key an optimistic row by who sent it and what it said.
@@ -306,6 +319,7 @@ export function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChat
     sender_display_name: (sender?.displayName ?? sender?.display_name ?? m.senderDisplayName ?? m.sender_display_name ?? null) as string | null,
     sender_avatar_url: (sender?.avatarUrl ?? sender?.avatarImageUrl ?? sender?.avatar_url ?? sender?.avatar_image_url ?? m.senderAvatarUrl ?? m.sender_avatar_url ?? null) as string | null,
     sender_badge_balance: Number(sender?.badgeBalance ?? sender?.badge_balance ?? m.senderBadgeBalance ?? m.sender_badge_balance ?? 0) || null,
+    sender_badge_lock: parseBadgeLock(sender?.badgeLock ?? sender?.badge_lock ?? m.senderBadgeLock ?? m.sender_badge_lock),
     sender_creator_badges: parseChatBadges(sender?.creatorBadges),
     content: (m.content ?? '') as string,
     message_type: normalizeMsgType((m.type ?? m.messageType ?? m.message_type) as string | undefined),
@@ -376,6 +390,29 @@ export function useLiveChatMessages(roomId: string | null) {
   }, [roomId]);
 
   /**
+   * Fold the room's newest lines in without replacing what is on screen, so a
+   * busy room keeps its scrollback while the gap check runs.
+   */
+  const catchUp = useCallback(async () => {
+    if (!roomId) return;
+    try {
+      const apiMessages = await fetchApiMessages(roomId, { limit: 50 });
+      if (!apiMessages.length) return;
+      const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
+      setMessages((prev) => {
+        const known = new Set(prev.map((m) => m.id));
+        const fresh = mapped.filter((m) => !known.has(m.id));
+        if (!fresh.length) return prev;
+        const next = mergeIncoming(prev, fresh);
+        cacheRoomMessages(roomId, next);
+        return next;
+      });
+    } catch (err) {
+      console.error('[LiveChat] REST catch-up failed:', err);
+    }
+  }, [roomId]);
+
+  /**
    * One reconciliation per burst of sends, not one per send.
    *
    * A message the gateway neither broadcast back nor refused leaves an
@@ -414,7 +451,9 @@ export function useLiveChatMessages(roomId: string | null) {
 
     initialLoadDone.current = false;
 
-    const unsubDebug = debugSocketEvents(roomId);
+    // Every socket event logged with its payload is real work per chat line
+    // and reaction on a busy stream; keep it to local dev.
+    const unsubDebug = import.meta.env.DEV ? debugSocketEvents(roomId) : () => {};
     const socket = getSocket(roomId);
     setIsConnected(socket.connected);
 
@@ -426,8 +465,40 @@ export function useLiveChatMessages(roomId: string | null) {
     // platform chat, and never echoed back, so the box kept the sent text.
     // The socket re-joins by itself on every (re)connect.
     joinRoom(roomId);
-    const onConnect = () => setIsConnected(true);
-    const onDisconnect = () => setIsConnected(false);
+    // A reconnect re-joins the room but the socket does not replay what was
+    // said while it was away (a background tab, a dropped network), so read
+    // the gap back over REST.
+    let droppedOnce = false;
+    const onConnect = () => {
+      setIsConnected(true);
+      if (droppedOnce) void fetchMessages(false);
+    };
+    const onDisconnect = () => { droppedOnce = true; setIsConnected(false); };
+    // Back in a tab that sat in the background: catch up even if the socket
+    // never noticed it was throttled.
+    let hiddenAt = 0;
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') { hiddenAt = Date.now(); return; }
+      if (hiddenAt && Date.now() - hiddenAt > 10_000) void fetchMessages(false);
+      hiddenAt = 0;
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    // A safety net under the socket. A connection can look healthy and still
+    // not deliver (a room membership lost on the server, a proxy holding a
+    // dead long-poll), and nothing on screen says so: a streamer just stops
+    // seeing their viewers. Every so often the room is read back over REST and
+    // anything missed is folded in. Quicker while the socket is known to be
+    // down. A stream's room only: the platform chat is open in every tab.
+    let lastPoll = Date.now();
+    const gapCheck = setInterval(() => {
+      if (document.visibilityState === 'hidden') return;
+      const due = socket.connected ? STREAM_GAP_CHECK_MS : DISCONNECTED_GAP_CHECK_MS;
+      if (!roomId.startsWith('stream:') && socket.connected) return;
+      if (Date.now() - lastPoll < due) return;
+      lastPoll = Date.now();
+      void catchUp();
+    }, DISCONNECTED_GAP_CHECK_MS);
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
@@ -481,7 +552,10 @@ export function useLiveChatMessages(roomId: string | null) {
       if (pending.length > MAX_LIVECHAT_MESSAGES) {
         pending.splice(0, pending.length - MAX_LIVECHAT_MESSAGES);
       }
-      if (flushHandle === null) flushHandle = setTimeout(flush, FLUSH_INTERVAL_MS);
+      // A hidden tab's timers can be held back for up to a minute, so there
+      // the batch goes in now rather than waiting on one.
+      if (document.visibilityState === 'hidden') flush();
+      else if (flushHandle === null) flushHandle = setTimeout(flush, FLUSH_INTERVAL_MS);
     });
 
     const unsubEdited = onMessageEdited(roomId, (msg) => {
@@ -582,6 +656,8 @@ export function useLiveChatMessages(roomId: string | null) {
       unsubDebug();
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      document.removeEventListener('visibilitychange', onVisibility);
+      clearInterval(gapCheck);
       setIsConnected(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

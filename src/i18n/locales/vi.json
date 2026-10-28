@@ -1774,6 +1774,9 @@
       "fractionPurchased": "{{name}} đã mua các phân số trong bài đăng của bạn",
       "repostedPosts": "{{name}} đã đăng lại {{count}} trong số các bài đăng của bạn",
       "commentMention": "{{name}} đã đề cập đến bạn trong một bình luận",
+      "postMention": "{{name}} đã đề cập đến bạn trong một bài đăng",
+      "liveChatMention": "{{name}} đã đề cập đến bạn trong cuộc trò chuyện trực tiếp",
+      "publicChatMention": "{{name}} đã đề cập đến bạn trong cuộc trò chuyện công khai",
       "followRequest": "{{name}} đã yêu cầu theo dõi bạn",
       "bountyReplyNamed": "{{name}} đã trả lời tiền thưởng của bạn “{{title}}”",
       "bountyReply": "{{name}} đã trả lời tiền thưởng của bạn",
@@ -3256,6 +3259,7 @@
     "followerInvites": {
       "title": "Mời người theo dõi",
       "detail": "Chọn tối đa 50 người theo dõi mỗi lần. Tin nhắn trả tiền hoặc đóng đã bỏ qua. Kiểm tra cuộc trò chuyện trước khi thử lại.",
+      "note": "Thêm lời nhắn vào lời mời (không bắt buộc)",
       "selectAll": "Chọn trang này",
       "clear": "Xóa",
       "previous": "Trước đó",

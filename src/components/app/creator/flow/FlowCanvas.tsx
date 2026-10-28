@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { edgeStyle } from '@/lib/creator/flow/edgeStyles';
 import { nodeAcceptsPromptInput } from '@/lib/creator/flow/executor';
+import { inputRules, sourceMedia as sourceKind } from '@/lib/creator/flow/graphContract';
 import { FALLBACK_SIZE, NODE_SIZE, getDefaultNodeSize, getLastNodeSettings } from '@/lib/creator/flow/nodeTypes';
 import { executeRun, findIssues, planRun, FlowRunError, type RunPlan } from '@/lib/creator/flow/runner';
 import { requestFlowSync } from '@/lib/creator/flow/syncBus';
@@ -101,28 +102,6 @@ function GroupPreviewOverlay({ groupIds }: { groupIds: Set<string> | null }) {
     />
   );
 }
-
-/** Kind of data a source handle emits. */
-function sourceKind(node: FlowNode | undefined, handle: string | null | undefined): 'prompt' | 'image' | 'video' | null {
-  if (!node) return null;
-  if (node.type === 'promptNode' || node.type === 'assistantNode') return 'prompt';
-  if (node.type === 'imageInputNode' || node.type === 'imageGenNode') return 'image';
-  if (node.type === 'videoInputNode' || node.type === 'videoGenNode') return handle === 'frame' ? 'image' : 'video';
-  return null;
-}
-
-/** What each input handle accepts and how many. */
-const TARGET_RULES: Record<string, Record<string, { kind: 'prompt' | 'image' | 'video'; max: number }>> = {
-  imageGenNode: { prompt: { kind: 'prompt', max: 1 }, image: { kind: 'image', max: 1 } },
-  videoGenNode: {
-    prompt: { kind: 'prompt', max: 1 },
-    startFrame: { kind: 'image', max: 1 },
-    endFrame: { kind: 'image', max: 1 },
-    image: { kind: 'image', max: 4 },
-    referenceVideo: { kind: 'video', max: 2 },
-  },
-  assistantNode: { prompt: { kind: 'prompt', max: 1 } },
-};
 
 interface CanvasProps {
   onOpenLogin: () => void;
@@ -507,7 +486,7 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
       const target = nodes.find((n) => n.id === c.target);
       if (!source || !target) return false;
       const kind = sourceKind(source, c.sourceHandle);
-      const rules = TARGET_RULES[target.type ?? ''];
+      const rules = inputRules(target);
       const rule = rules?.[c.targetHandle ?? ''];
       if (!kind || !rule || rule.kind !== kind) return false;
       const existing = edges.filter((e) => e.target === c.target && e.targetHandle === c.targetHandle);
@@ -524,7 +503,7 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
       const node = nodes.find((n) => n.id === params.nodeId);
       let kind: string | null = null;
       if (params.handleType === 'source') kind = sourceKind(node, params.handleId);
-      else if (node) kind = TARGET_RULES[node.type ?? '']?.[params.handleId ?? '']?.kind ?? null;
+      else if (node) kind = inputRules(node)[params.handleId ?? '']?.kind ?? null;
       if (rf && kind && params.handleType === 'source') rf.setAttribute('data-connecting-type', kind);
       setConnectingHandleType(kind);
       setIsConnecting(true);
@@ -594,13 +573,15 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
   );
 
   const confirmRun = useCallback(
-    async (txHash: string | undefined) => {
+    async (txHash: string | undefined, retryInterruptedFree: boolean) => {
       const p = plan;
       setPlan(null);
       if (!p) return;
       setLog([]);
       push(t('creatorFlow.logRunning'));
-      const { failures } = await executeRun(p, txHash, { onLog: push });
+      let failures: number;
+      try { ({ failures } = await executeRun(p, txHash, { onLog: push, retryInterruptedFree })); }
+      catch (error) { toast.error(error instanceof Error ? error.message : t('creatorFlow.planFailed')); return; }
       push(failures > 0 ? t('creatorFlow.logFinishedWithFailures', { count: failures }) : t('creatorFlow.logComplete'), failures === 0);
       if (failures > 0) toast.error(t('creatorFlow.runFailures', { count: failures }));
       else toast.success(t('creatorFlow.runComplete'));
@@ -855,7 +836,7 @@ function FlowCanvasInner({ onOpenLogin, signedIn, onSyncNow }: CanvasProps) {
         )}
 
         <ShareModal flowId={activeFlowId} open={shareOpen} onOpenChange={setShareOpen} canPublish={signedIn} onSyncNow={onSyncNow} />
-        <FlowPaywall plan={plan} open={plan !== null} onOpenChange={(o) => { if (!o) setPlan(null); }} onConfirm={(tx) => void confirmRun(tx)} />
+        <FlowPaywall plan={plan} open={plan !== null} onOpenChange={(o) => { if (!o) setPlan(null); }} onConfirm={(tx, retry) => void confirmRun(tx, retry)} />
       </div>
     </FlowActionsContext.Provider>
   );

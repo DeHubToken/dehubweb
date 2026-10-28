@@ -291,7 +291,7 @@
   },
   "accountConnect": {
     "title": "Iugnay ang iyong DeHub account",
-    "body": "Iugnay ang iyong account para pamahalaan ang iyong profile, mag-publish ng mga post at lumikha ng nilalaman mula sa chat. Ang mga koneksyon ay mag-eexpire sa loob ng 24 na oras. Maaari mong i-disconnect anumang oras.",
+    "body": "Iugnay ang iyong account para pamahalaan ang iyong profile, mag-publish ng mga post at lumikha ng nilalaman mula sa chat. Ang mga koneksyon ay mag-eexpire sa loob ng 30 araw. Maaari mong i-disconnect anumang oras.",
     "read": "Basahin ang iyong account, mga post, mga notification at ang Creator library",
     "profile": "I-edit ang iyong profile, mga larawan at mga setting ng privacy",
     "social": "Mag-publish ng mga post at komento, sundan ang mga tao at mag-save ng mga bookmark",
@@ -1800,6 +1800,9 @@
       "fractionPurchased": "{{name}} bumili ng bahagi ng iyong post",
       "repostedPosts": "{{name}} nag-post ulit ng {{count}} ng iyong mga post",
       "commentMention": "{{name}} tinutukoy ka sa isang komento",
+      "postMention": "Binanggit ka ni {{name}} sa isang post",
+      "liveChatMention": "{{name}} nabanggit ka sa live chat",
+      "publicChatMention": "{{name}} nabanggit ka sa pampublikong chat",
       "followRequest": "{{name}} humingi ng pagtanggap sa iyo",
       "bountyReplyNamed": "{{name}} sumagot sa iyong bounty “{{title}}”",
       "bountyReply": "{{name}} sumagot sa iyong bounty",
@@ -3287,6 +3290,7 @@
     "followerInvites": {
       "title": "Mag - imbita ng mga tagasunod",
       "detail": "Pumili ng hanggang sa 50 mga tagasunod sa bawat batch. Laktawan ang Paid or Closed DMs. Suriin ang chat para sa mga hindi nakumpirmang padala bago subukang muli.",
+      "note": "Magdagdag ng mensahe sa iyong imbitasyon (opsyonal)",
       "selectAll": "Piliin ang pahinang ito",
       "clear": "Tama",
       "previous": "Nakaraan",

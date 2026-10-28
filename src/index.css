@@ -139,6 +139,16 @@ All colors MUST be HSL.
   * {
     -webkit-tap-highlight-color: transparent;
   }
+  /* With the tap highlight off, a phone gave no sign a press landed until the
+     next page or sheet was drawn, which on a busy iPhone can be a few hundred
+     ms. Pressed controls dim while the finger is down. :where() keeps this at
+     zero specificity, so a control with its own opacity or press style wins.
+     (iOS only applies :active with a touchstart listener: see main.tsx.) */
+  @media (hover: none) and (pointer: coarse) {
+    :where(button, a[href], [role="button"], [role="tab"], [role="menuitem"], [data-opens-page]):active {
+      opacity: 0.7;
+    }
+  }
   :focus:not(:focus-visible) {
     outline: none;
   }
@@ -1225,11 +1235,16 @@ button.cursor-square-item:hover {
    while it is being typed in: the keyboard takes the bottom nav away. */
 [data-comment-tabs-pin],
 [data-comment-composer-pin] {
-  /* Near-solid, like the app's bars: the list scrolls underneath both, and a
-     see-through bar let the comment under it read through the reply box. */
-  background: rgb(0 0 0 / 0.9);
-  backdrop-filter: blur(24px);
+  /* Liquid glass: the list scrolls underneath both, so the blur has to be
+     hard enough that a comment under the reply box cannot read through it. */
+  background: var(--float-glass);
+  backdrop-filter: var(--float-glass-blur);
   border-color: rgb(255 255 255 / 0.08);
+}
+/* The field must not frost again: a backdrop-filter inside one only samples
+   its parent, which left the bar's own blur looking switched off. */
+:is([data-comment-composer-pin], [data-stage-composer]) [data-comment-field] {
+  backdrop-filter: none;
 }
 [data-comment-tabs-pin] {
   border-bottom-width: 1px;
@@ -1238,11 +1253,9 @@ button.cursor-square-item:hover {
   border-top-width: 1px;
 }
 html[data-theme='light'] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
-  background: rgb(250 250 249 / 0.94);
   border-color: rgb(0 0 0 / 0.08);
 }
 html[data-system-tone="light"] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
-  background: rgb(250 250 249 / 0.94);
   border-color: rgb(0 0 0 / 0.08);
 }
 html[data-theme='minimal'] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
@@ -3508,6 +3521,22 @@ html[data-system-tone="light"] .bg-muted {
   color: #ffffff !important;
 }
 
+/* Letter avatars (no picture) on paper: an outlined tile, not a grey slab
+   or a bare letter. Pale fill, ink letter and a hairline that follows the
+   avatar's own rounded-square corners, so it still reads as an avatar in Who
+   to follow, comments, chat and lists. Radix unmounts the fallback once the
+   picture loads, so photo avatars never get the line. */
+html[data-theme="light"] [data-avatar-fallback],
+html[data-system-tone="light"] [data-avatar-fallback] {
+  background-color: #f4f4f6 !important;
+  color: #3f3f46 !important;
+  box-shadow: inset 0 0 0 1px rgb(11 11 13 / 0.16);
+}
+html[data-theme="light"] [data-avatar-fallback] *,
+html[data-system-tone="light"] [data-avatar-fallback] * {
+  color: inherit !important;
+}
+
 /* …but not in docs. There .bg-muted is the wash panel nested inside a white
    bento — a quote block, a code sample, a comparison table — and the chip
    above turned every one of them into a dark grey slab with ink text sitting
@@ -5029,12 +5058,14 @@ html[data-system-tone="light"] [data-poll-card] .hover\:bg-white\/20:hover {
 /* TV static: the noise tile jumps position and flickers intensity in
    discrete steps — no drift, just re-randomized frames like analog snow */
 @keyframes video-glitch-static {
-  0%   { background-position: 0 0;         opacity: 0.10; }
-  20%  { background-position: -28px 18px;  opacity: 0.16; }
-  40%  { background-position: 22px -30px;  opacity: 0.09; }
-  60%  { background-position: -46px -12px; opacity: 0.17; }
-  80%  { background-position: 16px 34px;   opacity: 0.12; }
-  100% { background-position: 0 0;         opacity: 0.10; }
+  /* transform, not background-position: the oversized noise layer moves on
+     the compositor instead of repainting its whole area every step (Safari). */
+  0%   { transform: translate3d(0, 0, 0);         opacity: 0.10; }
+  20%  { transform: translate3d(-28px, 18px, 0);  opacity: 0.16; }
+  40%  { transform: translate3d(22px, -30px, 0);  opacity: 0.09; }
+  60%  { transform: translate3d(-46px, -12px, 0); opacity: 0.17; }
+  80%  { transform: translate3d(16px, 34px, 0);   opacity: 0.12; }
+  100% { transform: translate3d(0, 0, 0);         opacity: 0.10; }
 }
 
 /* Full-strength "no signal" TV snow — used as the standalone fallback for an
@@ -5042,12 +5073,12 @@ html[data-system-tone="light"] [data-poll-card] .hover\:bg-white\/20:hover {
    position each step (~22fps) at full opacity so it reads as a real static
    screen rather than a faint overlay. */
 @keyframes tv-static-snow {
-  0%   { background-position: 0 0; }
-  20%  { background-position: -34px 22px; }
-  40%  { background-position: 26px -28px; }
-  60%  { background-position: -18px -40px; }
-  80%  { background-position: 40px 16px; }
-  100% { background-position: 0 0; }
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(-34px, 22px, 0); }
+  40%  { transform: translate3d(26px, -28px, 0); }
+  60%  { transform: translate3d(-18px, -40px, 0); }
+  80%  { transform: translate3d(40px, 16px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 /* ==========================================================================
@@ -7000,3 +7031,4 @@ html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_
 html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
   visibility: hidden !important;
 }
+

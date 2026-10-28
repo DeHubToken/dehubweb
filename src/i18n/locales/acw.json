@@ -1732,6 +1732,9 @@
       "fractionPurchased": "{{name}} اشترى جزء من بوستك",
       "repostedPosts": "{{name}} ريبوست “{{count}}” من بوستاتك",
       "commentMention": "{{name}} ذكرك في تعليق",
+      "postMention": "{{name}} ذكرّك في بوست",
+      "liveChatMention": "{{name}} ذكرّك في الدردشة الحية",
+      "publicChatMention": "{{name}} ذكرّك في الدردشة العامة",
       "followRequest": "{{name}} طلب ليتبعك",
       "bountyReplyNamed": "{{name}} رد على بونتك “{{title}}”",
       "bountyReply": "{{name}} رد على بونتك",
@@ -3197,6 +3200,7 @@
     "followerInvites": {
       "title": "دعي المتابعين",
       "detail": "اختر ما بين 50 متابع لكل دفعة. الرسائل المدفوعة أو المغلقة تنسخ. تحقق من المحادثة عن الإرسالات غير المؤكدة قبل المحاولة مرة تانيه.",
+      "note": "أضف ملاحظة لدعوتك (اختياري)",
       "selectAll": "اختر هذه الصفحة",
       "clear": "مسح",
       "previous": "السابق",

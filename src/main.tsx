@@ -9,6 +9,7 @@ import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installTapPendingLogo } from "./lib/tap-pending-logo";
+import { installFocusKeys } from "./lib/focus-keys";
 import { installScrollStopTap } from "./lib/scroll-stop-tap";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
@@ -25,6 +26,7 @@ import "./i18n";
 import "./index.css";
 import "./styles/app-route-motion.css";
 import "./styles/theme-controls.css";
+import "./styles/focus-keys.css";
 import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";
 import "./styles/feed-pill-glow.css";
@@ -36,6 +38,7 @@ import "./styles/system-light.css";
 import "./styles/light-desktop-panels.css";
 import "./styles/text-readability.css";
 import "./styles/light-contrast.css";
+import "./styles/post-meta-grey.css";
 import "./styles/pinned-community-stage.css";
 import "./styles/grid-hover.css";
 import "./styles/notifications-feed.css";
@@ -130,6 +133,10 @@ registerServiceWorker();
 // See lib/scroll-freeze-watchdog.ts.
 installScrollFreezeWatchdog();
 
+// iOS Safari only shows a pressed (:active) state on elements under a
+// touchstart listener; one passive no-op on the document covers everything.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
 // A touch that stops a gliding feed only stops it, like a native app.
 // See lib/scroll-stop-tap.ts.
 installScrollStopTap();
@@ -137,3 +144,4 @@ installScrollStopTap();
 // Press a profile, post, link or Back and the logo is ready before the page
 // builds. See lib/tap-pending-logo.ts.
 installTapPendingLogo();
+installFocusKeys();

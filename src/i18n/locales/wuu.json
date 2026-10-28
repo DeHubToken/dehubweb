@@ -1723,6 +1723,9 @@
       "fractionPurchased": "{{name}} 購買你帖子的分數（股份）",
       "repostedPosts": "{{name}} 轉發你的帖子 {{count}} 份",
       "commentMention": "{{name}} 在評論中提到你",
+      "postMention": "{{name}} 在一条帖子里提到了你",
+      "liveChatMention": "{{name}} 在实时聊天里提到侬",
+      "publicChatMention": "{{name}} 在公开聊天里提到侬",
       "followRequest": "{{name}} 要求追蹤你",
       "bountyReplyNamed": "{{name}} 回覆你的獎勵「{{title}}」",
       "bountyReply": "{{name}} 回覆你的獎勵",
@@ -3182,6 +3185,7 @@
     "followerInvites": {
       "title": "邀請追蹤者",
       "detail": "選擇每批次最多50個追蹤者。付費或關閉的DM將被跳過。請在聊天中檢查未確認的發送前再試一次。",
+      "note": "帮侬个邀请加一句闲话（可选）",
       "selectAll": "選擇這個頁面",
       "clear": "清除",
       "previous": "上一頁",

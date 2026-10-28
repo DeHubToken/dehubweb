@@ -6,7 +6,7 @@ import { CREATOR_FAL_VIDEO_MODELS } from '../supabase/functions/_shared/creator-
 export const ORIGIN = 'https://dehub.io';
 export const RESOURCE = `${ORIGIN}/mcp`;
 const EDGE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
-const API = 'https://api.dehub.io/api';
+export const API = 'https://api.dehub.io/api';
 export const SCOPES = ['dehub:read', 'dehub:profile', 'dehub:social', 'dehub:generate'];
 const text = (max = 2000) => z.string().trim().min(1).max(max);
 const id = z.string().regex(/^\d{1,15}$/);

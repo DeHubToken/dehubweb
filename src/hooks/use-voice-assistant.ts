@@ -61,6 +61,8 @@ interface UseVoiceAssistantReturn {
    * plays. Read it every animation frame; it never re-renders.
    */
   getLevel: () => number;
+  /** Ends the current turn now and sends what was said, as a tap on the ball. */
+  finishTurn: () => Promise<void>;
 }
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAssistantReturn {
@@ -578,5 +580,6 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     recordingDuration,
     exchangesLeft,
     getLevel,
+    finishTurn: stopListeningAndProcess,
   };
 }

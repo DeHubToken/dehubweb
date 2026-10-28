@@ -1773,6 +1773,9 @@
       "fractionPurchased": "{{name}} sizning postining qismlarini sotib oldi",
       "repostedPosts": "{{name}} sizning postlarining {{count}} qismini qayta yubordi",
       "commentMention": "{{name}} sizga sharhda eslatib oʻtdi",
+      "postMention": "{{name}} sizni postda tilga oldi",
+      "liveChatMention": "{{name}} sizni jonli chatda tilga oldi",
+      "publicChatMention": "{{name}} sizni ochiq chatda tilga oldi",
       "followRequest": "{{name}} sizdan kuzatuvchi boʻlishni soʻradi",
       "bountyReplyNamed": "{{name}} sizning “{{title}}” nomli taklifingizga javob berdi",
       "bountyReply": "{{name}} sizning taklifingizga javob berdi",
@@ -3252,6 +3255,7 @@
     "followerInvites": {
       "title": "Izdoshlarni taklif qiling",
       "detail": "Har bir guruhda 50 tagacha obunachi tanlang. Pullik yoki yopiq shaxsiy xabarlar o&#39;tkazib yuboriladi. Qayta urinishdan oldin chatda tasdiqlanmagan xabarlar bor-yo&#39;qligini tekshiring.",
+      "note": "Taklifingizga izoh qo‘shing (ixtiyoriy)",
       "selectAll": "Ushbu sahifani tanlang",
       "clear": "Toza",
       "previous": "Oldingi",

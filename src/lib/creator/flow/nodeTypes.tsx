@@ -5,7 +5,7 @@
  * list, so a node type is declared once.
  */
 import type { ReactNode } from 'react';
-import { Bot, Clapperboard, Film } from "lucide-react";
+import { Bot, Clapperboard, Film, Volume2 } from "lucide-react";
 import ImageIcon from "@/components/ui/cut-icons/images";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 
@@ -26,6 +26,8 @@ export interface NodeMeta {
 }
 
 export const NODES: NodeMeta[] = [
+  { type: 'audioGenNode', category: 'generators', canReceiveConnection: true, icon: <Volume2 size={14} strokeWidth={1.6} />, labelKey: 'creatorFlow.nodeAudioGen', descriptionKey: 'creatorFlow.nodeAudioGenDesc' },
+  { type: 'audioInputNode', category: 'resources', canReceiveConnection: false, icon: <Volume2 size={14} strokeWidth={1.6} />, labelKey: 'creatorFlow.nodeAudioInput', descriptionKey: 'creatorFlow.nodeAudioInputDesc' },
   {
     type: 'assistantNode',
     category: 'generators',
@@ -81,6 +83,7 @@ const GEN_NODE_SETTINGS: Record<string, string[]> = {
   imageGenNode: ['model', 'aspectRatio'],
   videoGenNode: ['model', 'aspectRatio', 'duration', 'resolution'],
   assistantNode: ['assistantModel'],
+  audioGenNode: ['audioTask', 'voiceId', 'duration'],
 };
 
 export function getLastNodeSettings(
@@ -100,6 +103,8 @@ export function getLastNodeSettings(
 /** Rough footprint per node type — placement and collision detection. */
 export const NODE_SIZE: Record<string, { w: number; h: number }> = {
   assistantNode: { w: 300, h: 220 },
+  audioGenNode: { w: 300, h: 260 },
+  audioInputNode: { w: 300, h: 180 },
   videoGenNode: { w: 340, h: 260 },
   imageGenNode: { w: 300, h: 300 },
   promptNode: { w: 340, h: 220 },

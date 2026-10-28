@@ -30,6 +30,7 @@ import { parseSoundtrackTag } from '@/lib/soundtrack';
 import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { duetOfPost } from '@/lib/duet';
 export { parseSoundtrackTag } from '@/lib/soundtrack';
 
 // ===========================================================================
@@ -346,6 +347,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     quoteRevoked: item.quoteRevoked,
     replyPolicy: item.replyPolicy,
     forKids: item.forKids,
+    duetOf: duetOfPost(item as any),
     isLivePost: item.postType === 'live',
     liveStatus: item.stream?.status,
     liveIsActive: item.stream?.isActive,
@@ -981,8 +983,9 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
 
   return useMemo(() => {
     const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
-    if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false, newPostAuthors: NO_AUTHORS };
+    if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false, newPostAuthors: NO_AUTHORS, latestNewAt: 0 };
 
+    let latestNewAt = 0;
     // Only count rows the list would actually render. A stranded "live" post
     // from a failed stream launch never enters the feed (loadUnifiedFeedPage
     // drops it) yet sits at the head of the chronological sort indefinitely —
@@ -1011,7 +1014,9 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
       const raw =
         item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at;
       const stamp = raw ? Date.parse(raw) : NaN;
-      return !Number.isNaN(stamp) && stamp > newest;
+      if (Number.isNaN(stamp) || stamp <= newest) return false;
+      latestNewAt = Math.max(latestNewAt, stamp);
+      return true;
     });
 
     // The faces on the pill: the newest few distinct authors, newest first.
@@ -1033,6 +1038,9 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
       // Every row came back newer, so there are likely more than were fetched.
       atCap: newer.length >= NEW_POSTS_HEAD_SIZE,
       newPostAuthors,
+      /** createdAt (ms) of the newest post counted; a tapped chip stays away
+       *  until a post newer than this one turns up. */
+      latestNewAt,
     };
   }, [data, newestCreatedAt, chronological, queryClient]);
 }

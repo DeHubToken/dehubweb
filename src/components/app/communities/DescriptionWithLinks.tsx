@@ -1,49 +1,40 @@
 /**
  * DescriptionWithLinks
  * =====================
- * Renders a description with URLs extracted and shown as link emoji icons below.
+ * A community description with its links shown the way posts show them: an
+ * inline 🔗 that opens the link, plus tappable @mentions, $cashtags, #hashtags
+ * and emails. Only the display changes — the stored description is untouched.
  */
 
-import LinkIcon from "@/components/ui/cut-icons/link";
+import { renderTextWithLinks } from '@/components/app/TranslatableText';
+import { cn } from '@/lib/utils';
 
-
-const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
-
-function extractUrls(text: string): string[] {
-  return text.match(URL_REGEX) || [];
+/**
+ * Markdown links (`[Sign up](https://…)`) read as their label followed by the
+ * link, so the 🔗 lands right after the words it belongs to instead of inside
+ * leftover brackets.
+ */
+export function prepareDescriptionText(text: string, singleLine = false): string {
+  const out = text.replace(/\[([^\]\n]+)\]\(\s*(\S+?)\s*\)/g, '$1 $2');
+  return singleLine ? out.replace(/\s+/g, ' ').trim() : out;
 }
 
-function cleanUrl(url: string): string {
-  try {
-    const u = new URL(url);
-    return u.hostname.replace(/^www\./, '') + (u.pathname !== '/' ? u.pathname : '');
-  } catch {
-    return url.replace(/^https?:\/\/(www\.)?/, '');
-  }
+interface DescriptionWithLinksProps {
+  text: string;
+  className?: string;
+  /** Cards and previews: one truncated line, line breaks folded into spaces. */
+  singleLine?: boolean;
 }
 
-export function DescriptionWithLinks({ text }: { text: string }) {
-  const links = extractUrls(text);
-  const descWithoutLinks = text.replace(URL_REGEX, '').trim();
-
+export function DescriptionWithLinks({ text, className, singleLine = false }: DescriptionWithLinksProps) {
   return (
-    <div className="space-y-1.5">
-      {descWithoutLinks && (
-        <p className="text-white text-sm whitespace-pre-wrap">{descWithoutLinks}</p>
+    <p
+      className={cn(
+        singleLine ? 'truncate' : 'text-white text-sm whitespace-pre-wrap break-words',
+        className,
       )}
-      {links.slice(0, 3).map((url, i) => (
-        <a
-          key={i}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-zinc-300 hover:underline truncate max-w-[250px]"
-          onClick={e => e.stopPropagation()}
-        >
-          <LinkIcon className="lucide lucide-link w-3 h-3 shrink-0 text-zinc-300" />
-          <span className="truncate text-zinc-300">{cleanUrl(url)}</span>
-        </a>
-      ))}
-    </div>
+    >
+      {renderTextWithLinks(prepareDescriptionText(text, singleLine))}
+    </p>
   );
 }

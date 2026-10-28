@@ -1759,6 +1759,9 @@
       "fractionPurchased": "{{name}} wathenga amafraction ephostini lakho",
       "repostedPosts": "{{name}} waphinda {{count}} wephostini lakho",
       "commentMention": "{{name}} wakukhulumela ekuxoxeni",
+      "postMention": "{{name}} kukushilo ephostini",
+      "liveChatMention": "{{name}} ukhulume ngawe engxoxweni ebukhoma",
+      "publicChatMention": "{{name}} ukhulume ngawe engxoxweni yomphakathi",
       "followRequest": "{{name}} wacela ukukulandela",
       "bountyReplyNamed": "{{name}} waphendula ku-bounty yakho \"{{title}}\"",
       "bountyReply": "{{name}} waphendula ku-bounty yakho",
@@ -3269,6 +3272,7 @@
     "followerInvites": {
       "title": "Mwaleta abafumanekeli",
       "detail": "Khetha kuze kube 50 abafumanekeli ngesikhathi. Ama-DM ahlawulwe noma avaliwe ayalahlelwa. Bheka ingxoxo yokuthola izithubuluzi ezingakuqinisekisiwe ngaphambi kokuzama futhi.",
+      "note": "Engeza inothi esimemweni sakho (kuyazikhethela)",
       "selectAll": "Khetha leli pheji",
       "clear": "Sula",
       "previous": "Emuva",

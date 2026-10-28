@@ -31,6 +31,8 @@ export interface ContentBadge {
  */
 export interface BaseFeedItem {
   id: string;
+  /** The original video, when this post is a duet of it (lib/duet). */
+  duetOf?: import('@/lib/duet').DuetOf;
   createdAt?: string;
   /** Whether this is an optimistic (processing) post not yet minted */
   isOptimistic?: boolean;

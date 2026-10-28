@@ -36,12 +36,8 @@ function extractUserAvatarUrl(user: DeHubUser): string | undefined {
  * TanStack Query handles deduplication and caching.
  */
 async function fetchAvatarDirect(address: string): Promise<string | null> {
-  try {
-    const user = await getAccountInfo(address);
-    return extractUserAvatarUrl(user) ?? null;
-  } catch {
-    return null;
-  }
+  const user = await getAccountInfo(address);
+  return extractUserAvatarUrl(user) ?? null;
 }
 
 /**
@@ -60,7 +56,7 @@ export function useProfileAvatar(
     gcTime: AVATAR_CACHE_GC_MS,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    refetchOnReconnect: false,
+    refetchOnReconnect: true,
     retry: 1,
     placeholderData: fallbackUrl,
   });

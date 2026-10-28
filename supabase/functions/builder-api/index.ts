@@ -229,7 +229,7 @@ async function log(db: Db, projectId: string, content: string, role = "log") {
   await db.from("builder_messages").insert({ project_id: projectId, role, content });
 }
 
-// Builder apps are served from https://<slug>.dehub.app (builder-serve reads
+// Builder apps are served from https://<slug>.dhb.gg (builder-serve reads
 // builder_files directly). PUBLIC apps are also mirrored to the public
 // `builder-apps` Storage bucket, because share links and app builds from before
 // subdomains render from there. Private apps are never mirrored — the bucket is

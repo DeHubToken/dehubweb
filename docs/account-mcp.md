@@ -32,7 +32,11 @@ connection management require a verified DeHub session and same-origin POST.
 The `ACCOUNT_MCP` SQLite Durable Object stores grants and credentials privately.
 Codes, access tokens and refresh tokens are hashed as storage keys. Codes and
 refresh tokens are consumed atomically; refreshes rotate the refresh credential.
-Access tokens last one hour and grants last at most 24 hours. Every tool request
+Access tokens last one hour. Each grant holds its own DeHub session (listed in
+Active sessions as "<app> (DeHub connector)"), issued by `POST /auth/connector-session`
+and rotated through `/auth/refresh` before its 15 minute access token runs out.
+Grants slide to 30 days on every refresh, so a connection used at least weekly stays
+linked; one idle past the DeHub refresh lifetime asks to reconnect. Every tool request
 revalidates the underlying DeHub session and takes identity from that session.
 Expired or revoked credentials never fall back to anonymous account access.
 The connection page lists active grants for the signed-in account and can revoke

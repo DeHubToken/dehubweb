@@ -1691,6 +1691,9 @@
       "fractionOfferAccepted": "{{name}} قَبِلَتْ عَرَضَكْ دَقِيقَاتِكْ",
       "fractionPurchased": "{{name}} بعت كسرات من ما كتبت",
       "commentMention": "{{name}} قالك في تعليق",
+      "postMention": "{{name}} ذكرك في بوست",
+      "liveChatMention": "{{name}} ذكرّك في الشات المباشر",
+      "publicChatMention": "{{name}} ذكرّك في الشات العام",
       "followRequest": "{{name}} طلبك ليتبعه",
       "bountyReply": "{{name}} رد على جوائزك",
       "bountyAppliedNamed": "{{name}} تطلب جوائزك “{{title}}”",
@@ -3169,6 +3172,7 @@
     "followerInvites": {
       "title": "دعوة للمتابعين",
       "detail": "اختر حتى 50 متابعًا في كل دفعة. يتم تجاهل المرسلات المدفوعة أو المغلقة. تحقق من الشات قبل محاولة مرة أخرى.",
+      "note": "ضيف ملاحظة لدعوتك (اختياري)",
       "selectAll": "اختر هذه الصفحة",
       "clear": "كلار",
       "previous": "سابق",

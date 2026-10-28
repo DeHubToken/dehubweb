@@ -1,0 +1,44 @@
+name: Remix links
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261028070000_remix_links.sql'
+      - 'supabase/functions/remix-links/**'
+      - 'tests/sql/remix-links*.sql'
+      - '.github/workflows/remix-links.yml'
+  workflow_dispatch:
+jobs:
+  database:
+    name: Remix link permissions and counts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: remix-test
+          POSTGRES_DB: remix_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: remix-test
+      PGDATABASE: remix_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/remix-links-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261028070000_remix_links.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/remix-links.sql
+  function:
+    name: Remix links function types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check --node-modules-dir=none supabase/functions/remix-links/index.ts

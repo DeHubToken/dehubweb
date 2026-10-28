@@ -145,6 +145,23 @@ function EmailCopyInline({ email }: { email: string }) {
 }
 
 /**
+ * Punctuation that ends a sentence rather than a link: "see example.com." or
+ * "(details at example.com/a)". A closing bracket stays when the link opened
+ * one itself, as in wikipedia.org/wiki/Foo_(bar).
+ */
+export function trimTrailingUrlPunctuation(url: string): string {
+  let out = url;
+  for (;;) {
+    if (/[.,:;?!]$/.test(out)) { out = out.slice(0, -1); continue; }
+    if (out.endsWith(')') && (out.match(/\(/g)?.length ?? 0) < (out.match(/\)/g)?.length ?? 0)) {
+      out = out.slice(0, -1);
+      continue;
+    }
+    return out;
+  }
+}
+
+/**
  * Renders text with URLs replaced by clickable link emojis and @mentions as profile links
  */
 export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }): ReactNode[] {
@@ -253,14 +270,26 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
       );
     } else {
       // URL — render as link emoji, or as its text when written `<url>`
-      const { leadingBoundary, url } = splitLeadingUrlBoundary(fullMatch);
+      const { leadingBoundary, url: rawUrl } = splitLeadingUrlBoundary(fullMatch);
       // `<url>` is the author choosing to show the link itself (see
       // lib/link-display): drop the brackets and print the address, shortened
       // in the middle when long.
       const showAsText = leadingBoundary.endsWith('<') && text[combinedRegex.lastIndex] === '>';
+      const url = showAsText ? rawUrl : trimTrailingUrlPunctuation(rawUrl);
       const boundary = showAsText ? leadingBoundary.slice(0, -1) : leadingBoundary;
       if (boundary) {
         parts.push(boundary);
+      }
+      if (url.length < rawUrl.length) {
+        // The sentence's full stop (or closing bracket) goes back to the text.
+        combinedRegex.lastIndex -= rawUrl.length - url.length;
+      }
+      // The link matcher starts at the space in front of a word, one character
+      // before the email alternative could, so "mail hi@dehub.io" lands here.
+      if (!showAsText && /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(url)) {
+        parts.push(<EmailCopyInline key={`email-${match.index}`} email={url} />);
+        lastIndex = combinedRegex.lastIndex;
+        continue;
       }
       if (showAsText) {
         const dehub = parseDehubLink(url);

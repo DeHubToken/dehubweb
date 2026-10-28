@@ -25,13 +25,14 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { Square, Loader2, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { Square, Loader2, RotateCcw, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
 import Quote from "@/components/ui/cut-icons/quote";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Link from "@/components/ui/cut-icons/link";
 import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
+import { useHoldMenu } from '@/hooks/use-hold-menu';
 import Languages from "@/components/ui/cut-icons/language";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
@@ -51,6 +52,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { cn } from '@/lib/utils';
 import { createPortal, flushSync } from 'react-dom';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { POST_STAGE_COMPOSE_EVENT } from '@/components/app/post-stage/post-stage-context';
 import { VoiceStripPlayer } from '../audio/VoiceStripPlayer';
 import { LiveMicBars } from '../audio/LiveMicBars';
@@ -91,7 +93,9 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { parseBadgeLock } from '@/lib/staking-badges';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, getTipWall, type ApiCommentResponse } from '@/lib/api/dehub';
+import { TipWall, TipChip } from '@/components/app/comments/TipWall';
+import { subscribeTipMessageSent } from '@/lib/tip-events';
 import {
   applyReactionDelta,
   isPositiveReaction,
@@ -230,6 +234,9 @@ function draftReplyTarget(draft: CommentDraft | null): Comment | null {
  * sentence for the tooltip and for the button's accessible name, which is all
  * a screen reader gets in the narrow panel where the word is hidden.
  */
+/** Stable empty wall, so a post without tip messages never re-renders on it. */
+const EMPTY_TIP_WALL: ApiCommentResponse[] = [];
+
 const SORT_OPTIONS = [
   { value: 'recent', short: 'comments.sortRecent', sortedBy: 'comments.sortedByRecent' },
   { value: 'oldest', short: 'comments.sortOldest', sortedBy: 'comments.sortedByOldest' },
@@ -454,14 +461,24 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
   const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
 
+  // Translate lives in the row's menu, not on the row. Holding the comment on
+  // a phone, or right-clicking it on desktop, opens that same menu.
+  const canTranslate = !!comment.text && !translation.isTooShort;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hold = useHoldMenu(() => setMenuOpen(true), !isEditing && !isPending);
+
   return (
     <motion.div
       // A comment you just sent is already on screen under its placeholder id;
       // when the real id swaps in, the row remounts and must not fade in twice.
-      initial={delivery?.status === 'posted' ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative flex items-start gap-3 py-3 cursor-pointer rounded-xl"
+      initial={delivery?.status === 'posted' ? false : isPending ? { opacity: 0, y: 28, scale: 0.97 } : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={isPending ? { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } : undefined}
+      // The one you just sent lands with its text softly glowing (on the text,
+      // not the row, so no box edge is ever cut off by the sheet's sides).
+      className="relative flex items-start gap-3 py-3 cursor-pointer rounded-xl [-webkit-touch-callout:none]"
       data-comment-id={comment.id}
+      {...hold}
       /*
         Tap the comment to answer it.
 
@@ -562,6 +579,8 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
               {i18n.t('comments.pinnedBadge', 'Pinned')}
             </span>
           )}
+          {/* Sent with a tip on the post: the amount rides next to the name. */}
+          {comment.tip && <TipChip tip={comment.tip} className="text-white" />}
           {/* Same name, different account. Said plainly, and never by hiding
               the comment — the reader decides, this only removes the doubt. */}
           {isImpersonating && (
@@ -640,11 +659,29 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             {commentDisplayText && (
               <TranslatableText publicContent
                 text={commentDisplayText}
-                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow")}
+                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow", isPending && "dh-sent-text-glow")}
                 as="p"
                 hideControls
                 auto={false}
               />
+            )}
+            {/* No Translate button on the row — that is in the menu. The row
+                only says what happened: translating, or translated with the
+                way back. */}
+            {canTranslate && (translation.isLoading || translation.isTranslated) && (
+              translation.isLoading ? (
+                <span className="mt-0.5 flex items-center gap-1 text-xs text-white/60" role="status">
+                  <Loader2 className="w-3 h-3 animate-spin" />{i18n.t('common.translating')}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={translation.handleShowOriginal}
+                  className="mt-0.5 flex items-center gap-1 text-xs text-white/60 hover:text-white transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />{i18n.t('common.showOriginal')}
+                </button>
+              )
             )}
             <DehubLinkEmbeds links={commentLinks} />
             <FeedLinkPreviews text={commentBody} />
@@ -809,7 +846,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 </button>
               </>
             )}
-            <DropdownMenu>
+            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
@@ -850,6 +887,15 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                   <Quote className="w-4 h-4" />
                   {i18n.t('comments.copyText')}
                 </DropdownMenuItem>
+                {canTranslate && (
+                  <DropdownMenuItem
+                    onClick={() => { void (translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()); }}
+                    className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                  >
+                    {translation.isTranslated ? <RotateCcw className="w-4 h-4" /> : <Languages className="w-4 h-4" />}
+                    {translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}
+                  </DropdownMenuItem>
+                )}
                 {onReport && !isOwnComment && (
                   <DropdownMenuItem
                     onClick={() => onReport(comment.id)}
@@ -861,30 +907,6 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-            {comment.text && !translation.isTooShort && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
-                    className={cn(
-                      COMMENT_ACTION_HIT,
-                      "transition-colors",
-                      translation.isLoading ? "text-white/60" : 
-                      translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
-                    )}
-                    aria-label={i18n.t('comments.translate')}
-                    disabled={translation.isLoading}
-                  >
-                    {translation.isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Languages className="w-4 h-4" />
-                    )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}</TooltipContent>
-              </Tooltip>
-            )}
             {/* Views on the comment itself, recorded by the observer below
                 when the row scrolls into a reader's viewport.
 
@@ -923,6 +945,54 @@ const CommentItem = memo(function FilteredCommentItem(props: CommentItemProps) {
 // ============================================================================
 // MAIN COMPONENT
 // ============================================================================
+
+/**
+ * Moves a <body>-portalled `fixed bottom-0` bar where `sticky bottom-0` would
+ * hold it: on the screen's bottom edge while the section is in view, released
+ * at the slot it left behind, never above the section's top.
+ */
+function useFloatingPin(
+  on: boolean,
+  barRef: React.RefObject<HTMLDivElement | null>,
+  slotRef: React.RefObject<HTMLDivElement | null>,
+  sectionRef: React.RefObject<HTMLDivElement | null>,
+) {
+  useLayoutEffect(() => {
+    const bar = barRef.current, slot = slotRef.current, section = sectionRef.current;
+    if (!on || !bar || !slot || !section) return;
+    let frame = 0;
+    const place = () => {
+      frame = 0;
+      const h = bar.offsetHeight;
+      slot.style.height = `${h}px`;
+      if (!section.getClientRects().length) { bar.style.visibility = 'hidden'; return; }
+      bar.style.visibility = '';
+      const stickTop = window.innerHeight - (parseFloat(getComputedStyle(bar).bottom) || 0) - h;
+      const top = Math.max(section.getBoundingClientRect().top, Math.min(slot.getBoundingClientRect().top, stickTop));
+      bar.style.transform = top === stickTop ? '' : `translate3d(0,${Math.round(top - stickTop)}px,0)`;
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(place); };
+    // A page that slides in moves the section without a scroll or resize.
+    const settleUntil = performance.now() + 700;
+    const settle = () => { place(); if (performance.now() < settleUntil) frame = requestAnimationFrame(settle); };
+    settle();
+    const resize = new ResizeObserver(schedule);
+    resize.observe(bar);
+    resize.observe(section);
+    window.addEventListener('scroll', schedule, { passive: true, capture: true });
+    window.addEventListener('resize', schedule);
+    bar.addEventListener('transitionend', schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      resize.disconnect();
+      window.removeEventListener('scroll', schedule, { capture: true });
+      window.removeEventListener('resize', schedule);
+      bar.removeEventListener('transitionend', schedule);
+      bar.style.transform = '';
+      bar.style.visibility = '';
+    };
+  }, [on, barRef, slotRef, sectionRef]);
+}
 
 function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
@@ -998,8 +1068,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // On the phone post page the composer docks to the screen. It is portalled
   // to <body> because canvas themes put filters/transforms on the page frame,
   // which would turn `position: fixed` into "fixed to that frame".
+  // The phone page's reply bar goes to <body> too: the page clips what scrolls
+  // under the top pill, and Chrome draws no backdrop blur inside a clip-path,
+  // so a bar left in there shows the comments under it as plain text. An
+  // empty slot keeps its place in the page and it follows it (useFloatingPin).
+  const isActivePage = useContext(CachedPageActiveContext);
+  const floatPin = page && isMobile && isActivePage;
   const dockComposer = (el: React.ReactElement) =>
-    stage && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
+    (stage || floatPin) && typeof document !== 'undefined' ? createPortal(el, document.body) : el;
   /** Cleared by "Show all comments", and by arriving with nothing to focus. */
   const [showAllThreads, setShowAllThreads] = useState(!focusCommentId);
   useEffect(() => {
@@ -1125,6 +1201,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // A restored draft opens the composer already expanded: the collapsed well is
   // one line tall, so anything longer would come back apparently truncated.
   const [isInputExpanded, setIsInputExpanded] = useState(() => Boolean(restoredDraft?.text));
+  // A reply, or anything typed, keeps the open layout too: a reply used to
+  // stay in the one-line well with five buttons squeezed beside the text.
+  const composerExpanded = isInputExpanded || !!replyTo || newComment.length > 0;
   const mention = useMention({
     inputRef,
     onMentionInsert: (_user, newText) => setNewComment(newText),
@@ -1145,13 +1224,13 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   const resizeInput = useCallback(() => {
     const el = inputRef.current;
     if (!el) return;
-    if (!isInputExpanded) {
+    if (!composerExpanded) {
       el.style.height = '';
       return;
     }
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, composerMaxHeight)}px`;
-  }, [isInputExpanded, composerMaxHeight]);
+  }, [composerExpanded, composerMaxHeight]);
 
   // Re-measure on every value change, not just keystrokes: the reply prefill,
   // an emoji, and a restored draft all arrive without an input event.
@@ -1194,6 +1273,69 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   const { data: commentTips } = useCommentTips(tokenId);
   const topTippedIds = commentTips.topTippedIds;
   const topTippedKey = topTippedIds.join(',');
+
+  /**
+   * The tip wall: messages sent with a tip on this post, biggest tip first.
+   * They show as cards above the list and are kept out of it until a card is
+   * opened, so nothing reads twice.
+   */
+  const { data: tipWallRows = EMPTY_TIP_WALL, refetch: refetchTipWall } = useQuery({
+    queryKey: ['tip-wall', tokenId, walletAddress?.toLowerCase() ?? null],
+    queryFn: () => getTipWall(tokenId, walletAddress?.toLowerCase()),
+    enabled: !!tokenId,
+    staleTime: 60000,
+    retry: false,
+  });
+  const tipWallIds = useMemo(() => tipWallRows.map(row => String(row.id)), [tipWallRows]);
+  const tipWallCards = useMemo(() => tipWallRows.map(mapApiComment), [tipWallRows]);
+  const [openTipId, setOpenTipId] = useState<string | null>(null);
+  const [landedTipId, setLandedTipId] = useState<string | null>(null);
+  const tipWallIdsRef = useRef(tipWallIds);
+  tipWallIdsRef.current = tipWallIds;
+
+  // This viewer's tip with a message just confirmed. The server posts it a
+  // beat later (when the chain event reaches it), so look for it a few times
+  // and land the new card with its glow when it shows up.
+  useEffect(() => subscribeTipMessageSent((id) => {
+    if (id !== String(tokenId)) return;
+    const before = new Set(tipWallIdsRef.current);
+    const me = walletAddress?.toLowerCase();
+    let tries = 0;
+    let stopped = false;
+    const look = async () => {
+      if (stopped) return;
+      tries += 1;
+      const { data } = await refetchTipWall();
+      const fresh = (data ?? []).find(row => !before.has(String(row.id)) && (!me || row.address?.toLowerCase() === me));
+      if (fresh) {
+        setLandedTipId(String(fresh.id));
+        window.setTimeout(() => setLandedTipId(current => (current === String(fresh.id) ? null : current)), 2400);
+        return;
+      }
+      if (tries < 10) window.setTimeout(look, 1500);
+    };
+    void look();
+    return () => { stopped = true; };
+  }), [tokenId, walletAddress, refetchTipWall]);
+
+  const toggleTipCard = useCallback((id: string) => {
+    setOpenTipId(current => (current === id ? null : id));
+  }, []);
+  // An opened card's comment lands at the top of the list; bring it into
+  // view with the same glow a new comment gets.
+  useEffect(() => {
+    if (!openTipId) return;
+    const frame = window.requestAnimationFrame(() => {
+      const row = sectionRef.current?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(openTipId)}"]`);
+      if (!row) return;
+      row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      const text = row.querySelector<HTMLElement>('p.leading-6') ?? row;
+      text.classList.remove('dh-sent-text-glow');
+      void text.offsetWidth;
+      text.classList.add('dh-sent-text-glow');
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [openTipId]);
 
   // Fetch comments from API. Paged: the single-page version capped every
   // thread at its 20 newest roots with no way to read the rest.
@@ -1264,8 +1406,16 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         rows.push(row);
       }
     }
+    // Tip messages can sit on any page; the wall has them all, so an opened
+    // card's comment (and its replies' parent) is always in the list.
+    for (const row of tipWallRows) {
+      const id = String(row.id);
+      if (seen.has(id)) continue;
+      seen.add(id);
+      rows.push(row);
+    }
     return rows;
-  }, [commentPages]);
+  }, [commentPages, tipWallRows]);
   const apiRowsById = useMemo(
     () => new Map((apiComments ?? []).map(row => [String(row.id), row])),
     [apiComments],
@@ -1402,6 +1552,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
 
   // Record comment views when visible (#9)
   const sectionRef = useRef<HTMLDivElement>(null);
+  const pinBarRef = useRef<HTMLDivElement>(null);
+  const pinSlotRef = useRef<HTMLDivElement>(null);
+  useFloatingPin(floatPin, pinBarRef, pinSlotRef, sectionRef);
   const viewedIdsRef = useRef(new Set<number>());
   const pendingViewsRef = useRef<number[]>([]);
   const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1719,6 +1872,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       return groupedComments.filter(({ comment }) => comment.id === focusThreadId);
     }
 
+    // Tip messages live on the wall above; only an opened card's comment
+    // joins the list. A search still finds them all.
+    if (tipWallIds.length && !searchQuery.trim()) {
+      filtered = filtered.filter(({ comment }) => !tipWallIds.includes(comment.id) || comment.id === openTipId);
+    }
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = groupedComments.filter(
@@ -1776,6 +1935,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
 
     function lift({ comment }: CommentThread) {
+      if (comment.id === openTipId) return -1;
       if (comment.isPinned) return 0;
       if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
       const tipped = topTippedIds.indexOf(comment.id);
@@ -1783,7 +1943,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       const answered = sortBy === 'recent' ? creatorLiftRanks.get(comment.id) : undefined;
       return answered === undefined ? Number.MAX_SAFE_INTEGER : 2 + topTippedIds.length + answered;
     }
-  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks, postCreator?.address]);
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks, postCreator?.address, tipWallIds, openTipId]);
 
   /**
    * Bring the linked comment into view once it has actually rendered.
@@ -2112,6 +2272,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
   });
 
+  /** The comment just sent, brought into view once its row exists. */
+  const landTempIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    const id = landTempIdRef.current;
+    if (!id) return;
+    const row = sectionRef.current?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(id)}"]`);
+    if (!row) return;
+    landTempIdRef.current = null;
+    // After the keyboard has gone, so the scroll measures the real viewport.
+    window.setTimeout(() => row.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 120);
+  }, [optimisticComments]);
+
   const submitComment = useCallback(async () => {
     if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting || submitInFlightRef.current) return;
 
@@ -2153,6 +2325,13 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
+    // Sent: the keyboard goes away so the reader sees their comment glide
+    // into its spot instead of a keyboard over it.
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
+      && document.activeElement.matches('textarea, input, [contenteditable="true"]')) {
+      document.activeElement.blur();
+    }
+    landTempIdRef.current = tempId;
     const replyTarget = replyTo;
     // Your own reply has to land somewhere you can see it, so open the thread
     // it belongs to. Replying to a reply still means the root's thread.
@@ -2624,6 +2803,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             ) : error ? (
               <p className="text-zinc-500 text-sm py-6 text-center">{t('comments.loadFailed')}</p>
             ) : (
+              <>
+              {!focusOnlyThread && !searchQuery.trim() ? (
+                <TipWall rows={tipWallCards} openId={openTipId} onToggle={toggleTipCard} landedId={landedTipId} />
+              ) : null}
               <AnimatePresence mode="popLayout">
                 {isAssistantReplying && (
                   <motion.div
@@ -2639,10 +2822,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 )}
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
-                ) : hideEmptyInline ? null : (
+                ) : hideEmptyInline || tipWallCards.length ? null : (
                   <AppState icon="posts" title={t('comments.emptyRepliesTitle')} description={t('comments.emptyRepliesBody')} size="section" />
                 )}
               </AnimatePresence>
+              </>
             )}
             {showAllCommentsRow ?? loadMoreRow}
           </div>
@@ -2858,7 +3042,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           data-comment-composer
           data-comment-composer-pin={page || undefined}
           data-stage-composer={stage || undefined}
-          ref={stage ? composerRootRef : undefined}
+          ref={stage ? composerRootRef : floatPin ? pinBarRef : undefined}
           className={cn(
             // Hidden, not unmounted: a photo picker opened from it must still
             // be able to hand its file back.
@@ -2867,6 +3051,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
               // Docked to the bottom of the screen for the whole page, over a
               // translucent blur (post-stage.css). The bottom nav is hidden here.
               ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+              : floatPin
+              ? "fixed inset-x-0 bottom-0 z-20 px-2 sm:px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
               : page
               // The app's reply bar: full width, pinned to the bottom of the
               // screen while the thread is in view, released at its end.
@@ -3011,22 +3197,21 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 data-vaul-no-drag
                 data-comment-field
                 data-glass-stack
-                data-expanded={isInputExpanded || undefined}
+                data-expanded={composerExpanded || undefined}
                 /* War dresses this as a chamfered HUD well; the hook is inert
                    under every other theme. See war-comments.css section 2. */
                 data-war-cut="sm"
                 className={cn(
                   "w-full min-w-0 backdrop-blur-xl border rounded-xl relative transition-all duration-200",
-                  isInputExpanded
-                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[1fr_auto] gap-x-2 items-stretch px-3 pb-2"
+                  composerExpanded
+                    // Text on top across the full width, then one row: tools
+                    // on the left, AI and Post on the right, all the same height.
+                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-2 items-center px-3 pb-2"
                     : "flex items-center flex-row px-3 pr-1 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
-                  // The expanded floor is the three-line resting size the field
-                  // sizes itself to anyway — kept so a shorter field can never
-                  // shrink the well under its own tool row.
-                  isInputExpanded ? "min-h-[118px]" : "min-h-0 h-10"
+                  composerExpanded ? "min-h-0" : "min-h-0 h-10"
                 )}>
                 <textarea
                   ref={inputRef}
@@ -3052,8 +3237,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                   }}
                   className={cn(
                     "bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full min-w-0",
-                    isInputExpanded
-                      ? cn("shrink-0 pt-2.5 pb-1 pr-1 min-h-[74px]", isMobile ? "max-h-[140px]" : "max-h-[180px]")
+                    composerExpanded
+                      ? cn("col-span-2 shrink-0 pt-2.5 pb-1 pr-1 min-h-[44px] leading-5", isMobile ? "max-h-[140px]" : "max-h-[180px]")
                       : "flex-1 self-center h-5 min-h-5 py-0 leading-5 overflow-hidden whitespace-nowrap text-ellipsis pr-0"
                   )}
                   rows={1}
@@ -3100,8 +3285,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 {/* Tools stay below the editable area; Send (and AI on phones) occupy the adjacent column. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
-                  isInputExpanded
-                    ? "col-start-1 row-start-2 min-w-0 flex-wrap shrink-0 justify-start mt-auto pt-1"
+                  composerExpanded
+                    ? "col-start-1 row-start-2 min-w-0 shrink-0 justify-start pt-1"
                     : "shrink-0 ml-1"
                 )}>
                   <button
@@ -3212,7 +3397,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     </button>
                   )}
                 </div>
-                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
+                <div data-comment-actions className={cn("shrink-0 flex items-center", composerExpanded ? "col-start-2 row-start-2 flex-row gap-1.5 pt-1" : "ml-1")}>
                   {isMobile && newComment.trim().length > 0 && (
                     <button
                       type="button"
@@ -3221,7 +3406,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       data-comment-tool="ai"
                       aria-label={t('conversation.coach.aiMenu')}
                       title={t('conversation.coach.aiMenu')}
-                      className="h-9 min-w-9 self-stretch flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                      className="h-8 w-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
                     >
                       {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                     </button>
@@ -3246,7 +3431,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     // word is swapped for a spinner and the button has no text.
                     aria-label={t('comments.post')}
                     data-comment-send
-                    className="h-9 min-w-9 px-2 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                    className="h-8 min-w-8 px-2.5 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('comments.post')}
                   </button>
@@ -3256,6 +3441,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           </div>
         </div>
         )}
+        {floatPin && !commentsDisabled && !kidsOnlyThread && <div ref={pinSlotRef} data-comment-composer-slot aria-hidden />}
 
         {/* Common Ground steps, opened by the first Post of the session on a
             thread that has the mode on. Its own Post button sends the reply. */}

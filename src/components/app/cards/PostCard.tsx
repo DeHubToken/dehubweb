@@ -87,7 +87,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
+import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice, formatSubscriberPrice } from '@/lib/content-gate';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import {
   Drawer,
@@ -716,7 +716,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                   >
                     <Star className="w-3.5 h-3.5" />
                     {cheapestPlanPrice !== undefined ? (
-                      <>{_copy("copy.c2947d66723d", { defaultValue: "Subscribe from " })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                      <>{_copy("copy.c2947d66723d", { defaultValue: "Subscribe from " })}<DhbAmount amount={formatSubscriberPrice(cheapestPlanPrice)} />
                       </>
                     ) : (
                       _copy("copy.0ad5874f8903", { defaultValue: "Subscribe to read" })

@@ -5,9 +5,10 @@ import { prepareOutgoing } from './dm-e2ee/keys';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from './supabase-wallet-client';
 import { ensureWalletSession } from './wallet-session';
-import { allowsFreeCommunityInvite, sendCommunityInviteBatch } from './community-invites-core';
+import { allowsFreeCommunityInvite, communityInviteMessage, sendCommunityInviteBatch } from './community-invites-core';
 
-export async function inviteCommunityFollowers(communityId:string,wallet:string,url:string,recipients:string[],shouldContinue:()=>boolean) {
+export async function inviteCommunityFollowers(communityId:string,wallet:string,url:string,recipients:string[],shouldContinue:()=>boolean,note?:string) {
+  const message=communityInviteMessage(url,note);
   if (!await ensureWalletSession(wallet)) throw new Error('Sign in again');
   const receipt = async (method:string,address:string) => {
     const {data,error}=await withWalletHeader((supabase as any).rpc(method,{_community_id:communityId,_recipient:address}),wallet);
@@ -21,7 +22,7 @@ export async function inviteCommunityFollowers(communityId:string,wallet:string,
       if(!allowsFreeCommunityInvite(raw?.result??raw)) return null;
       const conversation=await createConversation(address);
       if(!/^[a-f0-9]{24}$/i.test(conversation.id)) throw new Error('Conversation unavailable');
-      const wire=await prepareOutgoing(address,url);
+      const wire=await prepareOutgoing(address,message);
       return async()=>{await emitSendMessage({dmId:conversation.id,content:wire.content,type:'msg'});};
     },
     claim:address=>receipt('community_claim_invite',address),

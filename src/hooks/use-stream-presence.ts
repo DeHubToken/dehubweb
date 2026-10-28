@@ -28,7 +28,8 @@ export function useStreamPresence(streamId: string | undefined, isLive: boolean)
         // viewer counted for a card nobody is looking at.
         if (cancelled) return;
         presence = joinStreamPresence(streamId, (count) => {
-          if (!cancelled) setViewerCount(count);
+          // This tab is one of them, so never "0 here" while it watches.
+          if (!cancelled) setViewerCount(Math.max(1, count));
         });
       })
       .catch(() => undefined);

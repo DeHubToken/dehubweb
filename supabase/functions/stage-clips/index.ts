@@ -23,7 +23,7 @@
 // Without a worker URL and secret this does nothing and says so.
 import { admin, corsHeaders, DEHUB_API_BASE, json, normalizeTarget } from '../_shared/transcripts.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
-import { stageClip, stageLink, textsFor } from '../growth-autopost/posts.ts';
+import { stageClip, stageLink, textsFor } from '../_shared/growth-posts.ts';
 import {
   buildAss, buildCues, clipWords, HIGHLIGHT_PROMPT, hostBlocksClips, looksMature, normalizeSegments, parseSuggestions,
   pickHighlights, promptTranscript, type Segment, type Suggestion,

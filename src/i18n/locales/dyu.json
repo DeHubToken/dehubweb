@@ -1745,6 +1745,7 @@
       "fractionPurchased": "{{name}} y’i ka positi kɛrɛfɛn san",
       "repostedPosts": "{{name}} y’i ka positi {{count}} kɛrɛfɛn kɛ",
       "commentMention": "{{name}} y’i tɔgɔ fɔ kɔmenti dɔ kɔnɔ",
+      "publicChatMention": "{{name}} mention i ka jama ka baro la",
       "followRequest": "{{name}} y’a ɲini ka i ladɛrɛ",
       "bountyReplyNamed": "{{name}} y’a jaabi i ka bunti “{{title}}”",
       "bountyReply": "{{name}} y’a jaabi i ka bunti",
@@ -3226,6 +3227,7 @@
     "followerInvites": {
       "title": "I ka ladonw wele",
       "detail": "I ka ladon 50 bɔ a kɔrɔ, i ka ladonw wele. I kana ladonw wele minnu bɛ sara walima minnu bɛ a nɔfɛ. I ka chat kɔrɔsi walasa ka ladon minnu ma sɔrɔ, sanni i ka kɛnɛ tugun.",
+      "note": "Kunnafoni dɔ fara i ka welekan kan (n’i b’a fɛ)",
       "selectAll": "Nin bɛn kɔrɔsi",
       "clear": "A kɔrɔsi",
       "previous": "Kɔ",

@@ -1749,6 +1749,9 @@
       "fractionPurchased": "{{name}} sizning postingizning fraksiyasini sotib oldi",
       "repostedPosts": "{{name}} sizning postlaringizdan {{count}} ni qayta yoydi",
       "commentMention": "{{name}} sizni yorliqda eslatdi",
+      "postMention": "{{name}} سىزنى بىر يازمىدا تىلغا ئالدى",
+      "liveChatMention": "{{name}} سىزنى بىۋاستە پاراڭدا تىلغا ئالدى",
+      "publicChatMention": "{{name}} ئاممىۋى پاراڭدا سىزنى تىلغا ئالدى",
       "followRequest": "{{name}} sizni izlashga da’wa qildi",
       "bountyReplyNamed": "{{name}} sizning “{{title}}” bountingizga javob berdi",
       "bountyReply": "{{name}} sizning bountingizga javob berdi",
@@ -3224,6 +3227,7 @@
     "followerInvites": {
       "title": "Qidiruvchilarni chaqiring",
       "detail": "Har bir batchda 50 dan kamroq qidiruvchilarni tanlang. To'lov qilingan yoki yopiq DMlar o'tkazib yuboriladi. Yuborilganlar tasdiqlanmaganlar uchun so'zlashuvni tekshiring.",
+      "note": "تەكلىپىڭىزگە ئىزاھات قوشۇڭ (ئىختىيارى)",
       "selectAll": "Bu sahifani tanlang",
       "clear": "Tozalang",
       "previous": "Oldingi",

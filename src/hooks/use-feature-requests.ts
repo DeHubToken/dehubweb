@@ -133,6 +133,48 @@ function setSessionCache(key: string, data: unknown) {
 
 const PAGE_SIZE = 15;
 
+// One request can sit in four caches at once: the paged Prompts list, the
+// Queued and Shipped arrays, and the single row a notification deep link pins.
+// Patching only the paged list left votes and comment counts frozen on every
+// Queued and Shipped card, which is where most of the board lives.
+const FEATURE_ROW_KEYS = [
+  ['feature-requests'],
+  ['feature-requests-shipped'],
+  ['feature-requests-in-progress'],
+  ['feature-request'],
+] as const;
+
+type FeatureQueryClient = ReturnType<typeof useQueryClient>;
+
+export function patchFeatureRow(
+  queryClient: FeatureQueryClient,
+  id: string,
+  patch: (row: FeatureRequest) => FeatureRequest,
+) {
+  const apply = (row: FeatureRequest) => (row?.id === id ? patch(row) : row);
+  for (const queryKey of FEATURE_ROW_KEYS) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    queryClient.setQueriesData({ queryKey }, (old: any) => {
+      if (!old) return old;
+      if (Array.isArray(old.pages)) return { ...old, pages: old.pages.map((page: FeatureRequest[]) => page.map(apply)) };
+      if (Array.isArray(old)) return old.map(apply);
+      if (typeof old === 'object' && 'id' in old) return apply(old);
+      return old;
+    });
+  }
+}
+
+function snapshotFeatureRows(queryClient: FeatureQueryClient) {
+  return FEATURE_ROW_KEYS.flatMap((queryKey) => queryClient.getQueriesData({ queryKey }));
+}
+
+// Edits and deletes change what a row says or whether it exists, so every list
+// that can hold it refetches, not only Prompts.
+function invalidateFeatureRows(queryClient: FeatureQueryClient) {
+  for (const queryKey of FEATURE_ROW_KEYS) queryClient.invalidateQueries({ queryKey });
+  queryClient.invalidateQueries({ queryKey: ['feature-requests-total-count'] });
+}
+
 // Every category a filter chip should match, including the legacy aliases that
 // fold into it — so picking "New Feature" also surfaces rows still stored as
 // `feature`.
@@ -555,11 +597,11 @@ export function useVoteFeatureRequest() {
     },
     onMutate: async ({ featureRequestId, voteType, currentVote }) => {
       // Cancel in-flight queries
-      await queryClient.cancelQueries({ queryKey: ['feature-requests'] });
+      for (const queryKey of FEATURE_ROW_KEYS) await queryClient.cancelQueries({ queryKey });
       await queryClient.cancelQueries({ queryKey: ['feature-request-votes'] });
 
       // Snapshot previous state
-      const previousRequests = queryClient.getQueriesData({ queryKey: ['feature-requests'] });
+      const previousRequests = snapshotFeatureRows(queryClient);
       const previousVotes = queryClient.getQueryData(['feature-request-votes', walletAddress]);
 
       // Optimistically update votes map
@@ -573,43 +615,33 @@ export function useVoteFeatureRequest() {
         return newVotes;
       });
 
-      // Optimistically update vote count + like/dislike counts on feature requests (InfiniteData shape)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueriesData({ queryKey: ['feature-requests'] }, (old: any) => {
-        if (!old?.pages) return old;
+      // Optimistically update vote count + like/dislike counts wherever the row is cached
+      patchFeatureRow(queryClient, featureRequestId, (fr) => {
+        let voteDelta: number = voteType;
+        let likeDelta = 0;
+        let dislikeDelta = 0;
+
+        if (currentVote === voteType) {
+          // Toggle off
+          voteDelta = -voteType as number;
+          likeDelta = voteType === 1 ? -1 : 0;
+          dislikeDelta = voteType === -1 ? -1 : 0;
+        } else if (currentVote) {
+          // Switching
+          voteDelta = voteType - currentVote;
+          likeDelta = voteType === 1 ? 1 : -1;
+          dislikeDelta = voteType === -1 ? 1 : -1;
+        } else {
+          // New vote
+          likeDelta = voteType === 1 ? 1 : 0;
+          dislikeDelta = voteType === -1 ? 1 : 0;
+        }
+
         return {
-          ...old,
-          pages: old.pages.map((page: FeatureRequest[]) =>
-            page.map((fr) => {
-              if (fr.id !== featureRequestId) return fr;
-              let voteDelta: number = voteType;
-              let likeDelta = 0;
-              let dislikeDelta = 0;
-
-              if (currentVote === voteType) {
-                // Toggle off
-                voteDelta = -voteType as number;
-                likeDelta = voteType === 1 ? -1 : 0;
-                dislikeDelta = voteType === -1 ? -1 : 0;
-              } else if (currentVote) {
-                // Switching
-                voteDelta = voteType - currentVote;
-                likeDelta = voteType === 1 ? 1 : -1;
-                dislikeDelta = voteType === -1 ? 1 : -1;
-              } else {
-                // New vote
-                likeDelta = voteType === 1 ? 1 : 0;
-                dislikeDelta = voteType === -1 ? 1 : 0;
-              }
-
-              return {
-                ...fr,
-                vote_count: fr.vote_count + voteDelta,
-                like_count: Math.max(0, (fr.like_count ?? 0) + likeDelta),
-                dislike_count: Math.max(0, (fr.dislike_count ?? 0) + dislikeDelta),
-              };
-            })
-          ),
+          ...fr,
+          vote_count: fr.vote_count + voteDelta,
+          like_count: Math.max(0, (fr.like_count ?? 0) + likeDelta),
+          dislike_count: Math.max(0, (fr.dislike_count ?? 0) + dislikeDelta),
         };
       });
 
@@ -654,7 +686,7 @@ export function useEditFeatureRequest() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      invalidateFeatureRows(queryClient);
       toast.success(_copy("copy.b8af57e311aa", { defaultValue: "Feature request updated!" }));
     },
     onError: () => {
@@ -679,8 +711,7 @@ export function useDeleteFeatureRequest() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
-      queryClient.invalidateQueries({ queryKey: ['feature-requests-total-count'] });
+      invalidateFeatureRows(queryClient);
       toast.success(_copy("copy.be692c8e223e", { defaultValue: "Feature request deleted" }));
     },
     onError: () => {

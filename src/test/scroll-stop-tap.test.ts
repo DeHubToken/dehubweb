@@ -90,4 +90,22 @@ describe('scroll-stop-tap', () => {
     card.click();
     expect(opened).toHaveBeenCalledTimes(2);
   });
+
+  it('lets a button fixed over the gliding page take the tap', () => {
+    const bar = document.createElement('div');
+    bar.style.position = 'fixed';
+    const back = document.createElement('button');
+    bar.appendChild(back);
+    document.body.appendChild(bar);
+    const pressed = vi.fn<(event: Event) => void>();
+    back.addEventListener('click', pressed);
+    fling();
+    now += 30;
+    touch('touchstart', back, 1);
+    const end = touch('touchend', back, 0);
+    back.click();
+    expect(end.defaultPrevented).toBe(false);
+    expect(pressed).toHaveBeenCalledTimes(1);
+    bar.remove();
+  });
 });

@@ -49,7 +49,9 @@ import { useAuth } from '@/contexts/AuthContext';
 // of the entry bundle (scripts/check-entry-bundle.mjs fails the build
 // otherwise).
 import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import { getAccountInfo } from '@/lib/api/dehub';
+import { getAccountInfo, registerTipMessage, bindTipMessage, cancelTipMessage, TIP_MESSAGE_MAX_LENGTH } from '@/lib/api/dehub';
+import { emitTipMessageSent } from '@/lib/tip-events';
+import { Globe, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
@@ -91,11 +93,22 @@ export function TipModal({
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useSurfaceDraft("components/app/modals/TipModal.tsx:amount", '', JSON.stringify([creatorAddress, tokenId, commentId]));
+  // The message that goes with a post tip. Kept as a draft like a reply, so
+  // closing the sheet doesn't lose it.
+  const [message, setMessage] = useSurfaceDraft("components/app/modals/TipModal.tsx:message", '', JSON.stringify([creatorAddress, tokenId]));
+  const [messagePrivate, setMessagePrivate] = useState(false);
+  /** The server's id for the message registered with the tip in flight. */
+  const tipMessageId = useRef<string | null>(null);
+  const tipLanded = useRef(false);
   const [balances, setBalances] = useState<Record<number, number> | null>(null);
   const lastTipAmount = useRef(0);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
   const [privacyChecking, setPrivacyChecking] = useState(false);
   const resolvedTokenId = tokenId || context;
+  // A message goes with a tip on a post, not on a comment or a chat.
+  const canMessage = !commentId && /^[1-9]\d*$/.test(String(resolvedTokenId ?? ''));
+  const trimmedMessage = message.trim();
+  const messageTooLong = message.length > TIP_MESSAGE_MAX_LENGTH;
   const { pinnedChainId } = useTipNetwork();
   // Set when the tip is paid from another token: it is turned into DHB on
   // Base first, so the tip itself always leaves from Base.
@@ -142,9 +155,20 @@ export function TipModal({
       if (commentId) emitPostTipped(commentTipKey(commentId));
       else if (resolvedTokenId) emitPostTipped(resolvedTokenId);
       setAmount.complete(amount, '');
+      tipLanded.current = true;
+      if (tipMessageId.current) setMessage.complete(message, '');
       onOpenChange(false);
     },
-    onConfirmed: () => {
+    onConfirmed: (txHash) => {
+      const messageId = tipMessageId.current;
+      tipMessageId.current = null;
+      if (messageId && resolvedTokenId) {
+        // The webhook usually posts it first; this binds the hash in case it
+        // was slower, then the comments list fetches the wall and lands it.
+        (txHash ? bindTipMessage(messageId, txHash) : Promise.resolve(null))
+          .catch(() => null)
+          .finally(() => emitTipMessageSent(String(resolvedTokenId)));
+      }
       if (commentId && resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['comment-tips', resolvedTokenId] });
       } else if (resolvedTokenId) {
@@ -225,6 +249,25 @@ export function TipModal({
         toast.error(_copy("copy.babd987b2954", { defaultValue: "Could not verify the recipient privacy setting. No tip was sent." }));
         return;
       }
+      // Write the message first: the server refuses here (comments off,
+      // reply limits) before any money moves, and it is waiting when the
+      // tip's confirmation arrives so the creator's notification carries it.
+      tipMessageId.current = null;
+      tipLanded.current = false;
+      if (canMessage && trimmedMessage && !recipientPrivate) {
+        if (messageTooLong) return;
+        const registered = await registerTipMessage({
+          tokenId: resolvedTokenId!,
+          amount: parsedAmount,
+          content: trimmedMessage,
+          isPrivate: messagePrivate,
+        }).catch(() => null);
+        if (!registered?.result || !registered.messageId) {
+          toast.error(registered?.error || t('tip.messageFailed', 'Your message could not be added. No tip was sent.'));
+          return;
+        }
+        tipMessageId.current = registered.messageId;
+      }
       if (directToken) {
         lastTipAmount.current = 0;
         await tip(parsedAmount, directToken);
@@ -239,6 +282,12 @@ export function TipModal({
       lastTipAmount.current = parsedAmount;
       await tip(parsedAmount);
     } finally {
+      // A tip that never went out must not leave its message waiting for the
+      // next tip of the same amount.
+      if (tipMessageId.current && !tipLanded.current) {
+        void cancelTipMessage(tipMessageId.current).catch(() => {});
+        tipMessageId.current = null;
+      }
       sendInFlight.current = false;
       setPreparing(false);
     }
@@ -350,6 +399,47 @@ export function TipModal({
             </div>
           </div>
 
+          {canMessage && !recipientPrivate ? (
+            <div data-tip-message>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="tip-message" className="text-white/60 text-xs">{t('tip.addMessage', 'Add a message (optional)')}</label>
+                {message.length >= TIP_MESSAGE_MAX_LENGTH - 40 ? (
+                  <span className={`text-xs tabular-nums ${messageTooLong ? 'text-red-400' : 'text-white/40'}`}>
+                    {message.length} / {TIP_MESSAGE_MAX_LENGTH}
+                  </span>
+                ) : null}
+              </div>
+              <div className="rounded-xl bg-white/5 border border-white/10 focus-within:border-white/25 transition-colors">
+                <textarea
+                  id="tip-message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  rows={2}
+                  maxLength={TIP_MESSAGE_MAX_LENGTH + 20}
+                  enterKeyHint="send"
+                  placeholder={t('tip.messagePlaceholder', 'Say something with your tip')}
+                  className="block w-full resize-none bg-transparent px-3 pt-2.5 pb-1 text-[15px] text-white placeholder:text-white/40 outline-none"
+                />
+                <div className="flex items-center justify-end px-2 pb-2">
+                  <button
+                    type="button"
+                    onClick={() => setMessagePrivate(v => !v)}
+                    aria-pressed={messagePrivate}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-xs text-white/80 hover:bg-white/15 transition-colors"
+                  >
+                    {messagePrivate ? <Lock className="w-3.5 h-3.5" /> : <Globe className="w-3.5 h-3.5" />}
+                    {messagePrivate
+                      ? t('tip.messagePrivate', 'Only {{name}}', { name: creatorName || t('tip.theCreator', 'the creator') })
+                      : t('tip.messagePublic', 'Public')}
+                  </button>
+                </div>
+              </div>
+              {trimmedMessage && !messagePrivate ? (
+                <p className="text-white/40 text-[11px] mt-1.5">{t('tip.messageWallNote', 'Shows on the tip wall once the tip goes through.')}</p>
+              ) : null}
+            </div>
+          ) : null}
+
           {open && walletAddress && !recipientPrivate ? (
             <Suspense fallback={null}>
               <TipPayWith amountDhb={isValidAmount && !directToken ? parsedAmount : 0} value={payWith} onChange={changePayWith} direct recipientName={creatorName} />
@@ -369,7 +459,7 @@ export function TipModal({
               variant="glass"
               className="flex-1"
               onClick={handleSendTip}
-              disabled={isTipping || funding || preparing || privacyChecking || recipientPrivate || !isValidAmount}
+              disabled={isTipping || funding || preparing || privacyChecking || recipientPrivate || !isValidAmount || (canMessage && messageTooLong)}
             >
               {isTipping || funding || preparing ? (
                 <>
@@ -377,7 +467,7 @@ export function TipModal({
                   {t('tip.sending', 'Sending...')}
                 </>
               ) : (
-                t('tip.send', 'Send')
+                canMessage && trimmedMessage ? t('tip.sendWithMessage', 'Send with message') : t('tip.send', 'Send')
               )}
             </Button>
           </div>

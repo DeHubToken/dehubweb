@@ -8,6 +8,7 @@
  */
 import type { FlowEdge, FlowNode } from './types';
 import { GEN_NODE_TYPES } from './types';
+import { inputRules } from './graphContract';
 
 /** Topological sort — node ids in execution order. */
 export function topoSort(nodes: FlowNode[], edges: FlowEdge[]): string[] {
@@ -85,6 +86,7 @@ export interface ResolvedInputs {
   startFrameUrl?: string;
   endFrameUrl?: string;
   referenceVideoUrls: string[];
+  audioUrl?: string;
 }
 
 /** Resolve upstream prompt and media for a target node. */
@@ -99,6 +101,7 @@ export function resolveInputs(nodeId: string, nodes: FlowNode[], edges: FlowEdge
 
     if (src.type === 'promptNode') result.prompt = src.data.prompt as string | undefined;
     if (src.type === 'assistantNode') result.prompt = src.data.outputText as string | undefined;
+    if (src.type === 'audioGenNode' && src.data.audioTask === 'transcribe') result.prompt = src.data.outputText as string | undefined;
 
     switch (edge.targetHandle) {
       case 'image': {
@@ -126,6 +129,10 @@ export function resolveInputs(nodeId: string, nodes: FlowNode[], edges: FlowEdge
       case 'referenceVideo': {
         const url = videoUrlOf(src);
         if (url) result.referenceVideoUrls.push(url);
+        break;
+      }
+      case 'audio': {
+        if (typeof src.data.audioUrl === 'string') result.audioUrl = src.data.audioUrl;
         break;
       }
       default:
@@ -215,6 +222,6 @@ export function resolveMentions(
 
 /** True when the node can receive a text prompt on a free `prompt` handle. */
 export function nodeAcceptsPromptInput(node: FlowNode, edges: FlowEdge[]): boolean {
-  if (node.type !== 'imageGenNode' && node.type !== 'videoGenNode') return false;
+  if (!inputRules(node).prompt) return false;
   return !edges.some((e) => e.target === node.id && e.targetHandle === 'prompt');
 }

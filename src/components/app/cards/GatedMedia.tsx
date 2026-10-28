@@ -43,6 +43,7 @@ import {
   isSubscriberGated,
   cheapestSubscriberPlan,
   subscriberPlanPrice,
+  formatSubscriberPrice,
   type SubscriberPlan,
 } from '@/lib/content-gate';
 import { GatePreview } from './GatePreview';
@@ -189,7 +190,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
           <Star className="h-7 w-7 text-white" />,
           _copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" }),
           cheapestPlanPrice !== undefined ? (
-            <>{_copy("copy.8b2ebd182d8e", { defaultValue: "Subscribe from" })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
+            <>{_copy("copy.8b2ebd182d8e", { defaultValue: "Subscribe from" })}<DhbAmount amount={formatSubscriberPrice(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
             </>
           ) : gate.creatorName ? (
             _copy("copy.855f365abafc", { defaultValue: "Subscribe to {{value1}}", value1: gate.creatorName })

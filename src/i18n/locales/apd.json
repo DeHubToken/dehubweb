@@ -1733,6 +1733,9 @@
       "fractionPurchased": "المنشورات {{name}} اشترى أجزاء من منشورك",
       "repostedPosts": "إعادة النشر {{name}} من منشورات {{count}}",
       "commentMention": "تم ذكرك في تعليق من قبل {{name}}",
+      "postMention": "{{name}} ذكرّك في بوست",
+      "liveChatMention": "{{name}} ذكرّك في الدردشة الحية",
+      "publicChatMention": "{{name}} ذكرّك في الشات العام",
       "followRequest": "حجزت ليك {{name}}",
       "bountyReplyNamed": "{{name}} رد على مناقشاتك “{{title}}”",
       "bountyReply": "{{name}} رد على مناقشاتك",
@@ -3202,6 +3205,7 @@
     "followerInvites": {
       "title": "دعوة المتابعين",
       "detail": "تختر 50 متابع كحد أقصى لكل دفعة. تهمل الرسائل الخاصة المدفوعة أو المغلقة. تحقق من الدردشة قبل إعادة المحاولة من جديد.",
+      "note": "أضف ملاحظة لدعوتك (اختياري)",
       "selectAll": "تختر هذا الصفحة",
       "clear": "حسناً",
       "previous": "الماقبل",

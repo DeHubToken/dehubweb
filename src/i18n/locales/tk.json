@@ -3211,6 +3211,7 @@
     "followerInvites": {
       "title": "Şägirtleri çagyrmak",
       "detail": "Her toparda 50 adam saýlaň. Ödülýän ýa-da ýapylýan DM-ler ýitirilýär. Çat ýene-de synamagyň öň ýanynda tassyklanmadyk habarlar üçin barlaň.",
+      "note": "Çakylygyňyza bellik goşuň (hökman däl)",
       "selectAll": "Bu sahypa saýlaň",
       "clear": "Aç",
       "previous": "Öňki",

@@ -1761,6 +1761,9 @@
       "fractionPurchased": "{{name}} megvásárolta a posztod részleteit",
       "repostedPosts": "{{name}} újrahozta {{count}}-t a posztjaidból",
       "commentMention": "{{name}} megemlítette a kommentedben",
+      "postMention": "{{name}} megemlített egy bejegyzésben",
+      "liveChatMention": "{{name}} megemlített téged az élő csevegésben",
+      "publicChatMention": "{{name}} megemlített téged a nyilvános csevegésben",
       "followRequest": "{{name}} követésre kérte",
       "bountyReplyNamed": "{{name}} válaszolt a díjkeresőedre: “{{title}}”",
       "bountyReply": "{{name}} válaszolt a díjkeresőedre",
@@ -3247,6 +3250,7 @@
     "followerInvites": {
       "title": "Újra invitálja a követőket",
       "detail": "Legfeljebb 50 követőt választhat ki egy csomagban. A fizetett vagy zárva tartott DM-ek áttekintve lesznek. Ellenőrizze a csatban a megerősítetlen küldéseket, mielőtt újra próbálkozna.",
+      "note": "Adj hozzá üzenetet a meghívódhoz (nem kötelező)",
       "selectAll": "Válassza ki ezt az oldalt",
       "clear": "Töröl",
       "previous": "Előző",
