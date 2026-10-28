@@ -1947,7 +1947,7 @@ function PrivacySettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('reactions.remixesSection', 'Remixes')}</h3>
         <div className="space-y-4">
           <DuetSetting address={user?.address} />
-          <AccountAllowReactions />
+          <div data-setting-anchor="allow-reactions"><AccountAllowReactions /></div>
         </div>
       </div>
 
