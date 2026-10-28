@@ -7,7 +7,7 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Camera, Film, Image as ImageIcon, Pause, Play, RotateCcw, Trash2, Volume2, VolumeX } from 'lucide-react';
+import { Camera, Film, Image as ImageIcon, MonitorPlay, Pause, Play, RotateCcw, Trash2, Volume2, VolumeX } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
@@ -34,6 +34,9 @@ import {
 import { DESK_CHANNELS, MAX_VOLUME, type AudioDesk, type DeskChannel, type GateStrength } from '@/lib/studio/audio-desk';
 import type { StudioSources } from './use-studio-sources';
 import type { BackgroundMode, BackgroundOptions } from '@/lib/studio/background';
+import { getNFTInfo } from '@/lib/api/dehub';
+import { buildVideoUrl } from '@/lib/media-url';
+import { startLiveReaction, stopLiveReaction, tokenIdFromPostUrl } from '@/lib/api/remix-links';
 
 const chip = (on: boolean) =>
   cn(
@@ -200,8 +203,9 @@ export function ScenesPanel({
 
 /* ───────────────────────── Sources ───────────────────────── */
 
-export function SourcesPanel({ sources, frameAspect }: { sources: StudioSources; frameAspect: number }) {
+export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources: StudioSources; frameAspect: number; streamTokenId?: string }) {
   const { t } = useTranslation();
+  const [reactLink, setReactLink] = useState<string | null>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const clipRef = useRef<HTMLInputElement>(null);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
@@ -276,6 +280,72 @@ export function SourcesPanel({ sources, frameAspect }: { sources: StudioSources;
     });
   };
 
+  /**
+   * React live: a DeHub video fills the frame for viewers, with the creator's
+   * camera in a bubble over it. The server checks the video may be reacted to
+   * and marks the stream as reacting to it before anything goes on screen.
+   */
+  const addReaction = async () => {
+    const raw = (reactLink ?? '').trim();
+    const tokenId = /^\d+$/.test(raw) ? Number(raw) : tokenIdFromPostUrl(raw);
+    if (!tokenId) {
+      toast.error(t('studioDeck.sources.reactInvalid', 'Paste a link to a DeHub video.'));
+      return;
+    }
+    if (!streamTokenId) {
+      toast.error(t('studioDeck.sources.reactNotLive', 'Go live first, then add the video.'));
+      return;
+    }
+    setAdding(true);
+    try {
+      const post = await getNFTInfo(String(tokenId));
+      await startLiveReaction(streamTokenId, tokenId);
+      for (const c of sources.configs) if (c.reaction) sources.remove(c.id);
+      const creator = post?.mintername || post?.minterUsername || null;
+      const ok = await sources.add({
+        id: newSourceId(),
+        kind: 'video',
+        name: (creator ? `@${creator} · ` : '') + (post?.name || t('studioDeck.sources.clip')).slice(0, 40),
+        url: buildVideoUrl(tokenId),
+        reaction: { tokenId, creator, title: String(post?.name ?? '').slice(0, 120) },
+        rect: { x: 0, y: 0, w: 1, h: 1 },
+        shape: 'rect',
+        visible: true,
+        withSound: true,
+        loop: false,
+      });
+      if (!ok) {
+        void stopLiveReaction(streamTokenId).catch(() => undefined);
+        toast.error(t('studioDeck.sources.failed'));
+        return;
+      }
+      setReactLink(null);
+      // The creator's face goes over the video; without a second camera the
+      // video shrinks to a corner so the main camera still shows.
+      if (!sources.configs.some((c) => c.kind === 'camera')) {
+        const bubble = await sources.add({
+          id: newSourceId(),
+          kind: 'camera',
+          name: t('studioDeck.sources.camera'),
+          rect: placeSource('bottom-right', 'medium', 1, frameAspect),
+          shape: 'circle',
+          visible: true,
+          mirror: true,
+        });
+        if (!bubble) toast(t('studioDeck.sources.reactNoBubble', 'Your camera could not open twice here. Resize the video to keep your face on screen.'));
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('studioDeck.sources.failed'));
+    } finally {
+      setAdding(false);
+    }
+  };
+
+  const removeSource = (c: SourceConfig) => {
+    sources.remove(c.id);
+    if (c.reaction && streamTokenId) void stopLiveReaction(streamTokenId).catch(() => undefined);
+  };
+
   const move = (c: SourceConfig, position: SourcePosition, size: SourceSize) => {
     // The source's own shape in pixels, recovered from its current rect.
     const aspect = c.shape === 'circle' ? 1 : (c.rect.w / Math.max(0.0001, c.rect.h)) * frameAspect;
@@ -298,9 +368,26 @@ export function SourcesPanel({ sources, frameAspect }: { sources: StudioSources;
             <Film className="mr-1 inline h-3.5 w-3.5" />
             {t('studioDeck.sources.addClip')}
           </button>
+          <button type="button" disabled={full} className={chip(reactLink !== null)} onClick={() => setReactLink(reactLink === null ? '' : null)}>
+            <MonitorPlay className="mr-1 inline h-3.5 w-3.5" />
+            {t('studioDeck.sources.addReaction', 'React to a video')}
+          </button>
           <input ref={imageRef} type="file" accept="image/*" hidden onChange={(e) => void addImage(e.target.files?.[0])} />
           <input ref={clipRef} type="file" accept="video/*" hidden onChange={(e) => void addClip(e.target.files?.[0])} />
         </div>
+        {reactLink !== null && (
+          <form className="flex gap-1.5" onSubmit={(e) => { e.preventDefault(); void addReaction(); }}>
+            <input
+              autoFocus
+              value={reactLink}
+              onChange={(e) => setReactLink(e.target.value)}
+              placeholder={t('studioDeck.sources.reactPlaceholder', 'Paste a DeHub video link')}
+              aria-label={t('studioDeck.sources.reactPlaceholder', 'Paste a DeHub video link')}
+              className="min-w-0 flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white placeholder:text-white/40"
+            />
+            <button type="submit" className={chip(true)}>{t('studioDeck.sources.reactAdd', 'Show')}</button>
+          </form>
+        )}
       </Section>
 
       {sources.configs.length === 0 ? (
@@ -325,7 +412,7 @@ export function SourcesPanel({ sources, frameAspect }: { sources: StudioSources;
                     </>
                   )}
                   <Switch checked={c.visible} onCheckedChange={(v) => sources.update(c.id, { visible: v })} aria-label={t('studioDeck.sources.show')} />
-                  <button type="button" aria-label={t('studioDeck.remove')} className="rounded-md p-1 text-white/60 hover:bg-white/10 hover:text-white" onClick={() => sources.remove(c.id)}>
+                  <button type="button" aria-label={t('studioDeck.remove')} className="rounded-md p-1 text-white/60 hover:bg-white/10 hover:text-white" onClick={() => removeSource(c)}>
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

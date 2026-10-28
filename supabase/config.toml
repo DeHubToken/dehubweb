@@ -353,6 +353,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # Live clips: viewer clips and streamer highlights. Checks the DeHub token itself.
   [functions.live-clips]
     verify_jwt = false
+  # Reactions to DeHub videos: links, the allow switch, live chips. Checks the DeHub token itself.
+  [functions.remix-links]
+    verify_jwt = false
   # Public read-only CoinMarketCap proxy; the CMC key stays server-side.
   [functions.cmc-market-cap]
     verify_jwt = false

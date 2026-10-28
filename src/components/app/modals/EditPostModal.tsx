@@ -42,6 +42,7 @@ import { useTranslation } from 'react-i18next';
 import { normalizeCategoryName } from '@/lib/category-names';
 import { CONTENT_WARNING_MAX } from '@/components/app/cards/ContentWarningGate';
 import type { QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
+import { PostAllowReactions } from '@/components/app/remix/AllowReactionsSwitch';
 
 export interface EditPostResult {
   name: string;
@@ -358,6 +359,8 @@ export function EditPostModal({
               <option value="nobody">{t('quotePolicy.nobody')}</option>
             </select>
           </div>
+
+          {canReplaceVideo && <PostAllowReactions tokenId={tokenId} open={open} />}
 
           {/* Who may reply from now on, while comments are on. Replies already made stay. */}
           <div className="flex items-center justify-between gap-3">

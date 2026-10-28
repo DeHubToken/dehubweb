@@ -6768,7 +6768,13 @@
         "circle": "Círculo",
         "rounded": "Redondeado",
         "rect": "Cuadrado"
-      }
+      },
+      "addReaction": "Reaccionar a un vídeo",
+      "reactPlaceholder": "Pega un enlace de vídeo de DeHub",
+      "reactAdd": "Mostrar",
+      "reactInvalid": "Pega un enlace a un vídeo de DeHub.",
+      "reactNotLive": "Primero empieza el directo y luego añade el vídeo.",
+      "reactNoBubble": "Tu cámara no puede abrirse dos veces aquí. Cambia el tamaño del vídeo para que se vea tu cara."
     },
     "audio": {
       "title": "Mezclador de audio",
@@ -19696,5 +19702,26 @@
     "errorNoRecipient": "No se encontró ninguna cuenta de DeHub",
     "errorSelf": "No puedes enviarte a ti mismo",
     "errorGeneric": "No se pudo enviar. Inténtalo de nuevo."
+  },
+  "reactions": {
+    "reactionTo": "Reacción a",
+    "reactingTo": "Reaccionando a",
+    "count_one": "{{count}} reacción",
+    "count_other": "{{count}} reacciones",
+    "allow": "Permitir reacciones",
+    "allowDescription": "Deja que otros creadores reaccionen a tus vídeos, grabados o en directo. Puedes cambiarlo en cada publicación.",
+    "notify": "{{name}} reaccionó a {{title}}",
+    "notifyLive": "{{name}} está reaccionando en directo a {{title}}",
+    "yourVideo": "tu vídeo",
+    "pageTitle": "Reacciones a {{title}} — DeHub",
+    "pageDescription": "Mira cómo los creadores reaccionan a «{{title}}» de {{creator}} en DeHub, grabado y en directo.",
+    "heading": "Reacciones",
+    "backToVideo": "Volver al vídeo",
+    "empty": "Aún no hay reacciones. Abre el menú Remix del vídeo y elige Reaccionar para ser el primero.",
+    "more": "Ver más",
+    "liveNow": "En directo",
+    "wasLive": "Fue en directo",
+    "untitled": "Reacción",
+    "thisVideo": "este vídeo"
   }
 }

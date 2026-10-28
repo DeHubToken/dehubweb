@@ -20,6 +20,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { PostModal } from "@/features/post";
+import { tokenIdFromPostUrl } from "@/lib/api/remix-links";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
@@ -45,6 +46,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
   const media = useEditorStore((s) => s.media);
   const clips = useEditorStore((s) => s.clips);
   const settings = useEditorStore((s) => s.settings);
+  const reactionSourceId = settings.remixSource?.mode === 'react' ? tokenIdFromPostUrl(settings.remixSource.url) : null;
   const duration = useEditorStore(selectTimelineDuration);
 
 
@@ -186,7 +188,8 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         isOpen={postOpen}
         onClose={() => { setPostOpen(false); setFiles(null); }}
         initialFiles={files}
-        initialText={settings.remixSource ? `Remix of ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        initialText={settings.remixSource ? `${settings.remixSource.mode === 'react' ? 'Reaction to' : 'Remix of'} ${settings.remixSource.creator ? '@' + settings.remixSource.creator : settings.remixSource.title}\n${settings.remixSource.url}` : undefined}
+        remixLink={reactionSourceId ? { sourceTokenId: reactionSourceId } : null}
         onFilesProcessed={() => setFiles(null)}
       />
     </>

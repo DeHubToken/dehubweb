@@ -2775,7 +2775,7 @@ export function GoLiveBroadcaster({
             fullBleed && 'absolute inset-x-3 bottom-24 z-20 max-h-[60vh] overflow-y-auto bg-black/80 backdrop-blur-xl'
           )}
         >
-          <SourcesPanel sources={studioSources} frameAspect={frameAspect} />
+          <SourcesPanel sources={studioSources} frameAspect={frameAspect} streamTokenId={tokenId} />
         </div>
       )}
 

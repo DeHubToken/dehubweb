@@ -54,6 +54,7 @@ import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/a
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
+import { linkReactionPost } from '@/lib/api/remix-links';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -317,6 +318,8 @@ export function usePostForm(
    * hidden by the modal and never sent.
    */
   quotedPost?: DeHubNFT | null,
+  /** Set when this post is a reaction recorded in the remix studio: it is linked to its source once minted. */
+  remixLink?: { sourceTokenId: number } | null,
 ): UsePostFormReturn {
   const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
@@ -2075,6 +2078,13 @@ export function usePostForm(
               );
             }
           });
+      }
+
+      // A reaction recorded in the remix studio: credit its source and tell its
+      // creator. The post is up either way.
+      if (remixLink && !mintResponse.duplicate && !liveMode) {
+        void linkReactionPost(remixLink.sourceTokenId, mintResponse.createdTokenId)
+          .catch((error) => console.warn('[Mint] Reaction link failed', error));
       }
 
       // Never for a followers-only or direct post: another network would publish

@@ -60,6 +60,7 @@ import { verticalCropStyle, type VerticalCrop } from '@/lib/live-overlay/vertica
 import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
 import { useLiveClip } from '../live/ClipButton';
+import { ReactingToChip } from '../remix/ReactionChips';
 import Scissors from '@/components/ui/cut-icons/trim';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
@@ -1727,6 +1728,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             />
           </Suspense>
         )}
+        {/* React live: the DeHub video on screen, credited and one tap away. */}
+        <ReactingToChip
+          streamTokenId={stream.tokenId || stream.id}
+          live={!!stream.isLive && !streamEnded}
+          className={cn('absolute left-3 z-20 max-w-[70%]', immersive ? 'top-[max(6.5rem,calc(env(safe-area-inset-top)+6.5rem))]' : 'top-14')}
+        />
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
         {stream.streamId && stream.isLive && !streamEnded && !isOwnStream && (
           <Suspense fallback={null}>

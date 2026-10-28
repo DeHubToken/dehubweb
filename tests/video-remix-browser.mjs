@@ -26,7 +26,7 @@ const browser = await chromium.launch({ headless: true, args: [
 ] });
 const results = [];
 try {
-  for (const mode of ['collab', 'sound', 'cut', 'green-screen']) {
+  for (const mode of ['collab', 'sound', 'cut', 'green-screen', 'react']) {
     const context = await browser.newContext({ permissions: ['camera', 'microphone'], viewport: { width: 430, height: 900 } });
     const page = await context.newPage();
     const logs = [], errors = [], requests = [];
@@ -39,7 +39,14 @@ try {
       window.remixPackets = [];
       window.addEventListener('message', event => { if (event.data?.type) window.remixPackets.push(event.data); });
     });
-    await page.route('https://media.remix.test/source.mp4', route => route.fulfill({ status: 200, contentType: 'video/mp4', headers: { 'access-control-allow-origin': '*', 'cache-control': 'no-store' }, body: source }));
+    // Byte ranges like the real CDN, so the source can be scrubbed.
+    await page.route('https://media.remix.test/source.mp4', route => {
+      const headers = { 'access-control-allow-origin': '*', 'cache-control': 'no-store', 'accept-ranges': 'bytes' };
+      const range = /^bytes=(\d+)-(\d*)$/.exec(route.request().headers().range || '');
+      if (!range) return route.fulfill({ status: 200, contentType: 'video/mp4', headers, body: source });
+      const start = Number(range[1]), end = range[2] ? Math.min(Number(range[2]), source.length - 1) : source.length - 1;
+      return route.fulfill({ status: 206, contentType: 'video/mp4', headers: { ...headers, 'content-range': `bytes ${start}-${end}/${source.length}` }, body: source.subarray(start, end + 1) });
+    });
     await page.route('https://remix.test/', route => route.fulfill({ status: 200, contentType: 'text/html', body: buildRemixStudioHtml({ mode, videoUrl: 'https://media.remix.test/source.mp4', sourceUrl: 'https://dehub.io/app/post/fixture', title: 'Recording fixture', creator: 'fixture', bridgeKey: key }) }));
     try {
       await page.goto('https://remix.test/');
@@ -52,12 +59,29 @@ try {
       await page.waitForFunction(() => !document.querySelector('#record').disabled, undefined, { timeout: 15000 });
       await page.screenshot({ path: path.join(output, `${mode}-preview.png`) });
       await page.locator('#record').click();
+      if (mode === 'react') {
+        // Pause and scrub the source mid-take; the camera bubble keeps recording.
+        await page.waitForFunction(() => Number.parseFloat(document.querySelector('#clock').textContent) >= 0.8, undefined, { timeout: 20000 });
+        await page.locator('#sourcePlay').click();
+        await page.waitForFunction(() => document.querySelector('#source').paused);
+        await page.locator('#sourcePos').fill('4');
+        await page.waitForFunction(() => Math.abs(document.querySelector('#source').currentTime - 4) < 0.5);
+        await page.locator('#sourcePlay').click();
+        await page.waitForFunction(() => !document.querySelector('#source').paused);
+      }
       await page.waitForFunction(() => Number.parseFloat(document.querySelector('#clock').textContent) >= 2, undefined, { timeout: 20000 });
       await page.locator('#stop').click();
       await page.locator('#use').waitFor({ state: 'visible', timeout: 15000 });
       await page.locator('#use').click();
       await page.waitForFunction(() => window.remixPackets.some(packet => packet.type === 'recorded'), undefined, { timeout: 15000 });
-      const packet = await page.evaluate(() => window.remixPackets.find(value => value.type === 'recorded'));
+      // A reaction hands its take over as a Blob (it can run ten minutes); read it back the same way.
+      const packet = await page.evaluate(async () => {
+        const found = window.remixPackets.find(value => value.type === 'recorded');
+        if (!(found.blob instanceof Blob)) return found;
+        const dataUrl = await new Promise(resolve => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.readAsDataURL(found.blob); });
+        return { ...found, blob: undefined, handedBlob: true, dataUrl };
+      });
+      if (mode === 'react') assert(packet.handedBlob, 'react: take must be handed over as a Blob');
       assert.equal(packet.key, key);
       assert.equal(packet.width, 720);
       assert.equal(packet.height, mode === 'green-screen' ? 720 : 1280);
