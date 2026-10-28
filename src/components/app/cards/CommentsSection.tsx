@@ -91,7 +91,9 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { parseBadgeLock } from '@/lib/staking-badges';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, getTipWall, type ApiCommentResponse } from '@/lib/api/dehub';
+import { TipWall, TipChip } from '@/components/app/comments/TipWall';
+import { subscribeTipMessageSent } from '@/lib/tip-events';
 import {
   applyReactionDelta,
   isPositiveReaction,
@@ -230,6 +232,9 @@ function draftReplyTarget(draft: CommentDraft | null): Comment | null {
  * sentence for the tooltip and for the button's accessible name, which is all
  * a screen reader gets in the narrow panel where the word is hidden.
  */
+/** Stable empty wall, so a post without tip messages never re-renders on it. */
+const EMPTY_TIP_WALL: ApiCommentResponse[] = [];
+
 const SORT_OPTIONS = [
   { value: 'recent', short: 'comments.sortRecent', sortedBy: 'comments.sortedByRecent' },
   { value: 'oldest', short: 'comments.sortOldest', sortedBy: 'comments.sortedByOldest' },
@@ -458,9 +463,11 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     <motion.div
       // A comment you just sent is already on screen under its placeholder id;
       // when the real id swaps in, the row remounts and must not fade in twice.
-      initial={delivery?.status === 'posted' ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="relative flex items-start gap-3 py-3 cursor-pointer rounded-xl"
+      initial={delivery?.status === 'posted' ? false : isPending ? { opacity: 0, y: 28, scale: 0.97 } : { opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={isPending ? { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } : undefined}
+      // The one you just sent lands with the soft glow, wherever it lands.
+      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl${isPending ? ' dh-land-glow' : ''}`}
       data-comment-id={comment.id}
       /*
         Tap the comment to answer it.
@@ -562,6 +569,8 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
               {i18n.t('comments.pinnedBadge', 'Pinned')}
             </span>
           )}
+          {/* Sent with a tip on the post: the amount rides next to the name. */}
+          {comment.tip && <TipChip tip={comment.tip} className="text-white" />}
           {/* Same name, different account. Said plainly, and never by hiding
               the comment — the reader decides, this only removes the doubt. */}
           {isImpersonating && (
@@ -1198,6 +1207,68 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   const topTippedIds = commentTips.topTippedIds;
   const topTippedKey = topTippedIds.join(',');
 
+  /**
+   * The tip wall: messages sent with a tip on this post, biggest tip first.
+   * They show as cards above the list and are kept out of it until a card is
+   * opened, so nothing reads twice.
+   */
+  const { data: tipWallRows = EMPTY_TIP_WALL, refetch: refetchTipWall } = useQuery({
+    queryKey: ['tip-wall', tokenId, walletAddress?.toLowerCase() ?? null],
+    queryFn: () => getTipWall(tokenId, walletAddress?.toLowerCase()),
+    enabled: !!tokenId,
+    staleTime: 60000,
+    retry: false,
+  });
+  const tipWallIds = useMemo(() => tipWallRows.map(row => String(row.id)), [tipWallRows]);
+  const tipWallCards = useMemo(() => tipWallRows.map(mapApiComment), [tipWallRows]);
+  const [openTipId, setOpenTipId] = useState<string | null>(null);
+  const [landedTipId, setLandedTipId] = useState<string | null>(null);
+  const tipWallIdsRef = useRef(tipWallIds);
+  tipWallIdsRef.current = tipWallIds;
+
+  // This viewer's tip with a message just confirmed. The server posts it a
+  // beat later (when the chain event reaches it), so look for it a few times
+  // and land the new card with its glow when it shows up.
+  useEffect(() => subscribeTipMessageSent((id) => {
+    if (id !== String(tokenId)) return;
+    const before = new Set(tipWallIdsRef.current);
+    const me = walletAddress?.toLowerCase();
+    let tries = 0;
+    let stopped = false;
+    const look = async () => {
+      if (stopped) return;
+      tries += 1;
+      const { data } = await refetchTipWall();
+      const fresh = (data ?? []).find(row => !before.has(String(row.id)) && (!me || row.address?.toLowerCase() === me));
+      if (fresh) {
+        setLandedTipId(String(fresh.id));
+        window.setTimeout(() => setLandedTipId(current => (current === String(fresh.id) ? null : current)), 2400);
+        return;
+      }
+      if (tries < 10) window.setTimeout(look, 1500);
+    };
+    void look();
+    return () => { stopped = true; };
+  }), [tokenId, walletAddress, refetchTipWall]);
+
+  const toggleTipCard = useCallback((id: string) => {
+    setOpenTipId(current => (current === id ? null : id));
+  }, []);
+  // An opened card's comment lands at the top of the list; bring it into
+  // view with the same glow a new comment gets.
+  useEffect(() => {
+    if (!openTipId) return;
+    const frame = window.requestAnimationFrame(() => {
+      const row = sectionRef.current?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(openTipId)}"]`);
+      if (!row) return;
+      row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      row.classList.remove('dh-land-glow');
+      void row.offsetWidth;
+      row.classList.add('dh-land-glow');
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [openTipId]);
+
   // Fetch comments from API. Paged: the single-page version capped every
   // thread at its 20 newest roots with no way to read the rest.
   const COMMENTS_PAGE_SIZE = 20;
@@ -1267,8 +1338,16 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         rows.push(row);
       }
     }
+    // Tip messages can sit on any page; the wall has them all, so an opened
+    // card's comment (and its replies' parent) is always in the list.
+    for (const row of tipWallRows) {
+      const id = String(row.id);
+      if (seen.has(id)) continue;
+      seen.add(id);
+      rows.push(row);
+    }
     return rows;
-  }, [commentPages]);
+  }, [commentPages, tipWallRows]);
   const apiRowsById = useMemo(
     () => new Map((apiComments ?? []).map(row => [String(row.id), row])),
     [apiComments],
@@ -1722,6 +1801,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       return groupedComments.filter(({ comment }) => comment.id === focusThreadId);
     }
 
+    // Tip messages live on the wall above; only an opened card's comment
+    // joins the list. A search still finds them all.
+    if (tipWallIds.length && !searchQuery.trim()) {
+      filtered = filtered.filter(({ comment }) => !tipWallIds.includes(comment.id) || comment.id === openTipId);
+    }
+
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = groupedComments.filter(
@@ -1779,6 +1864,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
 
     function lift({ comment }: CommentThread) {
+      if (comment.id === openTipId) return -1;
       if (comment.isPinned) return 0;
       if (comment.anchoredUntil && comment.anchoredUntil.getTime() > now) return 1;
       const tipped = topTippedIds.indexOf(comment.id);
@@ -1786,7 +1872,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       const answered = sortBy === 'recent' ? creatorLiftRanks.get(comment.id) : undefined;
       return answered === undefined ? Number.MAX_SAFE_INTEGER : 2 + topTippedIds.length + answered;
     }
-  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks, postCreator?.address]);
+  }, [groupedComments, searchQuery, sortBy, focusOnlyThread, focusThreadId, topTippedIds, creatorLiftRanks, postCreator?.address, tipWallIds, openTipId]);
 
   /**
    * Bring the linked comment into view once it has actually rendered.
@@ -2115,6 +2201,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     }
   });
 
+  /** The comment just sent, brought into view once its row exists. */
+  const landTempIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    const id = landTempIdRef.current;
+    if (!id) return;
+    const row = sectionRef.current?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(id)}"]`);
+    if (!row) return;
+    landTempIdRef.current = null;
+    // After the keyboard has gone, so the scroll measures the real viewport.
+    window.setTimeout(() => row.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 120);
+  }, [optimisticComments]);
+
   const submitComment = useCallback(async () => {
     if ((!newComment.trim() && !voiceNote && !commentImage && !commentGifUrl) || isSubmitting || submitInFlightRef.current) return;
 
@@ -2156,6 +2254,13 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     };
 
     setOptimisticComments(prev => [tempComment, ...prev]);
+    // Sent: the keyboard goes away so the reader sees their comment glide
+    // into its spot instead of a keyboard over it.
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
+      && document.activeElement.matches('textarea, input, [contenteditable="true"]')) {
+      document.activeElement.blur();
+    }
+    landTempIdRef.current = tempId;
     const replyTarget = replyTo;
     // Your own reply has to land somewhere you can see it, so open the thread
     // it belongs to. Replying to a reply still means the root's thread.
@@ -2627,6 +2732,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             ) : error ? (
               <p className="text-zinc-500 text-sm py-6 text-center">{t('comments.loadFailed')}</p>
             ) : (
+              <>
+              {!focusOnlyThread && !searchQuery.trim() ? (
+                <TipWall rows={tipWallCards} openId={openTipId} onToggle={toggleTipCard} landedId={landedTipId} />
+              ) : null}
               <AnimatePresence mode="popLayout">
                 {isAssistantReplying && (
                   <motion.div
@@ -2642,10 +2751,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 )}
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(renderThread)
-                ) : hideEmptyInline ? null : (
+                ) : hideEmptyInline || tipWallCards.length ? null : (
                   <AppState icon="posts" title={t('comments.emptyRepliesTitle')} description={t('comments.emptyRepliesBody')} size="section" />
                 )}
               </AnimatePresence>
+              </>
             )}
             {showAllCommentsRow ?? loadMoreRow}
           </div>
