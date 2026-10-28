@@ -348,7 +348,11 @@ export interface ProjectSettings {
   /** Optional film brief, shot direction and owned media links, portable with the project. */
   filmProject?: import('./filmProject').FilmProject;
   /** Original post retained when a recorded remix is edited and published. */
-  remixSource?: { url: string; creator?: string; title: string };
+  remixSource?: {
+    url: string; creator?: string; title: string;
+    /** Set for a duet: it posts as a quote of this token so the original keeps credit. */
+    mode?: 'duet'; tokenId?: string; layout?: string;
+  };
   /** Physical page sizing for PDF downloads. */
   printDpi?: number;
   width: number;
