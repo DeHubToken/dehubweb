@@ -48,6 +48,8 @@ interface PlanCardProps {
   isOwner?: boolean;
   isSubscribed?: boolean;
   onEdit?: () => void;
+  /** Told when the confirm dialog opens or closes, so a sheet holding this card can step aside. */
+  onConfirmOpenChange?: (open: boolean) => void;
 }
 
 function formatAmount(value: number | undefined, maximumFractionDigits = 4): string {
@@ -65,7 +67,7 @@ function PlanNotice({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps) {
+export function PlanCard({ plan, isOwner, isSubscribed, onEdit, onConfirmOpenChange }: PlanCardProps) {
   const { t } = useTranslation();
   const buyPlanMutation = useBuyPlan();
   const { walletAddress } = useAuth();
@@ -246,7 +248,13 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
           {t('subscriptions.subscribed')}
         </Button>
       ) : (
-        <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialog
+          open={confirmOpen}
+          onOpenChange={(open) => {
+            setConfirmOpen(open);
+            onConfirmOpenChange?.(open);
+          }}
+        >
           <AlertDialogTrigger asChild>
             <Button
               disabled={busy || !published || !isBuyable}
@@ -265,7 +273,9 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
               )}
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
+          {/* z-[110]: the gate sheet that holds this card sits at z-[100], and the
+              dialog has to land in front of it, not behind. */}
+          <AlertDialogContent className="z-[110] bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-white">{t('subscriptions.confirmSubscription')}</AlertDialogTitle>
               <AlertDialogDescription className="text-zinc-400">
