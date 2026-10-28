@@ -78,11 +78,11 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
     requiresAuth: !!getAuthToken(),
     params: {
       q: params.q,
-      page: params.page,
+      page: (params.page ?? 0) + 1,
       // /search's page-size param is `limit` — `unit` was ignored and every
       // request fell back to the server default of 20.
       limit: params.unit,
-      type: params.type,
+      type: params.type === 'accounts' ? 'accounts' : params.type ? 'content' : undefined,
       postType: params.postType,
       address: params.address,
     },
@@ -198,7 +198,7 @@ export async function logSearchAnalytics(params: SearchLogParams): Promise<void>
     method: "POST",
     body: {
       query: params.query,
-      type: params.type,
+      type: params.type === 'accounts' ? 'accounts' : params.type ? 'content' : undefined,
       resultCount: params.resultCount,
       clicked: params.clicked,
       clickedResultId: params.clickedResultId,
