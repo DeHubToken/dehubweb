@@ -8,9 +8,9 @@ HTTPS callbacks and the MCP resource bound to `https://dehub.io/mcp`.
 
 | Scope | Account controls |
 | --- | --- |
-| `dehub:read` | Connected identity, own posts, followers/following, notifications, bookmarks, generation status and private Creator library |
+| `dehub:read` | Connected identity, own posts, followers/following, notifications, bookmarks, generation status, private Creator library and your agents' new member welcomes |
 | `dehub:profile` | Username, display name, bio, avatar, banner and profile privacy |
-| `dehub:social` | Publish ordinary posts, comments/replies, reactions, follow/unfollow, bookmarks and notification read state |
+| `dehub:social` | Publish ordinary posts, comments/replies, reactions, follow/unfollow, bookmarks, notification read state and switching your agents to welcome new members |
 | `dehub:generate` | Images, video, audio and 3D through the existing Creator endpoints |
 
 `dehub_features` describes supported chat controls and links to app surfaces for

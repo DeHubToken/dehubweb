@@ -52,6 +52,7 @@ import MessagesSquare from '@/components/ui/cut-icons/chat';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
+import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { useQueryClient } from '@tanstack/react-query';
 import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
 import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
@@ -773,6 +774,7 @@ export default function StateGalleryPage() {
         <PollGallery />
         <LockedChatGallery />
         <ProposalCardGallery />
+        <AgentWelcomeGallery />
         <LiveViewerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -1240,6 +1242,34 @@ function ProposalCardGallery() {
           <ProposalLinkEmbed key={p.id} proposalId={p.id} path="/app/state-gallery" />
         ))}
       </div>
+    </section>
+  );
+}
+
+const GALLERY_AGENT = '0x00000000000000000000000000000000000a6e17';
+function AgentWelcomeGallery() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  // Seed before the panel mounts so it renders the sample, never fetches.
+  useState(() => {
+    queryClient.setQueryData(['agent-welcomes'], {
+      limits: { maxPerDay: 10, defaultPerDay: 3, ownerMessagesPerDay: 20, maxText: 500 },
+      agents: [{ address: GALLERY_AGENT, username: 'welcomebot', displayName: 'Welcome Bot', avatarImageUrl: null, follow: true, message: true,
+        text: 'Hey {name}, welcome to DeHub! 👋 Shout if you need a hand finding your people.', perDay: 3, today: { follows: 2, messages: 1 } }],
+    });
+    const at = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
+    const target = (n: string) => ({ address: `0x${n.padStart(40, '0')}`, username: n, displayName: n, avatarImageUrl: null });
+    queryClient.setQueryData(['agent-welcome-log', GALLERY_AGENT], [
+      { kind: 'message', status: 'done', reason: '', content: '', at: at(4), target: target('sunnyreels') },
+      { kind: 'follow', status: 'done', reason: '', content: '', at: at(5), target: target('sunnyreels') },
+      { kind: 'follow', status: 'done', reason: '', content: '', at: at(48), target: target('beatsbyjo') },
+      { kind: 'message', status: 'skipped', reason: 'They do not take new messages.', content: '', at: at(49), target: target('beatsbyjo') },
+    ]);
+  });
+  return (
+    <section data-page-bento data-agent-welcome-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('agents.welcome.title')}</h2>
+      <div className="max-w-xl"><AgentWelcomePanel agentName="welcomebot" /></div>
     </section>
   );
 }
