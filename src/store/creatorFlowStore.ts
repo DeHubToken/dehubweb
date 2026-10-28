@@ -23,6 +23,7 @@ import type { Flow, FlowEdge, FlowNode, NodeData, Viewport } from '@/lib/creator
 import { nodeLabel, uid } from '@/lib/creator/flow/types';
 import { edgeStyle } from '@/lib/creator/flow/edgeStyles';
 import { requestFlowSync } from '@/lib/creator/flow/syncBus';
+import { durableFlowNodes } from '@/lib/creator/flow/graphContract';
 
 const STORAGE_PREFIX = 'dehub-creator-flow-v1';
 const MAX_UNDO = 50;
@@ -71,7 +72,7 @@ function syncFlow(
 
 /** Inline data URLs are session-only; only durable URLs are written. */
 function stripInline(nodes: FlowNode[]): FlowNode[] {
-  return nodes.map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } }));
+  return durableFlowNodes(nodes).map((n) => ({ ...n, data: { ...n.data, inputImage: undefined } }));
 }
 
 interface Persisted {
@@ -125,6 +126,7 @@ interface Snapshot {
 }
 
 export interface FlowState {
+  scopeVersion: number;
   flows: Flow[];
   activeFlowId: string;
 
@@ -195,6 +197,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
   const snapshot = (s: FlowState): Snapshot[] => [...s.undoStack.slice(-(MAX_UNDO - 1)), { nodes: s.nodes, edges: s.edges }];
 
   return {
+    scopeVersion: 0,
     flows: initialFlows,
     activeFlowId: active.id,
     nodes: active.nodes,
@@ -230,6 +233,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
         const target = s.flows.find((f) => f.id === id);
         if (!target) return {};
         return {
+          scopeVersion: s.scopeVersion + 1,
           flows: syncFlow(s.flows, s.activeFlowId, s.nodes, s.edges, s.nodeCounters),
           activeFlowId: id,
           nodes: target.nodes,
@@ -334,6 +338,7 @@ export const useCreatorFlowStore = create<FlowState>()((set, get) => {
       const activeId = loadedNext?.activeFlowId ?? flows[0].id;
       const activeFlow = flows.find((f) => f.id === activeId) ?? flows[0];
       set({
+        scopeVersion: get().scopeVersion + 1,
         flows,
         activeFlowId: activeFlow.id,
         nodes: activeFlow.nodes,

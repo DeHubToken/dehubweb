@@ -519,7 +519,7 @@ export default function ExplorePage() {
     error: searchError,
   } = useDeHubSearch({
     query: effectiveQuery,
-    type: effectiveSearchType,
+    type: effectiveSearchType ?? 'videos',
     postType: isShortSearch ? undefined : getPostTypeForTab(activeTab),
     address: walletAddress || undefined,
     enabled: isSearching,
@@ -527,8 +527,8 @@ export default function ExplorePage() {
   });
 
   // Additional account search specifically for "All" tab
-  // The main search above only returns content when type is undefined (All tab)
-  // This parallel search fetches accounts to merge into results
+  // The primary query requests content only; fetch the full people list once.
+  // Keep the larger people list rather than the combined endpoint's top five.
   const {
     data: allTabAccountData,
   } = useDeHubSearch({
