@@ -1,7 +1,10 @@
 import { beforeEach, expect, it, vi } from 'vitest';
-const mocks = vi.hoisted(() => ({ list: vi.fn(), save: vi.fn(), upload: vi.fn(), download: vi.fn(), scope: vi.fn(), merge: vi.fn(), switch: vi.fn() }));
+import { webcrypto } from 'node:crypto';
+const mocks = vi.hoisted(() => ({ list: vi.fn(), save: vi.fn(), upload: vi.fn(), media: vi.fn(), owned: vi.fn(), scope: vi.fn(), merge: vi.fn(), switch: vi.fn(), id: 0 }));
 vi.mock('./cloudLibrary', () => ({ saveCloudGeneration: mocks.upload }));
-vi.mock('./assetDownload', () => ({ assetToFile: mocks.download }));
+vi.mock('../editor/mediaStore', () => ({ getMedia: mocks.media }));
+vi.mock('./flow/assets', () => ({ loadFlowAssets: mocks.owned }));
+vi.mock('./flow/types', () => ({ uid: () => `newbatch${mocks.id++}` }));
 vi.mock('./flow/api', () => ({ listFlows: mocks.list, saveFlows: mocks.save, remoteToFlow: (row: unknown) => row }));
 vi.mock('@/store/creatorFlowStore', () => ({ useCreatorFlowStore: { getState: () => ({ setScope: mocks.scope, loadFlowsFromDB: mocks.merge, switchFlow: mocks.switch }) } }));
 import { openReviewedBatch, prepareReviewedBatch } from './reviewedBatchFlow';
@@ -9,8 +12,42 @@ import { batchSnapshot, makeReviewedBatch } from './reviewedBatch';
 const batch = () => makeReviewedBatch('campaign', 'campaign', 'Launch', 'owner', [{ id: 'variant', label: 'Variant', draft: { kind: 'image', prompt: 'Tea', owner: 'owner' }, references: [] }]);
 beforeEach(() => {
   vi.resetAllMocks(); localStorage.clear(); localStorage.setItem('dehub_wallet', 'owner');
-  vi.stubGlobal('crypto', { subtle: { digest: vi.fn(async () => new Uint8Array(32).fill(1).buffer) } });
+  vi.stubGlobal('crypto', webcrypto); mocks.id = 0;
+  Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: vi.fn(() => 'blob:immutable-copy') });
+  Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: vi.fn() });
+  mocks.owned.mockResolvedValue(new Map());
   mocks.list.mockResolvedValue({ flows: [] }); mocks.save.mockResolvedValue({ ok: true });
+});
+const referenced = (prompt = 'Tea', url = 'https://private.test/expired') => makeReviewedBatch('film', 'project', 'Film', 'owner', [{ id: 'shot', label: 'Shot',
+  draft: { kind: 'image', prompt, owner: 'owner', references: [{ url, label: 'Reference' }] }, references: [{ sourceId: 'media', url, label: 'Reference' }] }]);
+const media = (content: string) => ({ blob: { size: content.length, type: 'image/png', arrayBuffer: async () => new TextEncoder().encode(content).buffer } });
+it('binds the actual reference bytes so replacing content under the same media ID creates a new batch and private copy', async () => {
+  mocks.media.mockResolvedValue(media('original'));
+  const first = await prepareReviewedBatch(referenced(), () => true);
+  const firstAsset = mocks.upload.mock.calls[0][1].id;
+  mocks.list.mockResolvedValue({ flows: [first] }); mocks.media.mockResolvedValue(media('replacement'));
+  const second = await prepareReviewedBatch(referenced(), () => true);
+  expect(second.id).not.toBe(first.id);
+  expect(mocks.upload.mock.calls[1][1].id).not.toBe(firstAsset);
+  expect(mocks.save.mock.calls[1][0][0].id).toBe(second.id);
+  expect(first.data.nodes![1].data.batchSource).not.toEqual(second.data.nodes![1].data.batchSource);
+});
+it('treats a renewed signed URL as the same content and reuses its existing Flow', async () => {
+  mocks.media.mockResolvedValue(media('same bytes'));
+  const first = await prepareReviewedBatch(referenced(), () => true);
+  mocks.list.mockResolvedValue({ flows: [first] }); mocks.upload.mockClear(); mocks.save.mockClear();
+  expect(await prepareReviewedBatch(referenced('Tea', 'https://private.test/renewed'), () => true)).toBe(first);
+  expect(mocks.upload).not.toHaveBeenCalled(); expect(mocks.save).not.toHaveBeenCalled();
+});
+it('uses a verified owned copy for a prompt-only revision even when the original playback URL expired', async () => {
+  mocks.media.mockResolvedValue(media('same bytes'));
+  const first = await prepareReviewedBatch(referenced(), () => true);
+  const assetId = mocks.upload.mock.calls[0][1].id;
+  mocks.list.mockResolvedValue({ flows: [first] }); mocks.upload.mockClear();
+  mocks.owned.mockResolvedValue(new Map([[assetId, { id: assetId, kind: 'image', url: 'fresh-owned-link' }]]));
+  const second = await prepareReviewedBatch(referenced('Changed prompt'), () => true);
+  expect(second.id).not.toBe(first.id); expect(mocks.upload).not.toHaveBeenCalled();
+  expect(second.data.nodes!.find(node => node.type === 'imageInputNode')!.data.inputAssetId).toBe(assetId);
 });
 it('creates a separate owner-bound Flow without replacing any current draft or starting jobs', async () => {
   const flow = await prepareReviewedBatch(batch(), () => true);
