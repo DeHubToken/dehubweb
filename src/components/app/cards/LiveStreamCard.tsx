@@ -309,7 +309,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!liveNow);
-  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(stream.streamId, isBuffering, liveNow && !streamEnded, stream.liveStatus);
+  const { broadcastPaused, broadcastEnded, waitingTooLong } = useLivePlaybackFeedback(stream.streamId, isBuffering, liveNow && !streamEnded, stream.liveStatus);
+  // The room says it is over: show the ended state now, not on the next refetch.
+  useEffect(() => { if (broadcastEnded) setStreamEnded(true); }, [broadcastEnded]);
   // The viewer's own thumb, played on tap rather than on the echo — see
   // LiveReactionFlow's `self`. The room still gets theirs off the broadcast.
   const [selfReaction, setSelfReaction] = useState<SelfReaction | null>(null);
