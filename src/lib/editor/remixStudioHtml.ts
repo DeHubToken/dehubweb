@@ -184,6 +184,6 @@ try {
   if(!navigator.mediaDevices?.getUserMedia || !canvas.captureStream || typeof MediaRecorder==='undefined')throw new Error('Live recording is unavailable in this browser. Use the latest Chrome or the DeHub app.');
   await waitMedia(source,'loadeddata',()=>{source.src=config.videoUrl;source.muted=true;});
   if(!Number.isFinite(source.duration)||source.duration<.25)throw new Error('Choose a finished video with a known duration.');
-  $('trim').max=String(Math.max(0,source.duration-.5));$('sourcePos').max=String(source.duration);ready=true;$('sample').disabled=false;controls();status('Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
+  $('trim').max=String(Math.max(0,source.duration-.5));$('sourcePos').max=String(source.duration);if(REACT && source.videoWidth>source.videoHeight){$('layout').value='landscape';$('layout').onchange();}ready=true;$('sample').disabled=false;controls();status('Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);
 }catch(error){liveError(error);}
 `;
