@@ -37,7 +37,7 @@ export function FeatureRequestComments({
 }: FeatureRequestCommentsProps) {
   const { t } = useI18n();
 
-  const { data: threads, isLoading } = useFeatureRequestComments(featureRequestId);
+  const { data: threads, isLoading, isError, isFetching, refetch } = useFeatureRequestComments(featureRequestId);
   const submitComment = useSubmitComment();
   const editComment = useEditComment();
   const deleteComment = useDeleteComment();
@@ -59,6 +59,9 @@ export function FeatureRequestComments({
       draftScope={`thread:featureRequestId:${featureRequestId}`}
       threads={threads}
       isLoading={isLoading}
+      isError={isError}
+      isFetching={isFetching}
+      onRetry={() => { void refetch(); }}
       entityAuthorAddress={featureAuthorAddress}
       focusCommentId={focusCommentId}
       labels={labels}
