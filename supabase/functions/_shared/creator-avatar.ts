@@ -24,11 +24,15 @@ async function portrait(bytes: Uint8Array, mime: string) {
   const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   let width = 0, height = 0;
   if (mime === 'image/png' && bytes.length >= 45 && [137,80,78,71,13,10,26,10].every((x,i) => bytes[i] === x)) {
-    let pos = 8, first = true, data = false, ended = false, channels = 0;
+    let pos = 8, first = true, data = false, ended = false, channels = 0, dataEnded = false, palette = false;
     const compressed: Uint8Array[] = [];
     while (pos + 12 <= bytes.length) {
       const size = v.getUint32(pos), type = String.fromCharCode(...bytes.subarray(pos + 4, pos + 8));
       if (size > bytes.length - pos - 12) throw new Error('Invalid PNG portrait');
+      if (!/^[A-Za-z]{2}[A-Z][A-Za-z]$/.test(type) || /^[A-Z]/.test(type) && !['IHDR','PLTE','IDAT','IEND'].includes(type)) throw new Error('Unsupported PNG chunk');
+      if (data && type !== 'IDAT') dataEnded = true;
+      if (type === 'IDAT' && dataEnded) throw new Error('Invalid PNG data order');
+      if (type === 'PLTE') { if (data || palette || !size || size % 3 || size > 768) throw new Error('Invalid PNG palette'); palette = true; }
       let crc = 0xffffffff;
       for (let i = pos + 4; i < pos + 8 + size; i++) crc = crcTable[(crc ^ bytes[i]) & 255] ^ (crc >>> 8);
       if (((crc ^ 0xffffffff) >>> 0) !== v.getUint32(pos + 8 + size)) throw new Error('Invalid PNG portrait');
@@ -96,4 +100,8 @@ export async function prepareAvatar(value: unknown, prompt = '.') {
 
 export function verifyAvatarQuote(avatar: AvatarInputs, prepared: { inputDigest: string }, priceDhb: number) {
   if (avatar.inputDigest !== prepared.inputDigest || avatar.acceptedPriceDhb !== priceDhb) throw new Error('The portrait, audio or price changed. Review a new quote before paying.');
+}
+export function avatarDeliveryReleased(job: { status?: string; result?: { libraryId?: string; savePending?: boolean; paymentRestored?: boolean } | null }) {
+  return job.status === 'succeeded' && !!job.result?.libraryId && job.result.savePending !== true ||
+    ['failed','canceled','cancelled'].includes(job.status ?? '') && job.result?.paymentRestored === true;
 }
