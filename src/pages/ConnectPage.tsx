@@ -88,6 +88,7 @@ export default function ConnectPage() {
             <a href="https://chatgpt.com/#settings/Connectors" target="_blank" rel="noreferrer" className="text-sm text-white underline hover:opacity-80">{g('openSettings')}</a>
           </div>
           {steps(['chatgpt1', 'chatgpt2', 'chatgpt3', 'chatgpt4', 'chatgpt5'])}
+          <Link to="/connect/chatgpt" className="inline-block mt-4 text-sm text-white underline hover:opacity-80">{t("copy.e27b8c5f9d13")}</Link>
         </section>
 
         {/* Claude */}
@@ -97,6 +98,7 @@ export default function ConnectPage() {
             <a href="https://claude.ai/customize/connectors?modal=add-custom-connector" target="_blank" rel="noreferrer" className="text-sm text-white underline hover:opacity-80">{g('openSettings')}</a>
           </div>
           {steps(['claude1', 'claude2', 'claude3', 'claude4'])}
+          <Link to="/connect/claude" className="inline-block mt-4 text-sm text-white underline hover:opacity-80">{t("copy.f38c9d6a0e24")}</Link>
         </section>
 
         {/* Developer apps */}

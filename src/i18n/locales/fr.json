@@ -29,7 +29,7 @@
     "duet": "Duo",
     "green-screen": "Fond vert",
     "sound": "Utiliser ce son",
-    "cut": "Couper cette vidéo",
+    "stitch": "Stitch",
     "selectSource": "Ouvre les options d'une vidéo et choisis Remix pour commencer."
   },
   "remixLinks": {
@@ -39,6 +39,27 @@
       "stitch": "{{name}} a fait un stitch de ta vidéo",
       "react": "{{name}} a réagi à ta vidéo",
       "reactLive": "{{name}} réagit en direct à ta vidéo"
+    },
+    "linkFailed": "Ta publication est en ligne, mais elle n’a pas pu être liée à la vidéo d’origine.",
+    "settingsHeading": "Remix",
+    "policy": {
+      "default": "Mon réglage par défaut",
+      "everyone": "Tout le monde",
+      "followers": "Abonnés",
+      "nobody": "Personne"
+    },
+    "stitch": {
+      "allow": "Autoriser les stitchs",
+      "allowDesc": "Qui peut utiliser jusqu’à 5 secondes de tes vidéos dans les siennes. Tu peux aussi le changer pour chaque publication.",
+      "saveFailed": "Impossible d’enregistrer ton réglage de stitch. Réessaie.",
+      "settingFailed": "Ta publication est en ligne, mais son réglage de stitch n’a pas été enregistré. Modifie-le depuis Modifier la publication.",
+      "from": "Stitch de {{name}}",
+      "count_one": "{{count}} stitch",
+      "count_other": "{{count}} stitchs",
+      "listTitle": "Stitchs",
+      "listFailed": "Impossible de charger les stitchs. Réessaie.",
+      "listEmpty": "Aucun stitch pour l’instant.",
+      "unavailable": "Cette vidéo n’est plus disponible pour les stitchs."
     }
   },
   "dehubAppPage": {
@@ -16422,6 +16443,15 @@
     "06c9ece9b089": "Connecteurs personnalisés Claude",
     "84bd6a26225f": "Activez le connecteur depuis la zone de saisie de Claude, puis demandez-lui d'utiliser DeHub.",
     "7ebd7e474b83": "Tout autre client compatible MCP fonctionne de la même façon — ajoutez un serveur MCP personnalisé et collez l'URL ci-dessus.",
+    "a3c1e5f20b71": "Utilisez DeHub dans ChatGPT, Claude ou toute app MCP. Collez l'URL ci-dessous dans les paramètres de connecteurs de votre assistant pour parcourir les publications, profils et commentaires, puis connectez-vous quand on vous le demande pour lier votre propre compte.",
+    "b84d2e7c9a16": "Cette adresse est destinée aux apps d'IA, ce n'est pas une page web. L'ouvrir dans un navigateur vous amène ici.",
+    "c5e9f1a3d742": "Liez votre compte DeHub",
+    "d61a7b4e8c05": "Quand votre assistant vous demande de vous connecter, connectez-vous à DeHub et cliquez sur Autoriser. Il pourra alors mettre à jour votre profil, publier des posts et des commentaires, suivre des personnes et créer dans Creator Studio. Les connexions restent actives tant que vous les utilisez et expirent après 30 jours sans utilisation.",
+    "e27b8c5f9d13": "Guide pas à pas pour ChatGPT",
+    "f38c9d6a0e24": "Guide pas à pas pour Claude",
+    "0a49d7b1f835": "Vous préférez un compte bot séparé ? Créez un agent pour obtenir une URL de connecteur qui publie au nom de cet agent.",
+    "1b5ae8c20f46": "Quand ChatGPT vous le demande, connectez-vous à DeHub et cliquez sur Autoriser pour lier votre compte.",
+    "2c6bf9d31a57": "Cliquez sur Connecter, connectez-vous à DeHub et cliquez sur Autoriser pour lier votre compte.",
     "266c57b5eb4e": "DeHub Creator — AI Studio, Agents et outils vidéo",
     "34bc1a3f12ae": "Générez des images et des vidéos, modifiez-les avec l'IA et publiez-les sur DeHub. Un studio de création d'IA complet avec un design en verre liquide métallique.",
     "002f6e549556": "DeHub Editor — Éditeur vidéo dans le navigateur",
