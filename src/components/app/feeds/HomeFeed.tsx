@@ -1002,6 +1002,12 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // an older head (a filter or the ranking keeps those posts off the top).
   const [newPostsTappedAt, setNewPostsTappedAt] = useState(0);
   const newPostCount = latestNewAt > newPostsTappedAt ? polledNewPostCount : 0;
+  // A pull or logo refresh loads the same posts, so it clears the chip too.
+  const latestNewAtRef = useRef(latestNewAt);
+  latestNewAtRef.current = latestNewAt;
+  useEffect(() => {
+    if (isRefreshing) setNewPostsTappedAt(latestNewAtRef.current);
+  }, [isRefreshing]);
   const showNewPosts = useCallback(() => {
     setNewPostsTappedAt(latestNewAt);
     setShortsVisit(value => value + 1);
@@ -2023,9 +2029,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center mt-11">{bead}</div>, newPostsTarget);
         }
         if (mobileNavTarget) {
+          // System wraps the bar in an anchor exactly its size. Hang the chip
+          // from that, not from inside the bar: System Light's bar blurs
+          // itself, and a blur inside it only sees the bar, so the chip came
+          // out clear. Under the bar and the filter drawer, never over them.
+          const anchor = mobileNavTarget.parentElement?.closest<HTMLElement>('[data-home-filter-anchor]');
           return createPortal(
-            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{bead}</div>,
-            mobileNavTarget,
+            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className={cn("pointer-events-none absolute inset-x-0 top-full flex justify-center", anchor ? "-z-10" : "z-20")}>{bead}</div>,
+            anchor ?? mobileNavTarget,
           );
         }
         if (newPostCount <= 0) return null;
