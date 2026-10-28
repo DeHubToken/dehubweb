@@ -209,13 +209,10 @@ export default function MessagesPage() {
   // header zone: the reply strip (orb flanked by two drafts) lives in that
   // band until the composer takes focus and the keyboard takes it instead.
   const chatOpen = !!selectedConversation || showPublicChat;
-  // While the on-screen keyboard is up the mobile bottom nav hides, so chat
-  // surfaces reclaim its reserved 76px (the top bar only ever shows on the
-  // home feed, so --app-top-bar is 0 here on a phone) and
-  // the screen splits between messages and composer.
+  // The inbox scrolls behind the floating nav. Reserve its clearance inside
+  // the list, so a viewport-height gap cannot paint a strip behind the pill.
   const keyboardOpen = useKeyboardOpen();
-  const mobileChatHeight =
-    keyboardOpen || chatOpen ? 'h-[calc(100dvh_-_var(--app-top-bar))]' : 'h-[calc(100dvh_-_76px_-_var(--app-top-bar))]';
+  const mobileChatHeight = 'h-[calc(100dvh_-_var(--app-top-bar))]';
   // dvh only tracks the keyboard on Android (interactive-widget) — iOS keeps
   // the layout viewport full-size and just covers it. Sizing to the measured
   // visual viewport keeps the composer above the keyboard on both. On iOS,
@@ -604,10 +601,10 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="h-full pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
+    <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
       <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://dehub.io/app/messages" />
       <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
-      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
+      <div className="h-full lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
             no surface at all — see [data-bento-flat] in index.css. The
             [data-page-bento] hook stays: the Osaka and Jungle `#app-root` class
@@ -658,7 +655,7 @@ export default function MessagesPage() {
           </PageIsland>
 
           {/* Conversation List */}
-          <div className="flex-1 overflow-y-auto pt-3">
+          <div className="flex-1 min-h-0 overflow-y-auto pt-3 pb-[76px] lg:pb-0">
             {/* Public Chat (pinned) */}
             <button
               onClick={() => setShowPublicChat(true)}
