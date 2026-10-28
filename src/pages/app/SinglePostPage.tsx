@@ -790,7 +790,10 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const [showTipModal, setShowTipModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showPageComments, setShowPageComments] = useState(true);
+  // Desktop: closed until the comment button asks, same as a feed card.
+  // Phone and tablet keep them open under the post.
+  const desktopView = () => typeof window !== 'undefined' && window.innerWidth >= 1024;
+  const [showPageComments, setShowPageComments] = useState(() => !desktopView());
   const [postOptions, setPostOptions] = useState<(() => void) | null>(null);
   const registerPostOptions = useCallback((open: (() => void) | null) => setPostOptions(() => open), []);
   const [pageCommentsInitialTab, setPageCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>();
@@ -798,7 +801,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    setShowPageComments(true);
+    setShowPageComments(!desktopView());
     setPageCommentsInitialTab(undefined);
   }, [id]);
 
@@ -1439,8 +1442,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
                   />
                   {renderContent()}
                   {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+                  {pageComments}
                 </div>
-                {pageComments}
                 {/* Related Videos Feed */}
                 {showRelated && id && <NoFocusComment><RelatedVideosFeed currentVideoId={id} /></NoFocusComment>}
               </div>
@@ -1609,7 +1612,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         </div>
         {commentsSplitSheet}
       </section>
-    ) : detailsOnly ? (
+    ) : detailsOnly && isMobileView ? (
       <section data-retained-post-details className="pt-3">
         <button type="button" data-retained-details-toggle aria-expanded={detailsExpanded}
           aria-label={_copy('common.more', { defaultValue: 'More' })}
@@ -1624,6 +1627,15 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           {showRelated && isTextPost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
         </div>}
         {commentsSplitSheet}
+      </section>
+    ) : detailsOnly ? (
+      /* Desktop posts opened from the feed: the same as the feed.
+         The card above keeps its own comment button and opens comments inside
+         its bento; under it, the ad and then more posts, loading as you scroll. */
+      <section data-retained-post-details className="pt-3">
+        {isImagePost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+        {showRelated && isImagePost && id && <NoFocusComment><RelatedImagesFeed currentPostId={id} /></NoFocusComment>}
+        {showRelated && isTextPost && id && <NoFocusComment><RelatedPostsFeed currentPostId={id} /></NoFocusComment>}
       </section>
     ) : useStage ? (
       renderStage()
@@ -1667,12 +1679,14 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           >
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+            {/* Desktop: comments open inside the post's bento, attached to it like on the feed. */}
+            {!isMobileView && !isLivePost && !commentsSplit && pageComments}
           </div>
           {/* A live post has one conversation: the chat, open under the player.
               It used to have comments as well, so what people said during the
               broadcast and what they said "about the post" were two lists that
               never met. Old comments were folded into the chat room. */}
-          {!isLivePost && !commentsSplit && pageComments}
+          {isMobileView && !isLivePost && !commentsSplit && pageComments}
           {!isLivePost && commentsSplitSheet}
           {/* Shop rail sits between the player and the chat: close enough to the
               stream to read as part of it, above the chat so a busy room does
