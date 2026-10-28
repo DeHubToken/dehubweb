@@ -4,7 +4,7 @@ const rpc = vi.fn();
 vi.mock('@/integrations/supabase/client', () => ({ supabase: { rpc: (...args: unknown[]) => rpc(...args), functions: { invoke: vi.fn() } } }));
 vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: vi.fn(async () => 'token') }));
 
-import { forgetReactionSummary, reactionSummary, tokenIdFromPostUrl } from '../remix-links';
+import { forgetReactionSummary, reactionSummary, RemixLinksError, remixLinksUnavailable, tokenIdFromPostUrl } from '../remix-links';
 
 describe('tokenIdFromPostUrl', () => {
   it('reads the post id from every DeHub post link shape', () => {
@@ -53,5 +53,16 @@ describe('reactionSummary', () => {
   it('ignores ids that are not post ids', async () => {
     expect(await reactionSummary('abc')).toEqual({ reactionOf: null, reactions: 0 });
     expect(rpc).not.toHaveBeenCalled();
+  });
+});
+
+describe('remixLinksUnavailable', () => {
+  it('lets callers carry on only when the service is missing or down, never on a refusal', () => {
+    expect(remixLinksUnavailable(new RemixLinksError('offline'))).toBe(true);
+    expect(remixLinksUnavailable(new RemixLinksError('not deployed', 404))).toBe(true);
+    expect(remixLinksUnavailable(new RemixLinksError('boom', 503))).toBe(true);
+    expect(remixLinksUnavailable(new RemixLinksError('The creator has turned off reactions to this video.', 409))).toBe(false);
+    expect(remixLinksUnavailable(new RemixLinksError('Only the streamer can change this.', 403))).toBe(false);
+    expect(remixLinksUnavailable(new Error('other'))).toBe(false);
   });
 });
