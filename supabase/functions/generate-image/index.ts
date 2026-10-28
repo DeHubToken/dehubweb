@@ -787,7 +787,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
     if (FAL_IMAGE_MODELS[model]) {
       const appId = sourceImage ? FAL_IMAGE_MODELS[model].edit! : FAL_IMAGE_MODELS[model].text;
-      if (outpaint) return success({ imageUrl: await generateWithFal(model, prompt, sourceImage, bannerFormat, aspectRatio, referenceImageUrls), provider: 'fal', model: appId });
+      if (outpaint || CREATOR_FAL_IMAGE_MODELS[model]?.relight) return success({ imageUrl: await generateWithFal(model, prompt, sourceImage, bannerFormat, aspectRatio, referenceImageUrls), provider: 'fal', model: appId });
       return success(await resilientImage(imageRequest, {
         provider: 'fal', model: appId,
         generate: async signal => ({ imageUrl: await generateWithFal(model, contextualPrompt, sourceImage,
