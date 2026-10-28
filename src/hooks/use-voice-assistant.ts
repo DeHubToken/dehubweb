@@ -578,5 +578,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     recordingDuration,
     exchangesLeft,
     getLevel,
+    /** Ends the current turn now and sends what was said, as a tap on the ball. */
+    finishTurn: stopListeningAndProcess,
   };
 }
