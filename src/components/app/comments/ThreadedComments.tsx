@@ -325,6 +325,9 @@ export interface ThreadedCommentsProps<C extends ThreadedComment> {
   draftScope: string;
   threads: CommentThread<C>[] | undefined;
   isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  onRetry: () => void;
   /** Whose thing this thread hangs off — their rows get the author chip. */
   entityAuthorAddress: string;
   /** A comment a notification pointed at — ringed and forced into view. */
@@ -350,6 +353,9 @@ export function ThreadedComments<C extends ThreadedComment>({
   draftScope,
   threads,
   isLoading,
+  isError,
+  isFetching,
+  onRetry,
   entityAuthorAddress,
   focusCommentId,
   labels,
@@ -451,6 +457,15 @@ export function ThreadedComments<C extends ThreadedComment>({
 
   return (
     <div className="border-t border-white/5 pt-2 mt-1">
+      {isError && (
+        <div role="alert" className="flex items-center justify-center gap-3 py-2 text-xs text-zinc-400">
+          <span>{t('comments.loadFailed')}</span>
+          <button type="button" onClick={onRetry} disabled={isFetching} aria-busy={isFetching}
+            className="min-h-10 px-2 text-white underline disabled:opacity-50">
+            {t(isFetching ? 'common.loading' : 'common.retry')}
+          </button>
+        </div>
+      )}
       {isLoading ? (
         <div className="flex justify-center py-3">
           <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
@@ -489,7 +504,7 @@ export function ThreadedComments<C extends ThreadedComment>({
             );
           })}
         </div>
-      ) : (
+      ) : !isError && (
         <p className="text-zinc-500 text-xs text-center py-2 mb-2">{labels.empty}</p>
       )}
 
