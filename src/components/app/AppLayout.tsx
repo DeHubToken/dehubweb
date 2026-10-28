@@ -425,12 +425,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const retainedPost = useRetainedPost(overlayPostId);
 
   const isCached = isCachedPageRoute(location.pathname);
-  // An open DM hides the mobile bottom nav, so <main> must drop the pb-16
-  // reserved for that nav too — otherwise the page is 64px taller than the
-  // viewport and the whole conversation scrolls under a dead black band.
-  const mobileChatOpen =
-    location.pathname === '/app/messages' &&
-    new URLSearchParams(location.search).get('chat') === '1';
+  // Messages owns its viewport and scrollable nav clearance, both for the
+  // inbox and open chats. Outer padding would add a dead band below it.
+  const isMessagesRoute = location.pathname === '/app/messages';
   // Dynamic routes: post overlay, single post, post info, or username profiles
   const isDynamicRoute = !isCached && !showHomePagePersisted;
 
@@ -457,7 +454,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         
          <main ref={mainRef} data-main-panel data-post-route={isPostRoute ? '' : undefined} className={cn(
           "flex-1 min-h-screen lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative",
-          mobileChatOpen ? "pb-0" : "pb-16"
+          isMessagesRoute ? "pb-0" : "pb-16"
          )}>
           <GlobalFeedNavProvider>
             {/* Global feed nav — only shown on the home feed in collapsed mode.
