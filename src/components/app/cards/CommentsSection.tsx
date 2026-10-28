@@ -474,8 +474,9 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
       initial={delivery?.status === 'posted' ? false : isPending ? { opacity: 0, y: 28, scale: 0.97 } : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={isPending ? { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } : undefined}
-      // The one you just sent lands with the soft glow, wherever it lands.
-      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl [-webkit-touch-callout:none]${isPending ? ' dh-land-glow' : ''}`}
+      // The one you just sent lands with its text softly glowing (on the text,
+      // not the row, so no box edge is ever cut off by the sheet's sides).
+      className="relative flex items-start gap-3 py-3 cursor-pointer rounded-xl [-webkit-touch-callout:none]"
       data-comment-id={comment.id}
       {...hold}
       /*
@@ -658,7 +659,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             {commentDisplayText && (
               <TranslatableText publicContent
                 text={commentDisplayText}
-                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow")}
+                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow", isPending && "dh-sent-text-glow")}
                 as="p"
                 hideControls
                 auto={false}
@@ -1328,9 +1329,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       const row = sectionRef.current?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(openTipId)}"]`);
       if (!row) return;
       row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      row.classList.remove('dh-land-glow');
-      void row.offsetWidth;
-      row.classList.add('dh-land-glow');
+      const text = row.querySelector<HTMLElement>('p.leading-6') ?? row;
+      text.classList.remove('dh-sent-text-glow');
+      void text.offsetWidth;
+      text.classList.add('dh-sent-text-glow');
     });
     return () => window.cancelAnimationFrame(frame);
   }, [openTipId]);
