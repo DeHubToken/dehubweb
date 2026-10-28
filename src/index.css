@@ -3508,6 +3508,22 @@ html[data-system-tone="light"] .bg-muted {
   color: #ffffff !important;
 }
 
+/* Letter avatars (no picture) on paper: an outlined tile, not a grey slab
+   or a bare letter. Pale fill, ink letter and a hairline that follows the
+   avatar's own rounded-square corners, so it still reads as an avatar in Who
+   to follow, comments, chat and lists. Radix unmounts the fallback once the
+   picture loads, so photo avatars never get the line. */
+html[data-theme="light"] [data-avatar-fallback],
+html[data-system-tone="light"] [data-avatar-fallback] {
+  background-color: #f4f4f6 !important;
+  color: #3f3f46 !important;
+  box-shadow: inset 0 0 0 1px rgb(11 11 13 / 0.16);
+}
+html[data-theme="light"] [data-avatar-fallback] *,
+html[data-system-tone="light"] [data-avatar-fallback] * {
+  color: inherit !important;
+}
+
 /* …but not in docs. There .bg-muted is the wash panel nested inside a white
    bento — a quote block, a code sample, a comparison table — and the chip
    above turned every one of them into a dark grey slab with ink text sitting
