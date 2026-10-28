@@ -9,6 +9,7 @@ export interface FlowReceipt {
   jobIds: Record<string, string>;
   completed: string[];
   started: string[];
+  outputs: Record<string, { audioAssetId?: string; outputAssetId?: string; outputText?: string }>;
   txHash?: string;
   totalDhb: number;
 }
@@ -37,7 +38,7 @@ export function reserveReceipt(wallet: string, flowId: string, signature: string
     return existing;
   }
   const receipt: FlowReceipt = { wallet: wallet.toLowerCase(), flowId, signature, nodeIds, expectedPaidNodeIds: paidIds,
-    jobIds: Object.fromEntries(paidIds.map(id => [id, crypto.randomUUID()])), completed: [], started: [], totalDhb };
+    jobIds: Object.fromEntries(paidIds.map(id => [id, crypto.randomUUID()])), completed: [], started: [], outputs: {}, totalDhb };
   saveReceipt(receipt);
   return receipt;
 }
