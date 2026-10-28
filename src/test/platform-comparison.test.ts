@@ -64,7 +64,7 @@ describe('public platform comparison', () => {
     }
     for (const rule of RESEARCH_RULES) for (const id of rule.ids.split(' ')) expect(FEATURES.some(feature => feature.id === id), id).toBe(true);
     expect(researchedEntry('future-capability', 'Future', 'Video editing', 'youtube')).toBeUndefined();
-    expect(comparisonCoverage('all').reviewed).toBe(524 * 11);
+    expect(comparisonCoverage('all').reviewed).toBe(534 * 11);
   });
   it('retains competitor matches and explicit current limitations discovered by research', () => {
     const peer = (id: string, platform: typeof PLATFORMS[number]['id']) => entryFor(FEATURES.find(feature => feature.id === id)!, platform);

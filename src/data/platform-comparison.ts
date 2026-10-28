@@ -1,6 +1,7 @@
 /** Keep identical to dehub-mobile/libs/platform-comparison.ts. */
 import { AUDIT_REVISIONS, DETAIL_GROUPS } from './platform-comparison-details';
-import { COMPETITOR_REVIEWED_ON, RESEARCH_SOURCES, REVIEWED_FEATURE_IDS, researchedEntry } from './platform-comparison-research';
+import { CATEGORY_FAMILIES, COMPETITOR_REVIEWED_ON, RESEARCH_SOURCES, REVIEW_SCOPES, REVIEWED_FEATURE_IDS, researchedEntry } from './platform-comparison-research';
+import { PRODUCT_REVIEW, PRODUCT_REVIEWED_ON } from './platform-comparison-product-review';
 export { AUDIT_REVISIONS } from './platform-comparison-details';
 export { COMPETITOR_REVIEWED_ON, REVIEWED_FEATURE_IDS } from './platform-comparison-research';
 export const REVIEWED_ON = '2026-10-27';
@@ -333,6 +334,22 @@ const CORE_EVIDENCE: Record<string, Partial<Record<PlatformId, ComparisonEntry>>
   notifications: { youtube: e('ytNotifications', 'Choose which channel and account notifications you get.') },
   themes: { youtube: e('ytDark', 'Light, dark and device appearance; not theme packs.', 'limited') },
 };
+/** Applies the hands-on product review where the documentation pass found no equivalent; never downgrades an entry. */
+function productReviewed(feature: ComparisonFeature, platform: PlatformId, entry: ComparisonEntry | undefined): ComparisonEntry | undefined {
+  const found = PRODUCT_REVIEW[platform].get(feature.id);
+  if (!found) return entry;
+  const has = entry && ['documented', 'code', 'limited'].includes(entry.status);
+  if (has || (found === 'partial' && entry?.status === 'ecosystem')) return entry;
+  const scope = REVIEW_SCOPES[platform][CATEGORY_FAMILIES[feature.category]];
+  return {
+    status: found === 'yes' ? 'documented' : 'ecosystem',
+    note: found === 'yes'
+      ? `Confirmed in the live product and its help centre on ${PRODUCT_REVIEWED_ON}.`
+      : `Partly available, or through a separate app, as of ${PRODUCT_REVIEWED_ON}.`,
+    source: entry?.source ?? scope.sources[0],
+    relatedSources: entry?.relatedSources ?? scope.sources.slice(1),
+  };
+}
 const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => detail.rows.map(([id, name, note, file = '', mobileOverride]) => {
   const web = detail.web + file, mobile = mobileOverride ?? detail.mobile + file;
   const webSource = `web:${web}`, mobileSource = `mobile:${mobile}`;
@@ -340,10 +357,25 @@ const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => d
   SOURCES[mobileSource] = { title: 'DeHub mobile implementation', url: `https://github.com/DeHubToken/dehub-mobile/blob/${AUDIT_REVISIONS.mobile}/${mobile}` };
   return { id, category: detail.category, name, dehub: { ...e(webSource, note, detail.paid ? 'limited' : 'code'), relatedSources: [mobileSource, 'dehub'] }, peers: {}, iosRestricted: !!detail.paid, implementation: { web, mobile } };
 }));
-export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES].map(feature => ({
+/** Popular features other platforms have and DeHub does not offer yet, so the chart is not one-sided. */
+const NOT_YET: ComparisonFeature[] = ([
+  ['stories', 'Stories that disappear after 24 hours'],
+  ['duets', 'Duets and side-by-side remixes'],
+  ['face-effects', 'Camera face effects and AR filters'],
+  ['collab-posts', 'Co-authored collab posts'],
+  ['location-map', 'Location tags and a friends map'],
+  ['raids', 'Live raids into another channel'],
+  ['live-predictions', 'Live predictions with channel points'],
+  ['live-rewind', 'Rewind a live stream while it is live'],
+  ['community-notes', 'Community Notes fact-checks'],
+  ['disappearing-messages', 'Disappearing messages'],
+] as const).map(([id, name]) => ({
+  id, category: 'Features DeHub does not have yet', name, dehub: e('dehub', 'Not available on DeHub yet.', 'not_offered'), peers: {}, iosRestricted: false,
+}));
+export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES, ...NOT_YET].map(feature => ({
   ...feature,
   dehub: feature.id === 'encrypted-text' ? e('dehubEncryption', feature.dehub.note, 'limited') : feature.id === 'encrypted-attachments' ? { ...feature.dehub, status: 'limited' as const } : feature.dehub,
-  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).map(([id, entry]) => [id, CORE_EVIDENCE[feature.id]?.[id as PlatformId] ?? entry]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
+  peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).map(([id, entry]) => [id, CORE_EVIDENCE[feature.id]?.[id as PlatformId] ?? productReviewed(feature, id as PlatformId, entry as ComparisonEntry | undefined)]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
 }));
 export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))];
 export function entryFor(feature: ComparisonFeature, platform: PlatformId | 'dehub'): ComparisonEntry {
