@@ -2,6 +2,7 @@
 import { AUDIT_REVISIONS, DETAIL_GROUPS } from './platform-comparison-details';
 import { CATEGORY_FAMILIES, COMPETITOR_REVIEWED_ON, RESEARCH_SOURCES, REVIEW_SCOPES, REVIEWED_FEATURE_IDS, researchedEntry } from './platform-comparison-research';
 import { PRODUCT_REVIEW, PRODUCT_REVIEWED_ON } from './platform-comparison-product-review';
+import { RIVAL_INVENTORY_REVIEWED_ON, RIVAL_ROWS, rivalSource } from './platform-comparison-rival-inventory';
 export { AUDIT_REVISIONS } from './platform-comparison-details';
 export { COMPETITOR_REVIEWED_ON, REVIEWED_FEATURE_IDS } from './platform-comparison-research';
 export const REVIEWED_ON = '2026-10-27';
@@ -357,27 +358,53 @@ const EXPANDED_FEATURES: ComparisonFeature[] = DETAIL_GROUPS.flatMap(detail => d
   SOURCES[mobileSource] = { title: 'DeHub mobile implementation', url: `https://github.com/DeHubToken/dehub-mobile/blob/${AUDIT_REVISIONS.mobile}/${mobile}` };
   return { id, category: detail.category, name, dehub: { ...e(webSource, note, detail.paid ? 'limited' : 'code'), relatedSources: [mobileSource, 'dehub'] }, peers: {}, iosRestricted: !!detail.paid, implementation: { web, mobile } };
 }));
-/** Popular features other platforms have and DeHub does not offer yet, so the chart is not one-sided. */
+/** Popular rival features DeHub does not offer yet, filed under the topic they belong to. */
 const NOT_YET: ComparisonFeature[] = ([
-  ['stories', 'Stories that disappear after 24 hours'],
-  ['duets', 'Duets and side-by-side remixes'],
-  ['face-effects', 'Camera face effects and AR filters'],
-  ['collab-posts', 'Co-authored collab posts'],
-  ['location-map', 'Location tags and a friends map'],
-  ['raids', 'Live raids into another channel'],
-  ['live-predictions', 'Live predictions with channel points'],
-  ['live-rewind', 'Rewind a live stream while it is live'],
-  ['community-notes', 'Community Notes fact-checks'],
-  ['disappearing-messages', 'Disappearing messages'],
-] as const).map(([id, name]) => ({
-  id, category: 'Features DeHub does not have yet', name, dehub: e('dehub', 'Not available on DeHub yet.', 'not_offered'), peers: {}, iosRestricted: false,
+  ['stories', 'Posts and discovery', 'Stories that disappear after 24 hours'],
+  ['duets', 'Studio and creation', 'Duets and side-by-side remixes'],
+  ['face-effects', 'Studio and creation', 'Camera face effects and AR filters'],
+  ['collab-posts', 'Posts and discovery', 'Co-authored collab posts'],
+  ['location-map', 'Posts and discovery', 'Location tags and a friends map'],
+  ['raids', 'Live video and audio', 'Live raids into another channel'],
+  ['live-predictions', 'Live video and audio', 'Live predictions with channel points'],
+  ['live-rewind', 'Live video and audio', 'Rewind a live stream while it is live'],
+  ['community-notes', 'Safety and personalization', 'Community Notes fact-checks'],
+  ['disappearing-messages', 'Communities and messages', 'Disappearing messages'],
+] as const).map(([id, category, name]) => ({
+  id, category, name, dehub: e('dehub', 'Not available on DeHub yet.', 'not_offered'), peers: {}, iosRestricted: false,
 }));
-export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES, ...NOT_YET].map(feature => ({
+/** The rival-first inventory: features gathered from each competitor's own docs, with DeHub ticked honestly. */
+const RIVAL_FEATURES: ComparisonFeature[] = RIVAL_ROWS.map(row => ({
+  id: row.id, category: row.category, name: row.name, iosRestricted: false,
+  dehub: row.marks.dehub === 'yes' ? e('dehub', 'Available on DeHub.')
+    : row.marks.dehub === 'partial' ? e('dehub', 'Partly available on DeHub.', 'ecosystem')
+    : e('dehub', 'Not available on DeHub yet.', 'not_offered'),
+  peers: Object.fromEntries(PLATFORMS.flatMap(({ id }) => {
+    const mark = row.marks[id];
+    if (!mark) return [];
+    return [[id, {
+      status: mark === 'yes' ? 'documented' : 'ecosystem',
+      note: mark === 'yes'
+        ? `Listed in the official help, creator or product pages, reviewed ${RIVAL_INVENTORY_REVIEWED_ON}. Some plans, regions or account types may apply.`
+        : `Partly available, limited to some accounts, or through a separate app, as of ${RIVAL_INVENTORY_REVIEWED_ON}.`,
+      source: rivalSource(id, row.category, SOURCES),
+    } satisfies ComparisonEntry]];
+  })),
+}));
+export const FEATURES: ComparisonFeature[] = [...CATALOGUE, ...EXPANDED_FEATURES, ...NOT_YET, ...RIVAL_FEATURES].map(feature => ({
   ...feature,
   dehub: feature.id === 'encrypted-text' ? e('dehubEncryption', feature.dehub.note, 'limited') : feature.id === 'encrypted-attachments' ? { ...feature.dehub, status: 'limited' as const } : feature.dehub,
   peers: Object.fromEntries(PLATFORMS.map(platform => [platform.id, researchedEntry(feature.id, feature.name, feature.category, platform.id, ADDITIONAL_EVIDENCE[feature.id]?.[platform.id] ?? feature.peers[platform.id])]).map(([id, entry]) => [id, CORE_EVIDENCE[feature.id]?.[id as PlatformId] ?? productReviewed(feature, id as PlatformId, entry as ComparisonEntry | undefined)]).filter(([, entry]) => entry)) as Partial<Record<PlatformId, ComparisonEntry>>,
 }));
-export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))];
+const CATEGORY_ORDER = [
+  'Posts and discovery', 'Profiles and identity', 'Playback and uploads', 'Live video and audio', 'Communities and messages',
+  'Creator income', 'Creator analytics', 'Premium plans', 'Business and advertising', 'Ownership and commerce',
+  'Studio and creation', 'Video editing', 'Design and documents', 'Charts and data', 'Presentations and exports',
+  'Open web and automation', 'Developers and API', 'Safety and personalization', 'Accessibility',
+  'Accounts, privacy and preferences', 'Notifications', 'Apps and devices', 'Entertainment and platform tools',
+];
+const rank = (category: string) => { const at = CATEGORY_ORDER.indexOf(category); return at < 0 ? CATEGORY_ORDER.length : at; };
+export const CATEGORIES = [...new Set(FEATURES.map(feature => feature.category))].sort((a, b) => rank(a) - rank(b));
 export function entryFor(feature: ComparisonFeature, platform: PlatformId | 'dehub'): ComparisonEntry {
   if (platform === 'dehub') return feature.dehub;
   return feature.peers[platform] ?? { status: 'unverified', note: 'An equivalent has not been verified in this comparison. This does not mean the platform lacks the feature.' };
