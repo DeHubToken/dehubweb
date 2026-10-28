@@ -23,6 +23,16 @@ interface QueuedResponse {
   body: string;
 }
 
+it('refuses oversized multipart metadata before opening a connection', async () => {
+  const form = {
+    forEach(callback: (file: { size: number; type: string }) => void) {
+      callback({ size: 60_000_000, type: 'video/mp4' });
+      callback({ size: 41_000_000, type: 'application/octet-stream' });
+    },
+  } as FormData;
+  await expect(authedUpload('/draft_video', form)).rejects.toMatchObject({ status: 413, code: 'UPLOAD_TOO_LARGE' });
+});
+
 class MockXhr {
   static sent: MockXhr[] = [];
   static queue: QueuedResponse[] = [];
