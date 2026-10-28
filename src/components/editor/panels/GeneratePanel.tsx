@@ -259,6 +259,13 @@ export function GeneratePanel() {
   const runVideoJob = useCallback(
     (options: VideoGenerationOptions | undefined, txHash: string) => {
       setVideoPaywallOpen(false);
+      if (options?.avatar) {
+        const savedPrompt = options.avatar.prompt ?? prompt.trim();
+        startVideo({ prompt: savedPrompt, model: 'kling-avatar-v2', avatar: options.avatar, clientJobId: options.avatar.clientJobId, txHash },
+          { prompt: savedPrompt, resolvedPrompt: savedPrompt, modelName: 'Kling Avatar v2', aspect: '1:1' });
+        setPanel('library');
+        return;
+      }
       startVideo(
         {
           prompt: prompt.trim(),
@@ -466,7 +473,7 @@ export function GeneratePanel() {
           model={activeVideoModel}
           selectedModelKey={videoModel}
           onModelChange={setVideoModel}
-          onConfirm={runVideoJob}
+          onConfirm={runVideoJob} avatarPrompt={prompt.trim()}
         />
       )}
       {MODEL3D_MODELS[model3dModel] && (

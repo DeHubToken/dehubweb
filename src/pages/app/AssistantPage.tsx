@@ -1258,6 +1258,7 @@ function AssistantPageForAccount() {
           ...(options?.audioUrls && options.audioUrls.length > 0 && { audioUrls: options.audioUrls }),
           ...(options?.videoUrls && options.videoUrls.length > 0 && { videoUrls: options.videoUrls }),
           ...(options?.seed !== undefined && { seed: options.seed }),
+          ...(options?.avatar ? { avatar: options.avatar, clientJobId: options.avatar.clientJobId, prompt: options.avatar.prompt ?? prompt, sourceImage: undefined, duration: undefined, aspectRatio: '1:1' } : {}),
           txHash,
         }
       });
@@ -3165,7 +3166,7 @@ function AssistantPageForAccount() {
           onModelChange={(modelKey) => {
             setPendingVideoRequest(prev => prev ? { ...prev, model: modelKey } : null);
           }}
-          onConfirm={handleVideoGenerationConfirm}
+          onConfirm={handleVideoGenerationConfirm} avatarPrompt={pendingVideoRequest.prompt}
           isGenerating={isVideoLoading}
         />
       )}
