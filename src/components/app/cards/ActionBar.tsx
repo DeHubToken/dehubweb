@@ -51,7 +51,6 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji, preloadAnimatedReaction } from './ReactionEmoji';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { ReactionPicker } from './ReactionPicker';
 import { maybeShowReactionTip } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
@@ -815,15 +814,14 @@ export function ActionBar({
     : resolveLeadReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
   /**
-   * On phones a plain like turns the thumb into the moving 👍, the same way
-   * every other reaction you cast shows as its moving emoji. Desktop keeps
-   * the filled thumb.
+   * A plain like turns the thumb into the moving 👍, the same way every other
+   * reaction you cast shows as its moving emoji, and pumps it upward on a loop.
    */
-  const isPhone = useIsMobile();
-  const thumbGlyph = leadReaction ?? (isPhone && isLiked ? 'like' : null);
+  const thumbGlyph = leadReaction ?? (isLiked ? 'like' : null);
+  const thumbPumps = thumbGlyph === 'like' && (myReaction === 'like' || !leadReaction);
   useEffect(() => {
-    if (isPhone) preloadAnimatedReaction('like').catch(() => {});
-  }, [isPhone]);
+    preloadAnimatedReaction('like').catch(() => {});
+  }, []);
   /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -1148,7 +1146,9 @@ export function ActionBar({
               className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
-              <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction || !leadReaction} />
+              <span className={cn('flex h-full w-full items-center justify-center', thumbPumps && 'dehub-like-pump')}>
+                <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction || !leadReaction} />
+              </span>
             </span>
           ) : (
             <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && "fill-current")} />
