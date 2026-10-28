@@ -3243,6 +3243,7 @@
     "followerInvites": {
       "title": "Təqibçiləri dəvət edin",
       "detail": "Her dəstədə 50 təqibçi seçə bilərsiniz. Ödüllü və bağlanmış DM-lər atlanır. Təkrar cəhd etməkdən əvvəl təyit edilməyən göndərilənləri mesajlar bölməsində nəzarət edin.",
+      "note": "Dəvətinizə qeyd əlavə edin (istəyə bağlı)",
       "selectAll": "Bu səhifəni seçin",
       "clear": "Təmizlə",
       "previous": "Önceki",

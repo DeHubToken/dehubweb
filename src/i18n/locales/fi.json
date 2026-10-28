@@ -3244,6 +3244,7 @@
     "followerInvites": {
       "title": "Kutsu seuraajia",
       "detail": "Valitse enintään 50 seuraajaa kerralla. Maksettu tai suljettu viestit ohitetaan. Tarkista keskustelu ennen yrittämistä uudelleen.",
+      "note": "Lisää kutsuun viesti (valinnainen)",
       "selectAll": "Valitse tämä sivu",
       "clear": "Tyhjennä",
       "previous": "Edellinen",

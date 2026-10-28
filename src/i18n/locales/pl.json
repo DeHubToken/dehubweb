@@ -3249,6 +3249,7 @@
     "followerInvites": {
       "title": "Zaproś obserwujących",
       "detail": "Wybierz do 50 obserwujących na raz. Zablokowane lub płatne wiadomości są pomijane. Sprawdź czat przed ponownym próbą.",
+      "note": "Dodaj wiadomość do zaproszenia (opcjonalnie)",
       "selectAll": "Wybierz stronę",
       "clear": "Wyczyść",
       "previous": "Poprzednia",

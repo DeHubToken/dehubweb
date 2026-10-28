@@ -3250,6 +3250,7 @@
     "followerInvites": {
       "title": "Inviter følgere",
       "detail": "Vælg op til 50 følgere pr. batch. Betalte eller lukkede privatbeskeder overskrides. Kontrollér chatten for uafstemte sendte beskeder før du prøver igen.",
+      "note": "Tilføj en note til din invitation (valgfrit)",
       "selectAll": "Vælg denne side",
       "clear": "Ryd",
       "previous": "Forrige",

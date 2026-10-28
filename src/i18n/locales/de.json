@@ -3250,6 +3250,7 @@
     "followerInvites": {
       "title": "Einladung an Follower senden",
       "detail": "Wählen Sie bis zu 50 Follower pro Batch aus. Bezahlte oder geschlossene Nachrichten werden übergangen. Überprüfen Sie den Chat, bevor Sie es erneut versuchen.",
+      "note": "Füge deiner Einladung eine Notiz hinzu (optional)",
       "selectAll": "Diese Seite auswählen",
       "clear": "Löschen",
       "previous": "Zurück",

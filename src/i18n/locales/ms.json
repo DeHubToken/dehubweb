@@ -3499,6 +3499,7 @@
     "followerInvites": {
       "title": "Undang pengikut",
       "detail": "Pilih sehingga 50 pengikut setiap batch. Pautan DM dibayar atau ditutup dilompatkan. Periksa perbualan untuk menghantar semula sebelum mencuba lagi.",
+      "note": "Tambah nota pada jemputan anda (pilihan)",
       "selectAll": "Pilih halaman ini",
       "clear": "Kosongkan",
       "previous": "Sebelumnya",
