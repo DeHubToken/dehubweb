@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowDown, ArrowRight, Boxes, CircleDollarSign, Cpu, Gauge, HardDrive, Loader2, Network, Server, WifiOff } from "lucide-react";
+import Plus from "@/components/ui/cut-icons/add";
 import Check from "@/components/ui/cut-icons/check";
 import LockKeyhole from "@/components/ui/cut-icons/privacy";
 import Radio from "@/components/ui/cut-icons/live";
@@ -658,7 +659,7 @@ export default function DePinPage() {
                       <details className="group rounded-2xl border border-white/10 bg-zinc-950 open:border-white/20">
                         <summary className="flex cursor-pointer list-none items-center justify-between gap-6 p-5 font-semibold marker:content-none sm:p-6">
                           {t(`${stem}Q`)}
-                          <span aria-hidden="true" className="text-xl font-normal text-zinc-500 transition-transform group-open:rotate-45">+</span>
+                          <Plus aria-hidden="true" className="h-5 w-5 shrink-0 text-zinc-500 transition-transform group-open:rotate-45" />
                         </summary>
                         <p className="max-w-3xl px-5 pb-5 text-sm leading-6 text-zinc-400 sm:px-6 sm:pb-6 sm:text-base">
                           {t(`${stem}A`)}
