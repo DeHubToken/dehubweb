@@ -3255,6 +3255,7 @@
     "followerInvites": {
       "title": "Izdoshlarni taklif qiling",
       "detail": "Har bir guruhda 50 tagacha obunachi tanlang. Pullik yoki yopiq shaxsiy xabarlar o&#39;tkazib yuboriladi. Qayta urinishdan oldin chatda tasdiqlanmagan xabarlar bor-yo&#39;qligini tekshiring.",
+      "note": "Taklifingizga izoh qo‘shing (ixtiyoriy)",
       "selectAll": "Ushbu sahifani tanlang",
       "clear": "Toza",
       "previous": "Oldingi",

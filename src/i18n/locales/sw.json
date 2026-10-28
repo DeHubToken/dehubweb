@@ -3245,6 +3245,7 @@
     "followerInvites": {
       "title": "Tuma wafuasi",
       "detail": "Chagua hadi wafuasi 50 kwa kikundi. Mawasiliano ya malipo yaliyopatikana au yaliyokatwa hachaguziwi. Tafuta chati kwa mawasiliano yasiyokubalika kabla ya kujaribu tena.",
+      "note": "Ongeza ujumbe kwenye mwaliko wako (si lazima)",
       "selectAll": "Chagua hii ya picha",
       "clear": "Kuondoa",
       "previous": "Kuondoa",

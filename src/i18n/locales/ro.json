@@ -3245,6 +3245,7 @@
     "followerInvites": {
       "title": "Invită urmăritori",
       "detail": "Alegeți până la 50 de urmăritori pe lot. ZM plătite sau închise sunt omise. Verificați chat-ul pentru trimiteri neconfirmate înainte de a încerca din nou.",
+      "note": "Adaugă o notă la invitație (opțional)",
       "selectAll": "Selectează această pagină",
       "clear": "Clar",
       "previous": "Înapoi",

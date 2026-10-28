@@ -3279,6 +3279,7 @@
     "followerInvites": {
       "title": "Nooi volgelinge uit",
       "detail": "Kies tot 50 volgelinge per bondel. Betaalde of geslote DM's word oorgeslaan. Gaan die klets na vir onbevestigde versendings voordat jy weer probeer.",
+      "note": "Voeg ’n nota by jou uitnodiging (opsioneel)",
       "selectAll": "Kies hierdie bladsy",
       "clear": "Maak skoon",
       "previous": "Vorige",

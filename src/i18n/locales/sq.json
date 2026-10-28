@@ -3246,6 +3246,7 @@
     "followerInvites": {
       "title": "Faqja e përsëritur",
       "detail": "Zgjidh deri në 50 pasioninë për batch. Mësimet e paguara ose të mbyllura janë të braktisura. Kontrolloni çatin për sendet e pa konfirmuara para se të provoni përsëri.",
+      "note": "Shtoni një shënim në ftesën tuaj (opsionale)",
       "selectAll": "Zgjidh këtë faqe",
       "clear": "E pastroni",
       "previous": "Më parë",
