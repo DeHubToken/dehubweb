@@ -196,6 +196,7 @@ export function buildCreatorFalImageRequest(modelId: string, prompt: string, sou
   const images = [...new Set([...(sourceImage ? [sourceImage] : []), ...(referenceImageUrls ?? [])])];
   sourceImage = images[0];
   if (!m || (sourceImage && !m.edit)) throw new Error('This model cannot edit an image');
+  if (m.requiresImage && !sourceImage) throw new Error('Attach one image to use this model');
   if (images.length > (m.maxReferenceImages ?? 4) || (images.length > 1 && !m.editUsesPlural)) throw new Error(`Choose a model supporting these references (up to ${m.maxReferenceImages ?? 4})`);
   if (m.outpaint) {
     if (!sourceImage) throw new Error('Attach one image to expand');
