@@ -453,6 +453,8 @@ function AssistantPageForAccount() {
   const [selectedStyle, setSelectedStyle] = useState<string>('normal');
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
+  // Which "what's on your mind" line greets this visit; a new one each time.
+  const [greetingIndex] = useState(() => Math.floor(Math.random() * 8));
   const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
   // ElevenLabs voice selection: { type: 'browser', preset } or { type: 'elevenlabs', voiceId }
   const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(() => {
@@ -2274,6 +2276,16 @@ function AssistantPageForAccount() {
     thinking: _copy("copy.b4739a4f0865", { defaultValue: "Thinking..." }),
     speaking: _copy("copy.f2ef1cac7f88", { defaultValue: "Speaking..." }),
   };
+  const greetings = [
+    _copy("copy.d1a0c7e2f301", { defaultValue: "What's on your mind today?" }),
+    _copy("copy.d1a0c7e2f302", { defaultValue: "What are you thinking about today?" }),
+    _copy("copy.d1a0c7e2f303", { defaultValue: "What's on your mind?" }),
+    _copy("copy.d1a0c7e2f304", { defaultValue: "Got something on your mind?" }),
+    _copy("copy.d1a0c7e2f305", { defaultValue: "What's on your mind right now?" }),
+    _copy("copy.d1a0c7e2f306", { defaultValue: "What are we thinking today?" }),
+    _copy("copy.d1a0c7e2f307", { defaultValue: "Anything on your mind today?" }),
+    _copy("copy.d1a0c7e2f308", { defaultValue: "What's on your mind this time?" }),
+  ];
   const lastReply = [...messages].reverse().find((m) => m.role === 'assistant' && m.content)?.content ?? '';
   const startTiles: Array<{ icon: ThemeIconKey; label: string; onClick: () => void }> = [
     { icon: 'images', label: _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }), onClick: () => {
@@ -2755,7 +2767,7 @@ function AssistantPageForAccount() {
                 <>
                   <div className="text-center px-2">
                     <h2 className="text-[22px] lg:text-[28px] font-extrabold leading-tight text-white [text-wrap:balance]">
-                      {t('creatorFlow.assistantEmptyTitle')}
+                      {greetings[greetingIndex]}
                     </h2>
                     <p className="mt-1.5 text-sm text-white/55">{voiceStatusLine.idle}</p>
                   </div>
