@@ -11,7 +11,7 @@
     "policyFollowers": "المتابعون",
     "policyNobody": "لا أحد",
     "saveFailed": "تعذر الحفظ. حاول مرة أخرى.",
-    "count_one": "دويتو واحد",
+    "count_one": "{{count}} دويتو",
     "count_other": "{{count}} دويتو",
     "pageHeading": "الدويتو",
     "pageTitle": "دويتو {{title}} من @{{creator}}",
