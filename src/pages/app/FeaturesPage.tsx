@@ -22,7 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { Loader2, CheckCircle2, MoreVertical, ImagePlus } from "lucide-react";
+import { Loader2, CheckCircle2, MoreVertical, ImagePlus, Github } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Pencil from "@/components/ui/cut-icons/edit";
@@ -94,6 +94,8 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
 ];
 
 type PageTab = 'requests' | 'shipping' | 'shipped';
+
+const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
 
 const SHIPPED_PAGE_SIZE = 20;
 
@@ -1058,7 +1060,10 @@ export default function FeaturesPage() {
             </div>
 
             </>}
-            {/* Sort Tabs */}
+            {/* Sort tabs (Requests only) on the left, the GitHub link pinned to
+                the bento's bottom-right corner on every tab. */}
+            <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
             {activeTab === 'requests' && (
             <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
               <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
@@ -1082,6 +1087,18 @@ export default function FeaturesPage() {
               </div>
             </div>
             )}
+            </div>
+            <a
+              href={DEHUB_GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${t('commandCentre.viewAll')} GitHub`}
+              className="shrink-0 inline-flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-sm font-medium text-zinc-400 hover:text-white transition-colors"
+            >
+              {t('commandCentre.viewAll')}
+              <Github className="w-4 h-4" aria-hidden="true" />
+            </a>
+            </div>
         </>
         </div>
       </div>
