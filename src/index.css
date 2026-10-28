@@ -7021,3 +7021,17 @@ html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_
 html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
   visibility: hidden !important;
 }
+
+/* A liked thumb pumps upward on a loop, on top of the moving 👍 itself.
+   Transform only, so it costs nothing on Safari. */
+.dehub-like-pump {
+  transform-origin: 50% 85%;
+  animation: dehub-like-pump 1.3s cubic-bezier(.3, 1.4, .5, 1) infinite;
+}
+@keyframes dehub-like-pump {
+  0%, 60%, 100% { transform: none; }
+  14% { transform: translateY(1px) scale(.92); }
+  32% { transform: translateY(-4px) scale(1.16) rotate(-6deg); }
+  46% { transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) { .dehub-like-pump { animation: none; } }
