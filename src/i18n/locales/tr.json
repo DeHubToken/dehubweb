@@ -39,6 +39,27 @@
       "stitch": "{{name}} videonu stitch'ledi",
       "react": "{{name}} videona tepki verdi",
       "reactLive": "{{name}} videona canlı tepki veriyor"
+    },
+    "linkFailed": "Gönderin yayında, ancak orijinal videoya bağlanamadı.",
+    "settingsHeading": "Remiksler",
+    "policy": {
+      "default": "Varsayılanım",
+      "everyone": "Herkes",
+      "followers": "Takipçiler",
+      "nobody": "Hiç kimse"
+    },
+    "stitch": {
+      "allow": "Stitch'lere izin ver",
+      "allowDesc": "Videolarının en fazla 5 saniyesini kendi videosunda kimin kullanabileceği. Bunu her gönderi için de değiştirebilirsin.",
+      "saveFailed": "Stitch ayarın kaydedilemedi. Tekrar dene.",
+      "settingFailed": "Gönderin yayında, ancak stitch ayarı kaydedilmedi. Gönderiyi düzenle bölümünden değiştir.",
+      "from": "{{name}} videosundan stitch",
+      "count_one": "{{count}} stitch",
+      "count_other": "{{count}} stitch",
+      "listTitle": "Stitch'ler",
+      "listFailed": "Stitch'ler yüklenemedi. Tekrar dene.",
+      "listEmpty": "Henüz stitch yok.",
+      "unavailable": "Bu video artık stitch için kullanılamıyor."
     }
   },
   "dehubAppPage": {
