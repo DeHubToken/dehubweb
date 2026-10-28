@@ -95,7 +95,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
   // clip could not be routed through the page's AudioContext.
   const replyAnalyserRef = useRef<AnalyserNode | null>(null);
   const replyObjectUrlRef = useRef<string | null>(null);
-  const levelBufRef = useRef<Uint8Array | null>(null);
+  const levelBufRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
 
   // Keep refs in sync
   const onTranscriptRef = useRef(onTranscript);
