@@ -31,7 +31,7 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
   const [paying, setPaying] = useState(false);
   const { walletDhb, isLoading: walletLoading } = useSpendableDhb();
 
-  const total = plan?.totalDhb ?? 0;
+  const total = plan?.resumeTxHash ? 0 : plan?.totalDhb ?? 0;
   const paid = plan?.items.filter((i) => i.priceDhb > 0) ?? [];
   const free = plan?.items.filter((i) => i.priceDhb === 0) ?? [];
   const needsTokens = !walletLoading && total > 0 && walletDhb < total;
@@ -48,9 +48,9 @@ export default function FlowPaywall({ plan, open, onOpenChange, onConfirm }: Pro
       let txHash: string | undefined;
       if (total > 0) {
         toast.loading(t('creatorFlow.paying', { amount: formatDhb(total) }), { id: 'flow-run-payment' });
-        txHash = await payForPlan(plan);
-        toast.success(t('creatorFlow.paymentConfirmed'), { id: 'flow-run-payment' });
       }
+      txHash = await payForPlan(plan);
+      if (total > 0) toast.success(t('creatorFlow.paymentConfirmed'), { id: 'flow-run-payment' });
       onConfirm(txHash);
     } catch (e) {
       toast.dismiss('flow-run-payment');
