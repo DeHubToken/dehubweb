@@ -5,7 +5,7 @@ export const LAYER_MODEL = 'qwen-image-layered';
 export const LAYER_ENDPOINT = 'fal-ai/qwen-image-layered';
 export const LAYER_COUNT = 4;
 export const layerAssetId = (jobId: string, index: number) => `${jobId}-layer-${index}`;
-export const layerManifest = (jobId: string, sourceAssetId: string, images: any) => ({ version: 1, id: jobId, sourceAssetId,
+export const layerManifest = (jobId: string, sourceAssetId: string, images: any, sourceDigest?: string, seed?: unknown) => ({ version: 1, id: jobId, sourceAssetId, sourceDigest, seed: typeof seed === 'number' && Number.isFinite(seed) ? seed : null,
   operation: 'decompose', format: 'png',
   layers: Array.from({ length: LAYER_COUNT }, (_, index) => ({ id: layerAssetId(jobId, index), index, rawUrl: images?.[index]?.url ?? null })) });
 export const layerInput = (imageUrl: string) => ({ image_url: imageUrl, num_layers: LAYER_COUNT,

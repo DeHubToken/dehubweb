@@ -8,6 +8,7 @@ import { chargeForJob } from "../_shared/ai-payment-guard.ts";
 // says they are allowed. A local copy silently drops them; see auth.ts.
 import { corsHeaders, requireDeHubAuth, serviceClient } from "../_shared/auth.ts";
 import { layerInput, layerManifest, LAYER_MODEL, LAYER_ENDPOINT } from '../_shared/creator-image-layers.ts';
+import { prepareLayerSource } from '../_shared/creator-layer-source.ts';
 
 // ─── Tool definitions ───
 
@@ -228,6 +229,7 @@ serve(async (req) => {
 
     const body = await req.json();
     let sourceAssetId = body.sourceAssetId;
+    let sourceDigest = body.sourceDigest;
     let layerJobId: string | undefined;
     // txHash and purpose are payment fields, not tool inputs — pulled out here
     // so they never reach buildInput and get forwarded to the provider.
@@ -236,6 +238,7 @@ serve(async (req) => {
       if (!authorized.ok) return authorized.response;
       const ticket = authorized.ticket;
       sourceAssetId = ticket.result?.sourceAssetId;
+      sourceDigest = ticket.result?.sourceDigest;
       layerJobId = ticket.result?.jobId;
       if (ticket.result?.providerCompleted) {
         return await settleGeneration('fal-ai-tools', body.requestId, new Response(JSON.stringify({ ...ticket.result, status: 'succeeded' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }));
@@ -275,7 +278,7 @@ serve(async (req) => {
         status: mappedStatus,
         requestId,
         ...result,
-        ...(statusAppId === LAYER_ENDPOINT ? { sourceAssetId, ...(mappedStatus === 'succeeded' ? { layerSet: layerManifest(layerJobId!, sourceAssetId, result.layerImages), savePending: true } : {}) } : {}),
+        ...(statusAppId === LAYER_ENDPOINT ? { sourceAssetId, sourceDigest, ...(mappedStatus === 'succeeded' ? { layerSet: layerManifest(layerJobId!, sourceAssetId, result.layerImages, sourceDigest, result.seed), savePending: true } : {}) } : {}),
         ...(mappedStatus === 'failed' && { error: 'Processing failed on fal.ai' }),
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -292,13 +295,9 @@ serve(async (req) => {
       if (body.acceptedPriceDhb !== 60) throw new Error('Review the current layer separation quote');
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.clientJobId || '') || typeof sourceAssetId !== 'string' || !/^[a-zA-Z0-9_-]{6,80}$/.test(sourceAssetId)) throw new Error('Choose one saved image');
       const owner = await requireDeHubAuth(req); if (!owner.ok) return owner.response;
-      const db = serviceClient();
-      const source = await db.from('creator_assets').select('metadata,storage_path').eq('wallet_address', owner.wallet).eq('id', sourceAssetId).eq('ready', true).maybeSingle();
-      if (source.error) throw source.error;
-      if (source.data?.metadata?.kind !== 'image' || source.data.storage_path !== `${owner.wallet}/${sourceAssetId}/original`) throw new Error('Choose one saved image');
-      const signed = await db.storage.from('creator-assets').createSignedUrl(source.data.storage_path, 3600);
-      if (signed.error || !signed.data?.signedUrl) throw new Error('Saved image is temporarily unavailable');
-      params.ownedImageUrl = signed.data.signedUrl;
+      if (typeof sourceDigest !== 'string' || !/^[a-f0-9]{64}$/.test(sourceDigest)) throw new Error('Review the saved image before paying');
+      const prepared = await prepareLayerSource(owner.wallet, sourceAssetId, sourceDigest);
+      params.ownedImageUrl = prepared.sourcePreviewUrl;
     }
     const input = toolConfig.buildInput(params);
     console.log(`[fal-tools] ${toolConfig.name}: ${JSON.stringify(input).substring(0, 200)}`);
@@ -329,7 +328,7 @@ serve(async (req) => {
           statusUrl: submission.status_url,
           responseUrl: submission.response_url,
           tool,
-          ...(tool === LAYER_MODEL ? { sourceAssetId, jobId: charged.jobId } : {}),
+          ...(tool === LAYER_MODEL ? { sourceAssetId, sourceDigest, jobId: charged.jobId } : {}),
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }));

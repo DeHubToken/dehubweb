@@ -1,7 +1,7 @@
 name: Creator image layers
 on:
   pull_request:
-    paths: ['supabase/functions/_shared/creator-image-layers*', 'supabase/functions/_shared/creator-layer-png*', 'supabase/functions/_shared/generation-*.ts', 'supabase/functions/fal-ai-tools/**', 'supabase/functions/creator-library/**', 'supabase/functions/creator-reconcile/**', 'tests/sql/creator-image-layers.sql', '.github/workflows/creator-image-layers.yml']
+    paths: ['supabase/functions/_shared/creator-image-layers*', 'supabase/functions/_shared/creator-layer-*', 'supabase/functions/_shared/generation-*.ts', 'supabase/functions/fal-ai-tools/**', 'supabase/functions/creator-library/**', 'supabase/functions/creator-reconcile/**', 'tests/sql/creator-image-layers.sql', '.github/workflows/creator-image-layers.yml']
   workflow_dispatch:
 jobs:
   layers:

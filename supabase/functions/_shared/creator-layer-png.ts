@@ -9,11 +9,11 @@ export function layerCanvas(width: number, height: number) {
   return { width, height };
 }
 /** Verify structure, every CRC and exactly one bounded noninterlaced RGBA raster. */
-export async function validateLayerPng(bytes: Uint8Array) {
+export async function validateLayerPng(bytes: Uint8Array, allowRgb = false) {
   const fail = () => { throw new LayerValidationError('Invalid RGBA PNG layer'); };
   if (bytes.length < 57 || bytes.length > 12 * 1024 * 1024 || [137,80,78,71,13,10,26,10].some((value, index) => bytes[index] !== value)) fail();
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  let pos = 8, width = 0, height = 0, count = 0, data = false, afterData = false, ended = false, palette = false;
+  let pos = 8, width = 0, height = 0, channels = 4, count = 0, data = false, afterData = false, ended = false, palette = false;
   const compressed: Uint8Array[] = [];
   while (pos + 12 <= bytes.length) {
     if (++count > 2048) fail();
@@ -25,7 +25,8 @@ export async function validateLayerPng(bytes: Uint8Array) {
     if (count === 1) {
       if (type !== 'IHDR' || size !== 13) fail();
       width = view.getUint32(pos + 8); height = view.getUint32(pos + 12); layerCanvas(width, height);
-      if (bytes[pos + 16] !== 8 || bytes[pos + 17] !== 6 || bytes[pos + 18] || bytes[pos + 19] || bytes[pos + 20]) fail();
+      channels = bytes[pos+17] === 2 && allowRgb ? 3 : bytes[pos+17] === 6 ? 4 : 0;
+      if (bytes[pos + 16] !== 8 || !channels || bytes[pos + 18] || bytes[pos + 19] || bytes[pos + 20]) fail();
     } else if (type === 'IHDR' || type === 'acTL' || type === 'fcTL' || type === 'fdAT' || type === 'tRNS') fail();
     if (data && type !== 'IDAT') afterData = true;
     if (type === 'IDAT') {
@@ -38,7 +39,7 @@ export async function validateLayerPng(bytes: Uint8Array) {
     if (type === 'IEND') { if (size || !data || pos !== bytes.length) fail(); ended = true; break; }
   }
   if (!ended) fail();
-  const row = width * 4 + 1, expected = row * height;
+  const row = width * channels + 1, expected = row * height;
   const reader = new Blob(compressed.map(part => part.buffer as ArrayBuffer)).stream().pipeThrough(new DecompressionStream('deflate')).getReader();
   let total = 0;
   try {

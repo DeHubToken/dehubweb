@@ -105,7 +105,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   // already parsed it hands it over; otherwise cloning leaves the original
   // readable, so nothing downstream had to learn about payment.
   const body = (opts.body
-    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown; sourceAssetId?: unknown };
+    ?? await req.clone().json().catch(() => ({}))) as { txHash?: unknown; purpose?: unknown; clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; useFree?: unknown; paySource?: unknown; sourceAssetId?: unknown; sourceDigest?: unknown };
   const txHash = typeof body.txHash === 'string' ? body.txHash.toLowerCase() : '';
 
   // `txHash: "credits"` is a sentinel the web client sends through the existing field.
@@ -150,6 +150,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     if (previous.error) return { ok: false, response: jsonResponse({ error: 'Could not check the previous generation. Please retry.' }, 503) };
     if (previous.data) {
       const job = previous.data;
+      if (opts.modelId === 'qwen-image-layered' && (job.metadata?.sourceAssetId !== body.sourceAssetId || job.metadata?.sourceDigest !== body.sourceDigest)) return { ok: false, response: jsonResponse({ error: 'This job belongs to a different saved source.' }, 409) };
       if (job.wallet_address !== guard.wallet || job.tx_hash !== txHash || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
       return { ok: false, response: jsonResponse(await hydrateGenerationResult(job, supabase) || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
     }
@@ -203,7 +204,7 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
     p_tx_hash: txHash,
     p_wallet: guard.wallet,
     p_dhb: priceDhb,
-    ...(journalled ? { p_job_id: jobId, p_kind: opts.kind, p_model: opts.modelId, p_endpoint: opts.actionType, p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId } : {}) } } : {}),
+    ...(journalled ? { p_job_id: jobId, p_kind: opts.kind, p_model: opts.modelId, p_endpoint: opts.actionType, p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId, sourceDigest: body.sourceDigest } : {}) } } : {}),
   });
 
   if (error) {
@@ -261,7 +262,7 @@ export async function chargeCredits(
   wallet: string,
   priceDhb: number,
   opts: ChargeRequest,
-  body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; sourceAssetId?: unknown },
+  body: { clientJobId?: unknown; prompt?: unknown; aspectRatio?: unknown; sourceAssetId?: unknown; sourceDigest?: unknown },
   dependencies: { db?: ReturnType<typeof serviceClient>; debit?: typeof debitCredits } = {},
 ): Promise<ChargeResult> {
   const supabase = dependencies.db || serviceClient();
@@ -275,6 +276,7 @@ export async function chargeCredits(
     if (previous.error) return { ok: false, response: jsonResponse({ error: 'Could not check the previous generation. Please retry.' }, 503) };
     if (previous.data) {
       const job = previous.data;
+      if (opts.modelId === 'qwen-image-layered' && (job.metadata?.sourceAssetId !== body.sourceAssetId || job.metadata?.sourceDigest !== body.sourceDigest)) return { ok: false, response: jsonResponse({ error: 'This job belongs to a different saved source.' }, 409) };
       if (job.wallet_address !== wallet || job.payment_source !== 'credits' || job.model !== opts.modelId || job.endpoint !== opts.actionType) return { ok: false, response: jsonResponse({ error: 'Generation id is already in use.' }, 409) };
       return { ok: false, response: jsonResponse(await hydrateGenerationResult(job, supabase) || { error: 'This generation is already being submitted. Check your library before retrying.' }, job.result ? 200 : 409) };
     }
@@ -289,7 +291,7 @@ export async function chargeCredits(
       p_kind: opts.kind,
       p_model: opts.modelId,
       p_endpoint: opts.actionType,
-      p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId } : {}) },
+      p_metadata: { prompt: typeof body.prompt === 'string' ? body.prompt.slice(0, 20000) : '', aspectRatio: typeof body.aspectRatio === 'string' ? body.aspectRatio : '', ...(opts.modelId === 'qwen-image-layered' ? { sourceAssetId: body.sourceAssetId, sourceDigest: body.sourceDigest } : {}) },
       p_debit_key: key,
     });
     if (error) {

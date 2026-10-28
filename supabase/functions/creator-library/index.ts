@@ -2,6 +2,7 @@ import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, che
 import { parseLibraryAction, updateLibraryAssets } from './actions.ts';
 import { retryGenerationSave, settleGeneration } from '../_shared/generation-jobs.ts';
 import { hydrateGenerationResult } from '../_shared/generation-result.ts';
+import { prepareLayerSource } from '../_shared/creator-layer-source.ts';
 
 const BUCKET = 'creator-assets';
 const ID = /^[a-zA-Z0-9_-]{6,80}$/;
@@ -17,14 +18,15 @@ Deno.serve(async (req) => {
   if (!limited.allowed) return jsonResponse({ error: 'Please wait before saving more generations.' }, 429);
   try {
     const body = await req.json();
+    if (body.action === 'layer-source') return jsonResponse(await prepareLayerSource(auth.wallet,String(body.sourceAssetId || ''),body.sourceDigest));
     if (body.action === 'layer-jobs') {
       if (!ID.test(String(body.sourceAssetId || ''))) return jsonResponse({ error: 'Choose one saved image' }, 400);
-      const jobs = await db.from('ai_generation_jobs').select('id,status,created_at,result,prediction_id,provider_app')
+      const jobs = await db.from('ai_generation_jobs').select('id,status,created_at,result,prediction_id,provider_app,metadata')
         .eq('wallet_address', auth.wallet).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools')
         .eq('metadata->>sourceAssetId', body.sourceAssetId).order('created_at', { ascending: false }).limit(20);
       if (jobs.error) throw jobs.error;
       return jsonResponse({ jobs: (jobs.data || []).map(job => ({ id: job.id, status: job.status, createdAt: job.created_at,
-        savePending: job.result?.savePending === true, requestId: job.prediction_id, appId: job.provider_app })) });
+        savePending: job.result?.savePending === true, sourceDigest:job.metadata?.sourceDigest, requestId: job.prediction_id, appId: job.provider_app })) });
     }
     if (body.action === 'layer-set') {
       const { data: job, error } = await db.from('ai_generation_jobs').select('*').eq('wallet_address', auth.wallet).eq('id', String(body.id || '')).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools').maybeSingle();

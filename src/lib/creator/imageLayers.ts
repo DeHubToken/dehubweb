@@ -6,7 +6,7 @@ import { useEditorStore } from '@/store/editorStore';
 import { zipFiles } from '@/lib/editor/zip';
 import { validateLayerSet, selectedLayers, layerExportManifest, type ImageLayerSet, type LayerChoice } from './imageLayersContract';
 
-export interface LayerJob { id: string; status: string; savePending?: boolean; requestId?: string; appId?: string }
+export interface LayerJob { id: string; status: string; savePending?: boolean; sourceDigest?: string; requestId?: string; appId?: string }
 export async function layerJobs(wallet: string, sourceAssetId: string): Promise<LayerJob[]> {
   return (await callCreatorLibrary(wallet, { action: 'layer-jobs', sourceAssetId })).jobs;
 }
@@ -18,8 +18,8 @@ export async function collectLayers(wallet: string, job: LayerJob): Promise<Imag
   const result = await callCreatorLibrary(wallet, { action: 'layer-set', id: job.id });
   return result.layerSet ? validateLayerSet(result.layerSet) : null;
 }
-export async function submitLayers(sourceAssetId: string, clientJobId: string, txHash: string, acceptedPriceDhb: number) {
-  const { data, error } = await invokeAi<{ error?: string; submissionUnconfirmed?: boolean }>('fal-ai-tools', { body: { tool: 'qwen-image-layered', sourceAssetId, clientJobId, txHash, acceptedPriceDhb } });
+export async function submitLayers(sourceAssetId: string, clientJobId: string, txHash: string, acceptedPriceDhb: number, sourceDigest?: string) {
+  const { data, error } = await invokeAi<{ error?: string; submissionUnconfirmed?: boolean }>('fal-ai-tools', { body: { tool: 'qwen-image-layered', sourceAssetId, sourceDigest, clientJobId, txHash, acceptedPriceDhb } });
   if (error || data?.error) throw error || new Error(data!.error);
 }
 export async function importLayers(set: ImageLayerSet, choices: LayerChoice[], wallet: string, currentOwner: () => boolean, signal: AbortSignal) {
