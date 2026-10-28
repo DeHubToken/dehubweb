@@ -25,13 +25,14 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { Square, Loader2, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { Square, Loader2, RotateCcw, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
 import Quote from "@/components/ui/cut-icons/quote";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Link from "@/components/ui/cut-icons/link";
 import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
+import { useHoldMenu } from '@/hooks/use-hold-menu';
 import Languages from "@/components/ui/cut-icons/language";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
@@ -459,6 +460,12 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
   const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
 
+  // Translate lives in the row's menu, not on the row. Holding the comment on
+  // a phone, or right-clicking it on desktop, opens that same menu.
+  const canTranslate = !!comment.text && !translation.isTooShort;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hold = useHoldMenu(() => setMenuOpen(true), !isEditing && !isPending);
+
   return (
     <motion.div
       // A comment you just sent is already on screen under its placeholder id;
@@ -467,8 +474,9 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={isPending ? { type: 'spring', stiffness: 380, damping: 30, mass: 0.8 } : undefined}
       // The one you just sent lands with the soft glow, wherever it lands.
-      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl${isPending ? ' dh-land-glow' : ''}`}
+      className={`relative flex items-start gap-3 py-3 cursor-pointer rounded-xl [-webkit-touch-callout:none]${isPending ? ' dh-land-glow' : ''}`}
       data-comment-id={comment.id}
+      {...hold}
       /*
         Tap the comment to answer it.
 
@@ -655,6 +663,24 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 auto={false}
               />
             )}
+            {/* No Translate button on the row — that is in the menu. The row
+                only says what happened: translating, or translated with the
+                way back. */}
+            {canTranslate && (translation.isLoading || translation.isTranslated) && (
+              translation.isLoading ? (
+                <span className="mt-0.5 flex items-center gap-1 text-xs text-white/60" role="status">
+                  <Loader2 className="w-3 h-3 animate-spin" />{i18n.t('common.translating')}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={translation.handleShowOriginal}
+                  className="mt-0.5 flex items-center gap-1 text-xs text-white/60 hover:text-white transition-colors"
+                >
+                  <RotateCcw className="w-3 h-3" />{i18n.t('common.showOriginal')}
+                </button>
+              )
+            )}
             <DehubLinkEmbeds links={commentLinks} />
             <FeedLinkPreviews text={commentBody} />
             <AssetRefCards refs={commentAssetRefs} />
@@ -818,7 +844,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 </button>
               </>
             )}
-            <DropdownMenu>
+            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
@@ -859,6 +885,15 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                   <Quote className="w-4 h-4" />
                   {i18n.t('comments.copyText')}
                 </DropdownMenuItem>
+                {canTranslate && (
+                  <DropdownMenuItem
+                    onClick={() => { void (translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()); }}
+                    className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
+                  >
+                    {translation.isTranslated ? <RotateCcw className="w-4 h-4" /> : <Languages className="w-4 h-4" />}
+                    {translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}
+                  </DropdownMenuItem>
+                )}
                 {onReport && !isOwnComment && (
                   <DropdownMenuItem
                     onClick={() => onReport(comment.id)}
@@ -870,30 +905,6 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-            {comment.text && !translation.isTooShort && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => translation.isTranslated ? translation.handleShowOriginal() : translation.handleTranslate()}
-                    className={cn(
-                      COMMENT_ACTION_HIT,
-                      "transition-colors",
-                      translation.isLoading ? "text-white/60" : 
-                      translation.isTranslated ? "text-white" : "text-white hover:text-zinc-400"
-                    )}
-                    aria-label={i18n.t('comments.translate')}
-                    disabled={translation.isLoading}
-                  >
-                    {translation.isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Languages className="w-4 h-4" />
-                    )}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{translation.isTranslated ? i18n.t('common.showOriginal') : i18n.t('comments.translate')}</TooltipContent>
-              </Tooltip>
-            )}
             {/* Views on the comment itself, recorded by the observer below
                 when the row scrolls into a reader's viewport.
 
