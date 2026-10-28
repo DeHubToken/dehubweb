@@ -9,6 +9,7 @@ import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installTapPendingLogo } from "./lib/tap-pending-logo";
+import { installFocusKeys } from "./lib/focus-keys";
 import { installScrollStopTap } from "./lib/scroll-stop-tap";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
@@ -25,6 +26,7 @@ import "./i18n";
 import "./index.css";
 import "./styles/app-route-motion.css";
 import "./styles/theme-controls.css";
+import "./styles/focus-keys.css";
 import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";
 import "./styles/feed-pill-glow.css";
@@ -138,3 +140,4 @@ installScrollStopTap();
 // Press a profile, post, link or Back and the logo is ready before the page
 // builds. See lib/tap-pending-logo.ts.
 installTapPendingLogo();
+installFocusKeys();
