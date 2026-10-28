@@ -5095,6 +5095,17 @@
     "sellYourFractions": "Paylarınızı satın ({{held}} adet)"
   },
   "creator": {
+    "batchFlowLimit": "Flow listesi dolu. Yeni grup oluşturmadan önce kullanılmayan bir Flow’u kaldırın.",
+    "batchReviewCampaign": "Kampanya grubunu Flow’da incele",
+    "batchReviewFilmImages": "Görsel taslak grubunu incele",
+    "batchReviewFilmVideos": "Film klibi grubunu incele",
+    "batchReviewHint": "Ayrı kaydedilen bir Flow açar. Ödemeden önce her öğeyi ve toplam fiyatı inceleyin. Tamamlanan öğeler ve ilk ödeme kurtarma için korunur. Referanslar özel kitaplığınıza kopyalanır; depolama ve ağ kullanımı geçerlidir.",
+    "batchInvalid": "1–12 görsel veya klipten oluşan bir grup hazırlamadan önce her öğeyi tamamlayın.",
+    "batchReferenceLimit": "Bu grup her öğe için bir görsel referansını destekler. Fazladan referansları kaldırın veya öğeyi ayrı hazırlayın.",
+    "batchVideoSettings": "Bu gruptaki klipler 4–15 tam saniye uzunluğunda ve 16:9, 9:16 veya 1:1 en boy oranında olmalıdır.",
+    "batchMissingReference": "Bir referans eksik, desteklenmiyor veya 25 MB’tan büyük. Grubu hazırlamadan önce düzenleyicide geri yükleyin.",
+    "batchOwnerChanged": "Hesap veya taslak değişti. Bu grubu ilk hesabınızla yeniden açın.",
+    "batchConflict": "Kaydedilen grup ilk anlık görüntüsüyle eşleşmiyor.",
     "audioExportFormat": "Dışa aktarma biçimi",
     "audioExportMp3": "MP3 · 128 kbit/sn",
     "audioExportWav": "WAV · 24 kHz · tek kanal",
