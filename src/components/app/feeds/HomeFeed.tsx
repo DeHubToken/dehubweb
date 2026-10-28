@@ -1401,6 +1401,16 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   );
   const shortsBatches = useMemo(() => shortsRotation.batches.map(batch => batch.map(mapCarouselItem)),
     [shortsRotation.batches, mapCarouselItem]);
+  // What a row's viewer carries on into after the row's own shorts, and the
+  // pages behind it: a row used to stop dead on its tenth short.
+  const shortsPool = useMemo(() => shortsCandidates.map(mapCarouselItem), [shortsCandidates, mapCarouselItem]);
+  const shortsHasMore = !!(scrollFeed.hasNextPage || scrollPhotosFeed.hasNextPage);
+  const shortsLoadingMore = scrollFeed.isFetchingNextPage || scrollPhotosFeed.isFetchingNextPage;
+  const loadMoreShorts = useCallback(() => {
+    if (scrollFeed.hasNextPage && !scrollFeed.isFetching) void scrollFeed.fetchNextPage();
+    if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching) void scrollPhotosFeed.fetchNextPage();
+  }, [scrollFeed.hasNextPage, scrollFeed.isFetching, scrollFeed.fetchNextPage,
+    scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching, scrollPhotosFeed.fetchNextPage]);
   useEffect(() => {
     if (!isHomeActive || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
     if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
@@ -1627,7 +1637,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         case 'image':
           return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
         case 'shorts':
-          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} pool={shortsPool} onLoadMore={loadMoreShorts}
+            hasMore={shortsHasMore} isLoadingMore={shortsLoadingMore} />;
         case 'ad':
           return <SponsoredAdCard key={`ad-${item.data.serveId}`} ad={item.data} />;
         default:
@@ -1760,7 +1771,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       if (!isKidsMode) {
         if (hasShorts) inserts.push(
           <div key={`shorts-${shortsRotation.generation}-${batchIndex}`} data-shorts-after-post={posts}>
-            <ShortsReel shorts={batch!} />
+            <ShortsReel shorts={batch!} pool={shortsPool} onLoadMore={loadMoreShorts}
+              hasMore={shortsHasMore} isLoadingMore={shortsLoadingMore} />
           </div>,
         );
         // Keep other inserts at least two posts away from a Shorts boundary.

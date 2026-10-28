@@ -107,7 +107,7 @@ import '@/styles/shorts-mini.css';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
 import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate, useMediaMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { createWheelGesture } from '@/lib/wheel-gesture';
+import { createWheelPager } from '@/lib/wheel-pager';
 import { commitsDismiss } from '@/lib/video-hold-gestures';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -335,6 +335,13 @@ const SMOOTH_TRANSITION = {
   ease: [0.25, 0.1, 0.25, 1], // CSS ease-out equivalent
 } as const;
 
+// Desktop paging: a slightly springy settle (damping ratio ~0.85), so a wheel
+// or trackpad swipe lands with a little life instead of a flat tween. The page
+// and the drag offset share it, so their sum moves as one spring.
+const PAGE_SPRING = { type: 'spring', stiffness: 400, damping: 34, mass: 1 } as const;
+// A half push that springs back: bouncier, it is the "not far enough" answer.
+const SNAP_BACK_SPRING = { type: 'spring', stiffness: 520, damping: 28, mass: 1 } as const;
+
 // Tap-to-restore band used while the mobile chrome is hidden: the lower part of
 // the frame where the overlays live, stopping short of VideoSlide's bottom 15%
 // seek strip so a restore tap never scrubs the timeline.
@@ -481,12 +488,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const root = containerRef.current;
     return root ? installFirstTap(root) : undefined;
   }, []);
-  // Turns the trackpad's continuous wheel stream into one step per swipe — see
-  // the wheel effect below and `createWheelGesture` for why it is not a timer.
-  // Lazily built into a ref rather than a memo: it carries the live gesture,
-  // and a memo React is free to discard would drop it mid-swipe.
-  const wheelGestureRef = useRef<ReturnType<typeof createWheelGesture>>();
-  if (!wheelGestureRef.current) wheelGestureRef.current = createWheelGesture();
+  // Turns the trackpad's continuous wheel stream into a drag that follows the
+  // fingers and pages one short per swipe — see `createWheelPager`. Lazily
+  // built into a ref rather than a memo: it carries the live gesture, and a
+  // memo React is free to discard would drop it mid-swipe.
+  const wheelPagerRef = useRef<ReturnType<typeof createWheelPager>>();
+  if (!wheelPagerRef.current) wheelPagerRef.current = createWheelPager();
   // The slide the pointer was last hit-tested onto — kept mounted, see
   // visibleIndices.
   const [pointerPinnedIndex, setPointerPinnedIndex] = useState<number | null>(null);
@@ -947,11 +954,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       setIsTransitioning(true);
       setCurrentIndex(prev => prev + 1);
     }
-    // Load more when within 3 items of the end
-    if (currentIndex >= shorts.length - 4 && hasMore && !isLoadingMore && onLoadMore) {
-      onLoadMore();
-    }
-  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore, isTransitioning, isMobile, showComments]);
+  }, [currentIndex, shorts.length, isTransitioning, isMobile, showComments]);
+
+  // Load more when within 3 items of the end, however the viewer got there —
+  // opened near the end, a swipe, a key, a wheel. It used to run only inside
+  // goToNext, so a page that arrived while sitting on the last short (or one
+  // that added nothing new) never asked again and the feed just stopped.
+  // A few tries per list length covers pages that bring nothing new without
+  // hammering a feed that keeps failing.
+  const loadMoreTries = useRef({ length: -1, tries: 0 });
+  useEffect(() => {
+    if (currentIndex < shorts.length - 4 || !hasMore || isLoadingMore || !onLoadMore) return;
+    const tries = loadMoreTries.current;
+    if (tries.length !== shorts.length) { tries.length = shorts.length; tries.tries = 0; }
+    if (tries.tries >= 4) return;
+    tries.tries++;
+    onLoadMore();
+  }, [currentIndex, shorts.length, hasMore, isLoadingMore, onLoadMore]);
 
   const goToPrev = useCallback(() => {
     if (minimizedRef.current) return;
@@ -972,6 +991,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const goToPrevRef = useRef(goToPrev);
   goToNextRef.current = goToNext;
   goToPrevRef.current = goToPrev;
+  // Where the wheel can go right now, so a push past either end rubber bands.
+  const wheelNavRef = useRef({ index: currentIndex, count: shorts.length });
+  wheelNavRef.current = { index: currentIndex, count: shorts.length };
+  const videoContainerRef = useRef(videoContainer);
+  videoContainerRef.current = videoContainer;
   useEffect(() => {
     if (isTransitioning || !queuedStep.current) return;
     const step = queuedStep.current;
@@ -984,11 +1008,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   //
   // A trackpad fires a long *burst* of wheel events per physical swipe — a
   // captured flick ran 31 events over 983ms — so guarding only on
-  // `isTransitioning` let one swipe advance several videos. The step rule that
-  // solves that lives in `createWheelGesture`; it reads its timing off the
-  // events rather than a timer, because the version that waited for a 220ms
-  // `setTimeout` to fire between swipes lost that race under load and left the
-  // feed dead until the pointer was nudged.
+  // `isTransitioning` let one swipe advance several videos. `createWheelPager`
+  // turns it into a drag: the short follows the fingers, a push that stops
+  // short springs back (the 160ms quiet timer below, the only timer, where
+  // being late is harmless), and a swipe pages once while its inertia tail is
+  // ignored. Its timing is read off the events: overlapping swipes leave no
+  // silence to wait for.
   //
   // Bound to `window`, NOT to the viewer element. Advancing a slide unmounts the
   // node the browser latched this wheel gesture to (the render window drops the
@@ -1026,16 +1051,38 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // `e.timeStamp`, not `performance.now()`: it is when the event was
       // created, so a janked main thread delivering a batch late still reports
       // the real spacing between swipes.
-      const step = wheelGestureRef.current!.read(e.deltaY, e.timeStamp);
-      if (step === 'next') goToNextRef.current();
-      else if (step === 'prev') goToPrevRef.current();
+      const { index, count } = wheelNavRef.current;
+      const frameHeight = videoContainerRef.current?.clientHeight || window.innerHeight;
+      const { offset, step } = wheelPagerRef.current!.read({
+        deltaY: e.deltaY,
+        deltaMode: e.deltaMode,
+        wheelDeltaY: (e as WheelEvent & { wheelDeltaY?: number }).wheelDeltaY,
+        timeStamp: e.timeStamp,
+      }, frameHeight, index < count - 1, index > 0);
+      if (step) {
+        // The short is already part way there under the fingers; the page
+        // change and this offset settle on the same spring from where it is.
+        animate(dragOffset, 0, PAGE_SPRING);
+        if (step === 'next') goToNextRef.current();
+        else goToPrevRef.current();
+      } else if (offset !== null) {
+        dragOffset.stop();
+        dragOffset.set(offset);
+      }
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => {
+        settleTimer = undefined;
+        if (wheelPagerRef.current!.settle()) animate(dragOffset, 0, SNAP_BACK_SPRING);
+      }, 160);
     };
 
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
     window.addEventListener('wheel', handleWheel, { passive: false, capture: true });
     return () => {
+      if (settleTimer) clearTimeout(settleTimer);
       window.removeEventListener('wheel', handleWheel, { capture: true });
     };
-  }, []);
+  }, [dragOffset]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -1043,8 +1090,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
-      if (e.key === 'ArrowDown' || e.key === 'j') goToNext();
-      else if (e.key === 'ArrowUp' || e.key === 'k') goToPrev();
+      // A held arrow pages at the transition's pace instead of queueing a
+      // step behind every auto-repeat.
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && e.repeat && transitioningRef.current) {
+        e.preventDefault();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); goToNext(); }
+      else if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); goToPrev(); }
       else if (e.key === 'Escape') {
         // Esc steps back one level, it does not close everything: from
         // fullscreen it returns to the windowed viewer. Browsers normally
@@ -1646,7 +1699,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     animate={{
                       y: `${offset * 100}%`,
                     }}
-                    transition={SMOOTH_TRANSITION}
+                    transition={isMobile ? SMOOTH_TRANSITION : PAGE_SPRING}
                     style={{ zIndex: isActive ? 2 : 1 }}
                   >
                     <motion.div className="absolute inset-0" style={{ y: dragOffset }}>
