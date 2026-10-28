@@ -54,6 +54,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import type { ChatCreatorBadge } from '@/lib/live/chat-badges';
+import type { BadgeLock } from '@/lib/staking-badges';
 import { useFocusChatMessage, chatMessageDomId } from '@/hooks/use-focus-chat-message';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
@@ -93,8 +94,8 @@ function CreatorBadges({ badges }: { badges?: ChatCreatorBadge[] }) {
 }
 
 /** Live chat badge */
-function LiveChatBadge({ badgeBalance, username }: { badgeBalance?: number | null; username?: string | null }) {
-  return <BadgeIcon badgeBalance={badgeBalance} username={username} className="w-[1em] h-[1em]" />;
+function LiveChatBadge({ badgeBalance, badgeLock, username }: { badgeBalance?: number | null; badgeLock?: BadgeLock | null; username?: string | null }) {
+  return <BadgeIcon badgeBalance={badgeBalance} badgeLock={badgeLock} username={username} className="w-[1em] h-[1em]" />;
 }
 
 /** Translatable text message with inline translate button */
@@ -580,7 +581,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
                           {displayName}
                         </span>
-                        <LiveChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
+                        <LiveChatBadge badgeBalance={msg.sender_badge_balance} badgeLock={msg.sender_badge_lock} username={msg.sender_username} />
                         <CreatorBadges badges={msg.sender_creator_badges} />
                       </span>
                       {isPinned && <Pin className="w-2.5 h-2.5 text-blue-400 fill-current shrink-0" />}
