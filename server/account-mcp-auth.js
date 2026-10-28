@@ -326,6 +326,7 @@ export class AccountMcpAuth {
       if (url.pathname.startsWith('/mcp/oauth/')) return await this.oauth(request, url);
       if (url.pathname === '/mcp/health' && request.method === 'GET') return json({ status: 'ok', version: '3.0.0', tools: accountTools.length });
       if (url.pathname !== '/mcp') return json({ error: 'Unknown route.' }, 404);
+      if (request.method === 'GET' && (request.headers.get('Accept') || '').includes('text/html')) return new Response(null, { status: 302, headers: { Location: `${ORIGIN}/connect`, 'Cache-Control': 'no-store' } });
       if (request.method !== 'POST') return json({ error: 'Use Streamable HTTP POST.' }, 405, { Allow: 'POST, OPTIONS' });
       let grant;
       try { grant = await this.bearer(request); } catch { return json({ error: 'Link your DeHub account again.' }, 401, { 'WWW-Authenticate': challenge() }); }
