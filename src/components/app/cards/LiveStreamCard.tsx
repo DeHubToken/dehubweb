@@ -91,6 +91,7 @@ import {
 } from '@/lib/live-ingest';
 import type { WhepState, WhepSubscription } from '@/lib/livepeer/whep';
 import { nativeLiveEdge, watchLiveProgress } from '@/lib/live/stall-watchdog';
+import { forgetWhepSilent, hasRealPicture, rememberWhepSilent, whepRecentlySilent } from '@/lib/live/whep-memory';
 import { peekLiveSession, takeLiveSession } from '@/lib/live-handoff';
 import { useStreamActions, useStreamActivities } from '@/hooks/use-livestream';
 import { useBlockAuthor } from '@/hooks/use-block-author';
@@ -155,7 +156,9 @@ const logger = createLogger('LiveStreamCard');
  * The nasty case is not an error — it is a session that connects cleanly and
  * plays nothing, which has no event to listen for.
  */
-const WHEP_START_TIMEOUT_MS = 6000;
+// A working WebRTC session shows its first frame in about a second; waiting
+// 6s (twice, with the edge retry) put ~12s in front of every HLS fallback.
+const WHEP_START_TIMEOUT_MS = 3500;
 
 /** What the player overlay says while playback is struggling; worded at render. */
 type PlaybackError = 'reconnecting' | 'alternateSource' | 'connecting' | 'unavailable' | 'playFailed';
@@ -248,7 +251,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [giftBalanceVersion, setGiftBalanceVersion] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isBuffering, setIsBuffering] = useState(false);
+  // Starts loading: a live autoplays, so the first thing in the middle is the
+  // spinner, not a Play button that flips to a spinner a moment later.
+  const [isBuffering, setIsBuffering] = useState(true);
   // Keyed on the URLs' text, not the array: every refetch of the post builds
   // a fresh playbackUrls array, and the playback effects below (keyed on
   // urlsToTry) tore the player down and reloaded the stream each time, a
@@ -303,10 +308,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   // A handed-over session is already delivering frames, which answers the
   // Android worry below — keep it rather than dropping to HLS.
   const [transport, setTransport] = useState<'whep' | 'hls'>(
-    !bigEvent && (handoff || !preferAndroidHls()) && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
+    !bigEvent && (handoff || (!preferAndroidHls() && !whepRecentlySilent(whepPlaybackId))) && typeof RTCPeerConnection !== 'undefined' && !!whepPlaybackId ? 'whep' : 'hls'
   );
   // A source swap pauses the element; keep the viewer's intent through fallback.
   const playbackRequestedRef = useRef(true);
+  // The same intent as state, for what should follow it rather than the
+  // element: a browser pausing a muted live in a background tab, a buffer, or
+  // the WebRTC → HLS swap all pause the <video> without the viewer leaving.
+  const [playbackWanted, setPlaybackWantedState] = useState(true);
+  const setPlaybackWanted = useCallback((wanted: boolean) => {
+    playbackRequestedRef.current = wanted;
+    setPlaybackWantedState(wanted);
+  }, []);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!liveNow);
   const { broadcastPaused, broadcastEnded, waitingTooLong } = useLivePlaybackFeedback(stream.streamId, isBuffering, liveNow && !streamEnded, stream.liveStatus);
@@ -479,7 +492,10 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
    */
   const livePresence = useStreamPresence(
     stream.streamId,
-    !!stream.isLive && !streamEnded && isPlaying && !isOwnStream
+    // Following the viewer's intent, not the element: a tab switch or a
+    // stall paused the <video> and walked them out of the room ("left" in
+    // chat, the count dropping) while they were still watching.
+    !!stream.isLive && !streamEnded && playbackWanted && !isOwnStream
   );
 
   /*
@@ -568,7 +584,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
   // A handed-over session also overrides the Android HLS preference, since it
   // is already delivering frames.
   useEffect(() => {
-    if (!bigEvent && whepPlaybackId && (handoff || !preferAndroidHls()) && !whepFailedRef.current) setTransport('whep');
+    if (!bigEvent && whepPlaybackId && (handoff || (!preferAndroidHls() && !whepRecentlySilent(whepPlaybackId))) && !whepFailedRef.current) setTransport('whep');
   }, [whepPlaybackId, handoff, bigEvent]);
 
   // Fetch DHB balance when gift drawer opens
@@ -613,6 +629,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       // Latched: without it the promote-on-live effect below would flip the
       // transport straight back and the two would trade the element forever.
       whepFailedRef.current = true;
+      // Answered but never sent a picture: next open goes straight to HLS.
+      if (reason === 'no frames') rememberWhepSilent(whepPlaybackId);
       setTransport('hls');
     };
 
@@ -622,7 +640,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     const armStartTimer = () => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        if (!cancelled && !video.videoWidth) void failOver('no frames');
+        if (!cancelled && !hasRealPicture(video)) void failOver('no frames');
       }, WHEP_START_TIMEOUT_MS);
     };
 
@@ -632,9 +650,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     // "fallback" below is on the same unreachable host and saves nothing.
     // Livepeer streams skip straight to the ladder as before.
     let triedEdge = false;
+    let connected = false;
     const failOver = async (reason: string) => {
       if (cancelled) return;
-      if (!triedEdge && whepSource?.provider === 'mediamtx') {
+      // The edge route is for networks that can't reach the ingest host. A
+      // session that connected and still sent nothing is the stream itself,
+      // and a second wait over TURN only delays HLS.
+      if (!triedEdge && whepSource?.provider === 'mediamtx' && !(reason === 'no frames' && connected)) {
         triedEdge = true;
         const relay = await fetchTurnServers();
         if (relay.length) {
@@ -660,7 +682,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       armStartTimer();
       const onStateChange = (state: WhepState, detail?: string) => {
         if (cancelled) return;
-        if (state === 'playing') setError(null);
+        if (state === 'playing') { connected = true; setError(null); }
         else if (state === 'reconnecting') setError('reconnecting');
         else if (state === 'failed') void failOver(detail || 'connection failed');
       };
@@ -693,7 +715,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
           await video.play().catch(() => setIsBuffering(false));
         }
         videoPlaybackManager.register(videoId, () => {
-          playbackRequestedRef.current = false;
+          setPlaybackWanted(false);
           video.pause();
           setIsPlaying(false);
         }, undefined, undefined, () => video, true);
@@ -725,7 +747,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
         if (video.srcObject) video.srcObject = null;
       });
     };
-  }, [transport, whepPlaybackId, whepSource?.provider, streamEnded, videoId, stream.id]);
+  }, [transport, whepPlaybackId, whepSource?.provider, streamEnded, videoId, stream.id, setPlaybackWanted]);
 
   useEffect(() => {
     if (transport !== 'hls') return;
@@ -821,7 +843,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
       video.src = urlsToTry[0];
       resumePlayback();
       videoPlaybackManager.register(videoId, () => {
-        playbackRequestedRef.current = false;
+        setPlaybackWanted(false);
         video.pause();
         setIsPlaying(false);
       }, undefined, undefined, () => video, true);
@@ -969,7 +991,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     });
 
     videoPlaybackManager.register(videoId, () => {
-      playbackRequestedRef.current = false;
+      setPlaybackWanted(false);
       video.pause();
       setIsPlaying(false);
     }, undefined, undefined, () => video, true);
@@ -995,12 +1017,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     if (!video) return;
 
     if (isPlaying || isBuffering) {
-      playbackRequestedRef.current = false;
+      setPlaybackWanted(false);
       setIsBuffering(false);
       video.pause();
       videoPlaybackManager.stop(videoId);
     } else {
-      playbackRequestedRef.current = true;
+      setPlaybackWanted(true);
       setError(null);
       setIsBuffering(true);
       videoPlaybackManager.play(videoId);
@@ -1608,8 +1630,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               onPlaying={(e) => {
                 if (!visualActivity.isLivePlaybackAllowed() && !isVideoInPictureInPicture(e.currentTarget)) { e.currentTarget.pause(); return; }
                 setIsPlaying(true); setIsBuffering(false); setError(null);
+                if (e.currentTarget.srcObject && hasRealPicture(e.currentTarget)) forgetWhepSilent(whepPlaybackId);
               }}
-              onWaiting={() => setIsBuffering(true)}
+              onWaiting={(e) => { if (!e.currentTarget.paused) setIsBuffering(true); }}
               onPause={() => { setIsPlaying(false); setIsBuffering(false); }}
               /* A live element "ends" whenever its source does: a WebRTC
                  session closed during failover, or a playlist Safari gave up
@@ -1640,7 +1663,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
               </div>
             )}
             
-            <div className={cn('absolute inset-0 flex items-center justify-center bg-black/30 transition-opacity', isPlaying ? 'opacity-0 hover:opacity-100 focus-within:opacity-100' : 'opacity-100')}>
+            {/* While the picture is loading the spinner is the only thing in
+                the middle: the play/pause button stays tappable but never
+                draws over it. A paused live shows Play and no spinner. */}
+            <div className={cn('absolute inset-0 flex items-center justify-center transition-opacity',
+              isBuffering && !error && !broadcastPaused
+                ? 'opacity-0'
+                : isPlaying ? 'bg-black/30 opacity-0 hover:opacity-100 focus-within:opacity-100' : 'bg-black/30 opacity-100')}>
               <button
                 onClick={togglePlay}
                 aria-label={isPlaying ? t('audioPost.pause', 'Pause') : t('audioPost.play', 'Play')}
