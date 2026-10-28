@@ -1713,6 +1713,8 @@
       "fractionPurchased": "{{name}} اشترى كسرات من مشاركتك",
       "repostedPosts": "{{name}} reposted {{count}} من مشاركاتك",
       "commentMention": "{{name}} ذكرتك في تعليق",
+      "liveChatMention": "{{name}} ذكرّك بالدردشة الحية",
+      "publicChatMention": "{{name}} ذكرّك في شات عام",
       "followRequest": "{{name}} طلبت أن تتبعها",
       "bountyReplyNamed": "{{name}} ردت على مناقشة {{title}}",
       "bountyReply": "{{name}} ردت على مناقشة",

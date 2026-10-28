@@ -1728,6 +1728,8 @@
       "fractionPurchased": "{{name}} ଆପଣଙ୍କ ପୋଷ୍ଟର ଫ୍ରାକ୍ସନ କିଣିଛନ୍ତି",
       "repostedPosts": "{{name}} ଆପଣଙ୍କ {{count}} ଟି ପୋଷ୍ଟକୁ ରିପୋଷ୍ଟ କରିଛନ୍ତି",
       "commentMention": "{{name}} ଏକ ମନ୍ତବ୍ୟରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରାଯାଇଛି",
+      "liveChatMention": "{{name}} Live Chat ରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରାଯାଇଛି",
+      "publicChatMention": "{{name}} ସାର୍ବଜନୀନ ଚାଟରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରାଯାଇଛି",
       "followRequest": "{{name}} ଆପଣଙ୍କୁ ଅନୁସରଣ କରିବାକୁ ଅନୁରୋଧ କରାଯାଇଛି",
       "bountyReplyNamed": "{{name}} ଆପଣଙ୍କ ବାଉଣ୍ଟି “{{title}}” ର ଉତ୍ତର ଦେଇଛନ୍ତି",
       "bountyReply": "{{name}} ଆପଣଙ୍କ ବାଉଣ୍ଟିର ଉତ୍ତର ଦେଇଛନ୍ତି",

@@ -1745,6 +1745,7 @@
       "fractionPurchased": "{{name}} y’i ka positi kɛrɛfɛn san",
       "repostedPosts": "{{name}} y’i ka positi {{count}} kɛrɛfɛn kɛ",
       "commentMention": "{{name}} y’i tɔgɔ fɔ kɔmenti dɔ kɔnɔ",
+      "publicChatMention": "{{name}} mention i ka jama ka baro la",
       "followRequest": "{{name}} y’a ɲini ka i ladɛrɛ",
       "bountyReplyNamed": "{{name}} y’a jaabi i ka bunti “{{title}}”",
       "bountyReply": "{{name}} y’a jaabi i ka bunti",

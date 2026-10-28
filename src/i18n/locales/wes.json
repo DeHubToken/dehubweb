@@ -1696,6 +1696,7 @@
       "fractionPurchased": "{{name}} buy fractions blong post blong yu",
       "repostedPosts": "{{name}} repost {{count}} blong post blong yu",
       "commentMention": "{{name}} mention yu long koment",
+      "postMention": "{{name}} mention you for one post",
       "followRequest": "{{name}} ask to follo yu",
       "bountyReplyNamed": "{{name}} replai to yu bounty “{{title}}”",
       "bountyReply": "{{name}} replai to yu bounty",
