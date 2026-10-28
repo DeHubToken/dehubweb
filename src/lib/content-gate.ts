@@ -82,6 +82,20 @@ export function subscriberPlanPrice(
 }
 
 /**
+ * A plan price for the gate buttons ("Subscribe from N"). Whole amounts read
+ * compact, as the rest of the feed does. A price under one token reads "<1":
+ * rounding it gave "0", which told readers a paid plan was free.
+ */
+export function formatSubscriberPrice(price: number | undefined): string {
+  const n = Number(price);
+  if (!Number.isFinite(n) || n <= 0) return '0';
+  if (n < 1) return '<1';
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+  return String(Math.round(n * 100) / 100);
+}
+
+/**
  * The cheapest plan a reader could actually buy to get in. Unbuyable plans are
  * skipped because naming their price is an invitation to a disabled button.
  */
