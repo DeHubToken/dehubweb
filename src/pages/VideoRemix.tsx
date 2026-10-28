@@ -25,10 +25,10 @@ async function checkSource(sourceUrl: string, mode: RemixMode) {
       isLocked: post.is_locked || post.streamInfo?.isLockContent,
       lockedPrice: post.locked_price ?? post.streamInfo?.lockContentAmount,
       subscriberPlans: extra.plansDetails ?? extra.plans })) throw new Error('This video is unavailable for remixing.');
-  // The creator's "Allow duets" setting, checked by the server for this viewer.
-  if (mode === 'duet') {
-    const verdict = await checkRemix(sourceTokenId(sourceUrl), 'duet');
-    if (!verdict.allowed) throw new Error(verdict.reason || 'The creator does not allow duets on this video.');
+  // The creator's "Allow duets" / "Allow stitches" setting, checked by the server for this viewer.
+  if (mode === 'duet' || mode === 'stitch') {
+    const verdict = await checkRemix(sourceTokenId(sourceUrl), mode);
+    if (!verdict.allowed) throw new Error(verdict.reason || `The creator does not allow ${mode === 'duet' ? 'duets' : 'stitches'} on this video.`)
   }
 }
 
@@ -43,9 +43,9 @@ export default function VideoRemix() {
   const [error, setError] = useState('');
   const [available, setAvailable] = useState(false);
   const config = useMemo<RemixStudioConfig | null>(() => {
-    // "collab" is the old name of duet; keep links and history entries working.
-    const mode: RemixMode | undefined = state?.mode === 'collab' ? 'duet' : state?.mode;
-    if (!state || !mode || !['green-screen', 'duet', 'sound', 'cut'].includes(mode)
+    // "collab" and "cut" are the old names of duet and stitch; keep links and history entries working.
+    const mode: RemixMode | undefined = state?.mode === 'collab' ? 'duet' : state?.mode === 'cut' ? 'stitch' : state?.mode;
+    if (!state || !mode || !['green-screen', 'duet', 'sound', 'stitch'].includes(mode)
       || typeof state.videoUrl !== 'string' || !state.videoUrl.startsWith('https://')
       || typeof state.sourceUrl !== 'string' || !/^https:\/\/dehub\.io\/app\/post\/[^/?#]+$/.test(state.sourceUrl)) return null;
     return { mode, videoUrl: state.videoUrl, sourceUrl: state.sourceUrl,
@@ -79,7 +79,7 @@ export default function VideoRemix() {
         if (closed) return;
         if (typeof data.dataUrl !== 'string' || data.dataUrl.length > 34 * 1024 * 1024
           || !/^data:video\/(webm|mp4);base64,[A-Za-z0-9+/]+=*$/.test(data.dataUrl)
-          || !Number.isFinite(data.duration) || data.duration <= .25 || data.duration > (config.mode === 'duet' ? DUET_MAX_SECONDS + 1 : 61)
+          || !Number.isFinite(data.duration) || data.duration <= .25 || data.duration > (config.mode === 'duet' ? DUET_MAX_SECONDS + 1 : config.mode === 'stitch' ? 66 : 61)
           || data.width !== 720 || ![720, 1280].includes(data.height)) throw new Error('Invalid recording. Please try another take.');
         const response = await fetch(data.dataUrl);
         const blob = await response.blob();
@@ -92,11 +92,12 @@ export default function VideoRemix() {
         const previous = useEditorStore.getState().toSnapshot();
         if (previous.clips.length) await saveProject(previous);
         const project: ProjectSnapshot = {
-          id: crypto.randomUUID(), title: `${config.mode === 'duet' ? 'Duet' : config.mode}: ${config.title}`, updatedAt: Date.now(),
+          id: crypto.randomUUID(), title: `${config.mode === 'duet' ? 'Duet' : config.mode === 'stitch' ? 'Stitch' : config.mode}: ${config.title}`, updatedAt: Date.now(),
           settings: { ...DEFAULT_SETTINGS, width: 720, height: data.height, aspectPreset: data.height === 720 ? '1:1' : '9:16',
             remixSource: { url: config.sourceUrl, creator: config.creator, title: config.title,
               ...(config.mode === 'duet' ? { mode: 'duet' as const, tokenId: sourceTokenId(config.sourceUrl),
-                layout: typeof data.layout === 'string' ? data.layout : undefined } : {}) } },
+                layout: typeof data.layout === 'string' ? data.layout : undefined } : {}),
+              ...(config.mode === 'stitch' ? { mode: 'stitch' as const, tokenId: sourceTokenId(config.sourceUrl) } : {}) } },
           tracks: [{ id: 'remix', kind: 'video', name: 'Remix', muted: false, hidden: false }],
           clips: [{ id: crypto.randomUUID(), trackId: 'remix', kind: 'video', mediaId, start: 0,
             trimIn: 0, duration: data.duration, sourceDuration: data.duration, label: `Remix: ${config.title}`, href: config.sourceUrl }],

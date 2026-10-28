@@ -29,7 +29,7 @@
     "duet": "Dúo",
     "green-screen": "Pantalla verde",
     "sound": "Usar este sonido",
-    "cut": "Recortar este video",
+    "stitch": "Stitch",
     "selectSource": "Abre las opciones de un video y elige Remix para empezar."
   },
   "remixLinks": {
@@ -39,6 +39,27 @@
       "stitch": "{{name}} hizo un stitch de tu video",
       "react": "{{name}} reaccionó a tu video",
       "reactLive": "{{name}} está reaccionando en directo a tu video"
+    },
+    "linkFailed": "Tu publicación está activa, pero no se pudo vincular al video original.",
+    "settingsHeading": "Remezclas",
+    "policy": {
+      "default": "Mi predeterminado",
+      "everyone": "Todos",
+      "followers": "Seguidores",
+      "nobody": "Nadie"
+    },
+    "stitch": {
+      "allow": "Permitir stitches",
+      "allowDesc": "Quién puede usar hasta 5 segundos de tus videos en los suyos. También puedes cambiarlo en cada publicación.",
+      "saveFailed": "No se pudo guardar tu ajuste de stitch. Inténtalo de nuevo.",
+      "settingFailed": "Tu publicación está activa, pero su ajuste de stitch no se guardó. Cámbialo desde Editar publicación.",
+      "from": "Stitch de {{name}}",
+      "count_one": "{{count}} stitch",
+      "count_other": "{{count}} stitches",
+      "listTitle": "Stitches",
+      "listFailed": "No se pudieron cargar los stitches. Inténtalo de nuevo.",
+      "listEmpty": "Aún no hay stitches.",
+      "unavailable": "Este video ya no está disponible para stitches."
     }
   },
   "dehubAppPage": {

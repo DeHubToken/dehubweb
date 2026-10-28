@@ -15,7 +15,7 @@ export interface RemixSource {
 }
 const modes = [
   ['green-screen', 'Green screen', Camera], ['duet', 'Duet', Columns2],
-  ['sound', 'Use this sound', Music2], ['cut', 'Cut this video', Scissors],
+  ['sound', 'Use this sound', Music2], ['stitch', 'Stitch', Scissors],
 ] as const;
 
 export function RemixMenuItems({ source, onStart, isOwner = false }: { source: RemixSource; onStart: () => void; isOwner?: boolean }) {
@@ -24,6 +24,7 @@ export function RemixMenuItems({ source, onStart, isOwner = false }: { source: R
   const { walletAddress } = useAuth();
   // Unknown until the menu opens; Duet shows meanwhile and the recorder re-checks.
   const [duetAllowed, setDuetAllowed] = useState(true);
+  const [stitchAllowed, setStitchAllowed] = useState(true);
   const [duets, setDuets] = useState(0);
   const [policy, setPolicy] = useState<RemixPolicy | ''>('');
 
@@ -36,9 +37,13 @@ export function RemixMenuItems({ source, onStart, isOwner = false }: { source: R
         .then(({ settings }) => setPolicy(settings.duet.post ?? '')).catch(() => {});
     } else if (walletAddress) {
       void checkRemix(tokenId, 'duet').then(verdict => setDuetAllowed(verdict.allowed));
+      void checkRemix(tokenId, 'stitch').then(verdict => setStitchAllowed(verdict.allowed));
     } else if (source.creatorAddress) {
       void getRemixSettings(source.creatorAddress, tokenId)
-        .then(({ settings }) => setDuetAllowed(settings.duet.effective !== 'nobody')).catch(() => {});
+        .then(({ settings }) => {
+          setDuetAllowed(settings.duet.effective !== 'nobody');
+          setStitchAllowed(settings.stitch.effective !== 'nobody');
+        }).catch(() => {});
     }
   };
 
@@ -55,7 +60,7 @@ export function RemixMenuItems({ source, onStart, isOwner = false }: { source: R
 
   return <details className="rounded-xl border border-white/10" onToggle={event => { if ((event.currentTarget as HTMLDetailsElement).open) load(); }}>
     <summary className="cursor-pointer px-4 py-3 text-white">{t('videoRemix.menu', { defaultValue: 'Remix' })}</summary>
-    {modes.filter(([mode]) => mode !== 'duet' || duetAllowed || isOwner).map(([mode, label, Icon]) => <button key={mode} type="button"
+    {modes.filter(([mode]) => isOwner || (mode === 'duet' ? duetAllowed : mode === 'stitch' ? stitchAllowed : true)).map(([mode, label, Icon]) => <button key={mode} type="button"
       className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-white hover:bg-white/10"
       onClick={() => { onStart(); navigate('/creator/remix', { state: { ...source, mode: mode as RemixMode } }); }}>
       <Icon className="h-5 w-5" />{t(`videoRemix.${mode}`, { defaultValue: label })}

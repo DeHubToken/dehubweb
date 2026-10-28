@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
+import { saveRemixSettings, type RemixPolicy } from '@/lib/remix-links';
 import { buyTokensLabel, dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
@@ -365,6 +366,8 @@ export function usePostForm(
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   // Who may reply. Anyone, unless the creator narrows it.
   const [replyPolicy, setReplyPolicy] = useState<ReplyPolicy>('public');
+  // Who may stitch a video post. null follows the account's setting.
+  const [stitchPolicy, setStitchPolicy] = useState<RemixPolicy | null>(null);
   // Who may see the post. Everyone, unless the creator narrows it; fixed once posted.
   const [visibility, setVisibility] = useState<PostVisibility>('public');
   const [isEnhancing, setIsEnhancing] = useState(false);
@@ -1225,6 +1228,7 @@ export function usePostForm(
     setContentWarning(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
+    setStitchPolicy(null);
     setVisibility('public');
     setScheduledDate(null);
     setTitleText.complete(titleText, '');
@@ -2051,6 +2055,12 @@ export function usePostForm(
         throw new Error('Invalid response from backend - missing token ID');
       }
       onPosted?.(String(mintResponse.createdTokenId));
+      // A Supabase row of its own, so it cannot ride on the mint. Reported, not thrown: the post is up.
+      if (stitchPolicy && postType === 'video' && !mintResponse.duplicate) {
+        void saveRemixSettings({ tokenId: String(mintResponse.createdTokenId), allowStitch: stitchPolicy }).catch(() => {
+          toast.error(_copy("remixLinks.stitch.settingFailed", { defaultValue: "Your post is up, but its stitch setting was not saved. Change it from Edit post." }));
+        });
+      }
 
       /**
        * Put the picked store listings on the post, now that it has a tokenId.
@@ -2750,7 +2760,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility,
+    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 
@@ -2786,6 +2796,7 @@ export function usePostForm(
       contentWarning,
       quotePolicy,
       replyPolicy,
+      stitchPolicy,
       visibility,
       isEnhancing,
       isPosting,
@@ -2828,6 +2839,7 @@ export function usePostForm(
       setPoll,
       setContentWarning,
       setQuotePolicy,
+      setStitchPolicy,
       setReplyPolicy,
       setVisibility,
       handleImageSelect,
