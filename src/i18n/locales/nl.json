@@ -7965,6 +7965,8 @@
     "footerNote": "DePin-deelname is een bijdrageservice, geen beleggingsproduct. Beschikbaarheid, geschiktheid en beloningen kunnen veranderen."
   },
   "creatorFlow": {
+    "signInForAudioLibrary": "Log in om je privébibliotheek met opgeslagen audio te openen.",
+    "audioLibraryFailed": "Je opgeslagen audio kon niet worden geladen. Probeer het opnieuw.",
     "retryFreeTask": "Gratis taak opnieuw proberen",
     "previewSavedMedia": "Opgeslagen media bekijken",
     "audioSavePending": "De audio is klaar, maar het opslaan in de privébibliotheek is nog bezig. Hervat om het resultaat op te halen.",
