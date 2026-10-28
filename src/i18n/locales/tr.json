@@ -1230,7 +1230,16 @@
     "payDirect": "{{chain}} üzerinde {{symbol}} olarak doğrudan {{name}} kişisine gönderilir. Takas yok.",
     "payDirectNoName": "{{chain}} üzerinde {{symbol}} olarak doğrudan içerik üreticisine gönderilir. Takas yok.",
     "payViaBridgeDpay": "Base'e taşındı ve DeHub Pay'e ödendi, tokenlar yaklaşık bir dakika içinde gelir",
-    "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
+    "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!",
+    "addMessage": "Mesaj ekle (isteğe bağlı)",
+    "messagePlaceholder": "Bahşişinle bir şey söyle",
+    "messagePublic": "Herkese açık",
+    "messagePrivate": "Yalnızca {{name}}",
+    "theCreator": "içerik üreticisi",
+    "messageWallNote": "Bahşiş onaylanınca bahşiş duvarında görünür.",
+    "sendWithMessage": "Mesajla gönder",
+    "messageFailed": "Mesajın eklenemedi. Bahşiş gönderilmedi.",
+    "wallLabel": "Bahşiş mesajları"
   },
   "postOptions": {
     "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",

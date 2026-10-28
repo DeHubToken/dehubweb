@@ -1230,7 +1230,16 @@
     "payDirect": "Sent straight to {{name}} in {{symbol}} on {{chain}}. No swap.",
     "payDirectNoName": "Sent straight to the creator in {{symbol}} on {{chain}}. No swap.",
     "payViaBridgeDpay": "Moved to Base and paid to DeHub Pay, tokens arrive in about a minute",
-    "dmSent": "Sent {{amount}} tokens to {{name}}!"
+    "dmSent": "Sent {{amount}} tokens to {{name}}!",
+    "addMessage": "Add a message (optional)",
+    "messagePlaceholder": "Say something with your tip",
+    "messagePublic": "Public",
+    "messagePrivate": "Only {{name}}",
+    "theCreator": "the creator",
+    "messageWallNote": "Shows on the tip wall once the tip goes through.",
+    "sendWithMessage": "Send with message",
+    "messageFailed": "Your message could not be added. No tip was sent.",
+    "wallLabel": "Tip messages"
   },
   "postOptions": {
     "liveAlertsOn": "Following {{name}}. You'll get a notification when they go live.",
