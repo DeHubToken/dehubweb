@@ -8,7 +8,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Uses the livechat_messages table with realtime subscriptions.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Loader2, RotateCcw, Pin } from "lucide-react";
@@ -52,7 +53,7 @@ import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
+import { useHoldMenu } from '@/hooks/use-hold-menu';
 import type { ChatCreatorBadge } from '@/lib/live/chat-badges';
 import type { BadgeLock } from '@/lib/staking-badges';
 import { useFocusChatMessage, chatMessageDomId } from '@/hooks/use-focus-chat-message';
@@ -98,9 +99,19 @@ function LiveChatBadge({ badgeBalance, badgeLock, username }: { badgeBalance?: n
   return <BadgeIcon badgeBalance={badgeBalance} badgeLock={badgeLock} username={username} className="w-[1em] h-[1em]" />;
 }
 
-/** Translatable text message with inline translate button */
-function TranslatableChatMsg({ content }: { content: string }) {
-  const { t, i18n } = useI18n();
+/** What the hold menu needs to offer Translate / Show original for one line. */
+interface TranslateHandle {
+  isTranslated: boolean;
+  toggle: () => void;
+}
+
+/**
+ * A text line. No Translate button on it: Translate lives in the line's hold /
+ * right-click menu, so the line only says what happened — translating, or
+ * translated with the way back.
+ */
+function TranslatableChatMsg({ content, onHandle }: { content: string; onHandle: (handle: TranslateHandle | null) => void }) {
+  const { t } = useI18n();
   const {
     isTranslated,
     translatedText,
@@ -111,31 +122,31 @@ function TranslatableChatMsg({ content }: { content: string }) {
     handleShowOriginal,
   } = useTextTranslation(content, 'chat');
 
+  useEffect(() => {
+    onHandle(isTooShort ? null : { isTranslated, toggle: isTranslated ? handleShowOriginal : handleTranslate });
+  }, [onHandle, isTooShort, isTranslated, handleTranslate, handleShowOriginal]);
+  useEffect(() => () => onHandle(null), [onHandle]);
+
   return (
     <div>
       <p className="text-sm text-zinc-300 break-words whitespace-pre-wrap">
         {renderTextWithLinks(isTranslated ? translatedText : content)}
       </p>
-      <div className="flex items-center gap-1 mt-0.5">
-        {!isTooShort && (
-          isTranslateLoading ? (
+      {!isTooShort && (isTranslateLoading || isTranslated || translateError) && (
+        <div className="flex items-center gap-1 mt-0.5">
+          {isTranslateLoading ? (
             <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
           ) : isTranslated ? (
             <button type="button" onClick={handleShowOriginal} className="flex min-h-8 items-center gap-1 text-xs text-zinc-300 hover:text-white transition-colors">
               <RotateCcw className="w-3 h-3" />
               {t('common.showOriginal')}
             </button>
-          ) : (
-            <button type="button" onClick={handleTranslate} className="flex min-h-8 items-center gap-1 text-xs text-zinc-300 hover:text-white transition-colors">
-              <Languages className="w-3 h-3" />
-              {LANGUAGE_NAMES[i18n.language] || i18n.language}
-            </button>
-          )
-        )}
-        {translateError && (
-          <span className="text-zinc-500 text-[10px]">{translateError}</span>
-        )}
-      </div>
+          ) : null}
+          {translateError && (
+            <span className="text-zinc-500 text-[10px]">{translateError}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -372,14 +383,31 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     }
   }, [t]);
 
-  const handleMessageContextMenu = useCallback((e: React.MouseEvent, msg: SupabaseLiveChatMessage) => {
-    // Opens for the host (pinning) and for whoever wrote the line (edit,
-    // delete). Everyone else keeps the browser's own menu.
-    if (!canModerate && !isMine(msg)) return;
-    e.preventDefault();
-    setContextMenuPos({ x: e.clientX, y: e.clientY });
+  // Each text line's Translate / Show original, for its menu.
+  const translateHandles = useRef(new Map<string, TranslateHandle>());
+  const translateHandleFor = useMemo(() => {
+    const cache = new Map<string, (handle: TranslateHandle | null) => void>();
+    return (id: string) => {
+      let fn = cache.get(id);
+      if (!fn) {
+        fn = (handle) => { if (handle) translateHandles.current.set(id, handle); else translateHandles.current.delete(id); };
+        cache.set(id, fn);
+      }
+      return fn;
+    };
+  }, []);
+
+  // Hold a line on a phone, or right-click it on desktop. Opens for anyone
+  // when the line can be translated, for the host (pinning, moderation) and
+  // for whoever wrote it (edit, delete). Otherwise the browser keeps its own.
+  const messageHold = useHoldMenu((point, target) => {
+    const id = target.closest('[data-live-msg]')?.getAttribute('data-live-msg');
+    const msg = id ? messages.find((m) => m.id === id) : undefined;
+    if (!msg || msg.message_type === 'system') return false;
+    if (!canModerate && !isMine(msg) && !translateHandles.current.has(msg.id)) return false;
+    setContextMenuPos(point);
     setContextMenuMsg(msg);
-  }, [canModerate, isMine]);
+  });
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
@@ -515,6 +543,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         ref={messagesContainerRef}
         // Scrolling the messages is not a swipe to the next short.
         data-shorts-scrollable
+        {...messageHold}
         className={cn(
           'overflow-y-auto overscroll-contain scrollbar-hide',
           overlay
@@ -570,7 +599,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                 key={msg.id}
                 id={chatMessageDomId(msg.id)}
                 ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
-                onContextMenu={(e) => handleMessageContextMenu(e, msg)}
+                data-live-msg={msg.id}
                 className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}${landClass(msg)}`}
               >
                 <div className="flex items-start gap-2">
@@ -619,7 +648,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                     ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
                       <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
-                      <TranslatableChatMsg content={msg.content} />
+                      <TranslatableChatMsg content={msg.content} onHandle={translateHandleFor(msg.id)} />
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
@@ -666,13 +695,28 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       </div>
 
       {/* Right-click context menu for host */}
-      {contextMenuMsg && (canModerate || isMine(contextMenuMsg)) && (
+      {/* Portalled: the chat often sits inside a blurred or transformed
+          panel, which turns `fixed` into "fixed to that panel" and threw the
+          menu off screen. */}
+      {contextMenuMsg && (canModerate || isMine(contextMenuMsg) || translateHandles.current.has(contextMenuMsg.id)) && createPortal(
         <div
           data-glass-menu
           className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
           style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
           onClick={(e) => e.stopPropagation()}
         >
+          {(() => {
+            const translate = translateHandles.current.get(contextMenuMsg.id);
+            return translate && (
+              <button
+                onClick={() => { setContextMenuMsg(null); translate.toggle(); }}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                {translate.isTranslated ? <RotateCcw className="w-3.5 h-3.5" /> : <Languages className="w-3.5 h-3.5" />}
+                {translate.isTranslated ? t('common.showOriginal') : t('comments.translate')}
+              </button>
+            );
+          })()}
           {isHost && (
             <button
               onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
@@ -725,7 +769,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               )}
             </>
           )}
-        </div>
+        </div>,
+        document.body,
       )}
 
       {/* Input */}
