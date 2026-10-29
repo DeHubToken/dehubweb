@@ -52,7 +52,7 @@ html[data-system-tone="light"] .login-stack-corner {
   align-self: start;
   flex-direction: column;
   gap: 8px;
-  animation: ls-up 32s linear infinite;
+  animation: ls-up 44s linear infinite;
   will-change: transform;
 }
 .login-stack__lane--down {
