@@ -7,11 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { badgeImage } from '@/lib/staking-badges';
 
 /**
- * The daily posting allowance, drawn as a ladder.
+ * The daily home-feed allowance, drawn as a ladder.
  *
- * Two things are true of every row and both matter: a badge buys a bigger free
- * allowance AND a cheaper rate on whatever runs past it. A table alone hides
- * the shape of the first — the apex tiers break away rather than continuing the
+ * Posting is never limited or charged; a badge decides how many text posts and
+ * how much media reach the public home feed each day, and anything past that
+ * goes to the creator's profile. A table alone hides the shape of the ladder — the apex tiers break away rather than continuing the
  * straight line — so the bar is the point of this component and the numbers sit
  * beside it rather than replacing it.
  *
@@ -31,37 +31,27 @@ interface AllowanceTier {
   threshold: string;
   postsPerDay: number;
   gbPerDay: number;
-  dhbPerTextPost: number;
-  dhbPerGb: number;
   image: string | null;
 }
 
 const TIERS: AllowanceTier[] = [
-  { get name() { return _translateCopy("copy.a39a305fab8b", { defaultValue: "No badge" }); }, threshold: '< 10,000', postsPerDay: 10, gbPerDay: 1, dhbPerTextPost: 100, dhbPerGb: 2000, image: null },
-  { name: 'Crab', threshold: '10,000+', postsPerDay: 11, gbPerDay: 1.1, dhbPerTextPost: 95, dhbPerGb: 1900, image: badgeImage('Crab') },
-  { name: 'Ghost Lobster', threshold: '25k+', postsPerDay: 12, gbPerDay: 1.2, dhbPerTextPost: 93, dhbPerGb: 1860, image: badgeImage('Ghost Lobster') },
-  { name: 'Piranha', threshold: '50k+', postsPerDay: 13, gbPerDay: 1.3, dhbPerTextPost: 91, dhbPerGb: 1820, image: badgeImage('Piranha') },
-  { name: 'Giant Tortoise', threshold: '100k+', postsPerDay: 14, gbPerDay: 1.4, dhbPerTextPost: 89, dhbPerGb: 1780, image: badgeImage('Giant Tortoise') },
-  { name: 'King Cobra', threshold: '250k+', postsPerDay: 15, gbPerDay: 1.5, dhbPerTextPost: 87, dhbPerGb: 1740, image: badgeImage('King Cobra') },
-  { name: 'Octopus', threshold: '500k+', postsPerDay: 16, gbPerDay: 1.6, dhbPerTextPost: 85, dhbPerGb: 1700, image: badgeImage('Octopus') },
-  { name: 'Crocodile', threshold: '1m+', postsPerDay: 17, gbPerDay: 1.7, dhbPerTextPost: 83, dhbPerGb: 1660, image: badgeImage('Crocodile') },
-  { name: 'Dolphin', threshold: '2m+', postsPerDay: 18, gbPerDay: 1.8, dhbPerTextPost: 81, dhbPerGb: 1620, image: badgeImage('Dolphin') },
-  { name: 'Tiger Shark', threshold: '3m+', postsPerDay: 19, gbPerDay: 1.9, dhbPerTextPost: 79, dhbPerGb: 1580, image: badgeImage('Tiger Shark') },
-  { name: 'Great White Shark', threshold: '5m+', postsPerDay: 20, gbPerDay: 2, dhbPerTextPost: 77, dhbPerGb: 1540, image: badgeImage('Great White Shark') },
-  { name: 'Killer Whale', threshold: '10m+', postsPerDay: 25, gbPerDay: 2.5, dhbPerTextPost: 75, dhbPerGb: 1500, image: badgeImage('Killer Whale') },
-  { name: 'Blue Whale', threshold: '25m+', postsPerDay: 50, gbPerDay: 5, dhbPerTextPost: 73, dhbPerGb: 1460, image: badgeImage('Blue Whale') },
-  { name: 'Megalodon', threshold: '50m+', postsPerDay: 100, gbPerDay: 10, dhbPerTextPost: 70, dhbPerGb: 1400, image: badgeImage('Megalodon') },
+  { get name() { return _translateCopy("copy.a39a305fab8b", { defaultValue: "No badge" }); }, threshold: '< 10,000', postsPerDay: 1, gbPerDay: 1, image: null },
+  { name: 'Crab', threshold: '10,000+', postsPerDay: 2, gbPerDay: 1.1, image: badgeImage('Crab') },
+  { name: 'Ghost Lobster', threshold: '25k+', postsPerDay: 2, gbPerDay: 1.2, image: badgeImage('Ghost Lobster') },
+  { name: 'Piranha', threshold: '50k+', postsPerDay: 2, gbPerDay: 1.3, image: badgeImage('Piranha') },
+  { name: 'Giant Tortoise', threshold: '100k+', postsPerDay: 3, gbPerDay: 1.4, image: badgeImage('Giant Tortoise') },
+  { name: 'King Cobra', threshold: '250k+', postsPerDay: 3, gbPerDay: 1.5, image: badgeImage('King Cobra') },
+  { name: 'Octopus', threshold: '500k+', postsPerDay: 3, gbPerDay: 1.6, image: badgeImage('Octopus') },
+  { name: 'Crocodile', threshold: '1m+', postsPerDay: 3, gbPerDay: 1.7, image: badgeImage('Crocodile') },
+  { name: 'Dolphin', threshold: '2m+', postsPerDay: 4, gbPerDay: 1.8, image: badgeImage('Dolphin') },
+  { name: 'Tiger Shark', threshold: '3m+', postsPerDay: 5, gbPerDay: 1.9, image: badgeImage('Tiger Shark') },
+  { name: 'Great White Shark', threshold: '5m+', postsPerDay: 6, gbPerDay: 2, image: badgeImage('Great White Shark') },
+  { name: 'Killer Whale', threshold: '10m+', postsPerDay: 7, gbPerDay: 2.5, image: badgeImage('Killer Whale') },
+  { name: 'Blue Whale', threshold: '25m+', postsPerDay: 8, gbPerDay: 5, image: badgeImage('Blue Whale') },
+  { name: 'Megalodon', threshold: '50m+', postsPerDay: 9, gbPerDay: 10, image: badgeImage('Megalodon') },
 ];
 
 const MAX_GB = TIERS[TIERS.length - 1].gbPerDay;
-
-/** DHB is sold at a fixed $0.001, so a price in DHB is a price in cents ÷ 10. */
-const DHB_USD = 0.001;
-
-const usd = (dhb: number) => {
-  const value = dhb * DHB_USD;
-  return value < 1 ? `${(value * 100).toFixed(1).replace(/\.0$/, '')}c` : `$${value.toFixed(2)}`;
-};
 
 const gbLabel = (gb: number) => (Number.isInteger(gb) ? `${gb} GB` : `${gb.toFixed(1)} GB`);
 
@@ -73,8 +63,8 @@ const AllowanceFootnote = () => {
 const PostingAllowanceChart = () => (
   <Card className="w-full">
     <CardHeader>
-      <CardTitle className="text-center font-exo"><TranslationText name="copy.bfec166eea05" fallback={"Daily posting allowance by badge"} /></CardTitle>
-      <p className="text-center text-sm text-muted-foreground font-exo"><TranslationText name="copy.23c4bdbfc9f8" fallback={"Free every day. The bar is the data allowance; the price on the right is what anything past it costs."} /></p>
+      <CardTitle className="text-center font-exo"><TranslationText name="copy.bfec166eea05" fallback={"Daily home feed allowance by badge"} /></CardTitle>
+      <p className="text-center text-sm text-muted-foreground font-exo"><TranslationText name="copy.23c4bdbfc9f8" fallback={"Post as much as you like. The bar is the data that reaches the home feed each day; past it, posts go to your profile."} /></p>
     </CardHeader>
     <CardContent>
       <div className="grid gap-2">
@@ -107,7 +97,7 @@ const PostingAllowanceChart = () => (
                 <div
                   className="mt-2 h-2 w-full rounded-full bg-muted overflow-hidden"
                   role="img"
-                  aria-label={_translateCopy("copy.d300f01abdea", { defaultValue: "{{value1}} of media and {{value2}} text posts free per day", value1: gbLabel(tier.gbPerDay), value2: tier.postsPerDay })}
+                  aria-label={_translateCopy("copy.d300f01abdea", { defaultValue: "{{value1}} of media and {{value2}} text posts on the home feed per day", value1: gbLabel(tier.gbPerDay), value2: tier.postsPerDay })}
                 >
                   <div
                     className="h-full rounded-full bg-foreground/70"
@@ -122,9 +112,6 @@ const PostingAllowanceChart = () => (
                     <span className="text-muted-foreground"> · </span>
                     <strong className="font-semibold">{tier.postsPerDay}</strong>
                     <span className="text-muted-foreground"><TranslationText name="copy.a092b4b19981" fallback={" text posts"} /></span>
-                  </span>
-                  <span className="text-xs text-muted-foreground font-mono"><TranslationText name="copy.ce580a215203" fallback={"then "} />{tier.dhbPerGb.toLocaleString()} <DhbCoin />/GB ({usd(tier.dhbPerGb)}) ·{' '}
-                    {tier.dhbPerTextPost} <DhbCoin /><TranslationText name="copy.8a1719815fd8" fallback={"/post ("} />{usd(tier.dhbPerTextPost)})
                   </span>
                 </div>
               </div>
