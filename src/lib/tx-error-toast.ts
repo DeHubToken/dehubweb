@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { isWalletLockedError, parseTxError } from '@/lib/contracts/aa-utils';
+import { isWalletLockedError, parseTxError } from '@/lib/contracts/tx-errors';
 
 /**
  * Toast a transaction failure — unless nothing failed.

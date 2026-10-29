@@ -5,8 +5,7 @@
  * Each token has 1000 fractions that can be owned by different wallets.
  */
 
-import { createPublicClient, http, parseAbiItem, encodeFunctionData, decodeFunctionResult, type Address, type Hex } from 'viem';
-import { base, bsc } from 'viem/chains';
+import type { Address, Hex } from 'viem';
 import { supabase } from '@/integrations/supabase/client';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
@@ -36,11 +35,6 @@ const BALANCE_OF_ABI = [{
   ],
   outputs: [{ type: 'uint256', name: '' }]
 }] as const;
-
-// ERC-1155 Transfer events ABI for finding holder addresses
-const TRANSFER_SINGLE_ABI = parseAbiItem(
-  'event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)'
-);
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const QUERY_TIMEOUT_MS = 15000; // 15 second timeout (increased for Alchemy)
@@ -163,10 +157,9 @@ export async function getTokenHolders(
       console.log(`[TokenHolders] Using RPC: ${rpcUrl.includes('alchemy') ? 'Alchemy' : 'Public'} for chain ${chainId}`);
       
       // Create client with the appropriate RPC
-      const client = createPublicClient({
-        chain: chainId === 8453 ? base : bsc,
-        transport: http(rpcUrl),
-      });
+      const { createChainClient, TRANSFER_SINGLE_ABI, encodeFunctionData, decodeFunctionResult } =
+        await import('./token-holders-rpc');
+      const client = createChainClient(chainId, rpcUrl);
       
       // Get current block number
       const currentBlock = await client.getBlockNumber();
@@ -303,10 +296,8 @@ export async function getFractionBalance(
 
   try {
     const endpoints = await getRpcEndpoints();
-    const client = createPublicClient({
-      chain: chainId === 8453 ? base : bsc,
-      transport: http(chainId === 8453 ? endpoints.base : endpoints.bsc),
-    });
+    const { createChainClient, encodeFunctionData, decodeFunctionResult } = await import('./token-holders-rpc');
+    const client = createChainClient(chainId, chainId === 8453 ? endpoints.base : endpoints.bsc);
 
     const result = await client.call({
       to: contractAddress,

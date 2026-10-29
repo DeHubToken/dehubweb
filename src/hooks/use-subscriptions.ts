@@ -16,8 +16,8 @@ import {
   primaryPlanChain,
   type SubscriptionPlan,
 } from '@/lib/api/dehub';
-import { publishPlanOnChain, normaliseDuration } from '@/lib/contracts';
-import { BASE_CHAIN_ID } from '@/lib/contracts';
+import { normaliseDuration } from '@/lib/contracts/subscription-plan';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -168,6 +168,9 @@ export function usePublishPlan() {
       if (!token) throw new Error(_translateCopy("copy.4190c289a568", { defaultValue: "Plan is missing a payment token" }));
 
       setStage('wallet');
+      // Loaded on publish: it brings the wallet stack, which a profile
+      // visitor looking at plans never needs.
+      const { publishPlanOnChain } = await import('@/lib/contracts/subscription');
       const { confirmed } = await publishPlanOnChain({
         planId,
         duration: plan.duration,
@@ -231,6 +234,9 @@ export function useCreatePlan() {
       const target = planData.chains[0];
 
       setStage('wallet');
+      // Loaded on publish: it brings the wallet stack, which a profile
+      // visitor looking at plans never needs.
+      const { publishPlanOnChain } = await import('@/lib/contracts/subscription');
       const { confirmed } = await publishPlanOnChain({
         planId: planId!,
         duration: planData.duration,
