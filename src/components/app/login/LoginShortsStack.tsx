@@ -76,24 +76,22 @@ function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
   );
 }
 
-/** Preview only: `?loginCols=4` shows four clips per row on desktop. */
-function previewColumnCount() {
-  if (typeof window === 'undefined') return 3;
-  return new URLSearchParams(window.location.search).get('loginCols') === '4' ? 4 : 3;
-}
+/** Desktop shows four lanes; phones keep two. */
+const DESKTOP_LANES = 4;
 
 export function LoginShortsStack() {
   const { t } = useTranslation();
-  const [count] = useState(previewColumnCount);
-  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS, Math.random, count === 4 ? 12 : 8));
   const isMobile = useIsMobile();
+  const count = DESKTOP_LANES;
+  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS, Math.random, 12));
   const selected = [...lanes.first, ...lanes.second];
   const perLane = Math.ceil(selected.length / count);
+  // Phones keep two lanes of four so they drift at the same speed as before.
   const columns = isMobile
-    ? [lanes.first, lanes.second]
+    ? [selected.slice(0, 4), selected.slice(4, 8)]
     : Array.from({ length: count }, (_, i) => selected.slice(i * perLane, (i + 1) * perLane));
   return (
-    <div className="login-stack" data-login-stack data-columns={isMobile ? undefined : count}>
+    <div className="login-stack" data-login-stack>
       <div className="login-stack__lanes" aria-hidden="true">
         {columns.map((clips, index) => <Lane key={index} clips={clips} reverse={index % 2 === 1} />)}
       </div>
