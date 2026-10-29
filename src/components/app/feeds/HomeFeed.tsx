@@ -1912,9 +1912,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         );
       })()}
 
-      {/* Active filter chips bar (sort, date, content access, categories) */}
+      {/* Active filter chips bar (sort, date, content access). Hashtags/categories
+          never show here — FollowTagBar under the live pill owns that. */}
       {(() => {
-        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0;
+        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked;
         if (!hasChips) return null;
 
         const chipsBar = (
@@ -1979,35 +1980,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
             )}
-            {optimisticCategories.map((rawCatId, index) => {
-              const catId = typeof rawCatId === 'string'
-                ? rawCatId
-                : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
-                  ? ((rawCatId as { categoryId: string }).categoryId)
-                  : null;
-
-              if (!catId) return null;
-
-              const catObj = categories.find(c => c.id === catId);
-              return (
-                <button
-                  data-filter-chip
-                data-active="true"
-                  key={`${catId}-${index}`}
-                  onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
-                  className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-                >
-                  <span className="leading-[1]">{catObj?.name || catId}</span>
-                  <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-                </button>
-              );
-            })}
             <button
               onClick={() => {
                 setSelectedSort(DEFAULT_HOME_SORT);
                 setSelectedDate(DATE_FILTER_OPTIONS[0]);
                 resetContentFilters();
-                setSelectedCategories([]);
               }}
               className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
             >{_copy("copy.29a390f9237e", { defaultValue: "Clear all" })}</button>
@@ -2115,8 +2092,15 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           )}
 
           {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
+          {/* Portaled into the sticky header slot (where filter chips sit) so it
+              stays pinned while the feed scrolls. */}
           {selectedCategories.length === 1 && (
-            <FollowTagBar tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
+            chipsTarget
+              ? createPortal(
+                  <FollowTagBar className="mt-2" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
+                  chipsTarget,
+                )
+              : <FollowTagBar className="mb-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*

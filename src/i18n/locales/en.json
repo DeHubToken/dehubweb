@@ -19793,5 +19793,15 @@
     "help2": "“Link your DeHub account” when you ask about your own posts: press Connect in the app’s connector settings.",
     "help3": "An error when you open the URL in a browser tab is normal. Paste it into your AI app instead.",
     "other": "Any other MCP app works the same way: add a remote MCP server and paste the URL above."
+  },
+  "avatarPrompt": {
+    "title": "Add a profile photo",
+    "body": "People spot you faster in feeds, comments and chats when you have a face or logo.",
+    "choose": "Choose a photo",
+    "another": "Choose another",
+    "save": "Use this photo",
+    "notNow": "Not now",
+    "saved": "Looking good",
+    "failed": "Could not save your photo. Try again."
   }
 }

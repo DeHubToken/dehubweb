@@ -57,9 +57,30 @@ export interface LiveChatUserProfile {
 }
 
 /**
+ * The chat panel and the public-chat unread tracker both open on boot and
+ * both ask for the room and its latest window within the same second. One
+ * answer serves both: in-flight calls share a promise, and the result is kept
+ * for a few seconds so a caller arriving just after reuses it.
+ */
+const SHARED_READ_MS = 5_000;
+const sharedReads = new Map<string, { at: number; promise: Promise<unknown> }>();
+function sharedRead<T>(key: string, load: () => Promise<T>): Promise<T> {
+  const hit = sharedReads.get(key);
+  if (hit && Date.now() - hit.at < SHARED_READ_MS) return hit.promise as Promise<T>;
+  const promise = load();
+  sharedReads.set(key, { at: Date.now(), promise });
+  promise.catch(() => sharedReads.delete(key));
+  return promise;
+}
+
+/**
  * GET /api/livechat/room — single global chat room info
  */
-export async function getLiveChatRooms(): Promise<LiveChatRoom[]> {
+export function getLiveChatRooms(): Promise<LiveChatRoom[]> {
+  return sharedRead('rooms', loadLiveChatRooms).then((rooms) => rooms.map((room) => ({ ...room })));
+}
+
+async function loadLiveChatRooms(): Promise<LiveChatRoom[]> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/room', {
       requiresAuth: false,
@@ -116,7 +137,17 @@ export async function getLiveChatRoom(roomId: string): Promise<LiveChatRoom> {
  * GET /api/livechat/messages — cursor-based pagination
  * Params: limit (max 100, default 50), before (message ID), after (message ID)
  */
-export async function getLiveChatMessages(
+export function getLiveChatMessages(
+  roomId: string,
+  params?: { page?: number; limit?: number; before?: string; after?: string }
+): Promise<LiveChatMessage[]> {
+  // Only the latest window is shared; paging and catch-up reads always go out.
+  if (params?.before || params?.after) return loadLiveChatMessages(roomId, params);
+  return sharedRead(`messages:${roomId}:${Math.min(params?.limit ?? 100, 100)}`, () => loadLiveChatMessages(roomId, params))
+    .then((messages) => messages.slice());
+}
+
+async function loadLiveChatMessages(
   roomId: string,
   params?: { page?: number; limit?: number; before?: string; after?: string }
 ): Promise<LiveChatMessage[]> {
