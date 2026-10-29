@@ -1733,6 +1733,12 @@
     "burstBody": "{{count}} नई सूचनाएं {{who}} से",
     "community": {
       "joined": "{{name}} आपके समुदाय में शामिल हुए",
+      "chatOne": "{{name}} ने एक संदेश भेजा",
+      "chatOneNamed": "{{name}} ने {{community}} में एक संदेश भेजा",
+      "chatTwo": "{{name}} और {{second}} ने संदेश भेजे",
+      "chatTwoNamed": "{{name}} और {{second}} ने {{community}} में संदेश भेजे",
+      "chatMany": "{{name}} + {{others}} अन्य ने संदेश भेजे",
+      "chatManyNamed": "{{name}} + {{others}} अन्य ने {{community}} में संदेश भेजे",
       "joinedNamed": "{{name}} “{{community}}” में शामिल हुए",
       "requested": "{{name}} को आपके समुदाय में शामिल होने के लिए कहा गया",
       "requestedNamed": "{{name}} को “{{community}}” में शामिल होने के लिए कहा गया",

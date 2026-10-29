@@ -1724,6 +1724,12 @@
     "burstBody": "{{count}}件の新しい通知 {{who}}さんから",
     "community": {
       "joined": "{{name}}さんがコミュニティに参加しました",
+      "chatOne": "{{name}}さんがメッセージを送信しました",
+      "chatOneNamed": "{{name}}さんが{{community}}でメッセージを送信しました",
+      "chatTwo": "{{name}}さんと{{second}}さんがメッセージを送信しました",
+      "chatTwoNamed": "{{name}}さんと{{second}}さんが{{community}}でメッセージを送信しました",
+      "chatMany": "{{name}}さんほか{{others}}人がメッセージを送信しました",
+      "chatManyNamed": "{{name}}さんほか{{others}}人が{{community}}でメッセージを送信しました",
       "joinedNamed": "{{name}}さんが「{{community}}」に参加しました",
       "requested": "{{name}}さんがコミュニティへの参加をリクエストしました",
       "requestedNamed": "{{name}}さんが「{{community}}」への参加をリクエストしました",

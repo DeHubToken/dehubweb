@@ -2067,6 +2067,12 @@
     "burstBody": "{{count}} nieuwe meldingen van {{who}}",
     "community": {
       "joined": "{{name}} is lid geworden van je community",
+      "chatOne": "{{name}} stuurde een bericht",
+      "chatOneNamed": "{{name}} stuurde een bericht in {{community}}",
+      "chatTwo": "{{name}} en {{second}} stuurden berichten",
+      "chatTwoNamed": "{{name}} en {{second}} stuurden berichten in {{community}}",
+      "chatMany": "{{name}} + {{others}} anderen stuurden berichten",
+      "chatManyNamed": "{{name}} + {{others}} anderen stuurden berichten in {{community}}",
       "joinedNamed": "{{name}} sloot zich aan bij “{{community}}”",
       "requested": "{{name}} gevraagd om lid te worden van je community",
       "requestedNamed": "{{name}} gevraagd om lid te worden van \"{{community}}\"",
