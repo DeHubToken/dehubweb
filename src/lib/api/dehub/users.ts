@@ -22,6 +22,8 @@ export interface AccountSummary {
   displayName?: string | null;
   avatarImageUrl?: string | null;
   badgeBalance?: number | null;
+  /** Grandfathered tier; raw, run it through parseBadgeLock. */
+  badgeLock?: unknown;
   isBanned?: boolean;
 }
 
@@ -48,6 +50,19 @@ export async function getAccountSummariesByUsernames(usernames: string[]): Promi
     body: { usernames: unique.slice(0, 100) },
   });
   return response?.result || [];
+}
+
+/** Addresses and usernames resolved together, in one request per hundred of each. */
+export async function getAccountSummariesMixed(addresses: string[], usernames: string[]): Promise<AccountSummary[]> {
+  const result: AccountSummary[] = [];
+  for (let start = 0; start < Math.max(addresses.length, usernames.length); start += 100) {
+    const response = await apiCall<{ result: AccountSummary[] }>('/api/account_info/batch', {
+      method: 'POST',
+      body: { addresses: addresses.slice(start, start + 100), usernames: usernames.slice(start, start + 100) },
+    });
+    result.push(...(response?.result || []));
+  }
+  return result;
 }
 
 /** Detect empty-shell API responses that return 200 but have no real user data */
