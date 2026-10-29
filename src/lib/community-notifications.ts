@@ -31,6 +31,7 @@ export const COMMUNITY_NOTIFICATION_TYPES = [
   'community_join',
   'community_mention',
   'community_here',
+  'community_chat',
 ] as const;
 
 export type CommunityNotificationType = (typeof COMMUNITY_NOTIFICATION_TYPES)[number];
@@ -64,12 +65,29 @@ type WithCustomFields = DeHubNotification & {
  * in the API's `tokenId`, which means a post and is not one here.
  */
 export function communityNotificationRef(notification: DeHubNotification): string | undefined {
-  return (notification as WithCustomFields)._customReferenceId;
+  return (notification as WithCustomFields)._customReferenceId || chatMeta(notification)?.communitySlug;
+}
+
+/**
+ * Grouped chat rows come from the DeHub API, not Supabase, so they carry the
+ * community and the people talking in `metadata` (backend
+ * community-chat-notification.service.ts).
+ */
+interface CommunityChatMeta {
+  communitySlug?: string;
+  communityName?: string;
+  senders?: { a: string; n: string }[];
+  senderCount?: number;
+}
+
+function chatMeta(notification: DeHubNotification): CommunityChatMeta | undefined {
+  if ((notification.type as string) !== 'community_chat') return undefined;
+  return (notification as DeHubNotification & { metadata?: CommunityChatMeta }).metadata;
 }
 
 /** The community's display name, when the row stored one. */
 export function communityNotificationTitle(notification: DeHubNotification): string | undefined {
-  return (notification as WithCustomFields)._customReferenceTitle || notification.tokenTitle || undefined;
+  return (notification as WithCustomFields)._customReferenceTitle || chatMeta(notification)?.communityName || notification.tokenTitle || undefined;
 }
 
 /**
@@ -102,14 +120,16 @@ export function communityNotificationRefs(community: CommunityRef | null | undef
  * Where tapping the row goes. `useCommunity` resolves a uuid as readily as a
  * slug, so either reference form opens the right page.
  */
-export function communityNotificationPath(referenceId: string | null | undefined): string {
-  return referenceId ? `/app/communities/${referenceId}` : '/app/communities';
+export function communityNotificationPath(referenceId: string | null | undefined, type?: string): string {
+  if (!referenceId) return '/app/communities';
+  // Chat rows open straight on the chat tab, where the conversation is.
+  return `/app/communities/${referenceId}${type === 'community_chat' ? '?tab=chat' : ''}`;
 }
 
 /** The glyph on the row, shared so the bell and the Activity tab cannot disagree. */
 export function communityNotificationIcon(type: string) {
   if (type === 'community_here') return Megaphone;
-  if (type === 'community_mention') return MessageSquareText;
+  if (type === 'community_mention' || type === 'community_chat') return MessageSquareText;
   return UsersRound;
 }
 
@@ -169,6 +189,8 @@ export function communityNotificationSentence(
   const values = { name: actorName, community };
 
   switch (notification.type as string) {
+    case 'community_chat':
+      return communityChatSentence(notification, actorName, t, community);
     case 'community_join':
       if (isCommunityJoinRequest(notification)) {
         return named
@@ -187,6 +209,40 @@ export function communityNotificationSentence(
         ? line(t, 'notifications.community.mentionedNamed', '{{name}} mentioned you in “{{community}}”', values)
         : line(t, 'notifications.community.mentioned', '{{name}} mentioned you in a community', values);
   }
+}
+
+/**
+ * "James sent a message in X", "James and Charlie sent messages in X",
+ * "James + 2 others sent messages in X". Whoever spoke first leads.
+ */
+function communityChatSentence(
+  notification: DeHubNotification,
+  actorName: string,
+  t: Translate,
+  community: string | undefined,
+): string {
+  const meta = chatMeta(notification);
+  const senders = meta?.senders || [];
+  const count = Math.max(meta?.senderCount || 0, senders.length, notification.aggregatedCount || 0, 1);
+  const values = {
+    name: senders[0]?.n || actorName,
+    second: senders[1]?.n || '',
+    others: String(count - 1),
+    community,
+  };
+  if (count === 1) {
+    return community
+      ? line(t, 'notifications.community.chatOneNamed', '{{name}} sent a message in {{community}}', values)
+      : line(t, 'notifications.community.chatOne', '{{name}} sent a message', values);
+  }
+  if (count === 2) {
+    return community
+      ? line(t, 'notifications.community.chatTwoNamed', '{{name}} and {{second}} sent messages in {{community}}', values)
+      : line(t, 'notifications.community.chatTwo', '{{name}} and {{second}} sent messages', values);
+  }
+  return community
+    ? line(t, 'notifications.community.chatManyNamed', '{{name}} + {{others}} others sent messages in {{community}}', values)
+    : line(t, 'notifications.community.chatMany', '{{name}} + {{others}} others sent messages', values);
 }
 
 /**

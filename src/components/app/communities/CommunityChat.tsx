@@ -14,6 +14,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { markCommunityChatSeen, COMMUNITY_CHAT_SEEN_INTERVAL_MS } from '@/lib/community-chat-notify';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Loader2, SmilePlus, CornerDownRight, LogIn, ArrowDown, Pin, PinOff } from "lucide-react";
 import Reply from "@/components/ui/cut-icons/reply";
@@ -188,9 +190,11 @@ interface CommunityChatProps {
   community: Community;
   membership: CommunityMember | null | undefined;
   isMember: boolean;
+  /** The chat is the tab on screen. Defaults to true for a chat shown on its own. */
+  active?: boolean;
 }
 
-export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
+export function CommunityChat({ communityId, community, membership, isMember, active = true }: CommunityChatProps) {
   const { t: _copy } = _useCopy();
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
   const [replyTo, setReplyTo] = useDraftState<CommunityChatMessage | null>(`community:${communityId}:reply`, null);
@@ -231,6 +235,26 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  // While the chat is on screen its notification is cleared and new pings are
+  // held (lib/community-chat-notify). Re-sent every minute and on return to
+  // the tab, so a reader who walks away starts hearing about it again.
+  useEffect(() => {
+    if (!active || !isAuthenticated || !isMember || !communityId) return;
+    const ping = () => {
+      if (document.visibilityState !== 'visible') return;
+      void markCommunityChatSeen(communityId).then(() =>
+        queryClient.invalidateQueries({ queryKey: ['notifications'] }));
+    };
+    ping();
+    const timer = window.setInterval(ping, COMMUNITY_CHAT_SEEN_INTERVAL_MS);
+    document.addEventListener('visibilitychange', ping);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', ping);
+    };
+  }, [active, isAuthenticated, isMember, communityId, queryClient]);
 
   // @mention autocomplete. The composer already had handles parsed out of the
   // sent text for notifications, but nothing offered suggestions while typing,

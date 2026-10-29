@@ -34,7 +34,7 @@ function row(overrides: Record<string, unknown> = {}): DeHubNotification {
 }
 
 describe('community notification types', () => {
-  it('claims exactly the three community types', () => {
+  it('claims exactly the community types', () => {
     expect(isCommunityNotificationType('community_join')).toBe(true);
     expect(isCommunityNotificationType('community_mention')).toBe(true);
     expect(isCommunityNotificationType('community_here')).toBe(true);
@@ -132,5 +132,27 @@ describe('the quoted preview under the sentence', () => {
   it('is empty for joins and for anything that is not a community row', () => {
     expect(communityNotificationPreview(row())).toBeUndefined();
     expect(communityNotificationPreview(row({ type: 'like', content: 'alice reacted to your post' }))).toBeUndefined();
+  });
+});
+
+describe('grouped community chat rows', () => {
+  const chat = (senders: { a: string; n: string }[], senderCount = senders.length) => row({
+    _id: 'n1', id: 'n1', type: 'community_chat', _customReferenceId: undefined, _customReferenceTitle: undefined,
+    metadata: { communitySlug: 'riftn', communityName: 'Riftn', senders, senderCount },
+  });
+  const james = { a: '0x1', n: 'james' };
+  const charlie = { a: '0x2', n: 'charlie' };
+  const dana = { a: '0x3', n: 'dana' };
+
+  it('leads with whoever spoke first', () => {
+    expect(communityNotificationSentence(chat([james]), 'x', untranslated)).toBe('james sent a message in Riftn');
+    expect(communityNotificationSentence(chat([james, charlie]), 'x', untranslated)).toBe('james and charlie sent messages in Riftn');
+    expect(communityNotificationSentence(chat([james, charlie, dana]), 'x', untranslated)).toBe('james + 2 others sent messages in Riftn');
+  });
+
+  it('opens the chat tab of that community', () => {
+    expect(isCommunityNotificationType('community_chat')).toBe(true);
+    expect(communityNotificationPath('riftn', 'community_chat')).toBe('/app/communities/riftn?tab=chat');
+    expect(communityNotificationPreview(chat([james]))).toBeUndefined();
   });
 });
