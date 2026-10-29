@@ -15,6 +15,7 @@ import { getAccountSummaries } from '@/lib/api/dehub';
 import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { notifyCommunityMentions } from '@/lib/community-mention-notify';
+import { reportCommunityChatMessage } from '@/lib/community-chat-notify';
 import { toast } from 'sonner';
 import { useCommunityChatHistory } from './use-community-chat-history';
 import { updateCommunityChatCache, type CommunityChatHistory, type CommunityChatCursor, type CommunityChatPage } from '@/lib/community-chat-history';
@@ -266,6 +267,7 @@ export function useCommunityChat(
     // message the sender believes was lost.
     const messageId = (inserted as { id?: string } | null)?.id;
     if (messageId) {
+      void reportCommunityChatMessage(communityId, messageId, walletAddress);
       void notifyCommunityMentions({
         communityId,
         messageId,

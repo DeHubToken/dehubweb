@@ -1726,6 +1726,12 @@
     "burstBody": "{{count}} neue Benachrichtigungen von {{who}}",
     "community": {
       "joined": "{{name}} ist deiner Community beigetreten",
+      "chatOne": "{{name}} hat eine Nachricht gesendet",
+      "chatOneNamed": "{{name}} hat eine Nachricht in {{community}} gesendet",
+      "chatTwo": "{{name}} und {{second}} haben Nachrichten gesendet",
+      "chatTwoNamed": "{{name}} und {{second}} haben Nachrichten in {{community}} gesendet",
+      "chatMany": "{{name}} + {{others}} weitere haben Nachrichten gesendet",
+      "chatManyNamed": "{{name}} + {{others}} weitere haben Nachrichten in {{community}} gesendet",
       "joinedNamed": "{{name}} ist „{{community}}“ beigetreten",
       "requested": "{{name}} hat darum gebeten, deiner Community beizutreten",
       "requestedNamed": "{{name}} hat darum gebeten, „{{community}}“ beizutreten",

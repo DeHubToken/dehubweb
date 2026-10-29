@@ -1725,6 +1725,12 @@
     "burstBody": "{{count}} новых уведомлений от {{who}}",
     "community": {
       "joined": "{{name}} присоединился (ась) к вашему сообществу",
+      "chatOne": "{{name}} отправил(а) сообщение",
+      "chatOneNamed": "{{name}} отправил(а) сообщение в {{community}}",
+      "chatTwo": "{{name}} и {{second}} отправили сообщения",
+      "chatTwoNamed": "{{name}} и {{second}} отправили сообщения в {{community}}",
+      "chatMany": "{{name}} и ещё {{others}} отправили сообщения",
+      "chatManyNamed": "{{name}} и ещё {{others}} отправили сообщения в {{community}}",
       "joinedNamed": "{{name}} присоединились к «{{community}}»",
       "requested": "{{name}} хочет присоединиться к сообществу",
       "requestedNamed": "{{name}} попросил (-а) присоединиться к «{{community}}»",
