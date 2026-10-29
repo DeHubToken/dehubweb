@@ -7046,3 +7046,21 @@ html[data-theme='minimal'] [data-comment-composer-pin] {
   backdrop-filter: var(--float-glass-blur);
   -webkit-backdrop-filter: var(--float-glass-blur);
 }
+
+/* Your own 👍 / 👎 (ThumbIcon): a small nod once every 5 seconds. It tips up
+   from the wrist, settles and rests; the 👎 is the same hand turned over, so
+   it nods from its wrist at the top. Transform only, so it is cheap on Safari. */
+.dehub-thumb-nod {
+  transform-origin: 25% 85%;
+  animation: dehub-thumb-nod 5s ease-in-out 0.35s infinite;
+}
+.dehub-thumb-nod--down { transform-origin: 75% 15%; }
+@keyframes dehub-thumb-nod {
+  0%, 22%, 100% { transform: none; }
+  6% { transform: rotate(-12deg) scale(1.08); }
+  12% { transform: rotate(5deg) scale(1.02); }
+  17% { transform: rotate(-2deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dehub-thumb-nod { animation: none; }
+}

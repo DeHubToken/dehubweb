@@ -648,8 +648,8 @@ async function fetchUnifiedFeedFromAPI(
   // BEFORE the request goes out rather than repaired after a 401 that never
   // comes. requestFeed() is the single retryable attempt.
   const requestFeed = async (token: string | null): Promise<UnifiedFeedResponse> => {
+    // No Content-Type on this bodyless GET: it would force a CORS preflight.
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;

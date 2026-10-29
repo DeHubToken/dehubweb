@@ -41,7 +41,6 @@ import Download from "@/components/ui/cut-icons/download";
 import X from "@/components/ui/cut-icons/close";
 import Play from "@/components/ui/cut-icons/play";
 import Pause from "@/components/ui/cut-icons/pause";
-import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Bookmark from "@/components/ui/cut-icons/save";
 import Share2 from "@/components/ui/cut-icons/feedshare";
@@ -73,6 +72,7 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
+import { ThumbIcon } from './ThumbIcon';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
@@ -944,6 +944,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
    */
   const leadReaction = resolveThumbReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
+  /** A 👍 or 👎 stays the plain thumb icon; your own fills and nods. */
+  const thumbDown = leadReaction === 'dislike';
+  const thumbMine = thumbDown ? myReaction === 'dislike' : isLiked;
 
   const goToNext = useCallback(() => {
     if (minimizedRef.current) return;
@@ -1925,14 +1928,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >
-                      {leadReaction ? (
+                      {leadReaction && !thumbDown ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
                         </span>
                       ) : (
-                        <ThumbsUp className={cn(
+                        <ThumbIcon down={thumbDown} nod={thumbMine} className={cn(
                           "w-5 h-5 drop-shadow-lg",
-                          isLiked ? "fill-white text-white" : "text-white"
+                          thumbMine ? "fill-white text-white" : "text-white"
                         )} />
                       )}
                       <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>
@@ -2180,14 +2183,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >
-                      {leadReaction ? (
+                      {leadReaction && !thumbDown ? (
                         <span data-engaged-glyph className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
                           <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
                         </span>
                       ) : (
-                        <ThumbsUp className={cn(
+                        <ThumbIcon down={thumbDown} nod={thumbMine} className={cn(
                           "w-5 h-5 drop-shadow-lg",
-                          isLiked ? "fill-white text-white" : "text-white"
+                          thumbMine ? "fill-white text-white" : "text-white"
                         )} />
                       )}
                       <span className="text-xs font-medium text-white/70 [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)]">{formatCount(thumbCount)}</span>

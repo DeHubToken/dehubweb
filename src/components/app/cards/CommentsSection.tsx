@@ -41,7 +41,6 @@ import Sparkles from "@/components/ui/cut-icons/assistant";
 
 import X from "@/components/ui/cut-icons/close";
 import Search from "@/components/ui/cut-icons/search";
-import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Mic from "@/components/ui/cut-icons/mic";
 import Share2 from "@/components/ui/cut-icons/feedshare";
@@ -110,6 +109,7 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
+import { ThumbIcon } from './ThumbIcon';
 import { ReactionPicker } from './ReactionPicker';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -461,6 +461,9 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     ? (dislikesOutnumberLikes(comment.reactionCounts) ? 'dislike' : null)
     : resolveThumbReaction(comment.reactionCounts, myHeldReaction);
   const thumbCount = resolveThumbCount(comment.likes, comment.dislikes ?? 0, leadReaction);
+  /** A 👍 or 👎 stays the plain thumb icon; your own fills and nods. */
+  const thumbDown = leadReaction === 'dislike';
+  const thumbMine = !isOwnComment && (thumbDown ? myHeldReaction === 'dislike' : !!comment.isLiked);
 
   // Translate lives in the row's menu, not on the row. Holding the comment on
   // a phone, or right-clicking it on desktop, opens that same menu.
@@ -756,12 +759,12 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 aria-haspopup={isOwnComment ? undefined : 'menu'}
                 aria-expanded={isOwnComment ? undefined : likeTray.open}
               >
-                {leadReaction ? (
+                {leadReaction && !thumbDown ? (
                   <span data-engaged-glyph className="w-[18px] h-[18px] flex items-center justify-center text-base leading-none" aria-hidden="true">
                     <ReactionEmoji reaction={leadReaction} animate={leadReaction === myHeldReaction} />
                   </span>
                 ) : (
-                  <ThumbsUp className={cn(COMMENT_ICON_CLASS.like, !isOwnComment && comment.isLiked && "fill-current")} />
+                  <ThumbIcon down={thumbDown} nod={thumbMine} className={cn(COMMENT_ICON_CLASS.like, thumbMine && "fill-current")} />
                 )}
                 {(thumbCount > 0 || isOwnComment) && <span className="text-xs">{thumbCount}</span>}
               </button>

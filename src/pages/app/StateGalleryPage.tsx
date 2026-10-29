@@ -53,6 +53,7 @@ import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
+import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
 import { useQueryClient } from '@tanstack/react-query';
 import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
 import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
@@ -702,6 +703,22 @@ const ICONS: ThemeIconKey[] = [
   'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
 ];
 
+/** The "Add a profile photo" ask; saving here only waits, nothing uploads. */
+function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen);
+  return (
+    <section data-avatar-prompt-gallery className="mb-5">
+      <Button onClick={() => setOpen(true)}>Profile photo prompt</Button>
+      <AvatarPromptSheet
+        open={open}
+        onOpenChange={setOpen}
+        name="Nova"
+        onSave={() => new Promise((resolve) => window.setTimeout(resolve, 800))}
+      />
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -760,6 +777,8 @@ export default function StateGalleryPage() {
         </div>
 
         {params.get('predictions') === '1' && <PredictionGallery />}
+
+        <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}

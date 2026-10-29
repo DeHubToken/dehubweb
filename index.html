@@ -361,7 +361,8 @@
           }
 
           if (p === "/" || p === "/app" || p === "/app/") {
-            var h = { "Accept": "application/json", "Content-Type": "application/json" };
+            // No Content-Type: a bodyless GET with one needs a CORS preflight.
+            var h = { "Accept": "application/json" };
             var t = localStorage.getItem("dehub_token");
             var exp = parseInt(localStorage.getItem("dehub_token_expires_at") || "0", 10);
             var live = !!t && (!exp || Date.now() < exp);
