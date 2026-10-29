@@ -20119,5 +20119,15 @@
     "help2": "“Koppel je DeHub-account” als je naar je eigen posts vraagt: druk op Verbinden in de connectorinstellingen van de app.",
     "help3": "Een foutmelding als je de URL in een browsertabblad opent is normaal. Plak hem in je AI-app.",
     "other": "Elke andere MCP-app werkt hetzelfde: voeg een externe MCP-server toe en plak de URL hierboven."
+  },
+  "avatarPrompt": {
+    "title": "Voeg een profielfoto toe",
+    "body": "Mensen herkennen je sneller in feeds, reacties en chats met een gezicht of logo.",
+    "choose": "Kies een foto",
+    "another": "Kies een andere",
+    "save": "Gebruik deze foto",
+    "notNow": "Niet nu",
+    "saved": "Ziet er goed uit",
+    "failed": "Je foto kon niet worden opgeslagen. Probeer het opnieuw."
   }
 }

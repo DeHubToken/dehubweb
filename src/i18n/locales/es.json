@@ -19870,5 +19870,15 @@
     "help2": "«Vincula tu cuenta de DeHub» al preguntar por tus publicaciones: pulsa Conectar en los ajustes del conector de la app.",
     "help3": "Ver un error al abrir la URL en una pestaña del navegador es normal. Pégala en tu app de IA.",
     "other": "Cualquier otra app MCP funciona igual: añade un servidor MCP remoto y pega la URL de arriba."
+  },
+  "avatarPrompt": {
+    "title": "Añade una foto de perfil",
+    "body": "La gente te reconoce antes en el feed, los comentarios y los chats si tienes una cara o un logo.",
+    "choose": "Elegir una foto",
+    "another": "Elegir otra",
+    "save": "Usar esta foto",
+    "notNow": "Ahora no",
+    "saved": "¡Te queda genial!",
+    "failed": "No se pudo guardar tu foto. Inténtalo de nuevo."
   }
 }

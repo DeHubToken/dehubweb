@@ -19874,5 +19874,15 @@
     "help2": "« Liez votre compte DeHub » quand vous parlez de vos publications : appuyez sur Connecter dans les paramètres du connecteur.",
     "help3": "Une erreur en ouvrant l’URL dans un onglet du navigateur est normale. Collez-la plutôt dans votre app IA.",
     "other": "Toute autre app MCP fonctionne pareil : ajoutez un serveur MCP distant et collez l’URL ci-dessus."
+  },
+  "avatarPrompt": {
+    "title": "Ajoute une photo de profil",
+    "body": "On te repère plus vite dans le fil, les commentaires et les discussions avec un visage ou un logo.",
+    "choose": "Choisir une photo",
+    "another": "En choisir une autre",
+    "save": "Utiliser cette photo",
+    "notNow": "Plus tard",
+    "saved": "Superbe !",
+    "failed": "Impossible d'enregistrer ta photo. Réessaie."
   }
 }
