@@ -19870,5 +19870,15 @@
     "help2": "Kendi gönderilerini sorduğunda “DeHub hesabını bağla” görürsen uygulamanın bağlayıcı ayarlarında Bağlan’a bas.",
     "help3": "URL’yi tarayıcı sekmesinde açınca hata görmek normaldir. Onun yerine yapay zekâ uygulamana yapıştır.",
     "other": "Diğer tüm MCP uygulamaları aynı şekilde çalışır: uzak MCP sunucusu ekle ve yukarıdaki URL’yi yapıştır."
+  },
+  "avatarPrompt": {
+    "title": "Profil fotoğrafı ekle",
+    "body": "Bir yüzün ya da logon olduğunda insanlar seni akışta, yorumlarda ve sohbetlerde daha hızlı fark eder.",
+    "choose": "Fotoğraf seç",
+    "another": "Başka birini seç",
+    "save": "Bu fotoğrafı kullan",
+    "notNow": "Şimdi değil",
+    "saved": "Harika görünüyor",
+    "failed": "Fotoğrafın kaydedilemedi. Tekrar dene."
   }
 }
