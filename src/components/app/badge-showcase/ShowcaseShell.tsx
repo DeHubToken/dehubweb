@@ -536,7 +536,7 @@ export function ShowcaseShell({
   const dock = (
     <nav
       aria-label={dockLabel}
-      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:w-auto lg:max-w-[calc(100%-24px)] lg:p-1.5"
+      className="relative z-10 mx-auto flex w-full max-w-[480px] shrink-0 items-center gap-1 rounded-[20px] border border-white/10 bg-white/[0.07] p-1 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-[opacity,transform] duration-700 lg:max-w-none lg:p-1.5"
       style={{
         opacity: panelIn ? 1 : 0,
         transform: panelIn ? 'none' : 'translateY(24px)',
@@ -546,7 +546,7 @@ export function ShowcaseShell({
       <div
         ref={railRef}
         onScroll={updateRailFade}
-        className="flex min-w-0 flex-1 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide lg:flex-none"
+        className="flex min-w-0 flex-1 snap-x gap-0.5 overflow-x-auto py-1 scrollbar-hide lg:[justify-content:safe_center]"
         style={{ maskImage: railMask, WebkitMaskImage: railMask }}
       >
         {entries.map((entry, i) => {
@@ -694,7 +694,6 @@ export function ShowcaseShell({
               {t('badgeShowcase.hint')}
             </p>
           </div>
-          {isDesktop && dock}
         </div>
 
         {/* Details: one 8px gap, 16px radius and 12px padding throughout. */}
@@ -715,6 +714,12 @@ export function ShowcaseShell({
           </div>
         </div>
       </div>
+
+      {/* Desktop: the dock runs the full width under the badge and the details,
+          so there is no dead space under the side panel. */}
+      {isDesktop && (
+        <div className="relative z-10 mx-auto w-full max-w-[1180px] shrink-0 px-6 pb-6 pt-2 lg:pl-0 lg:pr-8">{dock}</div>
+      )}
 
       {/* Same 480px column and 16px gutters as the details, so the edges line up.
           On phones the dock sits between the details and the actions; the three
