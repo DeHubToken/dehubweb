@@ -253,3 +253,7 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
 
 /* Inactive profile / feed tab counts: 60% ink read ~3:1 at 10px on paper. */
 html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_) [data-feed-tab-btn][data-active="false"] { opacity: .78 !important; }
+
+/* Explore filter X: dark ink on paper reads as a smudge at the dark themes'
+   strength, so the glow is dialled down. */
+html[data-theme="system"][data-system-tone="light"] [data-explore-filter-glow] { --explore-glow-core: 28%; --explore-glow-edge: 8%; }
