@@ -1877,6 +1877,12 @@
     "burstBody": "{{count}} إشعار جديد من {{who}}",
     "community": {
       "joined": "انضم {{name}} إلى مجتمعك",
+      "chatOne": "أرسل {{name}} رسالة",
+      "chatOneNamed": "أرسل {{name}} رسالة في {{community}}",
+      "chatTwo": "أرسل {{name}} و{{second}} رسائل",
+      "chatTwoNamed": "أرسل {{name}} و{{second}} رسائل في {{community}}",
+      "chatMany": "أرسل {{name}} + {{others}} آخرين رسائل",
+      "chatManyNamed": "أرسل {{name}} + {{others}} آخرين رسائل في {{community}}",
       "joinedNamed": "{{name}} انضم إلى \"{{community}}\"",
       "requested": "طلب {{name}} الانضمام إلى مجتمعك",
       "requestedNamed": "طلب {{name}} الانضمام إلى \"{{community}}\"",
