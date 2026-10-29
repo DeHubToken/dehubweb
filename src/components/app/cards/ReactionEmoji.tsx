@@ -46,18 +46,14 @@ interface ReactionEmojiProps {
   reaction: PostReaction;
   /** Play the moving version. Off, it is the ordinary emoji character. */
   animate?: boolean;
-  /** Play the move once every 5 seconds instead of non-stop (👍 and 👎 only). */
-  slow?: boolean;
   className?: string;
 }
 
-export function ReactionEmoji({ reaction, animate = false, slow = false, className }: ReactionEmojiProps) {
+export function ReactionEmoji({ reaction, animate = false, className }: ReactionEmojiProps) {
   const reduceMotion = useReducedMotion();
   const [failed, setFailed] = useState(false);
   const [shown, setShown] = useState<string | null>(null);
-  const src = slow && (reaction === 'like' || reaction === 'dislike')
-    ? `/emoji/animated/${reaction}-every5s.webp`
-    : animatedReactionSrc(reaction);
+  const src = animatedReactionSrc(reaction);
   const emoji = reactionMeta(reaction).emoji;
 
   if (!animate || reduceMotion || failed) {
