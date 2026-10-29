@@ -26,7 +26,6 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Send from "@/components/ui/cut-icons/send";
-import ThumbsUp from "@/components/ui/cut-icons/like";
 import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -50,6 +49,7 @@ import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
+import { ThumbIcon } from '@/components/app/cards/ThumbIcon';
 import {
   reactionForThumbTap,
   reactionMeta,
@@ -151,6 +151,9 @@ function CommentRow<C extends ThreadedComment>({
     : resolveThumbReaction(comment.reactionCounts, comment.myReaction);
   const thumbCount = resolveThumbCount(comment.likes, comment.dislikes, leadReaction);
   const held = isOwn ? null : comment.myReaction ?? null;
+  /** A 👍 or 👎 stays the plain thumb icon; your own fills and nods. */
+  const thumbDown = leadReaction === 'dislike';
+  const thumbMine = thumbDown ? held === 'dislike' : held === 'like';
 
   const avatarUrl = comment.avatar ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
   const handle = comment.username || `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
@@ -274,12 +277,12 @@ function CommentRow<C extends ThreadedComment>({
                 aria-haspopup={isOwn ? undefined : 'menu'}
                 aria-expanded={isOwn ? undefined : likeTray.open}
               >
-                {leadReaction ? (
+                {leadReaction && !thumbDown ? (
                   <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
                     <ReactionEmoji reaction={leadReaction} animate={leadReaction === held} />
                   </span>
                 ) : (
-                  <ThumbsUp className={cn('w-4 h-4', held && 'fill-current')} />
+                  <ThumbIcon down={thumbDown} nod={thumbMine} className={cn('w-4 h-4', thumbMine && 'fill-current')} />
                 )}
                 {thumbCount > 0 && <span className="text-xs">{thumbCount}</span>}
               </button>
