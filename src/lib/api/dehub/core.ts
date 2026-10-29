@@ -508,10 +508,15 @@ export async function apiCall<T>(
     token = await ensureFreshToken();
   }
 
+  // Content-Type only when there is a body. On a GET it made every request a
+  // non-simple CORS request, so the browser sent an OPTIONS preflight first —
+  // for signed-out visitors that doubled every read on Home.
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
     "Accept": "application/json",
   };
+  if (body) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
