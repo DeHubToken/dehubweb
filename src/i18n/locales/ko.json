@@ -1724,6 +1724,12 @@
     "burstBody": "{{count}}개의 새 알림 {{who}}",
     "community": {
       "joined": "{{name}} 님이 회원님의 커뮤니티에 가입했습니다",
+      "chatOne": "{{name}}님이 메시지를 보냈습니다",
+      "chatOneNamed": "{{name}}님이 {{community}}에 메시지를 보냈습니다",
+      "chatTwo": "{{name}}님과 {{second}}님이 메시지를 보냈습니다",
+      "chatTwoNamed": "{{name}}님과 {{second}}님이 {{community}}에 메시지를 보냈습니다",
+      "chatMany": "{{name}}님 외 {{others}}명이 메시지를 보냈습니다",
+      "chatManyNamed": "{{name}}님 외 {{others}}명이 {{community}}에 메시지를 보냈습니다",
       "joinedNamed": "{{name}} 님이 “{{community}}” 에 가입했습니다",
       "requested": "{{name}} 님이 커뮤니티 가입을 요청했습니다",
       "requestedNamed": "{{name}} 님이 “{{community}}” 에 가입을 요청했습니다",

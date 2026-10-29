@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Users from "@/components/ui/cut-icons/communities";
 
 import ArrowLeft from "@/components/ui/cut-icons/back";
@@ -37,11 +37,14 @@ export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const [tab, setTab] = useState<Tab>('posts');
+  const [searchParams] = useSearchParams();
+  // ?tab=chat is where a chat notification lands.
+  const initialTab: Tab = searchParams.get('tab') === 'chat' ? 'chat' : 'posts';
+  const [tab, setTab] = useState<Tab>(initialTab);
   // Lazy-mount-then-keep: only the Posts tab mounts on arrival; the others
   // (chat = 200-message fetch + per-sender profile fan-out, events, members)
   // mount on first activation and then stay mounted CSS-hidden as before.
-  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts']));
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts', initialTab]));
   const [manageOpen, setManageOpen] = useState(false);
   const activateTab = (next: Tab) => {
     setTab(next);
@@ -213,6 +216,7 @@ export default function CommunityPage() {
             {visitedTabs.has('chat') && (
               <div className={tab === 'chat' ? '' : 'hidden'}>
                 <CommunityChat
+                  active={tab === 'chat'}
                   communityId={community.id}
                   community={community}
                   membership={membership}

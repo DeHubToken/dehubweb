@@ -1726,6 +1726,12 @@
     "burstBody": "{{count}} notifikasi baru dari {{who}}",
     "community": {
       "joined": "{{name}} bergabung dengan komunitas Anda",
+      "chatOne": "{{name}} mengirim pesan",
+      "chatOneNamed": "{{name}} mengirim pesan di {{community}}",
+      "chatTwo": "{{name}} dan {{second}} mengirim pesan",
+      "chatTwoNamed": "{{name}} dan {{second}} mengirim pesan di {{community}}",
+      "chatMany": "{{name}} + {{others}} lainnya mengirim pesan",
+      "chatManyNamed": "{{name}} + {{others}} lainnya mengirim pesan di {{community}}",
       "joinedNamed": "{{name}} bergabung dengan “{{community}}”",
       "requested": "{{name}} meminta untuk bergabung dengan komunitas Anda",
       "requestedNamed": "{{name}} meminta untuk bergabung dengan “{{community}}”",
