@@ -26,6 +26,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -112,6 +113,8 @@ interface ImagesFeedProps {
   selectedPostId?: string | null;
   /** Callback to clear selected post and switch modes */
   onPostSelected?: (postId: string | null) => void;
+  /** Words typed in the feed pill's search box: the feed shows search results under its filters. */
+  searchQuery?: string;
 }
 
 // ============================================================================
@@ -419,6 +422,7 @@ export function ImagesFeed({
   refreshKey = 0,
   selectedPostId = null,
   onPostSelected,
+  searchQuery = '',
 }: ImagesFeedProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
@@ -600,7 +604,7 @@ export function ImagesFeed({
     refetch,
   });
 
-  if ((isLoading || isAutoRetrying) && !showFilters) {
+  if ((isLoading || isAutoRetrying) && !showFilters && !searchQuery) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <ImagesFeedSkeleton />
@@ -610,7 +614,7 @@ export function ImagesFeed({
 
   // An in-flight filter switch outranks "empty": bailing here would drop the
   // filter panel and the loader both, and read as the feed vanishing.
-  if (imagePosts.length === 0 && !filterTransition.active && !showFilters) {
+  if (imagePosts.length === 0 && !filterTransition.active && !showFilters && !searchQuery) {
     return <EmptyState />;
   }
 
@@ -677,7 +681,9 @@ export function ImagesFeed({
       {/* Content. The filter loader sits BELOW the filter panel, not in place of
           the whole feed, so the chips the user is working with stay on screen
           and clickable while the request runs. */}
-      {isLoading || isAutoRetrying ? (
+      {searchQuery ? (
+        <FeedSearchResults tab="images" query={searchQuery} />
+      ) : isLoading || isAutoRetrying ? (
         <ImagesFeedSkeleton />
       ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />
