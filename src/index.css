@@ -7032,3 +7032,17 @@ html:not(#_):not(#_):not(#_):not(#_):not(#_) img[data-image-failed] {
   visibility: hidden !important;
 }
 
+/* Post page reply bar: just the pill, no full-width band behind it.
+   The field keeps its own frost so comments scrolling under it stay
+   legible. */
+[data-comment-composer-pin],
+html[data-theme='minimal'] [data-comment-composer-pin] {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top-width: 0;
+}
+[data-comment-composer-pin] [data-comment-field] {
+  backdrop-filter: var(--float-glass-blur);
+  -webkit-backdrop-filter: var(--float-glass-blur);
+}
