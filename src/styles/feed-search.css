@@ -1,0 +1,38 @@
+/* Feed search (FeedSearchBar): the lit tab melts into a search box.
+
+   The box starts clipped to the tapped tab (--melt-l / --melt-r, measured on
+   open) and opens out to the pill's full width while the tab icons blur away.
+   Closing runs the same way back. */
+
+[data-feed-search-bar] {
+  animation: feed-search-melt 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-feed-search-bar][data-closing] {
+  animation: feed-search-unmelt 220ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes feed-search-melt {
+  from { clip-path: inset(0 var(--melt-r, 40%) 0 var(--melt-l, 40%) round 12px); }
+  to { clip-path: inset(0 0 0 0 round 12px); }
+}
+@keyframes feed-search-unmelt {
+  from { clip-path: inset(0 0 0 0 round 12px); }
+  to { clip-path: inset(0 var(--melt-r, 40%) 0 var(--melt-l, 40%) round 12px); }
+}
+
+/* The tab row under the box: blurs out as the box spreads over it. */
+[data-feed-search-tabs] {
+  transition: opacity 220ms ease, filter 220ms ease;
+}
+[data-feed-search-tabs][data-hidden] {
+  opacity: 0;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  [data-feed-search-bar],
+  [data-feed-search-bar][data-closing] { animation: none; }
+  [data-feed-search-tabs] { transition: none; }
+}

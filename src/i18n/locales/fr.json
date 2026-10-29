@@ -12474,6 +12474,18 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "1aa9d734f2ee": "Choisir où chercher",
+    "55656b5e434f": "Fermer la recherche",
+    "ef557404f465": "Aucun résultat pour « {{query}} »",
+    "35034aa59bd3": "Rien dans {{feed}} ne correspond. Essayez d’autres mots ou cherchez partout.",
+    "57e2faa5ec63": "Rechercher sur DeHub",
+    "96d7bff86b44": "La recherche n’a pas pu se charger",
+    "415155739590": "Tout rechercher",
+    "9e13d826baaf": "Rechercher des images",
+    "cbf6f228327c": "Rechercher de la musique",
+    "c7661da99c41": "Rechercher des vidéos",
+    "90f1afe66801": "Recherche de « {{query}} »…",
+    "d7b559f2d8c6": "Essayez d’autres mots ou modifiez les filtres.",
     "1607715e45ed": "Touchez la boule pour parler, ou écrivez en dessous",
     "d1a0c7e2f301": "Qu'avez-vous en tête aujourd'hui ?",
     "d1a0c7e2f302": "À quoi pensez-vous aujourd'hui ?",

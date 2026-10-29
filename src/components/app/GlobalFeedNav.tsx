@@ -28,6 +28,8 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { closeCommentsSplit } from '@/lib/comments-split';
+import { FeedSearchBar } from '@/components/app/navigation/FeedSearchBar';
+import { isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
 import { useImagesFeedScrollView, requestImagesBackToCollage } from '@/lib/images-feed-mode';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
@@ -67,6 +69,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
   // z-100, dialog/sheet z-50) dims the pill with the rest of the page.
   const anyOverlayOpen = useAnyOverlayOpen();
   const isHomePage = isHomePath(location.pathname);
+  const feedSearch = useFeedSearch();
 
   const handleBack = useCallback(() => {
     // An open comments sheet on a phone post page closes first.
@@ -76,6 +79,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
   }, [navigate]);
 
   const [activeTab, setActiveTab] = useState(() => isHomePage || profilePage ? getPersistedTab() : '');
+  const searchOpen = feedSearch.open && isHomePage && isFeedSearchTab(activeTab);
   const [enableTransition, setEnableTransition] = useState(false);
   const { shortsEnabled } = useShortsEnabled();
   const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
@@ -211,8 +215,10 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
 
     if (isHomePage) {
       if (tabValue === activeTab) {
-        // Same tab clicked — dispatch event so HomePage toggles filters
-        window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
+        // Same tab clicked: a searchable feed turns the pill into its search,
+        // the others toggle their filters (the sliders button does both).
+        if (isFeedSearchTab(tabValue)) openFeedSearch();
+        else window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue }));
       } else {
         // Different tab — enable smooth transition, auto-reset after animation
         setEnableTransition(true);
@@ -274,9 +280,11 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
           </div>
         ) : (
         <div ref={layerRef} className="relative overflow-visible">
-          <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
+          <div data-feed-search-tabs data-hidden={searchOpen ? '' : undefined} className="absolute inset-0 pointer-events-none">
+            <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
+          </div>
           {/* Drag handle overlay */}
-          {dragDisplayRect.ready && (
+          {dragDisplayRect.ready && !searchOpen && (
             <div
               className="absolute z-30 cursor-grab active:cursor-grabbing"
               style={{
@@ -298,7 +306,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
               onContextMenu={(event) => event.preventDefault()}
             />
           )}
-          <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'manipulation' }}>
+          <div data-feed-search-tabs data-hidden={searchOpen ? '' : undefined} className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'manipulation' }}>
             {/* Back button on a directly-loaded post page (mirrors the from-feed
                 overlay, whose home pill turns its settings slot into a back
                 button). On the home feed this slot toggles the tab's filters. */}
@@ -351,6 +359,15 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
               );
             })}
           </div>
+          {searchOpen && isFeedSearchTab(activeTab) && (
+            <FeedSearchBar
+              tab={activeTab}
+              hasActiveFilters={false}
+              filtersOpen={false}
+              onToggleFilters={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
+              onPickFeed={(tab) => applyTab(tab)}
+            />
+          )}
         </div>
         )}
         {/* Filter panel portal target — rendered here so the dropdown stays

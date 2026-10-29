@@ -65,6 +65,9 @@ import { warmPostPage } from '@/lib/preload-post-page';
 import { HomeFeed } from '@/components/app/feeds/HomeFeed';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { closeCommentsSplit } from '@/lib/comments-split';
+import { FeedSearchBar } from '@/components/app/navigation/FeedSearchBar';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
+import { activeFeedSearchQuery, closeFeedSearch, isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
 
 const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m => ({ default: m.VideosFeed }));
 const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
@@ -222,6 +225,14 @@ export default function HomePage() {
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
   // so heavy feeds (e.g. Videos) don't block the tab animation
   const deferredTab = useDeferredValue(activeTab);
+  // Tapping the lit tab again turns the pill into a search for that feed.
+  const feedSearch = useFeedSearch();
+  const searchOpen = feedSearch.open && isFeedSearchTab(activeTab);
+  const searchQuery = activeFeedSearchQuery(feedSearch);
+  useEffect(() => {
+    if (feedSearch.open && !isFeedSearchTab(activeTab)) closeFeedSearch();
+  }, [feedSearch.open, activeTab]);
+  useEffect(() => closeFeedSearch, []);
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Lazy mount: only mount a feed on its first visit, then keep it alive.
@@ -629,10 +640,11 @@ export default function HomePage() {
       return;
     }
     if (tabValue === activeTab) {
-      // Same tab clicked - scroll to top
+      // Same tab clicked - scroll to top, and on a searchable feed open its search
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       scrollDocumentToSmooth();
+      if (isFeedSearchTab(tabValue)) openFeedSearch();
     } else {
       setEnableHomeTransition(true);
       // Auto-reset after animation completes to prevent stale transitions on page nav
@@ -1076,9 +1088,11 @@ export default function HomePage() {
           <span data-nav-glass-backdrop aria-hidden="true" />
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
+            <div data-feed-search-tabs data-hidden={searchOpen ? '' : undefined} className="absolute inset-0 pointer-events-none">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} variant="nav" />
             {/* Drag handle overlay */}
-            {homeTabRect.ready && (
+            </div>
+            {homeTabRect.ready && !searchOpen && (
               <div
                 className="absolute z-30 cursor-grab active:cursor-grabbing"
                 style={{
@@ -1095,7 +1109,7 @@ export default function HomePage() {
                 onContextMenu={(event) => event.preventDefault()}
               />
             )}
-            <div className="relative z-20 flex scrollbar-hide">
+            <div data-feed-search-tabs data-hidden={searchOpen ? '' : undefined} className="relative z-20 flex scrollbar-hide">
               {/* Settings Button - toggles current tab's filters.
                   When a post overlay is open on top of the feed — or the images
                   tab has swapped its grid for the scroll view — this slot becomes
@@ -1191,6 +1205,15 @@ export default function HomePage() {
                 );
               })}
             </div>
+            {searchOpen && isFeedSearchTab(activeTab) && (
+              <FeedSearchBar
+                tab={activeTab}
+                hasActiveFilters={hasActiveFilters}
+                filtersOpen={islandFiltersOpen}
+                onToggleFilters={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
+                onPickFeed={handleTabClick}
+              />
+            )}
         </div>
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
         {!islandTopBar && <FeedPillGlow refreshing={isRefreshing} />}
@@ -1241,10 +1264,17 @@ export default function HomePage() {
             Memo wrappers prevent re-renders during drag — feeds only update when
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
-          <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
+          <div style={{ display: deferredTab === 'home' && !searchQuery ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'home'}>
             <MemoHomeFeed active={deferredTab === 'home'} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
             </CachedPageActiveContext.Provider>
+          </div>
+        )}
+        {/* Home's filter panel is portalled into the pill, so the feed can hide
+            under its search results and the panel still opens. */}
+        {searchQuery && deferredTab === 'home' && (
+          <div className="px-2 sm:px-3">
+            <FeedSearchResults tab="home" query={searchQuery} />
           </div>
         )}
         {/* Every tab but home is a lazy chunk (see the imports): the Suspense
@@ -1255,7 +1285,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'videos' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoVideosFeed showFilters={showVideosFilters} refreshKey={refreshKey} />
+              <MemoVideosFeed showFilters={showVideosFilters} refreshKey={refreshKey} searchQuery={deferredTab === 'videos' ? searchQuery : ''} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
@@ -1271,6 +1301,7 @@ export default function HomePage() {
                 refreshKey={refreshKey}
                 selectedPostId={selectedImageId}
                 onPostSelected={handleImageSelected}
+                searchQuery={deferredTab === 'images' ? searchQuery : ''}
               />
             </Suspense>
             </CachedPageActiveContext.Provider>
@@ -1298,7 +1329,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'music' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'music'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoMusicFeed showFilters={showMusicFilters} refreshKey={refreshKey} />
+              <MemoMusicFeed showFilters={showMusicFilters} refreshKey={refreshKey} searchQuery={deferredTab === 'music' ? searchQuery : ''} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>

@@ -30,6 +30,7 @@ import "./styles/focus-keys.css";
 import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";
 import "./styles/feed-pill-glow.css";
+import "./styles/feed-search.css";
 import "./styles/page-kit.css";
 import "./styles/post-stage.css";
 import "./styles/live-audience.css";
