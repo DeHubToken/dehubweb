@@ -2590,6 +2590,9 @@ export function usePostForm(
       // style (lib/post-landing); a morph starts from the composer itself.
       if (!isQuoting) beginPostLanding(optimisticId, document.querySelector<HTMLElement>('[data-post-modal]'));
 
+      // The phone keyboard goes with the composer, so the feed is not left
+      // shifted up under it while the new post lands.
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
       onClose();
 
       // A quote stays where it was written: the optimistic card above already
