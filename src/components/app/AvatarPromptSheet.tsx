@@ -78,12 +78,12 @@ export function AvatarPromptSheet({ open, onOpenChange, name, onSave }: AvatarPr
         type="button"
         onClick={() => inputRef.current?.click()}
         aria-label={t('avatarPrompt.choose', 'Choose a photo')}
-        className="relative mt-2 h-24 w-24 rounded-full"
+        className="relative mt-2 h-24 w-24 rounded-[22px]"
       >
         {preview ? (
-          <img src={preview} alt="" className="h-24 w-24 rounded-full object-cover ring-1 ring-white/20" />
+          <img src={preview} alt="" className="h-24 w-24 rounded-[22px] object-cover ring-1 ring-white/20" />
         ) : (
-          <span data-avatar-fallback className="flex h-24 w-24 items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-4xl font-semibold text-white">
+          <span data-avatar-fallback className="flex h-24 w-24 items-center justify-center rounded-[22px] border border-white/15 bg-white/[0.08] text-4xl font-semibold text-white">
             {letter}
           </span>
         )}
