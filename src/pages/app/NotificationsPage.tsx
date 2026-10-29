@@ -49,6 +49,7 @@ import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotification
 import {
   communityNotificationIcon,
   communityNotificationPath,
+  communityNotificationRef,
   communityNotificationPreview,
   communityNotificationSentence,
   isCommunityNotificationType,
@@ -291,7 +292,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote', 'remix'],
   features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
-  communities: ['community_mention', 'community_here', 'community_join'],
+  communities: ['community_chat', 'community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed', 'work_application', 'work_submission'],
@@ -317,6 +318,7 @@ const API_BACKED_TYPES = new Set([
   'livestream_start', 'signal_flare', 'video_milestone',
   'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed', 'badge_tier_up', 'badge_tier_down',
   'video_removal', 'account_warning', 'system',
+  'community_chat',
 ]);
 
 /**
@@ -365,6 +367,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     // reply in the thread.
     case 'community_mention':
     case 'community_here':
+    case 'community_chat':
     case 'community_join': {
       const CommunityIcon = communityNotificationIcon(type);
       return <CommunityIcon className="w-4 h-4 text-white/70" />;
@@ -866,7 +869,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // reference is normally its slug, but the join trigger has written the uuid
   // too; `useCommunity` resolves either, and so does the shared helper.
   if (isCommunityNotificationType(notification.type as string)) {
-    return communityNotificationPath(customReferenceId(notification));
+    return communityNotificationPath(communityNotificationRef(notification), notification.type as string);
   }
   // Bounty applications/submissions store job_number, which is what the
   // canonical /bounty/<n> URL is keyed on — not the job uuid.
