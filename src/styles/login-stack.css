@@ -136,6 +136,10 @@ html[data-system-tone="light"] .login-stack-corner {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     margin: 0;
   }
+  .login-stack-scroll [data-columns="4"] .login-stack__lanes {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .login-stack-scroll [data-columns="4"] .login-stack__tile { border-radius: 14px; }
 }
 
 .login-stack-method {

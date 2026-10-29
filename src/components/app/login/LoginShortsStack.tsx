@@ -76,14 +76,24 @@ function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
   );
 }
 
+/** Preview only: `?loginCols=4` shows four clips per row on desktop. */
+function previewColumnCount() {
+  if (typeof window === 'undefined') return 3;
+  return new URLSearchParams(window.location.search).get('loginCols') === '4' ? 4 : 3;
+}
+
 export function LoginShortsStack() {
   const { t } = useTranslation();
-  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS));
+  const [count] = useState(previewColumnCount);
+  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS, Math.random, count === 4 ? 12 : 8));
   const isMobile = useIsMobile();
   const selected = [...lanes.first, ...lanes.second];
-  const columns = isMobile ? [lanes.first, lanes.second] : [selected.slice(0, 3), selected.slice(3, 6), selected.slice(6)];
+  const perLane = Math.ceil(selected.length / count);
+  const columns = isMobile
+    ? [lanes.first, lanes.second]
+    : Array.from({ length: count }, (_, i) => selected.slice(i * perLane, (i + 1) * perLane));
   return (
-    <div className="login-stack" data-login-stack>
+    <div className="login-stack" data-login-stack data-columns={isMobile ? undefined : count}>
       <div className="login-stack__lanes" aria-hidden="true">
         {columns.map((clips, index) => <Lane key={index} clips={clips} reverse={index % 2 === 1} />)}
       </div>
