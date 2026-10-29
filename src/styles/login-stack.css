@@ -52,7 +52,7 @@ html[data-system-tone="light"] .login-stack-corner {
   align-self: start;
   flex-direction: column;
   gap: 8px;
-  animation: ls-up 32s linear infinite;
+  animation: ls-up 44s linear infinite;
   will-change: transform;
 }
 .login-stack__lane--down {
@@ -133,9 +133,10 @@ html[data-system-tone="light"] .login-stack-corner {
     margin-right: auto;
   }
   .login-stack-scroll .login-stack__lanes {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 0;
   }
+  .login-stack-scroll .login-stack__tile { border-radius: 14px; }
 }
 
 .login-stack-method {
