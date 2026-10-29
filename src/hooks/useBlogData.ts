@@ -9,6 +9,17 @@ import { BlogPost, BlogTag } from '@/types/blog';
 // full-content modules in src/data are generator-only inputs now.
 import { newPostsMetadata as newPosts, excludedTitles } from '@/data/blog-metadata.generated';
 
+// Posts pinned to the top of the Featured row, in this order. Everything else
+// that is featured follows, newest first.
+const PINNED_FEATURED_SLUGS = [
+  'dehub-next-chapter-riftn-bnb-recovery-relaunch',
+  'q4-development-overview',
+];
+const pinRank = (slug: string) => {
+  const rank = PINNED_FEATURED_SLUGS.indexOf(slug);
+  return rank === -1 ? PINNED_FEATURED_SLUGS.length : rank;
+};
+
 export const useBlogData = () => {
   const { t: _copy } = _useCopy();
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,7 +92,7 @@ export const useBlogData = () => {
         !(post.title.includes('Q1') && post.title.includes('Overview')) && 
         post.title !== 'MVP App Released & Listed on Google Play Store'
       )
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      .sort((a, b) => pinRank(a.slug) - pinRank(b.slug) || new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
       .map(post => ({ ...post, ...translated?.[post.slug] }));
   }, [_copy, translated]);
 

@@ -3085,7 +3085,7 @@ export const newPostsMetadata: BlogPost[] = [
       "2026"
     ],
     "readingTime": 12,
-    "featured": false,
+    "featured": true,
     "status": "published",
     "seoTitle": "Q4 Development Overview | DeHub",
     "seoDescription": "Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout."
