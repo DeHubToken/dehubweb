@@ -10,7 +10,8 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
-import { useTrendingCategories, useAllTrendingCategories, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
+import { useTrendingCategories, useAllTrendingCategories, prefetchTrendingPeriods, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
+import { useQueryClient } from '@tanstack/react-query';
 
 const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -99,6 +100,13 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
     observer.observe(el);
     return () => observer.disconnect();
   }, [topicPeriod, hasMore]);
+
+  // The rotation below will visit every period; load them together up front.
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (!isAutoRotating || !isOnScreen) return;
+    prefetchTrendingPeriods(queryClient, TOPIC_PERIODS.map(p => p.value));
+  }, [isAutoRotating, isOnScreen, queryClient]);
 
   // Auto-rotate through periods every 5 seconds (skip ticks while the browser
   // tab is hidden — this list is mounted app-wide via the sidebar)
