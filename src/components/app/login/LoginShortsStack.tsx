@@ -76,12 +76,20 @@ function Lane({ clips, reverse }: { clips: ClipName[]; reverse?: boolean }) {
   );
 }
 
+/** Desktop shows four lanes; phones keep two. */
+const DESKTOP_LANES = 4;
+
 export function LoginShortsStack() {
   const { t } = useTranslation();
-  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS));
   const isMobile = useIsMobile();
+  const count = DESKTOP_LANES;
+  const [lanes] = useState(() => loginClipLanes(LOGIN_CLIP_IDS, Math.random, 12));
   const selected = [...lanes.first, ...lanes.second];
-  const columns = isMobile ? [lanes.first, lanes.second] : [selected.slice(0, 3), selected.slice(3, 6), selected.slice(6)];
+  const perLane = Math.ceil(selected.length / count);
+  // Phones keep two lanes of four so they drift at the same speed as before.
+  const columns = isMobile
+    ? [selected.slice(0, 4), selected.slice(4, 8)]
+    : Array.from({ length: count }, (_, i) => selected.slice(i * perLane, (i + 1) * perLane));
   return (
     <div className="login-stack" data-login-stack>
       <div className="login-stack__lanes" aria-hidden="true">
