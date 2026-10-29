@@ -15,7 +15,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
-import { forgetPayment } from '@/lib/ai-payment';
 import i18next from 'i18next';
 import { isImageProviderUnavailable } from '@/lib/image-provider-error';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -75,7 +74,13 @@ export async function invokeAi<T = any>(
   if (typeof body?.txHash === 'string' && body.purpose !== 'voice') {
     const exhausted = !!result.error
       && isPaymentExhausted(await readFunctionError(result.error, result.data));
-    if (!result.error || exhausted) forgetPayment(body.txHash, exhausted);
+    if (!result.error || exhausted) {
+      // Loaded here, not at the top: ai-payment pulls in the whole wallet
+      // stack, and this file is reached from the emoji picker on every page.
+      // Only a paid call gets this far, and its paywall has loaded it already.
+      const { forgetPayment } = await import('@/lib/ai-payment');
+      forgetPayment(body.txHash, exhausted);
+    }
   }
 
   return result;

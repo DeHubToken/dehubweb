@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
+// The app initialises i18n at boot; ai-invoke itself no longer drags it in.
+import '@/i18n';
 import { readFunctionError } from '@/lib/ai-invoke';
 
 /**
