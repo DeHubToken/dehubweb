@@ -3,6 +3,7 @@ import MaintenanceGate from '@/components/MaintenanceGate';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
+import { AvatarPrompt } from "@/components/app/AvatarPrompt";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
@@ -1050,6 +1051,10 @@ const App = () => (
                               notifications; renders nothing itself. Reads
                               auth, so it must stay inside WalletProviders. */}
                           <NotificationsPromptToast />
+
+                          {/* Asks accounts with no profile picture to add one,
+                              a few times at most. Same provider requirement. */}
+                          <AvatarPrompt />
 
                           {/* Says so when a granted permission is delivering
                               nothing, which the Settings row alone only ever
