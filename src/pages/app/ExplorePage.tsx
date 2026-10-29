@@ -235,19 +235,11 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
         aria-label={placeholder}
         className={cn(
           'w-full pl-12 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
-          trailing ? (local ? 'pr-[76px]' : 'pr-12') : 'pr-4',
+          trailing ? 'pr-12' : 'pr-4',
         )}
       />
       <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
-        {local && (
-          <button
-            type="button"
-            onClick={() => push('')}
-            className="h-8 w-8 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
+        {/* No clear button: the keyboard's own clear does the job. */}
         {trailing}
       </div>
     </div>
@@ -806,11 +798,53 @@ export default function ExplorePage() {
                 title={t('explorePage.filters')}
                 className={cn(
                   'relative h-8 w-8 flex items-center justify-center transition-colors',
-                  showFilters || activeFilterCount > 0 ? 'text-white' : 'text-zinc-500 hover:text-white',
+                  showFilters || activeFilterCount > 0 ? 'text-white' : 'text-zinc-500 [@media(hover:hover)]:hover:text-white',
                 )}
               >
-                <SlidersHorizontal className="h-[18px] w-[18px]" />
-                {activeFilterCount > 0 && (
+                {/* Open: the sliders spin into a glowing X that closes the
+                    panel, the same turn the home pill's toggle makes into
+                    its back arrow. */}
+                <AnimatePresence initial={false}>
+                  {showFilters && (
+                    <motion.span
+                      key="glow"
+                      aria-hidden
+                      data-explore-filter-glow
+                      initial={{ opacity: 0, scale: 0.6 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.6 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="pointer-events-none absolute inset-0 rounded-full blur-[3px]"
+                      style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, currentColor var(--explore-glow-core, 65%), transparent), color-mix(in srgb, currentColor var(--explore-glow-edge, 20%), transparent) 60%, transparent)' }}
+                    />
+                  )}
+                </AnimatePresence>
+                <AnimatePresence mode="wait" initial={false}>
+                  {showFilters ? (
+                    <motion.span
+                      key="close"
+                      initial={{ rotate: -180, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 180, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="relative z-10 flex"
+                    >
+                      <X className="h-[18px] w-[18px]" />
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="sliders"
+                      initial={{ rotate: 180, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -180, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="relative z-10 flex"
+                    >
+                      <SlidersHorizontal className="h-[18px] w-[18px]" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+                {activeFilterCount > 0 && !showFilters && (
                   <span className="absolute top-0 right-0 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
                     {activeFilterCount}
                   </span>
