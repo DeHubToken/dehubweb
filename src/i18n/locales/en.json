@@ -12423,6 +12423,18 @@
     "reminderLater": "Not now"
   },
   "copy": {
+    "1aa9d734f2ee": "Choose what to search",
+    "55656b5e434f": "Close search",
+    "ef557404f465": "No results for “{{query}}”",
+    "35034aa59bd3": "Nothing in {{feed}} matched. Try other words or search everything.",
+    "57e2faa5ec63": "Search DeHub",
+    "96d7bff86b44": "Search could not load",
+    "415155739590": "Search everything",
+    "9e13d826baaf": "Search images",
+    "cbf6f228327c": "Search music",
+    "c7661da99c41": "Search videos",
+    "90f1afe66801": "Searching for “{{query}}”…",
+    "d7b559f2d8c6": "Try other words, or change the filters.",
     "1607715e45ed": "Tap the ball to talk, or type below",
     "d1a0c7e2f301": "What's on your mind today?",
     "d1a0c7e2f302": "What are you thinking about today?",

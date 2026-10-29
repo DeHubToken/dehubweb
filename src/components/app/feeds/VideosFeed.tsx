@@ -29,6 +29,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -64,6 +65,8 @@ import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 interface VideosFeedProps {
   showFilters?: boolean;
+  /** Words typed in the feed pill's search box: the feed shows search results under its filters. */
+  searchQuery?: string;
   refreshKey?: number;
 }
 
@@ -444,7 +447,7 @@ function CategoryFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedProps) {
+export function VideosFeed({ showFilters = false, refreshKey = 0, searchQuery = '' }: VideosFeedProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -788,7 +791,7 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
 
   // Show loading during initial load or while auto-fetching for duration filter.
   // A pull-to-refresh keeps the cards on screen while the fresh page loads.
-  if ((isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters) {
+  if ((isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters && !searchQuery) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
@@ -857,7 +860,9 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
       {/* Video Grid, filter loader or Empty State. The loader sits BELOW the
           filter panel, not in place of the whole feed, so the chips the user is
           working with stay on screen and clickable while the request runs. */}
-      {isApiLoading || isAutoFetching || isAutoRetrying ? (
+      {searchQuery ? (
+        <FeedSearchResults tab="videos" query={searchQuery} />
+      ) : isApiLoading || isAutoFetching || isAutoRetrying ? (
         <VideosFeedSkeleton />
       ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />

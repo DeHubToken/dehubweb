@@ -27,6 +27,7 @@ import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 import { MusicFeedSkeleton, MusicVideoCardSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
 // Direct, not through the radio barrel: that barrel also re-exports the
 // fullscreen visualizer, so importing one component through it pulled the whole
 // canvas visualizer module onto the boot path.
@@ -394,9 +395,11 @@ interface MusicFeedProps {
   tab?: string | null;
   /** Changes on every arrival, so a second visit to the same ?tab= still applies. */
   tabRequest?: string;
+  /** Words typed in the feed pill's search box: the feed shows search results under its filters. */
+  searchQuery?: string;
 }
 
-export function MusicFeed({ showFilters = false, tab, tabRequest }: MusicFeedProps) {
+export function MusicFeed({ showFilters = false, tab, tabRequest, searchQuery = '' }: MusicFeedProps) {
   const [activeSubTab, setActiveSubTab] = usePersistedFeedFilter<MusicSubTab>('music', 'subTab', 'all', MUSIC_SUB_TAB_VALUES);
   useEffect(() => {
     const requested = MUSIC_SUB_TAB_VALUES.find(value => value === tab);
@@ -598,7 +601,7 @@ export function MusicFeed({ showFilters = false, tab, tabRequest }: MusicFeedPro
 
       {/* Content - Scrollable */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-3">
-        {renderContent()}
+        {searchQuery ? <FeedSearchResults tab="music" query={searchQuery} /> : renderContent()}
       </div>
 
     </div>
