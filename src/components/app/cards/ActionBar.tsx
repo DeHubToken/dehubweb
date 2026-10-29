@@ -1242,7 +1242,10 @@ export function ActionBar({
       className
     )}>
       {utilityDesktopAnchor ? (
-        <div className={cn("flex flex-wrap items-center justify-between gap-y-2 gap-x-3", leftHanded && "flex-row-reverse")}>
+        <div className={cn("flex flex-wrap items-center justify-between gap-y-2 gap-x-3", leftHanded ? "flex-row-reverse lg:pl-0.5" : "lg:pr-0.5")}>
+          {/* Counters end on bare digits while icons carry ~2px of built-in
+              inset, so the trailing count read tighter to the card edge than
+              the icons do to the side and bottom. lg:pr-0.5 nudges it in. */}
           {/* Utility cluster — a real flex item of this justify-between row
               (not a separately-margined sibling), so the gap to the
               neighbouring engagement button matches the gaps between every
@@ -1269,7 +1272,8 @@ export function ActionBar({
       ) : (
         <div className={cn(
           "flex flex-wrap items-center gap-y-2 gap-x-2 justify-between",
-          leftHanded && "flex-row-reverse",
+          // Same optical nudge as above: the trailing count is bare digits.
+          leftHanded ? "flex-row-reverse pl-0.5" : "pr-0.5",
           centered && "lg:justify-center lg:gap-x-4"
         )}>
           {/* Utility actions (bookmark, pin, info) — display:contents so every
