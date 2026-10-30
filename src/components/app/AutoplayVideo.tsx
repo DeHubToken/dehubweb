@@ -101,9 +101,6 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   const interacted = useFirstInteraction();
   const playbackAllowed = useFeedPlaybackAllowed();
   const engaged = playbackAllowed && (!deferUntilInteraction || interacted);
-  // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
-  // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
-  const poster = useResolvedThumbnail(posterProp, posterWidth);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -160,6 +157,33 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     observer.observe(el);
     return () => observer.disconnect();
   }, [threshold, rootMargin, playbackGroup]);
+
+  // The poster waits until the tile is within a screen of the viewport. A
+  // <video poster> has no loading="lazy", so every tile in a strip fetched
+  // its poster at mount: the home page's shorts reel sits below the fold and
+  // pulled all ~30 at once, most of them sideways out of view. Tiles clipped
+  // by their horizontal scroller do not intersect, so a strip loads only what
+  // is on screen and the rest as they are swiped in. Latched, so a poster
+  // never disappears once shown.
+  const [nearViewport, setNearViewport] = useState(false);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || nearViewport) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setNearViewport(true);
+        observer.disconnect();
+      },
+      { rootMargin: '100% 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [nearViewport]);
+  // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
+  // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
+  // The resolver probes by downloading, so it waits for the same latch.
+  const poster = useResolvedThumbnail(nearViewport ? posterProp : undefined, posterWidth);
 
   // Play/pause based on visibility, disabled state, and group slot
   useEffect(() => {
@@ -231,7 +255,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
           while it is actually loading. A tile waiting for its turn shows the
           <video> poster still; a pulse on every waiting tile (a Shorts row
           has ~20) kept Safari repainting the feed forever. */}
-      {!hasLoaded && (shouldLoad || !poster) && (
+      {!hasLoaded && (shouldLoad || !posterProp) && (
         <div className="absolute inset-0 z-[1]">
           <VideoGlitchLoader poster={poster} />
         </div>
