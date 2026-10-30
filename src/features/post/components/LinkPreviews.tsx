@@ -131,7 +131,11 @@ export function LinkPreviews({ text, onRemoveCommunityLink, hideAssetCards, onHi
               e.stopPropagation();
               setAssetCardsHidden(true);
             }}
-            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
+            // On the corner, not inside it: the price sits top right.
+            // Inline colours: the light themes remap black/white utility classes,
+            // which left a white X on a white dot there.
+            className="absolute -top-2 -right-2 p-1 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+            style={{ background: 'rgba(0,0,0,0.72)', color: '#fff', boxShadow: '0 0 0 1px rgba(255,255,255,0.25)' }}
           >
             <X className="w-3.5 h-3.5" />
           </button>
