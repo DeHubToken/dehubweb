@@ -5073,6 +5073,17 @@
     "sellYourFractions": "Perçeyên xwe bifiroşe ({{held}} li cem te)"
   },
   "creator": {
+    "layerNewAttempt": "Hewldaneke nû binirxîne",
+    "layerPngRequired": "Wêneyeke PNG ya tomarkirî hilbijêre, herî zêde 12 MiB û çar megapîksel.",
+    "layerTitle": "Qatên wêneyê ji hev veqetîne",
+    "layerSource": "Wêneya resen",
+    "layerDescription": "Çar qatên PNG yên zelal. Nivîs beşek ji her wêneyê dimîne.",
+    "layerSeparate": "Qatan ji hev veqetîne",
+    "layerPending": "Karê tomarkirî: {{status}}. Encamê bistîne an bê dayîna din dîsa tomarkirinê biceribîne.",
+    "layerCollect": "Encamê bistîne / tomarkirinê dîsa biceribîne",
+    "layerOpen": "Qatan di edîtorê de veke",
+    "layerExport": "Qatên PNG û pelê danasînê wek ZIP derxe",
+    "layerNumber": "Qata {{number}}",
     "audioExportFormat": "Formata derxistinê",
     "audioExportMp3": "MP3 · 128 kbps",
     "audioExportWav": "WAV · 24 kHz · mono",

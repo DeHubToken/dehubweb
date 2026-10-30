@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LibraryManager } from './LibraryManager';
+vi.mock('./ImageLayersPanel', () => ({ ImageLayersPanel: () => null }));
 const mocks = vi.hoisted(() => ({ list: vi.fn(), update: vi.fn(), apply: vi.fn() }));
 vi.mock('@/lib/creator/cloudLibrary', () => ({ loadCloudGenerationPage: mocks.list, updateLibrarySelection: mocks.update }));
 vi.mock('@/store/generationStore', () => ({ useGenerationStore: { getState: () => ({ applyLibraryPreferences: mocks.apply }) } }));

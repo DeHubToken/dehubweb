@@ -1,5 +1,8 @@
 import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, checkRateLimit } from '../_shared/auth.ts';
 import { parseLibraryAction, updateLibraryAssets } from './actions.ts';
+import { retryGenerationSave, settleGeneration } from '../_shared/generation-jobs.ts';
+import { hydrateGenerationResult } from '../_shared/generation-result.ts';
+import { prepareLayerSource } from '../_shared/creator-layer-source.ts';
 
 const BUCKET = 'creator-assets';
 const ID = /^[a-zA-Z0-9_-]{6,80}$/;
@@ -15,6 +18,31 @@ Deno.serve(async (req) => {
   if (!limited.allowed) return jsonResponse({ error: 'Please wait before saving more generations.' }, 429);
   try {
     const body = await req.json();
+    if (body.action === 'layer-source') return jsonResponse(await prepareLayerSource(auth.wallet,String(body.sourceAssetId || ''),body.sourceDigest));
+    if (body.action === 'layer-jobs') {
+      if (!ID.test(String(body.sourceAssetId || ''))) return jsonResponse({ error: 'Choose one saved image' }, 400);
+      const jobs = await db.from('ai_generation_jobs').select('id,status,created_at,result,prediction_id,provider_app,metadata')
+        .eq('wallet_address', auth.wallet).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools')
+        .eq('metadata->>sourceAssetId', body.sourceAssetId).order('created_at', { ascending: false }).limit(20);
+      if (jobs.error) throw jobs.error;
+      return jsonResponse({ jobs: (jobs.data || []).map(job => ({ id: job.id, status: job.status, createdAt: job.created_at,
+        savePending: job.result?.savePending === true, delivered:job.status==='succeeded' && !!job.result?.libraryId && !job.result?.savePending,
+        paymentRestored:job.result?.paymentRestored===true, sourceDigest:job.metadata?.sourceDigest, requestId: job.prediction_id, appId: job.provider_app })) });
+    }
+    if (body.action === 'layer-set') {
+      const { data: job, error } = await db.from('ai_generation_jobs').select('*').eq('wallet_address', auth.wallet).eq('id', String(body.id || '')).eq('model', 'qwen-image-layered').eq('endpoint', 'fal-ai-tools').maybeSingle();
+      if (error) throw error;
+      if (!job) return jsonResponse({ error: 'Layer set was not found' }, 404);
+      if (job.status === 'processing' && job.result?.providerCompleted && job.prediction_id) {
+        return await settleGeneration('fal-ai-tools', job.prediction_id, jsonResponse({ ...job.result, status: 'succeeded' }));
+      }
+      if (job.status !== 'succeeded') return jsonResponse({ status: job.status, requestId: job.prediction_id, appId: job.provider_app });
+      await retryGenerationSave(job);
+      const current = await db.from('ai_generation_jobs').select('*').eq('id', job.id).eq('wallet_address', auth.wallet).single();
+      if (current.error) throw current.error;
+      const result = await hydrateGenerationResult(current.data, db);
+      return jsonResponse({ status: result?.layerSet ? 'succeeded' : 'saving', layerSet: result?.layerSet, savePending: !!result?.savePending });
+    }
     if (body.action === 'update-selection') {
       let selection;
       try { selection = parseLibraryAction(body); }
@@ -48,6 +76,9 @@ Deno.serve(async (req) => {
     }
     const id = String(body.id ?? '');
     if (!ID.test(id)) return jsonResponse({ error: 'Invalid generation id' }, 400);
+    if (/^[0-9a-f-]{36}-layer-[0-3]$/i.test(id) && ['prepare','complete','remove'].includes(body.action)) {
+      return jsonResponse({ error: 'Layer originals are managed by their saved set. Use Hide to remove them from your library.' }, 409);
+    }
     if (body.action === 'prepare-preview' || body.action === 'complete-preview') {
       const existing = await db.from('creator_assets').select('metadata').eq('wallet_address', auth.wallet).eq('id', id).eq('ready', true).maybeSingle();
       if (existing.error) throw existing.error;

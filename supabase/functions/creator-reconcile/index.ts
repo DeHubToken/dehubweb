@@ -24,7 +24,10 @@ Deno.serve(async (req) => {
   let processed = 0;
   await Promise.all((jobs ?? []).map(async (job) => {
     try {
-      if ((job.status === 'starting' || job.status === 'processing') && new Date(job.created_at).getTime() < abandonedBefore) {
+      // An interrupted layer submission may already have spent provider credits.
+      // Retain its journal for recovery instead of releasing it for paid replay.
+      if (job.model === 'qwen-image-layered' && job.status === 'submitting') return;
+      if (job.model !== 'qwen-image-layered' && (job.status === 'starting' || job.status === 'processing') && new Date(job.created_at).getTime() < abandonedBefore) {
         // Only refund if the row was still running: a render that settled since
         // the select above must not be paid back as well.
         const marked = await transitionGeneration(job.id, 'failed', { status: 'failed', error: 'The render did not finish in time.' }, {
@@ -57,8 +60,10 @@ Deno.serve(async (req) => {
       }
       processed++;
     } catch (error) { console.error('[creator-reconcile]', job.id, String(error)); }
-    // Rotate across all pending jobs instead of starving newer submissions.
-    await db.from('ai_generation_jobs').update({ updated_at: new Date().toISOString() }).eq('id', job.id);
+    finally {
+      // Held ambiguous submissions also rotate; they must not starve active saves.
+      await db.from('ai_generation_jobs').update({ updated_at: new Date().toISOString() }).eq('id', job.id);
+    }
   }));
   return jsonResponse({ processed });
 });

@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import type { GenerationJob } from '@/store/generationStore';
 
-async function call(wallet: string, body: Record<string, unknown>) {
+export async function callCreatorLibrary(wallet: string, body: Record<string, unknown>) {
   const token = await ensureFreshToken();
   const { data, error } = await supabase.functions.invoke('creator-library', {
     body, headers: { 'x-dehub-token': token, 'x-wallet-address': wallet },
@@ -10,6 +10,7 @@ async function call(wallet: string, body: Record<string, unknown>) {
   if (error || data?.error) throw new Error(data?.error || error?.message || 'Could not save your generation');
   return data;
 }
+const call = callCreatorLibrary;
 
 export async function saveCloudGeneration(wallet: string, job: GenerationJob): Promise<void> {
   const { url, sourceImage, ticket, ...metadata } = job;
