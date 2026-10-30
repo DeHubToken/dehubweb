@@ -228,7 +228,7 @@ export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: s
       {layout === 'shorts' ? (
         <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
           {shorts.map((short, i) => (
-            <button key={short.id} type="button" onClick={() => setViewerIndex(i)} className="relative aspect-[9/16] min-w-0 overflow-hidden rounded-lg bg-white/[0.06] text-left">
+            <button key={short.id} type="button" data-media-tile data-media-scrim onClick={() => setViewerIndex(i)} className="relative aspect-[9/16] min-w-0 overflow-hidden rounded-lg bg-white/[0.06] text-left">
               {short.thumbnail && <img src={short.thumbnail} alt="" className="h-full w-full object-cover" loading="lazy" />}
               <span className="absolute inset-0 bg-gradient-to-b from-transparent from-55% to-black/75" />
               <span className="absolute bottom-1.5 left-1.5 right-1.5 block truncate text-[10px] font-semibold text-white">@{short.creatorUsername || short.username}</span>
