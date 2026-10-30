@@ -44,6 +44,9 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
       <div className="flex -space-x-2" aria-label={displayed.map(getDisplayName).join(', ')}>
         {displayed.map((item) => {
           const url = getAvatarUrl(item);
+          // The 1px ring leaves a 1px inner corner, so the picture and the
+          // letter tile use that, not the primitive's rounded-lg, or the
+          // tile's fill/hairline bulges rounder than the ring around it.
           return (
             <Avatar
               key={item.address}
@@ -51,8 +54,8 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
               className="w-5 h-5 !rounded-[2px] border border-zinc-900 cursor-pointer"
               onClick={() => handleNavigate(item)}
             >
-              {url && <AvatarImage src={url} alt={getDisplayName(item)} className="!rounded-[2px]" />}
-              <AvatarFallback className="bg-zinc-700 text-white text-[8px] font-medium">
+              {url && <AvatarImage src={url} alt={getDisplayName(item)} className="!rounded-[1px]" />}
+              <AvatarFallback className="!rounded-[1px] bg-zinc-700 text-white text-[8px] font-medium">
                 {(item.username || item.displayName || item.address).charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
