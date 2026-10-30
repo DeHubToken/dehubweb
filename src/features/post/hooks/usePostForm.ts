@@ -362,6 +362,8 @@ export function usePostForm(
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   // The content warning being written: null is "none", '' is "toggled on, still empty".
   const [contentWarning, setContentWarning] = useState<string | null>(null);
+  // The poster closed the $TICKER / address card, so the post goes out without one.
+  const [hideAssetCards, setHideAssetCards] = useState(false);
   // Who may quote the post. Anyone, unless the creator narrows it.
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   // Who may reply. Anyone, unless the creator narrows it.
@@ -1222,6 +1224,7 @@ export function usePostForm(
     setLiveMode(null);
     setPoll.complete(poll, null);
     setContentWarning(null);
+    setHideAssetCards(false);
     setQuotePolicy('public');
     setReplyPolicy('public');
     setStitchPolicy(null);
@@ -1998,6 +2001,7 @@ export function usePostForm(
           ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
+        hideAssetCards: hideAssetCards || undefined,
         quotePolicy,
         replyPolicy,
         // A livestream and a quote are always public.
@@ -2759,7 +2763,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy,
+    isQuoting, quotedPost, contentWarning, hideAssetCards, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 
@@ -2793,6 +2797,7 @@ export function usePostForm(
       liveMode,
       poll,
       contentWarning,
+      hideAssetCards,
       quotePolicy,
       replyPolicy,
       stitchPolicy,
@@ -2837,6 +2842,7 @@ export function usePostForm(
       setLiveMode,
       setPoll,
       setContentWarning,
+      setHideAssetCards,
       setQuotePolicy,
       setStitchPolicy,
       setReplyPolicy,

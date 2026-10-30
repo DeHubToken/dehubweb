@@ -636,7 +636,10 @@ function FeedDescription({
   translatedText,
   onOpen,
   stage = false,
+  hideAssetCards = false,
 }: { 
+  /** The poster closed the market card for this post. */
+  hideAssetCards?: boolean;
   onOpen?: () => void;
   /** Phone post page: a shorter clamp (about three lines) with "more". */
   stage?: boolean;
@@ -693,7 +696,7 @@ function FeedDescription({
   const { links: dehubLinks } = useDehubLinks(linkSource);
   // Contract addresses come out here too, for the same reason and at the same
   // stage: half a stripped address left behind by the clamp is worse than none.
-  const { refs: assetRefs } = useAssetRefsInText(linkSource);
+  const { refs: assetRefs } = useAssetRefsInText(linkSource, undefined, hideAssetCards);
   const linkFreeTitle = useMemo(
     () => stripAssetRefs(
       dehubLinks.length ? stripDehubLinkMatches(displayTitle, dehubLinks) : displayTitle,
@@ -1447,6 +1450,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}
+          hideAssetCards={post.hideAssetCards}
           isTranslated={isTranslated}
           translatedText={translatedText}
           stage={!!stage}

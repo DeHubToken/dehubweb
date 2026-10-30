@@ -60,6 +60,9 @@ interface PostContentAreaProps {
   /** The content warning being written, or null when the post has none. */
   contentWarning?: string | null;
   onContentWarningChange?: (text: string) => void;
+  /** The poster closed the market card; the post goes out without one. */
+  hideAssetCards?: boolean;
+  onHideAssetCardsChange?: (hidden: boolean) => void;
   liveMode: LiveMode;
   canPost: boolean;
   destinations: string[];
@@ -162,6 +165,8 @@ export function PostContentArea({
   onSetMediaDescription,
   contentWarning,
   onContentWarningChange,
+  hideAssetCards,
+  onHideAssetCardsChange,
   liveMode,
   canPost,
   destinations,
@@ -698,6 +703,8 @@ export function PostContentArea({
         <div>
           <LinkPreviews 
             text={text} 
+            hideAssetCards={hideAssetCards}
+            onHideAssetCardsChange={onHideAssetCardsChange}
             onRemoveCommunityLink={() => {
               // Remove community URL from text
               const cleaned = text.replace(/https?:\/\/[^\s]*\/app\/communities\/[a-zA-Z0-9_-]+/g, '').trim();

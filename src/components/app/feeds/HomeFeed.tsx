@@ -443,6 +443,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         // and text branches below carry it; this one did not.
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
@@ -480,6 +481,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'video',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
@@ -522,6 +524,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'post',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
