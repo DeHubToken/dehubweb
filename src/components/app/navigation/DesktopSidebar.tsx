@@ -427,7 +427,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button
               onClick={handleLogoClick}
               data-glass-bare-action
-              data-entry-logo
               className={cn(
                 "cursor-pointer flex items-center justify-center",
                 renderCompactLogo ? "overflow-hidden" : "overflow-visible",
