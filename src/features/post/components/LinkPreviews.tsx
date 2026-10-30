@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { useTranslation as _useCopy } from 'react-i18next';
 import X from "@/components/ui/cut-icons/close";
 
 import { LinkPreviewCard } from './LinkPreviewCard';
@@ -12,6 +13,13 @@ import { findDehubLinks, parseDehubLink } from '@/lib/dehub-links';
 interface LinkPreviewsProps {
   text: string;
   onRemoveCommunityLink?: () => void;
+  /**
+   * The poster closed the market card. Owned by the composer because it goes
+   * out with the post — a closed card stays closed in the feed too. Without a
+   * handler the X still works, for this draft only.
+   */
+  hideAssetCards?: boolean;
+  onHideAssetCardsChange?: (hidden: boolean) => void;
 }
 
 /**
@@ -49,7 +57,8 @@ function useSettledText(text: string): string {
   return settled;
 }
 
-export function LinkPreviews({ text: liveText, onRemoveCommunityLink }: LinkPreviewsProps) {
+export function LinkPreviews({ text: liveText, onRemoveCommunityLink, hideAssetCards, onHideAssetCardsChange }: LinkPreviewsProps) {
+  const { t: _copy } = _useCopy();
   const text = useSettledText(liveText);
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
@@ -67,7 +76,19 @@ export function LinkPreviews({ text: liveText, onRemoveCommunityLink }: LinkPrev
   // The market cards the post will carry, shown while it is still a draft — the
   // poster chose an asset from a dropdown, so they should see which one they got
   // before they publish it.
-  const { refs: assetRefs } = useAssetRefsInText(text);
+  // before they publish it. They can also close it: not every $TICKER wants a
+  // price card under it.
+  const { refs: foundAssetRefs } = useAssetRefsInText(text);
+  const [localAssetCardsHidden, setLocalAssetCardsHidden] = useState(false);
+  const assetCardsHidden = hideAssetCards ?? localAssetCardsHidden;
+  const setAssetCardsHidden = onHideAssetCardsChange ?? setLocalAssetCardsHidden;
+  const assetRefs = assetCardsHidden ? [] : foundAssetRefs;
+
+  // Closing is for the tickers in the text now. Once they are all gone, the
+  // next one typed gets its card back.
+  useEffect(() => {
+    if (assetCardsHidden && foundAssetRefs.length === 0) setAssetCardsHidden(false);
+  }, [assetCardsHidden, foundAssetRefs.length, setAssetCardsHidden]);
 
   useEffect(() => {
     // Outside links only — DeHub links get their own cards above.
@@ -127,7 +148,26 @@ export function LinkPreviews({ text: liveText, onRemoveCommunityLink }: LinkPrev
 
   return (
     <div className="mt-3 space-y-2">
-      <AssetRefCards refs={assetRefs} className="mt-0" />
+      {assetRefs.length > 0 && (
+        <div className="relative">
+          <AssetRefCards refs={assetRefs} className="mt-0" />
+          <button
+            type="button"
+            aria-label={_copy("copy.removeTickerCard", { defaultValue: "Remove ticker card" })}
+            onClick={(e) => {
+              e.stopPropagation();
+              setAssetCardsHidden(true);
+            }}
+            // On the corner, not inside it: the price sits top right.
+            // Inline colours: the light themes remap black/white utility classes,
+            // which left a white X on a white dot there.
+            className="absolute -top-2 -right-2 p-1 rounded-full opacity-90 hover:opacity-100 transition-opacity z-10"
+            style={{ background: 'rgba(0,0,0,0.72)', color: '#fff', boxShadow: '0 0 0 1px rgba(255,255,255,0.25)' }}
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {dehubLinks.map((link) => (
         <div className="relative" key={`${link.kind}-${link.path}`}>

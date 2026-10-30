@@ -83,6 +83,8 @@ export interface PostFormState {
   poll: PollData | null;
   /** The content warning being written; null when the post has none. */
   contentWarning: string | null;
+  /** The poster closed the market card, so the post carries none. */
+  hideAssetCards: boolean;
   /** Who may quote the post. */
   quotePolicy: import('@/lib/api/dehub/types').QuotePolicy;
   /** Who may reply to the post. */
@@ -118,6 +120,7 @@ export interface PostFormActions {
   setLiveMode: (value: LiveMode) => void;
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   setContentWarning: (value: string | null) => void;
+  setHideAssetCards: (value: boolean) => void;
   setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
   setStitchPolicy: (value: import('@/lib/remix-links').RemixPolicy | null) => void;
   setReplyPolicy: (value: import('@/lib/api/dehub/types').ReplyPolicy) => void;
