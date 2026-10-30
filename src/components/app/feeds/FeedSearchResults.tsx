@@ -3,12 +3,14 @@
  * ===================
  * The grid the feed turns into while its pill is a search box. Results stay
  * inside the feed they were searched from and use that feed's toggles:
- * photos as a mosaic, videos as small 16:10 tiles, music as cover tiles, and
- * Home as everything with matching people first.
+ * photos as a mosaic, videos as small 16:10 tiles, shorts as 9:16 tiles that
+ * open the swipe viewer, music as cover tiles, and Home as everything with
+ * matching people first.
  *
  * @module components/app/feeds/FeedSearchResults
  */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation as _useCopy } from 'react-i18next';
 import Play from '@/components/ui/cut-icons/play';
@@ -20,6 +22,11 @@ import { useUnifiedFeed, mapToImagePost, mapToVideoItem, type UnifiedFeedItem } 
 import { useDeHubSearch, mapAccountToCreator } from '@/hooks/use-dehub-search';
 import { feedSearchParams, type FeedSearchTab } from '@/lib/feed-search';
 import { FEED_TABS } from '@/constants/app.constants';
+import { mapToShortVideo } from '@/lib/short-video';
+
+const ShortsViewer = lazy(() =>
+  import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
+);
 
 const PAGE_SIZE = 24;
 
@@ -83,6 +90,13 @@ function TypeBadge({ postType }: { postType: UnifiedFeedItem['postType'] }) {
 
 function ShimmerGrid({ tab }: { tab: FeedSearchTab }) {
   const tile = 'rounded-lg bg-white/[0.06] animate-pulse';
+  if (tab === 'shorts') {
+    return (
+      <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
+        {Array.from({ length: 6 }, (_, i) => <div key={i} className={cn(tile, 'aspect-[9/16]')} />)}
+      </div>
+    );
+  }
   if (tab === 'videos') {
     return (
       <div className="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-3">
@@ -116,7 +130,8 @@ export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: s
   const params = useMemo(() => feedSearchParams(tab, filters, q), [tab, filters, q]);
 
   // Music Videos searches videos, so it gets the video tiles.
-  const layout: FeedSearchTab = params.postType === 'video' ? 'videos' : tab;
+  const layout: FeedSearchTab = tab === 'shorts' ? 'shorts' : params.postType === 'video' ? 'videos' : tab;
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const feed = useUnifiedFeed({ ...params, limit: PAGE_SIZE, enabled: q.length > 0 });
   const people = useDeHubSearch({
@@ -128,7 +143,12 @@ export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: s
     minQueryLength: 2,
   });
 
-  const items = useMemo(() => feed.data?.pages.flatMap((p) => p.items || []) ?? [], [feed.data]);
+  // Shorts leaves pay-per-view out of its feed, so its search does too.
+  const items = useMemo(() => {
+    const all = feed.data?.pages.flatMap((p) => p.items || []) ?? [];
+    return tab === 'shorts' ? all.filter((item) => !item.streamInfo?.isPayPerView) : all;
+  }, [feed.data, tab]);
+  const shorts = useMemo(() => (tab === 'shorts' ? items.map((item, i) => mapToShortVideo(item, i)) : []), [items, tab]);
   const accounts = useMemo(
     () => (people.data?.pages.flatMap((p) => p.accounts) ?? []).map(mapAccountToCreator).slice(0, 10),
     [people.data],
@@ -205,7 +225,17 @@ export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: s
         <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">{_copy("copy.a80811cf6889", { defaultValue: "Posts" })}</p>
       )}
 
-      {layout === 'videos' ? (
+      {layout === 'shorts' ? (
+        <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
+          {shorts.map((short, i) => (
+            <button key={short.id} type="button" onClick={() => setViewerIndex(i)} className="relative aspect-[9/16] min-w-0 overflow-hidden rounded-lg bg-white/[0.06] text-left">
+              {short.thumbnail && <img src={short.thumbnail} alt="" className="h-full w-full object-cover" loading="lazy" />}
+              <span className="absolute inset-0 bg-gradient-to-b from-transparent from-55% to-black/75" />
+              <span className="absolute bottom-1.5 left-1.5 right-1.5 block truncate text-[10px] font-semibold text-white">@{short.creatorUsername || short.username}</span>
+            </button>
+          ))}
+        </div>
+      ) : layout === 'videos' ? (
         <div className="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-3">
           {items.map((item, i) => {
             const v = mapToVideoItem(item, i);
@@ -276,6 +306,22 @@ export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: s
         </div>
       )}
       <div ref={moreRef} className="h-10" />
+      {tab === 'shorts' && (
+        <Suspense fallback={null}>
+          <AnimatePresence>
+            {viewerIndex !== null && (
+              <ShortsViewer
+                shorts={shorts}
+                initialIndex={viewerIndex}
+                onClose={() => setViewerIndex(null)}
+                onLoadMore={() => { if (feed.hasNextPage && !feed.isFetchingNextPage) void feed.fetchNextPage(); }}
+                hasMore={feed.hasNextPage ?? false}
+                isLoadingMore={feed.isFetchingNextPage}
+              />
+            )}
+          </AnimatePresence>
+        </Suspense>
+      )}
     </div>
   );
 }
