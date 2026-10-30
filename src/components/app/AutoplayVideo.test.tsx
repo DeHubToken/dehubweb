@@ -18,10 +18,11 @@ import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 const MP4 = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/6888.mp4';
 const LADDER = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/6888/hls/lq3k9x/master.m3u8';
 
-let intersect: IntersectionObserverCallback;
+let observers: IntersectionObserverCallback[] = [];
 beforeEach(() => {
+  observers = [];
   vi.stubGlobal('IntersectionObserver', class {
-    constructor(callback: IntersectionObserverCallback) { intersect = callback; }
+    constructor(callback: IntersectionObserverCallback) { observers.push(callback); }
     observe() {} unobserve() {} disconnect() {}
   });
   vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
@@ -31,7 +32,8 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
 function visibility(visible: boolean) {
-  act(() => intersect([{ isIntersecting: visible, intersectionRatio: visible ? 1 : 0 } as IntersectionObserverEntry], {} as IntersectionObserver));
+  const entry = { isIntersecting: visible, intersectionRatio: visible ? 1 : 0 } as IntersectionObserverEntry;
+  act(() => observers.forEach(intersect => intersect([entry], {} as IntersectionObserver)));
 }
 
 describe('autoplay grid tiles', () => {
@@ -64,5 +66,17 @@ describe('autoplay grid tiles', () => {
     const { container } = render(<AutoplayVideo src={MP4} />);
     visibility(true);
     expect(hlsVod.setVideoSource).toHaveBeenCalledWith(container.querySelector('video'), { src: MP4, hls: undefined, startLow: true });
+  });
+
+  it('hold the poster until the tile comes near the screen, then keep it', () => {
+    const poster = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/6888.jpg';
+    const { container } = render(<AutoplayVideo src={MP4} poster={poster} />);
+    const video = container.querySelector('video')!;
+    expect(video.getAttribute('poster')).toBeNull();
+
+    visibility(true);
+    expect(video.getAttribute('poster')).toContain('6888.jpg');
+    visibility(false);
+    expect(video.getAttribute('poster')).toContain('6888.jpg');
   });
 });
