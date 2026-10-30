@@ -114,6 +114,8 @@ export interface MintPostParams {
   shopListingCount?: number;
   /** Alt text, one per uploaded image or video in file order. */
   mediaDescriptions?: string[];
+  /** The poster closed the market card for the $TICKER / address in the text. Only sent when true. */
+  hideAssetCards?: boolean;
   /** Content warning: one line shown in place of the post until a viewer opens it. */
   spoilerText?: string;
   /** Who may quote it. Only sent when it is not the default, anyone. */
@@ -260,6 +262,10 @@ export async function mintPost(
 
   if (params.mediaDescriptions?.some(Boolean)) {
     formData.append('mediaDescriptions', JSON.stringify(params.mediaDescriptions));
+  }
+
+  if (params.hideAssetCards) {
+    formData.append('hideAssetCards', 'true');
   }
 
   if (params.spoilerText?.trim()) {
