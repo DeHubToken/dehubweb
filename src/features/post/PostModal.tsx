@@ -290,6 +290,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onSetMediaDescription={actions.setMediaDescription}
         contentWarning={state.contentWarning}
         onContentWarningChange={actions.setContentWarning}
+        hideAssetCards={state.hideAssetCards}
+        onHideAssetCardsChange={actions.setHideAssetCards}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}

@@ -311,7 +311,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   // Same idea for market references, and in this order: the entity pass claims
   // whole URLs first, so a dehub.io link carrying a hex id cannot also read as a
   // contract address.
-  const { refs: assetRefs, displayText: displayBody } = useAssetRefsInText(bodyWithoutLinks);
+  const { refs: assetRefs, displayText: displayBody } = useAssetRefsInText(bodyWithoutLinks, undefined, post.hideAssetCards);
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page

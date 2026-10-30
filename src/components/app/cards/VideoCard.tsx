@@ -675,18 +675,20 @@ interface ExpandableDescriptionProps {
   isImmersive: boolean;
   /** Lines shown before "more" (immersive only). The phone post page uses fewer. */
   clampLines?: 2 | 3 | 4;
+  /** The poster closed the market card for this post. */
+  hideAssetCards?: boolean;
 }
 
 const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } as const;
 
-function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
+function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4, hideAssetCards }: ExpandableDescriptionProps) {
   const { t: _copy } = _useCopy();
   // Unify \r\n → \n only. Blank lines and spacing stay exactly as typed.
   const normalized = rawDescription.replace(/\r\n/g, '\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
   const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);
-  const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription);
+  const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription, undefined, hideAssetCards);
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -3275,6 +3277,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     description={shownDesc}
                     isImmersive={isImmersive || !!stage || tabletPortrait}
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
+                    hideAssetCards={video.hideAssetCards}
                   />
                 )}
                 </>)}
