@@ -1069,7 +1069,11 @@ export function ActionBar({
         <button
           // On the phone post page the comments are already on the page: the
           // button scrolls to them and opens the composer.
-          onClick={stage ? (e) => { e.stopPropagation(); stage.openComments(); } : onComment}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (stage) stage.openComments();
+            else onComment?.();
+          }}
           className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
           aria-label={_copy("copy.44f5e3fbec57", { defaultValue: "Comment" })}
         >
