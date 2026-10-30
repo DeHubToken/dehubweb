@@ -19,6 +19,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { composerTextFor, type AssetSuggestion } from '@/lib/api/market';
+import { getEditorCaret, setEditorCaret } from '@/lib/editor-text';
 
 type PickerInput = HTMLTextAreaElement | HTMLInputElement | HTMLDivElement;
 
@@ -41,13 +42,8 @@ function caretOffset(input: PickerInput | null, fallback: number): number {
   if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
     return input.selectionStart ?? fallback;
   }
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return fallback;
-  const range = selection.getRangeAt(0);
-  const preCaret = range.cloneRange();
-  preCaret.selectNodeContents(input);
-  preCaret.setEnd(range.endContainer, range.endOffset);
-  return preCaret.toString().length;
+  // Counted in post text, where a 🔗 chip counts as its address.
+  return getEditorCaret(input) ?? fallback;
 }
 
 /**
@@ -166,23 +162,7 @@ export function useAssetPicker({ inputRef, onInsert }: UseAssetPickerOptions): U
           input.setSelectionRange(target, target);
           return;
         }
-        const walker = document.createTreeWalker(input, NodeFilter.SHOW_TEXT, null);
-        let counted = 0;
-        while (walker.nextNode()) {
-          const node = walker.currentNode;
-          const length = (node.textContent || '').length;
-          if (counted + length >= target) {
-            const selection = window.getSelection();
-            if (!selection) return;
-            const range = document.createRange();
-            range.setStart(node, Math.min(target - counted, length));
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return;
-          }
-          counted += length;
-        }
+        setEditorCaret(input, target);
       }, 10);
     },
     [inputRef, onInsert, close],
