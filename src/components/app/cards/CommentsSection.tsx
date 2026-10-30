@@ -923,10 +923,10 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 not yet seen by anyone else reads as. */}
             {comment.views > 0 && (
               <span
-                className="flex items-center gap-1 text-white/70"
+                className="flex items-center gap-1 text-zinc-400"
                 aria-label={i18n.t('comments.viewCount', { count: comment.views })}
               >
-                <Eye className="w-4 h-4" />
+                <Eye className={COMMENT_ICON_CLASS.like} />
                 <span className="text-xs">{formatCount(comment.views)}</span>
               </span>
             )}
