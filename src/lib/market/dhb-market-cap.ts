@@ -33,9 +33,16 @@ interface DhbCorrectable {
   maxSupply?: number | null;
 }
 
+/**
+ * Every cashtag that means our token. $RIFT and $RIFTN are the new brand
+ * (DeHub is becoming Riftn), so they resolve to DHB's card, logo and numbers
+ * rather than to whatever unrelated coin also uses that ticker.
+ */
+const DHB_SYMBOLS = new Set(['DHB', 'DEHUB', 'RIFT', 'RIFTN']);
+
 export function isDhbSymbol(symbol?: string | null): boolean {
-  const s = symbol?.replace(/^\$/, '').toUpperCase();
-  return s === 'DHB' || s === 'DEHUB';
+  const s = symbol?.trim().replace(/^\$/, '').toUpperCase();
+  return !!s && DHB_SYMBOLS.has(s);
 }
 
 /**
