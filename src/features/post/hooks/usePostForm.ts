@@ -1145,10 +1145,9 @@ export function usePostForm(
         break;
     }
 
-    // Update the text state with plain text
-    const plainText = editor.innerText;
-    setText(plainText);
-  }, [setText]);
+    // execCommand fires the editor's input event, which records the text with
+    // links as full addresses. innerText would save each 🔗 chip as "🔗".
+  }, []);
 
   const insertEmoji = useCallback((emoji: string) => {
     const editor = editorRef.current;
@@ -1158,13 +1157,10 @@ export function usePostForm(
       return;
     }
 
-    // Focus and insert at cursor position
+    // Focus and insert at cursor position. The editor's input event records
+    // the new text; innerText here would save each 🔗 chip as "🔗".
     editor.focus();
-    document.execCommand('insertText', false, emoji);
-
-    // Update the text state
-    const plainText = editor.innerText;
-    setText(plainText);
+    if (!document.execCommand('insertText', false, emoji)) setText(prev => prev + emoji);
   }, [setText]);
 
   const insertGif = useCallback((gifUrl: string) => {
