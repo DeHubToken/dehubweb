@@ -59,6 +59,8 @@ import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTok
 import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
 import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
+import { PollEditor } from '@/features/post/components/PollEditor';
+import type { PollData } from '@/features/post/types';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
@@ -1153,8 +1155,23 @@ function PollGallery() {
             </div>
           ))}
         </div>
+        <PollEditorGallery />
       </AuthContext.Provider>
     </section>
+  );
+}
+
+function PollEditorGallery() {
+  const [poll, setPoll] = useState<PollData>({
+    question: 'Best time to stream?',
+    options: [{ id: 'a', text: 'Morning' }, { id: 'b', text: 'Night' }],
+    duration: 72,
+    isMultipleChoice: false,
+  });
+  return (
+    <div data-poll-editor-gallery className="mt-4 max-w-md">
+      <PollEditor poll={poll} onChange={setPoll} onRemove={() => {}} />
+    </div>
   );
 }
 

@@ -7064,3 +7064,11 @@ html[data-theme='minimal'] [data-comment-composer-pin] {
 @media (prefers-reduced-motion: reduce) {
   .dehub-thumb-nod { animation: none; }
 }
+
+/* Tickers typed in the post editor (src/lib/cashtag-highlight.ts). A faux bold
+   from text-shadow: a highlight cannot change font-weight, and the letters must
+   stay plain editable text so selection crosses them. */
+::highlight(dehub-cashtag) {
+  color: currentColor;
+  text-shadow: 0.35px 0 0 currentColor, -0.35px 0 0 currentColor;
+}
