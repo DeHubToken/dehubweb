@@ -2,7 +2,7 @@
  * Feed search
  * ===========
  * Tapping the lit tab in the feed pill turns the pill into a search box for
- * that feed (Home, Images, Videos, Music). One open/query state is shared by
+ * that feed (Home, Shorts, Images, Videos, Music). One open/query state is shared by
  * the pill and the results, so this is a tiny store rather than context: the
  * pill lives in HomePage and in GlobalFeedNav, the results inside each feed.
  *
@@ -14,7 +14,7 @@
 import { useSyncExternalStore } from 'react';
 import type { UnifiedFeedParams } from '@/hooks/use-unified-feed';
 
-export const FEED_SEARCH_TABS = ['home', 'images', 'videos', 'music'] as const;
+export const FEED_SEARCH_TABS = ['home', 'shorts', 'images', 'videos', 'music'] as const;
 export type FeedSearchTab = typeof FEED_SEARCH_TABS[number];
 
 export function isFeedSearchTab(tab: string | null | undefined): tab is FeedSearchTab {
@@ -67,6 +67,7 @@ export function activeFeedSearchQuery(s: FeedSearchState): string {
 }
 
 const FEED_POST_TYPE: Record<Exclude<FeedSearchTab, 'home'>, UnifiedFeedParams['postType']> = {
+  shorts: 'short',
   images: 'feed-images',
   videos: 'video',
   music: 'feed-audio',
