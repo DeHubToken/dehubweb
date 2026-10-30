@@ -335,3 +335,24 @@ html:is([data-theme='light'], [data-system-tone='light'])
   color: rgba(255,255,255,0.86) !important;
 }
 
+
+/* Poll duration chips: the picked length must read as picked in every theme,
+   so it stays a solid chip (white on dark and glass themes, ink on light)
+   instead of the shared control material. Three extra ids beat that material. */
+html [data-poll-duration][aria-pressed='true']:not(#_):not(#_):not(#_) {
+  background: #fff !important;
+  border: 1px solid #fff !important;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.35), 0 0 14px rgba(255,255,255,0.3) !important;
+  color: #09090b !important;
+  backdrop-filter: none !important;
+}
+html:is([data-theme='light'], [data-system-tone='light']) [data-poll-duration][aria-pressed='true']:not(#_):not(#_):not(#_) {
+  background: #111114 !important;
+  border-color: #111114 !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+html [data-poll-duration][aria-pressed='true']:not(#_):not(#_):not(#_) svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
