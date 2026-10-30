@@ -1023,7 +1023,7 @@ export default function FeaturesPage() {
               activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <Loader2 className="w-3.5 h-3.5" />
+            <Loader2 className={cn("w-3.5 h-3.5", showDeclinedTab && "max-sm:hidden")} />
             {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
@@ -1039,7 +1039,7 @@ export default function FeaturesPage() {
               activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
+            <CheckCircle2 className={cn("w-3.5 h-3.5", showDeclinedTab && "max-sm:hidden")} />
             {t('features.shipped')}
             {shippedCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
@@ -1052,11 +1052,12 @@ export default function FeaturesPage() {
               type="button"
               onClick={() => setActiveTab('declined')}
               role="tab" aria-selected={activeTab === 'declined'}
-              className={`relative z-10 flex-1 min-w-0 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              className={`relative z-10 flex-1 min-w-0 py-1 sm:py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
                 activeTab === 'declined' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
-              <span className="truncate">{t('features.notFeasible', 'Not feasible')}</span>
+              {/* Two short lines on a phone rather than "Not …". */}
+              <span className="text-center leading-tight max-sm:text-xs">{t('features.notFeasible', 'Not feasible')}</span>
               {declinedCount > 0 && (
                 <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                   {declinedCount}
