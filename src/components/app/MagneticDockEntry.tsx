@@ -1,20 +1,20 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { playMagneticDock } from '@/lib/magnetic-dock';
+import { takeMobileBootCover } from '@/lib/mobile-boot-cover';
 
-/** Once on signed-in entry; ordinary feed navigation and refresh stay immediate. */
+/** A visible slow-start loader may dock; a ready page never starts a loader. */
 export function MagneticDockEntry() {
   const { isAuthenticated, isLoading, requiresUsername } = useAuth();
   const { pathname } = useLocation();
-  const played = useRef(false);
   useLayoutEffect(() => {
-    if (!isAuthenticated) { played.current = false; return; }
-    if (isLoading || requiresUsername || played.current || !isHomeFeedRoute(pathname)) return;
+    const wasLoading = takeMobileBootCover();
+    if (!wasLoading || !window.matchMedia('(max-width: 767px)').matches || !isAuthenticated || isLoading || requiresUsername || !isHomeFeedRoute(pathname)) return;
     const root = document.getElementById('app-root');
     if (!root) return;
-    return playMagneticDock(root, () => { played.current = true; });
+    return playMagneticDock(root, () => {});
   }, [isAuthenticated, isLoading, requiresUsername, pathname]);
   return null;
 }
