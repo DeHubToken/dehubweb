@@ -33,6 +33,8 @@ import { useAssetPicker } from '@/hooks/use-asset-picker';
 import { useAssetSearch } from '@/hooks/use-asset-ref';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { getEditorCaret, setEditorCaret, serializeEditor, editorTextNodes } from '@/lib/editor-text';
+import { paintCashtags, clearCashtags } from '@/lib/cashtag-highlight';
 
 interface PostContentAreaProps {
   text: string;
@@ -118,9 +120,6 @@ function findLinks(text: string): LinkMatch[] {
 }
 const hasLinks = (text: string) => findLinks(text).length > 0;
 
-// Cashtag regex - matches $SYMBOL (1-20 uppercase/lowercase letters after $)
-const createCashtagRegex = () => /\$[a-zA-Z]{1,20}/g;
-
 // Create a link chip element. 'icon' shows 🔗; 'text' shows the address,
 // shortened in the middle, and is saved as `<url>` (see lib/link-display).
 // Backspace on an icon chip turns it into a text chip; again removes it.
@@ -141,17 +140,6 @@ function createLinkChip(url: string, mode: 'icon' | 'text' = 'icon'): HTMLSpanEl
     const href = /^https?:\/\//i.test(url) ? url : `https://${url}`;
     window.open(href, '_blank', 'noopener,noreferrer');
   };
-  return chip;
-}
-
-// Create a cashtag chip element (bold white text, inline)
-function createCashtagChip(tag: string): HTMLSpanElement {
-  const chip = document.createElement('span');
-  chip.setAttribute('data-cashtag-chip', 'true');
-  chip.setAttribute('data-cashtag', tag);
-  chip.contentEditable = 'false';
-  chip.className = 'font-bold text-white';
-  chip.textContent = tag;
   return chip;
 }
 
@@ -222,15 +210,21 @@ export function PostContentArea({
     ? buildAvatarUrl(user.address, user.avatarImageUrl)
     : null;
   
+  // The post text this editor last reported. A `text` that differs came from
+  // outside (draft loaded, form reset, mention inserted, AI rewrite) and is
+  // written into the editor; one that matches is our own typing echoing back,
+  // and rewriting the DOM for it is what used to move the caret.
+  const lastEmittedText = useRef<string | null>(null);
+
   // Mention hook - handles @mention detection and dropdown
   const mention = useMention({
     inputRef: editorRef,
     onMentionInsert: (user, newText) => {
+      lastEmittedText.current = newText;
       setText(newText);
       if (editorRef.current) {
         editorRef.current.textContent = newText;
-        // Re-apply link chips after mention insertion
-        setTimeout(processLinks, 0);
+        processLinks(true);
       }
     },
   });
@@ -240,10 +234,11 @@ export function PostContentArea({
   const assetPicker = useAssetPicker({
     inputRef: editorRef,
     onInsert: (_asset, newText) => {
+      lastEmittedText.current = newText;
       setText(newText);
       if (editorRef.current) {
         editorRef.current.textContent = newText;
-        setTimeout(processLinks, 0);
+        processLinks(true);
       }
     },
   });
@@ -256,245 +251,99 @@ export function PostContentArea({
   // the raw text, so a looser count here let posts through that it then refused.
   const charCount = text.length;
 
-  // Save and restore cursor position
-  const saveCursorPosition = useCallback(() => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return null;
-    
-    const range = selection.getRangeAt(0);
-    const preCaretRange = range.cloneRange();
-    preCaretRange.selectNodeContents(editorRef.current!);
-    preCaretRange.setEnd(range.endContainer, range.endOffset);
-    
-    return preCaretRange.toString().length;
-  }, [editorRef]);
-
-  const restoreCursorPosition = useCallback((position: number) => {
-    if (!editorRef.current || position === null) return;
-    
-    const selection = window.getSelection();
-    if (!selection) return;
-
-    const walker = document.createTreeWalker(
-      editorRef.current,
-      NodeFilter.SHOW_TEXT,
-      null
-    );
-
-    let currentPos = 0;
-    let node: Text | null = null;
-
-    while (walker.nextNode()) {
-      node = walker.currentNode as Text;
-      const nodeLength = node.textContent?.length || 0;
-      
-      if (currentPos + nodeLength >= position) {
-        const range = document.createRange();
-        range.setStart(node, Math.min(position - currentPos, nodeLength));
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        return;
-      }
-      currentPos += nodeLength;
-    }
-  }, [editorRef]);
-
-  // Process links and cashtags in the content
-  const processLinks = useCallback(() => {
-    if (!editorRef.current || isProcessingLinks.current) return;
-    
+  // Tickers are painted, not wrapped (see lib/cashtag-highlight), skipping any
+  // `$` inside an address that has not become a chip yet.
+  const repaintCashtags = useCallback(() => {
     const editor = editorRef.current;
-    const html = editor.innerHTML;
-    
-    // Check if there are unprocessed URLs or cashtags (not already in chips)
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    
-    // Get text content without chips
-    const chips = tempDiv.querySelectorAll('[data-link-chip], [data-cashtag-chip]');
-    chips.forEach(chip => chip.remove());
-    const textWithoutChips = tempDiv.textContent || '';
-    
-    const hasUrls = hasLinks(textWithoutChips);
-    const hasCashtags = createCashtagRegex().test(textWithoutChips);
-    
-    if (!hasUrls && !hasCashtags) return;
-    
-    isProcessingLinks.current = true;
-    const cursorPos = saveCursorPosition();
-    
-    // Process text nodes only (not inside existing chips)
-    const walker = document.createTreeWalker(
-      editor,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: (node) => {
-          const parent = node.parentElement as HTMLElement;
-          if (parent?.closest('[data-link-chip]') || parent?.closest('[data-cashtag-chip]')) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      }
-    );
+    if (!editor) return;
+    const links = findLinks(serializeEditor(editor));
+    paintCashtags(editor, (start, end) => links.some((l) => start < l.index + l.length && end > l.index));
+  }, [editorRef]);
 
-    const nodesToProcess: { node: Text; urlMatches: LinkMatch[]; cashtagMatches: RegExpMatchArray[] }[] = [];
-    
-    while (walker.nextNode()) {
-      const textNode = walker.currentNode as Text;
-      const nodeText = textNode.textContent || '';
-      const urlMatches = findLinks(nodeText);
-      const cashtagMatches = [...nodeText.matchAll(createCashtagRegex())];
-      
-      if (urlMatches.length > 0 || cashtagMatches.length > 0) {
-        nodesToProcess.push({ node: textNode, urlMatches, cashtagMatches });
-      }
+  useEffect(() => {
+    const editor = editorRef.current;
+    return () => { if (editor) clearCashtags(editor); };
+  }, [editorRef]);
+
+  // Turn typed links into chips. Positions are counted in post text, where a
+  // chip counts as its full address, so the caret stays exactly where it was.
+  // A link the caret is still touching is left alone until the writer moves on
+  // (space, new line, tapping elsewhere) — chipping half an address mid-word is
+  // what split links and threw the caret around. `force` chips everything:
+  // pastes, blur, and text loaded from outside.
+  const processLinks = useCallback((force = false) => {
+    const editor = editorRef.current;
+    if (!editor || isProcessingLinks.current) return;
+
+    const caret = getEditorCaret(editor);
+    const nodesToProcess: { node: Text; matches: LinkMatch[] }[] = [];
+    for (const { node, start } of editorTextNodes(editor)) {
+      const matches = findLinks(node.textContent || '').filter((m) => {
+        // Community links get a card under the post instead of a chip.
+        if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(m.url)) return false;
+        if (force || caret === null) return true;
+        const from = start + m.index;
+        return caret < from || caret > from + m.length;
+      });
+      if (matches.length > 0) nodesToProcess.push({ node, matches });
     }
+    if (nodesToProcess.length === 0) return;
 
-    // Process nodes in reverse to maintain positions
-    for (let i = nodesToProcess.length - 1; i >= 0; i--) {
-      const { node, urlMatches, cashtagMatches } = nodesToProcess[i];
+    isProcessingLinks.current = true;
+    for (const { node, matches } of nodesToProcess) {
       const nodeText = node.textContent || '';
-      
-      // Merge all matches and sort by index
-      const allMatches: { index: number; length: number; type: 'url' | 'cashtag'; text: string; mode?: 'icon' | 'text' }[] = [];
-      for (const m of urlMatches) {
-        // Skip community URLs - they get a card embed below instead of a chip
-        if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(m.url)) continue;
-        allMatches.push({ index: m.index, length: m.length, type: 'url', text: m.url, mode: m.mode });
-      }
-      for (const m of cashtagMatches) {
-        // Skip cashtags that fall inside a URL match
-        const idx = m.index!;
-        const insideUrl = urlMatches.some(u => idx >= u.index && idx < u.index + u.length);
-        if (!insideUrl) {
-          allMatches.push({ index: idx, length: m[0].length, type: 'cashtag', text: m[0] });
-        }
-      }
-      allMatches.sort((a, b) => a.index - b.index);
-      
-      if (allMatches.length === 0) continue;
-      
       const fragment = document.createDocumentFragment();
       let lastIndex = 0;
-      
-      for (const match of allMatches) {
+      for (const match of matches) {
         if (match.index > lastIndex) {
           fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex, match.index)));
         }
-        
-        if (match.type === 'url') {
-          fragment.appendChild(createLinkChip(match.text, match.mode));
-        } else {
-          fragment.appendChild(createCashtagChip(match.text));
-        }
+        fragment.appendChild(createLinkChip(match.url, match.mode));
         lastIndex = match.index + match.length;
       }
-      
       if (lastIndex < nodeText.length) {
         fragment.appendChild(document.createTextNode(nodeText.substring(lastIndex)));
       }
-      
       node.parentNode?.replaceChild(fragment, node);
     }
-
-    // Restore cursor
-    if (cursorPos !== null) {
-      setTimeout(() => {
-        restoreCursorPosition(cursorPos);
-        isProcessingLinks.current = false;
-      }, 0);
-    } else {
-      isProcessingLinks.current = false;
-    }
-  }, [editorRef, saveCursorPosition, restoreCursorPosition]);
+    // A chip serializes to exactly the text it replaced, so the same offset is
+    // the same spot. Put back synchronously: a frame with the caret lost is a
+    // frame where the browser scrolls the editor to its start.
+    if (caret !== null) setEditorCaret(editor, caret);
+    isProcessingLinks.current = false;
+    repaintCashtags();
+  }, [editorRef, repaintCashtags]);
 
   // Handle input changes - preserve line breaks from contentEditable
   const handleInput = useCallback((e?: React.FormEvent<HTMLDivElement>) => {
     const editor = e?.currentTarget || editorRef.current;
     if (!editor) return;
-    
-    // Mark that user is actively typing so the sync effect doesn't clobber the DOM
-    isUserTyping.current = true;
-    hasHydrated.current = true;
-    
-    // Get plain text including URLs from chips and preserving line breaks
-    let plainText = '';
-    
-    const processNode = (node: Node, isFirst: boolean = false) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        plainText += node.textContent || '';
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        const el = node as HTMLElement;
-        const tagName = el.tagName.toUpperCase();
-        
-        // Handle link chips specially - skip their children
-        if (el.hasAttribute('data-link-chip')) {
-          const url = el.getAttribute('data-url') || '';
-          plainText += el.getAttribute('data-link-mode') === 'text' ? `<${url}>` : url;
-          return;
-        }
-        
-        // Handle cashtag chips - extract the cashtag text
-        if (el.hasAttribute('data-cashtag-chip')) {
-          plainText += el.getAttribute('data-cashtag') || el.textContent || '';
-          return;
-        }
-        
-        // BR elements become newlines
-        if (tagName === 'BR') {
-          plainText += '\n';
-          return;
-        }
-        
-        // Block elements (DIV, P) add newline before (except first)
-        const isBlock = tagName === 'DIV' || tagName === 'P';
-        if (isBlock && !isFirst && plainText.length > 0 && !plainText.endsWith('\n')) {
-          plainText += '\n';
-        }
-        
-        // Process children recursively
-        let first = true;
-        for (const child of el.childNodes) {
-          processNode(child, first && isFirst);
-          first = false;
-        }
-      }
-    };
-    
-    // Process all children of editor
-    let first = true;
-    for (const child of editor.childNodes) {
-      processNode(child, first);
-      first = false;
-    }
-    
+
+    // Plain text with links as full addresses and line breaks kept.
+    let plainText = serializeEditor(editor);
+
     // Enforce the tier's character limit on the post text, as the API counts it.
     if (plainText.length > maxChars) {
+      const caret = getEditorCaret(editor);
       plainText = plainText.slice(0, maxChars);
-      if (editor) {
-        editor.textContent = plainText;
-        // Move cursor to end
-        const range = document.createRange();
-        const sel = window.getSelection();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-        sel?.removeAllRanges();
-        sel?.addRange(range);
-      }
+      editor.textContent = plainText;
+      processLinks(true);
+      setEditorCaret(editor, Math.min(caret ?? maxChars, maxChars));
     }
-    
+
+    lastEmittedText.current = plainText;
     setText(plainText);
-    
+    repaintCashtags();
+
     // Trigger mention detection
     mention.handleInput(plainText);
     assetPicker.handleInput(plainText);
 
-    // Only process links after user stops typing for 1.5s to avoid cursor jumps
+    // Chip finished links once typing pauses. Links still under the caret are
+    // skipped, so this can be short.
     if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
-    linkDebounceRef.current = setTimeout(processLinks, 1500);
-  }, [editorRef, setText, processLinks, mention, assetPicker, maxChars]);
+    linkDebounceRef.current = setTimeout(() => processLinks(), 400);
+  }, [editorRef, setText, processLinks, repaintCashtags, mention, assetPicker, maxChars]);
 
   // Handle paste - process links immediately
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
@@ -515,11 +364,11 @@ export function PostContentArea({
 
     if (!pastedText) return;
     
+    // insertText fires the editor's own input event, which records the text.
     document.execCommand('insertText', false, pastedText);
     // Chip pasted links straight away rather than after the typing pause.
-    if (hasLinks(pastedText)) setTimeout(processLinks, 0);
-
-    // Update state
+    if (hasLinks(pastedText)) processLinks(true);
+    // Some browsers refuse insertText without firing input; record either way.
     handleInput();
   }, [handleInput, onFileDrop, processLinks]);
 
@@ -559,28 +408,23 @@ export function PostContentArea({
     }
   }, [onFileDrop]);
 
-  // Sync contentEditable DOM with React text state (draft restore + form reset)
-  const hasHydrated = useRef(false);
-  const isUserTyping = useRef(false);
+  // Write text that came from outside into the editor (draft restore, form
+  // reset after posting, share text, removing a community link).
   useEffect(() => {
-    if (!editorRef.current) return;
-    // When text is cleared externally (e.g. after post submit), clear the editor
-    if (text === '' && editorRef.current.innerHTML !== '') {
-      editorRef.current.innerHTML = '';
-      hasHydrated.current = false;
-      isUserTyping.current = false;
-    } else if (text && !isUserTyping.current) {
-      // Check if DOM content matches — if not, sync it (handles external setText like share)
-      const currentContent = editorRef.current.textContent || '';
-      if (currentContent !== text) {
-        editorRef.current.textContent = text;
-        hasHydrated.current = true;
-        setTimeout(processLinks, 0);
-      } else if (!hasHydrated.current) {
-        hasHydrated.current = true;
-      }
-    }
+    const editor = editorRef.current;
+    if (!editor) return;
+    if (text === lastEmittedText.current) return;
+    lastEmittedText.current = text;
+    if (serializeEditor(editor) === text) return;
+    const focused = document.activeElement === editor;
+    editor.textContent = text;
+    processLinks(true);
+    if (focused) setEditorCaret(editor, text.length);
   }, [text, editorRef, processLinks]);
+
+  useEffect(() => () => {
+    if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
+  }, []);
 
   return (
     <>
@@ -762,7 +606,7 @@ export function PostContentArea({
               onBlur={() => {
                 // Process links immediately when user leaves the editor
                 if (linkDebounceRef.current) clearTimeout(linkDebounceRef.current);
-                processLinks();
+                processLinks(true);
               }}
               onClick={() => {
                 if (editorRef.current) {
