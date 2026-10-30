@@ -1328,7 +1328,7 @@ export default function HomePage() {
           <div className={isCollapsed && !(islandTopBar && isMobile) ? 'pt-2' : undefined} style={{ display: deferredTab === 'shorts' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'shorts'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} startShortId={startShortId} onStartShortConsumed={() => setStartShortId(undefined)} />
+              <MemoShortsFeed showFilters={showShortsFilters} isRefreshing={isRefreshing} refreshKey={refreshKey} startShortId={startShortId} onStartShortConsumed={() => setStartShortId(undefined)} searchQuery={deferredTab === 'shorts' ? searchQuery : ''} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>

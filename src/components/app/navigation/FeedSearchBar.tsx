@@ -18,6 +18,7 @@ import Settings2 from '@/components/ui/cut-icons/settings';
 import X from '@/components/ui/cut-icons/close';
 import { cn } from '@/lib/utils';
 import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { FEED_SEARCH_TABS, closeFeedSearch, setFeedSearchQuery, useFeedSearch, type FeedSearchTab } from '@/lib/feed-search';
 
 const CLOSE_MS = 220;
@@ -66,9 +67,11 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
     setTimeout(closeFeedSearch, CLOSE_MS);
   };
 
+  const { shortsEnabled } = useShortsEnabled();
   const Icon = FEED_TABS.find((t) => t.value === tab)?.icon;
   const placeholder = {
     home: _copy("copy.57e2faa5ec63", { defaultValue: "Search DeHub" }),
+    shorts: _copy("copy.e8756c6865a5", { defaultValue: "Search shorts" }),
     images: _copy("copy.9e13d826baaf", { defaultValue: "Search images" }),
     videos: _copy("copy.c7661da99c41", { defaultValue: "Search videos" }),
     music: _copy("copy.cbf6f228327c", { defaultValue: "Search music" }),
@@ -143,6 +146,7 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
           className="absolute left-0 top-[calc(100%+6px)] z-50 flex gap-1 rounded-xl border border-white/[0.14] bg-zinc-900/90 p-1 backdrop-blur-xl"
         >
           {FEED_SEARCH_TABS.map((value) => {
+            if (value === 'shorts' && !shortsEnabled) return null;
             const T = FEED_TABS.find((t) => t.value === value);
             if (!T) return null;
             return (
