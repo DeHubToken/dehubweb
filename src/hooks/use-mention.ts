@@ -7,6 +7,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { MentionUser } from '@/components/app/mentions';
+import { getEditorCaret, setEditorCaret } from '@/lib/editor-text';
 
 interface UseMentionOptions {
   inputRef: React.RefObject<HTMLTextAreaElement | HTMLInputElement | HTMLDivElement | null>;
@@ -141,14 +142,9 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
       if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
         cursorPos = input.selectionStart ?? text.length;
       } else if (input instanceof HTMLDivElement) {
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const preCaretRange = range.cloneRange();
-          preCaretRange.selectNodeContents(input);
-          preCaretRange.setEnd(range.endContainer, range.endOffset);
-          cursorPos = preCaretRange.toString().length;
-        }
+        // Counted in post text (a 🔗 chip counts as its address), the same
+        // text the query is read from.
+        cursorPos = getEditorCaret(input) ?? undefined;
       }
     }
     
@@ -218,14 +214,7 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
     if (input instanceof HTMLTextAreaElement || input instanceof HTMLInputElement) {
       cursorPos = input.selectionStart ?? text.length;
     } else if (input instanceof HTMLDivElement) {
-      const selection = window.getSelection();
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const preCaretRange = range.cloneRange();
-        preCaretRange.selectNodeContents(input);
-        preCaretRange.setEnd(range.endContainer, range.endOffset);
-        cursorPos = preCaretRange.toString().length;
-      }
+      cursorPos = getEditorCaret(input) ?? cursorPos;
     }
     
     // Build new text with @username inserted
@@ -253,31 +242,7 @@ export function useMention({ inputRef, onMentionInsert }: UseMentionOptions): Us
       } else if (input instanceof HTMLDivElement) {
         input.focus();
         // For contentEditable, place cursor at end of inserted mention
-        const textContent = input.textContent || '';
-        const targetPos = startIndex + mention.length;
-        
-        // Walk text nodes to find the right position
-        const walker = document.createTreeWalker(input, NodeFilter.SHOW_TEXT, null);
-        let charCount = 0;
-        let node: Node | null = null;
-        
-        while (walker.nextNode()) {
-          node = walker.currentNode;
-          const nodeLen = (node.textContent || '').length;
-          if (charCount + nodeLen >= targetPos) {
-            const offset = targetPos - charCount;
-            const sel = window.getSelection();
-            if (sel) {
-              const range = document.createRange();
-              range.setStart(node, Math.min(offset, nodeLen));
-              range.collapse(true);
-              sel.removeAllRanges();
-              sel.addRange(range);
-            }
-            break;
-          }
-          charCount += nodeLen;
-        }
+        setEditorCaret(input, startIndex + mention.length);
       }
     }, 10);
   }, [inputRef, onMentionInsert]);

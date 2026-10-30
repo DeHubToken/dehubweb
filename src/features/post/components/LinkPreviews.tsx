@@ -25,7 +25,32 @@ interface LinkPreviewsProps {
  * no such effect for stores. Dismissal is now keyed by the link itself, so it
  * survives an edit elsewhere in the text and clears when that exact link goes.
  */
-export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps) {
+/**
+ * The text the cards follow: a paste lands at once, typing only after a short
+ * pause. Reading it on every keystroke fetched a preview for each half-typed
+ * address (`https://exa`, `https://exam`, …) and flashed a skeleton for each,
+ * which is what made adding a link feel frozen and jumpy.
+ */
+const TYPING_SETTLE_MS = 600;
+function useSettledText(text: string): string {
+  const [settled, setSettled] = useState(text);
+  const previous = useRef(text);
+  useEffect(() => {
+    const before = previous.current;
+    previous.current = text;
+    // More than one character at once is a paste, a draft or a reset.
+    if (Math.abs(text.length - before.length) > 1 || text === '') {
+      setSettled(text);
+      return;
+    }
+    const timer = setTimeout(() => setSettled(text), TYPING_SETTLE_MS);
+    return () => clearTimeout(timer);
+  }, [text]);
+  return settled;
+}
+
+export function LinkPreviews({ text: liveText, onRemoveCommunityLink }: LinkPreviewsProps) {
+  const text = useSettledText(liveText);
   const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
@@ -87,8 +112,10 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   };
 
   // Get URLs that should be displayed (in text, not removed, not DeHub links)
-  const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !parseDehubLink(url));
+  const currentUrls = useMemo(
+    () => extractUrlsFromText(text).filter(url => !removedUrls.has(url) && !parseDehubLink(url)),
+    [text, removedUrls],
+  );
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
