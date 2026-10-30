@@ -3,22 +3,22 @@ import { act, fireEvent, render, cleanup } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSwipeBack } from '@/hooks/use-swipe-back';
-import { completesSwipeBack, findSwipeBackControl } from '@/lib/swipe-back';
+import { completesSwipeBack, findSwipeBackControl, pageSwipeAllowed } from '@/lib/swipe-back';
 
 const overlays = vi.hoisted(() => ({ open: false }));
 vi.mock('@/lib/overlay-open', () => ({ useAnyOverlayOpen: () => overlays.open }));
 const back = vi.fn();
 function Harness() {
   useSwipeBack();
-  return <div><button data-swipe-back onClick={back}>Back</button><div data-testid="surface" /></div>;
+  return <div><button data-swipe-back onClick={back}>Back</button><div data-testid="surface" /><div data-no-swipe><div data-testid="carousel" /></div></div>;
 }
-const touch = (type: string, x: number, y: number, count = 1) => {
+const touch = (type: string, x: number, y: number, count = 1, on = 'surface') => {
   const point: Touch = {
     identifier: 7, clientX: x, clientY: y, pageX: x, pageY: y,
     screenX: x, screenY: y, force: 1, radiusX: 1, radiusY: 1,
     rotationAngle: 0, target: document.body,
   };
-  fireEvent(document.querySelector('[data-testid="surface"]') ?? document.body, new TouchEvent(type, {
+  fireEvent(document.querySelector(`[data-testid="${on}"]`) ?? document.body, new TouchEvent(type, {
     bubbles: true, cancelable: true,
     touches: type === 'touchend' ? [] : Array(count).fill(point), changedTouches: [point],
   }));
@@ -47,6 +47,36 @@ describe('swipe back', () => {
     if (kind === 'native') act(() => window.dispatchEvent(new PopStateEvent('popstate')));
     touch('touchend', 100, kind === 'scroll' ? 290 : 200);
     expect(back).not.toHaveBeenCalled();
+  });
+  it('goes back from a drag across the page, not only the edge', () => {
+    render(<BrowserRouter><Harness /></BrowserRouter>);
+    touch('touchstart', 150, 300); touch('touchmove', 175, 302); touch('touchmove', 230, 306); touch('touchend', 260, 306);
+    expect(back).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('[data-swipe-back-cue]')).not.toBeNull();
+  });
+  it('asks a page drag for a longer pull than the edge', () => {
+    render(<BrowserRouter><Harness /></BrowserRouter>);
+    const now = vi.spyOn(performance, 'now').mockReturnValue(0);
+    touch('touchstart', 150, 300); touch('touchmove', 175, 300);
+    now.mockReturnValue(1000);
+    touch('touchend', 220, 300);
+    expect(back).not.toHaveBeenCalled();
+  });
+  it('leaves sideways swipes on carousels and media to them', () => {
+    render(<BrowserRouter><Harness /></BrowserRouter>);
+    touch('touchstart', 150, 300, 1, 'carousel'); touch('touchmove', 200, 300, 1, 'carousel'); touch('touchend', 280, 300, 1, 'carousel');
+    expect(back).not.toHaveBeenCalled();
+    document.body.innerHTML = '<div id="row" style="overflow-x:auto"><img id="pic"><span id="txt"></span></div><p id="plain"></p>';
+    const row = document.querySelector<HTMLElement>('#row')!;
+    Object.defineProperty(row, 'scrollWidth', { value: 900 });
+    Object.defineProperty(row, 'clientWidth', { value: 300 });
+    expect(pageSwipeAllowed(document.querySelector('#pic'))).toBe(false);
+    expect(pageSwipeAllowed(document.querySelector('#txt'))).toBe(true);
+    row.scrollLeft = 200;
+    Object.defineProperty(row, 'scrollLeft', { value: 200 });
+    expect(pageSwipeAllowed(document.querySelector('#txt'))).toBe(false);
+    expect(pageSwipeAllowed(document.querySelector('#plain'))).toBe(true);
+    document.body.innerHTML = '';
   });
   it('never activates a page behind an open sheet', () => {
     overlays.open = true;

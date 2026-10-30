@@ -1270,6 +1270,7 @@ export default function HomePage() {
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
         data-feed-pull-content
+        data-tab-swipe
       >
         {/* Keep the swallow clip stationary while the feed moves beneath it. */}
         <div
