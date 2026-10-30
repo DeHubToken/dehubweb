@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/drawer';
 import { editPost, replaceVideoFile, getPostQuota } from '@/lib/api/dehub';
 import { BASE_POST_TEXT_CHARS, postTextLimit } from '@/lib/post-text-limit';
+import { ARTICLE_SUMMARY_MAX } from '@/lib/article';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
 import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
@@ -121,7 +122,7 @@ export function EditPostModal({
     getPostQuota().then(q => { if (!cancelled) setTierTextMax(postTextLimit(q)); });
     return () => { cancelled = true; };
   }, [open, currentArticleBody]);
-  const descriptionMax = currentArticleBody !== undefined ? BASE_POST_TEXT_CHARS : tierTextMax;
+  const descriptionMax = currentArticleBody !== undefined ? ARTICLE_SUMMARY_MAX : tierTextMax;
   const [categoryInput, setCategoryInput] = useSurfaceDraft("components/app/modals/EditPostModal.tsx:categoryInput", '', tokenId);
   const [categories, setCategories] = useDraftState<string[]>(`post:edit:${tokenId}` + ":categories", currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);

@@ -13,6 +13,7 @@ import { payForVoiceSession, VOICE_EXCHANGE_DHB, VOICE_SESSION_EXCHANGES } from 
 import { toast } from 'sonner';
 import i18n from 'i18next';
 import { createVoiceRecorder, voiceRecordingBlob, voiceRecordingFilename } from '@/lib/voice-recording';
+import { speechText } from '@/lib/speech-text';
 
 interface UseVoiceAssistantOptions {
   /** Called when Whisper returns a transcript */
@@ -157,20 +158,9 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Generate speech via Dia TTS (fal-ai-tools)
   const generateSpeech = useCallback(async (text: string): Promise<string> => {
-    // Clean text for TTS
-    const cleanText = text
-      .replace(/\*\*/g, '')
-      .replace(/\*/g, '')
-      .replace(/`/g, '')
-      .replace(/#{1,6}\s/g, '')
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/\n+/g, '. ')
-      .trim();
-
-    if (!cleanText) throw new Error('No text to speak');
-
-    // Truncate for TTS (Dia has limits)
-    const truncated = cleanText.substring(0, 1500);
+    // Dia takes up to 1,500 characters; a longer reply ends on its last whole sentence.
+    const truncated = speechText(text, 1500);
+    if (!truncated) throw new Error('No text to speak');
 
     const { data, error } = await invokeAi('fal-ai-tools', {
       body: { tool: 'dia-tts', text: truncated, txHash: sessionTxRef.current, purpose: 'voice' },

@@ -821,7 +821,7 @@ export const es = {
     postControlsB9: "Tus feeds a tu manera:",
     postControlsB9Desc: "Elige la pestaña con la que se abre DeHub y guarda qué interruptores del feed quieres activados. Las respuestas sugeridas están desactivadas salvo que las actives.",
     postControlsB10: "Borradores y publicaciones más largas:",
-    postControlsB10Desc: "Una publicación de más de tres palabras se guarda en Borradores si cierras el editor. La longitud de la publicación crece con tu insignia, desde 500 caracteres sin insignia hasta 2,000 para el nivel más alto.",
+    postControlsB10Desc: "Una publicación de más de tres palabras se guarda en Borradores si cierras el editor. La longitud de la publicación crece con tu insignia, desde 1,000 caracteres sin insignia hasta 2,000 para el nivel más alto.",
     tocLiveGifts: "Regalos en directo, invitados y clips",
     liveGiftsTitle: "Regalos en directo, invitados y clips",
     liveGiftsDesc: "Los directos tienen más formas de ganar dinero, de colaborar y de llegar a gente que no estaba mirando.",

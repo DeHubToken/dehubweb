@@ -53,6 +53,7 @@ import {
   useFeatureRequest,
   useShippedFeatures,
   useInProgressFeatures,
+  useDeclinedFeatures,
 
   useUserVotes,
   useFeatureCounts,
@@ -94,7 +95,7 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
   { id: 'other', labelKey: 'features.other' },
 ];
 
-type PageTab = 'requests' | 'shipping' | 'shipped';
+type PageTab = 'requests' | 'shipping' | 'shipped' | 'declined';
 
 const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
 
@@ -456,6 +457,12 @@ function FeatureCard({
           </span>
           <StatusBadge status={feature.status} />
         </div>
+        {feature.status === 'declined' && feature.status_note?.trim() && (
+          <p className="text-xs leading-relaxed text-zinc-400">
+            <span className="font-medium text-zinc-300">{_copy("features.notFeasibleWhy", { defaultValue: "Why:" })}</span>{' '}
+            <TranslatableText publicContent text={feature.status_note.trim()} as="span" hideControls />
+          </p>
+        )}
 
         {/* Translate control */}
         <PostMetadata
@@ -801,7 +808,7 @@ export default function FeaturesPage() {
     const requestedTab = searchParams.get('tab');
     if (requestedTab === 'prompts') setActiveTab('requests');
     if (requestedTab === 'queued') setActiveTab('shipping');
-    if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped') {
+    if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped' || requestedTab === 'declined') {
       setActiveTab(requestedTab);
     }
   }, [searchParams, setSearchParams]);
@@ -810,6 +817,7 @@ export default function FeaturesPage() {
   const allFeatures = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+  const { data: declinedFeatures, isLoading: isLoadingDeclined } = useDeclinedFeatures();
 
   // A notification about one request pins it above the board. The list query
   // could never be relied on to hold it — it may be shipped, declined, outside
@@ -849,6 +857,10 @@ export default function FeaturesPage() {
   const visibleInProgress = useMemo(
     () => withoutFocused(inProgressFeatures).filter(matchesFilters),
     [inProgressFeatures, withoutFocused, matchesFilters],
+  );
+  const visibleDeclined = useMemo(
+    () => withoutFocused(declinedFeatures).filter(matchesFilters),
+    [declinedFeatures, withoutFocused, matchesFilters],
   );
   const visibleShipped = useMemo(
     () => withoutFocused(shippedFeatures).filter(matchesFilters),
@@ -916,6 +928,9 @@ export default function FeaturesPage() {
   const remainingCount = counts?.open ?? features.length;
   const shippedCount = shippedFeatures?.length ?? 0;
   const inProgressCount = inProgressFeatures?.length ?? 0;
+  const declinedCount = declinedFeatures?.length ?? 0;
+  // The Not feasible tab only takes room in the bar once something is on it.
+  const showDeclinedTab = declinedCount > 0 || activeTab === 'declined';
 
 
   // Swallow the feature-request list at the sticky header bento's top edge under
@@ -971,15 +986,18 @@ export default function FeaturesPage() {
           {/* Sliding liquid glass indicator */}
           <div
             className={cn(
-              "absolute top-1 bottom-1 w-[calc(33.333%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
+              "absolute top-1 bottom-1 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
               isLightTheme
                 ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
                 : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
-              activeTab === 'shipped'
-                ? 'translate-x-[calc(200%+8px)]'
-                : activeTab === 'shipping'
-                  ? 'translate-x-[calc(100%+4px)]'
-                  : 'translate-x-0'
+              showDeclinedTab ? 'w-[calc(25%-4px)]' : 'w-[calc(33.333%-4px)]',
+              activeTab === 'declined'
+                ? 'translate-x-[calc(300%+12px)]'
+                : activeTab === 'shipped'
+                  ? 'translate-x-[calc(200%+8px)]'
+                  : activeTab === 'shipping'
+                    ? 'translate-x-[calc(100%+4px)]'
+                    : 'translate-x-0'
             )}
           />
           <button
@@ -1029,6 +1047,23 @@ export default function FeaturesPage() {
               </span>
             )}
           </button>
+          {showDeclinedTab && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('declined')}
+              role="tab" aria-selected={activeTab === 'declined'}
+              className={`relative z-10 flex-1 min-w-0 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+                activeTab === 'declined' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+              }`}
+            >
+              <span className="truncate">{t('features.notFeasible', 'Not feasible')}</span>
+              {declinedCount > 0 && (
+                <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                  {declinedCount}
+                </span>
+              )}
+            </button>
+          )}
         </div>
 
 
@@ -1210,6 +1245,36 @@ export default function FeaturesPage() {
         </>
       )}
 
+
+      {activeTab === 'declined' && (
+        <>
+          {isLoadingDeclined ? (
+            <FeatureSkeletons />
+          ) : visibleDeclined.length > 0 ? (
+            <div className="space-y-3">
+              {visibleDeclined.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
+              <h3 className="text-white font-semibold mb-1">
+                {isFiltering
+                  ? (search.trim() ? t('follow.noMatches', { query: search.trim() }) : t('filters.noMatches'))
+                  : t('features.noNotFeasible', 'Nothing here')}
+              </h3>
+            </div>
+          )}
+        </>
+      )}
 
       {/* Shipped Features Tab */}
       {activeTab === 'shipped' && (

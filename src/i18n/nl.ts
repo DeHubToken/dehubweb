@@ -1160,7 +1160,7 @@ export const nl = {
     postControlsB9: "Feeds op jouw manier:",
     postControlsB9Desc: "Kies het tabblad waarop DeHub opent en bewaar welke feedschakelaars je aan wilt hebben. Voorgestelde reacties staan uit tenzij je ze aanzet.",
     postControlsB10: "Concepten en langere posts:",
-    postControlsB10Desc: "Een post van meer dan drie woorden wordt opgeslagen in Concepten als je de editor sluit. De lengte van een post groeit mee met je badge, van 500 tekens zonder badge tot 2,000 voor het hoogste niveau.",
+    postControlsB10Desc: "Een post van meer dan drie woorden wordt opgeslagen in Concepten als je de editor sluit. De lengte van een post groeit mee met je badge, van 1,000 tekens zonder badge tot 2,000 voor het hoogste niveau.",
     tocLiveGifts: "Live-cadeaus, gasten en clips",
     liveGiftsTitle: "Live-cadeaus, gasten en clips",
     liveGiftsDesc: "Livestreams hebben meer manieren om te verdienen, samen te werken en mensen te bereiken die niet keken.",
