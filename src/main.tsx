@@ -3,6 +3,7 @@ import "./lib/storage-quota-guard"; // Must run first: keeps localStorage writab
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import "./lib/media-session"; // Install page-close cleanup before any player mounts.
 import { seedDefaultFeedTab } from "./lib/feed-defaults";
+import { beginMobileBootWait } from "./lib/mobile-boot-cover";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { recoverFromChunkError } from "./lib/lazy-with-retry";
@@ -119,11 +120,13 @@ const render = () => {
     </ErrorBoundary>
   );
 };
+const finishMobileBootWait = beginMobileBootWait();
 const bootThemeCss = loadThemeCss(document.documentElement.dataset.theme);
 const bootDependencies = import.meta.env.DEV && location.pathname === '/app/state-gallery'
   ? [bootThemeCss]
   : [bootThemeCss, preloadWalletProviders()];
-Promise.all(bootDependencies).then(render, render);
+const renderReadyApp = () => { finishMobileBootWait(); render(); };
+Promise.all(bootDependencies).then(renderReadyApp, renderReadyApp);
 
 // Register the offline-shell / asset-cache service worker (production only,
 // deferred to `load` so it doesn't compete with first paint). See lib/register-sw.ts.
