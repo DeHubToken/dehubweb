@@ -79,6 +79,13 @@ function patchProfileCaches(queryClient: QueryClient, address: string, isFollowi
   });
 }
 
+/** Records a follow made outside toggleFollowFor (the batch "Follow back all") on every surface. */
+export function markFollowedFor(queryClient: QueryClient, address: string) {
+  if (getFollowOverride(address) === true) return;
+  setFollowOverride(address, true);
+  patchProfileCaches(queryClient, address, true, 1);
+}
+
 export interface ToggleFollowOptions {
   /** Display name used in toasts */
   name?: string;

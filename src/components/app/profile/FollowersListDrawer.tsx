@@ -22,8 +22,8 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { getFollowList, followUser, isFollowing as checkIsFollowing, type FollowListItem } from '@/lib/api/dehub';
-import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
+import { getFollowList, followUser, followUsersBatch, isFollowing as checkIsFollowing, type FollowListItem, type FollowBatchResult } from '@/lib/api/dehub';
+import { useFollowOverrides, toggleFollowFor, markFollowedFor } from '@/hooks/use-follow';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -38,6 +38,7 @@ const PAGE_SIZE = 30;
 const FOLLOWING_CACHE_PAGE_SIZE = 100; // API caps at 100 per page regardless of requested limit
 const FOLLOW_BACK_ALL_REVEAL_THRESHOLD = 2;
 const BULK_FOLLOW_CONCURRENCY = 4;
+const BULK_FOLLOW_BATCH_SIZE = 50;
 
 type SortOption = 'newest' | 'earliest';
 const SORT_LABEL_KEYS: Record<SortOption, string> = {
@@ -564,6 +565,41 @@ export function FollowersListDrawer({
       let nextIndex = 0;
       let completed = 0;
       let failed = 0;
+
+      // One request per 50 people. Falls back to one-by-one if the batch route isn't there.
+      let batchSupported = true;
+      while (batchSupported && nextIndex < candidates.length) {
+        const chunk = candidates.slice(nextIndex, nextIndex + BULK_FOLLOW_BATCH_SIZE);
+        let results: FollowBatchResult[];
+        try {
+          results = await followUsersBatch(chunk.map(user => user.address));
+        } catch (error) {
+          if (completed === 0) {
+            batchSupported = false;
+            break;
+          }
+          throw error;
+        }
+        const byAddress = new Map(results.map(result => [result.address.toLowerCase(), result]));
+        for (const user of chunk) {
+          const lower = user.address.toLowerCase();
+          const result = byAddress.get(lower);
+          if (!result?.ok) {
+            failed += 1;
+          } else if (result.status === 'pending') {
+            setUsers(current => current.map(item =>
+              item.address.toLowerCase() === lower ? { ...item, isPending: true } : item
+            ));
+            followingSetRef.current?.add(lower);
+          } else {
+            markFollowedFor(queryClient, user.address);
+            followingSetRef.current?.add(lower);
+          }
+          completed += 1;
+        }
+        nextIndex += chunk.length;
+        setBulkFollowProgress({ completed, total: candidates.length });
+      }
 
       const worker = async () => {
         while (nextIndex < candidates.length) {
