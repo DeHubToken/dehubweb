@@ -24,11 +24,11 @@ jobs:
           psql -v ON_ERROR_STOP=1 -c 'CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;'
           psql -v ON_ERROR_STOP=1 -f tests/sql/generation-compaction-bootstrap.sql
           sed -n '/CREATE OR REPLACE FUNCTION public.ai_generation_terminal_guard()/,/CREATE TRIGGER ai_generation_terminal_guard/p' supabase/migrations/20261026020000_generation_terminal_ownership.sql | psql -v ON_ERROR_STOP=1
-          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261028190000_generation_compaction_terminal_guard.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/creator-image-layers.sql
           psql -v ON_ERROR_STOP=1 -c 'DROP TABLE public.ai_generation_jobs,public.creator_assets CASCADE;'
           sed '1d' tests/sql/generation-terminal-bootstrap.sql | psql -v ON_ERROR_STOP=1
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261026020000_generation_terminal_ownership.sql
           psql -v ON_ERROR_STOP=1 -c "CREATE TABLE public.creator_assets(id text,wallet_address text,storage_path text,ready boolean NOT NULL DEFAULT false,metadata jsonb DEFAULT '{}',PRIMARY KEY(wallet_address,id));"
-          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261027223000_generation_compaction_terminal_guard.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261028190000_generation_compaction_terminal_guard.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/creator-image-layer-delivery.sql
