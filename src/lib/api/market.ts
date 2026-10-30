@@ -31,7 +31,8 @@ import {
   type AssetRef,
   type RankablePair,
 } from '@/lib/asset-refs';
-import { correctDhbMarketCap } from '@/lib/market/dhb-market-cap';
+import { correctDhbMarketCap, isDhbSymbol } from '@/lib/market/dhb-market-cap';
+import dehubCoin from '@/assets/dehub-coin.png';
 import type { PricePoint } from '@/hooks/use-token-chart';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
@@ -322,6 +323,16 @@ export async function resolveAddress(address: string): Promise<ResolvedAsset | n
  * on web, on mobile and on a re-render.
  */
 export async function resolveTicker(symbol: string): Promise<ResolvedAsset | null> {
+  // $RIFT, $RIFTN and $DEHUB are all our token: resolve them as DHB and wear
+  // the DeHub coin, which no provider has a logo for.
+  if (isDhbSymbol(symbol)) {
+    const dhb = await resolveTickerFromProviders('DHB');
+    return dhb ? { ...dhb, logo: dhb.logo ?? dehubCoin } : null;
+  }
+  return resolveTickerFromProviders(symbol);
+}
+
+async function resolveTickerFromProviders(symbol: string): Promise<ResolvedAsset | null> {
   const [cmc, stock, dexTokens] = await Promise.all([
     cmcBySymbol(symbol),
     stockBySymbol(symbol),
