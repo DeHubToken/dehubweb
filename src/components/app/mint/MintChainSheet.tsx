@@ -85,7 +85,7 @@ export function MintChainSheet({ open, onOpenChange, defaultChainId, isMinting, 
       queryFn: () => getMintFee(chain.id as number),
       enabled: open,
       staleTime: 55_000,
-      refetchInterval: open ? 60_000 : false,
+      refetchInterval: open ? 60_000 : (false as const),
     })),
   });
 
