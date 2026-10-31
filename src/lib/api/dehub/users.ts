@@ -439,6 +439,28 @@ export async function getRankedSuggestions(
 }
 
 /**
+ * The addresses that must stay off people lists: banned, adult, spam.
+ *
+ * For lists read straight from Supabase (New members, the signed-out Who to
+ * follow cache), which know nothing about bans or adult flags. Fails open, so
+ * a slow API never empties a list; the API's own lists filter server-side.
+ */
+export async function getDiscoveryHidden(addresses: string[]): Promise<Set<string>> {
+  const wanted = [...new Set(addresses.filter(Boolean).map(a => a.toLowerCase()))].slice(0, 200);
+  if (!wanted.length) return new Set();
+  try {
+    const response = await apiCall<{ result?: { hidden?: string[] } }>('/api/accounts/discovery-hidden', {
+      method: 'POST',
+      body: { addresses: wanted },
+      timeoutMs: 6000,
+    });
+    return new Set((response?.result?.hidden ?? []).map(a => a.toLowerCase()));
+  } catch {
+    return new Set();
+  }
+}
+
+/**
  * Fetch cached suggested profiles for unauthenticated users.
  * These are pre-cached top active users from the leaderboard.
  */
@@ -456,7 +478,9 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
     return { items: [], hasMore: false };
   }
 
-  const items: SuggestedAccount[] = (data || []).map((row: any) => ({
+  const rows = data || [];
+  const hidden = await getDiscoveryHidden(rows.map((row: any) => row.address));
+  const items: SuggestedAccount[] = rows.filter((row: any) => !hidden.has(String(row.address).toLowerCase())).map((row: any) => ({
     address: row.address,
     username: row.username || undefined,
     displayName: row.display_name || row.username || undefined,
@@ -468,7 +492,7 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
     hideBadgeAndBalance: true,
   }));
 
-  return { items, hasMore: items.length === limit };
+  return { items, hasMore: rows.length === limit };
 }
 
 export interface AnalyticsResponse {
