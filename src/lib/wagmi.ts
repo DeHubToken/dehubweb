@@ -64,7 +64,8 @@ export const wagmiConfig = createConfig({
   // being deployed: a wallet already sitting on 4663 should be recognised
   // rather than reported as an unsupported network. What gates the user-facing
   // pickers is ROBINHOOD_ENABLED in lib/chains/constants.
-  chains: [base, bsc, mainnet, robinhood, arc],
+  // BNB first: it is the chain a fresh WalletConnect session starts on.
+  chains: [bsc, base, mainnet, robinhood, arc],
   connectors: [
     // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
     // that inject window.ethereum but may not support EIP-6963 discovery.

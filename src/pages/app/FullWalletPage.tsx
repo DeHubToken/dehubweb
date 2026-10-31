@@ -42,6 +42,7 @@ import { showWeb3AuthCheckout, isWeb3AuthConnected } from '@/lib/web3auth';
 import { getDexBuyLink } from '@/lib/wallet/buy-links';
 import { getERC20Metadata, saveCustomToken, type WalletChainId, type WalletToken } from '@/lib/wallet/tokens';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
+import { getDefaultChainId } from '@/lib/chains/default-chain';
 import { SOLANA_MAINNET_CHAIN_ID, isSolanaChainId } from '@/lib/chains/solana';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 import { ARC_CHAIN_ID } from '@/lib/chains/arc';
@@ -121,7 +122,7 @@ export default function FullWalletPage() {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [crossChainBuyOpen, setCrossChainBuyOpen] = useState(false);
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
-  const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
+  const [importChainId, setImportChainId] = useState<WalletChainId>(() => getDefaultChainId());
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
   const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/FullWalletPage.tsx:searchQuery", '');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);

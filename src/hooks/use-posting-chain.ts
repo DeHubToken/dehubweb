@@ -4,24 +4,29 @@ import { toast } from 'sonner';
 import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
 import { isSolanaChain } from '@/lib/chains/constants';
 import { getSolanaStatus } from '@/lib/api/dehub/solana';
+import { DEFAULT_CHAIN_EVENT, NEW_USER_DEFAULT_CHAIN, getDefaultChainId } from '@/lib/chains/default-chain';
 
 const STORAGE_KEY = 'dehub_posting_chain';
 const CHANGE_EVENT = 'dehub-posting-chain-change';
-const DEFAULT_CHAIN: PostChainId = 8453;
 
 function readChain(): PostChainId {
   try {
-    const stored = Number(localStorage.getItem(STORAGE_KEY));
-    return SUPPORTED_CHAINS.find(chain => chain.id === stored)?.id ?? DEFAULT_CHAIN;
+    // An explicit pick in Settings wins; otherwise BNB, or Base for a wallet
+    // that already held Base tokens (lib/chains/default-chain).
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const stored = raw === null ? NaN : Number(raw);
+    return SUPPORTED_CHAINS.find(chain => chain.id === stored)?.id ?? getDefaultChainId();
   } catch {
-    return DEFAULT_CHAIN;
+    return getDefaultChainId();
   }
 }
 
 function subscribe(listener: () => void) {
   window.addEventListener('storage', listener);
   window.addEventListener(CHANGE_EVENT, listener);
+  window.addEventListener(DEFAULT_CHAIN_EVENT, listener);
   return () => {
+    window.removeEventListener(DEFAULT_CHAIN_EVENT, listener);
     window.removeEventListener('storage', listener);
     window.removeEventListener(CHANGE_EVENT, listener);
   };
@@ -30,7 +35,7 @@ function subscribe(listener: () => void) {
 /** Device-local, shared by Settings and every mounted post composer. */
 export function usePostingChain() {
   const { t: _copy } = _useCopy();
-  const chainId = useSyncExternalStore(subscribe, readChain, () => DEFAULT_CHAIN);
+  const chainId = useSyncExternalStore(subscribe, readChain, () => NEW_USER_DEFAULT_CHAIN);
   const [saving, setSaving] = useState(false);
   const setChainId = useCallback(async (next: PostChainId) => {
     if (!SUPPORTED_CHAINS.some(chain => chain.id === next)) return;

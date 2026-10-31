@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getDefaultChainId } from '@/lib/chains/default-chain';
 import { useQueries } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -75,7 +76,7 @@ interface MintChainSheetProps {
 export function MintChainSheet({ open, onOpenChange, defaultChainId, isMinting, onConfirm, sponsored: sponsoredOverride }: MintChainSheetProps) {
   const { t } = useTranslation();
   const sponsored = sponsoredOverride ?? isSmartWalletSession();
-  const fallback = MINT_LATER_CHAINS.some((c) => c.id === defaultChainId) ? (defaultChainId as ChainId) : (MINT_LATER_CHAINS[0].id as ChainId);
+  const fallback = MINT_LATER_CHAINS.some((c) => c.id === defaultChainId) ? (defaultChainId as ChainId) : (getDefaultChainId() as ChainId);
   const [selected, setSelected] = useState<ChainId>(fallback);
   useEffect(() => { if (open) setSelected(fallback); }, [open, fallback]);
 
