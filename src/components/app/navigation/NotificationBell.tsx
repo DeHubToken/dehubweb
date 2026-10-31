@@ -30,12 +30,15 @@ export function NotificationBell({ unread = 0, size = 26, active = true }: {
     '--bell-reach': `${profile.reach * size / 26}px`,
     '--bell-cycle': `${profile.cycleMs}ms`,
     '--bell-glow': `${profile.intensity}px`,
+    '--bell-size': `${size}px`,
   } as CSSProperties;
   return (
     <span ref={ref} className="notification-bell" style={style} aria-hidden="true"
       data-unread={profile.unread > 0} data-unread-count={profile.unread} data-running={active && visible && foreground}>
       <span className="notification-bell__swing">
+        {profile.unread > 0 && <span className="notification-bell__rim"><Bell size={size} /></span>}
         <Bell size={size} />
+        {profile.unread > 0 && <span className="notification-bell__hot"><Bell size={size} /></span>}
         {profile.unread > 0 && BELL_SIDE_RIPPLE_PATHS.map((path, side) => [0, 1].map(echo => (
           <span key={`${side}-${echo}`} className="notification-bell__wave" data-side={side} data-echo={echo}>
             <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
