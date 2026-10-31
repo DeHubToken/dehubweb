@@ -1066,7 +1066,7 @@ export const en = {
     tocFeedsPhotos: 'Feeds, Photos & Comments',
     feedsPhotosTitle: 'Feeds, Photos & Comments',
     feedsPhotosDesc: 'Opening and reading posts is quicker, on the web and in the app.',
-    feedsPhotosB1: 'Who to follow:',
+    feedsPhotosB1: 'Follow suggestions:',
     feedsPhotosB1Desc: 'Cover cards in the feed and on Explore show profile banners and a Follow back button, and the list never runs out.',
     feedsPhotosB2: 'Photos:',
     feedsPhotosB2Desc: 'Tap a photo to see it full screen with tap to hide buttons and double tap to zoom, or open the Images scroll view. Back returns to the spot in the feed you left.',

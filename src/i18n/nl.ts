@@ -974,7 +974,7 @@ export const nl = {
     tocFeedsPhotos: "Feeds, foto's en reacties",
     feedsPhotosTitle: "Feeds, foto's en reacties",
     feedsPhotosDesc: "Posts openen en lezen gaat sneller, op het web en in de app.",
-    feedsPhotosB1: "Wie te volgen:",
+    feedsPhotosB1: "Volgsuggesties:",
     feedsPhotosB1Desc: "Coverkaarten in de feed en op Verkennen tonen profielbanners en een knop Terugvolgen, en de lijst raakt nooit op.",
     feedsPhotosB2: "Foto's:",
     feedsPhotosB2Desc: "Tik op een foto om hem schermvullend te zien, met tikken om knoppen te verbergen en dubbeltikken om in te zoomen, of open de scrollweergave van afbeeldingen. Terug brengt je naar de plek in de feed die je verliet.",

@@ -635,7 +635,7 @@ export const fr = {
     tocFeedsPhotos: "Fils, photos et commentaires",
     feedsPhotosTitle: "Fils, photos et commentaires",
     feedsPhotosDesc: "Ouvrir et lire les publications est plus rapide, sur le web et dans l'app.",
-    feedsPhotosB1: "Qui suivre :",
+    feedsPhotosB1: "Suggestions d’abonnements :",
     feedsPhotosB1Desc: "Les cartes de couverture dans le fil et sur Explorer affichent des bannières de profil et un bouton Suivre en retour, et la liste ne s'épuise jamais.",
     feedsPhotosB2: "Photos :",
     feedsPhotosB2Desc: "Touchez une photo pour la voir en plein écran, avec un toucher pour masquer les boutons et un double toucher pour zoomer, ou ouvrez la vue de défilement des images. Retour vous ramène à l'endroit du fil que vous avez quitté.",

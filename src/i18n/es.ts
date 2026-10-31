@@ -635,7 +635,7 @@ export const es = {
     tocFeedsPhotos: "Feeds, fotos y comentarios",
     feedsPhotosTitle: "Feeds, fotos y comentarios",
     feedsPhotosDesc: "Abrir y leer publicaciones es más rápido, en la web y en la app.",
-    feedsPhotosB1: "A quién seguir:",
+    feedsPhotosB1: "Sugerencias para seguir:",
     feedsPhotosB1Desc: "Las tarjetas de portada en el feed y en Explorar muestran banners de perfil y un botón de Seguir también, y la lista nunca se agota.",
     feedsPhotosB2: "Fotos:",
     feedsPhotosB2Desc: "Toca una foto para verla a pantalla completa, con toque para ocultar botones y doble toque para ampliar, o abre la vista de desplazamiento de imágenes. Atrás te devuelve al punto del feed que dejaste.",
