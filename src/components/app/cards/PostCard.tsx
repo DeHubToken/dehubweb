@@ -78,7 +78,7 @@ import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
-import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, reportPostEvent, type TokenVisibility } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
@@ -406,6 +406,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           url: postUrl,
         });
         void import('@/lib/analytics').then((m) => m.trackShare('image', { kind: 'post' }));
+        reportPostEvent(post.id, 'share');
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -440,6 +441,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     <div
       ref={viewRef}
       data-post-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
@@ -814,6 +816,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           timestamp={post.createdAt}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,

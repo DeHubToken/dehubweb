@@ -1,10 +1,15 @@
 import { useEffect, useState, type RefObject } from 'react';
 
-/** Release far-offscreen gallery images; pinned slides (single, active ±1) never unload. */
+/**
+ * Gallery photos load as the strip nears them and unload once far away, so a
+ * 30+ photo post only fetches the photos around the one in view. Pinned
+ * slides (single photo, active ±2) always load and never unload.
+ */
 export function useHorizontalBitmap(source: string, measured: boolean, viewportRef: RefObject<HTMLDivElement>, slideRef: RefObject<HTMLDivElement>, pinned = false) {
-  const [retained, setRetained] = useState(true);
+  const [retained, setRetained] = useState(pinned);
   useEffect(() => {
-    setRetained(true);
+    // Without an observer (or a shape yet) there is nothing to window by.
+    if (!viewportRef.current || !measured || typeof IntersectionObserver === 'undefined') setRetained(true);
     const root = viewportRef.current;
     const node = slideRef.current;
     if (pinned || !root || !node || !measured || typeof IntersectionObserver === 'undefined') return;

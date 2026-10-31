@@ -11,7 +11,7 @@ import { tokenLabel } from '@/lib/token-label';
  * - Engagement stats
  */
 
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Tag, Hash, HandCoins, Globe, Ticket } from "lucide-react";
@@ -56,6 +56,7 @@ import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
+import { PostReactorsSection } from '@/components/app/post-info/PostReactorsSection';
 import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
@@ -76,6 +77,8 @@ import { resolveViewCount } from '@/lib/engagement';
 
 
 // Chain configuration
+const PostStatsPanel = lazy(() => import('@/components/app/post-stats/PostStatsPanel'));
+
 const CHAIN_CONFIG: Record<number, { name: string; explorerUrl: string; explorerName: string }> = {
   8453: {
     name: 'Base',
@@ -392,6 +395,11 @@ export default function PostInfoPage() {
       
       <div>
         <div className="p-4 space-y-6">
+          {isOwner && postId ? (
+            <Suspense fallback={null}>
+              <PostStatsPanel tokenId={postId} />
+            </Suspense>
+          ) : null}
           {/* Transaction & Mint Info — or, for a post published off-chain, a
               placeholder in its place. The post is real and everything social
               about it works; only the NFT behind it does not exist yet. */}
@@ -776,6 +784,9 @@ export default function PostInfoPage() {
               </div>
             </div>
           </section>
+
+          {/* Who reacted - only the author gets person rows */}
+          {isOwner && nftInfo.tokenId != null && <PostReactorsSection tokenId={nftInfo.tokenId} />}
 
           {/* PPV Sales Info - shown for PPV content */}
           {isPPV && (

@@ -1,3 +1,4 @@
+import { reportPostEvent } from '@/lib/api/dehub/post-stats';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { LiveRipple } from '@/components/app/LiveRipple';
 /**
@@ -113,7 +114,9 @@ export function CardHeader({
   const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
   const avatarSrc = hasRealAvatar ? avatarSeed : agentFallback;
 
-  const handleProfileClick = () => {
+  const handleProfileClick = (e?: { currentTarget: Element }) => {
+    // A tap through to the creator from one of their posts counts in that post's stats.
+    reportPostEvent(e?.currentTarget?.closest?.('[data-stats-token]')?.getAttribute('data-stats-token'), 'profile');
     // Seed profile cache with data we already have from the feed card
     const cleanUsername = creatorUsername?.replace('@', '');
     if (cleanUsername || creatorId) {

@@ -359,13 +359,26 @@ function ImageSlide({
  * guess: a post of wide screenshots showed a huge empty band under its first
  * photo until it was tapped.
  */
+const EAGER_SHAPE_PROBES = 6;
+
+function whenIdle(run: () => void): () => void {
+  if (typeof window.requestIdleCallback === 'function') {
+    const id = window.requestIdleCallback(run, { timeout: 1500 });
+    return () => window.cancelIdleCallback(id);
+  }
+  const id = window.setTimeout(run, 300);
+  return () => window.clearTimeout(id);
+}
+
 function useGalleryAspects(images: string[], enabled: boolean) {
   const [measured, setMeasured] = useState<Record<string, number>>({});
   useEffect(() => {
     if (!enabled || typeof Image === 'undefined') return;
     let live = true;
-    images.forEach((img) => {
-      if (imageAspectRatioCache.get(img)) return;
+    // The first few shapes are probed now; a long carousel's rest wait for an
+    // idle moment so they never compete with the photos in view.
+    const probeOne = (img: string) => {
+      if (!live || imageAspectRatioCache.get(img)) return;
       const probe = new Image();
       probe.decoding = 'async';
       probe.onload = () => {
@@ -375,8 +388,11 @@ function useGalleryAspects(images: string[], enabled: boolean) {
         if (live) setMeasured((previous) => ({ ...previous, [img]: ratio }));
       };
       probe.src = cdnImage(img, { width: 160 });
-    });
-    return () => { live = false; };
+    };
+    images.slice(0, EAGER_SHAPE_PROBES).forEach(probeOne);
+    const rest = images.slice(EAGER_SHAPE_PROBES);
+    const idle = rest.length ? whenIdle(() => rest.forEach(probeOne)) : undefined;
+    return () => { live = false; idle?.(); };
   }, [images, enabled]);
   return images.map((img) => measured[img] ?? imageAspectRatioCache.get(img));
 }
@@ -574,7 +590,7 @@ function ImageCarousel({
               onImageClick={onImageClick}
               viewportRef={scrollRef}
               immersive={immersive}
-              pinned={images.length <= 1 || Math.abs(idx - currentIndex) <= 1}
+              pinned={images.length <= 1 || (idx >= currentIndex - 1 && idx <= currentIndex + 2)}
               knownRatio={measuredAspects[idx] ?? tallestAspect}
               fill={fillsFrame(idx)}
             />
@@ -1229,6 +1245,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     <div
       ref={viewRef}
       data-image-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
@@ -1469,6 +1486,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           timestamp={post.timeAgo}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
