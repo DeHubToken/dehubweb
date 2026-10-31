@@ -2861,6 +2861,21 @@
     "anonymousLikes_one": "{{count}} pai mai i tētahi kaipupuri tohu huna",
     "anonymousLikes_other": "{{count}} pai mai i ngā kaipupuri tohu huna"
   },
+  "mintChain": {
+    "title": "Mint pou",
+    "subtitle": "Kōwhiri i te mekameka. utu e ora, me te whakahou ia meneti.",
+    "free": "Free",
+    "gasCovered": "Ko te hau e kapi ana i te DeHub",
+    "feeIncludesGas": "≈ {{usd}}, whakauru hau",
+    "gasIncluded": "Kei roto i te hau",
+    "gasOnly": "≈ {{usd}} kasa",
+    "paidFromWallet": "{{amount}} mai i to putea",
+    "paidFromWalletPlain": "Utu mai i to putea",
+    "priceUnavailable": "Ko te utu kaore i te waatea",
+    "confirm": "Mint i runga i {{chain}}",
+    "confirmWithCost": "Mint i runga i {{chain}} · {{cost}}",
+    "notAvailable": "Kaore ano kia waatea te peita i runga i tenei mekameka."
+  },
   "postInfo": {
     "title": "Mōhiohio pou",
     "tokenId": "Tohu ID",

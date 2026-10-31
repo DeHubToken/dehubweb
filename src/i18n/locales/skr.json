@@ -2799,6 +2799,17 @@
     "anonymousLikes_one": "گمنام بیج ہولڈر دی طرفوں {{count}} لائیک",
     "anonymousLikes_other": "گمنام بیج ہولڈرز دی طرفوں {{count}} لائیک"
   },
+  "mintChain": {
+    "title": "مٹھا پوسٹ",
+    "subtitle": "چنڈا چُنو۔ قیمتاں لائیو نیں تے ہر منٹ اپ ڈیٹ ہوندیاں نیں۔",
+    "free": "مفت",
+    "gasCovered": "گئس ڈی ہب کے تحت",
+    "feeIncludesGas": "≈ {{usd}}, گیس شامل",
+    "gasIncluded": "گئس شامل",
+    "paidFromWalletPlain": "پہنچا ہے اپنے ڈھنگ سے",
+    "priceUnavailable": "قیمت نہیں ہے",
+    "notAvailable": "چین میں مائنٹنگ اس وقت دستیاب نہیں ہے۔"
+  },
   "postInfo": {
     "title": "پوسٹ معلومات",
     "tokenId": "ٹوکن ID",

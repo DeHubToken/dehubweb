@@ -2883,6 +2883,21 @@
     "anonymousLikes_one": "{{count}} Like vomene anonyme Badge-Inhaber",
     "anonymousLikes_other": "{{count}} Likes vo anonyme Badge-Inhaber"
   },
+  "mintChain": {
+    "title": "Mint-Post",
+    "subtitle": "Wähl e Chain. D'Priise sind live und aktualisiere jede Minute.",
+    "free": "Gratis",
+    "gasCovered": "Gas vom DeHub übernahm",
+    "feeIncludesGas": "≈ {{usd}}, Gas iibegriffe",
+    "gasIncluded": "Gas iibegriffe",
+    "gasOnly": "≈ {{usd}} Gas",
+    "paidFromWallet": "{{amount}} us dinere Wallet",
+    "paidFromWalletPlain": "Bezahlt us dinere Wallet",
+    "priceUnavailable": "Preis nöd verfüegbar",
+    "confirm": "Mint uf {{chain}}",
+    "confirmWithCost": "Mint uf {{chain}} · {{cost}}",
+    "notAvailable": "Minting uf däre Chain isch no nöd verfüegbar."
+  },
   "postInfo": {
     "title": "Biitragsinformation",
     "tokenId": "Token-ID",

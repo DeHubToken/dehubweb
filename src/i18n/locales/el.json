@@ -2904,6 +2904,21 @@
     "anonymousLikes_one": "{{count}} like από ανώνυμο κάτοχο κονκάρδας",
     "anonymousLikes_other": "{{count}} likes από ανώνυμους κατόχους κονκάρδας"
   },
+  "mintChain": {
+    "title": "Ανάρτηση μέντας",
+    "subtitle": "Επιλέξτε μια αλυσίδα. Οι τιμές είναι δημοσιευμένες και ενημερώνονται κάθε λεπτό.",
+    "free": "Δωρεάν",
+    "gasCovered": "Αέριο που καλύπτεται από το DeHub",
+    "feeIncludesGas": "≈ {{usd}}, με γκάζι",
+    "gasIncluded": "Περιλαμβάνεται αέριο",
+    "gasOnly": "≈ {{usd}} αέριο",
+    "paidFromWallet": "{{amount}} από το πορτοφόλι σας",
+    "paidFromWalletPlain": "Πληρώθηκε από το πορτοφόλι σας",
+    "priceUnavailable": "Η τιμή δεν είναι διαθέσιμη",
+    "confirm": "Μέντα στις {{chain}}",
+    "confirmWithCost": "Μέντα στις {{chain}} · {{cost}}",
+    "notAvailable": "Η κοπή σε αυτή την αλυσίδα δεν είναι ακόμα διαθέσιμη."
+  },
   "postInfo": {
     "title": "Πληροφορίες ανάρτησης",
     "tokenId": "Τοκέν ID",

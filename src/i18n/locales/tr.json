@@ -633,6 +633,16 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "postLanding": "Paylaştıktan sonra",
+    "postLandingDesc": "Yeni gönderinin akışında nasıl belirdiği",
+    "postLandingGhost": "Hayalet yuva",
+    "postLandingGhostDesc": "Akışın yer açar ve gönderin yerine yavaşça belirir",
+    "postLandingMorph": "Dönüşüm",
+    "postLandingMorphDesc": "Düzenleyici küçülerek gönderine dönüşür",
+    "postLandingPill": "Çubuktan karta",
+    "postLandingPillDesc": "Yükleme çubuğu, gönderin yayına girince açılıp gönderine dönüşür",
+    "postLandingDrop": "Düşüş",
+    "postLandingDropDesc": "Gönderin yukarıdan küçük bir sekmeyle düşer",
     "sessionsRevokedMany": "{{count}} cihaz oturumu kapatıldı",
     "usernameTaken": "Kullanıcı adı alınmış",
     "postingChain": "Gönderi blokzinciri",
@@ -1198,17 +1208,7 @@
     "socialConnectedShort": "Bağlı",
     "socialConnectFailed": "{{platform}} bağlanamadı. Lütfen tekrar dene.",
     "socialVerifiedFollowers": "{{value}} takipçi",
-    "socialFollowersPending": "Takipçi sayısı güncelleniyor",
-    "postLanding": "Paylaştıktan sonra",
-    "postLandingDesc": "Yeni gönderinin akışında nasıl belirdiği",
-    "postLandingGhost": "Hayalet yuva",
-    "postLandingGhostDesc": "Akışın yer açar ve gönderin yerine yavaşça belirir",
-    "postLandingMorph": "Dönüşüm",
-    "postLandingMorphDesc": "Düzenleyici küçülerek gönderine dönüşür",
-    "postLandingPill": "Çubuktan karta",
-    "postLandingPillDesc": "Yükleme çubuğu, gönderin yayına girince açılıp gönderine dönüşür",
-    "postLandingDrop": "Düşüş",
-    "postLandingDropDesc": "Gönderin yukarıdan küçük bir sekmeyle düşer"
+    "socialFollowersPending": "Takipçi sayısı güncelleniyor"
   },
   "common": {
     "confirm": "Onayla",
@@ -1312,6 +1312,9 @@
     "embedCodeCopied": "Yerleştirme kodu kopyalandı",
     "options": "Seçenekler",
     "aiOverview": "Yapay zekaya genel bakış",
+    "refreshLinkPreview": "Bağlantı önizlemesini yenile",
+    "linkPreviewRefreshed": "Bağlantı önizlemesi yenilendi",
+    "linkPreviewRefreshFailed": "Bu siteye ulaşılamadı. Daha sonra tekrar deneyin.",
     "sendTip": "Bahşiş Gönder",
     "queue": "Sıra",
     "watchList": "İzleme Listesi",
@@ -1342,10 +1345,7 @@
     "giftBoost": "Bir güçlendirme hediye et",
     "markSection": "Atlanabilir bölümler",
     "copyFailed": "Bağlantı kopyalanamadı",
-    "share": "Paylaş",
-    "refreshLinkPreview": "Bağlantı önizlemesini yenile",
-    "linkPreviewRefreshed": "Bağlantı önizlemesi yenilendi",
-    "linkPreviewRefreshFailed": "Bu siteye ulaşılamadı. Daha sonra tekrar deneyin."
+    "share": "Paylaş"
   },
   "filters": {
     "sort": "Sırala",
@@ -2989,6 +2989,21 @@
     "likersEmptyBody": "Bu yorumun beğenileri burada görünecek.",
     "anonymousLikes_one": "Anonim rozet sahibinden {{count}} beğeni",
     "anonymousLikes_other": "Anonim rozet sahiplerinden {{count}} beğeni"
+  },
+  "mintChain": {
+    "title": "Darphane postası",
+    "subtitle": "Bir zincir seçin. Fiyatlar canlıdır ve her dakika güncellenir.",
+    "free": "Ücretsiz",
+    "gasCovered": "DeHub tarafından karşılanan gaz",
+    "feeIncludesGas": "≈{{usd}}, gaz dahil",
+    "gasIncluded": "Gaz dahil",
+    "gasOnly": "≈{{usd}} gaz",
+    "paidFromWallet": "cüzdanınızdan {{amount}}",
+    "paidFromWalletPlain": "Cüzdanınızdan ödendi",
+    "priceUnavailable": "Fiyat mevcut değil",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "{{chain}}{{cost}}' de nane",
+    "notAvailable": "Bu zincirde para basma henüz mevcut değil."
   },
   "postInfo": {
     "title": "Gönderi Bilgisi",
@@ -6845,6 +6860,12 @@
       "addImage": "Görsel veya logo",
       "addCamera": "İkinci kamera",
       "addClip": "Video klip",
+      "addReaction": "Bir videoya tepki ver",
+      "reactPlaceholder": "Bir DeHub video bağlantısı yapıştır",
+      "reactAdd": "Göster",
+      "reactInvalid": "Bir DeHub videosunun bağlantısını yapıştır.",
+      "reactNotLive": "Önce canlı yayına başla, sonra videoyu ekle.",
+      "reactNoBubble": "Kameran burada iki kez açılamadı. Yüzünün görünmesi için videoyu yeniden boyutlandır.",
       "failed": "Bu kaynak eklenemedi.",
       "empty": "Yayınının üstüne bir logo, ikinci kamera veya video klip ekle.",
       "hint": "Kaynaklar her izleyici ve her platform için görüntünün üstüne çizilir.",
@@ -6871,13 +6892,7 @@
         "circle": "Daire",
         "rounded": "Yuvarlak köşe",
         "rect": "Kare"
-      },
-      "addReaction": "Bir videoya tepki ver",
-      "reactPlaceholder": "Bir DeHub video bağlantısı yapıştır",
-      "reactAdd": "Göster",
-      "reactInvalid": "Bir DeHub videosunun bağlantısını yapıştır.",
-      "reactNotLive": "Önce canlı yayına başla, sonra videoyu ekle.",
-      "reactNoBubble": "Kameran burada iki kez açılamadı. Yüzünün görünmesi için videoyu yeniden boyutlandır."
+      }
     },
     "audio": {
       "title": "Ses mikseri",
@@ -9065,7 +9080,35 @@
     "priceChartCleared": "Fiyat grafiği temizlendi. Sabit referans fiyatı: 0.0001 $. Uygulama fiyatları mevcut siparişlere bağlıdır."
   },
   "editor": {
-    "stage": {"create":"3B sahne ekle","title":"3B sahne","hint":"Küre ve kutularla bir çekim hazırlayın. Kamera, konumlar ve üç bağımsız alan ışığı oluşturulan görüntüyü değiştirir.","preview":"Oluşturulan sahne önizlemesi","error":"Görüntü hazırlanamadı. Çekim referanslarını kontrol edip tekrar deneyin.","camera":"Kamera","yaw":"Dönüş","elevation":"Yükseklik açısı","distance":"Uzaklık","fov":"Görüş alanı","object":"Nesne","add":"Ekle","sphere":"Küre","box":"Kutu","x":"X","y":"Y","z":"Z","scale":"Boyut","color":"Renk","remove":"Nesneyi kaldır","light":"Işık","intensity":"Yoğunluk","diffusion":"Yayılım","saving":"Görüntü hazırlanıyor…","useFrame":"Oluşturulan görüntüyü çekim referansı olarak kullan","frameHint":"320 × 180 PNG oluşturur ve çekim referanslarına ekler. Üretmeden önce referans sınırını ve fiyatı kontrol edin.","frameName":"Sahne görüntüsü"},
+    "stage": {
+      "create": "3B sahne ekle",
+      "title": "3B sahne",
+      "hint": "Küre ve kutularla bir çekim hazırlayın. Kamera, konumlar ve üç bağımsız alan ışığı oluşturulan görüntüyü değiştirir.",
+      "preview": "Oluşturulan sahne önizlemesi",
+      "error": "Görüntü hazırlanamadı. Çekim referanslarını kontrol edip tekrar deneyin.",
+      "camera": "Kamera",
+      "yaw": "Dönüş",
+      "elevation": "Yükseklik açısı",
+      "distance": "Uzaklık",
+      "fov": "Görüş alanı",
+      "object": "Nesne",
+      "add": "Ekle",
+      "sphere": "Küre",
+      "box": "Kutu",
+      "x": "X",
+      "y": "Y",
+      "z": "Z",
+      "scale": "Boyut",
+      "color": "Renk",
+      "remove": "Nesneyi kaldır",
+      "light": "Işık",
+      "intensity": "Yoğunluk",
+      "diffusion": "Yayılım",
+      "saving": "Görüntü hazırlanıyor…",
+      "useFrame": "Oluşturulan görüntüyü çekim referansı olarak kullan",
+      "frameHint": "320 × 180 PNG oluşturur ve çekim referanslarına ekler. Üretmeden önce referans sınırını ve fiyatı kontrol edin.",
+      "frameName": "Sahne görüntüsü"
+    },
     "film": {
       "repairRefs": "Eksik medya bağlantılarını kaldır",
       "title": "Film projesi",
@@ -19836,7 +19879,14 @@
     "count_one": "{{count}} tepki",
     "count_other": "{{count}} tepki",
     "allow": "Tepkilere izin ver",
+    "remixesSection": "Remiksler",
     "allowDescription": "Diğer içerik üreticilerinin videolarına kayıtlı veya canlı tepki vermesine izin ver. Her gönderide ayrıca değiştirebilirsin.",
+    "policy": {
+      "everyone": "Herkes",
+      "followers": "Takipçiler",
+      "nobody": "Hiç kimse",
+      "default": "Hesap varsayılanı ({{value}})"
+    },
     "pageTitle": "{{title}} için tepkiler — DeHub",
     "pageDescription": "DeHub’da {{creator}} tarafından paylaşılan “{{title}}” videosuna verilen kayıtlı ve canlı tepkileri izle.",
     "heading": "Tepkiler",
@@ -19846,14 +19896,7 @@
     "liveNow": "Canlı",
     "wasLive": "Canlıydı",
     "untitled": "Tepki",
-    "thisVideo": "bu video",
-    "policy": {
-      "everyone": "Herkes",
-      "followers": "Takipçiler",
-      "nobody": "Hiç kimse",
-      "default": "Hesap varsayılanı ({{value}})"
-    },
-    "remixesSection": "Remiksler"
+    "thisVideo": "bu video"
   },
   "connectGuide": {
     "title": "DeHub’ı yapay zekâ asistanına bağla",

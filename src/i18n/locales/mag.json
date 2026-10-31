@@ -2843,6 +2843,15 @@
     "anonymousLikes_one": "गुमनाम बैज धारक से {{count}} पसंद",
     "anonymousLikes_other": "गुमनाम बैज धारक सब से {{count}} पसंद"
   },
+  "mintChain": {
+    "title": "पोस्ट कैलक्यूलेटर",
+    "subtitle": "चुनाव एक श्रृंखला है। मूल्य जीवित हैं और हर मिनट अपडेट होते हैं।",
+    "gasCovered": "Dehub के उपयोग के लिए संकेत",
+    "gasIncluded": "गैस, आउटपुट के रूप में शामिल",
+    "paidFromWalletPlain": "अपन जेब से खरचा - खरचा",
+    "priceUnavailable": "उपस्थिति, परिणामों की अनुपस्थिति,",
+    "notAvailable": "मेरी स्कूल की छुट्टी अब तक डिक्लेर नहीं हई थी.."
+  },
   "postInfo": {
     "title": "पोस्ट जानकारी",
     "tokenId": "टोकन ID",

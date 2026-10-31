@@ -2881,6 +2881,21 @@
     "anonymousLikes_one": "گمنام بیج ہولڈر کی جانب سے {{count}} لائیک",
     "anonymousLikes_other": "گمنام بیج ہولڈرز کی جانب سے {{count}} لائیکس"
   },
+  "mintChain": {
+    "title": "ٹکسال کی پوسٹ",
+    "subtitle": "چین منتخب کریں ۔ قیمتیں لائیو ہیں اور ہر منٹ اپ ڈیٹ ہوتی ہیں ۔",
+    "free": "مفت",
+    "gasCovered": "ڈی ہب کے ذریعہ احاطہ کردہ گیس",
+    "feeIncludesGas": "≈ {{usd}}، گیس شامل ہے",
+    "gasIncluded": "گیس شامل ہے",
+    "gasOnly": "≈ {{usd}} گیس",
+    "paidFromWallet": "آپ کے والٹ سے {{amount}}",
+    "paidFromWalletPlain": "آپ کے والٹ سے ادائیگی کی گئی",
+    "priceUnavailable": "قیمت دستیاب نہیں ہے",
+    "confirm": "{{chain}} پر ٹکسال",
+    "confirmWithCost": "ٹکسال {{chain}} ·{{cost}} پر",
+    "notAvailable": "اس زنجیر پر مائننگ ابھی تک دستیاب نہیں ہے ۔"
+  },
   "postInfo": {
     "title": "پوسٹ کی معلومات",
     "tokenId": "ٹوکن ID",
