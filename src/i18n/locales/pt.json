@@ -1900,9 +1900,6 @@
     "followBack": "Seguir de volta"
   },
   "features": {
-    "notFeasible": "Não viável",
-    "notFeasibleWhy": "Por quê:",
-    "noNotFeasible": "Nada aqui",
     "prompts": "Prompts",
     "queued": "Fila",
     "promptPageTitle": "Solicitações",

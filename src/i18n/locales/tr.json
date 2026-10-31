@@ -2051,9 +2051,6 @@
     "followBack": "Takip Et"
   },
   "features": {
-    "notFeasible": "Mümkün değil",
-    "notFeasibleWhy": "Neden:",
-    "noNotFeasible": "Burada bir şey yok",
     "prompts": "İstemler",
     "queued": "Sırada",
     "promptPageTitle": "İstekler",
