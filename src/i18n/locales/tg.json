@@ -2857,6 +2857,19 @@
     "anonymousLikes_one": "{{count}} писанд аз дорандаи нишони беном",
     "anonymousLikes_other": "{{count}} писанд аз дорандагони нишони беном"
   },
+  "mintChain": {
+    "title": "Почтаи майда",
+    "subtitle": "Занҷирро интихоб кунед. Нархҳо зиндаанд ва ҳар дақиқа навсозӣ мекунанд.",
+    "free": "Озод",
+    "gasCovered": "Газ аз ҷониби DeHub фаро гирифта шудааст",
+    "feeIncludesGas": "{{usd}}, gas include",
+    "gasIncluded": "Газ дохил карда шудааст",
+    "gasOnly": "{{usd}} gas",
+    "paidFromWallet": "{{amount}} mula sa iyong wallet",
+    "paidFromWalletPlain": "Пардохтшуда аз ҳамёни шумо",
+    "priceUnavailable": "Нарх дастнорас аст",
+    "notAvailable": "Ин занҷир ҳоло дастрас нест."
+  },
   "postInfo": {
     "title": "Маълумоти пост",
     "tokenId": "ID токен",

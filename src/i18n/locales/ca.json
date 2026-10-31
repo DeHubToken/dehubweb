@@ -2879,6 +2879,21 @@
     "anonymousLikes_one": "{{count}} m'agrada d'un titular de distintiu anònim",
     "anonymousLikes_other": "{{count}} m'agrada de titulars de distintius anònims"
   },
+  "mintChain": {
+    "title": "Post de menta",
+    "subtitle": "Tria una cadena. Els preus estan disponibles i s'actualitzen cada minut.",
+    "free": "Gratis",
+    "gasCovered": "Gas cobert per DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas inclòs",
+    "gasIncluded": "Gas inclòs",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} de la teva cartera",
+    "paidFromWalletPlain": "Pagat amb la teva cartera",
+    "priceUnavailable": "Preu no disponible",
+    "confirm": "Menta a {{chain}}",
+    "confirmWithCost": "Menta a {{chain}} · {{cost}}",
+    "notAvailable": "L'encunyació d'aquesta cadena encara no està disponible."
+  },
   "postInfo": {
     "title": "Informació de la publicació",
     "tokenId": "ID del token",

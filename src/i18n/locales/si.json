@@ -2852,6 +2852,20 @@
     "anonymousLikes_one": "නිර්නාමික ලාංඡන හිමියෙකුගෙන් කැමැත්තන් {{count}}",
     "anonymousLikes_other": "නිර්නාමික ලාංඡන හිමියන්ගෙන් කැමැත්තන් {{count}}"
   },
+  "mintChain": {
+    "title": "මින්ට් පශ්චාත්",
+    "subtitle": "දාමයක් තෝරන්න. මිල ගණන් සජීවී වන අතර සෑම මිනිත්තුවකම යාවත්කාලීන වේ.",
+    "free": "නොමිලේ",
+    "gasCovered": "DeHub විසින් ආවරණය කරන ලද ගෑස්",
+    "feeIncludesGas": "≈ {{usd}}, ගෑස් ඇතුළත් වේ",
+    "gasIncluded": "ගෑස් ඇතුළත් වේ",
+    "gasOnly": "≈ {{usd}} ගෑස්",
+    "paidFromWallet": "{{amount}} ඔබේ පසුම්බියෙන්",
+    "paidFromWalletPlain": "ඔබේ පසුම්බියෙන් ගෙවන ලදී",
+    "priceUnavailable": "මිල ලබා ගත නොහැක",
+    "confirm": "{{chain}} මත මින්ට්",
+    "notAvailable": "මේ චැනල් එකේ සබ් එක තාම අප්ඩේට් වෙලා නෑ."
+  },
   "postInfo": {
     "title": "පළ කිරීමේ තොරතුරු",
     "tokenId": "ටෝකන් ID",

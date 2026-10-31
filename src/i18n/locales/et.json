@@ -2878,6 +2878,21 @@
     "anonymousLikes_one": "{{count}} meeldimine anonüümselt märgiomanikult",
     "anonymousLikes_other": "{{count}} meeldimist anonüümsetelt märgiomanikelt"
   },
+  "mintChain": {
+    "title": "Mündipost",
+    "subtitle": "Vali ahel. Hinnad avaldatakse ja neid uuendatakse iga minuti järel.",
+    "free": "Tasuta",
+    "gasCovered": "DeHubiga hõlmatud gaas",
+    "feeIncludesGas": "≈ {{usd}}, sisaldab gaasi",
+    "gasIncluded": "Gaas kuulub komplekti",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} oma rahakotist",
+    "paidFromWalletPlain": "Makstud sinu rahakotist",
+    "priceUnavailable": "Hind pole saadaval",
+    "confirm": "Rahapaja: {{chain}}",
+    "confirmWithCost": "Piparmünt {{chain}} · {{cost}}",
+    "notAvailable": "Selle keti vermimine pole veel saadaval."
+  },
   "postInfo": {
     "title": "Postituse info",
     "tokenId": "Tokeni ID",

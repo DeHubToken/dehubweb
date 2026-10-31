@@ -2717,6 +2717,18 @@
     "anonymousLikes_one": "{{count}} like from anonymous badge holder",
     "anonymousLikes_other": "{{count}} likes from badge holders wey hide their name"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pick one chain. Prices dey live and dem dey update every minute.",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}",
+    "notAvailable": "Minting for dis chain no dey available yet."
+  },
   "postInfo": {
     "title": "Post Info",
     "tokenId": "Token ID",
@@ -9252,14 +9264,14 @@
       "colour": "Colour for path",
       "data": "SVG markup or di path data (d)",
       "detail": "How curve detail reach",
-      "note": "Add small note for your invite (if you want)",
       "filled": "Closed shape wey dem fill",
       "hint": "Paste path d data or simple SVG markup wey get path, rectangle, circle, ellipse, line and polygon. Move, line, cubic, quadratic, smooth and arc command dey work. SVG matrix, translate, scale, rotate and skew transform go keep their shape. Shape go use the colour wey you choose; original paint, stroke and viewport margin no go enter. Curve go turn to drawing point dem. Close path with Z to fill am. SVG element dem wey close separate fit fill together. Plenty part go turn editable layer dem wey dey group; compound hole no dey work.",
       "insert": "Put geometry wey person fit edit",
       "name": "Name for layer",
       "preview": "Preview for vector path",
       "title": "Bring SVG shape wey you fit edit enter",
-      "weight": "How thick line be"
+      "weight": "How thick line be",
+      "note": "Add small note for your invite (if you want)"
     },
     "symbols": {
       "colour": "Colour",

@@ -2878,6 +2878,21 @@
     "anonymousLikes_one": "{{count}} apreciere de la un deținător anonim de insignă",
     "anonymousLikes_other": "{{count}} aprecieri de la deținători anonimi de insigne"
   },
+  "mintChain": {
+    "title": "Suport pentru mentă",
+    "subtitle": "Alege un lanț. Prețurile sunt valabile și se actualizează la fiecare minut.",
+    "free": "Gratuit",
+    "gasCovered": "Gaz acoperit de DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gaz inclus",
+    "gasIncluded": "Gaz inclus",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "{{amount}} din portofel",
+    "paidFromWalletPlain": "Plătit din portofel",
+    "priceUnavailable": "Preț indisponibil",
+    "confirm": "Mentă pe {{chain}}",
+    "confirmWithCost": "Mentă pe {{chain}} · {{cost}}",
+    "notAvailable": "Mentonarea acestui lanț nu este încă disponibilă."
+  },
   "postInfo": {
     "title": "Postare informații",
     "tokenId": "ID jeton",

@@ -2907,6 +2907,21 @@
     "anonymousLikes_one": "{{count}} لايك من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} لايكات من حاملين شارات مجهولين"
   },
+  "mintChain": {
+    "title": "منشور النعناع",
+    "subtitle": "اختر سلسلة. الأسعار متاحة ويتم تحديثها كل دقيقة.",
+    "free": "مجاني",
+    "gasCovered": "الغاز المغطى بواسطة DeHub",
+    "feeIncludesGas": "≈ {{usd}}، بما في ذلك الغاز",
+    "gasIncluded": "الغاز مشمول",
+    "gasOnly": "≈ {{usd}} غاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "تم الدفع من محفظتك",
+    "priceUnavailable": "السعر غير متاح",
+    "confirm": "النعناع على {{chain}}",
+    "confirmWithCost": "النعناع على {{chain}}·{{cost}}",
+    "notAvailable": "لا يتوفر سك العملة على هذه السلسلة حتى الآن."
+  },
   "postInfo": {
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",

@@ -633,6 +633,16 @@
     "heading": "Cortos de DeHub"
   },
   "settings": {
+    "postLanding": "Después de publicar",
+    "postLandingDesc": "Cómo aparece tu nueva publicación en tu feed",
+    "postLandingGhost": "Hueco fantasma",
+    "postLandingGhostDesc": "Tu feed hace espacio y tu publicación aparece suavemente en su lugar",
+    "postLandingMorph": "Transformación",
+    "postLandingMorphDesc": "El editor se encoge hasta convertirse en tu publicación",
+    "postLandingPill": "De barra a tarjeta",
+    "postLandingPillDesc": "La barra de subida se abre hasta convertirse en tu publicación cuando ya está publicada",
+    "postLandingDrop": "Caída",
+    "postLandingDropDesc": "Tu publicación cae desde arriba con un pequeño rebote",
     "sessionsRevokedMany": "{{count}} dispositivos desconectados",
     "usernameTaken": "Nombre de usuario ocupado",
     "postingChain": "Cadena de bloques de las publicaciones",
@@ -1198,17 +1208,7 @@
     "socialConnectedShort": "Conectado",
     "socialConnectFailed": "No se pudo conectar {{platform}}. Inténtalo de nuevo.",
     "socialVerifiedFollowers": "{{value}} seguidores",
-    "socialFollowersPending": "Actualizando seguidores",
-    "postLanding": "Después de publicar",
-    "postLandingDesc": "Cómo aparece tu nueva publicación en tu feed",
-    "postLandingGhost": "Hueco fantasma",
-    "postLandingGhostDesc": "Tu feed hace espacio y tu publicación aparece suavemente en su lugar",
-    "postLandingMorph": "Transformación",
-    "postLandingMorphDesc": "El editor se encoge hasta convertirse en tu publicación",
-    "postLandingPill": "De barra a tarjeta",
-    "postLandingPillDesc": "La barra de subida se abre hasta convertirse en tu publicación cuando ya está publicada",
-    "postLandingDrop": "Caída",
-    "postLandingDropDesc": "Tu publicación cae desde arriba con un pequeño rebote"
+    "socialFollowersPending": "Actualizando seguidores"
   },
   "common": {
     "confirm": "Confirmar",
@@ -1312,6 +1312,9 @@
     "embedCodeCopied": "Código de inserción copiado",
     "options": "Opciones",
     "aiOverview": "Descripción general de la IA",
+    "refreshLinkPreview": "Actualizar vista previa del enlace",
+    "linkPreviewRefreshed": "Vista previa del enlace actualizada",
+    "linkPreviewRefreshFailed": "No se pudo acceder a ese sitio. Inténtalo más tarde.",
     "sendTip": "Enviar propina",
     "queue": "Cola",
     "watchList": "Lista de seguimiento",
@@ -1342,10 +1345,7 @@
     "giftBoost": "Regala un impulso",
     "markSection": "Secciones saltables",
     "copyFailed": "No se pudo copiar el enlace",
-    "share": "Compartir",
-    "refreshLinkPreview": "Actualizar vista previa del enlace",
-    "linkPreviewRefreshed": "Vista previa del enlace actualizada",
-    "linkPreviewRefreshFailed": "No se pudo acceder a ese sitio. Inténtalo más tarde."
+    "share": "Compartir"
   },
   "filters": {
     "sort": "Ordenar",
@@ -2989,6 +2989,21 @@
     "likersEmptyBody": "Los me gusta de este comentario aparecerán aquí.",
     "anonymousLikes_one": "{{count}} me gusta de un titular de insignia anónimo",
     "anonymousLikes_other": "{{count}} me gusta de titulares de insignias anónimos"
+  },
+  "mintChain": {
+    "title": "Publicación de menta",
+    "subtitle": "Elige una cadena. Los precios están disponibles y se actualizan cada minuto.",
+    "free": "Gratis",
+    "gasCovered": "Gas cubierto por DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas incluido",
+    "gasIncluded": "Gas incluido",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} de tu monedero",
+    "paidFromWalletPlain": "Pagado con tu monedero",
+    "priceUnavailable": "Precio no disponible",
+    "confirm": "Menta en {{chain}}",
+    "confirmWithCost": "Menta en {{chain}} · {{cost}}",
+    "notAvailable": "La acuñación en esta cadena aún no está disponible."
   },
   "postInfo": {
     "title": "Info del Post",
@@ -6845,6 +6860,12 @@
       "addImage": "Imagen o logo",
       "addCamera": "Segunda cámara",
       "addClip": "Clip de vídeo",
+      "addReaction": "Reaccionar a un vídeo",
+      "reactPlaceholder": "Pega un enlace de vídeo de DeHub",
+      "reactAdd": "Mostrar",
+      "reactInvalid": "Pega un enlace a un vídeo de DeHub.",
+      "reactNotLive": "Primero empieza el directo y luego añade el vídeo.",
+      "reactNoBubble": "Tu cámara no puede abrirse dos veces aquí. Cambia el tamaño del vídeo para que se vea tu cara.",
       "failed": "No se pudo añadir esa fuente.",
       "empty": "Añade un logo, una segunda cámara o un clip de vídeo sobre tu directo.",
       "hint": "Las fuentes se dibujan sobre tu imagen para todos los espectadores y plataformas.",
@@ -6871,13 +6892,7 @@
         "circle": "Círculo",
         "rounded": "Redondeado",
         "rect": "Cuadrado"
-      },
-      "addReaction": "Reaccionar a un vídeo",
-      "reactPlaceholder": "Pega un enlace de vídeo de DeHub",
-      "reactAdd": "Mostrar",
-      "reactInvalid": "Pega un enlace a un vídeo de DeHub.",
-      "reactNotLive": "Primero empieza el directo y luego añade el vídeo.",
-      "reactNoBubble": "Tu cámara no puede abrirse dos veces aquí. Cambia el tamaño del vídeo para que se vea tu cara."
+      }
     },
     "audio": {
       "title": "Mezclador de audio",
@@ -9065,7 +9080,35 @@
     "priceChartCleared": "Gráfico de precios borrado. Precio de referencia fijo: $0.0001. Los precios de ejecución dependen de las órdenes disponibles."
   },
   "editor": {
-    "stage": {"create":"Añadir escenario 3D","title":"Escenario 3D","hint":"Prepara un plano con esferas y cajas. La cámara, las posiciones y tres luces de área independientes cambian la imagen renderizada.","preview":"Vista previa de la escena","error":"No se pudo preparar la imagen. Revisa las referencias del plano e inténtalo de nuevo.","camera":"Cámara","yaw":"Rotación","elevation":"Elevación","distance":"Distancia","fov":"Campo de visión","object":"Objeto","add":"Añadir","sphere":"Esfera","box":"Caja","x":"X","y":"Y","z":"Z","scale":"Tamaño","color":"Color","remove":"Eliminar objeto","light":"Luz","intensity":"Intensidad","diffusion":"Difusión","saving":"Preparando imagen…","useFrame":"Usar imagen renderizada como referencia del plano","frameHint":"Crea un PNG de 320 × 180 y lo añade a las referencias del plano. Revisa el límite de referencias y el precio antes de generar.","frameName":"Imagen del escenario"},
+    "stage": {
+      "create": "Añadir escenario 3D",
+      "title": "Escenario 3D",
+      "hint": "Prepara un plano con esferas y cajas. La cámara, las posiciones y tres luces de área independientes cambian la imagen renderizada.",
+      "preview": "Vista previa de la escena",
+      "error": "No se pudo preparar la imagen. Revisa las referencias del plano e inténtalo de nuevo.",
+      "camera": "Cámara",
+      "yaw": "Rotación",
+      "elevation": "Elevación",
+      "distance": "Distancia",
+      "fov": "Campo de visión",
+      "object": "Objeto",
+      "add": "Añadir",
+      "sphere": "Esfera",
+      "box": "Caja",
+      "x": "X",
+      "y": "Y",
+      "z": "Z",
+      "scale": "Tamaño",
+      "color": "Color",
+      "remove": "Eliminar objeto",
+      "light": "Luz",
+      "intensity": "Intensidad",
+      "diffusion": "Difusión",
+      "saving": "Preparando imagen…",
+      "useFrame": "Usar imagen renderizada como referencia del plano",
+      "frameHint": "Crea un PNG de 320 × 180 y lo añade a las referencias del plano. Revisa el límite de referencias y el precio antes de generar.",
+      "frameName": "Imagen del escenario"
+    },
     "film": {
       "repairRefs": "Quitar vínculos a archivos ausentes",
       "title": "Proyecto de película",
@@ -19836,7 +19879,14 @@
     "count_one": "{{count}} reacción",
     "count_other": "{{count}} reacciones",
     "allow": "Permitir reacciones",
+    "remixesSection": "Remixes",
     "allowDescription": "Deja que otros creadores reaccionen a tus vídeos, grabados o en directo. Puedes cambiarlo en cada publicación.",
+    "policy": {
+      "everyone": "Todos",
+      "followers": "Seguidores",
+      "nobody": "Nadie",
+      "default": "Predeterminado de la cuenta ({{value}})"
+    },
     "pageTitle": "Reacciones a {{title}} — DeHub",
     "pageDescription": "Mira cómo los creadores reaccionan a «{{title}}» de {{creator}} en DeHub, grabado y en directo.",
     "heading": "Reacciones",
@@ -19846,14 +19896,7 @@
     "liveNow": "En directo",
     "wasLive": "Fue en directo",
     "untitled": "Reacción",
-    "thisVideo": "este vídeo",
-    "policy": {
-      "everyone": "Todos",
-      "followers": "Seguidores",
-      "nobody": "Nadie",
-      "default": "Predeterminado de la cuenta ({{value}})"
-    },
-    "remixesSection": "Remixes"
+    "thisVideo": "este vídeo"
   },
   "connectGuide": {
     "title": "Conecta DeHub a tu asistente de IA",

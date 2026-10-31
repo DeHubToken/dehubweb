@@ -2860,6 +2860,21 @@
     "anonymousLikes_one": "نامسىز بەلگە ئىگىسىدىن {{count}} ياقتۇرۇش",
     "anonymousLikes_other": "نامسىز بەلگە ئىگىلىرىدىن {{count}} ياقتۇرۇش"
   },
+  "mintChain": {
+    "title": "Mint POST",
+    "subtitle": "زەنجىرنى تاللاڭ. باھاسى ھەر مىنۇتتا ئۆسىدۇ ۋە يېڭىلىنىدۇ.",
+    "free": "ھەقسىز",
+    "gasCovered": "DeHub تەرىپىدىن قاپلانغان گاز",
+    "feeIncludesGas": "≈ {{usd}}، گاز كىرگۈزۈلگەن",
+    "gasIncluded": "غاز كىرگۈزۈلگەن",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "يانچۇقىڭىزدىن {{amount}}",
+    "paidFromWalletPlain": "يانچۇقىڭىزدىن ھەق تاپشۇرۇڭ",
+    "priceUnavailable": "باھاسى قوللانغىلى بولمايدىغان",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "Mint on {{chain}} {{cost}}",
+    "notAvailable": "بۇ زەنجىرنى ياساش تېخى قوللىنىلمىغان."
+  },
   "postInfo": {
     "title": "يوللىما ئۇچۇرى",
     "tokenId": "توكېن ID",

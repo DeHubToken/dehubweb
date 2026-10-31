@@ -2882,6 +2882,21 @@
     "anonymousLikes_one": "{{count}} лајк од анонимног власника значке",
     "anonymousLikes_other": "{{count}} лајкова од анонимних власника значки"
   },
+  "mintChain": {
+    "title": "Пошта нане",
+    "subtitle": "Изаберите ланац. Цене су активне и ажурирају се сваког минута.",
+    "free": "Бесплатно",
+    "gasCovered": "Гас који покрива DeHub",
+    "feeIncludesGas": "≈ {{usd}}, укључен гас",
+    "gasIncluded": "Гас укључен у паковање",
+    "gasOnly": "≈ {{usd}} гас",
+    "paidFromWallet": "{{amount}} из новчаника",
+    "paidFromWalletPlain": "Плаћено из новчаника",
+    "priceUnavailable": "Цена није доступна",
+    "confirm": "Нана {{chain}}",
+    "confirmWithCost": "Ковница {{chain}} · {{cost}}",
+    "notAvailable": "Ковање на овом ланцу још није доступно."
+  },
   "postInfo": {
     "title": "Информације о објави",
     "tokenId": "Токен ID",

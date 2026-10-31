@@ -2877,6 +2877,21 @@
     "anonymousLikes_one": "{{count}} tykkäys nimettömältä merkin haltijalta",
     "anonymousLikes_other": "{{count}} tykkäystä nimettömiltä merkkien haltijoilta"
   },
+  "mintChain": {
+    "title": "Mintunpylväs",
+    "subtitle": "Valitse ketju. Hinnat ovat voimassa ja päivittyvät joka minuutti.",
+    "free": "Ilmainen",
+    "gasCovered": "DeHubin kattama kaasu",
+    "feeIncludesGas": "≈ {{usd}}, sisältää kaasun",
+    "gasIncluded": "Sisältää kaasun",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} lompakostasi",
+    "paidFromWalletPlain": "Maksettu lompakostasi",
+    "priceUnavailable": "Hinta ei saatavilla",
+    "confirm": "Minttu päällä {{chain}}",
+    "confirmWithCost": "Minttu päällä {{chain}} · {{cost}}",
+    "notAvailable": "Tämän ketjun louhinta ei ole vielä saatavilla."
+  },
   "postInfo": {
     "title": "Julkaisun tiedot",
     "tokenId": "Token-ID",

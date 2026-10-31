@@ -2860,6 +2860,17 @@
     "anonymousLikes_one": "Diyanye {{count}} ka bɔ badge tigi tɔgɔbali fɛ",
     "anonymousLikes_other": "Diyanye {{count}} ka bɔ badge tigi tɔgɔbaliw fɛ"
   },
+  "mintChain": {
+    "title": "O kɔ, a ye sɛbɛ dɔ ci",
+    "subtitle": "I ka jɔrɔkɔ sugandi. I ka jɔrɔkɔw be to niin na ani u be yɛlɛ miniti o miniti.",
+    "gasCovered": "O kɔ, a ye dɔ fara a ka baara kan.",
+    "gasIncluded": "Gasi min be se ka mɔgɔ faga",
+    "paidFromWallet": "{{amount}} ka bɔ i ka wari la",
+    "paidFromWalletPlain": "I ka wari bɔ i ka wari la",
+    "priceUnavailable": "O tɛ se ka kɛ",
+    "confirm": "O ye {{chain}}",
+    "notAvailable": "O kama, u ma se ka marifakɛlɛ kɛ."
+  },
   "postInfo": {
     "title": "Post kunnafoni",
     "tokenId": "Token ID",

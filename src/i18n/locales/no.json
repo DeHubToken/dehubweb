@@ -2878,6 +2878,21 @@
     "anonymousLikes_one": "{{count}} likerklikk fra en anonym merkeinnehaver",
     "anonymousLikes_other": "{{count}} likerklikk fra anonyme merkeinnehavere"
   },
+  "mintChain": {
+    "title": "Myntpost",
+    "subtitle": "Velg en kjede. Prisene er live og oppdateres hvert minutt.",
+    "free": "Gratis",
+    "gasCovered": "Gass dekket av DeHub",
+    "feeIncludesGas": "≈ {{usd}}, inkludert gass",
+    "gasIncluded": "Gass inkludert",
+    "gasOnly": "≈ {{usd}} gass",
+    "paidFromWallet": "{{amount}} fra lommeboken din",
+    "paidFromWalletPlain": "Betalt fra lommeboken din",
+    "priceUnavailable": "Pris utilgjengelig",
+    "confirm": "Mynt på {{chain}}",
+    "confirmWithCost": "Mint på {{chain}} · {{cost}}",
+    "notAvailable": "Preging på denne kjeden er ikke tilgjengelig ennå."
+  },
   "postInfo": {
     "title": "Innleggsinformasjon",
     "tokenId": "Token-ID",
