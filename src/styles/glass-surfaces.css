@@ -83,7 +83,7 @@ html[data-theme='osaka'] { --tint-accent: rgb(255 111 181); }
 html[data-theme='jungle'] { --tint-accent: rgb(132 190 60); }
 html[data-theme='island'] { --tint-accent: rgb(34 170 200); }
 html[data-theme='hacker'] { --tint-accent: rgb(57 255 136); }
-html[data-theme='horror'] { --tint-accent: rgb(214 190 150); }
+html[data-theme='horror'] { --tint-accent: rgb(206 32 48); }
 
 /* Nav pills: the feed tab pill, every page's sticky tab pill and the phone
    bottom nav are liquid glass on the web, desktop and phone alike: 20% of the
@@ -357,6 +357,30 @@ html {
   html[data-theme][data-theme]:is([data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
     [data-page-bento].cursor-pointer:not([data-bento-flat]):not(:has([data-page-bento])):hover:not(#_):not(#_) {
     background-color: color-mix(in srgb, var(--tint-mix) calc(var(--tint-bento-raised) * 100%), transparent) !important;
+  }
+}
+
+/* Horror is a dungeon: cards are black iron with only a breath of crimson,
+   and denser than the other canvas themes, so the torch and gate light in the
+   backdrop never shows through behind copy (phones draw no blur). */
+html[data-theme='horror'] {
+  --tint-bento: 0.72;
+  --tint-card: 0.68;
+  --tint-bento-raised: 0.8;
+  --nav-glass: color-mix(in srgb, var(--tint-accent) 7%, transparent);
+  --nav-glass-base: rgb(10 7 8 / 0.72);
+}
+@media (max-width: 767px), (pointer: coarse) {
+  html[data-theme='horror'] {
+    --tint-bento: 0.88;
+    --tint-card: 0.86;
+    --tint-bento-raised: 0.92;
+    --nav-glass-base: rgb(10 7 8 / 0.86);
+  }
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  html[data-theme][data-theme][data-theme='horror'] {
+    --tint-mix: color-mix(in srgb, var(--tint-accent) 7%, rgb(12 9 10));
   }
 }
 
