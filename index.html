@@ -23,6 +23,11 @@
           var d = document.documentElement;
           var t = localStorage.getItem('dehub.theme') || 'system';
           if (t === 'christmas') t = 'winter'; // legacy name migration
+          // Halloween 2026: Horror until local midnight unless this device opted
+          // out by picking a theme (mirrors src/lib/halloween-override.ts).
+          var now = new Date();
+          if (now.getFullYear() === 2026 && now.getMonth() === 9 && now.getDate() === 31 &&
+              localStorage.getItem('dehub.halloween2026.optOut') !== '1') t = 'horror';
           // System Light runs as System with a light tone (ThemeContext SYSTEM_LIGHT).
           var tone = t === 'system-light' ? 'light' : 'dark';
           if (tone === 'light') t = 'system';
