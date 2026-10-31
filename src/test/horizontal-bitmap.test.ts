@@ -1,57 +1,56 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
-import { useHorizontalBitmap } from '../hooks/use-horizontal-bitmap';
+import { HORIZONTAL_LOAD_MARGIN, HORIZONTAL_RELEASE_MARGIN, useHorizontalBitmap } from '../hooks/use-horizontal-bitmap';
 
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); });
 
+type Notify = (e: { isIntersecting: boolean }[]) => void;
+
 function setup() {
-  let notify: (e: { isIntersecting: boolean }[]) => void = () => {};
+  const observers = new Map<string | undefined, Notify>();
   const observe = vi.fn();
   vi.stubGlobal('IntersectionObserver', class {
-    constructor(cb: typeof notify) { notify = cb; }
+    constructor(cb: Notify, init?: IntersectionObserverInit) { observers.set(init?.rootMargin, cb); }
     observe = observe; disconnect() {}
   });
-  return { notify: (v: boolean) => notify([{ isIntersecting: v }]), observe,
-    viewport: { current: document.createElement('div') }, slide: { current: document.createElement('div') } };
+  const fire = (margin: string, v: boolean) => observers.get(margin)?.([{ isIntersecting: v }]);
+  return {
+    // Within a viewport: inside both margins. Beyond three: outside both.
+    near: () => { fire(HORIZONTAL_LOAD_MARGIN, true); fire(HORIZONTAL_RELEASE_MARGIN, true); },
+    passed: () => { fire(HORIZONTAL_LOAD_MARGIN, false); fire(HORIZONTAL_RELEASE_MARGIN, true); },
+    far: () => { fire(HORIZONTAL_LOAD_MARGIN, false); fire(HORIZONTAL_RELEASE_MARGIN, false); },
+    observe,
+    viewport: { current: document.createElement('div') }, slide: { current: document.createElement('div') },
+  };
 }
 
 it('keeps a single image always visible', () => {
   vi.useFakeTimers();
   const t = setup();
   const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide, true));
-  act(() => { t.notify(false); vi.advanceTimersByTime(5000); });
+  act(() => { t.far(); vi.advanceTimersByTime(5000); });
   expect(result.current).toBe(true);
   expect(t.observe).not.toHaveBeenCalled();
 });
 
-it('unloads far slides after grace and restores on intersect', () => {
+it('unloads far slides after grace and restores when near again', () => {
   vi.useFakeTimers();
   const t = setup();
   const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide));
-  act(() => { t.notify(false); vi.advanceTimersByTime(200); t.notify(true); vi.advanceTimersByTime(400); });
+  act(() => { t.near(); });
   expect(result.current).toBe(true);
-  act(() => { t.notify(false); vi.advanceTimersByTime(400); });
+  act(() => { t.far(); vi.advanceTimersByTime(200); t.near(); vi.advanceTimersByTime(400); });
+  expect(result.current).toBe(true);
+  act(() => { t.far(); vi.advanceTimersByTime(400); });
   expect(result.current).toBe(false);
-  act(() => t.notify(true));
+  act(() => t.near());
   expect(result.current).toBe(true);
 });
 
-it('keeps the neighbouring slides drawn in both directions', () => {
-  let options: IntersectionObserverInit | undefined;
-  vi.stubGlobal('IntersectionObserver', class {
-    constructor(_cb: unknown, init: IntersectionObserverInit) { options = init; }
-    observe() {} disconnect() {}
-  });
-  const viewport = { current: document.createElement('div') };
-  const slide = { current: document.createElement('div') };
-  renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide));
-  expect(options?.rootMargin).toBe('0px 100%');
-});
-
-it('does not load a far slide until the strip nears it', () => {
+it('keeps a photo just passed drawn so swiping back never redraws it', () => {
+  vi.useFakeTimers();
   const t = setup();
   const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide));
-  expect(result.current).toBe(false);
-  act(() => t.notify(true));
+  act(() => { t.near(); t.passed(); vi.advanceTimersByTime(5000); });
   expect(result.current).toBe(true);
 });
