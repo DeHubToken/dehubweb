@@ -1158,6 +1158,7 @@
     "doNotDisturb": "Do not disturb",
     "doNotDisturbDesc": "Mute all message notifications",
     "comingSoon": "Coming soon",
+    "tipsOffNote": "Tips and sends to you are off while this is on. Turn it off to get tipped again.",
     "walletUnlockInterval": "Wallet unlock prompt",
     "walletUnlockIntervalDesc": "How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.",
     "walletUnlockNever": "Never (until you log out)",

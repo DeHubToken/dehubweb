@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { DISLIKES_VISIBILITY_KEY, dislikesArePublic } from '@/hooks/use-profile-dislikes';
+import { useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -46,10 +47,22 @@ export function usePrivacySettings() {
   const queryClient = useQueryClient();
 
   // Read current profile (customs) from the existing profile query
-  const { data: profile, isLoading } = useDeHubProfile({
+  const profileQuery = useDeHubProfile({
     userId: walletAddress || undefined,
     enabled: !!walletAddress && isAuthenticated,
   });
+  const { data: profile, isPlaceholderData, isFetchedAfterMount, refetch } = profileQuery;
+
+  // Settings must show what the server has right now. The profile query
+  // paints from a week-old localStorage copy and keeps answers for five
+  // minutes, so without this a switch could show OFF while the account was
+  // ON (tips to dehub.io/camp were refused that way, 2026-10-31). Always ask
+  // again when the screen opens, and keep the switches locked until that
+  // answer is in.
+  useEffect(() => {
+    if (walletAddress && isAuthenticated) void refetch();
+  }, [walletAddress, isAuthenticated, refetch]);
+  const isLoading = !profile || isPlaceholderData || !isFetchedAfterMount;
 
   const customs = profile?.customs;
   const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(customs?.followVisibility);
@@ -128,8 +141,10 @@ export function usePrivacySettings() {
 
       await updateProfile(profileUpdate);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    onSuccess: async () => {
+      // Wait for the fresh profile so the switch never flicks back to the old
+      // position while it is clickable again.
+      await queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
       void refreshUser();
       toast.success(_copy("copy.3bc473d05556", { defaultValue: "Privacy settings updated" }));
     },
