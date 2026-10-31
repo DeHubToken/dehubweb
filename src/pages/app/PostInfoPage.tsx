@@ -38,6 +38,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
 import { findCachedFeedPost } from '@/hooks/use-unified-feed';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
+import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
@@ -150,10 +151,12 @@ export default function PostInfoPage() {
   // is refetched, which flips isUnminted and swaps the placeholder for the
   // real on-chain sections in place.
   const { mint: mintExisting, isMinting } = useMintExistingPost();
-  const handleMintNow = async () => {
+  const [showMintSheet, setShowMintSheet] = useState(false);
+  const handleMintNow = async (chosenChainId: number) => {
     if (!nftInfo?.tokenId) return;
-    const ok = await mintExisting(nftInfo.tokenId, nftInfo.chainId);
+    const ok = await mintExisting(nftInfo.tokenId, nftInfo.chainId, chosenChainId);
     if (ok) {
+      setShowMintSheet(false);
       queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
       queryClient.invalidateQueries({ queryKey: ['token-holders'] });
     }
@@ -384,9 +387,6 @@ export default function PostInfoPage() {
               <Pencil className="w-4 h-4" />
             </button>
           )}
-          <span className="px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80 shrink-0">
-            {chainInfo.name}
-          </span>
         </div>
       </div>
       
@@ -418,7 +418,7 @@ export default function PostInfoPage() {
                 </p>
                 {isOwner && (
                   <button
-                    onClick={handleMintNow}
+                    onClick={() => setShowMintSheet(true)}
                     disabled={isMinting}
                     className="mt-5 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
                   >
@@ -861,6 +861,16 @@ export default function PostInfoPage() {
 
         </div>
       </div>
+
+      {isOwner && isUnminted && (
+        <MintChainSheet
+          open={showMintSheet}
+          onOpenChange={setShowMintSheet}
+          defaultChainId={nftInfo.chainId}
+          isMinting={isMinting}
+          onConfirm={handleMintNow}
+        />
+      )}
 
       {/* Edit Post Modal */}
       {isOwner && nftInfo && (

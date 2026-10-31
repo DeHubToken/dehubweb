@@ -1,4 +1,5 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
@@ -471,6 +472,21 @@ function TipMessageGallery() {
   );
 }
 
+/** Mint chain picker: Mint on an off-chain post, with each chain's live price. */
+function MintChainGallery() {
+  const [open, setOpen] = useState<null | 'dehub' | 'own'>(null);
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-mint-chain-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Mint chain picker</h2>
+      <div className="flex flex-wrap gap-3">
+        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>DeHub wallet</Button>
+        <Button variant="glass" size="sm" data-open-mint-sheet="own" onClick={() => setOpen('own')}>Own wallet</Button>
+      </div>
+      <MintChainSheet open={open !== null} onOpenChange={(o) => { if (!o) setOpen(null); }} defaultChainId={8453} sponsored={open === 'dehub'} onConfirm={() => setOpen(null)} />
+    </section>
+  );
+}
+
 function WhenSheetGallery() {
   const { t } = useTranslation();
   const [kind, setKind] = useState<ScheduleKind | null>(null);
@@ -908,6 +924,7 @@ export default function StateGalleryPage() {
         </section>
 
         <TipMessageGallery />
+        <MintChainGallery />
         <WhenSheetGallery />
         <ToastsGallery />
         <TooltipsGallery />

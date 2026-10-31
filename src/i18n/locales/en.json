@@ -2990,6 +2990,21 @@
     "anonymousLikes_one": "{{count}} like from anonymous badge holder",
     "anonymousLikes_other": "{{count}} likes from anonymous badge holders"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Choose a chain. Prices are live and update every minute.",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} from your wallet",
+    "paidFromWalletPlain": "Paid from your wallet",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "Mint on {{chain}} · {{cost}}",
+    "notAvailable": "Minting on this chain is not available yet."
+  },
   "postInfo": {
     "title": "Post Info",
     "tokenId": "Token ID",
