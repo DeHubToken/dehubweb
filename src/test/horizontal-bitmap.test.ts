@@ -35,3 +35,15 @@ it('unloads far slides after grace and restores on intersect', () => {
   act(() => t.notify(true));
   expect(result.current).toBe(true);
 });
+
+it('keeps the neighbouring slides drawn in both directions', () => {
+  let options: IntersectionObserverInit | undefined;
+  vi.stubGlobal('IntersectionObserver', class {
+    constructor(_cb: unknown, init: IntersectionObserverInit) { options = init; }
+    observe() {} disconnect() {}
+  });
+  const viewport = { current: document.createElement('div') };
+  const slide = { current: document.createElement('div') };
+  renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide));
+  expect(options?.rootMargin).toBe('0px 100%');
+});
