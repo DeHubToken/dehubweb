@@ -1229,6 +1229,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     <div
       ref={viewRef}
       data-image-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
@@ -1469,6 +1470,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           timestamp={post.timeAgo}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
