@@ -42,7 +42,6 @@ import { featurePromptFields } from '@/lib/feature-prompt';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
@@ -766,8 +765,6 @@ export default function FeaturesPage() {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
-  const { theme, themeChoice } = useAppTheme();
-  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('newest');
@@ -777,6 +774,9 @@ export default function FeaturesPage() {
   // the sort chips in front of them only exist on the Prompts tab.
   const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category, activeTab);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
+  // Prompts / Queued / Shipped. Counts arriving change the tab widths, which
+  // the hook's ResizeObserver picks up.
+  const { layerRef: pageTabLayerRef, setRef: setPageTabRef, rect: pageTabRect } = useTabIndicator(activeTab);
   const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort, activeTab);
   const setFilterLayerRef = useCallback((el: HTMLDivElement | null) => {
     (featuresCatLayerRef as MutableRefObject<HTMLDivElement | null>).current = el;
@@ -973,26 +973,16 @@ export default function FeaturesPage() {
         </div>
 
         {/* Page Tabs: Requests / Shipping / Shipped */}
-        <div role="tablist" aria-label={t('features.promptPageTitle', 'Requests')} className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
-          {/* Sliding liquid glass indicator */}
-          <div
-            className={cn(
-              "absolute top-1 bottom-1 w-[calc(33.333%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
-              isLightTheme
-                ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
-                : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
-              activeTab === 'shipped'
-                ? 'translate-x-[calc(200%+8px)]'
-                : activeTab === 'shipping'
-                  ? 'translate-x-[calc(100%+4px)]'
-                  : 'translate-x-0'
-            )}
-          />
+        <div ref={pageTabLayerRef} role="tablist" aria-label={t('features.promptPageTitle', 'Requests')} className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
+          {/* Measured from the active tab, so the glass hugs it however wide
+              the labels and counts render (iPhone Safari draws them wider). */}
+          <GlassIndicator rect={pageTabRect} borderRadius="0.5rem" className="left-0 top-0" enableTransition />
           <button
             type="button"
+            ref={setPageTabRef('requests')}
             onClick={() => setActiveTab('requests')}
             role="tab" aria-selected={activeTab === 'requests'}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+            className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
@@ -1005,13 +995,14 @@ export default function FeaturesPage() {
           </button>
           <button
             type="button"
+            ref={setPageTabRef('shipping')}
             onClick={() => setActiveTab('shipping')}
             role="tab" aria-selected={activeTab === 'shipping'}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+            className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <Loader2 className="w-3.5 h-3.5" />
+            <Loader2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
@@ -1021,13 +1012,14 @@ export default function FeaturesPage() {
           </button>
           <button
             type="button"
+            ref={setPageTabRef('shipped')}
             onClick={() => setActiveTab('shipped')}
             role="tab" aria-selected={activeTab === 'shipped'}
-            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+            className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <CheckCircle2 className="w-3.5 h-3.5" />
+            <CheckCircle2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.shipped')}
             {shippedCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
