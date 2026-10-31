@@ -1208,7 +1208,8 @@
     "socialConnectedShort": "Bağlı",
     "socialConnectFailed": "{{platform}} bağlanamadı. Lütfen tekrar dene.",
     "socialVerifiedFollowers": "{{value}} takipçi",
-    "socialFollowersPending": "Takipçi sayısı güncelleniyor"
+    "socialFollowersPending": "Takipçi sayısı güncelleniyor",
+    "tipsOffNote": "Bu açıkken sana bahşiş ve gönderim kapalıdır. Tekrar bahşiş almak için kapat."
   },
   "common": {
     "confirm": "Onayla",

@@ -1208,7 +1208,8 @@
     "socialConnectedShort": "Conectado",
     "socialConnectFailed": "No se pudo conectar {{platform}}. Inténtalo de nuevo.",
     "socialVerifiedFollowers": "{{value}} seguidores",
-    "socialFollowersPending": "Actualizando seguidores"
+    "socialFollowersPending": "Actualizando seguidores",
+    "tipsOffNote": "Las propinas y envíos hacia ti están desactivados mientras esto esté activado. Desactívalo para volver a recibir propinas."
   },
   "common": {
     "confirm": "Confirmar",

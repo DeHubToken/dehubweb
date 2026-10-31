@@ -1208,7 +1208,8 @@
     "socialConnectedShort": "Connecté",
     "socialConnectFailed": "Impossible de connecter {{platform}}. Veuillez réessayer.",
     "socialVerifiedFollowers": "{{value}} abonnés",
-    "socialFollowersPending": "Mise à jour des abonnés"
+    "socialFollowersPending": "Mise à jour des abonnés",
+    "tipsOffNote": "Les pourboires et envois vers toi sont désactivés tant que cette option est activée. Désactive-la pour recevoir à nouveau des pourboires."
   },
   "common": {
     "confirm": "Confirmer",
