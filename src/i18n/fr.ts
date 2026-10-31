@@ -821,7 +821,7 @@ export const fr = {
     postControlsB9: "Vos fils à votre façon :",
     postControlsB9Desc: "Choisissez l'onglet sur lequel DeHub s'ouvre et enregistrez les options de fil que vous voulez activer. Les réponses suggérées sont désactivées sauf si vous les activez.",
     postControlsB10: "Brouillons et publications plus longues :",
-    postControlsB10Desc: "Une publication de plus de trois mots est enregistrée dans Brouillons si vous fermez l'éditeur. La longueur d'une publication augmente avec votre badge, de 500 caractères sans badge jusqu'à 2,000 pour le niveau le plus élevé.",
+    postControlsB10Desc: "Une publication de plus de trois mots est enregistrée dans Brouillons si vous fermez l'éditeur. La longueur d'une publication augmente avec votre badge, de 1,000 caractères sans badge jusqu'à 2,000 pour le niveau le plus élevé.",
     tocLiveGifts: "Cadeaux en direct, invités et clips",
     liveGiftsTitle: "Cadeaux en direct, invités et clips",
     liveGiftsDesc: "Les lives offrent plus de façons de gagner de l'argent, de s'associer et d'atteindre des gens qui ne regardaient pas.",

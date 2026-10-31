@@ -1139,7 +1139,7 @@ export const tr = {
     postControlsB9: "Akışlarınız sizin tarzınızda:",
     postControlsB9Desc: "DeHub'ın hangi sekmede açılacağını seçin ve açık olmasını istediğiniz akış anahtarlarını kaydedin. Önerilen yanıtlar siz açmadıkça kapalıdır.",
     postControlsB10: "Taslaklar ve daha uzun gönderiler:",
-    postControlsB10Desc: "Üç kelimeden uzun bir gönderi, yazma penceresini kapatırsanız Taslaklar'a kaydedilir. Gönderi uzunluğu rozetinizle artar; rozetsiz 500 karakterden en üst seviyede 2,000'e kadar çıkar.",
+    postControlsB10Desc: "Üç kelimeden uzun bir gönderi, yazma penceresini kapatırsanız Taslaklar'a kaydedilir. Gönderi uzunluğu rozetinizle artar; rozetsiz 1,000 karakterden en üst seviyede 2,000'e kadar çıkar.",
     tocLiveGifts: "Canlı hediyeler, konuklar ve klipler",
     liveGiftsTitle: "Canlı hediyeler, konuklar ve klipler",
     liveGiftsDesc: "Canlı yayınlar kazanmanın, işbirliği yapmanın ve izlemeyen kişilere ulaşmanın daha fazla yoluna kavuştu.",

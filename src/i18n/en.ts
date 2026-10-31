@@ -1252,7 +1252,7 @@ export const en = {
     postControlsB9: 'Feeds your way:',
     postControlsB9Desc: 'Pick the tab DeHub opens on, and save which feed toggles you want on. Suggested replies are off unless you turn them on.',
     postControlsB10: 'Drafts and longer posts:',
-    postControlsB10Desc: 'A post of more than three words is saved to Drafts if you close the composer. Post length grows with your badge, from 500 characters with no badge up to 2,000 for the top tier.',
+    postControlsB10Desc: 'A post of more than three words is saved to Drafts if you close the composer. Posts can be up to 1,000 characters, and higher badges get more, up to 2,000 for the top tier.',
     tocLiveGifts: 'Live Gifts, Guests & Clips',
     liveGiftsTitle: 'Live Gifts, Guests & Clips',
     liveGiftsDesc: 'Live streams got more ways to earn, to team up and to reach people who were not watching.',
