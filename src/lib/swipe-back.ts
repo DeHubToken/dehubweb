@@ -9,9 +9,23 @@ export const SWIPE_BACK_EDGE = 28;
 export const SWIPE_BACK_PAGE_DISTANCE = 88;
 
 const OWNS_INPUT = 'input,textarea,select,[contenteditable="true"],[role="slider"],[data-swipe-back-ignore]';
-// Media, carousels and anything that already swipes sideways keep the drag;
-// only the edge strip goes back from on top of them.
-const OWNS_SIDEWAYS = 'img,video,canvas,iframe,[data-no-swipe],[data-tab-swipe],[draggable="true"]';
+// Carousels, drawing surfaces and anything that already swipes sideways keep
+// the drag; only the edge strip goes back from on top of them. A single photo
+// or video is page like any other.
+const OWNS_SIDEWAYS = 'canvas,iframe,[data-no-swipe],[data-tab-swipe],[draggable="true"]';
+
+// The feed's own tabs: going back from them would leave the app's home.
+const ROOT_PATHS = new Set(['/', '/app', '/videos', '/shorts', '/images', '/audio', '/live', '/app/images', '/app/videos', '/app/shorts', '/app/audio', '/app/live']);
+
+/**
+ * A page with no back arrow on screen can still go back when the app itself
+ * navigated here (react-router counts its entries in history.state.idx).
+ */
+export function canGoBackInApp(pathname: string, state: unknown = window.history.state): boolean {
+  if (ROOT_PATHS.has(pathname.replace(/\/+$/, '') || '/')) return false;
+  const idx = (state as { idx?: unknown } | null)?.idx;
+  return typeof idx === 'number' && idx > 0;
+}
 
 /**
  * Whether a drag that starts away from the edge, on `target`, may go back.
@@ -26,7 +40,9 @@ export function pageSwipeAllowed(target: Element | null): boolean {
   for (let node: Element | null = target; node && node !== document.body; node = node.parentElement) {
     const style = getComputedStyle(node);
     const touch = style.touchAction || '';
-    if (touch === 'none' || (touch.includes('pan-y') && !touch.includes('pan-x'))) return false;
+    // `none` is a drag handle that reads raw touches. (pan-y alone is common
+    // on plain media just to stop sideways browser panning, so it stays page.)
+    if (touch === 'none') return false;
     if ((style.overflowX === 'auto' || style.overflowX === 'scroll') && node.scrollWidth > node.clientWidth + 1) {
       // Dragging right scrolls back toward the start; only once there is nothing left does back take over.
       if (Math.abs(node.scrollLeft) > 1) return false;
