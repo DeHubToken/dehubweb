@@ -1807,6 +1807,11 @@ function PrivacySettings() {
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
           />
+          {hideBadgeAndBalance && !isLoading && (
+            <div role="status" className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs font-medium leading-relaxed text-zinc-200">
+              {t('settings.tipsOffNote', 'Tips and sends to you are off while this is on. Turn it off to get tipped again.')}
+            </div>
+          )}
           <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-zinc-300">{_copy("copy.660711e7d4af", { defaultValue: "On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled." })}</div>
           {isPrivate && (
             <div className="pl-8">
