@@ -20023,6 +20023,7 @@
   },
   "halloween": {
     "title": "Joyeux Halloween",
-    "otherThemes": "Découvre d'autres thèmes dans les réglages :"
+    "otherThemes": "Pas d'humeur à frissonner ? Découvre d'autres thèmes :",
+    "enter": "Entrer dans le donjon"
   }
 }

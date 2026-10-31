@@ -40,6 +40,10 @@ const CSS = `
 .hg-float{animation:hg-bob 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 40%}
 .hg-face{animation:hg-follow 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 50%}
 .hg-title{margin:4px 0 0;font-size:30px;line-height:1.05;font-weight:800;color:#f4ece8;letter-spacing:.01em;text-shadow:0 2px 0 #000,0 0 18px rgba(206,32,48,.6);animation:hg-up .6s .5s ease-out both}
+.hg-enter{margin:6px 0 10px;min-height:46px;padding:0 26px;border-radius:999px;font-size:15px;font-weight:800;letter-spacing:.02em;color:#fff;background:linear-gradient(180deg,#e2334a,#a3121f);border:1px solid rgba(255,170,175,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 6px 22px rgba(206,32,48,.45);cursor:pointer;animation:hg-up .6s .56s ease-out both;transition:transform .15s ease,box-shadow .15s ease}
+.hg-enter:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 8px 30px rgba(206,32,48,.65)}
+.hg-enter:active{transform:scale(.96)}
+.hg-enter:focus-visible{outline:2px solid #f4ece8;outline-offset:3px}
 .hg-sub{margin:0;font-size:14px;color:rgba(244,236,232,.72);animation:hg-up .6s .62s ease-out both}
 .hg-rail{width:100vw;max-width:560px;display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 16px 10px;scrollbar-width:none;animation:hg-up .6s .74s ease-out both;mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
 .hg-rail::-webkit-scrollbar{display:none}
@@ -162,7 +166,8 @@ export default function HalloweenGhostPopup({ onClose }: { onClose: () => void }
       <div className="hg-card">
         <div className="hg-ghost"><Ghost /></div>
         <p className="hg-title">{t('halloween.title', 'Happy Halloween')}</p>
-        <p className="hg-sub">{t('halloween.otherThemes', 'Find other themes in settings now:')}</p>
+        <button type="button" className="hg-enter" onClick={close}>{t('halloween.enter', 'Enter the dungeon')}</button>
+        <p className="hg-sub">{t('halloween.otherThemes', 'Not feeling spooky? Find other themes:')}</p>
         <div className="hg-rail" ref={railRef}>
           {THEMES.map(([value, labelKey]) => (
             <ThemePreviewCard

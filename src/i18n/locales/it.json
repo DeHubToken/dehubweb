@@ -18801,6 +18801,7 @@
   },
   "halloween": {
     "title": "Buon Halloween",
-    "otherThemes": "Trova altri temi nelle impostazioni:"
+    "otherThemes": "Niente brividi? Trova altri temi:",
+    "enter": "Entra nel sotterraneo"
   }
 }
