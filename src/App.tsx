@@ -18,6 +18,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectLinkedWalletModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
+import { DefaultChainSync } from "@/components/app/DefaultChainSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
@@ -485,6 +486,7 @@ function AppContent() {
   return (
     <>
       <SelfBadgeSync />
+      <DefaultChainSync />
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
