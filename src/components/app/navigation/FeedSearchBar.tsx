@@ -6,8 +6,9 @@
  *
  *   [feed icon] [filters] [search box ...........] [x]
  *
- * The feed icon says which feed is searched; tapping it offers the other
- * searchable feeds. The filters button opens the same filter panel as the
+ * The feed icon is the lit tab that opened the search, so tapping it again
+ * closes the search, like a toggle. Holding it (or right-clicking) offers the
+ * other searchable feeds. The filters button opens the same filter panel as the
  * pill's own sliders button, and the results follow those filters.
  *
  * @module components/app/navigation/FeedSearchBar
@@ -60,6 +61,21 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
     return () => cancelAnimationFrame(id);
   }, []);
 
+  // The bar opens on the tab's pointerup, so the same tap's click lands on
+  // whatever button now sits under the finger (on Home that is the filters
+  // button). Ignore clicks that arrive right after opening.
+  const openedAt = useRef(performance.now());
+  const ghostClick = () => performance.now() - openedAt.current < 350;
+
+  // Hold the feed icon to pick another feed; a plain tap closes the search.
+  const holdTimer = useRef<number | null>(null);
+  const held = useRef(false);
+  const clearHold = () => {
+    if (holdTimer.current != null) window.clearTimeout(holdTimer.current);
+    holdTimer.current = null;
+  };
+  useEffect(() => clearHold, []);
+
   const close = () => {
     if (closing) return;
     setClosing(true);
@@ -78,6 +94,7 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
   }[tab];
 
   return (
+    <>
     <div
       ref={barRef}
       data-feed-search-bar
@@ -89,17 +106,33 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
       <button
         type="button"
         data-feed-search-scope
-        onClick={() => setPicking((p) => !p)}
-        aria-label={_copy("copy.1aa9d734f2ee", { defaultValue: "Choose what to search" })}
+        onPointerDown={() => {
+          held.current = false;
+          clearHold();
+          holdTimer.current = window.setTimeout(() => { held.current = true; setPicking(true); }, 450);
+        }}
+        onPointerUp={clearHold}
+        onPointerLeave={clearHold}
+        onPointerCancel={clearHold}
+        onContextMenu={(e) => { e.preventDefault(); clearHold(); held.current = true; setPicking(true); }}
+        onClick={() => {
+          clearHold();
+          if (ghostClick()) return;
+          if (held.current) { held.current = false; return; }
+          if (picking) { setPicking(false); return; }
+          close();
+        }}
+        aria-label={_copy("copy.55656b5e434f", { defaultValue: "Close search" })}
+        aria-haspopup="menu"
         aria-expanded={picking}
-        className={cn('relative flex h-[29px] w-10 shrink-0 items-center justify-center rounded-[10px] text-white', GLASS)}
+        className={cn('relative flex h-[29px] w-10 shrink-0 select-none items-center justify-center rounded-[10px] text-white [-webkit-touch-callout:none]', GLASS)}
       >
         {Icon && <Icon className="h-4 w-4" style={{ transform: `scale(${FEED_TAB_ICON_SCALE[tab] ?? 1})` }} />}
       </button>
       <button
         type="button"
         data-feed-search-filters
-        onClick={onToggleFilters}
+        onClick={() => { if (!ghostClick()) onToggleFilters(); }}
         aria-label={_copy("copy.546ebb8eb993", { defaultValue: "Filters" })}
         aria-expanded={filtersOpen}
         className={cn(
@@ -139,11 +172,13 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
         <X className="h-4 w-4" />
       </button>
 
+    </div>
+    {/* Outside the bar: the bar's melt clip-path would cut it off. */}
       {picking && (
         <div
           role="menu"
           data-feed-search-picker
-          className="absolute left-0 top-[calc(100%+6px)] z-50 flex gap-1 rounded-xl border border-white/[0.14] bg-zinc-900/90 p-1 backdrop-blur-xl"
+          className="absolute left-0 top-[calc(100%+6px)] z-50 flex gap-1 rounded-xl border border-white/[0.14] bg-zinc-900 p-1"
         >
           {FEED_SEARCH_TABS.map((value) => {
             if (value === 'shorts' && !shortsEnabled) return null;
@@ -166,6 +201,6 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
           })}
         </div>
       )}
-    </div>
+    </>
   );
 }
