@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   load: vi.fn(), setup: vi.fn(), sync: vi.fn(), open: vi.fn(),
-  runtime: { isConnected: false, connector: undefined as any },
+  runtime: { isConnected: false, connector: undefined as any }, unlocked: true,
 }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({
   isAuthenticated: true, walletAddress: '0x1111111111111111111111111111111111111111',
@@ -16,7 +16,7 @@ vi.mock('@/lib/dm-e2ee/signer', () => ({
   WalletLockedError: class extends Error {},
   WalletConnectionError: class extends Error {},
 }));
-vi.mock('@/lib/smart-wallet', () => ({ isWalletUnlocked: () => false, WALLET_LOCK_CHANGED_EVENT: 'test:wallet-change' }));
+vi.mock('@/lib/smart-wallet', () => ({ isWalletUnlocked: () => mocks.unlocked, WALLET_LOCK_CHANGED_EVENT: 'test:wallet-change' }));
 
 import { useDmEncryption } from '../use-dm-encryption';
 import { WalletConnectionError } from '@/lib/dm-e2ee/signer';
@@ -26,6 +26,7 @@ beforeEach(() => {
   mocks.load.mockReturnValue(false);
   mocks.sync.mockResolvedValue(undefined);
   mocks.runtime = { isConnected: false, connector: undefined };
+  mocks.unlocked = true;
 });
 afterEach(() => cleanup());
 
@@ -56,6 +57,20 @@ describe('encryption setup retry', () => {
     expect(result.current.needsWalletConnection).toBe(false);
     mocks.setup.mockResolvedValue({ publicKey: 'published' });
     await act(async () => { await result.current.retry(); });
+    expect(result.current.status).toBe('ready');
+  });
+});
+
+describe('opening a chat', () => {
+  it('does not raise the unlock prompt for a locked wallet until retry is tapped', async () => {
+    mocks.unlocked = false;
+    const { result } = renderHook(() => useDmEncryption());
+    await waitFor(() => expect(result.current.status).toBe('locked'));
+    expect(mocks.setup).not.toHaveBeenCalled();
+
+    mocks.setup.mockResolvedValue({ publicKey: 'published' });
+    await act(async () => { await result.current.retry(); });
+    expect(mocks.setup).toHaveBeenCalledOnce();
     expect(result.current.status).toBe('ready');
   });
 });
