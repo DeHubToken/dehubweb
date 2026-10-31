@@ -36,16 +36,16 @@ const DocsHome = () => {
     if (latestPost.slug === '1-million-dollar-raise-completed') {
       bannerImage = '/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png';
       bannerImageAlt = t('home.bannerAltFundraise');
-    } else if (latestPost.slug === 'get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025') {
+    } else if (latestPost.slug === 'get-ready-players-final-snapshot-for-last-chad-standing-airdrop') {
       bannerImage = '/media/6d868478-769e-4981-b285-4ca5fa215dc5.png';
       bannerImageAlt = t('home.bannerAltHelicopter');
-    } else if (latestPost.slug === 'main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025') {
+    } else if (latestPost.slug === 'main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention') {
       bannerImage = '/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png';
       bannerImageAlt = t('home.bannerAltHelmet');
-    } else if (latestPost.slug === 'fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025') {
+    } else if (latestPost.slug === 'fresh-experience-revamped-app-feed-with-audio-replies-live-talk-spaces') {
       bannerImage = '/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
       bannerImageAlt = t('home.bannerAltAppFeed');
-    } else if (latestPost.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025') {
+    } else if (latestPost.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking') {
       bannerImage = '/media/3b0272d6-6cae-4b9a-a303-5fdf970d17e7.png';
       bannerImageAlt = t('home.bannerAltDhbScan');
     } else if (latestPost.slug === 'dhb-tradable-on-coinbase-soon') {

@@ -2839,6 +2839,21 @@
     "anonymousLikes_one": "{{count}} seneng saka pemegang lencana anonim",
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pilih ranting. Harga iku wis ana lan nggih update setiap menit.",
+    "free": "Ganjaran gratis",
+    "gasCovered": "Gas dibiayai DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas ingkang kudu dibayar",
+    "gasIncluded": "Gas ingkang kudu dibayar",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} saka dompetmu",
+    "paidFromWalletPlain": "Ganjaran saka dompetmu",
+    "priceUnavailable": "Harga ora ana",
+    "confirm": "Mint ing {{chain}}",
+    "confirmWithCost": "Mint ing {{chain}} · {{cost}}",
+    "notAvailable": "Minting ing ranting iki ora ana."
+  },
   "postInfo": {
     "title": "Info Postingan",
     "tokenId": "ID Token",

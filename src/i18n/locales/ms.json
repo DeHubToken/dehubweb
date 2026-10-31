@@ -3132,6 +3132,21 @@
     "anonymousLikes_one": "{{count}} suka daripada pemegang lencana tanpa nama",
     "anonymousLikes_other": "{{count}} suka daripada pemegang lencana tanpa nama"
   },
+  "mintChain": {
+    "title": "Hantaran pudina",
+    "subtitle": "Pilih rantai. Harga disiarkan secara langsung dan kemas kini setiap minit.",
+    "free": "Percuma",
+    "gasCovered": "Gas dilindungi oleh DeHub",
+    "feeIncludesGas": "≈ {{usd}}, termasuk gas",
+    "gasIncluded": "Termasuk gas",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} daripada dompet anda",
+    "paidFromWalletPlain": "Dibayar daripada dompet anda",
+    "priceUnavailable": "Harga tidak tersedia",
+    "confirm": "Mint pada {{chain}}",
+    "confirmWithCost": "Mint pada {{chain}} · {{cost}}",
+    "notAvailable": "Percetakan pada rantai ini belum tersedia lagi."
+  },
   "postInfo": {
     "title": "Info Pos",
     "tokenId": "ID Token",

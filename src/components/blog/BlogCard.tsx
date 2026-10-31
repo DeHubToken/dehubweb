@@ -75,7 +75,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
   const isCoinbasePost = post.slug === 'dhb-tradable-on-coinbase-soon';
   const coinbaseBanner = '/media/c238e114-80c3-42ac-9e7a-d4617111466c.png';
 
-  const isLivepeerPost = post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025';
+  const isLivepeerPost = post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers';
   const livepeerBanner = '/media/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png';
 
   const isAgencyPost = post.title === 'Leading the Way: DeHub founder\'s agency Becomes UK #1 with 1,000 Streamers';

@@ -64,6 +64,9 @@ import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 // Lazy, mounted on demand — see the note on the same pair in VideoCard.
+const MintChainSheet = lazy(() =>
+  import('@/components/app/mint/MintChainSheet').then((m) => ({ default: m.MintChainSheet })),
+);
 const EditPostModal = lazy(() =>
   import('../modals/EditPostModal').then((m) => ({ default: m.EditPostModal }))
 );
@@ -75,7 +78,7 @@ import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
-import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, reportPostEvent, type TokenVisibility } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
@@ -200,6 +203,9 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
+  const [showMintSheet, setShowMintSheet] = useState(false);
+  const [mintSheetMounted, setMintSheetMounted] = useState(false);
+  useEffect(() => { if (showMintSheet) setMintSheetMounted(true); }, [showMintSheet]);
   // No `isMuting` any more: the only control that used it was the ✕ removed
   // from the header, and the options menu closes on click rather than
   // disabling itself.
@@ -400,6 +406,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           url: postUrl,
         });
         void import('@/lib/analytics').then((m) => m.trackShare('image', { kind: 'post' }));
+        reportPostEvent(post.id, 'share');
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -434,6 +441,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     <div
       ref={viewRef}
       data-post-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
@@ -611,7 +619,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                     <button
                       onClick={() => {
                         setShowOptionsDrawer(false);
-                        if (postTokenId) mintExisting(postTokenId, post.chainId);
+                        if (postTokenId) setTimeout(() => setShowMintSheet(true), 300);
                       }}
                       disabled={!postTokenId || isMinting}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
@@ -808,6 +816,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           timestamp={post.createdAt}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
@@ -1069,6 +1078,24 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
         tokenId={post.id}
         contentType="post"
       />
+
+      {/* Mint chain picker — mounted on first open, like the edit modal. */}
+      {mintSheetMounted && (
+        <Suspense fallback={null}>
+          <MintChainSheet
+            open={showMintSheet}
+            onOpenChange={setShowMintSheet}
+            defaultChainId={post.chainId}
+            isMinting={isMinting}
+            onConfirm={(chainId) => {
+              if (!postTokenId) return;
+              mintExisting(postTokenId, post.chainId, chainId).then((ok) => {
+                if (ok) setShowMintSheet(false);
+              });
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Delete Post Modal */}
       <DeletePostModal

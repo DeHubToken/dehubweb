@@ -341,6 +341,12 @@ export interface MintFeeQuoteResponse {
   decimals: number;
   isNative: boolean;
   ttlSeconds: number;
+  /** What the creator pays, in USD. */
+  retailUsd?: number;
+  /** Gas for one mint, in USD and in the chain's gas token. */
+  gasCostUsd?: number;
+  gasCost?: number;
+  gasSymbol?: string;
 }
 
 /**
@@ -391,10 +397,10 @@ export async function resolveNewPost(n: number | string): Promise<NewPostResolut
  * The post already has its token ID, so this returns the same shape as
  * mintPost's signature fields and feeds straight into mintOnChain.
  */
-export async function mintExistingPost(tokenId: number | string): Promise<MintResponse> {
+export async function mintExistingPost(tokenId: number | string, chainId?: number): Promise<MintResponse> {
   return apiCall<MintResponse>('/api/mint_existing', {
     method: 'POST',
-    body: { tokenId: Number(tokenId) },
+    body: { tokenId: Number(tokenId), ...(chainId ? { chainId } : {}) },
     requiresAuth: true,
   });
 }

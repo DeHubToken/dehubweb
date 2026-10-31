@@ -1,3 +1,4 @@
+import { reportPostEvent } from '@/lib/api/dehub/post-stats';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { TranslationCooldown } from '@/lib/translation-cooldown';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -365,6 +366,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            reportPostEvent(e.currentTarget.closest('[data-stats-token]')?.getAttribute('data-stats-token'), 'link');
             window.open(href, '_blank', 'noopener,noreferrer');
           }}
           onPointerDown={(e) => e.stopPropagation()}

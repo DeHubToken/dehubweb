@@ -2826,6 +2826,21 @@
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
   },
+  "mintChain": {
+    "title": "مُنتج بُست",
+    "subtitle": "اختر سلسلة. الأسعار حية وتحديث كل دقيقة.",
+    "free": "مجاناً",
+    "gasCovered": "الغاز مدفوع من قبل DeHub",
+    "feeIncludesGas": "≈ {{usd}}، الغاز مُضمَن",
+    "gasIncluded": "الغاز مُضمَن",
+    "gasOnly": "≈ {{usd}} الغاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "مدفوع من محفظتك",
+    "priceUnavailable": "السعر غير متوفر",
+    "confirm": "مُنتج على {{chain}}",
+    "confirmWithCost": "مُنتج على {{chain}} · {{cost}}",
+    "notAvailable": "مُنتج على هذه السلسلة غير متوفرة بعد."
+  },
   "postInfo": {
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",

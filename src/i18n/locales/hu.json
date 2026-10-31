@@ -2883,6 +2883,21 @@
     "anonymousLikes_one": "{{count}} kedvelés névtelen jelvénytulajdonostól",
     "anonymousLikes_other": "{{count}} kedvelés névtelen jelvénytulajdonosoktól"
   },
+  "mintChain": {
+    "title": "Menta bejegyzés",
+    "subtitle": "Válassz egy láncot. Az árak valós idejűek, és percenként frissülnek.",
+    "free": "Ingyenes",
+    "gasCovered": "A DeHub által lefedett gáz",
+    "feeIncludesGas": "≈ {{usd}}, gázzal együtt",
+    "gasIncluded": "Gázzal együtt",
+    "gasOnly": "≈ {{usd}} gáz",
+    "paidFromWallet": "{{amount}} a pénztárcádból",
+    "paidFromWalletPlain": "A pénztárcádból fizetve",
+    "priceUnavailable": "Az ár nem érhető el",
+    "confirm": "Menta {{chain}} napján",
+    "confirmWithCost": "Menta {{chain}} · {{cost}} napján",
+    "notAvailable": "Ezen a láncon a verés még nem érhető el."
+  },
   "postInfo": {
     "title": "Bejegyzés infó",
     "tokenId": "Token azonosító",

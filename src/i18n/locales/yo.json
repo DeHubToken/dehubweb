@@ -2858,6 +2858,21 @@
     "anonymousLikes_one": "Ìfẹ́ràn {{count}} láti ọ̀dọ̀ ẹni tó ní báàjì tí kò fi orúkọ hàn",
     "anonymousLikes_other": "Ìfẹ́ràn {{count}} láti ọ̀dọ̀ àwọn tó ní báàjì tí kò fi orúkọ hàn"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Yan pq kan. Owó wà láàyè kí o sì ṣe àtúnṣe ní ìṣẹ́jú kọ̀ọ̀kan.",
+    "free": "FREE",
+    "gasCovered": "Gaasi tí DeHub bo",
+    "feeIncludesGas": "≈ {{usd}}, gáàsì tó wà nínú rẹ̀",
+    "gasIncluded": "Gaasi ti a fi kun",
+    "gasOnly": "≈ {{usd}} gáàsì",
+    "paidFromWallet": "{{amount}} lati apamọwọ rẹ",
+    "paidFromWalletPlain": "O san lati inu apamọwọ rẹ",
+    "priceUnavailable": "Iye tí kò sí",
+    "confirm": "Mint lori {{chain}}",
+    "confirmWithCost": "Mint lori {{chain}} {{cost}}",
+    "notAvailable": "A ṣe minting ni wọn ni ó ṣẹlẹ."
+  },
   "postInfo": {
     "title": "Ìwífún nípa àkọsílẹ̀",
     "tokenId": "ID Àmì-ìdánimọ̀ (Token ID)",

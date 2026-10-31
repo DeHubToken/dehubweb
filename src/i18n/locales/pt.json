@@ -1900,9 +1900,6 @@
     "followBack": "Seguir de volta"
   },
   "features": {
-    "notFeasible": "Não viável",
-    "notFeasibleWhy": "Por quê:",
-    "noNotFeasible": "Nada aqui",
     "prompts": "Prompts",
     "queued": "Fila",
     "promptPageTitle": "Solicitações",
@@ -2895,6 +2892,21 @@
     "likersEmptyBody": "As curtidas deste comentário aparecerão aqui.",
     "anonymousLikes_one": "{{count}} curtida de um portador de emblema anônimo",
     "anonymousLikes_other": "{{count}} curtidas de portadores de emblema anônimos"
+  },
+  "mintChain": {
+    "title": "Post de hortelã",
+    "subtitle": "Escolha uma cadeia. Os preços estão ativos e são atualizados a cada minuto.",
+    "free": "Grátis",
+    "gasCovered": "Gás coberto pelo DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gás incluído",
+    "gasIncluded": "Gás incluído",
+    "gasOnly": "≈ {{usd}} gás",
+    "paidFromWallet": "{{amount}} da sua carteira",
+    "paidFromWalletPlain": "Pago com a sua carteira",
+    "priceUnavailable": "Preço indisponível",
+    "confirm": "Menta em {{chain}}",
+    "confirmWithCost": "Menta em {{chain}} · {{cost}}",
+    "notAvailable": "A cunhagem nesta corrente ainda não está disponível."
   },
   "postInfo": {
     "title": "Info do Post",
@@ -8985,6 +8997,9 @@
       "apply": "Aplicar marca",
       "addLogo": "Adicionar logotipo",
       "applied": "Marca aplicada a {{count}} camadas.",
+      "dehubApplied": "Marca DeHub aplicada a {{count}} camadas.",
+      "dehubApply": "Usar a marca DeHub",
+      "dehubHint": "Cores oficiais da DeHub, fontes Exo e Inter e o logo da DeHub, em um clique.",
       "exportFile": "Baixar arquivo de estilos",
       "fileDownloaded": "Arquivo de estilos da marca baixado",
       "fileHint": "Transferir cores e pares de fontes nomeadas entre dispositivos. Imagens e logotipos ficam no design.",

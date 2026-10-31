@@ -46,7 +46,7 @@ export interface FeatureRequest {
   /** Every attachment; `image_url` mirrors the first. Read via featureAttachments(). */
   image_urls?: string[] | null;
   shipped_url?: string | null;
-  /** Why a request was marked not feasible. Shown under the request. */
+  /** Short tag shown next to the status, e.g. "Future review". */
   status_note?: string | null;
   vote_count: number;
   like_count: number;
@@ -105,7 +105,7 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
   get in_progress() { return _translateCopy("copy.b4cc4b07c300", { defaultValue: "In Progress" }); },
   get completed() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
   get shipped() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
-  get declined() { return _translateCopy("features.notFeasible", { defaultValue: "Not feasible" }); },
+  get declined() { return _translateCopy("copy.dce083a2c47f", { defaultValue: "Declined" }); },
 };
 
 export { CATEGORY_LABELS, STATUS_LABELS };
@@ -311,25 +311,6 @@ export function useShippedFeatures() {
         if (raw) return JSON.parse(raw).ts;
       } catch {}
       return undefined;
-    },
-    staleTime: 60_000,
-    gcTime: 5 * 60_000,
-  });
-}
-
-// "Not feasible" tab — requests looked at and turned down (status `declined`),
-// each with the reason in `status_note`.
-export function useDeclinedFeatures() {
-  return useQuery({
-    queryKey: ['feature-requests-declined'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('feature_requests')
-        .select('*')
-        .eq('status', 'declined')
-        .order('updated_at', { ascending: false });
-      if (error) throw error;
-      return normalizeRows((data || []) as FeatureRequest[]);
     },
     staleTime: 60_000,
     gcTime: 5 * 60_000,

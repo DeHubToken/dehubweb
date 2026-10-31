@@ -2878,6 +2878,21 @@
     "anonymousLikes_one": "{{count}} patīk no anonīma nozīmītes īpašnieka",
     "anonymousLikes_other": "{{count}} patīk no anonīmiem nozīmīšu īpašniekiem"
   },
+  "mintChain": {
+    "title": "Piparmētru ziņa",
+    "subtitle": "Izvēlieties ķēdi. Cenas ir aktuālas un tiek atjauninātas katru minūti.",
+    "free": "Bezmaksas",
+    "gasCovered": "DeHub nosegtā gāze",
+    "feeIncludesGas": "≈ {{usd}}, gāze iekļauta",
+    "gasIncluded": "Iekļauta gāze",
+    "gasOnly": "≈ {{usd}} gāze",
+    "paidFromWallet": "{{amount}} no jūsu maka",
+    "paidFromWalletPlain": "Apmaksāts no jūsu maka",
+    "priceUnavailable": "Cena nav pieejama",
+    "confirm": "Monētu kaltuve {{chain}}",
+    "confirmWithCost": "Monētu kaltuve {{chain}} · {{cost}}",
+    "notAvailable": "Šīs ķēdes kalšana vēl nav pieejama."
+  },
   "postInfo": {
     "title": "Ieraksta informācija",
     "tokenId": "Žetona ID",

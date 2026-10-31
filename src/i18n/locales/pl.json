@@ -2882,6 +2882,21 @@
     "anonymousLikes_one": "{{count}} polubienie od anonimowego posiadacza odznaki",
     "anonymousLikes_other": "Polubienia od anonimowych posiadaczy odznak: {{count}}"
   },
+  "mintChain": {
+    "title": "Idealny słupek",
+    "subtitle": "Wybierz sieć. Ceny są aktywne i aktualizowane co minutę.",
+    "free": "Darmowe",
+    "gasCovered": "Gaz pokryty przez DeHub",
+    "feeIncludesGas": "≈ {{usd}}, w tym gaz",
+    "gasIncluded": "Gaz w zestawie",
+    "gasOnly": "Gaz ≈ {{usd}}",
+    "paidFromWallet": "{{amount}} z Twojego portfela",
+    "paidFromWalletPlain": "Zapłacono z portfela",
+    "priceUnavailable": "Cena niedostępna",
+    "confirm": "Mięta na {{chain}}",
+    "confirmWithCost": "Mennica na {{chain}} · {{cost}}",
+    "notAvailable": "Wybijanie na tym łańcuszku nie jest jeszcze dostępne."
+  },
   "postInfo": {
     "title": "Informacje o poście",
     "tokenId": "Identyfikator tokena",

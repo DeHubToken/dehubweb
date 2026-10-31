@@ -2888,6 +2888,21 @@
     "anonymousLikes_one": "Анонимді бейдж иесінен {{count}} ұнату",
     "anonymousLikes_other": "Анонимді бейдж иелерінен {{count}} ұнату"
   },
+  "mintChain": {
+    "title": "Жалбыз пост",
+    "subtitle": "Тізбекті таңдаңыз. Бағалар тірі және әр минут сайын жаңартылады.",
+    "free": "ТЕГІН",
+    "gasCovered": "DeHub жабатын газ",
+    "feeIncludesGas": "≈ {{usd}}, газ қосылған",
+    "gasIncluded": "Газ қосылған",
+    "gasOnly": "≈ {{usd}} газ",
+    "paidFromWallet": "Әмияннан{{amount}}",
+    "paidFromWalletPlain": "Әмияныңыздан төленді",
+    "priceUnavailable": "Бағасы қолжетімсіз",
+    "confirm": "{{chain}} бойынша жалбыз",
+    "confirmWithCost": "{{chain}} · {{cost}} бойынша жалбыз",
+    "notAvailable": "Бұл тізбектегі жалғау әлі қолжетімді емес."
+  },
   "postInfo": {
     "title": "Жазба ақпараты",
     "tokenId": "Токен ID",

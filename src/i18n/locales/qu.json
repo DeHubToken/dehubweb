@@ -2901,6 +2901,21 @@
     "anonymousLikes_one": "Mana sutiyuq insigniayuqmanta {{count}} munasqa",
     "anonymousLikes_other": "Mana sutiyuq insigniayuqkunamanta {{count}} munasqa"
   },
+  "mintChain": {
+    "title": "Menta poste",
+    "subtitle": "Huk kadenata akllay. Preciokuna kawsaqmi hinaspa sapa minuto musuqyachisqa.",
+    "free": "Qispisqa",
+    "gasCovered": "DeHub nisqawan qatasqa gas",
+    "feeIncludesGas": "≈ {{usd}}, gas nisqawan kuska",
+    "gasIncluded": "Gas nisqapas",
+    "gasOnly": "≈ {{usd}} gas nisqa",
+    "paidFromWallet": "{{amount}} billeteraykimanta",
+    "paidFromWalletPlain": "Billeteraykimanta pagasqa",
+    "priceUnavailable": "Precio mana kanchu",
+    "confirm": "Mint nisqapi {{chain}} nisqapi.",
+    "confirmWithCost": "Mint nisqapi {{chain}} · {{cost}} nisqapi.",
+    "notAvailable": "Kay cadena nisqapi minting nisqa manaraqmi kanchu."
+  },
   "postInfo": {
     "title": "Post willay",
     "tokenId": "ID de fichas nisqa",
