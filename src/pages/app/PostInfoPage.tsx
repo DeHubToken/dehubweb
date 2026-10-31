@@ -55,6 +55,7 @@ import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
+import { PostReactorsSection } from '@/components/app/post-info/PostReactorsSection';
 import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
@@ -776,6 +777,9 @@ export default function PostInfoPage() {
               </div>
             </div>
           </section>
+
+          {/* Who reacted - only the author gets person rows */}
+          {isOwner && nftInfo.tokenId != null && <PostReactorsSection tokenId={nftInfo.tokenId} />}
 
           {/* PPV Sales Info - shown for PPV content */}
           {isPPV && (
