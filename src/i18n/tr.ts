@@ -953,7 +953,7 @@ export const tr = {
     tocFeedsPhotos: "Akışlar, fotoğraflar ve yorumlar",
     feedsPhotosTitle: "Akışlar, fotoğraflar ve yorumlar",
     feedsPhotosDesc: "Gönderileri açmak ve okumak daha hızlı, web'de ve uygulamada.",
-    feedsPhotosB1: "Kimi takip etmeli:",
+    feedsPhotosB1: "Takip önerileri:",
     feedsPhotosB1Desc: "Akıştaki ve Keşfet'teki kapak kartları profil bannerlarını ve Geri takip et düğmesini gösterir; liste hiç tükenmez.",
     feedsPhotosB2: "Fotoğraflar:",
     feedsPhotosB2Desc: "Bir fotoğrafı tam ekran görmek için dokunun; düğmeleri gizlemek için dokunma, yakınlaştırmak için çift dokunma çalışır. Ya da Görseller kaydırma görünümünü açın. Geri, akışta ayrıldığınız yere döndürür.",

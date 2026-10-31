@@ -114,7 +114,7 @@ function FollowCardsGallery() {
   const noop = () => {};
   return (
     <section data-follow-cards-gallery className="mb-5">
-      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.a94bfc8a15e8", { defaultValue: "Follow suggestions" })}</h2>
       <div data-follow-cards className="-mx-4">
         <div className="fc-rail flex overflow-x-auto scrollbar-hide px-4 pb-2">
           {users.map((user, i) => (
