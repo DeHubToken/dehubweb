@@ -1,6 +1,5 @@
 {
   "dehubAppPage": {
-    "android": "Android",
     "appStore": "在 App Store 下載",
     "downloadApk": "下載 APK（Android 沒有 Google Play）",
     "downloadTitle": "下載 DeHub",
@@ -21,7 +20,6 @@
     "heading": "德胡比應用程式",
     "intro1": "DeHub是一個去中心化的社交網絡和行動應用程式，自2021年開發起，使用者可以在鏈上發布帖子，創作者可以保留觀眾、內容和收入。",
     "intro2": "佢合并了時間線式的feed、實時直播、端到端加密的訊息、用戶自行管理的社群、跨鏈錢包和以看獎勵的功能，獎勵以代幣形式發放。同一賬號可在安卓、iPhone和任何現代瀏覽器上使用。",
-    "iphone": "iPhone",
     "notSure": "還是不清楚你需要哪個DeHub呢？ <compare>DeHub vs DePaul DeHUB vs Rowan DEHub</compare>可以幫助你區分， <guide>什麼是DeHub</guide>則是對平台進行了深入的介紹。",
     "openInBrowser": "開啓 DeHub 於你的瀏覽器",
     "seoDescription": "下載 DeHub 應用程式：開源、用戶自主的社交媒體，實時直播、加密訊息和看看賺錢。免費在 Google Play、App Store 和網頁上。",
@@ -255,7 +253,6 @@
     "show": "显示帖子"
   },
   "altText": {
-    "badge": "ALT",
     "add": "添加描述",
     "edit": "编辑描述",
     "titleImage": "描述搿张图片",
@@ -399,7 +396,6 @@
     "featureRequests": "功能请求",
     "staking": "质押",
     "governance": "治理",
-    "dao": "DAO",
     "careers": "招聘",
     "glossary": "术语表",
     "arcade": "街机",
@@ -2104,7 +2100,6 @@
     "statusStillArriving": "支付已通过。代币还在路上——马上检查侬的钱包。",
     "paymentMethod": "付款方式",
     "cardBank": "卡 / 银行",
-    "cardBankDesc": "Visa、Mastercard、Apple Pay",
     "fiatOnramp": "法币入金",
     "fiatOnrampDesc": "用法币直接买加密货币",
     "buy": "购买 {{symbol}}",
@@ -2279,7 +2274,6 @@
     "agentDisplayNamePlaceholder": "這個代理在 DeHub 上的顯示名稱",
     "capacity": "{{used}} 個 {{limit}} 代理 · {{badge}}",
     "noBadge": "無徽章",
-    "agentNamePlaceholder": "my-agent",
     "agentDescription": "描述",
     "agentDescriptionPlaceholder": "侬个代理会做啥？",
     "createAgent": "创建代理",
@@ -2554,9 +2548,6 @@
     "yourApplication": "侬个申请",
     "fullName": "全名",
     "email": "邮箱",
-    "telegram": "Telegram",
-    "xTwitter": "X (Twitter)",
-    "instagram": "Instagram",
     "linkedin": "連結在線",
     "otherSocials": "其他社交",
     "otherSocialsPlaceholder": "TikTok、YouTube、Discord等",
@@ -3612,7 +3603,6 @@
       "source": "来源",
       "datasets": "数据集",
       "zone": "区域",
-      "ray": "Cloudflare ray ID",
       "fetched": "获取时间",
       "query": "图表背后个确切查询",
       "copied": "已拷贝",
@@ -4114,7 +4104,6 @@
     "podBadge": "按需印刷",
     "podBuyOn": "在 {{provider}} 购买",
     "podNote": "由 {{provider}} 按需印刷并发货，在其网站结账。",
-    "podUrlPlaceholder": "https://…",
     "title": "商店",
     "browse": "浏览",
     "myStore": "我个店",
@@ -5872,7 +5861,6 @@
     "cool": "冷色",
     "vivid": "鲜艳",
     "dream": "梦幻",
-    "vhs": "VHS",
     "neon": "霓虹",
     "blur": "模糊",
     "pixelate": "像素化"
@@ -7699,7 +7687,6 @@
     "kindVideo": "影片",
     "kindAudio": "音频",
     "kindImage": "图片",
-    "tileSourceKind": "{{source}} · {{kind}}",
     "reviewTitle": "发布前检查",
     "reviewSubtitle": "从 {{source}}，作为 {{kind}}。编辑你喜欢的任何东西——留下标题为空以保持原始。",
     "reviewName": "標題",
@@ -7712,7 +7699,6 @@
     "podcast": {
       "tab": "播客",
       "feedUrlLabel": "播客 RSS feed 网址",
-      "feedUrlPlaceholder": "https://example.com/feed.xml",
       "fetchFeed": "获取 feed",
       "fetching": "正在获取 feed…",
       "showBy": "作者：{{author}}",
@@ -8714,8 +8700,7 @@
         "change": "本周 +42%"
       },
       "birthday": {
-        "title": "生日快乐",
-        "name": "Sam！"
+        "title": "生日快乐"
       },
       "meme": {
         "title": "表情包",
@@ -8734,7 +8719,6 @@
       "square": "方形",
       "squareDetail": "信息流帖子",
       "portrait": "纵向",
-      "portraitDetail": "Instagram",
       "canvas": "画布",
       "resolution": "分辨率",
       "frameRate": "帧率",
@@ -8910,7 +8894,6 @@
       "lanes": "关键帧",
       "scrub": "左右拖动即可更改，按住 Shift 可更快。",
       "addKeyShortcut": "在播放头处添加关键帧 (K)",
-      "segment": "{{from}} → {{to}}",
       "ease": {
         "linear": "线性",
         "ease": "缓动",
@@ -10296,7 +10279,6 @@
     "paused": "链上代币转账目前暂停了，所以迭个解锁暂时无法完成。请稍后重试。",
     "otherChain": "迭个帖子勒别个链上结算，所以需要侬个钱包里向有 DeHub 代币。",
     "buyCard": "用银行卡买代币",
-    "buyCardHint": "Visa, Mastercard, Apple Pay",
     "moveFunds": "转入资金",
     "moveFundsHint": "从别个链兑换或者存入",
     "notNow": "暂时勿要"
@@ -11317,7 +11299,6 @@
   "credits": {
     "earningsWorth": "价值{{amount}}",
     "percentUsed": "用脱 {{percent}}%",
-    "spentOfTotal": "{{spent}} / {{total}}",
     "subscriptionTokens": "订阅代币",
     "topUp": "加代币",
     "topUpTitle": "添加订阅代币",
@@ -13098,7 +13079,6 @@
     "bdca14f3e1d4": "聊天室尚未設定",
     "bdf7c3345a42": "聽眾（{{value1}}）",
     "be205011d048": "⚡ Seedance 2.0 的相同功能，但速度更快且更便宜",
-    "be4b0c384393": "Solana",
     "be55ef3f4c4e": "加拿大",
     "be567a4c5484": "🔊 原生音頻內容",
     "be9f2a4ccc47": "{{value1}} 您的訊息已經回到盒子中。",
@@ -14395,8 +14375,6 @@
     "1b52b1397dee": "回到",
     "9e9ae626652a": "只能用字母、數字、連字號和底線。最多30個字元。",
     "dc85af8f2b1d": "儲存中...",
-    "08b6a3efc2b5": "Phantom",
-    "2ef54eee0edd": "Trust Wallet",
     "bcbaa814d3ca": "提及用戶",
     "8f1aa08d3a21": "輸入搜尋用戶",
     "3457098e7042": "關注你的人",
@@ -15528,7 +15506,6 @@
     "5697d03daef4": "功能",
     "00787feeb046": "查看餘額、發送和接收代幣，以及在 DeHub 上跨鏈管理您的加密資產。",
     "112e22b0fd15": "DeHub Wallet — 分散式社交媒體、審查不受控 & 言論自由",
-    "5dc85dbc155e": "BNB Chain",
     "6b8a9141538a": "质押",
     "228fc4afbce4": "抽獎活動 (鎖定)",
     "911c67ed8f19": "購買方式：Coinbase — Visa, Mastercard, Apple Pay",
@@ -15692,7 +15669,6 @@
     "a7a3e94141c9": "这个能力还没有使用记录。",
     "b602b7029be6": "PT",
     "d8d91b2e06df": "NG",
-    "f223faa96f22": "Apple",
     "c7bac46904be": "微軟",
     "6850f76b953d": "伯克希爾·哈撒韦公司",
     "00fb5022b75a": "台積電",
@@ -16100,7 +16076,6 @@
     "6662a5411155": "写入它",
     "4945a70fa7f9": "配对",
     "a54084383e3c": "匹配",
-    "6a40edf1fc87": "WhatsApp",
     "761747747547": "关注请求已通过",
     "c97583fe9025": "未通过审批",
     "962b110538f3": "拒绝了您的请求",
