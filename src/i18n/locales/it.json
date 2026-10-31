@@ -18798,5 +18798,9 @@
     "fingerprint": "Impronta",
     "exploreFirst": "Esplora prima",
     "codeNote": "Ti inviamo un codice via email, senza password."
+  },
+  "halloween": {
+    "title": "Buon Halloween",
+    "otherThemes": "Trova altri temi nelle impostazioni:"
   }
 }

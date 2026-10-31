@@ -18803,5 +18803,9 @@
     "fingerprint": "Sidik jari",
     "exploreFirst": "Jelajahi dulu",
     "codeNote": "Kami kirim kode lewat email, tanpa kata sandi."
+  },
+  "halloween": {
+    "title": "Selamat Halloween",
+    "otherThemes": "Temukan tema lain di pengaturan sekarang:"
   }
 }
