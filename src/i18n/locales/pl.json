@@ -18859,5 +18859,9 @@
     "fingerprint": "Odcisk palca",
     "exploreFirst": "Najpierw się rozejrzyj",
     "codeNote": "Wyślemy ci kod e-mailem, bez hasła."
+  },
+  "halloween": {
+    "title": "Wesołego Halloween",
+    "otherThemes": "Znajdź inne motywy w ustawieniach:"
   }
 }

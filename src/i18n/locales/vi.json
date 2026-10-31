@@ -18876,5 +18876,9 @@
     "fingerprint": "Vân tay",
     "exploreFirst": "Khám phá trước",
     "codeNote": "Chúng tôi gửi mã qua email, không cần mật khẩu."
+  },
+  "halloween": {
+    "title": "Halloween vui vẻ",
+    "otherThemes": "Tìm các giao diện khác trong cài đặt ngay:"
   }
 }

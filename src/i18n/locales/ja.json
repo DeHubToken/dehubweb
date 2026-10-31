@@ -18725,5 +18725,9 @@
     "fingerprint": "指紋",
     "exploreFirst": "先に見てみる",
     "codeNote": "メールでコードを送ります。パスワードは不要です。"
+  },
+  "halloween": {
+    "title": "ハッピーハロウィン",
+    "otherThemes": "他のテーマは設定から選べます："
   }
 }

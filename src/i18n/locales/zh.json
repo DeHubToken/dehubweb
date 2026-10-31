@@ -18671,5 +18671,9 @@
     "fingerprint": "指纹",
     "exploreFirst": "先逛逛",
     "codeNote": "我们会通过邮件发送验证码，无需密码。"
+  },
+  "halloween": {
+    "title": "万圣节快乐",
+    "otherThemes": "现在就在设置中探索其他主题："
   }
 }
