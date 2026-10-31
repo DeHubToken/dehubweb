@@ -4,9 +4,10 @@ import { makeNoiseTile, runCanvasBackdrop, type CanvasScene } from '@/lib/canvas
 
 /**
  * "Horror" — found footage on a worn VHS tape. A dim corridor with a lit door
- * at the far end, under tape grain, a rolling tracking band, scanlines and a
- * REC timestamp that shows the viewer's real time. Every so often the tape
- * skips: the picture jumps and tears for a moment.
+ * at the far end, under tape grain, a rolling tracking band and scanlines.
+ * Every so often the tape skips: the picture jumps and tears for a moment.
+ * There is no burned-in REC clock: page cards are see-through glass, so any
+ * text drawn here ends up behind (and on top of the reading of) real text.
  *
  * The corridor is drawn once per size to an offscreen canvas; each frame only
  * composites it with grain and the tape effects.
@@ -182,37 +183,6 @@ export function createHorrorScene(): CanvasScene {
       v.addColorStop(1, 'rgba(0,0,0,0.78)');
       x.fillStyle = v;
       x.fillRect(0, 0, w, h);
-
-      // On-screen display: REC and the real time, as the camera burns it in.
-      const d = new Date();
-      const pad = (n: number) => String(n).padStart(2, '0');
-      const clock = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-      const date = `${pad(d.getMonth() + 1)}.${pad(d.getDate())}.${d.getFullYear()}`;
-      const fs = Math.max(12, Math.min(18, w / 34));
-      x.font = `600 ${fs}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
-      x.textBaseline = 'top';
-      x.shadowColor = 'rgba(255,255,255,0.55)';
-      x.shadowBlur = 4;
-      x.fillStyle = 'rgba(240,240,240,0.85)';
-      // Lifted clear of the phone bottom nav.
-      const base = h - 84;
-      const right = w - fs * 1.2;
-      x.textAlign = 'right';
-      x.fillText(clock, right, base - fs * 1.4);
-      x.fillText(date, right, base);
-      x.textAlign = 'left';
-      x.fillText('PLAY ▶', fs * 1.2, base);
-      if (Math.floor(t * 1.2) % 2 === 0) {
-        x.fillStyle = 'rgba(255,40,40,0.9)';
-        x.shadowColor = 'rgba(255,40,40,0.6)';
-        x.beginPath();
-        x.arc(fs * 1.2 + fs * 0.4, base - fs * 1.4 + fs * 0.5, fs * 0.38, 0, Math.PI * 2);
-        x.fill();
-      }
-      x.fillStyle = 'rgba(240,240,240,0.85)';
-      x.shadowColor = 'rgba(255,255,255,0.55)';
-      x.fillText('REC', fs * 2.3, base - fs * 1.4);
-      x.shadowBlur = 0;
     },
   };
 }
