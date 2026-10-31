@@ -2923,6 +2923,20 @@
     "anonymousLikes_one": "{{count}} like mula sa anonymous na badge holder",
     "anonymousLikes_other": "{{count}} like mula sa mga anonymous na badge holder"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pumili ng chain. Ang mga presyo ay live at ina - update bawat minuto.",
+    "free": "Libre",
+    "feeIncludesGas": "≈{{usd}}, may kasamang gas",
+    "gasIncluded": "Kasama ang gas",
+    "gasOnly": "≈{{usd}}gas",
+    "paidFromWallet": "{{amount}} mula sa iyong wallet",
+    "paidFromWalletPlain": "Binayaran mula sa iyong wallet",
+    "priceUnavailable": "Hindi available ang presyo",
+    "confirm": "Mint sa {{chain}}",
+    "confirmWithCost": "Mint sa {{chain}} ·{{cost}}",
+    "notAvailable": "Hindi pa available ang pagmimina sa chain na ito."
+  },
   "postInfo": {
     "title": "Instagram",
     "tokenId": "Token ID",

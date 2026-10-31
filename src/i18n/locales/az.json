@@ -2876,6 +2876,20 @@
     "anonymousLikes_one": "Anonim nişan sahibindən {{count}} bəyənmə",
     "anonymousLikes_other": "Anonim nişan sahiblərindən {{count}} bəyənmə"
   },
+  "mintChain": {
+    "title": "Nanə yazısı",
+    "subtitle": "Zəncir seçin. Qiymətlər canlıdır və hər dəqiqə yenilənir.",
+    "free": "Pulsuz",
+    "gasCovered": "DeHub-un əhatə etdiyi qaz",
+    "feeIncludesGas": "≈ {{usd}}, qaz daxildir",
+    "gasIncluded": "Qaz daxildir",
+    "paidFromWallet": "{{amount}} cüzdanınızdan",
+    "paidFromWalletPlain": "Pul kisənizdən ödənilib",
+    "priceUnavailable": "Qiymət mövcud deyil",
+    "confirm": "Nanə {{chain}}",
+    "confirmWithCost": "Nanə {{chain}} · {{cost}}",
+    "notAvailable": "Bu zəncirdə mintinq hələ mövcud deyil."
+  },
   "postInfo": {
     "title": "Paylaşım məlumatı",
     "tokenId": "Token ID",

@@ -633,6 +633,16 @@
     "heading": "مقاطع DeHub القصيرة"
   },
   "settings": {
+    "postLanding": "بعد النشر",
+    "postLandingDesc": "كيف يظهر منشورك الجديد في موجزك",
+    "postLandingGhost": "خانة شبحية",
+    "postLandingGhostDesc": "يفسح موجزك مكانًا ويظهر منشورك تدريجيًا في موضعه",
+    "postLandingMorph": "تحوّل",
+    "postLandingMorphDesc": "يتقلّص المحرر ليصبح منشورك",
+    "postLandingPill": "من الشريط إلى البطاقة",
+    "postLandingPillDesc": "يتّسع شريط الرفع ليصبح منشورك بعد نشره",
+    "postLandingDrop": "هبوط",
+    "postLandingDropDesc": "يهبط منشورك من الأعلى مع ارتداد خفيف",
     "sessionsRevokedMany": "تم تسجيل خروج أجهزة {{count}}",
     "usernameTaken": "اسم المستخدم مأخوذ",
     "postingChain": "شبكة النشر",
@@ -1198,17 +1208,7 @@
     "socialConnectedShort": "مرتبط",
     "socialConnectFailed": "تعذر ربط {{platform}}. حاول مرة أخرى.",
     "socialVerifiedFollowers": "{{value}} متابع",
-    "socialFollowersPending": "جارٍ تحديث عدد المتابعين",
-    "postLanding": "بعد النشر",
-    "postLandingDesc": "كيف يظهر منشورك الجديد في موجزك",
-    "postLandingGhost": "خانة شبحية",
-    "postLandingGhostDesc": "يفسح موجزك مكانًا ويظهر منشورك تدريجيًا في موضعه",
-    "postLandingMorph": "تحوّل",
-    "postLandingMorphDesc": "يتقلّص المحرر ليصبح منشورك",
-    "postLandingPill": "من الشريط إلى البطاقة",
-    "postLandingPillDesc": "يتّسع شريط الرفع ليصبح منشورك بعد نشره",
-    "postLandingDrop": "هبوط",
-    "postLandingDropDesc": "يهبط منشورك من الأعلى مع ارتداد خفيف"
+    "socialFollowersPending": "جارٍ تحديث عدد المتابعين"
   },
   "common": {
     "confirm": "تأكيد",
@@ -1312,6 +1312,9 @@
     "embedCodeCopied": "تم نسخ رمز التضمين",
     "options": "خيارات",
     "aiOverview": "نظرة عامة على الذكاء الاصطناعي",
+    "refreshLinkPreview": "تحديث معاينة الرابط",
+    "linkPreviewRefreshed": "تم تحديث معاينة الرابط",
+    "linkPreviewRefreshFailed": "تعذّر الوصول إلى ذلك الموقع. حاول مرة أخرى لاحقًا.",
     "sendTip": "إرسال إكرامية",
     "queue": "قائمة الانتظار",
     "watchList": "قائمة المشاهدة",
@@ -1342,10 +1345,7 @@
     "giftBoost": "أهدِ دفعة",
     "markSection": "أقسام قابلة للتخطي",
     "copyFailed": "تعذّر نسخ الرابط",
-    "share": "مشاركة",
-    "refreshLinkPreview": "تحديث معاينة الرابط",
-    "linkPreviewRefreshed": "تم تحديث معاينة الرابط",
-    "linkPreviewRefreshFailed": "تعذّر الوصول إلى ذلك الموقع. حاول مرة أخرى لاحقًا."
+    "share": "مشاركة"
   },
   "filters": {
     "sort": "ترتيب",
@@ -2994,6 +2994,21 @@
     "likersEmptyBody": "ستظهر الإعجابات على هذا التعليق هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "منشور النعناع",
+    "subtitle": "اختر سلسلة. الأسعار متاحة ويتم تحديثها كل دقيقة.",
+    "free": "مجاني",
+    "gasCovered": "الغاز المغطى بواسطة DeHub",
+    "feeIncludesGas": "≈ {{usd}}، بما في ذلك الغاز",
+    "gasIncluded": "الغاز مشمول",
+    "gasOnly": "≈ {{usd}} غاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "تم الدفع من محفظتك",
+    "priceUnavailable": "السعر غير متاح",
+    "confirm": "النعناع على {{chain}}",
+    "confirmWithCost": "النعناع على {{chain}}·{{cost}}",
+    "notAvailable": "لا يتوفر سك العملة على هذه السلسلة حتى الآن."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -6850,6 +6865,12 @@
       "addImage": "صورة أو شعار",
       "addCamera": "كاميرا ثانية",
       "addClip": "مقطع فيديو",
+      "addReaction": "تفاعل مع فيديو",
+      "reactPlaceholder": "الصق رابط فيديو من DeHub",
+      "reactAdd": "عرض",
+      "reactInvalid": "الصق رابطًا لفيديو على DeHub.",
+      "reactNotLive": "ابدأ البث المباشر أولًا ثم أضف الفيديو.",
+      "reactNoBubble": "تعذّر فتح الكاميرا مرتين هنا. غيّر حجم الفيديو ليظهر وجهك.",
       "failed": "تعذرت إضافة هذا المصدر.",
       "empty": "أضف شعارًا أو كاميرا ثانية أو مقطع فيديو فوق البث.",
       "hint": "تُرسم المصادر فوق الصورة لكل المشاهدين وكل المنصات.",
@@ -6876,13 +6897,7 @@
         "circle": "دائرة",
         "rounded": "حواف مستديرة",
         "rect": "مربع"
-      },
-      "addReaction": "تفاعل مع فيديو",
-      "reactPlaceholder": "الصق رابط فيديو من DeHub",
-      "reactAdd": "عرض",
-      "reactInvalid": "الصق رابطًا لفيديو على DeHub.",
-      "reactNotLive": "ابدأ البث المباشر أولًا ثم أضف الفيديو.",
-      "reactNoBubble": "تعذّر فتح الكاميرا مرتين هنا. غيّر حجم الفيديو ليظهر وجهك."
+      }
     },
     "audio": {
       "title": "خلاط الصوت",
@@ -9070,7 +9085,35 @@
     "priceChartCleared": "تم مسح مخطط الأسعار. سعر المرجع المعدل: $0.0001. أسعار التنفيذ تعتمد على الطلبات المتاحة."
   },
   "editor": {
-    "stage": {"create":"إضافة مشهد ثلاثي الأبعاد","title":"مشهد ثلاثي الأبعاد","hint":"حضّر اللقطة بكرات وصناديق. تغيّر الكاميرا والمواضع وثلاثة أضواء مساحية مستقلة الصورة المعروضة.","preview":"معاينة المشهد المعروض","error":"تعذّر تحضير الصورة. راجع مراجع اللقطة وحاول مجددًا.","camera":"الكاميرا","yaw":"الدوران","elevation":"زاوية الارتفاع","distance":"المسافة","fov":"مجال الرؤية","object":"مجسم","add":"إضافة","sphere":"كرة","box":"صندوق","x":"X","y":"Y","z":"Z","scale":"الحجم","color":"اللون","remove":"إزالة المجسم","light":"الضوء","intensity":"الشدة","diffusion":"الانتشار","saving":"جارٍ تحضير الصورة…","useFrame":"استخدام الصورة المعروضة كمرجع للقطة","frameHint":"ينشئ صورة PNG بحجم 320 × 180 ويضيفها إلى مراجع اللقطة. راجع حد المراجع والسعر قبل التوليد.","frameName":"صورة المشهد"},
+    "stage": {
+      "create": "إضافة مشهد ثلاثي الأبعاد",
+      "title": "مشهد ثلاثي الأبعاد",
+      "hint": "حضّر اللقطة بكرات وصناديق. تغيّر الكاميرا والمواضع وثلاثة أضواء مساحية مستقلة الصورة المعروضة.",
+      "preview": "معاينة المشهد المعروض",
+      "error": "تعذّر تحضير الصورة. راجع مراجع اللقطة وحاول مجددًا.",
+      "camera": "الكاميرا",
+      "yaw": "الدوران",
+      "elevation": "زاوية الارتفاع",
+      "distance": "المسافة",
+      "fov": "مجال الرؤية",
+      "object": "مجسم",
+      "add": "إضافة",
+      "sphere": "كرة",
+      "box": "صندوق",
+      "x": "X",
+      "y": "Y",
+      "z": "Z",
+      "scale": "الحجم",
+      "color": "اللون",
+      "remove": "إزالة المجسم",
+      "light": "الضوء",
+      "intensity": "الشدة",
+      "diffusion": "الانتشار",
+      "saving": "جارٍ تحضير الصورة…",
+      "useFrame": "استخدام الصورة المعروضة كمرجع للقطة",
+      "frameHint": "ينشئ صورة PNG بحجم 320 × 180 ويضيفها إلى مراجع اللقطة. راجع حد المراجع والسعر قبل التوليد.",
+      "frameName": "صورة المشهد"
+    },
     "film": {
       "repairRefs": "إزالة روابط الوسائط المفقودة",
       "title": "مشروع فيلم",
@@ -19841,7 +19884,14 @@
     "count_one": "{{count}} تفاعل",
     "count_other": "{{count}} تفاعلات",
     "allow": "السماح بالتفاعلات",
+    "remixesSection": "الريمكسات",
     "allowDescription": "اسمح لصنّاع المحتوى الآخرين بالتفاعل مع فيديوهاتك، مسجلة أو مباشرة. يمكنك تغيير ذلك في كل منشور.",
+    "policy": {
+      "everyone": "الجميع",
+      "followers": "المتابعون",
+      "nobody": "لا أحد",
+      "default": "الإعداد الافتراضي للحساب ({{value}})"
+    },
     "pageTitle": "التفاعلات مع {{title}} — DeHub",
     "pageDescription": "شاهد صنّاع المحتوى يتفاعلون مع «{{title}}» من {{creator}} على DeHub، مسجلًا ومباشرًا.",
     "heading": "التفاعلات",
@@ -19851,14 +19901,7 @@
     "liveNow": "مباشر",
     "wasLive": "كان مباشرًا",
     "untitled": "تفاعل",
-    "thisVideo": "هذا الفيديو",
-    "policy": {
-      "everyone": "الجميع",
-      "followers": "المتابعون",
-      "nobody": "لا أحد",
-      "default": "الإعداد الافتراضي للحساب ({{value}})"
-    },
-    "remixesSection": "الريمكسات"
+    "thisVideo": "هذا الفيديو"
   },
   "connectGuide": {
     "title": "اربط DeHub بمساعد الذكاء الاصطناعي",

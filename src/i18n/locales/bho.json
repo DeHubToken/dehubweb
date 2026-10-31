@@ -2814,6 +2814,16 @@
     "anonymousLikes_one": "गुमनाम बैज धारक से {{count}} लाइक",
     "anonymousLikes_other": "गुमनाम बैज धारकन से {{count}} लाइक"
   },
+  "mintChain": {
+    "title": "पोस्ट कइल गइल",
+    "subtitle": "अपने आवेदन में एकीकृत करने के सरल आतंक विरोधी मंच; हर घंटे अद्यतन ।",
+    "free": "आजाद के खातिर",
+    "gasCovered": "Dehub में पूरा कोंडोमिनियम (कोंडो)",
+    "gasIncluded": "इलेक्ट्रिकइलेक्ट्रिक समापन",
+    "paidFromWalletPlain": "आपन बटुआ से आपन बटुआ निकालीं",
+    "priceUnavailable": "कीमत नहीं मिल रहे संभावित",
+    "notAvailable": "एह श्रेणी के हटावल न जाय; फिलहाल ई खाली बा ।"
+  },
   "postInfo": {
     "title": "पोस्ट जानकारी",
     "tokenId": "टोकन ID",

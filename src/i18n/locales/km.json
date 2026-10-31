@@ -2866,6 +2866,20 @@
     "anonymousLikes_one": "{{count}} ការចូលចិត្តពីអ្នកកាន់ផ្លាកសញ្ញាអនាមិក",
     "anonymousLikes_other": "{{count}} ការចូលចិត្តពីអ្នកកាន់ផ្លាកសញ្ញាអនាមិក"
   },
+  "mintChain": {
+    "title": "បង្គោលជីអង្កាម",
+    "subtitle": "ជ្រើសរើសខ្សែសង្វាក់ ។ តម្លៃគឺនៅរស់និងធ្វើបច្ចុប្បន្នភាពរៀងរាល់នាទី ។",
+    "free": "ឥតគិតថ្លៃ",
+    "gasCovered": "ឧស្ម័នដែលគ្របដណ្តប់ដោយ DeHub",
+    "feeIncludesGas": "≈{{usd}}, ឧស្ម័នរួមបញ្ចូល",
+    "gasIncluded": "ឧស្ម័នរួមបញ្ចូល",
+    "paidFromWallet": "{{amount}} ពីកាបូបរបស់អ្នក",
+    "paidFromWalletPlain": "បានបង់ប្រាក់ពីកាបូបរបស់អ្នក",
+    "priceUnavailable": "តម្លៃមិនមាន",
+    "confirm": "នាទីនៅលើ {{chain}}",
+    "confirmWithCost": "អណ្តូងរ៉ែនៅលើ {{chain}} · {{cost}}",
+    "notAvailable": "ការជីកយករ៉ែនៅលើខ្សែសង្វាក់នេះមិនទាន់មាននៅឡើយទេ ។"
+  },
   "postInfo": {
     "title": "ព័ត៌មានប្រកាស",
     "tokenId": "លេខសម្គាល់ថូខឹន",

@@ -2875,6 +2875,21 @@
     "anonymousLikes_one": "বেনামী ব্যাজধারীর কাছ থেকে {{count}}টি লাইক",
     "anonymousLikes_other": "বেনামী ব্যাজধারীদের কাছ থেকে {{count}}টি লাইক"
   },
+  "mintChain": {
+    "title": "মিন্ট পোস্ট",
+    "subtitle": "একটি চেইন বেছে নিন । মূল্য লাইভ এবং প্রতি মিনিটে আপডেট করা হয় ।",
+    "free": "বিনামূল্যে",
+    "gasCovered": "DeHub দ্বারা আচ্ছাদিত গ্যাস",
+    "feeIncludesGas": "≈ {{usd}}, গ্যাস অন্তর্ভুক্ত",
+    "gasIncluded": "গ্যাস অন্তর্ভুক্ত",
+    "gasOnly": "≈ {{usd}} গ্যাস",
+    "paidFromWallet": "{{amount}} আপনার ওয়ালেট থেকে",
+    "paidFromWalletPlain": "আপনার ওয়ালেট থেকে পেমেন্ট করা হয়েছে",
+    "priceUnavailable": "মূল্য পাওয়া যাচ্ছে না",
+    "confirm": "{{chain}} -এ পুদিনা",
+    "confirmWithCost": "{{chain}}{{cost}} -এ পুদিনা",
+    "notAvailable": "এই শৃঙ্খলে খনন এখনও পাওয়া যায় নি ।"
+  },
   "postInfo": {
     "title": "পোস্টের তথ্য",
     "tokenId": "টোকেন ID",

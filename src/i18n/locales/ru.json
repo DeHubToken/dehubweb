@@ -2891,6 +2891,21 @@
     "anonymousLikes_one": "{{count}} лайк от анонимного держателя значка",
     "anonymousLikes_other": "Лайки от анонимных держателей значков: {{count}}"
   },
+  "mintChain": {
+    "title": "Стойка монетного двора",
+    "subtitle": "Выберите сеть. Цены в прямом эфире и обновляются каждую минуту.",
+    "free": "Бесплатно",
+    "gasCovered": "Газ, покрываемый DeHub",
+    "feeIncludesGas": "≈ {{usd}}, газ включен",
+    "gasIncluded": "Включенный газ",
+    "gasOnly": "≈ {{usd}} газ",
+    "paidFromWallet": "{{amount}} из вашего кошелька",
+    "paidFromWalletPlain": "Оплачено из вашего кошелька",
+    "priceUnavailable": "Цена недоступна",
+    "confirm": "Мята на {{chain}}",
+    "confirmWithCost": "Мята на {{chain}} · {{cost}}",
+    "notAvailable": "Чеканка на этой цепочке пока недоступна."
+  },
   "postInfo": {
     "title": "Информация о посте",
     "tokenId": "ID токена",

@@ -2861,6 +2861,20 @@
     "anonymousLikes_one": "ಅನಾಮಧೇಯ ಬ್ಯಾಡ್ಜ್ ಹೋಲ್ಡರ್‌ನಿಂದ {{count}} ಲೈಕ್",
     "anonymousLikes_other": "ಅನಾಮಧೇಯ ಬ್ಯಾಡ್ಜ್ ಹೋಲ್ಡರ್‌ಗಳಿಂದ {{count}} ಲೈಕ್‌ಗಳು"
   },
+  "mintChain": {
+    "title": "ಮಿಂಟ್ ಪೋಸ್ಟ್",
+    "subtitle": "ಸರಪಳಿಯನ್ನು ಆರಿಸಿ. ಬೆಲೆಗಳು ಲೈವ್ ಆಗಿರುತ್ತವೆ ಮತ್ತು ಪ್ರತಿ ನಿಮಿಷಕ್ಕೂ ಅಪ್‌ಡೇಟ್ ಆಗುತ್ತವೆ.",
+    "free": "ಉಚಿತ",
+    "gasCovered": "DeHub ನಿಂದ ಆವರಿಸಿರುವ ಅನಿಲ",
+    "feeIncludesGas": "² {{usd}}, ಅನಿಲವನ್ನು ಸೇರಿಸಲಾಗಿದೆ",
+    "gasIncluded": "ಅನಿಲವನ್ನು ಸೇರಿಸಲಾಗಿದೆ",
+    "gasOnly": "² {{usd}} ಗ್ಯಾಸ್",
+    "paidFromWallet": "{{amount}} ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ",
+    "paidFromWalletPlain": "ನಿಮ್ಮ ವಾಲೆಟ್‌ನಿಂದ ಪಾವತಿಸಲಾಗಿದೆ",
+    "priceUnavailable": "ಬೆಲೆ ಲಭ್ಯವಿಲ್ಲ",
+    "confirm": "{{chain}} ನಲ್ಲಿ ಮಿಂಟ್",
+    "notAvailable": "ಈ ಸರಪಳಿಯಲ್ಲಿ ಮಿಂಟಿಂಗ್ ಇನ್ನೂ ಲಭ್ಯವಿಲ್ಲ."
+  },
   "postInfo": {
     "title": "ಪೋಸ್ಟ್ ಮಾಹಿತಿ",
     "tokenId": "ಟೋಕನ್ ID",

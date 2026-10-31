@@ -2869,6 +2869,21 @@
     "anonymousLikes_one": "Анонимдүү белги ээсинен {{count}} жактыруу",
     "anonymousLikes_other": "Анонимдүү белги ээлеринен {{count}} жактыруу"
   },
+  "mintChain": {
+    "title": "Mint билдирүү",
+    "subtitle": "Чынжырды тандаңыз. Баалар жандуу жана ар бир мүнөт сайын жаңыланып турат.",
+    "free": "Бекер",
+    "gasCovered": "DeHub тарабынан камтылган газ",
+    "feeIncludesGas": "≈ {{usd}}, газ камтылган",
+    "gasIncluded": "Газ камтылган",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "Капчыгыңыздан{{amount}}",
+    "paidFromWalletPlain": "Сиздин капчыгыңыздан төлөнгөн",
+    "priceUnavailable": "Баасы жеткиликтүү эмес",
+    "confirm": "Жалюзи {{chain}}",
+    "confirmWithCost": "{{chain}} {{cost}}",
+    "notAvailable": "Бул чынжырдагы жалюзи азырынча жеткиликтүү эмес."
+  },
   "postInfo": {
     "title": "Пост маалыматы",
     "tokenId": "Токен ID",

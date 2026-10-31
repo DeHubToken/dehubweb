@@ -2840,6 +2840,21 @@
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
   },
+  "mintChain": {
+    "title": "منت بوست",
+    "subtitle": "اختار تشين. الأسعار حية وتتحدث كل دقيقة.",
+    "free": "مجاني",
+    "gasCovered": "الغاز مغطى من ديهب",
+    "feeIncludesGas": "≈ {{usd}}، الغاز مشمول",
+    "gasIncluded": "الغاز مشمول",
+    "gasOnly": "≈ {{usd}} غاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "مدفوع من محفظتك",
+    "priceUnavailable": "السعر غير متوفر",
+    "confirm": "منت على {{chain}}",
+    "confirmWithCost": "منت على {{chain}} · {{cost}}",
+    "notAvailable": "المنت على هذا التشين غير متوفر حاليا."
+  },
   "postInfo": {
     "title": "معلومات المنشور",
     "tokenId": "رقم التوكن",
