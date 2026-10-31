@@ -112,6 +112,7 @@ import { AiToolProcessingSkeleton } from '@/components/app/assistant/AiToolProce
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { speechText } from '@/lib/speech-text';
 
 const imageGenLogger = createLogger('AssistantPage.imageGen');
 
@@ -789,10 +790,9 @@ function AssistantPageForAccount() {
     }
     try {
       // Clean text for TTS
-      const cleanText = text
-        .replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
-        .replace(/#{1,6}\s/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-        .replace(/\n+/g, '. ').trim().slice(0, 500);
+      // The voice takes up to 5,000 characters; this used to stop at 500,
+      // mid-sentence. A longer reply now ends on its last whole sentence.
+      const cleanText = speechText(text, 5000);
       if (!cleanText) return;
 
       const response = await fetch(

@@ -2051,6 +2051,9 @@
     "followBack": "Seguir de vuelta"
   },
   "features": {
+    "notFeasible": "No viable",
+    "notFeasibleWhy": "Por qué:",
+    "noNotFeasible": "Nada aquí",
     "prompts": "Propuestas",
     "queued": "En cola",
     "promptPageTitle": "Solicitudes",
