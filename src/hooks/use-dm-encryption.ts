@@ -5,9 +5,11 @@
  * then stored locally and published. Every later visit loads it silently. A
  * locked embedded wallet is reported as `locked` rather than an error.
  *
- * Opening a chat is the one moment this may raise a wallet prompt. Everything
- * else — regaining focus, the vault opening for some other action — only
- * retries when a signature can be produced without asking, because
+ * Only the user's own tap on Unlock / turn on may raise a wallet prompt.
+ * Opening a chat, regaining focus, the vault opening for some other action —
+ * all of these only proceed when a signature can be produced without asking.
+ * Opening a chat used to prompt too, which put the unlock sheet up before the
+ * user had seen the chat or its Unlock button. And because
  * MessagesPage never unmounts (PersistentPageCache CSS-hides it) and a thread
  * left open would otherwise keep raising the unlock sheet on top of whatever
  * page the user is actually on. That is what it did: a signature request
@@ -40,8 +42,8 @@ export function useDmEncryption(enabled = true) {
 
   /**
    * @param mayPrompt whether this attempt is allowed to raise the wallet
-   *                  unlock sheet. True for opening the chat and for the
-   *                  banner's own "turn on"; false for every background retry.
+   *                  unlock sheet. True only for the user's own Unlock / turn on;
+   *                  false for opening the chat and every background retry.
    */
   const run = useCallback(async (mayPrompt: boolean) => {
     if (!enabled || !isAuthenticated || !walletAddress || inFlight.current) return;
@@ -103,7 +105,7 @@ export function useDmEncryption(enabled = true) {
     }
     if (attemptedFor.current === walletAddress) return;
     attemptedFor.current = walletAddress;
-    void run(true);
+    void run(false);
   }, [enabled, isAuthenticated, walletAddress, run]);
 
   useEffect(() => {
