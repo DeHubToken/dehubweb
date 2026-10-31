@@ -456,6 +456,12 @@ function FeatureCard({
             {CATEGORY_LABELS[feature.category]}
           </span>
           <StatusBadge status={feature.status} />
+          {/* A short tag on a live request, e.g. "Future review" on Queued. */}
+          {feature.status !== 'declined' && feature.status_note?.trim() && (
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg border backdrop-blur-xl whitespace-nowrap bg-amber-400/15 text-amber-300/90 border-amber-300/25">
+              {feature.status_note.trim()}
+            </span>
+          )}
         </div>
         {feature.status === 'declined' && feature.status_note?.trim() && (
           <p className="text-xs leading-relaxed text-zinc-400">
