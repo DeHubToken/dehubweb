@@ -2241,9 +2241,6 @@
     "followBack": "Volg terug"
   },
   "features": {
-    "notFeasible": "Niet haalbaar",
-    "notFeasibleWhy": "Waarom:",
-    "noNotFeasible": "Niets hier",
     "prompts": "Voorstellen",
     "queued": "In de wachtrij",
     "promptPageTitle": "Verzoeken",
