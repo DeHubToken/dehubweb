@@ -3,7 +3,7 @@ import { act, fireEvent, render, cleanup } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSwipeBack } from '@/hooks/use-swipe-back';
-import { completesSwipeBack, findSwipeBackControl, pageSwipeAllowed } from '@/lib/swipe-back';
+import { canGoBackInApp, completesSwipeBack, findSwipeBackControl, pageSwipeAllowed } from '@/lib/swipe-back';
 
 const overlays = vi.hoisted(() => ({ open: false }));
 vi.mock('@/lib/overlay-open', () => ({ useAnyOverlayOpen: () => overlays.open }));
@@ -70,13 +70,19 @@ describe('swipe back', () => {
     const row = document.querySelector<HTMLElement>('#row')!;
     Object.defineProperty(row, 'scrollWidth', { value: 900 });
     Object.defineProperty(row, 'clientWidth', { value: 300 });
-    expect(pageSwipeAllowed(document.querySelector('#pic'))).toBe(false);
+    expect(pageSwipeAllowed(document.querySelector('#pic'))).toBe(true);
     expect(pageSwipeAllowed(document.querySelector('#txt'))).toBe(true);
     row.scrollLeft = 200;
     Object.defineProperty(row, 'scrollLeft', { value: 200 });
     expect(pageSwipeAllowed(document.querySelector('#txt'))).toBe(false);
     expect(pageSwipeAllowed(document.querySelector('#plain'))).toBe(true);
     document.body.innerHTML = '';
+  });
+  it('goes back through history on a page with no arrow, never from the feed tabs', () => {
+    expect(canGoBackInApp('/app/wallet', { idx: 2 })).toBe(true);
+    expect(canGoBackInApp('/app/wallet', { idx: 0 })).toBe(false);
+    expect(canGoBackInApp('/app', { idx: 3 })).toBe(false);
+    expect(canGoBackInApp('/', { idx: 3 })).toBe(false);
   });
   it('never activates a page behind an open sheet', () => {
     overlays.open = true;
