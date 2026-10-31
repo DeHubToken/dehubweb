@@ -9,12 +9,14 @@ export function useHorizontalBitmap(source: string, measured: boolean, viewportR
     const node = slideRef.current;
     if (pinned || !root || !node || !measured || typeof IntersectionObserver === 'undefined') return;
     let timer: ReturnType<typeof setTimeout> | undefined;
-    // rootMargin already supplies the 32px buffer; trust the observer's own snapshot.
+    // A full viewport each side keeps the photo just passed drawn, so swiping
+    // back is as instant as swiping forward (the next one is preloaded by the
+    // browser's lazy loading; the previous one had been unloaded and redrawn).
     const observer = new IntersectionObserver(([entry]) => {
       if (timer) clearTimeout(timer);
       if (entry.isIntersecting) setRetained(true);
       else timer = setTimeout(() => setRetained(false), 400);
-    }, { root, rootMargin: '0px 32px' });
+    }, { root, rootMargin: '0px 100%' });
     observer.observe(node);
     return () => {
       observer.disconnect();
