@@ -5,7 +5,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Displays timestamp, view count, and optional translate control below post content.
  */
 
+import { lazy, Suspense, useState } from 'react';
 import { watchedLabel } from '@/i18n/watched-label';
+import Stats from "@/components/ui/cut-icons/stats";
 import { Headphones, RotateCcw, Loader2 } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Clock from "@/components/ui/cut-icons/clock";
@@ -17,6 +19,8 @@ import { LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useBoostedPost } from './boosted-post';
+
+const PostStatsSheet = lazy(() => import('@/components/app/post-stats/PostStatsSheet'));
 
 interface PostMetadataProps {
   className?: string;
@@ -41,9 +45,13 @@ interface PostMetadataProps {
   };
   /** The viewer has played this video before: append to its view count. */
   watched?: boolean;
+  /** The viewer made this post: the view count opens its stats. */
+  isOwnPost?: boolean;
 }
 
-export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl, watched }: PostMetadataProps) {
+export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl, watched, isOwnPost }: PostMetadataProps) {
+  const [statsOpen, setStatsOpen] = useState(false);
+  const canOpenStats = !!isOwnPost && !isAd && tokenId != null && /^\d+$/.test(String(tokenId));
   const { t: _copy } = _useCopy();
   const { t, i18n } = useTranslation();
   const boosted = useBoostedPost();
@@ -136,12 +144,30 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
           {_copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
         </button>
       )}
-      {hasViews && (
+      {hasViews && (canOpenStats ? (
+        <button
+          type="button"
+          data-post-stats-trigger
+          data-no-navigate
+          onClick={(e) => { e.stopPropagation(); setStatsOpen(true); }}
+          aria-label={t('postStats.open', 'See how your post is doing')}
+          className="flex items-center gap-1 rounded-full px-2 py-0.5 -my-0.5 bg-white/10 text-white/80 hover:text-white hover:bg-white/15 transition-colors"
+        >
+          {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+          <span className="tabular-nums">{displayedCount}</span>
+          <Stats aria-hidden="true" className="w-3 h-3" />
+        </button>
+      ) : (
         <span className="flex items-center gap-1">
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
           <span className="tabular-nums">{displayedCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
         </span>
-      )}
+      ))}
+      {canOpenStats && statsOpen ? (
+        <Suspense fallback={null}>
+          <PostStatsSheet open={statsOpen} onOpenChange={setStatsOpen} tokenId={tokenId!} />
+        </Suspense>
+      ) : null}
       {renderTranslateControl()}
     </div>
   );

@@ -54,6 +54,10 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
+import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
+import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
+import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
+import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { useQueryClient } from '@tanstack/react-query';
 import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
 import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
@@ -705,6 +709,29 @@ const ICONS: ThemeIconKey[] = [
   'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
 ];
 
+/** Post stats: the Quick Peek sheet (tap the view pill) and the full Post Info panel, on example numbers. */
+function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
+  const queryClient = useQueryClient();
+  const [seeded] = useState(() => {
+    queryClient.setQueryData(['post-stats', '777'], SAMPLE_POST_STATS);
+    queryClient.setQueryData(['post-stats-best-times'], SAMPLE_BEST_TIMES);
+    return true;
+  });
+  const [open, setOpen] = useState(initiallyOpen);
+  if (!seeded) return null;
+  return (
+    <section data-post-stats-gallery className="mb-5 max-w-xl">
+      <h2 className="mb-3 text-sm font-semibold">Post stats</h2>
+      <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+      <Button className="mt-3" onClick={() => setOpen(true)}>Quick Peek</Button>
+      <PostStatsSheet open={open} onOpenChange={setOpen} tokenId="777" />
+      <div className="mt-4" data-post-stats-gallery-panel>
+        <PostStatsPanel tokenId="777" />
+      </div>
+    </section>
+  );
+}
+
 /** The "Add a profile photo" ask; saving here only waits, nothing uploads. */
 function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   const [open, setOpen] = useState(initiallyOpen);
@@ -909,6 +936,7 @@ export default function StateGalleryPage() {
 
         <TipMessageGallery />
         <WhenSheetGallery />
+        <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
         <ToastsGallery />
         <TooltipsGallery />
         <AppTokensGallery />

@@ -1825,6 +1825,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
+    watchTokenId: video.isAd ? undefined : video.id,
     src: mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined,
     hlsSrc: ladderUrl,
     startLow: ladderStartsLow,
@@ -2278,6 +2279,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     <div
       ref={scrubEventRef}
       data-video-card
+      data-stats-token={video.isAd ? undefined : video.id}
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
       className={isImmersive || stage
@@ -3301,6 +3303,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             tokenId={video.id}
             isAd={video.isAd}
             isAudio={video.isAudio}
+            isOwnPost={isOwnPost}
             translateControl={nothingToTranslate ? undefined : {
               isTranslated: isVideoTranslated,
               isLoading: isTranslateLoading,
