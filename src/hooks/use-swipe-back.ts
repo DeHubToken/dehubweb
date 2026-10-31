@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
-import { findSwipeBackControl, completesSwipeBack, pageSwipeAllowed, SWIPE_BACK_EDGE, SWIPE_BACK_PAGE_DISTANCE } from '@/lib/swipe-back';
+import { canGoBackInApp, findSwipeBackControl, completesSwipeBack, pageSwipeAllowed, SWIPE_BACK_EDGE, SWIPE_BACK_PAGE_DISTANCE } from '@/lib/swipe-back';
 
 const ARROW = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>';
 
@@ -91,8 +91,10 @@ export function useSwipeBack() {
       // The edge strip always goes back; further in, a plain stretch of page
       // does too, but never from on top of something that swipes sideways.
       if (edge ? target?.closest('input,textarea,[contenteditable="true"],[role="slider"],[data-swipe-back-ignore]') : !pageSwipeAllowed(target)) return;
+      // The visible arrow when there is one (it may be a local step back);
+      // otherwise plain history back, so every page that can go back does.
       const control = findSwipeBackControl(target, overlayOpen);
-      if (!control) return;
+      if (!control && (overlayOpen || !canGoBackInApp(window.location.pathname))) return;
       start = { id: touch.identifier, x: touch.clientX, y: touch.clientY, at: performance.now(), control, edge };
       held = event.target;
       held?.addEventListener('touchmove', move as EventListener, { passive: false });
@@ -136,11 +138,12 @@ export function useSwipeBack() {
       if (window.location.pathname !== location.pathname) return;
       // A re-render may have swapped the arrow for an identical new one.
       const control = origin.control?.isConnected ? origin.control : findSwipeBackControl(null, overlayOpen);
-      if (!control) return;
+      if (!control && !(origin.control === null && canGoBackInApp(window.location.pathname))) return;
       if (event.cancelable) event.preventDefault();
       locked = true;
       timer = setTimeout(() => { locked = false; }, 600);
-      control.click();
+      if (control) control.click();
+      else window.history.back();
     };
     const cancel = () => reset();
     const move = once(onMove);

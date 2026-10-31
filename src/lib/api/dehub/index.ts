@@ -31,6 +31,7 @@ export * from './sessions';
 export * from './payments';
 export * from './bookmarks';
 export * from './pins';
+export * from './post-stats';
 export * from './polls';
 export * from './og-image';
 export * from './solana';

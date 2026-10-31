@@ -51,6 +51,7 @@ import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { BadgedName } from '@/components/app/BadgedName';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { useCommentsPullDismiss } from '@/hooks/use-comments-pull-dismiss';
@@ -1843,7 +1844,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       </button>
                       <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
                         {currentShort.displayName && (
-                          <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
+                          <BadgedName
+                            lookupId={currentShort.creatorUsername || currentShort.creatorId || currentShort.username}
+                            username={currentShort.creatorUsername || currentShort.username}
+                            className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] leading-tight"
+                            wrapperClassName="text-base leading-tight"
+                          >
+                            {currentShort.displayName}
+                          </BadgedName>
                         )}
                         <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                       </button>
@@ -2092,7 +2100,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex flex-col items-start text-left min-w-0"
                     >
                       {currentShort.displayName && (
-                        <span className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">{currentShort.displayName}</span>
+                        <BadgedName
+                          lookupId={currentShort.creatorUsername || currentShort.creatorId || currentShort.username}
+                          username={currentShort.creatorUsername || currentShort.username}
+                          className="text-white font-semibold text-base [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] leading-tight"
+                          wrapperClassName="text-base leading-tight"
+                        >
+                          {currentShort.displayName}
+                        </BadgedName>
                       )}
                       <span className="text-white/70 text-sm [text-shadow:0_10px_8px_rgb(0_0_0/0.04),0_4px_3px_rgb(0_0_0/0.1)] truncate leading-tight">@{currentShort.creatorUsername || currentShort.username}</span>
                     </button>
@@ -2300,7 +2315,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 </Avatar>
                 <div className="flex flex-col flex-1 min-w-0">
                   {currentShort.displayName && (
-                    <span className="text-white font-semibold text-sm lg:text-base truncate hover:underline">{currentShort.displayName}</span>
+                    <BadgedName
+                      lookupId={currentShort.creatorUsername || currentShort.creatorId || currentShort.username}
+                      username={currentShort.creatorUsername || currentShort.username}
+                      className="text-white font-semibold text-sm lg:text-base hover:underline"
+                      wrapperClassName="text-sm lg:text-base"
+                    >
+                      {currentShort.displayName}
+                    </BadgedName>
                   )}
                   <span className="text-white/60 text-xs lg:text-sm truncate">@{currentShort.creatorUsername || currentShort.username}</span>
                 </div>
