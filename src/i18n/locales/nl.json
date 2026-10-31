@@ -633,6 +633,16 @@
     "heading": "DeHub-shorts"
   },
   "settings": {
+    "postLanding": "Na het plaatsen",
+    "postLandingDesc": "Hoe je nieuwe bericht in je feed verschijnt",
+    "postLandingGhost": "Spookplek",
+    "postLandingGhostDesc": "Je feed maakt ruimte en je bericht vervaagt op zijn plek",
+    "postLandingMorph": "Morph",
+    "postLandingMorphDesc": "De editor krimpt tot je bericht",
+    "postLandingPill": "Van balk naar kaart",
+    "postLandingPillDesc": "De uploadbalk opent zich tot je bericht zodra het online staat",
+    "postLandingDrop": "Invallen",
+    "postLandingDropDesc": "Je bericht valt van boven in met een kleine stuiter",
     "sessionsRevokedMany": "{{count}} apparaten zijn uitgelogd",
     "usernameTaken": "Gebruikersnaam is bezet",
     "postingChain": "Blockchain voor berichten",
@@ -1198,17 +1208,7 @@
     "socialConnectedShort": "Gekoppeld",
     "socialConnectFailed": "Kan {{platform}} niet koppelen. Probeer het opnieuw.",
     "socialVerifiedFollowers": "{{value}} volgers",
-    "socialFollowersPending": "Aantal volgers wordt bijgewerkt",
-    "postLanding": "Na het plaatsen",
-    "postLandingDesc": "Hoe je nieuwe bericht in je feed verschijnt",
-    "postLandingGhost": "Spookplek",
-    "postLandingGhostDesc": "Je feed maakt ruimte en je bericht vervaagt op zijn plek",
-    "postLandingMorph": "Morph",
-    "postLandingMorphDesc": "De editor krimpt tot je bericht",
-    "postLandingPill": "Van balk naar kaart",
-    "postLandingPillDesc": "De uploadbalk opent zich tot je bericht zodra het online staat",
-    "postLandingDrop": "Invallen",
-    "postLandingDropDesc": "Je bericht valt van boven in met een kleine stuiter"
+    "socialFollowersPending": "Aantal volgers wordt bijgewerkt"
   },
   "common": {
     "confirm": "Bevestigen",
@@ -1502,6 +1502,9 @@
     "embedCodeCopied": "Insluitcode gekopieerd",
     "options": "Opties",
     "aiOverview": "AI-overzicht",
+    "refreshLinkPreview": "Linkvoorbeeld vernieuwen",
+    "linkPreviewRefreshed": "Linkvoorbeeld vernieuwd",
+    "linkPreviewRefreshFailed": "Kan die site niet bereiken. Probeer het later opnieuw.",
     "sendTip": "Fooi sturen",
     "queue": "Wachtrij",
     "watchList": "Kijklijst",
@@ -1532,10 +1535,7 @@
     "giftBoost": "Een boost cadeau doen",
     "markSection": "Overslaapbare secties",
     "copyFailed": "Kon link niet kopiëren",
-    "share": "Delen",
-    "refreshLinkPreview": "Linkvoorbeeld vernieuwen",
-    "linkPreviewRefreshed": "Linkvoorbeeld vernieuwd",
-    "linkPreviewRefreshFailed": "Kan die site niet bereiken. Probeer het later opnieuw."
+    "share": "Delen"
   },
   "filters": {
     "sort": "Sorteren",
@@ -3176,6 +3176,21 @@
     "likersEmptyBody": "Likes op deze reactie verschijnen hier.",
     "anonymousLikes_one": "{{count}} like van een anonieme badgehouder",
     "anonymousLikes_other": "{{count}} likes van anonieme badgehouders"
+  },
+  "mintChain": {
+    "title": "Muntpaal",
+    "subtitle": "Kies een keten. Prijzen zijn live en worden elke minuut bijgewerkt.",
+    "free": "Gratis",
+    "gasCovered": "Gas gedekt door DeHub",
+    "feeIncludesGas": "≈ {{usd}}, inclusief gas",
+    "gasIncluded": "Gas inbegrepen",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} uit uw portemonnee",
+    "paidFromWalletPlain": "Betaald uit je portemonnee",
+    "priceUnavailable": "Prijs niet beschikbaar",
+    "confirm": "Munt op {{chain}}",
+    "confirmWithCost": "Munt op {{chain}} · {{cost}}",
+    "notAvailable": "Munt op deze ketting is nog niet beschikbaar."
   },
   "postInfo": {
     "title": "Berichtinfo",
@@ -7032,6 +7047,12 @@
       "addImage": "Afbeelding of logo",
       "addCamera": "Tweede camera",
       "addClip": "Videoclip",
+      "addReaction": "Reageer op een video",
+      "reactPlaceholder": "Plak een DeHub-videolink",
+      "reactAdd": "Tonen",
+      "reactInvalid": "Plak een link naar een DeHub-video.",
+      "reactNotLive": "Ga eerst live en voeg dan de video toe.",
+      "reactNoBubble": "Je camera kan hier niet twee keer openen. Verklein de video zodat je gezicht zichtbaar blijft.",
       "failed": "Kon die bron niet toevoegen.",
       "empty": "Voeg een logo, een tweede camera of een videoclip toe boven op je stream.",
       "hint": "Bronnen worden over je beeld getekend voor elke kijker en elk platform.",
@@ -7058,13 +7079,7 @@
         "circle": "Cirkel",
         "rounded": "Afgerond",
         "rect": "Vierkant"
-      },
-      "addReaction": "Reageer op een video",
-      "reactPlaceholder": "Plak een DeHub-videolink",
-      "reactAdd": "Tonen",
-      "reactInvalid": "Plak een link naar een DeHub-video.",
-      "reactNotLive": "Ga eerst live en voeg dan de video toe.",
-      "reactNoBubble": "Je camera kan hier niet twee keer openen. Verklein de video zodat je gezicht zichtbaar blijft."
+      }
     },
     "audio": {
       "title": "Audiomixer",
@@ -9254,7 +9269,35 @@
     "priceChartCleared": "Prijsgrafiek is geleegd. Referentieprijs is vastgesteld op $0.0001. Uitvoeringsprijzen zijn afhankelijk van beschikbare orders."
   },
   "editor": {
-    "stage": {"create":"3D-scène toevoegen","title":"3D-scène","hint":"Zet een opname op met bollen en blokken. De camera, posities en drie onafhankelijke vlaklichten veranderen het gerenderde beeld.","preview":"Voorbeeld van de gerenderde scène","error":"Het beeld kon niet worden voorbereid. Controleer de referenties van de opname en probeer opnieuw.","camera":"Camera","yaw":"Draaiing","elevation":"Hoogtehoek","distance":"Afstand","fov":"Beeldhoek","object":"Object","add":"Toevoegen","sphere":"Bol","box":"Blok","x":"X","y":"Y","z":"Z","scale":"Grootte","color":"Kleur","remove":"Object verwijderen","light":"Licht","intensity":"Sterkte","diffusion":"Spreiding","saving":"Beeld voorbereiden…","useFrame":"Gerenderd beeld als opnamereferentie gebruiken","frameHint":"Maakt een PNG van 320 × 180 en voegt deze toe aan de opnamereferenties. Controleer de referentielimiet en prijs voordat je genereert.","frameName":"Scènebeeld"},
+    "stage": {
+      "create": "3D-scène toevoegen",
+      "title": "3D-scène",
+      "hint": "Zet een opname op met bollen en blokken. De camera, posities en drie onafhankelijke vlaklichten veranderen het gerenderde beeld.",
+      "preview": "Voorbeeld van de gerenderde scène",
+      "error": "Het beeld kon niet worden voorbereid. Controleer de referenties van de opname en probeer opnieuw.",
+      "camera": "Camera",
+      "yaw": "Draaiing",
+      "elevation": "Hoogtehoek",
+      "distance": "Afstand",
+      "fov": "Beeldhoek",
+      "object": "Object",
+      "add": "Toevoegen",
+      "sphere": "Bol",
+      "box": "Blok",
+      "x": "X",
+      "y": "Y",
+      "z": "Z",
+      "scale": "Grootte",
+      "color": "Kleur",
+      "remove": "Object verwijderen",
+      "light": "Licht",
+      "intensity": "Sterkte",
+      "diffusion": "Spreiding",
+      "saving": "Beeld voorbereiden…",
+      "useFrame": "Gerenderd beeld als opnamereferentie gebruiken",
+      "frameHint": "Maakt een PNG van 320 × 180 en voegt deze toe aan de opnamereferenties. Controleer de referentielimiet en prijs voordat je genereert.",
+      "frameName": "Scènebeeld"
+    },
     "film": {
       "repairRefs": "Ontbrekende mediakoppelingen verwijderen",
       "title": "Filmproject",
@@ -20082,7 +20125,14 @@
     "count_one": "{{count}} reactie",
     "count_other": "{{count}} reacties",
     "allow": "Reacties toestaan",
+    "remixesSection": "Remixes",
     "allowDescription": "Laat andere makers reageren op je video’s, opgenomen of live. Je kunt het per bericht nog aanpassen.",
+    "policy": {
+      "everyone": "Iedereen",
+      "followers": "Volgers",
+      "nobody": "Niemand",
+      "default": "Accountstandaard ({{value}})"
+    },
     "pageTitle": "Reacties op {{title}} — DeHub",
     "pageDescription": "Bekijk hoe makers reageren op “{{title}}” van {{creator}} op DeHub, opgenomen en live.",
     "heading": "Reacties",
@@ -20092,14 +20142,7 @@
     "liveNow": "Live",
     "wasLive": "Was live",
     "untitled": "Reactie",
-    "thisVideo": "deze video",
-    "policy": {
-      "everyone": "Iedereen",
-      "followers": "Volgers",
-      "nobody": "Niemand",
-      "default": "Accountstandaard ({{value}})"
-    },
-    "remixesSection": "Remixes"
+    "thisVideo": "deze video"
   },
   "connectGuide": {
     "title": "Koppel DeHub aan je AI-assistent",

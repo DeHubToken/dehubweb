@@ -2890,6 +2890,20 @@
     "anonymousLikes_one": "익명 배지 보유자의 좋아요 {{count}}개",
     "anonymousLikes_other": "익명 배지 보유자의 좋아요 {{count}}개"
   },
+  "mintChain": {
+    "title": "민트 포스트",
+    "subtitle": "체인을 선택하세요. 가격은 실시간으로 1분마다 업데이트됩니다.",
+    "free": "무료",
+    "gasCovered": "DeHub가 보장하는 가스",
+    "feeIncludesGas": "≈ {{usd}}, 가스 포함",
+    "gasIncluded": "가스 포함",
+    "paidFromWallet": "지갑에서 {{amount}}",
+    "paidFromWalletPlain": "지갑에서 결제됨",
+    "priceUnavailable": "예약 불가능한 가격",
+    "confirm": "{{chain}} 에 민트",
+    "confirmWithCost": "조폐국 {{chain}} · {{cost}}",
+    "notAvailable": "이 체인에서 주조는 아직 사용할 수 없습니다."
+  },
   "postInfo": {
     "title": "게시물 정보",
     "tokenId": "토큰 ID",

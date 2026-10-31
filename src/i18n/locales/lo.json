@@ -2853,6 +2853,20 @@
     "anonymousLikes_one": "{{count}} ຖືກໃຈຈາກຜູ້ຖືປ້າຍທີ່ບໍ່ລະບຸຊື່",
     "anonymousLikes_other": "{{count}} ຖືກໃຈຈາກຜູ້ຖືປ້າຍທີ່ບໍ່ລະບຸຊື່"
   },
+  "mintChain": {
+    "title": "ໂພສ Mint",
+    "subtitle": "ເລືອກລະບົບຕ່ອງໂສ້. ລາຄາມີຊີວິດຢູ່ ແລະ ອັບເດດທຸກໆນາທີ.",
+    "free": "ຟຣີ",
+    "gasCovered": "ອາຍແກັສທີ່ປົກຄຸມໂດຍ DeHub",
+    "feeIncludesGas": "≈ {{usd}}, ອາຍແກັສລວມ",
+    "gasIncluded": "ອາຍແກັສລວມ",
+    "gasOnly": "≈ {{usd}} ອາຍແກັສ",
+    "paidFromWallet": "{{amount}} ຈາກກະເປົາເງິນຂອງທ່ານ",
+    "paidFromWalletPlain": "ຈ່າຍຈາກກະເປົາເງິນຂອງທ່ານ",
+    "priceUnavailable": "ລາຄາບໍ່ສາມາດໃຊ້ໄດ້",
+    "confirmWithCost": "Mint ໃນ {{chain}} · {{cost}}",
+    "notAvailable": "ການຂຸດຄົ້ນບໍ່ແຮ່ໃນຕ່ອງໂສ້ນີ້ຍັງບໍ່ທັນມີເທື່ອ."
+  },
   "postInfo": {
     "title": "ຂໍ້ມູນໂພສ",
     "tokenId": "ລະຫັດໂທເຄນ",

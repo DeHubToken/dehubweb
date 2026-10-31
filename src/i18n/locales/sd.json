@@ -2850,6 +2850,21 @@
     "anonymousLikes_one": "گمنام بيج هولڊر کان {{count}} پسند",
     "anonymousLikes_other": "گمنام بيج هولڊرز کان {{count}} پسنديون"
   },
+  "mintChain": {
+    "title": "مينٽ پوسٽ",
+    "subtitle": "هڪ زنجير چونڊيو قيمتون زنده آهن ۽ هر منٽ کي تازه ڪاري ڪريو.",
+    "free": "مفت",
+    "gasCovered": "DeHub طرفان ڍڪيل گئس",
+    "feeIncludesGas": "≈ {{usd}}، گيس شامل آهي",
+    "gasIncluded": "گئس شامل آهي",
+    "gasOnly": "≈ {{usd}} گاس",
+    "paidFromWallet": "{{amount}} توهان جي پرس مان",
+    "paidFromWalletPlain": "توھان جي پرس مان ادا ڪيل",
+    "priceUnavailable": "قيمت دستياب ناهي",
+    "confirm": "{{chain}} تي مينٽ",
+    "confirmWithCost": "منٽ {{chain}} {{cost}}",
+    "notAvailable": "هن زنجير تي منٽنگ اڃا تائين دستياب ناهي."
+  },
   "postInfo": {
     "title": "پوسٽ معلومات",
     "tokenId": "ٽوڪن ID",

@@ -2986,6 +2986,21 @@
     "anonymousLikes_one": "{{count}} lajk od anonymného držiteľa odznaku",
     "anonymousLikes_other": "{{count}} lajkov od anonymných držiteľov odznakov"
   },
+  "mintChain": {
+    "title": "Príspevok mincovne",
+    "subtitle": "Vyberte si reťazec. Ceny sú aktuálne a aktualizujú sa každú minútu.",
+    "free": "Zadarmo",
+    "gasCovered": "Plyn krytý spoločnosťou DeHub",
+    "feeIncludesGas": "≈ {{usd}} vrátane plynu",
+    "gasIncluded": "Vrátane plynu",
+    "gasOnly": "≈ {{usd}} plyn",
+    "paidFromWallet": "{{amount}} z vašej peňaženky",
+    "paidFromWalletPlain": "Zaplatené z peňaženky",
+    "priceUnavailable": "Cena nie je k dispozícii",
+    "confirm": "Mincovňa {{chain}}",
+    "confirmWithCost": "Mincovňa {{chain}} · {{cost}}",
+    "notAvailable": "Minting na tomto reťazci ešte nie je k dispozícii."
+  },
   "postInfo": {
     "title": "Informácie o príspevku",
     "tokenId": "ID tokenu",

@@ -2889,6 +2889,21 @@
     "anonymousLikes_one": "{{count}} Like von einem anonymen Badge-Inhaber",
     "anonymousLikes_other": "{{count}} Likes von anonymen Badge-Inhabern"
   },
+  "mintChain": {
+    "title": "Mint Post",
+    "subtitle": "Wählen Sie eine Kette. Die Preise sind live und werden jede Minute aktualisiert.",
+    "free": "Kostenlos",
+    "gasCovered": "Gas gedeckt durch DeHub",
+    "feeIncludesGas": "≈ {{usd}}, Gas inbegriffen",
+    "gasIncluded": "Gas inbegriffen",
+    "gasOnly": "≈ {{usd}} Gas",
+    "paidFromWallet": "{{amount}} aus Ihrem Wallet",
+    "paidFromWalletPlain": "Bezahlt aus dem Portemonnaie",
+    "priceUnavailable": "Preis nicht verfügbar",
+    "confirm": "Minze am {{chain}}",
+    "confirmWithCost": "Minze am {{chain}} · {{cost}}",
+    "notAvailable": "Die Prägung dieser Kette ist noch nicht verfügbar."
+  },
   "postInfo": {
     "title": "Beitragsinfo",
     "tokenId": "Token-ID",

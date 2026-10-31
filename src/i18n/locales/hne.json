@@ -2843,6 +2843,18 @@
     "anonymousLikes_one": "गुमनाम बैज धारक ले {{count}} लाइक",
     "anonymousLikes_other": "गुमनाम बैज धारक मन ले {{count}} लाइक"
   },
+  "mintChain": {
+    "title": "मिंट पोस्ट",
+    "subtitle": "एक श्रृंखला चुनव. कीमतें लाइव हे अउ हर मिनट अपडेट करथे.",
+    "free": "मुक्त",
+    "gasCovered": "DeHub द्वारा गैस कवर करे गए",
+    "feeIncludesGas": "{{usd}}, गैस शामिल",
+    "gasIncluded": "गैस समावेशी",
+    "paidFromWallet": "{{amount}} अपन बटुआ ले",
+    "paidFromWalletPlain": "तोर बटुआ ले ले",
+    "priceUnavailable": "मूल्य अनुपलब्ध",
+    "notAvailable": "ए श्रृंखला म खनन अभी तक उपलब्ध नी हवय ।"
+  },
   "postInfo": {
     "title": "पोस्ट जानकारी",
     "tokenId": "टोकन ID",
