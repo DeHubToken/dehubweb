@@ -1018,7 +1018,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-73-community-champions-",
     "title": "Community Champions: UGC Ambassadorship Program Launched",
-    "slug": "community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025",
+    "slug": "community-champions-ugc-ambassadorship-program-launched",
     "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Launched UGC ambassadorship program with 50 vacancies.",
     "content": "",
     "bannerImage": "/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png",
@@ -1068,7 +1068,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-75-transparency-hub-dhb",
     "title": "Transparency Hub: dhbscan.com Launches for Contract Activity Tracking",
-    "slug": "transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025",
+    "slug": "transparency-hub-dhbscancom-launches-for-contract-activity-tracking",
     "excerpt": "dhbscan.com — every DHB contract in one place, so verifying us does not require knowing which addresses to look at.",
     "content": "",
     "bannerImage": "/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
@@ -1093,7 +1093,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-77-get-ready-players-fi",
     "title": "Get Ready Players: Final Snapshot for Last Chad Standing Airdrop",
-    "slug": "get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025",
+    "slug": "get-ready-players-final-snapshot-for-last-chad-standing-airdrop",
     "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers.",
     "content": "",
     "bannerImage": "/media/6d868478-769e-4981-b285-4ca5fa215dc5.png",
@@ -1118,7 +1118,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-69-reliability-perfecte",
     "title": "Reliability Perfected: 99.99% Uptime for DeHub Streaming",
-    "slug": "reliability-perfected-9999-uptime-for-dehub-streaming---a-dehub-milestone-from-q1-2025",
+    "slug": "reliability-perfected-9999-uptime-for-dehub-streaming",
     "excerpt": "99.99% across all streaming services. The fourth nine costs more than the first three combined, and here is why we paid for it.",
     "content": "",
     "bannerImage": "/media/milestone-uptime-banner.jpg",
@@ -1143,7 +1143,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-67-scaling-new-heights-",
     "title": "Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
-    "slug": "scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025",
+    "slug": "scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers",
     "excerpt": "Livepeer integration taking us to 50,000+ concurrent viewers, with headroom beyond that on higher tiers — and a delivery layer that is not one company.",
     "content": "",
     "bannerImage": "/media/milestone-livepeer-banner.jpg",
@@ -1193,7 +1193,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-71-connect-and-converse",
     "title": "Connect and Converse: Advanced Messaging System with Paid/Free DMs",
-    "slug": "connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025",
+    "slug": "connect-and-converse-advanced-messaging-system-with-paidfree-dms",
     "excerpt": "Paid or free DMs and unlockable chat content — a creator-side answer to an inbox that is 95% noise.",
     "content": "",
     "bannerImage": "/media/milestone-messaging-banner.jpg",
@@ -1218,7 +1218,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-70-strategic-shift-disc",
     "title": "Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
-    "slug": "strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025",
+    "slug": "strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb",
     "excerpt": "We ended Ethereum mainnet support a year after adding it, and concentrated on Base. Fees, not ideology.",
     "content": "",
     "bannerImage": "/media/milestone-ethereum-exit-banner.jpg",
@@ -1243,7 +1243,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-72-main-event-ready-las",
     "title": "Main Event Ready: Last Chad Standing Full Trailer Gains MMA Promoter Attention",
-    "slug": "main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025",
+    "slug": "main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention",
     "excerpt": "The full trailer landed, and the people who noticed were MMA promoters rather than crypto media. That was the entire objective.",
     "content": "",
     "bannerImage": "/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png",
@@ -1268,7 +1268,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-68-speed-of-light-custo",
     "title": "Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
-    "slug": "speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025",
+    "slug": "speed-of-light-custom-cdn-achieves-sub-200ms-global-latency",
     "excerpt": "Sub-200ms globally, from our own CDN. The word doing the work in that sentence is \"globally\".",
     "content": "",
     "bannerImage": "/media/milestone-cdn-banner.jpg",
@@ -1293,7 +1293,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-65-the-future-of-infras",
     "title": "The Future of Infrastructure: DePIN Phase 1 Goes Live",
-    "slug": "the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024",
+    "slug": "the-future-of-infrastructure-depin-phase-1-goes-live",
     "excerpt": "Phase 1 of decentralised physical infrastructure. The point where \"decentralised streaming\" stops being a description of the token and starts being one of the delivery.",
     "content": "",
     "bannerImage": "/media/milestone-depin-banner.jpg",
@@ -1369,7 +1369,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-63-the-hype-is-real-las",
     "title": "The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
-    "slug": "the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024",
+    "slug": "the-hype-is-real-last-chad-standing-teaser-hits-1m-views",
     "excerpt": "A million views on the teaser for the first MMA-inspired battle royale. The audience it reached was mostly not a crypto audience.",
     "content": "",
     "bannerImage": "/media/milestone-teaser-1m-banner.jpg",
@@ -1394,7 +1394,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-62-revolutionizing-acce",
     "title": "Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
-    "slug": "revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024",
+    "slug": "revolutionizing-access-on-chain-tradable-subscriptions-launch",
     "excerpt": "A Q4 2024 milestone from DeHub's roadmap: Released onchain tradable subscriptions.",
     "content": "",
     "bannerImage": "/media/milestone-subscriptions-banner.jpg",
@@ -1470,7 +1470,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-61-faster-and-sleeker-u",
     "title": "Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
-    "slug": "faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost---a-dehub-milestone-from-q3-2024",
+    "slug": "faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost",
     "excerpt": "A full interface overhaul and a backend three times faster. Shipped together, because either one alone would have been worse than nothing.",
     "content": "",
     "bannerImage": "/media/milestone-ui-overhaul-banner.jpg",
@@ -1495,7 +1495,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-60-leveling-up-major-ap",
     "title": "Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
-    "slug": "leveling-up-major-app-upgrade-earns-95-positive-feedback---a-dehub-milestone-from-q3-2024",
+    "slug": "leveling-up-major-app-upgrade-earns-95-positive-feedback",
     "excerpt": "95% positive feedback on a major app upgrade — and the 5% is the part that shaped the following year.",
     "content": "",
     "bannerImage": "/media/milestone-positive-feedback-banner.jpg",
@@ -1520,7 +1520,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-59-worldwide-creators-p",
     "title": "Worldwide Creators: Partnerships Spanning 15 Countries",
-    "slug": "worldwide-creators-partnerships-spanning-15-countries---a-dehub-milestone-from-q2-2024",
+    "slug": "worldwide-creators-partnerships-spanning-15-countries",
     "excerpt": "Creator partnerships across 15 countries. The interesting part was how differently each market treats a platform that pays in tokens.",
     "content": "",
     "bannerImage": "/media/milestone-15-countries-banner.jpg",
@@ -1545,7 +1545,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-58-entrepreneurial-spir",
     "title": "Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
-    "slug": "entrepreneurial-spirit-co-founders-launch-tiktok-agency---a-dehub-milestone-from-q2-2024",
+    "slug": "entrepreneurial-spirit-co-founders-launch-tiktok-agency",
     "excerpt": "Mike Hales and Indi Cammish opened a TikTok agency with TikTok executives directly, after a year topping the UK stream charts at around £1k a day.",
     "content": "",
     "bannerImage": "/media/milestone-tiktok-agency-banner.jpg",
@@ -1595,7 +1595,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-56-layer-2-expansion-sd",
     "title": "Layer 2 Expansion: SDHB Lists on Base",
-    "slug": "layer-2-expansion-sdhb-lists-on-base---a-dehub-milestone-from-q2-2024",
+    "slug": "layer-2-expansion-sdhb-lists-on-base",
     "excerpt": "sDHB on Base. The chain where the transaction costs less than the thing you are buying — which is the entire requirement.",
     "content": "",
     "bannerImage": "/media/milestone-base-listing-banner.jpg",
@@ -1695,7 +1695,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-54-expanding-reach-dhb-",
     "title": "Expanding Reach: DHB Lists on Ethereum Mainnet",
-    "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024",
+    "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet",
     "excerpt": "DHB listed on Ethereum mainnet. A year later we discontinued it — this post is where the reasoning for both starts.",
     "content": "",
     "bannerImage": "/media/milestone-eth-listing-banner.jpg",
@@ -1720,7 +1720,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-46-expanding-horizons-p",
     "title": "Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
-    "slug": "expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023",
+    "slug": "expanding-horizons-partner-airdrop-for-fansite-bj-fork",
     "excerpt": "A Q3 2023 milestone from DeHub's roadmap: Announced partner airdrop for BJ (now fan.site), the adult fork of DeHub.",
     "content": "",
     "bannerImage": "/media/milestone-partner-airdrop-banner.jpg",
@@ -1745,7 +1745,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-53-full-disclosure-dehu",
     "title": "What's in store for the end of the year?",
-    "slug": "full-disclosure-dehubs-comprehensive-transparency-reports---a-dehub-milestone-from-q4-2023",
+    "slug": "full-disclosure-dehubs-comprehensive-transparency-reports",
     "excerpt": "A quick overview of exciting updates coming before the end of 2023, including Streaming, Arcade, Shop, and more.",
     "content": "",
     "bannerImage": "/media/131924d4-97f2-468e-9b52-cbf384e718ea.png",
@@ -1770,7 +1770,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-52-smarter-liquidity-au",
     "title": "Smarter Liquidity: Automated Liquidity Provision on DEXs",
-    "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023",
+    "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs",
     "excerpt": "Liquidity management moved out of the contract and into a rules-based process — the opposite of where it lived when it broke everything.",
     "content": "",
     "bannerImage": "/media/milestone-auto-liquidity-banner.jpg",
@@ -1795,7 +1795,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-51-open-and-clear-dex-p",
     "title": "Open and Clear: DEX Policy Implementation and Transparency Commitment",
-    "slug": "open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023",
+    "slug": "open-and-clear-dex-policy-implementation-and-transparency-commitment",
     "excerpt": "A published, specific DEX policy — written so that the next person handling treasury cannot quietly do something different.",
     "content": "",
     "bannerImage": "/media/milestone-dex-policy-banner.jpg",
@@ -1820,7 +1820,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-50-prioritizing-princip",
     "title": "Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
-    "slug": "prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023",
+    "slug": "prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization",
     "excerpt": "We asked to be delisted. Projects do not usually do that, and the reasoning was practical as well as ideological.",
     "content": "",
     "bannerImage": "/media/milestone-gate-delisting-banner.jpg",
@@ -1867,7 +1867,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-49-paving-the-way-frame",
     "title": "Paving the Way: Framework for Community-Driven Forks",
-    "slug": "paving-the-way-framework-for-community-driven-forks---a-dehub-milestone-from-q3-2023",
+    "slug": "paving-the-way-framework-for-community-driven-forks",
     "excerpt": "After one fork went well, we wrote down how it should go — so the next group is not negotiating from scratch.",
     "content": "",
     "bannerImage": "/media/milestone-fork-framework-banner.jpg",
@@ -1892,7 +1892,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-48-decentralization-in-",
     "title": "Decentralization in Practice: The Fan.site Fork Story",
-    "slug": "decentralization-in-practice-the-fansite-fork-story---a-dehub-milestone-from-q3-2023",
+    "slug": "decentralization-in-practice-the-fansite-fork-story",
     "excerpt": "Large holders forked our app to target the adult market. We did not stop them, and could not have. Here is why we think that is correct.",
     "content": "",
     "bannerImage": "/media/milestone-fork-story-banner.jpg",
@@ -1917,7 +1917,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-47-supporting-growth-kn",
     "title": "Supporting Growth: Knowledge Transfer to Fan.site Team",
-    "slug": "supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023",
+    "slug": "supporting-growth-knowledge-transfer-to-fansite-team",
     "excerpt": "We handed engineering knowledge to the team that forked us. The alternative was a worse product carrying our code and our holders.",
     "content": "",
     "bannerImage": "/media/milestone-knowledge-transfer-banner.jpg",
@@ -1942,7 +1942,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-45-protecting-innovatio",
     "title": "Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
-    "slug": "protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023",
+    "slug": "protecting-innovation-patent-applications-for-streaming-watch2earn-tech",
     "excerpt": "Patent applications on the streaming and watch-to-earn mechanics — filed by a team that also open-sources, which needs explaining.",
     "content": "",
     "bannerImage": "/media/milestone-patents-banner.jpg",
@@ -2017,7 +2017,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-39-the-vision-unfolds-a",
     "title": "The Vision Unfolds: Test Beta Launch of the DeHub d'App",
-    "slug": "the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp---a-dehub-milestone-from-q1-2023",
+    "slug": "the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp",
     "excerpt": "A Q1 2023 milestone from DeHub's roadmap: Alpha launch of complete d'app integrating all ecosystem components.",
     "content": "",
     "bannerImage": "/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png",
@@ -2042,7 +2042,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-42-back-in-action-dehub",
     "title": "Back in Action: DeHub V2 Trading Resumes on Gate.io",
-    "slug": "back-in-action-dehub-v2-trading-resumes-on-gateio---a-dehub-milestone-from-q1-2023",
+    "slug": "back-in-action-dehub-v2-trading-resumes-on-gateio",
     "excerpt": "Trading resumed on Gate.io after the v2 relaunch. Ten months later we left voluntarily — both decisions are in this archive.",
     "content": "",
     "bannerImage": "/media/milestone-gate-resume-banner.jpg",
@@ -2067,7 +2067,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-41-insights-for-creator",
     "title": "Insights for Creators: Advanced Analytics Dashboard Development Begins",
-    "slug": "insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023",
+    "slug": "insights-for-creators-advanced-analytics-dashboard-development-begins",
     "excerpt": "Work started on creator analytics in Q1 2023. On a platform paying out 90% on-chain, the numbers have to reconcile with the chain exactly.",
     "content": "",
     "bannerImage": "/media/milestone-analytics-banner.jpg",
@@ -2092,7 +2092,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-40-creator-economy-reim",
     "title": "Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
-    "slug": "creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023",
+    "slug": "creator-economy-reimagined-tokenized-uploads-90-ad-revenue-share",
     "excerpt": "Creators keep 90% of ad revenue, settled on-chain. The number is the easy part — making it structural rather than promotional is not.",
     "content": "",
     "bannerImage": "/media/milestone-tokenized-uploads-banner.jpg",
@@ -2139,7 +2139,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-38-stability-first-adop",
     "title": "Stability First: Adopting Standard ERC20 Tokenomics",
-    "slug": "stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022",
+    "slug": "stability-first-adopting-standard-erc20-tokenomics",
     "excerpt": "No tax triggers, no reflections, nothing in the transfer path. The boring choice, made immediately after the interesting one broke.",
     "content": "",
     "bannerImage": "/media/milestone-erc20-banner.jpg",
@@ -2164,7 +2164,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-37-moving-forward-succe",
     "title": "Moving Forward: Successful Migration of 25,000+ Holders to V2",
-    "slug": "moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022",
+    "slug": "moving-forward-successful-migration-of-25000-holders-to-v2",
     "excerpt": "Moving 25,000+ holders onto a new contract, after a failure that was ours, at the point where we had the least credibility to ask anything of them.",
     "content": "",
     "bannerImage": "/media/milestone-v2-migration-banner.jpg",
@@ -2189,7 +2189,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-36-the-unforeseen-navig",
     "title": "The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
-    "slug": "the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022",
+    "slug": "the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch",
     "excerpt": "The contract's tax triggers malfunctioned and froze both the token and our liquidity pool. There was no fix short of relaunching.",
     "content": "",
     "bannerImage": "/media/milestone-contract-malfunction-banner.jpg",
@@ -2214,7 +2214,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-35-trust-and-transparen",
     "title": "Trust and Transparency: On-Chain Verified Raffle Mechanics",
-    "slug": "trust-and-transparency-on-chain-verified-raffle-mechanics---a-dehub-milestone-from-q3-2022",
+    "slug": "trust-and-transparency-on-chain-verified-raffle-mechanics",
     "excerpt": "The verification layer built for a $1,000,000 raffle — including the part that proved the draw could not be run.",
     "content": "",
     "bannerImage": "/media/milestone-raffle-mechanics-banner.jpg",
@@ -2239,7 +2239,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-34-strategic-alliances-",
     "title": "Strategic Alliances: Partnering with Real Estate and Legal Experts",
-    "slug": "strategic-alliances-partnering-with-real-estate-and-legal-experts---a-dehub-milestone-from-q3-2022",
+    "slug": "strategic-alliances-partnering-with-real-estate-and-legal-experts",
     "excerpt": "The advisers behind the property venture. They did not save it — but they are the reason it ended cleanly rather than badly.",
     "content": "",
     "bannerImage": "/media/milestone-alliances-banner.jpg",
@@ -2264,7 +2264,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-33-ambitious-ventures-t",
     "title": "Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
-    "slug": "ambitious-ventures-the-palawan-real-estate-tokenization-attempt---a-dehub-milestone-from-q3-2022",
+    "slug": "ambitious-ventures-the-palawan-real-estate-tokenization-attempt",
     "excerpt": "Power of attorney over islands and a sea-front strip worth $15m+, and a plan to tokenise the sales. The Philippine SEC ended it.",
     "content": "",
     "bannerImage": "/media/milestone-palawan-banner.jpg",
@@ -2289,7 +2289,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-32-dream-big-the-1m-hom",
     "title": "Dream Big: The $1M Home Crypto Raffle by DeHub",
-    "slug": "dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022",
+    "slug": "dream-big-the-1m-home-crypto-raffle-by-dehub",
     "excerpt": "A $1,000,000 house, 15,000+ participants, and a raffle that did not hit its minimum. Everyone was refunded and the NFT kept its place in the app.",
     "content": "",
     "bannerImage": "/media/milestone-home-raffle-banner.jpg",
@@ -2314,7 +2314,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-31-empowering-creators-",
     "title": "Empowering Creators: DeHub NFT Marketplace with Royalties",
-    "slug": "empowering-creators-dehub-nft-marketplace-with-royalties---a-dehub-milestone-from-q2-2022",
+    "slug": "empowering-creators-dehub-nft-marketplace-with-royalties",
     "excerpt": "A marketplace where royalties are enforced by the contract rather than requested by the marketplace. In 2022 that distinction was about to matter enormously.",
     "content": "",
     "bannerImage": "/media/milestone-nft-marketplace-banner.jpg",
@@ -2339,7 +2339,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-30-efficient-streaming-",
     "title": "Efficient Streaming: Advanced Video Compression Reduces Costs",
-    "slug": "efficient-streaming-advanced-video-compression-reduces-costs---a-dehub-milestone-from-q2-2022",
+    "slug": "efficient-streaming-advanced-video-compression-reduces-costs",
     "excerpt": "A 60% cut in bandwidth costs. Unglamorous, invisible to users, and the reason the streaming product was viable at all.",
     "content": "",
     "bannerImage": "/media/milestone-compression-banner.jpg",
@@ -2364,7 +2364,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-29-building-bridges-phi",
     "title": "Building Bridges: Philippine SEC Registration Secured",
-    "slug": "building-bridges-philippine-sec-registration-secured---a-dehub-milestone-from-q2-2022",
+    "slug": "building-bridges-philippine-sec-registration-secured",
     "excerpt": "SEC registration in the Philippines for real estate, construction and brokerage. It was necessary, it was slow, and it was not sufficient.",
     "content": "",
     "bannerImage": "/media/milestone-sec-banner.jpg",
@@ -2389,7 +2389,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-28-the-chads-arrive-gen",
     "title": "The Chads Arrive: Genesis Mint of the Chads NFT Collection",
-    "slug": "the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022",
+    "slug": "the-chads-arrive-genesis-mint-of-the-chads-nft-collection",
     "excerpt": "The genesis mint of the Chads. What the collection was for, and what we would not do again.",
     "content": "",
     "bannerImage": "/media/milestone-chads-banner.jpg",
@@ -2414,7 +2414,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-27-lights-camera-blockc",
     "title": "Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
-    "slug": "lights-camera-blockchain-dehubs-first-tokenized-documentary---a-dehub-milestone-from-q2-2022",
+    "slug": "lights-camera-blockchain-dehubs-first-tokenized-documentary",
     "excerpt": "A documentary by Luke Barnatt featuring Jorge Masvidal and Brad Pickett — and the first time we tokenised something that already had an audience.",
     "content": "",
     "bannerImage": "/media/milestone-documentary-banner.jpg",
@@ -2439,7 +2439,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-26-crystal-clear-dehub-",
     "title": "Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
-    "slug": "crystal-clear-dehub-stream-app-with-4k-support--high-uptime---a-dehub-milestone-from-q2-2022",
+    "slug": "crystal-clear-dehub-stream-app-with-4k-support-high-uptime",
     "excerpt": "4K streaming at 99.9% uptime. The uptime figure was the difficult one, and it is the one creators actually judged us on.",
     "content": "",
     "bannerImage": "/media/milestone-4k-streams-banner.jpg",
@@ -2464,7 +2464,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-25-powering-play-dehubs",
     "title": "Powering Play: DeHub's Custom Mobile Game Engine",
-    "slug": "powering-play-dehubs-custom-mobile-game-engine---a-dehub-milestone-from-q1-2022",
+    "slug": "powering-play-dehubs-custom-mobile-game-engine",
     "excerpt": "Building our own engine is normally the wrong answer. Here is the specific reason it was not, and what it cost us.",
     "content": "",
     "bannerImage": "/media/milestone-game-engine-banner.jpg",
@@ -2489,7 +2489,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-24-challenge-accepted-s",
     "title": "Challenge Accepted: Social Features and Friend Challenges Arrive",
-    "slug": "challenge-accepted-social-features-and-friend-challenges-arrive---a-dehub-milestone-from-q1-2022",
+    "slug": "challenge-accepted-social-features-and-friend-challenges-arrive",
     "excerpt": "Friend challenges, built deliberately as a light layer over solo play rather than a competitive mode — because that is what the data said people wanted.",
     "content": "",
     "bannerImage": "/media/milestone-challenges-banner.jpg",
@@ -2514,7 +2514,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-23-on-chain-glory-block",
     "title": "On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
-    "slug": "on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022",
+    "slug": "on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade",
     "excerpt": "Once a score decides a reward, the score is a financial record. It has to be checkable by the person who came second.",
     "content": "",
     "bannerImage": "/media/milestone-leaderboards-banner.jpg",
@@ -2539,7 +2539,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-22-high-score-dehub-gam",
     "title": "High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
-    "slug": "high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022",
+    "slug": "high-score-dehub-gaming-hits-5000-monthly-active-users",
     "excerpt": "5,000 monthly active gamers in the arcade's first quarter. The number that mattered was how many came back on quiet days.",
     "content": "",
     "bannerImage": "/media/milestone-5000-players-banner.jpg",
@@ -2564,7 +2564,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-21-level-up-dehub-arcad",
     "title": "Level Up: DeHub Arcade Launches with 5 Games & Predictions",
-    "slug": "level-up-dehub-arcade-launches-with-5-games--predictions---a-dehub-milestone-from-q1-2022",
+    "slug": "level-up-dehub-arcade-launches-with-5-games-predictions",
     "excerpt": "Five games — Super Robin Hood and Tomb Runner among them — plus predictions, shipped as one arcade rather than five separate apps.",
     "content": "",
     "bannerImage": "/media/milestone-arcade-launch-banner.jpg",
@@ -2589,7 +2589,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-20-strength-in-numbers-",
     "title": "Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
-    "slug": "strength-in-numbers-dehub-community-exceeds-8000-active-members---a-dehub-milestone-from-q4-2021",
+    "slug": "strength-in-numbers-dehub-community-exceeds-8000-active-members",
     "excerpt": "Past 8,000 active members — in the same quarter the chart was manipulated by our own listing agent. That is when a community is actually tested.",
     "content": "",
     "bannerImage": "/media/milestone-8000-members-banner.jpg",
@@ -2614,7 +2614,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-19-fair-play-provably-f",
     "title": "Fair Play: Provably Fair Randomization in DeHub Games",
-    "slug": "fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021",
+    "slug": "fair-play-provably-fair-randomization-in-dehub-games",
     "excerpt": "The test is not whether we picked the winner. It is whether we could have. Provable fairness is what makes that question answerable.",
     "content": "",
     "bannerImage": "/media/milestone-provably-fair-banner.jpg",
@@ -2639,7 +2639,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-18-trials-and-tribulati",
     "title": "Trials and Tribulations: The Gate.io Listing Agent Incident",
-    "slug": "trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021",
+    "slug": "trials-and-tribulations-the-gateio-listing-agent-incident",
     "excerpt": "Our listing agent took the fundraise and dumped our chart instead of airdropping Gate users. Gate investigated, apologised, and said the records were lost.",
     "content": "",
     "bannerImage": "/media/milestone-gate-incident-banner.jpg",
@@ -2664,7 +2664,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-17-to-the-moon-gateio-l",
     "title": "To the Moon: Gate.io Listing and $10M LP Milestone",
-    "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021",
+    "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone",
     "excerpt": "A near-1000x run, close to $10m in the pool, and a Gate.io listing. This is the high point — and it is inseparable from what happened during it.",
     "content": "",
     "bannerImage": "/media/milestone-gate-listing-banner.jpg",
@@ -2689,7 +2689,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-16-game-on-dehub-launch",
     "title": "Game On: DeHub Launches Prediction and Raffle Games",
-    "slug": "game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021",
+    "slug": "game-on-dehub-launches-prediction-and-raffle-games",
     "excerpt": "Predictions and raffles were the first things on DeHub where the outcome had to be provable, not promised.",
     "content": "",
     "bannerImage": "/media/milestone-prediction-games-banner.jpg",
@@ -2714,7 +2714,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-15-global-reach-dehub-t",
     "title": "Global Reach: DeHub Team Grows to 15 Strong",
-    "slug": "global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021",
+    "slug": "global-reach-dehub-team-grows-to-15-strong",
     "excerpt": "Fifteen people across three time zones. The distribution was the point, and it came with costs worth naming.",
     "content": "",
     "bannerImage": "/media/milestone-team-15-banner.jpg",
@@ -2739,7 +2739,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-14-fortifying-our-walls",
     "title": "Fortifying Our Walls: V1 Security Hardened with Certik Audit",
-    "slug": "fortifying-our-walls-v1-security-hardened-with-certik-audit---a-dehub-milestone-from-q3-2021",
+    "slug": "fortifying-our-walls-v1-security-hardened-with-certik-audit",
     "excerpt": "A full Certik audit after a v1 vulnerability. Worth being precise about what an audit does and does not buy you.",
     "content": "",
     "bannerImage": "/media/milestone-certik-banner.jpg",
@@ -2764,7 +2764,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-13-rewarding-loyalty-au",
     "title": "Rewarding Loyalty: Automatic Airdrop for All Holders",
-    "slug": "rewarding-loyalty-automatic-airdrop-for-all-holders---a-dehub-milestone-from-q3-2021",
+    "slug": "rewarding-loyalty-automatic-airdrop-for-all-holders",
     "excerpt": "Every v1 holder was made whole 1:1, automatically, with no claim page and no deadline. This is what the security fix looked like from the holder side.",
     "content": "",
     "bannerImage": "/media/milestone-auto-airdrop-banner.jpg",
@@ -2789,7 +2789,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-12-building-for-all-app",
     "title": "Building for All: App Rebuild with React Native",
-    "slug": "building-for-all-app-rebuild-with-react-native---a-dehub-milestone-from-q3-2021",
+    "slug": "building-for-all-app-rebuild-with-react-native",
     "excerpt": "The beta proved people wanted it. Rebuilding the whole app in React Native was the admission that the beta could not carry them.",
     "content": "",
     "bannerImage": "/media/milestone-react-native-banner.jpg",
@@ -2814,7 +2814,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-11-a-new-era-the-rebran",
     "title": "A New Era: The Rebranding to DeHub",
-    "slug": "a-new-era-the-rebranding-to-dehub---a-dehub-milestone-from-q3-2021",
+    "slug": "a-new-era-the-rebranding-to-dehub",
     "excerpt": "A rename is usually cosmetic. This one was an argument about what we were building, settled in public.",
     "content": "",
     "bannerImage": "/media/milestone-rebrand-banner.jpg",
@@ -2839,7 +2839,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-10-navigating-challenge",
     "title": "Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
-    "slug": "navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021",
+    "slug": "navigating-challenges-addressing-a-v1-smart-contract-security-issue",
     "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Smart contract security issue discovered.",
     "content": "",
     "bannerImage": "/media/milestone-v1-security-banner.jpg",
@@ -2864,7 +2864,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-7-diving-in-first-dehu",
     "title": "Diving In: First DeHub Liquidity Pools on Pancake Swap",
-    "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021",
+    "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap",
     "excerpt": "The community had already voted on the chain, the price, the supply and the market cap. PancakeSwap is where those decisions became real.",
     "content": "",
     "bannerImage": "/media/milestone-pancake-pools-banner.jpg",
@@ -2889,7 +2889,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-6-power-to-the-people-",
     "title": "Power to the People: Community Governed Listings",
-    "slug": "power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021",
+    "slug": "power-to-the-people-community-governed-listings",
     "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Community governed listing chain, price / market cap.",
     "content": "",
     "bannerImage": "/media/milestone-governed-listings-banner.jpg",
@@ -2914,7 +2914,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-2-early-traction-dehub",
     "title": "Early Traction: DeHub's Alpha App Hits 2,000 DAUs",
-    "slug": "early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021",
+    "slug": "early-traction-dehubs-beta-app-hits-2000-daus",
     "excerpt": "500 testers, 2,000 people opening the app every day, and no token yet. The order we did that in explains most of what came after.",
     "content": "",
     "bannerImage": "/media/milestone-2000-daus-banner.jpg",
@@ -2939,7 +2939,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-3-listening-to-our-use",
     "title": "Listening to Our Users: 50+ Interviews Shape DeHub",
-    "slug": "listening-to-our-users-50-interviews-shape-dehub---a-dehub-milestone-from-q1-2021",
+    "slug": "listening-to-our-users-50-interviews-shape-dehub",
     "excerpt": "We sat down with more than 50 users one at a time. Several features we were certain about did not survive the conversations.",
     "content": "",
     "bannerImage": "/media/milestone-interviews-banner.jpg",
@@ -2986,7 +2986,7 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-milestone-1-building-the-dream-d",
     "title": "Building the Dream: DeHub's Core Team Assembled",
-    "slug": "building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021",
+    "slug": "building-the-dream-dehubs-core-team-assembled",
     "excerpt": "A Q1 2021 milestone from DeHub's roadmap: Assembled core development team.",
     "content": "",
     "bannerImage": "/media/milestone-core-team-banner.jpg",

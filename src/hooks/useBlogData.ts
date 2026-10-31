@@ -71,7 +71,7 @@ export const useBlogData = () => {
           publishedAt: '2024-10-30T12:00:00.000Z'
         };
       }
-      if (post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025') {
+      if (post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers') {
         return {
           ...post,
           title: _copy("copy.908faafd71bb", { defaultValue: "Scaling New Heights: Livepeer Integration for initially 50k+ Concurrent Viewers With Unlimited Viewer abilities as we scale up." })
