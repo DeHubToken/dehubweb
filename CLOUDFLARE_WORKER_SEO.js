@@ -40,7 +40,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
-import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
+import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES, cleanBlogSlug } from './src/lib/blog-redirects.js';
 import { STREAM_LINKS, STREAM_PAGE, streamFaqLd } from './src/lib/streamer-page.js';
 import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd } from './src/lib/dehub-app-page.js';
 
@@ -616,16 +616,59 @@ function absolutize(url) {
 }
 
 /**
- * A blog post's share card. The renderer answers a 0.5–0.85 MB PNG in up to
- * 1.7 s on every uncached scrape, and scrapers time out on that. The card is
- * served through the image transform instead — 1200x630 JPEG, cached at the
- * edge — reading the render via the same-zone relay (ogSourceResponse), since
- * the transform refuses the Supabase origin. The slug is the whole address:
- * the relay rebuilds the renderer URL from the manifest, so the transform
- * never has to carry a query string.
+ * A blog post's share card: the post's own banner, made a true 1200x630 JPEG
+ * by the image transform and cached at the edge. Every post ships a banner
+ * drawn with the house banner kit (see src/test/blog-share-cards.test.ts), so
+ * this is the post's own art, not a generic card.
+ *
+ * The banner is read straight from /media on this zone. It used to go through
+ * the blog-share-image renderer, which only drew the same banner full-bleed and
+ * took up to 1.7 s on every uncached scrape; reading the file is the same
+ * picture without the round trip.
+ *
+ * A banner already near 1.91:1 is cropped to fill. Anything wider (a 3:1 strip),
+ * taller or square is padded onto near-black instead, because cropping those
+ * cut the headline printed on them in half. The generator records each
+ * banner's pixel size in the manifest for this.
+ *
+ * No banner at all, or one on another host: the relay through the renderer
+ * (ogSourceResponse), which still covers both.
  */
+const BLOG_CARD_PAD = 'fit=pad,width=1200,height=630,background=%230a0a0b,format=jpeg,quality=82';
 function buildBlogShareImage(post) {
+  const banner = absolutize(post.bannerImage);
+  if (banner && banner.startsWith(`${APP_URL}/media/`)) {
+    const w = Number(post.bannerWidth), h = Number(post.bannerHeight);
+    const ratio = w > 0 && h > 0 ? w / h : 1200 / 630;
+    const fit = ratio >= 1.75 && ratio <= 2.05 ? CARD_COVER : BLOG_CARD_PAD;
+    return `${IMAGE_TRANSFORM_BASE}${fit}/${banner}`;
+  }
   return `${IMAGE_TRANSFORM_BASE}${CARD_COVER}/${APP_URL}${OG_SOURCE_PREFIX}blog/${encodeURIComponent(post.slug)}`;
+}
+
+/**
+ * Meta description cut to what a results page shows (~160 characters) at a
+ * word boundary, so it never ends mid-word. og:description keeps the longer
+ * text: chat and timeline cards show more.
+ */
+function snippet(text, max = 160) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,;:.\-–—]+$/, '')}…`;
+}
+
+/**
+ * <title> for a post. The 64 milestone posts carry "<headline> | DeHub 2024
+ * Roadmap", which runs past the ~60 characters a results page shows and cut
+ * off the brand; those drop to "<headline> | DeHub".
+ */
+function blogTitle(post) {
+  const title = post.seoTitle || `${post.title} — DeHub Blog`;
+  if (title.length <= 60) return title;
+  const short = title.replace(/\s*\|\s*DeHub \d{4} Roadmap$/, ' | DeHub');
+  return short.length < title.length ? short : title;
 }
 
 /** The renderer URL behind a post's card (see buildBlogShareImage). */
@@ -779,28 +822,50 @@ function postVideoLd(contentHtml, post) {
   };
 }
 
-function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
+function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
   const image = buildBlogShareImage(post);
-  const title = post.seoTitle || `${post.title} — DeHub Blog`;
-  const description = (post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+  const title = blogTitle(post);
+  const longDescription = (post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`).replace(/\s+/g, ' ').trim();
+  const description = snippet(longDescription);
+  const ogDescription = snippet(longDescription, 280);
+  const imageAlt = post.bannerImageAlt || post.title;
   const published = post.publishedAt || '';
   const modified = post.updatedAt || published;
   const banner = absolutize(post.bannerImage);
+  const tags = Array.isArray(post.tags) ? post.tags.filter(Boolean) : [];
   const body = contentHtml
     ? contentHtml
     : `<p>${escHtml(post.excerpt || '')}</p><p><a href="${escHtml(canonicalUrl)}">Read the full post on DeHub</a></p>`;
+  const bannerDims = post.bannerWidth && post.bannerHeight
+    ? ` width="${Number(post.bannerWidth)}" height="${Number(post.bannerHeight)}"`
+    : '';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Article',
-        headline: post.title,
-        description,
-        image: banner ? [banner, image] : [image],
+        '@type': 'BlogPosting',
+        '@id': `${canonicalUrl}#article`,
+        headline: post.title.slice(0, 110),
+        description: longDescription.slice(0, 300),
+        image: [
+          { '@type': 'ImageObject', url: image, width: 1200, height: 630, caption: imageAlt },
+          ...(banner ? [{
+            '@type': 'ImageObject',
+            url: banner,
+            ...(post.bannerWidth && post.bannerHeight ? { width: Number(post.bannerWidth), height: Number(post.bannerHeight) } : {}),
+            caption: imageAlt,
+          }] : []),
+        ],
         ...(published ? { datePublished: published, dateModified: modified } : {}),
         author: blogAuthorLd(post.author),
         publisher: ORG_JSONLD,
+        inLanguage: 'en',
+        url: canonicalUrl,
         mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+        isPartOf: { '@type': 'Blog', '@id': `${APP_URL}/docs/blog#blog`, name: 'DeHub Blog', url: `${APP_URL}/docs/blog` },
+        ...(tags.length ? { keywords: tags.join(', '), articleSection: tags[0] } : {}),
+        ...(wordCount ? { wordCount } : {}),
+        ...(post.readingTime ? { timeRequired: `PT${Number(post.readingTime)}M` } : {}),
       },
       breadcrumbLd([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: post.title, url: canonicalUrl }]),
     ],
@@ -809,12 +874,15 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
   const video = postVideoLd(contentHtml, post);
   if (video) jsonLd['@graph'].push({ ...video, '@id': `${canonicalUrl}#video` });
+  const tagMeta = tags.slice(0, 10).map((t) => `<meta property="article:tag" content="${escHtml(t)}">`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escHtml(title)}</title>
 <meta name="description" content="${escHtml(description)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="article">
@@ -822,30 +890,38 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 ${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
-<meta property="og:description" content="${escHtml(description)}">
+<meta property="og:description" content="${escHtml(ogDescription)}">
 <meta property="og:image" content="${escHtml(image)}">
+<meta property="og:image:secure_url" content="${escHtml(image)}">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${escHtml(post.title)}">
+<meta property="og:image:alt" content="${escHtml(imageAlt)}">
 <meta property="article:published_time" content="${escHtml(published)}">
 <meta property="article:modified_time" content="${escHtml(modified)}">
 <meta property="article:author" content="${escHtml(post.author || 'DeHub Team')}">
+<meta property="article:section" content="Blog">
+${tagMeta}
+<meta name="author" content="${escHtml(post.author || 'DeHub Team')}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escHtml(title)}">
-<meta name="twitter:description" content="${escHtml(description)}">
+<meta name="twitter:description" content="${escHtml(ogDescription)}">
 <meta name="twitter:image" content="${escHtml(image)}">
+<meta name="twitter:image:alt" content="${escHtml(imageAlt)}">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
+<nav aria-label="Breadcrumb"><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></nav>
+<main>
 <article>
 <h1>${escHtml(post.title)}</h1>
-<p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — ${escHtml(published.slice(0, 10))}` : ''}</em></p>
-${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(post.bannerImageAlt || post.title)}" style="max-width:100%">` : ''}
+<p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
+${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(imageAlt)}"${bannerDims} fetchpriority="high" decoding="async" style="max-width:100%;height:auto">` : ''}
 <!--hl-body-->${body}<!--/hl-body-->
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
+</main>
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -867,18 +943,30 @@ function buildBlogIndexHtml(manifest) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
+    '@id': `${canonicalUrl}#blog`,
     name: 'DeHub Blog',
     description: blogDescription,
     url: canonicalUrl,
+    inLanguage: 'en',
     image: shareImage('blog'),
     publisher: ORG_JSONLD,
+    // The newest posts, so the index says what it holds as well as linking it.
+    blogPost: posts.slice(0, 20).map((p) => ({
+      '@type': 'BlogPosting',
+      headline: String(p.title || '').slice(0, 110),
+      url: `${APP_URL}/guides/${encodeURIComponent(p.slug)}`,
+      ...(p.publishedAt ? { datePublished: p.publishedAt } : {}),
+      image: buildBlogShareImage(p),
+    })),
   };
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>DeHub Blog — News, Guides &amp; Product Updates</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="${escHtml(blogDescription)} ${posts.length} posts and counting.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="${canonicalUrl}">
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="website">
@@ -6046,6 +6134,13 @@ async function handleRequest(request, env, ctx) {
     // Thin standalone guides folded into the flagship post on the same query.
     const consolidatedInto = CONSOLIDATED_GUIDES[trimmedPath.slice('/guides/'.length)];
     if (consolidatedInto) return redirect301(`${APP_URL}/guides/${consolidatedInto}`);
+    // Long generated slugs now publish under a clean one; the old URL keeps
+    // working and passes on what it earned. See cleanBlogSlug.
+    const guideSlug = trimmedPath.slice('/guides/'.length);
+    const cleanGuideSlug = cleanBlogSlug(guideSlug);
+    if (cleanGuideSlug && cleanGuideSlug !== guideSlug && !guideSlug.includes('/')) {
+      return redirect301(`${APP_URL}/guides/${cleanGuideSlug}`);
+    }
   }
 
   // /docs/blog/<slug> is a second address for every post: the SPA mounts it
@@ -6053,7 +6148,11 @@ async function handleRequest(request, env, ctx) {
   // /guides/<slug>. It answered crawlers 200 with a canonical to the /guides
   // twin, which still costs a crawl per post and splits links between the two.
   const docsBlogPost = trimmedPath.match(/^\/docs\/blog\/([^/]+)$/);
-  if (docsBlogPost) return redirect301(`${APP_URL}/guides/${docsBlogPost[1]}`);
+  // One hop, straight to the address the post lives at now.
+  if (docsBlogPost) {
+    const target = MILESTONE_REDIRECTS[docsBlogPost[1]] || cleanBlogSlug(docsBlogPost[1]) || docsBlogPost[1];
+    return redirect301(`${APP_URL}/guides/${target}`);
+  }
 
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
   // so both resolved somewhere a human can never land: /radio is in
@@ -6635,6 +6734,7 @@ async function handleRequest(request, env, ctx) {
     let legacySlug = legacyBlog[1];
     try { legacySlug = decodeURIComponent(legacySlug); } catch { /* keep raw */ }
     const manifest = await getBlogManifest(request, env);
+    legacySlug = MILESTONE_REDIRECTS[legacySlug] || cleanBlogSlug(legacySlug);
     const target = manifest.has(legacySlug)
       ? `${APP_URL}/guides/${encodeURIComponent(legacySlug)}`
       : `${APP_URL}/docs/blog`;
@@ -6685,7 +6785,7 @@ async function handleRequest(request, env, ctx) {
     if (post) {
       const canonical = `${APP_URL}/guides/${encodeURIComponent(slug)}`;
       const content = await getBlogContent(request, env, slug);
-      return guard(new Response(buildBlogHtml(post, canonical, content && content.html, manifest), {
+      return guard(new Response(buildBlogHtml(post, canonical, content && content.html, manifest, content && content.wordCount), {
         status: 200,
         headers: blogHeaders,
       }));
