@@ -2857,6 +2857,20 @@
     "anonymousLikes_one": "{{count}} jeclaansho oo ka timid haystaha calaamad qarsoon",
     "anonymousLikes_other": "{{count}} jeclaansho oo ka yimid haystayaasha calaamado qarsoon"
   },
+  "mintChain": {
+    "title": "MINT POST",
+    "subtitle": "Dooro silsilad. qiimayaashu waa nool yihiin oo cusbooneysiiyaan daqiiqad kasta.",
+    "free": "Bilaash",
+    "gasCovered": "Gaas oo daboolka ka qaaday DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gaaska waxaa ka mid ah",
+    "gasIncluded": "Gaaska waxaa ka mid ah",
+    "gasOnly": "≈ {{usd}} gaas",
+    "paidFromWallet": "{{amount}} ka boorsadaada",
+    "paidFromWalletPlain": "Lacag laga bixiyay boorsadaada",
+    "priceUnavailable": "Qiimaha aan la heli karin",
+    "confirm": "Mint ee {{chain}}",
+    "notAvailable": "Minting on silsiladdan weli lama heli karo."
+  },
   "postInfo": {
     "title": "Macluumaadka qoraalka",
     "tokenId": "Aqoonsiga Token-ka",

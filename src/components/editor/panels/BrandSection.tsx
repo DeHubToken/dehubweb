@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import { useBrandStore, hasBrand } from '@/store/editorBrandStore';
 import { useEditorStore } from '@/store/editorStore';
 import { FontPicker } from '@/components/editor/FontPicker';
-import { applyBrand, addBrandLogo } from '@/lib/editor/brand';
+import { applyBrand, addBrandLogo, applyDehubBrand } from '@/lib/editor/brand';
 import { PanelHeading } from './DesignPanel';
 
 export function BrandSection() {
@@ -32,6 +32,17 @@ export function BrandSection() {
     <>
       <PanelHeading className="mt-5">{t('editor.brand.heading')}</PanelHeading>
       <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+        <button
+          type="button"
+          onClick={async () => {
+            const n = await applyDehubBrand();
+            toast.success(t('editor.brand.dehubApplied', { count: n, defaultValue: 'DeHub brand applied to {{count}} layers.' }));
+          }}
+          className="flex min-h-9 w-full items-center justify-center gap-1.5 rounded-lg bg-white px-3 text-xs font-semibold text-black transition hover:bg-white/90"
+        >
+          <Wand2 className="h-3.5 w-3.5" /> {t('editor.brand.dehubApply', { defaultValue: 'Use the DeHub brand' })}
+        </button>
+        <p className="text-[10px] text-white/45">{t('editor.brand.dehubHint', { defaultValue: 'Official DeHub colours, Exo and Inter fonts, and the DeHub logo, in one click.' })}</p>
         <BrandPresetLibrary value={kit} onLoad={styles => update(styles)} />
         <div className="flex flex-wrap gap-2">
           <button type="button" className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10" onClick={() => { useEditorStore.getState().updateSettings({ brandStyles: normaliseBrandStyles(kit) }); toast.success(t("editor.brand.stylesSaved", { defaultValue: "Brand styles saved with this design" })); }}>{t("editor.brand.saveStyles", { defaultValue: "Save styles with design" })}</button>

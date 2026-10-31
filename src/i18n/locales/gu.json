@@ -2875,6 +2875,21 @@
     "anonymousLikes_one": "અનામી બેજ ધારક તરફથી {{count}} લાઇક",
     "anonymousLikes_other": "અનામી બેજ ધારકો તરફથી {{count}} લાઇક્સ"
   },
+  "mintChain": {
+    "title": "ટંકશાળની પોસ્ટ",
+    "subtitle": "ચેઇન પસંદ કરો. કિંમતો જીવંત છે અને દર મિનિટે અપડેટ થાય છે.",
+    "free": "મફત",
+    "gasCovered": "ડીહબ દ્વારા આવરી લેવામાં આવેલ ગેસ",
+    "feeIncludesGas": "≈ {{usd}}, ગેસનો સમાવેશ થાય છે",
+    "gasIncluded": "ગેસનો સમાવેશ થાય છે",
+    "gasOnly": "≈ {{usd}} ગેસ",
+    "paidFromWallet": "તમારા વૉલેટમાંથી {{amount}}",
+    "paidFromWalletPlain": "તમારા વૉલેટમાંથી ચૂકવવામાં આવે છે",
+    "priceUnavailable": "કિંમત ઉપલબ્ધ નથી",
+    "confirm": "{{chain}} પર ટંકશાળ",
+    "confirmWithCost": "{{chain}} · {{cost}} પર ટંકશાળ",
+    "notAvailable": "આ સાંકળ પર મિન્ટિંગ હજી સુધી ઉપલબ્ધ નથી."
+  },
   "postInfo": {
     "title": "પોસ્ટ માહિતી",
     "tokenId": "ટોકન ID",

@@ -2874,6 +2874,21 @@
     "anonymousLikes_one": "అనామక బ్యాడ్జ్ హోల్డర్ నుండి {{count}} లైక్",
     "anonymousLikes_other": "అనామక బ్యాడ్జ్ హోల్డర్ల నుండి {{count}} లైక్‌లు"
   },
+  "mintChain": {
+    "title": "మింట్ పోస్ట్",
+    "subtitle": "గొలుసును ఎంచుకోండి. ధరలు ప్రత్యక్షంగా ఉంటాయి మరియు ప్రతి నిమిషం అప్ ‌ డేట్ అవుతాయి.",
+    "free": "ఉచితం",
+    "gasCovered": "DeHub ద్వారా కవర్ చేయబడిన గ్యాస్",
+    "feeIncludesGas": "² {{usd}}, గ్యాస్ చేర్చబడింది",
+    "gasIncluded": "గ్యాస్ చేర్చబడింది",
+    "gasOnly": "³ {{usd}} గ్యాస్",
+    "paidFromWallet": "{{amount}} మీ వాలెట్ నుండి",
+    "paidFromWalletPlain": "మీ వాలెట్ నుండి చెల్లించారు",
+    "priceUnavailable": "ధర అందుబాటులో లేదు",
+    "confirm": "{{chain}} పై మింట్",
+    "confirmWithCost": "పుదీనా {{chain}}{{cost}}",
+    "notAvailable": "ఈ గొలుసుపై మింటింగ్ ఇంకా అందుబాటులో లేదు."
+  },
   "postInfo": {
     "title": "పోస్ట్ సమాచారం",
     "tokenId": "టోకెన్ ID",

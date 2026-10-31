@@ -1700,9 +1700,6 @@
     "tipTokens": "{{amount}} เหรียญ",
     "tokenAmount": "{{amount}} เหรียญ",
     "custom": {
-      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
-      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
-      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "featureLikeNamed": "{{name}}ชอบฟีเจอร์ขอความช่วยเหลือ “{{title}}”",
       "featureLike": "{{name}} เลยชอบคำขอฟีเจอร์ของคุณ",
       "featureReplyNamed": "{{name}} ตอบคุณใน “{{title}}”",
@@ -1722,6 +1719,9 @@
       "fractionOfferRejected": "{{name}} ปฏิเสธข้อเสนอส่วนแบ่งของคุณแล้ว",
       "fractionPurchased": "{{name}} ซื้อส่วนเล็กๆ ของโพสต์ของคุณ",
       "repostedPosts": "{{name}} เปิดใหม่ {{count}} ของโพสต์ของคุณ",
+      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
+      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
+      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "followRequest": "{{name}} ขอให้ตามดูคุณ",
       "bountyReplyNamed": "{{name}} ตอบกลับบอนัสของคุณ “{{title}}”",
       "bountyReply": "{{name}} ตอบคำขอรางวัลของคุณ",
@@ -2818,6 +2818,20 @@
     "likersEmptyBody": "การถูกใจความคิดเห็นนี้สิสะแดงอยู่นี่",
     "anonymousLikes_one": "{{count}} ถูกใจจากผู้ถือแบดจ์ที่บ่เปิดเผยตัวตน",
     "anonymousLikes_other": "{{count}} ถูกใจจากผู้ถือแบดจ์ที่บ่เปิดเผยตัวตน"
+  },
+  "mintChain": {
+    "subtitle": "เลือกสาย. ราคาต่อเนื่องและอัปเดตทุกนาที.",
+    "free": "ฟรี",
+    "gasCovered": "แก๊สที่ครอบคลุมโดย DeHub",
+    "feeIncludesGas": "≈ {{usd}}, รวมแก๊สแล้ว",
+    "gasIncluded": "รวมแก๊ส",
+    "gasOnly": "≈ {{usd}} ก๊าซ",
+    "paidFromWallet": "{{amount}} จากกระเป๋าสตางค์",
+    "paidFromWalletPlain": "จ่ายจากกระเป๋าสตางค์",
+    "priceUnavailable": "ราคาคือไม่สามารถหาได้",
+    "confirm": "มิ้นท์บน {{chain}}",
+    "confirmWithCost": "มิ้นท์บน {{chain}} · {{cost}}",
+    "notAvailable": "ไม่สามารถmintได้บนช่วงนี้"
   },
   "postInfo": {
     "title": "ข้อมูลโพสต์",

@@ -2854,6 +2854,20 @@
     "anonymousLikes_one": "来自匿名徽章持有者的 {{count}} 个赞",
     "anonymousLikes_other": "来自匿名徽章持有者的 {{count}} 个赞"
   },
+  "mintChain": {
+    "title": "新鲜帖子",
+    "subtitle": "选择一条链。价格是实时的，每分钟更新一次。",
+    "free": "免费",
+    "gasCovered": "Gas 由 DeHub 承担",
+    "feeIncludesGas": "≈ {{usd}}，包含 gas",
+    "gasIncluded": "包含 gas",
+    "paidFromWallet": "{{amount}} 来自您的钱包",
+    "paidFromWalletPlain": "从您的钱包支付",
+    "priceUnavailable": "价格不可用",
+    "confirm": "在 {{chain}} 上 Mint",
+    "confirmWithCost": "在 {{chain}} · {{cost}} 上 Mint",
+    "notAvailable": "此链上的 Minting 暂不可用。"
+  },
   "postInfo": {
     "title": "帖子信息",
     "tokenId": "代币ID",

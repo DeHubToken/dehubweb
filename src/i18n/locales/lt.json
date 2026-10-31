@@ -2879,6 +2879,21 @@
     "anonymousLikes_one": "{{count}} patiktukas iš anoniminio ženklelio turėtojo",
     "anonymousLikes_other": "Patiktukai iš anoniminių ženklelių turėtojų: {{count}}"
   },
+  "mintChain": {
+    "title": "Mėtų stulpelis",
+    "subtitle": "Pasirinkite grandinę. Kainos yra galiojančios ir atnaujinamos kiekvieną minutę.",
+    "free": "Nemokamai",
+    "gasCovered": "Dujas dengia „DeHub“",
+    "feeIncludesGas": "≈ {{usd}}, su dujomis",
+    "gasIncluded": "Su dujomis",
+    "gasOnly": "≈ {{usd}} dujos",
+    "paidFromWallet": "{{amount}} iš jūsų piniginės",
+    "paidFromWalletPlain": "Sumokėta iš jūsų piniginės",
+    "priceUnavailable": "Kaina nepasiekiama",
+    "confirm": "Kalykla {{chain}}",
+    "confirmWithCost": "Minėta {{chain}} · {{cost}}",
+    "notAvailable": "Šios grandinės monetų kaldinti dar negalima."
+  },
   "postInfo": {
     "title": "Įrašo informacija",
     "tokenId": "Žetono ID",

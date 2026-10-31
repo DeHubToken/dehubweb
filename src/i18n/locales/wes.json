@@ -2777,6 +2777,17 @@
     "anonymousLikes_one": "{{count}} like from badge holder weh no show imsef",
     "anonymousLikes_other": "{{count}} like dem from badge holder dem weh no show demsef"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pick one chain. Di price dem live and dem dey update every minute.",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}"
+  },
   "postInfo": {
     "title": "Post Info",
     "tokenId": "Tokon ID",
@@ -9589,14 +9600,14 @@
       "colour": "Colour for path",
       "data": "SVG markup or data for path (d)",
       "detail": "Detail for curve",
-      "note": "Add small note for ya invite (if you want)",
       "filled": "Closed geometry wey get fill",
       "hint": "Paste path d data or basic SVG markup like path, rectangle, circle, ellipse, line, polygon. Move, line, cubic, quadratic, smooth, and arc commands fit. SVG matrix, translate, scale, rotate, and skew transformations keep shape same. Shape use your pick color; original fill, stroke, and view box not come. Curves turn to sample draw points. Close path with Z to fill. Separate closed SVG parts can fill together. Many parts turn to group, edit layers; compound holes no support.",
       "insert": "Put geometry wey you fit edit",
       "name": "Name di layer",
       "preview": "How vector path go look",
       "title": "Bring in SVG geometry wey you fit edit",
-      "weight": "Lain weit"
+      "weight": "Lain weit",
+      "note": "Add small note for ya invite (if you want)"
     },
     "symbols": {
       "colour": "Colour",

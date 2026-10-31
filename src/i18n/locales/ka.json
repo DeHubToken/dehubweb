@@ -2889,6 +2889,21 @@
     "anonymousLikes_one": "{{count}} მოწონება ანონიმური ბეჯის მფლობელისგან",
     "anonymousLikes_other": "{{count}} მოწონება ანონიმური ბეჯის მფლობელებისგან"
   },
+  "mintChain": {
+    "title": "პიტნის პოსტი",
+    "subtitle": "აირჩიეთ ჯაჭვი. ფასები გამოქვეყნებულია და განახლდება ყოველ წუთს.",
+    "free": "უფასო",
+    "gasCovered": "გაზზე დაფარულია DeHub",
+    "feeIncludesGas": "≈ {{usd}}, გაზი შედის",
+    "gasIncluded": "შედის გაზი",
+    "gasOnly": "≈ {{usd}} გაზი",
+    "paidFromWallet": "{{amount}} თქვენი საფულიდან",
+    "paidFromWalletPlain": "გადახდილია საფულიდან",
+    "priceUnavailable": "ფასი მიუწვდომელია",
+    "confirm": "პიტნა {{chain}}",
+    "confirmWithCost": "ზარაფხანა {{chain}} · {{cost}}",
+    "notAvailable": "ამ ჯაჭვზე მოჭრა ჯერ არ არის ხელმისაწვდომი."
+  },
   "postInfo": {
     "title": "პოსტის ინფორმაცია",
     "tokenId": "ტოკენის ID",

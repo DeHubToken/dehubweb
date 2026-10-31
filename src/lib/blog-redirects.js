@@ -130,3 +130,31 @@ export const CONSOLIDATED_GUIDES = {
   'best-decentralized-social-media': 'best-decentralised-social-media-platforms-2026',
   'best-web3-social-media-dapps': 'best-decentralised-social-media-platforms-2026',
 };
+
+/**
+ * Short, clean URL for a post whose slug was generated from its full title.
+ * ========================================================================
+ * The milestone archive slugs were built from "<title> - A DeHub Milestone
+ * from Q2 2025", so every one ended in `---a-dehub-milestone-from-q2-2025` and
+ * ran to 80-110 characters, and an ampersand in a title left a doubled dash
+ * behind. Search results cut them off and chats printed them as a wall of
+ * text.
+ *
+ * The source modules keep the long slug as the post's internal key (content,
+ * banners, overrides and the maps above are all keyed by it). The manifest
+ * generator publishes the clean form instead, and the old one stays reachable:
+ *
+ *   scripts/generate-blog-manifest.mjs  renames every post through this, and
+ *                                       fails the build on a collision
+ *   CLOUDFLARE_WORKER_SEO.js            301s a long /guides/ URL to its clean twin
+ *   src/pages/docs/BlogPost.tsx         <Navigate>s the same in the SPA
+ *
+ * A slug that is already clean comes back unchanged, so this is safe to run on
+ * any slug, any number of times.
+ */
+export function cleanBlogSlug(slug) {
+  return String(slug)
+    .replace(/-+a-dehub-milestone-from-q[1-4]-\d{4}$/, '')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '');
+}

@@ -2887,6 +2887,21 @@
     "anonymousLikes_one": "匿名のバッジ保有者からのいいね{{count}}件",
     "anonymousLikes_other": "匿名のバッジ保有者からのいいね{{count}}件"
   },
+  "mintChain": {
+    "title": "ミントポスト",
+    "subtitle": "チェーンを選択してください。価格はライブで、毎分更新されます。",
+    "free": "無料",
+    "gasCovered": "DeHubがカバーするガス",
+    "feeIncludesGas": "≈{{usd}}、ガス込み",
+    "gasIncluded": "ガスが含まれています",
+    "gasOnly": "≈{{usd}}ガス",
+    "paidFromWallet": "お財布から{{amount}}",
+    "paidFromWalletPlain": "ウォレットからお支払い済み",
+    "priceUnavailable": "料金はご利用いただけません",
+    "confirm": "{{chain}}に新品",
+    "confirmWithCost": "{{chain}}に新品・{{cost}}",
+    "notAvailable": "このチェーンでの鋳造はまだ利用できません。"
+  },
   "postInfo": {
     "title": "投稿情報",
     "tokenId": "トークンID",

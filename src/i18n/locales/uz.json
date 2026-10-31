@@ -2888,6 +2888,21 @@
     "anonymousLikes_one": "Anonim nishon egasidan {{count}} ta layk",
     "anonymousLikes_other": "Anonim nishon egalaridan {{count}} ta layk"
   },
+  "mintChain": {
+    "title": "Yalpiz posti",
+    "subtitle": "Tarmoq tanlang. Narxlar jonli va har daqiqada yangilanadi.",
+    "free": "Bepul",
+    "gasCovered": "DeHub tomonidan qoplangan gaz",
+    "feeIncludesGas": "≈ {{usd}}, gaz bilan birga",
+    "gasIncluded": "Gaz kiritilgan",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "hamyoningizdan {{amount}}",
+    "paidFromWalletPlain": "Hamyoningizdan to'langan",
+    "priceUnavailable": "Narxi mavjud emas",
+    "confirm": "{{chain}} da yalpiz",
+    "confirmWithCost": "{{chain}} da yalpiz · {{cost}}",
+    "notAvailable": "Ushbu zanjirda zarb qilish hali mavjud emas."
+  },
   "postInfo": {
     "title": "Post ma'lumoti",
     "tokenId": "Token identifikatori",

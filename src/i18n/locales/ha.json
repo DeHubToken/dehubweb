@@ -2859,6 +2859,21 @@
     "anonymousLikes_one": "So {{count}} daga mai riƙe da lamba da ba a sani ba",
     "anonymousLikes_other": "So {{count}} daga masu riƙe da lamba da ba a sani ba"
   },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Zaɓi sarkar. farashin suna rayuwa kuma suna sabunta kowane minti.",
+    "free": "Kyauta",
+    "gasCovered": "Gas da aka rufe da DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas hada",
+    "gasIncluded": "Gas hada",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} daga walat ka",
+    "paidFromWalletPlain": "Biyan kuɗi daga walat ɗin ku",
+    "priceUnavailable": "Farashin da ba a samu ba",
+    "confirm": "Mint a kan {{chain}}",
+    "confirmWithCost": "Mint a kan {{chain}} · {{cost}}",
+    "notAvailable": "Minting a kan wannan sarkar ba a samuwa ba tukuna."
+  },
   "postInfo": {
     "title": "Bayanan bugu",
     "tokenId": "ID na Token",

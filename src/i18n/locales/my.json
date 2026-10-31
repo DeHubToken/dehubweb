@@ -2876,6 +2876,20 @@
     "anonymousLikes_one": "အမည်မသိ တံဆိပ်ကိုင်ဆောင်သူထံမှ Like {{count}} ခု",
     "anonymousLikes_other": "အမည်မသိ တံဆိပ်ကိုင်ဆောင်သူများထံမှ Like {{count}} ခု"
   },
+  "mintChain": {
+    "title": "Mint ပို့စ်",
+    "subtitle": "ကွင်းဆက်ကိုရွေးချယ်ပါ ။ စျေးနှုန်းများမှာ တိုက်ရိုက်ဖြစ်ပြီး မိနစ်တိုင်းကို အပ်ဒိတ်လုပ်သည် ။",
+    "free": "အခမဲ့",
+    "gasCovered": "DeHub အားဖြင့်ဖုံးလွှမ်းဓာတ်ငွေ့",
+    "feeIncludesGas": "≈ {{usd}}, ဓာတ်ငွေ့ပါဝင်သည်",
+    "gasIncluded": "ဓာတ်ငွေ့ပါဝင်သည်",
+    "gasOnly": "≈ {{usd}} ဂက်စ်",
+    "paidFromWallet": "{{amount}} သင် ၏ ပိုက်ဆံအိတ်မှ",
+    "paidFromWalletPlain": "သင် ၏ ပိုက်ဆံအိတ်မှ ပေးချေသည်",
+    "priceUnavailable": "စျေးနှုန်းမရနိုင်ပါ",
+    "confirm": "{{chain}} အပေါ် Mint",
+    "notAvailable": "ဤကွင်းဆက်တွင် minting ကိုမရရှိနိုင်သေးပါ ။"
+  },
   "postInfo": {
     "title": "ပို့စ်အချက်အလက်",
     "tokenId": "တိုကင် ID",

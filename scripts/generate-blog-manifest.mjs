@@ -27,7 +27,7 @@ import { build } from 'esbuild';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
-import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from '../src/lib/blog-redirects.js';
+import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES, cleanBlogSlug } from '../src/lib/blog-redirects.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
@@ -141,10 +141,61 @@ for (const [from, to] of Object.entries(CONSOLIDATED_GUIDES)) {
   }
 }
 
-const posts = applyManifestDisplayOverrides(kept);
+// Publish every post under its clean slug (see cleanBlogSlug). Everything above
+// this line works on the long source slugs, which stay the internal key; from
+// here on the clean one is the URL. Two posts landing on one clean slug would
+// make one of them unreachable, so that fails the build.
+const renameSlug = (p) => {
+  if (redirectedSlugs.has(p.slug)) return p;
+  const slug = cleanBlogSlug(p.slug);
+  return slug === p.slug ? p : { ...p, slug };
+};
+// Links between posts point at the published address too, so a reader (or a
+// crawler) never takes a redirect hop to get from one post to the next.
+const relinkGuides = (md) => typeof md === 'string'
+  ? md.replace(/(\/guides\/)([a-z0-9-]+)/g, (_, prefix, s) => prefix + (MILESTONE_REDIRECTS[s] || cleanBlogSlug(s)))
+  : md;
+const posts = applyManifestDisplayOverrides(kept)
+  .map(renameSlug)
+  .map((p) => ({ ...p, content: relinkGuides(p.content) }));
+{
+  const owners = new Map();
+  for (const p of posts) {
+    if (owners.has(p.slug)) throw new Error(`[blog-manifest] two posts share the slug ${p.slug}`);
+    owners.set(p.slug, p);
+  }
+}
 const sorted = [...posts].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
 );
+
+// Pixel size of a banner under public/, read from the file header (PNG IHDR or
+// the first JPEG SOF marker). The edge worker uses it to fit the post's own
+// image into a 1200x630 share card: a banner already near that shape is
+// cropped to fill, anything wider, taller or squarer is padded so the text on
+// it is not cut off. Null for anything it cannot read, which the worker treats
+// as "crop to fill".
+function bannerSize(src) {
+  if (!src || !src.startsWith('/')) return null;
+  let buf;
+  try { buf = fs.readFileSync(path.join(PUBLIC, decodeURIComponent(src.split('?')[0]))); } catch { return null; }
+  if (buf.length > 24 && buf.readUInt32BE(0) === 0x89504e47) {
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+  }
+  if (buf[0] === 0xff && buf[1] === 0xd8) {
+    let i = 2;
+    while (i + 9 < buf.length) {
+      if (buf[i] !== 0xff) { i++; continue; }
+      const marker = buf[i + 1];
+      const len = buf.readUInt16BE(i + 2);
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+        return { width: buf.readUInt16BE(i + 7), height: buf.readUInt16BE(i + 5) };
+      }
+      i += 2 + len;
+    }
+  }
+  return null;
+}
 
 // 1. manifest (metadata only — shape consumed by CLOUDFLARE_WORKER_SEO.js)
 const manifest = sorted.map((p) => ({
@@ -158,6 +209,10 @@ const manifest = sorted.map((p) => ({
   updatedAt: p.updatedAt || undefined,
   bannerImage: p.bannerImage || undefined,
   bannerImageAlt: p.bannerImageAlt || undefined,
+  ...(() => {
+    const size = bannerSize(p.bannerImage);
+    return size ? { bannerWidth: size.width, bannerHeight: size.height } : {};
+  })(),
   readingTime: p.readingTime || undefined,
   tags: p.tags && p.tags.length ? p.tags : undefined,
 }));
@@ -203,16 +258,16 @@ for (const p of sorted) {
 import type { BlogPost } from '@/types/blog';
 
 // getPublishedPosts() corpus: overrides applied, published only, newest first.
-export const blogPostsMetadata: BlogPost[] = ${ser(blogData.publishedPosts.map(stripContent))};
+export const blogPostsMetadata: BlogPost[] = ${ser(blogData.publishedPosts.map(renameSlug).map(stripContent))};
 
 // src/data/newPosts.ts array, source order preserved (getNewPostBySlug wins
 // over blogPostsMetadata on slug collisions — same as the old runtime).
 // The /docs/blog list corpus (getAllBlogListPosts) is combined from these two
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
-export const newPostsMetadata: BlogPost[] = ${ser(blogData.newPosts.map(stripContent))};
+export const newPostsMetadata: BlogPost[] = ${ser(blogData.newPosts.map(renameSlug).map(stripContent))};
 
 // getLatestPost() result — docs home hero.
-export const latestPostMetadata: BlogPost | undefined = ${blogData.latestPost ? ser(stripContent(blogData.latestPost)) : 'undefined'};
+export const latestPostMetadata: BlogPost | undefined = ${blogData.latestPost ? ser(stripContent(renameSlug(blogData.latestPost))) : 'undefined'};
 
 export const excludedTitles: string[] = ${ser(blogData.excludedTitles)};
 `;
