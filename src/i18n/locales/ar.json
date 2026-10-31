@@ -1208,7 +1208,8 @@
     "socialConnectedShort": "مرتبط",
     "socialConnectFailed": "تعذر ربط {{platform}}. حاول مرة أخرى.",
     "socialVerifiedFollowers": "{{value}} متابع",
-    "socialFollowersPending": "جارٍ تحديث عدد المتابعين"
+    "socialFollowersPending": "جارٍ تحديث عدد المتابعين",
+    "tipsOffNote": "الإكراميات والتحويلات إليك متوقفة طالما هذا الخيار مفعّل. أوقفه لتتلقى الإكراميات مجددًا."
   },
   "common": {
     "confirm": "تأكيد",

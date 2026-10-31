@@ -1208,7 +1208,8 @@
     "socialConnectedShort": "Gekoppeld",
     "socialConnectFailed": "Kan {{platform}} niet koppelen. Probeer het opnieuw.",
     "socialVerifiedFollowers": "{{value}} volgers",
-    "socialFollowersPending": "Aantal volgers wordt bijgewerkt"
+    "socialFollowersPending": "Aantal volgers wordt bijgewerkt",
+    "tipsOffNote": "Fooien en verzendingen naar jou staan uit zolang dit aan staat. Zet het uit om weer fooien te krijgen."
   },
   "common": {
     "confirm": "Bevestigen",
