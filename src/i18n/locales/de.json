@@ -18797,5 +18797,9 @@
     "fingerprint": "Fingerabdruck",
     "exploreFirst": "Erst umsehen",
     "codeNote": "Wir senden dir einen Code per E-Mail, ohne Passwort."
+  },
+  "halloween": {
+    "title": "Fröhliches Halloween",
+    "otherThemes": "Weitere Designs findest du jetzt in den Einstellungen:"
   }
 }

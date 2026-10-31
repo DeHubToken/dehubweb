@@ -19991,5 +19991,9 @@
       "fri": "Sex",
       "sat": "Sáb"
     }
+  },
+  "halloween": {
+    "title": "Feliz Halloween",
+    "otherThemes": "Encontre outros temas nas configurações:"
   }
 }

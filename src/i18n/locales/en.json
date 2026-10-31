@@ -19911,5 +19911,9 @@
       "fri": "Fri",
       "sat": "Sat"
     }
+  },
+  "halloween": {
+    "title": "Happy Halloween",
+    "otherThemes": "Find other themes in settings now:"
   }
 }
