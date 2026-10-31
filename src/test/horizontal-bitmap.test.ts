@@ -47,3 +47,11 @@ it('keeps the neighbouring slides drawn in both directions', () => {
   renderHook(() => useHorizontalBitmap('a.jpg', true, viewport, slide));
   expect(options?.rootMargin).toBe('0px 100%');
 });
+
+it('does not load a far slide until the strip nears it', () => {
+  const t = setup();
+  const { result } = renderHook(() => useHorizontalBitmap('a.jpg', true, t.viewport, t.slide));
+  expect(result.current).toBe(false);
+  act(() => t.notify(true));
+  expect(result.current).toBe(true);
+});
