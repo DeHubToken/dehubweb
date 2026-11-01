@@ -158,7 +158,7 @@ export function PostStatsPanel({ tokenId }: { tokenId: string }) {
         <div className="flex flex-col gap-3">
           <StatTile label={t('postStats.newFollowers', 'New followers')} value={`+${fmt(followers.gained)}`} sub={t('postStats.afterWatching', 'followed after seeing it')} />
           {followers.viewersWhoFollow + followers.viewersNew > 0 ? (
-            <SplitBar left={followers.viewersWhoFollow} right={followers.viewersNew} leftLabel={t('postStats.yourFollowers', 'your followers')} rightLabel={t('postStats.newToYou', 'new to you')} />
+            <SplitBar left={followers.viewersWhoFollow} percent right={followers.viewersNew} leftLabel={t('postStats.yourFollowers', 'your followers')} rightLabel={t('postStats.newToYou', 'new to you')} />
           ) : null}
           {devicesTotal > 0 ? (
             <div className="flex flex-col gap-1.5">

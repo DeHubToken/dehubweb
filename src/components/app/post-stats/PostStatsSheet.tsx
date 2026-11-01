@@ -137,7 +137,7 @@ export function PostStatsSheet({ open, onOpenChange, tokenId }: PostStatsSheetPr
               {data.followers.viewersWhoFollow + data.followers.viewersNew > 0 ? (
                 <div className="bg-white/5 rounded-lg p-3">
                   <SplitBar
-                    left={data.followers.viewersWhoFollow}
+                    left={data.followers.viewersWhoFollow} percent
                     right={data.followers.viewersNew}
                     leftLabel={t('postStats.yourFollowers', 'your followers')}
                     rightLabel={t('postStats.newToYou', 'new to you')}
