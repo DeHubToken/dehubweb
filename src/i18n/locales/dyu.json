@@ -18560,5 +18560,19 @@
     "fingerprint": "Fanga be mɔgɔ minw na, olu ka kan ka kɛ",
     "exploreFirst": "Fɔlɔ ka ɲinini kɛ",
     "codeNote": "An bɛ code ci i ma email fɛ, password tɛ ɲininka."
+  },
+  "tokenLaunch": {
+    "body": "Sàn-sàn dɔ̀n kɔ̀nɔ̀ sira a tɛ́ jɛ́ token kura ye sɛbɛn na. Iimɛ̀ la gaf a jɛ́ o dɔ̀n kɔ̀nɔ̀ kɛ́ sira.",
+    "notifyMe": "Bɛma me",
+    "sendTo": "A bɛ i-mail {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "I-meeli jɛ",
+    "invalidEmail": "Imɛyili jɛ ka bon sɛbɛn",
+    "joinedTitle": "I nin ka jɔ̀n na",
+    "joinedBody": "A bɛ email {{email}} sɛbɛn jɔ token la.",
+    "joinedBodyNoEmail": "A bɛ i jɔ email la sɔrɔ ka token la wuli.",
+    "failed": "A man tɛ se ka sɛbɛn. Segin fɔ.",
+    "privacy": "A ka se fɛ ka kɔ ni i ma ka sɛbɛn.",
+    "seoDescription": "DeHub jatɔ koura ye sɔrɔ kɔnɔ. Lisiw la cɛ ka, o ye imɛyili kelen fɛ sɔrɔ na a bɛ kɔ, seko DeHub walɛ la cɛ ka sɔn."
   }
 }

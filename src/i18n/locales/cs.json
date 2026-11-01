@@ -18798,5 +18798,22 @@
     "fingerprint": "Otisk prstu",
     "exploreFirst": "Nejdřív se rozhlédni",
     "codeNote": "Pošleme ti kód e-mailem, bez hesla."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Brzy přijde",
+    "title": "Lancování tokenu brzy",
+    "body": "Koupení je zatím uzavřeno, protože se připravuje nový token. Obdržíte email okamžitě, jakmile bude live.",
+    "notifyMe": "Oznamte mi",
+    "sendTo": "Odesíláme email {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Vaše email",
+    "invalidEmail": "Zadejte platný email",
+    "joinedTitle": "Jste na seznamu",
+    "joinedBody": "Odesíláme email {{email}}, jakmile token vyjde.",
+    "joinedBodyNoEmail": "Odesíláme vám email, jakmile token vyjde.",
+    "failed": "Nepodařilo se uložit. Zkuste to znovu.",
+    "privacy": "Pouze pro informace o lancování.",
+    "seoTitle": "Lancování tokenu brzy | DeHub",
+    "seoDescription": "Nový token DeHub brzy vyjde. Přidejte se na seznam a obdržíte jeden email okamžitě, jakmile bude live, poté můžete koupit přímo z vaší DeHub peněženky."
   }
 }

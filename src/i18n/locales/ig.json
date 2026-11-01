@@ -18705,5 +18705,15 @@
     "fingerprint": "Mkpịsị aka",
     "exploreFirst": "Inyocha mbụ",
     "codeNote": "Anyị na-ezitere gị koodu, ọ dịghị paswọọdụ achọrọ."
+  },
+  "tokenLaunch": {
+    "body": "Ịzụ ahịa emechaala ka token ọhụrụ na-akwadebe. Nata imeyl ngwa ngwa mgbe ọ na-amalite.",
+    "sendTo": "Anyị ga-ezipụ {{email}}",
+    "joinedTitle": "Ndè mma nke ụlọ ụlọ.",
+    "joinedBodyNoEmail": "Aga m ezipụta gị ozi mgbe token ahụ na-amalite.",
+    "failed": "Ndèrè n'egwèrè nke àlà. Nkèrè n'egwèrè.",
+    "privacy": "Naanị ejiri ya ịkwu gị ihe banyere mmalite ahụ.",
+    "seoTitle": "Token na-amalite n'oge na-adịghị anya | DeHub",
+    "seoDescription": "Ọhụụ token DeHub ọhụụ na-abịa n'oge na-adịghị anya. Sonye na ndepụta ma nata imeyl otu mgbe ọ na-amalite, mgbe ahụ zụta ozugbo site na akpa ego DeHub gị."
   }
 }

@@ -18501,6 +18501,20 @@
     "exploreFirst": "先探索",
     "codeNote": "我们会通过邮件发送一个验证码，无需密码。"
   },
+  "tokenLaunch": {
+    "eyebrow": "即将推出",
+    "body": "购买暂时关闭，新代币即将上线。一上线就立即收到邮件通知。",
+    "notifyMe": "通知我",
+    "sendTo": "我们将会给{{email}}发送电子邮件。",
+    "emailLabel": "电子邮件",
+    "invalidEmail": "请输入一个有效的电子邮件地址。",
+    "joinedTitle": "你在名单上。",
+    "joinedBody": "我们将在代币上市时给{{email}}发邮件。",
+    "joinedBodyNoEmail": "我们将在代币上市时通过邮件通知您。",
+    "failed": "无法保存。请重试。",
+    "privacy": "仅用于通知您发布的信息。",
+    "seoDescription": "新的 DeHub 代币即将上线。加入名单，一旦上线即可收到一封邮件，然后直接从您的 DeHub 钱包购买。"
+  },
   "post": {
     "like": "喜欢",
     "comment": "评论",

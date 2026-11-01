@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { TokenLaunchNotify } from '@/components/app/token-launch/TokenLaunchNotify';
 import { createCheckoutSession, getDPayPrice, getDPaySessionStatus } from '@/lib/api/dpay';
 import { getStripe, isPaymentsConfigured } from '@/lib/stripe';
 import { useAuth } from '@/contexts/AuthContext';
@@ -120,6 +121,10 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
         <DrawerHeader className="border-b border-white/10 mb-4">
           <DrawerTitle className="text-white">{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</DrawerTitle>
         </DrawerHeader>
+        {/* While sales are closed the drawer offers the launch list instead. */}
+        {DHB_SALES_PAUSED ? (
+          <div className="overflow-y-auto pb-3"><TokenLaunchNotify compact /></div>
+        ) : (
         <div className="overflow-y-auto space-y-4 pb-3">
           <p className="text-sm text-zinc-400">{t('liveGift.buy.intro', { returnTo: returnLabel })}</p>
           {!clientSecret && (
@@ -156,6 +161,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
           {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
           <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>{_copy("copy.7ff60540f666", { defaultValue: "Back to {{value1}}", value1: returnLabel })}</Button>
         </div>
+        )}
       </DrawerContent>
     </Drawer>
   );

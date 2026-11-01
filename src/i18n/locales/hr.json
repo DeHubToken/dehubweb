@@ -18795,5 +18795,22 @@
     "fingerprint": "Otisak prsta",
     "exploreFirst": "Istraži prvo",
     "codeNote": "Pošaljemo ti kod po e-mailu, bez potrebe za lozinkom."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Dolazi uskoro",
+    "title": "Lančanje tokenova brzo dolazi",
+    "body": "Kupljenje je zatvoreno dok se novi token priprema. Dobit ćete email trenutno kada postane dostupan.",
+    "notifyMe": "Obavijesti me",
+    "sendTo": "Pošaljat ćemo email {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Tvoj email",
+    "invalidEmail": "Unesi važeći email",
+    "joinedTitle": "Na listi si",
+    "joinedBody": "Pošaljat ćemo email {{email}} kada se token lansira.",
+    "joinedBodyNoEmail": "Pošaljat ćemo ti email kada se token lansira.",
+    "failed": "Nije uspjelo sačuvati. Pokusaj ponovno.",
+    "privacy": "Koristi se samo da bi ti obavijestili o lansiranju.",
+    "seoTitle": "Token lansira se brzo | DeHub",
+    "seoDescription": "Novi DeHub token brzo dolazi. Priključite se listi i dobijte jedan email trenutno kada postane dostupan, a zatim kupite direktno iz vašeg DeHub novčanika."
   }
 }

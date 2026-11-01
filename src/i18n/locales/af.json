@@ -18884,6 +18884,23 @@
     "exploreFirst": "Verken eers",
     "codeNote": "Ons stuur vir jou 'n kode, geen wagwoord nodig nie."
   },
+  "tokenLaunch": {
+    "eyebrow": "Binnekort beskikbaar",
+    "title": "Token word binnekort geloods",
+    "body": "Koping is gesluit terwyl die nuwe token gereed gemaak word. Ontvang 'n e-pos die oomblik dit lewendig gaan.",
+    "notifyMe": "Stel my in kennis",
+    "sendTo": "Ons sal e-pos aan {{email}}",
+    "emailLabel": "E-pos",
+    "emailPlaceholder": "Jou e-pos",
+    "invalidEmail": "Voer 'n geldige e-pos in",
+    "joinedTitle": "Jy is op die lys",
+    "joinedBody": "Ons sal e-pos aan {{email}} wanneer die token geloods word.",
+    "joinedBodyNoEmail": "Ons sal jou e-pos wanneer die token geloods word.",
+    "failed": "Kon dit nie stoor nie. Probeer weer.",
+    "privacy": "Slegs gebruik om jou van die bekendstelling in te lig.",
+    "seoTitle": "Token word binnekort geloods | DeHub",
+    "seoDescription": "Die nuwe DeHub-token word binnekort geloods. Sluit aan by die lys en ontvang 'n e-pos die oomblik dit lewendig gaan, dan koop direk vanaf jou DeHub-beursie."
+  },
   "footer": {
     "company": "Maatskappy",
     "about": "Oor",

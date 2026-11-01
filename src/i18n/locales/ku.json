@@ -18756,5 +18756,14 @@
       "failed": "Ew nexebitî. Dîsa biceribîne.",
       "hypeHint": "Her kesê ku li trêna coşê siwar dibe, nîşana te ya 🚂 jî di asta ku gihîştiyê de distîne."
     }
+  },
+  "tokenLaunch": {
+    "title": "Tokenê diyar e ku bi ser destpêkirin e.",
+    "sendTo": "We werin {{email}} bi emailê.",
+    "emailPlaceholder": "Têkiliyên tîpêjî yên te",
+    "joinedTitle": "Tê li ser lîsteyê.",
+    "joinedBody": "We {{email}} biyêjin ku tokenê destpê dike.",
+    "failed": "Nêzêk kirina nekir. Bêhn re bi kar bîne.",
+    "seoDescription": "Nû tokenê DeHubê li ser xwe ye. Bi destxistina listê re, bi dest bixî û yekî emailê di şûna ku li ser xwe bike, paşê bi karî bi xwezîna DeHubê xwe bixerike."
   }
 }

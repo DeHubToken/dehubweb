@@ -18799,5 +18799,22 @@
     "fingerprint": "Fingeraftryk",
     "exploreFirst": "Udforsk først",
     "codeNote": "Vi sender dig en kode på e-mail, ingen adgangskode."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kommer snart",
+    "title": "Token kommer snart",
+    "body": "Køb er lukket, mens den nye token bliver klar. Modtag en e-mail øjeblikket, når den går live.",
+    "notifyMe": "Meddelelse mig",
+    "sendTo": "Vi vil sende e-mail til {{email}}",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "Din e-mail",
+    "invalidEmail": "Indtast en gyldig e-mail",
+    "joinedTitle": "Du er på listen",
+    "joinedBody": "Vi vil sende e-mail til {{email}}, når tokenet går live.",
+    "joinedBodyNoEmail": "Vi vil sende dig e-mail, når tokenet går live.",
+    "failed": "Kunne ikke gemme det. Prøv igen.",
+    "privacy": "Bruges kun til at fortælle dig om lanceringen.",
+    "seoTitle": "Token kommer snart | DeHub",
+    "seoDescription": "Den nye DeHub-token går snart live. Tilmeld dig listen og få en e-mail øjeblikket, når den går live, og køb derefter direkte fra din DeHub-lommebog."
   }
 }
