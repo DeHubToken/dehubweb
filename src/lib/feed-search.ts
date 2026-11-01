@@ -35,12 +35,28 @@ function set(next: FeedSearchState) {
   listeners.forEach((l) => l());
 }
 
+/** Words put aside by the bottom Home button, handed back on the next open. */
+let parked = '';
+
 export function openFeedSearch() {
-  set({ open: true, query: state.query });
+  set({ open: true, query: state.query || parked });
+  parked = '';
 }
 
 /** Closing also forgets the words, so the next open starts empty. */
 export function closeFeedSearch() {
+  parked = '';
+  set({ open: false, query: '' });
+}
+
+/**
+ * The bottom Home button while a search is up: back to the feed, but keep the
+ * words so tapping the lit tab again brings the same search (and its cached
+ * results) straight back.
+ */
+export function parkFeedSearch() {
+  if (!state.open) return;
+  parked = state.query;
   set({ open: false, query: '' });
 }
 

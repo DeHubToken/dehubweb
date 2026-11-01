@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { activeFeedSearchQuery, closeFeedSearch, feedSearchParams, getFeedSearchState, openFeedSearch, setFeedSearchQuery } from './feed-search';
+import { activeFeedSearchQuery, closeFeedSearch, feedSearchParams, getFeedSearchState, openFeedSearch, parkFeedSearch, setFeedSearchQuery } from './feed-search';
 
 describe('feedSearchParams', () => {
   it('searches only the feed it was opened on', () => {
@@ -42,5 +42,17 @@ describe('feed search state', () => {
     expect(activeFeedSearchQuery(getFeedSearchState())).toBe('lofi');
     closeFeedSearch();
     expect(getFeedSearchState()).toEqual({ open: false, query: '' });
+  });
+
+  it('keeps the words when Home puts the search away, and hands them back once', () => {
+    setFeedSearchQuery('sunset');
+    parkFeedSearch();
+    expect(getFeedSearchState()).toEqual({ open: false, query: '' });
+    openFeedSearch();
+    expect(getFeedSearchState()).toEqual({ open: true, query: 'sunset' });
+    closeFeedSearch();
+    openFeedSearch();
+    expect(getFeedSearchState().query).toBe('');
+    closeFeedSearch();
   });
 });
