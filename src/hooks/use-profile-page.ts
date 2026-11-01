@@ -31,7 +31,8 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
-import { useUserPins } from '@/hooks/use-pins';
+import { useUserPins, usePinnedPostIds } from '@/hooks/use-pins';
+import type { UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { getUserComments, blockUser, unblockUser, getUserReposts, getUserProposalReposts, getNFTInfo } from '@/lib/api/dehub';
@@ -59,8 +60,8 @@ export interface ProfileProposalItem {
 }
 
 export type ProfileContentItem =
-  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }
-  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string };
+  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean }
+  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean };
 
 const PULL_THRESHOLD = 80;
 
@@ -301,6 +302,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // and the balance is what it prints under the threshold.
   const badgeTier = getBadgeName(badgeBalance, badgeUsername, badgeContext);
 
+  // Pinned posts lead the All tab. On your own profile the pinned ids come
+  // from the list a pin flips instantly, so a post you pin jumps to the top
+  // (and an unpinned one drops back) before the server answers.
+  const { data: pinsData } = useUserPins(contentUserId || '');
+  const { data: myPinnedIds } = usePinnedPostIds();
+  const pinnedIds = useMemo(() => {
+    if (isViewingOwnProfile && myPinnedIds) return myPinnedIds;
+    return (pinsData?.items ?? []).map((pin) => String(pin.tokenId));
+  }, [isViewingOwnProfile, myPinnedIds, pinsData]);
+
   // Content separation
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, PROFILE_LIVE, ALL_CONTENT } = useMemo(() => {
     if (!userContentData?.pages) {
@@ -375,6 +386,35 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
 
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+    // Pinned posts first, newest pin on top, each shown once. A post pinned a
+    // moment ago that the pins list has not caught up with yet is lifted out
+    // of the feed itself.
+    if (pinnedIds.length) {
+      const wanted = new Set(pinnedIds);
+      const fromPins = separateUserContent((pinsData?.items ?? []).map((pin) => ((pin as { post?: unknown }).post || pin) as unknown as UnifiedFeedItem));
+      const pinListed: ProfileContentItem[] = [
+        ...fromPins.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+        ...fromPins.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
+        ...fromPins.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+        ...fromPins.lives.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+      ];
+      const byId = new Map<string, ProfileContentItem>();
+      for (const item of [...pinListed, ...unified]) {
+        if (item.type !== 'proposal' && wanted.has(item.data.id) && !byId.has(item.data.id)) byId.set(item.data.id, item);
+      }
+      const serverOrder = (pinsData?.items ?? []).map((pin) => String(pin.tokenId));
+      const order = [...pinnedIds.filter((id) => !serverOrder.includes(id)).reverse(), ...serverOrder.filter((id) => wanted.has(id))];
+      const pinned: ProfileContentItem[] = [];
+      for (const id of order) {
+        const item = byId.get(id);
+        if (item && !pinned.some((p) => p.data.id === id)) pinned.push({ ...item, isRepost: false, isPinned: true } as ProfileContentItem);
+      }
+      const pinnedSet = new Set(pinned.map((p) => p.data.id));
+      const rest = unified.filter((item) => item.type === 'proposal' || !pinnedSet.has(item.data.id));
+      unified.length = 0;
+      unified.push(...pinned, ...rest);
+    }
+
     return {
       PROFILE_POSTS: separated.posts,
       PROFILE_IMAGES: separated.images,
@@ -382,7 +422,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered]);
+  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered, pinnedIds, pinsData]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
@@ -400,8 +440,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
-  const { data: pinsData } = useUserPins(contentUserId || '');
-  const pinnedCount = pinsData?.items?.length ?? 0;
+  const pinnedCount = isViewingOwnProfile && myPinnedIds ? myPinnedIds.length : pinsData?.items?.length ?? 0;
 
   // Public bookmark folders. The same query feeds the Playlists panel, so the
   // tab's badge and its content can never disagree; the tab only exists while

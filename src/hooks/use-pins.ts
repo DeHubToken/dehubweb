@@ -26,24 +26,35 @@ export function useTogglePin() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
+  const me = walletAddress?.toLowerCase() || '';
+  const flip = (tokenId: number, pinned: boolean) =>
+    queryClient.setQueryData<string[]>([PINS_KEY, 'mine', me], (old) => {
+      if (old === undefined) return pinned ? [String(tokenId)] : undefined;
+      const id = String(tokenId);
+      return pinned ? [...old.filter((t) => t !== id), id] : old.filter((t) => t !== id);
+    });
+
   return useMutation({
     mutationFn: togglePin,
+    // Flip the viewer's pinned list before the request goes out, so the post
+    // moves to (or off) the top of the profile the moment it is tapped.
+    onMutate: async (tokenId: number) => {
+      if (!me) return { previous: undefined as string[] | undefined };
+      await queryClient.cancelQueries({ queryKey: [PINS_KEY, 'mine', me] });
+      const previous = queryClient.getQueryData<string[]>([PINS_KEY, 'mine', me]);
+      const wasPinned = (previous || []).includes(String(tokenId));
+      flip(tokenId, !wasPinned);
+      return { previous };
+    },
     onSuccess: (data, tokenId) => {
       // Patch this post's pin count in place instead of refetching every pin query
       queryClient.setQueryData<number>([PINS_KEY, 'count', tokenId], (old) =>
         old === undefined ? undefined : Math.max(0, old + (data.pinned ? 1 : -1)));
       // Only this post's pinners list + the current user's own pins list are affected
       queryClient.invalidateQueries({ queryKey: [PINS_KEY, 'users', tokenId] });
-      if (walletAddress) {
-        const me = walletAddress.toLowerCase();
-        // Patch the viewer's own id list first so every surface showing this
-        // post — the card's utility button and the same post's row in the
-        // three-dot menu — flips together, then refresh it from the server.
-        queryClient.setQueryData<string[]>([PINS_KEY, 'mine', me], (old) => {
-          if (old === undefined) return undefined;
-          const id = String(tokenId);
-          return data.pinned ? [...old.filter((t) => t !== id), id] : old.filter((t) => t !== id);
-        });
+      if (me) {
+        // Settle on the server's answer (the toggle decides), then refresh.
+        flip(tokenId, data.pinned);
         queryClient.invalidateQueries({ queryKey: [PINS_KEY, 'mine', me] });
         queryClient.invalidateQueries({
           predicate: (q) =>
@@ -58,7 +69,10 @@ export function useTogglePin() {
         toast.success(t('postOptions.postUnpinned', 'Unpinned from your profile'));
       }
     },
-    onError: () => toast.error(t('postOptions.pinFailed', 'Could not pin or unpin this post')),
+    onError: (_err, _tokenId, context) => {
+      if (me) queryClient.setQueryData([PINS_KEY, 'mine', me], context?.previous);
+      toast.error(t('postOptions.pinFailed', 'Could not pin or unpin this post'));
+    },
   });
 }
 
