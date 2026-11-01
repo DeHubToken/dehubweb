@@ -29,6 +29,8 @@ export function useHorizontalBitmap(source: string, measured: boolean, viewportR
     }, { root, rootMargin: HORIZONTAL_LOAD_MARGIN });
     const release = new IntersectionObserver(([entry]) => {
       if (timer) clearTimeout(timer);
+      // Hidden page (no box): keep what is loaded rather than blanking it.
+      if (!entry.isIntersecting && entry.boundingClientRect.width === 0 && entry.boundingClientRect.height === 0) { timer = undefined; return; }
       timer = entry.isIntersecting ? undefined : setTimeout(() => setRetained(false), 400);
     }, { root, rootMargin: HORIZONTAL_RELEASE_MARGIN });
     load.observe(node);
