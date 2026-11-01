@@ -322,7 +322,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <GlassFilterRow
-            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
+            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: o.value === 'article' ? t('articles.label') : t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
             borderRadius="0.75rem"
