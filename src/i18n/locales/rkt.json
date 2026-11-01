@@ -425,7 +425,9 @@
     "getTheApp": "অ্যাপ নেন",
     "connectAi": "AI সংযুক্ত করেন",
     "converter": "কনভার্টার",
-    "affiliate": "অ্যাফিলিয়েট"
+    "affiliate": "অ্যাফিলিয়েট",
+    "reorderReset": "রিসেট",
+    "reorderResetLong": "মেনুর ক্রম রিসেট করুন"
   },
   "feed": {
     "viewProfile": "{{name}}'র প্রোফাইল দেখ",

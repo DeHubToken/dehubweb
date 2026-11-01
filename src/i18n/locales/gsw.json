@@ -448,7 +448,8 @@
     "getTheApp": "App lade",
     "connectAi": "KI verbinde",
     "converter": "Converter",
-    "affiliate": "Partnerprogramm"
+    "affiliate": "Partnerprogramm",
+    "reorderReset": "Zrüggsetze"
   },
   "feed": {
     "viewProfile": "Lueg {{name}}'s Profil aa",

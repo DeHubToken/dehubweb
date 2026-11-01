@@ -423,7 +423,10 @@
     "getTheApp": "下载应用",
     "connectAi": "连接 AI",
     "converter": "轉換器",
-    "affiliate": "推广联盟"
+    "affiliate": "推广联盟",
+    "reorderHint": "按住并拖动任意图标来重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序"
   },
   "feed": {
     "viewProfile": "看 {{name}} 的资料",

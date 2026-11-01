@@ -443,7 +443,8 @@
     "getTheApp": "Njupuk aplikasi",
     "connectAi": "Nyambungake AI",
     "converter": "Converter",
-    "affiliate": "Afiliasi"
+    "affiliate": "Afiliasi",
+    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang"
   },
   "feed": {
     "viewProfile": "Deleng profil {{name}}",

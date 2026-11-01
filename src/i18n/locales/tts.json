@@ -431,7 +431,10 @@
     "getTheApp": "ดาวน์โหลดแอป",
     "connectAi": "เชื่อมต่อ AI",
     "converter": "ตัวแปลง",
-    "affiliate": "พันธมิตร"
+    "affiliate": "พันธมิตร",
+    "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
+    "reorderReset": "รีเซ็ต",
+    "reorderResetLong": "รีเซ็ตลำดับเมนู"
   },
   "feed": {
     "viewProfile": "ดูโปรไฟล์ {{name}}",

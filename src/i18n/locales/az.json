@@ -451,7 +451,8 @@
     "getTheApp": "Tətbiqi yüklə",
     "connectAi": "Süni intellekti qoş",
     "converter": "Konvertor",
-    "affiliate": "Tərəfdaş"
+    "affiliate": "Tərəfdaş",
+    "reorderReset": "Sıfırla"
   },
   "feed": {
     "viewProfile": "{{name}} adlı şəxsin profilinə baxın",

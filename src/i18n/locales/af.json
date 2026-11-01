@@ -452,7 +452,8 @@
     "getTheApp": "Kry die app",
     "connectAi": "Koppel KI",
     "converter": "Converter",
-    "affiliate": "Vennoot"
+    "affiliate": "Vennoot",
+    "reorderReset": "Herstel"
   },
   "feed": {
     "viewProfile": "Bekyk {{name}} se profiel",

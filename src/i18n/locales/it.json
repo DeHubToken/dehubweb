@@ -452,7 +452,8 @@
     "getTheApp": "Scarica l'app",
     "connectAi": "Collega l'IA",
     "converter": "Convertitore",
-    "affiliate": "Affiliazione"
+    "affiliate": "Affiliazione",
+    "reorderReset": "Ripristina"
   },
   "feed": {
     "viewProfile": "Visualizza il profilo di {{name}}",

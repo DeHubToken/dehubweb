@@ -447,7 +447,8 @@
     "getTheApp": "ऐप लीं",
     "connectAi": "AI जोड़ीं",
     "converter": "कनवर्टर बदलें",
-    "affiliate": "एफिलिएट"
+    "affiliate": "एफिलिएट",
+    "reorderReset": "रीसेट करीं"
   },
   "feed": {
     "viewProfile": "{{name}} के प्रोफाइल देखीं",

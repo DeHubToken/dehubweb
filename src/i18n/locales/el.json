@@ -452,7 +452,8 @@
     "getTheApp": "Κατεβάστε την εφαρμογή",
     "connectAi": "Σύνδεση AI",
     "converter": "Μετατροπέας",
-    "affiliate": "Συνεργάτες"
+    "affiliate": "Συνεργάτες",
+    "reorderReset": "Επαναφορά"
   },
   "feed": {
     "viewProfile": "Προβολή προφίλ του/της {{name}}",

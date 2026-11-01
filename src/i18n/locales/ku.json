@@ -452,7 +452,9 @@
     "getTheApp": "Sepanê bistîne",
     "connectAi": "AI girêde",
     "converter": "Veguherîner",
-    "affiliate": "Hevkarî"
+    "affiliate": "Hevkarî",
+    "reorderReset": "Vegerîne",
+    "reorderResetLong": "Rêza menuyê vegerîne"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",

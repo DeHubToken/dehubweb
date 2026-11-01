@@ -451,7 +451,8 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "اربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة"
+    "affiliate": "التسويق بالعمولة",
+    "reorderReset": "إعادة تعيين"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",

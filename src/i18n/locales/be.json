@@ -452,7 +452,8 @@
     "getTheApp": "Спампаваць праграму",
     "connectAi": "Падлучыць ШІ",
     "converter": "пераўтваральная",
-    "affiliate": "Партнёрка"
+    "affiliate": "Партнёрка",
+    "reorderReset": "Скінуць"
   },
   "feed": {
     "viewProfile": "Праглядзець профіль {{name}}",

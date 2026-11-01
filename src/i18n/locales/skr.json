@@ -430,7 +430,8 @@
     "getTheApp": "ایپ لوو",
     "connectAi": "AI جوڑو",
     "converter": "کانورٹر",
-    "affiliate": "ایفیلی ایٹ"
+    "affiliate": "ایفیلی ایٹ",
+    "reorderResetLong": "مینو دی ترتیب ری سیٹ کرو"
   },
   "feed": {
     "viewProfile": "{{name}} دی پروفائل ویکھو",
