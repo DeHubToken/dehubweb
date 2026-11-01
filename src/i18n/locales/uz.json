@@ -1755,6 +1755,7 @@
       "featureReply": "{{name}} sizning sharhingizga javob berdi",
       "featureMentionNamed": "{{name}} sizni “{{title}}” da tilga oldi",
       "featureMention": "{{name}} sizni funksiya so&#39;rovida tilga oldi",
+      "featureNew": "{{name}} yangi so‘rov qo‘ygan",
       "governanceVoteNamed": "{{name}} sizning “{{title}}” taklifingizga ovoz berdi",
       "governanceVote": "{{name}} taklifingizga ovoz berdi",
       "governanceCommentNamed": "{{name}} sizning taklifingizga “{{title}}” deb izoh qoldirdi",

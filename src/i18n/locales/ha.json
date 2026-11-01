@@ -1728,6 +1728,8 @@
       "featureReply": "{{name}} ya amsa bayaninka",
       "featureMentionNamed": "{{name}} ya ambace ka a kan “{{title}}”",
       "featureMention": "{{name}} ya ambace ka a kan buƙatar ƙarin fasali",
+      "featureActivityNamed": "{{name}} comment a kan \"{{title}}\"",
+      "featureActivity": "{{name}} ya yi tsokaci akan buƙata",
       "governanceVoteNamed": "{{name}} ya kada kuri'a a kan shawararka \"{{title}}\"",
       "governanceVote": "{{name}} ya kada kuri'a akan shawararka",
       "governanceCommentNamed": "{{name}} comment a kan shawararka \"{{title}}\"",

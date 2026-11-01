@@ -1724,6 +1724,8 @@
       "featureReply": "{{name}} نے تمہارے تبصرے کا جواب دیا",
       "featureMentionNamed": "{{name}} आपको \"{{title}}\" पर mention किया",
       "featureMention": "{{name}} आपको एक feature request पर mention किया",
+      "featureNewNamed": "{{name}} خُبرَاتَ نَجِيبَةً جَدِيدَةً أَرْسَلَ: “{{title}}”",
+      "featureActivity": "{{name}} ہرنظرہ",
       "governanceVoteNamed": "{{name}} आपके proposal \"{{title}}\" पर vote किया",
       "governanceVote": "{{name}} आपके proposal पर vote किया",
       "governanceCommentNamed": "{{name}} आपके proposal \"{{title}}\" पर comment किया",

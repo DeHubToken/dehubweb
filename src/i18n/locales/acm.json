@@ -1731,6 +1731,7 @@
       "featureReply": "{{name}} أجاب على تعليقك",
       "featureMentionNamed": "{{name}} ذكرك في “{{title}}”",
       "featureMention": "{{name}} ذكرك في طلب خاص",
+      "featureNewNamed": "{{name}} قاﻟﻠﻪ طلب جديد “{{title}}”",
       "governanceVoteNamed": "{{name}} صوت على اقتراحك “{{title}}”",
       "governanceVote": "{{name}} صوت على اقتراحك",
       "governanceCommentNamed": "{{name}} ترك تعليق على اقتراحك “{{title}}”",

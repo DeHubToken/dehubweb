@@ -1158,6 +1158,7 @@
     "doNotDisturb": "الرجاء عدم الإزعاج",
     "doNotDisturbDesc": "كتم جميع إشعارات الرسائل",
     "comingSoon": "قريبًا",
+    "tipsOffNote": "الإكراميات والتحويلات إليك متوقفة طالما هذا الخيار مفعّل. أوقفه لتتلقى الإكراميات مجددًا.",
     "walletUnlockInterval": "موجه إلغاء قفل المحفظة",
     "walletUnlockIntervalDesc": "المدة التي تظل فيها محفظتك مفتوحة للنشر، الإكراميات والتحويلات قبل أن نطلب كلمة مرورك مرة أخرى. تستمر عبر التحديثات؛ تسجيل الخروج دائمًا يغلقها.",
     "walletUnlockNever": "أبدًا (حتى تقوم بتسجيل الخروج)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "مرتبط",
     "socialConnectFailed": "تعذر ربط {{platform}}. حاول مرة أخرى.",
     "socialVerifiedFollowers": "{{value}} متابع",
-    "socialFollowersPending": "جارٍ تحديث عدد المتابعين",
-    "tipsOffNote": "الإكراميات والتحويلات إليك متوقفة طالما هذا الخيار مفعّل. أوقفه لتتلقى الإكراميات مجددًا."
+    "socialFollowersPending": "جارٍ تحديث عدد المتابعين"
   },
   "common": {
     "confirm": "تأكيد",
@@ -1905,6 +1905,10 @@
       "featureReply": "{{name}} أجاب على تعليقك",
       "featureMentionNamed": "{{name}} ذكرك في “{{title}}”",
       "featureMention": "{{name}} ذكرك في طلب خاص",
+      "featureNewNamed": "نشر {{name}} طلبًا جديدًا \\\"{{title}}\\\"",
+      "featureNew": "نشر {{name}} طلبًا جديدًا",
+      "featureActivityNamed": "علق {{name}} على \"{{title}}\"",
+      "featureActivity": "علق {{name}} على طلب",
       "governanceVoteNamed": "{{name}} صوت على مقترحك “{{title}}”",
       "governanceVote": "{{name}} صوت على مقترحك",
       "governanceCommentNamed": "{{name}} ترك تعليق على مقترحك “{{title}}”",

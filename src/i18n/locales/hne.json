@@ -1718,6 +1718,7 @@
       "featureReply": "{{name}} ने आपके कमेंट पर प्रतिक्रिया दी",
       "featureMentionNamed": "{{name}} ने आपको “{{title}}” पर उल्लेख किया",
       "featureMention": "{{name}} ने आपको एक विशेषता प्रस्ताव पर उल्लेख किया",
+      "featureActivity": "{{name}} एक अनुरोध म टिप्पणी करे",
       "governanceVoteNamed": "{{name}} ने आपकी प्रस्ताव “{{title}}” पर मतदान किया है।",
       "governanceVote": "{{name}} ने आपके प्रस्ताव पर मतदान किया",
       "governanceCommentNamed": "{{name}} ने आपके प्रस्ताव “{{title}}” पर कमेंट किया",

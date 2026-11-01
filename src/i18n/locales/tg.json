@@ -1729,6 +1729,8 @@
       "featureReply": "{{name}} ба шарҳи шумо ҷавоб дод",
       "featureMentionNamed": "{{name}} шуморо дар “{{title}}” ёдовар шуд",
       "featureMention": "{{name}}info: whatsthis",
+      "featureNewNamed": "{{name}} дархости нав «{{title}}» илова кард",
+      "featureActivityNamed": "{{name}} комментари дар бораи “{{title}}”",
       "governanceVoteNamed": "{{name}} дар бораи пешниҳои {{title}} овоз дод.",
       "governanceVote": "{{name}} овоз дар пешниҳоди шумо",
       "governanceComment": "{{name}} дар пешниҳоди шумо шарҳ дод",

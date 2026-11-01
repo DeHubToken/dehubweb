@@ -1719,6 +1719,8 @@
       "featureReply": "{{name}} ने आपकी टिप्पणी पर उत्तर दिया",
       "featureMentionNamed": "{{name}} ने “{{title}}” में आपका उल्लेख किया",
       "featureMention": "{{name}} ने फीचर रिक्वेस्ट में आपका उल्लेख किया",
+      "featureNew": "{{name}} नवीन पृष्ठं निर्मीत अस्ती",
+      "featureActivity": "{{name}} एक टिप्पणी",
       "governanceVoteNamed": "{{name}} ने आपकी प्रस्तावना “{{title}}” पर मत दिया",
       "governanceVote": "{{name}} ने प्रस्तावना पर मत दिया",
       "governanceCommentNamed": "{{name}} ने प्रस्तावना “{{title}}” पर टिप्पणी की",

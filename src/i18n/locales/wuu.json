@@ -1705,6 +1705,8 @@
       "featureReply": "{{name}} 回覆你的評論",
       "featureMentionNamed": "{{name}} 在「{{title}}」提到你",
       "featureMention": "{{name}} 在功能請求中提到你",
+      "featureNewNamed": "{{name}} 發佈新需求「{{title}}」",
+      "featureNew": "{{name}} 發佈新請求",
       "governanceVoteNamed": "{{name}} 投票你的提案「{{title}}」",
       "governanceVote": "{{name}} 投票你的提案",
       "governanceCommentNamed": "{{name}} 評論你的提案「{{title}}」",

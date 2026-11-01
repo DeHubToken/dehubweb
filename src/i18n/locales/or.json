@@ -1715,6 +1715,8 @@
       "featureCommentNamed": "{{name}} ଏମାକ ଫେଚେର୍ ଅନୁମାନ୍ଦରେ “{{title}}” ପ୍ରତିକ୍ରିୟାର୍ଥିକାରୁ କମିନ୍ତି କିରିଲା।",
       "featureReply": "{{name}} ଆପଣଙ୍କ ମନ୍ତବ୍ୟରେ ଉତ୍ତର ଦେଲେ",
       "featureMention": "{{name}} ଏକ ବୈଶିଷ୍ଟ୍ୟ ଅନୁରୋଧରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରାଯାଇଛି",
+      "featureNewNamed": "{{name}} ଏକ ନୂତନ ଅନୁରୋଧ “{{title}}” ପୋଷ୍ଟ କରିଛନ୍ତି",
+      "featureActivity": "{{name}} ଏକ ଅନୁରୋଧ ଉପରେ ମନ୍ତବ୍ୟ ଦେଇଛନ୍ତି",
       "governanceReply": "{{name}} ଏକ ପ୍ରସ୍ତାବରେ ଆପଣଙ୍କ ମନ୍ତବ୍ୟର ଉତ୍ତର ଦେଇଛନ୍ତି",
       "storeOrderNamed": "{{name}} ଆପଣଙ୍କ ଲିଷ୍ଟିଂ “{{title}}” କିଣିଛନ୍ତି",
       "storeOrder": "{{name}} ଆପଣଙ୍କର ତାଲିକା କ୍ରୟ କରିଛନ୍ତି",

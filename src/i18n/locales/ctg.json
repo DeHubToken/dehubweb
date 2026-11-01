@@ -1756,6 +1756,7 @@
       "featureLikeNamed": "{{name}} আপনার ফিচার রিকোয়েস্ট “{{title}}”",
       "featureReplyNamed": "{{name}} তোমার সাথে “{{title}}” এ রিপ্লাই দিয়েছে।",
       "featureReply": "{{name}} কে আপনার কমেন্টে রিপ্লাই দিলো",
+      "featureNewNamed": "{{name}} ৰে আশা পোস্ট কৰলো “{{title}}”",
       "governanceVote": "{{name}} ভোট দিলো তোমার প্রস্তাবে",
       "stageLiveNamed": "{{name}} এর মঞ্চ “{{title}}” সক্রিয় — ট্যাপ করে শোনুন",
       "stageLive": "{{name}} এর মঞ্চে আছে",
