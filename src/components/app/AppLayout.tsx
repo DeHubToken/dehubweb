@@ -149,7 +149,8 @@ function PostOverlayEffects({
   overlayRef: React.RefObject<HTMLDivElement>;
   postId: string | null;
 }) {
-  // This commits with the lazy post, so the ref is live even on a cold load.
+  // Render this AFTER the overlay element: refs attach in tree order during
+  // the layout pass, so only a later sibling sees the element here.
   useFeedSwallowClip(overlayRef, '[data-feed-nav]', []);
   useLayoutEffect(() => {
     if (overlayRef.current) overlayRef.current.scrollTop = 0;
@@ -174,7 +175,6 @@ function RetainedPostOverlay({ entry }: { entry: RetainedPostEntry }) {
     <div aria-hidden data-post-overlay-backdrop className="fixed top-0 bottom-0 z-10" style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }} />
     <div ref={ref} data-post-overlay data-scroll-nav-source className="fixed top-0 bottom-0 z-10 overflow-y-auto overscroll-contain"
       style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH, WebkitOverflowScrolling: 'touch' }}>
-      <PostOverlayEffects overlayRef={ref} postId={entry.id} />
       <div data-post-rise className="pt-24 lg:pt-14 px-2 sm:px-3 pb-24">
         <RetainedPostDock entry={entry} />
         {/* The existing card is already visible; only its optional details await code/data. */}
@@ -183,6 +183,11 @@ function RetainedPostOverlay({ entry }: { entry: RetainedPostEntry }) {
         </ErrorBoundary>
       </div>
     </div>
+    {/* After the scroller, never inside or before it: React attaches a ref in
+        the same pass that runs layout effects, in tree order, so an earlier
+        sibling or a child sees this ref as null and the pill clip never
+        attached (posts slid up past the pill on every canvas theme). */}
+    <PostOverlayEffects overlayRef={ref} postId={entry.id} />
   </>;
 }
 
@@ -515,7 +520,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           {showHomePagePersisted && retainedPost && <RetainedPostOverlay entry={retainedPost} />}
           {showHomePagePersisted && !retainedPost && (
             <Suspense fallback={<PostOverlayLoading />}>
-              <PostOverlayEffects overlayRef={postOverlayRef} postId={overlayPostId} />
               {/* Backing for the post layer, deliberately a separate element from
                   the scroller: the swallow clip cuts the scroller at the nav
                   pill's top edge, and a clipped background takes its fill with
@@ -565,6 +569,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
                   <SinglePostPage inOverlay />
                 </ErrorBoundary>
               </div>
+              {/* After the scroller so its ref is attached when the clip reads it. */}
+              <PostOverlayEffects overlayRef={postOverlayRef} postId={overlayPostId} />
             </Suspense>
           )}
 
