@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { ElectricLogo } from './ElectricLogo';
 import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
-import { openNotificationsDrawer } from '../NotificationsDrawer';
+import { openNotificationsDrawer, warmNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
@@ -237,6 +237,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         {isAuthenticated && (
           <button
             onClick={() => openNotificationsDrawer()}
+            onPointerDown={warmNotificationsDrawer}
             className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >
