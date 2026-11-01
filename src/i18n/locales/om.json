@@ -406,6 +406,9 @@
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."
   },
   "nav": {
+    "reorderHint": "Irra deebi'ii qindeessuuf mallattoo kamiyyuu qabadhuu harkisi",
+    "reorderReset": "Reset gochuu",
+    "reorderResetLong": "Tartiiba menu irra deebi'ii saagi",
     "home": "Mana",
     "explore": "Qoradhu",
     "prompt": "Kakaasi",

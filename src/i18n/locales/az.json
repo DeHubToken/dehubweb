@@ -406,6 +406,8 @@
     "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
   },
   "nav": {
+    "reorderHint": "Dəstək və simvolları yerinə yetirmək üçün tutaraq sırala bilərsiniz.",
+    "reorderResetLong": "Menyu sifarişini sıfırla",
     "home": "Ana səhifə",
     "explore": "Kəşf et",
     "prompt": "Tənzimlə",
@@ -449,7 +451,8 @@
     "getTheApp": "Tətbiqi yüklə",
     "connectAi": "Süni intellekti qoş",
     "converter": "Konvertor",
-    "affiliate": "Tərəfdaş"
+    "affiliate": "Tərəfdaş",
+    "reorderReset": "Sıfırla"
   },
   "feed": {
     "viewProfile": "{{name}} adlı şəxsin profilinə baxın",

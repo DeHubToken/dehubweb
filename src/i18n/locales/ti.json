@@ -403,6 +403,9 @@
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
   },
   "nav": {
+    "reorderHint": "ንምልዋጥ ዝኾነ ኣዶ ሒዝካ ስዓቦ",
+    "reorderReset": "ዳግም ምትካል",
+    "reorderResetLong": "ናይ ምናሌ ቅደም ተከተል ዳግም ኣዳሉ",
     "home": "ገዛ",
     "explore": "ድለ",
     "prompt": "ሃናጺ",

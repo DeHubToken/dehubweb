@@ -407,6 +407,8 @@
     "gasSponsorshipFailed": "Non è stato possibile coprire questa transazione. Riprova tra un momento."
   },
   "nav": {
+    "reorderHint": "Tieni premuto e trascina qualsiasi icona per riorganizzare",
+    "reorderResetLong": "Ripristina l'ordine del menu",
     "home": "Casa",
     "explore": "Esplora",
     "prompt": "Personalizza",
@@ -450,7 +452,8 @@
     "getTheApp": "Scarica l'app",
     "connectAi": "Collega l'IA",
     "converter": "Convertitore",
-    "affiliate": "Affiliazione"
+    "affiliate": "Affiliazione",
+    "reorderReset": "Ripristina"
   },
   "feed": {
     "viewProfile": "Visualizza il profilo di {{name}}",

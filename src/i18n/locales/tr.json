@@ -546,6 +546,9 @@
     "gasSponsorshipFailed": "Bu işlemin ücreti karşılanamadı. Lütfen birazdan tekrar deneyin."
   },
   "nav": {
+    "reorderHint": "Yeniden düzenlemek için herhangi bir simgeyi basılı tutun ve sürükleyin",
+    "reorderReset": "Sıfırla",
+    "reorderResetLong": "Menü sırasını sıfırla",
     "home": "Ana Sayfa",
     "explore": "Keşfet",
     "prompt": "Yönlendir",

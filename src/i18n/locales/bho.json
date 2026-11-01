@@ -402,6 +402,8 @@
     "gasSponsorshipFailed": "ई लेनदेन के खरचा ना उठावल जा सकल। थोड़ी देर बाद कोसिस करीं।"
   },
   "nav": {
+    "reorderHint": "Hold aur drag karke koi bhi icon ke rearrange kariं",
+    "reorderResetLong": "मेनू ऑर्डर समायोजित करें",
     "home": "घरे",
     "explore": "खोजीं",
     "prompt": "प्रॉम्प्ट",
@@ -445,7 +447,8 @@
     "getTheApp": "ऐप लीं",
     "connectAi": "AI जोड़ीं",
     "converter": "कनवर्टर बदलें",
-    "affiliate": "एफिलिएट"
+    "affiliate": "एफिलिएट",
+    "reorderReset": "रीसेट करीं"
   },
   "feed": {
     "viewProfile": "{{name}} के प्रोफाइल देखीं",

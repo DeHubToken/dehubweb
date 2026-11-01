@@ -405,6 +405,9 @@
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
   },
   "nav": {
+    "reorderHint": "Qayta tartiblash uchun istalgan belgini ushlab turing va sudrang",
+    "reorderReset": "Qayta tiklash",
+    "reorderResetLong": "Menyu tartibini tiklash",
     "home": "Bosh sahifa",
     "explore": "Kashf qilish",
     "prompt": "Sozlash",

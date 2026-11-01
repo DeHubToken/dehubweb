@@ -408,6 +408,9 @@
     "gasSponsorshipFailed": "Tuto transakci se nepodařilo uhradit. Zkuste to prosím za chvíli."
   },
   "nav": {
+    "reorderHint": "Držte a přetáhněte libovolnou ikonu pro přeuspořádání",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Resetovat pořadí menu",
     "home": "Domů",
     "explore": "Prozkoumejte",
     "prompt": "Dotaz",

@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "この取引の手数料を負担できませんでした。しばらくしてからお試しください。"
   },
   "nav": {
+    "reorderHint": "任意のアイコンを長押ししてドラッグして並べ替えます",
+    "reorderReset": "リセット",
+    "reorderResetLong": "メニューの順序をリセットする",
     "home": "ホーム",
     "explore": "検索",
     "prompt": "プロンプト",

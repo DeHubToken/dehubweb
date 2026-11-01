@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Transaksi ini tidak dapat ditaja. Sila cuba lagi sebentar lagi."
   },
   "nav": {
+    "reorderHint": "Tahan dan seret sebarang ikon untuk menyusun semula",
+    "reorderReset": "Tetapkan semula",
+    "reorderResetLong": "Tetapkan semula pesanan menu",
     "home": "Laman Utama",
     "explore": "Terokai",
     "prompt": "Gesaan",

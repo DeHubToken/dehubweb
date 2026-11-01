@@ -546,6 +546,9 @@
     "gasSponsorshipFailed": "This transaction could not be sponsored. Please try again in a moment."
   },
   "nav": {
+    "reorderHint": "Hold and drag any icon to rearrange",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Reset menu order",
     "home": "Home",
     "explore": "Explore",
     "prompt": "Prompt",

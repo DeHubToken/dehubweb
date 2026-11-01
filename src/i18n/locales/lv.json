@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
   },
   "nav": {
+    "reorderHint": "Turiet un velciet jebkuru ikonu, lai pārkārtotu",
+    "reorderReset": "Atiestatīt",
+    "reorderResetLong": "Atiestati ēdienkartes secību",
     "home": "Sākums",
     "explore": "Izpētīt",
     "prompt": "Pamudinājums",

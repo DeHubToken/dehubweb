@@ -393,6 +393,7 @@
     "gasSponsorshipFailed": "ইয়ান লেনদেনর খরচ দিত ন পারি। এক্কেনা পরে আবার চেষ্টা গরন।"
   },
   "nav": {
+    "reorderHint": "কোনো আইকন ধরে টেনে এনে পুনর্বিন্যাস করুন",
     "home": "ঘর",
     "explore": "খোজো",
     "prompt": "কও",
@@ -436,7 +437,9 @@
     "getTheApp": "অ্যাপ লন",
     "connectAi": "AI সংযুক্ত গরন",
     "converter": "কনভার্টার",
-    "affiliate": "অ্যাফিলিয়েট"
+    "affiliate": "অ্যাফিলিয়েট",
+    "reorderReset": "রিসেট",
+    "reorderResetLong": "মেনুর ক্রম রিসেট করুন"
   },
   "feed": {
     "viewProfile": "{{name}} এর প্রোফাইল দেখুন",

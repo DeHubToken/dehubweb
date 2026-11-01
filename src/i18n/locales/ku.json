@@ -408,6 +408,7 @@
     "gasSponsorshipFailed": "Ev danûstandin nehat sponsorkirin. Ji kerema xwe piştî kêliyekê dîsa biceribîne."
   },
   "nav": {
+    "reorderHint": "Hildin û derêjin herîkoka ku we li serê xwe de ye bo ku bi rêza xwe re bi kar bînin.",
     "home": "Destpêk",
     "explore": "Keşf bike",
     "prompt": "Prompt",
@@ -451,7 +452,9 @@
     "getTheApp": "Sepanê bistîne",
     "connectAi": "AI girêde",
     "converter": "Veguherîner",
-    "affiliate": "Hevkarî"
+    "affiliate": "Hevkarî",
+    "reorderReset": "Vegerîne",
+    "reorderResetLong": "Rêza menuyê vegerîne"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",

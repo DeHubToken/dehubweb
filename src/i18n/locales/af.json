@@ -407,6 +407,8 @@
     "gasSponsorshipFailed": "Hierdie transaksie kon nie geborg word nie. Probeer oor 'n oomblik weer."
   },
   "nav": {
+    "reorderHint": "Hou en sleep enige ikoon vas om dit te herskik",
+    "reorderResetLong": "Stel kieslysbestelling terug",
     "home": "Tuis",
     "explore": "Verken",
     "prompt": "Stel saam",
@@ -450,7 +452,8 @@
     "getTheApp": "Kry die app",
     "connectAi": "Koppel KI",
     "converter": "Converter",
-    "affiliate": "Vennoot"
+    "affiliate": "Vennoot",
+    "reorderReset": "Herstel"
   },
   "feed": {
     "viewProfile": "Bekyk {{name}} se profiel",

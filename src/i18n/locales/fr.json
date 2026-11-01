@@ -546,6 +546,9 @@
     "gasSponsorshipFailed": "Cette transaction n'a pas pu être prise en charge. Réessayez dans un instant."
   },
   "nav": {
+    "reorderHint": "Maintenez et faites glisser n'importe quelle icône pour réorganiser",
+    "reorderReset": "Réinitialiser",
+    "reorderResetLong": "Réinitialiser l'ordre du menu",
     "home": "Accueil",
     "explore": "Explorer",
     "prompt": "Invite",

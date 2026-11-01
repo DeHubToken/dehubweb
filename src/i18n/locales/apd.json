@@ -382,6 +382,7 @@
     "gasSponsorshipFailed": "ما قدرنا نغطي المعاملة دي. حاول تاني بعد شوية."
   },
   "nav": {
+    "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "الرئيسية",
     "explore": "تصفّح",
     "prompt": "اكتب",
@@ -425,7 +426,9 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة"
+    "affiliate": "التسويق بالعمولة",
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",

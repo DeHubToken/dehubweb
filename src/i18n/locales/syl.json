@@ -391,6 +391,7 @@
     "gasSponsorshipFailed": "ইতার লেনদেনর খরচ দিতা পারলাম না। অখটু বাদে আবার চেষ্টা করউক্কা।"
   },
   "nav": {
+    "reorderHint": "হোল্ড করিয়া কোন আইকন টেনে বসালে সাজানো যাবে",
     "home": "ঘর",
     "explore": "হুদো",
     "prompt": "নির্দেশ করুন",
@@ -434,7 +435,9 @@
     "getTheApp": "অ্যাপ নামাউক্কা",
     "connectAi": "AI সংযুক্ত করউক্কা",
     "converter": "কনভার্টার",
-    "affiliate": "অ্যাফিলিয়েট"
+    "affiliate": "অ্যাফিলিয়েট",
+    "reorderReset": "রিসেট",
+    "reorderResetLong": "মেনুর ক্রম রিসেট করুন"
   },
   "feed": {
     "viewProfile": "{{name}}'র প্রোফাইল দেখ",

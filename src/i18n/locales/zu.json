@@ -404,6 +404,9 @@
     "gasSponsorshipFailed": "Le ntengiselwano ayikwazanga ukukhokhelwa. Sicela uzame futhi ngomzuzwana."
   },
   "nav": {
+    "reorderHint": "Bamba bese uhudula noma iyiphi i-ayikhoni ukuze uhlele kabusha",
+    "reorderReset": "Setha kabusha",
+    "reorderResetLong": "Setha kabusha ukulandelana kwemenyu",
     "home": "Ekhaya",
     "explore": "Hlola",
     "prompt": "Yenza",

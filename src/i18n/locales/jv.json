@@ -398,6 +398,8 @@
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
   "nav": {
+    "reorderReset": "Reset",
+    "reorderResetLong": "Kembalikan urutan menu",
     "home": "Beranda",
     "explore": "Jelajah",
     "prompt": "Pituduh",
@@ -441,7 +443,8 @@
     "getTheApp": "Njupuk aplikasi",
     "connectAi": "Nyambungake AI",
     "converter": "Converter",
-    "affiliate": "Afiliasi"
+    "affiliate": "Afiliasi",
+    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang"
   },
   "feed": {
     "viewProfile": "Deleng profil {{name}}",

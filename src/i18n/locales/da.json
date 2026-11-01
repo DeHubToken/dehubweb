@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Denne transaktion kunne ikke betales for dig. Prøv igen om et øjeblik."
   },
   "nav": {
+    "reorderHint": "Hold og træk et ikon for at omarrangere",
+    "reorderReset": "Nulstil",
+    "reorderResetLong": "Nulstil menurækkefølge",
     "home": "Hjem",
     "explore": "Udforsk",
     "prompt": "Styr",

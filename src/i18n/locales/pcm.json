@@ -372,6 +372,8 @@
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Abeg try again small time."
   },
   "nav": {
+    "reorderHint": "Hold and drag any icon wey you like so you can rearrange dem.",
+    "reorderResetLong": "Reset menu order",
     "home": "Home",
     "explore": "Waka Look",
     "prompt": "Prompt",
@@ -415,7 +417,8 @@
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
     "converter": "Converter",
-    "affiliate": "Affiliate"
+    "affiliate": "Affiliate",
+    "reorderReset": "Reset"
   },
   "feed": {
     "viewProfile": "View {{name}}'s profile",

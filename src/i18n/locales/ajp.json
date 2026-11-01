@@ -431,7 +431,10 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة"
+    "affiliate": "التسويق بالعمولة",
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",

@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."
   },
   "nav": {
+    "reorderHint": "Tartsa lenyomva és húzza bármelyik ikont az átrendezéshez",
+    "reorderReset": "Visszaállítás",
+    "reorderResetLong": "Menüsorrend visszaállítása",
     "home": "Kezdőlap",
     "explore": "Felfedezés",
     "prompt": "Ösztönzés",

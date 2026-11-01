@@ -379,6 +379,7 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول مرة أخرى بعد قليل."
   },
   "nav": {
+    "reorderHint": "احفظ و اسحب أي أيكون ليغير ترتيبها",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "تجهيز",
@@ -422,7 +423,9 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة"
+    "affiliate": "التسويق بالعمولة",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",

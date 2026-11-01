@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."
   },
   "nav": {
+    "reorderHint": "Hoia ja lohista ükskõik milline ikoon ümberkorraldamiseks",
+    "reorderReset": "Esimene",
+    "reorderResetLong": "Lähtesta menüü järjekord",
     "home": "Avaleht",
     "explore": "Avasta",
     "prompt": "Kohanda",

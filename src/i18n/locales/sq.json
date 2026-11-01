@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."
   },
   "nav": {
+    "reorderHint": "Mbaj dhe tërhiq çdo ikonë për të riorganizuar",
+    "reorderReset": "Rivendos",
+    "reorderResetLong": "Rivendos rendin e menusë",
     "home": "Kryefaqja",
     "explore": "Eksploro",
     "prompt": "Kërkesa",

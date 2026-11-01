@@ -385,6 +385,8 @@
     "gasSponsorshipFailed": "ایں لین دین دا خرچ نہ چایا ونڄ سڳیا۔ تھوڑی دیر بعد کوشش کرو۔"
   },
   "nav": {
+    "reorderHint": "ہول اور ڈرگ کریں کسی بھی آئیکن کو دوبارہ آرینج کرنے کے لئے",
+    "reorderReset": "ٹھیک کر",
     "home": "گھر",
     "explore": "ڳولو",
     "prompt": "پرامپٹ",
@@ -428,7 +430,8 @@
     "getTheApp": "ایپ لوو",
     "connectAi": "AI جوڑو",
     "converter": "کانورٹر",
-    "affiliate": "ایفیلی ایٹ"
+    "affiliate": "ایفیلی ایٹ",
+    "reorderResetLong": "مینو دی ترتیب ری سیٹ کرو"
   },
   "feed": {
     "viewProfile": "{{name}} دی پروفائل ویکھو",

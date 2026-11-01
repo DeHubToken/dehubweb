@@ -406,6 +406,8 @@
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
   },
   "nav": {
+    "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
+    "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",
     "home": "መነሻ",
     "explore": "አስስ",
     "prompt": "ጥያቄ",
@@ -449,7 +451,8 @@
     "getTheApp": "መተግበሪያውን አግኝ",
     "connectAi": "AI አገናኝ",
     "converter": "ቀይር",
-    "affiliate": "አጋር"
+    "affiliate": "አጋር",
+    "reorderReset": "ዳግም አስጀምር"
   },
   "feed": {
     "viewProfile": "የ {{name}} መገለጫ ይመልከቱ",

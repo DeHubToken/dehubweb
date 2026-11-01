@@ -392,6 +392,7 @@
     "gasSponsorshipFailed": "اس لین دین کا خرچ نہیں اٹھایا جا سکا۔ تھوڑی دیر بعد کوشش کریں۔"
   },
   "nav": {
+    "reorderHint": "کوئی بھی آئیکن پکڑ کر گھسیٹ کر ترتیب دیں",
     "home": "گھر",
     "explore": "ڈھونڈو",
     "prompt": "پرامپٹ",
@@ -435,7 +436,9 @@
     "getTheApp": "ایپ لو",
     "connectAi": "AI جوڑو",
     "converter": "کنورٹر",
-    "affiliate": "ایفیلی ایٹ"
+    "affiliate": "ایفیلی ایٹ",
+    "reorderReset": "रीसेट",
+    "reorderResetLong": "مینو کی ترتیب ری سیٹ کریں"
   },
   "feed": {
     "viewProfile": "{{name}} के अनुयायियों की संख्या",

@@ -406,6 +406,8 @@
     "gasSponsorshipFailed": "ماقدرناش نغطى المعامله دى. جرب تانى بعد شويه."
   },
   "nav": {
+    "reorderHint": "احتفظ و اسحب أي أيكون لتغيير ترتيبها",
+    "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الرئيسية",
     "explore": "استكشاف",
     "prompt": "اطلب",
@@ -449,7 +451,8 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "اربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة"
+    "affiliate": "التسويق بالعمولة",
+    "reorderReset": "إعادة تعيين"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",

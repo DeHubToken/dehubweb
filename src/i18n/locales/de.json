@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Diese Transaktion konnte nicht übernommen werden. Bitte versuche es gleich noch einmal."
   },
   "nav": {
+    "reorderHint": "Halte und ziehe ein beliebiges Symbol, um es neu anzuordnen",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Menüreihenfolge zurücksetzen",
     "home": "Startseite",
     "explore": "Entdecken",
     "prompt": "Eingabeaufforderung",

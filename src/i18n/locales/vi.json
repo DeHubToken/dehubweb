@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Không thể tài trợ cho giao dịch này. Vui lòng thử lại sau giây lát."
   },
   "nav": {
+    "reorderHint": "Giữ và kéo bất kỳ biểu tượng nào để sắp xếp lại",
+    "reorderReset": "Đặt lại",
+    "reorderResetLong": "Đặt lại thứ tự menu",
     "home": "Trang chủ",
     "explore": "Khám phá",
     "prompt": "Lời nhắc",

@@ -408,6 +408,9 @@
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
   },
   "nav": {
+    "reorderHint": "Ima iconotapas hap’ispa aysay mosoqmanta churanaykipaq",
+    "reorderReset": "Reset nisqa",
+    "reorderResetLong": "Menú ordenta kutichiy",
     "home": "Qallariy",
     "explore": "Maskay",
     "prompt": "Yanapaq",

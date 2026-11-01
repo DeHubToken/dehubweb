@@ -406,6 +406,9 @@
     "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
   },
   "nav": {
+    "reorderHint": "I - hold at i - drag ang anumang icon upang muling ayusin",
+    "reorderReset": "I - reset",
+    "reorderResetLong": "I - reset ang order ng menu",
     "home": "Tahanan",
     "explore": "Galugarin",
     "prompt": "Prompt",

@@ -425,7 +425,10 @@
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
     "converter": "Chenja",
-    "affiliate": "Affiliate"
+    "affiliate": "Affiliate",
+    "reorderHint": "Hold and drag any icon to rearrange am",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Reset menu order"
   },
   "feed": {
     "viewProfile": "Luk {{name}} profil",

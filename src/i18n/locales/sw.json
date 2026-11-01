@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Muamala huu haukuweza kugharimiwa. Tafadhali jaribu tena baada ya muda mfupi."
   },
   "nav": {
+    "reorderHint": "Shikilia na buruta ikoni yoyote ili kupanga upya",
+    "reorderReset": "Weka upya",
+    "reorderResetLong": "Weka upya mpangilio wa menyu",
     "home": "Nyumbani",
     "explore": "Gundua",
     "prompt": "Ishara",
