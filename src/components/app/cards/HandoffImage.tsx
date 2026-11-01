@@ -75,7 +75,9 @@ function show(entry: Entry) {
   if (props.fixedFrame) Object.assign(nextStyle, {
     position: 'absolute', inset: '0px', width: '100%', height: '100%', maxHeight: '100%', aspectRatio: 'auto',
   });
-  if (entry.failed) nextStyle.visibility = 'hidden';
+  // A released bitmap leaves the img without a src, which the browser paints
+  // as a broken-image icon. Keep the reserved frame empty instead.
+  if (entry.failed || !props.src) nextStyle.visibility = 'hidden';
   for (const property of new Set([...Object.keys(entry.appliedStyle ?? {}), ...Object.keys(nextStyle)])) {
     const value = nextStyle[property] ?? '';
     if ((image.style as any)[property] !== value) (image.style as any)[property] = value;
