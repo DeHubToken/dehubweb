@@ -2675,6 +2675,29 @@ async function fetchAccountInfo(handle) {
   }
 }
 
+/**
+ * A creator who turned "Allow AI scraping" off (customs.aiScraping === 'deny',
+ * see src/lib/ai-scraping.ts) gets the opt-out in the HTML crawlers are served:
+ * `noai, noimageai` on the robots meta and the TDMRep `tdm-reservation` meta.
+ * The app sets the same tags in the browser, but AI crawlers run no script, so
+ * without this they never saw the choice. Anything other than 'deny' is allow.
+ */
+function aiTrainingReserved(customs) {
+  return !!customs && typeof customs === 'object' && customs.aiScraping === 'deny';
+}
+
+function reserveAiTraining(html) {
+  if (/<meta name="robots"[^>]*>/i.test(html)) {
+    html = html.replace(/<meta name="robots" content="([^"]*)"\s*\/?>/i, (m, content) =>
+      /noai/i.test(content) ? m : `<meta name="robots" content="${content}, noai, noimageai">`);
+  } else {
+    html = html.replace('</head>', () => '<meta name="robots" content="noai, noimageai"></head>');
+  }
+  return html
+    .replace(/<meta name="tdm-reservation"[^>]*>/gi, '')
+    .replace('</head>', () => '<meta name="tdm-reservation" content="1"></head>');
+}
+
 /** Adds (or tightens) a page's robots meta to `noindex, follow`. */
 function noindexPage(html) {
   if (/<meta name="robots"[^>]*>/i.test(html)) {
@@ -7370,6 +7393,7 @@ async function handleRequest(request, env, ctx) {
         : '';
     let postShareRecord = null;
     let profileShareAccount = null;
+    let aiReserved = false;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -7385,6 +7409,7 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       postShareRecord = record;
+      aiReserved = aiTrainingReserved(record && record.minterUser && record.minterUser.customs);
       html = enrichPostMeta(html, proxiedPostId, record);
       // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's
       // link cards turn a pasted post link into the embedded post.
@@ -7413,6 +7438,7 @@ async function handleRequest(request, env, ctx) {
       // avatar has none, and its posts were never listed).
       const account = await fetchAccountInfo(proxiedHandle);
       profileShareAccount = account;
+      aiReserved = aiTrainingReserved(account && account.customs);
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
       // Feed readers find the profile's RSS from the page itself.
       if (account && !account.isPrivate) {
@@ -7614,6 +7640,9 @@ async function handleRequest(request, env, ctx) {
       if (localeRedirect) return redirect301(localeRedirect);
     }
 
+    // Last, so no later robots rewrite (noindexPage) drops the opt-out.
+    if (aiReserved) html = reserveAiTraining(html);
+    const robotsHeader = [isReferral ? 'noindex' : '', aiReserved ? 'noai, noimageai' : ''].filter(Boolean).join(', ');
     const rendered = await guard(new Response(html, {
       status: 200,
       headers: {
@@ -7623,7 +7652,8 @@ async function handleRequest(request, env, ctx) {
           : 'no-store',
         'Vary': 'User-Agent',
         'X-Powered-By': 'DeHub-Edge-SEO',
-        ...(isReferral ? { 'X-Robots-Tag': 'noindex' } : {}),
+        ...(robotsHeader ? { 'X-Robots-Tag': robotsHeader } : {}),
+        ...(aiReserved ? { 'tdm-reservation': '1' } : {}),
       },
     }));
     if (isBot && rendered.status === 200) ssrCachePut(ctx, ssrKey, rendered);
