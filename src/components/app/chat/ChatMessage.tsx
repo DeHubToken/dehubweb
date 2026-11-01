@@ -231,7 +231,7 @@ export const ChatMessage = memo(function ChatMessage({
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTextTranslation(message.content);
+  } = useTextTranslation(message.content, 'chat');
 
   // Community chat used to card up community links and nothing else — a store
   // item or an event dropped into a channel arrived as a bare URL.
