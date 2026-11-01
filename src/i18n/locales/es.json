@@ -1158,6 +1158,7 @@
     "doNotDisturb": "No molestar",
     "doNotDisturbDesc": "Silenciar todas las notificaciones de mensajes",
     "comingSoon": "Muy pronto",
+    "tipsOffNote": "Las propinas y envíos hacia ti están desactivados mientras esto esté activado. Desactívalo para volver a recibir propinas.",
     "walletUnlockInterval": "Solicitud de desbloqueo de la billetera",
     "walletUnlockIntervalDesc": "Cuánto tiempo permanece desbloqueada tu billetera para publicar, dar propinas y transferir antes de que solicitemos tu contraseña nuevamente. Sobrevive a actualizaciones; cerrar sesión siempre la bloquea.",
     "walletUnlockNever": "Nunca (hasta que cierres sesión)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Conectado",
     "socialConnectFailed": "No se pudo conectar {{platform}}. Inténtalo de nuevo.",
     "socialVerifiedFollowers": "{{value}} seguidores",
-    "socialFollowersPending": "Actualizando seguidores",
-    "tipsOffNote": "Las propinas y envíos hacia ti están desactivados mientras esto esté activado. Desactívalo para volver a recibir propinas."
+    "socialFollowersPending": "Actualizando seguidores"
   },
   "common": {
     "confirm": "Confirmar",
@@ -2245,6 +2245,10 @@
     "tabs": {
       "playlists": "Listas de reproducción",
       "dislikes": "No me gusta"
+    },
+    "articles": {
+      "emptyTitle": "No artículos aún",
+      "emptySubtitle": "Artículos aparecerán aquí"
     },
     "dislikes": {
       "emptyTitle": "Aún no hay «no me gusta»",
@@ -8469,7 +8473,6 @@
     "paying": "Pagando {{amount}} tokens…",
     "pickCount": "{{selected}} de {{total}} seleccionados. Cualquier cosa que ya esté en tu perfil se omite y nunca se cobra dos veces.",
     "pickTitle": "Elige qué traer",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} importado.",
     "progressDoneWithFailures": "{{imported}} importado, {{failed}} no se pudo importar.",
     "progressIdle": "Cada video en un lote obtiene su propio mosaico aquí, para que puedas ver qué llegó y reintentar lo que no. Nada en ejecución aún — la cuadrícula a continuación es un ejemplo.",

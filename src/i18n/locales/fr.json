@@ -1158,6 +1158,7 @@
     "doNotDisturb": "Ne pas déranger",
     "doNotDisturbDesc": "Couper toutes les notifications de messages",
     "comingSoon": "Bientôt",
+    "tipsOffNote": "Les pourboires et envois vers toi sont désactivés tant que cette option est activée. Désactive-la pour recevoir à nouveau des pourboires.",
     "walletUnlockInterval": "Invite de déverrouillage du portefeuille",
     "walletUnlockIntervalDesc": "Combien de temps votre portefeuille reste déverrouillé pour publier, donner des pourboires et effectuer des transferts avant que nous ne vous demandions à nouveau votre mot de passe. Persiste après les rafraîchissements ; se déconnecter le verrouille toujours.",
     "walletUnlockNever": "Jamais (jusqu'à ce que vous vous déconnectiez)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Connecté",
     "socialConnectFailed": "Impossible de connecter {{platform}}. Veuillez réessayer.",
     "socialVerifiedFollowers": "{{value}} abonnés",
-    "socialFollowersPending": "Mise à jour des abonnés",
-    "tipsOffNote": "Les pourboires et envois vers toi sont désactivés tant que cette option est activée. Désactive-la pour recevoir à nouveau des pourboires."
+    "socialFollowersPending": "Mise à jour des abonnés"
   },
   "common": {
     "confirm": "Confirmer",
@@ -2245,6 +2245,10 @@
     "tabs": {
       "playlists": "Playlists",
       "dislikes": "Je n'aime pas"
+    },
+    "articles": {
+      "emptyTitle": "Aucun article pour l’instant.",
+      "emptySubtitle": "Les articles apparaîtront ici."
     },
     "dislikes": {
       "emptyTitle": "Aucun « je n'aime pas » pour l'instant",

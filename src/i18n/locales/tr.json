@@ -1158,6 +1158,7 @@
     "doNotDisturb": "Rahatsız etmeyin",
     "doNotDisturbDesc": "Tüm mesaj bildirimlerini sessize al",
     "comingSoon": "Çok yakında",
+    "tipsOffNote": "Bu açıkken sana bahşiş ve gönderim kapalıdır. Tekrar bahşiş almak için kapat.",
     "walletUnlockInterval": "Cüzdan şifresi açma uyarısı",
     "walletUnlockIntervalDesc": "Cüzdanunuzun gönderi yapmak, ipuçları vermek ve transferler yapmak için ne kadar süreyle kilidini açtığınızı belirler. Sayfayı yenilediğinizde sürer; çıkış yapmak her zaman kilitler.",
     "walletUnlockNever": "Hiçbir zaman (çıkış yapana kadar)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Bağlı",
     "socialConnectFailed": "{{platform}} bağlanamadı. Lütfen tekrar dene.",
     "socialVerifiedFollowers": "{{value}} takipçi",
-    "socialFollowersPending": "Takipçi sayısı güncelleniyor",
-    "tipsOffNote": "Bu açıkken sana bahşiş ve gönderim kapalıdır. Tekrar bahşiş almak için kapat."
+    "socialFollowersPending": "Takipçi sayısı güncelleniyor"
   },
   "common": {
     "confirm": "Onayla",
@@ -2244,7 +2244,12 @@
     },
     "tabs": {
       "playlists": "Oynatma Listeleri",
-      "dislikes": "Beğenilmeyenler"
+      "dislikes": "Beğenilmeyenler",
+      "articles": "Makaleler"
+    },
+    "articles": {
+      "emptyTitle": "Henüz makaleler yok.",
+      "emptySubtitle": "Makaleler burada görünür."
     },
     "dislikes": {
       "emptyTitle": "Henüz beğenmediğin bir şey yok",
@@ -8469,7 +8474,6 @@
     "paying": "{{amount}} token ödeniyor…",
     "pickCount": "{{selected}} / {{total}} seçildi. Profilinizde zaten olan hiçbir şey atlanır ve asla iki kez ücretlendirilmez.",
     "pickTitle": "Neyi taşıyacağını seç",
-    "placeholder": "youtube.com/@you, tiktok.com/@you, vimeo.com/you…",
     "progressDone": "{{imported}} içe aktarıldı.",
     "progressDoneWithFailures": "{{imported}} içe aktarıldı, {{failed}} içe aktarılamadı.",
     "progressIdle": "Bir toplu işlemdeki her video burada kendi kutucuğunu alır, böylece neyin geldiğini ve neyin başarısız olduğunu yeniden deneyebilirsiniz. Henüz hiçbir şey çalışmıyor — aşağıdaki ızgara bir örnektir.",
@@ -16250,7 +16254,7 @@
     "f9730ea7776a": "Sıradaki",
     "e44dc88eb777": "@alice.eth",
     "4fa8c1cdf83e": "Alice Johnson",
-    "957b1cce1c08": "Web3 BUILDER & DESIGNER. Creating the future of decentralized social 🌐",
+    "957b1cce1c08": "Web3 geliştiricisi ve tasarımcısı. Merkeziyetsiz sosyal medyanın geleceğini yaratıyor 🌐",
     "2f77668a9dfb": "Mesaj",
     "74a883a037bc": "Ayarlar",
     "0b184bc5d534": "Oturumu Kapat",
