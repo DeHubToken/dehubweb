@@ -2311,7 +2311,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             creatorUsername={video.creatorUsername}
             badgeBalance={video.creatorBadgeBalance}
           />
-          {!postPage && <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1">
             {(isOwnPost || boosted) && (
               <PostHeaderBoostButton
                 rowGap={4}
@@ -2326,7 +2326,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
             <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
-          </div>}
+          </div>
         </div>
       )}
 
@@ -3317,7 +3317,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         </div>
         {!hideActions && (
           <>
-            {(postPage || stage) && (!stage || isOwnPost) && (
+            {stage && isOwnPost && (
               <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
                 {isOwnPost && (
                   <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
