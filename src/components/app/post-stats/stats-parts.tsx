@@ -19,10 +19,16 @@ export function fmtDuration(seconds: number | null | undefined): string {
   return h ? `${h}:${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}` : `${m}:${String(r).padStart(2, '0')}`;
 }
 
+/** Smallest count worth comparing against the creator's usual post. */
+const MIN_COMPARE = 5;
+
 /** "2.3× usual" style comparison against the creator's average post. */
 export function VsUsual({ value, usual }: { value: number; usual: number | null | undefined }) {
   const { t } = useTranslation();
   if (usual == null || usual <= 0) return null;
+  // Tiny numbers make silly ratios (1 save vs a usual of 0.1 reads as "10x").
+  // Only compare once this post or the usual reaches a few, and cap at 10+.
+  if (Math.max(value, usual) < MIN_COMPARE) return null;
   const ratio = value / usual;
   if (ratio >= 0.9 && ratio <= 1.1) {
     return <span className="text-[11px] font-semibold text-white/50">{t('postStats.aboutUsual', 'about your usual')}</span>;
@@ -30,7 +36,7 @@ export function VsUsual({ value, usual }: { value: number; usual: number | null 
   const up = ratio > 1;
   return (
     <span className={cn('text-[11px] font-semibold', up ? 'text-emerald-400' : 'text-red-400')}>
-      {up ? '▲' : '▼'} {t('postStats.timesUsual', { defaultValue: '{{ratio}}× usual', ratio: ratio >= 10 ? Math.round(ratio) : ratio.toFixed(1) })}
+      {up ? '▲' : '▼'} {t('postStats.timesUsual', { defaultValue: '{{ratio}}× usual', ratio: ratio > 10 ? '10+' : ratio >= 9.95 ? '10' : ratio.toFixed(1) })}
     </span>
   );
 }
@@ -73,17 +79,20 @@ export function StatsSection({ title, aside, children }: { title: string; aside?
 }
 
 /** Two-part bar: first share solid, rest faint, with labels under it. */
-export function SplitBar({ left, right, leftLabel, rightLabel }: { left: number; right: number; leftLabel: string; rightLabel: string }) {
+export function SplitBar({ left, right, leftLabel, rightLabel, percent = false }: { left: number; right: number; leftLabel: string; rightLabel: string; /** Show each side as a share of the total instead of a count. */ percent?: boolean }) {
   const total = left + right;
   const pct = total ? Math.round((left / total) * 100) : 0;
+  // Right side is 100 minus the left so the two always add up to 100.
+  const leftText = percent ? (total ? `${pct}%` : '–') : fmt(left);
+  const rightText = percent ? (total ? `${100 - pct}%` : '–') : fmt(right);
   return (
     <div className="flex flex-col gap-1.5">
       <div className="h-2 bg-white/10 rounded-full overflow-hidden flex">
         <div className="h-full bg-white rounded-full" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex justify-between text-xs text-white/60 tabular-nums gap-2">
-        <span><b className="text-white">{fmt(left)}</b> {leftLabel}</span>
-        <span><b className="text-white">{fmt(right)}</b> {rightLabel}</span>
+        <span><b className="text-white">{leftText}</b> {leftLabel}</span>
+        <span><b className="text-white">{rightText}</b> {rightLabel}</span>
       </div>
     </div>
   );
