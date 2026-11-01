@@ -20033,5 +20033,21 @@
     "title": "Mutlu Cadılar Bayramı",
     "otherThemes": "Korku havasında değil misin? Diğer temaları bul:",
     "enter": "Zindana gir"
+  },
+  "tokenLaunch": {
+    "eyebrow": "Yakında çıkacak!",
+    "title": "Token başlıyor yakın zamanda",
+    "body": "Alışveriş kapalı, yeni token hazırlanırken. Canlı olunca hemen bir e-posta alacaksın.",
+    "notifyMe": "Beni haberdar et",
+    "sendTo": "{{email}}'a e-posta göndericeğiz.",
+    "emailLabel": "E-posta",
+    "emailPlaceholder": "E-posta adresiniz",
+    "invalidEmail": "E-posta adresi giriniz.",
+    "joinedTitle": "Sen liste üzerindeysin.",
+    "joinedBody": "{{email}}'yi token başladığında size email gönderelim.",
+    "joinedBodyNoEmail": "Sizlere tokenın açıldığında e-posta gönderilecektir.",
+    "failed": "Kaydetmek mümkün değil. Tekrar deneyin.",
+    "privacy": "Sadece bu lansman hakkında söylemek için kullanılıyor.",
+    "seoTitle": "Token launching soon | DeHub"
   }
 }
