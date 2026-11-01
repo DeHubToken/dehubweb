@@ -12542,6 +12542,8 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "1d7234ff1b79": "dans {{feed}}",
+    "e122e5c2b563": "Glissez vers le haut pour fermer",
     "1aa9d734f2ee": "Choisir où chercher",
     "55656b5e434f": "Fermer la recherche",
     "ef557404f465": "Aucun résultat pour « {{query}} »",

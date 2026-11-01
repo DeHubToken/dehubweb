@@ -120,7 +120,17 @@ function ShimmerGrid({ tab }: { tab: FeedSearchTab }) {
   );
 }
 
-export function FeedSearchResults({ tab, query }: { tab: FeedSearchTab; query: string }) {
+export function FeedSearchResults(props: { tab: FeedSearchTab; query: string }) {
+  return (
+    <>
+      {/* Room for the docked search lens on the colour themes (feed-search.css). */}
+      <div data-feed-lens-gap aria-hidden="true" />
+      <FeedSearchResultsBody {...props} />
+    </>
+  );
+}
+
+function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: string }) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { walletAddress } = useAuth();
