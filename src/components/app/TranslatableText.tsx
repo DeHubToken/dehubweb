@@ -24,6 +24,7 @@ import Languages from "@/components/ui/cut-icons/language";
 
 import { supabase } from '@/integrations/supabase/client';
 import { autoTranslateEnabled, setAutoTranslateEnabled, subscribeAutoTranslate } from '@/lib/auto-translate-setting';
+import { chatLineIsForeign } from '@/lib/chat-language-hint';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
@@ -725,18 +726,20 @@ function requestTranslation(text: string, targetLang: string, isPublic = false):
 // kana, hangul, Arabic and friends identify themselves on sight.
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
 
-// Live chat goes further: a Latin-script chat line is never translated without
-// being asked. Chat is slang, names and in-jokes ("hiya bashmo bro"), and the
-// translator turns those into a confident sentence nobody wrote ("its basmati
-// my friend"), shown in place of what the sender typed. Only scripts that
-// identify themselves on sight are auto-translated in chat, and even those need
-// a few letters ("gm", "ok" stay as written). The translate control stays.
+// Live chat goes further. Chat is slang, names and in-jokes ("hiya bashmo
+// bro"), and the translator turns those into a confident sentence nobody wrote
+// ("its basmati my friend"), shown in place of what the sender typed. So a
+// Latin-script chat line is only auto-translated when its own words say which
+// language it is in ("bom dia galera", "hola a todos", see chat-language-hint)
+// and that language is not the reader's. Scripts that identify themselves on
+// sight are auto-translated once they have a few letters ("gm", "ok" stay as
+// written). The translate control stays either way.
 const MIN_CHAT_LETTERS_FOR_AUTO = 4;
 
-function skipsAutoTranslate(text: string, chat = false): boolean {
+function skipsAutoTranslate(text: string, chat = false, readerLang = 'en'): boolean {
   const ownScript = !!detectNonLatinScript(text);
   if (!chat) return !ownScript && text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION;
-  if (!ownScript) return true;
+  if (!ownScript) return !chatLineIsForeign(text, readerLang);
   const words = text
     .replace(/https?:\/\/\S+|www\.\S+/gi, ' ')
     .replace(/[@#$][\p{L}\p{N}_.-]+/gu, ' ');
@@ -1067,7 +1070,7 @@ export function useTranslation(
     // language, so auto-translating it is as likely wrong as right — and it is
     // the exact shape of query that pulls junk out of a shared translation
     // memory. The translate control stays; only the unasked-for pass skips.
-    if (skipsAutoTranslate(text, auto === 'chat')) return;
+    if (skipsAutoTranslate(text, auto === 'chat', userLang)) return;
 
     const key = `${text}-${userLang}`;
     if (autoDoneRef.current === key) return;
