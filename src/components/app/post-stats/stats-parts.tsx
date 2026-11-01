@@ -73,17 +73,20 @@ export function StatsSection({ title, aside, children }: { title: string; aside?
 }
 
 /** Two-part bar: first share solid, rest faint, with labels under it. */
-export function SplitBar({ left, right, leftLabel, rightLabel }: { left: number; right: number; leftLabel: string; rightLabel: string }) {
+export function SplitBar({ left, right, leftLabel, rightLabel, percent = false }: { left: number; right: number; leftLabel: string; rightLabel: string; /** Show each side as a share of the total instead of a count. */ percent?: boolean }) {
   const total = left + right;
   const pct = total ? Math.round((left / total) * 100) : 0;
+  // Right side is 100 minus the left so the two always add up to 100.
+  const leftText = percent ? (total ? `${pct}%` : '–') : fmt(left);
+  const rightText = percent ? (total ? `${100 - pct}%` : '–') : fmt(right);
   return (
     <div className="flex flex-col gap-1.5">
       <div className="h-2 bg-white/10 rounded-full overflow-hidden flex">
         <div className="h-full bg-white rounded-full" style={{ width: `${pct}%` }} />
       </div>
       <div className="flex justify-between text-xs text-white/60 tabular-nums gap-2">
-        <span><b className="text-white">{fmt(left)}</b> {leftLabel}</span>
-        <span><b className="text-white">{fmt(right)}</b> {rightLabel}</span>
+        <span><b className="text-white">{leftText}</b> {leftLabel}</span>
+        <span><b className="text-white">{rightText}</b> {rightLabel}</span>
       </div>
     </div>
   );
