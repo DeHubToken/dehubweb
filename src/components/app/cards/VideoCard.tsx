@@ -27,7 +27,6 @@ import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
-import { opensCommentsSplit } from '@/lib/comments-split';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
@@ -3377,12 +3376,6 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               onComment={() => {
                 if (onOpenComments) {
                   onOpenComments();
-                  return;
-                }
-                // Phones: an audio post opens with its comments in the bottom half.
-                if (video.isAudio && opensCommentsSplit() && window.location.pathname !== `/app/post/${video.id}`) {
-                  cacheVideoForNavigation(queryClient, video);
-                  navigate(`/app/post/${video.id}`, { state: { fromFeed: true, openComments: true } });
                   return;
                 }
                 setCommentsInitialTab(undefined);
