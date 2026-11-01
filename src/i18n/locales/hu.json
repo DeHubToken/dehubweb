@@ -18787,5 +18787,22 @@
     "fingerprint": "Ujjlenyomat",
     "exploreFirst": "Előbb nézz körül",
     "codeNote": "E-mailben küldünk egy kódot, jelszó nélkül."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Jövőben",
+    "title": "Token indítása közeledik",
+    "body": "A vásárlás le van zárva, amíg a új token készül. Kapj egy emailt, amikor online lesz.",
+    "notifyMe": "Értesíts meg engem",
+    "sendTo": "{{email}}-nak fogunk emailt küldeni",
+    "emailLabel": "Email",
+    "emailPlaceholder": "A megadott email",
+    "invalidEmail": "Adjon meg egy érvényes emailt",
+    "joinedTitle": "A listán vagy",
+    "joinedBody": "{{email}}-nak fogunk emailt küldeni, amikor a token indítódik.",
+    "joinedBodyNoEmail": "Miután elindul a token, emailben értesítünk téged.",
+    "failed": "Nem sikerült menteni. Próbálja újra.",
+    "privacy": "Csak azért használjuk, hogy a token indításáról értesítsünk.",
+    "seoTitle": "Token indítása közeledik | DeHub",
+    "seoDescription": "Az új DeHub token hamarosan indítódik. Csatlakozz a listához, és kapj egy emailt, amikor online lesz, majd vásárolhat közvetlenül a DeHub péntekéből."
   }
 }

@@ -18793,5 +18793,22 @@
     "fingerprint": "Empremta",
     "exploreFirst": "Explora primer",
     "codeNote": "T'enviem un codi per correu, sense contrasenya."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Proximament",
+    "title": "Llançament de tokens pròximament",
+    "body": "La compra està tancada mentre es prepara el nou token. Rebreu un correu electrònic en el moment que es posi en línia.",
+    "notifyMe": "Notificar-me",
+    "sendTo": "Us enviarem un correu a {{email}}",
+    "emailLabel": "Correu electrònic",
+    "emailPlaceholder": "El teu correu electrònic",
+    "invalidEmail": "Introduïu un correu electrònic vàlid",
+    "joinedTitle": "Ja esteu a la llista",
+    "joinedBody": "Us enviarem un correu a {{email}} quan es llanci el token.",
+    "joinedBodyNoEmail": "Us enviarem un correu quan es llanci el token.",
+    "failed": "No s'ha pogut guardar. Torneu a intentar-ho.",
+    "privacy": "Només s'utilitza per informar-vos del llançament.",
+    "seoTitle": "Llançament de token pròximament | DeHub",
+    "seoDescription": "El nou token de DeHub es llança pròximament. Uniteu a la llista i rebereu un correu electrònic en el moment que es posi en línia, després compreu directament des del vostre butxaca DeHub."
   }
 }

@@ -18691,5 +18691,22 @@
     "fingerprint": "Fingerabdruck",
     "exploreFirst": "Erst erkunden",
     "codeNote": "Wir schicken dir per E-Mail einen Code, kein Passwort nötig."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Chùò chùò",
+    "title": "Token wird bald lanciert",
+    "body": "Kaufen ist geschlossen, während der neue Token vorbereitet wird. Du bekommst eine E-Mail, sobald er live geht.",
+    "notifyMe": "Meld mich an",
+    "sendTo": "Wir werden {{email}} eine E-Mail schicken",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "Deine E-Mail",
+    "invalidEmail": "Gib eine gültige E-Mail ein",
+    "joinedTitle": "Du bist auf der Liste",
+    "joinedBody": "Wir werden {{email}} eine E-Mail schicken, wenn der Token lanciert wird.",
+    "joinedBodyNoEmail": "Wir werden dir eine E-Mail schicken, wenn der Token lanciert wird.",
+    "failed": "Das konnte nicht gespeichert werden. Versuche es nochmals.",
+    "privacy": "Nur für die Info über die Lancierung.",
+    "seoTitle": "Token wird bald lanciert | DeHub",
+    "seoDescription": "Der neue DeHub-Token wird bald lanciert. Schreib dich auf die Liste und bekomm eine E-Mail, sobald er live geht, dann kannst du direkt aus deinem DeHub-Wallet kaufen."
   }
 }
