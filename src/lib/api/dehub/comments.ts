@@ -340,6 +340,29 @@ export async function addImageComment(params: {
   return response;
 }
 
+/**
+ * A video or audio FILE on a comment or reply (an image keeps addImageComment).
+ * The backend tells the kinds apart by the file's type.
+ */
+export async function addMediaComment(params: {
+  tokenId: number;
+  file: File;
+  content?: string;
+  parentId?: string;
+}): Promise<ImageCommentResponse & { videoUrl?: string; audioUrl?: string; audioDuration?: number }> {
+  const formData = new FormData();
+  formData.append('file', params.file, params.file.name || `comment-${Date.now()}`);
+
+  const url = new URL('/api/comment_media', DEHUB_API_BASE);
+  url.searchParams.set('streamTokenId', String(params.tokenId));
+  if (params.content?.trim()) url.searchParams.set('content', params.content);
+  if (params.parentId) url.searchParams.set('commentId', params.parentId);
+
+  const response = await authedUpload<ImageCommentResponse & { videoUrl?: string; audioUrl?: string; audioDuration?: number }>(`${url.pathname}${url.search}`, formData);
+  assertCommentAccepted(response);
+  return response;
+}
+
 export async function addGifComment(params: {
   tokenId: number;
   gifUrl: string;

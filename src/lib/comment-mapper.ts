@@ -29,6 +29,8 @@ export interface Comment {
   avatar?: string;
   text: string;
   imageUrl?: string;
+  /** A video clip attached with the paperclip. */
+  videoUrl?: string;
   likes: number;
   dislikes: number;
   /**
@@ -129,6 +131,11 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     avatar: resolvedAvatar,
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
     imageUrl: commentImageUrl,
+    videoUrl: (apiComment as any).videoUrl
+      ? (String((apiComment as any).videoUrl).startsWith('http')
+        ? (apiComment as any).videoUrl
+        : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(apiComment as any).videoUrl}`)
+      : undefined,
     likes: apiComment.likeCount ?? 0,
     dislikes: apiComment.dislikeCount ?? 0,
     views: apiComment.views ?? 0,
