@@ -40,6 +40,6 @@ Both clients bypass old browser response caches. The accounting cache key is
 versioned so a previous operations estimate cannot survive the rollout.
 
 An unavailable source is missing from the total, not free. Other unconnected
-provider bills, including Lovable Cloud runtime usage, remain outside this feed.
+provider bills, including cloud hosting runtime usage, remain outside this feed.
 Do not describe the total as a complete company expense ledger until those
 sources are connected and reconciled.
