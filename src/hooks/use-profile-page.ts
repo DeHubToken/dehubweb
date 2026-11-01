@@ -8,6 +8,7 @@ import Radio from "@/components/ui/cut-icons/live";
 import PieChart from "@/components/ui/cut-icons/fractions";
 
 import Home from "@/components/ui/cut-icons/home";
+import ArticleIcon from "@/components/ui/cut-icons/blog";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Play from "@/components/ui/cut-icons/play";
 
@@ -47,6 +48,7 @@ const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
   videos: 'video',
   songs: 'feed-audio',
   live: 'live',
+  articles: 'article',
 };
 import { scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
 
@@ -439,6 +441,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const dislikesQuery = useProfileDislikes(apiProfile?.walletAddress, showDislikesTab && secondaryEnabled);
   const dislikesCount = dislikesQuery.data?.pages?.[0]?.totalCount ?? 0;
 
+  const articleCount = tabCount('articles', activeTab === 'articles' ? PROFILE_POSTS.length : 0);
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
     // All also merges in reposts the server total leaves out.
     const homeCount = Math.max(tabCount('home', 0), activeTab === 'home' && !isContentFiltered ? ALL_CONTENT.length : 0);
@@ -452,6 +455,11 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: tabCount('live', PROFILE_LIVE.length) },
       { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
       { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
+      // Only once the profile has an article; kept while open so a search
+      // with no matches does not pull the tab out from under the visitor.
+      ...(articleCount > 0 || activeTab === 'articles'
+        ? [{ icon: ArticleIcon, label: _copy("profile.tabs.articles", { defaultValue: "Articles" }), value: 'articles' as TabValue, count: articleCount }]
+        : []),
       ...(playlistCount > 0
         ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
         : []),
@@ -463,7 +471,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     return [homeTab, ...restTabs, ...dislikesTab];
     // tabCount reads only the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, showDislikesTab, dislikesCount, _copy]);
+  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, showDislikesTab, dislikesCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled

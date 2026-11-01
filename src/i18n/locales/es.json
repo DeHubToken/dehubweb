@@ -2244,7 +2244,12 @@
     },
     "tabs": {
       "playlists": "Listas de reproducción",
-      "dislikes": "No me gusta"
+      "dislikes": "No me gusta",
+      "articles": "Artículos"
+    },
+    "articles": {
+      "emptyTitle": "Aún no hay artículos",
+      "emptySubtitle": "Los artículos aparecerán aquí"
     },
     "dislikes": {
       "emptyTitle": "Aún no hay «no me gusta»",

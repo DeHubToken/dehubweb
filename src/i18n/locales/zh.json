@@ -2089,7 +2089,12 @@
     },
     "tabs": {
       "playlists": "播放列表",
-      "dislikes": "踩"
+      "dislikes": "踩",
+      "articles": "文章"
+    },
+    "articles": {
+      "emptyTitle": "还没有文章",
+      "emptySubtitle": "文章会显示在这里"
     },
     "dislikes": {
       "emptyTitle": "还没有踩过的内容",

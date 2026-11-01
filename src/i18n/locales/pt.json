@@ -2165,7 +2165,12 @@
     },
     "tabs": {
       "playlists": "Listas de reprodução",
-      "dislikes": "Não gostei"
+      "dislikes": "Não gostei",
+      "articles": "Artigos"
+    },
+    "articles": {
+      "emptyTitle": "Ainda não há artigos",
+      "emptySubtitle": "Os artigos aparecerão aqui"
     },
     "dislikes": {
       "emptyTitle": "Nenhum «não gostei» ainda",

@@ -2087,7 +2087,12 @@
     },
     "tabs": {
       "playlists": "재생 목록",
-      "dislikes": "싫어요"
+      "dislikes": "싫어요",
+      "articles": "아티클"
+    },
+    "articles": {
+      "emptyTitle": "아직 아티클이 없습니다",
+      "emptySubtitle": "아티클이 여기에 표시됩니다"
     },
     "dislikes": {
       "emptyTitle": "아직 싫어요가 없습니다",

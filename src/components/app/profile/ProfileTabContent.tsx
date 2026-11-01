@@ -267,7 +267,7 @@ export function ProfileTabContent({
   return (
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
-      {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
+      {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
         <div className="flex flex-col items-center justify-center min-h-[200px]">
           <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
         </div>
@@ -343,6 +343,25 @@ export function ProfileTabContent({
         )}
       </TabPanel>
 
+      {/* ARTICLES TAB — on this tab the content query asks for articles only,
+          so the text-post list holds this creator's articles. Each card is the
+          feed's article cover and opens the usual article page. */}
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="articles">
+        {showLoading ? null : PROFILE_POSTS.length === 0 ? (
+          isContentFiltered
+            ? <ProfileEmptyState iconSrc={comment3dIcon} iconAlt={_copy("profile.tabs.articles", { defaultValue: "Articles" })} iconClassName="opacity-90" {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt={_copy("profile.tabs.articles", { defaultValue: "Articles" })} iconClassName="opacity-90" title={_copy("profile.articles.emptyTitle", { defaultValue: "No articles yet" })} subtitle={_copy("profile.articles.emptySubtitle", { defaultValue: "Articles will appear here" })} />
+        ) : (
+          <div className="space-y-3">
+            {PROFILE_POSTS.map((post, index) => (
+              <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('post', index)}>
+                <PostCard post={post} />
+              </div>
+            ))}
+          </div>
+        )}
+      </TabPanel>
+
       {/* SUBSCRIBERS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="subscribers">
         <SubscribersTabPanel
@@ -412,7 +431,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
-      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
+      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
         <LoadMoreSentinel
           hasNextPage={hasNextContentPage}
           isFetchingNextPage={isFetchingNextContentPage}

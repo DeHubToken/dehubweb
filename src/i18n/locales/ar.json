@@ -2248,7 +2248,12 @@
     },
     "tabs": {
       "playlists": "قوائم التشغيل",
-      "dislikes": "عدم الإعجاب"
+      "dislikes": "عدم الإعجاب",
+      "articles": "المقالات"
+    },
+    "articles": {
+      "emptyTitle": "لا توجد مقالات بعد",
+      "emptySubtitle": "ستظهر المقالات هنا"
     },
     "dislikes": {
       "emptyTitle": "لا توجد منشورات لم تعجبك بعد",

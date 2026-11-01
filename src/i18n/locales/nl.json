@@ -2434,7 +2434,12 @@
     },
     "tabs": {
       "playlists": "Afspeellijsten",
-      "dislikes": "Dislikes"
+      "dislikes": "Dislikes",
+      "articles": "Artikelen"
+    },
+    "articles": {
+      "emptyTitle": "Nog geen artikelen",
+      "emptySubtitle": "Artikelen verschijnen hier"
     },
     "dislikes": {
       "emptyTitle": "Nog geen dislikes",

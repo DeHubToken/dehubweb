@@ -2244,7 +2244,12 @@
     },
     "tabs": {
       "playlists": "Oynatma Listeleri",
-      "dislikes": "Beğenilmeyenler"
+      "dislikes": "Beğenilmeyenler",
+      "articles": "Makaleler"
+    },
+    "articles": {
+      "emptyTitle": "Henüz makale yok",
+      "emptySubtitle": "Makaleler burada görünecek"
     },
     "dislikes": {
       "emptyTitle": "Henüz beğenmediğin bir şey yok",

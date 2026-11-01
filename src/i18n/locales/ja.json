@@ -2088,7 +2088,12 @@
     },
     "tabs": {
       "playlists": "プレイリスト",
-      "dislikes": "よくないね"
+      "dislikes": "よくないね",
+      "articles": "記事"
+    },
+    "articles": {
+      "emptyTitle": "まだ記事はありません",
+      "emptySubtitle": "記事はここに表示されます"
     },
     "dislikes": {
       "emptyTitle": "まだ「よくないね」はありません",

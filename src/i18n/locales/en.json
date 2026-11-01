@@ -2244,7 +2244,12 @@
     },
     "tabs": {
       "playlists": "Playlists",
-      "dislikes": "Dislikes"
+      "dislikes": "Dislikes",
+      "articles": "Articles"
+    },
+    "articles": {
+      "emptyTitle": "No articles yet",
+      "emptySubtitle": "Articles will appear here"
     },
     "dislikes": {
       "emptyTitle": "No dislikes yet",
