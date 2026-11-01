@@ -18713,5 +18713,10 @@
     "fingerprint": "Faraha",
     "exploreFirst": "Marka hore sahami",
     "codeNote": "Waxaan kuu soo diraynaa koodh iimaylkaaga, looma baahna eray sir ah."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Imaanshaha ugu dhakhsaha badan",
+    "failed": "Ma badbaadin karo taas. isku day mar kale.",
+    "seoDescription": "Token cusub ee DeHub ayaa lagu sii dayn doona dhow. Ku biir liiska oo hel email hal mar markii ay bilaabato, ka dibna iibso sida toos ah meesha DeHub wallet-kaaga."
   }
 }

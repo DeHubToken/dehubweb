@@ -18681,5 +18681,22 @@
     "fingerprint": "Döşeme",
     "exploreFirst": "Öňürti barlaň",
     "codeNote": "Biz size kody iberýäris, hiç hili parol gerek däl."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tezden çykyş",
+    "title": "Token tezden çykyş",
+    "body": "Satyn almak täze token taýynlanýan wagtynda ýapyk. Onuň işe girende e-poçta alyň.",
+    "notifyMe": "Meni habar et",
+    "sendTo": "Biz {{email}} adresine e-poçta ibereris",
+    "emailLabel": "E-poçta",
+    "emailPlaceholder": "Siziň e-poçtaňyz",
+    "invalidEmail": "Dogry e-poçta adresi giriziň",
+    "joinedTitle": "Siz sanawyda barsyňyz",
+    "joinedBody": "Biz {{email}} adresine token çykyşy wagtynda e-poçta ibereris.",
+    "joinedBodyNoEmail": "Biz size token çykyşy wagtynda e-poçta ibereris.",
+    "failed": "Muny saklamak mümkin bolmady. Gaýtadan synanyp görüň.",
+    "privacy": "Diňe çykyş barada size habar bermek üçin ulanylýar.",
+    "seoTitle": "Token tezden çykyş | DeHub",
+    "seoDescription": "Täze DeHub tokeni tezden çykyş edýär. Sanawynyza goşulyň we onuň işe girende bir e-poçta alyň, soňra DeHub şkiliňizden gönüden-göni satyn alyň."
   }
 }

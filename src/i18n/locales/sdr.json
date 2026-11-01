@@ -17669,6 +17669,19 @@
     "exploreFirst": "Pahile explore karo",
     "codeNote": "Hamni toke ek code email karbo, password ke darkar nai."
   },
+  "tokenLaunch": {
+    "body": "بخرید بسته شده است در حالی که توکن جدید آماده می‌شود. یک ایمیل دریافت کنید در دقیقه‌ای که آنلاین می‌شود.",
+    "sendTo": "{{email}}-i email qilishimizda.",
+    "emailLabel": "پست الکترونیکی",
+    "emailPlaceholder": "پست الکترونیکی",
+    "invalidEmail": "एक मान्य ईमेल दर्ज करें",
+    "joinedTitle": "سۆزی لێکەرەوەیەکەیە",
+    "joinedBody": "{{email}}-i qeyd qeyd etibarlı olduğu zaman email göndəriləcək.",
+    "failed": "نمی‌تونم این رو ذخیره کنم. دوباره امتحان کن.",
+    "privacy": "فقط برای تو خبر دادن از راه اندازی استفاده می شود.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "DeHub tokeni yeni çıksa. Listeye katılın ve canlı olduğu anda bir e-posta alın, ardından DeHub cüzdanınızdan doğrudan satın alın."
+  },
   "post": {
     "like": "پسند",
     "comment": "تبصرہ",

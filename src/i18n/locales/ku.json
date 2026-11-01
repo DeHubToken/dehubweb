@@ -18758,12 +18758,16 @@
     }
   },
   "tokenLaunch": {
+    "eyebrow": "Coming soon",
     "title": "Tokenê diyar e ku bi ser destpêkirin e.",
+    "notifyMe": "Notify me",
     "sendTo": "We werin {{email}} bi emailê.",
+    "emailLabel": "Email",
     "emailPlaceholder": "Têkiliyên tîpêjî yên te",
     "joinedTitle": "Tê li ser lîsteyê.",
     "joinedBody": "We {{email}} biyêjin ku tokenê destpê dike.",
     "failed": "Nêzêk kirina nekir. Bêhn re bi kar bîne.",
+    "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Nû tokenê DeHubê li ser xwe ye. Bi destxistina listê re, bi dest bixî û yekî emailê di şûna ku li ser xwe bike, paşê bi karî bi xwezîna DeHubê xwe bixerike."
   }
 }

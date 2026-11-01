@@ -18685,6 +18685,20 @@
     "exploreFirst": "Birinchi marta tekshiring",
     "codeNote": "Biz sizga kod yuboramiz, parol kerak emas."
   },
+  "tokenLaunch": {
+    "eyebrow": "Tez kunlarda",
+    "body": "Sotib olish to‘g‘ri kelmayapti, yangi token tayyorlanmoqda. Token chiqib ketganda, tezda email yuboriladi.",
+    "notifyMe": "Xabar bering.",
+    "sendTo": "Biz {{email}} email yuboramiz.",
+    "emailPlaceholder": "Muhim so'xangiz",
+    "joinedTitle": "Siz roʻyxatda!",
+    "joinedBody": "Biz token chiqqanda {{email}} ga elektron pochta orqali murojaat qilamiz.",
+    "joinedBodyNoEmail": "Biz sizga tokenning chiqishi haqida ma'lumot berish uchun xabarnoma jo'natamiz.",
+    "failed": "Saqlab bo'lmadi. Qaytadan urinib ko'ring.",
+    "privacy": "Faoliyatga faqat chiqarilish haqida xabar berish uchun ishlatiladi.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Yangi DeHub tokeni qoʻshilmoqda. Roʻyxatga kiring va unda chiqqanidan bir martta elektron pochta olgan holda, undan oʻzingizning DeHub walletidan olib, sotib olishingiz mumkin."
+  },
   "spaces": {
     "title": "Boʻlimlar",
     "live": "Jonli",

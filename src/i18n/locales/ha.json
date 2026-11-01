@@ -18627,6 +18627,12 @@
   },
   "tokenLaunch": {
     "eyebrow": "Sannu da zuwa",
+    "title": "Token ƙaddamarwa ba da daɗewa ba",
+    "body": "Ana rufe siye yayin da sabon alamar ya shirya. Samu imel lokacin da yake rayuwa.",
+    "notifyMe": "Sanar da ni",
+    "sendTo": "Za mu yi email {{email}}",
+    "emailLabel": "Imel",
+    "emailPlaceholder": "Imel naka",
     "invalidEmail": "Sai anai rubuta abin da aka shirya a cikin wannan shafin.",
     "joinedTitle": "Ka a cika jerinmu.",
     "joinedBody": "Muna kiranin {{email}} lokacin da ake kirkire token.",
