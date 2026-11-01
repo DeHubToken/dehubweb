@@ -2104,6 +2104,10 @@
       "featureReply": "{{name}} відповів на ваш коментар",
       "featureMentionNamed": "{{name}} згадав вас на “{{title}}”",
       "featureMention": "{{name}} згадав вас на особливість",
+      "featureNewNamed": "{{name}} опублікував(ла) новий запит «{{title}}»",
+      "featureNew": "{{name}} опублікував(ла) новий запит",
+      "featureActivityNamed": "{{name}} залишив(ла) коментар до “{{title}}”",
+      "featureActivity": "{{name}} залишив коментар до запиту",
       "governanceVoteNamed": "{{name}} проголосував за вашу пропозицію “{{title}}”",
       "governanceVote": "{{name}} проголосував за вашу пропозицію",
       "governanceCommentNamed": "{{name}} залишив коментар до вашої пропозиції “{{title}}”",
@@ -19157,6 +19161,11 @@
     "exploreFirst": "Спершу роздивитися",
     "codeNote": "Ми надішлемо код на пошту, пароль не потрібен."
   },
+  "halloween": {
+    "title": "Щасливого Гелловіну",
+    "otherThemes": "Не хочеться моторошного? Обери іншу тему:",
+    "enter": "Увійти в підземелля"
+  },
   "pages": {
     "home": {
       "title": "Головна",
@@ -19214,10 +19223,5 @@
     "footer": {
       "allRightsReserved": "Всі права захищені"
     }
-  },
-  "halloween": {
-    "title": "Щасливого Гелловіну",
-    "otherThemes": "Не хочеться моторошного? Обери іншу тему:",
-    "enter": "Увійти в підземелля"
   }
 }

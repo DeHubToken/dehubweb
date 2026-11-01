@@ -1158,6 +1158,7 @@
     "doNotDisturb": "Niet storen",
     "doNotDisturbDesc": "Alle berichtmeldingen dempen",
     "comingSoon": "Binnenkort",
+    "tipsOffNote": "Fooien en verzendingen naar jou staan uit zolang dit aan staat. Zet het uit om weer fooien te krijgen.",
     "walletUnlockInterval": "Portemonnee ontgrendelprompt",
     "walletUnlockIntervalDesc": "Hoe lang uw portemonnee ontgrendeld blijft voor het plaatsen, tippen en overmaken voordat we uw wachtwoord opnieuw vragen. Overleeft herladen; afmelden sluit het altijd.",
     "walletUnlockNever": "Nooit (totdat u afmeldt)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Gekoppeld",
     "socialConnectFailed": "Kan {{platform}} niet koppelen. Probeer het opnieuw.",
     "socialVerifiedFollowers": "{{value}} volgers",
-    "socialFollowersPending": "Aantal volgers wordt bijgewerkt",
-    "tipsOffNote": "Fooien en verzendingen naar jou staan uit zolang dit aan staat. Zet het uit om weer fooien te krijgen."
+    "socialFollowersPending": "Aantal volgers wordt bijgewerkt"
   },
   "common": {
     "confirm": "Bevestigen",
@@ -2095,6 +2095,10 @@
       "featureReply": "{{name}} heeft gereageerd op uw reactie",
       "featureMentionNamed": "{{name}} heeft u genoemd in “{{title}}”",
       "featureMention": "{{name}} heeft u genoemd in een featureverzoek",
+      "featureNewNamed": "{{name}} plaatste een nieuw verzoek \"{{title}}\"",
+      "featureNew": "{{name}} heeft een nieuw verzoek geplaatst",
+      "featureActivityNamed": "{{name}} heeft gereageerd op \"{{title}}\"",
+      "featureActivity": "{{name}} heeft gereageerd op een verzoek",
       "governanceVoteNamed": "{{name}} heeft gestemd op uw voorstel “{{title}}”",
       "governanceVote": "{{name}} heeft gestemd op uw voorstel",
       "governanceCommentNamed": "{{name}} heeft gereageerd op uw voorstel “{{title}}”",

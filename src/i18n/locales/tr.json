@@ -1158,6 +1158,7 @@
     "doNotDisturb": "Rahatsız etmeyin",
     "doNotDisturbDesc": "Tüm mesaj bildirimlerini sessize al",
     "comingSoon": "Çok yakında",
+    "tipsOffNote": "Bu açıkken sana bahşiş ve gönderim kapalıdır. Tekrar bahşiş almak için kapat.",
     "walletUnlockInterval": "Cüzdan şifresi açma uyarısı",
     "walletUnlockIntervalDesc": "Cüzdanunuzun gönderi yapmak, ipuçları vermek ve transferler yapmak için ne kadar süreyle kilidini açtığınızı belirler. Sayfayı yenilediğinizde sürer; çıkış yapmak her zaman kilitler.",
     "walletUnlockNever": "Hiçbir zaman (çıkış yapana kadar)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Bağlı",
     "socialConnectFailed": "{{platform}} bağlanamadı. Lütfen tekrar dene.",
     "socialVerifiedFollowers": "{{value}} takipçi",
-    "socialFollowersPending": "Takipçi sayısı güncelleniyor",
-    "tipsOffNote": "Bu açıkken sana bahşiş ve gönderim kapalıdır. Tekrar bahşiş almak için kapat."
+    "socialFollowersPending": "Takipçi sayısı güncelleniyor"
   },
   "common": {
     "confirm": "Onayla",
@@ -1905,6 +1905,10 @@
       "featureReply": "{{name}} yorumunuza cevap verdi",
       "featureMentionNamed": "{{name}} “{{title}}” üzerinde size atıfta bulundu",
       "featureMention": "{{name}} bir özelleştirme talebinde size atıfta bulundu",
+      "featureNewNamed": "{{name}} yeni bir istekte bulundu: “{{title}}”",
+      "featureNew": "{{name}} yeni bir istekte bulundu",
+      "featureActivityNamed": "{{name}}, “{{title}}” üzerine yorum yaptı",
+      "featureActivity": "{{name}} bir isteğe yorum yaptı",
       "governanceVoteNamed": "{{name}} öneriniz “{{title}}” üzerine oy kullandı",
       "governanceVote": "{{name}} öneriniz üzerine oy kullandı",
       "governanceCommentNamed": "{{name}} öneriniz “{{title}}” üzerine yorum yaptı",

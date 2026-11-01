@@ -1727,6 +1727,8 @@
       "featureReply": "{{name}} i ka kɔmenti jaabi",
       "featureMentionNamed": "{{name}} i tɔgɔ fɔra “{{title}}” kan",
       "featureMention": "{{name}} i tɔgɔ fɔra ɲinini dɔ kan",
+      "featureNewNamed": "{{name}} posted a new request {{title}}",
+      "featureActivity": "{{name}} Comment on a ka kan ka kɛ",
       "governanceVoteNamed": "{{name}} i ka tɔgɔ kan “{{title}}” kɔnɔ",
       "governanceVote": "{{name}} i ka tɔgɔ kan",
       "governanceCommentNamed": "{{name}} i ka tɔgɔ kan “{{title}}” kɔnɔ kɔmenti kɛ",

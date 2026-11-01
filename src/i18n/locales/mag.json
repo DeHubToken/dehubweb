@@ -1717,6 +1717,7 @@
       "featureReply": "{{name}} ने तुझसे टिप्पणी पर उत्तर दिया",
       "featureMentionNamed": "{{name}} ने “{{title}}” पर तुझको उल्लेख किया",
       "featureMention": "{{name}} ने फीचर रिक्वेस्ट पर तुझको उल्लेख किया",
+      "featureNewNamed": "{{name}} ने नया रिक्वेस्ट पोस्ट किया है – “{{title}}”",
       "governanceVoteNamed": "{{name}} ने प्रोपोजल “{{title}}” पर वोट दिया",
       "governanceVote": "{{name}} ने प्रोपोजल पर वोट दिया",
       "governanceCommentNamed": "{{name}} ने प्रोपोजल “{{title}}” पर टिप्पणी की",

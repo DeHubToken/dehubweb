@@ -1742,6 +1742,8 @@
       "featureReply": "{{name}} نے آپ کے تبصرے کو جواب دیا",
       "featureMentionNamed": "{{name}} نے آپ کو “{{title}}” پر ذکربھیج دیا",
       "featureMention": "{{name}} نے آپ کو فچر ریکوئسٹ پر ذکربھیج دیا",
+      "featureNew": "{{name}} نے ایک نیا درخواست پوسٹ کیا ہے",
+      "featureActivity": "{{name}} نے ایک درخواست پر کامنت کی ہے",
       "governanceVoteNamed": "{{name}} نے آپ کے پریپوزل “{{title}}” پر ووٹ دیا",
       "governanceVote": "{{name}} نے آپ کے پریپوزل پر ووٹ دیا",
       "governanceCommentNamed": "{{name}} نے آپ کے پریپوزل “{{title}}” پر تبصرہ کیا",

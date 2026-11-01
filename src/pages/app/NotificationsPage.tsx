@@ -289,9 +289,9 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote', 'remix'],
-  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
+  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new'],
   communities: ['community_chat', 'community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
@@ -358,6 +358,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'feature_request_comment':
     case 'feature_request_reply':
     case 'feature_request_mention':
+    case 'feature_request_activity':
+    case 'feature_request_new':
     case 'governance_comment':
     case 'governance_reply':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
@@ -641,6 +643,14 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.featureMentionNamed' : 'notifications.custom.featureMention', { name: actorName, title });
   }
+  if ((notification.type as string) === 'feature_request_new') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureNewNamed' : 'notifications.custom.featureNew', { name: actorName, title });
+  }
+  if ((notification.type as string) === 'feature_request_activity') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureActivityNamed' : 'notifications.custom.featureActivity', { name: actorName, title });
+  }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title, tr);
@@ -852,8 +862,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // and several pages of infinite scroll. `?request=` pins it at the top
   // instead, so the row always opens the thing it names. A comment row also
   // asks for the comments to be open, the same way a post comment does.
-  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention'];
-  if ((notification.type as string) === 'feature_request_like' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
+  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity'];
+  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
     const requestId = customReferenceId(notification);
     if (!requestId) return '/features';
     if (!FEATURE_COMMENT_TYPES.includes(notification.type as string)) {

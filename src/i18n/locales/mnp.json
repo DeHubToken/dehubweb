@@ -1702,6 +1702,8 @@
       "featureReply": "{{name}} 回覆了你的留言",
       "featureMentionNamed": "{{name}} 在「{{title}}」上提到了你",
       "featureMention": "{{name}} 在功能請求上提到了你",
+      "featureNewNamed": "{{name}} 吾新增一個請求「{{title}}」",
+      "featureNew": "{{name}} 吾新增一個請求",
       "governanceVoteNamed": "{{name}} 在你的提案「{{title}}」上投票了",
       "governanceVote": "{{name}} 在你的提案上投票了",
       "governanceCommentNamed": "{{name}} 在你的提案「{{title}}」上留了言",

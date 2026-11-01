@@ -1158,6 +1158,7 @@
     "doNotDisturb": "No molestar",
     "doNotDisturbDesc": "Silenciar todas las notificaciones de mensajes",
     "comingSoon": "Muy pronto",
+    "tipsOffNote": "Las propinas y envíos hacia ti están desactivados mientras esto esté activado. Desactívalo para volver a recibir propinas.",
     "walletUnlockInterval": "Solicitud de desbloqueo de la billetera",
     "walletUnlockIntervalDesc": "Cuánto tiempo permanece desbloqueada tu billetera para publicar, dar propinas y transferir antes de que solicitemos tu contraseña nuevamente. Sobrevive a actualizaciones; cerrar sesión siempre la bloquea.",
     "walletUnlockNever": "Nunca (hasta que cierres sesión)",
@@ -1208,8 +1209,7 @@
     "socialConnectedShort": "Conectado",
     "socialConnectFailed": "No se pudo conectar {{platform}}. Inténtalo de nuevo.",
     "socialVerifiedFollowers": "{{value}} seguidores",
-    "socialFollowersPending": "Actualizando seguidores",
-    "tipsOffNote": "Las propinas y envíos hacia ti están desactivados mientras esto esté activado. Desactívalo para volver a recibir propinas."
+    "socialFollowersPending": "Actualizando seguidores"
   },
   "common": {
     "confirm": "Confirmar",
@@ -1905,6 +1905,10 @@
       "featureReply": "{{name}} respondió a tu comentario",
       "featureMentionNamed": "{{name}} te mencionó en “{{title}}”",
       "featureMention": "{{name}} te mencionó en una solicitud de función",
+      "featureNewNamed": "{{name}} publicó una nueva solicitud “{{title}}”",
+      "featureNew": "{{name}} ha publicado una nueva solicitud",
+      "featureActivityNamed": "{{name}} comentó en “{{title}}”",
+      "featureActivity": "{{name}} comentó una solicitud",
       "governanceVoteNamed": "{{name}} votó en tu propuesta “{{title}}”",
       "governanceVote": "{{name}} votó en tu propuesta",
       "governanceCommentNamed": "{{name}} comentó en tu propuesta “{{title}}”",

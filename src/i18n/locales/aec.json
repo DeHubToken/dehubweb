@@ -1677,6 +1677,7 @@
       "featureReply": "{{name}} رد على تعليقك",
       "featureMentionNamed": "{{name}} ذكرتك في “{{title}}”",
       "featureMention": "{{name}} ذكرتك في طلب",
+      "featureActivityNamed": "{{name}} قال في “{{title}}”",
       "governanceVoteNamed": "{{name}} صوتوا على مشروعك \"{{title}}\"",
       "governanceVote": "{{name}} صوت على اقتراحك",
       "governanceCommentNamed": "{{name}} قام بتعليق على مشروعك \"{{title}}\"",
