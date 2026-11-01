@@ -24,6 +24,7 @@ vi.mock('@/hooks/use-search-history', () => ({ useSearchHistory: () => ({ addToH
 vi.mock('@/lib/route-preload', () => ({ preloadRoute: vi.fn() }));
 vi.mock('@/lib/document-scroll', () => ({ scrollDocumentToSmooth: vi.fn() }));
 vi.mock('@/components/app/war/WarHudIcon', () => ({ ThemedIcon: () => null }));
+vi.mock('@/contexts/UserPreferencesContext', () => ({ useUserPreferences: () => null }));
 vi.mock('@/components/app/navigation/DesktopSidebar', () => ({ DesktopSidebar: () => null }));
 vi.mock('@/components/app/navigation/SidebarProfileSwitcher', () => ({ SidebarProfileSwitcher: () => null }));
 vi.mock('@/components/ui/liquid-glass-bubble', () => ({ LiquidGlassBubble: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button> }));

@@ -21,6 +21,10 @@ import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CrumblingLogo } from './CrumblingLogo';
 import { filterNavItems, exploreSearchHref } from './nav-search';
+import { navItemId } from './nav-item-id';
+import { applyNavOrder } from '@/lib/nav-order';
+import { useNavOrderEditor } from '@/hooks/use-nav-order';
+import { useDragReorder } from '@/hooks/use-drag-reorder';
 import { canManageAgents } from '@/lib/agent-access';
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -339,6 +343,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
     return ordered;
   }, []);
+  const defaultRailIds = useMemo(() => railItems.map(navItemId), [railItems]);
+  // The person's own order, dragged into place (hooks/use-drag-reorder).
+  const { order: savedRailOrder, customised: railCustomised, save: saveRailOrder, reset: resetRailOrder } =
+    useNavOrderEditor('rail', defaultRailIds);
+  const orderedRailItems = useMemo(
+    () => applyNavOrder(railItems, savedRailOrder, navItemId),
+    [railItems, savedRailOrder],
+  );
 
   // `isKidsMode` is in the deps because `filterNavItems` reads the lock
   // directly rather than taking it as an argument — without it here the rail
@@ -346,8 +358,37 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // which is to say until long after the parent armed Kids Mode.
   const isKidsMode = useKidsModeLock();
   const visibleRailItems = useMemo(
-    () => filterNavItems(railItems, isCollapsed ? '' : navQuery, t, canManageAgents(walletAddress)),
-    [railItems, navQuery, isCollapsed, t, isKidsMode, walletAddress],
+    () => filterNavItems(orderedRailItems, isCollapsed ? '' : navQuery, t, canManageAgents(walletAddress)),
+    [orderedRailItems, navQuery, isCollapsed, t, isKidsMode, walletAddress],
+  );
+  const railSearching = !isCollapsed && !!navQuery.trim();
+  const railIds = useMemo(() => visibleRailItems.map(navItemId), [visibleRailItems]);
+  const onRailCommit = useCallback((next: string[]) => saveRailOrder(next), [saveRailOrder]);
+  const { order: liveRailOrder, draggingId: railDraggingId, itemProps: railDragProps } = useDragReorder({
+    ids: railIds,
+    onCommit: onRailCommit,
+    disabled: railSearching,
+  });
+  // A reorder moves the active row without resizing anything, so the
+  // ResizeObserver above wouldn't re-place the glass on its own. Measured once
+  // the rows have settled: a row mid-slide carries a transform, and Chrome then
+  // reports offsets against that row instead of the list.
+  useEffect(() => {
+    if (railDraggingId) return;
+    const timer = window.setTimeout(updateIndicator, 220);
+    return () => window.clearTimeout(timer);
+  }, [updateIndicator, liveRailOrder, railDraggingId]);
+  // The lifted row needs its own fill, or the rows it passes show through it.
+  const railLiftClass = cn(
+    'rounded-2xl',
+    isLightTheme
+      ? 'data-[reorder-dragging=true]:bg-white data-[reorder-dragging=true]:shadow-[0_10px_24px_rgba(0,0,0,0.18)]'
+      : 'data-[reorder-dragging=true]:bg-zinc-900 data-[reorder-dragging=true]:shadow-[0_10px_24px_rgba(0,0,0,0.55)]',
+  );
+  const railById = useMemo(() => new Map(visibleRailItems.map((item) => [navItemId(item), item])), [visibleRailItems]);
+  const railRows = useMemo(
+    () => liveRailOrder.map((id) => railById.get(id)).filter((item): item is NavItem => !!item),
+    [liveRailOrder, railById],
   );
   const isAIActive = location.pathname === '/app/assistant';
 
@@ -658,11 +699,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             "flex flex-col space-y-2 items-center",
             !isCollapsed && "lg:space-y-[2px] lg:items-stretch"
           )}>
-          {visibleRailItems.map((item) => {
+          {railRows.map((item) => {
             if (item.label === 'Assistant') {
               return (
+                <div key={item.label} {...railDragProps(navItemId(item))} className={railLiftClass}>
                 <NavLink
-                  key={item.label}
+                  draggable={false}
                   ref={isAIActive ? setActiveItemEl : undefined}
                   to="/app/assistant"
                   onPointerEnter={() => preloadRoute('/app/assistant')}
@@ -684,6 +726,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   </div>
                   <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.assistant')}</span>
                 </NavLink>
+                </div>
               );
             }
 
@@ -699,8 +742,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isStagesItem = item.action === 'open-stages';
 
             return (
+              <div key={item.label} {...railDragProps(navItemId(item))} className={railLiftClass}>
               <SidebarNavItem
-                key={item.label}
                 item={item}
                 isActive={isActive}
                 isHome={isHomeItem}
@@ -715,8 +758,22 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 registerActiveRef={isActive ? setActiveItemEl : undefined}
               />
+              </div>
             );
           })}
+          {railCustomised && !navQuery && !isCollapsed && (
+            <button
+              type="button"
+              data-rail-reorder-reset
+              onClick={resetRailOrder}
+              className={cn(
+                "hidden lg:flex w-full items-center rounded-xl px-2.5 py-1.5 text-left text-[12px]",
+                isLightTheme ? "text-zinc-500 hover:text-black" : "text-zinc-500 hover:text-white",
+              )}
+            >
+              {t('nav.reorderResetLong', { defaultValue: 'Reset menu order' })}
+            </button>
+          )}
           {navQuery && visibleRailItems.length === 0 && !isCollapsed && (
             <p className="px-2.5 py-3 text-[13px] text-zinc-500">{t('sidebar.noMenuMatches')}</p>
           )}

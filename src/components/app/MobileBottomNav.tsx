@@ -4,7 +4,7 @@ import Wand2 from "@/components/ui/cut-icons/prompt";
 import Zap from "@/components/ui/cut-icons/superpowers";
 import Scroll from "@/components/ui/cut-icons/glossary";
 import { useTranslation as _useCopy } from 'react-i18next';
-import React, { Suspense, useState, useRef, useEffect } from 'react';
+import React, { Suspense, useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { StageNavChip } from './spaces/StageNavChip';
 import { useStage } from '@/contexts/StageContext';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -64,6 +64,9 @@ import { useTranslation } from 'react-i18next';
 import { isKidsModePath } from '@/constants/app.constants';
 import { isKidsModeLocked } from '@/lib/kids-mode-lock';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
+import { applyNavOrder } from '@/lib/nav-order';
+import { useNavOrderEditor } from '@/hooks/use-nav-order';
+import { useDragReorder } from '@/hooks/use-drag-reorder';
 
 // Every link in this bar is an icon and nothing else, so without a name each
 // one reads to a screen reader as "link" — 25 of them on the 2026-09-02
@@ -71,6 +74,7 @@ import { useKidsModeLock } from '@/hooks/use-kids-mode';
 // existing nav strings, which is also what the desktop sidebar shows.
 const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home',
+  Explore: 'nav.explore',
   Messages: 'nav.messages',
   AI: 'nav.assistant',
   Editor: 'creator.editor',
@@ -101,31 +105,6 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Prompt: 'nav.prompt',
   Communities: 'nav.communities',
 };
-
-/**
- * Drop everything off the Kids Mode allowlist.
- *
- * Applied to all three lists below rather than to a merged one, because the bar
- * lays them out by position — left half, right half, scroll — and merging them
- * to filter once would change where the survivors sit.
- *
- * A generic so each list keeps its own element type; `SCROLL_NAV_ITEMS` carries
- * `requiresAuth` and the odd `external` entry that the others do not.
- */
-function kidsNav<T extends { path: string }>(items: T[]): T[] {
-  return isKidsModeLocked() ? items.filter(item => isKidsModePath(item.path)) : items;
-}
-
-// Left side: Home, Messages
-const LEFT_NAV_ITEMS = [
-  { icon: Home, label: 'Home', path: '/app' },
-  { icon: MessageEnvelope, label: 'Messages', path: '/app/messages' },
-];
-
-// Right side: AI link, Profile
-const RIGHT_NAV_ITEMS = [
-  { icon: AssistantNavIcon, label: 'AI', path: '/app/assistant' },
-];
 
 type MobileNavItem = {
   icon: React.ComponentType<{ className?: string }>;
@@ -164,6 +143,33 @@ const SCROLL_NAV_ITEMS = [
   { icon: Users, label: 'Communities', path: '/app/communities' },
 ] satisfies MobileNavItem[];
 
+/**
+ * The whole bar as one list, in its default order: Home, Messages, (Create),
+ * AI, Explore on the first screen, then everything reached by scrolling. Hold
+ * any icon and drag to rearrange (hooks/use-drag-reorder); Create stays put in
+ * the middle of the first screen and the rest flow around it.
+ */
+const BAR_ITEMS: MobileNavItem[] = [
+  { icon: Home, label: 'Home', path: '/app' },
+  { icon: MessageEnvelope, label: 'Messages', path: '/app/messages' },
+  { icon: AssistantNavIcon, label: 'AI', path: '/app/assistant' },
+  { icon: Search, label: 'Explore', path: '/app/explore' },
+  ...SCROLL_NAV_ITEMS,
+];
+const CREATE_ID = 'create';
+const CREATE_SLOT = 2;
+/** Saved under the destination's i18n key, which the app's bar shares. */
+const barItemId = (item: MobileNavItem) => NAV_LABEL_KEYS[item.label] ?? item.label;
+const DEFAULT_BAR_IDS = BAR_ITEMS.map(barItemId);
+
+/**
+ * Drop everything off the Kids Mode allowlist. Explore stays, as it always
+ * has on this bar.
+ */
+function kidsBar(items: MobileNavItem[], locked: boolean): MobileNavItem[] {
+  return locked ? items.filter(item => item.label === 'Explore' || isKidsModePath(item.path)) : items;
+}
+
 export function MobileBottomNav() {
   const { t: _copy } = _useCopy();
   const location = useLocation();
@@ -175,16 +181,27 @@ export function MobileBottomNav() {
   // Subscribed, not just read: `kidsNav` below calls `isKidsModeLocked()`
   // directly, and without a hook holding that value this bar would keep its
   // adult destinations until something else happened to re-render it.
-  useKidsModeLock();
+  const kidsLocked = useKidsModeLock();
   const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label, label);
-  const navIcon = (
-    item: MobileNavItem,
-    className: string,
-  ) => item.themedIcon ? (
-    <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
-  ) : (
-    <item.icon className={className} />
+
+  // The person's own order (account when signed in, this device otherwise).
+  const { order: savedBarOrder, save: saveBarOrder } = useNavOrderEditor('bar', DEFAULT_BAR_IDS);
+  const barItems = useMemo(
+    () => applyNavOrder(kidsBar(BAR_ITEMS, kidsLocked), savedBarOrder, barItemId),
+    [savedBarOrder, kidsLocked],
   );
+  const barById = useMemo(() => new globalThis.Map(barItems.map(item => [barItemId(item), item])), [barItems]);
+  const barIds = useMemo(() => barItems.map(barItemId), [barItems]);
+  const onBarCommit = useCallback((next: string[]) => saveBarOrder(next), [saveBarOrder]);
+  const { order: liveBarOrder, draggingId: barDraggingId, itemProps: barDragProps } = useDragReorder({
+    ids: barIds,
+    onCommit: onBarCommit,
+  });
+  const barOrder = useMemo(() => {
+    const out = [...liveBarOrder];
+    out.splice(Math.min(CREATE_SLOT, out.length), 0, CREATE_ID);
+    return out;
+  }, [liveBarOrder]);
 
   const dmUnread = useTotalUnreadCount();
   const messagesUnread = dmUnread + usePublicChatUnreadCount();
@@ -313,183 +330,85 @@ export function MobileBottomNav() {
             className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
-            {/* Left side items - Home + Messages */}
-            <div className="flex items-center justify-start flex-shrink-0" style={{ width: '40%' }}>
-              {kidsNav(LEFT_NAV_ITEMS).map((item, index) => {
-                const isActive = item.path === '/app'
-                  ? isHomePath(location.pathname)
-                  : location.pathname.startsWith(item.path);
-                
+            {barOrder.map((id) => {
+              if (id === CREATE_ID) {
                 return (
-                   <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onClick={(e) => handleNavClick(e, item.path)}
-                    onTouchStart={() => preloadRoute(item.path)}
-                    onPointerEnter={() => preloadRoute(item.path)}
-                    aria-label={navLabel(item.label)}
-                    className={cn(
-                      'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white',
-                      index === 0 && 'rounded-l-2xl'
-                    )}
-                  >
-                    <div className="relative w-5 h-5 md:w-6 md:h-6">
-                      {item.label === 'Home' && isHomeRefreshing ? (
-                        <Loader2
-                          className={cn(
-                            'w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
-                          )}
-                        />
-                      ) : (
-                        <item.icon
-                          data-home-nav-glyph={item.label === 'Home' || undefined}
-                            data-messages-nav-glyph={item.label === 'Messages' || undefined}
-                          className={cn(
-                            'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
-                            isActive
-                              ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
-                              : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                          )}
-                        />
-                      )}
-                      {item.label === 'Messages' && messagesUnread > 0 && (
-                        <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
-                          {messagesUnread > 99 ? '99+' : messagesUnread}
-                        </span>
-                      )}
-                    </div>
-                  </NavLink>
-                );
-              })}
-            </div>
-
-            {/* Center Create Button - liquid glass bubble */}
-            <button
-              onClick={handlePostClick}
-              onPointerDown={() => { if (isAuthenticated) warmPostComposer(); }}
-              onPointerEnter={() => { if (isAuthenticated) warmPostComposer(); }}
-              onFocus={() => { if (isAuthenticated) warmPostComposer(); }}
-              aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
-              className="flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
-            >
-                <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)]"
-                    style={{
-                      // The bar behind it is already the blur; a second one
-                      // inside it doubles Safari's work for no visible change.
-                      backgroundColor: 'rgba(255,255,255,0.18)',
-                    }}
-                  />
-                  <Plus
-                    className="w-7 h-7 md:w-8 md:h-8 relative"
-                    style={{ color: '#ffffff', zIndex: 10 }}
-                  />
-                </div>
-            </button>
-
-            {/* Right side items - AI + Profile */}
-            <div className="flex items-center justify-end flex-shrink-0" style={{ width: '40%' }}>
-              {kidsNav(RIGHT_NAV_ITEMS).map((item) => {
-                const isActive = location.pathname.startsWith(item.path);
-                
-                return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onTouchStart={() => preloadRoute(item.path)}
-                    onPointerEnter={() => preloadRoute(item.path)}
-                    aria-label={navLabel(item.label)}
-                    className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white"
-                  >
-                      <item.icon 
-                        className={cn(
-                          'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
-                          isActive 
-                            ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                        )} 
-                      />
-                  </NavLink>
-                );
-              })}
-              
-              {/* Search Link */}
-              <NavLink
-                to="/app/explore"
-                onTouchStart={() => preloadRoute('/app/explore')}
-                onPointerEnter={() => preloadRoute('/app/explore')}
-                aria-label={t('nav.explore')}
-                className="flex items-center justify-center h-12 md:h-14 flex-1 transition-colors duration-200 text-white rounded-r-2xl"
-              >
-                  <Search 
-                    className={cn(
-                      'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
-                      location.pathname.startsWith('/app/explore')
-                        ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                        : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                    )} 
-                  />
-                
-              </NavLink>
-            </div>
-
-            {/* Additional items - accessible via scroll */}
-            {kidsNav(SCROLL_NAV_ITEMS).map((item) => {
-              const isActive = !(item as any).external && !(item as any).action && location.pathname.startsWith(item.path);
-              
-              if ((item as any).external) {
-                return (
-                  <a
-                    key={item.label}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={navLabel(item.label)}
-                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: '20%' }}
-                  >
-                    {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
-                  </a>
-                );
-              }
-
-              if ((item as any).action === 'open-stages') {
-                return (
+                  /* Center Create Button - liquid glass bubble. Pinned to the
+                     middle of the first screen; everything around it moves. */
                   <button
-                    key={item.label}
-                    onClick={() => openStageModal()}
-                    aria-label={navLabel(item.label)}
-                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: '20%' }}
+                    key={CREATE_ID}
+                    onClick={handlePostClick}
+                    onPointerDown={() => { if (isAuthenticated) warmPostComposer(); }}
+                    onPointerEnter={() => { if (isAuthenticated) warmPostComposer(); }}
+                    onFocus={() => { if (isAuthenticated) warmPostComposer(); }}
+                    aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
+                    className="flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
                   >
-                    {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
+                      <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 rounded-xl border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_8px_rgba(0,0,0,0.3)]"
+                          style={{
+                            // The bar behind it is already the blur; a second one
+                            // inside it doubles Safari's work for no visible change.
+                            backgroundColor: 'rgba(255,255,255,0.18)',
+                          }}
+                        />
+                        <Plus
+                          className="w-7 h-7 md:w-8 md:h-8 relative"
+                          style={{ color: '#ffffff', zIndex: 10 }}
+                        />
+                      </div>
                   </button>
                 );
               }
-
+              const item = barById.get(id);
+              if (!item) return null;
+              const drag = barDragProps(id);
+              const isActive = item.path === '/app'
+                ? isHomePath(location.pathname)
+                : location.pathname.startsWith(item.path);
+              const badge = item.label === 'Messages'
+                ? messagesUnread
+                : item.label === 'Notifications'
+                  ? totalNotifUnread
+                  : 0;
+              const glyphClass = cn(
+                'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
+                isActive
+                  ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
+                  : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+              );
               return (
                 <NavLink
-                  key={item.path}
+                  key={id}
+                  {...drag}
                   to={item.path}
-                  onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
+                  onClick={(e) => handleProtectedNavClick(e, item.path, item.requiresAuth)}
                   onTouchStart={() => preloadRoute(item.path)}
                   onPointerEnter={() => preloadRoute(item.path)}
-                  aria-label={navLabel(item.label)}
-                  className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                  style={{ width: '20%' }}
+                  aria-label={item.label === 'Explore' ? t('nav.explore') : navLabel(item.label)}
+                  className={cn(
+                    'relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 rounded-xl transition-colors duration-200 text-white',
+                    barDraggingId === id && 'bg-white/15 shadow-[0_8px_20px_rgba(0,0,0,0.4)]'
+                  )}
+                  style={{ ...drag.style, width: '20%' }}
                 >
-                  <div className="relative">
-                    {navIcon(item, cn(
-                        'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
-                        isActive
-                          ? "drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]"
-                          : "hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
-                      ))}
-                    {item.label === 'Notifications' && totalNotifUnread > 0 && (
-                      <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
-                        {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
+                  <div className="relative w-5 h-5 md:w-6 md:h-6">
+                    {item.label === 'Home' && isHomeRefreshing ? (
+                      <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]" />
+                    ) : item.themedIcon ? (
+                      <ThemedIcon icon={item.themedIcon} alt="" className={cn(glyphClass, 'object-contain')} />
+                    ) : (
+                      <item.icon
+                        data-home-nav-glyph={item.label === 'Home' || undefined}
+                        data-messages-nav-glyph={item.label === 'Messages' || undefined}
+                        className={glyphClass}
+                      />
+                    )}
+                    {badge > 0 && (
+                      <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none whitespace-nowrap">
+                        {badge > 99 ? '99+' : badge}
                       </span>
                     )}
                   </div>
