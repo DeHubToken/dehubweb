@@ -182,9 +182,10 @@ export function EditPostModal({
     if (!open) { editingTokenRef.current = null; return; }
     if (editingTokenRef.current !== String(tokenId)) {
       editingTokenRef.current = String(tokenId);
-      setName.initialize(currentTitle);
-      setDescription.initialize(currentDescription);
-      setArticleBody.initialize(currentArticleBody ?? '');
+      // Open on the saved post, not a leftover draft from an earlier session.
+      setName(currentTitle);
+      setDescription(currentDescription);
+      setArticleBody(currentArticleBody ?? '');
       setCategories.initialize(currentCategories);
       setCommentsDisabled(currentCommentsDisabled);
       setIsMature(currentContentRating === 'mature');
