@@ -18886,6 +18886,23 @@
     "exploreFirst": "Mag-explore muna",
     "codeNote": "Magpapadala kami ng code sa email, walang password."
   },
+  "tokenLaunch": {
+    "eyebrow": "Maglalabas na",
+    "title": "Maglalabas na ang token",
+    "body": "Ang pagbibili ay nasara habang naghahanda ang bagong token. Magkaroon ka ng email sa sandali na ito ay maglulabas.",
+    "notifyMe": "Ibaba ang email mo",
+    "sendTo": "Ibibigay namin email sa {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Ito ang iyong email",
+    "invalidEmail": "Ipasok ang isang valid na email",
+    "joinedTitle": "Nasa listahan ka na",
+    "joinedBody": "Ibibigay namin email sa {{email}} kapag maglulabas ang token.",
+    "joinedBodyNoEmail": "Ibibigay namin email sa iyo kapag maglulabas ang token.",
+    "failed": "Hindi natin maipasa ito. Subukan muli.",
+    "privacy": "Gagamitin lamang ito upang ipaalam sa iyo tungkol sa paglulabas.",
+    "seoTitle": "Maglalabas na ang token | DeHub",
+    "seoDescription": "Maglalabas na ang bagong token ng DeHub. Maging bahagi ng listahan at magkaroon ka ng isang email sa sandali na ito ay maglulabas, pagkatapos ay bumili ka direktang mula sa iyong wallet ng DeHub."
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."

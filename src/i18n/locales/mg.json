@@ -18784,6 +18784,21 @@
     "exploreFirst": "Mikaroha aloha",
     "codeNote": "Handefa kaody amin'ny mailaka izahay, tsy mila tenimiafina."
   },
+  "tokenLaunch": {
+    "eyebrow": "Misy manokana",
+    "title": "Mampitohy ny fanampiana ny token ka hatramin'ny aloha.",
+    "body": "Mampiasa tsy misy fa tsy misy ny fampiasana ny token vao aloha. Misy email ho anao fa tsy misy ny fampiasana ny token vao aloha.",
+    "notifyMe": "Hafahatra ahoana izay matetika",
+    "emailLabel": "Mailaka",
+    "invalidEmail": "Misy email valido",
+    "joinedTitle": "Misy anatin'ny lisitry ny aminao.",
+    "joinedBody": "Misaotra email a {{email}} nandray ny tokeneo.",
+    "joinedBodyNoEmail": "Misy email amin'ny fomba fampianarana amin'ny tokana.",
+    "failed": "Tsy afaka nandraikitra izany. Andramo indray.",
+    "privacy": "Misy tsy voasambatra amin'ny fampahatsiarovana.",
+    "seoTitle": "Tokony amin'ny fahafito | DeHub",
+    "seoDescription": "Ireo DeHub token any amin'ny fahafito. Hita amin'ny lisitry ny amin'ny fahafito, ary hiverina ny email amin'ny fahafito amin'ny fahafito, ka tsy ho atao amin'ny DeHub wallet."
+  },
   "createPost": {
     "title": "Mamorona",
     "whatsOnYourMind": "Inona no ao an-tsainao?",

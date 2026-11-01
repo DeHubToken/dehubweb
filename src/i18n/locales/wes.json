@@ -17395,5 +17395,20 @@
     "fingerprint": "Fingerprint",
     "exploreFirst": "Explore first",
     "codeNote": "Wen yu send us kodi, no pase word dey need."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Coming soon",
+    "title": "Token launching soon",
+    "body": "\"Buy\" no go dey close while new token dey prepare. You go get email when dem go launch.",
+    "notifyMe": "Notify me",
+    "sendTo": "We go send email fo {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "invalidEmail": "Enter one email address valid wey you go use.",
+    "joinedBodyNoEmail": "Wetin we go send you email when token dey launch.",
+    "failed": "Wetin no save for you. Try again.",
+    "privacy": "Wah! Na me go tell you go launch a go dey.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "DeHub token new wey go launch soon. Come join list wey, get one email straight when go live, den buy straight from wallet wey you have for DeHub."
   }
 }

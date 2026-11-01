@@ -18075,6 +18075,19 @@
     "exploreFirst": "先探索",
     "codeNote": "我們會寄一個驗證碼，不需要密碼。"
   },
+  "tokenLaunch": {
+    "body": "购买已关闭，直至新代币准备就绪。立即收到电子邮件通知它上线。",
+    "notifyMe": "通知我",
+    "sendTo": "我们将通过电子邮件发送给{{email}}",
+    "emailLabel": "电子邮件",
+    "emailPlaceholder": "您的电子邮件",
+    "joinedTitle": "你在名单上",
+    "joinedBody": "我们将在令牌上线时发邮件给{{email}}。",
+    "joinedBodyNoEmail": "我们将在令牌上线时发邮件给你。",
+    "privacy": "只用来告诉你关于发布的信息。",
+    "seoTitle": "Token 发布即将开始 | DeHub",
+    "seoDescription": "新版DeHub代币即将上线。加入名单，等待即将上线的通知，然后直接从DeHub钱包购买。"
+  },
   "post": {
     "like": "赞",
     "comment": "评论",

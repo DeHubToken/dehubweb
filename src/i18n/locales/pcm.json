@@ -16198,5 +16198,17 @@
     "fingerprint": "Fingerprint",
     "exploreFirst": "Explore first",
     "codeNote": "We go email you code, you no need password."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Coming soon",
+    "title": "Token launching soon",
+    "notifyMe": "Notify me",
+    "sendTo": "We go send email to {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "joinedBody": "We go send email to {{email}} when token dey launch.",
+    "failed": "No go save dat. Try again.",
+    "privacy": "Wahala na me go tell you about the launch.",
+    "seoTitle": "Token launching soon | DeHub"
   }
 }

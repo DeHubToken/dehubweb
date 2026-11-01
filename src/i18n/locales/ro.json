@@ -18799,6 +18799,22 @@
     "exploreFirst": "Explorează mai întâi",
     "codeNote": "Îți trimitem un cod pe e-mail, fără parolă."
   },
+  "tokenLaunch": {
+    "eyebrow": "În curând",
+    "body": "Cumpărarea este închisă în timp ce noul token este pregătit. Primești un email în momentul în care devine disponibil.",
+    "notifyMe": "Notifică-mă",
+    "sendTo": "Vă vom trimite un email la {{email}}.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "E-mail-ul tău",
+    "invalidEmail": "Introduceți o adresă de email validă.",
+    "joinedTitle": "Ești pe listă.",
+    "joinedBody": "Vă vom trimite un email la {{email}} când token-ul va fi lansat.",
+    "joinedBodyNoEmail": "Vă vom trimite un email când token-ul va fi lansat.",
+    "failed": "Imposibil de salvat. Încearcă din nou.",
+    "privacy": "Doar pentru a-ți anunța lansarea.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Tokenul nou DeHub este pe punctul de lansare. Alătură-te listei și primești un email în momentul în care se pune în circulație, apoi cumpară direct din portofelul tău DeHub."
+  },
   "footer": {
     "about": "Despre noi",
     "contact": "Contact",

@@ -18117,5 +18117,14 @@
     "fingerprint": "指紋",
     "exploreFirst": "先探索",
     "codeNote": "我們會寄一個驗證碼給你，不需密碼。"
+  },
+  "tokenLaunch": {
+    "body": "买卖暂停，等新代币准备好。收到邮件时即刻上线。",
+    "emailPlaceholder": "你个电邮",
+    "invalidEmail": "输入有效个邮箱",
+    "joinedTitle": "侬在名单上",
+    "joinedBody": "代币上线辰光，我会给{{email}}发邮件。",
+    "seoTitle": "Token 就快上架囉 | DeHub",
+    "seoDescription": "新的DeHub代幣快出來囉！加入名單，一旦上線就會收到一封email，然後直接用你的DeHub錢包買入囉！"
   }
 }

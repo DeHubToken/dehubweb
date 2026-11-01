@@ -18707,9 +18707,16 @@
     "codeNote": "Anyị na-ezitere gị koodu, ọ dịghị paswọọdụ achọrọ."
   },
   "tokenLaunch": {
+    "eyebrow": "Na-abịa n 'oge na-adịghị anya",
+    "title": "Token launching adịghị anya",
     "body": "Ịzụ ahịa emechaala ka token ọhụrụ na-akwadebe. Nata imeyl ngwa ngwa mgbe ọ na-amalite.",
+    "notifyMe": "Gwa m",
     "sendTo": "Anyị ga-ezipụ {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email gị",
+    "invalidEmail": "Tinye a nti email",
     "joinedTitle": "Ndè mma nke ụlọ ụlọ.",
+    "joinedBody": "Anyị ga-eziga email {{email}} mgbe akara ngosi ahụ malitere.",
     "joinedBodyNoEmail": "Aga m ezipụta gị ozi mgbe token ahụ na-amalite.",
     "failed": "Ndèrè n'egwèrè nke àlà. Nkèrè n'egwèrè.",
     "privacy": "Naanị ejiri ya ịkwu gị ihe banyere mmalite ahụ.",

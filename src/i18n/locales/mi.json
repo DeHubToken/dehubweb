@@ -18731,5 +18731,22 @@
     "fingerprint": "Tapumati",
     "exploreFirst": "Tūhura i te tuatahi",
     "codeNote": "Ka īmēra mātou i tētahi waehere ki a koe, kāore he kupuhipa e hiahiatia ana."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kei te tae mai",
+    "title": "Kei te tae mai te token",
+    "body": "Kua katia te whakapaipai i te wa e whakarite ana te token hou. Tīkina he īmēra i te wā e whakatupu ai.",
+    "notifyMe": "Whakamōhiotia mai",
+    "sendTo": "Ka īmēra kami ki {{email}}",
+    "emailLabel": "Īmēra",
+    "emailPlaceholder": "Tō īmēra",
+    "invalidEmail": "Whakauru i te īmēra tika",
+    "joinedTitle": "Kei te rārangi koe",
+    "joinedBody": "Ka īmēra kami ki {{email}} i te wā e whakatupu ai te token.",
+    "joinedBodyNoEmail": "Ka īmēra kami ki a koe i te wā e whakatupu ai te token.",
+    "failed": "Kaore i taea te tiaki i tēnā. Ngana anō.",
+    "privacy": "Anake hei whakamōhio ki a koe mō te whakatupuranga.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Kei te tae mai te token DeHub hou. Tomo ki te rārangi me te tīkina he īmēra kotahi i te wā e whakatupu ai, katahi ka hoko tika mai i tō pūkoro DeHub."
   }
 }

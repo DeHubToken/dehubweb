@@ -18701,5 +18701,18 @@
     "fingerprint": "Oynash izi",
     "exploreFirst": "Birinchi eshittiring",
     "codeNote": "Men sizga kod yuboraman, parol kerak emas."
+  },
+  "tokenLaunch": {
+    "eyebrow": "پات يېقىندا كېلىدۇ",
+    "body": "Sotuv qayta ajar bo'lishidan oldin yopildi. Yangi token tayyor bo'lganda sizga email yuboriladi.",
+    "notifyMe": "Men sizni xabar qilishimni xohlayman.",
+    "emailLabel": "ئېلېكترونلۇق پوچتا",
+    "emailPlaceholder": "Xabar",
+    "joinedTitle": "سىزىكىڭىز سىزىكىڭىز",
+    "joinedBody": "Men token chiqqanda {{email}} ga elektron ma'lumot yuboramiz.",
+    "joinedBodyNoEmail": "Men sizga tokenning chiqqanida xabar yuboramiz.",
+    "failed": "بۇنى ساقلاپ بولالمىدى. قايتا سىناپ بېقىڭ.",
+    "privacy": "Men sizni laqiqatni xabar qilish uchun faqat foydalanish uchun ishlatiladi.",
+    "seoDescription": "Yeni DeHub token yengä qeling. Ro'yhatga kirip, token yengä qilingincha bir email alip, so'ngra DeHub waletinizdan to'g'ri buyurip aling."
   }
 }

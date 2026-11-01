@@ -19047,5 +19047,20 @@
     "fingerprint": "Cap jari",
     "exploreFirst": "Teroka dahulu",
     "codeNote": "Kami e-melkan kod kepada anda, tanpa kata laluan."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Segera akan datang",
+    "title": "Token pelancaran akan segera",
+    "body": "Belanjaan ditutup sementara token baru sedang disediakan. Dapatkan e-mel segera apabila ia dilancarkan.",
+    "notifyMe": "Beritahu saya",
+    "sendTo": "Kami akan menghantar e-mel kepada {{email}}.",
+    "invalidEmail": "Masukkan email yang sah.",
+    "joinedTitle": "Anda ada dalam senarai.",
+    "joinedBody": "Kami akan menghantar email kepada {{email}} apabila token dilancarkan.",
+    "joinedBodyNoEmail": "Kami akan menghantar email kepada anda apabila token dilancarkan.",
+    "failed": "Tidak dapat menyimpan itu. Coba lagi.",
+    "privacy": "Hanya digunakan untuk memberitahu tentang pelancaran.",
+    "seoTitle": "Token pelancaran akan segera | DeHub",
+    "seoDescription": "Token DeHub baru akan dilancarkan segera. Sertai senarai dan dapatkan satu borang e-mel segera apabila ia dilancarkan, kemudian beli terus dari dompet DeHub anda."
   }
 }

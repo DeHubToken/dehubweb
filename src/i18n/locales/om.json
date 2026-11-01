@@ -18717,6 +18717,23 @@
     "exploreFirst": "Dura daawwadhu",
     "codeNote": "Koodii siif imeelina, jecha icciitii hin barbaachisu."
   },
+  "tokenLaunch": {
+    "eyebrow": "Dhuma keessa dhufa",
+    "title": "Token dhuma keessa dhufa",
+    "body": "Bitaa cufa yeroo token haaraan qophaa'u. Ergaa email tokko argadhu yeroo inni jiraatu.",
+    "notifyMe": "Naa beeksi",
+    "sendTo": "Ergaa email {{email}} ni ergina",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email kee",
+    "invalidEmail": "Email sirrii galchi",
+    "joinedTitle": "Listaa keessa jirta",
+    "joinedBody": "Ergaa email {{email}} ni ergina token yeroo dhufa.",
+    "joinedBodyNoEmail": "Ergaa email si ergina token yeroo dhufa.",
+    "failed": "Kunis kuufuu hin dandeenye. Irra deebi yaali.",
+    "privacy": "Dhumarraa kaasee waa'ee dhufa kana siif himan keessatti fayyadama.",
+    "seoTitle": "Token dhuma keessa dhufa | DeHub",
+    "seoDescription": "Token DeHub haaraan dhuma keessa dhufa. Listaa keessa seeni ergaa email tokko argadhu yeroo inni jiraatu, sana booda DeHub wallet kee irraa bitaa."
+  },
   "spaces": {
     "title": "Bakkeewwan",
     "live": "Kallattii",

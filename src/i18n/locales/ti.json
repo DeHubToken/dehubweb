@@ -18602,5 +18602,22 @@
     "fingerprint": "አጻብዕቲ (Fingerprint)",
     "exploreFirst": "ቅድም ቀዳድም ተዓዘብ",
     "codeNote": "ኮድ ናብ ኢሜይልካ ንሰደልካ፣ ፓስዎርድ ኣየድልየካን።"
+  },
+  "tokenLaunch": {
+    "eyebrow": "ብቍርበት ይመጣል",
+    "title": "ቶክን ብቍርበት ይወጣል",
+    "body": "ግዛት ተዝጊሙ ነው ሓድሽ ቶክን ምስ ዝተዳለወ። ኢሜይል ብሓንጺጹ ክትቀበል ትኽእል።",
+    "notifyMe": "ንዐውተኒ",
+    "sendTo": "ኢሜይል {{email}} ክንልክ",
+    "emailLabel": "ኢሜይል",
+    "emailPlaceholder": "ኢሜይልካ",
+    "invalidEmail": "ሓቅ ዘለዎ ኢሜይል ኣእቱ",
+    "joinedTitle": "ኣብ ዝርዝር ውሕት ኣለካ",
+    "joinedBody": "ኢሜይል {{email}} ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "joinedBodyNoEmail": "ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "failed": "ሓደ ነገር ክሕዝን ኣይከኣለን። ድሕሪ ሕጂ ሞክር።",
+    "privacy": "ብቶክን ምውጣት ንምፍላጥ ጥራይ ይጠቀም።",
+    "seoTitle": "ቶክን ብቍርበት ይወጣል | DeHub",
+    "seoDescription": "ሓድሽ DeHub ቶክን ብቍርበት ይወጣል። ብዝርዝር ተሳተፍ ወይ ሓንጺጹ ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክትቀበል፣ ድሕሪኡ ካብ DeHub ዋሌትካ ብቀጥታ ግዛት።"
   }
 }
