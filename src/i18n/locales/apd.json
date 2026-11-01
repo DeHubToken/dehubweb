@@ -382,6 +382,7 @@
     "gasSponsorshipFailed": "ما قدرنا نغطي المعاملة دي. حاول تاني بعد شوية."
   },
   "nav": {
+    "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "الرئيسية",
     "explore": "تصفّح",
     "prompt": "اكتب",

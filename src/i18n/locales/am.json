@@ -406,6 +406,8 @@
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
   },
   "nav": {
+    "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
+    "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",
     "home": "መነሻ",
     "explore": "አስስ",
     "prompt": "ጥያቄ",

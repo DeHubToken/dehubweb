@@ -401,6 +401,9 @@
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
   },
   "nav": {
+    "reorderHint": "Jide ma dọrọ aịkọn ọ bụla ka ị hazie ọzọ",
+    "reorderReset": "Tọgharịa",
+    "reorderResetLong": "Tọgharịa usoro menu",
     "home": "Ụlọ",
     "explore": "Nyochaa",
     "prompt": "Nye ndụmọdụ",

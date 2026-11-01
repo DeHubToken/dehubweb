@@ -405,6 +405,9 @@
     "gasSponsorshipFailed": "呢筆交易嘅費用付唔到。請稍後再試。"
   },
   "nav": {
+    "reorderHint": "按住同拖曳任何圖示嚟重新排列",
+    "reorderReset": "重設",
+    "reorderResetLong": "重設菜單順序",
     "home": "主頁",
     "explore": "探索",
     "prompt": "提示",

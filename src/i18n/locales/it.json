@@ -407,6 +407,8 @@
     "gasSponsorshipFailed": "Non è stato possibile coprire questa transazione. Riprova tra un momento."
   },
   "nav": {
+    "reorderHint": "Tieni premuto e trascina qualsiasi icona per riorganizzare",
+    "reorderResetLong": "Ripristina l'ordine del menu",
     "home": "Casa",
     "explore": "Esplora",
     "prompt": "Personalizza",

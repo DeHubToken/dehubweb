@@ -408,6 +408,9 @@
     "gasSponsorshipFailed": "Denne transaksjonen kunne ikke dekkes. Prøv igjen om et øyeblikk."
   },
   "nav": {
+    "reorderHint": "Hold og dra et hvilket som helst ikon for å omorganisere",
+    "reorderReset": "Tilbakestill",
+    "reorderResetLong": "Tilbakestill menyrekkefølge",
     "home": "Hjem",
     "explore": "Utforsk",
     "prompt": "Fremlegg",

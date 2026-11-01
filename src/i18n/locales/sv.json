@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Den här transaktionen kunde inte bekostas. Försök igen om en stund."
   },
   "nav": {
+    "reorderHint": "Håll och dra valfri ikon för att ordna om",
+    "reorderReset": "Återställ",
+    "reorderResetLong": "Återställ menyordning",
     "home": "Hem",
     "explore": "Utforska",
     "prompt": "Styr",

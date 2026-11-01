@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Transaksi ini tidak dapat disponsori. Silakan coba lagi sebentar."
   },
   "nav": {
+    "reorderHint": "Tahan dan seret ikon apa pun untuk mengatur ulang",
+    "reorderReset": "Atur ulang",
+    "reorderResetLong": "Atur ulang pesanan menu",
     "home": "Beranda",
     "explore": "Jelajahi",
     "prompt": "Prompt",

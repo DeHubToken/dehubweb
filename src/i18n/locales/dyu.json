@@ -406,6 +406,9 @@
     "gasSponsorshipFailed": "An ma se ka nin baara sara. I ka segin ka a lajɛ dɔɔnin kɔfɛ."
   },
   "nav": {
+    "reorderHint": "Bɛɛ kɔ kɔkɔ kɔ kɔkɔ",
+    "reorderReset": "Ka segi ka na",
+    "reorderResetLong": "Ka dumuni labɛn",
     "home": "Kɛnɛ",
     "explore": "Fɛɛrɛ",
     "prompt": "Fiyɛri",

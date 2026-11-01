@@ -398,6 +398,9 @@
     "gasSponsorshipFailed": "Ba a iya ɗaukar nauyin wannan hada-hada ba. Ka sake gwadawa nan da ɗan lokaci."
   },
   "nav": {
+    "reorderHint": "Riƙe da jawo kowane icon don sake tsarawa",
+    "reorderReset": "Sake saitawa",
+    "reorderResetLong": "Sake saita umarnin menu",
     "home": "Gida",
     "explore": "Bincika",
     "prompt": "Fadakarwa",

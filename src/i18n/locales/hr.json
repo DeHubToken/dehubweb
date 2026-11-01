@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Ovu transakciju nije bilo moguće pokriti. Pokušajte ponovno za trenutak."
   },
   "nav": {
+    "reorderHint": "Držite i povucite bilo koju ikonu za promjenu rasporeda",
+    "reorderReset": "Resetiraj",
+    "reorderResetLong": "Resetiraj redoslijed izbornika",
     "home": "Početna",
     "explore": "Istraži",
     "prompt": "Potakni",

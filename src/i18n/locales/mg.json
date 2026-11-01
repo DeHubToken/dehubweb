@@ -405,6 +405,9 @@
     "gasSponsorshipFailed": "Tsy afaka nandoa ity fifanakalozana ity izahay. Andramo indray afaka kelikely."
   },
   "nav": {
+    "reorderHint": "Tazony ary zarao izay kisary hanamboarana",
+    "reorderReset": "Averina",
+    "reorderResetLong": "Hamerina ny filaharan'ny tolotra",
     "home": "Fandraisana",
     "explore": "Hikaroka",
     "prompt": "Ampodio",

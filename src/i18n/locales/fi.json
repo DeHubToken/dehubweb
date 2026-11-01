@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Tätä tapahtumaa ei voitu kustantaa. Yritä hetken kuluttua uudelleen."
   },
   "nav": {
+    "reorderHint": "Järjestä uudelleen pitämällä mitä tahansa kuvaketta painettuna ja vetämällä",
+    "reorderReset": "Tyhjennä",
+    "reorderResetLong": "Nollaa ruokalistan tilaus",
     "home": "Koti",
     "explore": "Tutustu",
     "prompt": "Ohjaa",

@@ -383,6 +383,9 @@
     "gasSponsorshipFailed": "這筆交易个費用擔袂起。請小等閣試。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标进行重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置選單順序",
     "home": "厝里",
     "explore": "探索",
     "prompt": "提示",

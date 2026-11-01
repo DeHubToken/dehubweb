@@ -379,6 +379,8 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول بعد قليل."
   },
   "nav": {
+    "reorderReset": "إعادة ضبط",
+    "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "توجيه",

@@ -405,6 +405,9 @@
     "gasSponsorshipFailed": "לא ניתן היה לממן את העסקה הזו. נסה שוב בעוד רגע."
   },
   "nav": {
+    "reorderHint": "יש להחזיק ולגרור כל סמל כדי לארגן מחדש",
+    "reorderReset": "איפוס",
+    "reorderResetLong": "איפוס סדר התפריט",
     "home": "דף הבית",
     "explore": "חקור",
     "prompt": "הגדרה",

@@ -468,6 +468,9 @@
     "gasSponsorshipFailed": "Não foi possível patrocinar esta transação. Tente novamente daqui a pouco."
   },
   "nav": {
+    "reorderHint": "Segure e arraste qualquer ícone para reorganizar",
+    "reorderReset": "Redefinir",
+    "reorderResetLong": "Redefinir ordem do menu",
     "home": "Início",
     "explore": "Explorar",
     "prompt": "Prompt",

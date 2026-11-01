@@ -402,6 +402,9 @@
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
   },
   "nav": {
+    "reorderHint": "Her bir simgony saklaň we gaýtargylaň",
+    "reorderReset": "Gaýd Et",
+    "reorderResetLong": "Menü düzgüni gaýd et",
     "home": "Baş sahypa",
     "explore": "Gözle",
     "prompt": "Sowal",

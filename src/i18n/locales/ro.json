@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "Această tranzacție nu a putut fi acoperită. Încearcă din nou peste un moment."
   },
   "nav": {
+    "reorderHint": "Țineți apăsată și trageți orice pictogramă pentru a o rearanja",
+    "reorderReset": "Resetează",
+    "reorderResetLong": "Resetați ordinea meniului",
     "home": "Acasă",
     "explore": "Explorează",
     "prompt": "Configurează",

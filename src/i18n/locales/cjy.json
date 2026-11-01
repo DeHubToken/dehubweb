@@ -404,6 +404,9 @@
     "gasSponsorshipFailed": "箇笔交易垫勿了。过歇再试试。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标进行重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序",
     "home": "家",
     "explore": "找找看",
     "prompt": "提示",

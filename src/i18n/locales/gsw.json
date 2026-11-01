@@ -403,6 +403,8 @@
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
   },
   "nav": {
+    "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
+    "reorderResetLong": "Reset Menü-Reihenfolge",
     "home": "Hei",
     "explore": "Entdecke",
     "prompt": "Aazäig",

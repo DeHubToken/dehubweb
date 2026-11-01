@@ -406,6 +406,9 @@
     "gasSponsorshipFailed": "Nie udało się pokryć tej transakcji. Spróbuj ponownie za chwilę."
   },
   "nav": {
+    "reorderHint": "Przytrzymaj i przeciągnij dowolną ikonę, aby zmienić kolejność",
+    "reorderReset": "Zresetuj",
+    "reorderResetLong": "Resetuj kolejność menu",
     "home": "Strona główna",
     "explore": "Odkrywaj",
     "prompt": "Wybierz tematy",

@@ -407,6 +407,9 @@
     "gasSponsorshipFailed": "这笔交易的费用无法代付。请稍后再试。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标以重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序",
     "home": "首页",
     "explore": "发现",
     "prompt": "提示",

@@ -405,6 +405,9 @@
     "gasSponsorshipFailed": "A ko le san owo idunaadura yii. Jowo gbiyanju leekansi laipe."
   },
   "nav": {
+    "reorderHint": "Duro ki o si fa eyikeyi aami lati tun ṣe atunṣe",
+    "reorderReset": "Tun ṣe",
+    "reorderResetLong": "Tún pàṣẹ àtòjọ-ẹ̀yàn padà",
     "home": "Ilé",
     "explore": "Ṣàwárí",
     "prompt": "Ohun tí o fẹ́ kà",

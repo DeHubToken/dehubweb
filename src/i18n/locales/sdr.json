@@ -398,6 +398,8 @@
     "gasSponsorshipFailed": "نەکرا خەرجی ئەم مامەڵەیە بدرێت. تکایە پاش ماوەیەک هەوڵ بدەرەوە."
   },
   "nav": {
+    "reorderReset": "assistant",
+    "reorderResetLong": "بازنشانی ترتیب منوی اصلی",
     "home": "گھر",
     "explore": "کھوجو",
     "prompt": "ପ୍ରମ୍ପ୍ଟ",

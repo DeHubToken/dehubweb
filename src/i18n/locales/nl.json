@@ -546,6 +546,9 @@
     "gasSponsorshipFailed": "Deze transactie kon niet worden vergoed. Probeer het zo meteen opnieuw."
   },
   "nav": {
+    "reorderHint": "Houd een pictogram ingedrukt en sleep het om de volgorde te wijzigen",
+    "reorderReset": "Resetten",
+    "reorderResetLong": "Menuvolgorde opnieuw instellen",
     "home": "Home",
     "explore": "Ontdekken",
     "prompt": "Prompt",
