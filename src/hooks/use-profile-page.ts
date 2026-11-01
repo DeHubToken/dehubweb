@@ -61,7 +61,7 @@ export interface ProfileProposalItem {
 
 export type ProfileContentItem =
   | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean }
-  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string };
+  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean };
 
 const PULL_THRESHOLD = 80;
 
