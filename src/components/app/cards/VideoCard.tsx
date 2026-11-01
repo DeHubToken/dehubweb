@@ -22,6 +22,7 @@ import { isVideoInPictureInPicture } from '@/lib/picture-in-picture';
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
@@ -930,6 +931,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // restart the clip (lib/video-handoff).
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Desktop post page: the page draws the creator row above this card, so
+  // boost + options go in that row (via a portal) instead of under the caption.
+  const [postHeadSlot, setPostHeadSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!postPage) return;
+    const find = () => (containerRef.current?.closest('[data-feed-item]') ?? document).querySelector<HTMLElement>('[data-post-head-actions]');
+    setPostHeadSlot(find());
+    const raf = requestAnimationFrame(() => setPostHeadSlot(find()));
+    return () => cancelAnimationFrame(raf);
+  }, [postPage]);
   const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
@@ -2311,7 +2322,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             creatorUsername={video.creatorUsername}
             badgeBalance={video.creatorBadgeBalance}
           />
-          <div className="flex items-center gap-1">
+          {!postPage && <div className="flex items-center gap-1">
             {(isOwnPost || boosted) && (
               <PostHeaderBoostButton
                 rowGap={4}
@@ -2326,11 +2337,26 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
             <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
-          </div>
+          </div>}
         </div>
       )}
 
-      {/* Video Player / Thumbnail */}
+      {postPage && postHeadSlot && !hideActions && createPortal(
+          <div className="flex items-center gap-1">
+            {(isOwnPost || boosted) && (
+              <PostHeaderBoostButton
+                rowGap={4}
+                lit={boosted}
+                onClick={() => (isOwnPost ? setShowBoostModal(true) : navigate('/app/superpowers'))}
+                aria-label={isOwnPost ? t('postOptions.boostPost') : _copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
+              />
+            )}
+            <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
+          </div>,
+          postHeadSlot,
+        )}
+
+        {/* Video Player / Thumbnail */}
       <div 
         ref={containerRef}
         tabIndex={0}
@@ -3317,7 +3343,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         </div>
         {!hideActions && (
           <>
-            {stage && isOwnPost && (
+            {((postPage && !postHeadSlot) || stage) && (!stage || isOwnPost) && (
               <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
                 {isOwnPost && (
                   <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
