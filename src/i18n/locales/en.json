@@ -12463,6 +12463,8 @@
     "reminderLater": "Not now"
   },
   "copy": {
+    "1d7234ff1b79": "in {{feed}}",
+    "e122e5c2b563": "Drag up to close",
     "1aa9d734f2ee": "Choose what to search",
     "55656b5e434f": "Close search",
     "ef557404f465": "No results for “{{query}}”",

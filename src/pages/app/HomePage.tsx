@@ -67,8 +67,9 @@ import { HomeFeed } from '@/components/app/feeds/HomeFeed';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { closeCommentsSplit } from '@/lib/comments-split';
 import { FeedSearchBar } from '@/components/app/navigation/FeedSearchBar';
+import { FeedSearchLens, useFeedSearchLens } from '@/components/app/navigation/FeedSearchLens';
 import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
-import { activeFeedSearchQuery, closeFeedSearch, isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
+import { activeFeedSearchQuery, closeFeedSearch, getFeedSearchState, isFeedSearchTab, openFeedSearch, useFeedSearch } from '@/lib/feed-search';
 
 const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m => ({ default: m.VideosFeed }));
 const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
@@ -245,6 +246,10 @@ export default function HomePage() {
   // Tapping the lit tab again turns the pill into a search for that feed.
   const feedSearch = useFeedSearch();
   const searchOpen = feedSearch.open && isFeedSearchTab(activeTab);
+  // Colour themes search through a lens that drops out of the bar; the tab
+  // row stays up under it (System and Minimal melt the bar instead).
+  const searchLens = useFeedSearchLens();
+  const meltOpen = searchOpen && !searchLens;
   const searchQuery = activeFeedSearchQuery(feedSearch);
   useEffect(() => {
     if (feedSearch.open && !isFeedSearchTab(activeTab)) closeFeedSearch();
@@ -661,7 +666,11 @@ export default function HomePage() {
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       scrollDocumentToSmooth();
-      if (isFeedSearchTab(tabValue)) openFeedSearch();
+      // Again with the search up (the lens leaves the tab tappable): close it.
+      if (isFeedSearchTab(tabValue)) {
+        if (getFeedSearchState().open) closeFeedSearch();
+        else openFeedSearch();
+      }
     } else {
       setEnableHomeTransition(true);
       // Auto-reset after animation completes to prevent stale transitions on page nav
@@ -1109,7 +1118,7 @@ export default function HomePage() {
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} variant="nav" />
             {/* Drag handle overlay */}
             </div>
-            {homeTabRect.ready && !searchOpen && (
+            {homeTabRect.ready && !meltOpen && (
               <div
                 className="absolute z-30 cursor-grab active:cursor-grabbing"
                 style={{
@@ -1126,7 +1135,7 @@ export default function HomePage() {
                 onContextMenu={(event) => event.preventDefault()}
               />
             )}
-            <div data-feed-search-tabs data-hidden={searchOpen ? '' : undefined} className="relative z-20 flex scrollbar-hide">
+            <div data-feed-search-tabs data-hidden={meltOpen ? '' : undefined} className="relative z-20 flex scrollbar-hide">
               {/* Settings Button - toggles current tab's filters.
                   When a post overlay is open on top of the feed — or the images
                   tab has swapped its grid for the scroll view — this slot becomes
@@ -1222,7 +1231,16 @@ export default function HomePage() {
                 );
               })}
             </div>
-            {searchOpen && isFeedSearchTab(activeTab) && (
+            {searchOpen && isFeedSearchTab(activeTab) && searchLens && (
+              <FeedSearchLens
+                tab={activeTab}
+                hasActiveFilters={hasActiveFilters}
+                filtersOpen={islandFiltersOpen}
+                onToggleFilters={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
+                onPickFeed={handleTabClick}
+              />
+            )}
+            {meltOpen && isFeedSearchTab(activeTab) && (
               <FeedSearchBar
                 tab={activeTab}
                 hasActiveFilters={hasActiveFilters}
