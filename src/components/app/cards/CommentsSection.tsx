@@ -1,5 +1,6 @@
 import ArrowUpDown from '@/components/ui/cut-icons/sort';
-import ImagePlus from '@/components/ui/cut-icons/images';
+import Paperclip from '@/components/ui/cut-icons/attach';
+import { COMMENT_ATTACH_ACCEPT, COMMENT_ATTACH_LIMITS, commentAttachmentKind, dragHasFiles, firstAttachableFile, type CommentAttachmentKind } from '@/lib/comment-attachments';
 import { COMMENT_ICON_CLASS } from './feed-icon-size';
 import { CommentsSplitContext } from '@/lib/comments-split';
 import { useDraftState } from '@/hooks/use-draft-state';
@@ -93,7 +94,7 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { parseBadgeLock } from '@/lib/staking-badges';
 import { NewMemberChip } from '@/components/app/NewMemberChip';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, getTipWall, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTCommentPage, postComment, reactToComment, editComment, deleteComment, addImageComment, addMediaComment, addGifComment, addVoiceComment, getPostReposters, recordCommentViews, getPostQuotes, getNFTInfo, pinComment, getTipWall, type ApiCommentResponse } from '@/lib/api/dehub';
 import { TipWall, TipChip } from '@/components/app/comments/TipWall';
 import { subscribeTipMessageSent } from '@/lib/tip-events';
 import {
@@ -711,6 +712,16 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
                 />
               </>
             )}
+            {comment.videoUrl && (
+              <video
+                src={comment.videoUrl}
+                controls
+                playsInline
+                preload="metadata"
+                data-comment-video
+                className="mt-1.5 block rounded-lg max-w-[280px] max-h-[320px] bg-black"
+              />
+            )}
             {comment.voiceNote && (
               <div className="mt-1">
                 <VoiceStripPlayer src={comment.voiceNote.url} duration={comment.voiceNote.duration} />
@@ -1185,6 +1196,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   const recordingTimeRef = useRef(0);
   const [commentImage, setCommentImage] = useState<File | null>(null);
   const [commentImagePreview, setCommentImagePreview] = useState<string | null>(null);
+  // What the paperclip picked: commentImage holds the file whatever it is.
+  const [commentAttachKind, setCommentAttachKind] = useState<CommentAttachmentKind>('image');
+  const [composerDropHover, setComposerDropHover] = useState(false);
   // A GIF is already hosted (GIPHY), so unlike commentImage it needs no
   // upload step — just the URL, carried straight through to comment_image.
   const [commentGifUrl, setCommentGifUrl] = useState<string | null>(restoredDraft?.gifUrl ?? null);
@@ -1804,18 +1818,52 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   };
 
   const acceptCommentImage = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      toast.error(t('toasts.please_select_an_image_file'));
+    const kind = commentAttachmentKind(file);
+    if (!kind) {
+      toast.error(t('comments.attachUnsupported', 'Attach a photo, a video or an audio file.'));
       return;
     }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error(t('comments.imageTooLarge'));
+    if (file.size > COMMENT_ATTACH_LIMITS[kind]) {
+      toast.error(kind === 'image'
+        ? t('comments.imageTooLarge')
+        : t('comments.attachTooLarge', { defaultValue: 'That file is over the {{size}} MB limit.', size: COMMENT_ATTACH_LIMITS[kind] / 1024 / 1024 }));
       return;
     }
+    if (commentImagePreview) URL.revokeObjectURL(commentImagePreview);
     setCommentGifUrl(null);
+    setCommentAttachKind(kind);
     setCommentImage(file);
     setCommentImagePreview(URL.createObjectURL(file));
+    setIsInputExpanded(true);
   };
+
+  // Dropping a photo, clip or song on the box attaches it here, instead of
+  // the page-wide drop opening a new post (that one skips [data-drop-attach]).
+  const composerDropProps = {
+    'data-drop-attach': true,
+    onDragOver: (e: React.DragEvent) => {
+      if (!dragHasFiles(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      if (!composerDropHover) setComposerDropHover(true);
+    },
+    onDragLeave: (e: React.DragEvent) => {
+      if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+      setComposerDropHover(false);
+    },
+    onDrop: (e: React.DragEvent) => {
+      if (!dragHasFiles(e)) return;
+      e.preventDefault();
+      setComposerDropHover(false);
+      const file = firstAttachableFile(e.dataTransfer.files);
+      if (!file) {
+        toast.error(t('comments.attachUnsupported', 'Attach a photo, a video or an audio file.'));
+        return;
+      }
+      acceptCommentImage(file);
+      requestAnimationFrame(() => inputRef.current?.focus());
+    },
+  } as const;
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1829,7 +1877,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // the words are what was meant.
   const handleCommentPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     if (e.clipboardData.getData('text/plain')) return;
-    const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith('image/'));
+    const file = firstAttachableFile(e.clipboardData.files);
     if (!file) return;
     e.preventDefault();
     setIsInputExpanded(true);
@@ -2319,8 +2367,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       views: 0,
       timeAgo: t('comments.justNow'),
       createdAt: new Date(),
-      voiceNote: voiceNote || undefined,
-      imageUrl: commentImagePreview || commentGifUrl || undefined,
+      voiceNote: voiceNote
+        || (commentImage && commentAttachKind === 'audio' && commentImagePreview ? { url: commentImagePreview, duration: 0 } : undefined),
+      imageUrl: (commentAttachKind === 'image' ? commentImagePreview : null) || commentGifUrl || undefined,
+      videoUrl: commentImage && commentAttachKind === 'video' ? commentImagePreview || undefined : undefined,
       replyToId: replyTo?.id,
       address: userAddress,
       // Carry the badge the posted row will carry, so it is there from the
@@ -2379,6 +2429,14 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           tokenId: parseInt(tokenId, 10),
           content: newComment,
           gifUrl,
+          parentId: replyTarget?.id,
+        });
+      } else if (imageFile && commentAttachmentKind(imageFile) !== 'image') {
+        // A video or an audio file: one route, told apart by the file's type.
+        return await addMediaComment({
+          tokenId: parseInt(tokenId, 10),
+          file: imageFile,
+          content: newComment,
           parentId: replyTarget?.id,
         });
       } else if (imageFile) {
@@ -3044,6 +3102,8 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           </div>
         ) : dockComposer(
         <div
+          {...composerDropProps}
+          data-drop-hover={composerDropHover || undefined}
           data-comment-composer
           data-comment-composer-pin={page || undefined}
           data-stage-composer={stage || undefined}
@@ -3115,14 +3175,38 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             </div>
           )}
 
-          {/* Image preview */}
-          {commentImagePreview && (
-            <div className="mb-3 relative inline-block">
+          {/* Attachment preview: photo, clip or audio file */}
+          {commentImagePreview && commentAttachKind === 'audio' && (
+            <div data-attach-preview="audio" className="mb-3 flex items-center gap-1.5 w-full md:max-w-[380px]">
+              <button
+                type="button"
+                onClick={removeCommentImage}
+                aria-label={t('comments.remove')}
+                className="shrink-0 w-8 h-8 rounded-[10px] border border-white/10 bg-white/[0.08] text-white/70 hover:text-white flex items-center justify-center transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+              <VoiceStripPlayer src={commentImagePreview} className="flex-1 max-w-none" />
+            </div>
+          )}
+          {commentImagePreview && commentAttachKind !== 'audio' && (
+            <div data-attach-preview={commentAttachKind} className="mb-3 relative inline-block">
+              {commentAttachKind === 'video' ? (
+                <video
+                  src={commentImagePreview}
+                  muted
+                  playsInline
+                  controls
+                  preload="metadata"
+                  className="max-h-32 max-w-[220px] rounded-xl bg-black"
+                />
+              ) : (
               <img 
                 src={commentImagePreview} 
                 alt={t('comments.imageAttachmentAlt')}
                 className="max-h-32 rounded-xl object-cover"
               />
+              )}
               <button
                 onClick={removeCommentImage}
                 aria-label={t('comments.removeImage')}
@@ -3157,7 +3241,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           <input
             ref={imageInputRef}
             type="file"
-            accept="image/*"
+            accept={COMMENT_ATTACH_ACCEPT}
             className="hidden"
             onChange={handleImageSelect}
           />
@@ -3296,11 +3380,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 )}>
                   <button
                     onClick={() => imageInputRef.current?.click()}
-                    data-comment-tool="image"
+                    data-comment-tool="attach"
                     className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
-                    aria-label={t('comments.attachImage')}
+                    aria-label={t('comments.attachMedia', 'Attach a photo, video or audio')}
+                    title={t('comments.attachMedia', 'Attach a photo, video or audio')}
                   >
-                    <ImagePlus className="w-4 h-4" />
+                    <Paperclip className="w-4 h-4" />
                   </button>
                   <EmojiGifPicker
                     onEmojiSelect={handleCommentEmojiSelect}

@@ -742,12 +742,29 @@ const MessageBubble = memo(function MessageBubble({
                   </>
                 ) : primaryMediaUrl ? (
                   <>
+                    {primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/') ? (
+                      <video
+                        src={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
+                        controls
+                        playsInline
+                        preload="metadata"
+                        data-dm-video
+                        className="max-w-full max-h-64 rounded-lg bg-black"
+                      />
+                    ) : primaryMedia?.type === 'audio' || primaryMedia?.mimeType?.startsWith('audio/') ? (
+                      <VoiceMessagePlayer
+                        audioUrl={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
+                        duration={message.voiceDuration}
+                        isPending={false}
+                      />
+                    ) : (
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
                       onClick={() => onOpenImage?.(getMediaUrl(primaryMediaUrl)!)}
                     />
+                    )}
                     {/* Driven by the same opted-out hook as a text message, not
                         by <TranslatableText>. That component calls
                         useTranslation(text) with auto defaulting to true, so
@@ -1357,6 +1374,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       : type === 'gif' ? 'gif'
       : type === 'voice' ? 'audio'
       : mediaFile?.type.startsWith('video/') ? 'video'
+      : mediaFile?.type.startsWith('audio/') ? 'audio'
       : 'image';
     if (!planAllows(kind)) {
       toast.warning(tr('dm.planTypeNotAllowed'));
@@ -1867,7 +1885,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               url: createTransientBlobUrl(mediaFile, 5 * 60_000),
               // A document has no renderable preview, so it must not be typed
               // 'image' here — the bubble would try to <img> a blob URL for a PDF.
-              type: type === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
+              type: type === 'voice' || mediaFile.type.startsWith('audio/') ? 'audio'
+                : mediaFile.type.startsWith('video/') ? 'video'
+                : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
               mimeType: mediaFile.type,
               name: mediaFile.name,
               size: mediaFile.size,
