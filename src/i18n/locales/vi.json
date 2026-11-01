@@ -2093,7 +2093,12 @@
     },
     "tabs": {
       "playlists": "Danh sách phát",
-      "dislikes": "Không thích"
+      "dislikes": "Không thích",
+      "articles": "Bài viết"
+    },
+    "articles": {
+      "emptyTitle": "Chưa có bài viết nào",
+      "emptySubtitle": "Bài viết sẽ xuất hiện ở đây"
     },
     "dislikes": {
       "emptyTitle": "Chưa có lượt không thích",

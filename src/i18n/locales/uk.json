@@ -2441,7 +2441,12 @@
     },
     "tabs": {
       "playlists": "Плейлісти",
-      "dislikes": "Дизлайки"
+      "dislikes": "Дизлайки",
+      "articles": "Статті"
+    },
+    "articles": {
+      "emptyTitle": "Статей поки немає",
+      "emptySubtitle": "Тут з’являться статті"
     },
     "dislikes": {
       "emptyTitle": "Поки немає дизлайків",

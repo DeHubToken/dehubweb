@@ -2097,7 +2097,12 @@
     },
     "tabs": {
       "playlists": "प्लेलिस्ट",
-      "dislikes": "नापसंद"
+      "dislikes": "नापसंद",
+      "articles": "लेख"
+    },
+    "articles": {
+      "emptyTitle": "अभी कोई लेख नहीं",
+      "emptySubtitle": "लेख यहाँ दिखाई देंगे"
     },
     "dislikes": {
       "emptyTitle": "अभी तक कोई नापसंद नहीं",

@@ -2090,7 +2090,12 @@
     },
     "tabs": {
       "playlists": "Daftar Putar",
-      "dislikes": "Tidak Suka"
+      "dislikes": "Tidak Suka",
+      "articles": "Artikel"
+    },
+    "articles": {
+      "emptyTitle": "Belum ada artikel",
+      "emptySubtitle": "Artikel akan muncul di sini"
     },
     "dislikes": {
       "emptyTitle": "Belum ada tidak suka",

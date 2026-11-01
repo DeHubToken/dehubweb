@@ -2090,7 +2090,12 @@
     },
     "tabs": {
       "playlists": "Playlist",
-      "dislikes": "Non mi piace"
+      "dislikes": "Non mi piace",
+      "articles": "Articoli"
+    },
+    "articles": {
+      "emptyTitle": "Ancora nessun articolo",
+      "emptySubtitle": "Gli articoli appariranno qui"
     },
     "dislikes": {
       "emptyTitle": "Ancora nessun «non mi piace»",

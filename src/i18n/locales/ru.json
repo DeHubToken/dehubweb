@@ -2089,7 +2089,12 @@
     },
     "tabs": {
       "playlists": "Плейлисты",
-      "dislikes": "Дизлайки"
+      "dislikes": "Дизлайки",
+      "articles": "Статьи"
+    },
+    "articles": {
+      "emptyTitle": "Статей пока нет",
+      "emptySubtitle": "Здесь появятся статьи"
     },
     "dislikes": {
       "emptyTitle": "Пока нет дизлайков",

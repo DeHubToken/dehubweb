@@ -2083,7 +2083,12 @@
     },
     "tabs": {
       "playlists": "Playlisty",
-      "dislikes": "Nie lubię"
+      "dislikes": "Nie lubię",
+      "articles": "Artykuły"
+    },
+    "articles": {
+      "emptyTitle": "Brak artykułów",
+      "emptySubtitle": "Tutaj pojawią się artykuły"
     },
     "dislikes": {
       "emptyTitle": "Brak łapek w dół",

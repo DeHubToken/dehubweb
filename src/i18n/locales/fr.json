@@ -2244,7 +2244,12 @@
     },
     "tabs": {
       "playlists": "Playlists",
-      "dislikes": "Je n'aime pas"
+      "dislikes": "Je n'aime pas",
+      "articles": "Articles"
+    },
+    "articles": {
+      "emptyTitle": "Aucun article pour l’instant",
+      "emptySubtitle": "Les articles apparaîtront ici"
     },
     "dislikes": {
       "emptyTitle": "Aucun « je n'aime pas » pour l'instant",
