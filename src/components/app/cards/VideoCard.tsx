@@ -1592,6 +1592,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // the transport bar only shows on hover or while paused, over the picture.
   const desktopFeedHug = !isPhone && !isImmersive && !isFullscreen && !video.isAudio;
   const splitControls = bareControls && !isContentGated && !feedPreview && !desktopFeedHug;
+  // Desktop feeds keep mute/unmute in the bottom row beside play time, CC and
+  // speed instead of alone in the top corner. Phones never reach this: their
+  // feed previews keep the corner mute.
+  const volumeInRow = splitControls || (bareControls && !isContentGated && desktopFeedHug);
   const showCenterPlay = !feedPreview && !splitControls && !isLoading && !!video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow);
   const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
@@ -2874,7 +2878,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <MediaControlIcon icon={liveSoundOn ? Volume2 : VolumeX} plain />
           </button>
         )}
-        {!feedPreview && !splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        {!feedPreview && !volumeInRow && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
@@ -2962,10 +2966,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   onClick={event => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}>
                   <MediaControlIcon icon={isPlaying ? Pause : Play} plain />
                 </button>}
-                {splitControls && <div data-video-volume>
+                {volumeInRow && <div data-video-volume>
             {dubAvailable ? (
               <Suspense fallback={<span className="h-8 w-8" />}>
-              <DubVolumeControl plain open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
+              <DubVolumeControl plain={splitControls} open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
                 onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
                 onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
               </Suspense>
@@ -2976,11 +2980,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
+                type="button"
+                data-video-bare
                 className="h-8 w-8 text-white flex items-center justify-center"
                 onClick={toggleMute}
-                aria-label={t('videoPlayer.volume')}
+                aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
               >
-                {isMuted ? <MediaControlIcon icon={VolumeX} plain /> : <MediaControlIcon icon={Volume2} plain />}
+                {isMuted ? <MediaControlIcon icon={VolumeX} plain={splitControls} /> : <MediaControlIcon icon={Volume2} plain={splitControls} />}
               </button>
               {volumeOpen && (
                 <div className="absolute bottom-full left-0 pb-1.5" onClick={(e) => e.stopPropagation()}>
