@@ -1,4 +1,5 @@
 import FileText from "@/components/ui/cut-icons/blog";
+import { getFeedSearchState, parkFeedSearch } from '@/lib/feed-search';
 import Film from "@/components/ui/cut-icons/editor";
 import Wand2 from "@/components/ui/cut-icons/prompt";
 import Zap from "@/components/ui/cut-icons/superpowers";
@@ -255,6 +256,18 @@ export function MobileBottomNav() {
 
   const handleNavClick = (e: React.MouseEvent, path: string) => {
     // On another feed (Videos, Shorts, Music...) Home goes back to the Home feed.
+    if (path === '/app' && isHomeFeedRoute(location.pathname) && getFeedSearchState().open) {
+      // A feed search is up: Home puts it away (words kept for the next open)
+      // and shows the Home feed, rather than searching Home or refreshing.
+      e.preventDefault();
+      parkFeedSearch();
+      let tab = 'home';
+      try { tab = JSON.parse(sessionStorage.getItem('home-feed-state') || '{}')?.tab || 'home'; } catch { /* ignore */ }
+      // Selecting the tab already lit would open its search again.
+      if (tab !== 'home') window.dispatchEvent(new CustomEvent('home-feed-select', { detail: 'home' }));
+      scrollDocumentToSmooth();
+      return;
+    }
     if (path === '/app' && isHomeFeedRoute(location.pathname)) {
       let tab = 'home';
       try { tab = JSON.parse(sessionStorage.getItem('home-feed-state') || '{}')?.tab || 'home'; } catch { /* ignore */ }
