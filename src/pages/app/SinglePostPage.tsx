@@ -704,7 +704,8 @@ function DesktopCreatorInfo({
         creatorUsername={creatorUsername}
         badgeBalance={badgeBalance}
       />
-
+      {/* VideoCard portals its boost + options buttons in here. */}
+      <div data-post-head-actions className="flex items-center" />
     </div>
   );
 }
