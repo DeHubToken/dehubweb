@@ -507,6 +507,12 @@ function HomeTabPanel({
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={offscreenCardStyle(item.type, index)}
           >
+            {item.isPinned && (
+              <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
+                <Pin className="w-3.5 h-3.5 fill-current" />
+                <span className="font-medium">{_copy("copy.79175cb0f6da", { defaultValue: "Pinned post" })}</span>
+              </div>
+            )}
             {item.isRepost && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Repeat2 className="w-3.5 h-3.5" />
