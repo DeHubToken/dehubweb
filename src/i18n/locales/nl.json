@@ -292,17 +292,35 @@
     "noUsername": "Kies een gebruikersnaam om een fediverse-adres te krijgen."
   },
   "profileFields": {
-    "add": "Veld toevoegen",
-    "remove": "Veld verwijderen",
     "title": "Profielvelden",
     "description": "Optionele aangepaste profielvelden",
     "label": "Label",
     "content": "Inhoud",
+    "add": "Veld toevoegen",
+    "remove": "Veld verwijderen",
     "save": "Velden opslaan",
     "saved": "Profielvelden opgeslagen",
     "failed": "Dat is niet opgeslagen. Probeer het opnieuw.",
     "verified": "Geverifieerde link",
-    "verifyHint": "Om een link te verifiëren, voeg je dit toe aan die pagina en sla je opnieuw op: {{snippet}}"
+    "verifyHint": "Om een link te verifiëren, voeg je dit toe aan die pagina en sla je opnieuw op: {{snippet}}",
+    "descriptionPresets": "Voeg een website, voornaamwoorden of iets anders toe. Links tonen met je socials.",
+    "type": "Veldtype",
+    "needsLabel": "Geef elk aangepast veld een label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "zij/zij",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Winkel",
+      "podcast": "Podcast",
+      "newsletter": "Nieuwsbrief",
+      "pronouns": "Voornaamwoorden",
+      "location": "Locatie",
+      "custom": "Aangepast",
+      "customOption": "Aangepast label"
+    }
   },
   "followedTags": {
     "follow": "Volg #{{tag}}",

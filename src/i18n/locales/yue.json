@@ -162,7 +162,19 @@
     "saved": "已儲存個人檔案欄位",
     "failed": "儲存唔到，請再試吓。",
     "verified": "已驗證連結",
-    "verifyHint": "要驗證連結，請將呢段加入嗰個頁面，然後再儲存一次：{{snippet}}"
+    "verifyHint": "要驗證連結，請將呢段加入嗰個頁面，然後再儲存一次：{{snippet}}",
+    "type": "田地類型",
+    "placeholderPronouns": "佢/佢",
+    "placeholderLocation": "城市, 國家",
+    "presets": {
+      "website": "網站",
+      "blog": "博客",
+      "portfolio": "作品集",
+      "shop": "商店",
+      "podcast": "播客",
+      "custom": "習俗",
+      "customOption": "自訂標籤"
+    }
   },
   "followedTags": {
     "follow": "追蹤 #{{tag}}",

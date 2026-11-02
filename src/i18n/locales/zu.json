@@ -162,7 +162,25 @@
     "saved": "Izinkambu zephrofayela zilondoloziwe",
     "failed": "Akulondolozwanga. Zama futhi.",
     "verified": "Isixhumanisi esiqinisekisiwe",
-    "verifyHint": "Ukuze uqinisekise isixhumanisi, engeza lokhu kulelo khasi, bese uphinda ulondoloze: {{snippet}}"
+    "verifyHint": "Ukuze uqinisekise isixhumanisi, engeza lokhu kulelo khasi, bese uphinda ulondoloze: {{snippet}}",
+    "descriptionPresets": "Engeza iwebhusayithi, izinombolo zesithakazelo noma enye into. Izixhumanisi zibonakala ngokuhambisana nezinhlelo zakho zokuxhumana.",
+    "type": "Uhlobo lwensimu",
+    "needsLabel": "Nikeza insimu ngayinye yesiko ilebula",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "Idolobha, izwe",
+    "presets": {
+      "website": "Iwebhusayithi",
+      "blog": "Ibhulogi",
+      "portfolio": "Ifolofolio",
+      "shop": "Ivenkile",
+      "podcast": "Ipodikasti",
+      "newsletter": "Inewslethi",
+      "pronouns": "Izinombolo zesithakazelo",
+      "location": "Indawo",
+      "custom": "Yesiko",
+      "customOption": "Ilebula lesiko"
+    }
   },
   "followedTags": {
     "follow": "Landela i-#{{tag}}",

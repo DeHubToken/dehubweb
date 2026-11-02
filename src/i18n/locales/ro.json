@@ -162,7 +162,25 @@
     "saved": "Câmpurile de profil au fost salvate",
     "failed": "Nu s-a salvat. Încearcă din nou.",
     "verified": "Link verificat",
-    "verifyHint": "Ca să verifici un link, adaugă asta pe acea pagină, apoi salvează din nou: {{snippet}}"
+    "verifyHint": "Ca să verifici un link, adaugă asta pe acea pagină, apoi salvează din nou: {{snippet}}",
+    "descriptionPresets": "Adaugă un site web, pronume sau orice altceva. Link-uri afișate cu rețelele tale sociale.",
+    "type": "Tipul câmpului",
+    "needsLabel": "Dați fiecărui câmp personalizat o etichetă",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ei/ei",
+    "placeholderLocation": "Oraș, țară",
+    "presets": {
+      "website": "Site web",
+      "blog": "Blog",
+      "portfolio": "Portofoliu",
+      "shop": "Magazin",
+      "podcast": "Podcast",
+      "newsletter": "Buletin inform",
+      "pronouns": "Pronume",
+      "location": "Poziție",
+      "custom": "Personalizat",
+      "customOption": "Etichetă personalizată"
+    }
   },
   "followedTags": {
     "follow": "Urmărește #{{tag}}",

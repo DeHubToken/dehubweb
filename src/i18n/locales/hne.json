@@ -162,7 +162,25 @@
     "saved": "प्रोफाइल फील्ड सेव होगे",
     "failed": "सेव नइ होइस। फेर कोसिस करव।",
     "verified": "सत्यापित लिंक",
-    "verifyHint": "लिंक सत्यापित करे बर एला ओ पेज म जोड़व, फेर सेव करव: {{snippet}}"
+    "verifyHint": "लिंक सत्यापित करे बर एला ओ पेज म जोड़व, फेर सेव करव: {{snippet}}",
+    "descriptionPresets": "एक वेबसाइट, उपनाम या कुछु अउ जोड़ें । अपन संगवारीमन के संग अपन संगवारीमन के संग ।",
+    "type": "छेत्र किसिम",
+    "needsLabel": "हर मनमाफिक छेत्र ल एक लेबल दे",
+    "placeholderLink": "उच्चारण रेकार्ड करे. com",
+    "placeholderPronouns": "ओमन, ओमन",
+    "placeholderLocation": "मॉडल: देश, शहर",
+    "presets": {
+      "website": "वेबसाइट",
+      "blog": "ब्लॉग",
+      "portfolio": "पोर्टफोलियो",
+      "shop": "दुकान",
+      "podcast": "पॉडकास्ट",
+      "newsletter": "न्यूज़लेटर",
+      "pronouns": "उच्चारण",
+      "location": "जगह",
+      "custom": "मनमाफिक",
+      "customOption": "मनमाफिक लेबल"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} फॉलो करव",

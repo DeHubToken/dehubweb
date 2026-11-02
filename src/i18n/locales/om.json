@@ -162,7 +162,24 @@
     "saved": "Dirreewwan piroofaayilii olkaa'aman",
     "failed": "Hin olkaa'amne. Irra deebi'ii yaali.",
     "verified": "Liinkii mirkanaa'e",
-    "verifyHint": "Liinkii mirkaneessuuf, kana fuula sana irratti dabali, achiis irra deebi'ii olkaa'i: {{snippet}}"
+    "verifyHint": "Liinkii mirkaneessuuf, kana fuula sana irratti dabali, achiis irra deebi'ii olkaa'i: {{snippet}}",
+    "descriptionPresets": "Marsariitii, bakka bu'aa ykn waan biraa itti dabali. Links socials keessan waliin agarsiisa.",
+    "type": "Akaakuu dirree",
+    "needsLabel": "Tokkoon tokkoo dirree amala asxaa kenni",
+    "placeholderLink": "marsariitii keessan.com",
+    "placeholderPronouns": "isaan/isaan",
+    "placeholderLocation": "Magaalaa, biyya",
+    "presets": {
+      "website": "Weebsaayitii",
+      "blog": "Blog",
+      "portfolio": "Poortiifooliyoo",
+      "shop": "Suuqii",
+      "newsletter": "Barruu Oduu",
+      "pronouns": "Bamaqoota",
+      "location": "Bakka",
+      "custom": "Aadaa",
+      "customOption": "Asxaa amala"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} hordofi",

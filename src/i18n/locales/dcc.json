@@ -162,7 +162,24 @@
     "saved": "پروفائل فیلڈ سیو ہوگئے",
     "failed": "سیو نئیں ہوا۔ پھر کوشش کرو۔",
     "verified": "تصدیق شدہ لنک",
-    "verifyHint": "لنک کی تصدیق کو یہ اس صفحے پر جوڑو، پھر دوبارہ سیو کرو: {{snippet}}"
+    "verifyHint": "لنک کی تصدیق کو یہ اس صفحے پر جوڑو، پھر دوبارہ سیو کرو: {{snippet}}",
+    "descriptionPresets": "ایک ویب سائٹ، ضمیر یا کوئی اور چیز شامل کریں۔ لنکس آپ کے سوشل کے ساتھ دکھائی دیں۔",
+    "type": "فیلڈ کی قسم",
+    "needsLabel": "ہر کسٹم فیلڈ کو ایک لیبل دیں",
+    "placeholderPronouns": "یہ/وہ",
+    "placeholderLocation": "شہر، ملک",
+    "presets": {
+      "website": "ویب سائٹ",
+      "blog": "بلاگ",
+      "portfolio": "پورٹ فولیو",
+      "shop": "دکان",
+      "podcast": "پوڈکاسٹ",
+      "newsletter": "نیوز لیٹر",
+      "pronouns": "ضمیر",
+      "location": "مقام",
+      "custom": "کسٹم",
+      "customOption": "کسٹم لیبل"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} فالو کرو",

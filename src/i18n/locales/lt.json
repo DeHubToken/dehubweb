@@ -162,7 +162,25 @@
     "saved": "Profilio laukai išsaugoti",
     "failed": "Neišsaugota. Bandykite dar kartą.",
     "verified": "Patvirtinta nuoroda",
-    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}"
+    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}",
+    "descriptionPresets": "Pridėkite svetainę, įvardžius ar dar ką nors. Rodomos nuorodos su tavo socialiniais tinklais.",
+    "type": "Lauko tipas",
+    "needsLabel": "Kiekvienam pasirinktiniam laukeliui suteikite etiketę",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "jie/jie",
+    "placeholderLocation": "Miestas, šalis",
+    "presets": {
+      "website": "Interneto svetainė",
+      "blog": "Tinklaraštis",
+      "portfolio": "Portfelis",
+      "shop": "Parduotuvė",
+      "podcast": "Tinklalaidė",
+      "newsletter": "Naujienlaiškis",
+      "pronouns": "Įvardžiai",
+      "location": "Vieta",
+      "custom": "Pasirinktinis",
+      "customOption": "Pasirinktinė etiketė"
+    }
   },
   "followedTags": {
     "follow": "Sekti #{{tag}}",

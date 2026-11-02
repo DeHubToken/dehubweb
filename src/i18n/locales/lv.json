@@ -162,7 +162,25 @@
     "saved": "Profila lauki saglabāti",
     "failed": "Netika saglabāts. Mēģini vēlreiz.",
     "verified": "Apstiprināta saite",
-    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}"
+    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}",
+    "descriptionPresets": "Pievienojiet vietni, vietniekvārdus vai jebko citu. Saites tiek rādītas jūsu sociālajos tīklos.",
+    "type": "Lauka veids",
+    "needsLabel": "Piešķiriet katram pielāgotajam laukam etiķeti",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "viņi/viņiem",
+    "placeholderLocation": "Pilsēta, valsts",
+    "presets": {
+      "website": "Vietne",
+      "blog": "Emuārs",
+      "portfolio": "Portfelis",
+      "shop": "Iepirkties",
+      "podcast": "Aplāde",
+      "newsletter": "Biļetens",
+      "pronouns": "Vietniekvārdi",
+      "location": "Atrašanās vieta",
+      "custom": "Pielāgots",
+      "customOption": "Pielāgota etiķete"
+    }
   },
   "followedTags": {
     "follow": "Sekot #{{tag}}",

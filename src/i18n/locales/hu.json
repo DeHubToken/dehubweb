@@ -162,7 +162,25 @@
     "saved": "Profilmezők mentve",
     "failed": "Nem sikerült menteni. Próbáld újra.",
     "verified": "Ellenőrzött hivatkozás",
-    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}"
+    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}",
+    "descriptionPresets": "Webhely, névmások vagy bármi más hozzáadása. A linkek megjelennek a közösségi oldalakon.",
+    "type": "Mező típusa",
+    "needsLabel": "Adj minden egyéni mezőnek egy címkét",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ők/ők",
+    "placeholderLocation": "Város, ország",
+    "presets": {
+      "website": "Webhely",
+      "blog": "Blog",
+      "portfolio": "Portfólió",
+      "shop": "Vásárlás",
+      "podcast": "Podcasting",
+      "newsletter": "Hírlevél",
+      "pronouns": "Névmások",
+      "location": "Hely",
+      "custom": "Egyedi",
+      "customOption": "Egyedi címke"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} követése",

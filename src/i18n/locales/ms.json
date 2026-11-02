@@ -162,7 +162,25 @@
     "saved": "Medan profil disimpan",
     "failed": "Tidak disimpan. Cuba lagi.",
     "verified": "Pautan disahkan",
-    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}"
+    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}",
+    "descriptionPresets": "Tambah laman web, kata ganti nama atau apa-apa lagi. Pautan ditunjukkan dengan media sosial anda.",
+    "type": "Jenis medan",
+    "needsLabel": "Berikan setiap medan tersuai label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "mereka/mereka",
+    "placeholderLocation": "Bandar, negara",
+    "presets": {
+      "website": "Laman web",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Beli",
+      "podcast": "Podcast",
+      "newsletter": "Surat Berita",
+      "pronouns": "Kata ganti nama",
+      "location": "Lokasi",
+      "custom": "Tersuai",
+      "customOption": "Label tersuai"
+    }
   },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",

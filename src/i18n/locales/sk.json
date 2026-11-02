@@ -162,7 +162,25 @@
     "saved": "Polia profilu uložené",
     "failed": "Neuložilo sa. Skúste to znova.",
     "verified": "Overený odkaz",
-    "verifyHint": "Ak chcete overiť odkaz, pridajte toto na tú stránku a uložte znova: {{snippet}}"
+    "verifyHint": "Ak chcete overiť odkaz, pridajte toto na tú stránku a uložte znova: {{snippet}}",
+    "descriptionPresets": "Pridajte webovú stránku, zámená alebo čokoľvek iné. Odkazy sa zobrazujú s vašimi sociálnymi sieťami.",
+    "type": "Typ poľa",
+    "needsLabel": "Priraďte každému vlastnému poľu štítok",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "oni/oni",
+    "placeholderLocation": "Mesto, krajina",
+    "presets": {
+      "website": "Webová stránka",
+      "blog": "Blog",
+      "portfolio": "Portfólio",
+      "shop": "Obchod",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Zámená",
+      "location": "Lokalita",
+      "custom": "Vlastné",
+      "customOption": "Vlastný štítok"
+    }
   },
   "followedTags": {
     "follow": "Sledovať #{{tag}}",
