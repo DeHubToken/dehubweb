@@ -27,7 +27,9 @@ import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } fro
 // ---------------------------------------------------------------------------
 // Models and pricing. Every build and edit is paid from the caller's USD
 // credit balance at provider cost plus MARKUP — there is no free tier.
-// Runs on fal's OpenRouter router (FAL_KEY), never the metered gateway.
+// OpenAI models run on OpenAI directly (OPENAI_API_KEY, or the
+// `openai_api_key` entry in Supabase Vault); the rest run on fal's OpenRouter
+// router (FAL_KEY). Never the metered gateway.
 // Keep in sync with BUILDER_MODELS in src/lib/builder/api.ts and
 // services/builder.service.ts (mobile).
 // ---------------------------------------------------------------------------
@@ -35,8 +37,8 @@ import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } fro
 type BuilderModel = { id: string; label: string; inUsdPerM: number; outUsdPerM: number };
 
 const BUILDER_MODELS: BuilderModel[] = [
-  { id: "anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5", inUsdPerM: 3, outUsdPerM: 15 },
   { id: "openai/gpt-5", label: "GPT-5", inUsdPerM: 1.25, outUsdPerM: 10 },
+  { id: "anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5", inUsdPerM: 3, outUsdPerM: 15 },
   { id: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro", inUsdPerM: 1.25, outUsdPerM: 10 },
   { id: "anthropic/claude-haiku-4.5", label: "Claude Haiku 4.5", inUsdPerM: 1, outUsdPerM: 5 },
   { id: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash", inUsdPerM: 0.3, outUsdPerM: 2.5 },
@@ -186,9 +188,58 @@ function editUserPrompt(
 
 type ModelResult = { text: string; inputTokens: number; outputTokens: number; providerUsd?: number };
 
-// fal's OpenRouter router on FAL_KEY. The metered gateway is never used here:
-// one build is up to 32k output tokens.
+let openAiKeyCache: string | null = null;
+
+/** OPENAI_API_KEY from the function env, else the `openai_api_key` Vault entry. */
+async function openAiKey(): Promise<string | null> {
+  const env = Deno.env.get("OPENAI_API_KEY");
+  if (env) return env;
+  if (openAiKeyCache) return openAiKeyCache;
+  const { data, error } = await serviceClient().rpc("builder_openai_key");
+  if (error || typeof data !== "string" || !data) return null;
+  openAiKeyCache = data;
+  return data;
+}
+
+async function callOpenAi(system: string, user: string, model: BuilderModel, key: string): Promise<ModelResult> {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: model.id.replace(/^openai\//, ""),
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+      max_completion_tokens: MAX_OUTPUT_TOKENS,
+      // Low reasoning keeps a full build well inside the function time limit.
+      reasoning_effort: "low",
+    }),
+    signal: AbortSignal.timeout(300_000),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`AI provider error (${res.status}): ${body.slice(0, 200)}`);
+  }
+  const data = await res.json();
+  const text: string = data.choices?.[0]?.message?.content ?? "";
+  if (!text.trim()) throw new Error("The AI returned an empty response");
+  const usage = data.usage ?? {};
+  return {
+    text,
+    inputTokens: Number(usage.prompt_tokens) || tokensFor(system.length + user.length),
+    outputTokens: Number(usage.completion_tokens) || tokensFor(text.length),
+  };
+}
+
+// OpenAI models go straight to OpenAI; everything else (and OpenAI models
+// when no OpenAI key is set) uses fal's OpenRouter router on FAL_KEY.
+// The metered gateway is never used here: one build is up to 32k output tokens.
 async function callModel(system: string, user: string, model: BuilderModel): Promise<ModelResult> {
+  if (model.id.startsWith("openai/")) {
+    const openAi = await openAiKey();
+    if (openAi) return callOpenAi(system, user, model, openAi);
+  }
   const key = Deno.env.get("FAL_KEY");
   if (!key) throw new Error("The builder is not configured");
   const res = await fetch("https://fal.run/openrouter/router", {
