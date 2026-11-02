@@ -1,8 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /** Feedback submissions and the paginated, consent-approved public wall. */
 
-import { useCallback, useState } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useCallback, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { KitButton, PageSection } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { Loader2, MessageSquareQuote } from "lucide-react";
@@ -14,6 +15,9 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAccountSummariesByUsernames, type AccountSummary } from '@/lib/api/dehub';
+import { buildAvatarUrl } from '@/lib/media-url';
 
 const MIN_LENGTH = 10;
 const MAX_LENGTH = 1200;
@@ -58,7 +62,31 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
     getNextPageParam: (lastPage, pages) => lastPage.length === 24 ? pages.length * 24 : undefined,
     staleTime: 60_000,
   });
-  const approved = feedback.data?.pages.flat() ?? [];
+  const approved = useMemo(() => feedback.data?.pages.flat() ?? [], [feedback.data]);
+
+  // Faces for the wall. The view only carries the handle each quote was given
+  // under, so the live profile (avatar, display name, current handle) is one
+  // batched lookup per hundred names rather than one per card.
+  const usernamesKey = useMemo(
+    () => [...new Set(approved.map((item) => item.username?.toLowerCase()).filter(Boolean) as string[])].sort().join(','),
+    [approved],
+  );
+  const { data: accounts } = useQuery({
+    queryKey: ['feedback-wall-accounts', usernamesKey],
+    enabled: usernamesKey.length > 0,
+    staleTime: 5 * 60_000,
+    queryFn: async () => {
+      const names = usernamesKey.split(',');
+      const chunks: string[][] = [];
+      for (let i = 0; i < names.length; i += 100) chunks.push(names.slice(i, i + 100));
+      const results = await Promise.all(chunks.map((chunk) => getAccountSummariesByUsernames(chunk).catch(() => [] as AccountSummary[])));
+      const byName: Record<string, AccountSummary> = {};
+      for (const account of results.flat()) {
+        if (account?.username) byName[account.username.toLowerCase()] = account;
+      }
+      return byName;
+    },
+  });
 
   const trimmed = body.trim();
   const canSubmit =
@@ -228,17 +256,50 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
             {feedback.isError ? t('common.failedToLoad') : null}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
-            {approved.map((item) => (
-              <figure key={item.id} className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
-                <blockquote className="whitespace-pre-line text-xs text-zinc-300 leading-relaxed">“{item.body}”</blockquote>
-                <figcaption className="mt-2 text-[11px] text-zinc-500">
-                  {item.username
-                    ? `@${item.username}`
-                    : t('stats.feedback.anonymous', 'A DeHub member')}
-                  {item.time_using ? ` · ${item.time_using}` : ''}
-                </figcaption>
-              </figure>
-            ))}
+            {approved.map((item) => {
+              const account = item.username ? accounts?.[item.username.toLowerCase()] : undefined;
+              const handle = account?.username ?? item.username;
+              const name = account?.displayName || handle || t('stats.feedback.anonymous', 'A DeHub member');
+              const avatar = account?.address && account.avatarImageUrl ? buildAvatarUrl(account.address, account.avatarImageUrl) : undefined;
+              const face = (
+                <Avatar className="w-8 h-8 shrink-0">
+                  {avatar && <AvatarImage src={avatar} />}
+                  <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+                    {handle ? name.charAt(0).toUpperCase() : <Quote className="w-3.5 h-3.5 text-zinc-300" />}
+                  </AvatarFallback>
+                </Avatar>
+              );
+              const who = (
+                <span className="min-w-0 flex flex-col leading-tight">
+                  <span className="truncate text-xs font-semibold text-white">{name}</span>
+                  {(handle || item.time_using) && (
+                    <span className="truncate text-[11px] text-zinc-500">
+                      {handle ? `@${handle}` : ''}
+                      {handle && item.time_using ? ' · ' : ''}
+                      {item.time_using ?? ''}
+                    </span>
+                  )}
+                </span>
+              );
+              return (
+                <figure key={item.id} className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
+                  <figcaption className="mb-2">
+                    {handle ? (
+                      <Link to={`/${handle}`} className="inline-flex max-w-full items-center gap-2 rounded-lg hover:opacity-80 transition-opacity">
+                        {face}
+                        {who}
+                      </Link>
+                    ) : (
+                      <span className="inline-flex max-w-full items-center gap-2">
+                        {face}
+                        {who}
+                      </span>
+                    )}
+                  </figcaption>
+                  <blockquote className="whitespace-pre-line text-xs text-zinc-300 leading-relaxed">“{item.body}”</blockquote>
+                </figure>
+              );
+            })}
           </div>
           {(feedback.isError || feedback.hasNextPage) && (
             <KitButton variant="quiet" className="mt-3" disabled={feedback.isFetching}
