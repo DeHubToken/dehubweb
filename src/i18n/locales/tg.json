@@ -10641,8 +10641,12 @@
       "restore": "Барқарор кардан",
       "restored": "Версияи барқароршуда {{version}}"
     },
-    "stakeForAllowance": "Токенҳои DeHub-ро барои зиёд кардани кӯмаки ҳаррӯзаи худ барои эҷод кардан истифода баред",
     "buildInChat": "Дар паёмҳои шахсӣ бо @assistant созед",
+    "modelLabel": "Модел",
+    "creditsLeft": "{{amount}} кредит",
+    "perPrompt": "≈ {{price}} барои ҳар дархост",
+    "pricingNote": "Ҳар дархост аз кредитҳои шумо бо нархи модел ва иловаи 30% пардохт мешавад. Ҳадди аксар нархи имконпазири дархост ҳангоми иҷро нигоҳ дошта мешавад ва қисми истифоданашуда баргардонида мешавад.",
+    "topUpCredits": "Пур кардани кредит",
     "landerTitle": "Lumikha ng isang application lamang sa pamamag",
     "landerSubtitle": "@ action: inmenu Ito ay nagbuo ng app, host ito at nagpapadala sa iyo ng isang link na maaaring buksan Ҷавоб додан барои тағйир додани ягон чиз.",
     "promptPlaceholder": "Тасвир кардани барномае, ки шумо мехоҳед...",

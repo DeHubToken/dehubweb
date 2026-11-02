@@ -10797,8 +10797,12 @@
       "restore": "Ibalik",
       "restored": "Naibalik na bersyon {{version}}"
     },
-    "stakeForAllowance": "Mag-stake ng DeHub token para mapataas ang iyong daily build allowance",
     "buildInChat": "Gumawa sa iyong mga DM kasama si @assistant",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} na credits",
+    "perPrompt": "≈ {{price}} bawat prompt",
+    "pricingNote": "Bawat prompt ay binabayaran mula sa iyong credits sa halaga ng modelo at dagdag na 30%. Ang pinakamataas na posibleng halaga ng prompt ay hinahawakan habang tumatakbo ito, at ibinabalik ang hindi nagamit na bahagi.",
+    "topUpCredits": "Mag-top up ng credits",
     "landerTitle": "Bumuo ng app sa pamamagitan lamang ng pagtatanong",
     "landerSubtitle": "Sabihin sa @assist kung ano ang gusto mo sa iyong mga mensahe. Ito ay bumubuo ng app, nagho - host ito at nagpapadala sa iyo ng isang link kahit sino ay maaaring buksan. Tumugon upang baguhin ang anumang bagay.",
     "promptPlaceholder": "Ilarawan ang app na gusto mo...",

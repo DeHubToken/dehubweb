@@ -10676,8 +10676,12 @@
       "restore": "Rikthe",
       "restored": "Versioni i rivendosur {{version}}"
     },
-    "stakeForAllowance": "Vendosni tokena DeHub për të rritur lejen tuaj ditore të ndërtimit",
     "buildInChat": "Ndërto në mesazhet private me @assistant",
+    "modelLabel": "Modeli",
+    "creditsLeft": "{{amount}} në kredite",
+    "perPrompt": "≈ {{price}} për kërkesë",
+    "pricingNote": "Çdo kërkesë paguhet nga kreditet e tua me koston e modelit plus 30%. Shuma maksimale që mund të kushtojë një kërkesë mbahet ndërsa ajo ekzekutohet dhe pjesa e papërdorur kthehet.",
+    "topUpCredits": "Rimbush kreditet",
     "landerTitle": "Ndërto një aplikacion vetëm duke pyetur",
     "landerSubtitle": "Thuaji @assistant çfarë dëshiron në mesazhet e tua. Ndërton aplikacionin, e pret dhe të dërgon një link që kushdo mund ta hapë. Përgjigju për të ndryshuar ndonjë gjë.",
     "promptPlaceholder": "Përshkruaj aplikacionin që dëshiron...",

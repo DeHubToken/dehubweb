@@ -10599,8 +10599,12 @@
       "restore": "Kembalikan",
       "restored": "Versi yang direstorasi {{version}}"
     },
-    "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina",
     "buildInChat": "Gawe ing DM-mu bareng @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} ing kredit",
+    "perPrompt": "≈ {{price}} saben prompt",
+    "pricingNote": "Saben prompt dibayar saka kreditmu miturut biaya model ditambah 30%. Biaya paling dhuwur sing bisa dientekake prompt ditahan nalika mlaku, lan bagean sing ora kanggo dibalekake.",
+    "topUpCredits": "Isi kredit",
     "landerTitle": "Gawe aplikasi mung kanthi takon",
     "landerSubtitle": "Ngomong marang @assistant apa sing dikarepake ing pesenmu. Iku nggawe aplikasi, nyimpen, lan ngirim link sing bisa dibukak sapa wae. Wangsulana kanggo ngganti apa wae.",
     "promptPlaceholder": "Jelasake aplikasi sing dikarepake...",

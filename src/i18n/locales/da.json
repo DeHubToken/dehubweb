@@ -10683,8 +10683,12 @@
       "restore": "Gendan",
       "restored": "Gendannet version {{version}}"
     },
-    "stakeForAllowance": "Stak DeHub-tokens for at øge din daglige byggetilladelse",
     "buildInChat": "Byg i dine DM'er med @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} i kreditter",
+    "perPrompt": "≈ {{price}} pr. prompt",
+    "pricingNote": "Hver prompt betales med dine kreditter til modellens pris plus 30 %. Det maksimale, en prompt kan koste, reserveres, mens den kører, og den ubrugte del returneres.",
+    "topUpCredits": "Tank kreditter op",
     "landerTitle": "Byg en app bare ved at spørge",
     "landerSubtitle": "Fortæl @assistant, hvad du vil have i dine beskeder. Den bygger appen, er vært for den og sender dig et link, som alle kan åbne. Svar for at ændre noget.",
     "promptPlaceholder": "Beskriv den app, du ønsker...",

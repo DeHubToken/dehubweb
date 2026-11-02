@@ -10610,8 +10610,12 @@
       "restore": "Dib u soo celi",
       "restored": "Nooca dib loo soo celiyay {{version}}"
     },
-    "stakeForAllowance": "Lacagta DeHub ku keydi si aad u kordhiso ogolaanshahaaga dhismaha maalinlaha ah",
     "buildInChat": "Ku dhis fariimahaaga gaarka ah adigoo la jooga @assistant",
+    "modelLabel": "Moodal",
+    "creditsLeft": "{{amount}} oo deyn ah",
+    "perPrompt": "≈ {{price}} codsi kasta",
+    "pricingNote": "Codsi kasta waxaa laga bixiyaa deyntaada qiimaha moodalka oo lagu daray 30%. Qiimaha ugu badan ee codsi ku kici karo waa la haystaa inta uu socdo, qaybta aan la isticmaalinna waa lagu soo celiyaa.",
+    "topUpCredits": "Ku shub deyn",
     "landerTitle": "Samee app kaliya adoo weydiinaya",
     "landerSubtitle": "U sheeg @caawiye waxa aad rabto farriimahaaga. Waxay dhisaysaa barnaamijka, martigelisaa oo kuu soo dirtaa isku xirka qof kasta oo furi kara. Ka jawaab wax kasta si aad u bedesho.",
     "promptPlaceholder": "Sharax barnaamijka aad rabto...",

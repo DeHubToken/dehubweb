@@ -103,3 +103,29 @@ export const builderApi = {
   publish: (projectId: string) => call<{ appSlug: string; tier: string; storeUrl: string }>({ action: 'publish', projectId }),
   unpublish: (projectId: string) => call<{ ok: true }>({ action: 'unpublish', projectId }),
 };
+
+/** One model the builder can run on, with what a typical prompt costs on it. */
+export interface BuilderModelQuote {
+  id: string;
+  label: string;
+  /** What a typical new-build prompt costs, in micro-dollars (cost + markup). */
+  typicalMicros: number;
+  /** The most one prompt can cost — held up front, the unused part returned. */
+  maxMicros: number;
+}
+
+export interface BuilderPricing {
+  model: string;
+  markup: number;
+  models: BuilderModelQuote[];
+}
+
+export const builderPricingApi = {
+  pricing: () => call<BuilderPricing>({ action: 'pricing' }),
+  setModel: (model: string) => call<{ model: string }>({ action: 'set_model', model }),
+};
+
+export function formatMicrosUsd(micros: number): string {
+  const usd = micros / 1_000_000;
+  return usd.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: usd < 0.1 ? 3 : 2 });
+}

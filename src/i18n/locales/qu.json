@@ -10706,8 +10706,12 @@
       "restore": "Kawsarichiy",
       "restored": "Kutichisqa laya {{version}}"
     },
-    "stakeForAllowance": "DeHub tokenskuna stakeyta atikanki urqu build allowance urqu punchawta",
     "buildInChat": "Sapaq willakuyniykikunapi @assistant-wan ruray",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} creditokunapi",
+    "perPrompt": "≈ sapa mañakuypaq {{price}}",
+    "pricingNote": "Sapa mañakuyqa creditoykikunamanta pagakun modelopa chaninwan 30% yapasqawan. Mañakuy aswan chaninniyuq kayninqa llamk'achkaptin hap'isqa kan, mana llamk'achisqa partitaq kutichisqa kan.",
+    "topUpCredits": "Creditota yapay",
     "landerTitle": "Tapuspalla huk appta ruway",
     "landerSubtitle": "@assistant nisqaman willay ima munasqaykita willakuyniykikunapi. Chayqa app ruwan, host ruwan chaymanta huk linkta apachisunki pipas kichayta atin. Imatapas tikranaykipaq kutichiy.",
     "promptPlaceholder": "Willay ima app munasqaykita...",

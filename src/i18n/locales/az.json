@@ -10672,8 +10672,12 @@
       "restore": "Bərpa et",
       "restored": "Bərpa olunmuş versiya {{version}}"
     },
-    "stakeForAllowance": "Gündəlik tikinti limitinizi artırmaq üçün DeHub tokenlərini steykinq edin",
     "buildInChat": "@assistant ilə şəxsi mesajlarınızda yaradın",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredit",
+    "perPrompt": "≈ hər sorğu üçün {{price}}",
+    "pricingNote": "Hər sorğu modelin qiyməti üstəgəl 30% olmaqla kreditlərinizdən ödənilir. Sorğunun ola biləcək maksimum qiyməti icra zamanı saxlanılır, istifadə olunmayan hissə geri qaytarılır.",
+    "topUpCredits": "Kredit artır",
     "landerTitle": "Yalnız xahiş edərək tətbiq yaradın",
     "landerSubtitle": "Mesajlarınızda nə istədiyinizi @ köməkçinizə bildirin. O, tətbiqi qurur, ona ev sahibliyi edir və hər kəsin aça biləcəyi linki sizə göndərir. Nəyisə dəyişmək üçün cavab verin.",
     "promptPlaceholder": "İstədiyiniz tətbiqi təsvir edin...",

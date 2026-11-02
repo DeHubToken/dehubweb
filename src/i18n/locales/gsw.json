@@ -10648,8 +10648,12 @@
       "restore": "Wiederherstellen",
       "restored": "Wiederhergestellte Version {{version}}"
     },
-    "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe",
     "buildInChat": "I dine DMs mit @assistant baue",
+    "modelLabel": "Modäll",
+    "creditsLeft": "{{amount}} Guethabe",
+    "perPrompt": "≈ {{price}} pro Prompt",
+    "pricingNote": "Jede Prompt wird us dim Guethabe zu de Chöschte vom Modäll plus 30 % zahlt. De Höchschtbetrag, wo e Prompt chan choschte, wird reserviert, solang er lauft, und de Rescht wo nöd brucht wird, chunnsch zrugg.",
+    "topUpCredits": "Guethabe ufladä",
     "landerTitle": "Build e App nume mit em Frag",
     "landerSubtitle": "Sag @assistant, was du wotsch i dine Nachrichtä. Es baut d App, hostt sie und schickt dir e Link, wo jedi öppis öppne cha. Antwort i de Chat, wenn du öppis ändere wotsch.",
     "promptPlaceholder": "Beschriibe d App, wo du wotsch…",

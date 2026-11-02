@@ -10697,8 +10697,12 @@
       "restore": "Wiederherstellen",
       "restored": "Wiederhergestellte Version {{version}}"
     },
-    "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen",
     "buildInChat": "In deinen DMs mit @assistant bauen",
+    "modelLabel": "Modell",
+    "creditsLeft": "{{amount}} an Guthaben",
+    "perPrompt": "≈ {{price}} pro Prompt",
+    "pricingNote": "Jeder Prompt wird aus deinem Guthaben zu den Kosten des Modells plus 30 % bezahlt. Der Höchstbetrag, den ein Prompt kosten kann, wird während der Ausführung reserviert, und der nicht genutzte Teil wird zurückerstattet.",
+    "topUpCredits": "Guthaben aufladen",
     "landerTitle": "Erstellen Sie eine App, indem Sie einfach fragen",
     "landerSubtitle": "Sagen Sie @assistant, was Sie in Ihren Nachrichten wollen. Es erstellt die App, hostet sie und sendet dir einen Link, den jeder öffnen kann. Antworte, um etwas zu ändern.",
     "promptPlaceholder": "Beschreiben Sie die gewünschte App...",

@@ -11478,8 +11478,12 @@
       "restore": "Geri Yükle",
       "restored": "Geri yüklenen sürüm {{version}}"
     },
-    "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin",
     "buildInChat": "@assistant ile özel mesajlarında oluştur",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredi",
+    "perPrompt": "≈ istem başına {{price}}",
+    "pricingNote": "Her istem, modelin maliyeti artı %30 üzerinden kredilerinden ödenir. Bir istemin tutabileceği en yüksek tutar çalıştığı sürece bloke edilir ve kullanılmayan kısım iade edilir.",
+    "topUpCredits": "Kredi yükle",
     "landerTitle": "Sadece sorarak bir uygulama oluşturun",
     "landerSubtitle": "@ASSISTANT'a mesajlarınızda ne istediğinizi söyleyin. Uygulamayı oluşturur, barındırır ve size herkesin açabileceği bir bağlantı gönderir. Herhangi bir şeyi değiştirmek için yanıt verin.",
     "promptPlaceholder": "İstediğiniz uygulamayı tanımlayın…",

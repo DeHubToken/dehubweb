@@ -10686,8 +10686,12 @@
       "restore": "Qayta tiklash",
       "restored": "Qayta tiklangan versiya {{version}}"
     },
-    "stakeForAllowance": "Kunlik yaratish imkoniyatingizni oshirish uchun DeHub tokenlarini stavka qiling",
     "buildInChat": "@assistant bilan shaxsiy xabarlarda yarating",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredit",
+    "perPrompt": "≈ har bir so'rov uchun {{price}}",
+    "pricingNote": "Har bir so'rov kreditlaringizdan model narxi ustiga 30% qo'shilgan holda to'lanadi. So'rovning eng yuqori mumkin bo'lgan narxi bajarilayotganda ushlab turiladi, ishlatilmagan qismi esa qaytariladi.",
+    "topUpCredits": "Kredit to'ldirish",
     "landerTitle": "Shunchaki so'rash orqali ilova yarating",
     "landerSubtitle": "Xabarlaringizda nimani xohlashingizni @assistant ga ayting. U ilovani yaratadi, joylashtiradi va sizga istalgan kishi ochishi mumkin bo'lgan havolani yuboradi. Biror narsani o'zgartirish uchun javob bering.",
     "promptPlaceholder": "Kerakli ilovani tasvirlab bering...",
