@@ -5,6 +5,8 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
+import type { DmVideoOptions } from '@/lib/dm-video-options';
+import { destructFromChoice, type DmDestructChoice } from '@/lib/dm-destruct';
 import { useEffect, useRef, useReducer, useCallback, useSyncExternalStore } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
@@ -657,7 +659,7 @@ export function useMessages(conversationId: string | null) {
           const pages = old.pages.map((page: any) => ({
             ...page,
             items: page.items.map((m: DmMessage) =>
-              m._id === data._id ? { ...m, isDeleted: true, content: '' } : m
+              m._id === (data._id ?? data.messageId) ? { ...m, isDeleted: true, content: '' } : m
             ),
           }));
           return { ...old, pages };
@@ -874,6 +876,8 @@ export function useSendMessage(conversationId: string) {
       replyPreview,
       txHash,
       forwardedFrom,
+      mediaOptions,
+      destruct,
     }: {
       content: string;
       msgType?: DmMsgType;
@@ -885,6 +889,8 @@ export function useSendMessage(conversationId: string) {
       replyPreview?: DmMessage['replyTo'];
       txHash?: string;
       forwardedFrom?: { messageId: string };
+      mediaOptions?: DmVideoOptions;
+      destruct?: DmDestructChoice;
     }): Promise<DmMessage> => {
       // Virtual conversations need createAndStart first to get real ID (applies to all message types)
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
@@ -929,6 +935,8 @@ export function useSendMessage(conversationId: string) {
           voiceDuration,
           replyTo,
           txHash,
+          mediaOptions,
+          destruct,
         });
         if (plain) seedSentMedia(sent._id, plain);
         return sent;
@@ -970,7 +978,7 @@ export function useSendMessage(conversationId: string) {
       };
     },
 
-    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview }) => {
+    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview, mediaOptions, destruct }) => {
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
       // Optimistic: prepend temp message
       const optimisticMessage: DmMessage = {
@@ -990,13 +998,16 @@ export function useSendMessage(conversationId: string) {
               url: createTransientBlobUrl(mediaFile),
               // A document has no renderable preview, so it must not be typed
               // 'image' — the bubble would try to <img> a blob URL for a PDF.
-              type: msgType === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
+              type: msgType === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file'
+                : mediaFile.type.startsWith('video/') ? 'video' : 'image',
               mimeType: mediaFile.type,
               name: mediaFile.name,
               size: mediaFile.size,
             }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: voiceDuration ?? null,
+        ...(mediaOptions ? { mediaOptions } : {}),
+        ...(destruct ? { destruct: destructFromChoice(destruct) } : {}),
         isRead: false,
         isEdited: false,
         editedAt: null,

@@ -423,6 +423,12 @@ All colors MUST be HSL.
     display: none;
   }
 
+  /* DM hidden video: the light that runs up the glass as it lifts */
+  @keyframes dm-reveal-sweep {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: .5; transform: translateY(-340px); }
+  }
+
   /* Marquee auto-scroll */
   .trending-marquee {
     animation: trending-scroll 40s linear infinite;

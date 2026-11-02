@@ -48,8 +48,11 @@ export interface EditedMessage {
 }
 
 export interface DeletedMessage {
-  _id: string;
+  /** Older events carry `_id`, the server now sends `messageId`. */
+  _id?: string;
+  messageId?: string;
   dmId: string;
+  reason?: 'destruct';
 }
 
 export interface DmReactionUpdate {

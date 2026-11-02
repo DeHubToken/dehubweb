@@ -1,3 +1,5 @@
+import type { DmDestruct, DmDestructChoice } from '@/lib/dm-destruct';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountSummaries, type AccountSummary } from './users';
@@ -111,6 +113,10 @@ export interface DmMessage {
   isForwarded: boolean;
   replyTo: ReplyPreview | null;
   reactions?: Record<string, string[]>;
+  /** How a plain video plays (trim, cover, mirror, rotate, hide until tapped). */
+  mediaOptions?: DmVideoOptions | null;
+  /** Self-destruct: gone after a set time, or once the other person watched it. */
+  destruct?: DmDestruct | null;
   paymentStatus: null | 'pending' | 'confirmed';
   paymentTxHash: string | null;
   tipAmount: number | null;
@@ -289,6 +295,8 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     reactions: raw.reactions && typeof raw.reactions === 'object' ? raw.reactions : {},
     // Populated preview only — a bare id has nothing to render.
     replyTo: raw.replyTo && typeof raw.replyTo === 'object' ? raw.replyTo : null,
+    mediaOptions: raw.mediaOptions && typeof raw.mediaOptions === 'object' ? raw.mediaOptions : null,
+    destruct: raw.destruct && typeof raw.destruct === 'object' && raw.destruct.mode ? raw.destruct : null,
     paymentStatus: raw.paymentStatus ?? null,
     paymentTxHash: raw.paymentTxHash ?? null,
     tipAmount: raw.tipAmount ?? null,
@@ -617,6 +625,10 @@ export async function uploadAndSendMedia(
      * stores it untouched and requires `content` to be an encrypted envelope.
      */
     encryptedKind?: MediaKind;
+    /** Video trim/cover/mirror/rotate/hide, for an attachment sent in the clear. */
+    mediaOptions?: DmVideoOptions;
+    /** Self-destruct choice; works for encrypted files too (only the timer is in the clear). */
+    destruct?: DmDestructChoice;
   }
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
@@ -631,6 +643,8 @@ export async function uploadAndSendMedia(
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
   if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
+  if (opts?.mediaOptions) formData.append('mediaOptions', JSON.stringify(opts.mediaOptions));
+  if (opts?.destruct) formData.append('destruct', String(opts.destruct));
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,
@@ -1018,4 +1032,9 @@ export async function getFreeDmAccessList(): Promise<FreeAccessUser[]> {
     console.error('[DM API] getFreeDmAccessList failed:', error);
     return [];
   }
+}
+
+/** The recipient has watched a view-once attachment; the server removes it for both. */
+export async function markDmMessageViewed(messageId: string): Promise<void> {
+  await apiCall<unknown>(`/api/dm/message/${encodeURIComponent(messageId)}/viewed`, { method: 'POST', requiresAuth: true });
 }
