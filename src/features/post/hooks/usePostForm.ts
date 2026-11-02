@@ -26,6 +26,7 @@ import { usePostProcessingStore } from '@/store/postProcessingStore';
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
+import { startDraftImage, resolveDraftImages } from '../lib/draftImages';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
 import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
@@ -595,6 +596,13 @@ export function usePostForm(
       setDraftVideo(null);
     };
   }, [attachedVideoFile, isQuoting, signedInForDraft]);
+
+  // Photos go up as they are attached or edited, so Post only sends ids.
+  useEffect(() => {
+    if (isQuoting || !signedInForDraft) return;
+    if (media.some((m) => m.type !== 'image')) return;
+    for (const m of media) startDraftImage(m.file);
+  }, [media, isQuoting, signedInForDraft]);
 
   // Auto-save active draft to localStorage whenever text fields change.
   // Debounced: JSON.stringify + synchronous localStorage.setItem on EVERY
@@ -2064,6 +2072,25 @@ export function usePostForm(
           setUploadProgress(5);
           mintResponse = await mintPost(mintParams, uploadWithFile);
           warnUntrimmed();
+        }
+      } else if (postType === 'feed-images' && !isQuoting) {
+        // Photos uploaded while the caption was written go by id; a 409 means
+        // the server lost one, so the post goes again with every file.
+        const early = await resolveDraftImages(files);
+        if (early) {
+          try {
+            mintResponse = await mintPost(
+              { ...mintParams, files: early.send.length ? early.send : undefined, draftImageIds: early.ids },
+              (percent) => setUploadProgress(Math.max(30, Math.round(percent * 0.6))),
+            );
+          } catch (err) {
+            if (!(err instanceof UploadHttpError && err.status === 409 && err.code === 'DRAFT_UNAVAILABLE')) throw err;
+            console.warn('[Mint] Draft photo unavailable — uploading the files with the post');
+            setUploadProgress(5);
+            mintResponse = await mintPost(mintParams, uploadWithFile);
+          }
+        } else {
+          mintResponse = await mintPost(mintParams, uploadWithFile);
         }
       } else {
         mintResponse = await mintPost(mintParams, uploadWithFile);

@@ -79,6 +79,11 @@ export interface MintPostParams {
    * /user_mint only — quotes keep sending the file.
    */
   draftVideoId?: string;
+  /**
+   * feed-images only: photos already uploaded through /api/draft_image, in
+   * display order. A null slot is filled by the next file in `files`.
+   */
+  draftImageIds?: (string | null)[];
   /** With draftVideoId: post only this part of the clip (seconds). */
   trimStart?: number;
   trimEnd?: number;
@@ -246,6 +251,10 @@ export async function mintPost(
       formData.append('trimStart', String(params.trimStart));
       formData.append('trimEnd', String(params.trimEnd));
     }
+  }
+
+  if (params.draftImageIds?.length && params.postType === 'feed-images' && !params.quotedTokenId) {
+    formData.append('draftImageIds', JSON.stringify(params.draftImageIds));
   }
 
   if (params.scheduledAt) {
