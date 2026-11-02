@@ -70,12 +70,17 @@ const MAX_DURATION = 30; // 30 seconds max
 const IMAGE_AUDIO_SUPPORTED = false;
 
 /**
- * Video filter/crop/trim settings were stored and then silently discarded —
- * unlike images, a video cannot be re-encoded in the browser without shipping
- * a wasm encoder, and the backend reads no trim/crop fields. Off until one of
- * those exists; the editors themselves are kept.
+ * Video filter/crop settings would be silently discarded — a video cannot be
+ * re-encoded in the browser without shipping a wasm encoder, and the backend
+ * reads no filter/crop fields. Off until it does; the editors are kept.
  */
 const VIDEO_EDITS_SUPPORTED = false;
+
+/**
+ * Trim is cut on the server from the draft upload (user_mint trimStart /
+ * trimEnd), so the trimmer is on.
+ */
+const VIDEO_TRIM_SUPPORTED = true;
 
 // Helper to check if crop is applied
 function hasCropApplied(settings?: CropSettings): boolean {
@@ -977,10 +982,11 @@ export function PostMediaPreview({
                         </button>
                       )}
                       
-                      {/* Top left: Filter + Crop + Trim buttons — gated off,
-                          see VIDEO_EDITS_SUPPORTED. */}
-                      {VIDEO_EDITS_SUPPORTED && (
+                      {/* Top left: Trim (+ Filter and Crop, gated off — see
+                          VIDEO_EDITS_SUPPORTED). */}
+                      {(VIDEO_EDITS_SUPPORTED || VIDEO_TRIM_SUPPORTED) && (
                       <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        {VIDEO_EDITS_SUPPORTED && (<>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -1010,11 +1016,13 @@ export function PostMediaPreview({
                           </TooltipTrigger>
                           <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
                         </Tooltip>
+                        </>)}
 
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
                               type="button"
+                              aria-label={_copy("copy.8d9346258548", { defaultValue: "Trim video" })}
                               onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
                               className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                                 ${m.trimStart !== undefined || m.trimEnd !== undefined
@@ -1033,8 +1041,10 @@ export function PostMediaPreview({
                       {/* Duration badge */}
                       {m.duration && (
                         <div data-keep-dark className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
-                          {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
-                          {m.duration < 90 && <span className="ml-1 text-emerald-400">{_copy("copy.ff5d20bd706f", { defaultValue: "• Short" })}</span>}
+                          {m.trimStart !== undefined && m.trimEnd !== undefined
+                            ? `${Math.floor((m.trimEnd - m.trimStart) / 60)}:${String(Math.floor((m.trimEnd - m.trimStart) % 60)).padStart(2, '0')} ${_copy("post.trim.trimmed", { defaultValue: "trimmed" })}`
+                            : `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}`}
+                          {m.duration < 90 && m.trimStart === undefined && <span className="ml-1 text-emerald-400">{_copy("copy.ff5d20bd706f", { defaultValue: "• Short" })}</span>}
                         </div>
                       )}
                       
@@ -1246,6 +1256,9 @@ export function PostMediaPreview({
           videoUrl={media[videoTrimmerIndex].preview}
           duration={media[videoTrimmerIndex].duration || 0}
           fileName={media[videoTrimmerIndex].file.name}
+          initialStart={media[videoTrimmerIndex].trimStart}
+          initialEnd={media[videoTrimmerIndex].trimEnd}
+          onPickCover={onAddThumbnail ? (url) => onAddThumbnail(videoTrimmerIndex, url) : undefined}
           onApply={(trimStart, trimEnd) => {
             onApplyTrim?.(videoTrimmerIndex, trimStart, trimEnd);
             setVideoTrimmerIndex(null);

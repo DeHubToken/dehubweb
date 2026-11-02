@@ -79,6 +79,9 @@ export interface MintPostParams {
    * /user_mint only — quotes keep sending the file.
    */
   draftVideoId?: string;
+  /** With draftVideoId: post only this part of the clip (seconds). */
+  trimStart?: number;
+  trimEnd?: number;
   /**
    * 'mature' marks the post adult or graphic. It then reaches the creator's
    * followers, their profile and anyone with the link, but stays off the
@@ -239,6 +242,10 @@ export async function mintPost(
 
   if (params.draftVideoId && !params.quotedTokenId) {
     formData.append('draftVideoId', params.draftVideoId);
+    if (typeof params.trimStart === 'number' && typeof params.trimEnd === 'number') {
+      formData.append('trimStart', String(params.trimStart));
+      formData.append('trimEnd', String(params.trimEnd));
+    }
   }
 
   if (params.scheduledAt) {
