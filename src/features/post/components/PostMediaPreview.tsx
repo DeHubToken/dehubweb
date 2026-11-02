@@ -173,6 +173,7 @@ export function PostMediaPreview({
       item: {
         id: m.preview, file: m.file, url: m.preview, kind: 'video', duration: m.duration,
         options: { trimStart: m.trimStart, trimEnd: m.trimEnd }, destruct: null, lockPrice: null,
+        description: m.description ?? '',
       },
     });
   }, [media]);
@@ -184,12 +185,22 @@ export function PostMediaPreview({
     videos.forEach((v) => seenVideos.current!.add(v));
     if (fresh >= 0 && !videoEdit) openVideoEdit(fresh);
   }, [media, videoEdit, openVideoEdit]);
+  // Photos too: a newly added photo opens straight into the photo editor.
+  const seenPhotos = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const photos = media.filter((m) => m.type === 'image').map((m) => m.preview);
+    if (!seenPhotos.current) { seenPhotos.current = new Set(photos); return; }
+    const fresh = media.findIndex((m) => m.type === 'image' && m.file.type !== 'image/gif' && !seenPhotos.current!.has(m.preview));
+    photos.forEach((v) => seenPhotos.current!.add(v));
+    if (fresh >= 0 && onReplaceImage && !studio && !videoEdit) setStudio({ index: fresh, tab: 'crop' });
+  }, [media, studio, videoEdit, onReplaceImage]);
   const confirmVideoEdit = async () => {
     if (!videoEdit) return;
     const { index, item } = videoEdit;
     setVideoEdit(null);
     const dur = item.duration ?? media[index]?.duration ?? 0;
     const o = item.options;
+    if (onSetDescription && (item.description ?? '').trim() !== (media[index]?.description ?? '').trim()) onSetDescription(index, (item.description ?? '').trim());
     if (o.trimStart != null || o.trimEnd != null) onApplyTrim?.(index, o.trimStart ?? 0, o.trimEnd ?? dur);
     if (o.coverAt != null && onAddThumbnail) {
       const frame = await grabVideoFrame(item.url, o.coverAt);
@@ -1318,7 +1329,8 @@ export function PostMediaPreview({
           onRemoveItem={() => { const i = videoEdit.index; setVideoEdit(null); onRemove(i); }}
           onClose={() => setVideoEdit(null)}
           onConfirm={() => { void confirmVideoEdit(); }}
-          onlyTabs={['cover', 'trim']}
+          onlyTabs={['cover', 'trim', 'alt']}
+          allowAlt={!!onSetDescription}
           initialTab="cover"
           allowTimer={false}
         />
@@ -1332,6 +1344,8 @@ export function PostMediaPreview({
             photos={ids.map((i) => ({ original: media[i].studioOriginal ?? media[i].file, edits: media[i].studioEdits }))}
             startIndex={start}
             startTab={studio.tab}
+            descriptions={ids.map((i) => media[i].description ?? '')}
+            onDescriptions={onSetDescription ? (d) => d.forEach((text, k) => { if (text !== (media[ids[k]].description ?? '').trim()) onSetDescription(ids[k], text); }) : undefined}
             onClose={() => setStudio(null)}
             onDone={(results: StudioResult[]) => {
               for (const r of results) onReplaceImage(ids[r.index], r.file, { original: r.original, edits: r.edits });

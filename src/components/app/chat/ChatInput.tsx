@@ -730,6 +730,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         onConfirm={() => { setStudioOpen(false); requestAnimationFrame(() => textareaRef.current?.focus()); }}
         allowLock={allowLock}
         allowTimer={allowDocuments}
+        onDropFiles={attachFiles}
       />
       {studioItems.length > 0 && (
         <div data-attach-preview="media" className="mb-2 flex items-center gap-2 overflow-x-auto pt-1.5 [scrollbar-width:none]">
