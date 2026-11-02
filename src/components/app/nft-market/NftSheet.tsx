@@ -19,6 +19,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import {
   CHAIN_LABEL,
   EXPLORER,
+  addAlert,
   cancelOrder,
   ensureNftApproval,
   ensureTokenAllowance,
@@ -31,7 +32,7 @@ import {
   type MarketCurrency,
   type MarketOrder,
 } from '@/lib/market/market';
-import { NATIVE, buildListing, buildOffer, sellerProceeds } from '@/lib/market/seaport';
+import { NATIVE, buildListing, buildOffer, currentPrice, type RoyaltyTerm } from '@/lib/market/seaport';
 import { NftArt, formatPrice } from './NftCard';
 
 export interface NftSheetTarget {
@@ -99,7 +100,37 @@ function Chips<T extends string | number>({ value, options, onChange }: { value:
   );
 }
 
-export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; onClose: () => void }) {
+/** Fee terms for a bundle: each NFT's royalty on its even share of the price, per creator. */
+async function bundleTerms(items: NftSheetTarget[], price: bigint, currency: string) {
+  const share = price / BigInt(items.length);
+  const all = await Promise.all(
+    items.map((i) => fetchTerms({ chainId: i.chainId, contract: i.contract, tokenId: i.tokenId, price: share.toString(), currency })),
+  );
+  const byReceiver = new Map<string, bigint>();
+  for (const t of all) {
+    for (const r of Array.isArray(t.royalty) ? t.royalty : t.royalty ? [t.royalty] : []) {
+      byReceiver.set(r.receiver, (byReceiver.get(r.receiver) ?? 0n) + BigInt(r.amount));
+    }
+  }
+  const royalty: RoyaltyTerm[] = [...byReceiver].map(([receiver, amount]) => ({ receiver, amount: amount.toString() }));
+  return { feeRecipient: all[0]?.feeRecipient ?? null, feeBps: all[0]?.feeBps ?? 0, fee: '0', royalty };
+}
+
+function royaltyTotal(r: RoyaltyTerm | RoyaltyTerm[] | null | undefined, skip: string): bigint {
+  if (!r) return 0n;
+  return (Array.isArray(r) ? r : [r]).filter((x) => x.receiver.toLowerCase() !== skip).reduce((s, x) => s + BigInt(x.amount), 0n);
+}
+
+export function NftSheet({
+  target,
+  bundle,
+  onClose,
+}: {
+  target: NftSheetTarget | null;
+  /** Two to four NFTs to list together; opens straight into the listing form. */
+  bundle?: NftSheetTarget[] | null;
+  onClose: () => void;
+}) {
   const { t } = useTranslation();
   // useContext, not useAuth: the state gallery renders this sheet with no AuthProvider.
   const auth = useContext(AuthContext);
@@ -108,18 +139,26 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
   const qc = useQueryClient();
   const open = !!target;
   const [busy, setBusy] = useState<string | null>(null);
-  const [mode, setMode] = useState<'view' | 'list' | 'offer'>('view');
+  const [mode, setMode] = useState<'view' | 'list' | 'offer' | 'alert'>('view');
+  const [dropping, setDropping] = useState(false);
+  const [endText, setEndText] = useState('');
+  const [anyInCollection, setAnyInCollection] = useState(false);
+  const [alertScope, setAlertScope] = useState<'token' | 'collection'>('collection');
+  const isBundle = !!bundle && bundle.length > 1;
   const [currency, setCurrency] = useState<string>(NATIVE);
   const [priceText, setPriceText] = useState('');
   const [days, setDays] = useState(30);
   const [qty, setQty] = useState('1');
 
   useEffect(() => {
-    setMode('view');
+    setMode(isBundle ? 'list' : 'view');
     setPriceText('');
+    setEndText('');
+    setDropping(false);
+    setAnyInCollection(false);
     setQty('1');
     setBusy(null);
-  }, [target?.chainId, target?.contract, target?.tokenId]);
+  }, [target?.chainId, target?.contract, target?.tokenId, isBundle]);
 
   const me: string = String(authWallet ?? '').toLowerCase();
 
@@ -144,26 +183,33 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
   const dhb = currencies.find((c) => c.symbol === 'DHB');
   const cur = currencies.find((c) => c.address === (mode === 'offer' ? dhb?.address : currency)) ?? currencies[0];
 
-  const priceWei = useMemo(() => {
+  const parse = (text: string) => {
     try {
-      if (!cur || !priceText.trim()) return 0n;
-      return parseUnits(priceText.trim(), cur.decimals);
+      if (!cur || !text.trim()) return 0n;
+      return parseUnits(text.trim(), cur.decimals);
     } catch {
       return 0n;
     }
-  }, [priceText, cur]);
+  };
+  const priceWei = useMemo(() => parse(priceText), [priceText, cur]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endWei = useMemo(() => (dropping ? parse(endText) : 0n), [endText, cur, dropping]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endValid = !dropping || (endWei > 0n && endWei < priceWei);
 
   const standard = holding.data?.standard ?? target?.standard ?? 'erc721';
   const terms = useQuery({
-    queryKey: ['nft-market', 'terms', target?.chainId, target?.contract, target?.tokenId, priceWei.toString(), cur?.address],
+    queryKey: ['nft-market', 'terms', target?.chainId, target?.contract, target?.tokenId, priceWei.toString(), cur?.address, isBundle ? bundle!.map((b) => b.tokenId).join(',') : ''],
     queryFn: () =>
-      fetchTerms({ chainId: target!.chainId, contract: target!.contract, tokenId: target!.tokenId, price: priceWei.toString(), currency: cur!.address }),
-    enabled: open && mode !== 'view' && priceWei > 0n && !!cur,
+      isBundle
+        ? bundleTerms(bundle!, priceWei, cur!.address)
+        : fetchTerms({ chainId: target!.chainId, contract: target!.contract, tokenId: anyInCollection && mode === 'offer' ? '0' : target!.tokenId, price: priceWei.toString(), currency: cur!.address }),
+    enabled: open && (mode === 'list' || mode === 'offer') && priceWei > 0n && !!cur,
     staleTime: 60_000,
   });
 
   const nft = detail.data?.nft;
-  const name = nft?.name || target?.name || `#${target?.tokenId ?? ''}`;
+  const name = isBundle
+    ? t('nftMarket.bundleOf', { defaultValue: 'Bundle of {{n}}', n: bundle!.length })
+    : nft?.name || target?.name || `#${target?.tokenId ?? ''}`;
   const image = nft?.image ?? target?.image ?? null;
   const collection = nft?.collectionName ?? target?.collectionName ?? null;
   const listings = detail.data?.listings ?? [];
@@ -192,11 +238,32 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
     }
   };
 
+  const saveAlert = () =>
+    run(
+      'alert',
+      async () => {
+        if (!target) return;
+        const max = priceText.trim() ? Number(priceText.trim()) : null;
+        await addAlert({
+          chainId: target.chainId,
+          contract: target.contract,
+          tokenId: alertScope === 'token' ? target.tokenId : null,
+          maxPrice: max && max > 0 ? max : null,
+          currency: max ? cur?.address ?? null : null,
+        });
+      },
+      t('nftMarket.alertSaved', { defaultValue: 'Alert on. We will tell you when one is listed.' }),
+    );
+
   const buy = (order: MarketOrder) =>
     run(`fill:${order.orderHash}`, async () => fillOrder(order, await walletAddress()), t('nftMarket.bought', { defaultValue: 'Bought. It is in your wallet now.' }));
 
   const accept = (order: MarketOrder) =>
-    run(`fill:${order.orderHash}`, async () => fillOrder(order, await walletAddress()), t('nftMarket.sold', { defaultValue: 'Sold. The payment is in your wallet.' }));
+    run(`fill:${order.orderHash}`, async () => {
+      const me = await walletAddress();
+      if (order.isCollection && target) await ensureNftApproval(target.contract, me, target.chainId);
+      return fillOrder(order, me, target?.tokenId);
+    }, t('nftMarket.sold', { defaultValue: 'Sold. The payment is in your wallet.' }));
 
   const cancel = (order: MarketOrder) =>
     run(`cancel:${order.orderHash}`, () => cancelOrder(order), t('nftMarket.cancelled', { defaultValue: 'Cancelled' }));
@@ -205,14 +272,19 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
     if (!target || !cur || priceWei <= 0n || !terms.data || !terms.data.feeRecipient) return;
     const feeTerms = { feeRecipient: terms.data.feeRecipient, feeBps: terms.data.feeBps, royalty: terms.data.royalty };
     if (mode === 'list') {
+      if (!endValid) return;
       const amount = standard === 'erc1155' ? String(Math.max(1, Math.min(Number(qty) || 1, Number(held) || 1))) : '1';
+      const nfts = isBundle
+        ? bundle!.map((b) => ({ contract: b.contract, tokenId: b.tokenId, standard: b.standard ?? 'erc721', amount: '1' }))
+        : { contract: target.contract, tokenId: target.tokenId, standard, amount };
       return run(
         'post',
         async () => {
           const seller = await walletAddress();
-          await ensureNftApproval(target.contract, seller, target.chainId);
+          const contracts = isBundle ? [...new Set(bundle!.map((b) => b.contract))] : [target.contract];
+          for (const c of contracts) await ensureNftApproval(c, seller, target.chainId);
           await postOrder('listing', target.chainId, seller, (counter) =>
-            buildListing({ seller, nft: { contract: target.contract, tokenId: target.tokenId, standard, amount }, currency: cur.address, price: priceWei, terms: feeTerms, days, counter }),
+            buildListing({ seller, nft: nfts, currency: cur.address, price: priceWei, endPrice: dropping ? endWei : undefined, terms: feeTerms, days, counter }),
           );
         },
         t('nftMarket.listed', { defaultValue: 'Listed. Anyone can buy it now.' }),
@@ -224,7 +296,7 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
         const buyer = await walletAddress();
         await ensureTokenAllowance(cur.address, buyer, priceWei, target.chainId);
         await postOrder('offer', target.chainId, buyer, (counter) =>
-          buildOffer({ buyer, nft: { contract: target.contract, tokenId: target.tokenId, standard, amount: '1' }, currency: cur.address, price: priceWei, terms: feeTerms, days, counter }),
+          buildOffer({ buyer, nft: { contract: target.contract, tokenId: target.tokenId, standard, amount: '1' }, currency: cur.address, price: priceWei, terms: feeTerms, days, counter, collection: anyInCollection }),
         );
       },
       t('nftMarket.offered', { defaultValue: 'Offer sent. The holder can accept it any time.' }),
@@ -232,13 +304,11 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
   };
 
   const fee = priceWei > 0n && cur ? (priceWei * BigInt(cur.feeBps)) / 10_000n : 0n;
-  const royalty = terms.data?.royalty ? BigInt(terms.data.royalty.amount) : 0n;
-  const proceeds =
-    terms.data && priceWei > 0n
-      ? sellerProceeds(priceWei, { feeRecipient: terms.data.feeRecipient ?? '', feeBps: terms.data.feeBps, royalty: terms.data.royalty }, mode === 'list' ? me : '0x0')
-      : 0n;
+  const royalty = royaltyTotal(terms.data?.royalty, mode === 'list' ? me : '0x0');
+  const proceeds = terms.data && priceWei > 0n ? priceWei - fee - royalty : 0n;
   const fmt = (v: bigint) => (cur ? `${formatPrice(v.toString(), cur.decimals)} ${cur.symbol}` : '');
-  const ready = isAuthenticated && priceWei > 0n && !!terms.data?.feeRecipient && !terms.isFetching;
+  const ready = isAuthenticated && priceWei > 0n && endValid && !!terms.data?.feeRecipient && !terms.isFetching;
+  const priceNow = (o: MarketOrder) => (o.endPrice && o.endPrice !== o.price ? currentPrice(o.components).toString() : o.price);
 
   return (
     <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
@@ -248,7 +318,13 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
         </DrawerHeader>
         <div className="mx-auto w-full max-w-xl overflow-y-auto px-4 pb-8">
           <div className="flex gap-3 pt-1">
-            <NftArt src={image} alt={name} className="h-24 w-24 shrink-0 rounded-xl" />
+            {isBundle ? (
+              <div className="grid h-24 w-24 shrink-0 grid-cols-2 gap-0.5 overflow-hidden rounded-xl">
+                {bundle!.slice(0, 4).map((b) => <NftArt key={`${b.contract}:${b.tokenId}`} src={b.image ?? null} alt={b.name ?? ''} className="h-full w-full" />)}
+              </div>
+            ) : (
+              <NftArt src={image} alt={name} className="h-24 w-24 shrink-0 rounded-xl" />
+            )}
             <div className="flex min-w-0 flex-col justify-center gap-0.5">
               {collection ? <p className="truncate text-[12px] text-zinc-500">{collection}</p> : null}
               <p className="truncate text-[17px] font-bold text-white">{name}</p>
@@ -271,9 +347,21 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                   <div className="min-w-0">
                     <p className="text-[12px] text-zinc-500">{t('nftMarket.buyNow', { defaultValue: 'Buy now' })}</p>
                     <p className="text-[18px] font-bold tabular-nums text-white">
-                      {formatPrice(cheapest.price, cheapest.currencyDecimals)} {cheapest.currencySymbol}
+                      {formatPrice(priceNow(cheapest), cheapest.currencyDecimals)} {cheapest.currencySymbol}
                     </p>
                     {cheapest.amount !== '1' ? <p className="text-[12px] text-zinc-500">× {cheapest.amount}</p> : null}
+                    {cheapest.endPrice && cheapest.endPrice !== cheapest.price ? (
+                      <p className="text-[12px] text-zinc-500">
+                        {t('nftMarket.dropsTo', {
+                          defaultValue: 'Price drops to {{price}} by {{date}}',
+                          price: `${formatPrice(cheapest.endPrice, cheapest.currencyDecimals)} ${cheapest.currencySymbol}`,
+                          date: new Date(cheapest.endTime).toLocaleDateString(),
+                        })}
+                      </p>
+                    ) : null}
+                    {(cheapest.items?.length ?? 1) > 1 ? (
+                      <p className="text-[12px] text-zinc-500">{t('nftMarket.inBundle', { defaultValue: 'Sold as a bundle of {{n}}', n: cheapest.items!.length })}</p>
+                    ) : null}
                   </div>
                   <KitButton disabled={!isAuthenticated || !!busy} onClick={() => buy(cheapest)}>
                     {busy === `fill:${cheapest.orderHash}` ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nftMarket.buy', { defaultValue: 'Buy' })}
@@ -292,6 +380,11 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                     {t('nftMarket.makeOffer', { defaultValue: 'Make an offer' })}
                   </KitButton>
                 ) : null}
+                {held === 0n ? (
+                  <KitButton variant="quiet" onClick={() => { setPriceText(''); setCurrency(NATIVE); setMode('alert'); }}>
+                    {t('nftMarket.priceAlert', { defaultValue: 'Price alert' })}
+                  </KitButton>
+                ) : null}
               </div> : null}
               {!isAuthenticated ? (
                 <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
@@ -304,6 +397,7 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                     <div key={o.orderHash} className="flex items-center justify-between gap-3 border-t border-white/10 pt-2">
                       <div className="min-w-0 text-[13px]">
                         <span className="tabular-nums text-white">{formatPrice(o.price, o.currencyDecimals)} {o.currencySymbol}</span>
+                        {o.isCollection ? <span className="ml-2 text-zinc-400">{t('nftMarket.anyInCollection', { defaultValue: 'Any in collection' })}</span> : null}
                         <span className="ml-2 text-zinc-500">{o.makerProfile?.username ? `@${o.makerProfile.username}` : `${o.maker.slice(0, 6)}…${o.maker.slice(-4)}`}</span>
                       </div>
                       {o.maker === me ? (
@@ -359,8 +453,55 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
           ) : (
             <div className="mt-4 flex flex-col gap-3">
               <p className="text-[15px] font-semibold text-white">
-                {mode === 'list' ? t('nftMarket.listForSale', { defaultValue: 'List for sale' }) : t('nftMarket.makeOffer', { defaultValue: 'Make an offer' })}
+                {mode === 'list'
+                  ? isBundle
+                    ? t('nftMarket.listBundle', { defaultValue: 'List as a bundle' })
+                    : t('nftMarket.listForSale', { defaultValue: 'List for sale' })
+                  : mode === 'alert'
+                    ? t('nftMarket.priceAlert', { defaultValue: 'Price alert' })
+                    : t('nftMarket.makeOffer', { defaultValue: 'Make an offer' })}
               </p>
+              {mode === 'alert' ? (
+                <>
+                  <Chips
+                    value={alertScope}
+                    options={[
+                      { id: 'collection', label: t('nftMarket.anyInCollection', { defaultValue: 'Any in collection' }) },
+                      { id: 'token', label: t('nftMarket.thisNft', { defaultValue: 'This NFT' }) },
+                    ]}
+                    onChange={(v) => setAlertScope(v as 'token' | 'collection')}
+                  />
+                  <Chips value={currency} options={currencies.map((c) => ({ id: c.address, label: c.symbol }))} onChange={(v) => setCurrency(String(v))} />
+                  <label className="flex flex-col gap-1">
+                    <span className="text-[12px] text-zinc-500">{t('nftMarket.alertUnder', { defaultValue: 'Tell me when listed at or under ({{symbol}}, optional)', symbol: cur?.symbol ?? '' })}</span>
+                    <input
+                      id="nft-market-alert"
+                      inputMode="decimal"
+                      value={priceText}
+                      onChange={(e) => setPriceText(e.target.value.replace(/[^0-9.]/g, ''))}
+                      placeholder={t('nftMarket.anyPrice', { defaultValue: 'Any price' })}
+                      className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-[16px] tabular-nums text-white outline-none focus:border-white/30"
+                    />
+                  </label>
+                  <div className="flex gap-2">
+                    <KitButton variant="quiet" disabled={!!busy} onClick={() => setMode('view')}>{t('nftMarket.back', { defaultValue: 'Back' })}</KitButton>
+                    <KitButton disabled={!isAuthenticated || !!busy} onClick={saveAlert}>
+                      {busy === 'alert' ? <Loader2 className="h-4 w-4 animate-spin" /> : t('nftMarket.turnOnAlert', { defaultValue: 'Turn on alert' })}
+                    </KitButton>
+                  </div>
+                </>
+              ) : null}
+              {mode === 'offer' ? (
+                <Chips
+                  value={anyInCollection ? 'collection' : 'token'}
+                  options={[
+                    { id: 'token', label: t('nftMarket.thisNft', { defaultValue: 'This NFT' }) },
+                    { id: 'collection', label: t('nftMarket.anyInCollection', { defaultValue: 'Any in collection' }) },
+                  ]}
+                  onChange={(v) => setAnyInCollection(v === 'collection')}
+                />
+              ) : null}
+              {mode !== 'alert' ? <>
               {mode === 'list' ? (
                 <Chips value={currency} options={currencies.map((c) => ({ id: c.address, label: c.symbol }))} onChange={(v) => setCurrency(String(v))} />
               ) : null}
@@ -379,7 +520,35 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                   className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-[16px] tabular-nums text-white outline-none focus:border-white/30"
                 />
               </label>
-              {mode === 'list' && standard === 'erc1155' && held > 1n ? (
+              {mode === 'list' ? (
+                <div className="flex flex-col gap-2">
+                  <Chips
+                    value={dropping ? 'drop' : 'fixed'}
+                    options={[
+                      { id: 'fixed', label: t('nftMarket.fixedPrice', { defaultValue: 'Fixed price' }) },
+                      { id: 'drop', label: t('nftMarket.priceDrop', { defaultValue: 'Price drops over time' }) },
+                    ]}
+                    onChange={(v) => setDropping(v === 'drop')}
+                  />
+                  {dropping ? (
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[12px] text-zinc-500">{t('nftMarket.endPrice', { defaultValue: 'Lowest price, reached at the end ({{symbol}})', symbol: cur?.symbol ?? '' })}</span>
+                      <input
+                        id="nft-market-end-price"
+                        inputMode="decimal"
+                        value={endText}
+                        onChange={(e) => setEndText(e.target.value.replace(/[^0-9.]/g, ''))}
+                        placeholder="0.0"
+                        className="h-11 rounded-xl border border-white/10 bg-black/40 px-3 text-[16px] tabular-nums text-white outline-none focus:border-white/30"
+                      />
+                      {endText && !endValid ? (
+                        <span className="text-[12px] text-red-400">{t('nftMarket.endBelowStart', { defaultValue: 'Must be below the starting price' })}</span>
+                      ) : null}
+                    </label>
+                  ) : null}
+                </div>
+              ) : null}
+              {mode === 'list' && !isBundle && standard === 'erc1155' && held > 1n ? (
                 <label className="flex flex-col gap-1">
                   <span className="text-[12px] text-zinc-500">{t('nftMarket.quantity', { defaultValue: 'How many (you hold {{n}})', n: held.toString() })}</span>
                   <input
@@ -419,11 +588,12 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                 <p className="text-[12px] text-red-400">{t('nftMarket.notOpen', { defaultValue: 'The market is not open yet.' })}</p>
               ) : null}
               <div className="flex gap-2">
-                <KitButton variant="quiet" disabled={!!busy} onClick={() => setMode('view')}>{t('nftMarket.back', { defaultValue: 'Back' })}</KitButton>
+                <KitButton variant="quiet" disabled={!!busy} onClick={() => (isBundle ? onClose() : setMode('view'))}>{t('nftMarket.back', { defaultValue: 'Back' })}</KitButton>
                 <KitButton disabled={!ready || !!busy} onClick={submit}>
                   {busy === 'post' ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === 'list' ? t('nftMarket.list', { defaultValue: 'List' }) : t('nftMarket.sendOffer', { defaultValue: 'Send offer' })}
                 </KitButton>
               </div>
+              </> : null}
             </div>
           )}
         </div>

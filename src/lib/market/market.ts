@@ -80,6 +80,12 @@ export interface MarketOrder {
   nftImage: string | null;
   collectionName: string | null;
   isDehub: boolean;
+  /** Every NFT in the order; more than one is a bundle. */
+  items?: { contract: string; tokenId: string; amount: string; standard: 'erc721' | 'erc1155' }[];
+  /** An offer on any token of the collection. */
+  isCollection?: boolean;
+  /** Price at the end; below `price` on a price-drop auction. */
+  endPrice?: string;
   createdAt: string;
   components: OrderComponents;
   signature: string;
@@ -120,6 +126,22 @@ export const fetchWalletNfts = (address: string, chainId: number, pageKey?: stri
 
 export const fetchTerms = (params: { chainId: number; contract: string; tokenId: string; price: string; currency: string }) =>
   apiCall<FeeTerms & { fee: string }>('/api/market/terms', { params });
+
+export interface MarketAlert {
+  id: string;
+  chainId: number;
+  contract: string;
+  tokenId: string | null;
+  maxPrice: number | null;
+  currency: string | null;
+}
+
+export const fetchAlerts = () => apiCall<{ items: MarketAlert[] }>('/api/market/alerts', { requiresAuth: true });
+
+export const addAlert = (body: { chainId: number; contract: string; tokenId?: string | null; maxPrice?: number | null; currency?: string | null }) =>
+  apiCall<{ alert: MarketAlert }>('/api/market/alerts', { method: 'POST', requiresAuth: true, body: body as unknown as Record<string, unknown> });
+
+export const removeAlert = (id: string) => apiCall<{ ok: boolean }>(`/api/market/alerts/${id}`, { method: 'DELETE', requiresAuth: true });
 
 export const syncOrder = (orderHash: string, txHash?: string) =>
   apiCall<{ order: MarketOrder }>(`/api/market/orders/${orderHash}/sync`, { method: 'POST', body: txHash ? { txHash } : {} });
@@ -192,21 +214,39 @@ export async function postOrder(
 
 /**
  * Fill an order: buy a listing, or accept an offer on an NFT you hold.
- * Handles the approvals first, then one Seaport transaction.
+ * Handles the approvals first, then one Seaport transaction. A collection
+ * offer is filled with the token you pick (`tokenId`).
  */
-export async function fillOrder(order: MarketOrder, me: string): Promise<string> {
+export async function fillOrder(order: MarketOrder, me: string, tokenId?: string): Promise<string> {
   const chainId = order.chainId;
   await ensureSignerOnChain(chainId as ChainId);
   if (order.kind === 'offer') await ensureNftApproval(order.contract, me, chainId);
   const spend = fillerTokenSpend(order.components, order.kind);
   if (spend && spend.amount > 0n) await ensureTokenAllowance(spend.token, me, spend.amount, chainId);
-  const tx = await writeContractAA(
-    SEAPORT_ADDRESS,
-    SEAPORT_IFACE,
-    'fulfillOrder',
-    [{ parameters: toOrderParameters(order.components), signature: order.signature }, '0x' + '0'.repeat(64)],
-    { chainId, value: nativeValue(order.components), context: order.kind === 'listing' ? 'buy this NFT' : 'accept this offer' },
-  );
+  const zero = '0x' + '0'.repeat(64);
+  const context = order.kind === 'listing' ? 'buy this NFT' : 'accept this offer';
+  const tx = order.isCollection
+    ? await writeContractAA(
+        SEAPORT_ADDRESS,
+        SEAPORT_IFACE,
+        'fulfillAdvancedOrder',
+        [
+          { parameters: toOrderParameters(order.components), numerator: 1, denominator: 1, signature: order.signature, extraData: '0x' },
+          // side 1 = consideration: the NFT the offerer asked for, resolved to the token being sold.
+          [{ orderIndex: 0, side: 1, index: 0, identifier: tokenId ?? '0', criteriaProof: [] }],
+          zero,
+          '0x' + '0'.repeat(40),
+        ],
+        { chainId, value: 0n, context },
+      )
+    : await writeContractAA(
+        SEAPORT_ADDRESS,
+        SEAPORT_IFACE,
+        'fulfillOrder',
+        [{ parameters: toOrderParameters(order.components), signature: order.signature }, zero],
+        // A price-drop auction is sent at its start price; Seaport refunds the difference.
+        { chainId, value: nativeValue(order.components), context },
+      );
   const receipt = await tx.wait();
   if (receipt.status !== 1) throw new Error('The transaction failed');
   await syncOrder(order.orderHash, tx.hash).catch(() => undefined);

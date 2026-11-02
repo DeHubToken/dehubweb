@@ -18,6 +18,7 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
 import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fetchOrders, fetchWalletNfts, type MarketOrder } from '@/lib/market/market';
+import { currentPrice } from '@/lib/market/seaport';
 
 type Tab = 'browse' | 'sell' | 'mine' | 'sales';
 type Sort = 'new' | 'price_asc' | 'price_desc';
@@ -51,6 +52,16 @@ export default function NftMarketPage() {
   const [sort, setSort] = useState<Sort>('new');
   const [dehubOnly, setDehubOnly] = useState(false);
   const [open, setOpen] = useState<NftSheetTarget | null>(null);
+  // Bundle builder on the Sell tab: pick two to four NFTs, list them together.
+  const [picking, setPicking] = useState(false);
+  const [picked, setPicked] = useState<NftSheetTarget[]>([]);
+  const [bundle, setBundle] = useState<NftSheetTarget[] | null>(null);
+  const togglePick = (n: NftSheetTarget) =>
+    setPicked((list) =>
+      list.some((p) => p.contract === n.contract && p.tokenId === n.tokenId)
+        ? list.filter((p) => !(p.contract === n.contract && p.tokenId === n.tokenId))
+        : list.length >= 4 ? list : [...list, n],
+    );
 
   // A shared NFT link (?chain=56&contract=0x…&token=12) opens its sheet.
   useEffect(() => {
@@ -221,8 +232,18 @@ export default function NftMarketPage() {
                         collection={o.collectionName}
                         image={o.nftImage}
                         chainId={o.chainId}
-                        badge={o.amount !== '1' ? `×${o.amount}` : null}
-                        price={{ amount: o.price, decimals: o.currencyDecimals, symbol: o.currencySymbol }}
+                        badge={
+                          (o.items?.length ?? 1) > 1
+                            ? t('nftMarket.bundleBadge', { defaultValue: 'Bundle ×{{n}}', n: o.items!.length })
+                            : o.endPrice && o.endPrice !== o.price
+                              ? t('nftMarket.dropBadge', { defaultValue: 'Price drop' })
+                              : o.amount !== '1' ? `×${o.amount}` : null
+                        }
+                        price={{
+                          amount: o.endPrice && o.endPrice !== o.price ? currentPrice(o.components).toString() : o.price,
+                          decimals: o.currencyDecimals,
+                          symbol: o.currencySymbol,
+                        }}
                         onClick={() => setOpen(targetOf(o))}
                       />
                     ))}
@@ -254,19 +275,42 @@ export default function NftMarketPage() {
                 ) : wallet.isError ? (
                   <PageEmpty icon="nfts" title={t('nftMarket.walletError', { defaultValue: 'Could not read your wallet' })} body={t('nftMarket.tryAgain', { defaultValue: 'Try again in a moment.' })} />
                 ) : wallet.data?.items.length ? (
-                  <div data-nft-grid className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">
-                    {wallet.data.items.map((n) => (
-                      <NftCard
-                        key={`${n.contract}:${n.tokenId}`}
-                        name={n.name || `#${n.tokenId}`}
-                        collection={n.collectionName}
-                        image={n.image}
-                        chainId={sellChain}
-                        badge={n.standard === 'erc1155' && n.balance !== '1' ? `×${n.balance}` : null}
-                        onClick={() => setOpen({ chainId: sellChain, contract: n.contract, tokenId: n.tokenId, standard: n.standard, name: n.name, image: n.image, collectionName: n.collectionName })}
-                      />
-                    ))}
+                  <>
+                  <div className="flex flex-wrap items-center gap-2 pb-2.5">
+                    {picking ? (
+                      <>
+                        <KitButton disabled={picked.length < 2} onClick={() => setBundle(picked)}>
+                          {t('nftMarket.listPicked', { defaultValue: 'List {{n}} as a bundle', n: picked.length })}
+                        </KitButton>
+                        <KitButton variant="quiet" onClick={() => { setPicking(false); setPicked([]); }}>
+                          {t('nftMarket.cancel', { defaultValue: 'Cancel' })}
+                        </KitButton>
+                        <span className="text-[12px] text-zinc-500">{t('nftMarket.pickHint', { defaultValue: 'Pick 2 to 4' })}</span>
+                      </>
+                    ) : (
+                      <KitButton variant="quiet" onClick={() => setPicking(true)}>
+                        {t('nftMarket.makeBundle', { defaultValue: 'Make a bundle' })}
+                      </KitButton>
+                    )}
                   </div>
+                  <div data-nft-grid className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">
+                    {wallet.data.items.map((n) => {
+                      const target: NftSheetTarget = { chainId: sellChain, contract: n.contract, tokenId: n.tokenId, standard: n.standard, name: n.name, image: n.image, collectionName: n.collectionName };
+                      const isPicked = picked.some((p) => p.contract === n.contract && p.tokenId === n.tokenId);
+                      return (
+                        <NftCard
+                          key={`${n.contract}:${n.tokenId}`}
+                          name={n.name || `#${n.tokenId}`}
+                          collection={n.collectionName}
+                          image={n.image}
+                          chainId={sellChain}
+                          badge={picking ? (isPicked ? '✓' : null) : n.standard === 'erc1155' && n.balance !== '1' ? `×${n.balance}` : null}
+                          onClick={() => (picking ? togglePick(target) : setOpen(target))}
+                        />
+                      );
+                    })}
+                  </div>
+                  </>
                 ) : (
                   <PageEmpty
                     icon="nfts"
@@ -343,6 +387,15 @@ export default function NftMarketPage() {
       </PageBody>
 
       <NftSheet target={open} onClose={closeSheet} />
+      <NftSheet
+        target={bundle?.[0] ?? null}
+        bundle={bundle}
+        onClose={() => {
+          setBundle(null);
+          setPicking(false);
+          setPicked([]);
+        }}
+      />
     </div>
   );
 }
