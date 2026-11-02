@@ -16,7 +16,7 @@
  *
  * @module components/app/navigation/FeedSearchLens
  */
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as _useCopy } from 'react-i18next';
 import Settings2 from '@/components/ui/cut-icons/settings';
@@ -30,6 +30,10 @@ const CLOSE_MS = 240;
 const LENS_H = 52;
 /** Drag the lens this far up and it snaps back into its tab. */
 const DRAG_CLOSE_PX = 70;
+/** A quick flick up (px per ms) closes too, even when it travels less. */
+const FLICK_CLOSE = 0.6;
+/** Finger travel before a press on the lens becomes a drag. */
+const DRAG_SLOP = 10;
 
 const GLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30';
 
@@ -98,7 +102,8 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
   const [closing, setClosing] = useState(false);
   const [picking, setPicking] = useState(false);
   const [drag, setDrag] = useState(0);
-  const dragStart = useRef<number | null>(null);
+  const dragStart = useRef<{ y: number; id: number; t: number; active: boolean } | null>(null);
+  const dragged = useRef(false);
   const anchorRef = useRef<HTMLSpanElement>(null);
   const spots = useLensSpots(anchorRef);
   const docked = query.trim().length > 0;
@@ -144,6 +149,49 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
     setTimeout(closeFeedSearch, CLOSE_MS);
   };
 
+  // Drag up closes from anywhere on a phone: the whole lens (its text box
+  // and buttons too, not only the thin rim between them) and the blur behind
+  // it. Before, the drag only started on the rim's spare pixels and a swipe
+  // on the blur scrolled the feed underneath. A mouse keeps the old rim-only
+  // drag so text in the box can still be selected on desktop.
+  const dragHandlers = {
+    onPointerDown: (e: ReactPointerEvent<HTMLElement>) => {
+      if (e.pointerType === 'mouse' && (e.target as HTMLElement).closest('input,button')) return;
+      dragStart.current = { y: e.clientY, id: e.pointerId, t: performance.now(), active: false };
+      dragged.current = false;
+    },
+    onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
+      const d = dragStart.current;
+      if (!d || d.id !== e.pointerId) return;
+      const dy = e.clientY - d.y;
+      if (!d.active) {
+        if (Math.abs(dy) < DRAG_SLOP) return;
+        d.active = true;
+        dragged.current = true;
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* pointer already gone */ }
+      }
+      setDrag(Math.min(0, dy));
+    },
+    onPointerUp: (e: ReactPointerEvent<HTMLElement>) => {
+      const d = dragStart.current;
+      if (!d || d.id !== e.pointerId) return;
+      dragStart.current = null;
+      if (!d.active) return;
+      const dy = e.clientY - d.y;
+      const speed = dy / Math.max(1, performance.now() - d.t);
+      setDrag(0);
+      if (dy < -DRAG_CLOSE_PX || (dy < -16 && speed < -FLICK_CLOSE)) close();
+    },
+    onPointerCancel: () => { dragStart.current = null; setDrag(0); },
+    // A drag that ends on a button must not also press it.
+    onClickCapture: (e: ReactMouseEvent<HTMLElement>) => {
+      if (!dragged.current) return;
+      dragged.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+  };
+
   const { shortsEnabled } = useShortsEnabled();
   const feed = FEED_TABS.find((t) => t.value === tab);
   const Icon = feed?.icon;
@@ -162,7 +210,7 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
     transform: closing || !landed ? 'scale(0.18)' : 'scale(1)',
     opacity: closing || !landed ? 0 : 1,
     transformOrigin: `${spots.from.x}px 50%`,
-    transition: dragStart.current != null
+    transition: dragStart.current?.active
       ? 'none'
       : closing
         ? `top ${CLOSE_MS}ms ease-in, transform ${CLOSE_MS}ms ease-in, opacity ${CLOSE_MS}ms ease-in`
@@ -178,8 +226,9 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
         data-feed-lens-blur
         data-shown={!docked && landed && !closing ? '' : undefined}
         aria-hidden="true"
+        {...dragHandlers}
         onClick={() => { if (!ghostClick()) close(); }}
-        className="fixed inset-0 z-[49]"
+        className="fixed inset-0 z-[49] touch-none"
       />
       <div data-feed-lens data-no-swipe className="fixed inset-x-0 z-[106] mx-auto w-full max-w-[560px] px-4" style={lensStyle}>
         <div
@@ -187,23 +236,7 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
           data-docked={docked ? '' : undefined}
           className="relative flex items-center gap-1 rounded-full px-1.5"
           style={{ height: LENS_H }}
-          onPointerDown={(e) => {
-            if ((e.target as HTMLElement).closest('input,button')) return;
-            dragStart.current = e.clientY;
-            (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-          }}
-          onPointerMove={(e) => {
-            if (dragStart.current == null) return;
-            setDrag(Math.min(0, e.clientY - dragStart.current));
-          }}
-          onPointerUp={() => {
-            if (dragStart.current == null) return;
-            const pulled = -drag;
-            dragStart.current = null;
-            setDrag(0);
-            if (pulled > DRAG_CLOSE_PX) close();
-          }}
-          onPointerCancel={() => { dragStart.current = null; setDrag(0); }}
+          {...dragHandlers}
         >
           <button
             type="button"
