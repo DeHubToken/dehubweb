@@ -754,39 +754,35 @@ function isArticleSlugParam(value?: string): value is string {
 }
 
 /**
- * /app/post/<article-title-slug>: resolve the slug to its tokenId, then render
- * the post AT the readable URL (everything inside keys on the tokenId).
+ * /app/post/<readable-slug>: resolve the slug to its tokenId, then render the
+ * post AT the readable URL (everything inside keys on the tokenId). Lives in
+ * the same tree position as the numeric page, so the replace from
+ * /app/post/<n> to its slug re-renders the open post instead of remounting it
+ * (a playing video keeps playing).
  */
-function ArticleSlugPostPage({ slug, ...props }: SinglePostPageProps & { slug: string }) {
-  const { t: _copy } = _useCopy();
-  const navigate = useNavigate();
-  const { data, isLoading } = useQuery({
-    queryKey: ['article-slug', slug.toLowerCase()],
-    queryFn: () => resolveArticleSlug(slug.toLowerCase()),
+function useSlugTokenId(slug?: string) {
+  return useQuery({
+    queryKey: ['article-slug', (slug || '').toLowerCase()],
+    queryFn: () => resolveArticleSlug((slug || '').toLowerCase()),
+    enabled: !!slug,
     staleTime: 10 * 60_000,
   });
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <SEOHead title="DeHub" noindex noCanonical />
-        <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
-      </div>
-    );
-  }
-  if (!data) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
-        <SEOHead title="Post not found — DeHub" noindex noCanonical />
-        <p className="text-foreground font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
-        <p className="text-muted-foreground text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
-        <button
-          onClick={() => navigate('/app')}
-          className="mt-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-foreground rounded-xl text-sm font-medium transition-colors"
-        >{_copy("copy.4027386e8d11", { defaultValue: "Go to feed" })}</button>
-      </div>
-    );
-  }
-  return <SinglePostPage {...props} overrideId={String(data.tokenId)} />;
+}
+
+function SlugNotFound() {
+  const { t: _copy } = _useCopy();
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
+      <SEOHead title="Post not found — DeHub" noindex noCanonical />
+      <p className="text-foreground font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
+      <p className="text-muted-foreground text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
+      <button
+        onClick={() => navigate('/app')}
+        className="mt-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-foreground rounded-xl text-sm font-medium transition-colors"
+      >{_copy("copy.4027386e8d11", { defaultValue: "Go to feed" })}</button>
+    </div>
+  );
 }
 
 /** The app shares comment links as ?c=, web as ?comment=. */
@@ -806,16 +802,25 @@ export default function SinglePostPage(props: SinglePostPageProps = {}) {
   useRouteContentReady();
   const { postId, tokenId, commentId } = useParams<{ postId?: string; tokenId?: string; commentId?: string }>();
   const { search } = useLocation();
-  const id = props.overrideId || postId || tokenId;
+  const slug = !props.overrideId && isArticleSlugParam(postId) ? postId : undefined;
+  const slugQuery = useSlugTokenId(slug);
   const focusCommentId = commentId || commentFromSearch(search);
 
-  if (!props.overrideId && isArticleSlugParam(postId)) {
-    return <ArticleSlugPostPage {...props} slug={postId} />;
+  if (slug && slugQuery.isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <SEOHead title="DeHub" noindex noCanonical />
+        <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
+      </div>
+    );
   }
+  if (slug && !slugQuery.data) return <SlugNotFound />;
 
+  const overrideId = slug ? String(slugQuery.data!.tokenId) : props.overrideId;
+  const id = overrideId || postId || tokenId;
   return (
     <FocusCommentProvider tokenId={id} commentId={focusCommentId}>
-      <SinglePostPageContent {...props} />
+      <SinglePostPageContent {...props} overrideId={overrideId} />
     </FocusCommentProvider>
   );
 }
