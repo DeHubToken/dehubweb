@@ -340,7 +340,13 @@ interface CommentItemProps {
   onEdit: (id: string, newContent: string) => Promise<boolean>;
   /** Ask to delete. The section confirms first — see its delete dialog. */
   onDelete: (id: string) => void;
-  onTip: (id: string) => void;
+  /** Tip the comment's author; the gem is left off the row when absent. */
+  onTip?: (id: string) => void;
+  /**
+   * Where "Copy link" points. Post threads build /app/post/<tokenId>?comment=;
+   * a thread hanging off something else (a Requests card) passes its own.
+   */
+  permalink?: (id: string) => string;
   /** DHB already tipped to this comment, shown beside the gem when > 0. */
   tipTotal?: number;
   /** This viewer has tipped this comment before. */
@@ -402,7 +408,7 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
-const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
+const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, permalink, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
   const [tipBurst, setTipBurst] = useState(0);
@@ -561,6 +567,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             <BadgedName
               badgeBalance={comment.badgeBalance}
               badgeLock={comment.badgeLock}
+              lookupId={comment.badgeLookupId}
               username={comment.username}
               className="font-semibold text-white text-base max-w-[140px] leading-5"
             >
@@ -791,6 +798,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             {/* Tip the comment's author. Rendered for own comments too so the
                 author sees what the comment has earned; the payment hook
                 already refuses self-tips. */}
+            {onTip && (
             <button
               onClick={() => onTip(comment.id)}
               className={cn(COMMENT_ACTION_HIT, "flex items-center gap-1 text-white hover:text-zinc-400 transition-colors")}
@@ -799,6 +807,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
               <TipGemIcon tipped={!!viewerTipped || tipBurst > 0} burstKey={tipBurst} className={COMMENT_ICON_CLASS.tip} plainClassName="" />
               {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
             </button>
+            )}
             {/*
               Comment Anchor — holding your own comment at the top of somebody
               else's thread. Beside Edit and Delete because it is the same kind
@@ -873,7 +882,9 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
               <DropdownMenuContent align="start" data-comments-dropdown className="min-w-[160px]">
                 <DropdownMenuItem
                   onClick={() => {
-                    const url = isThreadEntry
+                    const url = permalink
+                      ? permalink(comment.id)
+                      : isThreadEntry
                       ? dehubLinkFor.threadEntry(tokenId, comment.id)
                       : `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
                     navigator.clipboard.writeText(viewerShareUrl(url));
@@ -3608,3 +3619,9 @@ export function CommentsSection(props: CommentsSectionProps) {
   const { walletAddress } = useAuth();
   return <CommentsSectionForAccount key={`${walletAddress?.toLowerCase() ?? 'signed-out'}:${props.tokenId}`} {...props} />;
 }
+
+/**
+ * The post thread's own row, for threads stored somewhere else (the Requests
+ * board). Same row, same menu, same media, so the two never look different.
+ */
+export { CommentItem as PostCommentRow, PostCreatorContext as CommentCreatorContext };

@@ -21,6 +21,16 @@ vi.mock('@/components/app/cards/ReactionEmoji', () => ({ ReactionEmoji: () => nu
 vi.mock('@/components/app/mentions', () => ({ UserMentionDropdown: () => null }));
 vi.mock('@/lib/media-url', () => ({ buildAvatarUrl: () => null }));
 vi.mock('@/lib/feed-utils', () => ({ formatTimeAgo: () => 'now' }));
+vi.mock('@/components/app/cards/CommentsSection', async () => {
+  const { createContext } = await import('react');
+  return {
+    PostCommentRow: ({ comment }: { comment: { text: string } }) => <p>{comment.text}</p>,
+    CommentCreatorContext: createContext(null),
+  };
+});
+vi.mock('@/components/app/cards/CommentLikersDrawer', () => ({ CommentLikersDrawer: () => null }));
+vi.mock('@/components/app/chat/EmojiGifPicker', () => ({ EmojiGifPicker: () => null }));
+vi.mock('@/components/app/audio/VoiceStripPlayer', () => ({ VoiceStripPlayer: () => null }));
 vi.mock('@/lib/comment-threads', () => ({ countThreadComments: (threads: any[] | undefined) => threads?.reduce((sum, thread) => sum + 1 + thread.replies.length, 0) ?? 0 }));
 
 afterEach(cleanup);

@@ -4040,6 +4040,9 @@ export type Database = {
           created_at: string
           feature_request_id: string
           id: string
+          media_duration: number | null
+          media_type: string | null
+          media_url: string | null
           parent_id: string | null
           updated_at: string | null
           username: string | null
@@ -4051,6 +4054,9 @@ export type Database = {
           created_at?: string
           feature_request_id: string
           id?: string
+          media_duration?: number | null
+          media_type?: string | null
+          media_url?: string | null
           parent_id?: string | null
           updated_at?: string | null
           username?: string | null
@@ -4062,6 +4068,9 @@ export type Database = {
           created_at?: string
           feature_request_id?: string
           id?: string
+          media_duration?: number | null
+          media_type?: string | null
+          media_url?: string | null
           parent_id?: string | null
           updated_at?: string | null
           username?: string | null
