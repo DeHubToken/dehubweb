@@ -5483,12 +5483,15 @@ export type Database = {
           owner_wallet: string | null
           permissions: string[]
           review_note: string | null
+          review_state: string | null
           reviewed_at: string | null
+          reviewed_by: string | null
           slug: string
           source: string
           splash_background_color: string | null
           splash_image_url: string | null
           status: string
+          submitted_at: string | null
           submitted_by: string | null
           subtitle: string | null
           tags: string[]
@@ -5510,12 +5513,15 @@ export type Database = {
           owner_wallet?: string | null
           permissions?: string[]
           review_note?: string | null
+          review_state?: string | null
           reviewed_at?: string | null
+          reviewed_by?: string | null
           slug: string
           source?: string
           splash_background_color?: string | null
           splash_image_url?: string | null
           status?: string
+          submitted_at?: string | null
           submitted_by?: string | null
           subtitle?: string | null
           tags?: string[]
@@ -5537,12 +5543,15 @@ export type Database = {
           owner_wallet?: string | null
           permissions?: string[]
           review_note?: string | null
+          review_state?: string | null
           reviewed_at?: string | null
+          reviewed_by?: string | null
           slug?: string
           source?: string
           splash_background_color?: string | null
           splash_image_url?: string | null
           status?: string
+          submitted_at?: string | null
           submitted_by?: string | null
           subtitle?: string | null
           tags?: string[]
@@ -5808,6 +5817,47 @@ export type Database = {
           retired_at?: string | null
         }
         Relationships: []
+      }
+      miniapp_webhook_deliveries: {
+        Row: {
+          app_id: string
+          created_at: string
+          error: string | null
+          event: string
+          id: number
+          ok: boolean
+          status: number | null
+          url: string
+        }
+        Insert: {
+          app_id: string
+          created_at?: string
+          error?: string | null
+          event: string
+          id?: number
+          ok?: boolean
+          status?: number | null
+          url: string
+        }
+        Update: {
+          app_id?: string
+          created_at?: string
+          error?: string | null
+          event?: string
+          id?: number
+          ok?: boolean
+          status?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "miniapp_webhook_deliveries_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "miniapp_apps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       new_members: {
         Row: {
@@ -10520,6 +10570,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      miniapp_app_stats: { Args: { p_app: string }; Returns: Json }
       miniapp_compute_rewards: {
         Args: { p_week_start?: string }
         Returns: number
