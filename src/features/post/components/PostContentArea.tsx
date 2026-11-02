@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import type { StudioEdits } from '../lib/studioPaint';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BASE_POST_TEXT_CHARS } from '@/lib/post-text-limit';
@@ -55,7 +56,7 @@ interface PostContentAreaProps {
   onApplyCrop: (index: number, settings: CropSettings) => void;
   onClearCrop: (index: number) => void;
   onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
-  onReplaceImage: (index: number, file: File) => void;
+  onReplaceImage: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   onSetMediaDescription?: (index: number, description: string) => void;
   /** The content warning being written, or null when the post has none. */
   contentWarning?: string | null;

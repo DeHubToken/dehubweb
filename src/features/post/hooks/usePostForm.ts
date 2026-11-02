@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import type { StudioEdits } from '../lib/studioPaint';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
@@ -1058,7 +1059,7 @@ export function usePostForm(
    * rather than in the component, since this is the moment it stops being
    * anyone's `src`.
    */
-  const replaceImageFile = useCallback((index: number, file: File) => {
+  const replaceImageFile = useCallback((index: number, file: File, studio?: { original: File; edits: StudioEdits }) => {
     if (!file.type.startsWith('image/')) {
       toast.error(_copy("copy.94377a89a9e4", { defaultValue: "Choose an image file" }));
       return;
@@ -1077,6 +1078,9 @@ export function usePostForm(
         filterSettings: undefined,
         filterPresetId: undefined,
         cropSettings: undefined,
+        // A studio edit keeps the original to edit again; a new picture drops it.
+        studioOriginal: studio?.original,
+        studioEdits: studio?.edits,
       };
     }));
   }, [_copy]);

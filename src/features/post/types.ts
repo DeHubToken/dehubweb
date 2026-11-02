@@ -1,6 +1,7 @@
 import type { PostQuotaStatus } from '@/lib/api/dehub';
 import type { PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { FilterSettings, CropSettings } from './types/filters';
+import type { StudioEdits } from './lib/studioPaint';
 
 export interface AudioFile {
   blob: Blob;
@@ -39,6 +40,10 @@ export interface MediaFile {
   trimEnd?: number;
   /** Alt text: what the image or video shows, for people who cannot see it. */
   description?: string;
+  /** The photo before any studio edit, so the edits stay changeable. */
+  studioOriginal?: File;
+  /** The studio settings `file` was baked from. */
+  studioEdits?: StudioEdits;
 }
 
 /**
@@ -141,7 +146,7 @@ export interface PostFormActions {
   applyCropToMedia: (index: number, settings: CropSettings) => void;
   clearCropFromMedia: (index: number) => void;
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
-  replaceImageFile: (index: number, file: File) => void;
+  replaceImageFile: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   /** Alt text for one attached image or video; blank clears it. */
   setMediaDescription: (index: number, description: string) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;

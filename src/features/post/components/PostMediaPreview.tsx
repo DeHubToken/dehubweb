@@ -29,6 +29,8 @@ import { AudioTrimmer } from './AudioTrimmer';
 import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
 import { ImageAnnotator } from './ImageAnnotator';
+import { PhotoStudio, type StudioTab, type StudioResult } from './PhotoStudio';
+import type { StudioEdits } from '../lib/studioPaint';
 import { DraftVideoProgress } from './DraftVideoProgress';
 import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
@@ -48,7 +50,7 @@ interface PostMediaPreviewProps {
   onClearCrop?: (index: number) => void;
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
   /** Replace an image's bytes outright — used by the annotator, which bakes. */
-  onReplaceImage?: (index: number, file: File) => void;
+  onReplaceImage?: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   /** Alt text for one image or video; without it the ALT buttons are not shown. */
   onSetDescription?: (index: number, description: string) => void;
   /** Keeps the parent composer from treating the portalled viewer as an outside press. */
@@ -135,6 +137,9 @@ export function PostMediaPreview({
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
+  // The photo studio (Crop / Looks / Adjust / Draw in one editor) for every
+  // still photo; GIFs keep the old CSS editors since a bake would freeze them.
+  const [studio, setStudio] = useState<{ index: number; tab: StudioTab } | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
   const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
   // Width / height of each attached video, by preview URL, so its frame can match it.
@@ -679,7 +684,7 @@ export function PostMediaPreview({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'looks' }); else setFilterEditorIndex(index); }}
                               className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-black/60 backdrop-blur-xl border border-white/20
                                 hover:bg-black/70 hover:border-white/40"
@@ -694,7 +699,7 @@ export function PostMediaPreview({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'crop' }); else setCropEditorIndex(index); }}
                               className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-black/60 backdrop-blur-xl border border-white/20
                                 hover:bg-black/70 hover:border-white/40"
@@ -712,7 +717,7 @@ export function PostMediaPreview({
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
-                                onClick={(e) => { e.stopPropagation(); openAnnotator(index, m); }}
+                                onClick={(e) => { e.stopPropagation(); setStudio({ index, tab: 'draw' }); }}
                                 className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                   bg-black/60 backdrop-blur-xl border border-white/20
                                   hover:bg-black/70 hover:border-white/40"
@@ -1265,6 +1270,23 @@ export function PostMediaPreview({
           }}
         />
       )}
+
+      {studio && onReplaceImage && (() => {
+        const ids = media.map((m, i) => (m.type === 'image' && m.file.type !== 'image/gif' ? i : -1)).filter((i) => i >= 0);
+        const start = Math.max(0, ids.indexOf(studio.index));
+        return (
+          <PhotoStudio
+            photos={ids.map((i) => ({ original: media[i].studioOriginal ?? media[i].file, edits: media[i].studioEdits }))}
+            startIndex={start}
+            startTab={studio.tab}
+            onClose={() => setStudio(null)}
+            onDone={(results: StudioResult[]) => {
+              for (const r of results) onReplaceImage(ids[r.index], r.file, { original: r.original, edits: r.edits });
+              setStudio(null);
+            }}
+          />
+        );
+      })()}
 
       {annotator && (
         <ImageAnnotator
