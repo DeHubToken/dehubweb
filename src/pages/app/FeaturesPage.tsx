@@ -74,6 +74,7 @@ import {
 } from '@/lib/feature-attachments';
 import { z } from 'zod';
 import { FeatureRequestComments } from '@/components/app/features/FeatureRequestComments';
+import { TopBuildersCard } from '@/components/app/features/TopBuildersCard';
 import { SEOHead } from '@/components/SEOHead';
 
 // Built per use so its messages are read in the reader's language at the time.
@@ -1212,6 +1213,7 @@ export default function FeaturesPage() {
       {/* Shipped Features Tab */}
       {activeTab === 'shipped' && (
         <>
+          {!isFiltering && <TopBuildersCard />}
           {isLoadingShipped ? (
             <FeatureSkeletons />
           ) : visibleShipped.length > 0 ? (
