@@ -132,6 +132,39 @@ export default function NftMarketPage() {
     />
   );
 
+
+  // Filters ride inside the island, on its glass, so they read on every theme's backdrop.
+  const filters =
+    tab === 'browse' ? (
+      <>
+        {chainChips}
+        <PageTabs
+          size="sm"
+          value={sort}
+          onChange={setSort}
+          tabs={[
+            { id: 'new', label: t('nftMarket.sortNew', { defaultValue: 'Newest' }) },
+            { id: 'price_asc', label: t('nftMarket.sortLow', { defaultValue: 'Lowest price' }) },
+            { id: 'price_desc', label: t('nftMarket.sortHigh', { defaultValue: 'Highest price' }) },
+          ]}
+          beforeTabs={
+            <button type="button" data-kit-chip data-size="sm" data-active={dehubOnly ? 'true' : undefined} onClick={() => setDehubOnly((v) => !v)}>
+              <span>{t('nftMarket.dehubPosts', { defaultValue: 'DeHub posts' })}</span>
+            </button>
+          }
+        />
+      </>
+    ) : tab === 'sell' && me ? (
+      <PageTabs
+        size="sm"
+        value={String(sellChain)}
+        onChange={(v) => setSellChain(Number(v))}
+        tabs={MARKET_CHAINS.map((c) => ({ id: String(c), label: CHAIN_LABEL[c] }))}
+      />
+    ) : tab === 'sales' ? (
+      chainChips
+    ) : null;
+
   const signedOut = (
     <PageEmpty
       icon="nfts"
@@ -168,30 +201,14 @@ export default function NftMarketPage() {
             ]}
           />
         }
-      />
+      >
+        {filters}
+      </PageIsland>
 
       <PageBody>
         <div className="flex flex-col gap-3">
           {tab === 'browse' ? (
             <>
-              <div className="flex flex-col gap-2">
-                {chainChips}
-                <PageTabs
-                  size="sm"
-                  value={sort}
-                  onChange={setSort}
-                  tabs={[
-                    { id: 'new', label: t('nftMarket.sortNew', { defaultValue: 'Newest' }) },
-                    { id: 'price_asc', label: t('nftMarket.sortLow', { defaultValue: 'Lowest price' }) },
-                    { id: 'price_desc', label: t('nftMarket.sortHigh', { defaultValue: 'Highest price' }) },
-                  ]}
-                  beforeTabs={
-                    <button type="button" data-kit-chip data-size="sm" data-active={dehubOnly ? 'true' : undefined} onClick={() => setDehubOnly((v) => !v)}>
-                      <span>{t('nftMarket.dehubPosts', { defaultValue: 'DeHub posts' })}</span>
-                    </button>
-                  }
-                />
-              </div>
               {browse.isLoading ? (
                 <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-zinc-500" /></div>
               ) : listings.length ? (
@@ -232,12 +249,6 @@ export default function NftMarketPage() {
           {tab === 'sell' ? (
             !me ? signedOut : (
               <>
-                <PageTabs
-                  size="sm"
-                  value={String(sellChain)}
-                  onChange={(v) => setSellChain(Number(v))}
-                  tabs={MARKET_CHAINS.map((c) => ({ id: String(c), label: CHAIN_LABEL[c] }))}
-                />
                 {wallet.isLoading ? (
                   <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-zinc-500" /></div>
                 ) : wallet.isError ? (
@@ -296,7 +307,6 @@ export default function NftMarketPage() {
 
           {tab === 'sales' ? (
             <>
-              {chainChips}
               {sales.isLoading ? (
                 <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-zinc-500" /></div>
               ) : sales.data?.items.length ? (

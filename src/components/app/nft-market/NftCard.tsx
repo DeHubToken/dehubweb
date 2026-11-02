@@ -36,6 +36,8 @@ export function NftArt({ src, alt, className }: { src: string | null; alt: strin
   );
 }
 
+const BADGE = { background: 'rgba(0,0,0,0.62)', color: '#fff' } as const;
+
 export function NftCard({
   name,
   collection,
@@ -65,11 +67,12 @@ export function NftCard({
     >
       <div className="relative aspect-square w-full overflow-hidden">
         <NftArt src={image} alt={name} className="h-full w-full" />
-        <span className="absolute left-2 top-2 rounded-md bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+        {/* Inline colours: these sit on the art, so they must not follow the light themes' text remaps. */}
+        <span className="absolute left-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>
           {CHAIN_LABEL[chainId] ?? chainId}
         </span>
         {badge ? (
-          <span className="absolute right-2 top-2 rounded-md bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white">{badge}</span>
+          <span className="absolute right-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>{badge}</span>
         ) : null}
       </div>
       <div className="flex min-w-0 flex-col gap-0.5 p-2.5">

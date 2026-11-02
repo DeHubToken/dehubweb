@@ -281,18 +281,18 @@ export function NftSheet({ target, onClose }: { target: NftSheetTarget | null; o
                 </div>
               ) : null}
 
-              <div className="flex flex-wrap gap-2">
+              {isAuthenticated ? <div className="flex flex-wrap gap-2">
                 {held > 0n ? (
-                  <KitButton variant={cheapest ? 'quiet' : 'primary'} disabled={!isAuthenticated} onClick={() => { setCurrency(NATIVE); setMode('list'); }}>
+                  <KitButton variant={cheapest ? 'quiet' : 'primary'} onClick={() => { setCurrency(NATIVE); setMode('list'); }}>
                     {t('nftMarket.listForSale', { defaultValue: 'List for sale' })}
                   </KitButton>
                 ) : null}
                 {dhb && held === 0n ? (
-                  <KitButton variant="quiet" disabled={!isAuthenticated} onClick={() => setMode('offer')}>
+                  <KitButton variant="quiet" onClick={() => setMode('offer')}>
                     {t('nftMarket.makeOffer', { defaultValue: 'Make an offer' })}
                   </KitButton>
                 ) : null}
-              </div>
+              </div> : null}
               {!isAuthenticated ? (
                 <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
               ) : null}
