@@ -1,3 +1,4 @@
+import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountSummaries, type AccountSummary } from './users';
@@ -111,6 +112,8 @@ export interface DmMessage {
   isForwarded: boolean;
   replyTo: ReplyPreview | null;
   reactions?: Record<string, string[]>;
+  /** How a plain video plays (trim, cover, mirror, rotate, hide until tapped). */
+  mediaOptions?: DmVideoOptions | null;
   paymentStatus: null | 'pending' | 'confirmed';
   paymentTxHash: string | null;
   tipAmount: number | null;
@@ -617,6 +620,8 @@ export async function uploadAndSendMedia(
      * stores it untouched and requires `content` to be an encrypted envelope.
      */
     encryptedKind?: MediaKind;
+    /** Video trim/cover/mirror/rotate/hide, for an attachment sent in the clear. */
+    mediaOptions?: DmVideoOptions;
   }
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
@@ -631,6 +636,7 @@ export async function uploadAndSendMedia(
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
   if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
+  if (opts?.mediaOptions) formData.append('mediaOptions', JSON.stringify(opts.mediaOptions));
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,

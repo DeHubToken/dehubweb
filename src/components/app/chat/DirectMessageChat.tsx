@@ -44,6 +44,8 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput, type ChatInputSendArgs } from './ChatInput';
+import { DmVideoBubble } from './DmVideo';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { DmLockedState, DmUndecryptableRun } from './DmLockedState';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -220,8 +222,10 @@ function EncryptedMediaBody({
   mediaUrl,
   voiceDuration,
   onOpenImage,
+  isOwn,
 }: {
   messageId: string;
+  isOwn?: boolean;
   media: MediaDescriptor;
   mediaUrl?: string;
   voiceDuration?: number | null;
@@ -232,6 +236,8 @@ function EncryptedMediaBody({
   const { url, status, load, retry } = useDecryptedMedia(mediaUrl, media, { messageId, enabled: eager });
   const [fileBusy, setFileBusy] = useState(false);
   const [fileFailed, setFileFailed] = useState(false);
+  // A video only starts by itself once the viewer has tapped it.
+  const [requested, setRequested] = useState(false);
   const uploading = !mediaUrl && !url;
 
   if (media.kind === 'audio') {
@@ -297,10 +303,25 @@ function EncryptedMediaBody({
     );
   }
 
+  if (media.kind === 'video' && status !== 'error') {
+    return (
+      <DmVideoBubble
+        messageId={messageId}
+        src={status === 'ready' ? url : undefined}
+        poster={media.thumb}
+        width={media.w}
+        height={media.h}
+        duration={media.dur}
+        options={media.opts}
+        mine={!!isOwn}
+        autoPlay={requested}
+        loading={uploading || status === 'loading'}
+        onNeedSource={() => { if (uploading) return; setRequested(true); load(); }}
+      />
+    );
+  }
+
   if (media.kind === 'video') {
-    if (status === 'ready' && url) {
-      return <video src={url} controls autoPlay={!!mediaUrl} playsInline className="max-w-full max-h-64 rounded-lg bg-black" />;
-    }
     return (
       <EncryptedMediaPlaceholder media={media} status={uploading ? 'loading' : status} onRetry={retry}>
         <button
@@ -698,6 +719,7 @@ const MessageBubble = memo(function MessageBubble({
               <div>
                 <EncryptedMediaBody
                   messageId={message._id}
+                  isOwn={isOwnMessage}
                   media={encMedia}
                   mediaUrl={primaryMediaUrl}
                   onOpenImage={onOpenImage}
@@ -743,13 +765,11 @@ const MessageBubble = memo(function MessageBubble({
                 ) : primaryMediaUrl ? (
                   <>
                     {primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/') ? (
-                      <video
+                      <DmVideoBubble
+                        messageId={message._id}
                         src={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
-                        controls
-                        playsInline
-                        preload="metadata"
-                        data-dm-video
-                        className="max-w-full max-h-64 rounded-lg bg-black"
+                        options={message.mediaOptions}
+                        mine={isOwnMessage}
                       />
                     ) : primaryMedia?.type === 'audio' || primaryMedia?.mimeType?.startsWith('audio/') ? (
                       <VoiceMessagePlayer
@@ -1831,12 +1851,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     mediaFile,
     gifUrl,
     duration,
+    mediaOptions,
   }: {
     content: string;
     type: 'msg' | 'media' | 'gif' | 'voice';
     mediaFile?: File;
     gifUrl?: string;
     duration?: number;
+    mediaOptions?: DmVideoOptions;
   }) => {
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
@@ -2037,6 +2059,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         txHash: feeTxHash,
         replyTo: replyingTo?._id,
         replyPreview,
+        mediaOptions,
       },
     ).then(
         (data) => {

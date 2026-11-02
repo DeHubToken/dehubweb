@@ -36,6 +36,8 @@ import {
   validateAttachment,
 } from '@/lib/attachments';
 import { dragHasFiles } from '@/lib/comment-attachments';
+import { cleanVideoOptions, type DmVideoOptions } from '@/lib/dm-video-options';
+import { DmVideoCard, DmVideoStudio } from './DmVideoStudio';
 
 /** Per-kind caps, matching the backend's DM limits. */
 const DM_MEDIA_LIMITS = { image: 10 * 1024 * 1024, video: 50 * 1024 * 1024, audio: 20 * 1024 * 1024 } as const;
@@ -46,6 +48,8 @@ export interface ChatInputSendArgs {
   mediaFile?: File;
   gifUrl?: string;
   duration?: number;
+  /** Trim, cover, mirror, rotation and hide choices for a video. */
+  mediaOptions?: DmVideoOptions;
 }
 
 interface ChatInputProps {
@@ -125,6 +129,10 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   // imageFile holds whatever photo, clip or audio file the paperclip picked.
   const [mediaKind, setMediaKind] = useState<'image' | 'video' | 'audio'>('image');
+  // The picked video's sheet choices, its length, and whether the sheet is up.
+  const [videoOptions, setVideoOptions] = useState<DmVideoOptions>({});
+  const [videoDuration, setVideoDuration] = useState<number | undefined>(undefined);
+  const [videoStudioOpen, setVideoStudioOpen] = useState(false);
   const [dropHover, setDropHover] = useState(false);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
@@ -294,6 +302,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         content: message.trim(),
         type: 'media',
         mediaFile: imageFile,
+        ...(mediaKind === 'video' ? { mediaOptions: cleanVideoOptions(videoOptions, videoDuration) } : {}),
       });
       if (!sent) return;
       clearImage();
@@ -377,6 +386,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       }
       if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
       setMediaKind(kind);
+      setVideoOptions({});
+      setVideoDuration(undefined);
       setImageFile(file);
       setImagePreviewUrl(URL.createObjectURL(file));
       setAudioPreview(null);
@@ -518,6 +529,9 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
     setImageFile(null);
     setImagePreviewUrl(null);
+    setVideoOptions({});
+    setVideoDuration(undefined);
+    setVideoStudioOpen(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -587,11 +601,36 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       )}
 
       {/* Photo / video / audio preview */}
-      {imagePreviewUrl && (
+      {imagePreviewUrl && imageFile && mediaKind === 'video' && (
+        <>
+          <DmVideoCard
+            url={imagePreviewUrl}
+            file={imageFile}
+            options={videoOptions}
+            duration={videoDuration}
+            onMeta={(m) => { if (Number.isFinite(m.dur)) setVideoDuration(m.dur); }}
+            onOpen={() => setVideoStudioOpen(true)}
+            onRemove={clearImage}
+          />
+          <DmVideoStudio
+            open={videoStudioOpen}
+            onOpenChange={setVideoStudioOpen}
+            url={imagePreviewUrl}
+            file={imageFile}
+            duration={videoDuration}
+            options={videoOptions}
+            onOptionsChange={setVideoOptions}
+            onRemove={clearImage}
+            caption={message}
+            onCaptionChange={setMessage}
+            onSend={() => { void handleSend(); }}
+            sendDisabled={sendDisabled || isSendingFee}
+          />
+        </>
+      )}
+      {imagePreviewUrl && mediaKind !== 'video' && (
         <div data-attach-preview={mediaKind} className={cn("mb-2 relative", mediaKind === 'audio' ? "flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[320px]" : "inline-block")}>
-          {mediaKind === 'video' ? (
-            <video src={imagePreviewUrl} muted playsInline controls preload="metadata" className="h-24 max-w-[220px] rounded-lg bg-black" />
-          ) : mediaKind === 'audio' ? (
+          {mediaKind === 'audio' ? (
             <>
               <audio src={imagePreviewUrl} controls preload="metadata" className="h-8 max-w-[200px]" />
               <span className="min-w-0 text-xs text-zinc-400 truncate" title={imageFile?.name}>{imageFile?.name}</span>

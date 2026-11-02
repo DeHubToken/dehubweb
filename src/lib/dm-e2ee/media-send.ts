@@ -9,6 +9,7 @@
  */
 import { uploadAndSendMedia, type DmMessage } from '@/lib/api/dehub/dm';
 import { isAllowedAttachment } from '@/lib/attachments';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { isEncryptedContent } from './crypto';
 import { canEncryptToPeer, prepareOutgoing } from './keys';
 import {
@@ -38,7 +39,7 @@ export interface SealedMedia {
 export interface MediaSendDeps {
   canEncrypt: (peer: string) => Promise<boolean>;
   seal: (peer: string | null | undefined, plaintext: string) => Promise<{ content: string; encrypted: boolean }>;
-  prepare: (file: File, kind: MediaKind, opts: { voiceDuration?: number }) => Promise<PreparedMedia>;
+  prepare: (file: File, kind: MediaKind, opts: { voiceDuration?: number; coverAt?: number }) => Promise<PreparedMedia>;
   upload: typeof uploadAndSendMedia;
 }
 
@@ -52,7 +53,7 @@ const defaultDeps: MediaSendDeps = {
 /** Null whenever the attachment cannot (or should not) travel encrypted. */
 export async function sealMediaForPeer(
   file: File,
-  opts: { peerAddress: string | null | undefined; caption?: string; msgType: 'media' | 'voice'; voiceDuration?: number },
+  opts: { peerAddress: string | null | undefined; caption?: string; msgType: 'media' | 'voice'; voiceDuration?: number; mediaOptions?: DmVideoOptions },
   deps: Partial<MediaSendDeps> = {},
 ): Promise<SealedMedia | null> {
   const d = { ...defaultDeps, ...deps };
@@ -61,12 +62,13 @@ export async function sealMediaForPeer(
   try {
     if (!(await d.canEncrypt(peer))) return null;
     const kind = mediaKindOf(file, opts.msgType, isAllowedAttachment(file.name));
-    const prepared = await d.prepare(file, kind, { voiceDuration: opts.voiceDuration });
+    const prepared = await d.prepare(file, kind, { voiceDuration: opts.voiceDuration, coverAt: opts.mediaOptions?.coverAt ?? opts.mediaOptions?.trimStart });
     const key = newFileKey();
     let descriptor: MediaDescriptor = {
       k: fileKeyToString(key),
       ...prepared.descriptor,
       ...(opts.caption ? { caption: opts.caption } : {}),
+      ...(opts.mediaOptions && kind === 'video' ? { opts: opts.mediaOptions } : {}),
     };
     let wire = await d.seal(peer, encodeMediaDescriptor(descriptor));
     // A long caption plus a preview can overrun the envelope limit; the
@@ -107,13 +109,14 @@ export async function uploadDmMedia(
     voiceDuration?: number;
     replyTo?: string;
     txHash?: string;
+    mediaOptions?: DmVideoOptions;
   },
   deps: Partial<MediaSendDeps> = {},
 ): Promise<{ message: DmMessage; plain?: Blob }> {
   const d = { ...defaultDeps, ...deps };
-  const { peerAddress, caption, msgType, voiceDuration, replyTo, txHash } = opts;
+  const { peerAddress, caption, msgType, voiceDuration, replyTo, txHash, mediaOptions } = opts;
 
-  const sealed = await sealMediaForPeer(file, { peerAddress, caption, msgType, voiceDuration }, d);
+  const sealed = await sealMediaForPeer(file, { peerAddress, caption, msgType, voiceDuration, mediaOptions }, d);
   if (sealed) {
     const sent = await d.upload(sealed.file, conversationId, senderId, {
       content: sealed.content,
@@ -136,7 +139,9 @@ export async function uploadDmMedia(
     voiceDuration,
     replyTo,
     txHash,
+    ...(mediaOptions ? { mediaOptions } : {}),
   });
   // The upload response echoes what we sent; keep the plaintext caption.
-  return { message: wire.encrypted ? { ...sent, content: caption, encrypted: true } : sent };
+  const withOptions = mediaOptions && !sent.mediaOptions ? { ...sent, mediaOptions } : sent;
+  return { message: wire.encrypted ? { ...withOptions, content: caption, encrypted: true } : withOptions };
 }
