@@ -397,7 +397,7 @@ export default function PostInfoPage() {
         <div className="p-4 space-y-6">
           {isOwner && postId ? (
             <Suspense fallback={null}>
-              <PostStatsPanel tokenId={postId} />
+              <PostStatsPanel tokenId={postId} views={views} />
             </Suspense>
           ) : null}
           {/* Transaction & Mint Info — or, for a post published off-chain, a
