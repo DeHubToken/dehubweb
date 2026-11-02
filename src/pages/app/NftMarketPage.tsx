@@ -15,6 +15,8 @@ import { Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { KitButton, PageBody, PageEmpty, PageIsland, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { AuthContext } from '@/contexts/AuthContext';
+import { canManageAgents } from '@/lib/agent-access';
+import NotFound from '@/pages/NotFound';
 import { NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
 import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fetchOrders, fetchWalletNfts, type MarketOrder } from '@/lib/market/market';
@@ -183,6 +185,9 @@ export default function NftMarketPage() {
       body={t('nftMarket.signInBody', { defaultValue: 'Connect your wallet to sell what you hold and track your listings and offers.' })}
     />
   );
+
+  // Owner preview: everyone else gets the normal not-found page until launch.
+  if (!canManageAgents(me)) return <NotFound />;
 
   return (
     <div className="min-h-screen">
