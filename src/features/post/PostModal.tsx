@@ -316,6 +316,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onApplyCrop={actions.applyCropToMedia}
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
+        onReplaceVideo={actions.replaceVideoFile}
+        onUpdateMedia={actions.updateMediaItem}
         onReplaceImage={actions.replaceImageFile}
         onSetMediaDescription={actions.setMediaDescription}
         contentWarning={state.contentWarning}

@@ -36,7 +36,10 @@ export function DmVideoFrame({
   onTimeUpdate,
   onPlayState,
   poster,
+  colorFilter,
 }: {
+  /** A CSS filter for the picture (a post's colour edits). */
+  colorFilter?: string;
   /** Still shown while there is no source yet (an encrypted video before it opens). */
   poster?: string;
   src?: string;
@@ -136,6 +139,7 @@ export function DmVideoFrame({
             width: innerW,
             height: innerH,
             transform: `translate(-50%, -50%) ${videoTransform(options) ?? ''}`,
+            ...(colorFilter ? { filter: colorFilter } : null),
           }}
         />
       )}

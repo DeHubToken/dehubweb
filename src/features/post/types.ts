@@ -1,3 +1,4 @@
+import type { PostVideoEdits } from './lib/video-edits';
 import type { PostQuotaStatus } from '@/lib/api/dehub';
 import type { PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { FilterSettings, CropSettings } from './types/filters';
@@ -38,6 +39,10 @@ export interface MediaFile {
   cropSettings?: CropSettings;
   trimStart?: number;
   trimEnd?: number;
+  /** Video: mirror, quarter turn, look and adjust dials, baked by the server. */
+  videoEdits?: PostVideoEdits;
+  /** Video post: deletes itself this many seconds after it goes up. */
+  destructSeconds?: number | null;
   /** Alt text: what the image or video shows, for people who cannot see it. */
   description?: string;
   /** Comic page caption, shown to everyone on the card. */
@@ -150,6 +155,10 @@ export interface PostFormActions {
   clearCropFromMedia: (index: number) => void;
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
   replaceImageFile: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
+  /** Swaps the attached video for another file. */
+  replaceVideoFile: (file: File) => Promise<void>;
+  /** Merges fields into one attached item (video edits, post timer). */
+  updateMediaItem: (index: number, patch: Partial<MediaFile>) => void;
   /** Alt text for one attached image or video; blank clears it. */
   setMediaDescription: (index: number, description: string) => void;
   /** Comic page caption for one image; blank clears it. */
