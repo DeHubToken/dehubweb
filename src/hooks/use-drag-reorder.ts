@@ -24,6 +24,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type React from 'react';
+import { clearTapPendingLogo } from '@/lib/tap-pending-logo';
 
 interface Options {
   /** Current on-screen order. */
@@ -334,6 +335,9 @@ export function useDragReorder({ ids, onCommit, disabled = false, holdMs = 380, 
     el.style.translate = '0px 0px';
     el.style.scale = reduce ? '' : String(liftScale);
     document.documentElement.style.userSelect = 'none';
+    // The press on a link armed the "page is opening" logo (lib/tap-pending-
+    // logo); a lift is a move, not a page change, so take it down.
+    clearTapPendingLogo();
     try { navigator.vibrate?.(12); } catch { /* not supported */ }
     setDraggingId(d.id);
     setLiveOrder(idsRef.current);
@@ -377,8 +381,10 @@ export function useDragReorder({ ids, onCommit, disabled = false, holdMs = 380, 
       settleFor(reduce ? 0 : Math.max(DROP_MS, SLIDE_MS) + 40);
     }
     document.documentElement.style.userSelect = '';
+    // Long enough for a click that Android delivers late on a busy page:
+    // the release of a drag must never open the item.
     swallowClick.current = true;
-    window.setTimeout(() => { swallowClick.current = false; }, 80);
+    window.setTimeout(() => { swallowClick.current = false; }, 350);
     const final = orderRef.current;
     const changed = final.length !== idsRef.current.length || final.some((id, i) => id !== idsRef.current[i]);
     setDraggingId(null);
@@ -446,6 +452,8 @@ export function useDragReorder({ ids, onCommit, disabled = false, holdMs = 380, 
   const onPointerDown = useCallback((id: string, e: React.PointerEvent) => {
     if (disabled || drag.current) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    // A new press: whatever click the last drop could still owe is gone.
+    swallowClick.current = false;
     const d: DragState = {
       id,
       pointerId: e.pointerId,

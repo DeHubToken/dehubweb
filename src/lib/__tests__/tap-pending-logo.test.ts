@@ -14,6 +14,7 @@ describe('tap pending logo', () => {
       <a id="ext" href="https://x.com">x</a>
       <button id="back" data-swipe-back>back</button>
       <button id="like">like</button>
+      <a id="tile" data-reorder-item="nav.home" href="/app">t</a>
       <div data-feed-item><p id="body">text</p><button id="inner">share</button></div>`;
     uninstall = installTapPendingLogo();
   });
@@ -25,6 +26,16 @@ describe('tap pending logo', () => {
     document.getElementById('link')!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     vi.advanceTimersByTime(0);
     expect(logo().style.display).toBe('none');
+  });
+
+  it('waits out the hold-to-rearrange on a menu tile so a hold never flashes it', () => {
+    const mark = () => logo().firstElementChild as HTMLElement;
+    document.getElementById('tile')!.dispatchEvent(Object.assign(new MouseEvent('pointerdown', { bubbles: true, button: 0 }), { pointerType: 'touch' }));
+    expect(logo().style.display).toBe('flex');
+    expect(mark().style.animationDelay).toBe('450ms');
+    clearTapPendingLogo();
+    press(document.getElementById('link')!);
+    expect(mark().style.animationDelay).toBe('160ms');
   });
 
   it('ignores plain buttons, external links and buttons inside a feed card', () => {
