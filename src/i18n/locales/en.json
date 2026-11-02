@@ -12390,6 +12390,14 @@
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
       "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Events DeHub sent your webhookUrl. Test sends a ping event.",
+        "test": "Send test",
+        "ok": "Webhook answered {{status}}",
+        "failed": "Webhook failed: {{reason}}",
+        "none": "No webhooks sent yet."
+      },
       "signin": {
         "title": "Sign in with DeHub",
         "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",

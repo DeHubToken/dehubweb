@@ -246,3 +246,21 @@ export async function fetchLatestRewards(): Promise<{ weekStart: string | null; 
     .order('amount_dhb', { ascending: false });
   return { weekStart, rows: (data ?? []) as RewardRow[], monthlyPool };
 }
+
+export interface WebhookDelivery {
+  event: string;
+  status: number | null;
+  ok: boolean;
+  error: string | null;
+  created_at: string;
+}
+
+/** Send a `ping` to the app's webhookUrl now (owner only). */
+export async function testWebhook(slug: string): Promise<{ ok: boolean; status: number | null; error: string | null }> {
+  return registryCall({ action: 'webhookTest', slug });
+}
+
+/** The last 20 webhooks DeHub sent the app (owner only). */
+export async function fetchWebhookDeliveries(slug: string): Promise<WebhookDelivery[]> {
+  return (await registryCall<{ deliveries: WebhookDelivery[] }>({ action: 'deliveries', slug })).deliveries;
+}

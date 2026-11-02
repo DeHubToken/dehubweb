@@ -12,9 +12,9 @@
  *        after checking the transfer on chain, and answer with a signed
  *        receipt the app's server verifies against the same JWKS as sign-in.
  *
- * add/remove also POST a signed event to the app's webhookUrl
- * ({ event, token }), fire-and-forget: an app that is down must not stop a
- * person adding or removing it.
+ * add/remove/payment also POST a signed event to the app's webhookUrl
+ * ({ event, token }, see _shared/miniapp-webhook.ts) in the background: an
+ * app that is down must not stop a person adding, removing or paying.
  *
  * Payments go straight to the developer's wallet — DeHub holds nothing and
  * pays nothing out. The fee in the plan (0% on an app's first $10k a year)
@@ -23,6 +23,7 @@
 import { handleCorsPreflight } from "../_shared/cors.ts";
 import { checkRateLimit, jsonResponse, requireDeHubAuth, serviceClient } from "../_shared/auth.ts";
 import { signMiniAppToken } from "../_shared/miniapp-jwt.ts";
+import { deliverWebhook } from "../_shared/miniapp-webhook.ts";
 
 const CHAINS: Record<number, { rpc: string; dhb: string }> = {
   8453: { rpc: "https://mainnet.base.org", dhb: "0xd20ab1015f6a2de4a6fddebab270113f689c2f7c" },
@@ -33,6 +34,13 @@ const MAX_PAYMENT_DHB = 1_000_000;
 
 type Db = ReturnType<typeof serviceClient>;
 
+/** Keep the worker alive for a webhook without making the person wait on it. */
+function background(work: Promise<unknown>) {
+  const done = work.catch(() => {});
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any).EdgeRuntime?.waitUntil?.(done);
+}
+
 interface AppRow {
   id: string;
   slug: string;
@@ -40,7 +48,7 @@ interface AppRow {
   name: string;
   owner_wallet: string | null;
   status: string;
-  manifest: { webhookUrl?: string } | null;
+  manifest: { webhookUrl?: string; webhookEvents?: string[] } | null;
 }
 
 async function appBySlug(db: Db, slug: unknown): Promise<AppRow | null> {
@@ -51,33 +59,6 @@ async function appBySlug(db: Db, slug: unknown): Promise<AppRow | null> {
     .eq("slug", slug)
     .maybeSingle();
   return data && data.status === "live" ? (data as AppRow) : null;
-}
-
-function isPublicHttps(raw: string | undefined): string | null {
-  if (!raw) return null;
-  try {
-    const url = new URL(raw);
-    const h = url.hostname.toLowerCase();
-    if (url.protocol !== "https:") return null;
-    if (h === "localhost" || h.endsWith(".local") || h.endsWith(".internal") || /^[\d.]+$/.test(h) || h.includes(":")) return null;
-    return url.toString();
-  } catch {
-    return null;
-  }
-}
-
-/** Tell the app, without waiting on it. */
-async function notifyWebhook(app: AppRow, wallet: string, event: string, extra: Record<string, unknown> = {}) {
-  const url = isPublicHttps(app.manifest?.webhookUrl);
-  if (!url) return;
-  const token = await signMiniAppToken({ sub: wallet, aud: app.domain, typ: "event", event, ...extra }, 3600);
-  await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "User-Agent": "dehub-miniapp-webhook/1" },
-    body: JSON.stringify({ event, token }),
-    redirect: "manual",
-    signal: AbortSignal.timeout(5000),
-  }).catch(() => {});
 }
 
 async function rpc<T>(chainId: number, method: string, params: unknown[]): Promise<T | null> {
@@ -137,7 +118,7 @@ Deno.serve(async (req: Request) => {
         .from("miniapp_installs")
         .upsert({ wallet: auth.wallet, app_id: app.id, notifications_on: true }, { onConflict: "wallet,app_id" });
       if (error) throw error;
-      await notifyWebhook(app, auth.wallet, "app_added");
+      background(deliverWebhook(db, app, auth.wallet, "app_added"));
       return jsonResponse({ added: true, notificationsEnabled: true });
     }
 
@@ -150,7 +131,7 @@ Deno.serve(async (req: Request) => {
 
     if (body.action === "remove") {
       await db.from("miniapp_installs").delete().eq("wallet", auth.wallet).eq("app_id", app.id);
-      await notifyWebhook(app, auth.wallet, "app_removed");
+      background(deliverWebhook(db, app, auth.wallet, "app_removed"));
       return jsonResponse({ removed: true });
     }
 
@@ -189,6 +170,7 @@ Deno.serve(async (req: Request) => {
         { sub: auth.wallet, aud: app.domain, typ: "payment", amount: transfer.amount, token: "DHB", chainId, txHash, memo },
         30 * 24 * 3600,
       );
+      background(deliverWebhook(db, app, auth.wallet, "payment", { amount: transfer.amount, token: "DHB", chainId, txHash, memo }));
       return jsonResponse({ txHash, chainId, amount: transfer.amount, receipt });
     }
 
