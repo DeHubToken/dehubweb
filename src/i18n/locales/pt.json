@@ -1245,7 +1245,10 @@
     "messageWallNote": "Mostra na parede de dicas uma vez que a dica passa.",
     "sendWithMessage": "Enviar mensagem",
     "messageFailed": "Sua mensagem não pôde ser adicionada. Nenhum dica foi enviada.",
-    "wallLabel": "Mensagens de gratificação"
+    "wallLabel": "Mensagens de gratificação",
+    "railTitle": "Gorjetas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Agora você segue {{name}}. Você receberá uma notificação quando a transmissão ao vivo começar.",

@@ -1516,7 +1516,10 @@
     "messageWallNote": "Verschijnt op de fooienmuur zodra de fooi rond is.",
     "sendWithMessage": "Versturen met bericht",
     "messageFailed": "Je bericht kon niet worden toegevoegd. Er is geen fooi verstuurd.",
-    "wallLabel": "Fooiberichten"
+    "wallLabel": "Fooiberichten",
+    "railTitle": "Fooien",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Je volgt nu {{name}}. Je krijgt een melding wanneer ze live gaan.",
