@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Check } from 'lucide-react';
+import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Check, Timer } from 'lucide-react';
 import X from '@/components/ui/cut-icons/close';
 import Send from '@/components/ui/cut-icons/send';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -13,9 +13,10 @@ import {
   nextQuarterTurn,
   type DmVideoOptions,
 } from '@/lib/dm-video-options';
+import { DESTRUCT_CHOICES, destructLabel, destructShort, type DmDestructChoice } from '@/lib/dm-destruct';
 import { DmVideoFrame } from './DmVideo';
 
-type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide';
+type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
 const FRAME_COUNT = 10;
 const MIN_KEEP = 1;
 
@@ -68,7 +69,9 @@ export function DmVideoCard({
   onRemove,
   onMeta,
   duration,
+  destruct,
 }: {
+  destruct?: DmDestructChoice | null;
   url: string;
   file: File;
   options?: DmVideoOptions;
@@ -96,6 +99,7 @@ export function DmVideoCard({
           <span className="absolute bottom-1.5 left-1.5 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white backdrop-blur-sm">
             {kept != null ? `${formatClock(kept)} · ` : ''}{formatAttachmentSize(file.size)}
           </span>
+          {destruct && <DestructChip choice={destruct} short />}
         </DmVideoFrame>
         <span
           role="button"
@@ -132,7 +136,11 @@ export function DmVideoStudio({
   onCaptionChange,
   onSend,
   sendDisabled,
+  destruct = null,
+  onDestructChange,
 }: {
+  destruct?: DmDestructChoice | null;
+  onDestructChange?: (c: DmDestructChoice | null) => void;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   url: string;
@@ -189,6 +197,7 @@ export function DmVideoStudio({
     { key: 'mirror', label: _copy('dmVideo.mirror', { defaultValue: 'Mirror' }), icon: FlipHorizontal2 },
     { key: 'rotate', label: _copy('dmVideo.rotate', { defaultValue: 'Rotate' }), icon: RotateCw },
     { key: 'hide', label: _copy('dmVideo.hide', { defaultValue: 'Hide' }), icon: EyeOff },
+    ...(onDestructChange ? [{ key: 'timer' as const, label: _copy('dmVideo.timer', { defaultValue: 'Timer' }), icon: Timer }] : []),
   ];
 
   const pct = (t: number) => (dur ? `${(t / dur) * 100}%` : '0%');
@@ -235,6 +244,7 @@ export function DmVideoStudio({
                 <EyeOff className="h-3.5 w-3.5" /> {_copy('dmVideo.hiddenUntilTap', { defaultValue: 'Hidden until they tap it' })}
               </span>
             )}
+            {destruct && <DestructChip choice={destruct} />}
           </DmVideoFrame>
         </div>
 
@@ -350,6 +360,35 @@ export function DmVideoStudio({
                 />
               </div>
             )}
+            {tab === 'timer' && onDestructChange && (
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-1.5">
+                  {([null, ...DESTRUCT_CHOICES] as (DmDestructChoice | null)[]).map((c) => (
+                    <button
+                      key={String(c)}
+                      type="button"
+                      aria-pressed={destruct === c}
+                      onClick={() => onDestructChange(c)}
+                      className={cn(
+                        'rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-zinc-300',
+                        destruct === c && 'border-white bg-white text-black',
+                      )}
+                    >
+                      {c == null
+                        ? _copy('dmVideo.timerOff', { defaultValue: 'Off' })
+                        : _copy(`dmVideo.destruct.${c}`, { defaultValue: destructLabel(c) })}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[11px] leading-snug text-zinc-400">
+                  {destruct == null
+                    ? _copy('dmVideo.timerOffBody', { defaultValue: 'The video stays in the chat.' })
+                    : destruct === 'view'
+                      ? _copy('dmVideo.timerViewBody', { defaultValue: 'Gone for both of you once they have watched it.' })
+                      : _copy('dmVideo.timerTimeBody', { defaultValue: 'Gone for both of you {{value1}} after you send it.', value1: destructLabel(destruct) })}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2 rounded-xl border border-white/15 py-1 pl-3 pr-1">
@@ -373,6 +412,16 @@ export function DmVideoStudio({
         </div>
       </DrawerContent>
     </Drawer>
+  );
+}
+
+function DestructChip({ choice, short }: { choice: DmDestructChoice; short?: boolean }) {
+  const { t: _copy } = _useCopy();
+  return (
+    <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+      <Timer className="h-3 w-3" />
+      {short ? destructShort(choice) : _copy(`dmVideo.destruct.${choice}`, { defaultValue: destructLabel(choice) })}
+    </span>
   );
 }
 

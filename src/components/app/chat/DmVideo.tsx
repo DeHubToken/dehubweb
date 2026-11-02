@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Play, Pause, EyeOff, Hand, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause, EyeOff, Hand, Volume2, VolumeX, Timer } from 'lucide-react';
+import { destructLeft, type DmDestruct } from '@/lib/dm-destruct';
 import { cn } from '@/lib/utils';
 import {
   fitVideoBox,
@@ -160,7 +161,13 @@ export function DmVideoBubble({
   onNeedSource,
   loading,
   poster,
+  destruct,
+  onViewed,
 }: {
+  /** Self-destruct timer on this message. */
+  destruct?: DmDestruct | null;
+  /** View-once: called once when the other person has watched it. */
+  onViewed?: () => void;
   poster?: string;
   messageId: string;
   src?: string;
@@ -184,6 +191,26 @@ export function DmVideoBubble({
   const hiddenForMe = options?.hidden === 'reveal' && !mine;
   const [covered, setCovered] = useState(() => hiddenForMe && !hasRevealed(messageId));
   const [lifting, setLifting] = useState(false);
+
+  const viewOnce = destruct?.mode === 'view';
+  const watched = useRef(false);
+  const reported = useRef(false);
+  const report = () => {
+    if (!viewOnce || mine || !watched.current || reported.current) return;
+    reported.current = true;
+    onViewed?.();
+  };
+  // Leaving the chat after starting a view-once video counts as watching it.
+  const reportRef = useRef(report);
+  reportRef.current = report;
+  useEffect(() => () => reportRef.current(), []);
+  const [, tick] = useState(0);
+  useEffect(() => {
+    if (destruct?.mode !== 'time') return;
+    const id = window.setInterval(() => tick((n) => n + 1), 30_000);
+    return () => window.clearInterval(id);
+  }, [destruct?.mode]);
+  const left = destructLeft(destruct);
 
   const start = options?.trimStart ?? 0;
   const kept = keptDuration(options, dur);
@@ -233,8 +260,17 @@ export function DmVideoBubble({
         muted={muted}
         blurred={covered && !lifting}
         onMeta={(m) => { if (!dur && Number.isFinite(m.dur)) setDur(m.dur); }}
-        onTimeUpdate={setTime}
-        onPlayState={setPlaying}
+        onTimeUpdate={(t) => {
+          setTime(t);
+          // Reached the end of the kept part: that is one full view.
+          const endAt = options?.trimEnd ?? dur;
+          if (endAt && t >= endAt - 0.3) report();
+        }}
+        onPlayState={(p) => {
+          setPlaying(p);
+          if (p) watched.current = true;
+          else if (watched.current && videoRef.current && videoRef.current.currentTime <= start + 0.05) report();
+        }}
       >
         {covered && (
           <span
@@ -259,6 +295,12 @@ export function DmVideoBubble({
         {kept != null && (
           <span className="absolute left-1.5 top-1.5 rounded-full bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white backdrop-blur-sm">
             {formatClock(playing ? kept - (time - start) : kept)}
+          </span>
+        )}
+        {destruct && (viewOnce || left) && (
+          <span className={cn('absolute left-1.5 inline-flex items-center gap-1 rounded-full bg-black/55 px-1.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm', kept != null ? 'top-7' : 'top-1.5')}>
+            <Timer className="h-3 w-3" />
+            {viewOnce ? _copy('dmVideo.destruct.view', { defaultValue: '1 view' }) : left}
           </span>
         )}
         {mine && options?.hidden === 'reveal' && (

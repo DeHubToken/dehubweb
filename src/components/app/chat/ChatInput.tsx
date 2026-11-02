@@ -37,6 +37,7 @@ import {
 } from '@/lib/attachments';
 import { dragHasFiles } from '@/lib/comment-attachments';
 import { cleanVideoOptions, type DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestructChoice } from '@/lib/dm-destruct';
 import { DmVideoCard, DmVideoStudio } from './DmVideoStudio';
 
 /** Per-kind caps, matching the backend's DM limits. */
@@ -50,6 +51,8 @@ export interface ChatInputSendArgs {
   duration?: number;
   /** Trim, cover, mirror, rotation and hide choices for a video. */
   mediaOptions?: DmVideoOptions;
+  /** Self-destruct: gone after one view or a set time. */
+  destruct?: DmDestructChoice;
 }
 
 interface ChatInputProps {
@@ -131,6 +134,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [mediaKind, setMediaKind] = useState<'image' | 'video' | 'audio'>('image');
   // The picked video's sheet choices, its length, and whether the sheet is up.
   const [videoOptions, setVideoOptions] = useState<DmVideoOptions>({});
+  const [videoDestruct, setVideoDestruct] = useState<DmDestructChoice | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | undefined>(undefined);
   const [videoStudioOpen, setVideoStudioOpen] = useState(false);
   const [dropHover, setDropHover] = useState(false);
@@ -303,6 +307,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         type: 'media',
         mediaFile: imageFile,
         ...(mediaKind === 'video' ? { mediaOptions: cleanVideoOptions(videoOptions, videoDuration) } : {}),
+        ...(mediaKind === 'video' && videoDestruct ? { destruct: videoDestruct } : {}),
       });
       if (!sent) return;
       clearImage();
@@ -387,6 +392,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
       setMediaKind(kind);
       setVideoOptions({});
+    setVideoDestruct(null);
+      setVideoDestruct(null);
       setVideoDuration(undefined);
       setImageFile(file);
       setImagePreviewUrl(URL.createObjectURL(file));
@@ -607,6 +614,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             url={imagePreviewUrl}
             file={imageFile}
             options={videoOptions}
+            destruct={videoDestruct}
             duration={videoDuration}
             onMeta={(m) => { if (Number.isFinite(m.dur)) setVideoDuration(m.dur); }}
             onOpen={() => setVideoStudioOpen(true)}
@@ -620,6 +628,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             duration={videoDuration}
             options={videoOptions}
             onOptionsChange={setVideoOptions}
+            destruct={videoDestruct}
+            onDestructChange={setVideoDestruct}
             onRemove={clearImage}
             caption={message}
             onCaptionChange={setMessage}

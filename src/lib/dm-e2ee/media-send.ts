@@ -9,6 +9,7 @@
  */
 import { uploadAndSendMedia, type DmMessage } from '@/lib/api/dehub/dm';
 import { isAllowedAttachment } from '@/lib/attachments';
+import type { DmDestructChoice } from '@/lib/dm-destruct';
 import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { isEncryptedContent } from './crypto';
 import { canEncryptToPeer, prepareOutgoing } from './keys';
@@ -110,11 +111,12 @@ export async function uploadDmMedia(
     replyTo?: string;
     txHash?: string;
     mediaOptions?: DmVideoOptions;
+    destruct?: DmDestructChoice;
   },
   deps: Partial<MediaSendDeps> = {},
 ): Promise<{ message: DmMessage; plain?: Blob }> {
   const d = { ...defaultDeps, ...deps };
-  const { peerAddress, caption, msgType, voiceDuration, replyTo, txHash, mediaOptions } = opts;
+  const { peerAddress, caption, msgType, voiceDuration, replyTo, txHash, mediaOptions, destruct } = opts;
 
   const sealed = await sealMediaForPeer(file, { peerAddress, caption, msgType, voiceDuration, mediaOptions }, d);
   if (sealed) {
@@ -125,6 +127,7 @@ export async function uploadDmMedia(
       replyTo,
       txHash,
       encryptedKind: sealed.encryptedKind,
+      ...(destruct ? { destruct } : {}),
     });
     return {
       message: { ...sent, content: caption, encrypted: true, undecryptable: false, encMedia: sealed.descriptor },
@@ -140,6 +143,7 @@ export async function uploadDmMedia(
     replyTo,
     txHash,
     ...(mediaOptions ? { mediaOptions } : {}),
+    ...(destruct ? { destruct } : {}),
   });
   // The upload response echoes what we sent; keep the plaintext caption.
   const withOptions = mediaOptions && !sent.mediaOptions ? { ...sent, mediaOptions } : sent;

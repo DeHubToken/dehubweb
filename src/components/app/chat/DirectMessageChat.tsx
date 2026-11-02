@@ -46,6 +46,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput, type ChatInputSendArgs } from './ChatInput';
 import { DmVideoBubble } from './DmVideo';
 import type { DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestruct, DmDestructChoice } from '@/lib/dm-destruct';
+import { markDmMessageViewed } from '@/lib/api/dehub/dm';
 import { DmLockedState, DmUndecryptableRun } from './DmLockedState';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -223,9 +225,11 @@ function EncryptedMediaBody({
   voiceDuration,
   onOpenImage,
   isOwn,
+  destruct,
 }: {
   messageId: string;
   isOwn?: boolean;
+  destruct?: DmDestruct | null;
   media: MediaDescriptor;
   mediaUrl?: string;
   voiceDuration?: number | null;
@@ -314,6 +318,8 @@ function EncryptedMediaBody({
         duration={media.dur}
         options={media.opts}
         mine={!!isOwn}
+        destruct={destruct}
+        onViewed={() => { void markDmMessageViewed(messageId).catch(() => undefined); }}
         autoPlay={requested}
         loading={uploading || status === 'loading'}
         onNeedSource={() => { if (uploading) return; setRequested(true); load(); }}
@@ -720,6 +726,7 @@ const MessageBubble = memo(function MessageBubble({
                 <EncryptedMediaBody
                   messageId={message._id}
                   isOwn={isOwnMessage}
+                  destruct={message.destruct}
                   media={encMedia}
                   mediaUrl={primaryMediaUrl}
                   onOpenImage={onOpenImage}
@@ -770,6 +777,8 @@ const MessageBubble = memo(function MessageBubble({
                         src={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
                         options={message.mediaOptions}
                         mine={isOwnMessage}
+                        destruct={message.destruct}
+                        onViewed={() => { void markDmMessageViewed(message._id).catch(() => undefined); }}
                       />
                     ) : primaryMedia?.type === 'audio' || primaryMedia?.mimeType?.startsWith('audio/') ? (
                       <VoiceMessagePlayer
@@ -1852,6 +1861,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     gifUrl,
     duration,
     mediaOptions,
+    destruct,
   }: {
     content: string;
     type: 'msg' | 'media' | 'gif' | 'voice';
@@ -1859,6 +1869,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     gifUrl?: string;
     duration?: number;
     mediaOptions?: DmVideoOptions;
+    destruct?: DmDestructChoice;
   }) => {
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
@@ -2060,6 +2071,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         replyTo: replyingTo?._id,
         replyPreview,
         mediaOptions,
+        destruct,
       },
     ).then(
         (data) => {
