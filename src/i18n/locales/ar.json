@@ -1326,7 +1326,10 @@
     "messageWallNote": "تظهر على جدار الإكراميات بعد إتمام الإكرامية.",
     "sendWithMessage": "إرسال مع رسالة",
     "messageFailed": "تعذّر إضافة رسالتك. لم تُرسل أي إكرامية.",
-    "wallLabel": "رسائل الإكراميات"
+    "wallLabel": "رسائل الإكراميات",
+    "railTitle": "الإكراميات",
+    "railTotal": "{{amount}} توكن",
+    "tokensUnit": "توكن"
   },
   "postOptions": {
     "liveAlertsOn": "أنت الآن تتابع {{name}}. سيصلك إشعار عندما يبدأ البث المباشر.",
@@ -6488,6 +6491,14 @@
     "raw": "النص الخام"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "الفلاتر",
+    "forSale": "للبيع",
+    "openToOffers": "مفتوح للعروض",
+    "freshMints": "جديد من صنّاع DeHub",
+    "makeOffer": "قدّم عرضًا",
+    "offersOpen": "مفتوح للعروض",
+    "mintedCount": "تم سكّ {{n}}",
     "trending": "مجموعات رائجة",
     "floor": "أدنى سعر",
     "listedCount": "{{n}} للبيع",

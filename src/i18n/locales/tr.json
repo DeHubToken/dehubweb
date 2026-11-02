@@ -1326,7 +1326,10 @@
     "messageWallNote": "Bahşiş onaylanınca bahşiş duvarında görünür.",
     "sendWithMessage": "Mesajla gönder",
     "messageFailed": "Mesajın eklenemedi. Bahşiş gönderilmedi.",
-    "wallLabel": "Bahşiş mesajları"
+    "wallLabel": "Bahşiş mesajları",
+    "railTitle": "Bahşişler",
+    "railTotal": "{{amount}} token",
+    "tokensUnit": "token"
   },
   "postOptions": {
     "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",
@@ -6480,6 +6483,14 @@
     "raw": "Ham hâli"
   },
   "nftMarket": {
+    "shortTitle": "NFT'ler",
+    "filters": "Filtreler",
+    "forSale": "Satışta",
+    "openToOffers": "Tekliflere açık",
+    "freshMints": "DeHub yaratıcılarından yeni",
+    "makeOffer": "Teklif ver",
+    "offersOpen": "Tekliflere açık",
+    "mintedCount": "{{n}} basıldı",
     "trending": "Popüler koleksiyonlar",
     "floor": "Taban fiyat",
     "listedCount": "{{n}} satışta",

@@ -1326,7 +1326,10 @@
     "messageWallNote": "Aparece en el muro de propinas cuando la propina se confirma.",
     "sendWithMessage": "Enviar con mensaje",
     "messageFailed": "No se pudo añadir tu mensaje. No se envió ninguna propina.",
-    "wallLabel": "Mensajes de propinas"
+    "wallLabel": "Mensajes de propinas",
+    "railTitle": "Propinas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Ahora sigues a {{name}}. Recibirás una notificación cuando transmita en vivo.",
@@ -6480,6 +6483,14 @@
     "raw": "Original"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filtros",
+    "forSale": "En venta",
+    "openToOffers": "Abierto a ofertas",
+    "freshMints": "Recién creados en DeHub",
+    "makeOffer": "Hacer oferta",
+    "offersOpen": "Abierto a ofertas",
+    "mintedCount": "{{n}} acuñados",
     "trending": "Colecciones en tendencia",
     "floor": "Precio mínimo",
     "listedCount": "{{n}} en venta",

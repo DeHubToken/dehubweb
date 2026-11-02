@@ -644,24 +644,28 @@ const galleryTipCard = (id: string, name: string, text: string, amount: number, 
   tip: { amount, symbol, chainId: 8453, txHash: '0x', value: symbol === 'DHB' ? amount : amount * 1000 },
 });
 const GALLERY_TIP_WALL: GalleryComment[] = [
-  galleryTipCard('9001', 'mal', 'This beat goes so hard 🔥 more of this', 5000),
-  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 1000),
-  galleryTipCard('9003', 'legouffre', 'merci 🙏', 5, 'USDC'),
+  galleryTipCard('9001', 'mal', 'This beat goes so hard, more of this', 25000),
+  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 5000),
+  galleryTipCard('9003', 'kenji', 'Drop the full set please', 1200),
+  galleryTipCard('9004', 'legouffre', 'merci', 5, 'USDC'),
 ];
+
 
 /** Tip with a message: the sheet's message box and the tip wall cards. */
 function TipMessageGallery() {
   const [open, setOpen] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [landed, setLanded] = useState<string | null>('9001');
+  const [replay, setReplay] = useState(0);
   return (
     <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-tip-message-gallery>
       <h2 className="mb-3 text-sm font-semibold">Tip messages</h2>
-      <div className="-mx-4">
-        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(id) => setOpenId(c => (c === id ? null : id))} landedId={landed} />
+      <div key={replay}>
+        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(cid) => setOpenId(c => (c === cid ? null : cid))} landedId={landed} />
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3 text-white">
         <TipChip tip={{ amount: 5000, symbol: 'DHB' }} />
+        <Button variant="glass" size="sm" data-replay-tip-rail onClick={() => setReplay(r => r + 1)}>Replay rails</Button>
         <Button variant="glass" size="sm" onClick={() => { setLanded(null); window.setTimeout(() => setLanded('9001'), 30); }}>Replay landing</Button>
         <Button variant="glass" size="sm" data-open-tip-sheet onClick={() => setOpen(true)}>Open tip sheet</Button>
       </div>
