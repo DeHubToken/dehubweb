@@ -11,7 +11,7 @@ interface MutualFollowersProps {
 export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
-  const { mutuals, isLoading } = useMutualFollowers({ profileAddress });
+  const { mutuals, totalCount, isLoading } = useMutualFollowers({ profileAddress });
 
   if (isLoading || mutuals.length === 0) return null;
 
@@ -32,7 +32,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
     }
   };
 
-  const count = mutuals.length;
+  const count = Math.max(totalCount, mutuals.length);
   const countLabel = count === 1
     ? _copy('profile.mutualsOne', { defaultValue: '{{count}} Mutual:', count })
     : _copy('profile.mutualsMany', { defaultValue: '{{count}} Mutuals:', count });
