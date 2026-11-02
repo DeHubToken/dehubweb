@@ -42,9 +42,13 @@ export function LockPriceControl({ value, onChange, kind }: LockPriceControlProp
         type="button"
         onClick={toggle}
         aria-pressed={on}
+        // "On" is a fixed white pill: canvas themes restyle bg-primary (and
+        // drop its fill inside some sheets), so the state vanished there.
+        {...(on ? { 'data-keep-white': '', 'data-on-media': '' } : {})}
+        style={on ? { background: '#ffffff', color: '#09090b', boxShadow: '0 0 0 1px rgba(0,0,0,0.12)' } : undefined}
         className={cn(
           'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
-          on ? 'border-transparent bg-primary text-primary-foreground' : 'border-white/15 bg-white/5 text-current hover:bg-white/10',
+          on ? 'border-transparent' : 'border-white/15 bg-white/5 text-current hover:bg-white/10',
         )}
       >
         {on ? <Lock className="h-3 w-3" /> : <LockOpen className="h-3 w-3" />}
@@ -63,7 +67,7 @@ export function LockPriceControl({ value, onChange, kind }: LockPriceControlProp
               onClick={() => { setCustom(''); onChange(p); }}
               className={cn(
                 'rounded-full px-2.5 py-1 text-xs transition-colors',
-                value === p && !custom ? 'bg-white/20 font-semibold' : 'bg-white/5 hover:bg-white/10',
+                value === p && !custom ? 'bg-white/20 font-semibold ring-1 ring-current' : 'bg-white/5 hover:bg-white/10',
               )}
             >
               {p}
