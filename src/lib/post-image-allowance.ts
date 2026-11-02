@@ -15,6 +15,22 @@ const IMAGE_LIMITS_BY_BADGE_INDEX = [
 export const BASE_POST_IMAGE_LIMIT = 4;
 
 /**
+ * Comics carry more pages than a photo carousel: 50 for any badge holder,
+ * 10 without one. Keep aligned with the backend's post-image-allowance.ts.
+ */
+export const COMIC_IMAGE_LIMIT = 50;
+export const BASE_COMIC_IMAGE_LIMIT = 10;
+
+export function getComicImageLimitForBadge(
+  badgeBalance: number | string | null | undefined,
+  username?: string | null,
+  badgeLock?: unknown,
+): number {
+  const badge = getBadgeName(badgeBalance, username, { lock: parseBadgeLock(badgeLock) });
+  return badge ? COMIC_IMAGE_LIMIT : BASE_COMIC_IMAGE_LIMIT;
+}
+
+/**
  * Fallback media upload allowance before the API quota has loaded. Images,
  * video and audio share this ceiling. Keep it aligned with POST_QUOTA_TIERS.
  */

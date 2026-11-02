@@ -122,6 +122,10 @@ export interface MintPostParams {
   shopListingCount?: number;
   /** Alt text, one per uploaded image or video in file order. */
   mediaDescriptions?: string[];
+  /** 'comic' lays the photos out as a comic (collector cards). */
+  layout?: 'comic';
+  /** Comic captions, one per page in file order. */
+  mediaCaptions?: string[];
   /** The poster closed the market card for the $TICKER / address in the text. Only sent when true. */
   hideAssetCards?: boolean;
   /** Content warning: one line shown in place of the post until a viewer opens it. */
@@ -282,6 +286,13 @@ export async function mintPost(
 
   if (params.hideAssetCards) {
     formData.append('hideAssetCards', 'true');
+  }
+
+  if (params.layout === 'comic') {
+    formData.append('layout', 'comic');
+    if (params.mediaCaptions?.some(Boolean)) {
+      formData.append('mediaCaptions', JSON.stringify(params.mediaCaptions));
+    }
   }
 
   if (params.spoilerText?.trim()) {
@@ -498,6 +509,8 @@ export interface EditPostParams {
   shopListingCount?: number;
   /** Replace the post's alt text, one per piece of media in display order. `[]` clears it. */
   mediaDescriptions?: string[];
+  /** Comic captions, one per page. `[]` clears them. */
+  mediaCaptions?: string[];
   /** Replace the content warning. `''` takes it off. */
   spoilerText?: string;
   /** Who may quote it from now on. Quotes already made stay. */

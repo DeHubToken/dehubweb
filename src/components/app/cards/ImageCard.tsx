@@ -109,6 +109,8 @@ import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
+/** Lazy: only comic posts load the collector cards. */
+const ComicDeckLazy = lazy(() => import('@/components/app/comic/ComicDeck').then(m => ({ default: m.ComicDeck })));
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
   import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
@@ -1421,6 +1423,22 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             </div>
           </>
         ) : (() => {
+          if (post.layout === 'comic' && images.length > 0) {
+            const onPostPage = postPage || isImmersive;
+            return (
+              <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
+                <ComicDeckLazy
+                  images={images}
+                  captions={post.mediaCaptions}
+                  descriptions={post.mediaDescriptions}
+                  title={post.title}
+                  aboveFold={aboveFold}
+                  full={onPostPage}
+                  onOpen={onPostPage ? undefined : openPost}
+                />
+              </Suspense>
+            );
+          }
           const carousel = (
             <ImageCarousel
               images={images}
