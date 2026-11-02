@@ -58,7 +58,8 @@ describe('mobile menu dismissal', () => {
     expect(messages?.querySelector('[data-menu-badge]')?.textContent).toBe('5');
   });
 
-  it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
+  // /nfts is owner-only while it is in preview, so a signed-in non-owner never sees it.
+  it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home' && item.path !== '/nfts').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
     mount();
     fireEvent.click(screen.getByText(label));
     expect(screen.getByTestId('path').textContent).toBe(path);
