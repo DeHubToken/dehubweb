@@ -12450,6 +12450,7 @@
       "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
+      "stateRejected": "Bağlantıyla yayında · mağaza için onaylanmadı",
       "copyLink": "Bağlantıyı kopyala",
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
@@ -12463,7 +12464,24 @@
       "rewardsWeek": "{{date}} haftası",
       "rewardPaid": "Ödendi",
       "rewardPending": "Bekleyen",
-      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor."
+      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor.",
+      "signin": {
+        "title": "DeHub ile giriş yap",
+        "body": "İnsanların web sitenize veya uygulamanıza DeHub hesaplarıyla giriş yapmasını sağlayın. Burada bir anahtar oluşturun, sonra kılavuzu izleyin.",
+        "guide": "Kılavuzu oku",
+        "users_one": "{{count}} kullanıcı",
+        "users_other": "{{count}} kullanıcı",
+        "copyId": "İstemci kimliğini kopyala",
+        "rotate": "Yeni gizli anahtar",
+        "delete": "Sil",
+        "rotateConfirm": "{{name}} için yeni gizli anahtar oluşturulsun mu? Eskisi hemen çalışmayı bırakır.",
+        "deleteConfirm": "{{name}} silinsin mi? Onunla giriş yapan herkesin oturumu kapanır.",
+        "secretOnce": "{{name}} için gizli anahtar. Şimdi kopyalayın: yalnızca bir kez gösterilir.",
+        "name": "Uygulama adı",
+        "website": "Web sitesi (isteğe bağlı)",
+        "redirects": "Yönlendirme URL'leri, her satıra bir tane (https://siteniz.com/callback)",
+        "create": "Anahtar oluştur"
+      }
     },
     "card": {
       "open": "Açık"

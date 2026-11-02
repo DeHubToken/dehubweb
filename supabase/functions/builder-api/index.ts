@@ -637,7 +637,10 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
       .maybeSingle();
     if (existing) {
       if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact DeHub support.");
-      await db.from("miniapp_apps").update({ ...fields, status: "live", review_note: null }).eq("id", existing.id);
+      const review = existing.tier === "unlisted"
+        ? { review_state: "pending", submitted_at: new Date().toISOString() }
+        : {};
+      await db.from("miniapp_apps").update({ ...fields, ...review, status: "live", review_note: null }).eq("id", existing.id);
       return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://dehub.io/apps/${existing.slug}` };
     }
   }
@@ -655,6 +658,8 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
       category: "utility",
       tier: "unlisted",
       status: "live",
+      review_state: "pending",
+      submitted_at: new Date().toISOString(),
     })
     .select("id, slug, tier")
     .single();

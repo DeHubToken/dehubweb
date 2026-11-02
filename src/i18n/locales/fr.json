@@ -12454,6 +12454,7 @@
       "stateUnlisted": "En ligne par lien · en attente de la boutique",
       "stateListed": "Dans la boutique",
       "stateSuspended": "Suspendue",
+      "stateRejected": "En ligne par lien · non approuvée pour la boutique",
       "copyLink": "Copier le lien",
       "notifyKey": "Notifier la touche",
       "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",
@@ -12467,7 +12468,24 @@
       "rewardsWeek": "Semaine du {{date}}",
       "rewardPaid": "Payant",
       "rewardPending": "En attente",
-      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi."
+      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi.",
+      "signin": {
+        "title": "Se connecter avec DeHub",
+        "body": "Permettez aux gens de se connecter à votre site ou app avec leur compte DeHub. Créez une clé ici, puis suivez le guide.",
+        "guide": "Lire le guide",
+        "users_one": "{{count}} utilisateur",
+        "users_other": "{{count}} utilisateurs",
+        "copyId": "Copier l'ID client",
+        "rotate": "Nouveau secret",
+        "delete": "Supprimer",
+        "rotateConfirm": "Créer un nouveau secret pour {{name}} ? L'ancien secret cesse de fonctionner immédiatement.",
+        "deleteConfirm": "Supprimer {{name}} ? Toutes les personnes connectées avec seront déconnectées.",
+        "secretOnce": "Secret de {{name}}. Copiez-le maintenant : il n'est affiché qu'une fois.",
+        "name": "Nom de l'app",
+        "website": "Site web (facultatif)",
+        "redirects": "URL de redirection, une par ligne (https://votresite.com/callback)",
+        "create": "Créer une clé"
+      }
     },
     "card": {
       "open": "Ouvrir"
