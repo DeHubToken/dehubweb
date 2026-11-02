@@ -56,6 +56,7 @@ import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -756,7 +757,14 @@ function FeedDescription({
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
-      {shownDescription && (
+      {!stage && dedupedDescription ? (
+        <FeedCaptionExpander
+          textKey={dedupedDescription}
+          preview={<p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(squeezeBlankLines(dedupedDescription))}</p>}
+        >
+          <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(dedupedDescription)}</p>
+        </FeedCaptionExpander>
+      ) : shownDescription && (
         <div>
           <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">
             {renderTextWithLinks(shownDescription)}

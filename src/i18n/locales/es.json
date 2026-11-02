@@ -292,8 +292,10 @@
     "noUsername": "Elige un nombre de usuario para tener una dirección en el fediverso."
   },
   "profileFields": {
+    "add": "Añadir campo",
+    "remove": "Quitar campo",
     "title": "Campos del perfil",
-    "description": "Hasta cuatro líneas extra en tu perfil, como un sitio web o tus pronombres.",
+    "description": "Campos de perfil personalizados opcionales",
     "label": "Etiqueta",
     "content": "Contenido",
     "save": "Guardar campos",

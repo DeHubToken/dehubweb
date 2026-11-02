@@ -292,8 +292,10 @@
     "noUsername": "Fediverse adresi almak için bir kullanıcı adı seç."
   },
   "profileFields": {
+    "add": "Alan ekle",
+    "remove": "Alanı kaldır",
     "title": "Profil alanları",
-    "description": "Profiline dört satıra kadar ek bilgi ekle; örneğin bir web sitesi ya da zamirlerin.",
+    "description": "İsteğe bağlı özel profil alanları",
     "label": "Etiket",
     "content": "İçerik",
     "save": "Alanları kaydet",

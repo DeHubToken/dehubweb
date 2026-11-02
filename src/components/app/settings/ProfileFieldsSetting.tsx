@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BadgeCheck } from 'lucide-react';
+import { BadgeCheck, Plus, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,8 +13,8 @@ const ROWS = 4;
 const blank = (): ProfileField => ({ name: '', value: '' });
 
 /**
- * Settings → Profile → Profile fields. Four label/value rows shown under the
- * bio. Saved on their own (PUT /profile-fields), because saving is also when
+ * Settings → Profile → Profile fields. Up to four label/value rows shown
+ * under the bio. Starts with one row; "+" adds more. Saved on their own (PUT /profile-fields), because saving is also when
  * the server checks each link for a rel="me" back to this profile.
  */
 export function ProfileFieldsSetting() {
@@ -33,6 +33,10 @@ export function ProfileFieldsSetting() {
 
   const username = String(user?.username || user?.address || '').replace(/^@/, '');
   const snippet = `<a rel="me" href="https://dehub.io/${username}">DeHub</a>`;
+
+  const addRow = () => setRows((prev) => (prev.length < ROWS ? [...prev, blank()] : prev));
+  const removeRow = (index: number) =>
+    setRows((prev) => (prev.length > 1 ? prev.filter((_, i) => i !== index) : [blank()]));
 
   const update = (index: number, key: 'name' | 'value', text: string) =>
     setRows((prev) => prev.map((row, i) => (i === index ? { ...row, [key]: text, verifiedAt: null } : row)));
@@ -84,9 +88,29 @@ export function ProfileFieldsSetting() {
                 </span>
               )}
             </div>
+            {rows.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeRow(index)}
+                aria-label={`${t('profileFields.remove')} ${index + 1}`}
+                className="flex h-10 w-8 shrink-0 items-center justify-center text-zinc-500 hover:text-white"
+              >
+                <X className="size-4" />
+              </button>
+            )}
           </div>
         ))}
       </div>
+      {rows.length < ROWS && (
+        <button
+          type="button"
+          onClick={addRow}
+          aria-label={t('profileFields.add')}
+          className="mt-2 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-zinc-300 hover:bg-white/5 hover:text-white"
+        >
+          <Plus className="size-4" />
+        </button>
+      )}
       <p className="mt-3 text-xs text-zinc-500 break-all">{t('profileFields.verifyHint', { snippet })}</p>
       <Button
         type="button"
@@ -103,6 +127,6 @@ export function ProfileFieldsSetting() {
 
 function padRows(fields: ProfileField[]): ProfileField[] {
   const rows: ProfileField[] = fields.slice(0, ROWS).map((f) => ({ name: f.name || '', value: f.value || '', verifiedAt: f.verifiedAt ?? null }));
-  while (rows.length < ROWS) rows.push(blank());
+  if (rows.length === 0) rows.push(blank());
   return rows;
 }
