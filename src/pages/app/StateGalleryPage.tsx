@@ -127,6 +127,29 @@ const GALLERY_COMIC_CAPTIONS = [
   '...and Nemo tumbles back into his own room.',
 ];
 const GALLERY_COMIC_ALTS = GALLERY_COMIC_PAGES.map((_, i) => `Panel ${i + 1}: Nemo's bed walking through the city at night.`);
+/** dehub.io/<free name> for a signed-out visitor: Reserve now, held (1 minute), ended, someone else holding. */
+function UsernameReserveGallery() {
+  const states = [
+    { state: 'avail' as const, label: 'Available' },
+    { state: 'held' as const, label: 'Held for you', secondsLeft: 41 },
+    { state: 'ended' as const, label: 'Hold ended' },
+    { state: 'busy' as const, label: 'Someone else holding', secondsLeft: 23 },
+  ];
+  return (
+    <section data-username-reserve-gallery className="mb-5">
+      <h2 className="mb-3 text-sm font-semibold">Free username: Reserve now</h2>
+      <div className="grid gap-6 sm:grid-cols-2">
+        {states.map((s) => (
+          <div key={s.state} className="flex flex-col items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{s.label}</p>
+            <UsernameReserve username="nova" preview={{ state: s.state, secondsLeft: s.secondsLeft }} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ComicGallery() {
   const media = GALLERY_COMIC_PAGES.slice(0, 3).map((preview, i) => ({
     file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
@@ -211,6 +234,7 @@ const GALLERY_AUTH = {
 
 import { ComicDeck } from '@/components/app/comic/ComicDeck';
 import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
+import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
@@ -1106,6 +1130,7 @@ export default function StateGalleryPage() {
         />
 
         <ComicGallery />
+        <UsernameReserveGallery />
 
         <FollowCardsGallery />
 

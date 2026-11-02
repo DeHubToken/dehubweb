@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 
 import { Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { isReservedUsername } from '@/lib/reserved-usernames';
+import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -495,6 +497,15 @@ export default function ProfilePage() {
   if (!data.profile) {
     const isUsernameRoute = !!data.routeUsername;
     const displayUsername = data.routeUsername || '';
+    // A free, takeable name seen by a signed-out visitor offers "Reserve now".
+    // Signed in (or still finding out) gets the plain not-found page.
+    const showReserve =
+      isUsernameRoute &&
+      (!data.isProfileError || data.isProfileNotFound) &&
+      !data.isAuthenticated &&
+      !data.isAuthLoading &&
+      /^[a-z0-9_-]{1,30}$/i.test(displayUsername) &&
+      !isReservedUsername(displayUsername);
     
     const notFoundContent = (
       <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
@@ -502,38 +513,27 @@ export default function ProfilePage() {
         {/* Any unknown top-level path lands here (/:username is the catch-all),
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
-        <SEOHead title={`${t('notFound.title')} — DeHub`} description={t('profile.notFound')} noindex noCanonical />
-        {isUsernameRoute && !data.isProfileError ? (
-          <>
-            <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain" />
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-white">{t('profile.usernameAvailable')}</h2>
-              <p className="text-zinc-400 max-w-md">
-                {t('profile.signUpToClaim')} <span className="text-white font-medium">dehub.io/{displayUsername}</span>
-              </p>
-            </div>
-            <Button
-              onClick={() => setLoginModalOpen(true)}
-              data-primary-cta
-                    className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-            >
-              {t('profile.signUp')}
-            </Button>
-            <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
-          </>
+        <SEOHead
+          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on DeHub', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} — DeHub`}
+          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
+          noindex
+          noCanonical
+        />
+        {showReserve ? (
+          <UsernameReserve username={displayUsername} onTaken={() => data.refetchProfile?.()} />
         ) : (
           <>
             <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain opacity-80" />
             <h2 className="text-xl font-bold text-white">{t('profile.notFound')}</h2>
             <p className="text-zinc-400 max-w-md">
-              {data.isProfileError
+              {data.isProfileError && !data.isProfileNotFound
                 ? t('profile.unableToLoad')
                 : t('profile.doesNotExist')}
             </p>
             {/* A load error (e.g. a transient API hiccup while flicking tabs)
                 used to stick until a full page refresh — offer an in-place
                 retry that refetches the profile instead. */}
-            {data.isProfileError && (
+            {data.isProfileError && !data.isProfileNotFound && (
               <Button
                 onClick={() => data.refetchProfile?.()}
                 disabled={data.isFetchingProfile}
