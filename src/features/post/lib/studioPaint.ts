@@ -18,13 +18,19 @@ export interface StudioStroke {
   width: number;
 }
 
+export type StudioFont = 'clean' | 'bold' | 'serif' | 'mono';
+
 export interface StudioText {
   kind: 'text';
+  /** Left edge, vertical middle, 0..1 of the picture. */
   at: StudioPoint;
   text: string;
   color: string;
   /** Font size as a fraction of the picture's shorter side. */
   size: number;
+  font?: StudioFont;
+  /** Drawn on a pill in `color`, text in black or white on top. */
+  bg?: boolean;
 }
 
 export type StudioMark = StudioStroke | StudioText;
@@ -153,7 +159,40 @@ function paintVignette(ctx: CanvasRenderingContext2D, w: number, h: number, amou
   ctx.fillRect(0, 0, w, h);
 }
 
-export const STUDIO_FONT = '600 {px}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+const FONT_CSS: Record<StudioFont, string> = {
+  clean: '600 {px}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  bold: 'italic 900 {px}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  serif: '700 {px}px Georgia, "Times New Roman", serif',
+  mono: '600 {px}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+};
+
+export function studioFontCss(font: StudioFont | undefined, px: number) {
+  return FONT_CSS[font ?? 'clean'].replace('{px}', String(Math.round(px)));
+}
+
+/** Black or white, whichever reads on `color`. */
+export function inkOn(color: string) {
+  const m = /^#([\da-f]{6})$/i.exec(color);
+  if (!m) return '#000000';
+  const n = parseInt(m[1], 16);
+  const lum = 0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255);
+  return lum > 150 ? '#000000' : '#ffffff';
+}
+
+let measureCtx: CanvasRenderingContext2D | null = null;
+
+/** A text mark's box in pixels of a `w` x `h` picture, for tapping and dragging it. */
+export function textBox(item: StudioText, w: number, h: number) {
+  const size = Math.max(8, item.size * Math.min(w, h));
+  if (!measureCtx) measureCtx = document.createElement('canvas').getContext('2d');
+  let tw = item.text.length * size * 0.55;
+  if (measureCtx) {
+    measureCtx.font = studioFontCss(item.font, size);
+    tw = measureCtx.measureText(item.text).width;
+  }
+  const pad = item.bg ? size * 0.35 : size * 0.15;
+  return { x: item.at.x * w - pad, y: item.at.y * h - size * 0.7, w: tw + pad * 2, h: size * 1.4, size, textWidth: tw };
+}
 
 export function paintMarks(ctx: CanvasRenderingContext2D, items: StudioMark[], w: number, h: number) {
   const unit = Math.min(w, h);
@@ -179,15 +218,34 @@ export function paintMarks(ctx: CanvasRenderingContext2D, items: StudioMark[], w
       ctx.stroke();
     } else {
       const size = Math.max(8, item.size * unit);
-      ctx.font = STUDIO_FONT.replace('{px}', String(Math.round(size)));
+      ctx.font = studioFontCss(item.font, size);
       ctx.textBaseline = 'middle';
       ctx.textAlign = 'start';
+      const x = item.at.x * w;
+      const y = item.at.y * h;
+      if (item.bg) {
+        const b = textBox(item, w, h);
+        ctx.fillStyle = item.color;
+        ctx.beginPath();
+        const r = b.h * 0.3;
+        ctx.moveTo(b.x + r, b.y);
+        ctx.arcTo(b.x + b.w, b.y, b.x + b.w, b.y + b.h, r);
+        ctx.arcTo(b.x + b.w, b.y + b.h, b.x, b.y + b.h, r);
+        ctx.arcTo(b.x, b.y + b.h, b.x, b.y, r);
+        ctx.arcTo(b.x, b.y, b.x + b.w, b.y, r);
+        ctx.closePath();
+        ctx.fill();
+        ctx.font = studioFontCss(item.font, size);
+        ctx.fillStyle = inkOn(item.color);
+        ctx.fillText(item.text, x, y);
+        continue;
+      }
       ctx.lineJoin = 'round';
       ctx.lineWidth = Math.max(1, size * 0.12);
       ctx.strokeStyle = item.color === '#000000' ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.55)';
-      ctx.strokeText(item.text, item.at.x * w, item.at.y * h);
+      ctx.strokeText(item.text, x, y);
       ctx.fillStyle = item.color;
-      ctx.fillText(item.text, item.at.x * w, item.at.y * h);
+      ctx.fillText(item.text, x, y);
     }
   }
 }
