@@ -234,7 +234,7 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
         placeholder={placeholder}
         aria-label={placeholder}
         className={cn(
-          'w-full pl-12 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
+          'w-full pl-12 h-[48px] text-ellipsis bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
           trailing ? 'pr-12' : 'pr-4',
         )}
       />
