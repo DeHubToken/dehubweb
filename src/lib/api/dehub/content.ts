@@ -389,6 +389,21 @@ export interface NewPostResolution {
  * keep working forever. Null on unknown slugs and on transport failure alike —
  * the caller shows not-found either way.
  */
+export interface ArticleSlugResolution {
+  tokenId: number;
+  articleSlug: string;
+}
+
+/** Resolve an article's readable URL (/app/post/<slug>) to its tokenId. */
+export async function resolveArticleSlug(slug: string): Promise<ArticleSlugResolution | null> {
+  try {
+    const res = await apiCall<any>(`/api/article/${encodeURIComponent(slug)}`);
+    return res && typeof res.tokenId === 'number' ? (res as ArticleSlugResolution) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function resolveNewPost(n: number | string): Promise<NewPostResolution | null> {
   try {
     const res = await apiCall<any>(`/api/newpost/${encodeURIComponent(String(n))}`);

@@ -103,6 +103,8 @@ interface ActionBarProps {
    * /app/post/<tokenId> the post hasn't earned. Omitted → old behaviour.
    */
   newPostSlug?: number | null;
+  /** An article's readable slug — shares as /app/post/<slug>, ahead of every other shape. */
+  articleSlug?: string | null;
   /**
    * The link Copy Link and the share targets hand out, for surfaces whose
    * items are not posts (a governance proposal lives at its own route, not
@@ -358,6 +360,7 @@ const COMPACT_BUTTON_CLASS =
 export function ActionBar({
   postId,
   newPostSlug,
+  articleSlug,
   shareUrl,
   onComment,
   onShare,
@@ -829,6 +832,8 @@ export function ActionBar({
   const shareUrlForPost = () =>
     shareUrl
       ? shareUrl
+      : articleSlug
+      ? dehubLinkFor.article(articleSlug)
       : newPostSlug != null
       ? dehubLinkFor.newPost(newPostSlug)
       : postId
@@ -1200,7 +1205,7 @@ export function ActionBar({
 
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
-          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
+          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={articleSlug ? dehubLinkFor.article(articleSlug) : newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
         </Suspense>
       )}
 

@@ -4502,6 +4502,29 @@ async function resolveNewPostTokenId(n) {
   }
 }
 
+/** An article's readable address, /app/post/<first-ten-words-of-title>. Never
+ *  digits only (that is a tokenId) and never a 24-hex stream ObjectId. */
+function articleSlugOf(pathname) {
+  const m = pathname.match(/^\/(?:app\/)?post\/([a-z0-9][a-z0-9-]{0,120})\/?$/i);
+  if (!m || !/[a-z]/i.test(m[1]) || /^[a-f\d]{24}$/i.test(m[1])) return null;
+  return m[1].toLowerCase();
+}
+
+/** Resolve an article slug to its tokenId through the API that owns it. */
+async function resolveArticleSlugTokenId(slug) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/article/${encodeURIComponent(slug)}`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const id = data?.tokenId ?? data?.result?.tokenId;
+    return Number.isFinite(Number(id)) ? String(Number(id)) : null;
+  } catch {
+    return null;
+  }
+}
+
 /** The sitemap spec's own cap, and the page size the API is asked for. */
 const PROFILE_SITEMAP_PAGE_SIZE = 50000;
 
@@ -7233,7 +7256,12 @@ async function handleRequest(request, env, ctx) {
   // fn's own system-route list has no `communities` entry, so it read the
   // segment as a username, missed, and 404'd every share of that shape.
   const bareCommunity = pathname.match(/^\/communities\/([^/]+)\/?$/);
-  if (newPostSlug) {
+  const articleSlug = articleSlugOf(pathname);
+  if (articleSlug) {
+    const tokenId = await resolveArticleSlugTokenId(articleSlug);
+    // Unresolvable: the fn's miss on the slug lands on the 404 below.
+    if (tokenId) ssrPath = `/app/post/${tokenId}`;
+  } else if (newPostSlug) {
     const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
     // Unresolvable slug: leave the path alone so the fn's miss lands on the
     // 404 below rather than a 200 carrying the homepage card.
@@ -7421,6 +7449,17 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       postShareRecord = record;
+      // An article lives at its readable slug. Asked for by number (or any
+      // other shape), it moves there for good, keeping ?ref and the rest of
+      // the query; asked for by slug, every self-link on the page says so.
+      const recordSlug = record && typeof record.articleSlug === 'string' ? record.articleSlug : '';
+      if (recordSlug && /^[a-z0-9-]+$/.test(recordSlug)) {
+        if (articleSlug !== recordSlug && (articleSlug || /^\/(?:app\/)?(?:post|newpost)\/\d+\/?$/.test(pathname))) {
+          const search = new URL(request.url).search;
+          return guard(new Response(null, { status: 301, headers: { Location: `${APP_URL}/app/post/${recordSlug}${search}` } }));
+        }
+        html = html.split(`${APP_URL}/app/post/${proxiedPostId}"`).join(`${APP_URL}/app/post/${recordSlug}"`);
+      }
       aiReserved = aiTrainingReserved(record && record.minterUser && record.minterUser.customs);
       html = enrichPostMeta(html, proxiedPostId, record);
       // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's

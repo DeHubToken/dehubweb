@@ -495,6 +495,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     rawName,
     rawDescription,
     articleBody: item.articleBody,
+    articleSlug: (item as any).articleSlug,
     createdAt: item.createdAt,
     views: formatViews(resolveViewCount(item)).replace(' views', ''),
     status: item.status,

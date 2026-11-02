@@ -96,6 +96,8 @@ export interface BaseFeedItem {
  */
 export interface TextPost extends BaseFeedItem {
   articleBody?: string;
+  /** An article's readable URL: /app/post/<articleSlug> (first ten words of its title). */
+  articleSlug?: string;
   articleImageUrl?: string;
   type: 'post';
   author: User;

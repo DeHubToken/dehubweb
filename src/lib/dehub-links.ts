@@ -54,6 +54,8 @@ export interface DehubLinkMatch {
   commentId?: string;
   /** Set when a post link used the off-chain slug (/newpost/3) instead of a tokenId. */
   newPostId?: string;
+  /** Set when a post link used an article's readable slug (/app/post/<title-slug>). */
+  articleSlug?: string;
   username?: string;
   slug?: string;
   code?: string;
@@ -194,8 +196,12 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
 
   // ── /app/post/:tokenId, /app/video/:tokenId ──
   if (isAppScoped && (scoped[0] === 'post' || scoped[0] === 'video') && scoped[1]) {
-    if (!/^\d+$/.test(scoped[1])) return null;
-    return { ...base, kind: 'post', tokenId: scoped[1] };
+    if (/^\d+$/.test(scoped[1])) return { ...base, kind: 'post', tokenId: scoped[1] };
+    // An article's readable address: letters, digits and dashes, with a letter.
+    if (scoped[0] === 'post' && /^[a-z0-9][a-z0-9-]*$/i.test(scoped[1]) && /[a-z]/i.test(scoped[1]) && !/^[a-f\d]{24}$/i.test(scoped[1])) {
+      return { ...base, kind: 'post', articleSlug: scoped[1].toLowerCase() };
+    }
+    return null;
   }
 
   // ── /newpost/:n — an off-chain post's own slug ──
@@ -429,6 +435,8 @@ export function shareOrigin(): string {
 
 export const dehubLinkFor = {
   post: (tokenId: string | number) => `${shareOrigin()}/app/post/${tokenId}`,
+  /** An article's readable URL — /app/post/<first-ten-words-of-the-title>. */
+  article: (slug: string) => `${shareOrigin()}/app/post/${slug}`,
   /** An off-chain post's own slug — use for posts at status 'signed' with a newPostId. */
   newPost: (n: string | number) => `${shareOrigin()}/newpost/${n}`,
   comment: (tokenId: string | number, commentId: string | number) =>
