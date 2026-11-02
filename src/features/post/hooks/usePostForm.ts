@@ -59,6 +59,11 @@ import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
 
+// Title switch preference. The old key was also written whenever Article or
+// Comic was picked, which left the title stuck on for plain posts; the new
+// key starts everyone back at off.
+const SHOW_TITLE_PREF_KEY = 'post_show_title_v2';
+
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
 const ACTIVE_DRAFT_KEY = 'post_active_draft';
@@ -283,6 +288,7 @@ interface UsePostFormReturn {
     stopRecording: () => void;
     setSelectedCategory: import('@/hooks/use-draft-state').DraftSetter<string>;
     setShowTitle: (show: boolean) => void;
+    setShowTitlePref: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
     setIsForKids: (value: boolean) => void;
@@ -420,14 +426,16 @@ export function usePostForm(
   const categorySavedRef = useRef(false);
   const [showTitle, setShowTitle] = useState(() => {
     if (d?.showTitle != null) return d.showTitle;
-    try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
+    try { return localStorage.getItem(SHOW_TITLE_PREF_KEY) === 'true'; } catch { return false; }
   });
   const [titleText, setTitleText] = useDraftState(draftScope + ":titleText", d?.titleText ?? '');
 
-  // Persist title toggle preference
+  // Only the Title switch itself remembers the choice. Picking Article or
+  // Comic turns the title on for that post alone, so a plain post opened
+  // later still starts with the title off.
   const handleSetShowTitle = useCallback((value: boolean) => {
     setShowTitle(value);
-    try { localStorage.setItem('post_show_title', String(value)); } catch {}
+    try { localStorage.setItem(SHOW_TITLE_PREF_KEY, String(value)); } catch {}
   }, []);
 
   /**
@@ -2954,7 +2962,8 @@ export function usePostForm(
       stopRecording,
       setSelectedCategory,
       markCategorySaved: () => { categorySavedRef.current = true; },
-      setShowTitle: handleSetShowTitle,
+      setShowTitle,
+      setShowTitlePref: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
       setIsMature,
       setIsForKids,
