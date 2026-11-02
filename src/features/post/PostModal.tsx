@@ -219,8 +219,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const selectPostMode = () => {
     setArticleMode(false);
     actions.setLiveMode(null);
-    actions.setShowTitle(false);
-    actions.setPostLayout(null);
+    // Comic is a post option now (the ... menu), so Post keeps it on.
+    if (!comicMode) actions.setShowTitle(false);
   };
 
   // A comic is a photo post shown as collector cards: a title, then pages
@@ -233,6 +233,11 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     actions.setPostLayout('comic');
     actions.setIsPPV(false);
     actions.setIsTokenGated(false);
+  };
+
+  const exitComicMode = () => {
+    actions.setPostLayout(null);
+    actions.setShowTitle(false);
   };
 
   const selectLiveMode = (mode: 'video' | 'townhall') => {
@@ -262,9 +267,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     <>
       {!isQuoting && (
       <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
-        <button type="button" aria-pressed={!articleMode && state.liveMode === null && !comicMode} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null && !comicMode ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.a5554622c655", { defaultValue: "Post" })}</button>
-        <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={comicMode} onClick={selectComicMode} className={cn('transition-colors', comicMode ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy('comic.tab', { defaultValue: 'Comic' })}</button>
+        <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.a5554622c655", { defaultValue: "Post" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
         <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => selectLiveMode('video')} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.9d4e6fe6676d", { defaultValue: "Livestream" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
@@ -493,6 +496,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onCloseModal={closeKeepingDraft}
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
+        onToggleComic={isQuoting ? undefined : () => (comicMode ? exitComicMode() : selectComicMode())}
+        isComic={comicMode}
         onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
         hasContentWarning={state.contentWarning !== null}
       />
