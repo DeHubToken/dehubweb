@@ -919,6 +919,31 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   const [dubAvailable, setDubAvailable] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  // Hover volume: close on a short delay so the pointer can travel from the
+  // speaker icon to the slider, and never while the slider is being dragged.
+  const volumeCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const volumeDragging = useRef(false);
+  const openVolume = useCallback(() => {
+    if (volumeCloseTimer.current) { clearTimeout(volumeCloseTimer.current); volumeCloseTimer.current = null; }
+    setVolumeOpen(true);
+  }, []);
+  const closeVolumeSoon = useCallback(() => {
+    if (volumeDragging.current) return;
+    if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current);
+    volumeCloseTimer.current = setTimeout(() => { volumeCloseTimer.current = null; setVolumeOpen(false); }, 350);
+  }, []);
+  const startVolumeDrag = useCallback(() => {
+    volumeDragging.current = true;
+    const end = () => {
+      volumeDragging.current = false;
+      window.removeEventListener('pointerup', end);
+      window.removeEventListener('pointercancel', end);
+      if (!document.querySelector('[data-volume-hover]:hover')) closeVolumeSoon();
+    };
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+  }, [closeVolumeSoon]);
+  useEffect(() => () => { if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current); }, []);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   // This creator's own rate if they have one, otherwise the global default.
@@ -2892,8 +2917,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
@@ -2914,8 +2940,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
@@ -2975,8 +3004,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
@@ -2999,8 +3029,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
