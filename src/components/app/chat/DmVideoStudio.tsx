@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Check, Timer } from 'lucide-react';
+import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Trash2 } from 'lucide-react';
 import X from '@/components/ui/cut-icons/close';
 import Send from '@/components/ui/cut-icons/send';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -125,45 +125,67 @@ export function DmVideoCard({
  * Big playing preview with Cover, Trim, Mirror, Rotate and Hide, plus the
  * caption and Send, so a video can go out from here without closing it.
  */
-export function DmVideoStudio({
-  open,
-  onOpenChange,
-  url,
-  file,
-  duration,
-  options,
-  onOptionsChange,
-  onRemove,
+/** One photo or video waiting in the edit screen. */
+export interface DmStudioItem {
+  id: string;
+  file: File;
+  url: string;
+  kind: 'image' | 'video';
+  /** Seconds, once the video has loaded. */
+  duration?: number;
+  options: DmVideoOptions;
+  destruct: DmDestructChoice | null;
+  lockPrice: number | null;
+}
+
+export function DmMediaStudio({
+  items,
+  active,
+  onActiveChange,
+  onItemChange,
+  onRemoveItem,
+  onAddMore,
+  onClose,
+  allowLock,
+  allowTimer = true,
   caption,
   onCaptionChange,
   onSend,
   sendDisabled,
-  destruct = null,
-  onDestructChange,
-  lockPrice = null,
-  onLockPriceChange,
 }: {
-  /** Pay-to-unlock price in DHB; null = not locked. Absent handler = locking not offered here. */
-  lockPrice?: number | null;
-  onLockPriceChange?: (p: number | null) => void;
-  destruct?: DmDestructChoice | null;
-  onDestructChange?: (c: DmDestructChoice | null) => void;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  url: string;
-  file: File;
-  duration?: number;
-  options: DmVideoOptions;
-  onOptionsChange: (o: DmVideoOptions) => void;
-  onRemove: () => void;
+  items: DmStudioItem[];
+  active: number;
+  onActiveChange: (i: number) => void;
+  onItemChange: (i: number, patch: Partial<DmStudioItem>) => void;
+  onRemoveItem: (i: number) => void;
+  /** Opens the picker; what is picked joins this screen. */
+  onAddMore: () => void;
+  /** Closes the screen and drops everything in it. */
+  onClose: () => void;
+  allowLock?: boolean;
+  /** Self-destruct only exists in DMs. */
+  allowTimer?: boolean;
   caption: string;
   onCaptionChange: (v: string) => void;
   onSend: () => void;
   sendDisabled?: boolean;
 }) {
+  const item = items[Math.min(active, items.length - 1)];
+  const open = items.length > 0;
+  const isVideo = item?.kind === 'video';
+  const url = item?.url ?? '';
+  const file = item?.file;
+  const duration = item?.duration;
+  const options = item?.options ?? {};
+  const destruct = item?.destruct ?? null;
+  const lockPrice = item?.lockPrice ?? null;
+  const onOptionsChange = (o: DmVideoOptions) => onItemChange(active, { options: o });
+  const onDestructChange = (c: DmDestructChoice | null) => onItemChange(active, { destruct: c });
+  const onLockPriceChange = allowLock ? (p: number | null) => onItemChange(active, { lockPrice: p }) : undefined;
   const { t: _copy } = _useCopy();
-  const [tab, setTab] = useState<Tab>('trim');
-  const frames = useFilmstrip(url, duration, open && (tab === 'trim' || tab === 'cover'));
+  const [pickedTab, setTab] = useState<Tab>('trim');
+  const tab: Tab = isVideo ? pickedTab : (pickedTab === 'timer' && allowTimer ? 'timer' : 'hide');
+  const frames = useFilmstrip(isVideo ? url : null, duration, open && isVideo && (tab === 'trim' || tab === 'cover'));
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const stripRef = useRef<HTMLDivElement | null>(null);
   const drag = useRef<'start' | 'end' | null>(null);
@@ -198,45 +220,67 @@ export function DmVideoStudio({
     if (drag.current) { drag.current = null; const v = videoRef.current; if (v) { v.currentTime = start; void v.play().catch(() => undefined); } }
   };
 
-  const tabs: { key: Tab; label: string; icon: typeof Scissors }[] = [
+  const allTabs: { key: Tab; label: string; icon: typeof Scissors }[] = [
     { key: 'cover', label: _copy('dmVideo.cover', { defaultValue: 'Cover' }), icon: ImageIcon },
     { key: 'trim', label: _copy('dmVideo.trim', { defaultValue: 'Trim' }), icon: Scissors },
     { key: 'mirror', label: _copy('dmVideo.mirror', { defaultValue: 'Mirror' }), icon: FlipHorizontal2 },
     { key: 'rotate', label: _copy('dmVideo.rotate', { defaultValue: 'Rotate' }), icon: RotateCw },
     { key: 'hide', label: _copy('dmVideo.hide', { defaultValue: 'Hide' }), icon: EyeOff },
-    ...(onDestructChange ? [{ key: 'timer' as const, label: _copy('dmVideo.timer', { defaultValue: 'Timer' }), icon: Timer }] : []),
+    { key: 'timer', label: _copy('dmVideo.timer', { defaultValue: 'Timer' }), icon: Timer },
   ];
+  // Photos keep Hide (price) and Timer; the rest only means something for a video.
+  const tabs = allTabs.filter((t) =>
+    (t.key !== 'timer' || allowTimer)
+    && (isVideo || (t.key === 'hide' && allowLock) || t.key === 'timer'));
+  if (!item || !file) return null;
 
   const pct = (t: number) => (dur ? `${(t / dur) * 100}%` : '0%');
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DrawerContent column hideHandle className="dark-surface flex max-h-[94dvh] flex-col overflow-hidden border-zinc-800 bg-zinc-950 text-white">
-        <DrawerTitle className="sr-only">{_copy('dmVideo.sheetTitle', { defaultValue: 'Edit video' })}</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy('dmVideo.sheetTitleAny', { defaultValue: 'Edit before sending' })}</DrawerTitle>
         <div className="flex items-center justify-between px-3 pt-3">
           <button
             type="button"
-            onClick={() => { onRemove(); onOpenChange(false); }}
+            onClick={onClose}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white hover:bg-white/10"
-            aria-label={_copy('copy.595b066a8838', { defaultValue: 'Remove attachment' })}
+            aria-label={_copy('dmVideo.close', { defaultValue: 'Close' })}
           >
             <X className="h-4 w-4" />
           </button>
           <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-semibold tabular-nums">
-            {kept != null ? `${formatClock(kept)} · ` : ''}{formatAttachmentSize(file.size)}
+            {isVideo && kept != null ? `${formatClock(kept)} · ` : ''}{formatAttachmentSize(file.size)}
           </span>
           <button
             type="button"
-            onClick={() => onOpenChange(false)}
+            onClick={() => onRemoveItem(active)}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/5 text-white hover:bg-white/10"
-            aria-label={_copy('dmVideo.done', { defaultValue: 'Done' })}
+            aria-label={_copy('copy.595b066a8838', { defaultValue: 'Remove attachment' })}
           >
-            <Check className="h-4 w-4" />
+            <Trash2 className="h-4 w-4" />
           </button>
         </div>
 
         <div className="flex min-h-0 flex-1 items-center justify-center px-3 py-3">
+          {!isVideo ? (
+            <div className="relative overflow-hidden rounded-lg bg-black">
+              <img
+                src={url}
+                alt=""
+                className={cn('block max-h-[42vh] max-w-full object-contain transition-[filter] duration-500', lockPrice != null && 'blur-xl brightness-75')}
+              />
+              {destruct && <DestructChip choice={destruct} />}
+              {lockPrice != null && (
+                <span className="absolute bottom-2 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold">
+                  <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedFor', { defaultValue: 'Unlock for {{value1}} DHB', value1: lockPrice })}
+                </span>
+              )}
+            </div>
+          ) : (
           <DmVideoFrame
+            key={item.id}
+            onMeta={(m) => { if (!item.duration && Number.isFinite(m.dur)) onItemChange(active, { duration: m.dur }); }}
             src={url}
             options={{ ...options, coverAt: undefined }}
             maxW={Math.min(360, typeof window !== 'undefined' ? window.innerWidth - 24 : 360)}
@@ -258,9 +302,39 @@ export function DmVideoStudio({
               </span>
             )}
           </DmVideoFrame>
+          )}
+        </div>
+
+        {/* Everything going out together; + adds more. */}
+        <div className="flex items-center gap-2 overflow-x-auto px-3 pb-2 [scrollbar-width:none]">
+          {items.map((it, i) => (
+            <button
+              key={it.id}
+              type="button"
+              onClick={() => onActiveChange(i)}
+              aria-label={_copy('dmVideo.editItem', { defaultValue: 'Edit item {{value1}}', value1: i + 1 })}
+              aria-pressed={i === active}
+              className={cn('relative h-12 w-12 shrink-0 overflow-hidden rounded-md border-2 border-transparent bg-zinc-900', i === active && 'border-white')}
+            >
+              {it.kind === 'video'
+                ? <video src={it.url} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+                : <img src={it.url} alt="" className="h-full w-full object-cover" />}
+              {it.kind === 'video' && <Play className="absolute bottom-0.5 left-0.5 h-3 w-3 fill-white text-white" />}
+              {it.lockPrice != null && <Lock className="absolute right-0.5 top-0.5 h-3 w-3 text-white" />}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={onAddMore}
+            aria-label={_copy('dmVideo.addMore', { defaultValue: 'Add photos or videos' })}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md border border-dashed border-white/30 text-white hover:bg-white/10"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="flex flex-col gap-3 px-3 pb-[max(12px,env(safe-area-inset-bottom))]">
+          {tabs.length > 0 && <>
           <div role="tablist" className="flex justify-around border-b border-white/10">
             {tabs.map(({ key, label, icon: Icon }) => (
               <button
@@ -349,7 +423,7 @@ export function DmVideoStudio({
               </div>
             )}
             {tab === 'hide' && (
-              <div className="grid grid-cols-3 gap-1.5">
+              <div className={cn('grid gap-1.5', isVideo ? 'grid-cols-3' : 'grid-cols-2')}>
                 <HideOption
                   active={options.hidden !== 'reveal' && lockPrice == null}
                   onClick={() => { set({ hidden: undefined }); onLockPriceChange?.(null); }}
@@ -357,13 +431,13 @@ export function DmVideoStudio({
                   title={_copy('dmVideo.showNormally', { defaultValue: 'Show normally' })}
                   body={_copy('dmVideo.showNormallyBody', { defaultValue: 'They see it right away' })}
                 />
-                <HideOption
+                {isVideo && <HideOption
                   active={options.hidden === 'reveal' && lockPrice == null}
                   onClick={() => { set({ hidden: 'reveal' }); onLockPriceChange?.(null); }}
                   icon={<EyeOff className="h-3.5 w-3.5" />}
                   title={_copy('dmVideo.hideUntilTap', { defaultValue: 'Hide until tapped' })}
                   body={_copy('dmVideo.hideUntilTapBody', { defaultValue: 'Blurred until they tap it' })}
-                />
+                />}
                 <HideOption
                   disabled={!onLockPriceChange}
                   active={lockPrice != null}
@@ -377,9 +451,9 @@ export function DmVideoStudio({
               </div>
             )}
             {tab === 'hide' && lockPrice != null && onLockPriceChange && (
-              <LockPriceControl value={lockPrice} onChange={onLockPriceChange} kind="video" />
+              <LockPriceControl value={lockPrice} onChange={onLockPriceChange} kind={item.kind} />
             )}
-            {tab === 'timer' && onDestructChange && (
+            {tab === 'timer' && (
               <div className="space-y-2">
                 <div className="flex flex-wrap gap-1.5">
                   {([null, ...DESTRUCT_CHOICES] as (DmDestructChoice | null)[]).map((c) => (
@@ -401,16 +475,17 @@ export function DmVideoStudio({
                 </div>
                 <p className="text-[11px] leading-snug text-zinc-400">
                   {destruct == null
-                    ? _copy('dmVideo.timerOffBody', { defaultValue: 'The video stays in the chat.' })
+                    ? _copy('dmVideo.timerOffBody', { defaultValue: 'It stays in the chat.' })
                     : destruct === 'view'
-                      ? _copy('dmVideo.timerViewBody', { defaultValue: 'Gone for both of you once they have watched it.' })
+                      ? _copy('dmVideo.timerViewBody', { defaultValue: 'Gone for both of you once they have seen it.' })
                       : _copy('dmVideo.timerTimeBody', { defaultValue: 'Gone for both of you {{value1}} after you send it.', value1: destructLabel(destruct) })}
                 </p>
               </div>
             )}
           </div>
+          </>}
 
-          <div className="flex items-center gap-2 rounded-xl border border-white/15 py-1 pl-3 pr-1">
+          <div className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] p-1 pl-3">
             <input
               value={caption}
               onChange={(e) => onCaptionChange(e.target.value)}
@@ -422,8 +497,8 @@ export function DmVideoStudio({
               type="button"
               onClick={onSend}
               disabled={sendDisabled}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black disabled:opacity-40"
-              aria-label={_copy('dmVideo.send', { defaultValue: 'Send video' })}
+              className="flex h-9 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-black transition-opacity active:opacity-80 disabled:opacity-40"
+              aria-label={_copy('dmVideo.sendAll', { defaultValue: 'Send' })}
             >
               <Send className="h-4 w-4" />
             </button>
