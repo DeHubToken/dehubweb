@@ -16,13 +16,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { getAccountSummariesByUsernames } from '@/lib/api/dehub';
+import { getAccountSummaries, getAccountSummariesByUsernames, type CommentLikersResponse } from '@/lib/api/dehub';
+import type { AccountSummary } from '@/lib/api/dehub/users';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import type { PostReaction } from '@/lib/reactions';
+import { isPositiveReaction } from '@/lib/reactions';
 import {
   attachReactions,
+  type CommentMediaInput,
   buildThreads,
   resolveCommentAvatar,
   type CommentReactionRow,
@@ -196,9 +199,12 @@ export function useSubmitComment() {
       featureTitle,
       featureAuthorAddress,
       parentAuthorAddress,
+      media,
     }: {
       featureRequestId: string;
       content: string;
+      /** One photo, clip, audio file, voice note or GIF. */
+      media?: CommentMediaInput | null;
       /** The comment being replied to, or nothing for a new thread. */
       parentId?: string | null;
       featureTitle?: string | null;
@@ -220,6 +226,11 @@ export function useSubmitComment() {
           avatar: avatarPath,
           content: text,
           parent_id: parentId ?? null,
+          ...(media ? {
+            media_url: media.url,
+            media_type: media.type,
+            media_duration: media.duration ? Math.round(media.duration) : null,
+          } : {}),
         })
         .select()
         .single()
@@ -379,4 +390,61 @@ export function useReactToComment() {
       toast.error(_copy("copy.13931898084d", { defaultValue: "Failed to react" }));
     },
   });
+}
+
+/**
+ * Put one comment attachment in the shared `feature-media` bucket, under the
+ * commenter's own folder — the same bucket and layout request attachments use.
+ */
+export async function uploadFeatureCommentMedia(file: File, walletAddress: string): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'bin';
+  const path = `${walletAddress.toLowerCase()}/comment-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage
+    .from('feature-media')
+    .upload(path, file, { contentType: file.type || undefined, upsert: false, cacheControl: '31536000' });
+  if (error) throw error;
+  return supabase.storage.from('feature-media').getPublicUrl(path).data.publicUrl;
+}
+
+/**
+ * Who reacted positively to one Requests comment, in the likers sheet's shape.
+ *
+ * Unlike a post comment's list this one is public on the database side, but
+ * the sheet only opens from your own comment's thumb, same as on a post.
+ */
+export async function getFeatureCommentLikers(
+  commentId: string | number,
+  page = 0,
+  limit = 50,
+): Promise<CommentLikersResponse> {
+  const { data, error } = await supabase
+    .from('feature_request_comment_reactions')
+    .select('wallet_address, reaction, created_at')
+    .eq('comment_id', String(commentId))
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  const positive = (data || []).filter((row) => isPositiveReaction(row.reaction as PostReaction));
+  const slice = positive.slice(page * limit, page * limit + limit);
+  const accounts: AccountSummary[] = await getAccountSummaries(slice.map((row) => row.wallet_address)).catch(() => []);
+  const byAddress = new Map<string, AccountSummary>(accounts.map((account) => [account.address.toLowerCase(), account]));
+  return {
+    result: true,
+    canViewLikers: true,
+    data: slice.map((row) => {
+      const account = byAddress.get(row.wallet_address.toLowerCase());
+      return {
+        address: row.wallet_address,
+        username: account?.username ?? null,
+        displayName: account?.displayName ?? null,
+        avatarImageUrl: account?.avatarImageUrl ?? null,
+        badgeBalance: account?.badgeBalance ?? undefined,
+      };
+    }),
+    pagination: {
+      page,
+      limit,
+      totalCount: positive.length,
+      hasMore: (page + 1) * limit < positive.length,
+    },
+  } as CommentLikersResponse;
 }
