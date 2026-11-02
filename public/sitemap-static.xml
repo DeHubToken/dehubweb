@@ -1789,6 +1789,84 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dao"/>
   </url>
   <url>
+    <loc>https://dehub.io/nfts</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=ar</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=es</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=fr</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=nl</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=tr</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
     <loc>https://dehub.io/usernames</loc>
     <lastmod>2026-08-25</lastmod>
     <changefreq>daily</changefreq>

@@ -1,5 +1,5 @@
 {
-  "version": "5b538b60b21ec3e3",
+  "version": "602f979090234e99",
   "routes": {
     "/": [
       "ar",
@@ -1479,6 +1479,13 @@
       "tr"
     ],
     "/music": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/nfts": [
       "ar",
       "es",
       "fr",

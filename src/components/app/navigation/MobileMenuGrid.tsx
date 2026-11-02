@@ -38,7 +38,7 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Editor: 'videos', Creator: 'paint',
   Feedback: 'messages', Events: 'events', Leaderboard: 'trophy', 'Feature Requests': 'features', Staking: 'staking',
   SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao', Bounties: 'bounties',
-  Careers: 'careers', Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames',
+  Careers: 'careers', Stores: 'stores', Fractions: 'fractions', 'NFT Market': 'nfts', Usernames: 'usernames',
   Accounts: 'accounts', Advertising: 'ads', 'Live TV': 'tv', Prompt: 'wand',
   Glossary: 'glossary', 'Compare DeHub': 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
   Wallet: 'buy', Affiliate: 'subscriptions', Converter: 'videos', Migrate: 'bridge',

@@ -16,7 +16,7 @@ const PAGE_KEYS = [
   'wand', 'paint', 'communities', 'careers', 'features', 'glossary', 'governance',
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
-  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy',
+  'email', 'accounts', 'usernames', 'tv', 'superpowers', 'dao', 'staking', 'bridge', 'buy', 'nfts',
 ];
 const SUPERPOWER_KEYS = [
   'boost', 'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',

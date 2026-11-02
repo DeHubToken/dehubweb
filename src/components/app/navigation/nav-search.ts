@@ -293,7 +293,11 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   // the same thing, so both have to land here.
   Fractions: [
     'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
-    'tokenised', 'nft', 'erc1155', 'trade', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
+    'tokenised', 'erc1155', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
+  ],
+  'NFT Market': [
+    'nft', 'nfts', 'nft market', 'nft marketplace', 'buy nft', 'sell nft', 'list nft', 'collectibles',
+    'opensea', 'make an offer', 'trade', 'erc721', 'art',
   ],
   // Nobody hunting a handle types "usernames" — they type the thing they want
   // to change, which is their @name, or the thing they want to do with it.
