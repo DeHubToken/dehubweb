@@ -54,3 +54,74 @@ export function OverlayOpenTracker(): null {
   }, []);
   return null;
 }
+
+/*
+ * Android Back closes the open sheet
+ * ----------------------------------
+ * On a phone, the system Back gesture is a browser history step. Overlays never
+ * touched history, so Back with a sheet up ("Reacted by" from a notification,
+ * a post's menu, a tip drawer) left the page — or the whole site, when the tab
+ * was opened from a link — instead of closing the sheet.
+ *
+ * While any overlay is open on a touch screen, one extra history entry with the
+ * same URL sits on top (react-router's `idx` is kept, so its own Back handling
+ * is unaffected). Back pops that entry, and the topmost overlay is closed the
+ * way Escape closes it (Radix and vaul both listen for it on the document, and
+ * only the top layer answers). An overlay closed any other way removes the
+ * entry again, unless a navigation from inside the sheet already replaced it.
+ */
+const SENTINEL = '__dehubOverlay';
+let entryPushed = false;
+let ignoreNextPop = false;
+let backWired = false;
+
+function touchScreen(): boolean {
+  return typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
+}
+
+function onSentinel(): boolean {
+  const state = window.history.state as Record<string, unknown> | null;
+  return !!state && state[SENTINEL] === true;
+}
+
+function syncBackEntry() {
+  if (typeof window === 'undefined') return;
+  const want = openOverlayCount > 0 && touchScreen();
+  if (want && !entryPushed) {
+    window.history.pushState({ ...(window.history.state ?? {}), [SENTINEL]: true }, '');
+    entryPushed = true;
+  } else if (!want && entryPushed) {
+    entryPushed = false;
+    if (onSentinel()) {
+      ignoreNextPop = true;
+      window.history.back();
+    }
+  }
+}
+
+function wireBack() {
+  if (backWired || typeof window === 'undefined') return;
+  backWired = true;
+  window.addEventListener('popstate', () => {
+    if (ignoreNextPop) {
+      ignoreNextPop = false;
+      return;
+    }
+    if (entryPushed && openOverlayCount > 0) {
+      entryPushed = false;
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
+      // An overlay that refuses Escape (unsaved input) stays up: put the
+      // entry back so the next Back is still caught.
+      setTimeout(syncBackEntry, 0);
+      return;
+    }
+    // Landed on an entry left behind by a sheet that navigated away: step past
+    // it so Back never looks like it did nothing.
+    if (openOverlayCount === 0 && onSentinel()) window.history.back();
+  });
+}
+
+listeners.add(() => {
+  wireBack();
+  syncBackEntry();
+});
