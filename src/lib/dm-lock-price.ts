@@ -4,9 +4,13 @@
  * holds whatever DHB does. The server works out the live DHB (`lock.price`);
  * these helpers cover the composer and anything the server has not priced.
  */
-import { DHB_PRELISTING_USD, dhbForUsd } from '@/lib/subscription-pricing';
 
-export { DHB_PRELISTING_USD };
+/**
+ * Fixed DHB sale price while trading is paused. Same value as
+ * DHB_PRELISTING_USD in subscription-pricing.ts; kept here so the DM API
+ * does not pull in i18n through that module.
+ */
+export const DHB_PRELISTING_USD = 0.001;
 
 export const LOCK_QUICK_USD = [1, 5, 10];
 export const LOCK_DEFAULT_USD = 5;
@@ -21,8 +25,8 @@ export function formatLockUsd(usd: number): string {
 
 /** DHB for a dollar price, rounded up to two decimals. */
 export function lockDhbForUsd(usd: number, rate = DHB_PRELISTING_USD): number {
-  const dhb = dhbForUsd(usd, rate);
-  return dhb === null ? 0 : Math.ceil(dhb * 100) / 100;
+  if (!(usd > 0) || !(rate > 0)) return 0;
+  return Math.ceil((usd / rate) * 100) / 100;
 }
 
 export function formatLockDhb(dhb: number): string {
