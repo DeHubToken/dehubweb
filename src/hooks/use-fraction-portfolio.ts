@@ -23,7 +23,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { getMyPosts, searchNFTs } from '@/lib/api/dehub/feed';
 import { getFractionBalance } from '@/lib/api/token-holders';
-import { buildImageUrl } from '@/lib/media-url';
+import { fractionImageFor } from '@/lib/fraction-thumb';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -115,7 +115,7 @@ export function useFractionPortfolio(address: string | null | undefined) {
               tokenId,
               chainId: (post as { chainId?: number }).chainId || 8453,
               title: post.name || post.title || null,
-              imageUrl: buildImageUrl(post.tokenId, post.imageUrl, 400) || null,
+              imageUrl: fractionImageFor(post, 400) || null,
               postType: post.postType || null,
               isCreator: true,
             });
@@ -136,7 +136,7 @@ export function useFractionPortfolio(address: string | null | undefined) {
               tokenId,
               chainId: (post as { chainId?: number }).chainId || 8453,
               title: post.name || post.title || null,
-              imageUrl: buildImageUrl(post.tokenId, post.imageUrl, 400) || null,
+              imageUrl: fractionImageFor(post, 400) || null,
               postType: post.postType || null,
               isCreator: true,
             });

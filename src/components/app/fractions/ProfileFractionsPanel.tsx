@@ -12,9 +12,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Tag, ImageIcon } from 'lucide-react';
+import { Loader2, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { cdnImage } from '@/lib/media-url';
+import { FractionThumb } from './FractionThumb';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
 import { TOTAL_FRACTIONS } from '@/hooks/use-fraction-marketplace';
@@ -88,7 +88,6 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {positions.map((position) => {
-          const thumb = position.imageUrl ? cdnImage(position.imageUrl, { width: 300 }) : '';
           return (
             <div
               key={`${position.chainId}-${position.tokenId}`}
@@ -99,18 +98,13 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
                 className="w-full text-left"
               >
                 <div className="aspect-square bg-white/5 relative overflow-hidden">
-                  {thumb ? (
-                    <img
-                      src={thumb}
-                      alt={position.title || t('fractions.postNumber', { id: position.tokenId })}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/20">
-                      <ImageIcon className="w-7 h-7" />
-                    </div>
-                  )}
+                  <FractionThumb
+                    tokenId={String(position.tokenId)}
+                    imageUrl={position.imageUrl}
+                    title={position.title}
+                    postType={position.postType}
+                    width={300}
+                  />
                   <span data-on-media className="absolute top-2 left-2 text-[10px] font-semibold bg-black/70 text-white/90 px-1.5 py-0.5 rounded backdrop-blur-sm">
                     {position.balance} / {TOTAL_FRACTIONS}
                   </span>
