@@ -20,10 +20,10 @@ import {
   rateLimitByIp,
   serviceClient,
 } from "../_shared/auth.ts";
+import { aiChat } from "../_shared/ai-chat.ts";
 import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } from "../_shared/builder-host.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
-const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
 // Model picker: "best" (default) for the hard codegen path, "fast" for quick edits.
 const BUILD_MODELS: Record<string, string> = {
   best: "google/gemini-2.5-pro",
@@ -182,28 +182,24 @@ function editUserPrompt(
   return `CURRENT FILES:\n${fileBlock}\n\nRECENT CONVERSATION:\n${convo}\n\nCHANGE REQUEST: ${request}`;
 }
 
-async function callGateway(system: string, user: string, model: string): Promise<string> {
-  const key = Deno.env.get("LOVABLE_API_KEY");
-  if (!key) throw new Error("LOVABLE_API_KEY not configured");
-  const res = await fetch(GATEWAY_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+// Google direct on GEMINI_API_KEY only. The metered gateway is never a
+// fallback here: one build is ~32k output tokens billed to the same credit
+// pool that pays for deploys.
+async function callModel(system: string, user: string, model: string): Promise<string> {
+  const res = await aiChat(
+    {
       model,
       messages: [
         { role: "system", content: system },
         { role: "user", content: user },
       ],
       max_completion_tokens: 32000,
-    }),
-    signal: AbortSignal.timeout(300_000),
-  });
+    },
+    { label: "builder-api", skipGateway: true, noFree: true, signal: AbortSignal.timeout(300_000) },
+  );
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(`AI gateway error (${res.status}): ${body.slice(0, 200)}`);
+    throw new Error(`AI provider error (${res.status}): ${body.slice(0, 200)}`);
   }
   const data = await res.json();
   const text: string = data.choices?.[0]?.message?.content || "";
@@ -337,7 +333,7 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
   try {
     await setStatus(db, projectId, "generating", "The AI is designing your app");
     await log(db, projectId, "🧠 Writing your app…");
-    const raw = await callGateway(GENERATE_SYSTEM, `Build this web app: ${prompt}`, model);
+    const raw = await callModel(GENERATE_SYSTEM, `Build this web app: ${prompt}`, model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     const slug = await ensureSlug(db, projectId, app.name);
@@ -410,7 +406,7 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
 
     await setStatus(db, projectId, "updating", "The AI is applying your changes");
     await log(db, projectId, "🛠️ Updating your app…");
-    const raw = await callGateway(EDIT_SYSTEM, editUserPrompt(files, conversation, request), model);
+    const raw = await callModel(EDIT_SYSTEM, editUserPrompt(files, conversation, request), model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     await ensureSlug(db, projectId, app.name);
