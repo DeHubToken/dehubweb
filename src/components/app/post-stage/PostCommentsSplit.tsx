@@ -13,7 +13,13 @@ const SLIDE = { type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] } as con
  * drawers' liquid glass (post-stage.css, [data-comments-split]). The logo and
  * the top pill are left alone: no scrim, no shade over them.
  */
-export function PostCommentsSplit({ onClose, children }: { onClose: () => void; children: ReactNode }) {
+export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }: {
+  onClose: () => void;
+  children: ReactNode;
+  /** Feed cards: the feed stays put above the sheet, so a tap up there
+   *  closes the sheet instead of reaching (or scrolling) the feed. */
+  closeOnTapAbove?: boolean;
+}) {
   const pullDismiss = useCommentsPullDismiss(onClose);
   // While typing, sit on the keyboard instead of under it.
   const typing = useKeyboardOpen(true);
@@ -41,6 +47,16 @@ export function PostCommentsSplit({ onClose, children }: { onClose: () => void; 
   // Portalled: the post page's rise-in animation leaves a transform on an
   // ancestor, which would pin a fixed sheet to the page instead of the screen.
   return createPortal(
+    <>
+    {closeOnTapAbove && (
+      <div
+        data-comments-split-catch
+        data-no-navigate
+        aria-hidden
+        onClick={onClose}
+        onWheel={e => e.preventDefault()}
+      />
+    )}
     <motion.div
       data-comments-split
       data-no-navigate
@@ -61,7 +77,8 @@ export function PostCommentsSplit({ onClose, children }: { onClose: () => void; 
         <i />
       </motion.div>
       <CommentsSplitContext.Provider value>{children}</CommentsSplitContext.Provider>
-    </motion.div>,
+    </motion.div>
+    </>,
     document.body,
   );
 }
