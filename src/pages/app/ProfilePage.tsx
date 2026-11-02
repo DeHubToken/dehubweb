@@ -757,7 +757,7 @@ export default function ProfilePage() {
                     )}
                   >
                     <tab.icon className="w-[18px] h-[18px] relative z-10" />
-                    <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count}</span>
+                    <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count ?? '\u00a0'}</span>
                   </button>
                 );
               })}
