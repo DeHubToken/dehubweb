@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { useUpdateCommunity, type Community } from '@/hooks/use-communities';
 import { DescriptionWithLinks } from './DescriptionWithLinks';
+import { TopHolders } from './TopHolders';
 
 interface CommunityAboutProps {
   community: Community;
@@ -131,6 +132,7 @@ export function CommunityAbout({ community, canManageSettings: canEdit = false }
           </ol>
         </div>
       )}
+      <TopHolders community={community} />
     </div>
   );
 }

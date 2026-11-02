@@ -1,4 +1,6 @@
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
+import { holderGateOf } from '@/hooks/use-holder-gate';
+import { HolderGateChip } from './HolderGateChip';
 import { useRef, useState, useCallback } from 'react';
 import { LogIn, Crown, Pin, PinOff, TrendingUp, FileText, Clock } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
@@ -75,6 +77,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateCommunity();
+  const holderGate = holderGateOf(community);
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
   const [showTickerInput, setShowTickerInput] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -328,6 +331,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           </div>
         )}
         <p className="text-white text-sm">{community.member_count.toLocaleString()} {t('communities.members')}</p>
+        {holderGate && <HolderGateChip gate={holderGate} />}
       </div>
 
       {/* Ticker */}

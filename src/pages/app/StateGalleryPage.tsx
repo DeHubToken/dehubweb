@@ -75,6 +75,10 @@ import type { DeHubPoll } from '@/lib/api/dehub';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { Community, PinnedCommunity } from '@/hooks/use-communities';
+import { holderGateOf } from '@/hooks/use-holder-gate';
+import { HolderGateChip } from '@/components/app/communities/HolderGateChip';
+import { TopHolders } from '@/components/app/communities/TopHolders';
+import { HoldersTab } from '@/components/app/communities/manage/HoldersTab';
 import { DraftVideoProgress } from '@/features/post/components/DraftVideoProgress';
 import { PostProcessingPill } from '@/components/app/PostProcessingDock';
 import type { PostProcessingPhase } from '@/store/postProcessingStore';
@@ -878,6 +882,7 @@ export default function StateGalleryPage() {
         <ProposalCardGallery />
         <AgentWelcomeGallery />
         <LiveViewerGallery />
+        <HolderGroupGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -1090,6 +1095,55 @@ const GALLERY_AUDIENCE: LiveAudience = {
     { address: '0x00000000000000000000000000000000000000b1', username: 'kira', displayName: 'Kira', messages: 19 },
   ],
 };
+
+const GALLERY_HOLDER_COMMUNITY = {
+  ...GALLERY_COMMUNITY,
+  id: 'gallery-holder-community',
+  ticker_symbol: 'DHB', ticker_chain_id: '56',
+  holder_gate_chain_id: 56,
+  holder_gate_token: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
+  holder_gate_min: 1000, holder_gate_symbol: 'DHB', holder_gate_decimals: 18,
+} as Community;
+
+/** A holder group: the header tag, the owner's Holders tab and Top holders. */
+function HolderGroupGallery() {
+  const queryClient = useQueryClient();
+  useState(() => {
+    const holders = [
+      ['0x00000000000000000000000000000000000000b2', 2_450_000],
+      ['0x00000000000000000000000000000000000000b1', 812_300],
+      ['0x00000000000000000000000000000000000000b3', 120_000],
+      ['0x00000000000000000000000000000000000000b4', 18_750],
+      ['0x00000000000000000000000000000000000000b5', 1_200],
+    ].map(([wallet_address, balance]) => ({ wallet_address, balance, checked_at: minutesAgo(3) }));
+    queryClient.setQueryData(['communities', 'holders', GALLERY_HOLDER_COMMUNITY.id], holders);
+    queryClient.setQueryData(['wallet-profiles', holders.map(h => h.wallet_address).sort().join(',')], {
+      '0x00000000000000000000000000000000000000b1': { address: '0x00000000000000000000000000000000000000b1', displayName: 'Kira' },
+      '0x00000000000000000000000000000000000000b2': { address: '0x00000000000000000000000000000000000000b2', displayName: 'Dex' },
+      '0x00000000000000000000000000000000000000b3': { address: '0x00000000000000000000000000000000000000b3', displayName: 'Juno' },
+      '0x00000000000000000000000000000000000000b4': { address: '0x00000000000000000000000000000000000000b4', displayName: 'Oto' },
+    });
+  });
+  const gate = holderGateOf(GALLERY_HOLDER_COMMUNITY)!;
+  return (
+    <section data-page-bento data-holder-group-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Holder groups</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <p className="text-white text-lg font-bold">{GALLERY_HOLDER_COMMUNITY.name}</p>
+            <p className="text-white text-sm">{GALLERY_HOLDER_COMMUNITY.member_count.toLocaleString()} members</p>
+            <HolderGateChip gate={gate} />
+            <div className="mt-4"><TopHolders community={GALLERY_HOLDER_COMMUNITY} /></div>
+          </div>
+          <div data-holders-tab-frame className="rounded-2xl border border-white/10 p-3.5">
+            <HoldersTab community={GALLERY_HOLDER_COMMUNITY} membership={null} />
+          </div>
+        </div>
+      </AuthContext.Provider>
+    </section>
+  );
+}
 
 /** The phone live viewer's chrome over a stand-in picture, with a seeded Who's here. */
 function LiveViewerGallery() {
