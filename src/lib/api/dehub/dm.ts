@@ -6,6 +6,7 @@ import { getAccountSummaries, type AccountSummary } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { MediaDescriptor, MediaKind } from '@/lib/dm-e2ee/media';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { DHB_PRELISTING_USD } from '@/lib/dm-lock-price';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
 
@@ -95,7 +96,12 @@ export interface ReplyPreview {
  * `mediaUrls[0]` is always the blurred preview.
  */
 export interface DmLock {
+  /** DHB to pay right now for `priceUsd` (live rate on reads, send-time quote on sockets). */
   price: number;
+  /** What the buyer pays, in USD. */
+  priceUsd?: number;
+  /** DHB rate the server used for `price`. */
+  dhbPriceUsd?: number;
   symbol: string;
   kind: 'image' | 'video';
   previewUrl: string | null;
@@ -294,7 +300,7 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
   };
 }
 
-type RawLock = Partial<DmLock> & { price?: number | string; unlockCount?: number | string };
+type RawLock = Partial<DmLock> & { price?: number | string; priceUsd?: number | string; dhbPriceUsd?: number | string; unlockCount?: number | string };
 
 export function parseDmLock(input: unknown, mine: boolean): DmLock | null {
   if (!input || typeof input !== 'object') return null;
@@ -302,6 +308,8 @@ export function parseDmLock(input: unknown, mine: boolean): DmLock | null {
   if (!(Number(raw.price) > 0)) return null;
   return {
     price: Number(raw.price),
+    ...(Number(raw.priceUsd) > 0 && { priceUsd: Number(raw.priceUsd) }),
+    ...(Number(raw.dhbPriceUsd) > 0 && { dhbPriceUsd: Number(raw.dhbPriceUsd) }),
     symbol: raw.symbol || 'DHB',
     kind: raw.kind === 'video' ? 'video' : 'image',
     previewUrl: raw.previewUrl ?? null,
@@ -680,7 +688,7 @@ export async function uploadAndSendMedia(
     mediaOptions?: DmVideoOptions;
     /** Self-destruct choice; works for encrypted files too (only the timer is in the clear). */
     destruct?: DmDestructChoice;
-    /** Put the photo or video behind this price (DHB). Never combined with encryptedKind. */
+    /** Put the photo or video behind this price, in USD. Never combined with encryptedKind. */
     lockPrice?: number;
   }
 ): Promise<DmMessage> {
@@ -698,7 +706,11 @@ export async function uploadAndSendMedia(
   if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
   if (opts?.mediaOptions) formData.append('mediaOptions', JSON.stringify(opts.mediaOptions));
   if (opts?.destruct) formData.append('destruct', String(opts.destruct));
-  if (opts?.lockPrice && opts.lockPrice > 0 && !opts.encryptedKind) formData.append('lockPrice', String(opts.lockPrice));
+  if (opts?.lockPrice && opts.lockPrice > 0 && !opts.encryptedKind) {
+    formData.append('lockPriceUsd', String(opts.lockPrice));
+    // The DHB figure too, for a server that predates dollar prices.
+    formData.append('lockPrice', String(Math.max(1, Math.ceil(opts.lockPrice / DHB_PRELISTING_USD))));
+  }
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,

@@ -15,7 +15,8 @@ import {
 } from '@/lib/dm-video-options';
 import { DESTRUCT_CHOICES, destructLabel, destructShort, type DmDestructChoice } from '@/lib/dm-destruct';
 import { DmVideoFrame } from './DmVideo';
-import { LockPriceControl, LOCK_QUICK_PRICES } from './LockPriceControl';
+import { LockPriceControl } from './LockPriceControl';
+import { LOCK_DEFAULT_USD, formatLockUsd } from '@/lib/dm-lock-price';
 
 type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
 const FRAME_COUNT = 10;
@@ -253,7 +254,7 @@ export function DmVideoStudio({
             {destruct && <DestructChip choice={destruct} />}
             {lockPrice != null && (
               <span className="absolute bottom-2 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold">
-                <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedFor', { defaultValue: 'Unlock for {{value1}} DHB', value1: lockPrice })}
+                <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedForUsd', { defaultValue: 'Unlock for {{value1}}', value1: formatLockUsd(lockPrice) })}
               </span>
             )}
           </DmVideoFrame>
@@ -366,7 +367,7 @@ export function DmVideoStudio({
                 <HideOption
                   disabled={!onLockPriceChange}
                   active={lockPrice != null}
-                  onClick={() => { set({ hidden: undefined }); if (lockPrice == null) onLockPriceChange?.(LOCK_QUICK_PRICES[1]); }}
+                  onClick={() => { set({ hidden: undefined }); if (lockPrice == null) onLockPriceChange?.(LOCK_DEFAULT_USD); }}
                   icon={<Lock className="h-3.5 w-3.5" />}
                   title={_copy('dmVideo.hidePrice', { defaultValue: 'Hide behind a price' })}
                   body={onLockPriceChange
