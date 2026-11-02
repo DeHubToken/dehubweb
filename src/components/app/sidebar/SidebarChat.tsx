@@ -42,6 +42,7 @@ import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import type { BadgeLock } from '@/lib/staking-badges';
 import { toast } from 'sonner';
+import { wasShownToUser } from '@/lib/chat-refusal';
 import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
@@ -322,7 +323,8 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[SidebarChat] Voice upload failed:', err);
-      toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
+      if (wasShownToUser(err)) toast.dismiss(toastId);
+      else toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
   }, [isAuthenticated, openLoginModal, send, replyTo, _copy]);
 
@@ -345,7 +347,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       setNewMessage(current => current === newMessage ? '' : current);
     } catch (err) {
       console.error('[SidebarChat] Send failed:', err);
-      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
+      if (!wasShownToUser(err)) toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
     } finally {
       mediaSendInFlight.current = false;
       setUploadingImage(false);
@@ -368,7 +370,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       await send('', 'gif', gifUrl, replyToId);
     } catch (err) {
       console.error('[SidebarChat] GIF send failed:', err);
-      toast.error(_copy("copy.f59dcbd274a8", { defaultValue: "Failed to send GIF" }));
+      if (!wasShownToUser(err)) toast.error(_copy("copy.f59dcbd274a8", { defaultValue: "Failed to send GIF" }));
     }
   };
 
