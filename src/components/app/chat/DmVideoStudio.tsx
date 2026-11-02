@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Pause, Trash2, Check } from 'lucide-react';
+import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Pause, Trash2, Check, Type } from 'lucide-react';
 import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ import { DmVideoFrame } from './DmVideo';
 import { LockPriceControl } from './LockPriceControl';
 import { LOCK_DEFAULT_USD, formatLockUsd } from '@/lib/dm-lock-price';
 
-export type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
+export type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer' | 'alt';
 const FRAME_COUNT = 10;
 const MIN_KEEP = 1;
 
@@ -136,6 +136,8 @@ export interface DmStudioItem {
   options: DmVideoOptions;
   destruct: DmDestructChoice | null;
   lockPrice: number | null;
+  /** Alt text, where the place it goes keeps one (posts). */
+  description?: string;
 }
 
 export function DmMediaStudio({
@@ -149,6 +151,8 @@ export function DmMediaStudio({
   onClose,
   allowLock,
   allowTimer = true,
+  allowAlt = false,
+  onDropFiles,
   open: openProp,
   onConfirm,
   confirmLabel,
@@ -168,6 +172,10 @@ export function DmMediaStudio({
   allowLock?: boolean;
   /** Self-destruct only exists in DMs. */
   allowTimer?: boolean;
+  /** Shows the Alt text tab. */
+  allowAlt?: boolean;
+  /** Files dropped on the screen join it (or are just kept off the page). */
+  onDropFiles?: (files: FileList) => void;
   /** Defaults to open while anything is picked. */
   open?: boolean;
   /** Confirm: keeps the choices and goes back. */
@@ -241,9 +249,10 @@ export function DmMediaStudio({
     { key: 'rotate', label: _copy('dmVideo.rotate', { defaultValue: 'Rotate' }), icon: RotateCw },
     { key: 'hide', label: _copy('dmVideo.hide', { defaultValue: 'Hide' }), icon: EyeOff },
     { key: 'timer', label: _copy('dmVideo.timer', { defaultValue: 'Timer' }), icon: Timer },
+    { key: 'alt', label: _copy('altText.tab', { defaultValue: 'Alt text' }), icon: Type },
   ];
   // Photos keep Hide (price) and Timer; the rest only means something for a video.
-  const tabs = allTabs.filter((t) => (!onlyTabs || onlyTabs.includes(t.key)) &&
+  const tabs = allTabs.filter((t) => (!onlyTabs || onlyTabs.includes(t.key)) && (t.key !== 'alt' || allowAlt) &&
     (t.key !== 'timer' || allowTimer)
     && (isVideo || (t.key === 'hide' && allowLock) || t.key === 'timer'));
   if (!item || !file) return null;
@@ -252,7 +261,15 @@ export function DmMediaStudio({
 
   return (
     <Drawer open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
-      <DrawerContent column hideHandle className="dark-surface flex max-h-[94dvh] flex-col overflow-hidden border-zinc-800 bg-zinc-950 text-white">
+      <DrawerContent
+        column
+        hideHandle
+        className="dark-surface flex max-h-[94dvh] flex-col overflow-hidden border-zinc-800 bg-zinc-950 text-white"
+        // Files dropped here join this screen, not the page-wide "new post" drop.
+        data-drop-attach
+        onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } }}
+        onDrop={(e) => { if (!e.dataTransfer.types.includes('Files')) return; e.preventDefault(); onDropFiles?.(e.dataTransfer.files); }}
+      >
         <DrawerTitle className="sr-only">{_copy('dmVideo.sheetTitleAny', { defaultValue: 'Edit before sending' })}</DrawerTitle>
         <div className="flex items-center justify-between px-3 pt-3">
           <button
@@ -511,6 +528,19 @@ export function DmMediaStudio({
             )}
             {tab === 'hide' && lockPrice != null && onLockPriceChange && (
               <LockPriceControl value={lockPrice} onChange={onLockPriceChange} kind={item.kind} />
+            )}
+            {tab === 'alt' && (
+              <div className="space-y-1.5">
+                <textarea
+                  value={item.description ?? ''}
+                  onChange={(e) => onItemChange(active, { description: e.target.value })}
+                  maxLength={1000}
+                  rows={3}
+                  placeholder={isVideo ? _copy('altText.placeholderVideo', { defaultValue: 'Describe this video' }) : _copy('altText.placeholder', { defaultValue: 'Describe this photo' })}
+                  className="w-full resize-none rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-zinc-500 focus:border-white/40 focus:outline-none"
+                />
+                <p className="text-[11px] text-zinc-400">{_copy('altText.hint', { defaultValue: 'Say what is in it for people who cannot see it.' })}</p>
+              </div>
             )}
             {tab === 'timer' && (
               <div className="space-y-2">
