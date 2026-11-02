@@ -265,6 +265,19 @@ describe('hls-vod', () => {
     expect(videoSourceOf(el)).toBeNull();
   });
 
+  it('leaves a ladder alone while its master playlist is still loading', async () => {
+    const el = video();
+    el.preload = 'auto';
+    setVideoSource(el, { src: MP4, hls: freshLadder() });
+    await flush();
+    const [player] = instances;
+    // A stall check fires before the manifest arrives (the first short opening).
+    reloadVideoSource(el);
+    expect(player.stopLoad).not.toHaveBeenCalled();
+    player.emit(FakeHls.Events.MANIFEST_PARSED);
+    expect(player.startLoad).toHaveBeenCalledTimes(1);
+  });
+
   it('reloads a ladder through hls.js, never load(), which would detach its MediaSource', async () => {
     const el = video();
     el.preload = 'metadata';

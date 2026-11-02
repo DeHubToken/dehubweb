@@ -338,7 +338,10 @@ export function reloadVideoSource(el: Pick<HTMLVideoElement, 'load' | 'error'>):
     return;
   }
   const player = session.player;
-  if (!player) return;
+  // Still fetching the master playlist: there is nothing to restart yet, and
+  // hls.js's stopLoad() aborts that fetch with nothing to start it again, so
+  // the video would sit on a spinner for good.
+  if (!player || !session.parsed) return;
   if (el.error) {
     player.recoverMediaError();
     return;
