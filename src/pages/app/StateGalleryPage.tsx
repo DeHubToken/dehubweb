@@ -210,6 +210,7 @@ const GALLERY_AUTH = {
 } as unknown as AuthContextType;
 
 import { ComicDeck } from '@/components/app/comic/ComicDeck';
+import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
@@ -417,6 +418,38 @@ function PostOptionsGallery() {
         hasContentWarning={warning}
       />
       </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Phone feed filter line: every active filter in one line, plus presets. Tap a line to open it. */
+function FeedFilterLineGallery() {
+  const base = [
+    { key: 'type', group: 'Type', label: 'Articles' },
+    { key: 'tag', group: 'Tag', label: '#music' },
+    { key: 'date', group: 'Date', label: '1w' },
+    { key: 'sort', group: 'Sort', label: 'Most Liked' },
+    { key: 'ppv', group: 'Access', label: 'PPV' },
+  ];
+  const [items, setItems] = useState(base);
+  const live = items.map((i) => ({ ...i, onRemove: () => setItems((xs) => xs.filter((x) => x.key !== i.key)) }));
+  return (
+    <section data-page-bento data-feed-filter-line-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Feed filter line</h2>
+      <div className="flex max-w-[390px] flex-col gap-3">
+        <FeedFilterLine items={live} onClearAll={() => setItems(base)} onSavePreset={() => {}} />
+        <FeedFilterLine items={live.slice(0, 3)} presetName="Long reads" onClearAll={() => {}} onSavePreset={() => {}} />
+        <div className="rounded-2xl border border-white/10 bg-black/60 p-4">
+          <FeedPresetsRow
+            presets={[{ name: 'Long reads' }, { name: 'Music this week' }, { name: 'Bounties' }]}
+            activeName="Long reads"
+            onApply={() => {}}
+            onDelete={() => {}}
+            onSaveCurrent={() => {}}
+            canSaveCurrent
+          />
+        </div>
+      </div>
     </section>
   );
 }
@@ -1209,6 +1242,7 @@ export default function StateGalleryPage() {
         <AppTokensGallery />
         <AudioGallery />
         <PostOptionsGallery />
+        <FeedFilterLineGallery />
         <AltPillGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
