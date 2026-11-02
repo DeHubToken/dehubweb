@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bookmark, ChevronUp, SlidersHorizontal, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { MAX_PRESET_NAME } from '@/lib/feed-presets';
-
-export const FEED_FILTER_LINE_SAVE_EVENT = 'feed-filter-line-save';
+import { FEED_FILTER_LINE_SAVE_EVENT, MAX_PRESET_NAME } from '@/lib/feed-presets';
 
 export interface FeedFilterLineItem {
   key: string;
@@ -290,3 +288,5 @@ export function FeedPresetsRow({
     </div>
   );
 }
+
+export default FeedFilterLine;

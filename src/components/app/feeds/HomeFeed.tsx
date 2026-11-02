@@ -17,7 +17,7 @@ import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -123,10 +123,14 @@ import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
 import { FollowTagBar } from './FollowTagBar';
-import { FeedFilterLine, FeedPresetsRow, FEED_FILTER_LINE_SAVE_EVENT, type FeedFilterLineItem } from './FeedFilterLine';
+import type { FeedFilterLineItem } from './FeedFilterLine';
+// Phone-only and shown once a filter is on: kept off the boot path.
+const FeedFilterLine = lazy(() => import('./FeedFilterLine'));
+const FeedPresetsRow = lazy(() => import('./FeedFilterLine').then((m) => ({ default: m.FeedPresetsRow })));
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   FEED_PRESETS_CHANGED_EVENT,
+  FEED_FILTER_LINE_SAVE_EVENT,
   deleteFeedPreset,
   presetMatches,
   readFeedPresets,
@@ -1997,14 +2001,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 presetsRow={isPhone ? (
-                  <FeedPresetsRow
+                  <Suspense fallback={null}><FeedPresetsRow
                     presets={feedPresets}
                     activeName={activePresetName}
                     onApply={applyPreset}
                     onDelete={deleteFeedPreset}
                     canSaveCurrent={filterLineItems.length > 0 && !activePresetName}
                     onSaveCurrent={() => window.dispatchEvent(new CustomEvent(FEED_FILTER_LINE_SAVE_EVENT))}
-                  />
+                  /></Suspense>
                 ) : undefined}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
@@ -2038,13 +2042,13 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         if (isPhone) {
           if (phoneShowsTagBar || filterLineItems.length === 0) return null;
           const line = (
-            <FeedFilterLine
+            <Suspense fallback={null}><FeedFilterLine
               className={chipsTarget ? 'mt-2' : 'mb-3'}
               items={filterLineItems}
               presetName={activePresetName}
               onClearAll={clearAllFilters}
               onSavePreset={(name) => saveFeedPreset({ name, ...currentPresetShape })}
-            />
+            /></Suspense>
           );
           return chipsTarget ? createPortal(line, chipsTarget) : line;
         }

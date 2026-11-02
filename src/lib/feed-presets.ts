@@ -20,6 +20,8 @@ export const MAX_PRESET_NAME = 24;
 
 /** Fired on window when the saved presets change here or arrive from the account. */
 export const FEED_PRESETS_CHANGED_EVENT = 'feed-presets-changed';
+/** "+ Save current" in the filter panel asks the filter line to open in save mode. */
+export const FEED_FILTER_LINE_SAVE_EVENT = 'feed-filter-line-save';
 
 export type PresetAccess = 'ppv' | 'w2e' | 'locked';
 
