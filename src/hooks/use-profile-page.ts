@@ -187,12 +187,17 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // Reset the toolbar when the visitor moves to another profile — a query
   // typed on one channel has no meaning on the next, and neither does a
   // category the next creator never posts in.
+  // Only the profile changing resets it. Reading the query through a ref keeps
+  // each keystroke from re-running this and wiping what was just typed.
+  const contentSearchRef = useRef(contentSearch);
+  contentSearchRef.current = contentSearch;
   useEffect(() => {
     setContentSort('newest');
-    setContentSearch.complete(contentSearch, '');
+    setContentSearch.complete(contentSearchRef.current, '');
     setContentFilters(EMPTY_PROFILE_FILTERS);
     setContentFiltersOpen(false);
-  }, [routeUsername, userId, contentSearch, setContentSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeUsername, userId]);
 
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
   const {
