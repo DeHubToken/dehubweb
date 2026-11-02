@@ -639,6 +639,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             onOptionsChange={setVideoOptions}
             destruct={videoDestruct}
             onDestructChange={setVideoDestruct}
+            lockPrice={allowLock ? lockPrice : null}
+            onLockPriceChange={allowLock ? setLockPrice : undefined}
             onRemove={clearImage}
             caption={message}
             onCaptionChange={setMessage}
