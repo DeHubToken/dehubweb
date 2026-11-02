@@ -145,6 +145,7 @@ export function DmMediaStudio({
   onItemChange,
   onRemoveItem,
   onAddMore,
+  onlyTabs,
   onClose,
   allowLock,
   allowTimer = true,
@@ -159,7 +160,9 @@ export function DmMediaStudio({
   onItemChange: (i: number, patch: Partial<DmStudioItem>) => void;
   onRemoveItem: (i: number) => void;
   /** Opens the picker; what is picked joins this screen. */
-  onAddMore: () => void;
+  onAddMore?: () => void;
+  /** Only these tools (a post keeps Cover and Trim). */
+  onlyTabs?: Tab[];
   /** X: closes the screen. */
   onClose: () => void;
   allowLock?: boolean;
@@ -240,7 +243,7 @@ export function DmMediaStudio({
     { key: 'timer', label: _copy('dmVideo.timer', { defaultValue: 'Timer' }), icon: Timer },
   ];
   // Photos keep Hide (price) and Timer; the rest only means something for a video.
-  const tabs = allTabs.filter((t) =>
+  const tabs = allTabs.filter((t) => (!onlyTabs || onlyTabs.includes(t.key)) &&
     (t.key !== 'timer' || allowTimer)
     && (isVideo || (t.key === 'hide' && allowLock) || t.key === 'timer'));
   if (!item || !file) return null;
@@ -358,6 +361,7 @@ export function DmMediaStudio({
         </div>
 
         {/* Everything going out together; + adds more. */}
+        {(items.length > 1 || onAddMore) && (
         <div className="flex items-center gap-2 overflow-x-auto px-3 pb-2 [scrollbar-width:none]">
           {items.map((it, i) => (
             <button
@@ -375,6 +379,7 @@ export function DmMediaStudio({
               {it.lockPrice != null && <Lock className="absolute right-0.5 top-0.5 h-3 w-3 text-white" />}
             </button>
           ))}
+          {onAddMore && (
           <button
             type="button"
             onClick={onAddMore}
@@ -383,7 +388,9 @@ export function DmMediaStudio({
           >
             <Plus className="h-5 w-5" />
           </button>
+          )}
         </div>
+        )}
 
         <div className="flex flex-col gap-3 px-3 pb-[max(12px,env(safe-area-inset-bottom))]">
           {tabs.length > 0 && <>
