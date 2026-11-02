@@ -619,6 +619,8 @@ function AppContent() {
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
+          <Route path="/developers" element={<Navigate to="/docs/developers" replace />} />
+          <Route path="/developer" element={<Navigate to="/docs/developers" replace />} />
           {/* The sidebar calls this board "Requests" but it has always lived at
               /features, so the URL people actually type went to the username
               catch-all and bounced them to the homepage. */}

@@ -149,7 +149,9 @@ export function validatePageTranslation(source, translated) {
   if (!equal(matches(source, placeholders).sort(), matches(translated, placeholders).sort())) throw new Error('Translation changed a placeholder');
   const urls = text => matches(text, links).map(link => link.replace(/[.,;!?]+$/, '')).sort();
   if (!equal(urls(source), urls(translated))) throw new Error('Translation changed a link');
-  const plain = source.replace(tags, '').trim();
+  // Code is never translated, so a segment that is only a code sample comes
+  // back unchanged on purpose and must not read as untranslated prose.
+  const plain = source.replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, '').replace(tags, '').trim();
   if (plain.split(/\s+/).length > 8 && source.trim() === translated.trim() && /\b(the|your|with|this|that|you|from|will|please)\b/i.test(plain)) throw new Error('English prose was left untranslated');
   return translated;
 }
