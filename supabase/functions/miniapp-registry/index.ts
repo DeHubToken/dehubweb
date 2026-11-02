@@ -325,7 +325,13 @@ async function inspect(raw: string): Promise<Inspection> {
 // `listed`; `status = 'suspended'` is the kill switch. Both are staff writes.
 
 const APP_COLUMNS =
-  "slug, domain, home_url, name, subtitle, icon_url, tier, status, source, owner_wallet, review_note, updated_at";
+  "slug, domain, home_url, name, subtitle, icon_url, tier, status, source, owner_wallet, review_note, review_state, submitted_at, reviewed_at, updated_at";
+
+/** Unlisted apps go (back) into the review queue on every submit. Listed apps stay listed. */
+function reviewFields(tier: string | null | undefined): Record<string, unknown> {
+  if (tier && tier !== "unlisted") return {};
+  return { review_state: "pending", submitted_at: new Date().toISOString(), review_note: null };
+}
 
 function slugify(name: string): string {
   const base = name
@@ -381,7 +387,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
     updated_at: new Date().toISOString(),
   };
 
-  const { data: existing } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by, status").eq("domain", domain).maybeSingle();
+  const { data: existing } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by, status, tier").eq("domain", domain).maybeSingle();
   if (existing) {
     // The domain's verified owner may always update it; so may whoever first
     // submitted an app nobody has claimed. A verified owner arriving later
@@ -395,7 +401,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
     if (existing.status === "suspended") return jsonResponse({ error: "This app is suspended. Contact DeHub support." }, 403);
     const { data, error } = await db
       .from("miniapp_apps")
-      .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), status: "live" })
+      .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), ...reviewFields(existing.tier), status: "live" })
       .eq("id", existing.id)
       .select(APP_COLUMNS)
       .single();
@@ -413,6 +419,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
       submitted_by: auth.wallet,
       tier: "unlisted",
       status: "live",
+      ...reviewFields("unlisted"),
     })
     .select(APP_COLUMNS)
     .single();

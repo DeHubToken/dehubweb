@@ -432,6 +432,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # Admin bearer token from api.dehub.io, re-verified inside the function.
   [functions.admin-user-creations]
     verify_jwt = false
+  # Admin hub review queue; callers are checked against api.dehub.io /api/admin/me.
+  [functions.miniapp-admin]
+    verify_jwt = false
   # Signed-in callers send x-dehub-token; signed-out exports are journalled by IP.
   [functions.editor-export-log]
     verify_jwt = false

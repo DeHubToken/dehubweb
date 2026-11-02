@@ -31,6 +31,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
   return {
     id,
     type: 'video',
+    articleSlug: (nft as any).articleSlug,
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
@@ -96,6 +97,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
   return {
     id,
     type: 'image',
+    articleSlug: (nft as any).articleSlug,
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,

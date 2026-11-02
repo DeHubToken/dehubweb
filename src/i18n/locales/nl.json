@@ -1516,7 +1516,10 @@
     "messageWallNote": "Verschijnt op de fooienmuur zodra de fooi rond is.",
     "sendWithMessage": "Versturen met bericht",
     "messageFailed": "Je bericht kon niet worden toegevoegd. Er is geen fooi verstuurd.",
-    "wallLabel": "Fooiberichten"
+    "wallLabel": "Fooiberichten",
+    "railTitle": "Fooien",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Je volgt nu {{name}}. Je krijgt een melding wanneer ze live gaan.",
@@ -2434,6 +2437,24 @@
     "mutualsOne": "{{count}} gemeenschappelijk:",
     "mutualsMany": "{{count}} gemeenschappelijk:",
     "back": "Terug",
+    "reserve": {
+      "available": "Gebruikersnaam beschikbaar",
+      "held": "Voor jou vastgehouden",
+      "ended": "Reservering verlopen",
+      "busy": "Wordt gereserveerd",
+      "availableBody": "dehub.io/{{name}} is nu vrij. Reserveer hem en we houden hem een minuut voor je vast terwijl je je aanmeldt.",
+      "heldBody": "Niemand anders kan @{{name}} nemen tot de timer afloopt. Rond je aanmelding af om hem te houden.",
+      "endedBody": "Je minuut is om, dus @{{name}} is weer voor iedereen beschikbaar. Hij is nog steeds vrij.",
+      "busyBody": "Iemand meldt zich nu aan als @{{name}}. Als diegene niet afrondt, komt hij vrij wanneer de timer afloopt.",
+      "finish": "Aanmelding afronden",
+      "again": "Opnieuw reserveren",
+      "cta": "Nu reserveren",
+      "letGo": "Laat maar gaan",
+      "haveAccount": "Heb je al een account?",
+      "signIn": "Inloggen",
+      "seoTitle": "@{{name}} is beschikbaar op DeHub",
+      "seoDescription": "Niemand heeft dehub.io/{{name}} nog. Reserveer hem en meld je aan om hem van jou te maken."
+    },
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
     "signUp": "Aanmelden",
@@ -6652,6 +6673,20 @@
     "raw": "Ruw"
   },
   "nftMarket": {
+    "shortTitle": "NFT's",
+    "filters": "Filters",
+    "forSale": "Te koop",
+    "openToOffers": "Open voor biedingen",
+    "freshMints": "Vers van DeHub-makers",
+    "makeOffer": "Bod doen",
+    "offersOpen": "Open voor biedingen",
+    "mintedCount": "{{n}} gemint",
+    "trending": "Populaire collecties",
+    "floor": "Bodemprijs",
+    "listedCount": "{{n}} te koop",
+    "thisCollection": "Deze collectie",
+    "collectionOffer": "Bied op een willekeurige",
+    "showAll": "Alles tonen",
     "title": "NFT-markt",
     "subtitle": "Kopen, verkopen en bieden op BNB en Base",
     "seoTitle": "NFT-markt: koop en verkoop NFT’s op BNB en Base | DeHub",
@@ -12664,6 +12699,7 @@
       "stateUnlisted": "Live via link · in beoordeling voor de winkel",
       "stateListed": "In de winkel",
       "stateSuspended": "Opgeschort",
+      "stateRejected": "Live via link · niet goedgekeurd voor de winkel",
       "copyLink": "Link kopiëren",
       "notifyKey": "Meldingssleutel",
       "notifyKeyOnce": "Nieuwe meldingssleutel voor {{name}}. Kopieer hem nu: hij wordt één keer getoond, en een nieuwe vervangt hem.",
@@ -12677,7 +12713,24 @@
       "rewardsWeek": "Week van {{date}}",
       "rewardPaid": "Uitbetaalde",
       "rewardPending": "Openstaand",
-      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag."
+      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag.",
+      "signin": {
+        "title": "Inloggen met DeHub",
+        "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",
+        "guide": "Lees de handleiding",
+        "users_one": "{{count}} gebruiker",
+        "users_other": "{{count}} gebruikers",
+        "copyId": "Client-ID kopiëren",
+        "rotate": "Nieuw geheim",
+        "delete": "Verwijderen",
+        "rotateConfirm": "Nieuw geheim maken voor {{name}}? Het oude geheim werkt meteen niet meer.",
+        "deleteConfirm": "{{name}} verwijderen? Iedereen die ermee is ingelogd wordt uitgelogd.",
+        "secretOnce": "Geheim voor {{name}}. Kopieer het nu: het wordt maar één keer getoond.",
+        "name": "Naam van de app",
+        "website": "Website (optioneel)",
+        "redirects": "Redirect-URL's, één per regel (https://jouwsite.com/callback)",
+        "create": "Sleutel maken"
+      }
     },
     "card": {
       "open": "Open"

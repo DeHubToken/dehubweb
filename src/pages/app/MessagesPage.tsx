@@ -48,6 +48,10 @@ import { SEOHead } from '@/components/SEOHead';
 import { blockUser } from '@/lib/api/dehub/blocks';
 import { toast } from 'sonner';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
+import { useUserCommunities } from '@/hooks/use-communities';
+import { chatsFromMemberships } from '@/lib/community-kinds';
 
 function ConversationBadge({ user }: { user?: DeHubUser }) {
   if (!user) return null;
@@ -232,12 +236,16 @@ export default function MessagesPage() {
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
+  const [newChatKind, setNewChatKind] = useState<NewChatKind | null>(null);
+  const { data: myMemberships } = useUserCommunities();
   
   const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/MessagesPage.tsx:searchQuery", '');
   // Both search-backed queries key on the query string — passing the raw
   // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
   // key). Debounce to one request pair per pause in typing.
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+  const groupChats = chatsFromMemberships(myMemberships).filter(c =>
+    !searchQuery.trim() || c.name.toLowerCase().includes(searchQuery.trim().toLowerCase()));
   const { isAuthenticated, walletAddress } = useAuth();
 
   // Subscribe to DM realtime updates only when on messages page
@@ -643,7 +651,7 @@ export default function MessagesPage() {
                 <button
                   type="button"
                   data-messages-search-action
-                  onClick={() => setShowNewConversation(true)}
+                  onClick={() => setShowMessageSelector(true)}
                   aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
@@ -678,6 +686,11 @@ export default function MessagesPage() {
                 </span>
               )}
             </button>
+
+            {/* Groups and channels you are in */}
+            {groupChats.map((chat) => (
+              <GroupChatRow key={chat.id} community={chat} onClick={() => navigate(`/app/communities/${chat.slug}?tab=chat`)} />
+            ))}
 
             {/* Loading State */}
             {isLoading && <ConversationsSkeleton />}
@@ -792,6 +805,14 @@ export default function MessagesPage() {
         open={showMessageSelector}
         onOpenChange={setShowMessageSelector}
         onSelectDM={() => setShowNewConversation(true)}
+        onSelectGroup={() => setNewChatKind('group')}
+        onSelectChannel={() => setNewChatKind('channel')}
+      />
+
+      <NewGroupChannelSheet
+        kind={newChatKind ?? 'group'}
+        open={!!newChatKind}
+        onOpenChange={(open) => { if (!open) setNewChatKind(null); }}
       />
 
       <NewConversationModal

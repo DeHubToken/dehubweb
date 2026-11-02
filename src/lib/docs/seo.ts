@@ -7,6 +7,8 @@
 // ('token/where-to-buy' -> tokenWhereToBuyTitle / tokenWhereToBuyDesc,
 // '' -> indexTitle). Change an English line here and there together.
 
+import developerDocs from "@/data/developer-docs.json";
+
 export interface DocsSeoEntry {
   title: string;
   description: string;
@@ -174,35 +176,16 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     title: "Architecture — DeHub Docs",
     description: "DeHub system architecture, services and on-chain infrastructure.",
   },
-  configuration: {
-    title: "Configuration — DeHub Docs",
-    description: "Configure DeHub clients, edge functions and developer tooling.",
-  },
-  "data-models": {
-    title: "Data Models — DeHub Docs",
-    description: "Database schemas and data structures used across DeHub services.",
-  },
-  auth: {
-    title: "Authentication — DeHub Docs",
-    description: "DeHub authentication: wallet sign-in, JWT sessions and edge function auth.",
-  },
-  webhooks: {
-    title: "Webhooks — DeHub Docs",
-    description: "Subscribe to real-time DeHub events with webhook integrations.",
-  },
-  "best-practices": {
-    title: "Best Practices — DeHub Docs",
-    description: "Recommended approaches and coding standards for building on DeHub.",
-  },
-  troubleshooting: {
-    title: "Troubleshooting — DeHub Docs",
-    description: "Common DeHub issues, error messages and how to resolve them.",
-  },
-  examples: {
-    title: "Examples — DeHub Docs",
-    description: "Code examples and end-to-end implementation samples for DeHub developers.",
-  },
 };
+
+// The developer docs carry their own metadata in src/data/developer-docs.json
+// (shared with the worker's DOCS_PAGES and the crawler copy). They are written
+// in English only, so no translated docsSeo line may replace them.
+const DEVELOPER_ROUTES = new Set<string>();
+for (const page of developerDocs.pages) {
+  DEVELOPER_ROUTES.add(page.route);
+  DOCS_SEO[page.route] = { title: page.seoTitle, description: page.description };
+}
 
 const BASE_URL = "https://dehub.io";
 
@@ -260,6 +243,6 @@ export function getDocsSeoForPath(pathname: string): {
     slug: p,
     canonical: `${BASE_URL}/docs${p ? `/${p}` : ""}`,
     entry,
-    key: docsSeoKey(DOCS_SEO[p] ? p : ""),
+    key: DEVELOPER_ROUTES.has(p) ? undefined : docsSeoKey(DOCS_SEO[p] ? p : ""),
   };
 }

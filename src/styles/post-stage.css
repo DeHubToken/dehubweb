@@ -500,7 +500,7 @@ html[data-system-tone='light'] [data-comments-split-handle] i {
   padding: 0.5rem 0.75rem max(0.75rem, env(safe-area-inset-bottom)) !important;
   background: transparent !important;
   backdrop-filter: none !important;
-  border-top: 1px solid rgb(127 127 127 / 0.14) !important;
+  border-top: 0 !important;
   box-shadow: none !important;
 }
 /* The sheet's composer replaces the bottom nav while it is up, like Shorts. */

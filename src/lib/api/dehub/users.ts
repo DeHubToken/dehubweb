@@ -1,3 +1,4 @@
+import { forgetHold, holdFieldFor } from '@/lib/username-hold';
 import { apiCall, authedUpload } from './core';
 import { isReservedUsername } from '@/lib/reserved-usernames';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -167,6 +168,10 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   }
 
   if (data.username !== undefined) formData.append("username", data.username);
+  // The name this browser reserved from a free profile link: lets the server
+  // hand it over while the one-minute hold is still on.
+  const usernameHold = data.username !== undefined ? holdFieldFor(data.username) : null;
+  if (usernameHold) formData.append("usernameHold", usernameHold);
   if (data.displayName !== undefined) formData.append("displayName", data.displayName);
   if (data.aboutMe !== undefined) formData.append("aboutMe", data.aboutMe);
   if (data.hideFollowers !== undefined) formData.append("hideFollowers", String(data.hideFollowers));
@@ -208,6 +213,7 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
     throw new Error(_translateCopy("copy.e51c5f7d0545", { defaultValue: "Profile update failed" }));
   }
   console.log('[updateProfile] API response:', JSON.stringify(result));
+  if (usernameHold) forgetHold();
   return result;
 }
 

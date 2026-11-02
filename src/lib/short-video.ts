@@ -55,6 +55,7 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
   return {
     id,
     type: 'short',
+    articleSlug: nft.articleSlug,
     visibility: nft.visibility,
     quotePolicy: nft.quotePolicy,
     spoilerText: nft.spoilerText,
@@ -108,6 +109,7 @@ export function videoItemToShort(video: VideoItem): ShortVideo {
   return {
     id: video.id,
     type: 'short',
+    articleSlug: video.articleSlug,
     visibility: video.visibility,
     quotePolicy: video.quotePolicy,
     duetOf: video.duetOf,

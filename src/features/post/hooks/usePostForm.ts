@@ -20,6 +20,7 @@ import { createLogger } from '@/lib/logger';
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPostOffChain, AuthenticationError, PaymentRequiredError, UploadHttpError, type MintFeeQuoteResponse, type MintResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
+import { videoEditsPayload, hasVideoEdits } from '../lib/video-edits';
 import { startDraftVideo, isDraftUsable, type DraftVideoUpload, type DraftVideoSnapshot } from '../lib/draft-video';
 import { usePostProcessingStore } from '@/store/postProcessingStore';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
@@ -58,6 +59,11 @@ import type { DeHubNFT, PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/a
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 import { trackFirstPost } from '@/lib/analytics';
+
+// Title switch preference. The old key was also written whenever Article or
+// Comic was picked, which left the title stuck on for plain posts; the new
+// key starts everyone back at off.
+const SHOW_TITLE_PREF_KEY = 'post_show_title_v2';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -283,6 +289,7 @@ interface UsePostFormReturn {
     stopRecording: () => void;
     setSelectedCategory: import('@/hooks/use-draft-state').DraftSetter<string>;
     setShowTitle: (show: boolean) => void;
+    setShowTitlePref: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
     setIsForKids: (value: boolean) => void;
@@ -420,14 +427,16 @@ export function usePostForm(
   const categorySavedRef = useRef(false);
   const [showTitle, setShowTitle] = useState(() => {
     if (d?.showTitle != null) return d.showTitle;
-    try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
+    try { return localStorage.getItem(SHOW_TITLE_PREF_KEY) === 'true'; } catch { return false; }
   });
   const [titleText, setTitleText] = useDraftState(draftScope + ":titleText", d?.titleText ?? '');
 
-  // Persist title toggle preference
+  // Only the Title switch itself remembers the choice. Picking Article or
+  // Comic turns the title on for that post alone, so a plain post opened
+  // later still starts with the title off.
   const handleSetShowTitle = useCallback((value: boolean) => {
     setShowTitle(value);
-    try { localStorage.setItem('post_show_title', String(value)); } catch {}
+    try { localStorage.setItem(SHOW_TITLE_PREF_KEY, String(value)); } catch {}
   }, []);
 
   /**
@@ -769,15 +778,15 @@ export function usePostForm(
     e.target.value = '';
   }, []);
 
-  const processVideoFile = useCallback(async (file: File) => {
+  const processVideoFile = useCallback(async (file: File, replace = false) => {
     // Can't add video if there are already images
-    if (hasImage) {
+    if (hasImage && !replace) {
       toast.error(_copy("copy.e38adb0be028", { defaultValue: "Remove images first to add a video" }));
       return;
     }
 
     // Can't add more than 1 video
-    if (hasVideo) {
+    if (hasVideo && !replace) {
       toast.error(_copy("copy.ffbd0be1d6f7", { defaultValue: "Only 1 video allowed per post" }));
       return;
     }
@@ -1052,6 +1061,18 @@ export function usePostForm(
     setMedia(prev => prev.map((m, i) => 
       i === index ? { ...m, cropSettings: undefined } : m
     ));
+  }, []);
+
+  const replaceVideoFile = useCallback(async (file: File) => {
+    if (!file.type.startsWith('video/')) {
+      toast.error(_copy("post.replaceVideo.notVideo", { defaultValue: "Choose a video file" }));
+      return;
+    }
+    await processVideoFile(file, true);
+  }, [processVideoFile, _copy]);
+
+  const updateMediaItem = useCallback((index: number, patch: Partial<MediaFile>) => {
+    setMedia(prev => prev.map((m, i) => (i === index ? { ...m, ...patch } : m)));
   }, []);
 
   const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
@@ -2035,6 +2056,8 @@ export function usePostForm(
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
         hideAssetCards: hideAssetCards || undefined,
+        // Self-destructing video post: the server deletes it when time is up.
+        destruct: media[0]?.type === 'video' && !liveMode && !isQuoting ? media[0].destructSeconds ?? undefined : undefined,
         // A comic: the photos show as collector cards, a caption per page.
         layout: postLayout === 'comic' && hasImage && !liveMode && !isQuoting ? 'comic' : undefined,
         mediaCaptions: postLayout === 'comic' && media.some(m => m.caption?.trim())
@@ -2071,9 +2094,9 @@ export function usePostForm(
 
       // Trims are cut on the server from the draft upload; a post that has to
       // send the file itself goes up whole, and says so.
-      const trimmed = media[0]?.type === 'video' && media[0].trimStart !== undefined;
+      const trimmed = media[0]?.type === 'video' && (media[0].trimStart !== undefined || hasVideoEdits(media[0].videoEdits));
       const warnUntrimmed = () => {
-        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim." }));
+        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim and edits." }));
       };
 
       let mintResponse: MintResponse;
@@ -2086,6 +2109,7 @@ export function usePostForm(
               draftVideoId,
               trimStart: media[0]?.trimStart,
               trimEnd: media[0]?.trimEnd,
+              videoEdits: videoEditsPayload(media[0]?.videoEdits) ?? undefined,
             },
             (percent) => setUploadProgress(Math.max(55, Math.round(percent * 0.6))),
           );
@@ -2937,6 +2961,8 @@ export function usePostForm(
       clearCropFromMedia,
       applyTrimToMedia,
       replaceImageFile,
+      replaceVideoFile,
+      updateMediaItem,
       setMediaDescription,
       setMediaCaption,
       setPostLayout,
@@ -2954,7 +2980,8 @@ export function usePostForm(
       stopRecording,
       setSelectedCategory,
       markCategorySaved: () => { categorySavedRef.current = true; },
-      setShowTitle: handleSetShowTitle,
+      setShowTitle,
+      setShowTitlePref: handleSetShowTitle,
       setShouldMint: handleSetShouldMint,
       setIsMature,
       setIsForKids,

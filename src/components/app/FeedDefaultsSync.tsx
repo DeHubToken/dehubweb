@@ -23,6 +23,7 @@ import {
   feedDefaultsCustoms,
   moveToAccountDefaultTab,
 } from '@/lib/feed-defaults';
+import { adoptAccountFeedPresets, feedPresetsCustoms } from '@/lib/feed-presets';
 
 const SAVE_DELAY_MS = 1500;
 
@@ -46,6 +47,7 @@ export function FeedDefaultsSync() {
     if (!isFetched || !profile || adoptedFor.current === walletAddress || savingRef.current) return;
     adoptedFor.current = walletAddress;
     const { hasTab, hasToggles, tabChanged, togglesChanged } = adoptAccountFeedDefaults(customsRef.current);
+    const presets = adoptAccountFeedPresets(customsRef.current);
     if (tabChanged) moveToAccountDefaultTab();
     if (togglesChanged) {
       // Only feeds without a choice made this session pick the account's up.
@@ -57,7 +59,7 @@ export function FeedDefaultsSync() {
       }
     }
     // Defaults set on this device before the account had any: send them up.
-    if (!hasTab || !hasToggles) window.dispatchEvent(new CustomEvent(FEED_DEFAULTS_CHANGED_EVENT));
+    if (!hasTab || !hasToggles || !presets.has) window.dispatchEvent(new CustomEvent(FEED_DEFAULTS_CHANGED_EVENT));
   }, [signedIn, walletAddress, isFetched, profile]);
 
   // Changes out: debounced, merged over the latest customs.
@@ -67,7 +69,7 @@ export function FeedDefaultsSync() {
     const save = async () => {
       timer = null;
       const existing = (customsRef.current ?? {}) as Record<string, string | number | boolean>;
-      const next = feedDefaultsCustoms();
+      const next = { ...feedDefaultsCustoms(), ...feedPresetsCustoms() };
       if (Object.entries(next).every(([k, v]) => existing[k] === v)) return;
       savingRef.current = true;
       try {

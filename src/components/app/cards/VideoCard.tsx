@@ -2081,7 +2081,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       }
     }
     cacheVideoForNavigation(queryClient, video);
-    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
+    navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, video, mediaAspect, isPPVLocked]);
   const openPost = useVideoCardOpen({
     mediaRef: containerRef,
@@ -3091,7 +3091,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               data-on-media
               data-video-speed
               className="h-8 w-[44px] text-white flex items-center justify-center tabular-nums"
-              style={{ fontFamily: 'Exo, sans-serif', touchAction: 'manipulation' }}
+              style={{ fontFamily: 'Manrope, sans-serif', touchAction: 'manipulation' }}
               onClick={cyclePlaybackRate}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
@@ -3420,6 +3420,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <ActionBar
               onLiveReaction={video.isLivePost && video.isLiveNow ? sendLiveReaction : undefined}
               postId={video.id}
+              articleSlug={video.articleSlug}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
@@ -3619,7 +3620,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             )}
             <button 
               onClick={() => {
-                const url = viewerShareUrl(`${window.location.origin}/app/post/${video.id}`);
+                const url = viewerShareUrl(`${window.location.origin}/app/post/${video.articleSlug || video.id}`);
                 navigator.clipboard.writeText(url);
                 toast.success(t('postOptions.linkCopied'));
                 trackLinkCopy(video.id, walletAddress, linkCopyCount);
@@ -3836,7 +3837,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   onClick={() => {
                     setShowBountyDrawer(false);
                     cacheVideoForNavigation(queryClient, video);
-                    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
+                    navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
                   }}
                 >
                   <span className="block text-center text-white text-sm font-medium">

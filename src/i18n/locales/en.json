@@ -1326,7 +1326,10 @@
     "messageWallNote": "Shows on the tip wall once the tip goes through.",
     "sendWithMessage": "Send with message",
     "messageFailed": "Your message could not be added. No tip was sent.",
-    "wallLabel": "Tip messages"
+    "wallLabel": "Tip messages",
+    "railTitle": "Tips",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Following {{name}}. You'll get a notification when they go live.",
@@ -2244,6 +2247,24 @@
     "mutualsOne": "{{count}} Mutual:",
     "mutualsMany": "{{count}} Mutuals:",
     "back": "Back",
+    "reserve": {
+      "available": "Username available",
+      "held": "Held for you",
+      "ended": "Hold ended",
+      "busy": "Being reserved",
+      "availableBody": "dehub.io/{{name}} is free right now. Reserve it and we hold it for one minute while you sign up.",
+      "heldBody": "Nobody else can take @{{name}} until the timer runs out. Finish sign up to keep it.",
+      "endedBody": "Your minute ran out, so @{{name}} is open to everyone again. It is still free.",
+      "busyBody": "Someone is signing up as @{{name}} right now. If they do not finish, it frees up when the timer ends.",
+      "finish": "Finish sign up",
+      "again": "Reserve again",
+      "cta": "Reserve now",
+      "letGo": "Let it go",
+      "haveAccount": "Have an account?",
+      "signIn": "Sign in",
+      "seoTitle": "@{{name}} is available on DeHub",
+      "seoDescription": "Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours."
+    },
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",
     "signUp": "Sign Up",
@@ -6415,7 +6436,21 @@
     "raw": "Raw"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filters",
+    "forSale": "For sale",
+    "openToOffers": "Open to offers",
+    "freshMints": "Fresh from DeHub creators",
+    "makeOffer": "Make offer",
+    "offersOpen": "Open to offers",
+    "mintedCount": "{{n}} minted",
     "title": "NFT Market",
+    "trending": "Trending collections",
+    "floor": "Floor",
+    "listedCount": "{{n}} for sale",
+    "thisCollection": "This collection",
+    "collectionOffer": "Offer on any",
+    "showAll": "Show all",
     "subtitle": "Buy, sell and offer on BNB, Base, Ethereum and Robinhood",
     "seoTitle": "NFT Market: buy and sell NFTs on BNB and Base | DeHub",
     "seoDescription": "Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step."
@@ -12340,6 +12375,7 @@
       "stateUnlisted": "Live by link · in review for the store",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
+      "stateRejected": "Live by link · not approved for the store",
       "copyLink": "Copy link",
       "notifyKey": "Notify key",
       "notifyKeyOnce": "New notify key for {{name}}. Copy it now: it is shown once, and making another replaces it.",
@@ -12353,7 +12389,24 @@
       "rewardsWeek": "Week of {{date}}",
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
-      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday."
+      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday.",
+      "signin": {
+        "title": "Sign in with DeHub",
+        "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",
+        "guide": "Read the guide",
+        "users_one": "{{count}} user",
+        "users_other": "{{count}} users",
+        "copyId": "Copy client ID",
+        "rotate": "New secret",
+        "delete": "Delete",
+        "rotateConfirm": "Make a new secret for {{name}}? The old secret stops working right away.",
+        "deleteConfirm": "Delete {{name}}? Everyone signed in with it is signed out.",
+        "secretOnce": "Secret for {{name}}. Copy it now: it is shown only once.",
+        "name": "App name",
+        "website": "Website (optional)",
+        "redirects": "Redirect URLs, one per line (https://yoursite.com/callback)",
+        "create": "Create key"
+      }
     },
     "card": {
       "open": "Open"

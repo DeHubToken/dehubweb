@@ -1326,7 +1326,10 @@
     "messageWallNote": "Bahşiş onaylanınca bahşiş duvarında görünür.",
     "sendWithMessage": "Mesajla gönder",
     "messageFailed": "Mesajın eklenemedi. Bahşiş gönderilmedi.",
-    "wallLabel": "Bahşiş mesajları"
+    "wallLabel": "Bahşiş mesajları",
+    "railTitle": "Bahşişler",
+    "railTotal": "{{amount}} token",
+    "tokensUnit": "token"
   },
   "postOptions": {
     "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",
@@ -2244,6 +2247,24 @@
     "mutualsOne": "{{count}} ortak:",
     "mutualsMany": "{{count}} ortak:",
     "back": "Geri",
+    "reserve": {
+      "available": "Kullanıcı adı müsait",
+      "held": "Senin için ayrıldı",
+      "ended": "Ayırma süresi doldu",
+      "busy": "Ayrılıyor",
+      "availableBody": "dehub.io/{{name}} şu anda boşta. Ayır, kaydolurken bir dakika boyunca senin için tutalım.",
+      "heldBody": "Süre bitene kadar @{{name}} adını başka kimse alamaz. Korumak için kaydı tamamla.",
+      "endedBody": "Bir dakikan doldu, @{{name}} yeniden herkese açık. Hâlâ boşta.",
+      "busyBody": "Şu anda biri @{{name}} olarak kaydoluyor. Tamamlamazsa süre bitince boşa çıkar.",
+      "finish": "Kaydı tamamla",
+      "again": "Yeniden ayır",
+      "cta": "Şimdi ayır",
+      "letGo": "Bırak",
+      "haveAccount": "Hesabın var mı?",
+      "signIn": "Giriş yap",
+      "seoTitle": "@{{name}} DeHub'da müsait",
+      "seoDescription": "dehub.io/{{name}} henüz kimsenin değil. Ayır ve kaydolarak senin olsun."
+    },
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
     "signUp": "Kaydol",
@@ -6462,6 +6483,20 @@
     "raw": "Ham hâli"
   },
   "nftMarket": {
+    "shortTitle": "NFT'ler",
+    "filters": "Filtreler",
+    "forSale": "Satışta",
+    "openToOffers": "Tekliflere açık",
+    "freshMints": "DeHub yaratıcılarından yeni",
+    "makeOffer": "Teklif ver",
+    "offersOpen": "Tekliflere açık",
+    "mintedCount": "{{n}} basıldı",
+    "trending": "Popüler koleksiyonlar",
+    "floor": "Taban fiyat",
+    "listedCount": "{{n}} satışta",
+    "thisCollection": "Bu koleksiyon",
+    "collectionOffer": "Herhangi birine teklif ver",
+    "showAll": "Tümünü göster",
     "title": "NFT Pazarı",
     "subtitle": "BNB ve Base üzerinde al, sat ve teklif ver",
     "seoTitle": "NFT Pazarı: BNB ve Base üzerinde NFT al ve sat | DeHub",
@@ -12415,6 +12450,7 @@
       "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
+      "stateRejected": "Bağlantıyla yayında · mağaza için onaylanmadı",
       "copyLink": "Bağlantıyı kopyala",
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
@@ -12428,7 +12464,24 @@
       "rewardsWeek": "{{date}} haftası",
       "rewardPaid": "Ödendi",
       "rewardPending": "Bekleyen",
-      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor."
+      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor.",
+      "signin": {
+        "title": "DeHub ile giriş yap",
+        "body": "İnsanların web sitenize veya uygulamanıza DeHub hesaplarıyla giriş yapmasını sağlayın. Burada bir anahtar oluşturun, sonra kılavuzu izleyin.",
+        "guide": "Kılavuzu oku",
+        "users_one": "{{count}} kullanıcı",
+        "users_other": "{{count}} kullanıcı",
+        "copyId": "İstemci kimliğini kopyala",
+        "rotate": "Yeni gizli anahtar",
+        "delete": "Sil",
+        "rotateConfirm": "{{name}} için yeni gizli anahtar oluşturulsun mu? Eskisi hemen çalışmayı bırakır.",
+        "deleteConfirm": "{{name}} silinsin mi? Onunla giriş yapan herkesin oturumu kapanır.",
+        "secretOnce": "{{name}} için gizli anahtar. Şimdi kopyalayın: yalnızca bir kez gösterilir.",
+        "name": "Uygulama adı",
+        "website": "Web sitesi (isteğe bağlı)",
+        "redirects": "Yönlendirme URL'leri, her satıra bir tane (https://siteniz.com/callback)",
+        "create": "Anahtar oluştur"
+      }
     },
     "card": {
       "open": "Açık"

@@ -47,6 +47,9 @@ import {
   type SubscriberPlan,
 } from '@/lib/content-gate';
 import { GatePreview } from './GatePreview';
+import { UnlockReveal } from '@/components/app/unlock/UnlockReveal';
+import { nextUnlockRevealKind, type UnlockRevealKind } from '@/components/app/unlock/unlock-reveal-kind';
+import { useIsMobile } from '@/hooks/use-mobile';
 import type { ContentRating } from '@/lib/api/dehub/types';
 
 const SubscriberGateDrawer = lazy(() =>
@@ -107,6 +110,11 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
   const [locallySubscribed, setLocallySubscribed] = useState(false);
 
   const matureGate = useMatureGate(gate.contentRating);
+  // Phones: a paid unlock ends with a reveal on the media itself.
+  const isMobile = useIsMobile();
+  const [revealKind, setRevealKind] = useState<UnlockRevealKind | null>(null);
+  // After a reveal the frame stays, so the media under it never remounts (a video keeps playing).
+  const [revealed, setRevealed] = useState(false);
 
   const canBypass = !!gate.canBypass || locallyUnlocked || isTokenUnlocked(gate.tokenId);
   const isPPVLocked = !!gate.isPPV && !canBypass;
@@ -118,10 +126,26 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
     markTokenUnlocked(gate.tokenId);
     setLocallyUnlocked(true);
   };
+  const onPaidUnlock = () => {
+    if (isMobile) { setRevealKind(nextUnlockRevealKind()); setRevealed(true); }
+    onUnlocked();
+  };
 
   const isGated = matureGate.isGated || isPPVLocked || isHoldingsLocked || isSubGated;
 
-  if (!isGated) return <>{children}</>;
+  if (!isGated) {
+    if (!revealed) return <>{children}</>;
+    return (
+      <div className={cn('relative w-full h-full overflow-hidden', className)}>
+        {children}
+        {revealKind && <UnlockReveal
+          kind={revealKind}
+          cover={<GatePreview src={preview} className="w-full h-full object-cover" />}
+          onDone={() => setRevealKind(null)}
+        />}
+      </div>
+    );
+  }
 
   const cheapestPlanPrice = subscriberPlanPrice(cheapestSubscriberPlan(gate.subscriberPlans));
 
@@ -217,7 +241,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
           creatorAddress={gate.creatorAddress}
           chainId={gate.ppvChainId}
           onClose={() => setShowPPVDrawer(false)}
-          onUnlocked={onUnlocked}
+          onUnlocked={onPaidUnlock}
           formatCompact={formatCompact}
         />
       </Drawer>

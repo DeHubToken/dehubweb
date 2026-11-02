@@ -30,6 +30,7 @@ import { validatePublicChatMedia } from '@/lib/public-chat-media';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { wasShownToUser } from '@/lib/chat-refusal';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
 import { AssistantReplyCard } from './AssistantReplyCard';
@@ -289,7 +290,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return true;
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
-      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
+      if (!wasShownToUser(err)) toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
       return false;
     }
   };

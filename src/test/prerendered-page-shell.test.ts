@@ -96,9 +96,9 @@ describe('stylePrerendered applies the site look', () => {
     expect(out).toContain('dehub-header-logo.png');
   });
 
-  it('loads Exo and inlines the stylesheet, so the page renders from one request', () => {
+  it('loads Manrope and inlines the stylesheet, so the page renders from one request', () => {
     const out = stylePrerendered(FN_PAGE);
-    expect(out).toContain('family=Exo');
+    expect(out).toContain('family=Manrope');
     expect(out).toMatch(/<style>[\s\S]*\.dh-main\{/);
     expect(out).not.toContain('.css"');
   });

@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useCrossPostAccountCount } from './CrossPostPicker';
 import { Eye, Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
+import BookOpen from "@/components/ui/cut-icons/docs";
+import Check from "@/components/ui/cut-icons/check";
 import More from "@/components/ui/cut-icons/more";
 import Paperclip from "@/components/ui/cut-icons/attach";
 import Calendar from "@/components/ui/cut-icons/events";
@@ -78,6 +80,9 @@ interface PostActionBarProps {
   onClearSound?: () => void;
   onTogglePoll?: () => void;
   hasPoll?: boolean;
+  /** Turn Comic mode on or off (photos post as collector cards). */
+  onToggleComic?: () => void;
+  isComic?: boolean;
   /** Add or take off a content warning. */
   onToggleContentWarning?: () => void;
   hasContentWarning?: boolean;
@@ -125,6 +130,8 @@ export function PostActionBar({
   onToggleContentWarning,
   hasContentWarning,
   hasPoll,
+  onToggleComic,
+  isComic,
   extraTool,
   hideLive = false,
 }: PostActionBarProps) {
@@ -568,14 +575,14 @@ export function PostActionBar({
           triggerClassName="h-auto w-auto p-2 rounded-xl text-white backdrop-blur-none hover:bg-white/10 [&_svg]:size-5"
         />
 
-        {(!isLive && (onTogglePoll || onToggleContentWarning || extraTool)) && (
+        {(!isLive && (onTogglePoll || onToggleComic || onToggleContentWarning || extraTool)) && (
           <button
             type="button"
             onClick={() => setPostOptionsOpen(true)}
             aria-label={t('upload.postOptions', { defaultValue: 'Post options' })}
             aria-haspopup="dialog"
             aria-expanded={postOptionsOpen}
-            className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10', (hasPoll || hasContentWarning || (extraTool && crossPostCount > 0)) && 'bg-white/20')}
+            className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-colors hover:bg-white/10', (hasPoll || isComic || hasContentWarning || (extraTool && crossPostCount > 0)) && 'bg-white/20')}
           >
             <More className="h-5 w-5" />
             {extraTool && crossPostCount > 0 && (
@@ -590,13 +597,23 @@ export function PostActionBar({
               <DrawerTitle>{t('upload.postOptions', { defaultValue: 'Post options' })}</DrawerTitle>
             </DrawerHeader>
             <div className="overflow-y-auto p-4">
-              {!isLive && !hasVideo && !hasImage && onTogglePoll && (
+              {!isLive && !hasVideo && !hasImage && !isComic && onTogglePoll && (
                 <button type="button" aria-pressed={!!hasPoll}
                   onClick={() => { setPostOptionsOpen(false); onTogglePoll(); }}
                   className={cn('flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-white hover:bg-white/10', hasPoll && 'bg-white/15')}
                 >
                   <BarChart2 className="h-5 w-5" />
                   {hasPoll ? _copy('copy.03ed4421a6d5', { defaultValue: 'Remove poll' }) : _copy('copy.1dd3d9f671d4', { defaultValue: 'Add poll' })}
+                </button>
+              )}
+              {!isLive && !hasVideo && !hasPoll && onToggleComic && (
+                <button type="button" aria-pressed={!!isComic}
+                  onClick={() => { setPostOptionsOpen(false); onToggleComic(); }}
+                  className={cn('flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-white hover:bg-white/10', isComic && 'bg-white/15')}
+                >
+                  <BookOpen className="h-5 w-5" />
+                  <span className="flex-1">{_copy('comic.tab', { defaultValue: 'Comic' })}</span>
+                  {isComic && <Check className="h-4 w-4" />}
                 </button>
               )}
               {!isLive && onToggleContentWarning && (

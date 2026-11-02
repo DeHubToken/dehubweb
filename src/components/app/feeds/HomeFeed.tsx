@@ -17,7 +17,7 @@ import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -123,6 +123,21 @@ import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
 import { FollowTagBar } from './FollowTagBar';
+import type { FeedFilterLineItem } from './FeedFilterLine';
+// Phone-only and shown once a filter is on: kept off the boot path.
+const FeedFilterLine = lazy(() => import('./FeedFilterLine'));
+const FeedPresetsRow = lazy(() => import('./FeedFilterLine').then((m) => ({ default: m.FeedPresetsRow })));
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  FEED_PRESETS_CHANGED_EVENT,
+  FEED_FILTER_LINE_SAVE_EVENT,
+  deleteFeedPreset,
+  presetMatches,
+  readFeedPresets,
+  saveFeedPreset,
+  type FeedFilterPreset,
+  type PresetAccess,
+} from '@/lib/feed-presets';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
@@ -223,6 +238,8 @@ interface FilterSectionProps {
   contentFilters: ContentTypeFilters;
   onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
   onReset: () => void;
+  /** Phone only: the "My presets" row on top of the options. */
+  presetsRow?: ReactNode;
 }
 
 function SortFilterSection({ 
@@ -239,6 +256,7 @@ function SortFilterSection({
   contentFilters,
   onContentFilterToggle,
   onReset,
+  presetsRow,
 }: FilterSectionProps) {
   const { t } = useI18n();
   const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/feeds/HomeFeed.tsx:categorySearch", '');
@@ -254,6 +272,7 @@ function SortFilterSection({
 
   return (
     <div className="relative flex flex-col gap-4">
+      {presetsRow}
       {/* Sort Options */}
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
@@ -688,6 +707,91 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     startTransition(() => resetContentFiltersRaw());
   }, [resetContentFiltersRaw, beginFilterTransition]);
 
+  // Phone feeds show every active filter in one line and keep saved presets
+  // (FeedFilterLine). Desktop keeps its chips and hashtag bar as they were.
+  const isPhone = useIsMobile();
+  const [feedPresets, setFeedPresets] = useState<FeedFilterPreset[]>(readFeedPresets);
+  useEffect(() => {
+    const reload = () => setFeedPresets(readFeedPresets());
+    window.addEventListener(FEED_PRESETS_CHANGED_EVENT, reload);
+    return () => window.removeEventListener(FEED_PRESETS_CHANGED_EVENT, reload);
+  }, []);
+  const currentPresetShape = useMemo<Omit<FeedFilterPreset, 'name'>>(() => {
+    const access = (['ppv', 'w2e', 'locked'] as const).filter((k) => optimisticContentFilters[k]);
+    return {
+      sort: optimisticSort.value !== DEFAULT_HOME_SORT.value ? optimisticSort.value : undefined,
+      date: optimisticDate.value !== 'all' ? optimisticDate.value : undefined,
+      postType: optimisticPostType !== 'all' ? optimisticPostType : undefined,
+      categories: optimisticCategories.length ? optimisticCategories : undefined,
+      access: access.length ? [...access] : undefined,
+    };
+  }, [optimisticSort, optimisticDate, optimisticPostType, optimisticCategories, optimisticContentFilters]);
+  const activePresetName = useMemo(
+    () => feedPresets.find((p) => presetMatches(p, { name: '', ...currentPresetShape }))?.name ?? null,
+    [feedPresets, currentPresetShape],
+  );
+  const applyPreset = useCallback((name: string) => {
+    const preset = feedPresets.find((p) => p.name === name);
+    if (!preset) return;
+    setSelectedSort(SORT_OPTIONS.find((o) => o.value === preset.sort) ?? DEFAULT_HOME_SORT);
+    setSelectedDate(DATE_FILTER_OPTIONS.find((o) => o.value === preset.date) ?? DATE_FILTER_OPTIONS[0]);
+    setSelectedPostType((POST_TYPE_FILTERS.find((o) => o.value === preset.postType)?.value ?? 'all') as PostTypeFilterValue);
+    setSelectedCategories(preset.categories ?? []);
+    const want = new Set<PresetAccess>(preset.access ?? []);
+    (['ppv', 'w2e', 'locked'] as const).forEach((k) => {
+      if (optimisticContentFilters[k] !== want.has(k)) toggleContentFilter(k);
+    });
+  }, [feedPresets, optimisticContentFilters, setSelectedSort, setSelectedDate, setSelectedPostType, setSelectedCategories, toggleContentFilter]);
+  const clearAllFilters = useCallback(() => {
+    setSelectedSort(DEFAULT_HOME_SORT);
+    setSelectedDate(DATE_FILTER_OPTIONS[0]);
+    setSelectedPostType('all');
+    setSelectedCategories([]);
+    resetContentFilters();
+  }, [setSelectedSort, setSelectedDate, setSelectedPostType, setSelectedCategories, resetContentFilters]);
+  const filterLineItems = useMemo<FeedFilterLineItem[]>(() => {
+    const items: FeedFilterLineItem[] = [];
+    if (optimisticPostType !== 'all') {
+      const o = POST_TYPE_FILTERS.find((x) => x.value === optimisticPostType);
+      items.push({
+        key: 'type',
+        group: t('feedFilters.groupType', 'Type'),
+        label: optimisticPostType === 'article' ? t('articles.label', 'Articles') : optimisticPostType === 'feed-audio' ? t('filters.audio', 'Audio') : optimisticPostType === 'feed-simple' ? t('filters.text', 'Text') : (o?.label ?? optimisticPostType),
+        onRemove: () => setSelectedPostType('all'),
+      });
+    }
+    optimisticCategories.forEach((c) => items.push({
+      key: `tag:${c}`,
+      group: t('feedFilters.groupTag', 'Tag'),
+      label: `#${c.replace(/^#+/, '')}`,
+      onRemove: () => setSelectedCategories((prev) => prev.filter((x) => x !== c)),
+    }));
+    if (optimisticDate.value !== 'all') items.push({
+      key: 'date',
+      group: t('feedFilters.groupDate', 'Date'),
+      label: optimisticDate.label,
+      onRemove: () => setSelectedDate(DATE_FILTER_OPTIONS[0]),
+    });
+    if (optimisticSort.value !== DEFAULT_HOME_SORT.value) items.push({
+      key: 'sort',
+      group: t('feedFilters.groupSort', 'Sort'),
+      label: t(optimisticSort.labelKey, optimisticSort.label),
+      onRemove: () => setSelectedSort(DEFAULT_HOME_SORT),
+    });
+    CONTENT_TYPE_FILTERS.forEach((f) => {
+      if (!optimisticContentFilters[f.value]) return;
+      items.push({
+        key: `access:${f.value}`,
+        group: t('feedFilters.groupAccess', 'Access'),
+        label: t(`filters.${f.value === 'w2e' ? 'bounty' : f.value}`, f.label),
+        onRemove: () => toggleContentFilter(f.value),
+      });
+    });
+    return items;
+  }, [t, optimisticPostType, optimisticCategories, optimisticDate, optimisticSort, optimisticContentFilters, setSelectedPostType, setSelectedCategories, setSelectedDate, setSelectedSort, toggleContentFilter]);
+  // One hashtag and nothing else keeps the hashtag bar with its Follow button.
+  const phoneShowsTagBar = filterLineItems.length === 1 && optimisticCategories.length === 1;
+
   // Listen for external category changes (e.g. from Talk of the Town sidebar).
   // setSelectedCategories arms the filter loader itself, so this path gets the
   // same feedback as a chip tap without a second flag to keep in sync.
@@ -1088,6 +1192,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       return {
         id,
         type: 'short' as const,
+        articleSlug: (item as any).articleSlug,
         username: item.minterDisplayName || item.minterUsername || 'user',
         verified: (item as any).minterUser?.isVerified || false,
         avatar: avatarUrl || undefined,
@@ -1895,6 +2000,16 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 }}
                 contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
+                presetsRow={isPhone ? (
+                  <Suspense fallback={null}><FeedPresetsRow
+                    presets={feedPresets}
+                    activeName={activePresetName}
+                    onApply={applyPreset}
+                    onDelete={deleteFeedPreset}
+                    canSaveCurrent={filterLineItems.length > 0 && !activePresetName}
+                    onSaveCurrent={() => window.dispatchEvent(new CustomEvent(FEED_FILTER_LINE_SAVE_EVENT))}
+                  /></Suspense>
+                ) : undefined}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
@@ -1924,6 +2039,19 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       {/* Active filter chips bar (sort, date, content access). Hashtags/categories
           never show here — FollowTagBar under the live pill owns that. */}
       {(() => {
+        if (isPhone) {
+          if (phoneShowsTagBar || filterLineItems.length === 0) return null;
+          const line = (
+            <Suspense fallback={null}><FeedFilterLine
+              className={chipsTarget ? 'mt-2' : 'mb-3'}
+              items={filterLineItems}
+              presetName={activePresetName}
+              onClearAll={clearAllFilters}
+              onSavePreset={(name) => saveFeedPreset({ name, ...currentPresetShape })}
+            /></Suspense>
+          );
+          return chipsTarget ? createPortal(line, chipsTarget) : line;
+        }
         const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked;
         if (!hasChips) return null;
 
@@ -2103,7 +2231,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
           {/* Portaled into the sticky header slot (where filter chips sit) so it
               stays pinned while the feed scrolls. */}
-          {selectedCategories.length === 1 && (
+          {selectedCategories.length === 1 && (!isPhone || phoneShowsTagBar) && (
             chipsTarget
               ? createPortal(
                   <FollowTagBar className="mt-2" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,

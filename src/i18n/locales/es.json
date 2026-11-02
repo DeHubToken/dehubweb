@@ -1326,7 +1326,10 @@
     "messageWallNote": "Aparece en el muro de propinas cuando la propina se confirma.",
     "sendWithMessage": "Enviar con mensaje",
     "messageFailed": "No se pudo añadir tu mensaje. No se envió ninguna propina.",
-    "wallLabel": "Mensajes de propinas"
+    "wallLabel": "Mensajes de propinas",
+    "railTitle": "Propinas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Ahora sigues a {{name}}. Recibirás una notificación cuando transmita en vivo.",
@@ -2244,6 +2247,24 @@
     "mutualsOne": "{{count}} en común:",
     "mutualsMany": "{{count}} en común:",
     "back": "Volver",
+    "reserve": {
+      "available": "Nombre de usuario disponible",
+      "held": "Reservado para ti",
+      "ended": "Reserva terminada",
+      "busy": "Reservándose",
+      "availableBody": "dehub.io/{{name}} está libre ahora mismo. Resérvalo y te lo guardamos un minuto mientras te registras.",
+      "heldBody": "Nadie más puede quedarse con @{{name}} hasta que acabe el temporizador. Termina el registro para conservarlo.",
+      "endedBody": "Se acabó tu minuto, así que @{{name}} vuelve a estar disponible para todos. Sigue libre.",
+      "busyBody": "Alguien se está registrando como @{{name}} ahora mismo. Si no termina, quedará libre cuando acabe el temporizador.",
+      "finish": "Terminar registro",
+      "again": "Reservar de nuevo",
+      "cta": "Reservar ahora",
+      "letGo": "Liberarlo",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "signIn": "Inicia sesión",
+      "seoTitle": "@{{name}} está disponible en DeHub",
+      "seoDescription": "Nadie tiene dehub.io/{{name}} todavía. Resérvalo y regístrate para que sea tuyo."
+    },
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
     "signUp": "Registrarse",
@@ -6462,6 +6483,20 @@
     "raw": "Original"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filtros",
+    "forSale": "En venta",
+    "openToOffers": "Abierto a ofertas",
+    "freshMints": "Recién creados en DeHub",
+    "makeOffer": "Hacer oferta",
+    "offersOpen": "Abierto a ofertas",
+    "mintedCount": "{{n}} acuñados",
+    "trending": "Colecciones en tendencia",
+    "floor": "Precio mínimo",
+    "listedCount": "{{n}} en venta",
+    "thisCollection": "Esta colección",
+    "collectionOffer": "Ofertar por cualquiera",
+    "showAll": "Ver todo",
     "title": "Mercado NFT",
     "subtitle": "Compra, vende y oferta en BNB y Base",
     "seoTitle": "Mercado NFT: compra y vende NFTs en BNB y Base | DeHub",
@@ -12415,6 +12450,7 @@
       "stateUnlisted": "Vive por enlace · en revisión para la tienda",
       "stateListed": "En la tienda",
       "stateSuspended": "Suspendido",
+      "stateRejected": "Vive por enlace · no aprobada para la tienda",
       "copyLink": "Copiar enlace",
       "notifyKey": "Notificar clave",
       "notifyKeyOnce": "Nueva clave de notificación para {{name}}. Copiala ahora: se muestra una sola vez, y hacer otra la reemplaza.",
@@ -12428,7 +12464,24 @@
       "rewardsWeek": "Semana de {{date}}",
       "rewardPaid": "Pagado",
       "rewardPending": "Pendiente",
-      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes."
+      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes.",
+      "signin": {
+        "title": "Iniciar sesión con DeHub",
+        "body": "Permite que la gente inicie sesión en tu web o app con su cuenta de DeHub. Crea una clave aquí y sigue la guía.",
+        "guide": "Leer la guía",
+        "users_one": "{{count}} usuario",
+        "users_other": "{{count}} usuarios",
+        "copyId": "Copiar ID de cliente",
+        "rotate": "Nuevo secreto",
+        "delete": "Eliminar",
+        "rotateConfirm": "¿Crear un nuevo secreto para {{name}}? El secreto anterior deja de funcionar al instante.",
+        "deleteConfirm": "¿Eliminar {{name}}? Todos los que iniciaron sesión con ella cerrarán sesión.",
+        "secretOnce": "Secreto de {{name}}. Cópialo ahora: solo se muestra una vez.",
+        "name": "Nombre de la app",
+        "website": "Sitio web (opcional)",
+        "redirects": "URL de redirección, una por línea (https://tusitio.com/callback)",
+        "create": "Crear clave"
+      }
     },
     "card": {
       "open": "Abierto"

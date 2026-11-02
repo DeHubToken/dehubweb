@@ -22,6 +22,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { chatRefusalText, ShownChatError, wasShownToUser } from '@/lib/chat-refusal';
 import { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
 import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 
@@ -593,8 +594,9 @@ export function useLiveChatMessages(roomId: string | null) {
     // message simply disappear. Say what happened and drop the row that will
     // never be confirmed.
     const unsubError = onLiveChatError(roomId, (data) => {
-      const message = data?.message || _translateCopy("copy.4e957da5c208", { defaultValue: "Message was not sent" });
-      toast.error(message);
+      const message = chatRefusalText(data);
+      // One toast per refusal even if several sends come back refused at once.
+      toast.error(message, { id: data?.code === 'SLOW_DOWN' ? 'chat-slow-down' : undefined });
       setMessages((prev) => {
         const next = prev.filter((m) => !m.id.startsWith('temp-'));
         if (roomId) cacheRoomMessages(roomId, next);
@@ -726,10 +728,14 @@ export function useLiveChatMessages(roomId: string | null) {
         }
 
         const apiType = type === 'image' ? 'media' : type;
+        // A refusal is already toasted by the room's error listener with the
+        // server's reason (slow down, blocked link, ...); remember it so the
+        // send does not add a second, vaguer toast on top.
+        let refused = false;
         const confirmed = await confirmChatDelivery({
           listen: (event, handler) => {
             if (event === 'message') return onLiveChatMessage(roomId, handler);
-            if (event === 'error') return onLiveChatError(roomId, handler);
+            if (event === 'error') return onLiveChatError(roomId, (data) => { refused = true; handler(data); });
             socket.on(event, handler); return () => { socket.off(event, handler); };
           },
           emit: () => { emitSendMessage({
@@ -744,6 +750,7 @@ export function useLiveChatMessages(roomId: string | null) {
           messageEvent: 'message', errorEvent: 'error',
           matches: message => roomMessageMatches(message, { account: walletAddress, content, room: roomId, attachment: imageUrl || audioUrl }),
         });
+        if (!confirmed && refused) throw new ShownChatError('refused');
         if (!confirmed) throw new Error(_translateCopy("copy.b13c7f1738c8", { defaultValue: "Message was not confirmed. Your draft has been kept." }));
 
         /*
@@ -771,7 +778,9 @@ export function useLiveChatMessages(roomId: string | null) {
           if (roomId) cacheRoomMessages(roomId, next);
           return next;
         });
-        toast.error(_translateCopy("copy.9b9ec2e38a00", { defaultValue: "Failed to send: {{value1}}", value1: err?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }));
+        if (!wasShownToUser(err)) {
+          toast.error(_translateCopy("copy.9b9ec2e38a00", { defaultValue: "Failed to send: {{value1}}", value1: err?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }));
+        }
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
       } finally {

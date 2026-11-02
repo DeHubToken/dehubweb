@@ -1326,7 +1326,10 @@
     "messageWallNote": "Apparaît sur le mur des pourboires une fois le pourboire confirmé.",
     "sendWithMessage": "Envoyer avec un message",
     "messageFailed": "Votre message n'a pas pu être ajouté. Aucun pourboire n'a été envoyé.",
-    "wallLabel": "Messages de pourboire"
+    "wallLabel": "Messages de pourboire",
+    "railTitle": "Pourboires",
+    "railTotal": "{{amount}} jetons",
+    "tokensUnit": "jetons"
   },
   "postOptions": {
     "liveAlertsOn": "Vous suivez désormais {{name}}. Vous recevrez une notification dès le début du direct.",
@@ -2244,6 +2247,24 @@
     "mutualsOne": "{{count}} en commun :",
     "mutualsMany": "{{count}} en commun :",
     "back": "Retour",
+    "reserve": {
+      "available": "Nom d'utilisateur disponible",
+      "held": "Réservé pour vous",
+      "ended": "Réservation terminée",
+      "busy": "En cours de réservation",
+      "availableBody": "dehub.io/{{name}} est libre en ce moment. Réservez-le et nous le gardons une minute pendant votre inscription.",
+      "heldBody": "Personne d'autre ne peut prendre @{{name}} avant la fin du minuteur. Terminez l'inscription pour le garder.",
+      "endedBody": "Votre minute est écoulée, @{{name}} est de nouveau ouvert à tous. Il est toujours libre.",
+      "busyBody": "Quelqu'un s'inscrit en tant que @{{name}} en ce moment. S'il ne termine pas, il se libère à la fin du minuteur.",
+      "finish": "Terminer l'inscription",
+      "again": "Réserver à nouveau",
+      "cta": "Réserver maintenant",
+      "letGo": "Le libérer",
+      "haveAccount": "Vous avez un compte ?",
+      "signIn": "Se connecter",
+      "seoTitle": "@{{name}} est disponible sur DeHub",
+      "seoDescription": "Personne n'a encore dehub.io/{{name}}. Réservez-le et inscrivez-vous pour qu'il soit à vous."
+    },
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
     "signUp": "S'inscrire",
@@ -6466,6 +6487,20 @@
     "raw": "Matières"
   },
   "nftMarket": {
+    "shortTitle": "NFT",
+    "filters": "Filtres",
+    "forSale": "En vente",
+    "openToOffers": "Ouvert aux offres",
+    "freshMints": "Tout juste créés sur DeHub",
+    "makeOffer": "Faire une offre",
+    "offersOpen": "Ouvert aux offres",
+    "mintedCount": "{{n}} créés",
+    "trending": "Collections tendance",
+    "floor": "Prix plancher",
+    "listedCount": "{{n}} en vente",
+    "thisCollection": "Cette collection",
+    "collectionOffer": "Offre sur n'importe lequel",
+    "showAll": "Tout afficher",
     "title": "Marché NFT",
     "subtitle": "Achetez, vendez et faites des offres sur BNB et Base",
     "seoTitle": "Marché NFT : achetez et vendez des NFT sur BNB et Base | DeHub",
@@ -12419,6 +12454,7 @@
       "stateUnlisted": "En ligne par lien · en attente de la boutique",
       "stateListed": "Dans la boutique",
       "stateSuspended": "Suspendue",
+      "stateRejected": "En ligne par lien · non approuvée pour la boutique",
       "copyLink": "Copier le lien",
       "notifyKey": "Notifier la touche",
       "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",
@@ -12432,7 +12468,24 @@
       "rewardsWeek": "Semaine du {{date}}",
       "rewardPaid": "Payant",
       "rewardPending": "En attente",
-      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi."
+      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi.",
+      "signin": {
+        "title": "Se connecter avec DeHub",
+        "body": "Permettez aux gens de se connecter à votre site ou app avec leur compte DeHub. Créez une clé ici, puis suivez le guide.",
+        "guide": "Lire le guide",
+        "users_one": "{{count}} utilisateur",
+        "users_other": "{{count}} utilisateurs",
+        "copyId": "Copier l'ID client",
+        "rotate": "Nouveau secret",
+        "delete": "Supprimer",
+        "rotateConfirm": "Créer un nouveau secret pour {{name}} ? L'ancien secret cesse de fonctionner immédiatement.",
+        "deleteConfirm": "Supprimer {{name}} ? Toutes les personnes connectées avec seront déconnectées.",
+        "secretOnce": "Secret de {{name}}. Copiez-le maintenant : il n'est affiché qu'une fois.",
+        "name": "Nom de l'app",
+        "website": "Site web (facultatif)",
+        "redirects": "URL de redirection, une par ligne (https://votresite.com/callback)",
+        "create": "Créer une clé"
+      }
     },
     "card": {
       "open": "Ouvrir"

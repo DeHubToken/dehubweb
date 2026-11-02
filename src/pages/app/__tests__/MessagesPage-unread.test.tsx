@@ -40,6 +40,10 @@ vi.mock('@/components/app/VerifiedBadge', () => ({ VerifiedBadge: () => null }))
 vi.mock('@/components/app/BadgeIcon', () => ({ BadgeIcon: () => null }));
 vi.mock('@/components/app/LiveRipple', () => ({ LiveRipple: ({ children }: { children: ReactNode }) => children }));
 vi.mock('@/components/app/chat/OnlineDot', () => ({ OnlineDot: () => null }));
+vi.mock('@/components/app/chat/NewGroupChannelSheet', () => ({ NewGroupChannelSheet: () => null }));
+vi.mock('@/components/app/chat/GroupChatRow', () => ({ GroupChatRow: () => null }));
+vi.mock('@/hooks/use-communities', () => ({ useUserCommunities: () => ({ data: [] }) }));
+vi.mock('@/lib/community-kinds', () => ({ chatsFromMemberships: () => [] }));
 vi.mock('@/components/app/AuthGate', () => ({ AuthGate: () => null }));
 vi.mock('@/components/SEOHead', () => ({ SEOHead: () => null }));
 vi.mock('@/components/ui/swipeable-row', () => ({ SwipeableRow: ({ children }: { children: ReactNode }) => <div>{children}</div> }));

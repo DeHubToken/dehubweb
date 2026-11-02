@@ -10,8 +10,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
-import { useTrendingCategories, useAllTrendingCategories, prefetchTrendingPeriods, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
-import { useQueryClient } from '@tanstack/react-query';
+import { useTrendingCategories, useAllTrendingCategories, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
 
 const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -49,25 +48,8 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const { t } = useTranslation();
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
   const dirRef = useRef(0);
-  const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loaderRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  // Instances of this list sit inside CSS-hidden cached pages (explore) and
-  // the sidebar — rotate only while THIS instance is actually on screen.
-  const [isOnScreen, setIsOnScreen] = useState(false);
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      setIsOnScreen(true);
-      return;
-    }
-    const io = new IntersectionObserver(([entry]) => setIsOnScreen(entry.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
 
   const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
   
@@ -101,34 +83,9 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
     return () => observer.disconnect();
   }, [topicPeriod, hasMore]);
 
-  // The rotation below will visit every period; load them together up front.
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    if (!isAutoRotating || !isOnScreen) return;
-    prefetchTrendingPeriods(queryClient, TOPIC_PERIODS.map(p => p.value));
-  }, [isAutoRotating, isOnScreen, queryClient]);
-
-  // Auto-rotate through periods every 5 seconds (skip ticks while the browser
-  // tab is hidden — this list is mounted app-wide via the sidebar)
-  useEffect(() => {
-    if (!isAutoRotating || !isOnScreen) return;
-    const interval = setInterval(() => {
-      if (document.hidden) return;
-      setTopicPeriod(prev => {
-        const idx = TOPIC_PERIODS.findIndex(p => p.value === prev);
-        const next = TOPIC_PERIODS[(idx + 1) % TOPIC_PERIODS.length].value;
-        dirRef.current = 1;
-        return next;
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isAutoRotating, isOnScreen]);
-
   const handlePeriodChange = useCallback((newPeriod: TopicPeriod) => {
     dirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[topicPeriod];
     setTopicPeriod(newPeriod);
-    setIsAutoRotating(false);
-    setTimeout(() => setIsAutoRotating(true), 30000);
   }, [topicPeriod]);
 
   const handleCategoryClick = (categoryName: string) => {
@@ -154,7 +111,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   };
 
   return (
-    <div ref={rootRef} style={{ minHeight }} className="relative overflow-hidden">
+    <div style={{ minHeight }} className="relative overflow-hidden">
       {/* Period tabs */}
       <div className="flex mb-2">
         {TOPIC_PERIODS.map(p => (

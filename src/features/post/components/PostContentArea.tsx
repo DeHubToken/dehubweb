@@ -55,6 +55,8 @@ interface PostContentAreaProps {
   onClearFilter: (index: number) => void;
   onApplyCrop: (index: number, settings: CropSettings) => void;
   onClearCrop: (index: number) => void;
+  onReplaceVideo?: (file: File) => Promise<void> | void;
+  onUpdateMedia?: (index: number, patch: Partial<MediaFile>) => void;
   onApplyTrim: (index: number, trimStart: number, trimEnd: number) => void;
   onReplaceImage: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   onSetMediaDescription?: (index: number, description: string) => void;
@@ -164,6 +166,8 @@ export function PostContentArea({
   onApplyCrop,
   onClearCrop,
   onApplyTrim,
+  onReplaceVideo,
+  onUpdateMedia,
   onReplaceImage,
   onSetMediaDescription,
   contentWarning,
@@ -433,7 +437,7 @@ export function PostContentArea({
   return (
     <>
       <div 
-        className="p-4 min-h-0 max-h-[60vh] overflow-y-auto relative"
+        className="p-4 min-h-0 max-h-[60vh] overflow-y-auto overscroll-contain [touch-action:pan-y] relative"
         data-vaul-no-drag
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -687,6 +691,8 @@ export function PostContentArea({
             onApplyCrop={onApplyCrop}
             onClearCrop={onClearCrop}
             onApplyTrim={onApplyTrim}
+            onReplaceVideo={onReplaceVideo}
+            onUpdateMedia={onUpdateMedia}
             onReplaceImage={onReplaceImage}
             onSetDescription={onSetMediaDescription}
             onFullscreenChange={onMediaFullscreenChange}

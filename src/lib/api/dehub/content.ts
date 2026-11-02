@@ -122,6 +122,10 @@ export interface MintPostParams {
   shopListingCount?: number;
   /** Alt text, one per uploaded image or video in file order. */
   mediaDescriptions?: string[];
+  /** Draft video edits the server bakes in (mirror, turn, colour matrix, vignette). */
+  videoEdits?: { mirror?: boolean; rotate?: number; matrix?: number[]; vignette?: number };
+  /** Seconds until the post deletes itself (1h, 12h, 1d, 7d or 30d). */
+  destruct?: number;
   /** 'comic' lays the photos out as a comic (collector cards). */
   layout?: 'comic';
   /** Comic captions, one per page in file order. */
@@ -255,6 +259,11 @@ export async function mintPost(
       formData.append('trimStart', String(params.trimStart));
       formData.append('trimEnd', String(params.trimEnd));
     }
+    if (params.videoEdits) formData.append('videoEdits', JSON.stringify(params.videoEdits));
+  }
+
+  if (params.destruct) {
+    formData.append('destruct', String(params.destruct));
   }
 
   if (params.draftImageIds?.length && params.postType === 'feed-images' && !params.quotedTokenId) {

@@ -29,7 +29,7 @@ import {
  * again in any order, and Done only rewrites the photos that changed.
  */
 
-export type StudioTab = 'crop' | 'looks' | 'adjust' | 'draw';
+export type StudioTab = 'crop' | 'looks' | 'adjust' | 'draw' | 'alt';
 
 export interface StudioPhoto {
   /** The original picture, before any studio edit. */
@@ -50,6 +50,9 @@ interface Props {
   startTab?: StudioTab;
   onClose: () => void;
   onDone: (results: StudioResult[]) => void;
+  /** Alt text per photo; with a handler the Alt tab shows and Done saves it. */
+  descriptions?: string[];
+  onDescriptions?: (descriptions: string[]) => void;
 }
 
 const COLORS = ['#ffffff', '#000000', '#ff3b30', '#ff9500', '#ffcc00', '#34c759', '#0a84ff', '#bf5af2'];
@@ -156,7 +159,8 @@ function Slider({ value, min, max, onChange, label }: { value: number; min: numb
   );
 }
 
-export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, onDone }: Props) {
+export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, onDone, descriptions, onDescriptions }: Props) {
+  const [alts, setAlts] = useState<string[]>(() => photos.map((_, i) => descriptions?.[i] ?? ''));
   const { t: _copy } = _useCopy();
   const [index, setIndex] = useState(startIndex);
   const [tab, setTab] = useState<StudioTab>(startTab);
@@ -470,6 +474,7 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
         const file = await bakeStudio(photos[i].original, latest[i]);
         results.push({ index: i, original: photos[i].original, edits: latest[i], file });
       }
+      onDescriptions?.(alts.map((a) => a.trim()));
       onDone(results);
     } catch (err) {
       console.warn('[PhotoStudio] bake failed:', err);
@@ -484,6 +489,7 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
     { id: 'looks', icon: <Palette className="h-5 w-5" />, label: _copy('copy.studio.looks', { defaultValue: 'Looks' }) },
     { id: 'adjust', icon: <SlidersHorizontal className="h-5 w-5" />, label: _copy('copy.studio.adjust', { defaultValue: 'Adjust' }) },
     { id: 'draw', icon: <Pencil className="h-5 w-5" />, label: _copy('copy.studio.draw', { defaultValue: 'Draw' }) },
+    ...(onDescriptions ? [{ id: 'alt' as StudioTab, icon: <span className="flex h-5 items-center rounded border border-current px-1 text-[9px] font-bold leading-none">ALT</span>, label: _copy('altText.tab', { defaultValue: 'Alt text' }) }] : []),
   ];
   const adjustLabel = (k: StudioAdjustKey) =>
     ({
@@ -503,6 +509,10 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
   const body = (
     <div
       className="fixed inset-0 z-[300] flex flex-col bg-black text-white"
+      // Files dropped here stay here, not on the page-wide "new post" drop.
+      data-drop-attach
+      onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); }}
+      onDrop={(e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); }}
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       role="dialog"
       aria-modal="true"
@@ -684,6 +694,20 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
                   })
                 : null}
             </div>
+          </div>
+        ) : null}
+
+        {tab === 'alt' ? (
+          <div className="space-y-1.5">
+            <textarea
+              value={alts[index] ?? ''}
+              onChange={(e) => { const v = e.target.value; setAlts((a) => a.map((x, i) => (i === index ? v : x))); }}
+              maxLength={1000}
+              rows={3}
+              placeholder={_copy('altText.placeholder', { defaultValue: 'Describe this photo' })}
+              className="w-full resize-none rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-white/40 focus:outline-none"
+            />
+            <p className="text-[11px] text-white/45">{_copy('altText.hint', { defaultValue: 'Say what is in it for people who cannot see it.' })}</p>
           </div>
         ) : null}
 

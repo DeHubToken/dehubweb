@@ -37,6 +37,10 @@ export interface Community {
   holder_gate_min?: number | string | null;
   holder_gate_symbol?: string | null;
   holder_gate_decimals?: number | null;
+  /** 'group' and 'channel' are started from the + in Messages. */
+  kind?: 'community' | 'group' | 'channel' | null;
+  /** One-off entry price in whole DeHub tokens; null or 0 = free. */
+  entry_price?: number | string | null;
   created_at: string;
   updated_at: string;
 }
@@ -292,7 +296,7 @@ export function useCreateCommunity() {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async (input: { name: string; slug: string; description?: string; avatar_url?: string; banner_url?: string; is_private?: boolean; rules?: any[] }) => {
+    mutationFn: async (input: { name: string; slug: string; description?: string; avatar_url?: string; banner_url?: string; is_private?: boolean; rules?: any[]; kind?: 'community' | 'group' | 'channel'; entry_price?: number | null }) => {
       if (!walletAddress) throw new Error('Not connected');
       const { data, error } = await withWalletHeader(
         supabase
@@ -306,7 +310,9 @@ export function useCreateCommunity() {
             creator_wallet_address: walletAddress,
             is_private: input.is_private || false,
             rules: input.rules || [],
-          })
+            ...(input.kind && input.kind !== 'community' ? { kind: input.kind } : {}),
+            ...(input.entry_price ? { entry_price: input.entry_price } : {}),
+          } as any)
           .select()
           .single(),
         walletAddress
@@ -314,10 +320,14 @@ export function useCreateCommunity() {
       if (error) throw error;
       return data as Community;
     },
-    onSuccess: () => {
+    onSuccess: (created) => {
       qc.invalidateQueries({ queryKey: ['communities', 'discover'] });
       qc.invalidateQueries({ queryKey: ['communities', 'user'] });
-      toast.success(_copy("copy.62ce8772eeee", { defaultValue: "Community created!" }));
+      toast.success(created?.kind === 'group'
+        ? _copy('communities.newChat.groupCreated', { defaultValue: 'Group created' })
+        : created?.kind === 'channel'
+          ? _copy('communities.newChat.channelCreated', { defaultValue: 'Channel created' })
+          : _copy("copy.62ce8772eeee", { defaultValue: "Community created!" }));
     },
     onError: (e: any) => {
       if (e?.message?.includes('duplicate')) {

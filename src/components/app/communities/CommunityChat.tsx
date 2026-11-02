@@ -24,6 +24,8 @@ import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import MicOff from "@/components/ui/cut-icons/mic-off";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import { communityKindOf } from "@/lib/community-kinds";
 import Ban from "@/components/ui/cut-icons/blocked";
 
 import Send from "@/components/ui/cut-icons/send";
@@ -374,7 +376,10 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
     });
   }, [abilities.mutedUntil, t]);
 
-  const composerNotice: { icon: React.ReactNode; text: React.ReactNode } | null = abilities.isMuted
+  const readOnlyChannel = communityKindOf(community) === 'channel' && !abilities.isOwner && !abilities.isAdmin;
+  const composerNotice: { icon: React.ReactNode; text: React.ReactNode } | null = readOnlyChannel
+    ? { icon: <Megaphone className="w-4 h-4" />, text: t('communities.newChat.adminsOnly', { defaultValue: 'Only admins post in this channel.' }) }
+    : abilities.isMuted
     ? { icon: <MicOff className="w-4 h-4" />, text: mutedNotice }
     : !canSendMessages
       ? {

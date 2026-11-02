@@ -283,6 +283,16 @@ function ImageSlide({
           return;
         }
 
+        // A feed kept alive on a hidden page has no box at all. That is not
+        // "scrolled far away", and releasing there leaves blank photos when
+        // the page comes back, so only release a slide that is laid out.
+        const box = entry.boundingClientRect;
+        if (box && box.width === 0 && box.height === 0) {
+          if (releaseTimer) clearTimeout(releaseTimer);
+          releaseTimer = undefined;
+          return;
+        }
+
         // Native lazy-loading never unloads an image once decoded. Release it
         // only after it has stayed far outside the viewport, leaving a wide
         // buffer and grace period so ordinary scroll-back remains instant.
@@ -966,12 +976,12 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
-    if (window.location.pathname === `/app/post/${post.id}`) return;
+    if (window.location.pathname === `/app/post/${post.id}` || (post.articleSlug && window.location.pathname === `/app/post/${post.articleSlug}`)) return;
     // Opens its own post page like a text post: the feed keeps this very card
     // (RetainedPostSurface) and the page shows it as it was, under the same
     // top bar, with Back in the pill.
     cacheImageForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+    navigate(`/app/post/${post.articleSlug || post.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const handleImageClick = (index: number, onPicture = true) => {
@@ -979,7 +989,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
     // A post opened from the feed keeps this feed card on its page, so being
     // on the post's own URL counts as the post page: the photo opens full screen.
-    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}`;
+    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}` || (!!post.articleSlug && window.location.pathname === `/app/post/${post.articleSlug}`);
     // The picture itself opens full screen; the bento around it (here, the
     // space beside a narrow photo) opens the post page.
     if (!onPicture && !onPostPage && !imagesFeedScrollView && !gated) {
@@ -1169,7 +1179,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
               </button>
               <button
                 onClick={() => {
-                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.articleSlug || post.id}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);
@@ -1527,6 +1537,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
         <ActionBar
           postId={post.id}
+          articleSlug={post.articleSlug}
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}

@@ -1,10 +1,15 @@
+import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
+import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
+import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { PostActionBar } from '@/features/post/components/PostActionBar';
 import { createPortal } from 'react-dom';
 import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
@@ -73,6 +78,9 @@ import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import type { DeHubPoll, DmLock, DmLockStatus, DmMessage } from '@/lib/api/dehub';
 import { LockedMediaBubble, lockedMediaKey } from '@/components/app/chat/LockedMediaBubble';
+import { UnlockReveal } from '@/components/app/unlock/UnlockReveal';
+import { UnlockConfirmSheet, type UnlockPhase } from '@/components/app/unlock/UnlockConfirmSheet';
+import type { UnlockRevealKind } from '@/components/app/unlock/unlock-reveal-kind';
 import { LockPriceControl } from '@/components/app/chat/LockPriceControl';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -123,6 +131,29 @@ const GALLERY_COMIC_CAPTIONS = [
   '...and Nemo tumbles back into his own room.',
 ];
 const GALLERY_COMIC_ALTS = GALLERY_COMIC_PAGES.map((_, i) => `Panel ${i + 1}: Nemo's bed walking through the city at night.`);
+/** dehub.io/<free name> for a signed-out visitor: Reserve now, held (1 minute), ended, someone else holding. */
+function UsernameReserveGallery() {
+  const states = [
+    { state: 'avail' as const, label: 'Available' },
+    { state: 'held' as const, label: 'Held for you', secondsLeft: 41 },
+    { state: 'ended' as const, label: 'Hold ended' },
+    { state: 'busy' as const, label: 'Someone else holding', secondsLeft: 23 },
+  ];
+  return (
+    <section data-username-reserve-gallery className="mb-5">
+      <h2 className="mb-3 text-sm font-semibold">Free username: Reserve now</h2>
+      <div className="grid gap-6 sm:grid-cols-2">
+        {states.map((s) => (
+          <div key={s.state} className="flex flex-col items-center gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{s.label}</p>
+            <UsernameReserve username="nova" preview={{ state: s.state, secondsLeft: s.secondsLeft }} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ComicGallery() {
   const media = GALLERY_COMIC_PAGES.slice(0, 3).map((preview, i) => ({
     file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
@@ -206,6 +237,8 @@ const GALLERY_AUTH = {
 } as unknown as AuthContextType;
 
 import { ComicDeck } from '@/components/app/comic/ComicDeck';
+import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
+import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
@@ -371,6 +404,84 @@ function CaptureCardGallery() {
  */
 const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
 
+/** Composer tool row: the ... sheet holds Poll, then Comic, then the rest. */
+function PostOptionsGallery() {
+  const imageRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLInputElement>(null);
+  const [poll, setPoll] = useState(false);
+  const [comic, setComic] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const noop = () => {};
+  return (
+    <section data-page-bento data-post-options-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Post options</h2>
+      {/* The gallery has no sign-in; the bar's pickers only read it. */}
+      <AuthContext.Provider value={GALLERY_AUTH}>
+      <PostActionBar
+        imageInputRef={imageRef}
+        videoInputRef={videoRef}
+        audioInputRef={audioRef}
+        onImageSelect={noop}
+        onVideoSelect={noop}
+        onAudioSelect={noop}
+        onStartRecording={noop}
+        liveMode={null}
+        setLiveMode={noop}
+        onInsertFormatting={noop}
+        onInsertEmoji={noop}
+        onInsertGif={noop}
+        onCameraCapture={noop}
+        onEnhanceWithAI={noop}
+        onPost={noop}
+        canPost={false}
+        isEnhancing={false}
+        isPosting={false}
+        hasText={false}
+        onTogglePoll={() => setPoll((v) => !v)}
+        hasPoll={poll}
+        onToggleComic={() => setComic((v) => !v)}
+        isComic={comic}
+        onToggleContentWarning={() => setWarning((v) => !v)}
+        hasContentWarning={warning}
+      />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Phone feed filter line: every active filter in one line, plus presets. Tap a line to open it. */
+function FeedFilterLineGallery() {
+  const base = [
+    { key: 'type', group: 'Type', label: 'Articles' },
+    { key: 'tag', group: 'Tag', label: '#music' },
+    { key: 'date', group: 'Date', label: '1w' },
+    { key: 'sort', group: 'Sort', label: 'Most Liked' },
+    { key: 'ppv', group: 'Access', label: 'PPV' },
+  ];
+  const [items, setItems] = useState(base);
+  const live = items.map((i) => ({ ...i, onRemove: () => setItems((xs) => xs.filter((x) => x.key !== i.key)) }));
+  return (
+    <section data-page-bento data-feed-filter-line-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Feed filter line</h2>
+      <div className="flex max-w-[390px] flex-col gap-3">
+        <FeedFilterLine items={live} onClearAll={() => setItems(base)} onSavePreset={() => {}} />
+        <FeedFilterLine items={live.slice(0, 3)} presetName="Long reads" onClearAll={() => {}} onSavePreset={() => {}} />
+        <div className="rounded-2xl border border-white/10 bg-black/60 p-4">
+          <FeedPresetsRow
+            presets={[{ name: 'Long reads' }, { name: 'Music this week' }, { name: 'Bounties' }]}
+            activeName="Long reads"
+            onApply={() => {}}
+            onDelete={() => {}}
+            onSaveCurrent={() => {}}
+            canSaveCurrent
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** Composer ALT pill: empty vs saved. Tap a picture's pill to flip it. */
 function AltPillGallery() {
   const [saved, setSaved] = useState([false, true]);
@@ -533,24 +644,28 @@ const galleryTipCard = (id: string, name: string, text: string, amount: number, 
   tip: { amount, symbol, chainId: 8453, txHash: '0x', value: symbol === 'DHB' ? amount : amount * 1000 },
 });
 const GALLERY_TIP_WALL: GalleryComment[] = [
-  galleryTipCard('9001', 'mal', 'This beat goes so hard 🔥 more of this', 5000),
-  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 1000),
-  galleryTipCard('9003', 'legouffre', 'merci 🙏', 5, 'USDC'),
+  galleryTipCard('9001', 'mal', 'This beat goes so hard, more of this', 25000),
+  galleryTipCard('9002', 'r2r', 'Played this on the drive home, perfect.', 5000),
+  galleryTipCard('9003', 'kenji', 'Drop the full set please', 1200),
+  galleryTipCard('9004', 'legouffre', 'merci', 5, 'USDC'),
 ];
+
 
 /** Tip with a message: the sheet's message box and the tip wall cards. */
 function TipMessageGallery() {
   const [open, setOpen] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [landed, setLanded] = useState<string | null>('9001');
+  const [replay, setReplay] = useState(0);
   return (
     <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-tip-message-gallery>
       <h2 className="mb-3 text-sm font-semibold">Tip messages</h2>
-      <div className="-mx-4">
-        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(id) => setOpenId(c => (c === id ? null : id))} landedId={landed} />
+      <div key={replay}>
+        <TipWall rows={GALLERY_TIP_WALL} openId={openId} onToggle={(cid) => setOpenId(c => (c === cid ? null : cid))} landedId={landed} />
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3 text-white">
         <TipChip tip={{ amount: 5000, symbol: 'DHB' }} />
+        <Button variant="glass" size="sm" data-replay-tip-rail onClick={() => setReplay(r => r + 1)}>Replay rails</Button>
         <Button variant="glass" size="sm" onClick={() => { setLanded(null); window.setTimeout(() => setLanded('9001'), 30); }}>Replay landing</Button>
         <Button variant="glass" size="sm" data-open-tip-sheet onClick={() => setOpen(true)}>Open tip sheet</Button>
       </div>
@@ -613,6 +728,58 @@ function LockedDmGallery() {
         {cell('You: unlocked', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-mine-sold', 'me')} /></div>)}
         {cell('Composer', <div className="w-[260px] rounded-2xl bg-black/30 p-3"><img src={real} alt="" className="h-20 rounded-lg object-cover" /><LockPriceControl value={price} onChange={setPrice} kind="image" /></div>)}
       </div>
+    </section>
+  );
+}
+
+/** Paid unlock: the confirm sheet's steps and the three reveals that take turns after paying. */
+function UnlockRevealGallery() {
+  const real = `${window.location.origin}/og/agents.jpg`;
+  const [plays, setPlays] = useState<Record<UnlockRevealKind, number>>({ coin: 0, confetti: 0, foil: 0 });
+  const [phase, setPhase] = useState<UnlockPhase | null>(null);
+  const tile = (kind: UnlockRevealKind, label: string) => (
+    <div className="flex flex-col gap-1.5" key={kind}>
+      <span className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</span>
+      <div data-reveal-tile={kind} className="relative w-[200px] overflow-hidden rounded-lg" style={{ aspectRatio: '4 / 5' }}>
+        <img src={real} alt="" className="h-full w-full object-cover" />
+        {plays[kind] > 0 && (
+          <UnlockReveal
+            key={plays[kind]}
+            kind={kind}
+            cover={<img src={GALLERY_LOCK_BLUR} alt="" className="scale-125 blur-xl" />}
+            onDone={() => undefined}
+          />
+        )}
+      </div>
+      <Button variant="glass" size="sm" data-play-reveal={kind} onClick={() => setPlays(p => ({ ...p, [kind]: p[kind] + 1 }))}>Play</Button>
+    </div>
+  );
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-unlock-reveal-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Paid unlock reveal</h2>
+      <div className="flex flex-wrap items-start gap-4 text-white">
+        {tile('coin', 'Coin drop')}
+        {tile('confetti', 'Confetti')}
+        {tile('foil', 'Foil peel')}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {(['idle', 'paying', 'confirming', 'done'] as UnlockPhase[]).map(ph => (
+          <Button key={ph} variant="glass" size="sm" data-unlock-phase={ph} onClick={() => setPhase(ph)}>Sheet: {ph}</Button>
+        ))}
+      </div>
+      <UnlockConfirmSheet
+        open={phase !== null}
+        onOpenChange={o => { if (!o) setPhase(null); }}
+        title="Unlock photo"
+        who="From angela"
+        sub="All of it goes to angela"
+        previewUrl={GALLERY_LOCK_BLUR}
+        priceLabel="$5"
+        dhbLabel="≈ 5,000 DHB"
+        phase={phase ?? 'idle'}
+        doneLabel="Opening your photo…"
+        onPay={() => setPhase('paying')}
+      />
     </section>
   );
 }
@@ -971,6 +1138,7 @@ export default function StateGalleryPage() {
         />
 
         <ComicGallery />
+        <UsernameReserveGallery />
 
         <FollowCardsGallery />
 
@@ -984,6 +1152,7 @@ export default function StateGalleryPage() {
         <AgentWelcomeGallery />
         <LiveViewerGallery />
         <HolderGroupGallery />
+        <GroupsChannelsGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -1098,6 +1267,7 @@ export default function StateGalleryPage() {
 
         <TipMessageGallery />
         <LockedDmGallery />
+        <UnlockRevealGallery />
         <MintChainGallery />
         <WhenSheetGallery />
         <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
@@ -1105,6 +1275,8 @@ export default function StateGalleryPage() {
         <TooltipsGallery />
         <AppTokensGallery />
         <AudioGallery />
+        <PostOptionsGallery />
+        <FeedFilterLineGallery />
         <AltPillGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
@@ -1207,6 +1379,37 @@ const GALLERY_HOLDER_COMMUNITY = {
   holder_gate_token: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
   holder_gate_min: 1000, holder_gate_symbol: 'DHB', holder_gate_decimals: 18,
 } as Community;
+
+const GALLERY_GROUP = { ...GALLERY_COMMUNITY, id: 'gallery-group', slug: 'night-owls', name: 'Night Owls', kind: 'group', is_private: true, member_count: 38, avatar_url: null } as Community;
+const GALLERY_CHANNEL = { ...GALLERY_COMMUNITY, id: 'gallery-channel', slug: 'alpha-calls', name: 'Alpha Calls', kind: 'channel', entry_price: 1000, member_count: 1204, avatar_url: null } as Community;
+
+/** The + in Messages: what it offers, the New channel sheet, and the list rows. */
+function GroupsChannelsGallery() {
+  const [selector, setSelector] = useState(false);
+  const [sheet, setSheet] = useState<NewChatKind | null>(null);
+  return (
+    <section data-page-bento data-groups-channels-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Groups and channels</h2>
+      <div className="flex flex-wrap gap-2 mb-3">
+        <button type="button" data-open-selector onClick={() => setSelector(true)} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">+ menu</button>
+        <button type="button" data-open-group-sheet onClick={() => setSheet('group')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">New group</button>
+        <button type="button" data-open-channel-sheet onClick={() => setSheet('channel')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">New channel</button>
+      </div>
+      <div data-groups-channels-rows className="rounded-2xl border border-white/10 overflow-hidden">
+        <GroupChatRow community={GALLERY_GROUP} onClick={noop} />
+        <GroupChatRow community={GALLERY_CHANNEL} onClick={noop} />
+      </div>
+      <div className="mt-3">
+        <CommunityKindChip community={GALLERY_GROUP} />
+        <CommunityKindChip community={GALLERY_CHANNEL} />
+      </div>
+      <NewMessageSelector open={selector} onOpenChange={setSelector} onSelectDM={noop} onSelectGroup={noop} onSelectChannel={noop} />
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <NewGroupChannelSheet kind={sheet ?? 'group'} open={!!sheet} onOpenChange={(open) => { if (!open) setSheet(null); }} />
+      </AuthContext.Provider>
+    </section>
+  );
+}
 
 /** A holder group: the header tag, the owner's Holders tab and Top holders. */
 function HolderGroupGallery() {
