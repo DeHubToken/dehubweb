@@ -162,7 +162,11 @@
     "saved": "个人资料字段已保存",
     "failed": "没有保存成功，请再试一次。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}",
+    "placeholderLocation": "城市、國家",
+    "presets": {
+      "custom": "定制"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",
@@ -383,6 +387,9 @@
     "gasSponsorshipFailed": "這筆交易个費用擔袂起。請小等閣試。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标进行重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置選單順序",
     "home": "厝里",
     "explore": "探索",
     "prompt": "提示",
@@ -1702,6 +1709,8 @@
       "featureReply": "{{name}} 回覆了你的留言",
       "featureMentionNamed": "{{name}} 在「{{title}}」上提到了你",
       "featureMention": "{{name}} 在功能請求上提到了你",
+      "featureNewNamed": "{{name}} 吾新增一個請求「{{title}}」",
+      "featureNew": "{{name}} 吾新增一個請求",
       "governanceVoteNamed": "{{name}} 在你的提案「{{title}}」上投票了",
       "governanceVote": "{{name}} 在你的提案上投票了",
       "governanceCommentNamed": "{{name}} 在你的提案「{{title}}」上留了言",
@@ -2797,6 +2806,21 @@
     "likersEmptyBody": "这条评论的点赞会显示在这里。",
     "anonymousLikes_one": "{{count}} 个来自匿名徽章持有者的赞",
     "anonymousLikes_other": "{{count}} 个来自匿名徽章持有者的赞"
+  },
+  "mintChain": {
+    "title": "Mint 帖子",
+    "subtitle": "选择链。价格实时更新，每分钟刷新一次。",
+    "free": "免费",
+    "gasCovered": "Gas 费用由 DeHub 覆盖",
+    "feeIncludesGas": "≈ {{usd}}，已含 gas",
+    "gasIncluded": "已含 gas",
+    "gasOnly": "≈ {{usd}} 气",
+    "paidFromWallet": "{{amount}} 来自你的钱包",
+    "paidFromWalletPlain": "已从你的钱包支付",
+    "priceUnavailable": "价格不可用",
+    "confirm": "在 {{chain}} 上铸造",
+    "confirmWithCost": "在 {{chain}} · {{cost}} 上铸造",
+    "notAvailable": "此链上的铸造尚未开放。"
   },
   "postInfo": {
     "title": "帖子信息",
@@ -14289,7 +14313,7 @@
     "f45e06965f93": "没有推荐的关注者",
     "34f5da2599fa": "新账户建议将在此处显示。",
     "bac527bf9a36": "关注推荐",
-    "036cfd952896": "谁值得关注",
+    "a94bfc8a15e8": "关注推荐",
     "0c820caf16c0": "暫無個人簡介",
     "e139251e4f5b": "删除帖子",
     "b3661ad568df": "本操作不可逆转。您的帖子将永久删除。",
@@ -18050,9 +18074,33 @@
     "headlineAccent": "並快樂。",
     "orContinueWith": "或繼續用",
     "phone": "手機",
+    "email": "Email",
     "fingerprint": "指紋",
     "exploreFirst": "先探索",
     "codeNote": "我們會寄一個驗證碼，不需要密碼。"
+  },
+  "tokenLaunch": {
+    "body": "购买已关闭，直至新代币准备就绪。立即收到电子邮件通知它上线。",
+    "notifyMe": "通知我",
+    "sendTo": "我们将通过电子邮件发送给{{email}}",
+    "emailLabel": "电子邮件",
+    "emailPlaceholder": "您的电子邮件",
+    "joinedTitle": "你在名单上",
+    "joinedBody": "我们将在令牌上线时发邮件给{{email}}。",
+    "joinedBodyNoEmail": "我们将在令牌上线时发邮件给你。",
+    "privacy": "只用来告诉你关于发布的信息。",
+    "seoTitle": "Token 发布即将开始 | DeHub",
+    "seoDescription": "新版DeHub代币即将上线。加入名单，等待即将上线的通知，然后直接从DeHub钱包购买。"
+  },
+  "githubLink": {
+    "hint": "登入 GitHub 來證明帳戶是你的。DeHub 只會看到你的公開 GitHub 簡介。",
+    "connected": "GitHub 連接好喽！",
+    "disconnected": "GitHub 断开连接",
+    "taken": "那個 GitHub 帳號已經在另一個 DeHub 個人檔案上了。",
+    "failed": "無法連結 GitHub。請再試一次。",
+    "unavailable": "GitHub 驗證即將到來。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开"
   },
   "post": {
     "like": "赞",

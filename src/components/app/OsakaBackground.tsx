@@ -949,6 +949,8 @@ function OsakaScene() {
 
     /* ---- loop ------------------------------------------------------------ */
     const gate = createRenderGate(mount, () => {
+      if (motionReduced) return;
+      tryPlay();
       if (!raf) raf = requestAnimationFrame(animate);
     });
     const throttle = createFrameThrottle(budget.fps);
@@ -998,8 +1000,17 @@ function OsakaScene() {
     }
 
     const animate = (now: number) => {
+      // Paused (hidden tab, docs over the canvas, or the app's feed moving):
+      // stop the loop and the rain video outright. A loop that only skipped
+      // its draw still woke every vsync and kept the video decoding, which on
+      // the phone app redrew the whole backdrop through every fling.
+      if (!gate.isActive()) {
+        raf = null;
+        video.pause();
+        return;
+      }
       raf = requestAnimationFrame(animate);
-      if (mediaFailed || !gate.isActive() || gl.isContextLost()) return;
+      if (mediaFailed || gl.isContextLost()) return;
       if (!throttle(now)) return;
 
       // Fade in over ~700ms. The video's first decoded frame can land several

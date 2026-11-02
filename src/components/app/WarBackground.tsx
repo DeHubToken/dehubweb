@@ -1679,8 +1679,13 @@ function WarScene() {
     let gate: ReturnType<typeof createRenderGate> | null = null;
 
     const animate = (now: number) => {
+      // Paused: stop the loop; the gate's resume restarts it.
+      if (!gate || !gate.isActive()) {
+        running = false;
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(animate);
-      if (!gate || !gate.isActive()) return;
       if (!throttle(now)) return;
       if (renderer.getContext().isContextLost()) return;
 

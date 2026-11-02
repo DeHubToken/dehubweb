@@ -1,3 +1,4 @@
+import { reportPostEvent } from '@/lib/api/dehub/post-stats';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CalendarClock, Clock, GitFork, Star } from "lucide-react";
@@ -20,7 +21,7 @@ export function RichLinkCard({ preview, onRemove }: { preview: RichPreview; onRe
   };
   return (
     <div data-glass-embed className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5" data-no-navigate>
-      <a href={preview.url} target="_blank" rel="noopener noreferrer" className="block p-3 text-white hover:bg-white/5" onClick={e => e.stopPropagation()}>
+      <a href={preview.url} target="_blank" rel="noopener noreferrer" className="block p-3 text-white hover:bg-white/5" onClick={e => { e.stopPropagation(); reportPostEvent(e.currentTarget.closest('[data-stats-token]')?.getAttribute('data-stats-token'), 'link'); }}>
         <div className="flex items-center gap-2 text-xs text-white/65">
           <span className="font-semibold">{preview.siteName}</span>
           {data.status && <span className="rounded-full bg-white/10 px-2 py-0.5">{t(statusKeys[data.status])}</span>}

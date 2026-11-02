@@ -27,14 +27,18 @@ export function useMintExistingPost() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const mint = useCallback(async (tokenId: number | string, chainId?: number) => {
+  /**
+   * `chosenChainId` is the chain picked in the mint sheet. Without one the
+   * post goes on-chain where it was published.
+   */
+  const mint = useCallback(async (tokenId: number | string, chainId?: number, chosenChainId?: number) => {
     if (isMinting) return false;
     setIsMinting(true);
     const toastId = 'mint-existing';
 
     try {
       const post = await getNFTInfo(String(tokenId));
-      const targetChain = (post.chainId || chainId || BASE_CHAIN_ID) as ChainId;
+      const targetChain = (chosenChainId || post.chainId || chainId || BASE_CHAIN_ID) as ChainId;
       const info = post.streamInfo;
       const hasBounty = !!info?.isAddBounty;
       const bountyAmount = Number(info?.addBountyAmount);
@@ -80,7 +84,13 @@ export function useMintExistingPost() {
 
       toast.loading(_copy("copy.ef478f3aaf43", { defaultValue: "Minting post" }), { id: toastId, duration: Infinity });
 
-      const sig = await mintExistingPost(tokenId);
+      const sig = await mintExistingPost(tokenId, targetChain);
+      // The signature binds the chain. A server that ignored the pick signed
+      // for the old one, and sending that to another chain would only revert.
+      const signedChain = Number((sig as { chainId?: number }).chainId ?? targetChain);
+      if (signedChain !== Number(targetChain)) {
+        throw new Error(t('mintChain.notAvailable', { defaultValue: 'Minting on this chain is not available yet.' }));
+      }
       // A retry must fund the saved reward pool, just like the original composer.
       const result = hasBounty ? { hash: await mintWithBounty({
         tokenId: sig.createdTokenId, timestamp: sig.timestamp, v: sig.v, r: sig.r, s: sig.s,

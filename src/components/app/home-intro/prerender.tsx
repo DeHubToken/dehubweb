@@ -8,7 +8,7 @@
  * same markup the browser already painted.
  */
 import { renderToStaticMarkup } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router-dom';
 import { HomeIntroPanel } from './HomeIntroPanel';
 
 const noop = () => {};

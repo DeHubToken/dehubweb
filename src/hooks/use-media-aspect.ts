@@ -21,8 +21,11 @@ import { LruCache } from '@/lib/lru-cache';
  */
 import { useEffect, useRef, useState } from 'react';
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
+import { cdnImage } from '@/lib/media-url';
 
 const cache = new LruCache<string, number>(1000);
+/** Wide enough that rounding moves the ratio well under the 2% stored-size tolerance. */
+const ASPECT_PROBE_WIDTH = 160;
 export const getMeasuredMediaAspect = (url?: string | null) => url ? cache.get(url) ?? null : null;
 const videoAspects = createMediaAspectCache(
   () => localStorage.getItem('video-aspects-v1'), value => localStorage.setItem('video-aspects-v1', value),
@@ -105,7 +108,9 @@ export function useMediaAspect(
       setMeasured({ url: posterUrl, ratio });
     };
     // No handler on error: an unmeasurable poster just leaves the default.
-    img.src = posterUrl;
+    // A small copy has the same shape: every card mounts long before it
+    // scrolls in, and probing the full poster pulled each one in up front.
+    img.src = cdnImage(posterUrl, { width: ASPECT_PROBE_WIDTH });
 
     return () => {
       cancelled = true;

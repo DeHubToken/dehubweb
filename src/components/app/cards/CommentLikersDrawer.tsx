@@ -39,9 +39,13 @@ interface CommentLikersDrawerProps {
   onOpenChange: (open: boolean) => void;
   /** Null while no comment is selected — the query stays disabled. */
   commentId: string | null;
+  /** Where the likers come from; post comments read the DeHub API. */
+  loadPage?: typeof getCommentLikers;
+  /** Keeps a different source's pages out of the post cache. */
+  cacheScope?: string;
 }
 
-export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLikersDrawerProps) {
+export function CommentLikersDrawer({ open, onOpenChange, commentId, loadPage = getCommentLikers, cacheScope = 'post' }: CommentLikersDrawerProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -52,9 +56,9 @@ export function CommentLikersDrawer({ open, onOpenChange, commentId }: CommentLi
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['comment-likers', commentId],
+    queryKey: ['comment-likers', cacheScope, commentId],
     queryFn: async ({ pageParam = 0 }) => {
-      const response = await getCommentLikers(commentId!, pageParam, PAGE_SIZE);
+      const response = await loadPage(commentId!, pageParam, PAGE_SIZE);
       return { ...response, page: pageParam };
     },
     getNextPageParam: (lastPage) => (lastPage.pagination?.hasMore ? lastPage.page + 1 : undefined),

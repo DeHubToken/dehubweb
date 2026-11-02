@@ -21,9 +21,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { getMyPosts } from '@/lib/api/dehub/feed';
+import { getMyPosts, searchNFTs } from '@/lib/api/dehub/feed';
 import { getFractionBalance } from '@/lib/api/token-holders';
-import { buildImageUrl } from '@/lib/media-url';
+import { fractionImageFor } from '@/lib/fraction-thumb';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -115,7 +115,28 @@ export function useFractionPortfolio(address: string | null | undefined) {
               tokenId,
               chainId: (post as { chainId?: number }).chainId || 8453,
               title: post.name || post.title || null,
-              imageUrl: buildImageUrl(post.tokenId, post.imageUrl, 400) || null,
+              imageUrl: fractionImageFor(post, 400) || null,
+              postType: post.postType || null,
+              isCreator: true,
+            });
+          }
+        } catch {
+          // The market half of the portfolio is still worth showing.
+        }
+      } else if (key) {
+        // Someone else's profile: their minted uploads are positions too (a
+        // creator is minted all 1000). Without this a creator who never
+        // traded showed "no fractions" on their own profile tab.
+        try {
+          const theirs = await searchNFTs({ creator_id: key, unit: 50, sortMode: 'new' });
+          for (const post of theirs.data || []) {
+            if (post.status && post.status !== 'minted') continue;
+            const tokenId = String(post.tokenId);
+            candidates.set(tokenId, {
+              tokenId,
+              chainId: (post as { chainId?: number }).chainId || 8453,
+              title: post.name || post.title || null,
+              imageUrl: fractionImageFor(post, 400) || null,
               postType: post.postType || null,
               isCreator: true,
             });

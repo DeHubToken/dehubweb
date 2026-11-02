@@ -11,7 +11,7 @@ import { tokenLabel } from '@/lib/token-label';
  * - Engagement stats
  */
 
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, Tag, Hash, HandCoins, Globe, Ticket } from "lucide-react";
@@ -38,6 +38,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
 import { findCachedFeedPost } from '@/hooks/use-unified-feed';
 import { useMintExistingPost } from '@/hooks/use-mint-existing-post';
+import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
@@ -55,6 +56,7 @@ import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
+import { PostReactorsSection } from '@/components/app/post-info/PostReactorsSection';
 import { SEOHead } from '@/components/SEOHead';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
@@ -69,12 +71,13 @@ const VISIBILITY_OPTIONS: { value: TokenVisibility; icon: React.ReactNode }[] = 
 // /app/fractions renders. It used to be ~440 lines inlined here, which is how
 // it ended up being the only place fractions could be traded at all.
 import { FractionMarketPanel } from '@/components/app/fractions/FractionMarketPanel';
-import { buildImageUrl } from '@/lib/media-url';
-import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { fractionImageFor } from '@/lib/fraction-thumb';
 import { resolveViewCount } from '@/lib/engagement';
 
 
 // Chain configuration
+const PostStatsPanel = lazy(() => import('@/components/app/post-stats/PostStatsPanel'));
+
 const CHAIN_CONFIG: Record<number, { name: string; explorerUrl: string; explorerName: string }> = {
   8453: {
     name: 'Base',
@@ -150,10 +153,12 @@ export default function PostInfoPage() {
   // is refetched, which flips isUnminted and swaps the placeholder for the
   // real on-chain sections in place.
   const { mint: mintExisting, isMinting } = useMintExistingPost();
-  const handleMintNow = async () => {
+  const [showMintSheet, setShowMintSheet] = useState(false);
+  const handleMintNow = async (chosenChainId: number) => {
     if (!nftInfo?.tokenId) return;
-    const ok = await mintExisting(nftInfo.tokenId, nftInfo.chainId);
+    const ok = await mintExisting(nftInfo.tokenId, nftInfo.chainId, chosenChainId);
     if (ok) {
+      setShowMintSheet(false);
       queryClient.invalidateQueries({ queryKey: ['nft-info', postId] });
       queryClient.invalidateQueries({ queryKey: ['token-holders'] });
     }
@@ -303,10 +308,27 @@ export default function PostInfoPage() {
   }
   
   // Loading state
-  if (isLoading) {
+  if (isLoading && !nftInfo) {
+    // Cold open from a link: the page's shape right away, not a loader.
     return (
-      <div data-glass-page className="min-h-screen bg-black flex items-center justify-center">
-        <DeHubPageLoader minHeight="0" />
+      <div data-glass-page className="min-h-screen bg-black">
+        <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
+          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2">
+            <button
+              data-swipe-back onClick={() => navigate(-1)}
+              className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+              aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
+            <h1 className="font-bold text-white flex-1 truncate">{t('postInfo.title')}</h1>
+          </div>
+        </div>
+        <div className="p-4 space-y-6" aria-busy="true">
+          {[112, 80, 160, 96].map((h, i) => (
+            <Skeleton key={i} className="w-full rounded-xl bg-white/5" style={{ height: h }} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -350,8 +372,11 @@ export default function PostInfoPage() {
   const chainInfo = getChainInfo(chainId);
   
   // Get stats with fallbacks
-  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? 0;
-  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
+  // A feed copy painted first names these likes/dislikes, so read those too
+  // rather than flashing 0 until the full post lands.
+  const feedCounts = nftInfo as { likes?: number; dislikes?: number };
+  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? feedCounts.likes ?? 0;
+  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? feedCounts.dislikes ?? 0;
   const views = resolveViewCount(nftInfo);
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
   const totalTips = nftInfo.minterUser?.receivedTips ?? 0;
@@ -384,14 +409,16 @@ export default function PostInfoPage() {
               <Pencil className="w-4 h-4" />
             </button>
           )}
-          <span className="px-2.5 py-1 text-xs font-medium bg-white/10 rounded-lg text-white/80 shrink-0">
-            {chainInfo.name}
-          </span>
         </div>
       </div>
       
       <div>
         <div className="p-4 space-y-6">
+          {isOwner && postId ? (
+            <Suspense fallback={null}>
+              <PostStatsPanel tokenId={postId} />
+            </Suspense>
+          ) : null}
           {/* Transaction & Mint Info — or, for a post published off-chain, a
               placeholder in its place. The post is real and everything social
               about it works; only the NFT behind it does not exist yet. */}
@@ -418,7 +445,7 @@ export default function PostInfoPage() {
                 </p>
                 {isOwner && (
                   <button
-                    onClick={handleMintNow}
+                    onClick={() => setShowMintSheet(true)}
                     disabled={isMinting}
                     className="mt-5 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors disabled:opacity-50 inline-flex items-center gap-2"
                   >
@@ -602,7 +629,7 @@ export default function PostInfoPage() {
             chainId={nftInfo.chainId || 8453}
             post={{
               title: nftInfo.name || nftInfo.title,
-              imageUrl: buildImageUrl(nftInfo.tokenId, nftInfo.imageUrl, 400) || undefined,
+              imageUrl: fractionImageFor(nftInfo, 400) || undefined,
               type: nftInfo.postType,
               creatorAddress: nftInfo.minter,
               creatorUsername: nftInfo.minterUsername || nftInfo.mintername,
@@ -622,7 +649,7 @@ export default function PostInfoPage() {
                 <span className="text-xs text-white/60">{t('postInfo.distribution')}</span>
                 <span className="text-xs font-medium text-white">
                   {isLoadingHolders 
-                    ? t('postInfo.loading')
+                    ? <Loader2 className="w-3.5 h-3.5 animate-spin text-white/60" aria-label={t('postInfo.loading')} />
                     : holders.length > 0 
                       ? t('postInfo.owner', { count: holders.length })
                       : t('postInfo.unavailable')
@@ -777,6 +804,9 @@ export default function PostInfoPage() {
             </div>
           </section>
 
+          {/* Who reacted - only the author gets person rows */}
+          {isOwner && nftInfo.tokenId != null && <PostReactorsSection tokenId={nftInfo.tokenId} />}
+
           {/* PPV Sales Info - shown for PPV content */}
           {isPPV && (
             <section className="bg-white/5 rounded-xl p-4 border border-white/10">
@@ -861,6 +891,16 @@ export default function PostInfoPage() {
 
         </div>
       </div>
+
+      {isOwner && isUnminted && (
+        <MintChainSheet
+          open={showMintSheet}
+          onOpenChange={setShowMintSheet}
+          defaultChainId={nftInfo.chainId}
+          isMinting={isMinting}
+          onConfirm={handleMintNow}
+        />
+      )}
 
       {/* Edit Post Modal */}
       {isOwner && nftInfo && (

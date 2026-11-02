@@ -193,6 +193,19 @@ describe('sending an attachment', () => {
     expect(await readBytes(plain!)).toEqual(original);
   });
 
+  it('a locked photo goes up as the original file with its price, caption still sealed', async () => {
+    const { upload, deps: d } = deps();
+    const f = photo();
+    await uploadDmMedia(f, 'c1', 'u1', { peerAddress: '0xpeer', caption: 'hi', msgType: 'media', lockPrice: 25 }, d);
+    expect(upload).toHaveBeenCalledTimes(1);
+    const [file, , , opts] = upload.mock.calls[0];
+    expect(file).toBe(f);
+    expect(opts.encryptedKind).toBeUndefined();
+    expect(opts.lockPrice).toBe(25);
+    expect(opts.content.startsWith('e2e:')).toBe(true);
+    expectNoDescriptorInClear(upload);
+  });
+
   it('sends the original file the old way when the chat cannot be encrypted', async () => {
     const { upload, deps: d } = deps({
       canEncrypt: async () => false,

@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import Eye from "@/components/ui/cut-icons/visibility";
 
@@ -66,11 +66,34 @@ function ShortAvatar({ avatar, username }: { avatar?: string; username?: string 
 
 interface ShortsReelProps {
   shorts: ShortVideo[];
+  /**
+   * Every short the page has loaded. The viewer plays the row's own shorts
+   * first and then carries on into these, instead of stopping dead on the
+   * row's last tile.
+   */
+  pool?: ShortVideo[];
+  /** Fetch more shorts into `pool` once the viewer nears its end. */
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
 }
 
-export function ShortsReel({ shorts }: ShortsReelProps) {
+/** `list` with whatever of `more` it does not hold yet appended, order kept. */
+function appendNewShorts(list: ShortVideo[], more: readonly ShortVideo[]): ShortVideo[] {
+  const seen = new Set(list.map(short => short.id));
+  const added = more.filter(short => !seen.has(short.id) && seen.add(short.id));
+  return added.length ? [...list, ...added] : list;
+}
+
+export function ShortsReel({ shorts, pool, onLoadMore, hasMore, isLoadingMore }: ShortsReelProps) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  // Only ever appended to while the viewer is open: a page arriving must not
+  // reorder or drop the shorts already playing or behind the current one.
+  const [viewerShorts, setViewerShorts] = useState<ShortVideo[]>(shorts);
+  useEffect(() => {
+    if (viewerOpen && pool) setViewerShorts(prev => appendNewShorts(prev, pool));
+  }, [viewerOpen, pool]);
   const posterWidth = tilePosterWidth();
 
   // There used to be a "pre-warm thumbnails" effect here that ran `new Image()`
@@ -87,6 +110,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
   // fetched immediately, so the visible tiles are no slower for this.
 
   const handleShortClick = (index: number) => {
+    setViewerShorts(appendNewShorts(shorts, pool ?? []));
     setSelectedIndex(index);
     setViewerOpen(true);
   };
@@ -171,9 +195,12 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
           <AnimatePresence>
             {viewerOpen && (
               <ShortsViewer
-                shorts={shorts}
+                shorts={viewerShorts}
                 initialIndex={selectedIndex}
                 onClose={() => setViewerOpen(false)}
+                onLoadMore={onLoadMore}
+                hasMore={hasMore}
+                isLoadingMore={isLoadingMore}
               />
             )}
           </AnimatePresence>

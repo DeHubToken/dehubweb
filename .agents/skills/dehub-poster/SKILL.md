@@ -68,6 +68,8 @@ Everything here is what the renderer already does. Describe it accurately when b
 
 **`pillPos`.** The wordmark pill defaults to bottom-left (poster/social composition). **Blog banners pass `pillPos:'top'`** — blog cards crop the banner bottom-anchored, so top elements are hidden on the card and appear only on the post page, and the pill is parked there deliberately to keep card thumbnails clean. With the pill at the top the type tag drops to the bottom-left automatically.
 
+**Every blog post needs its own banner.** The banner is also the post's share card: the edge worker serves it as `og:image` / `twitter:image`, cropped to 1200x630 when it is already close to that shape (render landscape at 1.91:1) and padded onto near-black when it is not. A post that arrives with its own picture keeps it; a post without one gets a banner rendered here, saved under a new name in `public/media/` and set as `bannerImage` with real `bannerImageAlt` text. `src/test/blog-share-cards.test.ts` fails the build for a post with no banner, a missing file, a shared banner or no alt text.
+
 ## Formats
 
 One set of fractional measurements scales to every aspect, so a format is a table row, not a redesign:

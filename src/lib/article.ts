@@ -78,3 +78,45 @@ export function articleSummaryFromBody(markdown: string): string {
   const cut = text.slice(0, ARTICLE_SUMMARY_MAX - 1);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), 200))}…`;
 }
+
+const BARE_URL_LINE = /^<?(https?:\/\/[^\s<>]+?)>?$/;
+const LINK_LINE = /^\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)$/;
+// A bare address in running text: not already the target of a markdown link
+// `](`, an autolink `<`, or a link's own label `[`.
+const INLINE_URL = /(^|[^(<[\w/])(https?:\/\/[^\s<>()[\]]*[^\s<>()[\].,;:!?'"])/g;
+
+/**
+ * The body as the reader renders it, with outside links made readable:
+ * - a bare address in the text becomes a link (writers paste them, and plain
+ *   markdown leaves them as grey text);
+ * - a line that is only a link, or only an address, stands as its own block
+ *   so the reader can show a preview card for it;
+ * - an address followed straight away by a titled link to the same address
+ *   (pasted, then linked) keeps only the titled link.
+ * Code, existing links and autolinks are left alone.
+ */
+export function articleLinkBlocks(markdown: string): string {
+  const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const out: string[] = [];
+  let inFence = false;
+  const nextContent = (from: number) => {
+    for (let j = from; j < lines.length; j++) if (lines[j].trim()) return lines[j].trim();
+    return '';
+  };
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^\s*```/.test(line)) { inFence = !inFence; out.push(line); continue; }
+    if (inFence) { out.push(line); continue; }
+    const trimmed = line.trim();
+    const bare = BARE_URL_LINE.exec(trimmed);
+    if (bare) {
+      const next = LINK_LINE.exec(nextContent(i + 1));
+      if (next && next[2] === bare[1]) continue;
+      out.push('', `<${bare[1]}>`, '');
+      continue;
+    }
+    if (LINK_LINE.test(trimmed)) { out.push('', trimmed, ''); continue; }
+    out.push(line.split(/(`[^`]*`|!?\[[^\]]*\]\([^)]*\)|<[^>\s]+>)/).map((part, k) => (k % 2 ? part : part.replace(INLINE_URL, '$1<$2>'))).join(''));
+  }
+  return out.join('\n').replace(/\n{3,}/g, '\n\n');
+}

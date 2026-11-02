@@ -162,7 +162,24 @@
     "saved": "Dirreewwan piroofaayilii olkaa'aman",
     "failed": "Hin olkaa'amne. Irra deebi'ii yaali.",
     "verified": "Liinkii mirkanaa'e",
-    "verifyHint": "Liinkii mirkaneessuuf, kana fuula sana irratti dabali, achiis irra deebi'ii olkaa'i: {{snippet}}"
+    "verifyHint": "Liinkii mirkaneessuuf, kana fuula sana irratti dabali, achiis irra deebi'ii olkaa'i: {{snippet}}",
+    "descriptionPresets": "Marsariitii, bakka bu'aa ykn waan biraa itti dabali. Links socials keessan waliin agarsiisa.",
+    "type": "Akaakuu dirree",
+    "needsLabel": "Tokkoon tokkoo dirree amala asxaa kenni",
+    "placeholderLink": "marsariitii keessan.com",
+    "placeholderPronouns": "isaan/isaan",
+    "placeholderLocation": "Magaalaa, biyya",
+    "presets": {
+      "website": "Weebsaayitii",
+      "blog": "Blog",
+      "portfolio": "Poortiifooliyoo",
+      "shop": "Suuqii",
+      "newsletter": "Barruu Oduu",
+      "pronouns": "Bamaqoota",
+      "location": "Bakka",
+      "custom": "Aadaa",
+      "customOption": "Asxaa amala"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} hordofi",
@@ -406,6 +423,9 @@
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."
   },
   "nav": {
+    "reorderHint": "Irra deebi'ii qindeessuuf mallattoo kamiyyuu qabadhuu harkisi",
+    "reorderReset": "Reset gochuu",
+    "reorderResetLong": "Tartiiba menu irra deebi'ii saagi",
     "home": "Mana",
     "explore": "Qoradhu",
     "prompt": "Kakaasi",
@@ -1742,6 +1762,10 @@
       "featureReply": "{{name}} yaada keetiif deebiseera",
       "featureMentionNamed": "{{name}} “{{title}}” irratti si caqaseera",
       "featureMention": "{{name}} gaaffii fedhii tokko irratti si caqaseera",
+      "featureNewNamed": "{{name}} gaaffii haaraa “{{title}}” jedhu maxxanseera.",
+      "featureNew": "{{name}} gaaffii haaraa maxxanseera",
+      "featureActivityNamed": "{{name}} “{{title}}” irratti yaada kennaniiru.",
+      "featureActivity": "{{name}} gaaffii dhiyaate irratti yaada kennaniiru",
       "governanceVoteNamed": "{{name}} yaada dhiyeessii kee “{{title}}” irratti sagalee kenneera",
       "governanceVote": "{{name}} yaada dhiyeessii kee irratti sagalee kenneera",
       "governanceCommentNamed": "{{name}} yaada dhiyeessii kee “{{title}}” irratti yaada kenneera",
@@ -2876,6 +2900,21 @@
     "likersEmptyBody": "Jaalalli yaada kanaa asitti mul'ata.",
     "anonymousLikes_one": "Qabataa baajii maqaa hin qabne irraa jaalala {{count}}",
     "anonymousLikes_other": "Qabattoota baajii maqaa hin qabne irraa jaalala {{count}}"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Sansalata filadhu. Gatiin daqiiqaa hunda live fi update ta'a.",
+    "free": "Bilisa",
+    "gasCovered": "Gaasii DeHub'n uwwifame",
+    "feeIncludesGas": "≈ {{usd}}, gaazii dabalatee",
+    "gasIncluded": "Gaasii dabalatee",
+    "gasOnly": "≈ {{usd}} gaazii",
+    "paidFromWallet": "{{amount}} boorsaa keessan irraa",
+    "paidFromWalletPlain": "Boorsaa keessan irraa kan kaffalame",
+    "priceUnavailable": "Gatiin hin argamu",
+    "confirm": "Mint {{chain}} irratti.",
+    "confirmWithCost": "Mint irratti {{chain}} · {{cost}} irratti.",
+    "notAvailable": "Sansalata kana irratti minting hanga ammaatti hin argamne."
   },
   "postInfo": {
     "title": "Odeeffannoo maxxansaa",
@@ -14616,7 +14655,7 @@
     "f45e06965f93": "Yaada hordoffii hanga ammaatti hin jiru",
     "34f5da2599fa": "Yaadonni akkaawuntii haaraan asitti ni mul&#39;atu.",
     "bac527bf9a36": "Gorsa Hordoffii",
-    "036cfd952896": "Namoota hordofuu qabdu",
+    "a94bfc8a15e8": "Yaada hordofuu",
     "0c820caf16c0": "Ibsi (bio) ammaaf hin jiru",
     "e139251e4f5b": "Maxxansa Haquu",
     "685ecb984ac2": "Haqaa jira...",
@@ -18690,9 +18729,32 @@
     "headlineAccent": "gammadaas taata.",
     "orContinueWith": "ykn itti fufi",
     "phone": "Bilbila",
+    "email": "Email",
     "fingerprint": "Fingerprint",
     "exploreFirst": "Dura daawwadhu",
     "codeNote": "Koodii siif imeelina, jecha icciitii hin barbaachisu."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Dhuma keessa dhufa",
+    "title": "Token dhuma keessa dhufa",
+    "body": "Bitaa cufa yeroo token haaraan qophaa'u. Ergaa email tokko argadhu yeroo inni jiraatu.",
+    "notifyMe": "Naa beeksi",
+    "sendTo": "Ergaa email {{email}} ni ergina",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email kee",
+    "invalidEmail": "Email sirrii galchi",
+    "joinedTitle": "Listaa keessa jirta",
+    "joinedBody": "Ergaa email {{email}} ni ergina token yeroo dhufa.",
+    "joinedBodyNoEmail": "Ergaa email si ergina token yeroo dhufa.",
+    "failed": "Kunis kuufuu hin dandeenye. Irra deebi yaali.",
+    "privacy": "Dhumarraa kaasee waa'ee dhufa kana siif himan keessatti fayyadama.",
+    "seoTitle": "Token dhuma keessa dhufa | DeHub",
+    "seoDescription": "Token DeHub haaraan dhuma keessa dhufa. Listaa keessa seeni ergaa email tokko argadhu yeroo inni jiraatu, sana booda DeHub wallet kee irraa bitaa."
+  },
+  "githubLink": {
+    "hint": "Guddisaa fi GitHub-ii isaa dhufeera. DeHub ammoo hubatii fi GitHub-ii isaa keessa jira.",
+    "connected": "GitHub garee garee.",
+    "taken": "Waa GitHub accounttiin isaa DeHub profilettiin walitti bu'ura."
   },
   "spaces": {
     "title": "Bakkeewwan",

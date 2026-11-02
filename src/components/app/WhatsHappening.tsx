@@ -561,7 +561,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
 function EmptyState({ icon: Icon, text }: { icon: React.ElementType; text: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-6 text-center">
+    // Phones: centred in the fixed-height tab box, so an empty tab is one
+    // finished picture instead of an icon at the top over a blank band.
+    <div className="flex flex-col items-center justify-center py-6 text-center max-md:min-h-[268px]">
       <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2.5">
         <Icon className="w-5 h-5 text-zinc-500" />
       </div>

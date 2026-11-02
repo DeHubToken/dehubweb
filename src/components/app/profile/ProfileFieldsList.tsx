@@ -1,20 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck } from 'lucide-react';
-
-/** An https link in a field is clickable; anything else is plain text. */
-function linkOf(value: string): string | null {
-  if (!/^https:\/\/\S+$/i.test(value)) return null;
-  try {
-    return new URL(value).toString();
-  } catch {
-    return null;
-  }
-}
+import { fieldLink, presetById, presetOf, splitProfileFields, displayFieldUrl } from '@/lib/profile-field-presets';
+import { PROFILE_FIELD_ICONS } from './profileFieldIcons';
 
 /**
  * The profile's label/value lines under the bio — Mastodon's profile fields.
- * A link whose page links back here with rel="me" shows a check. The links
- * carry rel="me" too, the way Mastodon's do, so the proof runs both ways.
+ * Website and the other link kinds are not here: they show with the social
+ * links (ProfileLinksPill). A link whose page links back here with rel="me"
+ * shows a check. The links carry rel="me" too, the way Mastodon's do, so the
+ * proof runs both ways.
  */
 export function ProfileFieldsList({
   fields,
@@ -22,22 +16,26 @@ export function ProfileFieldsList({
   fields?: Array<{ name: string; value: string; verifiedAt?: string | null }>;
 }) {
   const { t } = useTranslation();
-  if (!fields?.length) return null;
+  const { rest } = splitProfileFields(fields);
+  if (!rest.length) return null;
   return (
-    <dl data-profile-fields className="mt-3 divide-y divide-white/5 overflow-hidden rounded-xl border border-white/10">
-      {fields.map((field, index) => {
-        const href = linkOf(field.value);
+    <dl data-profile-fields className="mt-3 flex flex-col gap-1.5">
+      {rest.map((field, index) => {
+        const href = fieldLink(field.value);
         const verified = !!field.verifiedAt && !!href;
+        const preset = presetOf(field.name);
+        const Icon = PROFILE_FIELD_ICONS[preset];
+        const label = preset === 'custom' ? field.name : t(`profileFields.presets.${preset}`, presetById(preset)!.name);
         return (
-          <div
-            key={`${field.name}-${index}`}
-            className={`flex items-baseline gap-3 px-3 py-2 ${verified ? 'bg-emerald-500/10' : ''}`}
-          >
-            <dt className="w-28 shrink-0 truncate text-xs font-semibold uppercase tracking-wide text-zinc-400">{field.name}</dt>
-            <dd className="flex min-w-0 flex-1 items-center gap-1.5 text-sm text-white">
+          <div key={`${field.name}-${index}`} className="flex min-w-0 items-center gap-2 text-sm">
+            <dt className="flex shrink-0 items-center gap-1.5 text-zinc-400">
+              {preset !== 'custom' && <Icon className="size-4 shrink-0" aria-hidden />}
+              <span className={preset === 'custom' ? 'max-w-[9rem] truncate' : 'sr-only'}>{label}</span>
+            </dt>
+            <dd className="flex min-w-0 flex-1 items-center gap-1.5 text-white/90">
               {href ? (
                 <a href={href} target="_blank" rel="me nofollow noopener noreferrer" className="truncate hover:underline">
-                  {field.value.replace(/^https:\/\/(www\.)?/i, '').replace(/\/$/, '')}
+                  {displayFieldUrl(field.value)}
                 </a>
               ) : (
                 <span className="truncate">{field.value}</span>

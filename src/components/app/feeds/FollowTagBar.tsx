@@ -13,7 +13,7 @@ export const FOLLOWED_TAGS_QUERY_KEY = ['followed-tags'] as const;
  * beside the people you follow (Mastodon's tag follows); the server does the
  * mixing, this only keeps the list.
  */
-export function FollowTagBar({ tag, onClear }: { tag: string; onClear: () => void }) {
+export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear: () => void; className?: string }) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -53,36 +53,54 @@ export function FollowTagBar({ tag, onClear }: { tag: string; onClear: () => voi
     },
   });
 
+  // One chip on the right holds both actions, so the ✕ lives inside it.
+  // Bar is rounded-xl (12px) with a 6px inset around the chip, so the chip
+  // takes 12 - 6 = 6px corners (rounded-md) and sits evenly on every side.
+  const chipTone = following
+    ? 'border border-white/20 text-white'
+    : 'bg-white text-black';
+  const chipHover = following ? 'hover:bg-white/10' : 'hover:bg-zinc-200';
+
   return (
     <div
       data-follow-tag-bar
-      className="mb-3 flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2"
+      className={cn(
+        'flex items-center gap-3 rounded-xl border border-white/10 bg-black/80 backdrop-blur-xl py-1.5 pl-3 pr-1.5',
+        className,
+      )}
     >
       <Hash className="size-4 shrink-0 text-zinc-400" aria-hidden="true" />
       <span className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{name}</span>
-      {isAuthenticated && (
+      <div
+        className={cn(
+          'flex h-7 shrink-0 items-stretch overflow-hidden rounded-md text-xs font-semibold',
+          isAuthenticated ? chipTone : 'border border-white/20 text-zinc-300',
+        )}
+      >
+        {isAuthenticated && (
+          <button
+            type="button"
+            onClick={() => mutation.mutate(!following)}
+            disabled={mutation.isPending}
+            aria-pressed={following}
+            aria-label={following ? t('followedTags.unfollow', { tag: name }) : t('followedTags.follow', { tag: name })}
+            className={cn('flex items-center pl-3 pr-2 transition-colors disabled:opacity-60', chipHover)}
+          >
+            {following ? t('followedTags.following') : t('followedTags.follow', { tag: name })}
+          </button>
+        )}
         <button
           type="button"
-          onClick={() => mutation.mutate(!following)}
-          disabled={mutation.isPending}
-          aria-pressed={following}
-          aria-label={following ? t('followedTags.unfollow', { tag: name }) : t('followedTags.follow', { tag: name })}
+          onClick={onClear}
+          aria-label={t('followedTags.clear')}
           className={cn(
-            'shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition-colors disabled:opacity-60',
-            following ? 'border border-white/20 text-white hover:bg-white/10' : 'bg-white text-black hover:bg-zinc-200',
+            'flex items-center justify-center transition-colors',
+            isAuthenticated ? cn('pl-1.5 pr-2', chipHover) : 'px-2 hover:bg-white/10 hover:text-white',
           )}
         >
-          {following ? t('followedTags.following') : t('followedTags.follow', { tag: name })}
+          <X className="size-3.5" />
         </button>
-      )}
-      <button
-        type="button"
-        onClick={onClear}
-        aria-label={t('followedTags.clear')}
-        className="shrink-0 rounded-full p-1 text-zinc-400 hover:bg-white/10 hover:text-white"
-      >
-        <X className="size-4" />
-      </button>
+      </div>
     </div>
   );
 }

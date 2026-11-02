@@ -10,7 +10,7 @@
  * Media upload limits
  */
 export const MEDIA_LIMITS = {
-  /** Baseline maximum number of images per post; badges can raise this to 20. */
+  /** Baseline maximum number of images per post; badges raise this to 30-40 (lib/post-image-allowance). */
   MAX_IMAGES: 4,
   /** Maximum number of videos per post */
   MAX_VIDEOS: 1,

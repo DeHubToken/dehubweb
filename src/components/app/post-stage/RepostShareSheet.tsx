@@ -22,7 +22,7 @@ import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { getPostQuotes, getPostReposters } from '@/lib/api/dehub';
+import { getPostQuotes, getPostReposters, reportPostEvent } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { trackShare } from '@/lib/analytics';
 import { Code } from 'lucide-react';
@@ -130,6 +130,7 @@ export function RepostShareSheet({
   const text = encodeURIComponent(shareTitle || '');
   const openExternal = (url: string, channel: string) => {
     trackShare(channel, { kind: 'post' });
+    reportPostEvent(tokenId, 'share');
     window.open(url, '_blank', 'noopener,noreferrer');
     onOpenChange(false);
   };
@@ -142,6 +143,7 @@ export function RepostShareSheet({
     try {
       await navigator.share({ title: shareTitle, url: shareUrl });
       trackShare('native', { kind: 'post' });
+      reportPostEvent(tokenId, 'share');
       onOpenChange(false);
     } catch {
       // Dismissing the system sheet rejects; nothing to report.
@@ -149,7 +151,7 @@ export function RepostShareSheet({
   };
 
   const targets = [
-    { key: 'copy', label: t('postStage.copyLink', 'Copy link'), icon: <Link2 className="h-[18px] w-[18px]" />, onClick: onCopyLink },
+    { key: 'copy', label: t('postStage.copyLink', 'Copy link'), icon: <Link2 className="h-[18px] w-[18px]" />, onClick: () => { reportPostEvent(tokenId, 'share'); onCopyLink(); } },
     { key: 'x', label: 'X', icon: <XGlyph />, onClick: () => openExternal(`https://x.com/intent/post?url=${encoded}&text=${text}`, 'x') },
     { key: 'telegram', label: 'Telegram', icon: <Send className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://t.me/share/url?url=${encoded}&text=${text}`, 'telegram') },
     { key: 'whatsapp', label: _copy("copy.6a40edf1fc87", { defaultValue: "WhatsApp" }), icon: <MessageCircle className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://wa.me/?text=${text}${text ? '%20' : ''}${encoded}`, 'whatsapp') },

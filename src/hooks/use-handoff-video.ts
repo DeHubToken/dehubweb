@@ -8,6 +8,7 @@ import {
   subscribeHandoffVideo,
   takeHandoffVideo,
 } from '@/lib/video-handoff';
+import { trackWatchTime } from '@/lib/watch-time';
 import { clearVideoSource, setVideoSource, syncVideoLoad, videoSourceOf } from '@/lib/hls-vod';
 
 /**
@@ -45,6 +46,8 @@ export interface UseHandoffVideoOptions {
   onLoadedMetadata?: () => void;
   onAdopt?: (el: HTMLVideoElement) => void;
   onPlaybackChange?: (playing: boolean) => void;
+  /** Post id to measure watch time for (post stats). Leave out for non-post media. */
+  watchTokenId?: string | number;
 }
 
 export function useHandoffVideo({
@@ -64,6 +67,7 @@ export function useHandoffVideo({
   onLoadedMetadata,
   onAdopt,
   onPlaybackChange,
+  watchTokenId,
 }: UseHandoffVideoOptions) {
   const surfaceActive = useContext(CachedPageActiveContext);
   const slotRef = useRef<HTMLDivElement | null>(null);
@@ -73,6 +77,8 @@ export function useHandoffVideo({
   // re-binding on every render that changes a callback identity.
   const handlersRef = useRef({ onEnded, onError, onTimeUpdate, onLoadedMetadata, onAdopt, onPlaybackChange });
   handlersRef.current = { onEnded, onError, onTimeUpdate, onLoadedMetadata, onAdopt, onPlaybackChange };
+  const watchTokenRef = useRef(watchTokenId);
+  watchTokenRef.current = watchTokenId;
 
   /**
    * Whether this card is the one currently showing the element. Callers need it
@@ -120,6 +126,7 @@ export function useHandoffVideo({
       // before any sibling that reads the ref (the subtitle overlay) runs.
       videoRef.current = el;
       handlersRef.current.onAdopt?.(el);
+      trackWatchTime(el, watchTokenRef.current);
 
       // Every listener no-ops unless this card currently holds the element.
       // Both cards stay subscribed while the post is open over the feed, and

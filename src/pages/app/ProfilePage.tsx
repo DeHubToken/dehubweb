@@ -61,7 +61,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 
 /** Tabs served by the creator's own /api/feed content query. */
-const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
+const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos', 'articles'];
 
 /**
  * Wraps tab content and remembers the max height ever rendered.
@@ -788,7 +788,7 @@ export default function ProfilePage() {
             onFiltersOpenChange={data.setContentFiltersOpen}
             showPostType={data.showPostTypeFilter}
             resultCount={
-              activeTab === 'posts' ? data.PROFILE_POSTS.length
+              activeTab === 'posts' || activeTab === 'articles' ? data.PROFILE_POSTS.length
                 : activeTab === 'images' ? data.PROFILE_IMAGES.length
                 : activeTab === 'videos' ? data.ALL_PROFILE_VIDEOS.length
                 : data.ALL_CONTENT.length

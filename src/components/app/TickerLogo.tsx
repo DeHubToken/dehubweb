@@ -168,12 +168,14 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     retry: false,
   });
 
+  // alt is empty on purpose: the symbol is always written beside the logo, and
+  // a slow or failed image otherwise paints its alt text ("RII") over the row.
   const imgClass = `shrink-0 rounded-full object-cover ${className}`;
 
   // Known logo — instant
   if (knownLogo) {
     return (
-      <img src={knownLogo} alt={clean} width={size} height={size} className={imgClass} loading="lazy" />
+      <img src={knownLogo} alt="" width={size} height={size} className={imgClass} loading="lazy" />
     );
   }
 
@@ -183,7 +185,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     return (
       <img
         src={synthUrl}
-        alt={clean}
+        alt=""
         width={size}
         height={size}
         className={imgClass}
@@ -199,7 +201,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     return (
       <img
         src={clearbitUrl}
-        alt={clean}
+        alt=""
         width={size}
         height={size}
         className={`shrink-0 rounded-full object-contain bg-white p-0.5 ${className}`}
@@ -215,7 +217,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     return (
       <img
         src={faviconUrl}
-        alt={clean}
+        alt=""
         width={size}
         height={size}
         className={`shrink-0 rounded-full object-contain bg-white p-0.5 ${className}`}
@@ -230,7 +232,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     return (
       <img
         src={cgLogo}
-        alt={clean}
+        alt=""
         width={size}
         height={size}
         className={imgClass}
@@ -245,7 +247,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
     return (
       <img
         src={dexLogo}
-        alt={clean}
+        alt=""
         width={size}
         height={size}
         className={imgClass}

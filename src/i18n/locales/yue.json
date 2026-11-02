@@ -162,7 +162,19 @@
     "saved": "已儲存個人檔案欄位",
     "failed": "儲存唔到，請再試吓。",
     "verified": "已驗證連結",
-    "verifyHint": "要驗證連結，請將呢段加入嗰個頁面，然後再儲存一次：{{snippet}}"
+    "verifyHint": "要驗證連結，請將呢段加入嗰個頁面，然後再儲存一次：{{snippet}}",
+    "type": "田地類型",
+    "placeholderPronouns": "佢/佢",
+    "placeholderLocation": "城市, 國家",
+    "presets": {
+      "website": "網站",
+      "blog": "博客",
+      "portfolio": "作品集",
+      "shop": "商店",
+      "podcast": "播客",
+      "custom": "習俗",
+      "customOption": "自訂標籤"
+    }
   },
   "followedTags": {
     "follow": "追蹤 #{{tag}}",
@@ -405,6 +417,9 @@
     "gasSponsorshipFailed": "呢筆交易嘅費用付唔到。請稍後再試。"
   },
   "nav": {
+    "reorderHint": "按住同拖曳任何圖示嚟重新排列",
+    "reorderReset": "重設",
+    "reorderResetLong": "重設菜單順序",
     "home": "主頁",
     "explore": "探索",
     "prompt": "提示",
@@ -1739,6 +1754,8 @@
       "featureReply": "{{name}}回覆你的留言",
       "featureMentionNamed": "{{name}}在你的功能要求“{{title}}”上提及你",
       "featureMention": "{{name}}在功能要求上提及你",
+      "featureNewNamed": "{{name}} 發出新請求「{{title}}」",
+      "featureNew": "{{name}} 唔使新增請求",
       "governanceVoteNamed": "{{name}}在你的提案“{{title}}”上投票",
       "governanceVote": "{{name}}在你的提案上投票",
       "governanceCommentNamed": "{{name}}在你的提案“{{title}}”上留言",
@@ -2872,6 +2889,21 @@
     "likersEmptyBody": "呢則留言嘅讚好會喺度顯示。",
     "anonymousLikes_one": "來自匿名徽章持有人嘅 {{count}} 個讚",
     "anonymousLikes_other": "來自匿名徽章持有人嘅 {{count}} 個讚"
+  },
+  "mintChain": {
+    "title": "薄荷帖子",
+    "subtitle": "揀一條鏈。價錢會即時更新，每分鐘都會更新。",
+    "free": "免費",
+    "gasCovered": "氣體由 DeHub 覆蓋",
+    "feeIncludesGas": "≈ {{usd}} ，包括氣體",
+    "gasIncluded": "包括氣體",
+    "gasOnly": "≈ {{usd}} 氣體",
+    "paidFromWallet": "{{amount}} 喺你個銀包入面",
+    "paidFromWalletPlain": "由你個銀包畀錢",
+    "priceUnavailable": "價錢冇得買",
+    "confirm": "薄荷上 {{chain}}",
+    "confirmWithCost": "薄荷上 {{chain}} · {{cost}}",
+    "notAvailable": "呢條鏈嘅鑄造仲未有得賣。"
   },
   "postInfo": {
     "title": "帖子資訊",
@@ -14611,7 +14643,7 @@
     "f45e06965f93": "未有跟隨建議",
     "34f5da2599fa": "新用戶建議將會出現於此處。",
     "bac527bf9a36": "跟隨建議",
-    "036cfd952896": "要追蹤的人",
+    "a94bfc8a15e8": "追蹤推介",
     "0c820caf16c0": "尚未有個人簡介",
     "e139251e4f5b": "刪除帖子",
     "b3661ad568df": "這個動作不可逆轉。你的帖子將永久刪除。",
@@ -18702,8 +18734,38 @@
     "headlineAccent": "並快樂。",
     "orContinueWith": "或繼續使用",
     "phone": "手機",
+    "email": "電郵",
     "fingerprint": "指紋",
     "exploreFirst": "先探索",
     "codeNote": "我們會以電子郵件發送一個代碼，無需密碼。"
+  },
+  "tokenLaunch": {
+    "eyebrow": "就快嚟到",
+    "title": "好快就會推出代幣",
+    "body": "喺新代幣準備好嗰陣，買嘢已經閂咗。喺佢上線嗰陣收到電郵。",
+    "notifyMe": "通知我",
+    "sendTo": "我哋會電郵 {{email}}",
+    "emailLabel": "電郵",
+    "emailPlaceholder": "你嘅電郵",
+    "invalidEmail": "輸入有效嘅電郵",
+    "joinedTitle": "你喺名單入面",
+    "joinedBody": "當令牌啟動嗰陣，我哋會電郵 {{email}} 。",
+    "joinedBodyNoEmail": "我哋會喺令牌啟動嗰陣發電郵畀你。",
+    "failed": "救唔到嗰個。再試多次。",
+    "privacy": "只係用嚟同你講推出嘅事",
+    "seoTitle": "代幣即將推出 |去中心",
+    "seoDescription": "新嘅 DeHub 代幣好快就會推出。加入呢個清單，喺佢上線嗰一刻就會收到一封電郵，然後直接喺你嘅 DeHub 錢包度買。"
+  },
+  "githubLink": {
+    "hint": "登入 GitHub 以證明此帳戶屬於你。DeHub 只會看到你的公開 GitHub 個人資料。",
+    "verified": "已驗證",
+    "verifiedAria": "已驗證 GitHub 帳戶",
+    "connected": "GitHub 已連接",
+    "disconnected": "GitHub 已斷開連接",
+    "taken": "該 GitHub 帳戶已在另一個 DeHub 個人資料上。",
+    "failed": "無法連接 GitHub。請再試一次。",
+    "unavailable": "GitHub 驗證功能即將推出。",
+    "connect": "連接 GitHub",
+    "disconnect": "斷開 GitHub"
   }
 }

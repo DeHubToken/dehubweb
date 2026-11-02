@@ -26,7 +26,6 @@ import Quote from "@/components/ui/cut-icons/quote";
 import Link from "@/components/ui/cut-icons/link";
 import Info from "@/components/ui/cut-icons/information";
 
-import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Share2 from "@/components/ui/cut-icons/feedshare";
 import Repeat2 from "@/components/ui/cut-icons/repost";
@@ -51,6 +50,7 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
+import { ThumbIcon } from './ThumbIcon';
 import { ReactionPicker } from './ReactionPicker';
 import { maybeShowReactionTip } from '@/lib/reaction-tip';
 import { useAuth } from '@/contexts/AuthContext';
@@ -103,6 +103,8 @@ interface ActionBarProps {
    * /app/post/<tokenId> the post hasn't earned. Omitted → old behaviour.
    */
   newPostSlug?: number | null;
+  /** An article's readable slug — shares as /app/post/<slug>, ahead of every other shape. */
+  articleSlug?: string | null;
   /**
    * The link Copy Link and the share targets hand out, for surfaces whose
    * items are not posts (a governance proposal lives at its own route, not
@@ -358,6 +360,7 @@ const COMPACT_BUTTON_CLASS =
 export function ActionBar({
   postId,
   newPostSlug,
+  articleSlug,
   shareUrl,
   onComment,
   onShare,
@@ -814,12 +817,13 @@ export function ActionBar({
     : resolveLeadReaction(localReactionCounts, myReaction);
   const thumbCount = resolveThumbCount(localLikeCount, localDislikeCount, leadReaction);
   /**
-   * Your own like turns the thumb into the moving 👍 (and a 👎 picked from the
-   * tray into the moving 👎), playing once every 5 seconds. Any other reaction
-   * you cast shows as its moving emoji.
+   * A 👍 or 👎 stays the plain thumb icon (turned down for a 👎), filled and
+   * nodding once every 5 seconds when it is your own. Any other reaction in
+   * the lead shows as its emoji, moving when it is yours.
    */
-  const thumbGlyph = leadReaction ?? (isLiked ? 'like' : null);
-  const thumbGlyphMine = thumbGlyph === myReaction || !leadReaction;
+  const thumbDown = leadReaction === 'dislike';
+  const thumbGlyph = leadReaction && !thumbDown ? leadReaction : null;
+  const thumbMine = thumbDown ? myReaction === 'dislike' : isLiked;
   /** The viewer's own reaction, split by side. */
   const myPositiveReaction = myReaction && isPositiveReaction(myReaction) ? myReaction : null;
   const myNegativeReaction = myReaction && !isPositiveReaction(myReaction) ? myReaction : null;
@@ -828,6 +832,8 @@ export function ActionBar({
   const shareUrlForPost = () =>
     shareUrl
       ? shareUrl
+      : articleSlug
+      ? dehubLinkFor.article(articleSlug)
       : newPostSlug != null
       ? dehubLinkFor.newPost(newPostSlug)
       : postId
@@ -1144,14 +1150,10 @@ export function ActionBar({
               className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
-              <ReactionEmoji
-                reaction={thumbGlyph}
-                animate={thumbGlyphMine}
-                slow={thumbGlyphMine && (thumbGlyph === 'like' || thumbGlyph === 'dislike')}
-              />
+              <ReactionEmoji reaction={thumbGlyph} animate={thumbGlyph === myReaction} />
             </span>
           ) : (
-            <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && "fill-current")} />
+            <ThumbIcon down={thumbDown} nod={thumbMine} className={cn(FEED_ICON_CLASS.like, thumbMine && "fill-current")} />
           )}
           {!compact && (
             <span className="text-xs text-zinc-400">{formatCount(thumbCount)}</span>
@@ -1203,7 +1205,7 @@ export function ActionBar({
 
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
-          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
+          <ShareToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} url={articleSlug ? dehubLinkFor.article(articleSlug) : newPostSlug != null ? dehubLinkFor.newPost(newPostSlug) : dehubLinkFor.post(tokenId!)} />
         </Suspense>
       )}
 
@@ -1242,7 +1244,10 @@ export function ActionBar({
       className
     )}>
       {utilityDesktopAnchor ? (
-        <div className={cn("flex flex-wrap items-center justify-between gap-y-2 gap-x-3", leftHanded && "flex-row-reverse")}>
+        <div className={cn("flex flex-wrap items-center justify-between gap-y-2 gap-x-3", leftHanded ? "flex-row-reverse lg:pl-0.5" : "lg:pr-0.5")}>
+          {/* Counters end on bare digits while icons carry ~2px of built-in
+              inset, so the trailing count read tighter to the card edge than
+              the icons do to the side and bottom. lg:pr-0.5 nudges it in. */}
           {/* Utility cluster — a real flex item of this justify-between row
               (not a separately-margined sibling), so the gap to the
               neighbouring engagement button matches the gaps between every
@@ -1269,7 +1274,8 @@ export function ActionBar({
       ) : (
         <div className={cn(
           "flex flex-wrap items-center gap-y-2 gap-x-2 justify-between",
-          leftHanded && "flex-row-reverse",
+          // Same optical nudge as above: the trailing count is bare digits.
+          leftHanded ? "flex-row-reverse pl-0.5" : "pr-0.5",
           centered && "lg:justify-center lg:gap-x-4"
         )}>
           {/* Utility actions (bookmark, pin, info) — display:contents so every

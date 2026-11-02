@@ -162,7 +162,25 @@
     "saved": "Kua tiakina ngā āpure kōtaha",
     "failed": "Kāore i tiakina. Whakamātauria anō.",
     "verified": "Hono kua manatokona",
-    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}"
+    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}",
+    "descriptionPresets": "Tāpirihia he paetukutuku, he whakahua, he aha atu rānei. Ko nga hononga hono e whakaatu ana ki o raatau hapori.",
+    "type": "Momo mara",
+    "needsLabel": "Homai he tohu ki ia mara ritenga",
+    "placeholderLink": "koutouite.com",
+    "placeholderPronouns": "ratou/ratou",
+    "placeholderLocation": "Taone, whenua",
+    "presets": {
+      "website": "Paetukutuku",
+      "blog": "Blog",
+      "portfolio": "Pūtea",
+      "shop": "Hokona",
+      "podcast": "Podcast",
+      "newsletter": "Pūrongo",
+      "pronouns": "Ngā tohutohu",
+      "location": "Te waahi",
+      "custom": "Ritenga",
+      "customOption": "Tohu ritenga"
+    }
   },
   "followedTags": {
     "follow": "Whai i #{{tag}}",
@@ -406,6 +424,9 @@
     "gasSponsorshipFailed": "Kāore i taea te utu i tēnei whakawhitinga. Ngana anō ā tōna wā."
   },
   "nav": {
+    "reorderHint": "Kia mau, me te hopu i tetahi tohu ki te rearrange",
+    "reorderReset": "Whakahokia",
+    "reorderResetLong": "Whakahokia te ota tahua",
     "home": "Kāinga",
     "explore": "Tūhura",
     "prompt": "Whakahau",
@@ -1728,6 +1749,9 @@
       "featureReplyNamed": "{{name}} whakautu ki a koe i runga i {{title}}",
       "featureReply": "{{name}} whakautu ki to korero",
       "featureMention": "{{name}} whakahua koe i runga i te tono āhuatanga",
+      "featureNew": "{{name}} i tukuna he tono hou",
+      "featureActivityNamed": "{{name}} kōrero i runga i {{title}}",
+      "featureActivity": "{{name}} kōrero i runga i te tono",
       "governanceVote": "{{name}} i pōti i runga i to koutou tono",
       "governanceCommentNamed": "{{name}} kōrero i runga i to koutou kaupapa \"{{title}}\"",
       "governanceComment": "{{name}} kōrero i runga i to koutou tono",
@@ -2860,6 +2884,21 @@
     "likersEmptyBody": "Ka puta ki konei ngā pai mō tēnei kōrero.",
     "anonymousLikes_one": "{{count}} pai mai i tētahi kaipupuri tohu huna",
     "anonymousLikes_other": "{{count}} pai mai i ngā kaipupuri tohu huna"
+  },
+  "mintChain": {
+    "title": "Mint pou",
+    "subtitle": "Kōwhiri i te mekameka. utu e ora, me te whakahou ia meneti.",
+    "free": "Free",
+    "gasCovered": "Ko te hau e kapi ana i te DeHub",
+    "feeIncludesGas": "≈ {{usd}}, whakauru hau",
+    "gasIncluded": "Kei roto i te hau",
+    "gasOnly": "≈ {{usd}} kasa",
+    "paidFromWallet": "{{amount}} mai i to putea",
+    "paidFromWalletPlain": "Utu mai i to putea",
+    "priceUnavailable": "Ko te utu kaore i te waatea",
+    "confirm": "Mint i runga i {{chain}}",
+    "confirmWithCost": "Mint i runga i {{chain}} · {{cost}}",
+    "notAvailable": "Kaore ano kia waatea te peita i runga i tenei mekameka."
   },
   "postInfo": {
     "title": "Mōhiohio pou",
@@ -14618,7 +14657,7 @@
     "f45e06965f93": "Kaore anō he kupu whakatakoto whai",
     "34f5da2599fa": "Ka puta mai ngā kupu whakatakoto kaute hou ki konei.",
     "bac527bf9a36": "Kupu Whakatakoto Whai",
-    "036cfd952896": "Ko wai hei whai",
+    "a94bfc8a15e8": "Ngā marohi whai",
     "0c820caf16c0": "Kaore he koiora",
     "e139251e4f5b": "Mukua te Pōst",
     "b3661ad568df": "Kaore e taea te takahoki i tēnei mahi. Ka mukua tō pōst tonutanga.",
@@ -18706,8 +18745,38 @@
     "headlineAccent": "ā, ka harikoa koe.",
     "orContinueWith": "me haere tonu rānei me",
     "phone": "Waea",
+    "email": "Email",
     "fingerprint": "Tapumati",
     "exploreFirst": "Tūhura i te tuatahi",
     "codeNote": "Ka īmēra mātou i tētahi waehere ki a koe, kāore he kupuhipa e hiahiatia ana."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kei te tae mai",
+    "title": "Kei te tae mai te token",
+    "body": "Kua katia te whakapaipai i te wa e whakarite ana te token hou. Tīkina he īmēra i te wā e whakatupu ai.",
+    "notifyMe": "Whakamōhiotia mai",
+    "sendTo": "Ka īmēra kami ki {{email}}",
+    "emailLabel": "Īmēra",
+    "emailPlaceholder": "Tō īmēra",
+    "invalidEmail": "Whakauru i te īmēra tika",
+    "joinedTitle": "Kei te rārangi koe",
+    "joinedBody": "Ka īmēra kami ki {{email}} i te wā e whakatupu ai te token.",
+    "joinedBodyNoEmail": "Ka īmēra kami ki a koe i te wā e whakatupu ai te token.",
+    "failed": "Kaore i taea te tiaki i tēnā. Ngana anō.",
+    "privacy": "Anake hei whakamōhio ki a koe mō te whakatupuranga.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Kei te tae mai te token DeHub hou. Tomo ki te rārangi me te tīkina he īmēra kotahi i te wā e whakatupu ai, katahi ka hoko tika mai i tō pūkoro DeHub."
+  },
+  "githubLink": {
+    "hint": "Hokona ki GitHub ki te whakamatau i te pūkete ko koutou. DeHub anake kite i to koutou pūkete GitHub tūmatanui.",
+    "verified": "Whakamātauria",
+    "verifiedAria": "Ko te kaute GitHub kua whakamanahia",
+    "connected": "GitHub hono",
+    "disconnected": "Ko te GitHub kua whakakorehia",
+    "taken": "Ko te pūkete GitHub kei runga i tētahi atu pūkete DeHub.",
+    "failed": "Kaore e taea te hono atu ki a GitHub. Whakamātauria ano.",
+    "unavailable": "Ka hohoro te haere mai o te tirotiro GitHub.",
+    "connect": "Tūhono ki te GitHub",
+    "disconnect": "Tūhuratia"
   }
 }

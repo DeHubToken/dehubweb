@@ -162,7 +162,25 @@
     "saved": "Profiilikentät tallennettu",
     "failed": "Tallennus ei onnistunut. Yritä uudelleen.",
     "verified": "Vahvistettu linkki",
-    "verifyHint": "Vahvista linkki lisäämällä tämä sille sivulle ja tallentamalla uudelleen: {{snippet}}"
+    "verifyHint": "Vahvista linkki lisäämällä tämä sille sivulle ja tallentamalla uudelleen: {{snippet}}",
+    "descriptionPresets": "Lisää verkkosivusto, pronominit tai jotain muuta. Linkit näkyvät sosiaalisessa mediassa.",
+    "type": "Kentän tyyppi",
+    "needsLabel": "Anna kullekin mukautetulle kentälle tunniste",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "he/heidät",
+    "placeholderLocation": "Kaupunki, maa",
+    "presets": {
+      "website": "Verkkosivusto",
+      "blog": "Blogi",
+      "portfolio": "Portfolio",
+      "shop": "Osta",
+      "podcast": "Podcast",
+      "newsletter": "Uutiskirje",
+      "pronouns": "Pronominit",
+      "location": "Sijainti",
+      "custom": "Mukautettu",
+      "customOption": "Mukautettu tunniste"
+    }
   },
   "followedTags": {
     "follow": "Seuraa #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Tätä tapahtumaa ei voitu kustantaa. Yritä hetken kuluttua uudelleen."
   },
   "nav": {
+    "reorderHint": "Järjestä uudelleen pitämällä mitä tahansa kuvaketta painettuna ja vetämällä",
+    "reorderReset": "Tyhjennä",
+    "reorderResetLong": "Nollaa ruokalistan tilaus",
     "home": "Koti",
     "explore": "Tutustu",
     "prompt": "Ohjaa",
@@ -1742,6 +1763,10 @@
       "featureReply": "{{name}} vastasi kommenttiisi",
       "featureMentionNamed": "{{name}} mainitsi sinut kohteessa \"{{title}}\"",
       "featureMention": "{{name}} mainitsi sinut ominaisuuspyynnössä",
+      "featureNewNamed": "{{name}} julkaisi uuden pyynnön \"{{title}}\"",
+      "featureNew": "{{name}} julkaisi uuden pyynnön",
+      "featureActivityNamed": "{{name}} kommentoi kohdetta \"{{title}}\"",
+      "featureActivity": "{{name}} kommentoi pyyntöä",
       "governanceVoteNamed": "{{name}} äänesti ehdotuksestasi \"{{title}}\"",
       "governanceVote": "{{name}} äänesti ehdotuksestasi",
       "governanceCommentNamed": "{{name}} kommentoi ehdotustasi \"{{title}}\"",
@@ -2876,6 +2901,21 @@
     "likersEmptyBody": "Tämän kommentin tykkäykset näkyvät täällä.",
     "anonymousLikes_one": "{{count}} tykkäys nimettömältä merkin haltijalta",
     "anonymousLikes_other": "{{count}} tykkäystä nimettömiltä merkkien haltijoilta"
+  },
+  "mintChain": {
+    "title": "Mintunpylväs",
+    "subtitle": "Valitse ketju. Hinnat ovat voimassa ja päivittyvät joka minuutti.",
+    "free": "Ilmainen",
+    "gasCovered": "DeHubin kattama kaasu",
+    "feeIncludesGas": "≈ {{usd}}, sisältää kaasun",
+    "gasIncluded": "Sisältää kaasun",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} lompakostasi",
+    "paidFromWalletPlain": "Maksettu lompakostasi",
+    "priceUnavailable": "Hinta ei saatavilla",
+    "confirm": "Minttu päällä {{chain}}",
+    "confirmWithCost": "Minttu päällä {{chain}} · {{cost}}",
+    "notAvailable": "Tämän ketjun louhinta ei ole vielä saatavilla."
   },
   "postInfo": {
     "title": "Julkaisun tiedot",
@@ -14654,7 +14694,7 @@
     "f45e06965f93": "Ei seurauhdevinkkejä vielä",
     "34f5da2599fa": "Uusia käyttäjäehdotuksia tulevat näkyviin.",
     "bac527bf9a36": "Seurauhdevinkit",
-    "036cfd952896": "Kenen seurailla",
+    "a94bfc8a15e8": "Seurattavia ehdotuksia",
     "0c820caf16c0": "Ei vielä bioa",
     "e139251e4f5b": "Poista postaus",
     "b3661ad568df": "Tämä toiminto ei voi palautua. Postauksesi poistetaan pysyvästi.",
@@ -18766,8 +18806,35 @@
     "headlineAccent": "ja olet onnellinen.",
     "orContinueWith": "tai jatka käyttäen",
     "phone": "Puhelin",
+    "email": "Sähköposti",
     "fingerprint": "Sormenjälki",
     "exploreFirst": "Tutustu ensin",
     "codeNote": "Lähetämme sinulle koodin sähköpostilla, ilman salasanaa."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tulossa pian",
+    "title": "Token launchataan pian",
+    "body": "Ostaminen on suljettu, kunnes uusi token on valmis. Saat sähköpostin heti, kun se julkaistaan.",
+    "sendTo": "Meidät lähetämme sähköpostia {{email}}:lle.",
+    "emailLabel": "Sähköposti",
+    "invalidEmail": "Anna kelvollinen sähköpostiosoite",
+    "joinedTitle": "Sinä olet listalla.",
+    "joinedBody": "Me lähetämme sähköpostin {{email}}, kun token julkaistaan.",
+    "joinedBodyNoEmail": "Me lähetämme sinulle sähköpostia, kun token julkaistaan.",
+    "failed": "Ei voinut tallentaa sitä. Yritä uudelleen.",
+    "privacy": "Ainoastaan kerron sinulle uuden julkaisun tiedoista.",
+    "seoDescription": "Uusi DeHub-token lähtee pian markkinoille. Liity listalle ja saat yhden sähköpostiviestin heti, kun se tulee liveksi, ja osta suoraan DeHub-lompakostasi."
+  },
+  "githubLink": {
+    "hint": "Kirjaudu GitHubiin todistaaksesi, että tili on sinun. DeHub näkee vain julkisen GitHub-profiilisi.",
+    "verified": "Vahvistettu",
+    "verifiedAria": "Vahvistettu GitHub-tili",
+    "connected": "GitHub yhdistetty",
+    "disconnected": "GitHub-yhteys katkaistu",
+    "taken": "Kyseinen GitHub-tili on jo toisessa DeHub-profiilissa.",
+    "failed": "GitHubia ei voitu yhdistää. Yritä uudelleen.",
+    "unavailable": "GitHub-vahvistus on tulossa pian.",
+    "connect": "Yhdistä GitHub",
+    "disconnect": "Katkaise yhteys"
   }
 }

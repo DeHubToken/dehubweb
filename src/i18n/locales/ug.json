@@ -162,7 +162,23 @@
     "saved": "ئارخىپ بۆلەكلىرى ساقلاندى",
     "failed": "ساقلانمىدى. قايتا سىناڭ.",
     "verified": "دەلىللەنگەن ئۇلانما",
-    "verifyHint": "ئۇلانمىنى دەلىللەش ئۈچۈن بۇنى شۇ بەتكە قوشۇپ، قايتا ساقلاڭ: {{snippet}}"
+    "verifyHint": "ئۇلانمىنى دەلىللەش ئۈچۈن بۇنى شۇ بەتكە قوشۇپ، قايتا ساقلاڭ: {{snippet}}",
+    "descriptionPresets": "Men menlik qonuniyatlarni qo'llash orqali, biz sizni qo'llab-quvvatlashimiz mumkin.",
+    "type": "مەيدان تىپى",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "Uyghurcha: ul/ul",
+    "placeholderLocation": "شەھەر, مۇستەقىل دۆلەت",
+    "presets": {
+      "website": "Veb-sayt",
+      "blog": "Blog",
+      "portfolio": "مەدەنىيەت ساھەسىدىكى مۇھەندىس",
+      "shop": "Dukon",
+      "newsletter": "Xəbər xəbərləri",
+      "pronouns": "Pronouns",
+      "location": "جايى",
+      "custom": "ئىختىيارىي",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} گە ئەگىشىش",
@@ -405,6 +421,9 @@
     "gasSponsorshipFailed": "بۇ مامىلىنىڭ خىراجىتىنى كۆتۈرەلمىدۇق. بىردەمدىن كېيىن قايتا سىناڭ."
   },
   "nav": {
+    "reorderHint": "ھەرقانداق بەلگىنى تۇتۇپ قايتىدىن ئورۇنلاشتۇرۇش ئۈچۈن يۆتكەش",
+    "reorderReset": "ئەسلىگە كەلتۈرۈش",
+    "reorderResetLong": "تىزىملىكنى قايتىدىن تەڭشەش",
     "home": "باش بەت",
     "explore": "ئىزدەش",
     "prompt": "تەكلىپ",
@@ -2859,6 +2878,21 @@
     "likersEmptyBody": "بۇ ئىنكاسقا بېرىلگەن ياقتۇرۇشلار بۇ يەردە كۆرۈنىدۇ.",
     "anonymousLikes_one": "نامسىز بەلگە ئىگىسىدىن {{count}} ياقتۇرۇش",
     "anonymousLikes_other": "نامسىز بەلگە ئىگىلىرىدىن {{count}} ياقتۇرۇش"
+  },
+  "mintChain": {
+    "title": "Mint POST",
+    "subtitle": "زەنجىرنى تاللاڭ. باھاسى ھەر مىنۇتتا ئۆسىدۇ ۋە يېڭىلىنىدۇ.",
+    "free": "ھەقسىز",
+    "gasCovered": "DeHub تەرىپىدىن قاپلانغان گاز",
+    "feeIncludesGas": "≈ {{usd}}، گاز كىرگۈزۈلگەن",
+    "gasIncluded": "غاز كىرگۈزۈلگەن",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "يانچۇقىڭىزدىن {{amount}}",
+    "paidFromWalletPlain": "يانچۇقىڭىزدىن ھەق تاپشۇرۇڭ",
+    "priceUnavailable": "باھاسى قوللانغىلى بولمايدىغان",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "Mint on {{chain}} {{cost}}",
+    "notAvailable": "بۇ زەنجىرنى ياساش تېخى قوللىنىلمىغان."
   },
   "postInfo": {
     "title": "يوللىما ئۇچۇرى",
@@ -14591,7 +14625,7 @@
     "f45e06965f93": "Ko'rishlar yetib kelmadi",
     "34f5da2599fa": "Foydalanuvchi takliflari",
     "bac527bf9a36": "Foydalanuvchi takliflari yetib kelmadi",
-    "036cfd952896": "كىمگە ئەگىشىش",
+    "a94bfc8a15e8": "ئەگىشىش تەۋسىيەلىرى",
     "0c820caf16c0": "تېخى بىئو يوق",
     "e139251e4f5b": "Postni o'chirish",
     "b3661ad568df": "Bu amal qayta tiklanmaydi. Postingiz doimiy ravishda o'chiriladi.",
@@ -18679,8 +18713,34 @@
     "headlineAccent": "va xushbo'lsiz bo'ling.",
     "orContinueWith": "yoki davom eting",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Oynash izi",
     "exploreFirst": "Birinchi eshittiring",
     "codeNote": "Men sizga kod yuboraman, parol kerak emas."
+  },
+  "tokenLaunch": {
+    "eyebrow": "پات يېقىندا كېلىدۇ",
+    "body": "Sotuv qayta ajar bo'lishidan oldin yopildi. Yangi token tayyor bo'lganda sizga email yuboriladi.",
+    "notifyMe": "Men sizni xabar qilishimni xohlayman.",
+    "emailLabel": "ئېلېكترونلۇق پوچتا",
+    "emailPlaceholder": "Xabar",
+    "joinedTitle": "سىزىكىڭىز سىزىكىڭىز",
+    "joinedBody": "Men token chiqqanda {{email}} ga elektron ma'lumot yuboramiz.",
+    "joinedBodyNoEmail": "Men sizga tokenning chiqqanida xabar yuboramiz.",
+    "failed": "بۇنى ساقلاپ بولالمىدى. قايتا سىناپ بېقىڭ.",
+    "privacy": "Men sizni laqiqatni xabar qilish uchun faqat foydalanish uchun ishlatiladi.",
+    "seoDescription": "Yeni DeHub token yengä qeling. Ro'yhatga kirip, token yengä qilingincha bir email alip, so'ngra DeHub waletinizdan to'g'ri buyurip aling."
+  },
+  "githubLink": {
+    "hint": "GitHubغا كىرىپ ھېساباتنىڭ سىزگە تەۋە ئىكەنلىكىنى دەلىللەڭ. DeHub پەقەت سىزنىڭ ئاممىۋى GitHub پروفېلىڭىزنى كۆرەلەيدۇ.",
+    "verified": "Tasdiqlanmighan",
+    "verifiedAria": "دەلىللەنگەن GitHub ھېساباتى",
+    "connected": "GitHub باغلانغان",
+    "disconnected": "GitHub toqtalashdi.",
+    "taken": "بۇ GitHub ھېساباتى ئاللىقاچان باشقا DeHub پروفېلىدە بار.",
+    "failed": "GitHubنى باغلاپ بولمىدى. قايتا سىناپ بېقىڭ.",
+    "unavailable": "GitHub tasdiqlash kelish kelayaq.",
+    "connect": "GitHub نى باغلا",
+    "disconnect": "قۇرالۇش"
   }
 }

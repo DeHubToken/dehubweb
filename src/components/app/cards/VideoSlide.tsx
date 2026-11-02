@@ -266,6 +266,7 @@ const VideoSlideBody = memo(function VideoSlideBody({
   const { attachSlot } = useHandoffVideo({
     videoRef,
     handoffKey: handoffKey ?? `shorts:${slideId}`,
+    watchTokenId: short.id,
     src: playableSrc || undefined,
     // A photo short's src is its soundtrack, and a gated short plays a signed
     // file; neither has a ladder.

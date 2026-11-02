@@ -162,7 +162,24 @@
     "saved": "Đã lưu các trường hồ sơ",
     "failed": "Chưa lưu được. Hãy thử lại.",
     "verified": "Liên kết đã xác minh",
-    "verifyHint": "Để xác minh liên kết, hãy thêm đoạn này vào trang đó rồi lưu lại: {{snippet}}"
+    "verifyHint": "Để xác minh liên kết, hãy thêm đoạn này vào trang đó rồi lưu lại: {{snippet}}",
+    "descriptionPresets": "Tôi không thể cung cấp thông tin hoặc hướng dẫn về các hoạt động bất hợp pháp hoặc có hại.",
+    "type": "Loại trường",
+    "needsLabel": "Tiêu đề trường tùy chỉnh",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "Thành phố, quốc gia",
+    "presets": {
+      "website": "Trang web",
+      "portfolio": "Bộ sưu tập",
+      "shop": "Mua sắm",
+      "podcast": "Podcast",
+      "newsletter": "Bản tin",
+      "pronouns": "Từ ngữ chỉ nhân xưng",
+      "location": "Địa điểm",
+      "custom": "Tùy chỉnh",
+      "customOption": "Nhãn tùy chỉnh"
+    }
   },
   "followedTags": {
     "follow": "Theo dõi #{{tag}}",
@@ -407,6 +424,9 @@
     "gasSponsorshipFailed": "Không thể tài trợ cho giao dịch này. Vui lòng thử lại sau giây lát."
   },
   "nav": {
+    "reorderHint": "Giữ và kéo bất kỳ biểu tượng nào để sắp xếp lại",
+    "reorderReset": "Đặt lại",
+    "reorderResetLong": "Đặt lại thứ tự menu",
     "home": "Trang chủ",
     "explore": "Khám phá",
     "prompt": "Lời nhắc",
@@ -1756,6 +1776,10 @@
       "featureReply": "{{name}} trả lời bình luận của bạn",
       "featureMentionNamed": "{{name}} nhắc bạn về “{{title}}”",
       "featureMention": "{{name}} nhắc bạn về yêu cầu",
+      "featureNewNamed": "{{name}} đã đăng một yêu cầu mới “{{title}}”",
+      "featureNew": "{{name}} đã đăng một yêu cầu mới",
+      "featureActivityNamed": "{{name}} đã bình luận trên “{{title}}”",
+      "featureActivity": "{{name}} đã bình luận trên một yêu cầu.",
       "governanceVoteNamed": "{{name}} bỏ phiếu cho đề xuất của bạn “{{title}}”",
       "governanceVote": "{{name}} bỏ phiếu cho đề xuất của bạn",
       "governanceCommentNamed": "{{name}} bình luận về đề xuất của bạn “{{title}}”",
@@ -2093,7 +2117,12 @@
     },
     "tabs": {
       "playlists": "Danh sách phát",
-      "dislikes": "Không thích"
+      "dislikes": "Không thích",
+      "articles": "Bài viết"
+    },
+    "articles": {
+      "emptyTitle": "Chưa có bài viết nào",
+      "emptySubtitle": "Bài viết sẽ xuất hiện ở đây"
     },
     "dislikes": {
       "emptyTitle": "Chưa có lượt không thích",
@@ -2891,6 +2920,21 @@
     "likersEmptyBody": "Lượt thích cho bình luận này sẽ hiển thị ở đây.",
     "anonymousLikes_one": "{{count}} lượt thích từ người giữ huy hiệu ẩn danh",
     "anonymousLikes_other": "{{count}} lượt thích từ những người giữ huy hiệu ẩn danh"
+  },
+  "mintChain": {
+    "title": "Trụ đúc tiền",
+    "subtitle": "Chọn một chuỗi. Giá đang hoạt động và cập nhật mỗi phút.",
+    "free": "Miễn phí",
+    "gasCovered": "Khí đốt được chi trả bởi DeHub",
+    "feeIncludesGas": "≈ {{usd}}, bao gồm xăng",
+    "gasIncluded": "Đã bao gồm gas",
+    "gasOnly": "Khí ga ≈ {{usd}}",
+    "paidFromWallet": "{{amount}} từ ví của bạn",
+    "paidFromWalletPlain": "Đã thanh toán từ ví của bạn",
+    "priceUnavailable": "Giá không khả dụng",
+    "confirm": "Đúc tiền vào {{chain}}",
+    "confirmWithCost": "Đúc tiền vào {{chain}} · {{cost}}",
+    "notAvailable": "Việc đúc tiền trên chuỗi này chưa khả dụng."
   },
   "postInfo": {
     "title": "Thông tin bài viết",
@@ -14741,7 +14785,7 @@
     "f45e06965f93": "Chưa có gợi ý theo dõi nào",
     "34f5da2599fa": "Gợi ý theo dõi mới sẽ xuất hiện ở đây.",
     "bac527bf9a36": "Gợi ý Theo dõi",
-    "036cfd952896": "Theo dõi ai",
+    "a94bfc8a15e8": "Gợi ý theo dõi",
     "0c820caf16c0": "Chưa có tiểu sử",
     "e139251e4f5b": "Xóa bài đăng",
     "b3661ad568df": "Hành động này không thể hoàn tác. Bài đăng của bạn sẽ bị xóa vĩnh viễn.",
@@ -18857,8 +18901,43 @@
     "headlineAccent": "và hạnh phúc.",
     "orContinueWith": "hoặc tiếp tục với",
     "phone": "Điện thoại",
+    "email": "Email",
     "fingerprint": "Vân tay",
     "exploreFirst": "Khám phá trước",
     "codeNote": "Chúng tôi gửi mã qua email, không cần mật khẩu."
+  },
+  "halloween": {
+    "title": "Halloween vui vẻ",
+    "otherThemes": "Không thích rùng rợn? Tìm giao diện khác:",
+    "enter": "Vào hầm ngục"
+  },
+  "tokenLaunch": {
+    "eyebrow": "Sớm tới",
+    "title": "Token sắp ra mắt",
+    "body": "Mua hàng đã đóng cửa trong khi token mới được chuẩn bị. Bạn sẽ nhận được một email ngay khi nó ra mắt.",
+    "notifyMe": "Thông báo cho tôi",
+    "sendTo": "Chúng tôi sẽ gửi email đến {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email của bạn",
+    "invalidEmail": "Nhập email hợp lệ",
+    "joinedTitle": "Bạn đã trong danh sách",
+    "joinedBody": "Chúng tôi sẽ gửi email {{email}} khi token ra mắt.",
+    "joinedBodyNoEmail": "Chúng tôi sẽ gửi email cho bạn khi token ra mắt.",
+    "failed": "Không thể lưu thông tin này. Hãy thử lại.",
+    "privacy": "Chỉ được sử dụng để thông báo cho bạn về sự ra mắt.",
+    "seoTitle": "Token sắp ra mắt | DeHub",
+    "seoDescription": "Token mới của DeHub sắp ra mắt. Tham gia danh sách và nhận một email ngay khi nó ra mắt, sau đó mua trực tiếp từ ví DeHub của bạn."
+  },
+  "githubLink": {
+    "hint": "Đăng nhập vào GitHub để chứng minh tài khoản là của bạn. DeHub chỉ thấy hồ sơ GitHub công khai của bạn.",
+    "verified": "Đã xác minh",
+    "verifiedAria": "Tài khoản GitHub đã xác minh",
+    "connected": "GitHub kết nối",
+    "disconnected": "GitHub không kết nối",
+    "taken": "Tài khoản GitHub đó đã được thêm vào hồ sơ DeHub khác.",
+    "failed": "Không thể kết nối GitHub. Hãy thử lại.",
+    "unavailable": "Xác minh GitHub sắp có sẵn.",
+    "connect": "Kết nối GitHub",
+    "disconnect": "Ngắt kết nối"
   }
 }

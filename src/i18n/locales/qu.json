@@ -162,7 +162,25 @@
     "saved": "Riqsichikuy t'aqakuna waqaychasqa",
     "failed": "Manam waqaychakurqanchu. Watiqmanta ruray.",
     "verified": "Chiqaqchasqa t'inki",
-    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}"
+    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}",
+    "descriptionPresets": "Web kitita, sutirantikunata utaq imatapas yapay. Enlaces rikuchinku socialesniykiwan.",
+    "type": "Chakra laya",
+    "needsLabel": "Sapa costumbre chakraman huk etiquetata quy",
+    "placeholderLink": "sitioyki.com nisqapi",
+    "placeholderPronouns": "paykuna/paykuna",
+    "placeholderLocation": "Llaqta, suyu",
+    "presets": {
+      "website": "Web nisqapi",
+      "blog": "Blog nisqamanta",
+      "portfolio": "Cartera nisqa",
+      "shop": "Rantiy",
+      "podcast": "Podcast",
+      "newsletter": "Willakuy qillqa",
+      "pronouns": "Suti rantikuna",
+      "location": "Tarikusqan",
+      "custom": "Chullachasqa",
+      "customOption": "Etiqueta personalizada nisqa"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} qatiy",
@@ -408,6 +426,9 @@
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
   },
   "nav": {
+    "reorderHint": "Ima iconotapas hap’ispa aysay mosoqmanta churanaykipaq",
+    "reorderReset": "Reset nisqa",
+    "reorderResetLong": "Menú ordenta kutichiy",
     "home": "Qallariy",
     "explore": "Maskay",
     "prompt": "Yanapaq",
@@ -1735,6 +1756,10 @@
       "featureReply": "{{name}}-mi rimayniykita kutichisurqanki",
       "featureMentionNamed": "{{name}}-mi “{{title}}”-pi sutiykita rimarqan",
       "featureMention": "{{name}}-mi mañakusqayki allinchaypi sutiykita rimarqan",
+      "featureNewNamed": "{{name}} musuq mañakuyta churarqa “{{title}}”",
+      "featureNew": "{{name}} musuq mañakuyta churarqa",
+      "featureActivityNamed": "{{name}} “{{title}}” nisqapi rimarirqa.",
+      "featureActivity": "{{name}} huk mañakuymanta rimarirqa",
       "governanceVoteNamed": "{{name}}-mi “{{title}}” yuyaychasqaykipi akllarqan",
       "governanceVote": "{{name}}-mi yuyaychasqaykipi akllarqan",
       "governanceCommentNamed": "{{name}}-mi “{{title}}” yuyaychasqaykimanta rimarqan",
@@ -2900,6 +2925,21 @@
     "likersEmptyBody": "Kay rimaypa munasqankuna kaypi rikhurinqa.",
     "anonymousLikes_one": "Mana sutiyuq insigniayuqmanta {{count}} munasqa",
     "anonymousLikes_other": "Mana sutiyuq insigniayuqkunamanta {{count}} munasqa"
+  },
+  "mintChain": {
+    "title": "Menta poste",
+    "subtitle": "Huk kadenata akllay. Preciokuna kawsaqmi hinaspa sapa minuto musuqyachisqa.",
+    "free": "Qispisqa",
+    "gasCovered": "DeHub nisqawan qatasqa gas",
+    "feeIncludesGas": "≈ {{usd}}, gas nisqawan kuska",
+    "gasIncluded": "Gas nisqapas",
+    "gasOnly": "≈ {{usd}} gas nisqa",
+    "paidFromWallet": "{{amount}} billeteraykimanta",
+    "paidFromWalletPlain": "Billeteraykimanta pagasqa",
+    "priceUnavailable": "Precio mana kanchu",
+    "confirm": "Mint nisqapi {{chain}} nisqapi.",
+    "confirmWithCost": "Mint nisqapi {{chain}} · {{cost}} nisqapi.",
+    "notAvailable": "Kay cadena nisqapi minting nisqa manaraqmi kanchu."
   },
   "postInfo": {
     "title": "Post willay",
@@ -14678,7 +14718,7 @@
     "f45e06965f93": "Mana seguimiento imakunachu kaychu",
     "34f5da2599fa": "Musuq cuenta imakunaqa kaypi rikurisunqa.",
     "bac527bf9a36": "Yuyaychaykunata qatipay",
-    "036cfd952896": "Pita qatipanapaq",
+    "a94bfc8a15e8": "Qatinapaq yuyaychakuykuna",
     "0c820caf16c0": "Manaraqmi bio kanchu",
     "e139251e4f5b": "Borrar Post",
     "b3661ad568df": "Mana kutichisqa kanman. Rikuchiykiqa ama hina kaychu kunan.",
@@ -18787,8 +18827,34 @@
     "headlineAccent": "kusisqataq kanki.",
     "orContinueWith": "utaq kaywan qatiy",
     "phone": "Fono",
+    "email": "Email",
     "fingerprint": "Dedo ch'iqay",
     "exploreFirst": "Ñawpaqta maskay",
     "codeNote": "Ch'iqichisqayki kodigota apachimusayki, manam pasword necesitakunchu."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Chayamuchkanña",
+    "title": "Token nisqayki chaskiytaqa",
+    "body": "Rantikuy pichqa kaylla, musuq token allinakuytaq. Emailta apakuway chayqa kawsaq kaykunaqa.",
+    "notifyMe": "Ama hina kaychu",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Su correo electrónico",
+    "invalidEmail": "Kamaykamaykuna p'unchaykuna q'illaykamaykuna.",
+    "joinedTitle": "Kamuykuna q'umirichisqa",
+    "joinedBodyNoEmail": "Kamaykunapaq k'uskiyki qillqamanta qillqa k'uskiyki.",
+    "failed": "Kamuykuna qhaway, mana kaptinapaq.",
+    "privacy": "Kamuykuna qhawaykunawan k'ancha k'aspiy.",
+    "seoTitle": "K'antu q'illayta k'aspiyki. | DeHub"
+  },
+  "githubLink": {
+    "hint": "Sinqi kamarq'akuna GitHub kamarq'akuna. DeHub mana kamarq'akuna qhawaykuna kamarq'akuna qhawaykuna.",
+    "verified": "Wakichasqa",
+    "verifiedAria": "Kamachiyuwan GitHub qillqaynin",
+    "connected": "Qhaway GitHub q'illay",
+    "disconnected": "Kamaykuna GitHub q'illaykamaykuna.",
+    "taken": "Kay GitHub q'illaykamanaqa DeHub q'illqaykampana q'illqamanta aswan.",
+    "failed": "Mana ch'aspaq GitHub. Kunti chaspaq.",
+    "connect": "Kamuykuna GitHubnin ch'antaspa.",
+    "disconnect": "T’aqanakuy"
   }
 }

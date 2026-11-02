@@ -142,6 +142,37 @@ export function setFilterValue<T>(feedType: FeedType, filterKey: string, value: 
 }
 
 /**
+ * Every toggle a feed currently has, by name, in its stored form (a sort or
+ * date as its value, content chips as the list switched on). Session values
+ * win over the saved defaults, the same order the feeds read them in. For code
+ * that has to follow a feed's toggles without owning them, like feed search.
+ */
+export function readFeedFilterValues(feedType: FeedType): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...(readFeedToggles()[feedType] ?? {}) };
+  const session = getAllFilters()[feedType] ?? {};
+  for (const [key, value] of Object.entries(session)) out[key] = encode(value);
+  return out;
+}
+
+/** readFeedFilterValues, kept current as the feed's toggles change. */
+export function useFeedFilterValues(feedType: FeedType): Record<string, unknown> {
+  const [values, setValues] = useState(() => readFeedFilterValues(feedType));
+  useEffect(() => {
+    // The change event fires from inside the feed's state update, so read on
+    // the next tick rather than setting state during another component's render.
+    const reload = () => queueMicrotask(() => setValues(readFeedFilterValues(feedType)));
+    setValues(readFeedFilterValues(feedType));
+    window.addEventListener('feed-filters-changed', reload);
+    window.addEventListener(FEED_TOGGLES_RELOAD_EVENT, reload);
+    return () => {
+      window.removeEventListener('feed-filters-changed', reload);
+      window.removeEventListener(FEED_TOGGLES_RELOAD_EVENT, reload);
+    };
+  }, [feedType]);
+  return values;
+}
+
+/**
  * Clear all persisted feed filters
  * Call this on explicit refresh (pull-to-refresh, home button double-click).
  * Saved default toggles stay; the feeds fall back to them.

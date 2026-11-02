@@ -162,7 +162,20 @@
     "saved": "个人资料字段已保存",
     "failed": "保存失败，请重试。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}",
+    "descriptionPresets": "添加网站、代词或其他内容。社交媒体链接会显示在我的社交平台上。",
+    "type": "字段类型",
+    "placeholderPronouns": "他们/她们",
+    "placeholderLocation": "城市，国家",
+    "presets": {
+      "website": "网站",
+      "blog": "博客",
+      "shop": "商店",
+      "podcast": "播客",
+      "location": "地点",
+      "custom": "自定义",
+      "customOption": "自定义标签"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",
@@ -407,6 +420,9 @@
     "gasSponsorshipFailed": "这笔交易的费用无法代付。请稍后再试。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标以重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序",
     "home": "首页",
     "explore": "发现",
     "prompt": "提示",
@@ -1725,6 +1741,12 @@
     "burstBody": "{{count}} 条新通知来自 {{who}}",
     "community": {
       "joined": "{{name}}已加入您的社区",
+      "chatOne": "{{name}} 发送了一条消息",
+      "chatOneNamed": "{{name}} 在 {{community}} 发送了一条消息",
+      "chatTwo": "{{name}} 和 {{second}} 发送了消息",
+      "chatTwoNamed": "{{name}} 和 {{second}} 在 {{community}} 发送了消息",
+      "chatMany": "{{name}} 等 {{others}} 人发送了消息",
+      "chatManyNamed": "{{name}} 等 {{others}} 人在 {{community}} 发送了消息",
       "joinedNamed": "{{name}}已加入「{{community}}」",
       "requested": "{{name}}已申请加入您的社区",
       "requestedNamed": "{{name}}要求加入「{{community}}」",
@@ -1746,6 +1768,10 @@
       "featureReply": "{{name}}回复了你的评论",
       "featureMentionNamed": "{{name}}在“{{title}}”上提到了你",
       "featureMention": "{{name}}在功能请求上提到了你",
+      "featureNewNamed": "{{name}} 提交了一个新请求“{{title}}”",
+      "featureNew": "{{name}} 发布了一个新请求",
+      "featureActivityNamed": "{{name}} 在“{{title}}”下评论了。",
+      "featureActivity": "{{name}} 在请求中评论了",
       "governanceVoteNamed": "{{name}}在你的提案“{{title}}”上投票",
       "governanceVote": "{{name}}在你的提案上投票",
       "governanceCommentNamed": "{{name}}对您的提案「{{title}}」发表了评论",
@@ -2083,7 +2109,12 @@
     },
     "tabs": {
       "playlists": "播放列表",
-      "dislikes": "踩"
+      "dislikes": "踩",
+      "articles": "文章"
+    },
+    "articles": {
+      "emptyTitle": "还没有文章",
+      "emptySubtitle": "文章会显示在这里"
     },
     "dislikes": {
       "emptyTitle": "还没有踩过的内容",
@@ -2885,6 +2916,20 @@
     "likersEmptyBody": "这条评论收到的点赞会显示在这里。",
     "anonymousLikes_one": "来自匿名徽章持有人的 {{count}} 个赞",
     "anonymousLikes_other": "来自匿名徽章持有人的 {{count}} 个赞"
+  },
+  "mintChain": {
+    "title": "薄荷帖子",
+    "subtitle": "选择一个连锁店。价格实时更新，每分钟更新一次。",
+    "free": "免费",
+    "gasCovered": "DeHub承保的燃气",
+    "feeIncludesGas": "≈ {{usd}} ，含汽油",
+    "gasIncluded": "含燃气",
+    "paidFromWallet": "{{amount}}从您的钱包",
+    "paidFromWalletPlain": "通过您的钱包支付",
+    "priceUnavailable": "价格不可用",
+    "confirm": "{{chain}}薄荷",
+    "confirmWithCost": "在{{chain}} · {{cost}}上完好无损",
+    "notAvailable": "此链上的铸造尚不可用。"
   },
   "postInfo": {
     "title": "帖子信息",
@@ -14642,7 +14687,7 @@
     "f45e06965f93": "还没有关注建议",
     "34f5da2599fa": "新账号建议将在此处出现。",
     "bac527bf9a36": "关注建议",
-    "036cfd952896": "要关注的人",
+    "a94bfc8a15e8": "关注推荐",
     "0c820caf16c0": "尚无个人简介",
     "e139251e4f5b": "删除帖子",
     "b3661ad568df": "此操作不可逆。您的帖子将永久删除。",
@@ -18647,8 +18692,43 @@
     "headlineAccent": "并且很快乐。",
     "orContinueWith": "或使用以下方式继续",
     "phone": "手机",
+    "email": "邮箱",
     "fingerprint": "指纹",
     "exploreFirst": "先逛逛",
     "codeNote": "我们会通过邮件发送验证码，无需密码。"
+  },
+  "halloween": {
+    "title": "万圣节快乐",
+    "otherThemes": "不想要惊悚风？换个主题吧：",
+    "enter": "进入地牢"
+  },
+  "tokenLaunch": {
+    "eyebrow": "即将开放，敬请期待",
+    "title": "代币即将推出",
+    "body": "在新代币准备就绪时，购买已关闭。上线后立即收到电子邮件。",
+    "notifyMe": "_李白就象一个浪子一团糟",
+    "sendTo": "我们将发送电子邮件至{{email}}",
+    "emailLabel": "电子邮箱",
+    "emailPlaceholder": "您的邮箱地址",
+    "invalidEmail": "輸入有效 Email!",
+    "joinedTitle": "您已上榜",
+    "joinedBody": "我们将在令牌启动时向{{email}}发送电子邮件。",
+    "joinedBodyNoEmail": "我们将在令牌启动时向您发送电子邮件。",
+    "failed": "无法保存。请重试。",
+    "privacy": "仅用于告诉您有关发布的信息。",
+    "seoTitle": "代币即将推出| DeHub",
+    "seoDescription": "新的DeHub代币即将推出。加入列表，在上线时收到一封电子邮件，然后直接从DeHub钱包购买。"
+  },
+  "githubLink": {
+    "hint": "登录 GitHub 以证明该账户是您的。DeHub 只能看到您的公开 GitHub 资料。",
+    "verified": "已验证",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 已断开连接",
+    "taken": "该 GitHub 账户已在另一个 DeHub 资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
   }
 }

@@ -81,13 +81,18 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
 
     let dragCounter = 0;
 
+    // A comment, reply or message box takes the file itself: over one, the
+    // page-wide "drop to create post" steps aside.
+    const overAttachBox = (e: DragEvent) =>
+      e.target instanceof Element && !!e.target.closest('[data-drop-attach]');
+
     const handleDragEnter = (e: DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
       dragCounter++;
       
       if (e.dataTransfer?.types.includes('Files')) {
-        setIsDragging(true);
+        setIsDragging(!overAttachBox(e));
       }
     };
 
@@ -104,6 +109,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
+      if (e.dataTransfer?.types.includes('Files')) setIsDragging(!overAttachBox(e));
     };
 
     const handleDrop = (e: DragEvent) => {
@@ -111,6 +117,7 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
       e.stopPropagation();
       dragCounter = 0;
       setIsDragging(false);
+      if (overAttachBox(e)) return;
 
       const files = e.dataTransfer?.files;
       if (files && files.length > 0) {

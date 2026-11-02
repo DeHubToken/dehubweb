@@ -80,6 +80,8 @@ function signOut() {
 describe('appearance reset on sign-out', () => {
   beforeEach(() => {
     localStorage.clear();
+    // These cover the saved look; keep the Halloween 2026 override out of the way.
+    localStorage.setItem('dehub.halloween2026.optOut', '1');
     authState.isLoading = false;
     signOut();
     serverPrefs = null;

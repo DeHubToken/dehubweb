@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getAuthToken } from '@/lib/api/dehub';
+import { getDiscoveryHidden } from '@/lib/api/dehub/users';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -132,10 +133,14 @@ export function useNewMembers(excludeAddress?: string | null) {
 
       if (error) throw error;
       const rows = data || [];
+      // The roster knows nothing about bans or adult flags; the API does.
+      const hidden = await getDiscoveryHidden(rows.map((r) => r.wallet_address));
       return {
         // Filtered after the page is cut, not before: dropping yourself must
         // not shift the window and skip somebody on the next page.
-        items: rows.map(toNewMember).filter((m) => m.address.toLowerCase() !== exclude),
+        items: rows
+          .map(toNewMember)
+          .filter((m) => m.address.toLowerCase() !== exclude && !hidden.has(m.address.toLowerCase())),
         hasMore: rows.length === PAGE_SIZE,
       };
     },

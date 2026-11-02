@@ -162,7 +162,23 @@
     "saved": "اتحفظت حقول الصفحة",
     "failed": "متحفظش. جرب تاني.",
     "verified": "لينك موثّق",
-    "verifyHint": "علشان توثّق لينك، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}"
+    "verifyHint": "علشان توثّق لينك، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}",
+    "descriptionPresets": "أضف موقع إلكتروني، ضمائر أو أي حاجة تانية. الروابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "اعطي كل حقل مخصص عنوان",
+    "placeholderLocation": "المدينة، البلد",
+    "presets": {
+      "website": "موقع إلكتروني",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "عنوان مخصص"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -367,6 +383,9 @@
     "gasSponsorshipFailed": "ما قدرناش نغطي المعاملة دي. جرب تاني بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "اكتشف",
     "prompt": "وجّه",
@@ -1677,6 +1696,7 @@
       "featureReply": "{{name}} رد على تعليقك",
       "featureMentionNamed": "{{name}} ذكرتك في “{{title}}”",
       "featureMention": "{{name}} ذكرتك في طلب",
+      "featureActivityNamed": "{{name}} قال في “{{title}}”",
       "governanceVoteNamed": "{{name}} صوتوا على مشروعك \"{{title}}\"",
       "governanceVote": "{{name}} صوت على اقتراحك",
       "governanceCommentNamed": "{{name}} قام بتعليق على مشروعك \"{{title}}\"",
@@ -2804,6 +2824,20 @@
     "likersEmptyBody": "الإعجابات على التعليق ده هتظهر هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من صاحب شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من أصحاب شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "معلومات المنصة",
+    "subtitle": "اختر الشبكة. يتم تحديث الأسعار كل دقيقة.",
+    "free": "مجاناً",
+    "gasCovered": "تغطي الغاز من قبل DeHub",
+    "feeIncludesGas": "≈ {{usd}}، بما في ذلك الغاز",
+    "gasIncluded": "بما في ذلك الغاز",
+    "gasOnly": "≈ {{usd}} الغاز",
+    "paidFromWalletPlain": "تم سحب من محفظتك",
+    "priceUnavailable": "غير متوفرة",
+    "confirm": "مطروح على {{chain}}",
+    "confirmWithCost": "مطروح على {{chain}} · {{cost}}",
+    "notAvailable": "لا يتوفر المطروح على هذه الشبكة بعد."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -14308,7 +14342,7 @@
     "f45e06965f93": "لا يوجد إرشادات بعد",
     "34f5da2599fa": "تظهر اقتراحات الحسابات الجديدة هنا.",
     "bac527bf9a36": "اقتراحات للمتابعة",
-    "036cfd952896": "مَن يُتبع",
+    "a94bfc8a15e8": "اقتراحات للمتابعة",
     "0c820caf16c0": "لا بيانات شخصية بعد",
     "e139251e4f5b": "امسح المنشور",
     "b3661ad568df": "لا يمكن إعادتها هذه الإجراء. سوف يتم حذف المنشور بشكل دائم.",
@@ -18015,9 +18049,39 @@
     "headlineAccent": "وستكون سعيدًا.",
     "orContinueWith": "أو تابع باستخدام",
     "phone": "هاتف",
+    "email": "البريد",
     "fingerprint": "الطباعة الرقمية",
     "exploreFirst": "تستكشف",
     "codeNote": "نرسللك كود بريد إلكتروني، لا حاجة للاستخدام للرقم السري."
+  },
+  "tokenLaunch": {
+    "eyebrow": "قريبًا",
+    "title": "الـتوكن هيتطلق قريب",
+    "body": "الشراء مقفول لحد ما الـتوكن الجديد يجهز. هتوصلك إيميل أول ما يطلع.",
+    "notifyMe": "نبهني",
+    "sendTo": "حنبعتلك إيميل على {{email}}",
+    "emailLabel": "الإيميل",
+    "emailPlaceholder": "إيميلك",
+    "invalidEmail": "اكتب إيميل صحيح",
+    "joinedTitle": "إنت على القائمة",
+    "joinedBody": "حنبعتلك إيميل على {{email}} لما الـتوكن يطلع.",
+    "joinedBodyNoEmail": "حنبعتلك إيميل أول ما الـتوكن يطلع.",
+    "failed": "ما قدرناش نحفظ الكلام ده. جرّب تاني.",
+    "privacy": "بس عشان نقولك عن الإطلاق.",
+    "seoTitle": "الـتوكن هيتطلق قريب | DeHub",
+    "seoDescription": "الـتوكن الجديد بتاع DeHub هيتطلق قريب. انضم للقائمة وخد إيميل أول ما يطلع، وبعد كده اشتري مباشرة من محفظة DeHub بتاعتك."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول على جيت هاب ليهديك انك صاحب الحساب ده. ديهوب مش بتشوف غير ملفك العمومي على جيت هاب.",
+    "verified": "تأكد",
+    "verifiedAria": "حساب GitHub مؤكد",
+    "connected": "GitHub متصّل",
+    "disconnected": "GitHub منقطّع",
+    "taken": "الحساب ده مشتغل مع بروفييل ديهوب تانيه",
+    "failed": "مفيش اتصلش مع جيت هاب. حاول تاني.",
+    "unavailable": "التأكد من GitHub بيبق قريب",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "انقطّع عن GitHub"
   },
   "post": {
     "like": "إعجاب",

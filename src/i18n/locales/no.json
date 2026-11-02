@@ -162,7 +162,25 @@
     "saved": "Profilfelt lagret",
     "failed": "Det ble ikke lagret. Prøv igjen.",
     "verified": "Bekreftet lenke",
-    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}"
+    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}",
+    "descriptionPresets": "Legg til en nettside, pronomen eller noe annet. Lenker vises på sosiale medier.",
+    "type": "Felttype",
+    "needsLabel": "Gi hvert egendefinerte felt en etikett",
+    "placeholderLink": "dittnettsted.com",
+    "placeholderPronouns": "de/dem",
+    "placeholderLocation": "By, land",
+    "presets": {
+      "website": "Nettsted",
+      "blog": "Blogg",
+      "portfolio": "Portefølje",
+      "shop": "Butikk",
+      "podcast": "Podkast",
+      "newsletter": "Nyhetsbrev",
+      "pronouns": "Pronomen",
+      "location": "Sted",
+      "custom": "Skikk",
+      "customOption": "Tilpasset etikett"
+    }
   },
   "followedTags": {
     "follow": "Følg #{{tag}}",
@@ -408,6 +426,9 @@
     "gasSponsorshipFailed": "Denne transaksjonen kunne ikke dekkes. Prøv igjen om et øyeblikk."
   },
   "nav": {
+    "reorderHint": "Hold og dra et hvilket som helst ikon for å omorganisere",
+    "reorderReset": "Tilbakestill",
+    "reorderResetLong": "Tilbakestill menyrekkefølge",
     "home": "Hjem",
     "explore": "Utforsk",
     "prompt": "Fremlegg",
@@ -1742,6 +1763,10 @@
       "featureReply": "{{name}} svarte på kommentaren din",
       "featureMentionNamed": "{{name}} nevnte deg på «{{title}}»",
       "featureMention": "{{name}} nevnte deg på en forespørsel om en funksjon",
+      "featureNewNamed": "{{name}} la ut en ny forespørsel «{{title}}»",
+      "featureNew": "{{name}} la ut en ny forespørsel",
+      "featureActivityNamed": "{{name}} kommenterte på «{{title}}»",
+      "featureActivity": "{{name}} kommenterte på en forespørsel",
       "governanceVoteNamed": "{{name}} stemte på forslaget ditt «{{title}}»",
       "governanceVote": "{{name}} stemte på forslaget ditt",
       "governanceCommentNamed": "{{name}} kommenterte forslaget ditt «{{title}}»",
@@ -2877,6 +2902,21 @@
     "likersEmptyBody": "Likerklikk på denne kommentaren vises her.",
     "anonymousLikes_one": "{{count}} likerklikk fra en anonym merkeinnehaver",
     "anonymousLikes_other": "{{count}} likerklikk fra anonyme merkeinnehavere"
+  },
+  "mintChain": {
+    "title": "Myntpost",
+    "subtitle": "Velg en kjede. Prisene er live og oppdateres hvert minutt.",
+    "free": "Gratis",
+    "gasCovered": "Gass dekket av DeHub",
+    "feeIncludesGas": "≈ {{usd}}, inkludert gass",
+    "gasIncluded": "Gass inkludert",
+    "gasOnly": "≈ {{usd}} gass",
+    "paidFromWallet": "{{amount}} fra lommeboken din",
+    "paidFromWalletPlain": "Betalt fra lommeboken din",
+    "priceUnavailable": "Pris utilgjengelig",
+    "confirm": "Mynt på {{chain}}",
+    "confirmWithCost": "Mint på {{chain}} · {{cost}}",
+    "notAvailable": "Preging på denne kjeden er ikke tilgjengelig ennå."
   },
   "postInfo": {
     "title": "Innleggsinformasjon",
@@ -14658,7 +14698,7 @@
     "f45e06965f93": "Ingen følgere ennå",
     "34f5da2599fa": "Ny brukerforslag vil dukke opp her.",
     "bac527bf9a36": "Følgere",
-    "036cfd952896": "Hvem å følge",
+    "a94bfc8a15e8": "Forslag til å følge",
     "0c820caf16c0": "Ingen biografi ennå",
     "e139251e4f5b": "Slett Innlegg",
     "b3661ad568df": "Dette kan ikke gjenopprettes. Ditt innlegg vil bli permanent slettet.",
@@ -18775,8 +18815,34 @@
     "headlineAccent": "og være lykkelig.",
     "orContinueWith": "eller fortsett med",
     "phone": "Telefon",
+    "email": "E-post",
     "fingerprint": "Fingeravtrykk",
     "exploreFirst": "Utforsk først",
     "codeNote": "Vi sender deg en kode på e-post, uten passord."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kommer snart",
+    "body": "Kjøp er midlertidig stengt mens den nye tokenen blir forberedt. Meld deg på for å få en e-post når den går live.",
+    "notifyMe": "Bekrefte meg når du er ferdig.",
+    "sendTo": "Vi vil sende en epost til {{email}}.",
+    "emailLabel": "E-post",
+    "invalidEmail": "Legg inn en gyldig e-postadresse.",
+    "joinedTitle": "Du er på listen.",
+    "joinedBody": "Vi vil sende en epost til {{email}} når tokenet går i salg.",
+    "joinedBodyNoEmail": "Vi vil sende deg en e-post når tokenet går på markedet.",
+    "failed": "Kunne ikke lagre det. Prøv igjen.",
+    "privacy": "Bare for å fortelle deg om lanseringen.",
+    "seoDescription": "Den nye DeHub-tokenen lanserer snart. Meld deg på listen og få en e-post øyeblikket den går live, så kjøp direkte fra din DeHub-lommebok."
+  },
+  "githubLink": {
+    "hint": "Logg inn på GitHub for å bekrefte at kontoen er din. DeHub ser kun din offentlige GitHub-profil.",
+    "verified": "Verifisert",
+    "verifiedAria": "Verifisert GitHub-konto",
+    "connected": "GitHub koblet sammen",
+    "disconnected": "GitHub ble avkoblet",
+    "taken": "Den GitHub-kontoen er allerede knyttet til et annet DeHub-profil.",
+    "failed": "Kunne ikke koble til GitHub. Prøv på nytt.",
+    "unavailable": "GitHub-verifisering kommer snart.",
+    "connect": "Koble til GitHub"
   }
 }

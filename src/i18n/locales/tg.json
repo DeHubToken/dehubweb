@@ -162,7 +162,25 @@
     "saved": "Майдонҳои профил захира шуданд",
     "failed": "Захира нашуд. Боз кӯшиш кунед.",
     "verified": "Пайванди тасдиқшуда",
-    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}"
+    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o iba pang iba. Ang mga link ay ipinapakita sa iyong mga social.",
+    "type": "Навъи майдон",
+    "needsLabel": "Ба ҳар як майдони фармоишӣ барчасп диҳед",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "онҳо/онҳо",
+    "placeholderLocation": "Шаҳр, кишвар",
+    "presets": {
+      "website": "Сомона",
+      "blog": "Блог",
+      "portfolio": "Портфолио",
+      "shop": "Мағоза",
+      "podcast": "Podcast",
+      "newsletter": "Бюллетен",
+      "pronouns": "Тахаллусҳо",
+      "location": "Ҷойгиршавӣ",
+      "custom": "Оддӣ",
+      "customOption": "ТамғаиМатн"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}}-ро пайгирӣ кардан",
@@ -406,6 +424,9 @@
     "gasSponsorshipFailed": "Хароҷоти ин муомиларо пардохт карда натавонистем. Лутфан пас аз чанде кӯшиш кунед."
   },
   "nav": {
+    "reorderHint": "Нигоҳ доштан ва кашидани ягон нишона барои аз нав танзим кардан",
+    "reorderReset": "Бозсозӣ",
+    "reorderResetLong": "Бозсозии тартиботи меню",
     "home": "Асосӣ",
     "explore": "Ҷустуҷӯ",
     "prompt": "Вуруд",
@@ -1729,6 +1750,8 @@
       "featureReply": "{{name}} ба шарҳи шумо ҷавоб дод",
       "featureMentionNamed": "{{name}} шуморо дар “{{title}}” ёдовар шуд",
       "featureMention": "{{name}}info: whatsthis",
+      "featureNewNamed": "{{name}} дархости нав «{{title}}» илова кард",
+      "featureActivityNamed": "{{name}} комментари дар бораи “{{title}}”",
       "governanceVoteNamed": "{{name}} дар бораи пешниҳои {{title}} овоз дод.",
       "governanceVote": "{{name}} овоз дар пешниҳоди шумо",
       "governanceComment": "{{name}} дар пешниҳоди шумо шарҳ дод",
@@ -2856,6 +2879,19 @@
     "likersEmptyBody": "Писандҳои ин шарҳ дар ин ҷо пайдо мешаванд.",
     "anonymousLikes_one": "{{count}} писанд аз дорандаи нишони беном",
     "anonymousLikes_other": "{{count}} писанд аз дорандагони нишони беном"
+  },
+  "mintChain": {
+    "title": "Почтаи майда",
+    "subtitle": "Занҷирро интихоб кунед. Нархҳо зиндаанд ва ҳар дақиқа навсозӣ мекунанд.",
+    "free": "Озод",
+    "gasCovered": "Газ аз ҷониби DeHub фаро гирифта шудааст",
+    "feeIncludesGas": "{{usd}}, gas include",
+    "gasIncluded": "Газ дохил карда шудааст",
+    "gasOnly": "{{usd}} gas",
+    "paidFromWallet": "{{amount}} mula sa iyong wallet",
+    "paidFromWalletPlain": "Пардохтшуда аз ҳамёни шумо",
+    "priceUnavailable": "Нарх дастнорас аст",
+    "notAvailable": "Ин занҷир ҳоло дастрас нест."
   },
   "postInfo": {
     "title": "Маълумоти пост",
@@ -14608,7 +14644,7 @@
     "f45e06965f93": "Ҳанӯз пешниҳодҳои пайравӣ нест",
     "34f5da2599fa": "Пешниҳодҳои ҳисоби нави корбарон дар ин ҷо пайдо мешаванд.",
     "bac527bf9a36": "Пешниҳодҳои пайравӣ",
-    "036cfd952896": "Кимон ҳамроҳӣ кунед",
+    "a94bfc8a15e8": "Пешниҳодҳои обуна",
     "0c820caf16c0": "Номусиқии биографияи ҳич ҳам нашудааст",
     "e139251e4f5b": "Нест кардани нашр",
     "b3661ad568df": "Ин амал наметавонад бозгашт дода шавад. Пости шумо бебозгашт ҳазф карда мешавад.",
@@ -18699,8 +18735,34 @@
     "headlineAccent": "ва хушбахт бошед.",
     "orContinueWith": "o magpatuloy sa",
     "phone": "Телефон",
+    "email": "Email",
     "fingerprint": "Ангушт",
     "exploreFirst": "Мехнумайишгоҳ",
     "codeNote": "Мо ба шумо рамзро мефиристем, парол лозим нест."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Ба зудӣ",
+    "title": "Токен дар ҳоли барпоиш",
+    "body": "Харидҳо дар ҳоли таъйин аст, то токени нав омода шавад. Ҳангоми фаъолшавии он, почтаи электронӣ гиред.",
+    "notifyMe": "Манро огоҳ кунед",
+    "sendTo": "Мо ба {{email}} почтаи электронӣ мефиристем",
+    "emailLabel": "Почтаи электронӣ",
+    "emailPlaceholder": "Почтаи электронии шумо",
+    "invalidEmail": "Почтаи электронии дуруст ворид кунед",
+    "joinedTitle": "Шумо дар рӯйхат ҳастед",
+    "joinedBody": "Мо ба {{email}} почтаи электронӣ мефиристем, вақте ки токен оғоз мешавад.",
+    "joinedBodyNoEmail": "Мо ба шумо почтаи электронӣ мефиристем, вақте ки токен оғоз мешавад.",
+    "failed": "Сабт карда нашуд. Аз нав кӯшиш кунед.",
+    "privacy": "Танҳо барои огоҳ кардани шумо дар бораи оғоз истифода мешавад.",
+    "seoTitle": "Токен дар ҳоли барпоиш | DeHub",
+    "seoDescription": "Токени нави DeHub дар ҳоли барпоиш аст. Ба рӯйхат ҳамроҳ шавед ва ҳангоми фаъолшавии он, як почтаи электронӣ гиред, сипас бевосита аз ҳамёни DeHub худ харид кунед."
+  },
+  "githubLink": {
+    "hint": "Roʻyxatdan oʻtish uchun GitHubga kirishingiz kerak, shuning uchun hisobingiz siznikiga aylandi. DeHub faqat sizning umumiy GitHub profilingizni koʻrishadi.",
+    "verified": "Tasdiq etilgan",
+    "connected": "GitHub roʻyxatdan etilgan",
+    "taken": "Inshakhs, hesob GitHubi dar profili DeHubi baʼziy roʻy berde ast.",
+    "failed": "Qayd rosh qilib boʿd GitHub. Yana urinish konid.",
+    "disconnect": "Парокандашавондан."
   }
 }

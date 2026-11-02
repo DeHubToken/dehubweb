@@ -8,6 +8,8 @@ import { filmShotDraft, filmProjectMediaIds, removeFilmProjectMedia, validFilmPr
 import { CinemaDirectionControls } from '../app/creator/studio/CinemaDirectionControls';
 import { ReviewedBatchButton } from '../app/creator/ReviewedBatchButton';
 import { filmReviewedBatch } from '@/lib/creator/reviewedBatchDrafts';
+import { SceneStagePanel } from './SceneStagePanel';
+import { importOneFile } from '@/lib/editor/importFiles';
 
 export function FilmProjectPanel() {
   const { t } = useTranslation();
@@ -70,6 +72,18 @@ export function FilmProjectPanel() {
       <label className="mt-3 block text-xs">{t('editor.film.seconds')}<input className={`${input} mt-1`} type="number" min={1} max={30} value={shot.seconds} onChange={event => { const seconds = Number(event.target.value); if (seconds >= 1 && seconds <= 30) changeShot({ seconds }); }} /></label>
       {references(shot.referenceMediaIds, ids => changeShot({ referenceMediaIds: ids }), t('editor.film.shotReferences'))}
       <div className="mt-3"><CinemaDirectionControls value={shot.direction ?? {}} onChange={direction => changeShot({ direction })} mode="video" /></div>
+      <SceneStagePanel key={`${projectId}:${shot.id}:${walletAddress || ''}`} value={shot.stage} onChange={stage => changeShot({ stage })} onFrame={async (url,signal) => {
+        const capturedOwner=owner.current,capturedFilm=JSON.stringify(film),capturedShot=shot.id;
+        const current=()=>!signal.aborted && owner.current===capturedOwner && useEditorStore.getState().projectId===projectId
+          && JSON.stringify(useEditorStore.getState().settings.filmProject)===capturedFilm;
+        if(!current() || new Set([...film.referenceMediaIds,...shot.referenceMediaIds]).size>=4) throw new Error('Reference limit');
+        const blob=await (await fetch(url,{signal})).blob();
+        if(!current())return;
+        const id=await importOneFile(new File([blob],t('editor.stage.frameName')+'.png',{type:'image/png'}),{wallet:capturedOwner,signal});
+        if(!id || !current())throw new Error('Editor changed');
+        update({...film,shots:film.shots.map(item=>item.id===capturedShot?{...item,referenceMediaIds:[...item.referenceMediaIds,id]}:item)});
+        await saveProject(useEditorStore.getState().toSnapshot());
+      }}/>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" className={button} disabled={preparing || !shot.prompt.trim()} onClick={() => void prepare('image')}>{t('editor.film.frame')}</button>
         <button type="button" className={button} disabled={preparing || !shot.prompt.trim()} onClick={() => void prepare('video')}>{t('editor.film.video')}</button>

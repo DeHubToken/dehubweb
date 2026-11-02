@@ -162,7 +162,24 @@
     "saved": "个人资料字段已保存",
     "failed": "没有保存成功，请再试一次。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}",
+    "descriptionPresets": "添加网站、代词或其他任何内容。链接显示你的社交媒体。",
+    "type": "字段类型",
+    "needsLabel": "为每个自定义字段设置标签",
+    "placeholderPronouns": "他们/他们的",
+    "placeholderLocation": "城市，国家",
+    "presets": {
+      "website": "网站",
+      "blog": "博客",
+      "portfolio": "作品集",
+      "shop": "商店",
+      "podcast": "播客",
+      "newsletter": "通讯",
+      "pronouns": "代词",
+      "location": "位置",
+      "custom": "自定义",
+      "customOption": "自定义标签"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",
@@ -404,6 +421,9 @@
     "gasSponsorshipFailed": "箇笔交易垫勿了。过歇再试试。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标进行重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序",
     "home": "家",
     "explore": "找找看",
     "prompt": "提示",
@@ -1722,6 +1742,10 @@
       "featureReply": "{{name}} 回复了你的评论",
       "featureMentionNamed": "{{name}} 在“{{title}}”中提到了你",
       "featureMention": "{{name}} 在功能请求中提到了你",
+      "featureNewNamed": "{{name}} 发布了一个新请求“{{title}}”",
+      "featureNew": "{{name}} 发布了一个新的请求",
+      "featureActivityNamed": "{{name}} 在“{{title}}”下评论了",
+      "featureActivity": "{{name}} 在请求中评论了",
       "governanceVoteNamed": "{{name}} 给你的提案“{{title}}”投了票",
       "governanceVote": "{{name}} 给你的提案投了票",
       "governanceCommentNamed": "{{name}} 评论了你的提案“{{title}}”",
@@ -2853,6 +2877,20 @@
     "likersEmptyBody": "这条评论的点赞会显示在这儿。",
     "anonymousLikes_one": "来自匿名徽章持有者的 {{count}} 个赞",
     "anonymousLikes_other": "来自匿名徽章持有者的 {{count}} 个赞"
+  },
+  "mintChain": {
+    "title": "新鲜帖子",
+    "subtitle": "选择一条链。价格是实时的，每分钟更新一次。",
+    "free": "免费",
+    "gasCovered": "Gas 由 DeHub 承担",
+    "feeIncludesGas": "≈ {{usd}}，包含 gas",
+    "gasIncluded": "包含 gas",
+    "paidFromWallet": "{{amount}} 来自您的钱包",
+    "paidFromWalletPlain": "从您的钱包支付",
+    "priceUnavailable": "价格不可用",
+    "confirm": "在 {{chain}} 上 Mint",
+    "confirmWithCost": "在 {{chain}} · {{cost}} 上 Mint",
+    "notAvailable": "此链上的 Minting 暂不可用。"
   },
   "postInfo": {
     "title": "帖子信息",
@@ -14588,7 +14626,7 @@
     "f45e06965f93": "没有跟随建议",
     "34f5da2599fa": "新账户建议将在此处显示。",
     "bac527bf9a36": "建议",
-    "036cfd952896": "誰要關注？",
+    "a94bfc8a15e8": "关注推荐",
     "0c820caf16c0": "无个人简介",
     "e139251e4f5b": "删除帖子",
     "b3661ad568df": "这个动作无法撤销。您的帖子将永久删除。",
@@ -18475,9 +18513,36 @@
     "headlineAccent": "并快乐。",
     "orContinueWith": "或者继续使用",
     "phone": "手机",
+    "email": "Email",
     "fingerprint": "指纹",
     "exploreFirst": "先探索",
     "codeNote": "我们会通过邮件发送一个验证码，无需密码。"
+  },
+  "tokenLaunch": {
+    "eyebrow": "即将推出",
+    "body": "购买暂时关闭，新代币即将上线。一上线就立即收到邮件通知。",
+    "notifyMe": "通知我",
+    "sendTo": "我们将会给{{email}}发送电子邮件。",
+    "emailLabel": "电子邮件",
+    "invalidEmail": "请输入一个有效的电子邮件地址。",
+    "joinedTitle": "你在名单上。",
+    "joinedBody": "我们将在代币上市时给{{email}}发邮件。",
+    "joinedBodyNoEmail": "我们将在代币上市时通过邮件通知您。",
+    "failed": "无法保存。请重试。",
+    "privacy": "仅用于通知您发布的信息。",
+    "seoDescription": "新的 DeHub 代币即将上线。加入名单，一旦上线即可收到一封邮件，然后直接从您的 DeHub 钱包购买。"
+  },
+  "githubLink": {
+    "hint": "请登录 GitHub 以证明账户归属。DeHub 仅能看到您的公开 GitHub 个人资料。",
+    "verified": "验证通过",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 断开连接",
+    "taken": "这个 GitHub 账户已经绑定在另一个 DeHub 个人资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证功能即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
   },
   "post": {
     "like": "喜欢",

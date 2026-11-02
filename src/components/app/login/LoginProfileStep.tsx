@@ -55,6 +55,7 @@ import { isReservedUsername } from '@/lib/reserved-usernames';
 import { cn } from '@/lib/utils';
 import { createLogger } from '@/lib/logger';
 import { clearAuthTrace } from '@/lib/auth-trace';
+import { markAvatarPromptSignupSession } from '@/lib/avatar-prompt';
 
 const signupLog = createLogger('LoginProfileStep');
 import i18n, { SUPPORTED_LANGUAGES, loadLanguage, applyDocumentDirection } from '@/i18n';
@@ -338,6 +339,8 @@ export function LoginProfileStep() {
       if (avatarFile) {
         await queryClient.invalidateQueries({ queryKey: ['profile-avatar'] });
       }
+      // This open already offered a photo step; the reminder waits for the next.
+      markAvatarPromptSignupSession();
       signupLog.trace?.('signup-complete');
       clearAuthTrace();
       setSaved(true);

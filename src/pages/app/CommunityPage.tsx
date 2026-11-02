@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Users from "@/components/ui/cut-icons/communities";
 
 import ArrowLeft from "@/components/ui/cut-icons/back";
@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
 import { useCommunityAbilities, isEffectivelyActive, isActivelyBanned } from '@/hooks/use-community-admin';
 import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
+import { holderGateOf, holderGateMessage, runHolderCheck } from '@/hooks/use-holder-gate';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { AddExistingPost } from '@/components/app/communities/AddExistingPost';
@@ -37,11 +38,14 @@ export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const [tab, setTab] = useState<Tab>('posts');
+  const [searchParams] = useSearchParams();
+  // ?tab=chat is where a chat notification lands.
+  const initialTab: Tab = searchParams.get('tab') === 'chat' ? 'chat' : 'posts';
+  const [tab, setTab] = useState<Tab>(initialTab);
   // Lazy-mount-then-keep: only the Posts tab mounts on arrival; the others
   // (chat = 200-message fetch + per-sender profile fan-out, events, members)
   // mount on first activation and then stay mounted CSS-hidden as before.
-  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts']));
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts', initialTab]));
   const [manageOpen, setManageOpen] = useState(false);
   const activateTab = (next: Tab) => {
     setTab(next);
@@ -53,6 +57,7 @@ export default function CommunityPage() {
   const { data: members = [] } = useCommunityMembers(community?.id);
   const { data: membership } = useIsCommunityMember(community?.id);
   const joinMutation = useJoinCommunity();
+  const [checkingHolder, setCheckingHolder] = useState(false);
   const leaveMutation = useLeaveCommunity();
 
   // Membership resolves through the same helper the permission mirror uses, so
@@ -118,7 +123,24 @@ export default function CommunityPage() {
         onSuccess: () => { toast.success(t('communities.requestCancelled')); },
       });
     } else {
-      joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+      const gate = holderGateOf(community);
+      if (!gate || abilities.isOwner) {
+        joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+        return;
+      }
+      // Holder groups: the database reads the wallet's balance first, and only
+      // a passing read lets the membership row in.
+      setCheckingHolder(true);
+      runHolderCheck(community.id, walletAddress)
+        .then(result => {
+          if (result.status === 'open' || result.eligible) {
+            joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+          } else {
+            toast.error(holderGateMessage(result, gate));
+          }
+        })
+        .catch(() => toast.error(holderGateMessage({ status: 'failed' }, gate)))
+        .finally(() => setCheckingHolder(false));
     }
   };
 
@@ -146,7 +168,7 @@ export default function CommunityPage() {
         canManage={abilities.canManage}
         canInvite={!isMember || abilities.can('add_members')}
         onManage={() => setManageOpen(true)}
-        isPending={joinMutation.isPending || leaveMutation.isPending}
+        isPending={checkingHolder || joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
       />
 
@@ -213,6 +235,7 @@ export default function CommunityPage() {
             {visitedTabs.has('chat') && (
               <div className={tab === 'chat' ? '' : 'hidden'}>
                 <CommunityChat
+                  active={tab === 'chat'}
                   communityId={community.id}
                   community={community}
                   membership={membership}

@@ -162,7 +162,25 @@
     "saved": "Profilio laukai išsaugoti",
     "failed": "Neišsaugota. Bandykite dar kartą.",
     "verified": "Patvirtinta nuoroda",
-    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}"
+    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}",
+    "descriptionPresets": "Pridėkite svetainę, įvardžius ar dar ką nors. Rodomos nuorodos su tavo socialiniais tinklais.",
+    "type": "Lauko tipas",
+    "needsLabel": "Kiekvienam pasirinktiniam laukeliui suteikite etiketę",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "jie/jie",
+    "placeholderLocation": "Miestas, šalis",
+    "presets": {
+      "website": "Interneto svetainė",
+      "blog": "Tinklaraštis",
+      "portfolio": "Portfelis",
+      "shop": "Parduotuvė",
+      "podcast": "Tinklalaidė",
+      "newsletter": "Naujienlaiškis",
+      "pronouns": "Įvardžiai",
+      "location": "Vieta",
+      "custom": "Pasirinktinis",
+      "customOption": "Pasirinktinė etiketė"
+    }
   },
   "followedTags": {
     "follow": "Sekti #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Šios operacijos nepavyko padengti. Po akimirkos bandykite dar kartą."
   },
   "nav": {
+    "reorderHint": "Laikykite ir vilkite bet kurią piktogramą, kad pertvarkytumėte",
+    "reorderReset": "Nustatyti iš naujo",
+    "reorderResetLong": "Atkurti meniu tvarką",
     "home": "Pradžia",
     "explore": "Naršyti",
     "prompt": "Valdymas",
@@ -1743,6 +1764,10 @@
       "featureReply": "{{name}} atsakė į jūsų komentarą",
       "featureMentionNamed": "{{name}} paminėjo jūsą “{{title}}”",
       "featureMention": "{{name}} paminėjo jūsą prašyme",
+      "featureNewNamed": "{{name}} paskelbė naują užklausą „{{title}}“",
+      "featureNew": "{{name}} paskelbė naują užklausą",
+      "featureActivityNamed": "{{name}} pakomentavo „{{title}}“",
+      "featureActivity": "{{name}} pakomentavo užklausą",
       "governanceVoteNamed": "{{name}} balsavo jūsų pasiūlyje “{{title}}”",
       "governanceVote": "{{name}} balsavo jūsų pasiūlyje",
       "governanceCommentNamed": "{{name}} komentavo jūsų pasiūlymą “{{title}}”",
@@ -2878,6 +2903,21 @@
     "likersEmptyBody": "Čia bus rodomi šio komentaro patiktukai.",
     "anonymousLikes_one": "{{count}} patiktukas iš anoniminio ženklelio turėtojo",
     "anonymousLikes_other": "Patiktukai iš anoniminių ženklelių turėtojų: {{count}}"
+  },
+  "mintChain": {
+    "title": "Mėtų stulpelis",
+    "subtitle": "Pasirinkite grandinę. Kainos yra galiojančios ir atnaujinamos kiekvieną minutę.",
+    "free": "Nemokamai",
+    "gasCovered": "Dujas dengia „DeHub“",
+    "feeIncludesGas": "≈ {{usd}}, su dujomis",
+    "gasIncluded": "Su dujomis",
+    "gasOnly": "≈ {{usd}} dujos",
+    "paidFromWallet": "{{amount}} iš jūsų piniginės",
+    "paidFromWalletPlain": "Sumokėta iš jūsų piniginės",
+    "priceUnavailable": "Kaina nepasiekiama",
+    "confirm": "Kalykla {{chain}}",
+    "confirmWithCost": "Minėta {{chain}} · {{cost}}",
+    "notAvailable": "Šios grandinės monetų kaldinti dar negalima."
   },
   "postInfo": {
     "title": "Įrašo informacija",
@@ -14655,7 +14695,7 @@
     "f45e06965f93": "Kol kas nėra sekamų pasiūlymų",
     "34f5da2599fa": "Čia bus rodomi nauji paskyros pasiūlymai.",
     "bac527bf9a36": "Sekti pasiūlymus",
-    "036cfd952896": "Kas sekimas",
+    "a94bfc8a15e8": "Sekimo pasiūlymai",
     "0c820caf16c0": "Nėra biografijos dar",
     "e139251e4f5b": "Ištrinti įrašą",
     "b3661ad568df": "Šio veiksmo anuliuoti negalima. Jūsų įrašas bus visam laikui pašalintas.",
@@ -18766,8 +18806,38 @@
     "headlineAccent": "ir būkite laimingi.",
     "orContinueWith": "arba tęskite su",
     "phone": "Telefonas",
+    "email": "Email",
     "fingerprint": "Piršto atspaudas",
     "exploreFirst": "Pirmiausia peržiūrėkite",
     "codeNote": "Siunčiame kodą el. paštu, slaptažodžio nereikia."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Atvyksta greitai",
+    "title": "Tokenas pasirodys greitai",
+    "body": "Prekės pirkimas uždaras, kol naujas tokenas bus paruoštas. Gaukite el. paštą, kai jis bus prieinamas.",
+    "notifyMe": "Pranešti man",
+    "sendTo": "Mums rašykite {{email}}",
+    "emailLabel": "El. paštas",
+    "emailPlaceholder": "Jūsų el. paštas",
+    "invalidEmail": "Įveskite galiojančią el. paštą",
+    "joinedTitle": "Jūs jau įtraukti į sąrašą",
+    "joinedBody": "Mums rašykite {{email}}, kai tokenas bus prieinamas.",
+    "joinedBodyNoEmail": "Mums rašykite jums, kai tokenas bus prieinamas.",
+    "failed": "Nepavyko išsaugoti. Bandykite dar kartą.",
+    "privacy": "Naudojamas tik pranešti apie išleidimą.",
+    "seoTitle": "Tokenas pasirodys greitai | DeHub",
+    "seoDescription": "Naujas DeHub tokenas pasirodys greitai. Prisijunkite prie sąrašo ir gaukite vieną el. laišką, kai jis bus prieinamas, tada nusipirkti tiesiog iš savo DeHub portfelio."
+  },
+  "githubLink": {
+    "hint": "Prisijunkite prie „GitHub“ ir įrodykite, kad paskyra priklauso jums. DeHub mato tik jūsų viešą „GitHub“ profilį.",
+    "verified": "Patvirtinta",
+    "verifiedAria": "Patvirtinta „GitHub“ paskyra",
+    "connected": "„GitHub“ prijungtas",
+    "disconnected": "„GitHub“ atjungtas",
+    "taken": "Ta „GitHub“ paskyra jau yra kitame „DeHub“ profilyje.",
+    "failed": "Nepavyko prisijungti prie „GitHub“. Bandykite dar kartą.",
+    "unavailable": "Netrukus bus patvirtintas „GitHub“.",
+    "connect": "Prijungti GitHub",
+    "disconnect": "Atjungti"
   }
 }

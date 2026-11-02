@@ -162,7 +162,25 @@
     "saved": "Fushat e profilit u ruajtën",
     "failed": "Nuk u ruajt. Provo përsëri.",
     "verified": "Lidhje e verifikuar",
-    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}"
+    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}",
+    "descriptionPresets": "Shto një faqe interneti, përemra ose ndonjë gjë tjetër. Lidhjet shfaqen me rrjetet e tua sociale.",
+    "type": "Lloji i fushës",
+    "needsLabel": "Jepi çdo fushe të personalizuar një etiketë",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "ata/ato",
+    "placeholderLocation": "Qyteti, shteti",
+    "presets": {
+      "website": "Faqja e internetit",
+      "blog": "Blog",
+      "portfolio": "Portofoli",
+      "shop": "Dyqan",
+      "podcast": "Podcast",
+      "newsletter": "Buletini informativ",
+      "pronouns": "Përemrat",
+      "location": "Vendndodhja",
+      "custom": "I personalizuar",
+      "customOption": "Etiketa e personalizuar"
+    }
   },
   "followedTags": {
     "follow": "Ndiq #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Ky transaksion nuk mund të mbulohej. Ju lutemi provoni sërish pas pak."
   },
   "nav": {
+    "reorderHint": "Mbaj dhe tërhiq çdo ikonë për të riorganizuar",
+    "reorderReset": "Rivendos",
+    "reorderResetLong": "Rivendos rendin e menusë",
     "home": "Kryefaqja",
     "explore": "Eksploro",
     "prompt": "Kërkesa",
@@ -1743,6 +1764,10 @@
       "featureReply": "{{name}} përgjigjet për komentin tënd",
       "featureMentionNamed": "{{name}} përmend në “{{title}}”",
       "featureMention": "{{name}} përmend në një kërkesë",
+      "featureNewNamed": "{{name}} ka postuar një kërkesë “{{title}}”",
+      "featureNew": "{{name}} ka postuar një kërkesë të re",
+      "featureActivityNamed": "{{name}} komentoi në “{{title}}”",
+      "featureActivity": "{{name}} u komenteu në një kërkesë",
       "governanceVoteNamed": "{{name}} votoi për propozimin tënd “{{title}}”",
       "governanceVote": "{{name}} votoi për propozim",
       "governanceCommentNamed": "{{name}} komentoi propozimin tënd “{{title}}”",
@@ -2878,6 +2903,21 @@
     "likersEmptyBody": "Pëlqimet e këtij komenti do të shfaqen këtu.",
     "anonymousLikes_one": "{{count}} pëlqim nga një mbajtës anonim distinktivi",
     "anonymousLikes_other": "{{count}} pëlqime nga mbajtës anonimë distinktivësh"
+  },
+  "mintChain": {
+    "title": "Postimi i monedhës",
+    "subtitle": "Zgjidh një zinxhir. Çmimet janë aktive dhe përditësohen çdo minutë.",
+    "free": "Falas",
+    "gasCovered": "Gazi i mbuluar nga DeHub",
+    "feeIncludesGas": "≈ {{usd}}, përfshirë gazin",
+    "gasIncluded": "Përfshihet gazi",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} nga portofoli yt",
+    "paidFromWalletPlain": "Paguar nga portofoli yt",
+    "priceUnavailable": "Çmimi i padisponueshëm",
+    "confirm": "Mint në {{chain}}",
+    "confirmWithCost": "Mint në {{chain}} · {{cost}}",
+    "notAvailable": "Gjurmimi në këtë zinxhir nuk është ende i disponueshëm."
   },
   "postInfo": {
     "title": "Informacione për postimin",
@@ -14649,7 +14689,7 @@
     "f45e06965f93": "Nuk ke ndjekur ende sugjerimet",
     "34f5da2599fa": "Sugjerimet e reja të llogarisë do të shfaqen këtu.",
     "bac527bf9a36": "Ndiq sugjerimet",
-    "036cfd952896": "Kush të ndjek",
+    "a94bfc8a15e8": "Sugjerime për ndjekje",
     "0c820caf16c0": "Nuk ka biografi të shfaqur",
     "e139251e4f5b": "Fshi postimin",
     "b3661ad568df": "Ky veprim nuk mund të zhbëhet. Postimi yt do të hiqet përgjithmonë.",
@@ -18766,8 +18806,38 @@
     "headlineAccent": "dhe të jeni të gëzuar.",
     "orContinueWith": "ose vazhdoni me",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Shënim i unazës",
     "exploreFirst": "Eksploroni para",
     "codeNote": "Ne ju derdhim një kod, pa kërkim për fjalë kalim."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Së shpejti",
+    "title": "Tokeni po niset së shpejti",
+    "body": "Blerja është e mbyllur ndërkohë që tokeni i ri po përgatitet. Merrni një email në momentin kur të jetë i drejtpërdrejtë.",
+    "notifyMe": "Njoftomëni",
+    "sendTo": "Ne do t'ju dërgojmë email në {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Emaili juaj",
+    "invalidEmail": "Futni një email të vlefshëm",
+    "joinedTitle": "Jeni në listë",
+    "joinedBody": "Ne do t'ju dërgojmë email në {{email}} kur tokeni të niset.",
+    "joinedBodyNoEmail": "Ne do t'ju dërgojmë email kur tokeni të niset.",
+    "failed": "Nuk mundi të ruhet. Provoni përsëri.",
+    "privacy": "Përdoret vetëm për t'ju informuar për lançimin.",
+    "seoTitle": "Tokeni po niset së shpejti | DeHub",
+    "seoDescription": "Tokeni i ri DeHub po niset së shpejti. Bashkohuni në listë dhe merrni një email në momentin kur të jetë i drejtpërdrejtë, pastaj blini drejtpërdrejt nga portofoli juaj DeHub."
+  },
+  "githubLink": {
+    "hint": "Hyrni në GitHub për të provuar se llogaria është juaja. DeHub sheh vetëm profilin tuaj publik në GitHub.",
+    "verified": "Verified",
+    "verifiedAria": "Llogaria e Verifikuar në GitHub",
+    "connected": "GitHub është i lidhur",
+    "disconnected": "GitHub është i ndarë",
+    "taken": "Llogaria GitHub është e regjistruar në një profili tjetër DeHub.",
+    "failed": "Nuk mund të lidhesh me GitHub. Pritni edhe një herë.",
+    "unavailable": "Verifikimi i GitHub-it është në rrugën e pritjes.",
+    "connect": "Kërkoni lidhjen me GitHub",
+    "disconnect": "Ndalo lidhjen me GitHub"
   }
 }

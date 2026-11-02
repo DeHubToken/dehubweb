@@ -4352,6 +4352,7 @@ export type Database = {
           image_urls: string[] | null
           like_count: number
           shipped_url: string | null
+          status_note: string | null
           status: string
           status_note: string | null
           title: string
@@ -4372,6 +4373,7 @@ export type Database = {
           image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
+          status_note?: string | null
           status?: string
           status_note?: string | null
           title: string
@@ -4392,6 +4394,7 @@ export type Database = {
           image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
+          status_note?: string | null
           status?: string
           status_note?: string | null
           title?: string

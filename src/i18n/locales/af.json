@@ -162,7 +162,25 @@
     "saved": "Profielvelde gestoor",
     "failed": "Dit is nie gestoor nie. Probeer weer.",
     "verified": "Geverifieerde skakel",
-    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}"
+    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}",
+    "descriptionPresets": "Voeg 'n webwerf, voornaamwoorde of iets anders by. Maak kontak met jou sosiale netwerke.",
+    "type": "Veldtipe",
+    "needsLabel": "Gee elke pasgemaakte veld 'n etiket",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "hulle/hulle",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Webwerf",
+      "blog": "Blog",
+      "portfolio": "Portefeulje",
+      "shop": "Winkel",
+      "podcast": "Podsending",
+      "newsletter": "Nuusbrief",
+      "pronouns": "Voornaamwoorde",
+      "location": "Ligging",
+      "custom": "Pasmaak",
+      "customOption": "Pasmaak etiket"
+    }
   },
   "followedTags": {
     "follow": "Volg #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Hierdie transaksie kon nie geborg word nie. Probeer oor 'n oomblik weer."
   },
   "nav": {
+    "reorderHint": "Hou en sleep enige ikoon vas om dit te herskik",
+    "reorderReset": "Herstel",
+    "reorderResetLong": "Stel kieslysbestelling terug",
     "home": "Tuis",
     "explore": "Verken",
     "prompt": "Stel saam",
@@ -1753,6 +1774,10 @@
       "featureReply": "{{name}} het gereageer op jou kommentaar",
       "featureMentionNamed": "{{name}} het jou genoem op “{{title}}”",
       "featureMention": "{{name}} het jou genoem op 'n voorstel",
+      "featureNewNamed": "{{name}} het 'n nuwe versoek geplaas “{{title}}”",
+      "featureNew": "{{name}} het 'n nuwe versoek geplaas",
+      "featureActivityNamed": "{{name}} kommentaar op “{{title}}”",
+      "featureActivity": "{{name}} kommentaar op 'n versoek",
       "governanceVoteNamed": "{{name}} het op jou voorstel “{{title}}” gestem",
       "governanceVote": "{{name}} het op jou voorstel gestem",
       "governanceCommentNamed": "{{name}} het kommentaar gelas op jou voorstel “{{title}}”",
@@ -2911,6 +2936,21 @@
     "likersEmptyBody": "Laaiks op hierdie opmerking sal hier verskyn.",
     "anonymousLikes_one": "{{count}} laaik van 'n anonieme badgehouer",
     "anonymousLikes_other": "{{count}} laaiks van anonieme badgehouers"
+  },
+  "mintChain": {
+    "title": "Mint-pos",
+    "subtitle": "Kies 'n ketting. Pryse is lewendig en werk elke minuut op.",
+    "free": "Gratis",
+    "gasCovered": "Gas wat deur DeHub gedek word",
+    "feeIncludesGas": "≈ {{usd}}, gas ingesluit",
+    "gasIncluded": "Gas ingesluit",
+    "gasOnly": "≈ {{usd}} GAS",
+    "paidFromWallet": "{{amount}} van jou beursie",
+    "paidFromWalletPlain": "Betaal uit jou beursie",
+    "priceUnavailable": "Prys nie beskikbaar nie",
+    "confirm": "Munt op {{chain}}",
+    "confirmWithCost": "Munt op {{chain}} · {{cost}}",
+    "notAvailable": "Mining op hierdie ketting is nog nie beskikbaar nie."
   },
   "postInfo": {
     "title": "Plaas inligting",
@@ -14738,7 +14778,7 @@
     "f45e06965f93": "Geen volg-suggesties nog",
     "34f5da2599fa": "Nuwe rekeningvoorstelle sal hier verskyn.",
     "bac527bf9a36": "Volg voorstelle",
-    "036cfd952896": "Wie om te volg",
+    "a94bfc8a15e8": "Volgvoorstelle",
     "0c820caf16c0": "Geen bio nog",
     "e139251e4f5b": "Skrap plasing",
     "b3661ad568df": "Hierdie aksie kan nie ongedaan gemaak word nie. Jou pos sal permanent verwyder word.",
@@ -18857,9 +18897,39 @@
     "headlineAccent": "en wees gelukkig.",
     "orContinueWith": "of gaan voort met",
     "phone": "Foon",
+    "email": "Email",
     "fingerprint": "Vingerafdruk",
     "exploreFirst": "Verken eers",
     "codeNote": "Ons stuur vir jou 'n kode, geen wagwoord nodig nie."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Binnekort beskikbaar",
+    "title": "Token word binnekort geloods",
+    "body": "Koping is gesluit terwyl die nuwe token gereed gemaak word. Ontvang 'n e-pos die oomblik dit lewendig gaan.",
+    "notifyMe": "Stel my in kennis",
+    "sendTo": "Ons sal e-pos aan {{email}}",
+    "emailLabel": "E-pos",
+    "emailPlaceholder": "Jou e-pos",
+    "invalidEmail": "Voer 'n geldige e-pos in",
+    "joinedTitle": "Jy is op die lys",
+    "joinedBody": "Ons sal e-pos aan {{email}} wanneer die token geloods word.",
+    "joinedBodyNoEmail": "Ons sal jou e-pos wanneer die token geloods word.",
+    "failed": "Kon dit nie stoor nie. Probeer weer.",
+    "privacy": "Slegs gebruik om jou van die bekendstelling in te lig.",
+    "seoTitle": "Token word binnekort geloods | DeHub",
+    "seoDescription": "Die nuwe DeHub-token word binnekort geloods. Sluit aan by die lys en ontvang 'n e-pos die oomblik dit lewendig gaan, dan koop direk vanaf jou DeHub-beursie."
+  },
+  "githubLink": {
+    "hint": "Teken in op GitHub om te bewys dat die rekening joune is. DeHub sien slegs jou publieke GitHub-profiel.",
+    "verified": "Geverifieer",
+    "verifiedAria": "Geverifieerde GitHub-rekening",
+    "connected": "GitHub verbind",
+    "disconnected": "GitHub ontkoppel",
+    "taken": "Die GitHub-rekening is reeds op 'n ander DeHub-profiel.",
+    "failed": "Kon nie GitHub koppel nie. Probeer weer.",
+    "unavailable": "GitHub is soon.",
+    "connect": "Verbind met GitHub",
+    "disconnect": "Ontkoppel"
   },
   "footer": {
     "company": "Maatskappy",

@@ -97,25 +97,27 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
         })}
       </div>
 
-      {/* Tab Content — show/hide for maximum browser compatibility */}
+      {/* Tab Content — show/hide for maximum browser compatibility. No
+          overscroll containment: at the end of a list the wheel goes on to
+          scroll the rest of the side rail (the rail itself contains it). */}
       <div data-side-panel-content className="h-[400px]">
         {/* Leaderboard panel */}
-        <div className={`h-full overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
+        <div className={`h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
           {(leaderboardOpened || effectiveTab === 'leaderboard') && <SidebarLeaderboard ref={leaderboardRef} />}
         </div>
         {/* Follow panel - only rendered when authenticated */}
         {isAuthenticated && (
-          <div className={`h-full flex flex-col overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'follow' ? '' : 'hidden'}`}>
+          <div className={`h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'follow' ? '' : 'hidden'}`}>
             {followOpened && <WhoToFollow />}
           </div>
         )}
         {/* New members panel — mounted lazily on first open, like chat. */}
-        <div className={`h-full flex flex-col overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'newMembers' ? '' : 'hidden'}`}>
+        <div className={`h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'newMembers' ? '' : 'hidden'}`}>
           {newMembersOpened && <SidebarNewMembers />}
         </div>
         {/* Chat panel — pt-3 matches the buffer above WhatsHappening's period tabs.
             Mounted lazily on first open; stays mounted after so switching away keeps state. */}
-        <div className={`h-full pt-3 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
+        <div className={`h-full pt-3 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
           {chatOpened && <SidebarChat isActive={effectiveTab === 'chat'} />}
         </div>
       </div>

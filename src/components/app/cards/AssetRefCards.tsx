@@ -308,13 +308,18 @@ export function AssetRefCards({ refs, className }: { refs: AssetRef[]; className
  *
  * `displayText` differs from the input only when an address was found — tickers
  * stay in the sentence.
+ *
+ * `hidden` is the post's `hideAssetCards`: the poster closed the card. No refs,
+ * and nothing stripped, so an address they pasted stays in the text.
  */
 export function useAssetRefsInText(
   text?: string | null,
   max = MAX_ASSET_CARDS_PER_MESSAGE,
+  hidden = false,
 ): { refs: AssetRef[]; displayText: string } {
   return useMemo(() => {
+    if (hidden) return { refs: [], displayText: text ?? '' };
     const refs = findAssetRefs(text).slice(0, max);
     return { refs, displayText: stripAssetRefs(text, refs) };
-  }, [text, max]);
+  }, [text, max, hidden]);
 }

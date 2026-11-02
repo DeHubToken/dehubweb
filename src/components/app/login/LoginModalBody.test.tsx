@@ -56,7 +56,7 @@ it('prompts and focuses the email field when continuing without an address', () 
   expect(screen.getAllByText('loginModal.emailPlaceholder').some(element => element.tagName === 'P')).toBe(true);
 });
 
-it('switches phone and fingerprint in place without losing the email draft or provider row', () => {
+it('switches phone and fingerprint in place, swapping their slot for Email, without losing the email draft or provider row', () => {
   const view = render(<SheetBody layout="stack" />);
   const email = screen.getByPlaceholderText('loginModal.emailPlaceholder');
   const google = screen.getByRole('button', { name: 'loginModal.continueGoogle' });
@@ -68,8 +68,13 @@ it('switches phone and fingerprint in place without losing the email draft or pr
     screen.getByPlaceholderText('loginModal.phonePlaceholder'),
   );
   expect(screen.getByRole('button', { name: 'loginModal.continueGoogle' })).toBe(google);
+  // The Phone slot became Email; no extra Email line above the field.
+  expect(screen.queryByRole('button', { name: 'loginModal.continuePhone' })).toBeNull();
+  expect(screen.getAllByRole('button', { name: 'loginModal.continueEmail' })).toHaveLength(1);
 
   fireEvent.click(screen.getByRole('button', { name: 'loginModal.continuePasskey' }));
+  expect(screen.getByRole('button', { name: 'loginModal.continuePhone' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'loginModal.continuePasskey' })).toBeNull();
   expect(screen.queryByPlaceholderText('loginModal.phonePlaceholder')).toBeNull();
   expect(view.container.querySelector('[data-login-method="passkey"]')).toContainElement(
     screen.getByRole('button', { name: 'loginModal.passkeySignIn' }),

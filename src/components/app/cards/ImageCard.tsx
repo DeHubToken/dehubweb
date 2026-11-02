@@ -51,12 +51,12 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { opensCommentsSplit } from '@/lib/comments-split';
 import { cdnImage, cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -109,6 +109,8 @@ import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
+/** Lazy: only comic posts load the collector cards. */
+const ComicDeckLazy = lazy(() => import('@/components/app/comic/ComicDeck').then(m => ({ default: m.ComicDeck })));
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
   import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
@@ -359,13 +361,26 @@ function ImageSlide({
  * guess: a post of wide screenshots showed a huge empty band under its first
  * photo until it was tapped.
  */
+const EAGER_SHAPE_PROBES = 6;
+
+function whenIdle(run: () => void): () => void {
+  if (typeof window.requestIdleCallback === 'function') {
+    const id = window.requestIdleCallback(run, { timeout: 1500 });
+    return () => window.cancelIdleCallback(id);
+  }
+  const id = window.setTimeout(run, 300);
+  return () => window.clearTimeout(id);
+}
+
 function useGalleryAspects(images: string[], enabled: boolean) {
   const [measured, setMeasured] = useState<Record<string, number>>({});
   useEffect(() => {
     if (!enabled || typeof Image === 'undefined') return;
     let live = true;
-    images.forEach((img) => {
-      if (imageAspectRatioCache.get(img)) return;
+    // The first few shapes are probed now; a long carousel's rest wait for an
+    // idle moment so they never compete with the photos in view.
+    const probeOne = (img: string) => {
+      if (!live || imageAspectRatioCache.get(img)) return;
       const probe = new Image();
       probe.decoding = 'async';
       probe.onload = () => {
@@ -375,8 +390,11 @@ function useGalleryAspects(images: string[], enabled: boolean) {
         if (live) setMeasured((previous) => ({ ...previous, [img]: ratio }));
       };
       probe.src = cdnImage(img, { width: 160 });
-    });
-    return () => { live = false; };
+    };
+    images.slice(0, EAGER_SHAPE_PROBES).forEach(probeOne);
+    const rest = images.slice(EAGER_SHAPE_PROBES);
+    const idle = rest.length ? whenIdle(() => rest.forEach(probeOne)) : undefined;
+    return () => { live = false; idle?.(); };
   }, [images, enabled]);
   return images.map((img) => measured[img] ?? imageAspectRatioCache.get(img));
 }
@@ -574,7 +592,7 @@ function ImageCarousel({
               onImageClick={onImageClick}
               viewportRef={scrollRef}
               immersive={immersive}
-              pinned={images.length <= 1 || Math.abs(idx - currentIndex) <= 1}
+              pinned={images.length <= 1 || (idx >= currentIndex - 1 && idx <= currentIndex + 2)}
               knownRatio={measuredAspects[idx] ?? tallestAspect}
               fill={fillsFrame(idx)}
             />
@@ -636,7 +654,10 @@ function FeedDescription({
   translatedText,
   onOpen,
   stage = false,
+  hideAssetCards = false,
 }: { 
+  /** The poster closed the market card for this post. */
+  hideAssetCards?: boolean;
   onOpen?: () => void;
   /** Phone post page: a shorter clamp (about three lines) with "more". */
   stage?: boolean;
@@ -693,7 +714,7 @@ function FeedDescription({
   const { links: dehubLinks } = useDehubLinks(linkSource);
   // Contract addresses come out here too, for the same reason and at the same
   // stage: half a stripped address left behind by the clamp is worse than none.
-  const { refs: assetRefs } = useAssetRefsInText(linkSource);
+  const { refs: assetRefs } = useAssetRefsInText(linkSource, undefined, hideAssetCards);
   const linkFreeTitle = useMemo(
     () => stripAssetRefs(
       dehubLinks.length ? stripDehubLinkMatches(displayTitle, dehubLinks) : displayTitle,
@@ -738,7 +759,14 @@ function FeedDescription({
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
-      {shownDescription && (
+      {!stage && dedupedDescription ? (
+        <FeedCaptionExpander
+          textKey={dedupedDescription}
+          preview={<p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(squeezeBlankLines(dedupedDescription))}</p>}
+        >
+          <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(dedupedDescription)}</p>
+        </FeedCaptionExpander>
+      ) : shownDescription && (
         <div>
           <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">
             {renderTextWithLinks(shownDescription)}
@@ -949,25 +977,28 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
+    // A post opened from the feed keeps this feed card on its page, so being
+    // on the post's own URL counts as the post page: the photo opens full screen.
+    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}`;
     // The picture itself opens full screen; the bento around it (here, the
     // space beside a narrow photo) opens the post page.
-    if (!onPicture && !postPage && !imagesFeedScrollView && !gated) {
+    if (!onPicture && !onPostPage && !imagesFeedScrollView && !gated) {
       openPost();
       return;
     }
     // Phones open a plain photo full screen over the feed, so closing it lands
     // back on the same card. Desktop still opens the post page.
-    if (!postPage && isPhone && !post.soundtrackUrl && !gated) {
+    if (!onPostPage && isPhone && !post.soundtrackUrl && !gated) {
       setFullscreenIndex(index);
       setFullscreenOpen(true);
       return;
     }
     // Only photos with a song continue in the shorts viewer; plain photos open their post.
-    if (!postPage && (!post.soundtrackUrl || gated)) {
+    if (!onPostPage && (!post.soundtrackUrl || gated)) {
       openPost();
       return;
     }
-    if (!postPage) {
+    if (!onPostPage) {
       rememberGalleryIndex(String(post.id), index);
       openBrainrotFeed(post.id, {
         ...post,
@@ -1223,6 +1254,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     <div
       ref={viewRef}
       data-image-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className={isImmersive ? 'overflow-hidden isolate' : 'overflow-visible cursor-pointer isolate'}
@@ -1391,6 +1423,22 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             </div>
           </>
         ) : (() => {
+          if (post.layout === 'comic' && images.length > 0) {
+            const onPostPage = postPage || isImmersive;
+            return (
+              <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
+                <ComicDeckLazy
+                  images={images}
+                  captions={post.mediaCaptions}
+                  descriptions={post.mediaDescriptions}
+                  title={post.title}
+                  aboveFold={aboveFold}
+                  full={onPostPage}
+                  onOpen={onPostPage ? undefined : openPost}
+                />
+              </Suspense>
+            );
+          }
           const carousel = (
             <ImageCarousel
               images={images}
@@ -1444,6 +1492,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           disabled={matureGate.isGated || isPPV || isW2E || isLocked || isSubGated}
           title={post.title} 
           description={post.description}
+          hideAssetCards={post.hideAssetCards}
           isTranslated={isTranslated}
           translatedText={translatedText}
           stage={!!stage}
@@ -1462,6 +1511,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           timestamp={post.timeAgo}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
@@ -1491,12 +1541,6 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           onComment={() => {
             if (onOpenComments) {
               onOpenComments();
-              return;
-            }
-            // Phones: open the post with its comments in the bottom half.
-            if (opensCommentsSplit() && !postPage && window.location.pathname !== `/app/post/${post.id}`) {
-              cacheImageForNavigation(queryClient, post);
-              navigate(`/app/post/${post.id}`, { state: { fromFeed: true, openComments: true } });
               return;
             }
             setCommentsInitialTab(undefined);

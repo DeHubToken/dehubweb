@@ -6,6 +6,8 @@ describe('isDhbListingQuery', () => {
     expect(isDhbListingQuery('$DHB')).toBe(true);
     expect(isDhbListingQuery('$dhb')).toBe(true);
     expect(isDhbListingQuery('$DEHUB')).toBe(true);
+    expect(isDhbListingQuery('$RIFT')).toBe(true);
+    expect(isDhbListingQuery('$riftn')).toBe(true);
     expect(isDhbListingQuery('  dhb ')).toBe(true);
   });
 

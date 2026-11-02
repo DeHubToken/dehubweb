@@ -30,6 +30,7 @@
  */
 
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
+import { trackWatchTime } from '@/lib/watch-time';
 
 /** An element and whatever Web Audio nodes were built around it. */
 export interface AudioHandoffGraph {
@@ -209,6 +210,8 @@ export function setHandoffAudio(key: string, token: object | null, graph: AudioH
   const entry = pool.get(key);
   if (!entry) return;
   entry.graph = graph;
+  // Keys are post ids for audio posts; trackWatchTime ignores anything else.
+  if (graph) trackWatchTime(graph.el, key);
   entry.unregister?.();
   entry.unregister = graph
     ? registerOffDocumentMedia(graph.el, () => anchorOf(key), entry.claims[entry.claims.length - 1]?.navigationKey ?? key)

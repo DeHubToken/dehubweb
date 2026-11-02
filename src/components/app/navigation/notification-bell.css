@@ -6,7 +6,7 @@
   overflow: visible;
   pointer-events: none;
 }
-html:is([data-theme='light'], [data-system-tone='light']) .notification-bell { --bell-red: #dc3545; }
+html:is([data-theme='light'], [data-system-tone='light']) .notification-bell { --bell-red: #dc3545; --bell-rim: .55; }
 .notification-bell__swing { display: inline-flex; position: relative; transform-origin: 50% 5%; }
 .notification-bell__wave {
   position: absolute;
@@ -28,7 +28,18 @@ html:is([data-theme='light'], [data-system-tone='light']) .notification-bell { -
   animation: notification-bell-ripple var(--bell-cycle) cubic-bezier(.2,.5,.3,1) infinite;
   animation-delay: var(--bell-delay);
 }
-.notification-bell[data-running='false'] :is(.notification-bell__swing, .notification-bell__wave) { animation-play-state: paused; }
+/* Phones only: the bell turns red with a neon rim while it rings, then cools back. */
+.notification-bell__rim, .notification-bell__hot { display: none; }
+@media (max-width: 767px) {
+  .notification-bell { --bell-rim: .9; }
+  .notification-bell__rim, .notification-bell__hot { display: block; position: absolute; inset: 0; opacity: 0; color: var(--bell-red); }
+  .notification-bell__rim { filter: blur(calc(var(--bell-size) * .045)); transform: scale(1.07); }
+  :is(.notification-bell__rim, .notification-bell__hot) .cut-icon { display: block; color: var(--bell-red) !important; }
+  :is(.notification-bell__rim, .notification-bell__hot) .cut-icon path { fill: var(--bell-red) !important; }
+  .notification-bell[data-unread='true'] .notification-bell__rim { animation: notification-bell-rim var(--bell-cycle) ease-out infinite; }
+  .notification-bell[data-unread='true'] .notification-bell__hot { animation: notification-bell-hot var(--bell-cycle) ease-in-out infinite; }
+}
+.notification-bell[data-running='false'] :is(.notification-bell__swing, .notification-bell__wave, .notification-bell__rim, .notification-bell__hot) { animation-play-state: paused; }
 @keyframes notification-bell-swing {
   0%, 42%, 100% { transform: rotate(0deg); }
   5% { transform: rotate(var(--bell-swing)); }
@@ -37,12 +48,21 @@ html:is([data-theme='light'], [data-system-tone='light']) .notification-bell { -
   25% { transform: rotate(calc(var(--bell-swing) * -.31)); }
   31% { transform: rotate(calc(var(--bell-swing) * .15)); }
 }
+@keyframes notification-bell-rim {
+  0%, 46%, 100% { opacity: 0; }
+  5% { opacity: var(--bell-rim); }
+  26% { opacity: calc(var(--bell-rim) * .8); }
+}
+@keyframes notification-bell-hot {
+  0%, 48%, 100% { opacity: 0; }
+  5%, 28% { opacity: 1; }
+}
 @keyframes notification-bell-ripple {
   0% { opacity: 0; transform: translateX(0) scaleY(.94); }
   8% { opacity: var(--bell-opacity); }
   40%, 100% { opacity: 0; transform: translateX(calc(var(--bell-direction) * var(--bell-reach))) scaleY(1.12); }
 }
-html.reduce-motion .notification-bell :is(.notification-bell__swing, .notification-bell__wave) { animation: none; }
+html.reduce-motion .notification-bell :is(.notification-bell__swing, .notification-bell__wave, .notification-bell__rim, .notification-bell__hot) { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  .notification-bell :is(.notification-bell__swing, .notification-bell__wave) { animation: none !important; }
+  .notification-bell :is(.notification-bell__swing, .notification-bell__wave, .notification-bell__rim, .notification-bell__hot) { animation: none !important; }
 }

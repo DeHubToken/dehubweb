@@ -42,7 +42,7 @@ export interface UnifiedFeedParams {
   limit?: number;
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random' | 'score';
   sortOrder?: 'asc' | 'desc';
-  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
+  postType?: 'all' | 'video' | 'short' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio' | 'article';
   status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
   search?: string;
   owner?: string;
@@ -89,6 +89,12 @@ export interface UnifiedFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** 'comic' shows the gallery as collector cards. */
+  layout?: 'comic';
+  /** Comic captions, one per page in display order. */
+  mediaCaptions?: string[];
+  /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
+  hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
   spoilerText?: string;
   /** Who may quote it; absent means anyone. */
@@ -341,6 +347,9 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
+    hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     visibility: item.visibility,
@@ -440,6 +449,9 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
+    hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     visibility: item.visibility,
@@ -491,6 +503,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     rawName,
     rawDescription,
     articleBody: item.articleBody,
+    articleSlug: (item as any).articleSlug,
     createdAt: item.createdAt,
     views: formatViews(resolveViewCount(item)).replace(' views', ''),
     status: item.status,
@@ -511,6 +524,9 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
+    hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
     visibility: item.visibility,
@@ -648,8 +664,8 @@ async function fetchUnifiedFeedFromAPI(
   // BEFORE the request goes out rather than repaired after a 401 that never
   // comes. requestFeed() is the single retryable attempt.
   const requestFeed = async (token: string | null): Promise<UnifiedFeedResponse> => {
+    // No Content-Type on this bodyless GET: it would force a CORS preflight.
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
     if (token) headers['Authorization'] = `Bearer ${token}`;

@@ -11,6 +11,7 @@ const mock = vi.hoisted(() => ({ save: vi.fn(async () => {}) }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ walletAddress: 'alice' }) }));
 vi.mock('@/lib/editor/projectStore', () => ({ saveProject: mock.save }));
+vi.mock('@/lib/editor/importFiles', () => ({ importOneFile: vi.fn() }));
 vi.mock('../app/creator/studio/CinemaDirectionControls', () => ({ CinemaDirectionControls: () => null }));
 
 beforeEach(() => {

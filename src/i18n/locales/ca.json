@@ -162,7 +162,25 @@
     "saved": "S'han desat els camps del perfil",
     "failed": "No s'ha desat. Torna-ho a provar.",
     "verified": "Enllaç verificat",
-    "verifyHint": "Per verificar un enllaç, afegeix això a aquella pàgina i desa de nou: {{snippet}}"
+    "verifyHint": "Per verificar un enllaç, afegeix això a aquella pàgina i desa de nou: {{snippet}}",
+    "descriptionPresets": "Afegeix un lloc web, pronoms o qualsevol altra cosa. Els enllaços es mostren amb les teves xarxes socials.",
+    "type": "Tipus de camp",
+    "needsLabel": "Dona una etiqueta a cada camp personalitzat",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ells/elles",
+    "placeholderLocation": "Ciutat, país",
+    "presets": {
+      "website": "Lloc web",
+      "blog": "Bloc",
+      "portfolio": "Cartera",
+      "shop": "Botiga",
+      "podcast": "Podcast",
+      "newsletter": "Butlletí",
+      "pronouns": "Pronombres",
+      "location": "Ubicació",
+      "custom": "Personalitzat",
+      "customOption": "Etiqueta personalitzada"
+    }
   },
   "followedTags": {
     "follow": "Segueix #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."
   },
   "nav": {
+    "reorderHint": "Mantingues i arrossega qualsevol icona per reorganitzar",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Restableix l'ordre del menú",
     "home": "Inici",
     "explore": "Explorar",
     "prompt": "Demana",
@@ -1743,6 +1764,10 @@
       "featureReply": "{{name}} ha respondut al teu comentari",
       "featureMentionNamed": "{{name}} t’ha mencionat a “{{title}}”",
       "featureMention": "{{name}} t’ha mencionat en una petició de funció",
+      "featureNewNamed": "{{name}} ha publicat una nova sol·licitud “{{title}}”",
+      "featureNew": "{{name}} ha publicat una nova sol·licitud",
+      "featureActivityNamed": "{{name}} ha comentat “{{title}}”",
+      "featureActivity": "{{name}} ha comentat una sol·licitud",
       "governanceVoteNamed": "{{name}} ha votat la teva proposta “{{title}}”",
       "governanceVote": "{{name}} ha votat la teva proposta",
       "governanceCommentNamed": "{{name}} ha comentat la teva proposta “{{title}}”",
@@ -2878,6 +2903,21 @@
     "likersEmptyBody": "Els m'agrada d'aquest comentari apareixeran aquí.",
     "anonymousLikes_one": "{{count}} m'agrada d'un titular de distintiu anònim",
     "anonymousLikes_other": "{{count}} m'agrada de titulars de distintius anònims"
+  },
+  "mintChain": {
+    "title": "Post de menta",
+    "subtitle": "Tria una cadena. Els preus estan disponibles i s'actualitzen cada minut.",
+    "free": "Gratis",
+    "gasCovered": "Gas cobert per DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas inclòs",
+    "gasIncluded": "Gas inclòs",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} de la teva cartera",
+    "paidFromWalletPlain": "Pagat amb la teva cartera",
+    "priceUnavailable": "Preu no disponible",
+    "confirm": "Menta a {{chain}}",
+    "confirmWithCost": "Menta a {{chain}} · {{cost}}",
+    "notAvailable": "L'encunyació d'aquesta cadena encara no està disponible."
   },
   "postInfo": {
     "title": "Informació de la publicació",
@@ -14653,7 +14693,7 @@
     "f45e06965f93": "No hi ha suggeriments de seguiment encara",
     "34f5da2599fa": "Suggeriments de nous comptes apareixeran aquí.",
     "bac527bf9a36": "Suggeriments de seguiment",
-    "036cfd952896": "Qui seguir",
+    "a94bfc8a15e8": "Suggeriments per seguir",
     "0c820caf16c0": "Encara no hi ha biografia",
     "e139251e4f5b": "Esborra publicació",
     "b3661ad568df": "Aquesta acció no pot ser desfeta. La teva publicació serà eliminada de manera permanent.",
@@ -18770,8 +18810,38 @@
     "headlineAccent": "i seràs feliç.",
     "orContinueWith": "o continua amb",
     "phone": "Telèfon",
+    "email": "Email",
     "fingerprint": "Empremta",
     "exploreFirst": "Explora primer",
     "codeNote": "T'enviem un codi per correu, sense contrasenya."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Proximament",
+    "title": "Llançament de tokens pròximament",
+    "body": "La compra està tancada mentre es prepara el nou token. Rebreu un correu electrònic en el moment que es posi en línia.",
+    "notifyMe": "Notificar-me",
+    "sendTo": "Us enviarem un correu a {{email}}",
+    "emailLabel": "Correu electrònic",
+    "emailPlaceholder": "El teu correu electrònic",
+    "invalidEmail": "Introduïu un correu electrònic vàlid",
+    "joinedTitle": "Ja esteu a la llista",
+    "joinedBody": "Us enviarem un correu a {{email}} quan es llanci el token.",
+    "joinedBodyNoEmail": "Us enviarem un correu quan es llanci el token.",
+    "failed": "No s'ha pogut guardar. Torneu a intentar-ho.",
+    "privacy": "Només s'utilitza per informar-vos del llançament.",
+    "seoTitle": "Llançament de token pròximament | DeHub",
+    "seoDescription": "El nou token de DeHub es llança pròximament. Uniteu a la llista i rebereu un correu electrònic en el moment que es posi en línia, després compreu directament des del vostre butxaca DeHub."
+  },
+  "githubLink": {
+    "hint": "Inicia sessió a GitHub per comprovar que el compte és teu. DeHub només veu el teu perfil públic de GitHub.",
+    "verified": "Verificat",
+    "verifiedAria": "Compte de GitHub verificat",
+    "connected": "GitHub connectat",
+    "disconnected": "GitHub desconnectat",
+    "taken": "Aquest compte de GitHub ja està en un altre perfil de DeHub.",
+    "failed": "No s'ha pogut connectar a GitHub. Torna-ho a provar.",
+    "unavailable": "Aviat arribarà la verificació de GitHub.",
+    "connect": "Connecta el GitHub",
+    "disconnect": "Desconnecta"
   }
 }

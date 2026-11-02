@@ -56,7 +56,8 @@
       "!/chess-game/*",
       "!/jungle-game/*",
       "!/street-slayer-game/*",
-      "!/trenchstar-game/*"
+      "!/trenchstar-game/*",
+      "!/love-lock-bridge-game/*"
     ]
   }
 }

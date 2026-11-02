@@ -162,7 +162,24 @@
     "saved": "プロフィール項目を保存しました",
     "failed": "保存できませんでした。もう一度お試しください。",
     "verified": "認証済みリンク",
-    "verifyHint": "リンクを認証するには、そのページにこれを追加してからもう一度保存してください：{{snippet}}"
+    "verifyHint": "リンクを認証するには、そのページにこれを追加してからもう一度保存してください：{{snippet}}",
+    "descriptionPresets": "ウェブサイト、代名詞などを追加します。 ソーシャルメディアにリンクが表示されます。",
+    "type": "フィールドタイプ",
+    "needsLabel": "各カスタムフィールドにラベルを付ける",
+    "placeholderPronouns": "彼ら/彼ら",
+    "placeholderLocation": "市区町村、国",
+    "presets": {
+      "website": "ウェブサイト",
+      "blog": "ブログ",
+      "portfolio": "ポートフォリオ",
+      "shop": "ショップ",
+      "podcast": "ポッドキャスト",
+      "newsletter": "ニュースレター",
+      "pronouns": "代名詞",
+      "location": "場所",
+      "custom": "カスタム",
+      "customOption": "カスタムラベル"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} をフォロー",
@@ -407,6 +424,9 @@
     "gasSponsorshipFailed": "この取引の手数料を負担できませんでした。しばらくしてからお試しください。"
   },
   "nav": {
+    "reorderHint": "任意のアイコンを長押ししてドラッグして並べ替えます",
+    "reorderReset": "リセット",
+    "reorderResetLong": "メニューの順序をリセットする",
     "home": "ホーム",
     "explore": "検索",
     "prompt": "プロンプト",
@@ -1724,6 +1744,12 @@
     "burstBody": "{{count}}件の新しい通知 {{who}}さんから",
     "community": {
       "joined": "{{name}}さんがコミュニティに参加しました",
+      "chatOne": "{{name}}さんがメッセージを送信しました",
+      "chatOneNamed": "{{name}}さんが{{community}}でメッセージを送信しました",
+      "chatTwo": "{{name}}さんと{{second}}さんがメッセージを送信しました",
+      "chatTwoNamed": "{{name}}さんと{{second}}さんが{{community}}でメッセージを送信しました",
+      "chatMany": "{{name}}さんほか{{others}}人がメッセージを送信しました",
+      "chatManyNamed": "{{name}}さんほか{{others}}人が{{community}}でメッセージを送信しました",
       "joinedNamed": "{{name}}さんが「{{community}}」に参加しました",
       "requested": "{{name}}さんがコミュニティへの参加をリクエストしました",
       "requestedNamed": "{{name}}さんが「{{community}}」への参加をリクエストしました",
@@ -1745,6 +1771,10 @@
       "featureReply": "{{name}}はあなたのコメントに返信しました",
       "featureMentionNamed": "{{name}}は「{{title}}」であなたを紹介しました",
       "featureMention": "{{name}}はあなたの機能要求について紹介しました",
+      "featureNewNamed": "{{name}}さんが新しいリクエスト「{{title}}」を投稿しました",
+      "featureNew": "{{name}}さんが新しいリクエストを投稿しました",
+      "featureActivityNamed": "{{name}}さんが「{{title}}」にコメントしました",
+      "featureActivity": "{{name}}さんがリクエストにコメントしました",
       "governanceVoteNamed": "{{name}}はあなたの提案「{{title}}」について投票しました",
       "governanceVote": "{{name}}はあなたの提案について投票しました",
       "governanceCommentNamed": "{{name}}はあなたの提案「{{title}}」についてコメントしました",
@@ -2082,7 +2112,12 @@
     },
     "tabs": {
       "playlists": "プレイリスト",
-      "dislikes": "よくないね"
+      "dislikes": "よくないね",
+      "articles": "記事"
+    },
+    "articles": {
+      "emptyTitle": "まだ記事はありません",
+      "emptySubtitle": "記事はここに表示されます"
     },
     "dislikes": {
       "emptyTitle": "まだ「よくないね」はありません",
@@ -2880,6 +2915,21 @@
     "likersEmptyBody": "このコメントへのいいねがここに表示されます。",
     "anonymousLikes_one": "匿名のバッジ保有者からのいいね{{count}}件",
     "anonymousLikes_other": "匿名のバッジ保有者からのいいね{{count}}件"
+  },
+  "mintChain": {
+    "title": "ミントポスト",
+    "subtitle": "チェーンを選択してください。価格はライブで、毎分更新されます。",
+    "free": "無料",
+    "gasCovered": "DeHubがカバーするガス",
+    "feeIncludesGas": "≈{{usd}}、ガス込み",
+    "gasIncluded": "ガスが含まれています",
+    "gasOnly": "≈{{usd}}ガス",
+    "paidFromWallet": "お財布から{{amount}}",
+    "paidFromWalletPlain": "ウォレットからお支払い済み",
+    "priceUnavailable": "料金はご利用いただけません",
+    "confirm": "{{chain}}に新品",
+    "confirmWithCost": "{{chain}}に新品・{{cost}}",
+    "notAvailable": "このチェーンでの鋳造はまだ利用できません。"
   },
   "postInfo": {
     "title": "投稿情報",
@@ -14635,7 +14685,7 @@
     "f45e06965f93": "フォローするための提案はまだありません。",
     "34f5da2599fa": "新規アカウントの提案はここに表示されます。",
     "bac527bf9a36": "フォローするための提案",
-    "036cfd952896": "誰をフォローするか",
+    "a94bfc8a15e8": "おすすめのフォロー",
     "0c820caf16c0": "プロフィールはまだありません",
     "e139251e4f5b": "削除",
     "b3661ad568df": "このアクションは取り消せません。投稿は永久に削除されます。",
@@ -18700,8 +18750,43 @@
     "headlineAccent": "幸せになろう。",
     "orContinueWith": "または次で続ける",
     "phone": "電話",
+    "email": "メール",
     "fingerprint": "指紋",
     "exploreFirst": "先に見てみる",
     "codeNote": "メールでコードを送ります。パスワードは不要です。"
+  },
+  "halloween": {
+    "title": "ハッピーハロウィン",
+    "otherThemes": "怖いのは苦手？他のテーマを選ぼう：",
+    "enter": "ダンジョンへ入る"
+  },
+  "tokenLaunch": {
+    "eyebrow": "近日公開",
+    "title": "トークンのリリースが間近です",
+    "body": "購入は新しいトークンが準備される間、一時的に閉鎖されています。リリース時にメールでお知らせします。",
+    "notifyMe": "通知してください",
+    "sendTo": "{{email}}にメールを送ります。",
+    "emailLabel": "メールアドレス",
+    "emailPlaceholder": "あなたのメールアドレスを入力してください。",
+    "invalidEmail": "メールアドレスを入力してください。",
+    "joinedTitle": "あなたはリストに載っています。",
+    "joinedBody": "{{email}} のトークンがリリースされたら、メールでお知らせします。",
+    "joinedBodyNoEmail": "メールでトークンの発売開始をお知らせします。",
+    "failed": "保存できませんでした。もう一度お試しください。",
+    "privacy": "このリリースについてのみお知らせするために使用されます。",
+    "seoTitle": "トークンのローンチが間近です | DeHub",
+    "seoDescription": "新しいDeHubトークンが近々リリースされます。リストに登録してリリース直後に1通のメールで知らせを受け取り、DeHubウォレットから直接購入できます。"
+  },
+  "githubLink": {
+    "hint": "GitHubにサインインして、アカウントがあなたのものであることを証明します。 DeHubには公開されているGitHubプロファイルのみが表示されます。",
+    "verified": "認証済み",
+    "verifiedAria": "認証済みGitHubアカウント",
+    "connected": "GitHubに接続しました",
+    "disconnected": "GitHubが切断されました",
+    "taken": "そのGitHubアカウントはすでに別のDeHubプロファイルにあります。",
+    "failed": "GitHubに接続できませんでした。もう一度お試しください。",
+    "unavailable": "GitHubの検証がまもなく開始されます。",
+    "connect": "GitHubを接続",
+    "disconnect": "GitHubを切断"
   }
 }

@@ -22,7 +22,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { type SubscriptionPlan, planPrice, primaryPlanChain, isPlanPublished } from '@/lib/api/dehub';
 import { useBuyPlan, usePublishPlan, useUpdatePlan } from '@/hooks/use-subscriptions';
-import { formatDuration, normaliseDuration, BASE_CHAIN_ID } from '@/lib/contracts';
+import { formatDuration, normaliseDuration } from '@/lib/contracts/subscription-plan';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DHB_PRELISTING_USD, dhbForUsd, formatDhbPayment } from '@/lib/subscription-pricing';
 import dehubCoin from '@/assets/dehub-coin.png';

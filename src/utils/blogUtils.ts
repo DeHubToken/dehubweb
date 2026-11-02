@@ -71,7 +71,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
     if (post.title === 'MVP App Released & Listed on Google Play Store') {
       return { ...post, featured: false };
     }
-    if (post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025') {
+    if (post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers') {
       return {
         ...post,
         title: 'Scaling New Heights: Livepeer Integration for initially 50k+ Concurrent Viewers With Unlimited Viewer abilities as we scale up.'

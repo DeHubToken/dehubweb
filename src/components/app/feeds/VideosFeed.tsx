@@ -29,6 +29,7 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -64,6 +65,8 @@ import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 interface VideosFeedProps {
   showFilters?: boolean;
+  /** Words typed in the feed pill's search box: the feed shows search results under its filters. */
+  searchQuery?: string;
   refreshKey?: number;
 }
 
@@ -444,7 +447,7 @@ function CategoryFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedProps) {
+export function VideosFeed({ showFilters = false, refreshKey = 0, searchQuery = '' }: VideosFeedProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -673,12 +676,14 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
     (isFetchingNextPage || (hasNextPage && autoFetchAttempts.current < MAX_AUTO_FETCH_ATTEMPTS));
 
   // Map shorts data (same mapping as HomeFeed)
-  const shorts = useMemo((): ShortVideo[] => {
-    if (!scrollFeed.data?.pages) return [];
+  // The row shows ten, one per creator; its viewer then carries on through
+  // everything loaded (`shortsPool`) and asks for more pages behind it.
+  const { shorts, shortsPool } = useMemo((): { shorts: ShortVideo[]; shortsPool: ShortVideo[] } => {
+    if (!scrollFeed.data?.pages) return { shorts: [], shortsPool: [] };
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    return uniqueShortsCreators(nonPPV).slice(0, 10).map((item) => {
+    const toShort = (item: UnifiedFeedItem): ShortVideo => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
@@ -717,7 +722,8 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
         isLiked: (item as any).isLiked ?? voteType === 'for',
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
-    });
+    };
+    return { shorts: uniqueShortsCreators(nonPPV).slice(0, 10).map(toShort), shortsPool: nonPPV.map(toShort) };
   }, [scrollFeed.data]);
 
   // Check if any client-side filters are active
@@ -785,7 +791,7 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
 
   // Show loading during initial load or while auto-fetching for duration filter.
   // A pull-to-refresh keeps the cards on screen while the fresh page loads.
-  if ((isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters) {
+  if ((isApiLoading || isAutoFetching || isAutoRetrying) && !showFilters && !searchQuery) {
     return (
       <div className="p-2 sm:p-3 pt-0 sm:pt-0">
         <VideosFeedSkeleton />
@@ -854,7 +860,9 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
       {/* Video Grid, filter loader or Empty State. The loader sits BELOW the
           filter panel, not in place of the whole feed, so the chips the user is
           working with stay on screen and clickable while the request runs. */}
-      {isApiLoading || isAutoFetching || isAutoRetrying ? (
+      {searchQuery ? (
+        <FeedSearchResults tab="videos" query={searchQuery} />
+      ) : isApiLoading || isAutoFetching || isAutoRetrying ? (
         <VideosFeedSkeleton />
       ) : filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />
@@ -897,7 +905,9 @@ export function VideosFeed({ showFilters = false, refreshKey = 0 }: VideosFeedPr
               
               // Insert shorts carousel after 10 posts (index 9)
               if (index === SHORTS_INSERT_AFTER - 1 && shorts.length > 0) {
-                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "sm:col-span-2")}><ShortsReel shorts={shorts} /></div>);
+                elements.push(<div key="shorts-carousel" className={cn(isCollapsed && "sm:col-span-2")}><ShortsReel shorts={shorts} pool={shortsPool}
+                  onLoadMore={() => { if (!scrollFeed.isFetching) void scrollFeed.fetchNextPage(); }}
+                  hasMore={!!scrollFeed.hasNextPage} isLoadingMore={scrollFeed.isFetchingNextPage} /></div>);
               }
               
               return elements;

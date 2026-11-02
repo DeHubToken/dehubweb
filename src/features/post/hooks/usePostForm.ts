@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import type { StudioEdits } from '../lib/studioPaint';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
@@ -25,9 +26,11 @@ import { usePostProcessingStore } from '@/store/postProcessingStore';
 // though the mint helpers below cannot be (see the note under this import).
 import { isSmartWalletSession } from '@/lib/connection-source';
 import { applyEditsToImageFile } from '@/lib/filters';
+import { startDraftImage, resolveDraftImages } from '../lib/draftImages';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
-import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
+import { shrinkComicPages } from '@/lib/comic-pages';
+import { getComicImageLimitForBadge, getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -362,6 +365,10 @@ export function usePostForm(
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   // The content warning being written: null is "none", '' is "toggled on, still empty".
   const [contentWarning, setContentWarning] = useState<string | null>(null);
+  // The poster closed the $TICKER / address card, so the post goes out without one.
+  const [hideAssetCards, setHideAssetCards] = useState(false);
+  /** 'comic' when the Comic tab is open: photos post as collector cards. */
+  const [postLayout, setPostLayout] = useState<'comic' | null>(null);
   // Who may quote the post. Anyone, unless the creator narrows it.
   const [quotePolicy, setQuotePolicy] = useState<QuotePolicy>('public');
   // Who may reply. Anyone, unless the creator narrows it.
@@ -593,6 +600,13 @@ export function usePostForm(
     };
   }, [attachedVideoFile, isQuoting, signedInForDraft]);
 
+  // Photos go up as they are attached or edited, so Post only sends ids.
+  useEffect(() => {
+    if (isQuoting || !signedInForDraft) return;
+    if (media.some((m) => m.type !== 'image')) return;
+    for (const m of media) startDraftImage(m.file);
+  }, [media, isQuoting, signedInForDraft]);
+
   // Auto-save active draft to localStorage whenever text fields change.
   // Debounced: JSON.stringify + synchronous localStorage.setItem on EVERY
   // keystroke costs main-thread time exactly while the user is typing. An
@@ -702,7 +716,9 @@ export function usePostForm(
     }
 
     const currentImageCount = media.filter(m => m.type === 'image').length;
-    const imageLimit = getPostImageLimitForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
+    const imageLimit = postLayout === 'comic'
+      ? getComicImageLimitForBadge(user?.badgeBalance, user?.username, user?.badgeLock)
+      : getPostImageLimitForBadge(user?.badgeBalance, user?.username, user?.badgeLock);
     const availableSlots = imageLimit - currentImageCount;
     
     if (availableSlots <= 0) {
@@ -744,7 +760,7 @@ export function usePostForm(
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.mediaBytesPerDay, postQuota?.tier, t, _copy]);
+  }, [hasVideo, media, postLayout, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.mediaBytesPerDay, postQuota?.tier, t, _copy]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -1039,9 +1055,12 @@ export function usePostForm(
   }, []);
 
   const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
-    setMedia(prev => prev.map((m, i) => 
-      i === index ? { ...m, trimStart, trimEnd } : m
-    ));
+    setMedia(prev => prev.map((m, i) => {
+      if (i !== index) return m;
+      // The whole clip kept is no trim.
+      const whole = trimStart < 0.05 && (!m.duration || m.duration - trimEnd < 0.05);
+      return whole ? { ...m, trimStart: undefined, trimEnd: undefined } : { ...m, trimStart, trimEnd };
+    }));
   }, []);
 
   /**
@@ -1053,7 +1072,7 @@ export function usePostForm(
    * rather than in the component, since this is the moment it stops being
    * anyone's `src`.
    */
-  const replaceImageFile = useCallback((index: number, file: File) => {
+  const replaceImageFile = useCallback((index: number, file: File, studio?: { original: File; edits: StudioEdits }) => {
     if (!file.type.startsWith('image/')) {
       toast.error(_copy("copy.94377a89a9e4", { defaultValue: "Choose an image file" }));
       return;
@@ -1072,9 +1091,24 @@ export function usePostForm(
         filterSettings: undefined,
         filterPresetId: undefined,
         cropSettings: undefined,
+        // A studio edit keeps the original to edit again; a new picture drops it.
+        studioOriginal: studio?.original,
+        studioEdits: studio?.edits,
       };
     }));
   }, [_copy]);
+
+  /** Adds comic pages, shrinking big art first so 50 pages fit one upload. */
+  const addComicPages = useCallback(async (files: File[]) => {
+    const images = files.filter(f => f.type.startsWith('image/'));
+    if (!images.length) return;
+    processImageFiles(await shrinkComicPages(images));
+  }, [processImageFiles]);
+
+  /** Comic page caption for one image; blank clears it. */
+  const setMediaCaption = useCallback((index: number, caption: string) => {
+    setMedia(prev => prev.map((m, i) => (i === index ? { ...m, caption: caption || undefined } : m)));
+  }, []);
 
   /** Alt text for one attached image or video; blank clears it. */
   const setMediaDescription = useCallback((index: number, description: string) => {
@@ -1145,10 +1179,9 @@ export function usePostForm(
         break;
     }
 
-    // Update the text state with plain text
-    const plainText = editor.innerText;
-    setText(plainText);
-  }, [setText]);
+    // execCommand fires the editor's input event, which records the text with
+    // links as full addresses. innerText would save each 🔗 chip as "🔗".
+  }, []);
 
   const insertEmoji = useCallback((emoji: string) => {
     const editor = editorRef.current;
@@ -1158,13 +1191,10 @@ export function usePostForm(
       return;
     }
 
-    // Focus and insert at cursor position
+    // Focus and insert at cursor position. The editor's input event records
+    // the new text; innerText here would save each 🔗 chip as "🔗".
     editor.focus();
-    document.execCommand('insertText', false, emoji);
-
-    // Update the text state
-    const plainText = editor.innerText;
-    setText(plainText);
+    if (!document.execCommand('insertText', false, emoji)) setText(prev => prev + emoji);
   }, [setText]);
 
   const insertGif = useCallback((gifUrl: string) => {
@@ -1226,6 +1256,8 @@ export function usePostForm(
     setLiveMode(null);
     setPoll.complete(poll, null);
     setContentWarning(null);
+    setHideAssetCards(false);
+    setPostLayout(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
     setStitchPolicy(null);
@@ -2002,6 +2034,12 @@ export function usePostForm(
           ? media.filter(m => m.type !== 'audio').map(m => m.description || '')
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
+        hideAssetCards: hideAssetCards || undefined,
+        // A comic: the photos show as collector cards, a caption per page.
+        layout: postLayout === 'comic' && hasImage && !liveMode && !isQuoting ? 'comic' : undefined,
+        mediaCaptions: postLayout === 'comic' && media.some(m => m.caption?.trim())
+          ? media.filter(m => m.type === 'image').map(m => m.caption?.trim() || '')
+          : undefined,
         quotePolicy,
         replyPolicy,
         // A livestream and a quote are always public.
@@ -2031,11 +2069,24 @@ export function usePostForm(
         if (draftVideoId && !isDraftUsable(draft.getSnapshot())) draftVideoId = null;
       }
 
+      // Trims are cut on the server from the draft upload; a post that has to
+      // send the file itself goes up whole, and says so.
+      const trimmed = media[0]?.type === 'video' && media[0].trimStart !== undefined;
+      const warnUntrimmed = () => {
+        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim." }));
+      };
+
       let mintResponse: MintResponse;
       if (draftVideoId) {
         try {
           mintResponse = await mintPost(
-            { ...mintParams, files: undefined, draftVideoId },
+            {
+              ...mintParams,
+              files: undefined,
+              draftVideoId,
+              trimStart: media[0]?.trimStart,
+              trimEnd: media[0]?.trimEnd,
+            },
             (percent) => setUploadProgress(Math.max(55, Math.round(percent * 0.6))),
           );
         } catch (err) {
@@ -2043,9 +2094,30 @@ export function usePostForm(
           console.warn('[Mint] Draft video unavailable — uploading the file with the post');
           setUploadProgress(5);
           mintResponse = await mintPost(mintParams, uploadWithFile);
+          warnUntrimmed();
+        }
+      } else if (postType === 'feed-images' && !isQuoting) {
+        // Photos uploaded while the caption was written go by id; a 409 means
+        // the server lost one, so the post goes again with every file.
+        const early = await resolveDraftImages(files);
+        if (early) {
+          try {
+            mintResponse = await mintPost(
+              { ...mintParams, files: early.send.length ? early.send : undefined, draftImageIds: early.ids },
+              (percent) => setUploadProgress(Math.max(30, Math.round(percent * 0.6))),
+            );
+          } catch (err) {
+            if (!(err instanceof UploadHttpError && err.status === 409 && err.code === 'DRAFT_UNAVAILABLE')) throw err;
+            console.warn('[Mint] Draft photo unavailable — uploading the files with the post');
+            setUploadProgress(5);
+            mintResponse = await mintPost(mintParams, uploadWithFile);
+          }
+        } else {
+          mintResponse = await mintPost(mintParams, uploadWithFile);
         }
       } else {
         mintResponse = await mintPost(mintParams, uploadWithFile);
+        warnUntrimmed();
       }
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
@@ -2590,6 +2662,9 @@ export function usePostForm(
       // style (lib/post-landing); a morph starts from the composer itself.
       if (!isQuoting) beginPostLanding(optimisticId, document.querySelector<HTMLElement>('[data-post-modal]'));
 
+      // The phone keyboard goes with the composer, so the feed is not left
+      // shifted up under it while the new post lands.
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
       onClose();
 
       // A quote stays where it was written: the optimistic card above already
@@ -2760,7 +2835,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, quotePolicy, replyPolicy, visibility, stitchPolicy,
+    isQuoting, quotedPost, contentWarning, hideAssetCards, postLayout, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 
@@ -2794,6 +2869,8 @@ export function usePostForm(
       liveMode,
       poll,
       contentWarning,
+      hideAssetCards,
+      postLayout,
       quotePolicy,
       replyPolicy,
       stitchPolicy,
@@ -2838,6 +2915,7 @@ export function usePostForm(
       setLiveMode,
       setPoll,
       setContentWarning,
+      setHideAssetCards,
       setQuotePolicy,
       setStitchPolicy,
       setReplyPolicy,
@@ -2860,6 +2938,9 @@ export function usePostForm(
       applyTrimToMedia,
       replaceImageFile,
       setMediaDescription,
+      setMediaCaption,
+      setPostLayout,
+      addComicPages,
       handleEnhanceWithAI,
       insertFormatting,
       handlePost,

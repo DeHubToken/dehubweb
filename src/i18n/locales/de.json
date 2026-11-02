@@ -162,7 +162,25 @@
     "saved": "Profilfelder gespeichert",
     "failed": "Das wurde nicht gespeichert. Versuch es noch einmal.",
     "verified": "Bestätigter Link",
-    "verifyHint": "Um einen Link zu bestätigen, füge das auf der Seite ein und speichere erneut: {{snippet}}"
+    "verifyHint": "Um einen Link zu bestätigen, füge das auf der Seite ein und speichere erneut: {{snippet}}",
+    "descriptionPresets": "Fügen Sie eine Website, Pronomen oder etwas anderes hinzu. Links werden in Ihren sozialen Netzwerken angezeigt.",
+    "type": "Feldtyp",
+    "needsLabel": "Geben Sie jedem benutzerdefinierten Feld eine Bezeichnung",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "sie/sie",
+    "placeholderLocation": "Stadt, Land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomen",
+      "location": "Standort",
+      "custom": "Benutzerdefiniert",
+      "customOption": "Benutzerdefiniertes Etikett"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} folgen",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Diese Transaktion konnte nicht übernommen werden. Bitte versuche es gleich noch einmal."
   },
   "nav": {
+    "reorderHint": "Halte und ziehe ein beliebiges Symbol, um es neu anzuordnen",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Menüreihenfolge zurücksetzen",
     "home": "Startseite",
     "explore": "Entdecken",
     "prompt": "Eingabeaufforderung",
@@ -1726,6 +1747,12 @@
     "burstBody": "{{count}} neue Benachrichtigungen von {{who}}",
     "community": {
       "joined": "{{name}} ist deiner Community beigetreten",
+      "chatOne": "{{name}} hat eine Nachricht gesendet",
+      "chatOneNamed": "{{name}} hat eine Nachricht in {{community}} gesendet",
+      "chatTwo": "{{name}} und {{second}} haben Nachrichten gesendet",
+      "chatTwoNamed": "{{name}} und {{second}} haben Nachrichten in {{community}} gesendet",
+      "chatMany": "{{name}} + {{others}} weitere haben Nachrichten gesendet",
+      "chatManyNamed": "{{name}} + {{others}} weitere haben Nachrichten in {{community}} gesendet",
       "joinedNamed": "{{name}} ist „{{community}}“ beigetreten",
       "requested": "{{name}} hat darum gebeten, deiner Community beizutreten",
       "requestedNamed": "{{name}} hat darum gebeten, „{{community}}“ beizutreten",
@@ -1747,6 +1774,10 @@
       "featureReply": "{{name}} hat auf deinen Kommentar geantwortet",
       "featureMentionNamed": "{{name}} hat Sie auf „{{title}}“ erwähnt",
       "featureMention": "{{name}} hat dich bei einer Funktionsanfrage erwähnt",
+      "featureNewNamed": "{{name}} hat eine neue Anfrage „{{title}}“ gepostet",
+      "featureNew": "{{name}} hat eine neue Anfrage gepostet",
+      "featureActivityNamed": "{{name}} hat „{{title}}“ kommentiert",
+      "featureActivity": "{{name}} hat eine Anfrage kommentiert",
       "governanceVoteNamed": "{{name}} hat über Ihren Vorschlag „{{title}}“ abgestimmt",
       "governanceVote": "{{name}} hat über Ihren Vorschlag abgestimmt",
       "governanceCommentNamed": "{{name}} hat Ihren Vorschlag „{{title}}“ kommentiert",
@@ -2084,7 +2115,12 @@
     },
     "tabs": {
       "playlists": "Playlisten",
-      "dislikes": "Abneigungen"
+      "dislikes": "Abneigungen",
+      "articles": "Artikel"
+    },
+    "articles": {
+      "emptyTitle": "Noch keine Artikel",
+      "emptySubtitle": "Artikel erscheinen hier"
     },
     "dislikes": {
       "emptyTitle": "Noch keine Dislikes",
@@ -2882,6 +2918,21 @@
     "likersEmptyBody": "Likes für diesen Kommentar erscheinen hier.",
     "anonymousLikes_one": "{{count}} Like von einem anonymen Badge-Inhaber",
     "anonymousLikes_other": "{{count}} Likes von anonymen Badge-Inhabern"
+  },
+  "mintChain": {
+    "title": "Mint Post",
+    "subtitle": "Wählen Sie eine Kette. Die Preise sind live und werden jede Minute aktualisiert.",
+    "free": "Kostenlos",
+    "gasCovered": "Gas gedeckt durch DeHub",
+    "feeIncludesGas": "≈ {{usd}}, Gas inbegriffen",
+    "gasIncluded": "Gas inbegriffen",
+    "gasOnly": "≈ {{usd}} Gas",
+    "paidFromWallet": "{{amount}} aus Ihrem Wallet",
+    "paidFromWalletPlain": "Bezahlt aus dem Portemonnaie",
+    "priceUnavailable": "Preis nicht verfügbar",
+    "confirm": "Minze am {{chain}}",
+    "confirmWithCost": "Minze am {{chain}} · {{cost}}",
+    "notAvailable": "Die Prägung dieser Kette ist noch nicht verfügbar."
   },
   "postInfo": {
     "title": "Beitragsinfo",
@@ -14657,7 +14708,7 @@
     "f45e06965f93": "Keine Vorschläge zum Folgen",
     "34f5da2599fa": "Neue Benutzer-Vorschläge erscheinen hier.",
     "bac527bf9a36": "Folgen Vorschläge",
-    "036cfd952896": "Wem man folgen sollte",
+    "a94bfc8a15e8": "Folgevorschläge",
     "0c820caf16c0": "Noch keine Biografie",
     "e139251e4f5b": "Löschen Sie den Beitrag",
     "b3661ad568df": "Diese Aktion kann nicht rückgängig gemacht werden. Ihr Beitrag wird permanent gelöscht.",
@@ -18772,8 +18823,41 @@
     "headlineAccent": "und du wirst glücklich sein.",
     "orContinueWith": "oder weiter mit",
     "phone": "Telefon",
+    "email": "E-Mail",
     "fingerprint": "Fingerabdruck",
     "exploreFirst": "Erst umsehen",
     "codeNote": "Wir senden dir einen Code per E-Mail, ohne Passwort."
+  },
+  "halloween": {
+    "title": "Fröhliches Halloween",
+    "otherThemes": "Keine Lust auf Grusel? Finde andere Designs:",
+    "enter": "Betritt den Kerker"
+  },
+  "tokenLaunch": {
+    "eyebrow": "Bald verfügbar",
+    "body": "Kauf ist geschlossen, während der neue Token vorbereitet wird. Erhalte eine E-Mail, sobald er online geht.",
+    "notifyMe": "Benachrichtige mich",
+    "sendTo": "Wir werden {{email}} per E-Mail senden.",
+    "emailLabel": "E-Mail",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "joinedTitle": "Du bist auf der Liste.",
+    "joinedBody": "Wir werden {{email}} per E-Mail kontaktieren, wenn der Token startet.",
+    "joinedBodyNoEmail": "Wir werden Ihnen eine E-Mail schicken, sobald der Token verfügbar ist.",
+    "failed": "Das konnte nicht gespeichert werden. Versuchen Sie es erneut.",
+    "privacy": "Nur um dich über den Launch zu informieren.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Der neue DeHub-Token startet bald. Tritt der Liste bei und erhalte eine E-Mail, sobald er online geht, dann kaufe direkt aus deinem DeHub-Wallet."
+  },
+  "githubLink": {
+    "hint": "Melden Sie sich bei GitHub an, um zu beweisen, dass das Konto Ihnen gehört. DeHub sieht nur Ihr öffentliches GitHub-Profil.",
+    "verified": "Verifiziert",
+    "verifiedAria": "Verifiziertes GitHub-Konto",
+    "connected": "GitHub verbunden",
+    "disconnected": "GitHub getrennt",
+    "taken": "Dieses GitHub-Konto befindet sich bereits in einem anderen DeHub-Profil.",
+    "failed": "GitHub konnte nicht verbunden werden. Versuchen Sie es erneut.",
+    "unavailable": "Die GitHub-Verifizierung kommt bald.",
+    "connect": "GitHub verbinden",
+    "disconnect": "Trennen"
   }
 }

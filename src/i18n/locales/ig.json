@@ -162,7 +162,25 @@
     "saved": "Echekwala mpaghara profaịlụ",
     "failed": "Edebeghị ya. Nwaa ọzọ.",
     "verified": "Njikọ akwadoro",
-    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}"
+    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}",
+    "descriptionPresets": "Tinye a website, pronouns ma ọ bụ ihe ọ bụla ọzọ. Njikọ na-egosi na gị socials.",
+    "type": "Ụdị Ubi",
+    "needsLabel": "Nye mpaghara emeredịkachọrọ ọ bụla akara ngosi",
+    "placeholderLink": "gịsite.com",
+    "placeholderPronouns": "ha/ha",
+    "placeholderLocation": "Obodo, obodo",
+    "presets": {
+      "website": "Weebụsaịtị",
+      "blog": "Blog",
+      "portfolio": "Pọtụfoliyo",
+      "shop": "Ụlọ ahịa",
+      "podcast": "Podcast",
+      "newsletter": "Akwụkwọ akụkọ",
+      "pronouns": "Kpọtụrụ anyị",
+      "location": "Ebe",
+      "custom": "Omenala",
+      "customOption": "Akara emeredịkachọrọ"
+    }
   },
   "followedTags": {
     "follow": "Soro #{{tag}}",
@@ -401,6 +419,9 @@
     "gasSponsorshipFailed": "Enweghị ike ịkwụ ụgwọ azụmahịa a. Biko nwaa ọzọ obere oge."
   },
   "nav": {
+    "reorderHint": "Jide ma dọrọ aịkọn ọ bụla ka ị hazie ọzọ",
+    "reorderReset": "Tọgharịa",
+    "reorderResetLong": "Tọgharịa usoro menu",
     "home": "Ụlọ",
     "explore": "Nyochaa",
     "prompt": "Nye ndụmọdụ",
@@ -1726,6 +1747,9 @@
       "featureReply": "{{name}} zara okwu gị",
       "featureMentionNamed": "{{name}} kpọrọ aha gị na “{{title}}”",
       "featureMention": "{{name}} kpọrọ aha gị na arịrịọ atụmatụ",
+      "featureNewNamed": "{{name}} posted a ọhụrụ arịrịọ “{{title}}”",
+      "featureNew": "{{name}} posted a ọhụrụ arịrịọ",
+      "featureActivity": "{{name}} kwuru na a arịrịọ",
       "governanceVoteNamed": "{{name}} tụrụ vootu na atụmatụ gị “{{title}}”",
       "governanceVote": "{{name}} tụrụ vootu na atụmatụ gị",
       "governanceCommentNamed": "{{name}} kwuru okwu na atụmatụ gị “{{title}}”",
@@ -2857,6 +2881,21 @@
     "likersEmptyBody": "Mmasị na nkọwa a ga-apụta ebe a.",
     "anonymousLikes_one": "Mmasị {{count}} sitere n'aka onye ji baajị na-amaghị aha",
     "anonymousLikes_other": "Mmasị {{count}} sitere n'aka ndị ji baajị na-amaghị aha"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Họrọ agbụ. Ọnụahịa dị ndụ ma na-emelite kwa nkeji.",
+    "free": "Free",
+    "gasCovered": "Gas kpuchie site na DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas gụnyere",
+    "gasIncluded": "Gas gụnyere",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} site na obere akpa gị",
+    "paidFromWalletPlain": "A kwụrụ ụgwọ site na obere akpa gị",
+    "priceUnavailable": "Ọnụahịa adịghị",
+    "confirm": "Mint na {{chain}}",
+    "confirmWithCost": "Mint na {{chain}} {{cost}}",
+    "notAvailable": "Ihe ngosi dị na yinye a adịbeghị."
   },
   "postInfo": {
     "title": "Ozi banyere mbipụta",
@@ -14593,7 +14632,7 @@
     "f45e06965f93": "Ọ dịghị na-eso aro ma",
     "34f5da2599fa": "Atụmatụ akaụntụ ọhụrụ ga-apụta ebe a.",
     "bac527bf9a36": "Ndụmọdụ ịgbaso",
-    "036cfd952896": "Ndị ị ga-eso",
+    "a94bfc8a15e8": "Aro maka ndị ị ga-eso",
     "0c820caf16c0": "Enweghị bayo ọ bụla ugbu a",
     "e139251e4f5b": "Hichapụ Post",
     "b3661ad568df": "Agaghị enwenwu ike imegharị ihe a. A ga-ewepụ post gị kpamkpam.",
@@ -18680,8 +18719,38 @@
     "headlineAccent": "na enwe obi ụtọ.",
     "orContinueWith": "ma ọ bụ gaa n 'ihu na",
     "phone": "Ekwentị",
+    "email": "Email",
     "fingerprint": "Mkpịsị aka",
     "exploreFirst": "Inyocha mbụ",
     "codeNote": "Anyị na-ezitere gị koodu, ọ dịghị paswọọdụ achọrọ."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Na-abịa n 'oge na-adịghị anya",
+    "title": "Token launching adịghị anya",
+    "body": "Ịzụ ahịa emechaala ka token ọhụrụ na-akwadebe. Nata imeyl ngwa ngwa mgbe ọ na-amalite.",
+    "notifyMe": "Gwa m",
+    "sendTo": "Anyị ga-ezipụ {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email gị",
+    "invalidEmail": "Tinye a nti email",
+    "joinedTitle": "Ndè mma nke ụlọ ụlọ.",
+    "joinedBody": "Anyị ga-eziga email {{email}} mgbe akara ngosi ahụ malitere.",
+    "joinedBodyNoEmail": "Aga m ezipụta gị ozi mgbe token ahụ na-amalite.",
+    "failed": "Ndèrè n'egwèrè nke àlà. Nkèrè n'egwèrè.",
+    "privacy": "Naanị ejiri ya ịkwu gị ihe banyere mmalite ahụ.",
+    "seoTitle": "Token na-amalite n'oge na-adịghị anya | DeHub",
+    "seoDescription": "Ọhụụ token DeHub ọhụụ na-abịa n'oge na-adịghị anya. Sonye na ndepụta ma nata imeyl otu mgbe ọ na-amalite, mgbe ahụ zụta ozugbo site na akpa ego DeHub gị."
+  },
+  "githubLink": {
+    "hint": "Banye na GitHub iji gosi na akaụntụ ahụ bụ nke gị. DeHub na-ahụ naanị profaịlụ GitHub gị.",
+    "verified": "Nyochaa",
+    "verifiedAria": "Gosiri GitHub akaụntụ",
+    "connected": "GitHub ejikọrọ",
+    "disconnected": "E kewapụla GitHub",
+    "taken": "Akaụntụ GitHub ahụ adịworị na profaịlụ DeHub ọzọ.",
+    "failed": "Enweghị m ike ijikọ GitHub. Gbalịa ọzọ.",
+    "unavailable": "Nyocha GitHub na-abịa n 'oge na-adịghị anya.",
+    "connect": "Jikọọ GitHub",
+    "disconnect": "Kwụpụ"
   }
 }

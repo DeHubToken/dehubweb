@@ -6,7 +6,7 @@ const toast = vi.hoisted(() => ({
 }));
 
 vi.mock('sonner', () => ({ toast }));
-vi.mock('@/lib/contracts/aa-utils', () => ({
+vi.mock('@/lib/contracts/tx-errors', () => ({
   isWalletLockedError: (error: unknown) =>
     (error as { code?: string } | null)?.code === 'WALLET_LOCKED',
   parseTxError: () => 'Readable failure',

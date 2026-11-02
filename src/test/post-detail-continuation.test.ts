@@ -9,8 +9,8 @@ describe('dedicated post continuation', () => {
   const detail = readSource('pages/app/SinglePostPage.tsx');
   const commentsWrapper = readSource('components/app/cards/CommentsWrapper.tsx');
 
-  it('opens one page-owned comments surface by default', () => {
-    expect(detail).toContain('const [showPageComments, setShowPageComments] = useState(true)');
+  it('keeps desktop page comments closed until the comment button opens them', () => {
+    expect(detail).toContain('const [showPageComments, setShowPageComments] = useState(() => !desktopView())');
     expect(detail).toContain('forceInline');
     expect(detail.match(/onOpenComments=\{openPageComments\}/g)).toHaveLength(3);
   });

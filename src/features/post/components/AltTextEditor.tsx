@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Check } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -8,8 +9,9 @@ export const ALT_TEXT_MAX = 1500;
 
 /**
  * The ALT pill on a composer preview. Outlined until the media has a
- * description, filled once it does, so a creator can see at a glance which
- * pictures still need one.
+ * description, then a solid white pill with a tick, so a creator can see at a
+ * glance that the text was saved. Both looks are pinned in theme-controls.css
+ * (data-alt-text) because the theme control material repaints plain pills.
  */
 export function AltTextButton({ hasText, onClick, className }: { hasText: boolean; onClick: () => void; className?: string }) {
   const { t } = useTranslation();
@@ -20,15 +22,19 @@ export function AltTextButton({ hasText, onClick, className }: { hasText: boolea
       aria-label={hasText ? t('altText.edit') : t('altText.add')}
       title={hasText ? t('altText.edit') : t('altText.add')}
       data-alt-text={hasText ? 'set' : 'empty'}
+      aria-pressed={hasText}
+      data-keep-dark
+      data-on-media
       className={cn(
-        'z-20 rounded-lg px-2 py-1 text-[11px] font-bold tracking-wide transition-colors',
+        'z-20 inline-flex items-center gap-0.5 rounded-lg px-2 py-1 text-[11px] font-bold tracking-wide transition-colors',
         hasText
           ? 'bg-white text-black hover:bg-white/90'
           : 'bg-black/70 text-white border border-white/30 hover:bg-black/85',
         className,
       )}
     >
-      {t('altText.badge')}
+      {hasText && <Check className="h-3 w-3" strokeWidth={3} aria-hidden />}
+      {t('altText.badge', { defaultValue: 'ALT' })}
     </button>
   );
 }

@@ -92,6 +92,23 @@ export async function followUser(walletAddress: string): Promise<{ result: boole
   });
 }
 
+export interface FollowBatchResult {
+  address: string;
+  ok: boolean;
+  status?: string;
+  error?: string;
+}
+
+/** Follows up to 100 people in one call ("Follow back all"), so a long list doesn't trip the per-request rate limit. */
+export async function followUsersBatch(walletAddresses: string[]): Promise<FollowBatchResult[]> {
+  const response = await apiCall<{ result: boolean; results: FollowBatchResult[] }>("/api/request_follow/batch", {
+    method: "POST",
+    body: { addresses: walletAddresses.map(address => address.toLowerCase()) },
+    requiresAuth: true,
+  });
+  return response.results ?? [];
+}
+
 export async function unfollowUser(walletAddress: string): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/request_follow", {
     method: "POST",

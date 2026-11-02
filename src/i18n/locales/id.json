@@ -162,7 +162,25 @@
     "saved": "Kolom profil tersimpan",
     "failed": "Tidak tersimpan. Coba lagi.",
     "verified": "Tautan terverifikasi",
-    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}"
+    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}",
+    "descriptionPresets": "Tambahkan situs web, kata ganti, atau apa pun. Tautan ditampilkan dengan media sosial Anda.",
+    "type": "Jenis bidang",
+    "needsLabel": "Beri label pada setiap bidang kustom",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "mereka/mereka",
+    "placeholderLocation": "Kota, negara",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portofolio",
+      "shop": "Toko",
+      "podcast": "Podcast",
+      "newsletter": "Buletin",
+      "pronouns": "Kata ganti",
+      "location": "Lokasi",
+      "custom": "Kustom",
+      "customOption": "Label kustom"
+    }
   },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Transaksi ini tidak dapat disponsori. Silakan coba lagi sebentar."
   },
   "nav": {
+    "reorderHint": "Tahan dan seret ikon apa pun untuk mengatur ulang",
+    "reorderReset": "Atur ulang",
+    "reorderResetLong": "Atur ulang pesanan menu",
     "home": "Beranda",
     "explore": "Jelajahi",
     "prompt": "Prompt",
@@ -1726,6 +1747,12 @@
     "burstBody": "{{count}} notifikasi baru dari {{who}}",
     "community": {
       "joined": "{{name}} bergabung dengan komunitas Anda",
+      "chatOne": "{{name}} mengirim pesan",
+      "chatOneNamed": "{{name}} mengirim pesan di {{community}}",
+      "chatTwo": "{{name}} dan {{second}} mengirim pesan",
+      "chatTwoNamed": "{{name}} dan {{second}} mengirim pesan di {{community}}",
+      "chatMany": "{{name}} + {{others}} lainnya mengirim pesan",
+      "chatManyNamed": "{{name}} + {{others}} lainnya mengirim pesan di {{community}}",
       "joinedNamed": "{{name}} bergabung dengan “{{community}}”",
       "requested": "{{name}} meminta untuk bergabung dengan komunitas Anda",
       "requestedNamed": "{{name}} meminta untuk bergabung dengan “{{community}}”",
@@ -1747,6 +1774,10 @@
       "featureReply": "{{name}} menjawab komentar Anda",
       "featureMentionNamed": "{{name}} menyebut Anda pada “{{title}}”",
       "featureMention": "{{name}} menyebut Anda pada permintaan fitur",
+      "featureNewNamed": "{{name}} memposting permohonan baru “{{title}}”",
+      "featureNew": "{{name}} memposting permohonan baru",
+      "featureActivityNamed": "{{name}} mengomentari “{{title}}”",
+      "featureActivity": "{{name}} mengomentari permohonan",
       "governanceVoteNamed": "{{name}} mengundi pada proposal Anda “{{title}}”",
       "governanceVote": "{{name}} mengundi pada proposal",
       "governanceCommentNamed": "{{name}} berkomentar pada proposal Anda “{{title}}”",
@@ -2084,7 +2115,12 @@
     },
     "tabs": {
       "playlists": "Daftar Putar",
-      "dislikes": "Tidak Suka"
+      "dislikes": "Tidak Suka",
+      "articles": "Artikel"
+    },
+    "articles": {
+      "emptyTitle": "Belum ada artikel",
+      "emptySubtitle": "Artikel akan muncul di sini"
     },
     "dislikes": {
       "emptyTitle": "Belum ada tidak suka",
@@ -2882,6 +2918,21 @@
     "likersEmptyBody": "Suka pada komentar ini akan muncul di sini.",
     "anonymousLikes_one": "{{count}} suka dari pemegang lencana anonim",
     "anonymousLikes_other": "{{count}} suka dari pemegang lencana anonim"
+  },
+  "mintChain": {
+    "title": "Pos mint",
+    "subtitle": "Pilih rantai. Harga ditayangkan dan diperbarui setiap menit.",
+    "free": "Gratis",
+    "gasCovered": "Gas yang dicakup oleh DeHub",
+    "feeIncludesGas": "≈{{usd}}, termasuk gas",
+    "gasIncluded": "Termasuk gas",
+    "gasOnly": "≈{{usd}} gas",
+    "paidFromWallet": "{{amount}} dari dompet Anda",
+    "paidFromWalletPlain": "Dibayar dari dompet Anda",
+    "priceUnavailable": "Harga tidak tersedia",
+    "confirm": "Mint pada {{chain}}",
+    "confirmWithCost": "Pesan di {{chain}} · {{cost}}",
+    "notAvailable": "Pencetakan pada rantai ini belum tersedia."
   },
   "postInfo": {
     "title": "Info Postingan",
@@ -14661,7 +14712,7 @@
     "f45e06965f93": "Belum ada saran pengikut",
     "34f5da2599fa": "Saran pengikut baru akan muncul di sini.",
     "bac527bf9a36": "Saran Pengikut",
-    "036cfd952896": "Siapa yang harus diikuti",
+    "a94bfc8a15e8": "Saran untuk diikuti",
     "0c820caf16c0": "Belum ada bio",
     "e139251e4f5b": "Hapus Postingan",
     "b3661ad568df": "Aksi ini tidak dapat dibatalkan. Postingan Anda akan dihapus secara permanen.",
@@ -18778,8 +18829,40 @@
     "headlineAccent": "dan bahagia.",
     "orContinueWith": "atau lanjut dengan",
     "phone": "Telepon",
+    "email": "Email",
     "fingerprint": "Sidik jari",
     "exploreFirst": "Jelajahi dulu",
     "codeNote": "Kami kirim kode lewat email, tanpa kata sandi."
+  },
+  "halloween": {
+    "title": "Selamat Halloween",
+    "otherThemes": "Lagi nggak mau seram? Temukan tema lain:",
+    "enter": "Masuki ruang bawah tanah"
+  },
+  "tokenLaunch": {
+    "title": "Token peluncuran segera",
+    "body": "Belanjaan ditutup sementara token baru dalam proses persiapan. Dapatkan email saat token tersebut diluncurkan.",
+    "notifyMe": "Kirim notifikasi kepadaku",
+    "sendTo": "Kami akan mengirim email ke {{email}}",
+    "invalidEmail": "Masukkan alamat email yang valid.",
+    "joinedTitle": "Anda ada dalam daftar.",
+    "joinedBody": "Kami akan mengirim email kepada {{email}} saat token diluncurkan.",
+    "joinedBodyNoEmail": "Kami akan mengirim email kepada Anda saat token diluncurkan.",
+    "failed": "Tidak dapat menyimpannya. Coba lagi.",
+    "privacy": "Hanya digunakan untuk memberitahumu tentang peluncuran.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Token baru DeHub akan segera diluncurkan. Bergabunglah dengan daftar dan dapatkan satu email saatnya diluncurkan, kemudian beli langsung dari dompet DeHub Anda."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub untuk membuktikan bahwa akun itu milik Anda. DeHub hanya melihat profil GitHub publik Anda.",
+    "verified": "Terverifikasi",
+    "verifiedAria": "Akun GitHub terverifikasi",
+    "connected": "GitHub terhubung",
+    "disconnected": "GitHub terputus",
+    "taken": "Akun GitHub itu sudah ada di profil DeHub lain.",
+    "failed": "Tidak dapat menghubungkan GitHub. Coba lagi.",
+    "unavailable": "Verifikasi GitHub akan segera hadir.",
+    "connect": "Hubungkan GitHub",
+    "disconnect": "Putuskan"
   }
 }

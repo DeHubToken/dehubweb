@@ -45,6 +45,7 @@ import { useDeHubFeed, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use
 import { LiveShortTile } from '@/components/app/feeds/LiveShortTile';
 import { interleaveLive, isVerticalFeedLive, liveToShort } from '@/lib/live-shorts';
 import { useUnifiedFeed } from '@/hooks/use-unified-feed';
+import { FeedSearchResults } from '@/components/app/feeds/FeedSearchResults';
 import { getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -289,9 +290,11 @@ interface ShortsFeedProps {
   /** A short tapped elsewhere in the app: open the viewer on it once the list has it. */
   startShortId?: string;
   onStartShortConsumed?: () => void;
+  /** Words typed into the pill's search: the grid turns into matching shorts. */
+  searchQuery?: string;
 }
 
-export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0, startShortId, onStartShortConsumed }: ShortsFeedProps) {
+export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0, startShortId, onStartShortConsumed, searchQuery = '' }: ShortsFeedProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
@@ -575,7 +578,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     refetch,
   });
 
-  if ((isLoading || isAutoRetrying) && !showFilters) {
+  if ((isLoading || isAutoRetrying) && !showFilters && !searchQuery) {
     return (
       <div data-grid-feed className="px-2 pb-2 sm:px-3 sm:pb-3">
         <ShortsFeedSkeleton />
@@ -622,7 +625,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         {/* Shorts Grid, filter loader or Empty State. The loader sits BELOW the
             filter panel, not in place of the whole feed, so the chips the user
             is working with stay on screen and clickable while the request runs. */}
-        {isLoading || isAutoRetrying ? (
+        {searchQuery ? (
+          <FeedSearchResults tab="shorts" query={searchQuery} />
+        ) : isLoading || isAutoRetrying ? (
           <ShortsFeedSkeleton />
         ) : filterTransition.active ? (
           <FeedFilterLoader className="mt-3" />

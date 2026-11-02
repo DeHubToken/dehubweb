@@ -1,0 +1,91 @@
+/* Feed search (FeedSearchBar): the lit tab melts into a search box.
+
+   The box starts clipped to the tapped tab (--melt-l / --melt-r, measured on
+   open) and opens out to the pill's full width while the tab icons blur away.
+   Closing runs the same way back. */
+
+[data-feed-search-bar] {
+  animation: feed-search-melt 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-feed-search-bar][data-closing] {
+  animation: feed-search-unmelt 220ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes feed-search-melt {
+  from { clip-path: inset(0 var(--melt-r, 40%) 0 var(--melt-l, 40%) round 12px); }
+  to { clip-path: inset(0 0 0 0 round 12px); }
+}
+@keyframes feed-search-unmelt {
+  from { clip-path: inset(0 0 0 0 round 12px); }
+  to { clip-path: inset(0 var(--melt-r, 40%) 0 var(--melt-l, 40%) round 12px); }
+}
+
+/* The tab row under the box: blurs out as the box spreads over it. */
+[data-feed-search-tabs] {
+  transition: opacity 220ms ease, filter 220ms ease;
+}
+[data-feed-search-tabs][data-hidden] {
+  opacity: 0;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* ── Lens Drop (FeedSearchLens, the colour themes) ───────────────────────── */
+
+/* The feed blurs behind the lens until there are words to search. */
+[data-feed-lens-blur] {
+  pointer-events: none;
+  opacity: 0;
+  background: rgb(0 0 0 / 0.28);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  transition: opacity 260ms ease;
+}
+[data-feed-lens-blur][data-shown] { opacity: 1; pointer-events: auto; }
+
+/* The lens: dark glass with a rim lit in the theme's own tab colour. */
+[data-feed-lens-rim] {
+  background: rgb(14 14 18 / 0.62);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+  border: 1.5px solid color-mix(in srgb, var(--lens-accent, #fff) 70%, transparent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--lens-accent, #fff) 14%, transparent),
+    0 0 22px color-mix(in srgb, var(--lens-accent, #fff) 35%, transparent),
+    0 10px 30px rgb(0 0 0 / 0.45);
+  touch-action: none;
+}
+
+/* Where the lens came from: the glass bubble is gone, a dashed ring stays. */
+html[data-feed-lens] [data-feed-tab-btn][data-active="true"]::after {
+  content: '';
+  position: absolute;
+  inset: 3px 2px;
+  border: 1.5px dashed rgb(255 255 255 / 0.4);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* Room under the docked lens, and the tiles ripple out from it. */
+[data-feed-lens-gap] { display: none; }
+html[data-feed-lens][data-feed-lens-docked="true"] [data-feed-lens-gap] { display: block; height: 72px; }
+html[data-feed-lens] [data-feed-search-results] .grid > * {
+  animation: feed-lens-ripple 380ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+html[data-feed-lens] [data-feed-search-results] .grid > :nth-child(2) { animation-delay: 40ms; }
+html[data-feed-lens] [data-feed-search-results] .grid > :nth-child(3) { animation-delay: 70ms; }
+html[data-feed-lens] [data-feed-search-results] .grid > :nth-child(n + 4) { animation-delay: 110ms; }
+html[data-feed-lens] [data-feed-search-results] .grid > :nth-child(n + 7) { animation-delay: 160ms; }
+html[data-feed-lens] [data-feed-search-results] .grid > :nth-child(n + 10) { animation-delay: 210ms; }
+@keyframes feed-lens-ripple {
+  from { opacity: 0; transform: scale(0.86) translateY(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-feed-lens], [data-feed-lens-blur] { transition: none !important; }
+  html[data-feed-lens] [data-feed-search-results] .grid > * { animation: none; }
+  [data-feed-search-bar],
+  [data-feed-search-bar][data-closing] { animation: none; }
+  [data-feed-search-tabs] { transition: none; }
+}

@@ -3,6 +3,8 @@ import MaintenanceGate from '@/components/MaintenanceGate';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
+import { AvatarPrompt } from "@/components/app/AvatarPrompt";
+import { HalloweenGhostPrompt } from "@/components/app/halloween/HalloweenGhostPrompt";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
@@ -17,6 +19,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { ConnectLinkedWalletModal } from "@/components/app/wallet-setup/ConnectLinkedWalletModal";
 import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
+import { DefaultChainSync } from "@/components/app/DefaultChainSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
@@ -484,6 +487,7 @@ function AppContent() {
   return (
     <>
       <SelfBadgeSync />
+      <DefaultChainSync />
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
@@ -749,6 +753,7 @@ function AppContent() {
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="usernames" element={null} />
+              <Route path="nfts" element={null} />
               <Route path="accounts" element={null} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />
@@ -798,6 +803,7 @@ function AppContent() {
             {/* /usernames alias — the canonical form the worker links and
                 sitemaps, so the SPA has to answer it too. */}
             <Route path="/usernames" element={null} />
+            <Route path="/nfts" element={null} />
 
             {/* /accounts alias — same shape as /usernames above. */}
             <Route path="/accounts" element={null} />
@@ -1050,6 +1056,13 @@ const App = () => (
                               notifications; renders nothing itself. Reads
                               auth, so it must stay inside WalletProviders. */}
                           <NotificationsPromptToast />
+
+                          {/* Asks accounts with no profile picture to add one,
+                              a few times at most. Same provider requirement. */}
+                          <AvatarPrompt />
+
+                          {/* Halloween 2026 only: once per device while Horror is on. */}
+                          <HalloweenGhostPrompt />
 
                           {/* Says so when a granted permission is delivering
                               nothing, which the Settings row alone only ever

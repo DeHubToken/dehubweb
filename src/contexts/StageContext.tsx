@@ -2809,6 +2809,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     void refreshSpaces();
     void refreshScheduledSpaces();
+    const mountedAt = Date.now();
+    let joinedOnce = false;
     const scheduleLiveSpacesRefresh = () => {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
       liveSpacesRefreshDebounceRef.current = setTimeout(() => {
@@ -2863,7 +2865,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // Re-read on every join as well: a broadcast sent while this client was
     // not joined is simply gone, so a stage that started during a dropped
     // socket would otherwise never reach the list.
-    const stopWatching = watchStages(onSpaceChange, scheduleLiveSpacesRefresh);
+    //
+    // Except the first join right after mount: the two lists were read a
+    // moment ago, and reading them again a second later doubled the stage
+    // requests on every page open. A later join (a socket that dropped and
+    // came back) still re-reads.
+    const onJoin = () => {
+      const firstJoin = !joinedOnce;
+      joinedOnce = true;
+      if (firstJoin && Date.now() - mountedAt < 5000) return;
+      scheduleLiveSpacesRefresh();
+    };
+    const stopWatching = watchStages(onSpaceChange, onJoin);
     return () => {
       if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
       stopWatching();

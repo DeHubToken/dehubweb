@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Link2 from "@/components/ui/cut-icons/link";
 
-import { resolveNewPost } from '@/lib/api/dehub';
+import { resolveArticleSlug, resolveNewPost } from '@/lib/api/dehub';
 import type { DehubLinkMatch } from '@/lib/dehub-links';
 import { MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';
 import { CommunityLinkEmbed } from '@/components/app/communities/CommunityLinkEmbed';
@@ -144,6 +144,37 @@ function NewPostSlugEmbed({
   );
 }
 
+/** Resolves /app/post/<article-title-slug> to its tokenId, then renders the ordinary post card. */
+function ArticleSlugEmbed({
+  slug,
+  fullWidth,
+  className,
+  fallback,
+}: {
+  slug: string;
+  fullWidth: boolean;
+  className?: string;
+  fallback: ReactNode;
+}) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['article-slug', slug],
+    queryFn: () => resolveArticleSlug(slug),
+    staleTime: 10 * 60_000,
+  });
+  if (isLoading) {
+    return <div className="mt-2 h-24 rounded-xl theme-skeleton animate-pulse" />;
+  }
+  if (!data) return <>{fallback}</>;
+  return (
+    <SharedPostEmbed
+      tokenId={String(data.tokenId)}
+      fullWidth={fullWidth}
+      className={className}
+      fallback={fallback}
+    />
+  );
+}
+
 export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEmbedProps) {
   const fallback = <DehubLinkFallback link={link} />;
 
@@ -151,6 +182,16 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
     case 'post':
       // The off-chain slug form carries no tokenId, and everything downstream
       // keys on one — resolve it first, then render the same card.
+      if (!link.tokenId && link.articleSlug) {
+        return (
+          <ArticleSlugEmbed
+            slug={link.articleSlug}
+            fullWidth={!compact}
+            className={className}
+            fallback={fallback}
+          />
+        );
+      }
       if (!link.tokenId && link.newPostId) {
         return (
           <NewPostSlugEmbed

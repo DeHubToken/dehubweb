@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { ElectricLogo } from './ElectricLogo';
 import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
-import { openNotificationsDrawer } from '../NotificationsDrawer';
+import { openNotificationsDrawer, warmNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
@@ -41,7 +41,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button data-entry-logo onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
       <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-9 w-[42px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
@@ -237,6 +237,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         {isAuthenticated && (
           <button
             onClick={() => openNotificationsDrawer()}
+            onPointerDown={warmNotificationsDrawer}
             className="relative flex h-11 w-11 shrink-0 items-center justify-end text-white transition-colors"
             aria-label={`${_copy("copy.788011833a5a", { defaultValue: "Notifications" })}${totalNotifUnread > 0 ? ` (${totalNotifUnread})` : ''}`}
           >

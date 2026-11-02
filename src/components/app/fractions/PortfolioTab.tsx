@@ -20,7 +20,7 @@ import X from "@/components/ui/cut-icons/close";
 
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
-import { cdnImage } from '@/lib/media-url';
+import { FractionThumb } from './FractionThumb';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
 import {
@@ -45,23 +45,17 @@ function PositionCard({
   onOpen: () => void;
 }) {
   const { t } = useTranslation();
-  const thumb = position.imageUrl ? cdnImage(position.imageUrl, { width: 300 }) : '';
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
       <button onClick={onOpen} className="w-full text-left">
         <div className="aspect-square bg-white/5 relative overflow-hidden">
-          {thumb ? (
-            <img
-              src={thumb}
-              alt={position.title || t('fractions.postNumber', { id: position.tokenId })}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-white/20">
-              <ImageIcon className="w-8 h-8" />
-            </div>
-          )}
+          <FractionThumb
+            tokenId={String(position.tokenId)}
+            imageUrl={position.imageUrl}
+            title={position.title}
+            postType={position.postType}
+            width={300}
+          />
           <span data-on-media className="absolute top-2 left-2 text-[10px] font-semibold bg-black/70 text-white/90 px-1.5 py-0.5 rounded backdrop-blur-sm">
             {position.balance} / {TOTAL_FRACTIONS}
           </span>

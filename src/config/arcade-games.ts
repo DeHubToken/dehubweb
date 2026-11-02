@@ -171,6 +171,8 @@ export interface ArcadeGame {
    * competition and then asking people to lose it.
    */
   leaderboard?: ArcadeGameBoard;
+  /** Playable by link only. See UNLISTED_ARCADE_GAMES. */
+  unlisted?: boolean;
 }
 
 /**
@@ -213,6 +215,8 @@ const SLAYER_URL =
   (import.meta.env.VITE_STREET_SLAYER_URL as string | undefined) || '/street-slayer-game/index.html';
 const TRENCHSTAR_URL =
   (import.meta.env.VITE_TRENCHSTAR_URL as string | undefined) || '/trenchstar-game/index.html';
+const LOVE_LOCK_URL =
+  (import.meta.env.VITE_LOVE_LOCK_BRIDGE_URL as string | undefined) || '/love-lock-bridge-game/index.html';
 const GODS_EYE_URL =
   (import.meta.env.VITE_GODS_EYE_URL as string | undefined) || '/gods-eye-game/index.html?v=yPIb7IAb';
 
@@ -576,6 +580,40 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   },
 ];
 
+/**
+ * Games that play at `/arcade/<slug>` for anyone holding the link, and appear
+ * nowhere else: not in the grid, the apps page, search, the sitemap or the
+ * crawler copy, and the player serves them `noindex`. This is how a game is
+ * tested in production before it is announced. Moving an entry up into
+ * ARCADE_GAMES is the launch, and `src/test/arcade.test.ts` then holds it to
+ * the full contract (crawler page, sitemap entry, grid link).
+ */
+export const UNLISTED_ARCADE_GAMES: ArcadeGame[] = [
+  {
+    slug: 'love-lock-bridge',
+    title: 'Love Lock Bridge',
+    tagline: 'Walk a gilded bridge above the clouds and leave a lock.',
+    description: 'A first-person walk across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message, pick a spot on the railing and leave your lock.',
+    action: 'Walk the bridge',
+    art: '/arcade/love-lock-bridge.webp',
+    artAlt: 'A gilded bridge lined with lanterns and pink roses, heading into soft pink clouds in Love Lock Bridge',
+    credit: {
+      name: 'Love Lock Bridge',
+      author: 'DeHub',
+      licence: 'Proprietary',
+      licenceFile: 'LICENSE-LoveLockBridge',
+    },
+    buildUrl: () => LOVE_LOCK_URL,
+    // One document with its textures inlined, so the frame's load event lands
+    // once the scene is parsed; the engine itself comes from a CDN after that.
+    bootTauMs: 6000,
+    exitSource: 'love-lock-bridge',
+    allow: 'fullscreen; autoplay',
+    checkCapability: () => requireHardwareWebgl('The bridge', true),
+    unlisted: true,
+  },
+];
+
 export function getArcadeGame(slug: string | undefined): ArcadeGame | undefined {
-  return ARCADE_GAMES.find((game) => game.slug === slug);
+  return [...ARCADE_GAMES, ...UNLISTED_ARCADE_GAMES].find((game) => game.slug === slug);
 }

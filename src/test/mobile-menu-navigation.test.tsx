@@ -24,6 +24,7 @@ vi.mock('@/hooks/use-search-history', () => ({ useSearchHistory: () => ({ addToH
 vi.mock('@/lib/route-preload', () => ({ preloadRoute: vi.fn() }));
 vi.mock('@/lib/document-scroll', () => ({ scrollDocumentToSmooth: vi.fn() }));
 vi.mock('@/components/app/war/WarHudIcon', () => ({ ThemedIcon: () => null }));
+vi.mock('@/contexts/UserPreferencesContext', () => ({ useUserPreferences: () => null }));
 vi.mock('@/components/app/navigation/DesktopSidebar', () => ({ DesktopSidebar: () => null }));
 vi.mock('@/components/app/navigation/SidebarProfileSwitcher', () => ({ SidebarProfileSwitcher: () => null }));
 vi.mock('@/components/ui/liquid-glass-bubble', () => ({ LiquidGlassBubble: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button> }));
@@ -57,7 +58,8 @@ describe('mobile menu dismissal', () => {
     expect(messages?.querySelector('[data-menu-badge]')?.textContent).toBe('5');
   });
 
-  it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
+  // /nfts is owner-only while it is in preview, so a signed-in non-owner never sees it.
+  it.each(NAV_ITEMS.filter(item => !item.external && !item.action && item.label !== 'Home' && item.path !== '/nfts').map(item => [NAV_LABEL_KEYS[item.label] || item.label, item.path]))('opens %s and closes the menu', (label, path) => {
     mount();
     fireEvent.click(screen.getByText(label));
     expect(screen.getByTestId('path').textContent).toBe(path);

@@ -4,14 +4,31 @@ export const MAX_IMAGE_UPLOAD_BYTES = 42_069_000;
 export const MAX_REQUEST_IMAGE_BYTES = 100_000_000;
 
 /**
- * Feed-image allowance per post. The first four images are available to every
- * creator; higher badge tiers add room gradually, with Megalodon capped at 20.
+ * Feed-image allowance per post. Creators without a badge get four images;
+ * every badge holder gets at least 30, rising by tier to 40 for Megalodon.
+ * Keep aligned with the backend's post-image-allowance.ts.
  */
 const IMAGE_LIMITS_BY_BADGE_INDEX = [
-  5, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20,
+  30, 30, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
 ] as const;
 
 export const BASE_POST_IMAGE_LIMIT = 4;
+
+/**
+ * Comics carry more pages than a photo carousel: 50 for any badge holder,
+ * 10 without one. Keep aligned with the backend's post-image-allowance.ts.
+ */
+export const COMIC_IMAGE_LIMIT = 50;
+export const BASE_COMIC_IMAGE_LIMIT = 10;
+
+export function getComicImageLimitForBadge(
+  badgeBalance: number | string | null | undefined,
+  username?: string | null,
+  badgeLock?: unknown,
+): number {
+  const badge = getBadgeName(badgeBalance, username, { lock: parseBadgeLock(badgeLock) });
+  return badge ? COMIC_IMAGE_LIMIT : BASE_COMIC_IMAGE_LIMIT;
+}
 
 /**
  * Fallback media upload allowance before the API quota has loaded. Images,

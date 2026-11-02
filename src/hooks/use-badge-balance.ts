@@ -8,6 +8,10 @@
  *
  * One shared query key per identifier, so the same user drawn on several cards
  * costs a single request, and the entry is reused for the rest of the session.
+ * Different users drawn in the same moment (a rail of stage hosts, a chat
+ * column) share one request too: lookups made within a short window go out
+ * together through `account_info/batch` instead of one `account_info` each,
+ * which used to be a dozen requests (plus a CORS preflight each) on Home.
  * `provided` short-circuits the fetch entirely — pass the payload's balance
  * whenever there is one and this hook stays inert.
  *
@@ -21,7 +25,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { getAccountInfo } from '@/lib/api/dehub/users';
+import { getAccountInfo, getAccountSummariesMixed, type AccountSummary } from '@/lib/api/dehub/users';
 import {
   getBadgeName,
   getBadgeUrl,
@@ -52,6 +56,83 @@ function badgeKey(identifier?: string | null): string {
   return identifier?.replace('@', '').trim().toLowerCase() || '';
 }
 
+const ADDRESS_RE = /^0x[a-f0-9]{40}$/;
+/** Long enough to catch every card of one render pass, short enough not to show. */
+const BATCH_WINDOW_MS = 30;
+
+type Waiter = { resolve: (badge: ResolvedBadge) => void; reject: (error: unknown) => void };
+const waiting = new Map<string, Waiter[]>();
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+
+interface BadgeRow {
+  badgeBalance?: number | null;
+  badgeLock?: unknown;
+  username?: string | null;
+  address?: string | null;
+  wallet_address?: string | null;
+}
+
+function toResolved(user: BadgeRow): ResolvedBadge {
+  return {
+    badgeBalance: user?.badgeBalance,
+    badgeLock: parseBadgeLock(user?.badgeLock),
+    username: user?.username || undefined,
+    address: user?.address || user?.wallet_address || undefined,
+  };
+}
+
+function settle(key: string, outcome: { badge?: ResolvedBadge; error?: unknown }) {
+  const list = waiting.get(key) ?? [];
+  waiting.delete(key);
+  for (const waiter of list) {
+    if (outcome.error !== undefined) waiter.reject(outcome.error);
+    else waiter.resolve(outcome.badge ?? {});
+  }
+}
+
+/** The single-account lookup, kept for names the batch cannot answer (renamed handles). */
+function lookupOne(key: string) {
+  getAccountInfo(key)
+    .then((user) => settle(key, { badge: toResolved(user) }))
+    .catch((error) => settle(key, { error }));
+}
+
+async function flushBadgeLookups() {
+  flushTimer = null;
+  const keys = [...waiting.keys()];
+  const addresses = keys.filter((key) => ADDRESS_RE.test(key));
+  const usernames = keys.filter((key) => !ADDRESS_RE.test(key));
+  let rows: AccountSummary[];
+  try {
+    rows = await getAccountSummariesMixed(addresses, usernames);
+  } catch {
+    keys.forEach(lookupOne);
+    return;
+  }
+  const byKey = new Map<string, AccountSummary>();
+  for (const row of rows) {
+    if (row?.address) byKey.set(row.address.toLowerCase(), row);
+    if (row?.username) byKey.set(row.username.toLowerCase(), row);
+  }
+  for (const key of keys) {
+    const row = byKey.get(key);
+    if (row) settle(key, { badge: toResolved(row) });
+    // account_info also follows a renamed handle to its account; the batch
+    // only matches current usernames.
+    else if (!ADDRESS_RE.test(key)) lookupOne(key);
+    else settle(key, { badge: {} });
+  }
+}
+
+function lookupBadge(key: string): Promise<ResolvedBadge> {
+  return new Promise((resolve, reject) => {
+    const list = waiting.get(key);
+    if (list) list.push({ resolve, reject });
+    else waiting.set(key, [{ resolve, reject }]);
+    if (!flushTimer) flushTimer = setTimeout(() => { void flushBadgeLookups(); }, BATCH_WINDOW_MS);
+  });
+}
+
 export function useBadgeBalance(
   identifier?: string | null,
   provided?: number | null,
@@ -61,15 +142,7 @@ export function useBadgeBalance(
 
   const { data } = useQuery({
     queryKey: ['badge-balance', key],
-    queryFn: async (): Promise<ResolvedBadge> => {
-      const user = await getAccountInfo(key);
-      return {
-        badgeBalance: user?.badgeBalance,
-        badgeLock: parseBadgeLock(user?.badgeLock),
-        username: user?.username || undefined,
-        address: user?.address || user?.wallet_address || undefined,
-      };
-    },
+    queryFn: () => lookupBadge(key),
     enabled: !!key && !hasProvided,
     // A tier can move the moment someone buys, and a badge that shows up half
     // an hour late reads as broken. One request per unique name per minute,

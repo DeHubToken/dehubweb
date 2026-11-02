@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 import { execSync, execFileSync } from "child_process";
 import { writeFileSync } from "fs";
@@ -108,8 +107,8 @@ function resolveBuildVersion() {
   const headline = merge ? body.split('\n')[0].trim() || subject : subject;
 
   // The headline is whatever the commit/PR title happened to be, unfiltered —
-  // and tooling that commits straight to main (Lovable's agent, notably) has
-  // shipped titles like "Lovable update" before. Those are internal, not for
+  // and tooling that commits straight to main has shipped generic editor
+  // titles before. Those are internal, not for
   // an end user's toast, so a match blanks the note rather than surfacing it;
   // NewVersionToast already falls back to its generic copy when note is ''.
   const clean = !/lovable/i.test(headline);
@@ -389,7 +388,6 @@ export default defineConfig(({ mode }) => ({
     startEntryAfterFirstPaintPlugin(),
     warGameCorsPlugin(),
     mcpPlugin(),
-    mode === "development" && componentTagger(),
   ].filter(Boolean),
 
   resolve: {

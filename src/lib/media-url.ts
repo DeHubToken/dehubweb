@@ -131,6 +131,24 @@ export function cdnImage(
   opts: CdnImageOptions = {},
 ): string | undefined {
   if (!url) return url;
+  // Feed payloads arrive already wrapped at DEFAULT_IMAGE_WIDTH. Asking one of
+  // those for a different width used to hand the 1080 back unchanged, so the
+  // "160px" aspect probes and 64px blank-poster probes each pulled a full
+  // poster: ~75 of them for every profile opened on a phone. Re-wrap the
+  // source instead, keeping the quality and fit it carried.
+  const prefix = `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/`;
+  if (opts.width && url.startsWith(prefix)) {
+    const rest = url.slice(prefix.length);
+    const slash = rest.indexOf('/');
+    if (slash === -1) return url;
+    const carried: CdnImageOptions = {};
+    for (const param of rest.slice(0, slash).split(',')) {
+      const [key, value] = param.split('=');
+      if (key === 'quality' && value) carried.quality = Number(value);
+      if (key === 'fit' && value) carried.fit = value as CdnImageOptions['fit'];
+    }
+    return cdnImage(rest.slice(slash + 1), { ...carried, ...opts });
+  }
   if (!url.startsWith(DEHUB_CDN_BASE)) return url;
   if (NON_TRANSFORMABLE.test(url)) return url;
   if (transformsDown) return url;

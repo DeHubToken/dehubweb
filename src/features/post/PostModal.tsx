@@ -12,6 +12,9 @@ import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { ArticleComposer } from './components/ArticleComposer';
+import { ComicPagesEditor } from './components/ComicPagesEditor';
+import { getComicImageLimitForBadge } from '@/lib/post-image-allowance';
+import { useAuth } from '@/contexts/AuthContext';
 import { CrossPostPicker } from './components/CrossPostPicker';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
@@ -22,6 +25,8 @@ import { useBannedAccount } from '@/hooks/use-banned-account';
 import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 import { toast } from 'sonner';
+
+const PostPreviewSheet = lazy(() => import('./components/PostPreviewSheet').then((m) => ({ default: m.PostPreviewSheet })));
 
 /** Closing with more words than this saves the post to Drafts. */
 const AUTO_DRAFT_MIN_WORDS = 3;
@@ -66,9 +71,11 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
   const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
+  const { user: authUser } = useAuth();
   const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost, onPosted);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
@@ -206,18 +213,36 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     handleClose();
   };
 
+  const comicMode = !articleMode && state.liveMode === null && state.postLayout === 'comic';
+  const comicLimit = getComicImageLimitForBadge(authUser?.badgeBalance, authUser?.username, authUser?.badgeLock);
+
   const selectPostMode = () => {
     setArticleMode(false);
     actions.setLiveMode(null);
     actions.setShowTitle(false);
+    actions.setPostLayout(null);
+  };
+
+  // A comic is a photo post shown as collector cards: a title, then pages
+  // with a caption and alt text each. Paywalls keep the normal carousel, so
+  // they are switched off here.
+  const selectComicMode = () => {
+    setArticleMode(false);
+    actions.setLiveMode(null);
+    actions.setShowTitle(true);
+    actions.setPostLayout('comic');
+    actions.setIsPPV(false);
+    actions.setIsTokenGated(false);
   };
 
   const selectLiveMode = (mode: 'video' | 'townhall') => {
     setArticleMode(false);
+    actions.setPostLayout(null);
     actions.setLiveMode(mode);
   };
 
   const selectArticleMode = () => {
+    actions.setPostLayout(null);
     setArticleMode(true);
     actions.setShowTitle(true);
     actions.setLiveMode(null);
@@ -237,7 +262,9 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     <>
       {!isQuoting && (
       <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
-        <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.a5554622c655", { defaultValue: "Post" })}</button>
+        <button type="button" aria-pressed={!articleMode && state.liveMode === null && !comicMode} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null && !comicMode ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.a5554622c655", { defaultValue: "Post" })}</button>
+        <span className="text-white/25" aria-hidden="true">|</span>
+        <button type="button" aria-pressed={comicMode} onClick={selectComicMode} className={cn('transition-colors', comicMode ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy('comic.tab', { defaultValue: 'Comic' })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
         <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => selectLiveMode('video')} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.9d4e6fe6676d", { defaultValue: "Livestream" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
@@ -290,6 +317,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onSetMediaDescription={actions.setMediaDescription}
         contentWarning={state.contentWarning}
         onContentWarningChange={actions.setContentWarning}
+        hideAssetCards={state.hideAssetCards}
+        onHideAssetCardsChange={actions.setHideAssetCards}
         liveMode={state.liveMode}
         canPost={computed.canPost}
         destinations={computed.destinations}
@@ -341,6 +370,17 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onMediaFullscreenChange={setMediaFullscreenOpen}
         draftVideo={state.draftVideo}
         hideScheduleAndDrafts={isQuoting}
+        mediaSlot={comicMode ? (
+          <ComicPagesEditor
+            media={state.media}
+            limit={comicLimit}
+            onAddPages={actions.addComicPages}
+            onRemove={actions.removeMedia}
+            onMove={actions.moveMedia}
+            onCaption={actions.setMediaCaption}
+            onAlt={actions.setMediaDescription}
+          />
+        ) : undefined}
       />
       {quotedPost && (
         // Shown as it will appear under the quote. Not a link from here —
@@ -433,6 +473,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
           actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}) });
         }}
+        // Photos, a video or plain text: what the feed card can show as it will post.
+        onPreview={articleMode || computed.hasAudio || state.poll ? undefined : () => setPreviewOpen(true)}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
@@ -454,6 +496,17 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
         hasContentWarning={state.contentWarning !== null}
       />
+      {previewOpen && (
+      <Suspense fallback={null}>
+      <PostPreviewSheet
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        text={state.text}
+        title={state.titleText}
+        media={state.media}
+      />
+      </Suspense>
+      )}
       </>
       )}
     </>

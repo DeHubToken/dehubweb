@@ -63,7 +63,9 @@ describe('a post action bar with reactions on', () => {
     );
     const thumb = screen.getByRole('button', { name: 'Dislike — hold to change your reaction' });
     expect(thumb).toHaveAttribute('data-engaged', 'dislike');
-    expect(thumb.querySelector('[data-engaged-glyph]')).not.toBeNull();
+    // The plain thumbs-down icon, filled and nodding — not the emoji.
+    expect(thumb.querySelector('[data-engaged-glyph]')).toBeNull();
+    expect(thumb.querySelector('svg.dehub-thumb-nod.dehub-thumb-nod--down')).not.toBeNull();
     expect(thumb).toHaveTextContent('1');
     fireEvent.click(thumb);
     // Re-sending the held 👎 is the server's "remove it" — never a like.

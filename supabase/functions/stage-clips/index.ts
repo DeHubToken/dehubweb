@@ -5,7 +5,7 @@
 //
 // summarize-transcript calls this once a public stage transcript is ready. It
 // picks up to three 30-60 s stretches that stand on their own (the text helper
-// summarize-transcript uses suggests, highlights.ts checks and fills in),
+// summarize-transcript uses suggests, _shared/clip-highlights.ts checks and fills in),
 // writes the captions, watermark and end card as one ASS overlay per clip, and
 // hands the lot to the dub worker's host, which already runs ffmpeg
 // (services/auto-dub/clips.py). The worker holds no database key: it uploads
@@ -27,7 +27,7 @@ import { stageClip, stageLink, textsFor } from '../_shared/growth-posts.ts';
 import {
   buildAss, buildCues, clipWords, HIGHLIGHT_PROMPT, hostBlocksClips, looksMature, normalizeSegments, parseSuggestions,
   pickHighlights, promptTranscript, type Segment, type Suggestion,
-} from './highlights.ts';
+} from '../_shared/clip-highlights.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;

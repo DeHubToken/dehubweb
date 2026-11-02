@@ -162,7 +162,24 @@
     "saved": "Na-save ang mga field ng profile",
     "failed": "Hindi na-save. Subukan ulit.",
     "verified": "Na-verify na link",
-    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}"
+    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o anumang iba pa. Ipakita ang mga link sa iyong mga social.",
+    "type": "Uri ng field",
+    "needsLabel": "Bigyan ng label ang bawat iniangkop na field",
+    "placeholderPronouns": "sila/sila",
+    "placeholderLocation": "Lungsod, bansa",
+    "presets": {
+      "website": "Website",
+      "blog": "Facebook",
+      "portfolio": "Username or email address *",
+      "shop": "Magasin",
+      "podcast": "Podcast",
+      "newsletter": "Username or email address *",
+      "pronouns": "Mga Panghalip",
+      "location": "Lokasyon",
+      "custom": "Custom",
+      "customOption": "Iniangkop na label"
+    }
   },
   "followedTags": {
     "follow": "I-follow ang #{{tag}}",
@@ -406,6 +423,9 @@
     "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
   },
   "nav": {
+    "reorderHint": "I - hold at i - drag ang anumang icon upang muling ayusin",
+    "reorderReset": "I - reset",
+    "reorderResetLong": "I - reset ang order ng menu",
     "home": "Tahanan",
     "explore": "Galugarin",
     "prompt": "Prompt",
@@ -1782,6 +1802,10 @@
       "featureReply": "{{name}} sumagot sa iyong komento",
       "featureMentionNamed": "{{name}} tinawagan ka sa “{{title}}”",
       "featureMention": "{{name}} tinawagan ka sa isang kahilingan ng feature",
+      "featureNewNamed": "{{name}} nag-post ng bagong request na “{{title}}”",
+      "featureNew": "{{name}} nagpost ng bagong request",
+      "featureActivityNamed": "{{name}} nag-comment sa “{{title}}”",
+      "featureActivity": "{{name}} nag-comment sa isang request",
       "governanceVoteNamed": "{{name}} bumoto sa iyong proposal “{{title}}”",
       "governanceVote": "{{name}} bumoto sa iyong proposal",
       "governanceCommentNamed": "{{name}} nag-comment sa iyong proposal “{{title}}”",
@@ -2922,6 +2946,20 @@
     "likersEmptyBody": "Dito lalabas ang mga like sa komentong ito.",
     "anonymousLikes_one": "{{count}} like mula sa anonymous na badge holder",
     "anonymousLikes_other": "{{count}} like mula sa mga anonymous na badge holder"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pumili ng chain. Ang mga presyo ay live at ina - update bawat minuto.",
+    "free": "Libre",
+    "feeIncludesGas": "≈{{usd}}, may kasamang gas",
+    "gasIncluded": "Kasama ang gas",
+    "gasOnly": "≈{{usd}}gas",
+    "paidFromWallet": "{{amount}} mula sa iyong wallet",
+    "paidFromWalletPlain": "Binayaran mula sa iyong wallet",
+    "priceUnavailable": "Hindi available ang presyo",
+    "confirm": "Mint sa {{chain}}",
+    "confirmWithCost": "Mint sa {{chain}} ·{{cost}}",
+    "notAvailable": "Hindi pa available ang pagmimina sa chain na ito."
   },
   "postInfo": {
     "title": "Instagram",
@@ -14764,7 +14802,7 @@
     "f45e06965f93": "Wala pang mga paghahambing",
     "34f5da2599fa": "Mga bagong aklat na maaaring magmungkahi rito.",
     "bac527bf9a36": "Mga Paghahambing",
-    "036cfd952896": "Kaninuman ang susunodin",
+    "a94bfc8a15e8": "Mga mungkahing susundan",
     "0c820caf16c0": "Walang bio pa",
     "e139251e4f5b": "Pawalang post",
     "b3661ad568df": "Ang ganitong aksyon ay hindi maaaring ibalik. Ang iyong post ay magiging permanente na nawala.",
@@ -18860,9 +18898,39 @@
     "headlineAccent": "at magiging masaya ka.",
     "orContinueWith": "o magpatuloy gamit ang",
     "phone": "Telepono",
+    "email": "Email",
     "fingerprint": "Fingerprint",
     "exploreFirst": "Mag-explore muna",
     "codeNote": "Magpapadala kami ng code sa email, walang password."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Maglalabas na",
+    "title": "Maglalabas na ang token",
+    "body": "Ang pagbibili ay nasara habang naghahanda ang bagong token. Magkaroon ka ng email sa sandali na ito ay maglulabas.",
+    "notifyMe": "Ibaba ang email mo",
+    "sendTo": "Ibibigay namin email sa {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Ito ang iyong email",
+    "invalidEmail": "Ipasok ang isang valid na email",
+    "joinedTitle": "Nasa listahan ka na",
+    "joinedBody": "Ibibigay namin email sa {{email}} kapag maglulabas ang token.",
+    "joinedBodyNoEmail": "Ibibigay namin email sa iyo kapag maglulabas ang token.",
+    "failed": "Hindi natin maipasa ito. Subukan muli.",
+    "privacy": "Gagamitin lamang ito upang ipaalam sa iyo tungkol sa paglulabas.",
+    "seoTitle": "Maglalabas na ang token | DeHub",
+    "seoDescription": "Maglalabas na ang bagong token ng DeHub. Maging bahagi ng listahan at magkaroon ka ng isang email sa sandali na ito ay maglulabas, pagkatapos ay bumili ka direktang mula sa iyong wallet ng DeHub."
+  },
+  "githubLink": {
+    "hint": "Mag-log in sa GitHub upang ipatunayang ang account ay iyong sarili. Ang DeHub ay lamang nakikita sa iyong profile sa GitHub na maipapamahagi.",
+    "verified": "Verified",
+    "verifiedAria": "Tinatanggap na GitHub account",
+    "connected": "GitHub ay konektado",
+    "disconnected": "Naghihinto ang GitHub.",
+    "taken": "Ang GitHub account na iyon ay nasa ibang profile ng DeHub na.",
+    "failed": "Hindi makapag-ugnay sa GitHub. Subukan mo ulit.",
+    "unavailable": "Ang pagpapatunay ng GitHub ay dumating na.",
+    "connect": "Kumonek sa GitHub",
+    "disconnect": "Huwag magkabit"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

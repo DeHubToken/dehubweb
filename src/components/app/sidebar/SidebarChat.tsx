@@ -74,7 +74,7 @@ function SidebarMessageBody({ content }: { content: string }) {
   return (
     <>
       {displayText.trim() && (
-        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" />
+        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" auto="chat" />
       )}
       <DehubLinkEmbeds links={links} compact />
       <ChatLinkPreviews content={displayText} />

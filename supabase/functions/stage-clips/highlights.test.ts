@@ -4,7 +4,7 @@ import {
   END_CARD_S, MAX_CLIP_S, MIN_CLIP_S, assEscape, assTime, buildAss, buildCues, candidateWindows, clipWords,
   hostBlocksClips, looksMature, normalizeSegments, parseSuggestions, pickHighlights, scoreWindow, snapSuggestion,
   type Segment,
-} from './highlights.ts';
+} from '../_shared/clip-highlights.ts';
 
 /** A talk of `n` back-to-back 5-second lines, two of which open a new thought. */
 function talk(n = 40): Segment[] {

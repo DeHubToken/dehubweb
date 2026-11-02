@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Wand2, MessageCircleQuestion, FileText } from "lucide-react";
-import Image from "@/components/ui/cut-icons/images";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Reply from "@/components/ui/cut-icons/reply";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -22,11 +21,13 @@ import { useMention } from '@/hooks/use-mention';
 import { useDraft } from '@/hooks/use-draft';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
 import { voiceRecordingFile } from '@/lib/voice-recording';
 import { SmartReplyRail } from './SmartReplyRail';
+import { LockPriceControl } from './LockPriceControl';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
 import {
@@ -35,6 +36,13 @@ import {
   getAttachmentLabel,
   validateAttachment,
 } from '@/lib/attachments';
+import { dragHasFiles } from '@/lib/comment-attachments';
+import { cleanVideoOptions, type DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestructChoice } from '@/lib/dm-destruct';
+import { DmVideoCard, DmVideoStudio } from './DmVideoStudio';
+
+/** Per-kind caps, matching the backend's DM limits. */
+const DM_MEDIA_LIMITS = { image: 10 * 1024 * 1024, video: 50 * 1024 * 1024, audio: 20 * 1024 * 1024 } as const;
 
 export interface ChatInputSendArgs {
   content: string;
@@ -42,6 +50,12 @@ export interface ChatInputSendArgs {
   mediaFile?: File;
   gifUrl?: string;
   duration?: number;
+  /** Trim, cover, mirror, rotation and hide choices for a video. */
+  mediaOptions?: DmVideoOptions;
+  /** Self-destruct: gone after one view or a set time. */
+  destruct?: DmDestructChoice;
+  /** Pay-to-unlock price for a photo or video (DHB). */
+  lockPrice?: number;
 }
 
 interface ChatInputProps {
@@ -103,9 +117,11 @@ interface ChatInputProps {
    */
   allowDocuments?: boolean;
   voiceMaxDuration?: number;
+  /** Offer "Lock photo" (pay to unlock) on a picked photo or video. 1:1 DMs only. */
+  allowLock?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59, allowLock = false }: ChatInputProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
@@ -119,10 +135,19 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  // imageFile holds whatever photo, clip or audio file the paperclip picked.
+  const [mediaKind, setMediaKind] = useState<'image' | 'video' | 'audio'>('image');
+  // The picked video's sheet choices, its length, and whether the sheet is up.
+  const [videoOptions, setVideoOptions] = useState<DmVideoOptions>({});
+  const [videoDestruct, setVideoDestruct] = useState<DmDestructChoice | null>(null);
+  const [videoDuration, setVideoDuration] = useState<number | undefined>(undefined);
+  const [videoStudioOpen, setVideoStudioOpen] = useState(false);
+  // Pay-to-unlock price for the picked photo/video; null = not locked.
+  const [lockPrice, setLockPrice] = useState<number | null>(null);
+  const [dropHover, setDropHover] = useState(false);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const docInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // Choosing Reply means about to type — put the caret there.
   useEffect(() => {
@@ -288,6 +313,9 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         content: message.trim(),
         type: 'media',
         mediaFile: imageFile,
+        ...(mediaKind === 'video' ? { mediaOptions: cleanVideoOptions(videoOptions, videoDuration) } : {}),
+        ...(mediaKind === 'video' && videoDestruct ? { destruct: videoDestruct } : {}),
+        ...(allowLock && lockPrice && mediaKind !== 'audio' ? { lockPrice } : {}),
       });
       if (!sent) return;
       clearImage();
@@ -355,58 +383,89 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     onSendMessage({ content: '', type: 'gif', gifUrl });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error(_copy("copy.61247515dbaa", { defaultValue: "Image must be less than 10MB" }));
+  /**
+   * One paperclip for everything: a photo, a video, an audio file or (in a
+   * DM) a document. Each goes to the slot it is sent from.
+   */
+  const attachFile = (file: File) => {
+    const top = (file.type || '').split('/')[0];
+    const kind = top === 'image' || top === 'video' || top === 'audio' ? top : null;
+    if (kind && (kind === 'image' || allowDocuments)) {
+      if (file.size > DM_MEDIA_LIMITS[kind]) {
+        toast.error(kind === 'image'
+          ? _copy("copy.61247515dbaa", { defaultValue: "Image must be less than 10MB" })
+          : _copy("dm.attachTooLarge", { defaultValue: "\"{{name}}\" is over the {{size}} MB limit.", name: file.name, size: DM_MEDIA_LIMITS[kind] / 1024 / 1024 }));
+        return;
+      }
+      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+      setMediaKind(kind);
+      setVideoOptions({});
+    setVideoDestruct(null);
+      setVideoDestruct(null);
+      setVideoDuration(undefined);
+      setImageFile(file);
+      setImagePreviewUrl(URL.createObjectURL(file));
+      setAudioPreview(null);
+      clearDoc();
       return;
     }
-
-    setImageFile(file);
-    setImagePreviewUrl(URL.createObjectURL(file));
-    setAudioPreview(null);
-    clearDoc();
-  };
-
-  // Pasting a screenshot into the composer should attach it, the way dropping
-  // or picking one does. Text wins when the clipboard carries both — a rich
-  // copy brings its inline images along and the words are what was meant.
-  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    if (e.clipboardData.getData('text/plain')) return;
-    const file = Array.from(e.clipboardData.files).find((f) => f.type.startsWith('image/'));
-    if (!file) return;
-    e.preventDefault();
-
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error(_copy("copy.61247515dbaa", { defaultValue: "Image must be less than 10MB" }));
+    if (!allowDocuments) {
+      toast.error(_copy("toasts.please_select_an_image_file", { defaultValue: "Please select an image file" }));
       return;
     }
-
-    setImageFile(file);
-    setImagePreviewUrl(URL.createObjectURL(file));
-    setAudioPreview(null);
-    clearDoc();
-  };
-
-  const handleDocUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    // Reset immediately so picking the same file twice in a row still fires.
-    e.target.value = '';
-    if (!file) return;
-
     const check = validateAttachment(file);
     if (!check.ok) {
       toast.error(check.error);
       return;
     }
-
     // One attachment per message — the upload route takes a single file.
     setDocFile(file);
     setAudioPreview(null);
     clearImage();
   };
+
+  const handleAttachPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    // Reset immediately so picking the same file twice in a row still fires.
+    e.target.value = '';
+    if (file) attachFile(file);
+  };
+
+  // Pasting a screenshot (or a copied file) into the composer attaches it, the
+  // way dropping or picking one does. Text wins when the clipboard carries
+  // both — a rich copy brings its inline images along and the words are what
+  // was meant.
+  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (e.clipboardData.getData('text/plain')) return;
+    const file = e.clipboardData.files[0];
+    if (!file) return;
+    e.preventDefault();
+    attachFile(file);
+  };
+
+  // Dropping a file on the composer attaches it here rather than opening a
+  // new post (the page-wide drop skips [data-drop-attach]).
+  const dropProps = {
+    'data-drop-attach': true,
+    onDragOver: (e: React.DragEvent) => {
+      if (!dragHasFiles(e)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      if (!dropHover) setDropHover(true);
+    },
+    onDragLeave: (e: React.DragEvent) => {
+      if (e.currentTarget.contains(e.relatedTarget as Node | null)) return;
+      setDropHover(false);
+    },
+    onDrop: (e: React.DragEvent) => {
+      if (!dragHasFiles(e)) return;
+      e.preventDefault();
+      setDropHover(false);
+      const file = e.dataTransfer.files[0];
+      if (file) attachFile(file);
+      requestAnimationFrame(() => textareaRef.current?.focus());
+    },
+  } as const;
 
   const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
     const file = voiceRecordingFile(blob);
@@ -485,13 +544,16 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
     setImageFile(null);
     setImagePreviewUrl(null);
+    setVideoOptions({});
+    setVideoDuration(undefined);
+    setVideoStudioOpen(false);
+    setLockPrice(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   // No object URL to revoke — a document has no preview to render.
   const clearDoc = () => {
     setDocFile(null);
-    if (docInputRef.current) docInputRef.current.value = '';
   };
 
   const removeAudioPreview = () => setAudioPreview(null);
@@ -536,7 +598,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
        zinc-900 bar would be the only slab left on the page. Carrying no colour
        utility also puts it permanently out of reach of the Osaka/Jungle
        `#app-root` class nets, which outrank any re-declaration here. */}
-    <div className="shrink-0 p-3 lg:pl-4 border-t border-white/25">
+    <div {...dropProps} data-drop-hover={dropHover || undefined} className={cn("shrink-0 p-3 lg:pl-4 border-t border-white/25 transition-shadow", dropHover && "ring-2 ring-inset ring-white/40 rounded-xl")}>
       {/* Reply preview */}
       {replyTo && (
         <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg">
@@ -554,20 +616,64 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         </div>
       )}
 
-      {/* Image Preview */}
-      {imagePreviewUrl && (
-        <div className="mb-2 relative inline-block">
+      {/* Photo / video / audio preview */}
+      {imagePreviewUrl && imageFile && mediaKind === 'video' && (
+        <>
+          <DmVideoCard
+            url={imagePreviewUrl}
+            file={imageFile}
+            options={videoOptions}
+            destruct={videoDestruct}
+            duration={videoDuration}
+            onMeta={(m) => { if (Number.isFinite(m.dur)) setVideoDuration(m.dur); }}
+            onOpen={() => setVideoStudioOpen(true)}
+            onRemove={clearImage}
+          />
+          <DmVideoStudio
+            open={videoStudioOpen}
+            onOpenChange={setVideoStudioOpen}
+            url={imagePreviewUrl}
+            file={imageFile}
+            duration={videoDuration}
+            options={videoOptions}
+            onOptionsChange={setVideoOptions}
+            destruct={videoDestruct}
+            onDestructChange={setVideoDestruct}
+            lockPrice={allowLock ? lockPrice : null}
+            onLockPriceChange={allowLock ? setLockPrice : undefined}
+            onRemove={clearImage}
+            caption={message}
+            onCaptionChange={setMessage}
+            onSend={() => { void handleSend(); }}
+            sendDisabled={sendDisabled || isSendingFee}
+          />
+        </>
+      )}
+      {imagePreviewUrl && mediaKind !== 'video' && (
+        <div data-attach-preview={mediaKind} className={cn("mb-2 relative", mediaKind === 'audio' ? "flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[320px]" : "inline-block")}>
+          {mediaKind === 'audio' ? (
+            <>
+              <audio src={imagePreviewUrl} controls preload="metadata" className="h-8 max-w-[200px]" />
+              <span className="min-w-0 text-xs text-zinc-400 truncate" title={imageFile?.name}>{imageFile?.name}</span>
+            </>
+          ) : (
           <img
             src={imagePreviewUrl}
             alt={_copy("copy.324b134f57c7", { defaultValue: "Preview" })}
             className="h-20 rounded-lg object-cover"
           />
+          )}
           <button
             onClick={clearImage}
             className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
           >
             <X className="w-3 h-3 text-white" />
           </button>
+        </div>
+      )}
+      {imagePreviewUrl && allowLock && mediaKind !== 'audio' && (
+        <div className="mb-2 -mt-1">
+          <LockPriceControl value={lockPrice} onChange={setLockPrice} kind={mediaKind} />
         </div>
       )}
 
@@ -692,48 +798,33 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             onGifSelect={handleGifSelect}
           />
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Image className="w-5 h-5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                data-chat-tool="attach"
+                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label={allowDocuments
+                  ? _copy("dm.attachAnything", { defaultValue: "Attach a photo, video, audio or file" })
+                  : _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" })}
+              >
+                <Paperclip className="w-5 h-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{allowDocuments
+              ? _copy("dm.attachAnything", { defaultValue: "Attach a photo, video, audio or file" })
+              : _copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })}</TooltipContent>
+          </Tooltip>
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
+            accept={allowDocuments ? `image/*,video/*,audio/*,${ATTACHMENT_ACCEPT}` : 'image/*'}
+            onChange={handleAttachPick}
             className="hidden"
           />
-
-          {allowDocuments && (
-            <>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-                    onClick={() => docInputRef.current?.click()}
-                  >
-                    <Paperclip className="w-5 h-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })}</TooltipContent>
-              </Tooltip>
-              <input
-                ref={docInputRef}
-                type="file"
-                accept={ATTACHMENT_ACCEPT}
-                onChange={handleDocUpload}
-                className="hidden"
-              />
-            </>
-          )}
 
           <VoiceRecorder
             maxDuration={voiceMaxDuration}

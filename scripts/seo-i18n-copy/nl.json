@@ -59,5 +59,9 @@
   "/usernames": {
     "h1": "DeHub-marktplaats voor gebruikersnamen",
     "body": "<p>Elk DeHub-profiel staat op <strong>dehub.io/jouwnaam</strong>, en elke naam bestaat maar één keer. Op de marktplaats voor gebruikersnamen wisselen die namen van eigenaar: zoek wat er te koop is, betaal de houder rechtstreeks in tokens en de naam gaat naar je account zodra de overdracht on-chain is bevestigd.</p>\n<h2>Een naam kopen</h2>\n<p>De vraagprijs komt van DeHub, niet van de browser, en de betaling gaat van wallet naar wallet: DeHub rekent geen commissie en houdt je geld nooit vast. Zoek de naam die je wilt en DeHub vertelt je ook of die gewoon nog vrij is. In dat geval kun je hem gratis claimen in plaats van kopen.</p>\n<h2>Je eigen naam verkopen</h2>\n<p>Je kunt de naam die je nu gebruikt te koop zetten, voor elke prijs in tokens. Voordat je hem aanbiedt, kies je de naam waarnaar je overstapt, zodat de ruil direct gebeurt en rond is zodra een koper betaalt. Je berichten, volgers en wallet blijven precies waar ze zijn: alleen de naam verandert.</p>"
+  },
+  "/nfts": {
+    "h1": "DeHub NFT-markt",
+    "body": "<p>Op de DeHub NFT-markt wisselt elke NFT op BNB Chain of Base van eigenaar: DeHub-posts die als NFT zijn gemunt en elke andere collectie in je wallet. Zet er een te koop voor een vaste prijs, koop een aanbieding of doe een bod in DHB dat de houder kan accepteren.</p>\n<h2>Hoe een transactie werkt</h2>\n<p>Transacties worden afgewikkeld op Seaport, het open NFT-ruilcontract. De NFT en de betaling bewegen in dezelfde transactie, dus niemand betaalt zonder te ontvangen en niemand verstuurt zonder betaald te worden. DeHub houdt nooit je NFT’s of je geld vast.</p>\n<h2>Kosten</h2>\n<p>DeHub rekent 2% van een verkoop die in BNB of ETH wordt betaald, en 1% bij betaling in DHB. Makers ontvangen de royalty die hun collectie instelt, met een maximum van 10%. De verkoper ontvangt de rest zodra de transactie is afgewikkeld.</p>"
   }
 }

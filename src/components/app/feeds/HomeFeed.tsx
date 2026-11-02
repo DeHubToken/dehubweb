@@ -322,7 +322,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <GlassFilterRow
-            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
+            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: o.value === 'article' ? t('articles.label') : t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
             borderRadius="0.75rem"
@@ -443,6 +443,9 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         // and text branches below carry it; this one did not.
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        layout: pinnedPost.layout,
+        mediaCaptions: pinnedPost.mediaCaptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
@@ -480,6 +483,9 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'video',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        layout: pinnedPost.layout,
+        mediaCaptions: pinnedPost.mediaCaptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
@@ -522,6 +528,9 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
         type: 'post',
         contentRating: pinnedPost.contentRating,
         mediaDescriptions: pinnedPost.mediaDescriptions,
+        layout: pinnedPost.layout,
+        mediaCaptions: pinnedPost.mediaCaptions,
+        hideAssetCards: pinnedPost.hideAssetCards,
         spoilerText: pinnedPost.spoilerText,
         quotePolicy: pinnedPost.quotePolicy,
         visibility: pinnedPost.visibility,
@@ -1401,6 +1410,16 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   );
   const shortsBatches = useMemo(() => shortsRotation.batches.map(batch => batch.map(mapCarouselItem)),
     [shortsRotation.batches, mapCarouselItem]);
+  // What a row's viewer carries on into after the row's own shorts, and the
+  // pages behind it: a row used to stop dead on its tenth short.
+  const shortsPool = useMemo(() => shortsCandidates.map(mapCarouselItem), [shortsCandidates, mapCarouselItem]);
+  const shortsHasMore = !!(scrollFeed.hasNextPage || scrollPhotosFeed.hasNextPage);
+  const shortsLoadingMore = scrollFeed.isFetchingNextPage || scrollPhotosFeed.isFetchingNextPage;
+  const loadMoreShorts = useCallback(() => {
+    if (scrollFeed.hasNextPage && !scrollFeed.isFetching) void scrollFeed.fetchNextPage();
+    if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching) void scrollPhotosFeed.fetchNextPage();
+  }, [scrollFeed.hasNextPage, scrollFeed.isFetching, scrollFeed.fetchNextPage,
+    scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching, scrollPhotosFeed.fetchNextPage]);
   useEffect(() => {
     if (!isHomeActive || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
     if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
@@ -1627,7 +1646,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         case 'image':
           return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
         case 'shorts':
-          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} pool={shortsPool} onLoadMore={loadMoreShorts}
+            hasMore={shortsHasMore} isLoadingMore={shortsLoadingMore} />;
         case 'ad':
           return <SponsoredAdCard key={`ad-${item.data.serveId}`} ad={item.data} />;
         default:
@@ -1760,7 +1780,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       if (!isKidsMode) {
         if (hasShorts) inserts.push(
           <div key={`shorts-${shortsRotation.generation}-${batchIndex}`} data-shorts-after-post={posts}>
-            <ShortsReel shorts={batch!} />
+            <ShortsReel shorts={batch!} pool={shortsPool} onLoadMore={loadMoreShorts}
+              hasMore={shortsHasMore} isLoadingMore={shortsLoadingMore} />
           </div>,
         );
         // Keep other inserts at least two posts away from a Shorts boundary.
@@ -1900,9 +1921,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         );
       })()}
 
-      {/* Active filter chips bar (sort, date, content access, categories) */}
+      {/* Active filter chips bar (sort, date, content access). Hashtags/categories
+          never show here — FollowTagBar under the live pill owns that. */}
       {(() => {
-        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0;
+        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked;
         if (!hasChips) return null;
 
         const chipsBar = (
@@ -1967,35 +1989,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
             )}
-            {optimisticCategories.map((rawCatId, index) => {
-              const catId = typeof rawCatId === 'string'
-                ? rawCatId
-                : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
-                  ? ((rawCatId as { categoryId: string }).categoryId)
-                  : null;
-
-              if (!catId) return null;
-
-              const catObj = categories.find(c => c.id === catId);
-              return (
-                <button
-                  data-filter-chip
-                data-active="true"
-                  key={`${catId}-${index}`}
-                  onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
-                  className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-                >
-                  <span className="leading-[1]">{catObj?.name || catId}</span>
-                  <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-                </button>
-              );
-            })}
             <button
               onClick={() => {
                 setSelectedSort(DEFAULT_HOME_SORT);
                 setSelectedDate(DATE_FILTER_OPTIONS[0]);
                 resetContentFilters();
-                setSelectedCategories([]);
               }}
               className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
             >{_copy("copy.29a390f9237e", { defaultValue: "Clear all" })}</button>
@@ -2103,8 +2101,15 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           )}
 
           {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
+          {/* Portaled into the sticky header slot (where filter chips sit) so it
+              stays pinned while the feed scrolls. */}
           {selectedCategories.length === 1 && (
-            <FollowTagBar tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
+            chipsTarget
+              ? createPortal(
+                  <FollowTagBar className="mt-2" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
+                  chipsTarget,
+                )
+              : <FollowTagBar className="mb-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*

@@ -8,7 +8,7 @@ import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
-import { profileFieldLinks } from './server/profile-fields.js';
+import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
 import { embedRoute, handleEmbedPage, handleOembed, oembedLinkTag } from './server/post-embed.js';
@@ -40,7 +40,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
 import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
-import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
+import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES, cleanBlogSlug } from './src/lib/blog-redirects.js';
 import { STREAM_LINKS, STREAM_PAGE, streamFaqLd } from './src/lib/streamer-page.js';
 import { DEHUB_APP_LINKS, DEHUB_APP_PAGE, dehubAppFaqLd } from './src/lib/dehub-app-page.js';
 
@@ -176,10 +176,10 @@ const OG_CARD_ROUTES = new Set([
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk', 'admin-manual',
-  'raffle', 'stake', 'usernames',
+  'raffle', 'stake', 'usernames', 'nfts',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
-  'arcade/trenchstar',
+  'arcade/trenchstar', 'arcade/love-lock-bridge',
   'apps', 'apps/dev',
   // App surfaces that had no card of their own and unfurled as the homepage.
   // `superpowers` art was rendered when the page shipped and was never added
@@ -616,16 +616,59 @@ function absolutize(url) {
 }
 
 /**
- * A blog post's share card. The renderer answers a 0.5–0.85 MB PNG in up to
- * 1.7 s on every uncached scrape, and scrapers time out on that. The card is
- * served through the image transform instead — 1200x630 JPEG, cached at the
- * edge — reading the render via the same-zone relay (ogSourceResponse), since
- * the transform refuses the Supabase origin. The slug is the whole address:
- * the relay rebuilds the renderer URL from the manifest, so the transform
- * never has to carry a query string.
+ * A blog post's share card: the post's own banner, made a true 1200x630 JPEG
+ * by the image transform and cached at the edge. Every post ships a banner
+ * drawn with the house banner kit (see src/test/blog-share-cards.test.ts), so
+ * this is the post's own art, not a generic card.
+ *
+ * The banner is read straight from /media on this zone. It used to go through
+ * the blog-share-image renderer, which only drew the same banner full-bleed and
+ * took up to 1.7 s on every uncached scrape; reading the file is the same
+ * picture without the round trip.
+ *
+ * A banner already near 1.91:1 is cropped to fill. Anything wider (a 3:1 strip),
+ * taller or square is padded onto near-black instead, because cropping those
+ * cut the headline printed on them in half. The generator records each
+ * banner's pixel size in the manifest for this.
+ *
+ * No banner at all, or one on another host: the relay through the renderer
+ * (ogSourceResponse), which still covers both.
  */
+const BLOG_CARD_PAD = 'fit=pad,width=1200,height=630,background=%230a0a0b,format=jpeg,quality=82';
 function buildBlogShareImage(post) {
+  const banner = absolutize(post.bannerImage);
+  if (banner && banner.startsWith(`${APP_URL}/media/`)) {
+    const w = Number(post.bannerWidth), h = Number(post.bannerHeight);
+    const ratio = w > 0 && h > 0 ? w / h : 1200 / 630;
+    const fit = ratio >= 1.75 && ratio <= 2.05 ? CARD_COVER : BLOG_CARD_PAD;
+    return `${IMAGE_TRANSFORM_BASE}${fit}/${banner}`;
+  }
   return `${IMAGE_TRANSFORM_BASE}${CARD_COVER}/${APP_URL}${OG_SOURCE_PREFIX}blog/${encodeURIComponent(post.slug)}`;
+}
+
+/**
+ * Meta description cut to what a results page shows (~160 characters) at a
+ * word boundary, so it never ends mid-word. og:description keeps the longer
+ * text: chat and timeline cards show more.
+ */
+function snippet(text, max = 160) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  const space = cut.lastIndexOf(' ');
+  return `${(space > max * 0.6 ? cut.slice(0, space) : cut).replace(/[\s,;:.\-–—]+$/, '')}…`;
+}
+
+/**
+ * <title> for a post. The 64 milestone posts carry "<headline> | DeHub 2024
+ * Roadmap", which runs past the ~60 characters a results page shows and cut
+ * off the brand; those drop to "<headline> | DeHub".
+ */
+function blogTitle(post) {
+  const title = post.seoTitle || `${post.title} — DeHub Blog`;
+  if (title.length <= 60) return title;
+  const short = title.replace(/\s*\|\s*DeHub \d{4} Roadmap$/, ' | DeHub');
+  return short.length < title.length ? short : title;
 }
 
 /** The renderer URL behind a post's card (see buildBlogShareImage). */
@@ -779,28 +822,50 @@ function postVideoLd(contentHtml, post) {
   };
 }
 
-function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
+function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
   const image = buildBlogShareImage(post);
-  const title = post.seoTitle || `${post.title} — DeHub Blog`;
-  const description = (post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+  const title = blogTitle(post);
+  const longDescription = (post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`).replace(/\s+/g, ' ').trim();
+  const description = snippet(longDescription);
+  const ogDescription = snippet(longDescription, 280);
+  const imageAlt = post.bannerImageAlt || post.title;
   const published = post.publishedAt || '';
   const modified = post.updatedAt || published;
   const banner = absolutize(post.bannerImage);
+  const tags = Array.isArray(post.tags) ? post.tags.filter(Boolean) : [];
   const body = contentHtml
     ? contentHtml
     : `<p>${escHtml(post.excerpt || '')}</p><p><a href="${escHtml(canonicalUrl)}">Read the full post on DeHub</a></p>`;
+  const bannerDims = post.bannerWidth && post.bannerHeight
+    ? ` width="${Number(post.bannerWidth)}" height="${Number(post.bannerHeight)}"`
+    : '';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Article',
-        headline: post.title,
-        description,
-        image: banner ? [banner, image] : [image],
+        '@type': 'BlogPosting',
+        '@id': `${canonicalUrl}#article`,
+        headline: post.title.slice(0, 110),
+        description: longDescription.slice(0, 300),
+        image: [
+          { '@type': 'ImageObject', url: image, width: 1200, height: 630, caption: imageAlt },
+          ...(banner ? [{
+            '@type': 'ImageObject',
+            url: banner,
+            ...(post.bannerWidth && post.bannerHeight ? { width: Number(post.bannerWidth), height: Number(post.bannerHeight) } : {}),
+            caption: imageAlt,
+          }] : []),
+        ],
         ...(published ? { datePublished: published, dateModified: modified } : {}),
         author: blogAuthorLd(post.author),
         publisher: ORG_JSONLD,
+        inLanguage: 'en',
+        url: canonicalUrl,
         mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+        isPartOf: { '@type': 'Blog', '@id': `${APP_URL}/docs/blog#blog`, name: 'DeHub Blog', url: `${APP_URL}/docs/blog` },
+        ...(tags.length ? { keywords: tags.join(', '), articleSection: tags[0] } : {}),
+        ...(wordCount ? { wordCount } : {}),
+        ...(post.readingTime ? { timeRequired: `PT${Number(post.readingTime)}M` } : {}),
       },
       breadcrumbLd([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: post.title, url: canonicalUrl }]),
     ],
@@ -809,12 +874,15 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
   if (faq) jsonLd['@graph'].push({ ...faq, '@id': `${canonicalUrl}#faq` });
   const video = postVideoLd(contentHtml, post);
   if (video) jsonLd['@graph'].push({ ...video, '@id': `${canonicalUrl}#video` });
+  const tagMeta = tags.slice(0, 10).map((t) => `<meta property="article:tag" content="${escHtml(t)}">`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escHtml(title)}</title>
 <meta name="description" content="${escHtml(description)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="article">
@@ -822,30 +890,38 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest) {
 ${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
-<meta property="og:description" content="${escHtml(description)}">
+<meta property="og:description" content="${escHtml(ogDescription)}">
 <meta property="og:image" content="${escHtml(image)}">
+<meta property="og:image:secure_url" content="${escHtml(image)}">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${escHtml(post.title)}">
+<meta property="og:image:alt" content="${escHtml(imageAlt)}">
 <meta property="article:published_time" content="${escHtml(published)}">
 <meta property="article:modified_time" content="${escHtml(modified)}">
 <meta property="article:author" content="${escHtml(post.author || 'DeHub Team')}">
+<meta property="article:section" content="Blog">
+${tagMeta}
+<meta name="author" content="${escHtml(post.author || 'DeHub Team')}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escHtml(title)}">
-<meta name="twitter:description" content="${escHtml(description)}">
+<meta name="twitter:description" content="${escHtml(ogDescription)}">
 <meta name="twitter:image" content="${escHtml(image)}">
+<meta name="twitter:image:alt" content="${escHtml(imageAlt)}">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
+<nav aria-label="Breadcrumb"><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></nav>
+<main>
 <article>
 <h1>${escHtml(post.title)}</h1>
-<p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — ${escHtml(published.slice(0, 10))}` : ''}</em></p>
-${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(post.bannerImageAlt || post.title)}" style="max-width:100%">` : ''}
+<p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
+${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(imageAlt)}"${bannerDims} fetchpriority="high" decoding="async" style="max-width:100%;height:auto">` : ''}
 <!--hl-body-->${body}<!--/hl-body-->
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
+</main>
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -867,18 +943,30 @@ function buildBlogIndexHtml(manifest) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
+    '@id': `${canonicalUrl}#blog`,
     name: 'DeHub Blog',
     description: blogDescription,
     url: canonicalUrl,
+    inLanguage: 'en',
     image: shareImage('blog'),
     publisher: ORG_JSONLD,
+    // The newest posts, so the index says what it holds as well as linking it.
+    blogPost: posts.slice(0, 20).map((p) => ({
+      '@type': 'BlogPosting',
+      headline: String(p.title || '').slice(0, 110),
+      url: `${APP_URL}/guides/${encodeURIComponent(p.slug)}`,
+      ...(p.publishedAt ? { datePublished: p.publishedAt } : {}),
+      image: buildBlogShareImage(p),
+    })),
   };
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>DeHub Blog — News, Guides &amp; Product Updates</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="${escHtml(blogDescription)} ${posts.length} posts and counting.">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="${canonicalUrl}">
 <link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="website">
@@ -1260,6 +1348,19 @@ const MARKETING_PAGES = {
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
 <p><a href="${APP_URL}/arcade/jungle-trail">Walk the trail</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
+  'arcade/love-lock-bridge': {
+    // Unlisted while it is tested: the link unfurls with its own card, but
+    // the page is noindex, is not in the sitemap and the grid copy does not
+    // link it. See UNLISTED_ARCADE_GAMES in src/config/arcade-games.ts.
+    noindex: true,
+    title: 'Love Lock Bridge | DeHub Arcade',
+    description: 'Walk Love Lock Bridge on DeHub — a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
+    heading: 'Love Lock Bridge — Leave A Lock Above The Clouds',
+    ...arcadeGameLd('/arcade/love-lock-bridge.webp'),
+    bodyHtml: `<p>A first-person walk across a gilded bridge through rose gardens, a river and lake, Paris terraces and drifting cloud. Choose a spot on either golden railing, write up to 64 characters and leave your lock.</p>
+<p>Walk with WASD or the arrow keys and drag to look. On a phone, hold the on-screen arrows or tap the paving to walk.</p>
+<p><a href="${APP_URL}/arcade/love-lock-bridge">Walk the bridge</a>.</p>`,
+  },
   'arcade/street-slayer': {
     title: 'Street Slayer | DeHub Arcade',
     description: "Play Street Slayer on DeHub — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
@@ -1451,6 +1552,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li><strong>Social tasks</strong> — pay for high-quality engagement across posts.</li>
 <li><strong>Fixed-price contracts</strong> — hire creators for logos, video, translation and community work.</li>
 </ul>`,
+  },
+  'nfts': {
+    title: 'NFT Market: Buy & Sell NFTs on BNB Chain and Base',
+    description: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step, so nobody waits on the other side.',
+    heading: 'DeHub NFT Market',
+    bodyHtml: `<p>The DeHub NFT market is where any NFT on BNB Chain or Base changes hands: DeHub posts minted as NFTs, and any other collection in your wallet. List one at a fixed price, buy a listing, or make an offer in DHB that the holder can accept.</p>
+<h2>How a trade works</h2>
+<p>Trades settle on Seaport, the open NFT swap contract. The NFT and the payment move in the same transaction, so a buyer never pays without receiving and a seller never sends without being paid. DeHub never holds your NFTs or your money.</p>
+<h2>Fees</h2>
+<p>DeHub takes 2% of a sale paid in BNB or ETH, and 1% when paid in DHB. Creators receive the royalty their collection sets, capped at 10%. The seller receives the rest the moment the trade settles.</p>`,
   },
   'usernames': {
     title: 'Username Marketplace — Buy & Sell DeHub Handles for tokens',
@@ -2574,6 +2685,29 @@ async function fetchAccountInfo(handle) {
   }
 }
 
+/**
+ * A creator who turned "Allow AI scraping" off (customs.aiScraping === 'deny',
+ * see src/lib/ai-scraping.ts) gets the opt-out in the HTML crawlers are served:
+ * `noai, noimageai` on the robots meta and the TDMRep `tdm-reservation` meta.
+ * The app sets the same tags in the browser, but AI crawlers run no script, so
+ * without this they never saw the choice. Anything other than 'deny' is allow.
+ */
+function aiTrainingReserved(customs) {
+  return !!customs && typeof customs === 'object' && customs.aiScraping === 'deny';
+}
+
+function reserveAiTraining(html) {
+  if (/<meta name="robots"[^>]*>/i.test(html)) {
+    html = html.replace(/<meta name="robots" content="([^"]*)"\s*\/?>/i, (m, content) =>
+      /noai/i.test(content) ? m : `<meta name="robots" content="${content}, noai, noimageai">`);
+  } else {
+    html = html.replace('</head>', () => '<meta name="robots" content="noai, noimageai"></head>');
+  }
+  return html
+    .replace(/<meta name="tdm-reservation"[^>]*>/gi, '')
+    .replace('</head>', () => '<meta name="tdm-reservation" content="1"></head>');
+}
+
 /** Adds (or tightens) a page's robots meta to `noindex, follow`. */
 function noindexPage(html) {
   if (/<meta name="robots"[^>]*>/i.test(html)) {
@@ -2917,10 +3051,10 @@ function rewriteJsonLd(html, edit) {
  * which tells a consumer nothing; that link is dropped and any real external
  * one kept. The @handle rides as alternateName, the site-unique identifier.
  */
-function profilePageLd(value, handle) {
+function profilePageLd(value, handle, verified = []) {
   if (value['@type'] !== 'Person') return null;
   const { '@context': _context, '@type': _type, sameAs, ...person } = value;
-  const external = [].concat(sameAs || []).filter(
+  const external = [...new Set([].concat(sameAs || [], verified))].filter(
     (u) => typeof u === 'string' && u !== person.url && !u.startsWith(`${APP_URL}/`),
   );
   return {
@@ -4272,6 +4406,8 @@ const SSR_STATIC_ROUTES = new Set([
   // page, and without this the /app twin self-canonicalizes and indexes as a
   // duplicate. Rendered from MARKETING_PAGES, never proxied to the fn.
   'usernames',
+  // The NFT market, same arrangement as usernames.
+  'nfts',
   // Listed for canonicalizePath, not for the Supabase fn: /app/arcade is a
   // real SPA route and without this it self-canonicalizes, indexing as a
   // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
@@ -4355,6 +4491,29 @@ const NOT_FOUND_TITLES = [
 async function resolveNewPostTokenId(n) {
   try {
     const res = await fetch(`https://api.dehub.io/api/newpost/${encodeURIComponent(n)}`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const id = data?.tokenId ?? data?.result?.tokenId;
+    return Number.isFinite(Number(id)) ? String(Number(id)) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** An article's readable address, /app/post/<first-ten-words-of-title>. Never
+ *  digits only (that is a tokenId) and never a 24-hex stream ObjectId. */
+function articleSlugOf(pathname) {
+  const m = pathname.match(/^\/(?:app\/)?post\/([a-z0-9][a-z0-9-]{0,120})\/?$/i);
+  if (!m || !/[a-z]/i.test(m[1]) || /^[a-f\d]{24}$/i.test(m[1])) return null;
+  return m[1].toLowerCase();
+}
+
+/** Resolve an article slug to its tokenId through the API that owns it. */
+async function resolveArticleSlugTokenId(slug) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/article/${encodeURIComponent(slug)}`, {
       signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) return null;
@@ -6033,6 +6192,13 @@ async function handleRequest(request, env, ctx) {
     // Thin standalone guides folded into the flagship post on the same query.
     const consolidatedInto = CONSOLIDATED_GUIDES[trimmedPath.slice('/guides/'.length)];
     if (consolidatedInto) return redirect301(`${APP_URL}/guides/${consolidatedInto}`);
+    // Long generated slugs now publish under a clean one; the old URL keeps
+    // working and passes on what it earned. See cleanBlogSlug.
+    const guideSlug = trimmedPath.slice('/guides/'.length);
+    const cleanGuideSlug = cleanBlogSlug(guideSlug);
+    if (cleanGuideSlug && cleanGuideSlug !== guideSlug && !guideSlug.includes('/')) {
+      return redirect301(`${APP_URL}/guides/${cleanGuideSlug}`);
+    }
   }
 
   // /docs/blog/<slug> is a second address for every post: the SPA mounts it
@@ -6040,7 +6206,11 @@ async function handleRequest(request, env, ctx) {
   // /guides/<slug>. It answered crawlers 200 with a canonical to the /guides
   // twin, which still costs a crawl per post and splits links between the two.
   const docsBlogPost = trimmedPath.match(/^\/docs\/blog\/([^/]+)$/);
-  if (docsBlogPost) return redirect301(`${APP_URL}/guides/${docsBlogPost[1]}`);
+  // One hop, straight to the address the post lives at now.
+  if (docsBlogPost) {
+    const target = MILESTONE_REDIRECTS[docsBlogPost[1]] || cleanBlogSlug(docsBlogPost[1]) || docsBlogPost[1];
+    return redirect301(`${APP_URL}/guides/${target}`);
+  }
 
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
   // so both resolved somewhere a human can never land: /radio is in
@@ -6622,6 +6792,7 @@ async function handleRequest(request, env, ctx) {
     let legacySlug = legacyBlog[1];
     try { legacySlug = decodeURIComponent(legacySlug); } catch { /* keep raw */ }
     const manifest = await getBlogManifest(request, env);
+    legacySlug = MILESTONE_REDIRECTS[legacySlug] || cleanBlogSlug(legacySlug);
     const target = manifest.has(legacySlug)
       ? `${APP_URL}/guides/${encodeURIComponent(legacySlug)}`
       : `${APP_URL}/docs/blog`;
@@ -6672,7 +6843,7 @@ async function handleRequest(request, env, ctx) {
     if (post) {
       const canonical = `${APP_URL}/guides/${encodeURIComponent(slug)}`;
       const content = await getBlogContent(request, env, slug);
-      return guard(new Response(buildBlogHtml(post, canonical, content && content.html, manifest), {
+      return guard(new Response(buildBlogHtml(post, canonical, content && content.html, manifest, content && content.wordCount), {
         status: 200,
         headers: blogHeaders,
       }));
@@ -7085,7 +7256,12 @@ async function handleRequest(request, env, ctx) {
   // fn's own system-route list has no `communities` entry, so it read the
   // segment as a username, missed, and 404'd every share of that shape.
   const bareCommunity = pathname.match(/^\/communities\/([^/]+)\/?$/);
-  if (newPostSlug) {
+  const articleSlug = articleSlugOf(pathname);
+  if (articleSlug) {
+    const tokenId = await resolveArticleSlugTokenId(articleSlug);
+    // Unresolvable: the fn's miss on the slug lands on the 404 below.
+    if (tokenId) ssrPath = `/app/post/${tokenId}`;
+  } else if (newPostSlug) {
     const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
     // Unresolvable slug: leave the path alone so the fn's miss lands on the
     // 404 below rather than a 200 carrying the homepage card.
@@ -7257,6 +7433,7 @@ async function handleRequest(request, env, ctx) {
         : '';
     let postShareRecord = null;
     let profileShareAccount = null;
+    let aiReserved = false;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -7272,6 +7449,18 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       postShareRecord = record;
+      // An article lives at its readable slug. Asked for by number (or any
+      // other shape), it moves there for good, keeping ?ref and the rest of
+      // the query; asked for by slug, every self-link on the page says so.
+      const recordSlug = record && typeof record.articleSlug === 'string' ? record.articleSlug : '';
+      if (recordSlug && /^[a-z0-9-]+$/.test(recordSlug)) {
+        if (articleSlug !== recordSlug && (articleSlug || /^\/(?:app\/)?(?:post|newpost)\/\d+\/?$/.test(pathname))) {
+          const search = new URL(request.url).search;
+          return guard(new Response(null, { status: 301, headers: { Location: `${APP_URL}/app/post/${recordSlug}${search}` } }));
+        }
+        html = html.split(`${APP_URL}/app/post/${proxiedPostId}"`).join(`${APP_URL}/app/post/${recordSlug}"`);
+      }
+      aiReserved = aiTrainingReserved(record && record.minterUser && record.minterUser.customs);
       html = enrichPostMeta(html, proxiedPostId, record);
       // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's
       // link cards turn a pasted post link into the embedded post.
@@ -7300,6 +7489,7 @@ async function handleRequest(request, env, ctx) {
       // avatar has none, and its posts were never listed).
       const account = await fetchAccountInfo(proxiedHandle);
       profileShareAccount = account;
+      aiReserved = aiTrainingReserved(account && account.customs);
       html = enrichProfileMeta(html, proxiedHandle, account && account.displayName);
       // Feed readers find the profile's RSS from the page itself.
       if (account && !account.isPrivate) {
@@ -7314,7 +7504,8 @@ async function handleRequest(request, env, ctx) {
       // rel="me" for each link in the profile fields, so another site — a
       // Mastodon profile, a personal page — can prove this DeHub profile
       // links back to it. Those checks read the HTML and run no script.
-      const relMe = profileFieldLinks(account).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
+      // A verified GitHub joins them; it is proven, so it is also a sameAs below.
+      const relMe = [...profileFieldLinks(account), verifiedGithubUrl(account)].filter(Boolean).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
       if (relMe) html = html.replace('</head>', () => `${relMe}</head>`);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -7365,7 +7556,8 @@ async function handleRequest(request, env, ctx) {
     if (proxiedPostId) {
       html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
-      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
+      const verifiedLinks = [verifiedGithubUrl(profileShareAccount)].filter(Boolean);
+      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle, verifiedLinks));
     } else if (proxiedCommunity) {
       html = cardProxiedImage(rewriteJsonLd(html, communityPageLd));
     }
@@ -7501,6 +7693,9 @@ async function handleRequest(request, env, ctx) {
       if (localeRedirect) return redirect301(localeRedirect);
     }
 
+    // Last, so no later robots rewrite (noindexPage) drops the opt-out.
+    if (aiReserved) html = reserveAiTraining(html);
+    const robotsHeader = [isReferral ? 'noindex' : '', aiReserved ? 'noai, noimageai' : ''].filter(Boolean).join(', ');
     const rendered = await guard(new Response(html, {
       status: 200,
       headers: {
@@ -7510,7 +7705,8 @@ async function handleRequest(request, env, ctx) {
           : 'no-store',
         'Vary': 'User-Agent',
         'X-Powered-By': 'DeHub-Edge-SEO',
-        ...(isReferral ? { 'X-Robots-Tag': 'noindex' } : {}),
+        ...(robotsHeader ? { 'X-Robots-Tag': robotsHeader } : {}),
+        ...(aiReserved ? { 'tdm-reservation': '1' } : {}),
       },
     }));
     if (isBot && rendered.status === 200) ssrCachePut(ctx, ssrKey, rendered);

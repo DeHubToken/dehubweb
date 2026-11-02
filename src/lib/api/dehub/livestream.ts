@@ -181,6 +181,7 @@ export async function getUserScheduledStreams(address: string): Promise<{ result
 }
 
 export async function getLiveStream(streamId: string): Promise<{ result: LiveStream }> {
+  if (!/^[a-f\d]{24}$/i.test(streamId)) throw new Error('Invalid stream id');
   return apiCall<{ result: LiveStream }>(`/api/live/${streamId}`);
 }
 
@@ -210,6 +211,7 @@ export async function getStreamActivities(
   streamId: string,
   params: { page?: number; unit?: number } = {}
 ): Promise<{ result: StreamActivity[] }> {
+  if (!/^[a-f\d]{24}$/i.test(streamId)) throw new Error('Invalid stream id');
   // The Nest controller returns the aggregation array directly — there is no
   // { result } envelope — and the documents carry the raw backend shape.
   // Normalize both here so callers keep the typed contract.

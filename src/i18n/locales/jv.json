@@ -162,7 +162,25 @@
     "saved": "Kolom profil kesimpen",
     "failed": "Ora kesimpen. Coba maneh.",
     "verified": "Pranala sing diverifikasi",
-    "verifyHint": "Kanggo verifikasi pranala, tambahake iki ing kaca kasebut, banjur simpen maneh: {{snippet}}"
+    "verifyHint": "Kanggo verifikasi pranala, tambahake iki ing kaca kasebut, banjur simpen maneh: {{snippet}}",
+    "descriptionPresets": "Kanggo tambah website, pronomina, atawa cangge ngarani lain, link social media kanggo ditampilin.",
+    "type": "Tipe lapur",
+    "needsLabel": "Ganti tiap-tiap field khusus ngarani labelnya.",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ngoko/ngoko gini",
+    "placeholderLocation": "Kota, negara",
+    "presets": {
+      "website": "Situs web",
+      "blog": "Buku Buku",
+      "portfolio": "Panggonan Karya",
+      "shop": "Toko",
+      "podcast": "Pandhawa Swara",
+      "newsletter": "Buletin Newsletter",
+      "pronouns": "Kata Ganti",
+      "location": "Lokasi",
+      "custom": "Custom",
+      "customOption": "Siji label khusus"
+    }
   },
   "followedTags": {
     "follow": "Tut #{{tag}}",
@@ -398,6 +416,9 @@
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
   "nav": {
+    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Kembalikan urutan menu",
     "home": "Beranda",
     "explore": "Jelajah",
     "prompt": "Pituduh",
@@ -1716,6 +1737,10 @@
       "featureReply": "{{name}} ngisor ngoko kang komentar mo",
       "featureMentionNamed": "{{name}} diwacanaké déning “{{title}}”",
       "featureMention": "{{name}} ngoko ngarso ngaweni ngarso kanggo fitur wong munggah sarananya",
+      "featureNewNamed": "{{name}} ngirim panjalukan anyar \"{{title}}\"",
+      "featureNew": "{{name}} ngirim permintaan anyar",
+      "featureActivityNamed": "{{name}} ngaraniakeun ngeneh di “{{title}}”",
+      "featureActivity": "{{name}} ngarani kanggo ngisor-ngisorane",
       "governanceVoteNamed": "{{name}} ngaweni gweh proposal \"{{title}}\"",
       "governanceVote": "{{name}} ngelmuh pikeponan kalian",
       "governanceCommentNamed": "{{name}} ngomong di proposalmu “{{title}}”",
@@ -2838,6 +2863,21 @@
     "likersEmptyBody": "Sing seneng komentar iki bakal katon ing kene.",
     "anonymousLikes_one": "{{count}} seneng saka pemegang lencana anonim",
     "anonymousLikes_other": "{{count}} seneng saka pemegang lencana anonim"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pilih ranting. Harga iku wis ana lan nggih update setiap menit.",
+    "free": "Ganjaran gratis",
+    "gasCovered": "Gas dibiayai DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas ingkang kudu dibayar",
+    "gasIncluded": "Gas ingkang kudu dibayar",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} saka dompetmu",
+    "paidFromWalletPlain": "Ganjaran saka dompetmu",
+    "priceUnavailable": "Harga ora ana",
+    "confirm": "Mint ing {{chain}}",
+    "confirmWithCost": "Mint ing {{chain}} · {{cost}}",
+    "notAvailable": "Minting ing ranting iki ora ana."
   },
   "postInfo": {
     "title": "Info Postingan",
@@ -14542,7 +14582,7 @@
     "f45e06965f93": "Belum ada saran ikutan",
     "34f5da2599fa": "Saran akun baru akan nampung di sini.",
     "bac527bf9a36": "Saran Ikut",
-    "036cfd952896": "Siapa yang diikuti",
+    "a94bfc8a15e8": "Saran kanggo diikuti",
     "0c820caf16c0": "Gak ada bio lagi",
     "e139251e4f5b": "Hapus Post",
     "b3661ad568df": "Aksi ini gak bisa dibalik. Postingmu akan hilang selamanya.",
@@ -18516,8 +18556,30 @@
     "headlineAccent": "dan bahagia.",
     "orContinueWith": "atau lanjut dengan",
     "phone": "Telepon",
+    "email": "Email",
     "fingerprint": "Sidik jari",
     "exploreFirst": "Jelajahi dulu",
     "codeNote": "Kita kirim kode ke email mu, ga butuh password."
+  },
+  "tokenLaunch": {
+    "body": "Gede ngaheni beli saking wong ngendhok nganti token baru. Ndalem email wong ngendhok saking wong ngendhok nganti token baru nganti ngendhok.",
+    "notifyMe": "Kanggo ngarani aku",
+    "sendTo": "Kami bakal ngirim email ke {{email}}",
+    "emailLabel": "Surot email",
+    "emailPlaceholder": "Kulon emailmu",
+    "joinedTitle": "Kamu udh di daweh list.",
+    "joinedBody": "Kita bakal ngirim email ke {{email}} kalau token udah keluar.",
+    "joinedBodyNoEmail": "Kami bakal ngirim email ke gwe kanggo ngaweni token lanjar.",
+    "failed": "Saya nggih ora bisa ngerti apa inggung.",
+    "privacy": "Gampang aja ngomongin tentang peluncuran."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub ngawasih kanggo ngerti akun kanggo kanggo. DeHub cuma nglihat profil GitHub kanggo kanggo.",
+    "disconnected": "GitHub nganggo",
+    "taken": "Github account keneh udah dadi di profil DeHub lanang.",
+    "failed": "Gak bisa koneksi ke GitHub. Coba lagi.",
+    "unavailable": "GitHub verification kanggo dadi dekat.",
+    "connect": "Hubungin GitHub",
+    "disconnect": "Ngapus hubungan"
   }
 }

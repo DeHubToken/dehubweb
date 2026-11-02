@@ -508,10 +508,15 @@ export async function apiCall<T>(
     token = await ensureFreshToken();
   }
 
+  // Content-Type only when there is a body. On a GET it made every request a
+  // non-simple CORS request, so the browser sent an OPTIONS preflight first —
+  // for signed-out visitors that doubled every read on Home.
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
     "Accept": "application/json",
   };
+  if (body) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
@@ -735,6 +740,18 @@ export async function authedUpload<T>(
     unwrapResult = false,
     signal,
   } = options;
+
+  let bytes = 0;
+  formData.forEach(value => {
+    if (typeof value === "string") return;
+    bytes += value.size;
+    if ((value.type.startsWith("image/") && value.size > 42_069_000) || bytes > 100_000_000) {
+      throw new UploadHttpError(
+        "Images must be 42.069 MB or smaller; this upload must total 100 MB or less. Larger videos require resumable upload. Please retry when it is available.",
+        413, "UPLOAD_TOO_LARGE",
+      );
+    }
+  });
 
   const url = new URL(endpoint, DEHUB_API_BASE).toString();
   const xhrOpts = { method, timeoutMs, unwrapResult, onProgress, signal };

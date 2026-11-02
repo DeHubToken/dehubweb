@@ -29,6 +29,8 @@ import { AudioTrimmer } from './AudioTrimmer';
 import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
 import { ImageAnnotator } from './ImageAnnotator';
+import { PhotoStudio, type StudioTab, type StudioResult } from './PhotoStudio';
+import type { StudioEdits } from '../lib/studioPaint';
 import { DraftVideoProgress } from './DraftVideoProgress';
 import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
@@ -48,7 +50,7 @@ interface PostMediaPreviewProps {
   onClearCrop?: (index: number) => void;
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
   /** Replace an image's bytes outright — used by the annotator, which bakes. */
-  onReplaceImage?: (index: number, file: File) => void;
+  onReplaceImage?: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   /** Alt text for one image or video; without it the ALT buttons are not shown. */
   onSetDescription?: (index: number, description: string) => void;
   /** Keeps the parent composer from treating the portalled viewer as an outside press. */
@@ -70,12 +72,17 @@ const MAX_DURATION = 30; // 30 seconds max
 const IMAGE_AUDIO_SUPPORTED = false;
 
 /**
- * Video filter/crop/trim settings were stored and then silently discarded —
- * unlike images, a video cannot be re-encoded in the browser without shipping
- * a wasm encoder, and the backend reads no trim/crop fields. Off until one of
- * those exists; the editors themselves are kept.
+ * Video filter/crop settings would be silently discarded — a video cannot be
+ * re-encoded in the browser without shipping a wasm encoder, and the backend
+ * reads no filter/crop fields. Off until it does; the editors are kept.
  */
 const VIDEO_EDITS_SUPPORTED = false;
+
+/**
+ * Trim is cut on the server from the draft upload (user_mint trimStart /
+ * trimEnd), so the trimmer is on.
+ */
+const VIDEO_TRIM_SUPPORTED = true;
 
 // Helper to check if crop is applied
 function hasCropApplied(settings?: CropSettings): boolean {
@@ -130,6 +137,9 @@ export function PostMediaPreview({
   const [processingVideos, setProcessingVideos] = useState<Map<number, number>>(new Map());
   const [filterEditorIndex, setFilterEditorIndex] = useState<number | null>(null);
   const [cropEditorIndex, setCropEditorIndex] = useState<number | null>(null);
+  // The photo studio (Crop / Looks / Adjust / Draw in one editor) for every
+  // still photo; GIFs keep the old CSS editors since a bake would freeze them.
+  const [studio, setStudio] = useState<{ index: number; tab: StudioTab } | null>(null);
   const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
   const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
   // Width / height of each attached video, by preview URL, so its frame can match it.
@@ -674,7 +684,7 @@ export function PostMediaPreview({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
+                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'looks' }); else setFilterEditorIndex(index); }}
                               className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-black/60 backdrop-blur-xl border border-white/20
                                 hover:bg-black/70 hover:border-white/40"
@@ -689,7 +699,7 @@ export function PostMediaPreview({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
+                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'crop' }); else setCropEditorIndex(index); }}
                               className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-black/60 backdrop-blur-xl border border-white/20
                                 hover:bg-black/70 hover:border-white/40"
@@ -707,7 +717,7 @@ export function PostMediaPreview({
                             <TooltipTrigger asChild>
                               <button
                                 type="button"
-                                onClick={(e) => { e.stopPropagation(); openAnnotator(index, m); }}
+                                onClick={(e) => { e.stopPropagation(); setStudio({ index, tab: 'draw' }); }}
                                 className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                   bg-black/60 backdrop-blur-xl border border-white/20
                                   hover:bg-black/70 hover:border-white/40"
@@ -977,10 +987,11 @@ export function PostMediaPreview({
                         </button>
                       )}
                       
-                      {/* Top left: Filter + Crop + Trim buttons — gated off,
-                          see VIDEO_EDITS_SUPPORTED. */}
-                      {VIDEO_EDITS_SUPPORTED && (
+                      {/* Top left: Trim (+ Filter and Crop, gated off — see
+                          VIDEO_EDITS_SUPPORTED). */}
+                      {(VIDEO_EDITS_SUPPORTED || VIDEO_TRIM_SUPPORTED) && (
                       <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
+                        {VIDEO_EDITS_SUPPORTED && (<>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
@@ -1010,11 +1021,13 @@ export function PostMediaPreview({
                           </TooltipTrigger>
                           <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
                         </Tooltip>
+                        </>)}
 
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
                               type="button"
+                              aria-label={_copy("copy.8d9346258548", { defaultValue: "Trim video" })}
                               onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
                               className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                                 ${m.trimStart !== undefined || m.trimEnd !== undefined
@@ -1033,8 +1046,10 @@ export function PostMediaPreview({
                       {/* Duration badge */}
                       {m.duration && (
                         <div data-keep-dark className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
-                          {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
-                          {m.duration < 90 && <span className="ml-1 text-emerald-400">{_copy("copy.ff5d20bd706f", { defaultValue: "• Short" })}</span>}
+                          {m.trimStart !== undefined && m.trimEnd !== undefined
+                            ? `${Math.floor((m.trimEnd - m.trimStart) / 60)}:${String(Math.floor((m.trimEnd - m.trimStart) % 60)).padStart(2, '0')} ${_copy("post.trim.trimmed", { defaultValue: "trimmed" })}`
+                            : `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}`}
+                          {m.duration < 90 && m.trimStart === undefined && <span className="ml-1 text-emerald-400">{_copy("copy.ff5d20bd706f", { defaultValue: "• Short" })}</span>}
                         </div>
                       )}
                       
@@ -1246,12 +1261,32 @@ export function PostMediaPreview({
           videoUrl={media[videoTrimmerIndex].preview}
           duration={media[videoTrimmerIndex].duration || 0}
           fileName={media[videoTrimmerIndex].file.name}
+          initialStart={media[videoTrimmerIndex].trimStart}
+          initialEnd={media[videoTrimmerIndex].trimEnd}
+          onPickCover={onAddThumbnail ? (url) => onAddThumbnail(videoTrimmerIndex, url) : undefined}
           onApply={(trimStart, trimEnd) => {
             onApplyTrim?.(videoTrimmerIndex, trimStart, trimEnd);
             setVideoTrimmerIndex(null);
           }}
         />
       )}
+
+      {studio && onReplaceImage && (() => {
+        const ids = media.map((m, i) => (m.type === 'image' && m.file.type !== 'image/gif' ? i : -1)).filter((i) => i >= 0);
+        const start = Math.max(0, ids.indexOf(studio.index));
+        return (
+          <PhotoStudio
+            photos={ids.map((i) => ({ original: media[i].studioOriginal ?? media[i].file, edits: media[i].studioEdits }))}
+            startIndex={start}
+            startTab={studio.tab}
+            onClose={() => setStudio(null)}
+            onDone={(results: StudioResult[]) => {
+              for (const r of results) onReplaceImage(ids[r.index], r.file, { original: r.original, edits: r.edits });
+              setStudio(null);
+            }}
+          />
+        );
+      })()}
 
       {annotator && (
         <ImageAnnotator

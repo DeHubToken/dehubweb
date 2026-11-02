@@ -39,7 +39,6 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { opensCommentsSplit } from '@/lib/comments-split';
 import { CardHeader } from './CardHeader';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { useBoostedPost } from './boosted-post';
@@ -64,6 +63,9 @@ import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 // Lazy, mounted on demand — see the note on the same pair in VideoCard.
+const MintChainSheet = lazy(() =>
+  import('@/components/app/mint/MintChainSheet').then((m) => ({ default: m.MintChainSheet })),
+);
 const EditPostModal = lazy(() =>
   import('../modals/EditPostModal').then((m) => ({ default: m.EditPostModal }))
 );
@@ -75,7 +77,7 @@ import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
-import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, reportPostEvent, type TokenVisibility } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
@@ -98,6 +100,7 @@ import {
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { FeedCaptionExpander } from './FeedCaptionExpander';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
@@ -153,6 +156,17 @@ interface PostCardProps {
   threadSlot?: ReactNode;
 }
 
+/**
+ * The address a text post presents at: an article at its readable
+ * /app/post/<title-slug>, an off-chain post at /newpost/<n>, anything else at
+ * /app/post/<tokenId>. Every one of them resolves on web and in the app.
+ */
+function postOwnPath(post: { id: string; articleSlug?: string; newPostId?: number }): string {
+  if (post.articleSlug) return `/app/post/${post.articleSlug}`;
+  if (post.newPostId) return `/newpost/${post.newPostId}`;
+  return `/app/post/${post.id}`;
+}
+
 const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
@@ -200,6 +214,9 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(post.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { mint: mintExisting, isMinting } = useMintExistingPost();
+  const [showMintSheet, setShowMintSheet] = useState(false);
+  const [mintSheetMounted, setMintSheetMounted] = useState(false);
+  useEffect(() => { if (showMintSheet) setMintSheetMounted(true); }, [showMintSheet]);
   // No `isMuting` any more: the only control that used it was the ✕ removed
   // from the header, and the options menu closes on click rather than
   // disabling itself.
@@ -311,7 +328,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   // Same idea for market references, and in this order: the entity pass claims
   // whole URLs first, so a dehub.io link carrying a hex id cannot also read as a
   // contract address.
-  const { refs: assetRefs, displayText: displayBody } = useAssetRefsInText(bodyWithoutLinks);
+  const { refs: assetRefs, displayText: displayBody } = useAssetRefsInText(bodyWithoutLinks, undefined, post.hideAssetCards);
 
   // Navigate to single post page when clicking non-interactive areas
   // Pre-cache post data for instant display on the single post page
@@ -330,16 +347,16 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       if (excluded && excluded !== bodyNavigationRef.current) return;
       // Already on this post's own page: another push only adds a Back step.
       const path = window.location.pathname;
-      if (path === `/app/post/${post.id}` || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
+      if (path === `/app/post/${post.id}` || path === postOwnPath(post) || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
       cacheTextPostForNavigation(queryClient, post);
-      navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+      navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
     },
   });
 
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     // Swallow the ghost click left behind when a bottom sheet was just dismissed
     // by tapping the scrim — otherwise that tap navigates into the post.
-    if (wasDrawerJustDismissed() || window.location.pathname === `/app/post/${post.id}`) return;
+    if (wasDrawerJustDismissed() || window.location.pathname === `/app/post/${post.id}` || window.location.pathname === postOwnPath(post)) return;
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
@@ -349,7 +366,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
 
     // Cache the post data before navigation for instant display
     cacheTextPostForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+    navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
   }, [navigate, post.id, queryClient, post]);
 
   // Articles open in place, like every other post. They used to reload the
@@ -357,7 +374,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const isPostPage = /\/app\/post\/|\/newpost\//.test(window.location.pathname);
   const openArticle = useCallback(() => {
     cacheTextPostForNavigation(queryClient, post);
-    navigate(post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`, { state: { fromFeed: true } });
+    navigate(postOwnPath(post), { state: { fromFeed: true } });
   }, [navigate, queryClient, post]);
 
   const handleRepost = useCallback(async () => {
@@ -391,7 +408,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = viewerShareUrl(`https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`);
+      const postUrl = viewerShareUrl(`https://dehub.io${postOwnPath(post)}`);
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -400,6 +417,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           url: postUrl,
         });
         void import('@/lib/analytics').then((m) => m.trackShare('image', { kind: 'post' }));
+        reportPostEvent(post.id, 'share');
       } else {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -434,6 +452,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     <div
       ref={viewRef}
       data-post-card
+      data-stats-token={post.id}
       onClick={handleCardClick}
       onPointerDownCapture={warmPostPage}
       className="overflow-visible relative cursor-pointer isolate"
@@ -520,7 +539,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
               </button>
               <button
                 onClick={() => {
-                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
+                  const url = viewerShareUrl(`${window.location.origin}${post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);
@@ -611,7 +630,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
                     <button
                       onClick={() => {
                         setShowOptionsDrawer(false);
-                        if (postTokenId) mintExisting(postTokenId, post.chainId);
+                        if (postTokenId) setTimeout(() => setShowMintSheet(true), 300);
                       }}
                       disabled={!postTokenId || isMinting}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
@@ -751,7 +770,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
               body={post.articleBody}
               coverUrl={post.articleImageUrl}
               createdAt={post.createdAt}
-              shareUrl={`${window.location.origin}${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`}
+              shareUrl={`${window.location.origin}${postOwnPath(post)}`}
               onComment={() => {
                 if (onOpenComments) { onOpenComments(); return; }
                 setCommentsInitialTab(undefined);
@@ -778,7 +797,13 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          !stage && !threadSlot ? (
+            <FeedCaptionExpander lines={6} textKey={displayBody}>
+              <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+            </FeedCaptionExpander>
+          ) : (
+            <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          )
         ) : null}
         </>
         )}
@@ -808,6 +833,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           timestamp={post.createdAt}
           viewCount={post.views}
           tokenId={post.id}
+          isOwnPost={isOwnPost}
           translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
@@ -827,6 +853,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           <ActionBar
             postId={post.id}
             newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
+            articleSlug={post.articleSlug}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
             quotePolicy={post.quotePolicy}
@@ -837,12 +864,6 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             onComment={() => {
               if (onOpenComments) {
                 onOpenComments();
-                return;
-              }
-              // Phones: open the post with its comments in the bottom half.
-              if (opensCommentsSplit() && !isPostPage) {
-                cacheTextPostForNavigation(queryClient, post);
-                navigate(`/app/post/${post.id}`, { state: { fromFeed: true, openComments: true } });
                 return;
               }
               setCommentsInitialTab(undefined);
@@ -1069,6 +1090,24 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
         tokenId={post.id}
         contentType="post"
       />
+
+      {/* Mint chain picker — mounted on first open, like the edit modal. */}
+      {mintSheetMounted && (
+        <Suspense fallback={null}>
+          <MintChainSheet
+            open={showMintSheet}
+            onOpenChange={setShowMintSheet}
+            defaultChainId={post.chainId}
+            isMinting={isMinting}
+            onConfirm={(chainId) => {
+              if (!postTokenId) return;
+              mintExisting(postTokenId, post.chainId, chainId).then((ok) => {
+                if (ok) setShowMintSheet(false);
+              });
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Delete Post Modal */}
       <DeletePostModal

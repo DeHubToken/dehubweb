@@ -30,7 +30,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useCreatePlan } from '@/hooks/use-subscriptions';
-import { BASE_CHAIN_ID, BNB_CHAIN_ID, isSubscriptionChain } from '@/lib/contracts';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { isSubscriptionChain } from '@/lib/contracts/subscription-plan';
 import {
   DHB_PRELISTING_USD,
   dhbForUsd,

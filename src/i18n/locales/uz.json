@@ -162,7 +162,22 @@
     "saved": "Profil maydonlari saqlandi",
     "failed": "Saqlanmadi. Qayta urinib ko'ring.",
     "verified": "Tasdiqlangan havola",
-    "verifyHint": "Havolani tasdiqlash uchun buni o'sha sahifaga qo'shing, so'ng qayta saqlang: {{snippet}}"
+    "verifyHint": "Havolani tasdiqlash uchun buni o'sha sahifaga qo'shing, so'ng qayta saqlang: {{snippet}}",
+    "descriptionPresets": "Manzilga qo'shish uchun, sizning veb-saytingiz, ismlaringiz yoki boshqa ma'lumotlaringizni qo'shing. Mening ijtimoiy tarmoqlarim:",
+    "type": "Maydon turi",
+    "needsLabel": "Har bir maxsus maydonga yorliq bering",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ular/ularni",
+    "placeholderLocation": "Shahar, mamlakat",
+    "presets": {
+      "website": "Veb-sayt",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Do'kon",
+      "podcast": "Podkast",
+      "location": "Mekan",
+      "custom": "Kamolot"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ni kuzatish",
@@ -405,6 +420,9 @@
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
   },
   "nav": {
+    "reorderHint": "Qayta tartiblash uchun istalgan belgini ushlab turing va sudrang",
+    "reorderReset": "Qayta tiklash",
+    "reorderResetLong": "Menyu tartibini tiklash",
     "home": "Bosh sahifa",
     "explore": "Kashf qilish",
     "prompt": "Sozlash",
@@ -1755,6 +1773,7 @@
       "featureReply": "{{name}} sizning sharhingizga javob berdi",
       "featureMentionNamed": "{{name}} sizni “{{title}}” da tilga oldi",
       "featureMention": "{{name}} sizni funksiya so&#39;rovida tilga oldi",
+      "featureNew": "{{name}} yangi so‘rov qo‘ygan",
       "governanceVoteNamed": "{{name}} sizning “{{title}}” taklifingizga ovoz berdi",
       "governanceVote": "{{name}} taklifingizga ovoz berdi",
       "governanceCommentNamed": "{{name}} sizning taklifingizga “{{title}}” deb izoh qoldirdi",
@@ -2887,6 +2906,21 @@
     "likersEmptyBody": "Bu izohga bosilgan layklar shu yerda koʻrinadi.",
     "anonymousLikes_one": "Anonim nishon egasidan {{count}} ta layk",
     "anonymousLikes_other": "Anonim nishon egalaridan {{count}} ta layk"
+  },
+  "mintChain": {
+    "title": "Yalpiz posti",
+    "subtitle": "Tarmoq tanlang. Narxlar jonli va har daqiqada yangilanadi.",
+    "free": "Bepul",
+    "gasCovered": "DeHub tomonidan qoplangan gaz",
+    "feeIncludesGas": "≈ {{usd}}, gaz bilan birga",
+    "gasIncluded": "Gaz kiritilgan",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWallet": "hamyoningizdan {{amount}}",
+    "paidFromWalletPlain": "Hamyoningizdan to'langan",
+    "priceUnavailable": "Narxi mavjud emas",
+    "confirm": "{{chain}} da yalpiz",
+    "confirmWithCost": "{{chain}} da yalpiz · {{cost}}",
+    "notAvailable": "Ushbu zanjirda zarb qilish hali mavjud emas."
   },
   "postInfo": {
     "title": "Post ma'lumoti",
@@ -14653,7 +14687,7 @@
     "f45e06965f93": "Kuzatib borish takliflari yo'q",
     "34f5da2599fa": "Yangi foydalanuvchi takliflari shu yerda payda bo'ladi.",
     "bac527bf9a36": "Kuzatib borish takliflari",
-    "036cfd952896": "Quyoshga qanday qilib borish kerak",
+    "a94bfc8a15e8": "Kuzatish takliflari",
     "0c820caf16c0": "Hali bio yoʻq",
     "e139251e4f5b": "O'chirish",
     "b3661ad568df": "Bu amal qaytishtirilmaydi. Postingiz doimiy ravishda o'chiriladi.",
@@ -18661,9 +18695,36 @@
     "headlineAccent": "va sevinishingiz kerak.",
     "orContinueWith": "yoki davom eting",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Oʻngiz izi",
     "exploreFirst": "Birinchi marta tekshiring",
     "codeNote": "Biz sizga kod yuboramiz, parol kerak emas."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tez kunlarda",
+    "body": "Sotib olish to‘g‘ri kelmayapti, yangi token tayyorlanmoqda. Token chiqib ketganda, tezda email yuboriladi.",
+    "notifyMe": "Xabar bering.",
+    "sendTo": "Biz {{email}} email yuboramiz.",
+    "emailPlaceholder": "Muhim so'xangiz",
+    "joinedTitle": "Siz roʻyxatda!",
+    "joinedBody": "Biz token chiqqanda {{email}} ga elektron pochta orqali murojaat qilamiz.",
+    "joinedBodyNoEmail": "Biz sizga tokenning chiqishi haqida ma'lumot berish uchun xabarnoma jo'natamiz.",
+    "failed": "Saqlab bo'lmadi. Qaytadan urinib ko'ring.",
+    "privacy": "Faoliyatga faqat chiqarilish haqida xabar berish uchun ishlatiladi.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Yangi DeHub tokeni qoʻshilmoqda. Roʻyxatga kiring va unda chiqqanidan bir martta elektron pochta olgan holda, undan oʻzingizning DeHub walletidan olib, sotib olishingiz mumkin."
+  },
+  "githubLink": {
+    "hint": "GitHubga kirish uchun hisobingizga tegishli ekanligini isbot qilish uchun. DeHub faqat sizning ochiq GitHub profilingizni koʻradi.",
+    "verified": "Tasdiqlangan",
+    "verifiedAria": "Tasdiqlangan GitHub hisob",
+    "connected": "GitHub bilan bogʻlangan",
+    "disconnected": "GitHubdan ajralgan",
+    "taken": "Ushbu GitHub hisobi boshqa DeHub profilida ham mavjud.",
+    "failed": "GitHub bilan bogʻlanishga muvaffaqiyatsizlik. Qayta urinib koʻring.",
+    "unavailable": "GitHub tasdiqlanishi qiyosan kelmoqda.",
+    "connect": "GitHubga ulangish qiling",
+    "disconnect": "Uzish"
   },
   "spaces": {
     "title": "Boʻlimlar",

@@ -162,7 +162,25 @@
     "saved": "Sehemu za wasifu zimehifadhiwa",
     "failed": "Haikuhifadhiwa. Jaribu tena.",
     "verified": "Kiungo kilichothibitishwa",
-    "verifyHint": "Ili kuthibitisha kiungo, ongeza hiki kwenye ukurasa huo, kisha uhifadhi tena: {{snippet}}"
+    "verifyHint": "Ili kuthibitisha kiungo, ongeza hiki kwenye ukurasa huo, kisha uhifadhi tena: {{snippet}}",
+    "descriptionPresets": "Ongeza tovuti, viwakilishi au kitu kingine chochote. Viunganishi vinaonekana na watu wako wa kijamii.",
+    "type": "Aina ya sehemu",
+    "needsLabel": "Ipe kila sehemu mahususi lebo",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "wao/wao",
+    "placeholderLocation": "Jiji, nchi",
+    "presets": {
+      "website": "Tovuti",
+      "blog": "Blogu",
+      "portfolio": "Jalada",
+      "shop": "Duka",
+      "podcast": "Podikasti",
+      "newsletter": "Jarida",
+      "pronouns": "Viwakilishi",
+      "location": "Eneo",
+      "custom": "Maalum",
+      "customOption": "Lebo mahususi"
+    }
   },
   "followedTags": {
     "follow": "Fuata #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Muamala huu haukuweza kugharimiwa. Tafadhali jaribu tena baada ya muda mfupi."
   },
   "nav": {
+    "reorderHint": "Shikilia na buruta ikoni yoyote ili kupanga upya",
+    "reorderReset": "Weka upya",
+    "reorderResetLong": "Weka upya mpangilio wa menyu",
     "home": "Nyumbani",
     "explore": "Gundua",
     "prompt": "Ishara",
@@ -1743,6 +1764,10 @@
       "featureReply": "{{name}} alijibu kwa maoni yako",
       "featureMentionNamed": "{{name}} akakutaja kwenye \"{{title}}\"",
       "featureMention": "{{name}} akakutaja kwenye ombi la sifa",
+      "featureNewNamed": "{{name}} alitoa ombi jipya “{{title}}”",
+      "featureNew": "{{name}} alitoa ombi jipya",
+      "featureActivityNamed": "{{name}} aliamua juu ya “{{title}}”",
+      "featureActivity": "{{name}} alichambua ombi",
       "governanceVoteNamed": "{{name}} alipigia kura pendekezo lako \"{{title}}\"",
       "governanceVote": "{{name}} alipigia kura pendekezo lako",
       "governanceCommentNamed": "{{name}} alikomentea pendekezo lako \"{{title}}\"",
@@ -2877,6 +2902,21 @@
     "likersEmptyBody": "Vipendwa vya maoni haya vitaonekana hapa.",
     "anonymousLikes_one": "Kipendwa {{count}} kutoka kwa mmiliki wa beji asiyejulikana",
     "anonymousLikes_other": "Vipendwa {{count}} kutoka kwa wamiliki wa beji wasiojulikana"
+  },
+  "mintChain": {
+    "title": "Chapisho la sinia",
+    "subtitle": "Chagua mlolongo. Bei ni za moja kwa moja na zinasasishwa kila dakika.",
+    "free": "Bila malipo",
+    "gasCovered": "Gesi iliyofunikwa na DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gesi imejumuishwa",
+    "gasIncluded": "Gesi imejumuishwa",
+    "gasOnly": "≈ {{usd}} Gas",
+    "paidFromWallet": "{{amount}} kutoka kwenye pochi yako",
+    "paidFromWalletPlain": "Imelipwa kutoka kwenye pochi yako",
+    "priceUnavailable": "Bei haipatikani",
+    "confirm": "Mint kwenye {{chain}}",
+    "confirmWithCost": "Mint kwenye {{chain}} · {{cost}}",
+    "notAvailable": "Uwekaji picha kwenye mnyororo huu bado haupatikani."
   },
   "postInfo": {
     "title": "Taarifa ya chapisho",
@@ -14652,7 +14692,7 @@
     "f45e06965f93": "Hakuna mapendekezo ya kufuata bado",
     "34f5da2599fa": "Mapendekezo mapya ya akaunti yataonekana hapa.",
     "bac527bf9a36": "Fuata Mapendekezo",
-    "036cfd952896": "Nani wa kumfuata",
+    "a94bfc8a15e8": "Mapendekezo ya kufuata",
     "0c820caf16c0": "Bado hakuna wasifu",
     "e139251e4f5b": "Futa Chapisho",
     "b3661ad568df": "Kitendo hiki hakiwezi kutenguliwa. Chapisho lako litaondolewa kabisa.",
@@ -18770,8 +18810,38 @@
     "headlineAccent": "na utakuwa na furaha.",
     "orContinueWith": "au endelea kwa",
     "phone": "Simu",
+    "email": "Email",
     "fingerprint": "Alama ya kidole",
     "exploreFirst": "Gundua kwanza",
     "codeNote": "Tunakutumia msimbo kwa barua pepe, bila nenosiri."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Inakuja hivi karibuni",
+    "title": "Token itakazoanzishwa hivi karibuni",
+    "body": "Ununaji umefungwa wakati token mpya inajiandaa. Pata barua pepe mara tu itakapokuwa hai.",
+    "notifyMe": "Nijulishe",
+    "sendTo": "Tutawasiliana kwa barua pepe {{email}}",
+    "emailLabel": "Barua pepe",
+    "emailPlaceholder": "Barua pepe yako",
+    "invalidEmail": "Weka barua pepe sahihi",
+    "joinedTitle": "Upo kwenye orodha",
+    "joinedBody": "Tutawasiliana kwa barua pepe {{email}} wakati token itakapozinduliwa.",
+    "joinedBodyNoEmail": "Tutakutumia barua pepe wakati token itakapozinduliwa.",
+    "failed": "Hakuwezekani kuhifadhi hilo. Jaribu tena.",
+    "privacy": "Inatumika tu kukujulisha kuhusu uzinduzi.",
+    "seoTitle": "Token itakazoanzishwa hivi karibuni | DeHub",
+    "seoDescription": "Token mpya ya DeHub itakazoanzishwa hivi karibuni. Jiunge kwenye orodha na upate barua pepe mara tu itakapokuwa hai, kisha nunua moja kwa moja kutoka kwenye mkoba wako wa DeHub."
+  },
+  "githubLink": {
+    "hint": "Ingia kwenye GitHub ili kuthibitisha kuwa akaunti ni yako. DeHub inaona tu profili yako ya umma ya GitHub.",
+    "verified": "Tajiri",
+    "verifiedAria": "Kuhusu akaunti ya GitHub iliyeshawekesha (verified)",
+    "connected": "GitHub imetungajiwa",
+    "disconnected": "GitHub imekopwa",
+    "taken": "Hesabu ya GitHub hiyo imeandikwa katika profaili ya DeHub ya nyingine.",
+    "failed": "Hakuwezi kuunganisha GitHub. Ubaki na kufanya tena.",
+    "unavailable": "GitHub verification itatokea baadaye.",
+    "connect": "Kutoka GitHub",
+    "disconnect": "Ondoa"
   }
 }

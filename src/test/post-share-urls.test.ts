@@ -92,3 +92,27 @@ describe('post share URLs', () => {
     expect(WORKER).toContain("pathname.includes('newpost/')");
   });
 });
+
+/**
+ * Articles live at /app/post/<first-ten-words-of-the-title>. The worker has to
+ * resolve that slug before proxying (the fn only knows tokenIds), move the
+ * numeric shapes onto it for good, and the SPA has to read the slug as a post.
+ */
+describe('article slug URLs', () => {
+  it('resolves the slug through the API before proxying', () => {
+    expect(WORKER).toContain('async function resolveArticleSlugTokenId');
+    expect(WORKER).toMatch(/api\.dehub\.io\/api\/article\//);
+    expect(WORKER).toContain('const articleSlug = articleSlugOf(pathname);');
+  });
+
+  it('moves numeric links onto the slug, keeping the query', () => {
+    expect(WORKER).toContain('/app/post/${recordSlug}${search}');
+  });
+
+  it('parses a pasted article link as a post', async () => {
+    const { parseDehubLink } = await import('@/lib/dehub-links');
+    const link = parseDehubLink('https://dehub.io/app/post/issues-with-publishing-comics-on-dehub?ref=ABC');
+    expect(link).toMatchObject({ kind: 'post', articleSlug: 'issues-with-publishing-comics-on-dehub' });
+    expect(parseDehubLink('https://dehub.io/app/post/7074')).toMatchObject({ kind: 'post', tokenId: '7074' });
+  });
+});

@@ -4,7 +4,7 @@
  * React Query hooks for managing user notifications.
  */
 
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery, type QueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +27,20 @@ export const notificationKeys = {
     [...notificationKeys.all, 'list', category, types?.length ? [...types].sort().join(',') : null] as const,
   unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
 };
+
+/**
+ * Warm the unfiltered first page the bell opens on (same key and fetch as
+ * useNotifications with no filters), so the list is current the moment it
+ * mounts. Respects the list's staleTime, so a fresh cache costs nothing.
+ */
+export function prefetchNotificationsList(queryClient: QueryClient): Promise<void> {
+  return queryClient.prefetchInfiniteQuery({
+    queryKey: notificationKeys.list(undefined, undefined),
+    queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number, 30, undefined, false, undefined, false),
+    initialPageParam: 1,
+    staleTime: 2 * 60 * 1000,
+  });
+}
 
 /**
  * Hook to fetch notifications with infinite scroll

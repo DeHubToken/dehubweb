@@ -1,6 +1,7 @@
 import { cloneElement, useCallback, useContext, useLayoutEffect, useRef, useState, type HTMLAttributes, type ReactElement, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import {
   dockRetainedPost, getRetainedPost, markRetainedPostIntent, openRetainedComments, registerRetainedPost, RetainedPostActivityContext,
   useRetainedPostPinned, type RetainedCommentsTab, type RetainedPostEntry,
@@ -23,6 +24,10 @@ export function RetainedPostSurface({ id, children, frameProps, leading }: {
   const retainedId = useContext(RetainedPostActivityContext);
   const selected = retainedId === id && getRetainedPost(id) === entryRef.current;
   const pinnedHere = pinned && getRetainedPost(id) === entryRef.current && !!entryRef.current?.dock;
+  // Phone and tablet route the comment button to the post page's comments.
+  // Desktop keeps the card's own comments, opened inside its bento exactly as
+  // they are on the feed.
+  const desktop = useMediaQuery('(min-width: 1024px)');
   useLayoutEffect(() => {
     const slot = source.current;
     if (!slot) return;
@@ -37,7 +42,7 @@ export function RetainedPostSurface({ id, children, frameProps, leading }: {
   return <div ref={source} data-retained-post-source={id} onPointerDownCapture={markIntent} onClickCapture={markIntent}>
     {createPortal(<CachedPageActiveContext.Provider value={pageActive || selected || pinnedHere}><div {...frameProps}>
       {leading}
-      {pinnedHere ? cloneElement(children as ReactElement<{ onOpenComments?: typeof openComments }>, { onOpenComments: openComments }) : children}
+      {pinnedHere && !desktop ? cloneElement(children as ReactElement<{ onOpenComments?: typeof openComments }>, { onOpenComments: openComments }) : children}
     </div></CachedPageActiveContext.Provider>, container)}
   </div>;
 }

@@ -162,7 +162,23 @@
     "saved": "اتحفظت حقول الملف",
     "failed": "ما اتحفظ. جرب تاني.",
     "verified": "رابط موثّق",
-    "verifyHint": "عشان توثّق رابط، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}"
+    "verifyHint": "عشان توثّق رابط، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}",
+    "descriptionPresets": "أضف موقع ويب، ضمائر أو أي شيء آخر. الروابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "أعطِ كل حقل مخصص تسمية",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "موقع ويب",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -382,6 +398,9 @@
     "gasSponsorshipFailed": "ما قدرنا نغطي المعاملة دي. حاول تاني بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "الرئيسية",
     "explore": "تصفّح",
     "prompt": "اكتب",
@@ -2838,6 +2857,21 @@
     "likersEmptyBody": "الإعجابات على التعليق دا حتظهر هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملين شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "معلومات المقال",
+    "subtitle": "اختر سلسلة.  الأسعار حية وتحديث كل دقيقة.",
+    "free": "مجانا",
+    "gasCovered": "الوقود مدفوع من قبل DeHub",
+    "feeIncludesGas": "≈ {{usd}}، الوقود مرفق",
+    "gasIncluded": "الوقود مرفق",
+    "gasOnly": "≈ {{usd}} الوقود",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "مدفوع من محفظتك",
+    "priceUnavailable": "السعر غير متوفر",
+    "confirm": "تذكرة المintage في {{chain}}",
+    "confirmWithCost": "تذكرة المintage في {{chain}} · {{cost}}",
+    "notAvailable": "لا يوجد إمكانية لتحديد المintage على هذه السلسلة بعد."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -14250,7 +14284,7 @@
     "f45e06965f93": "لا توجد اقتراحات متابعة بعد",
     "34f5da2599fa": "سيظهر اقتراحات جديدة للمستخدمين هنا.",
     "bac527bf9a36": "اقتراحات متابعة",
-    "036cfd952896": "من يتابع",
+    "a94bfc8a15e8": "اقتراحات للمتابعة",
     "0c820caf16c0": "لا بيو بعد",
     "e139251e4f5b": "حذف المنشور",
     "b3661ad568df": "لا يمكن التراجع عن هذه الخطوة. سيتم حذف المنشور بشكل دائم.",
@@ -18023,8 +18057,37 @@
     "headlineAccent": "وكون سعيد",
     "orContinueWith": "ما هو السبب في أننا لا نستطيع أن نستفيد من هذه التكنولوجيا في مجال الصحة؟",
     "phone": "هاتف",
+    "email": "البريد",
     "fingerprint": "الطبعة",
     "exploreFirst": "تستكشف",
     "codeNote": "نرسللك رمزًا بريدًا إلكترونيًا، لا حاجة لرمز السر."
+  },
+  "tokenLaunch": {
+    "eyebrow": "قادم قريباً",
+    "title": "إطلاق التوكن قريب",
+    "body": "الشراء مغلق لحد ما التوكن الجاي جاهز. إرسل لي إيميل فور ما يطلق.",
+    "notifyMe": "أخبرني",
+    "sendTo": "حنبعت إيميل لـ {{email}}",
+    "emailLabel": "إيميل",
+    "emailPlaceholder": "الإيميل بتاعك",
+    "invalidEmail": "أدخل إيميل صحيح",
+    "joinedTitle": "أنت في اللستة",
+    "joinedBody": "حنبعت إيميل لـ {{email}} لما يطلق التوكن.",
+    "joinedBodyNoEmail": "حنبعت ليك إيميل لما يطلق التوكن.",
+    "failed": "ما قدرنا نحتفظ بيه. حاول تاني.",
+    "privacy": "مستخدم بس عشان نخبرك باللانش.",
+    "seoTitle": "إطلاق التوكن قريب | DeHub",
+    "seoDescription": "التوكن الجديد DeHub بيطلق قريب. انضم لللستة وخد إيميل فور ما يطلق، بعدين اشتري مباشرة من محفظتك DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبت أن الحساب لك. DeHub تراه فقط ملفك العام على GitHub.",
+    "verified": "مُصادَق عليه",
+    "verifiedAria": "حساب GitHub مُصادَق عليه",
+    "connected": "GitHub مُرتبط",
+    "disconnected": "GitHub مُفصَل",
+    "taken": "الحساب ده على جيت هاب موجود في بروفيل ديهوب تانيه.",
+    "failed": "مفشل اتصل GitHub. حاول تاني.",
+    "unavailable": "التحقق من GitHub جاي قريب.",
+    "disconnect": "افصل"
   }
 }

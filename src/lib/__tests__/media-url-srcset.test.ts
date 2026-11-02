@@ -44,3 +44,20 @@ describe('cdnImageSource', () => {
     expect(cdnImageSource(undefined)).toBeUndefined();
   });
 });
+
+describe('cdnImage on an already-wrapped URL', () => {
+  const wrapped = cdnImage(RAW, { width: 1080 });
+
+  it('re-sizes to the width asked for instead of returning the 1080', () => {
+    expect(cdnImage(wrapped, { width: 160 })).toBe(`https://dehub.io/cdn-cgi/image/format=auto,quality=80,width=160/${RAW}`);
+  });
+
+  it('keeps the quality and fit the wrapper carried', () => {
+    const cover = cdnImage(RAW, { width: 1080, quality: 70, fit: 'cover' });
+    expect(cdnImage(cover, { width: 64 })).toBe(`https://dehub.io/cdn-cgi/image/format=auto,quality=70,width=64,fit=cover/${RAW}`);
+  });
+
+  it('leaves it alone when no width is asked for', () => {
+    expect(cdnImage(wrapped)).toBe(wrapped);
+  });
+});

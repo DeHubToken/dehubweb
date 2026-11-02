@@ -14,6 +14,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { holderGateOf, runHolderCheck } from '@/hooks/use-holder-gate';
+import { useQueryClient } from '@tanstack/react-query';
+import { markCommunityChatSeen, COMMUNITY_CHAT_SEEN_INTERVAL_MS } from '@/lib/community-chat-notify';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Loader2, SmilePlus, CornerDownRight, LogIn, ArrowDown, Pin, PinOff } from "lucide-react";
 import Reply from "@/components/ui/cut-icons/reply";
@@ -188,9 +191,11 @@ interface CommunityChatProps {
   community: Community;
   membership: CommunityMember | null | undefined;
   isMember: boolean;
+  /** The chat is the tab on screen. Defaults to true for a chat shown on its own. */
+  active?: boolean;
 }
 
-export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
+export function CommunityChat({ communityId, community, membership, isMember, active = true }: CommunityChatProps) {
   const { t: _copy } = _useCopy();
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
   const [replyTo, setReplyTo] = useDraftState<CommunityChatMessage | null>(`community:${communityId}:reply`, null);
@@ -230,7 +235,34 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
+  // Holder groups: re-read this member's balance when the chat opens, so a
+  // top-up lets them talk again and a sale is caught before they type.
+  useEffect(() => {
+    if (!active || !isMember || !walletAddress || !holderGateOf(community)) return;
+    if (membership?.role === 'owner' || membership?.role === 'admin') return;
+    runHolderCheck(communityId, walletAddress).catch(() => { /* the send guard still decides */ });
+  }, [active, isMember, walletAddress, communityId, community, membership?.role]);
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  // While the chat is on screen its notification is cleared and new pings are
+  // held (lib/community-chat-notify). Re-sent every minute and on return to
+  // the tab, so a reader who walks away starts hearing about it again.
+  useEffect(() => {
+    if (!active || !isAuthenticated || !isMember || !communityId) return;
+    const ping = () => {
+      if (document.visibilityState !== 'visible') return;
+      void markCommunityChatSeen(communityId).then(() =>
+        queryClient.invalidateQueries({ queryKey: ['notifications'] }));
+    };
+    ping();
+    const timer = window.setInterval(ping, COMMUNITY_CHAT_SEEN_INTERVAL_MS);
+    document.addEventListener('visibilitychange', ping);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', ping);
+    };
+  }, [active, isAuthenticated, isMember, communityId, queryClient]);
 
   // @mention autocomplete. The composer already had handles parsed out of the
   // sent text for notifications, but nothing offered suggestions while typing,
@@ -437,7 +469,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   // widen the window first and finish the jump once its node exists.
   const jumpToMessage = useCallback(async (messageId: string) => {
     const node = messageRefs.current[messageId];
-    if (node) {
+    if (node && !searchQuery.trim()) {
       node.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setHighlight({ id: messageId, nonce: Date.now() });
       return;
@@ -445,11 +477,12 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     try {
       await showMessage(messageId);
       pendingJumpRef.current = messageId;
+      setSearchQuery('');
       setVisibleCount(Math.max(messages.length, 50));
     } catch {
       toast.error(t('common.failedToLoad'));
     }
-  }, [showMessage, messages.length, t]);
+  }, [showMessage, messages.length, searchQuery, setSearchQuery, t]);
 
   useEffect(() => {
     const pending = pendingJumpRef.current;
@@ -499,6 +532,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const scrollToBottom = useCallback(async () => {
     try {
       await showLatest();
+      setSearchQuery('');
       setVisibleCount(PAGE_SIZE);
       requestAnimationFrame(() => {
         const el = scrollRef.current;
@@ -507,7 +541,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
       setNewMessageCount(0);
       setShowJumpToLatest(false);
     } catch { toast.error(t('common.failedToLoad')); }
-  }, [showLatest, t]);
+  }, [showLatest, setSearchQuery, t]);
 
   const handleSetPinned = useCallback(async (messageId: string, pinned: boolean) => {
     setPinPendingId(messageId);
@@ -869,11 +903,16 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                     className={`group relative px-3 py-0.5 rounded-xl transition-shadow duration-300 ${isHighlighted ? 'ring-1 ring-white/30' : ''}`}
                   >
                     {msg.reply_to && (
-                      <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-9 mb-0.5">
+                      <button
+                        type="button"
+                        onClick={() => void jumpToMessage(msg.reply_to!.id)}
+                        aria-label={t('communities.chat.jumpToReply', { defaultValue: 'Jump to replied message' })}
+                        className="flex max-w-full items-center gap-1 text-left text-[10px] text-zinc-500 hover:text-zinc-300 focus-visible:outline focus-visible:outline-2 ml-9 mb-0.5"
+                      >
                         <CornerDownRight className="w-2.5 h-2.5" />
                         <span className="font-medium">{msg.reply_to.sender_name}</span>
                         <span className="truncate max-w-[200px]">{msg.reply_to.content}</span>
-                      </div>
+                      </button>
                     )}
                     <div className="flex items-start gap-2">
                       <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>

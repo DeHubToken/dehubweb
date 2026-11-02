@@ -254,7 +254,7 @@ export function MobileWhoToFollowCarousel({ surface = 'feed' }: MobileWhoToFollo
       className={surface === 'feed' ? 'py-4 border-b border-zinc-800/50' : 'py-1'}
     >
       <div data-fc-head>
-        <h2 data-fc-title>{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+        <h2 data-fc-title>{_copy("copy.a94bfc8a15e8", { defaultValue: "Follow suggestions" })}</h2>
         {surface === 'feed' && (
           <button type="button" data-fc-see-all onClick={() => navigate('/app/explore')}>
             {_copy("copy.44c9d36485b7", { defaultValue: "See All" })}<ChevronRight className="w-3.5 h-3.5" />

@@ -17,7 +17,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import Trash2 from "@/components/ui/cut-icons/delete";
 
-import ThumbsUp from "@/components/ui/cut-icons/like";
 import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { motion } from 'framer-motion';
@@ -53,6 +52,7 @@ import {
   type ReactionCounts,
 } from '@/lib/reactions';
 import { ReactionEmoji } from './ReactionEmoji';
+import { ThumbIcon } from './ThumbIcon';
 import { ReactionPicker } from './ReactionPicker';
 import { useReactionTray } from '@/hooks/use-reaction-tray';
 import { dehubLinkFor } from '@/lib/dehub-links';
@@ -123,6 +123,9 @@ function ThreadEntry({
     ? (dislikesOutnumberLikes(state.reactionCounts) ? 'dislike' : null)
     : resolveThumbReaction(state.reactionCounts, heldReaction);
   const thumbCount = resolveThumbCount(state.likes, state.dislikes ?? 0, leadReaction);
+  /** A 👍 or 👎 stays the plain thumb icon; your own fills and nods. */
+  const thumbDown = leadReaction === 'dislike';
+  const thumbMine = !isOwn && (thumbDown ? heldReaction === 'dislike' : !!state.isLiked);
 
   if (removed) return null;
 
@@ -319,12 +322,12 @@ function ThreadEntry({
               aria-haspopup={isOwn ? undefined : 'menu'}
               aria-expanded={isOwn ? undefined : likeTray.open}
             >
-              {leadReaction ? (
+              {leadReaction && !thumbDown ? (
                 <span data-engaged-glyph className="w-3.5 h-3.5 flex items-center justify-center text-[0.8rem] leading-none" aria-hidden="true">
                   <ReactionEmoji reaction={leadReaction} animate={leadReaction === heldReaction} />
                 </span>
               ) : (
-                <ThumbsUp className={cn('w-3.5 h-3.5', !isOwn && state.isLiked && 'fill-current')} />
+                <ThumbIcon down={thumbDown} nod={thumbMine} className={cn('w-3.5 h-3.5', thumbMine && 'fill-current')} />
               )}
               {(thumbCount > 0 || isOwn) && <span className="text-xs">{thumbCount}</span>}
             </button>

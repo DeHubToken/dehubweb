@@ -162,7 +162,25 @@
     "saved": "Profil sahələri yadda saxlanıldı",
     "failed": "Yadda saxlanılmadı. Yenidən cəhd edin.",
     "verified": "Təsdiqlənmiş link",
-    "verifyHint": "Linki təsdiqləmək üçün bunu həmin səhifəyə əlavə edin, sonra yenidən yadda saxlayın: {{snippet}}"
+    "verifyHint": "Linki təsdiqləmək üçün bunu həmin səhifəyə əlavə edin, sonra yenidən yadda saxlayın: {{snippet}}",
+    "descriptionPresets": "Veb-sayt, əvəzlik və ya başqa bir şey əlavə edin. Linklər sosiallarınızla göstərir.",
+    "type": "Sahə növü",
+    "needsLabel": "Hər bir fərdi sahəyə etiket verin",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "onlar/onlar",
+    "placeholderLocation": "Şəhər, ölkə",
+    "presets": {
+      "website": "Veb-sayt",
+      "blog": "Bloq",
+      "portfolio": "Portfel",
+      "shop": "Mağaza",
+      "podcast": "Podkast",
+      "newsletter": "Xəbər bülleteni",
+      "pronouns": "Pronouns",
+      "location": "Mövqe",
+      "custom": "Fərdi",
+      "customOption": "Fərdi etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} izlə",
@@ -406,6 +424,9 @@
     "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
   },
   "nav": {
+    "reorderHint": "Dəstək və simvolları yerinə yetirmək üçün tutaraq sırala bilərsiniz.",
+    "reorderReset": "Sıfırla",
+    "reorderResetLong": "Menyu sifarişini sıfırla",
     "home": "Ana səhifə",
     "explore": "Kəşf et",
     "prompt": "Tənzimlə",
@@ -1741,6 +1762,10 @@
       "featureReply": "{{name}} şərhinizə cavab verdi",
       "featureMentionNamed": "{{name}} sizi “{{title}}” üzərində əlavə etdi",
       "featureMention": "{{name}} xüsusi təklifdə sizi əlavə etdi",
+      "featureNewNamed": "{{name}} “{{title}}” adlı yeni sorğu dərc edib",
+      "featureNew": "{{name}} yeni sorğu dərc etdi",
+      "featureActivityNamed": "{{name}} şərhində “{{title}}”",
+      "featureActivity": "{{name}} sorğuya şərh yazdı",
       "governanceVoteNamed": "{{name}} sizin təklifinizə “{{title}}” üzərində səs verdi",
       "governanceVote": "{{name}} sizin təklifinizə səs verdi",
       "governanceCommentNamed": "{{name}} sizin təklifinizə “{{title}}” üzərində yorum yazdı",
@@ -2875,6 +2900,20 @@
     "likersEmptyBody": "Bu şərhin bəyənmələri burada görünəcək.",
     "anonymousLikes_one": "Anonim nişan sahibindən {{count}} bəyənmə",
     "anonymousLikes_other": "Anonim nişan sahiblərindən {{count}} bəyənmə"
+  },
+  "mintChain": {
+    "title": "Nanə yazısı",
+    "subtitle": "Zəncir seçin. Qiymətlər canlıdır və hər dəqiqə yenilənir.",
+    "free": "Pulsuz",
+    "gasCovered": "DeHub-un əhatə etdiyi qaz",
+    "feeIncludesGas": "≈ {{usd}}, qaz daxildir",
+    "gasIncluded": "Qaz daxildir",
+    "paidFromWallet": "{{amount}} cüzdanınızdan",
+    "paidFromWalletPlain": "Pul kisənizdən ödənilib",
+    "priceUnavailable": "Qiymət mövcud deyil",
+    "confirm": "Nanə {{chain}}",
+    "confirmWithCost": "Nanə {{chain}} · {{cost}}",
+    "notAvailable": "Bu zəncirdə mintinq hələ mövcud deyil."
   },
   "postInfo": {
     "title": "Paylaşım məlumatı",
@@ -14630,7 +14669,7 @@
     "f45e06965f93": "Hələ ki, heç bir əməl yoxdur",
     "34f5da2599fa": "Burada yeni hesab təklifləri görünəcək.",
     "bac527bf9a36": "Təkliflərə əməl edin",
-    "036cfd952896": "Kim izləməli",
+    "a94bfc8a15e8": "İzləmə təklifləri",
     "0c820caf16c0": "Hələ bio yoxdur",
     "e139251e4f5b": "Yazını Sil",
     "b3661ad568df": "Bu əməliyyatı geri qaytarmaq mümkün deyil. Postunuz həmişəlik silinəcək.",
@@ -18734,8 +18773,36 @@
     "headlineAccent": "və siz şad olacaqsınız.",
     "orContinueWith": "yoxsa davam edin",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "İşarə",
     "exploreFirst": "İlk dəfə kəşf edin",
     "codeNote": "Biz sizinə parol olmadan kod göndəririk."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tezliklə",
+    "body": "Alış-veriş kapalıdır, yeni token hazırlanır. Canlı olaraq çıxdıqda sizinə e-posta göndəriləcək.",
+    "notifyMe": "Xəbərdarlıq edin",
+    "emailLabel": "E-poçt",
+    "emailPlaceholder": "Sizin emailiniz",
+    "invalidEmail": "Düzgün bir email daxil edin.",
+    "joinedTitle": "Siz siyahıda qaldınız.",
+    "joinedBody": "{{email}} tokenın çıxdıqda sizə email göndərəcəyik.",
+    "joinedBodyNoEmail": "Sizə tokenin buraxılmasından sonra email göndərəcəyik.",
+    "failed": "Bunu yaddaşda saxlamaq mümkün olmadı. Yenidən cəhd edin.",
+    "privacy": "Yalnız bu ilan üçün istifadə olunur.",
+    "seoTitle": "Token ləğv edilməsi yaxşıda | DeHub",
+    "seoDescription": "Yeni DeHub tokenı çox çabuk yayımlanacaq. Siqışın və tokenin canlı olarkən bir email almaq üçün siyahıya düşün. Sonra DeHub cibinizdən doğrudan satın alın."
+  },
+  "githubLink": {
+    "hint": "Hesabın sizin olduğunu sübut etmək üçün GitHub-a daxil olun. DeHub yalnız ictimai GitHub profilinizi görür.",
+    "verified": "Təsdiqlənib",
+    "verifiedAria": "Təsdiqlənmiş GitHub hesabı",
+    "connected": "GitHub qoşuldu",
+    "disconnected": "GitHub bağlantısı kəsildi",
+    "taken": "GitHub hesabı artıq başqa DeHub profilindədir.",
+    "failed": "GitHub-a qoşulmaq mümkün olmadı. Yenidən cəhd edin.",
+    "unavailable": "GitHub təsdiqləməsi tezliklə göndəriləcək.",
+    "connect": "GitHub-ı qoşun",
+    "disconnect": "Əlaqəni kəs"
   }
 }

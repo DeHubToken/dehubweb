@@ -162,7 +162,19 @@
     "saved": "บันทึกช่องข้อมูลโปรไฟล์แล้ว",
     "failed": "บันทึกบ่สำเร็จ ลองใหม่",
     "verified": "ลิงก์ที่ยืนยันแล้ว",
-    "verifyHint": "ถ้าสิยืนยันลิงก์ ให้เพิ่มโค้ดนี้ใส่หน้านั้น แล้วบันทึกใหม่: {{snippet}}"
+    "verifyHint": "ถ้าสิยืนยันลิงก์ ให้เพิ่มโค้ดนี้ใส่หน้านั้น แล้วบันทึกใหม่: {{snippet}}",
+    "type": "สายงาน",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "พวกเขา/พวกเขา",
+    "placeholderLocation": "เมือง, ประเทศ",
+    "presets": {
+      "website": "เว็บไซต์",
+      "blog": "บล็อก",
+      "portfolio": "พอร์ตโฟลิโอ",
+      "shop": "ร้านขายของ",
+      "podcast": "พอดคาสต์",
+      "pronouns": "Pronouns"
+    }
   },
   "followedTags": {
     "follow": "ติดตาม #{{tag}}",
@@ -388,6 +400,9 @@
     "gasSponsorshipFailed": "จ่ายค่าธรรมเนียมธุรกรรมนี้บ่ได้ ลองใหม่อีกเทื่อในบ่ดนนี้"
   },
   "nav": {
+    "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
+    "reorderReset": "รีเซ็ต",
+    "reorderResetLong": "รีเซ็ตลำดับเมนู",
     "home": "บ้าน",
     "explore": "สำหลวด",
     "prompt": "ความต้องการ",
@@ -1700,9 +1715,6 @@
     "tipTokens": "{{amount}} เหรียญ",
     "tokenAmount": "{{amount}} เหรียญ",
     "custom": {
-      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
-      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
-      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "featureLikeNamed": "{{name}}ชอบฟีเจอร์ขอความช่วยเหลือ “{{title}}”",
       "featureLike": "{{name}} เลยชอบคำขอฟีเจอร์ของคุณ",
       "featureReplyNamed": "{{name}} ตอบคุณใน “{{title}}”",
@@ -1722,6 +1734,9 @@
       "fractionOfferRejected": "{{name}} ปฏิเสธข้อเสนอส่วนแบ่งของคุณแล้ว",
       "fractionPurchased": "{{name}} ซื้อส่วนเล็กๆ ของโพสต์ของคุณ",
       "repostedPosts": "{{name}} เปิดใหม่ {{count}} ของโพสต์ของคุณ",
+      "postMention": "{{name}} เอิ้นถึงเจ้าในโพสต์",
+      "liveChatMention": "{{name}} พูดถึงคุณในแชทสด",
+      "publicChatMention": "{{name}} พูดถึงเจ้าในแชทสาธารณะ",
       "followRequest": "{{name}} ขอให้ตามดูคุณ",
       "bountyReplyNamed": "{{name}} ตอบกลับบอนัสของคุณ “{{title}}”",
       "bountyReply": "{{name}} ตอบคำขอรางวัลของคุณ",
@@ -2818,6 +2833,20 @@
     "likersEmptyBody": "การถูกใจความคิดเห็นนี้สิสะแดงอยู่นี่",
     "anonymousLikes_one": "{{count}} ถูกใจจากผู้ถือแบดจ์ที่บ่เปิดเผยตัวตน",
     "anonymousLikes_other": "{{count}} ถูกใจจากผู้ถือแบดจ์ที่บ่เปิดเผยตัวตน"
+  },
+  "mintChain": {
+    "subtitle": "เลือกสาย. ราคาต่อเนื่องและอัปเดตทุกนาที.",
+    "free": "ฟรี",
+    "gasCovered": "แก๊สที่ครอบคลุมโดย DeHub",
+    "feeIncludesGas": "≈ {{usd}}, รวมแก๊สแล้ว",
+    "gasIncluded": "รวมแก๊ส",
+    "gasOnly": "≈ {{usd}} ก๊าซ",
+    "paidFromWallet": "{{amount}} จากกระเป๋าสตางค์",
+    "paidFromWalletPlain": "จ่ายจากกระเป๋าสตางค์",
+    "priceUnavailable": "ราคาคือไม่สามารถหาได้",
+    "confirm": "มิ้นท์บน {{chain}}",
+    "confirmWithCost": "มิ้นท์บน {{chain}} · {{cost}}",
+    "notAvailable": "ไม่สามารถmintได้บนช่วงนี้"
   },
   "postInfo": {
     "title": "ข้อมูลโพสต์",
@@ -14417,7 +14446,7 @@
     "f45e06965f93": "แนะนำผู้ที่ไม่ติดตามยังไม่มี",
     "34f5da2599fa": "แนะนำบัญชีใหม่จะปรากฏที่นี่",
     "bac527bf9a36": "แนะนำผู้ติดตาม",
-    "036cfd952896": "ใครควรติดตาม",
+    "a94bfc8a15e8": "คำแนะนำให้ติดตาม",
     "0c820caf16c0": "ยังไม่มีไบโอ",
     "e139251e4f5b": "ลบโพสต์",
     "b3661ad568df": "การกระทำนี้ไม่สามารถย้อนกลับได้ โพสต์ของคุณจะถูกลบถาวร",
@@ -18263,8 +18292,30 @@
     "headlineAccent": "และเป็นมีความสุข",
     "orContinueWith": "หรือดำเนินการต่อ",
     "phone": "โทรศัพท์",
+    "email": "Email",
     "fingerprint": "ลายนิ้วมือ",
     "exploreFirst": "สำรวจก่อน",
     "codeNote": "เราจะส่งอีเมลถึงคุณรหัสไม่ต้องใช้พาสเวิร์ด"
+  },
+  "tokenLaunch": {
+    "title": "โทเคนกำลังเปิดตัวเร็ว ๆ นี้",
+    "body": "การซื้อยังปิดอยู่ขณะโทเคนใหม่กำลังเตรียมพร้อม. รับอีเมลทันทีเมื่อนำไปใช้จริง.",
+    "sendTo": "จะส่งอีเมลให้ {{email}}",
+    "emailLabel": "อีเมล์",
+    "invalidEmail": "เข้ารหัสอีเมลที่ถูกต้อง",
+    "failed": "assistant",
+    "privacy": "แค่บอกเฉพาะเรื่องการเปิดตัวเท่านั้น",
+    "seoTitle": "Token ล็อกแล้วไม่นาน | DeHub"
+  },
+  "githubLink": {
+    "hint": "ลงชื่อเข้าใช้ GitHub เพื่อแสดงว่าบัญชีของคุณเป็นของคุณเอง DeHub จะเห็นโปรไฟล์ GitHub ของคุณที่เปิดสาธารณะ",
+    "verified": "ตรวจสอบแล้ว",
+    "verifiedAria": "บัญชี GitHub ที่ตรวจสอบแล้ว",
+    "connected": "GitHub ต่อ",
+    "disconnected": "GitHub หยุดเชื่อมต่อ",
+    "taken": "บัญชี GitHub นั้นอยู่ในโปรไฟล์ DeHub อีกโปรไฟล์หนึ่งแล้ว",
+    "failed": "ไม่สามารถเชื่อมต่อกับ GitHub ได้ ลองอีกครั้ง",
+    "unavailable": "การตรวจสอบ GitHub กำลังจะมาsoon",
+    "disconnect": "แยกออก"
   }
 }

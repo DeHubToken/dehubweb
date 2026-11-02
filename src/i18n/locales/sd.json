@@ -162,7 +162,24 @@
     "saved": "پروفائل جا خانا محفوظ ٿيا",
     "failed": "محفوظ نه ٿيو. ٻيهر ڪوشش ڪريو.",
     "verified": "تصديق ٿيل لنڪ",
-    "verifyHint": "لنڪ جي تصديق لاءِ هي ان صفحي تي شامل ڪريو، پوءِ ٻيهر محفوظ ڪريو: {{snippet}}"
+    "verifyHint": "لنڪ جي تصديق لاءِ هي ان صفحي تي شامل ڪريو، پوءِ ٻيهر محفوظ ڪريو: {{snippet}}",
+    "descriptionPresets": "هڪ ويب سائيٽ شامل ڪريو, pronouns يا ٻيو ڪجھ. لنڪس توهان جي سوشلز سان ڏيکاري ٿو.",
+    "type": "فيلڊ جو قسم",
+    "needsLabel": "هر ڪسٽم فيلڊ کي هڪ ليبل ڏيو",
+    "placeholderPronouns": "انهن/انهن",
+    "placeholderLocation": "شهر، ملڪ",
+    "presets": {
+      "website": "ويب سائيٽ",
+      "blog": "بلاگ",
+      "portfolio": "پورٽ فوليو",
+      "shop": "دڪان",
+      "podcast": "پوڊ ڪاسٽ",
+      "newsletter": "نيوز ليٽر",
+      "pronouns": "ڪائنات",
+      "location": "جڳھ",
+      "custom": "حسب ضرورت",
+      "customOption": "ڪسٽم ليبل"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} فالو ڪريو",
@@ -395,6 +412,9 @@
     "gasSponsorshipFailed": "هن وهڪڙي جو خرچ نه کڻي سگهياسين. مهرباني ڪري ٿوري دير کان پوءِ ڪوشش ڪريو."
   },
   "nav": {
+    "reorderHint": "ڪنهن به آئڪن کي ٻيهر ترتيب ڏيڻ لاءِ رکو ۽ ڇڪيو",
+    "reorderReset": "ري سيٽ ڪريو",
+    "reorderResetLong": "مينيو آرڊر ري سيٽ ڪريو",
     "home": "گھر",
     "explore": "ڳولهو",
     "prompt": "پرمٽ",
@@ -1718,6 +1738,10 @@
       "featureReply": "{{name}} توهان جي تبصري جو جواب ڏنو",
       "featureMentionNamed": "{{name}} تي توهان جو ذڪر ڪيو “{{title}}",
       "featureMention": "{{name}} هڪ فيچر جي درخواست تي توهان جو ذڪر ڪيو",
+      "featureNewNamed": "{{name}} هڪ نئين درخواست پوسٽ ڪئي “{{title}}",
+      "featureNew": "{{name}} هڪ نئين درخواست پوسٽ ڪئي",
+      "featureActivityNamed": "{{name}} تي تبصرو ڪيو “{{title}}",
+      "featureActivity": "{{name}} هڪ درخواست تي تبصرو ڪيو",
       "governanceVote": "{{name}} توهان جي تجويز تي ووٽ ڏنو",
       "governanceCommentNamed": "{{name}} نے آپ جي پيغام “{{title}}” تي تبصرہ ڪيو",
       "governanceComment": "{{name}} توهان جي تجويز تي تبصرو ڪيو",
@@ -2849,6 +2873,21 @@
     "likersEmptyBody": "هن تبصري تي پسنديون هتي نظر اينديون.",
     "anonymousLikes_one": "گمنام بيج هولڊر کان {{count}} پسند",
     "anonymousLikes_other": "گمنام بيج هولڊرز کان {{count}} پسنديون"
+  },
+  "mintChain": {
+    "title": "مينٽ پوسٽ",
+    "subtitle": "هڪ زنجير چونڊيو قيمتون زنده آهن ۽ هر منٽ کي تازه ڪاري ڪريو.",
+    "free": "مفت",
+    "gasCovered": "DeHub طرفان ڍڪيل گئس",
+    "feeIncludesGas": "≈ {{usd}}، گيس شامل آهي",
+    "gasIncluded": "گئس شامل آهي",
+    "gasOnly": "≈ {{usd}} گاس",
+    "paidFromWallet": "{{amount}} توهان جي پرس مان",
+    "paidFromWalletPlain": "توھان جي پرس مان ادا ڪيل",
+    "priceUnavailable": "قيمت دستياب ناهي",
+    "confirm": "{{chain}} تي مينٽ",
+    "confirmWithCost": "منٽ {{chain}} {{cost}}",
+    "notAvailable": "هن زنجير تي منٽنگ اڃا تائين دستياب ناهي."
   },
   "postInfo": {
     "title": "پوسٽ معلومات",
@@ -14572,7 +14611,7 @@
     "f45e06965f93": "ابھي تائين ڪوئي پيروي جي تجاويز نه آهن",
     "34f5da2599fa": "نوان اڪاؤنٽ جي تجاويز هتي ظاهر ٿيندي.",
     "bac527bf9a36": "تجويزون جي تابعداري ڪريو",
-    "036cfd952896": "ڪنهن کي فالو ڪجي",
+    "a94bfc8a15e8": "فالو ڪرڻ جون تجويزون",
     "0c820caf16c0": "اڃا تائين ڪا به بائيو (bio) نه آهي",
     "e139251e4f5b": "تحرير کي خارج ڪريو",
     "b3661ad568df": "اهو عمل واپس نٿو ڪري سگهجي. توهان جي پوسٽ مستقل طور تي هٽايل ويندي.",
@@ -18650,8 +18689,30 @@
     "headlineAccent": "۽ خوش رهو.",
     "orContinueWith": "يا ان سان گڏ جاري رکو",
     "phone": "فون",
+    "email": "Email",
     "fingerprint": "فنگر پرنٽ",
     "exploreFirst": "پهرين ڳولا ڪريو",
     "codeNote": "اسان توهان کي هڪ ڪوڊ اي ميل ڪندا آهيون، پاسورڊ جي ضرورت ناهي."
+  },
+  "tokenLaunch": {
+    "emailLabel": "ایمیل",
+    "invalidEmail": "اچو هڪ صحيح اي ميل داخل ڪريو",
+    "joinedBody": "اسان {{email}} کي اي ميل ڪندا سين جڏهن ٽوڪن لانچ ٿيندو.",
+    "joinedBodyNoEmail": "اسان توهان کي اي ميل ڪندس جڏهن ٽوڪن لانچ ٿيندو.",
+    "failed": "اھو محفوظ نه ٿي سگھيو. ٻيهر ڪوشش ڪريو.",
+    "privacy": "صرف توهان کي لانچ جي باري ۾ ٻڌائڻ لاء استعمال ڪيو ويو.",
+    "seoTitle": "ٽوڪن جلد لانچ ٿيندو | DeHub"
+  },
+  "githubLink": {
+    "hint": "ڪمپيوٽر ۾ GitHub تي لاگ ان ڪري ڏسو تہ ڪنٽاڪٽ ڪيل اڪائونٽ آپ جي ۾ ۾ آهي.",
+    "verified": "ورفيڊ",
+    "verifiedAria": "ورفيڊ GitHub اڪائونٽ",
+    "connected": "GitHub جوڙيل",
+    "disconnected": "GitHub جوڙيل",
+    "taken": "ڪنهن بہ اڪائونٽ تي GitHub جوڙيل آهي.",
+    "failed": "GitHub جوڙڻ ۾ ناکام. ٻيو ڪوشش ڪريو.",
+    "unavailable": "GitHub ورفيڪيشن پڻ اچڻ ۾ آهي.",
+    "connect": "GitHub سان ڳنڍو",
+    "disconnect": "ڌار ڪريو"
   }
 }

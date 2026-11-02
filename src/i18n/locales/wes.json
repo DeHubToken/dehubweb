@@ -162,7 +162,23 @@
     "saved": "Profile fields don save",
     "failed": "E no save. Try again.",
     "verified": "Verified link",
-    "verifyHint": "For verify link, add this one for that page, then save again: {{snippet}}"
+    "verifyHint": "For verify link, add this one for that page, then save again: {{snippet}}",
+    "type": "Field type",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Follow #{{tag}}",
@@ -382,6 +398,9 @@
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
   },
   "nav": {
+    "reorderHint": "Hold and drag any icon to rearrange am",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Reset menu order",
     "home": "Haus",
     "explore": "Eksplore",
     "prompt": "Prompt",
@@ -2776,6 +2795,17 @@
     "likersEmptyBody": "Like dem for dis comment go show for hia.",
     "anonymousLikes_one": "{{count}} like from badge holder weh no show imsef",
     "anonymousLikes_other": "{{count}} like dem from badge holder dem weh no show demsef"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Pick one chain. Di price dem live and dem dey update every minute.",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}"
   },
   "postInfo": {
     "title": "Post Info",
@@ -9589,14 +9619,14 @@
       "colour": "Colour for path",
       "data": "SVG markup or data for path (d)",
       "detail": "Detail for curve",
-      "note": "Add small note for ya invite (if you want)",
       "filled": "Closed geometry wey get fill",
       "hint": "Paste path d data or basic SVG markup like path, rectangle, circle, ellipse, line, polygon. Move, line, cubic, quadratic, smooth, and arc commands fit. SVG matrix, translate, scale, rotate, and skew transformations keep shape same. Shape use your pick color; original fill, stroke, and view box not come. Curves turn to sample draw points. Close path with Z to fill. Separate closed SVG parts can fill together. Many parts turn to group, edit layers; compound holes no support.",
       "insert": "Put geometry wey you fit edit",
       "name": "Name di layer",
       "preview": "How vector path go look",
       "title": "Bring in SVG geometry wey you fit edit",
-      "weight": "Lain weit"
+      "weight": "Lain weit",
+      "note": "Add small note for ya invite (if you want)"
     },
     "symbols": {
       "colour": "Colour",
@@ -13800,7 +13830,7 @@
     "916a8b871759": "followers",
     "34f5da2599fa": "New account suggestions go come show up here.",
     "bac527bf9a36": "Follow Suggestions",
-    "036cfd952896": "Wen to folo",
+    "a94bfc8a15e8": "Follow suggestions",
     "0c820caf16c0": "No bio yet",
     "e139251e4f5b": "Dilit Post",
     "b3661ad568df": "Dis action no go back. Post you make go disappear forever.",
@@ -17377,8 +17407,34 @@
     "headlineAccent": "an yu go happy.",
     "orContinueWith": "or continue wit",
     "phone": "Phone",
+    "email": "Email",
     "fingerprint": "Fingerprint",
     "exploreFirst": "Explore first",
     "codeNote": "Wen yu send us kodi, no pase word dey need."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Coming soon",
+    "title": "Token launching soon",
+    "body": "\"Buy\" no go dey close while new token dey prepare. You go get email when dem go launch.",
+    "notifyMe": "Notify me",
+    "sendTo": "We go send email fo {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "invalidEmail": "Enter one email address valid wey you go use.",
+    "joinedBodyNoEmail": "Wetin we go send you email when token dey launch.",
+    "failed": "Wetin no save for you. Try again.",
+    "privacy": "Wah! Na me go tell you go launch a go dey.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "DeHub token new wey go launch soon. Come join list wey, get one email straight when go live, den buy straight from wallet wey you have for DeHub."
+  },
+  "githubLink": {
+    "hint": "Log in for GitHub make dem see say di account na yours. DeHub only dey see your public GitHub profile.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

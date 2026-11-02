@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Profile fields",
-    "description": "Up to four extra lines on your profile, such as a website or your pronouns.",
+    "description": "Optional custom profile fields",
     "label": "Label",
     "content": "Content",
+    "add": "Add field",
+    "remove": "Remove field",
     "save": "Save fields",
     "saved": "Profile fields saved",
     "failed": "That didn't save. Try again.",
     "verified": "Verified link",
-    "verifyHint": "To verify a link, add this to that page, then save again: {{snippet}}"
+    "verifyHint": "To verify a link, add this to that page, then save again: {{snippet}}",
+    "descriptionPresets": "Add a website, pronouns or anything else. Links show with your socials.",
+    "type": "Field type",
+    "needsLabel": "Give each custom field a label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Follow #{{tag}}",
@@ -546,6 +566,9 @@
     "gasSponsorshipFailed": "This transaction could not be sponsored. Please try again in a moment."
   },
   "nav": {
+    "reorderHint": "Hold and drag any icon to rearrange",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Reset menu order",
     "home": "Home",
     "explore": "Explore",
     "prompt": "Prompt",
@@ -1158,6 +1181,7 @@
     "doNotDisturb": "Do not disturb",
     "doNotDisturbDesc": "Mute all message notifications",
     "comingSoon": "Coming soon",
+    "tipsOffNote": "Tips and sends to you are off while this is on. Turn it off to get tipped again.",
     "walletUnlockInterval": "Wallet unlock prompt",
     "walletUnlockIntervalDesc": "How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.",
     "walletUnlockNever": "Never (until you log out)",
@@ -1877,6 +1901,12 @@
     "burstBody": "{{count}} new notifications from {{who}}",
     "community": {
       "joined": "{{name}} joined your community",
+      "chatOne": "{{name}} sent a message",
+      "chatOneNamed": "{{name}} sent a message in {{community}}",
+      "chatTwo": "{{name}} and {{second}} sent messages",
+      "chatTwoNamed": "{{name}} and {{second}} sent messages in {{community}}",
+      "chatMany": "{{name}} + {{others}} others sent messages",
+      "chatManyNamed": "{{name}} + {{others}} others sent messages in {{community}}",
       "joinedNamed": "{{name}} joined “{{community}}”",
       "requested": "{{name}} asked to join your community",
       "requestedNamed": "{{name}} asked to join “{{community}}”",
@@ -1898,6 +1928,10 @@
       "featureReply": "{{name}} replied to your comment",
       "featureMentionNamed": "{{name}} mentioned you on “{{title}}”",
       "featureMention": "{{name}} mentioned you on a feature request",
+      "featureNewNamed": "{{name}} posted a new request “{{title}}”",
+      "featureNew": "{{name}} posted a new request",
+      "featureActivityNamed": "{{name}} commented on “{{title}}”",
+      "featureActivity": "{{name}} commented on a request",
       "governanceVoteNamed": "{{name}} voted on your proposal “{{title}}”",
       "governanceVote": "{{name}} voted on your proposal",
       "governanceCommentNamed": "{{name}} commented on your proposal “{{title}}”",
@@ -2207,6 +2241,8 @@
     "returnHome": "Return Home"
   },
   "profile": {
+    "mutualsOne": "{{count}} Mutual:",
+    "mutualsMany": "{{count}} Mutuals:",
     "back": "Back",
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",
@@ -2235,7 +2271,12 @@
     },
     "tabs": {
       "playlists": "Playlists",
-      "dislikes": "Dislikes"
+      "dislikes": "Dislikes",
+      "articles": "Articles"
+    },
+    "articles": {
+      "emptyTitle": "No articles yet",
+      "emptySubtitle": "Articles will appear here"
     },
     "dislikes": {
       "emptyTitle": "No dislikes yet",
@@ -2970,6 +3011,9 @@
     "replyPlaceholder": "Reply to @{{name}}...",
     "composerPlaceholder": "Type here",
     "attachImage": "Attach image",
+    "attachMedia": "Attach a photo, video or audio",
+    "attachUnsupported": "Attach a photo, a video or an audio file.",
+    "attachTooLarge": "That file is over the {{size}} MB limit.",
     "recordVoiceNote": "Record voice note",
     "post": "Post",
     "likersPrivateTitle": "Likes are private",
@@ -2978,6 +3022,21 @@
     "likersEmptyBody": "Likes on this comment will appear here.",
     "anonymousLikes_one": "{{count}} like from anonymous badge holder",
     "anonymousLikes_other": "{{count}} likes from anonymous badge holders"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Choose a chain. Prices are live and update every minute.",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} from your wallet",
+    "paidFromWalletPlain": "Paid from your wallet",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "Mint on {{chain}} · {{cost}}",
+    "notAvailable": "Minting on this chain is not available yet."
   },
   "postInfo": {
     "title": "Post Info",
@@ -6355,6 +6414,12 @@
     "docsLoadFailed": "# Error\nFailed to load skill documentation.",
     "raw": "Raw"
   },
+  "nftMarket": {
+    "title": "NFT Market",
+    "subtitle": "Buy, sell and offer on BNB, Base, Ethereum and Robinhood",
+    "seoTitle": "NFT Market: buy and sell NFTs on BNB and Base | DeHub",
+    "seoDescription": "Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step."
+  },
   "usernames": {
     "seoTitle": "Username Marketplace | DeHub",
     "seoDescription": "Buy and sell DeHub usernames with tokens. Search short, numeric and original handles for sale, or list your own — the transfer happens on-chain the moment payment clears.",
@@ -9007,6 +9072,7 @@
     "priceChartCleared": "Price chart cleared. Fixed reference price: $0.0001. Execution prices depend on available orders."
   },
   "editor": {
+    "stage": {"create":"Add a 3D stage","title":"3D scene stage","hint":"Block a shot with spheres and boxes. Camera, placement and three independent area lights change the rendered frame.","preview":"Rendered scene preview","error":"Could not prepare the frame. Check your shot references and try again.","camera":"Camera","yaw":"Rotation","elevation":"Elevation","distance":"Distance","fov":"Field of view","object":"Object","add":"Add","sphere":"Sphere","box":"Box","x":"X","y":"Y","z":"Z","scale":"Size","color":"Color","remove":"Remove object","light":"Light","intensity":"Intensity","diffusion":"Diffusion","saving":"Preparing frame…","useFrame":"Use rendered frame as a shot reference","frameHint":"Creates a 320 × 180 PNG and adds it to this shot\u0027s references. Review the reference limit and model quote before generating.","frameName":"Scene stage frame"},
     "film": {
         "repairRefs": "Remove missing media links",
                  "title":  "Film project",
@@ -9557,6 +9623,9 @@
       "apply": "Apply brand",
       "addLogo": "Add logo",
       "applied": "Brand applied to {{count}} layers.",
+      "dehubApplied": "DeHub brand applied to {{count}} layers.",
+      "dehubApply": "Use the DeHub brand",
+      "dehubHint": "Official DeHub colours, Exo and Inter fonts, and the DeHub logo, in one click.",
       "exportFile": "Download styles file",
       "fileDownloaded": "Brand styles file downloaded",
       "fileHint": "Transfer named colours and font pairs between devices. Images and logos stay in the design.",
@@ -11759,21 +11828,21 @@
         }
       },
       "posting-allowance": {
-        "title": "Your Daily Posting Allowance",
-        "intro": "Posting is free every day up to an allowance that scales with your staking badge. Everybody starts with ten text posts and one gigabyte of video, images and audio per day. Go past either one and the rest of that day is paid for in DeHub tokens — only on the part that runs over.",
+        "title": "Your Daily Home Feed Allowance",
+        "intro": "Post as much as you like, every day, for free. Your staking badge sets how many text posts and how much video, image and audio reach the public home feed each day. Anything past that still publishes, it just shows on your profile and to your followers instead of the home feed.",
         "steps": {
-          "1": "Post as normal. Inside the allowance nothing is charged and nothing is asked of you.",
-          "2": "Text posts and media are separate pools, so a day spent uploading video still leaves all ten text posts free.",
-          "3": "When a post would run over, the app prices it first and checks your wallet can cover it before anything uploads.",
-          "4": "The post publishes exactly as it would inside the allowance — publishing never waits on a payment.",
-          "5": "Then you approve one transfer for that post only, settled on whichever of Base or BNB Chain holds enough DeHub tokens.",
-          "6": "Both pools reset at midnight UTC."
+          "1": "Post as normal. Nothing is ever charged and nothing is ever blocked.",
+          "2": "Text posts and media are separate allowances, so a day of uploading video still leaves your text posts for the home feed.",
+          "3": "Media is one shared pool of data per day across video, images and audio, so lots of small posts all fit.",
+          "4": "Once you pass either allowance, new posts of that kind go to your profile and your followers' Following feed.",
+          "5": "Nothing is hidden: everything you post stays on your profile.",
+          "6": "Both allowances reset at midnight UTC."
         },
         "tips": {
-          "1": "Overage is pro-rata: 200 MB past your allowance costs 200 MB, not a whole gigabyte.",
-          "2": "Reposts, comments, reactions, tips and messages cost nothing and never touch the allowance.",
-          "3": "Decline the payment and the post stays up — the amount just blocks your next paid post until it is settled. Tomorrow's free allowance is always yours.",
-          "4": "A staking badge raises the free allowance and lowers the price of anything past it."
+          "1": "A higher staking badge puts more of your posts on the home feed each day.",
+          "2": "Reposts, comments, reactions, tips and messages never touch the allowance.",
+          "3": "Your followers see every post you make in their Following feed.",
+          "4": "Each single file still has a size limit set by your badge."
         }
       },
       "reactions-and-safety": {
@@ -12420,6 +12489,21 @@
     "reminderLater": "Not now"
   },
   "copy": {
+    "1d7234ff1b79": "in {{feed}}",
+    "e122e5c2b563": "Drag up to close",
+    "1aa9d734f2ee": "Choose what to search",
+    "55656b5e434f": "Close search",
+    "ef557404f465": "No results for “{{query}}”",
+    "35034aa59bd3": "Nothing in {{feed}} matched. Try other words or search everything.",
+    "57e2faa5ec63": "Search DeHub",
+    "96d7bff86b44": "Search could not load",
+    "415155739590": "Search everything",
+    "9e13d826baaf": "Search images",
+    "cbf6f228327c": "Search music",
+    "e8756c6865a5": "Search shorts",
+    "c7661da99c41": "Search videos",
+    "90f1afe66801": "Searching for “{{query}}”…",
+    "d7b559f2d8c6": "Try other words, or change the filters.",
     "1607715e45ed": "Tap the ball to talk, or type below",
     "d1a0c7e2f301": "What's on your mind today?",
     "d1a0c7e2f302": "What are you thinking about today?",
@@ -15363,7 +15447,7 @@
     "f45e06965f93": "No follow suggestions yet",
     "34f5da2599fa": "New account suggestions will appear here.",
     "bac527bf9a36": "Follow Suggestions",
-    "036cfd952896": "Who to follow",
+    "a94bfc8a15e8": "Follow suggestions",
     "0c820caf16c0": "No bio yet",
     "e139251e4f5b": "Delete Post",
     "b3661ad568df": "This action cannot be undone. Your post will be permanently removed.",
@@ -16950,8 +17034,8 @@
     "09bb8ce91a4a": "An unexpected error occurred. Don't worry, your data is safe. Try refreshing the page or head back to the home feed.",
     "82bc39f68192": "Go Home",
     "be60b6a22470": "Or refresh the entire page",
-    "bfec166eea05": "Daily posting allowance by badge",
-    "23c4bdbfc9f8": "Free every day. The bar is the data allowance; the price on the right is what anything past it costs.",
+    "bfec166eea05": "Daily home feed allowance by badge",
+    "23c4bdbfc9f8": "Post as much as you like. The bar is the data that reaches the home feed each day; past it, posts go to your profile.",
     "fe2026f79566": " media",
     "a092b4b19981": " text posts",
     "ce580a215203": "then ",
@@ -18406,7 +18490,7 @@
     "b7dc38f3d7f7": "quickStart.nextStakeTitle",
     "be20bbb07d43": "quickStart.nextFaqTitle",
     "e00e2b3e9d84": "{{value1}} hit a snag",
-    "d300f01abdea": "{{value1}} of media and {{value2}} text posts free per day",
+    "d300f01abdea": "{{value1}} of media and {{value2}} text posts on the home feed per day",
     "41fb2caed82f": "This {{value1}} badge was lent by {{value2}}",
     "afc70b19df93": "Progress to {{value1}}",
     "f66ca816cb1e": "{{value1}}'s avatar",
@@ -19497,6 +19581,7 @@
     "headlineAccent": "and be happy.",
     "orContinueWith": "or continue with",
     "phone": "Phone",
+    "email": "Email",
     "fingerprint": "Bio",
     "exploreFirst": "Explore first",
     "codeNote": "We email you a code, no password needed."
@@ -19789,5 +19874,119 @@
     "help2": "“Link your DeHub account” when you ask about your own posts: press Connect in the app’s connector settings.",
     "help3": "An error when you open the URL in a browser tab is normal. Paste it into your AI app instead.",
     "other": "Any other MCP app works the same way: add a remote MCP server and paste the URL above."
+  },
+  "avatarPrompt": {
+    "title": "Add a profile photo",
+    "body": "People spot you faster in feeds, comments and chats when you have a face or logo.",
+    "choose": "Choose a photo",
+    "another": "Choose another",
+    "save": "Use this photo",
+    "notNow": "Not now",
+    "saved": "Looking good",
+    "failed": "Could not save your photo. Try again."
+  },
+  "postStats": {
+    "aboutUsual": "about your usual",
+    "afterWatching": "followed after seeing it",
+    "audience": "Audience",
+    "avg": "avg",
+    "avgWatch": "Avg watch",
+    "bestTime": "When your people watch",
+    "bigDrop": "Big drop",
+    "byBadge": "by badge",
+    "devices": "Device (members)",
+    "engagement": "Engagement",
+    "finished": "Finished",
+    "finishedLower": "finished",
+    "finishedPct": "{{pct}}% watched to the end",
+    "inOut": "{{in}} members · {{out}} signed out",
+    "leave": "{{pct}}% leave",
+    "linkClicks": "Link clicks",
+    "members": "Members",
+    "membersLower": "members",
+    "newFollowers": "New followers",
+    "newToYou": "new to you",
+    "noAccount": "no account",
+    "noBadge": "No badge",
+    "noViewersYet": "Nobody has seen this post yet.",
+    "noWatchYet": "Watch time shows here once people play it. It started counting on 31 Oct 2026.",
+    "open": "See how your post is doing",
+    "otherBadges": "Other badges",
+    "peak": "Peak {{time}} · {{n}}",
+    "people": "People",
+    "peopleReached": "People reached",
+    "plays": "Plays",
+    "playsLower": "plays",
+    "playsMembers": "Plays by members",
+    "playsVisitors": "Plays signed out",
+    "profileTaps": "Taps to your profile",
+    "quotes": "Quotes",
+    "reach": "Reach",
+    "reposts": "Reposts",
+    "saved": "Saved",
+    "saves": "Saves",
+    "seeAll": "See all stats",
+    "shares": "Shares",
+    "signedIn": "signed in",
+    "signedOutLower": "signed out",
+    "signedOutViewers": "Signed out",
+    "stillWatching": "Still watching",
+    "timesUsual": "{{ratio}}× usual",
+    "topSupporters": "Top supporters",
+    "unavailableBody": "Only the creator can see stats for this post.",
+    "unavailableTitle": "Stats unavailable",
+    "visitors": "Signed out",
+    "vsUsual": "vs your usual post",
+    "watching": "Watching",
+    "whoSawIt": "Who saw it",
+    "withRepeats": "{{n}} repeats",
+    "yourFollowers": "your followers",
+    "first48": "First 48 hours",
+    "howItsDoing": "How it's doing",
+    "bestTip": "Most of your viewers show up {{day}} around {{hour}}:00. Posting just before then gives a post the best start.",
+    "last30": "last 30 days",
+    "day": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
+  },
+  "halloween": {
+    "title": "Happy Halloween",
+    "otherThemes": "Not feeling spooky? Find other themes:",
+    "enter": "Enter the dungeon"
+  },
+  "tokenLaunch": {
+    "eyebrow": "Coming soon",
+    "title": "Token launching soon",
+    "body": "Buying is closed while the new token gets ready. Get an email the moment it goes live.",
+    "notifyMe": "Notify me",
+    "sendTo": "We will email {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "invalidEmail": "Enter a valid email",
+    "joinedTitle": "You are on the list",
+    "joinedBody": "We will email {{email}} when the token launches.",
+    "joinedBodyNoEmail": "We will email you when the token launches.",
+    "failed": "Could not save that. Try again.",
+    "privacy": "Only used to tell you about the launch.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "The new DeHub token is launching soon. Join the list and get one email the moment it goes live, then buy straight from your DeHub wallet."
+  },
+  "githubLink": {
+    "hint": "Sign in to GitHub to prove the account is yours. DeHub only sees your public GitHub profile.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "taken": "That GitHub account is already on another DeHub profile.",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "unavailable": "GitHub verification is coming soon.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

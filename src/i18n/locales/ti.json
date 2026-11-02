@@ -162,7 +162,24 @@
     "saved": "መዳያታት መግለጺ ተዓቂቦም",
     "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።",
     "verified": "ዝተረጋገጸ ኣገናኝ",
-    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}"
+    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}",
+    "descriptionPresets": "ድረ ገጽ ፡ ኣቃውማ ወይ ካልእ ነገር ኣክሊልካ ። ምስ ማሕበራዊ መራኸቢታትካ ምትእስሳር የርኢ ።",
+    "type": "ዓይነት ሜዳ",
+    "needsLabel": "ንነፍሲ ወከፍ እተለምደ ሜዳ ምልክት ሃቦ",
+    "placeholderPronouns": "ንሳቶም/ንሳቶም",
+    "placeholderLocation": "ከተማ ፡ ሃገር",
+    "presets": {
+      "website": "ወብ ሳይት",
+      "blog": "ብሎግ",
+      "portfolio": "ፖርትፎሊዮ",
+      "shop": "ድኳን",
+      "podcast": "ፖድካስት",
+      "newsletter": "ጋዜጣ",
+      "pronouns": "ክብርታት",
+      "location": "ቦታ",
+      "custom": "እተለምደ",
+      "customOption": "እተለምደ መርትዖ"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ተኸተል",
@@ -403,6 +420,9 @@
     "gasSponsorshipFailed": "ወጻኢ እዚ ልውውጥ ክኽፈል ኣይተኻእለን። በጃኻ ድሕሪ ቁሩብ ፈትን።"
   },
   "nav": {
+    "reorderHint": "ንምልዋጥ ዝኾነ ኣዶ ሒዝካ ስዓቦ",
+    "reorderReset": "ዳግም ምትካል",
+    "reorderResetLong": "ናይ ምናሌ ቅደም ተከተል ዳግም ኣዳሉ",
     "home": "ገዛ",
     "explore": "ድለ",
     "prompt": "ሃናጺ",
@@ -2842,6 +2862,21 @@
     "likersEmptyBody": "ምፍታዋት ናይዚ ርእይቶ ኣብዚ ክርኣዩ እዮም።",
     "anonymousLikes_one": "ካብ ስሙ ዘይፍለጥ ዋና ባጅ {{count}} ምፍታው",
     "anonymousLikes_other": "ካብ ስሞም ዘይፍለጥ ወነንቲ ባጅ {{count}} ምፍታዋት"
+  },
+  "mintChain": {
+    "title": "ናይ ምስሊ መግለጺ",
+    "subtitle": "ሰንሰለት ሕረጽ ። ዋጋታት ህያው እዩ ፡ ኣብ ነፍሲ ወከፍ ደቒቕ ድማ ይሓድጎ ።",
+    "free": "ነጻ",
+    "gasCovered": "ብዲሆብ እተሸፈነ ጋዝ",
+    "feeIncludesGas": "≈ {{usd}}, ጋዝ ተካተተ",
+    "gasIncluded": "ጋዝ ተካኢሉ",
+    "gasOnly": "≈ {{usd}} ጋዝ",
+    "paidFromWallet": "{{amount}} ካብ ቦርሳኻ",
+    "paidFromWalletPlain": "ካብ ቦርሳኻ እተኸፍለ",
+    "priceUnavailable": "ዋጋታት ኣይተረኽበን ።",
+    "confirm": "ኣብ {{chain}}",
+    "confirmWithCost": "ኣብ {{chain}} {{cost}}",
+    "notAvailable": "ኣብዚ ጉዳይ'ዚ ፡ መፍትሒታት ክዝርዝሩ ኣይከኣሉን ።"
   },
   "postInfo": {
     "title": "ሓበሬታ ጽሑፍ",
@@ -14542,7 +14577,7 @@
     "f45e06965f93": "ምንም ክትትል ሐሳብ ገና የለም",
     "34f5da2599fa": "አዲስ ሂሳብ ሐሳብ እዚህ ይታያል።",
     "bac527bf9a36": "ኣስተማቕራታት ተኸታተሉ",
-    "036cfd952896": "መን እዩ ዚስዕቦ ፧",
+    "a94bfc8a15e8": "ንምክትታል ዝቐርቡ ሓሳባት",
     "0c820caf16c0": "ሕጂ እውን ኣይህሉን እዩ ።",
     "e139251e4f5b": "ፖስታ ሰርዝ",
     "b3661ad568df": "ይህ ተግባር ሊመለስ አይችልም። ልጥፍዎ ለዘላለም ይወገዳል።",
@@ -18580,8 +18615,38 @@
     "headlineAccent": "ከምኡውን ትሕጉስ ትኸውን።",
     "orContinueWith": "ወይ ብ",
     "phone": "ስልኪ ቀጽል",
+    "email": "Email",
     "fingerprint": "አጻብዕቲ (Fingerprint)",
     "exploreFirst": "ቅድም ቀዳድም ተዓዘብ",
     "codeNote": "ኮድ ናብ ኢሜይልካ ንሰደልካ፣ ፓስዎርድ ኣየድልየካን።"
+  },
+  "tokenLaunch": {
+    "eyebrow": "ብቍርበት ይመጣል",
+    "title": "ቶክን ብቍርበት ይወጣል",
+    "body": "ግዛት ተዝጊሙ ነው ሓድሽ ቶክን ምስ ዝተዳለወ። ኢሜይል ብሓንጺጹ ክትቀበል ትኽእል።",
+    "notifyMe": "ንዐውተኒ",
+    "sendTo": "ኢሜይል {{email}} ክንልክ",
+    "emailLabel": "ኢሜይል",
+    "emailPlaceholder": "ኢሜይልካ",
+    "invalidEmail": "ሓቅ ዘለዎ ኢሜይል ኣእቱ",
+    "joinedTitle": "ኣብ ዝርዝር ውሕት ኣለካ",
+    "joinedBody": "ኢሜይል {{email}} ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "joinedBodyNoEmail": "ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "failed": "ሓደ ነገር ክሕዝን ኣይከኣለን። ድሕሪ ሕጂ ሞክር።",
+    "privacy": "ብቶክን ምውጣት ንምፍላጥ ጥራይ ይጠቀም።",
+    "seoTitle": "ቶክን ብቍርበት ይወጣል | DeHub",
+    "seoDescription": "ሓድሽ DeHub ቶክን ብቍርበት ይወጣል። ብዝርዝር ተሳተፍ ወይ ሓንጺጹ ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክትቀበል፣ ድሕሪኡ ካብ DeHub ዋሌትካ ብቀጥታ ግዛት።"
+  },
+  "githubLink": {
+    "hint": "ናብ GitHub ተመልሰ ሎግ ኢን ንምክልኻል ሂወትካ ምክልኻል። DeHub ብሉጽ GitHub ገጽ ብቐንዱ ይርኢ።",
+    "verified": "ተረጋገጠ",
+    "verifiedAria": "ተረጋገጠ GitHub ሂወት",
+    "connected": "GitHub ተራኢ",
+    "disconnected": "GitHub ተቋረጠ",
+    "taken": "ዚ GitHub ሂወት ናብ ካልእ DeHub ገጽ ተወሲዱ ኣሎ።",
+    "failed": "GitHub ተራኢ ክኸውን ኣይከኣለን። ድሕሪ ሓንቲ ግዜ ሞክር።",
+    "unavailable": "GitHub ምክልኻል ብቐርቦ ክመጽእ ኣሎ።",
+    "connect": "GitHub ተገናኺ",
+    "disconnect": "ተላላይ"
   }
 }

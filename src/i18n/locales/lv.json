@@ -162,7 +162,25 @@
     "saved": "Profila lauki saglabāti",
     "failed": "Netika saglabāts. Mēģini vēlreiz.",
     "verified": "Apstiprināta saite",
-    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}"
+    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}",
+    "descriptionPresets": "Pievienojiet vietni, vietniekvārdus vai jebko citu. Saites tiek rādītas jūsu sociālajos tīklos.",
+    "type": "Lauka veids",
+    "needsLabel": "Piešķiriet katram pielāgotajam laukam etiķeti",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "viņi/viņiem",
+    "placeholderLocation": "Pilsēta, valsts",
+    "presets": {
+      "website": "Vietne",
+      "blog": "Emuārs",
+      "portfolio": "Portfelis",
+      "shop": "Iepirkties",
+      "podcast": "Aplāde",
+      "newsletter": "Biļetens",
+      "pronouns": "Vietniekvārdi",
+      "location": "Atrašanās vieta",
+      "custom": "Pielāgots",
+      "customOption": "Pielāgota etiķete"
+    }
   },
   "followedTags": {
     "follow": "Sekot #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
   },
   "nav": {
+    "reorderHint": "Turiet un velciet jebkuru ikonu, lai pārkārtotu",
+    "reorderReset": "Atiestatīt",
+    "reorderResetLong": "Atiestati ēdienkartes secību",
     "home": "Sākums",
     "explore": "Izpētīt",
     "prompt": "Pamudinājums",
@@ -1742,6 +1763,10 @@
       "featureReply": "{{name}} atbildēja uz jūsu komentāru",
       "featureMentionNamed": "{{name}} norāda uz jūsu “{{title}}”",
       "featureMention": "{{name}} norāda uz jūsu vēlumu",
+      "featureNewNamed": "{{name}} publicēja jaunu pieprasījumu \"{{title}}\"",
+      "featureNew": "{{name}} publicēja jaunu pieprasījumu",
+      "featureActivityNamed": "{{name}} komentēja \"{{title}}\"",
+      "featureActivity": "{{name}} komentēja pieprasījumu",
       "governanceVoteNamed": "{{name}} balsots jūsu ieteikumā “{{title}}”",
       "governanceVote": "{{name}} balsots jūsu ieteikumā",
       "governanceCommentNamed": "{{name}} komentēja jūsu ieteikumu “{{title}}”",
@@ -2877,6 +2902,21 @@
     "likersEmptyBody": "Šeit parādīsies šī komentāra patīk atzīmes.",
     "anonymousLikes_one": "{{count}} patīk no anonīma nozīmītes īpašnieka",
     "anonymousLikes_other": "{{count}} patīk no anonīmiem nozīmīšu īpašniekiem"
+  },
+  "mintChain": {
+    "title": "Piparmētru ziņa",
+    "subtitle": "Izvēlieties ķēdi. Cenas ir aktuālas un tiek atjauninātas katru minūti.",
+    "free": "Bezmaksas",
+    "gasCovered": "DeHub nosegtā gāze",
+    "feeIncludesGas": "≈ {{usd}}, gāze iekļauta",
+    "gasIncluded": "Iekļauta gāze",
+    "gasOnly": "≈ {{usd}} gāze",
+    "paidFromWallet": "{{amount}} no jūsu maka",
+    "paidFromWalletPlain": "Apmaksāts no jūsu maka",
+    "priceUnavailable": "Cena nav pieejama",
+    "confirm": "Monētu kaltuve {{chain}}",
+    "confirmWithCost": "Monētu kaltuve {{chain}} · {{cost}}",
+    "notAvailable": "Šīs ķēdes kalšana vēl nav pieejama."
   },
   "postInfo": {
     "title": "Ieraksta informācija",
@@ -14655,7 +14695,7 @@
     "f45e06965f93": "Vēl nav sekošanas ieteikumu",
     "34f5da2599fa": "Jauni konta ieteikumi parādīsies šeit.",
     "bac527bf9a36": "Sekošanas ieteikumi",
-    "036cfd952896": "Kam sekot",
+    "a94bfc8a15e8": "Sekošanas ieteikumi",
     "0c820caf16c0": "Pagaidām nav biogrāfijas",
     "e139251e4f5b": "Dzēst ierakstu",
     "b3661ad568df": "Šo darbību nevar atsaukt. Jūsu ieraksts tiks neatgriezeniski noņemts.",
@@ -18774,8 +18814,36 @@
     "headlineAccent": "un būsiet laimīgi.",
     "orContinueWith": "Vai turpiniet ar",
     "phone": "Telefons",
+    "email": "Email",
     "fingerprint": "Atslēga",
     "exploreFirst": "Pirmo reizi izpētīt",
     "codeNote": "Mūsu e-pasta adresējamā koda saņemšana, bez parolei nepieciešamības."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Drīzumā",
+    "title": "Token launchings atbūdis tuvu!",
+    "body": "Pirktājs ir slēgts, kamēr jauns tokens gatavojas. Saņemiet e-pastu, kad tas tiks publicēts.",
+    "notifyMe": "Maniet mani",
+    "sendTo": "Mēs {{email}}sūtsim e-pastu.",
+    "emailLabel": "E-pasts",
+    "emailPlaceholder": "Jūsu e-pasts",
+    "invalidEmail": "Ievadiet derīgu e-pasta adresi.",
+    "joinedTitle": "Jūs esat sarakstā.",
+    "joinedBodyNoEmail": "Jūsūs paziņosim, kad tokens iznāks, ar e-pasta ziņu.",
+    "failed": "Nevarēja to saglabāt. Mēģiniet vēlreiz.",
+    "privacy": "Tikai lai tevi informētu par izlaidi.",
+    "seoTitle": "Token launchēsies brīdinā | DeHub"
+  },
+  "githubLink": {
+    "hint": "Pierakstieties GitHub, lai pierādītu, ka konts ir jūsu. DeHub redz tikai jūsu publisko GitHub profilu.",
+    "verified": "Pārbaudīts",
+    "verifiedAria": "Pārbaudīts GitHub konts",
+    "connected": "GitHub savienots",
+    "disconnected": "GitHub atvienots",
+    "taken": "Šis GitHub konts jau ir citā DeHub profilā.",
+    "failed": "Nevarēja izveidot savienojumu ar GitHub. Mēģiniet vēlreiz.",
+    "unavailable": "Drīzumā gaidāma GitHub pārbaude.",
+    "connect": "Sajaukties ar GitHub.",
+    "disconnect": "Atvienot"
   }
 }

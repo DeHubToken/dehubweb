@@ -143,7 +143,7 @@ async function prepareImage(file: File): Promise<PreparedMedia> {
 }
 
 /** Poster frame, dimensions and duration, read from a throwaway <video>. */
-async function probeVideo(file: File): Promise<{ w?: number; h?: number; dur?: number; thumb?: string }> {
+async function probeVideo(file: File, coverAt?: number): Promise<{ w?: number; h?: number; dur?: number; thumb?: string }> {
   if (typeof document === 'undefined' || typeof URL.createObjectURL !== 'function') return {};
   const url = URL.createObjectURL(file);
   const video = document.createElement('video');
@@ -160,7 +160,7 @@ async function probeVideo(file: File): Promise<{ w?: number; h?: number; dur?: n
     const dur = Number.isFinite(video.duration) ? Math.round(video.duration * 10) / 10 : undefined;
     const meta = { w: video.videoWidth || undefined, h: video.videoHeight || undefined, dur };
     // The very first frame is often black; a moment in reads better.
-    const at = dur ? Math.min(0.5, dur / 2) : 0;
+    const at = coverAt != null && dur ? Math.min(coverAt, Math.max(0, dur - 0.1)) : dur ? Math.min(0.5, dur / 2) : 0;
     if (at > 0) {
       await new Promise<void>((resolve) => {
         const timer = setTimeout(resolve, 2000);
@@ -194,11 +194,11 @@ export function mediaKindOf(file: File, msgType: 'media' | 'voice', isDocument: 
 export async function prepareMediaPlaintext(
   file: File,
   kind: MediaKind,
-  opts: { voiceDuration?: number } = {},
+  opts: { voiceDuration?: number; coverAt?: number } = {},
 ): Promise<PreparedMedia> {
   if (kind === 'image') return prepareImage(file);
   if (kind === 'video') {
-    const meta = await probeVideo(file);
+    const meta = await probeVideo(file, opts.coverAt);
     return { bytes: await bytesOf(file), descriptor: { kind, mime: file.type || 'video/mp4', size: file.size, name: file.name, ...meta } };
   }
   if (kind === 'audio') {

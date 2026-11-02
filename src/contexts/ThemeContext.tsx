@@ -3,6 +3,7 @@ import { loadThemeCss } from '@/lib/theme-css';
 import { badgeLightArtworkCss } from '@/lib/badge-light-artwork';
 import { THEME_COLOR, themeTintAccent } from '@/lib/theme-color';
 import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
+import { HALLOWEEN_THEME, isHalloweenDay, msUntilLocalMidnight, readHalloweenOptOut, writeHalloweenOptOut } from '@/lib/halloween-override';
 
 const THEME_STORAGE_KEY = 'dehub.theme';
 const DIM_LIGHTS_STORAGE_KEY = 'dehub.dimLights';
@@ -132,8 +133,29 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setDarkHolds((n) => n - 1);
     };
   }, []);
-  // What paints the app: the saved choice, or its dark twin while a live room is open.
-  const theme = darkHolds > 0 ? DARK_TWIN[savedTheme] ?? savedTheme : savedTheme;
+  // Halloween: Horror paints for everyone until local midnight, without
+  // touching the saved choice. Re-checked at midnight and whenever the tab
+  // comes back (background timers can be throttled past midnight).
+  const [halloween, setHalloween] = useState<boolean>(() =>
+    typeof window !== 'undefined' && isHalloweenDay() && !readHalloweenOptOut());
+  useEffect(() => {
+    if (!halloween) return;
+    const recheck = () => {
+      if (!isHalloweenDay() || readHalloweenOptOut()) setHalloween(false);
+    };
+    const timer = window.setTimeout(recheck, msUntilLocalMidnight());
+    document.addEventListener('visibilitychange', recheck);
+    window.addEventListener('focus', recheck);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener('visibilitychange', recheck);
+      window.removeEventListener('focus', recheck);
+    };
+  }, [halloween]);
+  const baseTheme = halloween ? HALLOWEEN_THEME : savedTheme;
+
+  // What paints the app: the chosen look, or its dark twin while a live room is open.
+  const theme = darkHolds > 0 ? DARK_TWIN[baseTheme] ?? baseTheme : baseTheme;
 
   const [dimLights, setDimLightsState] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
@@ -209,6 +231,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { push: pushBrandColors } = useSyncedPreference('brandColors', brandColors, applyBrandColors, [], { resetOnLogout: true });
 
   const setTheme = useCallback((value: string) => {
+    // A pick during Halloween means they want their own look back today.
+    if (isHalloweenDay()) writeHalloweenOptOut();
+    setHalloween(false);
     setThemeState(value);
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, value);

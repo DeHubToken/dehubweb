@@ -2,7 +2,8 @@ import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
 import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 import React, { useLayoutEffect } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link, useLocation, Navigate } from 'react-router-dom';
+import { MILESTONE_REDIRECTS, cleanBlogSlug } from '@/lib/blog-redirects.js';
 import { RotateCw } from "lucide-react";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
@@ -116,7 +117,7 @@ const BlogPost = () => {
   });
 
   const displayDate =
-    post.slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022'
+    post.slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub'
       ? formatDate('2022-07-11T12:00:00Z', translatedPage.language)
       : formatDate(post.publishedAt, translatedPage.language);
 
@@ -202,4 +203,18 @@ const BlogPost = () => {
   );
 };
 
-export default BlogPost;
+// Old long milestone slugs and superseded posts land on the address the post
+// lives at now, the same 301 the edge worker answers crawlers with.
+const BlogPostRoute = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
+  if (slug) {
+    const target = (MILESTONE_REDIRECTS as Record<string, string>)[slug] || cleanBlogSlug(slug);
+    if (target && target !== slug) {
+      return <Navigate to={`/guides/${target}${location.search}${location.hash}`} replace />;
+    }
+  }
+  return <BlogPost />;
+};
+
+export default BlogPostRoute;

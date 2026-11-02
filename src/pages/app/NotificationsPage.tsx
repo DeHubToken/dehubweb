@@ -49,6 +49,7 @@ import { useCustomNotifications, useCustomUnreadCount, useMarkCustomNotification
 import {
   communityNotificationIcon,
   communityNotificationPath,
+  communityNotificationRef,
   communityNotificationPreview,
   communityNotificationSentence,
   isCommunityNotificationType,
@@ -288,10 +289,10 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
-  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'governance_comment', 'governance_reply', 'work_application_reply'],
+  comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote', 'remix'],
-  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention'],
-  communities: ['community_mention', 'community_here', 'community_join'],
+  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new'],
+  communities: ['community_chat', 'community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed', 'work_application', 'work_submission'],
@@ -317,6 +318,7 @@ const API_BACKED_TYPES = new Set([
   'livestream_start', 'signal_flare', 'video_milestone',
   'badge_delegated', 'badge_delegation_ended', 'badge_delegation_changed', 'badge_tier_up', 'badge_tier_down',
   'video_removal', 'account_warning', 'system',
+  'community_chat',
 ]);
 
 /**
@@ -356,6 +358,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     case 'feature_request_comment':
     case 'feature_request_reply':
     case 'feature_request_mention':
+    case 'feature_request_activity':
+    case 'feature_request_new':
     case 'governance_comment':
     case 'governance_reply':
       return <MessageSquareText className="w-4 h-4 text-white/70" />;
@@ -365,6 +369,7 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
     // reply in the thread.
     case 'community_mention':
     case 'community_here':
+    case 'community_chat':
     case 'community_join': {
       const CommunityIcon = communityNotificationIcon(type);
       return <CommunityIcon className="w-4 h-4 text-white/70" />;
@@ -638,6 +643,14 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.featureMentionNamed' : 'notifications.custom.featureMention', { name: actorName, title });
   }
+  if ((notification.type as string) === 'feature_request_new') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureNewNamed' : 'notifications.custom.featureNew', { name: actorName, title });
+  }
+  if ((notification.type as string) === 'feature_request_activity') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureActivityNamed' : 'notifications.custom.featureActivity', { name: actorName, title });
+  }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title, tr);
@@ -849,8 +862,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // and several pages of infinite scroll. `?request=` pins it at the top
   // instead, so the row always opens the thing it names. A comment row also
   // asks for the comments to be open, the same way a post comment does.
-  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention'];
-  if ((notification.type as string) === 'feature_request_like' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
+  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity'];
+  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
     const requestId = customReferenceId(notification);
     if (!requestId) return '/features';
     if (!FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
@@ -866,7 +879,7 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // reference is normally its slug, but the join trigger has written the uuid
   // too; `useCommunity` resolves either, and so does the shared helper.
   if (isCommunityNotificationType(notification.type as string)) {
-    return communityNotificationPath(customReferenceId(notification));
+    return communityNotificationPath(communityNotificationRef(notification), notification.type as string);
   }
   // Bounty applications/submissions store job_number, which is what the
   // canonical /bounty/<n> URL is keyed on — not the job uuid.
@@ -2078,9 +2091,20 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
   // drip (one state update per resolved actor) doesn't recompute it every
   // render — it re-runs only when the list or avatar map actually changes.
+  // Whether each bundle was unread when it was first listed. New is one block
+  // at the top (a reaction bundle bumped today sat among older read rows, so
+  // the headings ran New, This week, New), and a bundle you open stays where
+  // it was rather than dropping out from under you.
+  const listedUnreadRef = useRef(new Map<string, boolean>());
+  const listedUnread = useCallback((bundle: BundledNotification) => {
+    const key = String(bundle.primary.id);
+    if (!listedUnreadRef.current.has(key)) listedUnreadRef.current.set(key, !bundle.allNotifications.every((n) => n.read));
+    return listedUnreadRef.current.get(key)!;
+  }, []);
   const bundledNotifications = useMemo(
-    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
-    [notifications, enrichedAvatars]
+    () => [...bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars)]
+      .sort((a, b) => Number(listedUnread(b)) - Number(listedUnread(a))),
+    [notifications, enrichedAvatars, listedUnread]
   );
 
   // Hooks must run unconditionally on every render. This page stays mounted in
@@ -2381,7 +2405,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // Day headings for the feed: everything unread sits under New, the rest by
   // when it happened.
   const feedGroupOf = (bundle: BundledNotification): 'new' | 'today' | 'week' | 'earlier' => {
-    if (!bundle.allNotifications.every((n) => n.read)) return 'new';
+    if (listedUnread(bundle)) return 'new';
     const at = new Date(bundle.primary.createdAt).getTime();
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);

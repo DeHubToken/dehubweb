@@ -22,11 +22,11 @@ import { isVideoInPictureInPicture } from '@/lib/picture-in-picture';
  */
 
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext } from 'react';
+import { createPortal } from 'react-dom';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { cn } from '@/lib/utils';
-import { opensCommentsSplit } from '@/lib/comments-split';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useHandoffVideo } from '@/hooks/use-handoff-video';
@@ -107,6 +107,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -675,18 +676,20 @@ interface ExpandableDescriptionProps {
   isImmersive: boolean;
   /** Lines shown before "more" (immersive only). The phone post page uses fewer. */
   clampLines?: 2 | 3 | 4;
+  /** The poster closed the market card for this post. */
+  hideAssetCards?: boolean;
 }
 
 const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } as const;
 
-function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
+function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4, hideAssetCards }: ExpandableDescriptionProps) {
   const { t: _copy } = _useCopy();
   // Unify \r\n → \n only. Blank lines and spacing stay exactly as typed.
   const normalized = rawDescription.replace(/\r\n/g, '\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
   const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);
-  const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription);
+  const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription, undefined, hideAssetCards);
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -705,6 +708,25 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
   // auto={false} throughout: VideoCard translates title+description itself and
   // passes the result in. Left on, each of these re-translated text that had
   // already been translated — three requests per video instead of one.
+  // Feed: three lines, then "Show more" opens a capped scroll box. Post pages
+  // (clampLines < 4) keep their short inline "more".
+  if (clampLines === 4) {
+    return (
+      <div className="mb-2">
+        {description ? (
+          <FeedCaptionExpander
+            textKey={description}
+            preview={<TranslatableText publicContent text={squeezeBlankLines(description)} className="text-zinc-400 text-[14px]" as="p" auto={false} />}
+          >
+            <TranslatableText publicContent text={description} className="text-zinc-400 text-[14px]" as="p" auto={false} />
+          </FeedCaptionExpander>
+        ) : null}
+        <DehubLinkEmbeds links={dehubLinks} />
+        <FeedLinkPreviews text={normalized} />
+        <AssetRefCards refs={assetRefs} />
+      </div>
+    );
+  }
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation
     return (
@@ -917,6 +939,31 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   const [dubAvailable, setDubAvailable] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  // Hover volume: close on a short delay so the pointer can travel from the
+  // speaker icon to the slider, and never while the slider is being dragged.
+  const volumeCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const volumeDragging = useRef(false);
+  const openVolume = useCallback(() => {
+    if (volumeCloseTimer.current) { clearTimeout(volumeCloseTimer.current); volumeCloseTimer.current = null; }
+    setVolumeOpen(true);
+  }, []);
+  const closeVolumeSoon = useCallback(() => {
+    if (volumeDragging.current) return;
+    if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current);
+    volumeCloseTimer.current = setTimeout(() => { volumeCloseTimer.current = null; setVolumeOpen(false); }, 350);
+  }, []);
+  const startVolumeDrag = useCallback(() => {
+    volumeDragging.current = true;
+    const end = () => {
+      volumeDragging.current = false;
+      window.removeEventListener('pointerup', end);
+      window.removeEventListener('pointercancel', end);
+      if (!document.querySelector('[data-volume-hover]:hover')) closeVolumeSoon();
+    };
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+  }, [closeVolumeSoon]);
+  useEffect(() => () => { if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current); }, []);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   // This creator's own rate if they have one, otherwise the global default.
@@ -928,6 +975,16 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // restart the clip (lib/video-handoff).
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Desktop post page: the page draws the creator row above this card, so
+  // boost + options go in that row (via a portal) instead of under the caption.
+  const [postHeadSlot, setPostHeadSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!postPage) return;
+    const find = () => (containerRef.current?.closest('[data-feed-item]') ?? document).querySelector<HTMLElement>('[data-post-head-actions]');
+    setPostHeadSlot(find());
+    const raf = requestAnimationFrame(() => setPostHeadSlot(find()));
+    return () => cancelAnimationFrame(raf);
+  }, [postPage]);
   const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
@@ -1580,6 +1637,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   // the transport bar only shows on hover or while paused, over the picture.
   const desktopFeedHug = !isPhone && !isImmersive && !isFullscreen && !video.isAudio;
   const splitControls = bareControls && !isContentGated && !feedPreview && !desktopFeedHug;
+  // Desktop feeds keep mute/unmute in the bottom row beside play time, CC and
+  // speed instead of alone in the top corner. Phones never reach this: their
+  // feed previews keep the corner mute.
+  const volumeInRow = splitControls || (bareControls && !isContentGated && desktopFeedHug);
   const showCenterPlay = !feedPreview && !splitControls && !isLoading && !!video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow);
   const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
@@ -1823,6 +1884,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
+    watchTokenId: video.isAd ? undefined : video.id,
     src: mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined,
     hlsSrc: ladderUrl,
     startLow: ladderStartsLow,
@@ -2276,6 +2338,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     <div
       ref={scrubEventRef}
       data-video-card
+      data-stats-token={video.isAd ? undefined : video.id}
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
       className={isImmersive || stage
@@ -2326,7 +2389,22 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         </div>
       )}
 
-      {/* Video Player / Thumbnail */}
+      {postPage && postHeadSlot && !hideActions && createPortal(
+          <div className="flex items-center gap-1">
+            {(isOwnPost || boosted) && (
+              <PostHeaderBoostButton
+                rowGap={4}
+                lit={boosted}
+                onClick={() => (isOwnPost ? setShowBoostModal(true) : navigate('/app/superpowers'))}
+                aria-label={isOwnPost ? t('postOptions.boostPost') : _copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })}
+              />
+            )}
+            <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
+          </div>,
+          postHeadSlot,
+        )}
+
+        {/* Video Player / Thumbnail */}
       <div 
         ref={containerRef}
         tabIndex={0}
@@ -2845,7 +2923,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <MediaControlIcon icon={liveSoundOn ? Volume2 : VolumeX} plain />
           </button>
         )}
-        {!feedPreview && !splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        {!feedPreview && !volumeInRow && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
@@ -2859,8 +2937,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
@@ -2881,8 +2960,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
@@ -2933,25 +3015,28 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   onClick={event => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}>
                   <MediaControlIcon icon={isPlaying ? Pause : Play} plain />
                 </button>}
-                {splitControls && <div data-video-volume>
+                {volumeInRow && <div data-video-volume>
             {dubAvailable ? (
               <Suspense fallback={<span className="h-8 w-8" />}>
-              <DubVolumeControl plain open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
+              <DubVolumeControl plain={splitControls} open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
                 onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
                 onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
+                type="button"
+                data-video-bare
                 className="h-8 w-8 text-white flex items-center justify-center"
                 onClick={toggleMute}
-                aria-label={t('videoPlayer.volume')}
+                aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
               >
-                {isMuted ? <MediaControlIcon icon={VolumeX} plain /> : <MediaControlIcon icon={Volume2} plain />}
+                {isMuted ? <MediaControlIcon icon={VolumeX} plain={splitControls} /> : <MediaControlIcon icon={Volume2} plain={splitControls} />}
               </button>
               {volumeOpen && (
                 <div className="absolute bottom-full left-0 pb-1.5" onClick={(e) => e.stopPropagation()}>
@@ -2964,8 +3049,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
@@ -3275,6 +3363,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     description={shownDesc}
                     isImmersive={isImmersive || !!stage || tabletPortrait}
                     clampLines={stage ? (shownTitle ? 2 : 3) : 4}
+                    hideAssetCards={video.hideAssetCards}
                   />
                 )}
                 </>)}
@@ -3298,6 +3387,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             tokenId={video.id}
             isAd={video.isAd}
             isAudio={video.isAudio}
+            isOwnPost={isOwnPost}
             translateControl={nothingToTranslate ? undefined : {
               isTranslated: isVideoTranslated,
               isLoading: isTranslateLoading,
@@ -3311,7 +3401,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         </div>
         {!hideActions && (
           <>
-            {(postPage || stage) && (!stage || isOwnPost) && (
+            {((postPage && !postHeadSlot) || stage) && (!stage || isOwnPost) && (
               <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
                 {isOwnPost && (
                   <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
@@ -3345,12 +3435,6 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               onComment={() => {
                 if (onOpenComments) {
                   onOpenComments();
-                  return;
-                }
-                // Phones: an audio post opens with its comments in the bottom half.
-                if (video.isAudio && opensCommentsSplit() && window.location.pathname !== `/app/post/${video.id}`) {
-                  cacheVideoForNavigation(queryClient, video);
-                  navigate(`/app/post/${video.id}`, { state: { fromFeed: true, openComments: true } });
                   return;
                 }
                 setCommentsInitialTab(undefined);

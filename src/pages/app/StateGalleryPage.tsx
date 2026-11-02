@@ -1,9 +1,10 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
@@ -53,19 +54,33 @@ import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
+import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
+import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
+import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
+import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
+import { PostMetadata } from '@/components/app/cards/PostMetadata';
 import { useQueryClient } from '@tanstack/react-query';
 import { AppTokensRow, AppTokenSendDialog } from '@/components/app/wallet/AppTokens';
 import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
 import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
+import { PollEditor } from '@/features/post/components/PollEditor';
+import { AltTextButton } from '@/features/post/components/AltTextEditor';
+import type { PollData } from '@/features/post/types';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
-import type { DeHubPoll } from '@/lib/api/dehub';
+import type { DeHubPoll, DmLock, DmLockStatus, DmMessage } from '@/lib/api/dehub';
+import { LockedMediaBubble, lockedMediaKey } from '@/components/app/chat/LockedMediaBubble';
+import { LockPriceControl } from '@/components/app/chat/LockPriceControl';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { Community, PinnedCommunity } from '@/hooks/use-communities';
+import { holderGateOf } from '@/hooks/use-holder-gate';
+import { HolderGateChip } from '@/components/app/communities/HolderGateChip';
+import { TopHolders } from '@/components/app/communities/TopHolders';
+import { HoldersTab } from '@/components/app/communities/manage/HoldersTab';
 import { DraftVideoProgress } from '@/features/post/components/DraftVideoProgress';
 import { PostProcessingPill } from '@/components/app/PostProcessingDock';
 import type { PostProcessingPhase } from '@/store/postProcessingStore';
@@ -85,7 +100,53 @@ import followAvatarRio from '@/assets/avatars/riooo.png';
 import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
+import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
+import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
+import { ProfileFieldsEditor, type FieldRow } from '@/components/app/settings/ProfileFieldsSetting';
 import type { SuggestedAccount } from '@/lib/api/dehub';
+import { NAV_ITEMS } from '@/constants/app.constants';
+import { filterNavItems } from '@/components/app/navigation/nav-search';
+import { MobileMenuGrid } from '@/components/app/navigation/MobileMenuGrid';
+
+/**
+ * Comic posts: the deck as the feed shows it, the post page with the hand of
+ * pages, and the Comic tab's page list. Public-domain Little Nemo panels.
+ */
+const GALLERY_COMIC_PAGES = [1, 2, 3, 4, 5, 6].map(n => `/state-gallery/comic/nemo-${n}.webp`);
+const GALLERY_COMIC_CAPTIONS = [
+  'Nemo wakes to find his bed has grown legs.',
+  'It strides out of the window and over the rooftops.',
+  'The whole city sleeps below, the moon watching.',
+  'The legs keep growing, taller than the steeples.',
+  'One wrong step over the river...',
+  '...and Nemo tumbles back into his own room.',
+];
+const GALLERY_COMIC_ALTS = GALLERY_COMIC_PAGES.map((_, i) => `Panel ${i + 1}: Nemo's bed walking through the city at night.`);
+function ComicGallery() {
+  const media = GALLERY_COMIC_PAGES.slice(0, 3).map((preview, i) => ({
+    file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
+    caption: GALLERY_COMIC_CAPTIONS[i], description: i === 0 ? GALLERY_COMIC_ALTS[0] : undefined,
+  }));
+  const noop = () => {};
+  return (
+    <section data-comic-gallery className="mb-5 space-y-6">
+      <h2 className="text-sm font-semibold">Comic posts</h2>
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">In the feed</p>
+        <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} descriptions={GALLERY_COMIC_ALTS} title="The Walking Bed" onOpen={noop} />
+      </div>
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">On the post page</p>
+        <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} descriptions={GALLERY_COMIC_ALTS} title="The Walking Bed" full />
+      </div>
+      <div className="rounded-2xl bg-zinc-950 p-3">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Comic tab</p>
+        <ComicPagesEditor media={media} limit={50} onAddPages={noop} onRemove={noop} onMove={noop} onCaption={noop} onAlt={noop} />
+      </div>
+    </section>
+  );
+}
 
 /**
  * Who to follow cover cards in every state they ship in: a cover, no cover
@@ -106,7 +167,7 @@ function FollowCardsGallery() {
   const noop = () => {};
   return (
     <section data-follow-cards-gallery className="mb-5">
-      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.036cfd952896", { defaultValue: "Who to follow" })}</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.a94bfc8a15e8", { defaultValue: "Follow suggestions" })}</h2>
       <div data-follow-cards className="-mx-4">
         <div className="fc-rail flex overflow-x-auto scrollbar-hide px-4 pb-2">
           {users.map((user, i) => (
@@ -144,6 +205,8 @@ const GALLERY_AUTH = {
   openLoginModal: () => {},
 } as unknown as AuthContextType;
 
+import { ComicDeck } from '@/components/app/comic/ComicDeck';
+import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
 // The standard public BIP-39 test vector: owns nothing, safe to show.
@@ -265,6 +328,21 @@ function LiveAvatarsGallery() {
  * Go Live > Capture card. Behind a button because it opens real devices and
  * would otherwise ask every gallery visitor for camera access.
  */
+/**
+ * The phone menu's tile grid, live: hold a tile to lift it and drag it to a
+ * new spot (hooks/use-drag-reorder). Uses this browser's saved order, so
+ * Reset under the grid puts the default back.
+ */
+function MenuReorderGallery() {
+  const { t } = useTranslation();
+  const items = useMemo(() => filterNavItems(NAV_ITEMS, '', t, false), [t]);
+  return (
+    <section data-page-bento data-menu-reorder-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-4">
+      <MobileMenuGrid items={items} currentPath="/app" notificationCount={3} messageCount={12} onNavigate={() => {}} />
+    </section>
+  );
+}
+
 function CaptureCardGallery() {
   const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
@@ -292,6 +370,23 @@ function CaptureCardGallery() {
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
 const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
+/** Composer ALT pill: empty vs saved. Tap a picture's pill to flip it. */
+function AltPillGallery() {
+  const [saved, setSaved] = useState([false, true]);
+  return (
+    <section data-page-bento data-alt-pill-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Alt text pill</h2>
+      <div className="grid max-w-md grid-cols-2 gap-3">
+        {saved.map((on, i) => (
+          <div key={i} className="relative h-36 overflow-hidden rounded-xl bg-cover bg-center" style={{ backgroundImage: `url(${i ? '/og-image.png' : '/dehub-header-logo.png'})`, backgroundColor: i ? '#f4f1ea' : '#1b2a3a' }}>
+            <AltTextButton hasText={on} onClick={() => setSaved((s) => s.map((v, j) => (j === i ? !v : v)))} className="absolute bottom-2 right-2" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function VoiceNotesGallery() {
   const { t: _copy } = _useCopy();
@@ -464,6 +559,75 @@ function TipMessageGallery() {
           {open ? <TipModal open={open} onOpenChange={setOpen} creatorAddress="0x00000000000000000000000000000000000000aa" creatorName="angela" tokenId="5581" /> : null}
         </Suspense>
       </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Pay-to-unlock DM photos: what each side sees, plus the composer's lock. */
+const GALLERY_LOCK_BLUR = 'data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAD6AMgDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAQACAwQFBv/EABoQAQEBAQEBAQAAAAAAAAAAAAABEQISAxP/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/FYsaxYDOLGsWAzgxrFgM4sKAYsKALCgGBpAyigAKAIgEkQSSBIoHXDiIDBjSBmxmxus0GQ1QARQApAEUARABFAymsWAycOLACKAIoHZAgkkArNarNAUKgCggJBBJEAGlgM4sawyAzh8tzlqcg5+R5dvIvIONgsdbyxYDCNiB0QQFBAqzSKABAJJASCBSQFIwFI1Io1zAM5anJkbkBnyLHTBYDj1HOx26jn1AcrEbECSQJJAAUDKKBlFAiCBQIExlqA1HTlzjfNB0jcc5WpQbZtWs2gzXPpu1igxUqgSSBJIAigZTQBkNAAiAKCAmVk6DpK1K5Styg6yta5StaDes2jWbQNrNVAJJAljXkzkGMPl0nJnIOXleXbwvAOPkeXbyLyDj5FjteWLAcsTdjNgMg0AiEDUrUrm1KDpKdYlMoNaggSRgLEUDv4M4d/zanzBwnzanDvPm1OAef8ANeHp8C8A814ZvD1XgXgHkvDn1y9fXLl1yDy9cufUenrlx6gONDXTNAJICYyQbhZhgNIECYDAMRiB9fwZw3DAZnB8ugoMYzY2z1QZxmxrVQcuo5dR36c+oDy9xw7j1fSPN3AcOmK6dOdAJIEQQMajMagGGCNQE0IYBiMQPrc9tzp5Ofo3PoD1ehenH9Gb2DremOunO9sXsHb0fTz+2vQOl6Y6rN6F6Bnt5u3buuHYOPTnXTpzoBJAiCBjUZjUBqEQg0WSDSCB15+jfP0eSdNzsHr/AEV+jze17B3vbN7cfa9A7TtqdPPOmvQO3oXpy9L0DXXTl1TenO0GemK1WaASQJIgo1BGoBhBAlkgUkDhrU6YQOnpenPVoOvpenPToOkrWuUp0HTVrGrQatZtWgBQQASQJJA1DBDAJCAoatBpM6gckkCSQIggSyQaQQEJAgQCBQApAYWSBWhAtWgaDWpnUAKILEUDKIBIIGtTJAoIGkCCBQBEAkkCSAIJAkkBaZOgUNWgqKrQCQQFMkCgtBrTrKBpDVoFDVoELQBCQJBAkkB1aEDWjQgOjUASCAoICtCA6dZIHVoQNatZQNaNCA6ggSQAoIH/2Q==';
+function lockedGalleryMessage(id: string, author: 'me' | 'other', kind: 'image' | 'video' = 'image'): DmMessage {
+  return {
+    _id: id, conversation: 'gallery', content: '', msgType: 'media', author,
+    sender: { _id: author === 'me' ? 'me' : 'them', username: '', address: '', displayName: '', avatarImageUrl: '' },
+    mediaUrls: [{ url: GALLERY_LOCK_BLUR, type: 'image', mimeType: 'image/jpeg' }],
+    uploadStatus: 'success', voiceDuration: null, isRead: false, isEdited: false, editedAt: null, isForwarded: false,
+    replyTo: null, paymentStatus: null, paymentTxHash: null, tipAmount: null, tipSymbol: null, isDeleted: false,
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+    lock: { price: 25, symbol: 'DHB', kind, previewUrl: GALLERY_LOCK_BLUR, unlocked: author === 'me', mine: author === 'me', ready: true },
+  };
+}
+function LockedDmGallery() {
+  const queryClient = useQueryClient();
+  const [price, setPrice] = useState<number | null>(25);
+  const real = `${window.location.origin}/og/agents.jpg`;
+  const status = (id: string, over: Partial<DmLock>, pendingTxHash?: string): DmLockStatus => ({
+    messageId: id, conversationId: 'gallery', payTo: '0x00000000000000000000000000000000000000aa',
+    lock: { price: 25, symbol: 'DHB', kind: 'image', previewUrl: GALLERY_LOCK_BLUR, unlocked: false, ready: true, ...over },
+    ...(pendingTxHash ? { pendingTxHash } : {}),
+  });
+  // Seeded before the bubbles mount, so nothing here asks the API.
+  useState(() => {
+    queryClient.setQueryData(lockedMediaKey('g-lock-closed'), status('g-lock-closed', {}));
+    queryClient.setQueryData(lockedMediaKey('g-lock-video'), status('g-lock-video', { kind: 'video' }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-pending'), status('g-lock-pending', {}, '0xpending'));
+    queryClient.setQueryData(lockedMediaKey('g-lock-bought'), status('g-lock-bought', { unlocked: true, mediaUrl: real }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-mine'), status('g-lock-mine', { unlocked: true, mine: true, unlockCount: 0, mediaUrl: real }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-mine-sold'), status('g-lock-mine-sold', { unlocked: true, mine: true, unlockCount: 1, mediaUrl: real }));
+    return null;
+  });
+  const cell = (label: string, node: ReactNode) => (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</span>
+      {node}
+    </div>
+  );
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-locked-dm-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Locked DM photos</h2>
+      <div className="flex flex-wrap items-start gap-4 text-white">
+        {cell('Them: locked', <LockedMediaBubble message={lockedGalleryMessage('g-lock-closed', 'other')} />)}
+        {cell('Them: video', <LockedMediaBubble message={lockedGalleryMessage('g-lock-video', 'other', 'video')} />)}
+        {cell('Them: paying', <LockedMediaBubble message={lockedGalleryMessage('g-lock-pending', 'other')} />)}
+        {cell('Them: unlocked', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-bought', 'other')} /></div>)}
+        {cell('You: not yet', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-mine', 'me')} /></div>)}
+        {cell('You: unlocked', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-mine-sold', 'me')} /></div>)}
+        {cell('Composer', <div className="w-[260px] rounded-2xl bg-black/30 p-3"><img src={real} alt="" className="h-20 rounded-lg object-cover" /><LockPriceControl value={price} onChange={setPrice} kind="image" /></div>)}
+      </div>
+    </section>
+  );
+}
+
+/** Mint chain picker: Mint on an off-chain post, with each chain's live price. */
+function MintChainGallery() {
+  const [open, setOpen] = useState<null | 'dehub' | 'own'>(null);
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-mint-chain-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Mint chain picker</h2>
+      <div className="flex flex-wrap gap-3">
+        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>DeHub wallet</Button>
+        <Button variant="glass" size="sm" data-open-mint-sheet="own" onClick={() => setOpen('own')}>Own wallet</Button>
+      </div>
+      <MintChainSheet open={open !== null} onOpenChange={(o) => { if (!o) setOpen(null); }} defaultChainId={8453} sponsored={open === 'dehub'} onConfirm={() => setOpen(null)} />
     </section>
   );
 }
@@ -702,6 +866,45 @@ const ICONS: ThemeIconKey[] = [
   'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
 ];
 
+/** Post stats: the Quick Peek sheet (tap the view pill) and the full Post Info panel, on example numbers. */
+function PostStatsGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
+  const queryClient = useQueryClient();
+  const [seeded] = useState(() => {
+    queryClient.setQueryData(['post-stats', '777'], SAMPLE_POST_STATS);
+    queryClient.setQueryData(['post-stats-best-times'], SAMPLE_BEST_TIMES);
+    return true;
+  });
+  const [open, setOpen] = useState(initiallyOpen);
+  if (!seeded) return null;
+  return (
+    <section data-post-stats-gallery className="mb-5 max-w-xl">
+      <h2 className="mb-3 text-sm font-semibold">Post stats</h2>
+      <PostMetadata timestamp="2d" viewCount="1.2K" tokenId="777" isOwnPost />
+      <Button className="mt-3" onClick={() => setOpen(true)}>Quick Peek</Button>
+      <PostStatsSheet open={open} onOpenChange={setOpen} tokenId="777" />
+      <div className="mt-4" data-post-stats-gallery-panel>
+        <PostStatsPanel tokenId="777" />
+      </div>
+    </section>
+  );
+}
+
+/** The "Add a profile photo" ask; saving here only waits, nothing uploads. */
+function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen);
+  return (
+    <section data-avatar-prompt-gallery className="mb-5">
+      <Button onClick={() => setOpen(true)}>Profile photo prompt</Button>
+      <AvatarPromptSheet
+        open={open}
+        onOpenChange={setOpen}
+        name="Nova"
+        onSave={() => new Promise((resolve) => window.setTimeout(resolve, 800))}
+      />
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -761,9 +964,13 @@ export default function StateGalleryPage() {
 
         {params.get('predictions') === '1' && <PredictionGallery />}
 
+        <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
+
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
+
+        <ComicGallery />
 
         <FollowCardsGallery />
 
@@ -776,6 +983,7 @@ export default function StateGalleryPage() {
         <ProposalCardGallery />
         <AgentWelcomeGallery />
         <LiveViewerGallery />
+        <HolderGroupGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -836,6 +1044,8 @@ export default function StateGalleryPage() {
         </section>
 
         <PageKitGallery />
+        <GithubLinkGallery />
+        <ProfileFieldsGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.64392c53237a", { defaultValue: "Theme controls" })}</h2>
@@ -887,14 +1097,19 @@ export default function StateGalleryPage() {
         </section>
 
         <TipMessageGallery />
+        <LockedDmGallery />
+        <MintChainGallery />
         <WhenSheetGallery />
+        <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
         <ToastsGallery />
         <TooltipsGallery />
         <AppTokensGallery />
         <AudioGallery />
+        <AltPillGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
         <CaptureCardGallery />
+        <MenuReorderGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
         <DislikesGallery />
@@ -983,6 +1198,55 @@ const GALLERY_AUDIENCE: LiveAudience = {
     { address: '0x00000000000000000000000000000000000000b1', username: 'kira', displayName: 'Kira', messages: 19 },
   ],
 };
+
+const GALLERY_HOLDER_COMMUNITY = {
+  ...GALLERY_COMMUNITY,
+  id: 'gallery-holder-community',
+  ticker_symbol: 'DHB', ticker_chain_id: '56',
+  holder_gate_chain_id: 56,
+  holder_gate_token: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
+  holder_gate_min: 1000, holder_gate_symbol: 'DHB', holder_gate_decimals: 18,
+} as Community;
+
+/** A holder group: the header tag, the owner's Holders tab and Top holders. */
+function HolderGroupGallery() {
+  const queryClient = useQueryClient();
+  useState(() => {
+    const holders = [
+      ['0x00000000000000000000000000000000000000b2', 2_450_000],
+      ['0x00000000000000000000000000000000000000b1', 812_300],
+      ['0x00000000000000000000000000000000000000b3', 120_000],
+      ['0x00000000000000000000000000000000000000b4', 18_750],
+      ['0x00000000000000000000000000000000000000b5', 1_200],
+    ].map(([wallet_address, balance]) => ({ wallet_address, balance, checked_at: minutesAgo(3) }));
+    queryClient.setQueryData(['communities', 'holders', GALLERY_HOLDER_COMMUNITY.id], holders);
+    queryClient.setQueryData(['wallet-profiles', holders.map(h => h.wallet_address).sort().join(',')], {
+      '0x00000000000000000000000000000000000000b1': { address: '0x00000000000000000000000000000000000000b1', displayName: 'Kira' },
+      '0x00000000000000000000000000000000000000b2': { address: '0x00000000000000000000000000000000000000b2', displayName: 'Dex' },
+      '0x00000000000000000000000000000000000000b3': { address: '0x00000000000000000000000000000000000000b3', displayName: 'Juno' },
+      '0x00000000000000000000000000000000000000b4': { address: '0x00000000000000000000000000000000000000b4', displayName: 'Oto' },
+    });
+  });
+  const gate = holderGateOf(GALLERY_HOLDER_COMMUNITY)!;
+  return (
+    <section data-page-bento data-holder-group-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Holder groups</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <p className="text-white text-lg font-bold">{GALLERY_HOLDER_COMMUNITY.name}</p>
+            <p className="text-white text-sm">{GALLERY_HOLDER_COMMUNITY.member_count.toLocaleString()} members</p>
+            <HolderGateChip gate={gate} />
+            <div className="mt-4"><TopHolders community={GALLERY_HOLDER_COMMUNITY} /></div>
+          </div>
+          <div data-holders-tab-frame className="rounded-2xl border border-white/10 p-3.5">
+            <HoldersTab community={GALLERY_HOLDER_COMMUNITY} membership={null} />
+          </div>
+        </div>
+      </AuthContext.Provider>
+    </section>
+  );
+}
 
 /** The phone live viewer's chrome over a stand-in picture, with a seeded Who's here. */
 function LiveViewerGallery() {
@@ -1134,8 +1398,23 @@ function PollGallery() {
             </div>
           ))}
         </div>
+        <PollEditorGallery />
       </AuthContext.Provider>
     </section>
+  );
+}
+
+function PollEditorGallery() {
+  const [poll, setPoll] = useState<PollData>({
+    question: 'Best time to stream?',
+    options: [{ id: 'a', text: 'Morning' }, { id: 'b', text: 'Night' }],
+    duration: 72,
+    isMultipleChoice: false,
+  });
+  return (
+    <div data-poll-editor-gallery className="mt-4 max-w-md">
+      <PollEditor poll={poll} onChange={setPoll} onRemove={() => {}} />
+    </div>
   );
 }
 
@@ -1175,6 +1454,56 @@ function StreamerArtworkGallery() {
             </div>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/** Verified GitHub: the Settings row both ways, and the profile's links with it. */
+function GithubLinkGallery() {
+  const queryClient = useQueryClient();
+  // Seeded once, before the rows mount, so neither asks the API.
+  useState(() => {
+    queryClient.setQueryData(['github-link', '0xgallery-github-off'], { available: true, connected: false, login: null, verifiedAt: null });
+    queryClient.setQueryData(['github-link', '0xgallery-github-on'], { available: true, connected: true, login: 'octocat', verifiedAt: '2026-11-02T00:00:00Z' });
+    return true;
+  });
+  return (
+    <section data-page-bento data-github-link-gallery className="mb-5 space-y-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="text-sm font-semibold">GitHub</h2>
+      <GithubLinkSetting address="0xgallery-github-off" />
+      <GithubLinkSetting address="0xgallery-github-on" />
+      <div className="flex justify-end" data-github-links-pill>
+        <ProfileLinksPill githubLogin="octocat" customs={{ twitterLink: 'x.com/dehub', youtubeLink: 'youtube.com/@dehub' }} />
+      </div>
+    </section>
+  );
+}
+
+const GALLERY_FIELDS = [
+  { name: 'Website', value: 'https://dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+  { name: 'Pronouns', value: 'they/them' },
+  { name: 'Location', value: 'Lisbon, Portugal' },
+  { name: 'Favourite DJ', value: 'Four Tet' },
+];
+
+/** Profile fields: the editor (presets + delete) and how they read on a profile. */
+function ProfileFieldsGallery() {
+  const [rows, setRows] = useState<FieldRow[]>([
+    { key: -1, preset: 'website', name: 'Website', value: 'dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+    { key: -2, preset: 'pronouns', name: 'Pronouns', value: 'they/them' },
+    { key: -3, preset: 'custom', name: 'Favourite DJ', value: 'Four Tet' },
+  ]);
+  return (
+    <section data-page-bento data-profile-fields-gallery className="mb-5 space-y-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="text-sm font-semibold">Profile fields</h2>
+      <ProfileFieldsEditor rows={rows} onChange={setRows} username="dehub" />
+      <div>
+        <p className="mt-1 text-white/90">Bio goes here.</p>
+        <ProfileFieldsList fields={GALLERY_FIELDS} />
+        <div className="mt-2 flex justify-end" data-profile-fields-links>
+          <ProfileLinksPill fields={GALLERY_FIELDS} customs={{ twitterLink: 'x.com/dehub', youtubeLink: 'youtube.com/@dehub' }} />
+        </div>
       </div>
     </section>
   );

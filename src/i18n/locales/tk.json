@@ -162,7 +162,25 @@
     "saved": "Profil meýdanlary ýatda saklandy",
     "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
     "verified": "Tassyklanan baglanyşyk",
-    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}"
+    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}",
+    "descriptionPresets": "Web-sayt, sözbaşy ýa-da başga bir zat goş. Çepler öz içi syrlary bilen görkezilýär.",
+    "type": "Meýdanyň Türü",
+    "needsLabel": "Her bir meýdança üçin bir etiket goýuň",
+    "placeholderLink": "scanoir.com",
+    "placeholderPronouns": "olar",
+    "placeholderLocation": "Şäheri, ýurdy",
+    "presets": {
+      "website": "Web-sayt",
+      "blog": "Blog",
+      "portfolio": "Portfeli",
+      "shop": "Dükan",
+      "podcast": "Podkastlar",
+      "newsletter": "Bülleten",
+      "pronouns": "Çykyşlar",
+      "location": "Ýer",
+      "custom": "Adat",
+      "customOption": "Özgür etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} yzarla",
@@ -402,6 +420,9 @@
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
   },
   "nav": {
+    "reorderHint": "Her bir simgony saklaň we gaýtargylaň",
+    "reorderReset": "Gaýd Et",
+    "reorderResetLong": "Menü düzgüni gaýd et",
     "home": "Baş sahypa",
     "explore": "Gözle",
     "prompt": "Sowal",
@@ -1721,6 +1742,10 @@
       "featureCommentNamed": "{{name}} özellik soraga jogap berdi {{title}}",
       "featureReply": "{{name}} teswiryňize jogap berdi",
       "featureMentionNamed": "{{name}} sizi “{{title}}”da atadı.",
+      "featureNewNamed": "{{name}} “{{title}}” ýerinde bir yeni talap açdy.",
+      "featureNew": "{{name}} ýaly bir ylyk goraýyrdy.",
+      "featureActivityNamed": "{{name}} “{{title}}”-yň ýaly",
+      "featureActivity": "{{name}}gördü.",
       "governanceCommentNamed": "{{name}} Siziň teklibiňiz barada pikir alyşdyňyz{{title}}",
       "governanceReplyNamed": "{{name}} size teklipde jogap berdi {{title}}",
       "governanceReply": "{{name}} teklipe ýazan teswiriňize jogap berdi",
@@ -2843,6 +2868,20 @@
     "likersEmptyBody": "Bu teswire gelen halamalar şu ýerde görner.",
     "anonymousLikes_one": "Anonim nyşan eýesinden {{count}} halama",
     "anonymousLikes_other": "Anonim nyşan eýelerinden {{count}} halama"
+  },
+  "mintChain": {
+    "title": "Mint posty",
+    "subtitle": "Bir zynjyr saýlaň. Baýlar diridir we her minutda täzelenýär.",
+    "free": "Azat",
+    "gasCovered": "Dehub bilen örtülen gaz",
+    "feeIncludesGas": "≈ {{usd}}, gaz içi",
+    "gasIncluded": "Benzin hem şol sanda",
+    "gasOnly": "≈ {{usd}} gaz",
+    "paidFromWalletPlain": "Men pulumy gaýtaryp bererin",
+    "priceUnavailable": "Öňki ýaly, bular hem bar.",
+    "confirm": "Mint on {{chain}}",
+    "confirmWithCost": "{{chain}} {{cost}}",
+    "notAvailable": "Häzirki ýaly, bu mekdebiň açylmagy barada hiç hili habar berilmedi."
   },
   "postInfo": {
     "title": "Ýazgy maglumaty",
@@ -14573,7 +14612,7 @@
     "f45e06965f93": "Heniz yzarlamak üçin teklipler ýok",
     "34f5da2599fa": "Täze hasap teklipleri şu ýerde görner.",
     "bac527bf9a36": "Yzarlamak üçin teklipler",
-    "036cfd952896": "Kimler yzyna düşýär?",
+    "a94bfc8a15e8": "Yzarlamak üçin teklipler",
     "0c820caf16c0": "Hany bio ýok",
     "e139251e4f5b": "Posty poz",
     "b3661ad568df": "Bu hereketi yzyna gaýtaryp bolmaýar. Postuňyz hemişelik pozular.",
@@ -18656,8 +18695,30 @@
     "headlineAccent": "weýs bol.",
     "orContinueWith": "ýa-da dowam ediň",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Döşeme",
     "exploreFirst": "Öňürti barlaň",
     "codeNote": "Biz size kody iberýäris, hiç hili parol gerek däl."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tezden çykyş",
+    "title": "Token tezden çykyş",
+    "body": "Satyn almak täze token taýynlanýan wagtynda ýapyk. Onuň işe girende e-poçta alyň.",
+    "notifyMe": "Meni habar et",
+    "sendTo": "Biz {{email}} adresine e-poçta ibereris",
+    "emailLabel": "E-poçta",
+    "emailPlaceholder": "Siziň e-poçtaňyz",
+    "invalidEmail": "Dogry e-poçta adresi giriziň",
+    "joinedTitle": "Siz sanawyda barsyňyz",
+    "joinedBody": "Biz {{email}} adresine token çykyşy wagtynda e-poçta ibereris.",
+    "joinedBodyNoEmail": "Biz size token çykyşy wagtynda e-poçta ibereris.",
+    "failed": "Muny saklamak mümkin bolmady. Gaýtadan synanyp görüň.",
+    "privacy": "Diňe çykyş barada size habar bermek üçin ulanylýar.",
+    "seoTitle": "Token tezden çykyş | DeHub",
+    "seoDescription": "Täze DeHub tokeni tezden çykyş edýär. Sanawynyza goşulyň we onuň işe girende bir e-poçta alyň, soňra DeHub şkiliňizden gönüden-göni satyn alyň."
+  },
+  "githubLink": {
+    "verified": "Tasdiqlanmýş",
+    "disconnect": "Baglan"
   }
 }

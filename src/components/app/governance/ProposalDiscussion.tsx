@@ -38,7 +38,7 @@ export function ProposalDiscussion({
 }: ProposalDiscussionProps) {
   const { t } = useTranslation();
 
-  const { data: threads, isLoading } = useProposalDiscussion(proposalId);
+  const { data: threads, isLoading, isError, isFetching, refetch } = useProposalDiscussion(proposalId);
   const submitComment = useSubmitProposalComment();
   const editComment = useEditProposalComment();
   const deleteComment = useDeleteProposalComment();
@@ -63,6 +63,9 @@ export function ProposalDiscussion({
       draftScope={`thread:proposalId:${proposalId}`}
       threads={threads}
       isLoading={isLoading}
+      isError={isError}
+      isFetching={isFetching}
+      onRetry={() => { void refetch(); }}
       entityAuthorAddress={proposalAuthorAddress}
       focusCommentId={focusCommentId}
       labels={labels}

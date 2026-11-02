@@ -45,7 +45,7 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   // Page titles where the page has one, so the menu row reads the same as the
   // heading it opens.
   Bounties: 'work.title', Affiliate: 'nav.affiliate', Stores: 'stores.title',
-  Usernames: 'usernames.title', Accounts: 'accounts.title',
+  Usernames: 'usernames.title', 'NFT Market': 'nftMarket.title', Accounts: 'accounts.title',
   // Borrows the drawer's key rather than minting a `nav.` twin: `sidebar.logOut`
   // is already translated in all 110 locales, and the two controls should not be
   // able to drift into saying different things.

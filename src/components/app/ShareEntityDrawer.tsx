@@ -27,6 +27,7 @@ import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
 import { viewerShareUrl } from '@/lib/share-url';
 import { trackShare } from '@/lib/analytics';
+import { reportPostEvent } from '@/lib/api/dehub/post-stats';
 
 const ShareToDmModal = lazy(() =>
   import('@/components/app/modals/ShareToDmModal').then((m) => ({ default: m.ShareToDmModal }))
@@ -97,6 +98,10 @@ export function ShareEntityDrawer({
   const [reposting, setReposting] = useState(false);
 
   const link = parseDehubLink(url);
+  // Shares of a post count toward its creator's stats.
+  const reportShare = () => {
+    if (link?.kind === 'post' && 'tokenId' in link) reportPostEvent(link.tokenId, 'share');
+  };
   const noun = dehubLinkLabel(link ? link.kind : 'link');
 
   // navigator.share is the right primitive on a phone and absent on most
@@ -109,6 +114,7 @@ export function ShareEntityDrawer({
   const handleCopy = () => {
     navigator.clipboard.writeText(viewerShareUrl(url));
     trackShare('copy_link', { kind: link?.kind });
+    reportShare();
     toast.success(_copy("copy.d12860c21e78", { defaultValue: "Link copied" }));
     onOpenChange(false);
   };
@@ -117,6 +123,7 @@ export function ShareEntityDrawer({
     try {
       await navigator.share({ title: shareTitle, url: viewerShareUrl(url) });
       trackShare('native', { kind: link?.kind });
+      reportShare();
       onOpenChange(false);
     } catch {
       // Dismissing the OS sheet rejects; nothing to report.
@@ -155,6 +162,7 @@ export function ShareEntityDrawer({
               onClick={() => {
                 onOpenChange(false);
                 trackShare('dm', { kind: link?.kind });
+                reportShare();
                 // The sheet animates out first; opening both at once leaves the
                 // outgoing drawer's scrim over the new one.
                 setTimeout(() => setDmOpen(true), 250);
@@ -175,6 +183,7 @@ export function ShareEntityDrawer({
               onClick={() => {
                 onOpenChange(false);
                 trackShare('feed', { kind: link?.kind });
+                reportShare();
                 setTimeout(() => openPostModal(url, postCategory), 250);
               }}
             />

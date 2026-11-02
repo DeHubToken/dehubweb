@@ -448,6 +448,7 @@ export const POST_TYPE_FILTERS = [
   { label: 'Videos', value: 'video' as const },
   { label: 'Images', value: 'feed-images' as const },
   { label: 'Audio', value: 'feed-audio' as const },
+  { label: 'Article', value: 'article' as const },
   { label: 'Text', value: 'feed-simple' as const },
 ] as const;
 

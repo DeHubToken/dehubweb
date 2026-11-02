@@ -162,7 +162,25 @@
     "saved": "Profilmezők mentve",
     "failed": "Nem sikerült menteni. Próbáld újra.",
     "verified": "Ellenőrzött hivatkozás",
-    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}"
+    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}",
+    "descriptionPresets": "Webhely, névmások vagy bármi más hozzáadása. A linkek megjelennek a közösségi oldalakon.",
+    "type": "Mező típusa",
+    "needsLabel": "Adj minden egyéni mezőnek egy címkét",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ők/ők",
+    "placeholderLocation": "Város, ország",
+    "presets": {
+      "website": "Webhely",
+      "blog": "Blog",
+      "portfolio": "Portfólió",
+      "shop": "Vásárlás",
+      "podcast": "Podcasting",
+      "newsletter": "Hírlevél",
+      "pronouns": "Névmások",
+      "location": "Hely",
+      "custom": "Egyedi",
+      "customOption": "Egyedi címke"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} követése",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."
   },
   "nav": {
+    "reorderHint": "Tartsa lenyomva és húzza bármelyik ikont az átrendezéshez",
+    "reorderReset": "Visszaállítás",
+    "reorderResetLong": "Menüsorrend visszaállítása",
     "home": "Kezdőlap",
     "explore": "Felfedezés",
     "prompt": "Ösztönzés",
@@ -1743,6 +1764,10 @@
       "featureReply": "{{name}} válaszolt a megjegyzésedre",
       "featureMentionNamed": "{{name}} megemlítette téged “{{title}}”-on",
       "featureMention": "{{name}} megemlítette téged egy funkciókérésen",
+      "featureNewNamed": "{{name}} új kérést küldött: „{{title}}”",
+      "featureNew": "{{name}} új kérést küldött",
+      "featureActivityNamed": "{{name}} hozzászólt a következőhöz: „{{title}}”",
+      "featureActivity": "{{name}} hozzászólt egy kéréshez",
       "governanceVoteNamed": "{{name}} szavazott a javaslatodra “{{title}}”",
       "governanceVote": "{{name}} szavazott a javaslatodra",
       "governanceCommentNamed": "{{name}} kommentált a javaslatodra: “{{title}}”",
@@ -2882,6 +2907,21 @@
     "likersEmptyBody": "A hozzászólás kedvelései itt jelennek meg.",
     "anonymousLikes_one": "{{count}} kedvelés névtelen jelvénytulajdonostól",
     "anonymousLikes_other": "{{count}} kedvelés névtelen jelvénytulajdonosoktól"
+  },
+  "mintChain": {
+    "title": "Menta bejegyzés",
+    "subtitle": "Válassz egy láncot. Az árak valós idejűek, és percenként frissülnek.",
+    "free": "Ingyenes",
+    "gasCovered": "A DeHub által lefedett gáz",
+    "feeIncludesGas": "≈ {{usd}}, gázzal együtt",
+    "gasIncluded": "Gázzal együtt",
+    "gasOnly": "≈ {{usd}} gáz",
+    "paidFromWallet": "{{amount}} a pénztárcádból",
+    "paidFromWalletPlain": "A pénztárcádból fizetve",
+    "priceUnavailable": "Az ár nem érhető el",
+    "confirm": "Menta {{chain}} napján",
+    "confirmWithCost": "Menta {{chain}} · {{cost}} napján",
+    "notAvailable": "Ezen a láncon a verés még nem érhető el."
   },
   "postInfo": {
     "title": "Bejegyzés infó",
@@ -14651,7 +14691,7 @@
     "f45e06965f93": "Nincsenek követési javaslatok még",
     "34f5da2599fa": "Új felhasználói javaslatok itt jelennek meg.",
     "bac527bf9a36": "Követési javaslatok",
-    "036cfd952896": "Kinek követj",
+    "a94bfc8a15e8": "Követési javaslatok",
     "0c820caf16c0": "Még nincs bio",
     "e139251e4f5b": "Törölés",
     "b3661ad568df": "Ezt a műveletet nem lehet visszacsinálni. A posztot véglegesen törölni fogjuk.",
@@ -18764,8 +18804,38 @@
     "headlineAccent": "és boldog leszel.",
     "orContinueWith": "vagy folytasd ezzel",
     "phone": "Telefon",
+    "email": "E-mail",
     "fingerprint": "Ujjlenyomat",
     "exploreFirst": "Előbb nézz körül",
     "codeNote": "E-mailben küldünk egy kódot, jelszó nélkül."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Jövőben",
+    "title": "Token indítása közeledik",
+    "body": "A vásárlás le van zárva, amíg a új token készül. Kapj egy emailt, amikor online lesz.",
+    "notifyMe": "Értesíts meg engem",
+    "sendTo": "{{email}}-nak fogunk emailt küldeni",
+    "emailLabel": "Email",
+    "emailPlaceholder": "A megadott email",
+    "invalidEmail": "Adjon meg egy érvényes emailt",
+    "joinedTitle": "A listán vagy",
+    "joinedBody": "{{email}}-nak fogunk emailt küldeni, amikor a token indítódik.",
+    "joinedBodyNoEmail": "Miután elindul a token, emailben értesítünk téged.",
+    "failed": "Nem sikerült menteni. Próbálja újra.",
+    "privacy": "Csak azért használjuk, hogy a token indításáról értesítsünk.",
+    "seoTitle": "Token indítása közeledik | DeHub",
+    "seoDescription": "Az új DeHub token hamarosan indítódik. Csatlakozz a listához, és kapj egy emailt, amikor online lesz, majd vásárolhat közvetlenül a DeHub péntekéből."
+  },
+  "githubLink": {
+    "hint": "Jelentkezzen be a GitHubra, és igazolja, hogy a fiók az Öné. A DeHub csak a nyilvános GitHub-profilodat látja.",
+    "verified": "Igazolt",
+    "verifiedAria": "Igazolt GitHub-fiók",
+    "connected": "GitHub csatlakoztatva",
+    "disconnected": "GitHub leválasztva",
+    "taken": "Ez a GitHub-fiók már egy másik DeHub-profilban van.",
+    "failed": "Nem sikerült csatlakozni a GitHubhoz. Próbálkozz újra.",
+    "unavailable": "Hamarosan jön a GitHub-hitelesítés.",
+    "connect": "GitHub csatlakoztatása",
+    "disconnect": "Leválasztás"
   }
 }

@@ -48,6 +48,12 @@ export interface BaseFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** 'comic' shows the gallery as collector cards. */
+  layout?: 'comic';
+  /** Comic captions, one per page in display order. */
+  mediaCaptions?: string[];
+  /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
+  hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
   spoilerText?: string;
   /** Who may quote it; absent means anyone. */
@@ -94,6 +100,8 @@ export interface BaseFeedItem {
  */
 export interface TextPost extends BaseFeedItem {
   articleBody?: string;
+  /** An article's readable URL: /app/post/<articleSlug> (first ten words of its title). */
+  articleSlug?: string;
   articleImageUrl?: string;
   type: 'post';
   author: User;

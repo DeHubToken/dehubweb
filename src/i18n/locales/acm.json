@@ -162,7 +162,23 @@
     "saved": "انحفظت حقول الملف",
     "failed": "ما انحفظ. جرب مرة ثانية.",
     "verified": "رابط موثّق",
-    "verifyHint": "حتى توثّق رابط، ضيف هذا بالصفحة وبعدين احفظ مرة ثانية: {{snippet}}"
+    "verifyHint": "حتى توثّق رابط، ضيف هذا بالصفحة وبعدين احفظ مرة ثانية: {{snippet}}",
+    "descriptionPresets": "أضف موقعًا، ضمائر أو أي شيء آخر. روابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "أعطِ كل حقل مخصص تسمية",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "الموقع الإلكتروني",
+      "blog": "المدونة",
+      "portfolio": "المحفظة",
+      "shop": "المتجر",
+      "podcast": "البودكاست",
+      "newsletter": "النشرة الإخبارية",
+      "pronouns": "الضمائر",
+      "location": "الموقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -406,6 +422,9 @@
     "gasSponsorshipFailed": "ما كدرنا نتكفل بهاي المعاملة. جرب مرة ثانية بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "اطلب",
@@ -1731,6 +1750,7 @@
       "featureReply": "{{name}} أجاب على تعليقك",
       "featureMentionNamed": "{{name}} ذكرك في “{{title}}”",
       "featureMention": "{{name}} ذكرك في طلب خاص",
+      "featureNewNamed": "{{name}} قاﻟﻠﻪ طلب جديد “{{title}}”",
       "governanceVoteNamed": "{{name}} صوت على اقتراحك “{{title}}”",
       "governanceVote": "{{name}} صوت على اقتراحك",
       "governanceCommentNamed": "{{name}} ترك تعليق على اقتراحك “{{title}}”",
@@ -2839,6 +2859,21 @@
     "likersEmptyBody": "الإعجابات على هذا التعليق راح تطلع هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "منت بوست",
+    "subtitle": "اختار تشين. الأسعار حية وتتحدث كل دقيقة.",
+    "free": "مجاني",
+    "gasCovered": "الغاز مغطى من ديهب",
+    "feeIncludesGas": "≈ {{usd}}، الغاز مشمول",
+    "gasIncluded": "الغاز مشمول",
+    "gasOnly": "≈ {{usd}} غاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "مدفوع من محفظتك",
+    "priceUnavailable": "السعر غير متوفر",
+    "confirm": "منت على {{chain}}",
+    "confirmWithCost": "منت على {{chain}} · {{cost}}",
+    "notAvailable": "المنت على هذا التشين غير متوفر حاليا."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -14282,7 +14317,7 @@
     "f45e06965f93": "المتابعين",
     "34f5da2599fa": "لا يوجد توصيات متابعة بعد",
     "bac527bf9a36": "توصيات جديدة للمستخدمين جديدة سيظهر هنا.",
-    "036cfd952896": "من يتابع",
+    "a94bfc8a15e8": "اقتراحات للمتابعة",
     "0c820caf16c0": "لا يوجد وصفة حتى الآن",
     "e139251e4f5b": "حذف المنشور",
     "b3661ad568df": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف المنشور بشكل دائم.",
@@ -18060,8 +18095,32 @@
     "headlineAccent": "وسيحسن حالتك.",
     "orContinueWith": "أو استمر مع",
     "phone": "الهاتف",
+    "email": "البريد",
     "fingerprint": "الطباعة البصريه",
     "exploreFirst": "اكتشف أولاً",
     "codeNote": "نقلك بريدك الإلكتروني رمزًا، لا حاجة إلى كلمة المرور."
+  },
+  "tokenLaunch": {
+    "eyebrow": "قريبًا",
+    "title": "إطلاق التوكن قريبًا",
+    "body": "الشراء مغلق بينما التوكن الجديد يتحضر. استلم إيميل لحظة ما يطلق.",
+    "notifyMe": "نبهني",
+    "sendTo": "حنرسل إيميل لـ {{email}}",
+    "emailLabel": "الإيميل",
+    "emailPlaceholder": "إيميلك",
+    "invalidEmail": "أدخل إيميل صحيح",
+    "joinedTitle": "إنت على القائمة",
+    "joinedBody": "حنرسل إيميل لـ {{email}} لما يطلق التوكن.",
+    "joinedBodyNoEmail": "حنرسل لك إيميل لما يطلق التوكن.",
+    "failed": "ما قدرنا نحفظ هالشي. جرّب مرة ثانية.",
+    "privacy": "بس نخبرك عن الإطلاق.",
+    "seoTitle": "إطلاق التوكن قريبًا | DeHub",
+    "seoDescription": "توكن DeHub الجديد يطلق قريبًا. انضم للقائمة واستلم إيميل لحظة ما يطلق، بعدين اشترِ مباشرة من محفظة DeHub مالك."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبت أن الحساب لك. DeHub تراه فقط ملفك العام على GitHub.",
+    "failed": "شوفتش GitHub مش عملت. حاول تاني.",
+    "unavailable": "GitHub التّوثيق بيجي قريب.",
+    "disconnect": "تقطع"
   }
 }

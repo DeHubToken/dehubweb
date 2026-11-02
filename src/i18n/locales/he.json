@@ -162,7 +162,24 @@
     "saved": "שדות הפרופיל נשמרו",
     "failed": "לא נשמר. נסה שוב.",
     "verified": "קישור מאומת",
-    "verifyHint": "כדי לאמת קישור, הוסף את זה לעמוד ההוא ושמור שוב: {{snippet}}"
+    "verifyHint": "כדי לאמת קישור, הוסף את זה לעמוד ההוא ושמור שוב: {{snippet}}",
+    "descriptionPresets": "יש להוסיף אתר אינטרנט, כינויי גוף או כל דבר אחר. הקישורים מוצגים ברשתות החברתיות שלכם.",
+    "type": "סוג שדה",
+    "needsLabel": "תן תווית לכל שדה מותאם אישית",
+    "placeholderPronouns": "הם/הם",
+    "placeholderLocation": "עיר, ארץ",
+    "presets": {
+      "website": "אתר אינטרנט",
+      "blog": "בלוג",
+      "portfolio": "פורטפוליו",
+      "shop": "חנות",
+      "podcast": "פודקאסט",
+      "newsletter": "ניוזלטר",
+      "pronouns": "כינויים",
+      "location": "מיקום",
+      "custom": "התאמה אישית",
+      "customOption": "תווית מותאמת אישית"
+    }
   },
   "followedTags": {
     "follow": "עקוב אחרי #{{tag}}",
@@ -405,6 +422,9 @@
     "gasSponsorshipFailed": "לא ניתן היה לממן את העסקה הזו. נסה שוב בעוד רגע."
   },
   "nav": {
+    "reorderHint": "יש להחזיק ולגרור כל סמל כדי לארגן מחדש",
+    "reorderReset": "איפוס",
+    "reorderResetLong": "איפוס סדר התפריט",
     "home": "דף הבית",
     "explore": "חקור",
     "prompt": "הגדרה",
@@ -1738,6 +1758,10 @@
       "featureReply": "{{name}} השיב להערתך",
       "featureMentionNamed": "{{name}} הזכיר אותך ב\"{{title}}\"",
       "featureMention": "{{name}} הזכיר אותך בבקשת מאמר",
+      "featureNewNamed": "{{name}} פרסמה בקשה חדשה \"{{title}}\"",
+      "featureNew": "{{name}} פרסמו בקשה חדשה",
+      "featureActivityNamed": "{{name}} הגיב/ה על \"{{title}}\"",
+      "featureActivity": "{{name}} הגיבו על בקשה",
       "governanceVoteNamed": "{{name}} הצביע על הצעתך \"{{title}}\"",
       "governanceVote": "{{name}} הצביע על הצעתך",
       "governanceCommentNamed": "{{name}} התקשר להצעתך “{{title}}”",
@@ -2876,6 +2900,21 @@
     "likersEmptyBody": "לייקים לתגובה הזו יופיעו כאן.",
     "anonymousLikes_one": "{{count}} לייק ממחזיק תג אנונימי",
     "anonymousLikes_other": "{{count}} לייקים ממחזיקי תג אנונימיים"
+  },
+  "mintChain": {
+    "title": "פוסט מנטה",
+    "subtitle": "בחר שרשרת. המחירים פעילים ומתעדכנים בכל דקה.",
+    "free": "חינם",
+    "gasCovered": "הגז מכוסה על ידי DeHub",
+    "feeIncludesGas": "≈{{usd}}, כולל דלק",
+    "gasIncluded": "כולל גז",
+    "gasOnly": "≈{{usd}} דלק",
+    "paidFromWallet": "{{amount}} מהארנק שלך",
+    "paidFromWalletPlain": "שולם מהארנק שלכם",
+    "priceUnavailable": "המחיר לא זמין",
+    "confirm": "נענע ב -{{chain}}",
+    "confirmWithCost": "מטבעה ב - {{chain}} · {{cost}}",
+    "notAvailable": "הטבעה בשרשרת זו אינה זמינה עדיין."
   },
   "postInfo": {
     "title": "מידע על הפוסט",
@@ -14618,7 +14657,7 @@
     "f45e06965f93": "אין תזוזות עדיין",
     "34f5da2599fa": "הצעות חדשות יוצגו כאן.",
     "bac527bf9a36": "הצעות להגשים",
-    "036cfd952896": "את מי לעקוב",
+    "a94bfc8a15e8": "הצעות למעקב",
     "0c820caf16c0": "עדיין אין ביוגרפיה",
     "e139251e4f5b": "מחק פוסט",
     "b3661ad568df": "אין אפשרות לבטל. הפוסט שלך יימחק באופן קבוע.",
@@ -18656,8 +18695,38 @@
     "headlineAccent": "ותהיה מאושר.",
     "orContinueWith": "או המשך עם",
     "phone": "טלפון",
+    "email": "אימייל",
     "fingerprint": "טביעת אצבע",
     "exploreFirst": "קודם תסתובב",
     "codeNote": "נשלח לך קוד במייל, בלי סיסמה."
+  },
+  "tokenLaunch": {
+    "eyebrow": "בקרוב",
+    "title": "השקת טוקן בקרוב",
+    "body": "הקנייה סגורה בזמן שהטוקן החדש מתכונן. קבל אימייל ברגע שהוא יופעל.",
+    "notifyMe": "הודע לי",
+    "sendTo": "נשלח אימייל ל-{{email}}",
+    "emailLabel": "אימייל",
+    "emailPlaceholder": "האימייל שלך",
+    "invalidEmail": "הזן אימייל תקין",
+    "joinedTitle": "אתה ברשימה",
+    "joinedBody": "נשלח אימייל ל-{{email}} כאשר הטוקן יושק.",
+    "joinedBodyNoEmail": "נשלח אימייל אליך כאשר הטוקן יושק.",
+    "failed": "לא היה ניתן לשמור זאת. נסה שוב.",
+    "privacy": "משמש רק כדי להודיע לך על ההשקה.",
+    "seoTitle": "השקת טוקן בקרוב | DeHub",
+    "seoDescription": "הטוקן החדש של DeHub יושק בקרוב. הצטרף לרשימה וקבל אימייל אחד ברגע שהוא יופעל, ואז קנה ישירות מהארנק DeHub שלך."
+  },
+  "githubLink": {
+    "hint": "היכנס ל - GitHub כדי להוכיח שהחשבון שלך. DeHub רואה רק את פרופיל ה - GitHub הציבורי שלך.",
+    "verified": "מאומת",
+    "verifiedAria": "חשבון GitHub מאומת",
+    "connected": "GitHub מחובר",
+    "disconnected": "GitHub מנותק",
+    "taken": "חשבון GitHub זה כבר נמצא בפרופיל DeHub אחר.",
+    "failed": "לא הצלחנו לחבר את GitHub. נסו שוב.",
+    "unavailable": "האימות של GitHub יגיע בקרוב.",
+    "connect": "חיבור GitHub",
+    "disconnect": "התנתקות"
   }
 }

@@ -130,6 +130,7 @@ import { GettingStartedSetting } from '@/components/app/settings/GettingStartedS
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import type { SocialPlatform, VerifiedSocialAccount } from '@/lib/social-reach';
 import { SocialConnectControl, useOwnSocialReach } from '@/components/app/settings/SocialReachConnect';
+import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
@@ -380,35 +381,40 @@ export default function SettingsPage() {
         }
       >
         {/* Search across settings — switches tab, scrolls to the match and
-            flashes it. Index and jump live in src/lib/settings-search.ts. */}
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            data-search-surface
-            value={settingsSearch}
-            onChange={(e) => { setSettingsSearch(e.target.value); setSearchCursor(0); }}
-            onFocus={() => setSettingsSearchFocused(true)}
-            onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
-            onKeyDown={(e) => {
-              const count = settingsSearchResults.length;
-              if (e.key === 'Escape') { setSettingsSearch.complete(settingsSearch, ''); setSettingsSearchFocused(false); return; }
-              if (!count) return;
-              if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor((c) => (c + 1) % count); }
-              else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchCursor((c) => (c - 1 + count) % count); }
-              else if (e.key === 'Enter') {
-                e.preventDefault();
-                openSearchResult(settingsSearchResults[Math.min(searchCursor, count - 1)]);
-                e.currentTarget.blur();
-              }
-            }}
-            placeholder={t('settings.searchPlaceholder', 'Search settings')}
-            className="h-10 rounded-xl pl-9 bg-white/5 border-white/10"
-            role="combobox"
-            aria-expanded={settingsSearchFocused && settingsSearchResults.length > 0}
-            aria-controls="settings-search-results"
-          />
+            flashes it. Index and jump live in src/lib/settings-search.ts.
+            Results open inline and push the tab row down, as the app does: a
+            floating list hung over the tabs and the page below, half under the
+            island's glass, and read as no results at all. */}
+        <div>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              data-search-surface
+              value={settingsSearch}
+              onChange={(e) => { setSettingsSearch(e.target.value); setSearchCursor(0); }}
+              onFocus={() => setSettingsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
+              onKeyDown={(e) => {
+                const count = settingsSearchResults.length;
+                if (e.key === 'Escape') { setSettingsSearch.complete(settingsSearch, ''); setSettingsSearchFocused(false); return; }
+                if (!count) return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor((c) => (c + 1) % count); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchCursor((c) => (c - 1 + count) % count); }
+                else if (e.key === 'Enter') {
+                  e.preventDefault();
+                  openSearchResult(settingsSearchResults[Math.min(searchCursor, count - 1)]);
+                  e.currentTarget.blur();
+                }
+              }}
+              placeholder={t('settings.searchPlaceholder', 'Search settings')}
+              className="h-10 rounded-xl pl-9 bg-white/5 border-white/10"
+              role="combobox"
+              aria-expanded={settingsSearchFocused && settingsSearchResults.length > 0}
+              aria-controls="settings-search-results"
+            />
+          </div>
           {settingsSearchFocused && settingsSearch.trim() && (
-            <div id="settings-search-results" role="listbox" data-glass-menu className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+            <div id="settings-search-results" role="listbox" className="mt-2 max-h-[min(352px,50dvh)] overflow-y-auto overscroll-contain bg-white/5 border border-white/10 rounded-xl">
               {settingsSearchResults.length > 0 ? (
                 settingsSearchResults.map((result, i) => (
                   <button
@@ -1218,6 +1224,11 @@ function ProfileSettings() {
               }
             />
           </CollapsibleStack>
+          {/* Outside the stack so it is never folded away: a verified GitHub
+              is proven by signing in, not typed, which is the point of it. */}
+          <div className="mt-6">
+            <GithubLinkSetting />
+          </div>
         </div>
 
         {/* How you get back in. */}
@@ -1802,6 +1813,11 @@ function PrivacySettings() {
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
           />
+          {hideBadgeAndBalance && !isLoading && (
+            <div role="status" className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs font-medium leading-relaxed text-zinc-200">
+              {t('settings.tipsOffNote', 'Tips and sends to you are off while this is on. Turn it off to get tipped again.')}
+            </div>
+          )}
           <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-zinc-300">{_copy("copy.660711e7d4af", { defaultValue: "On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled." })}</div>
           {isPrivate && (
             <div className="pl-8">

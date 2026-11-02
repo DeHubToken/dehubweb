@@ -162,7 +162,23 @@
     "saved": "An ajiye filayen bayanan martaba",
     "failed": "Ba a ajiye ba. Sake gwadawa.",
     "verified": "Hanyar haɗi da aka tabbatar",
-    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}"
+    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}",
+    "descriptionPresets": "Ƙara shafin yanar gizo, pronouns ko wani abu. Hanyoyin haɗi suna nunawa tare da zamantakewar ku.",
+    "type": "Nau'in filin",
+    "needsLabel": "Ka ba kowane filin al'ada lakabi",
+    "placeholderLink": "nakuite.com",
+    "placeholderPronouns": "sun/sun",
+    "placeholderLocation": "City, kasar",
+    "presets": {
+      "website": "Yanar Gizo",
+      "blog": "Blog",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Wuri",
+      "custom": "Musamman",
+      "customOption": "Alamar al'ada"
+    }
   },
   "followedTags": {
     "follow": "Bi #{{tag}}",
@@ -398,6 +414,9 @@
     "gasSponsorshipFailed": "Ba a iya ɗaukar nauyin wannan hada-hada ba. Ka sake gwadawa nan da ɗan lokaci."
   },
   "nav": {
+    "reorderHint": "Riƙe da jawo kowane icon don sake tsarawa",
+    "reorderReset": "Sake saitawa",
+    "reorderResetLong": "Sake saita umarnin menu",
     "home": "Gida",
     "explore": "Bincika",
     "prompt": "Fadakarwa",
@@ -1728,6 +1747,8 @@
       "featureReply": "{{name}} ya amsa bayaninka",
       "featureMentionNamed": "{{name}} ya ambace ka a kan “{{title}}”",
       "featureMention": "{{name}} ya ambace ka a kan buƙatar ƙarin fasali",
+      "featureActivityNamed": "{{name}} comment a kan \"{{title}}\"",
+      "featureActivity": "{{name}} ya yi tsokaci akan buƙata",
       "governanceVoteNamed": "{{name}} ya kada kuri'a a kan shawararka \"{{title}}\"",
       "governanceVote": "{{name}} ya kada kuri'a akan shawararka",
       "governanceCommentNamed": "{{name}} comment a kan shawararka \"{{title}}\"",
@@ -2858,6 +2879,21 @@
     "likersEmptyBody": "So a kan wannan sharhi zai bayyana a nan.",
     "anonymousLikes_one": "So {{count}} daga mai riƙe da lamba da ba a sani ba",
     "anonymousLikes_other": "So {{count}} daga masu riƙe da lamba da ba a sani ba"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "Zaɓi sarkar. farashin suna rayuwa kuma suna sabunta kowane minti.",
+    "free": "Kyauta",
+    "gasCovered": "Gas da aka rufe da DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas hada",
+    "gasIncluded": "Gas hada",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} daga walat ka",
+    "paidFromWalletPlain": "Biyan kuɗi daga walat ɗin ku",
+    "priceUnavailable": "Farashin da ba a samu ba",
+    "confirm": "Mint a kan {{chain}}",
+    "confirmWithCost": "Mint a kan {{chain}} · {{cost}}",
+    "notAvailable": "Minting a kan wannan sarkar ba a samuwa ba tukuna."
   },
   "postInfo": {
     "title": "Bayanan bugu",
@@ -14526,7 +14562,7 @@
     "f45e06965f93": "Babu shawarwarin biyo baya tukuna",
     "34f5da2599fa": "Shawarwarin sabbin asusu za su bayyana a nan.",
     "bac527bf9a36": "Shawarwarin Biyo Baya",
-    "036cfd952896": "Wanene zai bi",
+    "a94bfc8a15e8": "Shawarwarin bibiya",
     "0c820caf16c0": "Babu bio yet",
     "e139251e4f5b": "Goge Sakon",
     "b3661ad568df": "Ba za a iya janye wannan matakin ba. Za a goge sakonka har abada.",
@@ -18600,8 +18636,38 @@
     "headlineAccent": "kuma ku yi farin ciki.",
     "orContinueWith": "ko ci gaba da",
     "phone": "Wayar waya",
+    "email": "Email",
     "fingerprint": "Rubutun yatsa",
     "exploreFirst": "Bincika na farko",
     "codeNote": "Muna imel da ku lambar, babu kalmar sirri da ake buƙata."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Sannu da zuwa",
+    "title": "Token ƙaddamarwa ba da daɗewa ba",
+    "body": "Ana rufe siye yayin da sabon alamar ya shirya. Samu imel lokacin da yake rayuwa.",
+    "notifyMe": "Sanar da ni",
+    "sendTo": "Za mu yi email {{email}}",
+    "emailLabel": "Imel",
+    "emailPlaceholder": "Imel naka",
+    "invalidEmail": "Sai anai rubuta abin da aka shirya a cikin wannan shafin.",
+    "joinedTitle": "Ka a cika jerinmu.",
+    "joinedBody": "Muna kiranin {{email}} lokacin da ake kirkire token.",
+    "joinedBodyNoEmail": "Muna kallon ku da email lokacin da ake kirkirar daidai token.",
+    "failed": "Ba zai iya ajiye wannan ba. sake gwadawa.",
+    "privacy": "Kawai ake magana da ku da shirin da aka kaddamar a cikin wannan wata.",
+    "seoTitle": "Kamfanin Token ya zo zuwa kasa | DeHub",
+    "seoDescription": "Tashin DeHub token ya zo daidai. Ci gaba a cikin jerin da kuma samu abinci mai lamba a wani lokaci, kuma kada ku shiga a cikin DeHub wallet ku kada."
+  },
+  "githubLink": {
+    "hint": "Shiga cikin GitHub don tabbatar da asusun naku ne. DeHub kawai yana ganin bayanan ku na GitHub na jama'a.",
+    "verified": "Tabbatacce",
+    "verifiedAria": "Tabbatar da asusun GitHub",
+    "connected": "GitHub da aka haɗa",
+    "disconnected": "GitHub ya katse",
+    "taken": "Cewa asusun GitHub ya riga ya kasance a kan wani bayanin martaba na DeHub.",
+    "failed": "Ba za a iya haɗa GitHub ba. sake gwadawa.",
+    "unavailable": "Tabbatar da GitHub yana zuwa ba da daɗewa ba.",
+    "connect": "Haɗa GitHub",
+    "disconnect": "Kashe haɗin kai"
   }
 }

@@ -4,7 +4,7 @@
  * category_post_log (synced from the feed API by sync-category-log).
  * "All" is the same call with no time cutoff.
  */
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTrendingTopic } from './use-superpowers';
 
@@ -145,6 +145,23 @@ function withBoosted(items: CategoryCount[], boosted: string | null | undefined)
   if (lastPlaceholder >= 0) rest.splice(lastPlaceholder, 1);
 
   return [{ name, post_count: existing?.post_count ?? 0, boosted: true }, ...rest];
+}
+
+/**
+ * Load every period at once. The rail rotates to a new period every 5 s and
+ * used to fetch each one as it came up, so the last count landed ~25 s after
+ * the page opened and kept the page "loading" that long. Same five reads, all
+ * done in the first seconds, and each rotation then shows its list instantly.
+ */
+export function prefetchTrendingPeriods(queryClient: QueryClient, periods: TopicPeriod[]): void {
+  for (const period of periods) {
+    void queryClient.prefetchQuery({
+      queryKey: ['trending-categories', period],
+      queryFn: () => fetchCategoryCounts(period),
+      staleTime: TRENDING_CACHE_MS,
+      gcTime: TRENDING_CACHE_MS,
+    });
+  }
 }
 
 /*

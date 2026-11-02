@@ -9,6 +9,7 @@ import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { AnimatePresence, motion } from 'framer-motion';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
+import { isDhbSymbol } from '@/lib/market/dhb-market-cap';
 
 interface CashtagResultSwitcherProps {
   stockData: StockQuote | null;
@@ -33,7 +34,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
 
   // Special case: $DHB / $DEHUB — always show as Dehub token, never as a stock
   const upperSym = symbol.toUpperCase().replace(/^\$/, '');
-  const isDhb = upperSym === 'DHB' || upperSym === 'DEHUB';
+  const isDhb = isDhbSymbol(upperSym);
   const hasDhbDexPair = dexPairs.some(p => p.baseToken?.symbol?.toUpperCase() === 'DHB');
   if (isDhb && !hasDhbDexPair && cmcData) {
     const syntheticPrice = cmcData.price ?? 0.001;

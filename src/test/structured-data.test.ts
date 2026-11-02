@@ -171,13 +171,15 @@ describe('edge-rendered pages', () => {
 
   it('bylines blog posts to the organisation and serves the card as a transformed JPEG', async () => {
     network({});
-    const slug = JSON.parse(MANIFEST)[0].slug;
+    const post = JSON.parse(MANIFEST)[0];
+    const slug = post.slug;
     const { body } = await crawl(`/guides/${slug}`);
     const [article, trail] = (jsonLd(body)[0]['@graph'] as Ld[]);
     expect(article.author).toEqual({ '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' });
     expect(trail['@type']).toBe('BreadcrumbList');
     const image = meta(body, 'og:image')!.replace(/&amp;/g, '&');
-    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io/_og/blog/${encodeURIComponent(slug)}`);
+    // The post's own banner, read straight from /media and made 1200x630.
+    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io${post.bannerImage}`);
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 

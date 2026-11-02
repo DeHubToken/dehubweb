@@ -162,7 +162,25 @@
     "saved": "प्रोफ़ाइल फ़ील्ड सेव हो गए",
     "failed": "सेव नहीं हुआ। फिर से कोशिश करें।",
     "verified": "सत्यापित लिंक",
-    "verifyHint": "लिंक सत्यापित करने के लिए इसे उस पेज पर जोड़ें, फिर दोबारा सेव करें: {{snippet}}"
+    "verifyHint": "लिंक सत्यापित करने के लिए इसे उस पेज पर जोड़ें, फिर दोबारा सेव करें: {{snippet}}",
+    "descriptionPresets": "वेबसाइट, सर्वनाम या कुछ और जोड़ें। लिंक आपके सोशल के साथ दिखाई देते हैं।",
+    "type": "फ़ील्ड का प्रकार",
+    "needsLabel": "हर कस्टम फ़ील्ड को एक लेबल दें",
+    "placeholderLink": "यoursite.com",
+    "placeholderPronouns": "वे/उन्हें",
+    "placeholderLocation": "शहर, देश",
+    "presets": {
+      "website": "वेबसाइट",
+      "blog": "ब्लॉग",
+      "portfolio": "पोर्टफ़ोलियो",
+      "shop": "खरीदारी करें",
+      "podcast": "पॉडकास्ट",
+      "newsletter": "न्यूज़लेटर",
+      "pronouns": "सर्वनाम",
+      "location": "स्थान",
+      "custom": "कस्टम",
+      "customOption": "कस्टम लेबल"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} फ़ॉलो करें",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "इस लेनदेन का खर्च नहीं उठाया जा सका। कृपया थोड़ी देर बाद फिर कोशिश करें।"
   },
   "nav": {
+    "reorderHint": "फिर से व्यवस्थित करने के लिए किसी भी आइकन को पकड़ें और खींचें",
+    "reorderReset": "रीसेट करें",
+    "reorderResetLong": "मेन्यू ऑर्डर रीसेट करें",
     "home": "होम",
     "explore": "खोजें",
     "prompt": "प्रॉम्प्ट",
@@ -1733,6 +1754,12 @@
     "burstBody": "{{count}} नई सूचनाएं {{who}} से",
     "community": {
       "joined": "{{name}} आपके समुदाय में शामिल हुए",
+      "chatOne": "{{name}} ने एक संदेश भेजा",
+      "chatOneNamed": "{{name}} ने {{community}} में एक संदेश भेजा",
+      "chatTwo": "{{name}} और {{second}} ने संदेश भेजे",
+      "chatTwoNamed": "{{name}} और {{second}} ने {{community}} में संदेश भेजे",
+      "chatMany": "{{name}} + {{others}} अन्य ने संदेश भेजे",
+      "chatManyNamed": "{{name}} + {{others}} अन्य ने {{community}} में संदेश भेजे",
       "joinedNamed": "{{name}} “{{community}}” में शामिल हुए",
       "requested": "{{name}} को आपके समुदाय में शामिल होने के लिए कहा गया",
       "requestedNamed": "{{name}} को “{{community}}” में शामिल होने के लिए कहा गया",
@@ -1754,6 +1781,10 @@
       "featureReply": "{{name}} ने आपके कमेंट का जवाब दिया",
       "featureMentionNamed": "{{name}} ने आपको \"{{title}}\" पर बताया",
       "featureMention": "{{name}} ने एक सुविधा अनुरोध पर आपका उल्लेख किया है",
+      "featureNewNamed": "{{name}} ने एक नया अनुरोध पोस्ट किया \"{{title}}\"",
+      "featureNew": "{{name}} ने एक नया अनुरोध पोस्ट किया",
+      "featureActivityNamed": "{{name}} ने \"{{title}}\" पर कमेंट किया",
+      "featureActivity": "{{name}} ने एक अनुरोध पर कमेंट किया",
       "governanceVoteNamed": "{{name}} ने आपके प्रस्ताव पर मतदान किया \"{{title}}\"",
       "governanceVote": "{{name}} ने आपके प्रस्ताव पर मतदान किया",
       "governanceCommentNamed": "{{name}} ने आपके प्रस्ताव पर टिप्पणी की \"{{title}}\"",
@@ -2091,7 +2122,12 @@
     },
     "tabs": {
       "playlists": "प्लेलिस्ट",
-      "dislikes": "नापसंद"
+      "dislikes": "नापसंद",
+      "articles": "लेख"
+    },
+    "articles": {
+      "emptyTitle": "अभी कोई लेख नहीं",
+      "emptySubtitle": "लेख यहाँ दिखाई देंगे"
     },
     "dislikes": {
       "emptyTitle": "अभी तक कोई नापसंद नहीं",
@@ -2889,6 +2925,21 @@
     "likersEmptyBody": "इस टिप्पणी के लाइक यहाँ दिखेंगे।",
     "anonymousLikes_one": "गुमनाम बैज धारक से {{count}} लाइक",
     "anonymousLikes_other": "गुमनाम बैज धारकों से {{count}} लाइक"
+  },
+  "mintChain": {
+    "title": "मिंट पोस्ट",
+    "subtitle": "एक चेन चुनें। कीमतें लाइव होती हैं और हर मिनट अपडेट होती हैं।",
+    "free": "मुफ़्त",
+    "gasCovered": "डीहब द्वारा कवर की गई गैस",
+    "feeIncludesGas": "≈ {{usd}}, गैस शामिल है",
+    "gasIncluded": "गैस शामिल है",
+    "gasOnly": "≈ {{usd}} गैस",
+    "paidFromWallet": "आपके वॉलेट से {{amount}}",
+    "paidFromWalletPlain": "आपके वॉलेट से भुगतान किया गया",
+    "priceUnavailable": "किराया उपलब्ध नहीं है",
+    "confirm": "{{chain}} पर टकसाल",
+    "confirmWithCost": "{{chain}} · {{cost}} पर टकसाल",
+    "notAvailable": "इस चेन पर मिंटिंग अभी तक उपलब्ध नहीं है।"
   },
   "postInfo": {
     "title": "पोस्ट जानकारी",
@@ -14656,7 +14707,7 @@
     "f45e06965f93": "अब तक कोई अनुसरण करने के सुझाव नहीं हैं",
     "34f5da2599fa": "नई खाता सुझाव जल्द ही यहाँ दिखाई देंगे।",
     "bac527bf9a36": "अनुसरण करने के सुझाव",
-    "036cfd952896": "किसे फॉलो करें",
+    "a94bfc8a15e8": "फ़ॉलो करने के सुझाव",
     "0c820caf16c0": "अभी तक कोई बायो नहीं है",
     "e139251e4f5b": "पोस्ट हटाना",
     "b3661ad568df": "यह कार्रवाई अनपड़ो है। आपकी पोस्ट को स्थायी रूप से हटा दिया जाएगा।",
@@ -18760,8 +18811,41 @@
     "headlineAccent": "और तुम खुश रहोगे।",
     "orContinueWith": "या इससे जारी रखें",
     "phone": "फ़ोन",
+    "email": "ईमेल",
     "fingerprint": "फ़िंगरप्रिंट",
     "exploreFirst": "पहले देखें",
     "codeNote": "हम आपको ईमेल पर एक कोड भेजते हैं, पासवर्ड की ज़रूरत नहीं।"
+  },
+  "halloween": {
+    "title": "हैप्पी हैलोवीन",
+    "otherThemes": "डरावना मूड नहीं है? दूसरी थीम खोजें:",
+    "enter": "कालकोठरी में चलें"
+  },
+  "tokenLaunch": {
+    "eyebrow": "जल्द आ रहा है",
+    "title": "टोकन जल्द ही लॉन्च होने वाला है",
+    "body": "खरीदारी बंद है जब तक नया टोकन तैयार नहीं हो जाता। जैसे ही यह लाइव होता है, एक ईमेल प्राप्त करें।",
+    "notifyMe": "अपको सूचित करें",
+    "sendTo": "हम {{email}} को ईमेल भेजेंगे।",
+    "emailLabel": "ईमेल",
+    "invalidEmail": "एक वैध ईमेल एड्रेस दर्ज करें।",
+    "joinedBody": "हम ईमेल भेजेंगे {{email}} जब टोकन लॉन्च होगा।",
+    "joinedBodyNoEmail": "हम आपको टोकन लॉन्च होने पर ईमेल करेंगे।",
+    "failed": "इसे सेव नहीं किया जा सका। फिर से कोशिश करें।",
+    "privacy": "अभी तक सिर्फ लॉन्च के बारे में बताने के लिए ही इस्तेमाल किया जाता है।",
+    "seoTitle": "टोकन लॉन्च होने वाला है | DeHub",
+    "seoDescription": "नई DeHub टोकन जल्द ही लॉन्च होने वाली है। लिस्ट में शामिल हो जाइए और लाइव होने की क्षणभर में एक ईमेल प्राप्त करें, फिर सीधे अपने DeHub वॉलेट से खरीदें।"
+  },
+  "githubLink": {
+    "hint": "यह साबित करने के लिए कि अकाउंट आपका है, GitHub में साइन इन करें। DeHub केवल आपकी सार्वजनिक GitHub प्रोफ़ाइल देखता है।",
+    "verified": "परखा हुआ",
+    "verifiedAria": "परखा हुआ GitHub अकाउंट",
+    "connected": "GitHub कनेक्टेड",
+    "disconnected": "GitHub डिस्कनेक्ट हो गया",
+    "taken": "वह GitHub अकाउंट पहले से ही किसी अन्य DeHub प्रोफ़ाइल पर है।",
+    "failed": "GitHub को कनेक्ट नहीं किया जा सका। फिर से कोशिश करें।",
+    "unavailable": "GitHub वेरिफ़िकेशन जल्द ही आ रहा है।",
+    "connect": "GitHub कनेक्ट करें",
+    "disconnect": "डिस्कनेक्ट करें"
   }
 }

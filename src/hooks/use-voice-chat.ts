@@ -7,6 +7,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { speechSentences, speechText } from '@/lib/speech-text';
 
 interface UseVoiceChatOptions {
   onTranscript?: (transcript: string) => void;
@@ -279,23 +280,9 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
     
-    // Clean text for better speech (remove markdown, etc.)
-    const cleanText = text
-      .replace(/\*\*/g, '') // Remove bold markers
-      .replace(/\*/g, '')   // Remove italic markers
-      .replace(/`/g, '')    // Remove code markers
-      .replace(/#{1,6}\s/g, '') // Remove heading markers
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to just text
-      .replace(/\n+/g, '. ') // Convert newlines to pauses
-      .trim();
-    
+    const cleanText = speechText(text);
     if (!cleanText) return;
-    
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
+
     // Use cached voices for consistent selection
     const voicesToUse = voices.length > 0 ? voices : safeGetVoices();
     
@@ -322,16 +309,20 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
       preferredVoice = voicesToUse.find(v => v.lang.startsWith('en-'));
     }
     
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
-    
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-    
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
+    // One utterance per sentence: browser voices cut long ones short.
+    const pieces = speechSentences(cleanText);
+    pieces.forEach((piece, i) => {
+      const utterance = new SpeechSynthesisUtterance(piece);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      if (preferredVoice) utterance.voice = preferredVoice;
+      if (i === 0) utterance.onstart = () => setIsSpeaking(true);
+      if (i === pieces.length - 1) utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = (e) => { if (e.error !== 'interrupted' && e.error !== 'canceled') setIsSpeaking(false); };
+      utteranceRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+    });
   }, [onError, voices, voicePreference]);
 
   const stopSpeaking = useCallback(() => {

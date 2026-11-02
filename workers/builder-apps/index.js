@@ -10,12 +10,12 @@
 // builder-api: /~t/<token>/<file>. The token rides in the path, not a cookie,
 // so relative assets inherit it and it works inside a cross-site iframe.
 //
-// The apex (dhb.gg) and www are not apps: the route
+// The apex (dhb.gg), www and docs are not apps: the route
 // is *.dhb.gg/* and www passes straight through to its origin.
 
 const FUNCTIONS = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/builder-serve';
 const APPS_DOMAIN = 'dhb.gg';
-const PASS_THROUGH = new Set(['www']);
+const PASS_THROUGH = new Set(['www', 'docs']);
 
 function page(status, title, message) {
   const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><body style="background:#0a0a0a;color:#e5e5e5;font-family:system-ui;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:24px"><div><p style="font-size:18px;margin:0 0 8px">${title}</p><p style="color:#949499;margin:0">${message}</p><p style="margin-top:20px"><a style="color:#e5e5e5" href="https://dehub.io/builder">Build your own on DeHub</a></p></div>`;

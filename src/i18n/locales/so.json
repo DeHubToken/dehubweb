@@ -162,7 +162,25 @@
     "saved": "Meelaha astaanta waa la kaydiyay",
     "failed": "Lama kaydin. Isku day mar kale.",
     "verified": "Xiriir la xaqiijiyay",
-    "verifyHint": "Si aad u xaqiijiso xiriir, kan ku dar boggaas, kadibna mar kale kaydi: {{snippet}}"
+    "verifyHint": "Si aad u xaqiijiso xiriir, kan ku dar boggaas, kadibna mar kale kaydi: {{snippet}}",
+    "descriptionPresets": "Ku dar websaydh, ku dhawaaqid ama wax kale. Xiriirada waxay muujinayaan bulshadaada.",
+    "type": "Nooca goobta",
+    "needsLabel": "Siiya beer kasta oo caadada ah calaamad",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ay/ay",
+    "placeholderLocation": "Magaalada, waddanka",
+    "presets": {
+      "website": "Websaydhka",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Dukaan",
+      "podcast": "Podcast",
+      "newsletter": "Wargayska",
+      "pronouns": "Pronouns",
+      "location": "Goobta",
+      "custom": "Custom",
+      "customOption": "Calaamad Custom"
+    }
   },
   "followedTags": {
     "follow": "Raac #{{tag}}",
@@ -404,6 +422,9 @@
     "gasSponsorshipFailed": "Kharashka macaamilkan lama bixin karin. Fadlan wax yar ka dib isku day."
   },
   "nav": {
+    "reorderHint": "Qabso oo jiido icon kasta si ay dib u abaabulaan",
+    "reorderReset": "Dib u deji",
+    "reorderResetLong": "Dib u deji amarka menu",
     "home": "Guriga",
     "explore": "Sahmi",
     "prompt": "Dejiso",
@@ -1730,6 +1751,10 @@
       "featureReply": "{{name}} ayaa ka jawaabay faalladaada",
       "featureMentionNamed": "{{name}} ayaa kugu xusay “{{title}}”",
       "featureMention": "{{name}} ayaa kugu xusay codsi muuqaal ah",
+      "featureNewNamed": "{{name}} waxay soo diray shahaadad \"{{title}}\"",
+      "featureNew": "{{name}} waxay soo diray shir.",
+      "featureActivityNamed": "{{name}} waxay aabahay \"{{title}}\"",
+      "featureActivity": "{{name}} waxay sheegtay inuu xusay",
       "governanceVoteNamed": "{{name}} ayaa u codeeyay soo jeedintaada “{{title}}”",
       "governanceVote": "{{name}} ayaa u codeeyay soo jeedintaada",
       "governanceCommentNamed": "{{name}} ayaa faallo ka bixiyay soo jeedintaada “{{title}}”",
@@ -2856,6 +2881,20 @@
     "likersEmptyBody": "Jeclaanshaha faalladan halkan ayay ka muuqan doonaan.",
     "anonymousLikes_one": "{{count}} jeclaansho oo ka timid haystaha calaamad qarsoon",
     "anonymousLikes_other": "{{count}} jeclaansho oo ka yimid haystayaasha calaamado qarsoon"
+  },
+  "mintChain": {
+    "title": "MINT POST",
+    "subtitle": "Dooro silsilad. qiimayaashu waa nool yihiin oo cusbooneysiiyaan daqiiqad kasta.",
+    "free": "Bilaash",
+    "gasCovered": "Gaas oo daboolka ka qaaday DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gaaska waxaa ka mid ah",
+    "gasIncluded": "Gaaska waxaa ka mid ah",
+    "gasOnly": "≈ {{usd}} gaas",
+    "paidFromWallet": "{{amount}} ka boorsadaada",
+    "paidFromWalletPlain": "Lacag laga bixiyay boorsadaada",
+    "priceUnavailable": "Qiimaha aan la heli karin",
+    "confirm": "Mint ee {{chain}}",
+    "notAvailable": "Minting on silsiladdan weli lama heli karo."
   },
   "postInfo": {
     "title": "Macluumaadka qoraalka",
@@ -14582,7 +14621,7 @@
     "f45e06965f93": "Ma jiraan talooyin raacid ah weli",
     "34f5da2599fa": "Talooyinka akoonnada cusub ayaa halkan ka soo muuqan doona.",
     "bac527bf9a36": "Talooyinka Raacidda",
-    "036cfd952896": "Cidda la raacayo",
+    "a94bfc8a15e8": "Talooyin la raaco",
     "0c820caf16c0": "Taariikh nololeed weli ma jiro",
     "e139251e4f5b": "Tirtir Qoraalka",
     "b3661ad568df": "Tallaabadan dib loogama noqon karo. Qoraalkaaga si joogto ah ayaa loo tirtiri doonaa.",
@@ -18688,8 +18727,26 @@
     "headlineAccent": "oo waad ku farxi doontaa.",
     "orContinueWith": "ama ku sii wad",
     "phone": "Telefoon",
+    "email": "Email",
     "fingerprint": "Faraha",
     "exploreFirst": "Marka hore sahami",
     "codeNote": "Waxaan kuu soo diraynaa koodh iimaylkaaga, looma baahna eray sir ah."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Imaanshaha ugu dhakhsaha badan",
+    "failed": "Ma badbaadin karo taas. isku day mar kale.",
+    "seoDescription": "Token cusub ee DeHub ayaa lagu sii dayn doona dhow. Ku biir liiska oo hel email hal mar markii ay bilaabato, ka dibna iibso sida toos ah meesha DeHub wallet-kaaga."
+  },
+  "githubLink": {
+    "hint": "Waxbarashada GitHub ku xidha inyo aad ugu xidha shaqaalaha aad ugu tahay. DeHub waxaad u baahantahay profileka GitHub-kaaga ah.",
+    "verified": "Verified",
+    "verifiedAria": "GitHub-kaaga ah waxaa la aaminaa",
+    "connected": "GitHub waxaa la xidhaa",
+    "disconnected": "GitHub waxaa la xidhaa",
+    "taken": "GitHub-kaaga ah waxaa la aaminaa kuwa aad ugu xidhaa profileka DeHub kana ah.",
+    "failed": "Waxaa la dhaadsaday GitHub. Fadlan xidhaa.",
+    "unavailable": "GitHub-kaaga ah waxaa la aaminaa inay ka dhac.",
+    "connect": "Xidhaa GitHub",
+    "disconnect": "Xidhaa GitHub"
   }
 }

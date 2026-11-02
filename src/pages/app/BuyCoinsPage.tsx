@@ -47,6 +47,7 @@ import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 import { isBuyRoute } from '@/lib/buy-route';
 import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { TokenLaunchNotify } from '@/components/app/token-launch/TokenLaunchNotify';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 const PRESET_AMOUNTS = [0.5, 10, 25, 50, 100, 500];
@@ -68,7 +69,37 @@ const DEAD_STRIPE = ['failed', 'canceled', 'cancelled', 'expired'];
 const DELIVERED = ['sent', 'completed', 'success'];
 const NOT_STARTED = ['', 'not_sent', 'pending', 'queued'];
 
+/**
+ * Buy Tokens while sales are closed: the token is launching soon, and anyone
+ * (signed in or not) can ask to be emailed when it does. The checkout below
+ * comes back when DHB_SALES_PAUSED is switched off.
+ */
 export default function BuyCoinsPage() {
+  if (DHB_SALES_PAUSED) return <TokenLaunchPage />;
+  return <BuyCoinsCheckout />;
+}
+
+function TokenLaunchPage() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen">
+      <SEOHead
+        title={t('tokenLaunch.seoTitle')}
+        description={t('tokenLaunch.seoDescription')}
+        url="https://dehub.io/buy"
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub token launching soon', url: 'https://dehub.io/buy', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
+      />
+      <h1 className="sr-only">{t('tokenLaunch.title')}</h1>
+      <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
+      <PageBody className="max-w-lg mx-auto">
+        <TokenLaunchNotify />
+      </PageBody>
+    </div>
+  );
+}
+
+function BuyCoinsCheckout() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();

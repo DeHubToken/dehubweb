@@ -162,7 +162,24 @@
     "saved": "Profilfälder gspeicheret",
     "failed": "Das isch nöd gspeicheret worde. Probier's nomal.",
     "verified": "Bestätigte Link",
-    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}"
+    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}",
+    "type": "Feldtyp",
+    "needsLabel": "Gebt jedem benutzerdefinierten Feld einen Label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "sie/ihm",
+    "placeholderLocation": "Stadt, Land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomen",
+      "location": "Ort",
+      "custom": "Benutzerdefiniert",
+      "customOption": "Benutzerdefinierter Label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} folge",
@@ -403,6 +420,9 @@
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
   },
   "nav": {
+    "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
+    "reorderReset": "Zrüggsetze",
+    "reorderResetLong": "Reset Menü-Reihenfolge",
     "home": "Hei",
     "explore": "Entdecke",
     "prompt": "Aazäig",
@@ -1726,6 +1746,10 @@
       "featureReply": "{{name}} het uf däm Komment aagfange.",
       "featureMentionNamed": "{{name}} hat dich in “{{title}}” erwähnt.",
       "featureMention": "{{name}} hat dich in einer Feature-Anfrage erwähnt.",
+      "featureNewNamed": "{{name}} hat eine neue Anfrage gepostet: “{{title}}”",
+      "featureNew": "{{name}} hat e neue Anfrage gepostet",
+      "featureActivityNamed": "{{name}} hätt’s im “{{title}}” kommentiert",
+      "featureActivity": "{{name}} hat an einer Anfrage kommentiert",
       "governanceVoteNamed": "{{name}} het für eini vo deini Vorschlag “{{title}}” abgstimmt het.",
       "governanceVote": "{{name}} hat uf dämmere Vorschlag abgstimmt",
       "governanceCommentNamed": "{{name}} het uf dämmere Vorschlag “{{title}}” kommentiert",
@@ -2882,6 +2906,21 @@
     "likersEmptyBody": "Likes uf dä Kommentar erschiined do.",
     "anonymousLikes_one": "{{count}} Like vomene anonyme Badge-Inhaber",
     "anonymousLikes_other": "{{count}} Likes vo anonyme Badge-Inhaber"
+  },
+  "mintChain": {
+    "title": "Mint-Post",
+    "subtitle": "Wähl e Chain. D'Priise sind live und aktualisiere jede Minute.",
+    "free": "Gratis",
+    "gasCovered": "Gas vom DeHub übernahm",
+    "feeIncludesGas": "≈ {{usd}}, Gas iibegriffe",
+    "gasIncluded": "Gas iibegriffe",
+    "gasOnly": "≈ {{usd}} Gas",
+    "paidFromWallet": "{{amount}} us dinere Wallet",
+    "paidFromWalletPlain": "Bezahlt us dinere Wallet",
+    "priceUnavailable": "Preis nöd verfüegbar",
+    "confirm": "Mint uf {{chain}}",
+    "confirmWithCost": "Mint uf {{chain}} · {{cost}}",
+    "notAvailable": "Minting uf däre Chain isch no nöd verfüegbar."
   },
   "postInfo": {
     "title": "Biitragsinformation",
@@ -14609,7 +14648,7 @@
     "f45e06965f93": "Keine Vorschläge zum Folgen noch",
     "34f5da2599fa": "Neue Benutzer-Vorschläge erscheinen hier.",
     "bac527bf9a36": "Folgevorschläge",
-    "036cfd952896": "Wen folgen?",
+    "a94bfc8a15e8": "Folgevorschläg",
     "0c820caf16c0": "Kein Bio noch",
     "e139251e4f5b": "Lösche Beitrag",
     "b3661ad568df": "Diese Aktion kann nicht rückgängig gemacht werden. Dein Beitrag wird dauerhaft gelöscht.",
@@ -18668,8 +18707,38 @@
     "headlineAccent": "und glücklich sein.",
     "orContinueWith": "oder weitermachen mit",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Fingerabdruck",
     "exploreFirst": "Erst erkunden",
     "codeNote": "Wir schicken dir per E-Mail einen Code, kein Passwort nötig."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Chùò chùò",
+    "title": "Token wird bald lanciert",
+    "body": "Kaufen ist geschlossen, während der neue Token vorbereitet wird. Du bekommst eine E-Mail, sobald er live geht.",
+    "notifyMe": "Meld mich an",
+    "sendTo": "Wir werden {{email}} eine E-Mail schicken",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "Deine E-Mail",
+    "invalidEmail": "Gib eine gültige E-Mail ein",
+    "joinedTitle": "Du bist auf der Liste",
+    "joinedBody": "Wir werden {{email}} eine E-Mail schicken, wenn der Token lanciert wird.",
+    "joinedBodyNoEmail": "Wir werden dir eine E-Mail schicken, wenn der Token lanciert wird.",
+    "failed": "Das konnte nicht gespeichert werden. Versuche es nochmals.",
+    "privacy": "Nur für die Info über die Lancierung.",
+    "seoTitle": "Token wird bald lanciert | DeHub",
+    "seoDescription": "Der neue DeHub-Token wird bald lanciert. Schreib dich auf die Liste und bekomm eine E-Mail, sobald er live geht, dann kannst du direkt aus deinem DeHub-Wallet kaufen."
+  },
+  "githubLink": {
+    "hint": "Logg dich bei GitHub ein, um zu beweisen, dass das Konto deinig ist. DeHub sieht nur dein öffentliches GitHub-Profil.",
+    "verified": "Bestätigt",
+    "verifiedAria": "Verifiziert",
+    "connected": "Verifiziertes GitHub-Konto",
+    "disconnected": "GitHub verbunden",
+    "taken": "GitHub getrennt",
+    "failed": "Dieses GitHub-Konto ist bereits mit einem anderen DeHub-Profil verbunden.",
+    "unavailable": "GitHub-Verifizierung ist bald verfügbar. Konnte GitHub nicht verbinden. Versuche es erneut.",
+    "connect": "Verifiziertes GitHub-Konto",
+    "disconnect": "GitHub verbinden"
   }
 }

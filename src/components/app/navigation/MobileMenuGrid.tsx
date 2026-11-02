@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react';
@@ -12,6 +12,13 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
+import { NAV_ITEMS } from '@/constants/app.constants';
+import { applyNavOrder } from '@/lib/nav-order';
+import { useNavOrderEditor } from '@/hooks/use-nav-order';
+import { useDragReorder } from '@/hooks/use-drag-reorder';
+import { navItemId } from './nav-item-id';
+
+const DEFAULT_MENU_IDS = NAV_ITEMS.map(navItemId);
 
 /**
  * The mobile menu sheet's tile grid.
@@ -31,7 +38,7 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Editor: 'videos', Creator: 'paint',
   Feedback: 'messages', Events: 'events', Leaderboard: 'trophy', 'Feature Requests': 'features', Staking: 'staking',
   SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao', Bounties: 'bounties',
-  Careers: 'careers', Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames',
+  Careers: 'careers', Stores: 'stores', Fractions: 'fractions', 'NFT Market': 'nfts', Usernames: 'usernames',
   Accounts: 'accounts', Advertising: 'ads', 'Live TV': 'tv', Prompt: 'wand',
   Glossary: 'glossary', 'Compare DeHub': 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
   Wallet: 'buy', Affiliate: 'subscriptions', Converter: 'videos', Migrate: 'bridge',
@@ -51,6 +58,22 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
   const [artFailed, setArtFailed] = useState(false);
   const { theme } = useAppTheme();
   useEffect(() => setArtFailed(false), [iconKey, theme]);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = labelRef.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.fontSize = '';
+      if (el.scrollWidth > el.clientWidth + 0.5) {
+        el.style.fontSize = `${Math.max(10, (11.5 * el.clientWidth) / el.scrollWidth).toFixed(2)}px`;
+      }
+    };
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(fit);
+    ro.observe(el.parentElement ?? el); // the tile: its width, not the label height the fit changes
+    return () => ro.disconnect();
+  }, [label, theme]);
   return (
     <>
       <span className="relative flex h-[44px] w-[44px] items-center justify-center">
@@ -72,7 +95,9 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
           </span>
         )}
       </span>
-      <span className={cn('w-full truncate text-center text-[11.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
+      {/* Names fit instead of ending in "…": two words wrap onto a second
+          line, and only a single word too long for the tile eases down. */}
+      <span ref={labelRef} className={cn('w-full line-clamp-2 text-center text-[11.5px] leading-tight [text-wrap:balance]', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
         {label}
       </span>
     </>
@@ -80,7 +105,8 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
 }
 
 const tileClass = (active: boolean) => cn(
-  'flex flex-col items-center justify-center gap-1.5 rounded-[14px] px-1 py-2.5 min-h-[84px] border transition-colors',
+  // justify-start: in a row where one name wraps, every icon stays on one line.
+  'flex flex-col items-center justify-start gap-1.5 rounded-[14px] px-1 py-2.5 min-h-[84px] border transition-colors',
   active
     ? 'bg-white/[0.12] border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
     : 'bg-white/[0.04] border-white/[0.08] active:bg-white/[0.08]',
@@ -97,9 +123,22 @@ interface MobileMenuGridProps {
   onNavigate: () => void;
 }
 
-export function MobileMenuGrid({ items, currentPath, notificationCount, messageCount, onNavigate }: MobileMenuGridProps) {
+export function MobileMenuGrid({ items, searching = false, currentPath, notificationCount, messageCount, onNavigate }: MobileMenuGridProps) {
   const { t } = useTranslation();
   const onHome = isHomePath(currentPath);
+
+  // Hold a tile and drag it to rearrange. Off while searching: the results
+  // are ordered by how well they match, not by the person's order.
+  const { order: savedOrder, customised, save, reset } = useNavOrderEditor('menu', DEFAULT_MENU_IDS);
+  const ordered = useMemo(
+    () => (searching ? items : applyNavOrder(items, savedOrder, navItemId)),
+    [items, savedOrder, searching],
+  );
+  const byId = useMemo(() => new Map(ordered.map((item) => [navItemId(item), item])), [ordered]);
+  const ids = useMemo(() => ordered.map(navItemId), [ordered]);
+  const onCommit = useCallback((next: string[]) => save(next), [save]);
+  const { order, draggingId, animateNextChange, itemProps } = useDragReorder({ ids, onCommit, disabled: searching });
+  const onReset = useCallback(() => { animateNextChange(); reset(); }, [animateNextChange, reset]);
 
   const isActive = (item: NavItem) =>
     item.path === '/app'
@@ -109,6 +148,8 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
   const renderNavTile = (item: NavItem) => {
     const label = t(NAV_LABEL_KEYS[item.label] || item.label, item.label);
     const active = isActive(item);
+    const drag = itemProps(navItemId(item));
+    const lifted = draggingId === navItemId(item);
     const body = (
       <TileBody
         label={label}
@@ -121,7 +162,7 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
 
     if (item.external) {
       return (
-        <a key={item.label} href={item.path} target="_blank" rel="noopener noreferrer" onClick={onNavigate} data-menu-tile="idle" className={tileClass(false)}>
+        <a key={item.label} {...drag} href={item.path} target="_blank" rel="noopener noreferrer" onClick={onNavigate} data-menu-tile="idle" className={cn(tileClass(false), lifted && liftedClass)}>
           {body}
         </a>
       );
@@ -130,9 +171,10 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
       return (
         <button
           key={item.label}
+          {...drag}
           type="button"
           onClick={() => { if (item.action === 'open-stages') openStageModal(); onNavigate(); }}
-          data-menu-tile="idle" className={tileClass(false)}
+          data-menu-tile="idle" className={cn(tileClass(false), lifted && liftedClass)}
         >
           {body}
         </button>
@@ -141,6 +183,7 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
     return (
       <Link
         key={item.label}
+        {...drag}
         to={item.path}
         aria-current={active ? 'page' : undefined}
         onClick={(e) => {
@@ -156,13 +199,31 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
         }}
         onTouchStart={() => preloadRoute(item.path)}
         onFocus={() => preloadRoute(item.path)}
-        data-menu-tile={active ? 'active' : 'idle'} className={tileClass(active)}
+        data-menu-tile={active ? 'active' : 'idle'} className={cn(tileClass(active), lifted && liftedClass)}
       >
         {body}
       </Link>
     );
   };
 
-  // Same order as the desktop rail, one continuous grid.
-  return <nav className="grid grid-cols-4 gap-2">{items.map(renderNavTile)}</nav>;
+  // The person's own order (default: the rail's), one continuous grid.
+  return (
+    <>
+      <nav className="grid grid-cols-4 gap-2" data-menu-reorder={draggingId ? 'dragging' : 'idle'}>
+        {order.map((id) => byId.get(id)).filter((item): item is NavItem => !!item).map(renderNavTile)}
+      </nav>
+      {!searching && (
+        <p data-menu-reorder-hint className="mt-3 flex items-center justify-center gap-1 px-2 text-center text-[13px] leading-[1.35] text-zinc-500">
+          <span>{t('nav.reorderHint', { defaultValue: 'Hold and drag any icon to rearrange' })}</span>
+          {customised && (
+            <button type="button" onClick={onReset} className="-my-3 flex-none px-2 py-3 font-semibold text-zinc-300 underline-offset-2 hover:underline">
+              {t('nav.reorderReset', { defaultValue: 'Reset' })}
+            </button>
+          )}
+        </p>
+      )}
+    </>
+  );
 }
+
+const liftedClass = 'bg-white/[0.16] border-white/30 shadow-[0_12px_28px_rgba(0,0,0,0.45)]';

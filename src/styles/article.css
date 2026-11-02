@@ -75,7 +75,7 @@ html[data-system-tone="light"] [data-article] {
 .article-body > * + * { margin-top: 1.05em; }
 /* The app sets its UI face on every element (index.css `*`), so the reading
    face has to be set on the descendants too, not only inherited. */
-.article-body :where(p, li, blockquote, strong, em, a, span, ul, ol) { font-family: var(--art-serif); }
+.article-body :where(p, li, blockquote, strong, em, a, span, ul, ol):not(.article-link-card *) { font-family: var(--art-serif); }
 .article-serif, .article-serif * { font-family: var(--art-serif); }
 .article-body .article-heading {
   font-family: var(--art-title);
@@ -90,7 +90,7 @@ html[data-system-tone="light"] [data-article] {
 .article-body h3.article-heading { font-size: 1.3em; }
 .article-body h4.article-heading { font-size: 1.12em; }
 .article-body strong { color: var(--art-ink); font-weight: 650; }
-.article-body a {
+.article-body a:not(.article-link-card *) {
   color: var(--art-ink);
   text-decoration: underline;
   text-decoration-color: var(--art-accent);
@@ -109,7 +109,8 @@ html[data-system-tone="light"] [data-article] {
 .article-body ol { list-style: decimal; }
 .article-body li + li { margin-top: 0.35em; }
 .article-body li::marker { color: var(--art-accent); }
-.article-body img { border-radius: calc(var(--art-radius) * 0.75); width: 100%; height: auto; }
+.article-body img:not(.article-link-card *) { border-radius: calc(var(--art-radius) * 0.75); width: 100%; height: auto; }
+.article-body .article-link-block > p + .article-link-card:not(:empty) { margin-top: 0.6em; }
 .article-body hr { border: 0; border-top: 1px solid var(--art-line); margin: 2em 0; }
 .article-body code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;

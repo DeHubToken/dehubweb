@@ -852,6 +852,15 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     setStep(next);
   };
 
+  // The open method's slot turns into Email, so the row keeps the same
+  // shape and switching back is the same tap in the same place.
+  const renderStackEmailOption = () => (
+    <button type="button" onClick={() => chooseInlineStep('main')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueEmail')}>
+      <span className="login-stack-option__disc"><Mail className="w-5 h-5" /></span>
+      {t('loginStack.email', 'Email')}
+    </button>
+  );
+
   const renderImportWalletStep = () => (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <LoginImportWalletStep busy={isConnecting} onImport={async privateKey => {
@@ -933,11 +942,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       )}
 
       <div className="login-stack-method" data-login-method={step}>
-        {step !== 'main' && step !== 'email' && step !== 'email-waiting' && (
-          <button type="button" onClick={() => chooseInlineStep('main')} disabled={isConnecting} className="mb-2 text-xs text-white/60 hover:text-white underline underline-offset-4">
-            {t('loginModal.continueEmail')}
-          </button>
-        )}
         {(step === 'main' || step === 'email') && (
       <form onSubmit={handleEmailSubmit} className="space-y-2.5" noValidate>
         <label htmlFor="login-stack-email" className="sr-only">{t('loginModal.emailPlaceholder')}</label>
@@ -995,34 +999,37 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <span className="login-stack-option__disc">{activeProvider === 'apple' ? <Loader2 className="w-5 h-5 animate-spin" /> : <AppleIcon />}</span>
           Apple
         </button>
-        <button type="button" onClick={() => chooseInlineStep('phone')} aria-pressed={step === 'phone' || step === 'phone-code'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePhone', 'Continue with phone')}>
-          <span className="login-stack-option__disc"><Phone className="w-5 h-5" /></span>
-          {t('loginStack.phone', 'Phone')}
-        </button>
-        {passkeyAvailable && (
-          <button type="button" onClick={() => chooseInlineStep('passkey')} aria-pressed={step === 'passkey'} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with Bio')}>
+        {step === 'phone' || step === 'phone-code' ? renderStackEmailOption() : (
+          <button type="button" onClick={() => chooseInlineStep('phone')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePhone', 'Continue with phone')}>
+            <span className="login-stack-option__disc"><Phone className="w-5 h-5" /></span>
+            {t('loginStack.phone', 'Phone')}
+          </button>
+        )}
+        {passkeyAvailable && (step === 'passkey' ? renderStackEmailOption() : (
+          <button type="button" onClick={() => chooseInlineStep('passkey')} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continuePasskey', 'Continue with Bio')}>
             <span className="login-stack-option__disc"><Fingerprint className="w-5 h-5" /></span>
             {t('loginStack.fingerprint', 'Bio')}
           </button>
-        )}
+        ))}
         <button type="button" onClick={handleTelegramLogin} disabled={isConnecting} className={stackOptionClass} aria-label={t('loginModal.continueTelegram', 'Continue with Telegram')}>
           <span className="login-stack-option__disc">{activeProvider === 'telegram' ? <Loader2 className="w-5 h-5 animate-spin" /> : <TelegramIcon />}</span>
           Telegram
         </button>
         {/* One way in for every wallet: connect one, or import a key from
             the list it opens. */}
-        <button
-          type="button"
-          onClick={() => chooseInlineStep('wallets')}
-          aria-pressed={step === 'wallets' || step === 'import-wallet'}
-          onPointerEnter={() => { void import('./LoginWalletsStep'); }}
-          disabled={isConnecting}
-          className={stackOptionClass}
-          aria-label={t('loginModal.connectWallet')}
-        >
-          <span className="login-stack-option__disc"><Wallet className="w-5 h-5" /></span>
-          {t('nav.wallet', 'Wallet')}
-        </button>
+        {step === 'wallets' || step === 'import-wallet' ? renderStackEmailOption() : (
+          <button
+            type="button"
+            onClick={() => chooseInlineStep('wallets')}
+            onPointerEnter={() => { void import('./LoginWalletsStep'); }}
+            disabled={isConnecting}
+            className={stackOptionClass}
+            aria-label={t('loginModal.connectWallet')}
+          >
+            <span className="login-stack-option__disc"><Wallet className="w-5 h-5" /></span>
+            {t('nav.wallet', 'Wallet')}
+          </button>
+        )}
       </div>
 
     </div>

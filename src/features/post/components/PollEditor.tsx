@@ -15,7 +15,7 @@ interface PollEditorProps {
 }
 
 const DURATION_OPTIONS = [
-  { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 1 }); }, value: 24 },
+  { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} day", count: 1 }); }, value: 24 },
   { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 3 }); }, value: 72 },
   { get label() { return _translateCopy("copy.ca4c4a68ebc9", { defaultValue: "{{count}} days", count: 7 }); }, value: 168 },
 ];
@@ -128,13 +128,16 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
               key={opt.value}
               type="button"
               onClick={() => onChange({ ...poll, duration: opt.value })}
+              data-poll-duration
+              aria-pressed={poll.duration === opt.value}
               className={cn(
-                'px-2.5 py-1 rounded-lg text-xs font-medium transition-colors',
+                'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors',
                 poll.duration === opt.value
                   ? 'bg-white text-black'
                   : 'bg-white/[0.06] text-white/50 hover:bg-white/10 hover:text-white/70'
               )}
             >
+              {poll.duration === opt.value && <Check className="w-3 h-3" />}
               {opt.label}
             </button>
           ))}

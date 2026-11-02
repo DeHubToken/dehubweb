@@ -162,7 +162,23 @@
     "saved": "انحفظت حقول الملف",
     "failed": "ما انحفظ. جرب مرة ثانية.",
     "verified": "رابط موثّق",
-    "verifyHint": "عشان توثّق رابط، أضف هذا في الصفحة وبعدين احفظ مرة ثانية: {{snippet}}"
+    "verifyHint": "عشان توثّق رابط، أضف هذا في الصفحة وبعدين احفظ مرة ثانية: {{snippet}}",
+    "descriptionPresets": "أضف موقع إلكتروني، ضمائر أو أي شيء ثاني. الروابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "عطِ كل حقل مخصص تسمية",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "موقع إلكتروني",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -379,6 +395,9 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول مرة أخرى بعد قليل."
   },
   "nav": {
+    "reorderHint": "احفظ و اسحب أي أيكون ليغير ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "تجهيز",
@@ -2832,6 +2851,21 @@
     "likersEmptyBody": "الإعجابات على هذا التعليق حتطلع هنا.",
     "anonymousLikes_one": "{{count}} إعجاب من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} إعجابات من حاملي شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "مُنتج",
+    "subtitle": "اختر سلسلة. الأسعار حية وتحديث كل دقيقة.",
+    "free": "مجاناً",
+    "gasCovered": "غطاء الغاز من قبل DeHub",
+    "feeIncludesGas": "≈ {{usd}}، الغاز مرفق",
+    "gasIncluded": "الغاز مرفق",
+    "gasOnly": "≈ {{usd}} الغاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "الدفع من محفظتك",
+    "priceUnavailable": "السعر غير متوفر",
+    "confirm": "مُنتج على {{chain}}",
+    "confirmWithCost": "مُنتج على {{chain}} · {{cost}}",
+    "notAvailable": "مُنتج على هذه السلسلة غير متاح بعد."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -14353,7 +14387,7 @@
     "f45e06965f93": "لا يوجد إرشادات بعد",
     "34f5da2599fa": "توصيات جديدة للعضوية ستظهر هنا.",
     "bac527bf9a36": "اتبع الاقتراحات",
-    "036cfd952896": "اقتراحات للمتابعة",
+    "a94bfc8a15e8": "اقتراحات للمتابعة",
     "0c820caf16c0": "ما عندي بيووش بعد كده",
     "e139251e4f5b": "حذف المنشور",
     "b3661ad568df": "لا يمكن التراجع عن هذه الحركة. سيتم حذف المنشور بشكل دائم.",
@@ -18126,8 +18160,38 @@
     "headlineAccent": "وستكون سعيد",
     "orContinueWith": "أو استمر مع",
     "phone": "الهاتف",
+    "email": "البريد",
     "fingerprint": "إصبعك",
     "exploreFirst": "استكشف أولا",
     "codeNote": "نرسل لك كود عن طريق البريد، ما حاجة لرقم مرور."
+  },
+  "tokenLaunch": {
+    "eyebrow": "قريبًا",
+    "title": "الرمز بيطلق قريبًا",
+    "body": "الشراء مقفل لين يجهز الرمز الجديد. استلم إيميل أول ما يطلع.",
+    "notifyMe": "نبهني",
+    "sendTo": "بنرسل لك إيميل على {{email}}",
+    "emailLabel": "الإيميل",
+    "emailPlaceholder": "إيميلك",
+    "invalidEmail": "اكتب إيميل صحيح",
+    "joinedTitle": "أنت على القائمة",
+    "joinedBody": "بنرسل لك إيميل على {{email}} لما يطلق الرمز.",
+    "joinedBodyNoEmail": "بنرسل لك إيميل لما يطلق الرمز.",
+    "failed": "ما قدرنا نحفظها. جرّب مرة ثانية.",
+    "privacy": "بس عشان نخبرك عن الإطلاق.",
+    "seoTitle": "الرمز بيطلق قريبًا | DeHub",
+    "seoDescription": "رمز DeHub الجديد بيطلق قريبًا. انضم للقائمة واستلم إيميل أول ما يطلع، بعدين اشترِ مباشرة من محفظة DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول ل GitHub ليُثبتوا إن الحساب لك. DeHub بتشوفك فقط من خلال ملفك العام على GitHub.",
+    "verified": "مصادقة",
+    "verifiedAria": "حساب GitHub مصادق",
+    "connected": "GitHub متصّل",
+    "disconnected": "GitHub منقطّع",
+    "taken": "الحساب ده على حساب GitHub تاني على DeHub",
+    "failed": "ما بيسوّد GitHub. حاول تاني.",
+    "unavailable": "GitHub verification (التحقق من GitHub) بتجي قريب.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "انقطّع"
   }
 }

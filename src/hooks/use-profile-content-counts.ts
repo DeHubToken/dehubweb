@@ -14,6 +14,7 @@ export interface ProfileContentCounts {
   subscribers?: number;
   pinned?: number;
   playlists?: number;
+  articles?: number;
 }
 
 /**

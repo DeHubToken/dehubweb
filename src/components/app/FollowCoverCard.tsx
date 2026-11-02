@@ -40,13 +40,17 @@ interface FollowCoverCardProps {
   onOpen: (user: SuggestedAccount) => void;
   onFollow: (user: SuggestedAccount) => void;
   onDismiss: (user: SuggestedAccount) => void;
+  /** Replaces the follower count in the foot, e.g. "joined 6h ago" on the new-members row. */
+  meta?: string;
+  /** Replaces "Following" on the button once followed, e.g. "Requested" for a private account. */
+  followedLabel?: string;
 }
 
 export function suggestionName(user: SuggestedAccount) {
   return user.displayName || user.username || `${user.address.slice(0, 6)}...`;
 }
 
-function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: FollowCoverCardProps) {
+function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, followedLabel }: FollowCoverCardProps) {
   const followed = phase !== undefined;
   const { t: _copy } = _useCopy();
   const name = suggestionName(user);
@@ -125,7 +129,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: Foll
         )}
         <div data-fc-foot>
           <span data-fc-count>
-            {_copy('accounts.followersCount', { defaultValue: '{{value}} followers', value: formatCount(user.followers ?? 0) })}
+            {meta ?? _copy('accounts.followersCount', { defaultValue: '{{value}} followers', value: formatCount(user.followers ?? 0) })}
           </span>
           <button
             type="button"
@@ -140,7 +144,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss }: Foll
             {followed ? (
               <>
                 <Check className="w-3.5 h-3.5" />
-                {_copy('copy.344b4271ca01', { defaultValue: 'Following' })}
+                {followedLabel ?? _copy('copy.344b4271ca01', { defaultValue: 'Following' })}
               </>
             ) : followsYou ? (
               _copy('follow.followBack', { defaultValue: 'Follow back' })

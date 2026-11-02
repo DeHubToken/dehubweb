@@ -27,6 +27,21 @@ export interface ThreadCommentRow {
   parent_id: string | null;
   /** Set the first time the author edits it. */
   updated_at: string | null;
+  /** One attachment, on tables that carry them (the Requests board). */
+  media_url?: string | null;
+  media_type?: CommentMediaType | null;
+  /** Seconds, for audio and voice notes. */
+  media_duration?: number | null;
+}
+
+/** What a comment can carry — the same four kinds a post comment takes. */
+export type CommentMediaType = 'image' | 'video' | 'audio' | 'voice' | 'gif';
+
+/** An attachment on its way into a new comment. */
+export interface CommentMediaInput {
+  url: string;
+  type: CommentMediaType;
+  duration?: number | null;
 }
 
 /** A row with its reactions folded in, ready to render. */

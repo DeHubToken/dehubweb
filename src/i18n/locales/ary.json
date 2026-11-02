@@ -162,7 +162,24 @@
     "saved": "تسجلو خانات البروفايل",
     "failed": "ما تسجلش. عاود جرب.",
     "verified": "رابط موثّق",
-    "verifyHint": "باش توثّق رابط، زيد هادشي فداك الصفحة ومن بعد سجّل مرة أخرى: {{snippet}}"
+    "verifyHint": "باش توثّق رابط، زيد هادشي فداك الصفحة ومن بعد سجّل مرة أخرى: {{snippet}}",
+    "descriptionPresets": "أضف موقع ويب أو ضمائر أو أي شيء آخر. تظهر الروابط مع وسائل التواصل الاجتماعي الخاصة بك.",
+    "type": "نوع الحقل",
+    "needsLabel": "امنح كل حقل مخصص تسمية",
+    "placeholderPronouns": "هم/هم",
+    "placeholderLocation": "المدينة، البلد",
+    "presets": {
+      "website": "الموقع الإلكتروني",
+      "blog": "المدونة",
+      "portfolio": "المحفظة الاستثمارية",
+      "shop": "المتجر",
+      "podcast": "بودكاست",
+      "newsletter": "النشرة الإخبارية",
+      "pronouns": "الضمائر",
+      "location": "الموقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تبع #{{tag}}",
@@ -406,6 +423,9 @@
     "gasSponsorshipFailed": "ما قدرناش نخلصو هاد المعاملة. عاود جرب من بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الصفحة الرئيسية",
     "explore": "استكشف",
     "prompt": "برمجة",
@@ -1741,6 +1761,10 @@
       "featureReply": "رد {{name}} على تعليقك",
       "featureMentionNamed": "أشار إليك {{name}} في \\\"{{title}}\\\"",
       "featureMention": "أشار إليك {{name}} في طلب ميزة",
+      "featureNewNamed": "نشر {{name}} طلبًا جديدًا \\\"{{title}}\\\"",
+      "featureNew": "نشر {{name}} طلبًا جديدًا",
+      "featureActivityNamed": "علق {{name}} على \"{{title}}\"",
+      "featureActivity": "علق {{name}} على طلب",
       "governanceVoteNamed": "{{name}} صوتت على مشروعك “{{title}}”",
       "governanceVote": "{{name}} صوتت على مشروعك",
       "governanceCommentNamed": "{{name}} قالت لك في مشروعك “{{title}}”",
@@ -2906,6 +2930,21 @@
     "likersEmptyBody": "اللايكات ديال هاد التعليق غادي يبانو هنا.",
     "anonymousLikes_one": "{{count}} لايك من حامل شارة مجهول",
     "anonymousLikes_other": "{{count}} لايكات من حاملين شارات مجهولين"
+  },
+  "mintChain": {
+    "title": "منشور النعناع",
+    "subtitle": "اختر سلسلة. الأسعار متاحة ويتم تحديثها كل دقيقة.",
+    "free": "مجاني",
+    "gasCovered": "الغاز المغطى بواسطة DeHub",
+    "feeIncludesGas": "≈ {{usd}}، بما في ذلك الغاز",
+    "gasIncluded": "الغاز مشمول",
+    "gasOnly": "≈ {{usd}} غاز",
+    "paidFromWallet": "{{amount}} من محفظتك",
+    "paidFromWalletPlain": "تم الدفع من محفظتك",
+    "priceUnavailable": "السعر غير متاح",
+    "confirm": "النعناع على {{chain}}",
+    "confirmWithCost": "النعناع على {{chain}}·{{cost}}",
+    "notAvailable": "لا يتوفر سك العملة على هذه السلسلة حتى الآن."
   },
   "postInfo": {
     "title": "معلومات المنشور",
@@ -14646,7 +14685,7 @@
     "f45e06965f93": "لا توجد اقتراحات متابعة حتى الآن",
     "34f5da2599fa": "ستظهر اقتراحات الحساب الجديد هنا.",
     "bac527bf9a36": "اتبع الاقتراحات",
-    "036cfd952896": "من ليه اتّبع",
+    "a94bfc8a15e8": "اقتراحات للمتابعة",
     "0c820caf16c0": "لا بيو بعد",
     "e139251e4f5b": "حذف المنشور",
     "b3661ad568df": "لا يمكن التراجع عن هذا الإجراء. ستتم إزالة منشورك نهائيًا.",
@@ -18730,8 +18769,37 @@
     "headlineAccent": "وتكون سعيدا.",
     "orContinueWith": "أو الاستمرار مع",
     "phone": "الهاتف",
+    "email": "البريد",
     "fingerprint": "بصمة الإصبع",
     "exploreFirst": "الاستكشاف أولاً",
     "codeNote": "نرسل إليك رمزًا بالبريد الإلكتروني، دون الحاجة إلى كلمة مرور."
+  },
+  "tokenLaunch": {
+    "eyebrow": "قريباً",
+    "title": "الرمز سيتطلق قريباً",
+    "body": "الشراء مغلق حتى يجهز الرمز الجديد. استلم إيميل ف اللحظة اللي يطلق فيها.",
+    "notifyMe": "أخبرني",
+    "sendTo": "غادي نبعث لك إيميل {{email}}",
+    "emailLabel": "الإيميل",
+    "emailPlaceholder": "الإيميل ديالك",
+    "invalidEmail": "دخل إيميل صحيح",
+    "joinedTitle": "أنت ف القايمة",
+    "joinedBody": "غادي نبعث لك إيميل {{email}} ملي يطلق الرمز.",
+    "joinedBodyNoEmail": "غادي نبعث لك إيميل ملي يطلق الرمز.",
+    "failed": "ما قدرناش نحتفظ به. جرب مرة أخرى.",
+    "privacy": "مستعمل غير باش نخبرك بالطلق.",
+    "seoTitle": "الرمز سيتطلق قريباً | DeHub",
+    "seoDescription": "الرمز الجديد ديال DeHub غادي يطلق قريباً. انضم للقائمة وخد إيميل ف اللحظة اللي يطلق فيها، ومن بعد شري مباشرة من محفظة DeHub ديالك."
+  },
+  "githubLink": {
+    "hint": "سجّل الدخول إلى GitHub لإثبات أن الحساب لك. يرى DeHub ملفك الشخصي العام على GitHub فقط.",
+    "verified": "تم التحقق",
+    "verifiedAria": "تم التحقق من حساب GitHub",
+    "connected": "GitHub متصل",
+    "disconnected": "GitHub غير متصل",
+    "taken": "حساب GitHub هذا موجود بالفعل في ملف تعريف DeHub آخر.",
+    "failed": "تعذر الاتصال بـ GitHub. حاول مرة أخرى.",
+    "unavailable": "التحقق من GitHub قريبًا.",
+    "disconnect": "قطع الاتصال"
   }
 }

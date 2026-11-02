@@ -162,7 +162,24 @@
     "saved": "پروفائل فیلڈ سیو ہوئے گیلک",
     "failed": "سیو نی ہولک۔ فیر کوشش کر۔",
     "verified": "تصدیق کرل لنک",
-    "verifyHint": "لنک تصدیق کرے لگِن ایکے اوہ پیج میں جوڑ، فیر سیو کر: {{snippet}}"
+    "verifyHint": "لنک تصدیق کرے لگِن ایکے اوہ پیج میں جوڑ، فیر سیو کر: {{snippet}}",
+    "descriptionPresets": "वेबसाइट, सर्वनाम या कुछ और भी जोड़ो। लिंक आपके सोशल के साथ दिखाते हैं।",
+    "type": "فیلد تایپ",
+    "needsLabel": "हर कस्टम फील्ड को एक लेबल दो",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "उन्हां/उनकर",
+    "placeholderLocation": "सहर, देश",
+    "presets": {
+      "website": "वेबसाइट",
+      "blog": "ब्लॉग",
+      "portfolio": "पोर्टफोलियो",
+      "shop": "दुकान",
+      "podcast": "पॉडकास्ट",
+      "newsletter": "न्यूज़लेटर",
+      "pronouns": "सर्वनाम",
+      "location": "जगह",
+      "customOption": "कस्टम लेबल"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} فالو کر",
@@ -398,6 +415,9 @@
     "gasSponsorshipFailed": "نەکرا خەرجی ئەم مامەڵەیە بدرێت. تکایە پاش ماوەیەک هەوڵ بدەرەوە."
   },
   "nav": {
+    "reorderHint": "किसी भी आइकन को दबाकर रखें और खींचकर क्रम बदलें",
+    "reorderReset": "assistant",
+    "reorderResetLong": "بازنشانی ترتیب منوی اصلی",
     "home": "گھر",
     "explore": "کھوجو",
     "prompt": "ପ୍ରମ୍ପ୍ଟ",
@@ -1724,6 +1744,8 @@
       "featureReply": "{{name}} نے تمہارے تبصرے کا جواب دیا",
       "featureMentionNamed": "{{name}} आपको \"{{title}}\" पर mention किया",
       "featureMention": "{{name}} आपको एक feature request पर mention किया",
+      "featureNewNamed": "{{name}} خُبرَاتَ نَجِيبَةً جَدِيدَةً أَرْسَلَ: “{{title}}”",
+      "featureActivity": "{{name}} ہرنظرہ",
       "governanceVoteNamed": "{{name}} आपके proposal \"{{title}}\" पर vote किया",
       "governanceVote": "{{name}} आपके proposal पर vote किया",
       "governanceCommentNamed": "{{name}} आपके proposal \"{{title}}\" पर comment किया",
@@ -2828,6 +2850,19 @@
     "likersEmptyBody": "ای تبصرہ کے پسند اہاں دیکھائی دیہی۔",
     "anonymousLikes_one": "گمنام بیج ہولڈر سے {{count}} پسند",
     "anonymousLikes_other": "گمنام بیج ہولڈرن سے {{count}} پسند"
+  },
+  "mintChain": {
+    "title": "Mint post",
+    "subtitle": "एक चेन चुनौ। कीमतें लाइव हैं और हर मिनट अपडेट होथ।",
+    "free": "Free",
+    "gasCovered": "Gas covered by DeHub",
+    "feeIncludesGas": "≈ {{usd}}, gas included",
+    "gasIncluded": "Gas included",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWalletPlain": "तोर वॉलेट सॅं भुगतान भइल",
+    "priceUnavailable": "Price unavailable",
+    "confirm": "Mint on {{chain}}",
+    "notAvailable": "ماینٹنگ اُپر یہاں یہ ابھی تک دستیاب نہیں ہے۔"
   },
   "postInfo": {
     "title": "پوسٹ کی معلومات",
@@ -14128,7 +14163,7 @@
     "f45e06965f93": "अभी तक कोई अनुसरण सुझाव नहीं",
     "34f5da2599fa": "नए खाता सुझाव यहां दिखाई देंगे।",
     "bac527bf9a36": "فالو تجاویز",
-    "036cfd952896": "किन्हें फॉलो करें",
+    "a94bfc8a15e8": "फॉलो करे के सुझाव",
     "0c820caf16c0": "अभी तक कोई बायो नहीं है",
     "e139251e4f5b": "پوسٹ مٹاؤ",
     "b3661ad568df": "यह कार्रवाई पूर्ववत नहीं की जा सकती। आपकी पोस्ट स्थायी रूप से हटा दी जाएगी।",
@@ -17646,9 +17681,29 @@
     "headlineAccent": "aur khush rahba.",
     "orContinueWith": "ya aage badho",
     "phone": "فون",
+    "email": "Email",
     "fingerprint": "Fingerprint",
     "exploreFirst": "Pahile explore karo",
     "codeNote": "Hamni toke ek code email karbo, password ke darkar nai."
+  },
+  "tokenLaunch": {
+    "body": "بخرید بسته شده است در حالی که توکن جدید آماده می‌شود. یک ایمیل دریافت کنید در دقیقه‌ای که آنلاین می‌شود.",
+    "sendTo": "{{email}}-i email qilishimizda.",
+    "emailLabel": "پست الکترونیکی",
+    "emailPlaceholder": "پست الکترونیکی",
+    "invalidEmail": "एक मान्य ईमेल दर्ज करें",
+    "joinedTitle": "سۆزی لێکەرەوەیەکەیە",
+    "joinedBody": "{{email}}-i qeyd qeyd etibarlı olduğu zaman email göndəriləcək.",
+    "failed": "نمی‌تونم این رو ذخیره کنم. دوباره امتحان کن.",
+    "privacy": "فقط برای تو خبر دادن از راه اندازی استفاده می شود.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "DeHub tokeni yeni çıksa. Listeye katılın ve canlı olduğu anda bir e-posta alın, ardından DeHub cüzdanınızdan doğrudan satın alın."
+  },
+  "githubLink": {
+    "connected": "GitHub واریده شد.",
+    "disconnected": "GitHub وایکونکشه.",
+    "failed": "نمی‌تونم به GitHub وصل بشم. دوباره امتحان کن.",
+    "connect": "GitHub"
   },
   "post": {
     "like": "پسند",

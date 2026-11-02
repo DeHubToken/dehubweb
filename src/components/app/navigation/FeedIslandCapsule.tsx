@@ -106,6 +106,7 @@ export function FeedIslandCapsule({
           </button>}
         </div>
         <button
+          data-entry-logo={show ? '' : undefined}
           onClick={isAuthenticated ? toggleFeedTabs : onAvatarClick}
           onPointerDown={onLogoPointerDown}
           tabIndex={visible ? 0 : -1}

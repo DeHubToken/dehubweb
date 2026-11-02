@@ -162,7 +162,25 @@
     "saved": "Pole profilu uložena",
     "failed": "Neuložilo se. Zkuste to znovu.",
     "verified": "Ověřený odkaz",
-    "verifyHint": "Chcete-li odkaz ověřit, přidejte toto na danou stránku a uložte znovu: {{snippet}}"
+    "verifyHint": "Chcete-li odkaz ověřit, přidejte toto na danou stránku a uložte znovu: {{snippet}}",
+    "descriptionPresets": "Přidej webové stránky, zájmena nebo cokoli jiného. Odkazy se zobrazují na sociálních sítích.",
+    "type": "Typ pole",
+    "needsLabel": "Dejte každému vlastnímu poli štítek",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "oni/oni",
+    "placeholderLocation": "Město, země",
+    "presets": {
+      "website": "Webová stránka",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Obchod",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Zájmena",
+      "location": "Lokalita",
+      "custom": "Vlastní",
+      "customOption": "Vlastní štítek"
+    }
   },
   "followedTags": {
     "follow": "Sledovat #{{tag}}",
@@ -408,6 +426,9 @@
     "gasSponsorshipFailed": "Tuto transakci se nepodařilo uhradit. Zkuste to prosím za chvíli."
   },
   "nav": {
+    "reorderHint": "Držte a přetáhněte libovolnou ikonu pro přeuspořádání",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Resetovat pořadí menu",
     "home": "Domů",
     "explore": "Prozkoumejte",
     "prompt": "Dotaz",
@@ -1744,6 +1765,10 @@
       "featureReply": "{{name}} odpověděl na váš komentář",
       "featureMentionNamed": "{{name}} vás zmínil (a) na „{{title}}“",
       "featureMention": "{{name}} vás zmínil/a v žádosti o funkci",
+      "featureNewNamed": "{{name}} zveřejnil (a) novou žádost „{{title}}“",
+      "featureNew": "{{name}} zveřejnil/a novou žádost",
+      "featureActivityNamed": "{{name}} okomentoval/a „{{title}}“",
+      "featureActivity": "{{name}} okomentoval/a žádost",
       "governanceVoteNamed": "{{name}} hlasoval/a pro váš návrh „{{title}}“",
       "governanceVote": "{{name}} hlasoval/a pro váš návrh",
       "governanceCommentNamed": "{{name}} komentoval vaši nabídku „{{title}}“",
@@ -2883,6 +2908,21 @@
     "likersEmptyBody": "Lajky tohoto komentáře se zobrazí zde.",
     "anonymousLikes_one": "{{count}} lajk od anonymního držitele odznaku",
     "anonymousLikes_other": "{{count}} lajků od anonymních držitelů odznaků"
+  },
+  "mintChain": {
+    "title": "Příspěvek mincovny",
+    "subtitle": "Vyberte si řetězec. Ceny jsou aktuální a aktualizují se každou minutu.",
+    "free": "Zdarma",
+    "gasCovered": "Plyn krytý společností DeHub",
+    "feeIncludesGas": "≈ {{usd}}, včetně plynu",
+    "gasIncluded": "Včetně plynu",
+    "gasOnly": "≈ {{usd}} plyn",
+    "paidFromWallet": "{{amount}} z vaší peněženky",
+    "paidFromWalletPlain": "Zaplaceno z peněženky",
+    "priceUnavailable": "Cena není k dispozici",
+    "confirm": "Mincovna {{chain}}",
+    "confirmWithCost": "Mincovna {{chain}} · {{cost}}",
+    "notAvailable": "Minting na tomto řetězci zatím není k dispozici."
   },
   "postInfo": {
     "title": "Informace o příspěvku",
@@ -14652,7 +14692,7 @@
     "f45e06965f93": "Žádné návrhy na sledování ještě nejsou",
     "34f5da2599fa": "Nové návrhy na sledování se objeví zde.",
     "bac527bf9a36": "Návrhy na sledování",
-    "036cfd952896": "Koho sledovat",
+    "a94bfc8a15e8": "Návrhy ke sledování",
     "0c820caf16c0": "Žádný profil ještě není",
     "e139251e4f5b": "Smazat příspěvek",
     "b3661ad568df": "Tato akce nemůže být zrušena. Váš příspěvek bude permanentně smazán.",
@@ -18772,8 +18812,38 @@
     "headlineAccent": "a budeš šťastný.",
     "orContinueWith": "nebo pokračuj přes",
     "phone": "Telefon",
+    "email": "E-mail",
     "fingerprint": "Otisk prstu",
     "exploreFirst": "Nejdřív se rozhlédni",
     "codeNote": "Pošleme ti kód e-mailem, bez hesla."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Brzy přijde",
+    "title": "Lancování tokenu brzy",
+    "body": "Koupení je zatím uzavřeno, protože se připravuje nový token. Obdržíte email okamžitě, jakmile bude live.",
+    "notifyMe": "Oznamte mi",
+    "sendTo": "Odesíláme email {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Vaše email",
+    "invalidEmail": "Zadejte platný email",
+    "joinedTitle": "Jste na seznamu",
+    "joinedBody": "Odesíláme email {{email}}, jakmile token vyjde.",
+    "joinedBodyNoEmail": "Odesíláme vám email, jakmile token vyjde.",
+    "failed": "Nepodařilo se uložit. Zkuste to znovu.",
+    "privacy": "Pouze pro informace o lancování.",
+    "seoTitle": "Lancování tokenu brzy | DeHub",
+    "seoDescription": "Nový token DeHub brzy vyjde. Přidejte se na seznam a obdržíte jeden email okamžitě, jakmile bude live, poté můžete koupit přímo z vaší DeHub peněženky."
+  },
+  "githubLink": {
+    "hint": "Přihlaste se na GitHub, abyste dokázali, že je účet váš. DeHub vidí pouze váš veřejný profil na GitHubu.",
+    "verified": "Ověřeno",
+    "verifiedAria": "Ověřený účet na GitHubu",
+    "connected": "Připojeno k GitHubu",
+    "disconnected": "GitHub odpojen",
+    "taken": "Tento účet GitHub je již na jiném profilu DeHub.",
+    "failed": "Nelze připojit GitHub. Zkuste to znovu.",
+    "unavailable": "Ověření na GitHubu již brzy.",
+    "connect": "Připojit GitHub",
+    "disconnect": "Odpojit"
   }
 }

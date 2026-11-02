@@ -162,7 +162,25 @@
     "saved": "Profiiliväljad salvestatud",
     "failed": "Ei salvestunud. Proovi uuesti.",
     "verified": "Kinnitatud link",
-    "verifyHint": "Lingi kinnitamiseks lisa see sellele lehele ja salvesta uuesti: {{snippet}}"
+    "verifyHint": "Lingi kinnitamiseks lisa see sellele lehele ja salvesta uuesti: {{snippet}}",
+    "descriptionPresets": "Lisa veebisait, asesõnad või midagi muud. Lingid näitavad sinu suhtlusvõrgustikke.",
+    "type": "Välja tüüp",
+    "needsLabel": "Anna igale kohandatud väljale silt",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "nad/neid",
+    "placeholderLocation": "Linn, riik",
+    "presets": {
+      "website": "Veebisait",
+      "blog": "Blogi",
+      "portfolio": "Portfoolio",
+      "shop": "Osta",
+      "podcast": "Podcast",
+      "newsletter": "Uudiskiri",
+      "pronouns": "Asesõnad",
+      "location": "Asukoht",
+      "custom": "Kohandatud",
+      "customOption": "Kohandatud silt"
+    }
   },
   "followedTags": {
     "follow": "Jälgi #{{tag}}",
@@ -407,6 +425,9 @@
     "gasSponsorshipFailed": "Seda tehingut ei õnnestunud katta. Proovige hetke pärast uuesti."
   },
   "nav": {
+    "reorderHint": "Hoia ja lohista ükskõik milline ikoon ümberkorraldamiseks",
+    "reorderReset": "Esimene",
+    "reorderResetLong": "Lähtesta menüü järjekord",
     "home": "Avaleht",
     "explore": "Avasta",
     "prompt": "Kohanda",
@@ -1742,6 +1763,10 @@
       "featureReply": "{{name}} vastas teie kommentaarile",
       "featureMentionNamed": "{{name}} nimetas teid “{{title}}”",
       "featureMention": "{{name}} nimetas teid meeldimaks",
+      "featureNewNamed": "{{name}} postitas uue taotluse „{{title}}“",
+      "featureNew": "{{name}} postitas uue taotluse",
+      "featureActivityNamed": "{{name}} kommenteeris teemat „{{title}}“",
+      "featureActivity": "{{name}} kommenteeris taotlust",
       "governanceVoteNamed": "{{name}} hääletas teie ettepaneku “{{title}}” peale",
       "governanceVote": "{{name}} hääletas teie ettepaneku peale",
       "governanceCommentNamed": "{{name}} kommentaris teie ettepaneku “{{title}}”",
@@ -2877,6 +2902,21 @@
     "likersEmptyBody": "Selle kommentaari meeldimised ilmuvad siia.",
     "anonymousLikes_one": "{{count}} meeldimine anonüümselt märgiomanikult",
     "anonymousLikes_other": "{{count}} meeldimist anonüümsetelt märgiomanikelt"
+  },
+  "mintChain": {
+    "title": "Mündipost",
+    "subtitle": "Vali ahel. Hinnad avaldatakse ja neid uuendatakse iga minuti järel.",
+    "free": "Tasuta",
+    "gasCovered": "DeHubiga hõlmatud gaas",
+    "feeIncludesGas": "≈ {{usd}}, sisaldab gaasi",
+    "gasIncluded": "Gaas kuulub komplekti",
+    "gasOnly": "≈ {{usd}} gas",
+    "paidFromWallet": "{{amount}} oma rahakotist",
+    "paidFromWalletPlain": "Makstud sinu rahakotist",
+    "priceUnavailable": "Hind pole saadaval",
+    "confirm": "Rahapaja: {{chain}}",
+    "confirmWithCost": "Piparmünt {{chain}} · {{cost}}",
+    "notAvailable": "Selle keti vermimine pole veel saadaval."
   },
   "postInfo": {
     "title": "Postituse info",
@@ -14653,7 +14693,7 @@
     "f45e06965f93": "Järgimissoovitusi veel ei ole",
     "34f5da2599fa": "Siin kuvatakse uued kontosoovitused.",
     "bac527bf9a36": "Järgi soovitusi",
-    "036cfd952896": "Keda jälgida",
+    "a94bfc8a15e8": "Jälgimissoovitused",
     "0c820caf16c0": "Ei biot veel",
     "e139251e4f5b": "Kustuta postitus",
     "b3661ad568df": "Seda toimingut ei saa tagasi võtta. Sinu postitus eemaldatakse jäädavalt.",
@@ -18770,8 +18810,38 @@
     "headlineAccent": "ja oled õnnelik.",
     "orContinueWith": "või continue",
     "phone": "Telefon",
+    "email": "Email",
     "fingerprint": "Silm",
     "exploreFirst": "Eksploro",
     "codeNote": "E-postiga saadame teile koodi, mitte parooli vajadest."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tuleb peagi",
+    "title": "Tokeni lükkamine peagi",
+    "body": "Ostmine on sulgunud, kuni uus token valmis saab. Saad e-maili hetkel, kui see avaldub.",
+    "notifyMe": "Kinnita",
+    "sendTo": "Saad e-maili {{email}}-le",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "Teie e-mail",
+    "invalidEmail": "Sisesta kehtiv e-mail",
+    "joinedTitle": "Sa olete nimekirjas",
+    "joinedBody": "Saad e-maili {{email}}-le, kui token avaldub.",
+    "joinedBodyNoEmail": "Saad e-maili, kui token avaldub.",
+    "failed": "E-maili ei saadud. Proovige uuesti.",
+    "privacy": "Kasutatakse ainult, et teavitada teid tokeni avaldumisest.",
+    "seoTitle": "Tokeni lükkamine peagi | DeHub",
+    "seoDescription": "Uus DeHub token lükkab peagi välja. Liitu nimekirja ja saad ühe e-maili hetkel, kui see avaldub, siis ostake sustrakti DeHub-kooslusest."
+  },
+  "githubLink": {
+    "hint": "Logi sisse GitHubi, et tõestada, et konto on sinu oma. DeHub näeb ainult sinu avalikku GitHubi profiili.",
+    "verified": "Kinnitatud",
+    "verifiedAria": "Kinnitatud GitHubi konto",
+    "connected": "GitHub ühendatud",
+    "disconnected": "GitHubi ühendus on katkestatud",
+    "taken": "See GitHubi konto on juba teisel DeHubi profiilil.",
+    "failed": "GitHubiga ei saanud ühendust luua. Proovige uuesti.",
+    "unavailable": "GitHubi kinnitus on peagi tulekul.",
+    "connect": "Ühenda GitHub",
+    "disconnect": "Katkesta ühendus"
   }
 }

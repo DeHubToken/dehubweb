@@ -36,6 +36,8 @@ import { RecentActionsTab } from './RecentActionsTab';
 import { PermissionsTab } from './PermissionsTab';
 import { RulesTab } from './RulesTab';
 import { DangerZone } from './DangerZone';
+import { HoldersTab } from './HoldersTab';
+import Coins from '@/components/ui/cut-icons/coins';
 
 export interface CommunityManageSheetProps {
   community: Community;
@@ -50,6 +52,7 @@ type ManageTabValue =
   | 'permissions'
   | 'invites'
   | 'rules'
+  | 'holders'
   | 'log'
   | 'danger';
 
@@ -128,6 +131,12 @@ export function CommunityManageSheet({
       });
     }
     if (abilities.isOwner) {
+      list.push({
+        value: 'holders',
+        label: t('communities.holderGate.tab', { defaultValue: 'Holders' }),
+        icon: Coins,
+        render: () => <HoldersTab community={community} membership={membership} />,
+      });
       list.push({
         value: 'danger',
         label: t('communities.manage.tabDangerZone', { defaultValue: 'Danger zone' }),

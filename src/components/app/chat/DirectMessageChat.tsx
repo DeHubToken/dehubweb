@@ -44,6 +44,10 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput, type ChatInputSendArgs } from './ChatInput';
+import { DmVideoBubble } from './DmVideo';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestruct, DmDestructChoice } from '@/lib/dm-destruct';
+import { markDmMessageViewed } from '@/lib/api/dehub/dm';
 import { DmLockedState, DmUndecryptableRun } from './DmLockedState';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
@@ -68,6 +72,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
+import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
@@ -220,8 +225,12 @@ function EncryptedMediaBody({
   mediaUrl,
   voiceDuration,
   onOpenImage,
+  isOwn,
+  destruct,
 }: {
   messageId: string;
+  isOwn?: boolean;
+  destruct?: DmDestruct | null;
   media: MediaDescriptor;
   mediaUrl?: string;
   voiceDuration?: number | null;
@@ -232,6 +241,8 @@ function EncryptedMediaBody({
   const { url, status, load, retry } = useDecryptedMedia(mediaUrl, media, { messageId, enabled: eager });
   const [fileBusy, setFileBusy] = useState(false);
   const [fileFailed, setFileFailed] = useState(false);
+  // A video only starts by itself once the viewer has tapped it.
+  const [requested, setRequested] = useState(false);
   const uploading = !mediaUrl && !url;
 
   if (media.kind === 'audio') {
@@ -297,10 +308,27 @@ function EncryptedMediaBody({
     );
   }
 
+  if (media.kind === 'video' && status !== 'error') {
+    return (
+      <DmVideoBubble
+        messageId={messageId}
+        src={status === 'ready' ? url : undefined}
+        poster={media.thumb}
+        width={media.w}
+        height={media.h}
+        duration={media.dur}
+        options={media.opts}
+        mine={!!isOwn}
+        destruct={destruct}
+        onViewed={() => { void markDmMessageViewed(messageId).catch(() => undefined); }}
+        autoPlay={requested}
+        loading={uploading || status === 'loading'}
+        onNeedSource={() => { if (uploading) return; setRequested(true); load(); }}
+      />
+    );
+  }
+
   if (media.kind === 'video') {
-    if (status === 'ready' && url) {
-      return <video src={url} controls autoPlay={!!mediaUrl} playsInline className="max-w-full max-h-64 rounded-lg bg-black" />;
-    }
     return (
       <EncryptedMediaPlaceholder media={media} status={uploading ? 'loading' : status} onRetry={retry}>
         <button
@@ -698,6 +726,8 @@ const MessageBubble = memo(function MessageBubble({
               <div>
                 <EncryptedMediaBody
                   messageId={message._id}
+                  isOwn={isOwnMessage}
+                  destruct={message.destruct}
                   media={encMedia}
                   mediaUrl={primaryMediaUrl}
                   onOpenImage={onOpenImage}
@@ -709,7 +739,11 @@ const MessageBubble = memo(function MessageBubble({
                 )}
               </div>
             )}
-            {message.msgType === 'media' && !encMedia && !isLockedMedia && (
+            {/* Pay-to-unlock photo or video: its own card, never the plain media path. */}
+            {message.msgType === 'media' && message.lock && (
+              <LockedMediaBubble message={message} onOpenImage={onOpenImage} />
+            )}
+            {message.msgType === 'media' && !message.lock && !encMedia && !isLockedMedia && (
               <div>
                 {primaryMediaUrl && isFileMedia ? (
                   <>
@@ -742,12 +776,29 @@ const MessageBubble = memo(function MessageBubble({
                   </>
                 ) : primaryMediaUrl ? (
                   <>
+                    {primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/') ? (
+                      <DmVideoBubble
+                        messageId={message._id}
+                        src={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
+                        options={message.mediaOptions}
+                        mine={isOwnMessage}
+                        destruct={message.destruct}
+                        onViewed={() => { void markDmMessageViewed(message._id).catch(() => undefined); }}
+                      />
+                    ) : primaryMedia?.type === 'audio' || primaryMedia?.mimeType?.startsWith('audio/') ? (
+                      <VoiceMessagePlayer
+                        audioUrl={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
+                        duration={message.voiceDuration}
+                        isPending={false}
+                      />
+                    ) : (
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
                       onClick={() => onOpenImage?.(getMediaUrl(primaryMediaUrl)!)}
                     />
+                    )}
                     {/* Driven by the same opted-out hook as a text message, not
                         by <TranslatableText>. That component calls
                         useTranslation(text) with auto defaulting to true, so
@@ -1357,6 +1408,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       : type === 'gif' ? 'gif'
       : type === 'voice' ? 'audio'
       : mediaFile?.type.startsWith('video/') ? 'video'
+      : mediaFile?.type.startsWith('audio/') ? 'audio'
       : 'image';
     if (!planAllows(kind)) {
       toast.warning(tr('dm.planTypeNotAllowed'));
@@ -1813,12 +1865,18 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     mediaFile,
     gifUrl,
     duration,
+    mediaOptions,
+    destruct,
+    lockPrice,
   }: {
     content: string;
     type: 'msg' | 'media' | 'gif' | 'voice';
     mediaFile?: File;
     gifUrl?: string;
     duration?: number;
+    mediaOptions?: DmVideoOptions;
+    destruct?: DmDestructChoice;
+    lockPrice?: number;
   }) => {
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
@@ -1867,7 +1925,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               url: createTransientBlobUrl(mediaFile, 5 * 60_000),
               // A document has no renderable preview, so it must not be typed
               // 'image' here — the bubble would try to <img> a blob URL for a PDF.
-              type: type === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
+              type: type === 'voice' || mediaFile.type.startsWith('audio/') ? 'audio'
+                : mediaFile.type.startsWith('video/') ? 'video'
+                : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
               mimeType: mediaFile.type,
               name: mediaFile.name,
               size: mediaFile.size,
@@ -2017,6 +2077,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         txHash: feeTxHash,
         replyTo: replyingTo?._id,
         replyPreview,
+        mediaOptions,
+        destruct,
+        lockPrice,
       },
     ).then(
         (data) => {
@@ -2496,6 +2559,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}
+        allowLock
         replyTo={composerReplyTo}
         onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}

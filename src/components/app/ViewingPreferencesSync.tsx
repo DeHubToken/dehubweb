@@ -34,6 +34,7 @@ import {
   writePublicChatAlerts,
   writePublicChatPerHour,
 } from '@/lib/public-chat-alerts';
+import { NAV_ORDER_PREF_KEYS, sanitiseNavOrder, useNavOrder, writeNavOrder, type NavOrderSurface } from '@/lib/nav-order';
 
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
@@ -118,7 +119,22 @@ function usePublicChatAlertsSync() {
   );
 }
 
+/**
+ * Dragged menu orders (phone menu, desktop rail, bottom bar). Written by
+ * hooks/use-nav-order, which pushes its own writes; inbound only here.
+ */
+function useNavOrderSync(surface: NavOrderSurface) {
+  const order = useNavOrder(surface);
+  const apply = useCallback((value: unknown) => {
+    writeNavOrder(surface, sanitiseNavOrder(value));
+  }, [surface]);
+  useSyncedPreference(NAV_ORDER_PREF_KEYS[surface], order, apply, []);
+}
+
 export function ViewingPreferencesSync() {
+  useNavOrderSync('menu');
+  useNavOrderSync('rail');
+  useNavOrderSync('bar');
   useFollowGroupSync();
   useAdLoadSync();
   useFeedVideoShapeSync();

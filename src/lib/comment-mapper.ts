@@ -29,6 +29,8 @@ export interface Comment {
   avatar?: string;
   text: string;
   imageUrl?: string;
+  /** A video clip attached with the paperclip. */
+  videoUrl?: string;
   likes: number;
   dislikes: number;
   /**
@@ -57,6 +59,11 @@ export interface Comment {
   badgeBalance?: number;
   /** The tier this author grandfathered, when the account row carries one. */
   badgeLock?: BadgeLock | null;
+  /**
+   * Who to look the badge up for when the row carries no balance — threads
+   * stored outside the DeHub API (the Requests board) have only a handle.
+   */
+  badgeLookupId?: string;
   /**
    * The post's creator pinned this comment to the top of the thread.
    *
@@ -129,6 +136,11 @@ export function mapApiComment(apiComment: ApiCommentResponse): Comment {
     avatar: resolvedAvatar,
     text: apiComment.content || (apiComment as any).text || (apiComment as any).body || '',
     imageUrl: commentImageUrl,
+    videoUrl: (apiComment as any).videoUrl
+      ? (String((apiComment as any).videoUrl).startsWith('http')
+        ? (apiComment as any).videoUrl
+        : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${(apiComment as any).videoUrl}`)
+      : undefined,
     likes: apiComment.likeCount ?? 0,
     dislikes: apiComment.dislikeCount ?? 0,
     views: apiComment.views ?? 0,

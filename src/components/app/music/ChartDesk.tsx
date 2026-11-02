@@ -77,7 +77,6 @@ export function ChartDesk<S extends string>({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = matchingRows.find(row => row.id === selectedId) || matchingRows[0];
   const selectedIndex = selected ? matchingRows.indexOf(selected) : -1;
-  const sortName = sorts.find(option => option.value === sort)?.label;
   const next = () => {
     if (matchingRows.length > 1) setSelectedId(matchingRows[(selectedIndex + 1) % matchingRows.length].id);
   };
@@ -120,7 +119,6 @@ export function ChartDesk<S extends string>({
       ) : (
         <div data-listening-desk-layout data-chart-thumbs={thumbs}>
           <div data-listening-desk-player>
-            {rows.includes(selected) && <span data-desk-rank>#{rows.indexOf(selected) + 1}{sortName ? ` · ${sortName}` : ''}</span>}
             {renderSelected(selected.id, { next })}
           </div>
           <div data-listening-desk-tracks><div data-listening-desk-scroll ref={scrollRef}>
