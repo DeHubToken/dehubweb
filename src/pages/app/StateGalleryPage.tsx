@@ -106,6 +106,45 @@ import { filterNavItems } from '@/components/app/navigation/nav-search';
 import { MobileMenuGrid } from '@/components/app/navigation/MobileMenuGrid';
 
 /**
+ * Comic posts: the deck as the feed shows it, the post page with the hand of
+ * pages, and the Comic tab's page list. Public-domain Little Nemo panels.
+ */
+const GALLERY_COMIC_PAGES = [1, 2, 3, 4, 5, 6].map(n => `/state-gallery/comic/nemo-${n}.webp`);
+const GALLERY_COMIC_CAPTIONS = [
+  'Nemo wakes to find his bed has grown legs.',
+  'It strides out of the window and over the rooftops.',
+  'The whole city sleeps below, the moon watching.',
+  'The legs keep growing, taller than the steeples.',
+  'One wrong step over the river...',
+  '...and Nemo tumbles back into his own room.',
+];
+const GALLERY_COMIC_ALTS = GALLERY_COMIC_PAGES.map((_, i) => `Panel ${i + 1}: Nemo's bed walking through the city at night.`);
+function ComicGallery() {
+  const media = GALLERY_COMIC_PAGES.slice(0, 3).map((preview, i) => ({
+    file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
+    caption: GALLERY_COMIC_CAPTIONS[i], description: i === 0 ? GALLERY_COMIC_ALTS[0] : undefined,
+  }));
+  const noop = () => {};
+  return (
+    <section data-comic-gallery className="mb-5 space-y-6">
+      <h2 className="text-sm font-semibold">Comic posts</h2>
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">In the feed</p>
+        <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} descriptions={GALLERY_COMIC_ALTS} title="The Walking Bed" onOpen={noop} />
+      </div>
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">On the post page</p>
+        <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} descriptions={GALLERY_COMIC_ALTS} title="The Walking Bed" full />
+      </div>
+      <div className="rounded-2xl bg-zinc-950 p-3">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Comic tab</p>
+        <ComicPagesEditor media={media} limit={50} onAddPages={noop} onRemove={noop} onMove={noop} onCaption={noop} onAlt={noop} />
+      </div>
+    </section>
+  );
+}
+
+/**
  * Who to follow cover cards in every state they ship in: a cover, no cover
  * (the avatar wash), mutual friends, follows you, no bio, and the moment after
  * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
@@ -162,6 +201,8 @@ const GALLERY_AUTH = {
   openLoginModal: () => {},
 } as unknown as AuthContextType;
 
+import { ComicDeck } from '@/components/app/comic/ComicDeck';
+import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
 // The standard public BIP-39 test vector: owns nothing, safe to show.
@@ -870,6 +911,8 @@ export default function StateGalleryPage() {
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
+
+        <ComicGallery />
 
         <FollowCardsGallery />
 

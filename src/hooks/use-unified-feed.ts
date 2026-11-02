@@ -89,6 +89,10 @@ export interface UnifiedFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** 'comic' shows the gallery as collector cards. */
+  layout?: 'comic';
+  /** Comic captions, one per page in display order. */
+  mediaCaptions?: string[];
   /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
   hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
@@ -343,6 +347,8 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
@@ -443,6 +449,8 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
@@ -515,6 +523,8 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
     contentRating: item.contentRating,
     mediaDescriptions: item.mediaDescriptions,
+    layout: item.layout,
+    mediaCaptions: item.mediaCaptions,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,

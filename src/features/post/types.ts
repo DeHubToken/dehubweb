@@ -40,6 +40,8 @@ export interface MediaFile {
   trimEnd?: number;
   /** Alt text: what the image or video shows, for people who cannot see it. */
   description?: string;
+  /** Comic page caption, shown to everyone on the card. */
+  caption?: string;
   /** The photo before any studio edit, so the edits stay changeable. */
   studioOriginal?: File;
   /** The studio settings `file` was baked from. */
@@ -103,7 +105,8 @@ export interface PostFormState {
   uploadProgress: number; // 0–100 stage-based progress
   /** The mint is waiting on a wallet that has not answered yet. */
   mintAwaitingWallet: boolean;
-  
+  /** 'comic' posts the photos as collector cards. */
+  postLayout: 'comic' | null;
 }
 
 export interface PostFormActions {
@@ -149,6 +152,11 @@ export interface PostFormActions {
   replaceImageFile: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   /** Alt text for one attached image or video; blank clears it. */
   setMediaDescription: (index: number, description: string) => void;
+  /** Comic page caption for one image; blank clears it. */
+  setMediaCaption: (index: number, caption: string) => void;
+  setPostLayout: (layout: 'comic' | null) => void;
+  /** Adds comic pages, shrinking big art first. */
+  addComicPages: (files: File[]) => Promise<void>;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
   handlePost: (extra?: { soundtrackTag?: string; articleBody?: string; articleImage?: File; socialImage?: File }) => void;

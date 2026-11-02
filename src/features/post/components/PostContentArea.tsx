@@ -81,6 +81,8 @@ interface PostContentAreaProps {
   canSaveDraft: boolean;
   /** Quotes publish now and are not saved as drafts — hide both controls. */
   hideScheduleAndDrafts?: boolean;
+  /** Replaces the media preview (the Comic tab's page list). */
+  mediaSlot?: React.ReactNode;
   // Recording props
   isRecording?: boolean;
   recordingTime?: number;
@@ -183,6 +185,7 @@ export function PostContentArea({
   onDeleteDraft,
   canSaveDraft,
   hideScheduleAndDrafts = false,
+  mediaSlot,
   isRecording,
   recordingTime,
   onStopRecording,
@@ -670,7 +673,7 @@ export function PostContentArea({
 
         {/* Media preview follows the same full-width column as the editor. */}
         <div>
-          <PostMediaPreview 
+          {mediaSlot ?? <PostMediaPreview 
             media={media} 
             onRemove={onRemoveMedia}
             onMove={onMoveMedia}
@@ -688,7 +691,7 @@ export function PostContentArea({
             onSetDescription={onSetMediaDescription}
             onFullscreenChange={onMediaFullscreenChange}
             draftVideo={draftVideo}
-          />
+          />}
         </div>
 
         {isLive && (
