@@ -6462,6 +6462,12 @@
     "raw": "Original"
   },
   "nftMarket": {
+    "trending": "Colecciones en tendencia",
+    "floor": "Precio mínimo",
+    "listedCount": "{{n}} en venta",
+    "thisCollection": "Esta colección",
+    "collectionOffer": "Ofertar por cualquiera",
+    "showAll": "Ver todo",
     "title": "Mercado NFT",
     "subtitle": "Compra, vende y oferta en BNB y Base",
     "seoTitle": "Mercado NFT: compra y vende NFTs en BNB y Base | DeHub",
