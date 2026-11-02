@@ -807,8 +807,10 @@ function getNotificationContent(
         ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
       return tr('notifications.custom.followRequest', { name: actorName });
+    // The server's sentence names the milestone ("reached 100 likes"); the
+    // shared translation only says "a new milestone", so it is the fallback.
     case 'video_milestone':
-      return tr('notifications.postMilestone');
+      return (notification as any).content || tr('notifications.postMilestone');
     case 'livestream_start':
       return tr('notifications.startedStreaming', { name: actorName });
     case 'comment_like': {
