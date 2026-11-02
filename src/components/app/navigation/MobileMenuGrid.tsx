@@ -69,6 +69,7 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
       }
     };
     fit();
+    if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(fit);
     ro.observe(el.parentElement ?? el); // the tile: its width, not the label height the fit changes
     return () => ro.disconnect();
