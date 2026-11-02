@@ -159,10 +159,25 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     const scroller = scrollRef.current;
     const active = activeItemEl;
     if (!scroller || !active) return;
+    // Summed up the offsetParent chain to the scroller: a row being dragged
+    // or gliding carries a transform, which makes it the offsetParent of the
+    // item inside it, and its own offsets are its resting slot either way.
+    let x = 0;
+    let y = 0;
+    let node: HTMLElement | null = active;
+    while (node && node !== scroller && scroller.contains(node)) {
+      x += node.offsetLeft;
+      y += node.offsetTop;
+      node = node.offsetParent as HTMLElement | null;
+    }
+    if (node !== scroller) {
+      x = active.offsetLeft;
+      y = active.offsetTop;
+    }
     setIndicatorRect((prev) => {
       const next = {
-        x: active.offsetLeft,
-        y: active.offsetTop,
+        x,
+        y,
         width: active.offsetWidth,
         height: active.offsetHeight,
         ready: true,
@@ -364,20 +379,21 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const railSearching = !isCollapsed && !!navQuery.trim();
   const railIds = useMemo(() => visibleRailItems.map(navItemId), [visibleRailItems]);
   const onRailCommit = useCallback((next: string[]) => saveRailOrder(next), [saveRailOrder]);
-  const { order: liveRailOrder, draggingId: railDraggingId, itemProps: railDragProps } = useDragReorder({
+  const { order: liveRailOrder, animateNextChange: animateRail, itemProps: railDragProps } = useDragReorder({
     ids: railIds,
     onCommit: onRailCommit,
     disabled: railSearching,
+    // A wide row reads as lifted at a much smaller scale than an icon.
+    liftScale: 1.02,
   });
+  const onRailReset = useCallback(() => { animateRail(); resetRailOrder(); }, [animateRail, resetRailOrder]);
   // A reorder moves the active row without resizing anything, so the
-  // ResizeObserver above wouldn't re-place the glass on its own. Measured once
-  // the rows have settled: a row mid-slide carries a transform, and Chrome then
-  // reports offsets against that row instead of the list.
+  // ResizeObserver above wouldn't re-place the glass on its own. Placed on the
+  // active row's new slot straight away, so the glass glides there with it.
   useEffect(() => {
-    if (railDraggingId) return;
-    const timer = window.setTimeout(updateIndicator, 220);
-    return () => window.clearTimeout(timer);
-  }, [updateIndicator, liveRailOrder, railDraggingId]);
+    const frame = requestAnimationFrame(updateIndicator);
+    return () => cancelAnimationFrame(frame);
+  }, [updateIndicator, liveRailOrder]);
   // The lifted row needs its own fill, or the rows it passes show through it.
   const railLiftClass = cn(
     'rounded-2xl',
@@ -765,7 +781,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button
               type="button"
               data-rail-reorder-reset
-              onClick={resetRailOrder}
+              onClick={onRailReset}
               className={cn(
                 "hidden lg:flex w-full items-center rounded-xl px-2.5 py-1.5 text-left text-[12px]",
                 isLightTheme ? "text-zinc-500 hover:text-black" : "text-zinc-500 hover:text-white",

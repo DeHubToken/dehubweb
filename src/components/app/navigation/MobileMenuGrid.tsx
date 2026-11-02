@@ -118,7 +118,8 @@ export function MobileMenuGrid({ items, searching = false, currentPath, notifica
   const byId = useMemo(() => new Map(ordered.map((item) => [navItemId(item), item])), [ordered]);
   const ids = useMemo(() => ordered.map(navItemId), [ordered]);
   const onCommit = useCallback((next: string[]) => save(next), [save]);
-  const { order, draggingId, itemProps } = useDragReorder({ ids, onCommit, disabled: searching });
+  const { order, draggingId, animateNextChange, itemProps } = useDragReorder({ ids, onCommit, disabled: searching });
+  const onReset = useCallback(() => { animateNextChange(); reset(); }, [animateNextChange, reset]);
 
   const isActive = (item: NavItem) =>
     item.path === '/app'
@@ -193,10 +194,10 @@ export function MobileMenuGrid({ items, searching = false, currentPath, notifica
         {order.map((id) => byId.get(id)).filter((item): item is NavItem => !!item).map(renderNavTile)}
       </nav>
       {!searching && (
-        <p data-menu-reorder-hint className="mt-3 flex items-center justify-center gap-2 px-2 text-center text-[11.5px] text-zinc-500">
+        <p data-menu-reorder-hint className="mt-3 flex items-center justify-center gap-1 px-2 text-center text-[13px] leading-[1.35] text-zinc-500">
           <span>{t('nav.reorderHint', { defaultValue: 'Hold and drag any icon to rearrange' })}</span>
           {customised && (
-            <button type="button" onClick={reset} className="font-semibold text-zinc-300 underline-offset-2 hover:underline">
+            <button type="button" onClick={onReset} className="-my-3 flex-none px-2 py-3 font-semibold text-zinc-300 underline-offset-2 hover:underline">
               {t('nav.reorderReset', { defaultValue: 'Reset' })}
             </button>
           )}
