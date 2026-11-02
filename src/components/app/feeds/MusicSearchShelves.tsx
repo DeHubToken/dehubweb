@@ -129,7 +129,7 @@ export function MusicSearchShelves({ stages, stations, showMusicTitle }: { stage
                       <img src={station.favicon} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                     )}
                     <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full" style={{ background: '#fff', color: '#000' }}>
-                      {onAir ? <span className="h-2.5 w-2.5 rounded-[2px] bg-black" /> : <svg aria-hidden viewBox="0 0 10 10" className="ml-0.5 h-2.5 w-2.5"><path d="M2 1l7 4-7 4z" style={{ fill: '#000' }} /></svg>}
+                      {onAir ? <span className="h-2.5 w-2.5 rounded-[2px]" style={{ background: '#000' }} /> : <svg aria-hidden viewBox="0 0 10 10" className="ml-0.5 h-2.5 w-2.5"><path d="M2 1l7 4-7 4z" style={{ fill: '#000' }} /></svg>}
                     </span>
                   </span>
                   <span className="block truncate px-2 pt-1.5 text-xs font-semibold text-white">{station.name.trim()}</span>
