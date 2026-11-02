@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, MessageCircleQuestion, FileText } from "lucide-react";
+import { Loader2, Wand2, MessageCircleQuestion, FileText, Play, Lock, EyeOff, Timer, Plus } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Reply from "@/components/ui/cut-icons/reply";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -139,6 +139,12 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [studioItems, setStudioItems] = useState<DmStudioItem[]>([]);
   const [studioActive, setStudioActive] = useState(0);
   const studioUrls = useRef<string[]>([]);
+  // The edit screen opens on a pick; Confirm brings the picks back here as a
+  // row above the box. X drops only what was picked since it opened.
+  const [studioOpen, setStudioOpen] = useState(false);
+  const studioOpenRef = useRef(false);
+  studioOpenRef.current = studioOpen;
+  const studioBase = useRef(0);
   const [dropHover, setDropHover] = useState(false);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
@@ -309,6 +315,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       const queue = [...studioItems];
       const caption = message;
       // Back to the chat at once; the uploads show there as they go.
+      setStudioOpen(false);
       setStudioItems([]);
       setStudioActive(0);
       setMessage.complete(caption, '');
@@ -460,9 +467,30 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       file, url, kind, options: {}, destruct: null, lockPrice: null,
     };
     setStudioItems((prev) => {
+      if (!studioOpenRef.current) { studioBase.current = prev.length; studioOpenRef.current = true; }
       setStudioActive(prev.length);
       return [...prev, item];
     });
+    setStudioOpen(true);
+  };
+
+  const openStudioAt = (i: number) => {
+    studioBase.current = studioItems.length;
+    setStudioActive(i);
+    setStudioOpen(true);
+  };
+
+  // X in the edit screen: forget what this visit added, keep what was confirmed.
+  const cancelStudio = () => {
+    setStudioOpen(false);
+    setStudioItems((prev) => {
+      prev.slice(studioBase.current).forEach((it) => {
+        URL.revokeObjectURL(it.url);
+        studioUrls.current = studioUrls.current.filter((u) => u !== it.url);
+      });
+      return prev.slice(0, studioBase.current);
+    });
+    setStudioActive(0);
   };
 
   const clearStudio = () => {
@@ -470,6 +498,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     studioUrls.current = [];
     setStudioItems([]);
     setStudioActive(0);
+    setStudioOpen(false);
   };
 
   const removeStudioItem = (i: number) => {
@@ -480,6 +509,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         studioUrls.current = studioUrls.current.filter((u) => u !== gone.url);
       }
       const next = prev.filter((_, j) => j !== i);
+      if (i < studioBase.current) studioBase.current -= 1;
+      if (!next.length) setStudioOpen(false);
       setStudioActive((a) => Math.max(0, Math.min(a >= i ? a - 1 : a, next.length - 1)));
       return next;
     });
@@ -694,14 +725,52 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         onItemChange={(i, patch) => setStudioItems((prev) => prev.map((it, j) => (j === i ? { ...it, ...patch } : it)))}
         onRemoveItem={removeStudioItem}
         onAddMore={() => fileInputRef.current?.click()}
-        onClose={clearStudio}
+        onClose={cancelStudio}
+        open={studioOpen}
+        onConfirm={() => { setStudioOpen(false); requestAnimationFrame(() => textareaRef.current?.focus()); }}
         allowLock={allowLock}
         allowTimer={allowDocuments}
-        caption={message}
-        onCaptionChange={setMessage}
-        onSend={() => { void handleSend(); }}
-        sendDisabled={sendDisabled || isSendingFee}
       />
+      {studioItems.length > 0 && (
+        <div data-attach-preview="media" className="mb-2 flex items-center gap-2 overflow-x-auto pt-1.5 [scrollbar-width:none]">
+          {studioItems.map((it, i) => (
+            <div key={it.id} className="relative shrink-0">
+              <button
+                type="button"
+                onClick={() => openStudioAt(i)}
+                aria-label={_copy('dmVideo.editItem', { defaultValue: 'Edit item {{value1}}', value1: i + 1 })}
+                className="relative block h-16 w-16 overflow-hidden rounded-lg bg-zinc-900"
+              >
+                {it.kind === 'video'
+                  ? <video src={it.url} muted playsInline preload="metadata" className={cn('h-full w-full object-cover', (it.lockPrice != null || it.options.hidden === 'reveal') && 'blur-sm')} />
+                  : <img src={it.url} alt="" className={cn('h-full w-full object-cover', it.lockPrice != null && 'blur-sm')} />}
+                <span className="absolute bottom-1 left-1 flex items-center gap-0.5">
+                  {it.kind === 'video' && <Play className="h-3 w-3 fill-white text-white drop-shadow" />}
+                  {it.lockPrice != null && <Lock className="h-3 w-3 text-white drop-shadow" />}
+                  {it.options.hidden === 'reveal' && <EyeOff className="h-3 w-3 text-white drop-shadow" />}
+                  {it.destruct && <Timer className="h-3 w-3 text-white drop-shadow" />}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => removeStudioItem(i)}
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-md border border-white/20 bg-zinc-800 hover:bg-zinc-700"
+                aria-label={_copy('copy.595b066a8838', { defaultValue: 'Remove attachment' })}
+              >
+                <X className="h-3 w-3 text-white" />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label={_copy('dmVideo.addMore', { defaultValue: 'Add photos or videos' })}
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/25 text-zinc-300 hover:bg-white/5"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
+        </div>
+      )}
       {imagePreviewUrl && (
         <div data-attach-preview="audio" className="mb-2 relative flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[320px]">
           <audio src={imagePreviewUrl} controls preload="metadata" className="h-8 max-w-[200px]" />
@@ -935,7 +1004,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             // keyboard open across sends instead of collapsing every tap.
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
-            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview)}
+            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview && !studioItems.length)}
             title={sendDisabled ? sendDisabledReason : feeAmount ? t('messages.feePerMessage', { amount: feeAmount.toLocaleString() }) : undefined}
           >
             {isSendingFee ? (

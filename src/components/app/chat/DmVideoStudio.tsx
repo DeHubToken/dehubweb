@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Trash2 } from 'lucide-react';
+import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Pause, Trash2, Check } from 'lucide-react';
 import X from '@/components/ui/cut-icons/close';
-import Send from '@/components/ui/cut-icons/send';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { formatAttachmentSize } from '@/lib/attachments';
@@ -18,7 +17,7 @@ import { DmVideoFrame } from './DmVideo';
 import { LockPriceControl } from './LockPriceControl';
 import { LOCK_DEFAULT_USD, formatLockUsd } from '@/lib/dm-lock-price';
 
-type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
+export type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
 const FRAME_COUNT = 10;
 const MIN_KEEP = 1;
 
@@ -122,8 +121,9 @@ export function DmVideoCard({
 }
 
 /**
- * Big playing preview with Cover, Trim, Mirror, Rotate and Hide, plus the
- * caption and Send, so a video can go out from here without closing it.
+ * The edit screen for picked photos and videos: a big preview you can play and
+ * scrub, Cover, Trim, Mirror, Rotate, Hide and Timer, a strip of everything
+ * picked with + to add more, and Confirm to go back to where it was opened.
  */
 /** One photo or video waiting in the edit screen. */
 export interface DmStudioItem {
@@ -148,10 +148,10 @@ export function DmMediaStudio({
   onClose,
   allowLock,
   allowTimer = true,
-  caption,
-  onCaptionChange,
-  onSend,
-  sendDisabled,
+  open: openProp,
+  onConfirm,
+  confirmLabel,
+  initialTab = 'trim',
 }: {
   items: DmStudioItem[];
   active: number;
@@ -160,18 +160,21 @@ export function DmMediaStudio({
   onRemoveItem: (i: number) => void;
   /** Opens the picker; what is picked joins this screen. */
   onAddMore: () => void;
-  /** Closes the screen and drops everything in it. */
+  /** X: closes the screen. */
   onClose: () => void;
   allowLock?: boolean;
   /** Self-destruct only exists in DMs. */
   allowTimer?: boolean;
-  caption: string;
-  onCaptionChange: (v: string) => void;
-  onSend: () => void;
-  sendDisabled?: boolean;
+  /** Defaults to open while anything is picked. */
+  open?: boolean;
+  /** Confirm: keeps the choices and goes back. */
+  onConfirm: () => void;
+  confirmLabel?: string;
+  /** Which tool a video opens on. */
+  initialTab?: Tab;
 }) {
   const item = items[Math.min(active, items.length - 1)];
-  const open = items.length > 0;
+  const open = (openProp ?? true) && items.length > 0;
   const isVideo = item?.kind === 'video';
   const url = item?.url ?? '';
   const file = item?.file;
@@ -183,10 +186,18 @@ export function DmMediaStudio({
   const onDestructChange = (c: DmDestructChoice | null) => onItemChange(active, { destruct: c });
   const onLockPriceChange = allowLock ? (p: number | null) => onItemChange(active, { lockPrice: p }) : undefined;
   const { t: _copy } = _useCopy();
-  const [pickedTab, setTab] = useState<Tab>('trim');
+  const [pickedTab, setTab] = useState<Tab>(initialTab);
   const tab: Tab = isVideo ? pickedTab : (pickedTab === 'timer' && allowTimer ? 'timer' : 'hide');
   const frames = useFilmstrip(isVideo ? url : null, duration, open && isVideo && (tab === 'trim' || tab === 'cover'));
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  // Watch and scrub the picked video right here.
+  const [now, setNow] = useState(0);
+  const [playing, setPlaying] = useState(true);
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) void v.play().catch(() => undefined); else v.pause();
+  };
   const stripRef = useRef<HTMLDivElement | null>(null);
   const drag = useRef<'start' | 'end' | null>(null);
   const dur = duration ?? 0;
@@ -278,8 +289,11 @@ export function DmMediaStudio({
               )}
             </div>
           ) : (
+          <div className="flex w-full max-w-full flex-col items-center gap-2">
           <DmVideoFrame
             key={item.id}
+            onTimeUpdate={setNow}
+            onPlayState={setPlaying}
             onMeta={(m) => { if (!item.duration && Number.isFinite(m.dur)) onItemChange(active, { duration: m.dur }); }}
             src={url}
             options={{ ...options, coverAt: undefined }}
@@ -301,7 +315,45 @@ export function DmMediaStudio({
                 <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedForUsd', { defaultValue: 'Unlock for {{value1}}', value1: formatLockUsd(lockPrice) })}
               </span>
             )}
+            <button
+              type="button"
+              onClick={togglePlay}
+              className="absolute inset-0 flex items-center justify-center"
+              aria-label={playing ? _copy('dmVideo.pause', { defaultValue: 'Pause' }) : _copy('dmVideo.play', { defaultValue: 'Play video' })}
+            >
+              {!playing && (
+                <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/35 bg-black/45">
+                  <Play className="ml-0.5 h-5 w-5 fill-white text-white" />
+                </span>
+              )}
+            </button>
           </DmVideoFrame>
+          {dur > 0 && (
+            <div className="flex w-full max-w-[440px] items-center gap-2">
+              <button
+                type="button"
+                onClick={togglePlay}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/15"
+                aria-label={playing ? _copy('dmVideo.pause', { defaultValue: 'Pause' }) : _copy('dmVideo.play', { defaultValue: 'Play video' })}
+              >
+                {playing ? <Pause className="h-4 w-4 fill-white" /> : <Play className="ml-0.5 h-4 w-4 fill-white" />}
+              </button>
+              <input
+                type="range"
+                min={start}
+                max={end}
+                step={0.05}
+                value={Math.min(end, Math.max(start, now))}
+                onChange={(e) => { const v = videoRef.current; const t = Number(e.target.value); if (v) { v.currentTime = t; setNow(t); } }}
+                aria-label={_copy('dmVideo.scrub', { defaultValue: 'Scrub through the video' })}
+                className="h-1 min-w-0 flex-1 cursor-pointer accent-white"
+              />
+              <span className="w-[72px] shrink-0 text-right text-[11px] tabular-nums text-zinc-400">
+                {formatClock(Math.max(0, now - start))} / {formatClock(kept)}
+              </span>
+            </div>
+          )}
+          </div>
           )}
         </div>
 
@@ -485,24 +537,14 @@ export function DmMediaStudio({
           </div>
           </>}
 
-          <div className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] p-1 pl-3">
-            <input
-              value={caption}
-              onChange={(e) => onCaptionChange(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && !sendDisabled) { e.preventDefault(); onSend(); } }}
-              placeholder={_copy('dmVideo.captionPlaceholder', { defaultValue: 'Add a caption…' })}
-              className="min-w-0 flex-1 bg-transparent py-1.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={onSend}
-              disabled={sendDisabled}
-              className="flex h-9 w-11 shrink-0 items-center justify-center rounded-lg bg-white text-black transition-opacity active:opacity-80 disabled:opacity-40"
-              aria-label={_copy('dmVideo.sendAll', { defaultValue: 'Send' })}
-            >
-              <Send className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-white text-sm font-bold text-black transition-opacity active:opacity-80"
+          >
+            <Check className="h-4 w-4" />
+            {confirmLabel ?? _copy('dmVideo.confirm', { defaultValue: 'Confirm' })}
+          </button>
         </div>
       </DrawerContent>
     </Drawer>
