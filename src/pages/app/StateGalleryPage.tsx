@@ -1,3 +1,7 @@
+import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
+import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
+import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
@@ -1119,6 +1123,7 @@ export default function StateGalleryPage() {
         <AgentWelcomeGallery />
         <LiveViewerGallery />
         <HolderGroupGallery />
+        <GroupsChannelsGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -1345,6 +1350,37 @@ const GALLERY_HOLDER_COMMUNITY = {
   holder_gate_token: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
   holder_gate_min: 1000, holder_gate_symbol: 'DHB', holder_gate_decimals: 18,
 } as Community;
+
+const GALLERY_GROUP = { ...GALLERY_COMMUNITY, id: 'gallery-group', slug: 'night-owls', name: 'Night Owls', kind: 'group', is_private: true, member_count: 38, avatar_url: null } as Community;
+const GALLERY_CHANNEL = { ...GALLERY_COMMUNITY, id: 'gallery-channel', slug: 'alpha-calls', name: 'Alpha Calls', kind: 'channel', entry_price: 1000, member_count: 1204, avatar_url: null } as Community;
+
+/** The + in Messages: what it offers, the New channel sheet, and the list rows. */
+function GroupsChannelsGallery() {
+  const [selector, setSelector] = useState(false);
+  const [sheet, setSheet] = useState<NewChatKind | null>(null);
+  return (
+    <section data-page-bento data-groups-channels-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Groups and channels</h2>
+      <div className="flex flex-wrap gap-2 mb-3">
+        <button type="button" data-open-selector onClick={() => setSelector(true)} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">+ menu</button>
+        <button type="button" data-open-group-sheet onClick={() => setSheet('group')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">New group</button>
+        <button type="button" data-open-channel-sheet onClick={() => setSheet('channel')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">New channel</button>
+      </div>
+      <div data-groups-channels-rows className="rounded-2xl border border-white/10 overflow-hidden">
+        <GroupChatRow community={GALLERY_GROUP} onClick={noop} />
+        <GroupChatRow community={GALLERY_CHANNEL} onClick={noop} />
+      </div>
+      <div className="mt-3">
+        <CommunityKindChip community={GALLERY_GROUP} />
+        <CommunityKindChip community={GALLERY_CHANNEL} />
+      </div>
+      <NewMessageSelector open={selector} onOpenChange={setSelector} onSelectDM={noop} onSelectGroup={noop} onSelectChannel={noop} />
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <NewGroupChannelSheet kind={sheet ?? 'group'} open={!!sheet} onOpenChange={(open) => { if (!open) setSheet(null); }} />
+      </AuthContext.Provider>
+    </section>
+  );
+}
 
 /** A holder group: the header tag, the owner's Holders tab and Top holders. */
 function HolderGroupGallery() {
