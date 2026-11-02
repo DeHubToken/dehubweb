@@ -356,3 +356,28 @@ html [data-poll-duration][aria-pressed='true']:not(#_):not(#_):not(#_) svg {
   color: inherit !important;
   stroke: currentColor !important;
 }
+
+/* Composer ALT pill (AltTextEditor). It sits on the photo, so it keeps the same
+   look on every theme: dark outlined while empty, solid white with a tick once
+   alt text is saved. The control material would otherwise repaint both. */
+html [data-alt-text]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0.5rem !important;
+}
+html [data-alt-text='empty']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) {
+  background: rgba(0,0,0,0.7) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+html [data-alt-text='set']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) {
+  background: #fff !important;
+  border: 1px solid #fff !important;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.35) !important;
+  color: #09090b !important;
+}
+html [data-alt-text='set']:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is(svg, svg *) {
+  color: #09090b !important;
+  stroke: currentColor !important;
+}
