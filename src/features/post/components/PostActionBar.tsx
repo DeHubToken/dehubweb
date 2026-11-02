@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useCrossPostAccountCount } from './CrossPostPicker';
-import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
+import { Eye, Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable, AlertTriangle } from "lucide-react";
 import More from "@/components/ui/cut-icons/more";
 import Paperclip from "@/components/ui/cut-icons/attach";
 import Calendar from "@/components/ui/cut-icons/events";
@@ -56,6 +56,8 @@ interface PostActionBarProps {
   onCameraCapture: () => void;
   onEnhanceWithAI: (mode: 'spellcheck' | 'grammar' | 'style', style?: string) => void;
   onPost: () => void;
+  /** Opens the post drawn by the real feed card. */
+  onPreview?: () => void;
   canPost: boolean;
   isEnhancing: boolean;
   isPosting?: boolean;
@@ -102,6 +104,7 @@ export function PostActionBar({
   onCameraCapture,
   onEnhanceWithAI,
   onPost,
+  onPreview,
   canPost,
   isEnhancing,
   isPosting,
@@ -647,6 +650,19 @@ export function PostActionBar({
           </DrawerContent>
         </Drawer>
         
+        {onPreview && !isLive && canPost && !isPosting && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onPreview}
+            aria-label={_copy("upload.preview.title", { defaultValue: "Preview" })}
+            className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{_copy("upload.preview.title", { defaultValue: "Preview" })}</span>
+          </Button>
+        )}
+
         <Button
           // One button, one form. This used to branch to a second Go Live
           // sheet that asked for the title, description and cover all over

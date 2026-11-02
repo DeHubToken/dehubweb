@@ -23,6 +23,8 @@ import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 import { toast } from 'sonner';
 
+const PostPreviewSheet = lazy(() => import('./components/PostPreviewSheet').then((m) => ({ default: m.PostPreviewSheet })));
+
 /** Closing with more words than this saves the post to Drafts. */
 const AUTO_DRAFT_MIN_WORDS = 3;
 const stripTags = (html: string) => html.replace(/<[^>]*>/g, ' ');
@@ -69,6 +71,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost, onPosted);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
@@ -435,6 +438,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
           actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}) });
         }}
+        onPreview={() => setPreviewOpen(true)}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
@@ -456,6 +460,17 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
         hasContentWarning={state.contentWarning !== null}
       />
+      {previewOpen && (
+      <Suspense fallback={null}>
+      <PostPreviewSheet
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        text={state.text}
+        title={state.titleText}
+        media={state.media}
+      />
+      </Suspense>
+      )}
       </>
       )}
     </>
