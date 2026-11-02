@@ -162,7 +162,25 @@
     "saved": "Fushat e profilit u ruajtën",
     "failed": "Nuk u ruajt. Provo përsëri.",
     "verified": "Lidhje e verifikuar",
-    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}"
+    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}",
+    "descriptionPresets": "Shto një faqe interneti, përemra ose ndonjë gjë tjetër. Lidhjet shfaqen me rrjetet e tua sociale.",
+    "type": "Lloji i fushës",
+    "needsLabel": "Jepi çdo fushe të personalizuar një etiketë",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "ata/ato",
+    "placeholderLocation": "Qyteti, shteti",
+    "presets": {
+      "website": "Faqja e internetit",
+      "blog": "Blog",
+      "portfolio": "Portofoli",
+      "shop": "Dyqan",
+      "podcast": "Podcast",
+      "newsletter": "Buletini informativ",
+      "pronouns": "Përemrat",
+      "location": "Vendndodhja",
+      "custom": "I personalizuar",
+      "customOption": "Etiketa e personalizuar"
+    }
   },
   "followedTags": {
     "follow": "Ndiq #{{tag}}",

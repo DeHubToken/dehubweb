@@ -162,7 +162,24 @@
     "saved": "پروفائل فیلڈ سیو ہوئے گیلک",
     "failed": "سیو نی ہولک۔ فیر کوشش کر۔",
     "verified": "تصدیق کرل لنک",
-    "verifyHint": "لنک تصدیق کرے لگِن ایکے اوہ پیج میں جوڑ، فیر سیو کر: {{snippet}}"
+    "verifyHint": "لنک تصدیق کرے لگِن ایکے اوہ پیج میں جوڑ، فیر سیو کر: {{snippet}}",
+    "descriptionPresets": "वेबसाइट, सर्वनाम या कुछ और भी जोड़ो। लिंक आपके सोशल के साथ दिखाते हैं।",
+    "type": "فیلد تایپ",
+    "needsLabel": "हर कस्टम फील्ड को एक लेबल दो",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "उन्हां/उनकर",
+    "placeholderLocation": "सहर, देश",
+    "presets": {
+      "website": "वेबसाइट",
+      "blog": "ब्लॉग",
+      "portfolio": "पोर्टफोलियो",
+      "shop": "दुकान",
+      "podcast": "पॉडकास्ट",
+      "newsletter": "न्यूज़लेटर",
+      "pronouns": "सर्वनाम",
+      "location": "जगह",
+      "customOption": "कस्टम लेबल"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} فالو کر",

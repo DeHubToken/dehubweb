@@ -162,7 +162,24 @@
     "saved": "A ti fi àwọn pápá profaili pamọ́",
     "failed": "Kò fi pamọ́. Tún gbìyànjú.",
     "verified": "Ìjápọ̀ tí a ti fìdí rẹ̀ múlẹ̀",
-    "verifyHint": "Láti fìdí ìjápọ̀ múlẹ̀, fi èyí kún ojú-ìwé yẹn, lẹ́yìn náà tún fi pamọ́: {{snippet}}"
+    "verifyHint": "Láti fìdí ìjápọ̀ múlẹ̀, fi èyí kún ojú-ìwé yẹn, lẹ́yìn náà tún fi pamọ́: {{snippet}}",
+    "type": "Field type",
+    "needsLabel": "Fun kọọkan aaye aṣa akọle kan",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Tẹ̀lé #{{tag}}",

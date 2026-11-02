@@ -162,7 +162,23 @@
     "saved": "Qadên profîlê hatin tomarkirin",
     "failed": "Ew nehat tomarkirin. Dîsa biceribîne.",
     "verified": "Girêdana piştrastkirî",
-    "verifyHint": "Ji bo piştrastkirina girêdanekê, vê li wê rûpelê zêde bike, paşê dîsa tomar bike: {{snippet}}"
+    "verifyHint": "Ji bo piştrastkirina girêdanekê, vê li wê rûpelê zêde bike, paşê dîsa tomar bike: {{snippet}}",
+    "type": "Field type",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} bişopîne",

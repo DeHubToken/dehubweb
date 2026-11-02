@@ -162,7 +162,25 @@
     "saved": "Kua tiakina ngā āpure kōtaha",
     "failed": "Kāore i tiakina. Whakamātauria anō.",
     "verified": "Hono kua manatokona",
-    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}"
+    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}",
+    "descriptionPresets": "Tāpirihia he paetukutuku, he whakahua, he aha atu rānei. Ko nga hononga hono e whakaatu ana ki o raatau hapori.",
+    "type": "Momo mara",
+    "needsLabel": "Homai he tohu ki ia mara ritenga",
+    "placeholderLink": "koutouite.com",
+    "placeholderPronouns": "ratou/ratou",
+    "placeholderLocation": "Taone, whenua",
+    "presets": {
+      "website": "Paetukutuku",
+      "blog": "Blog",
+      "portfolio": "Pūtea",
+      "shop": "Hokona",
+      "podcast": "Podcast",
+      "newsletter": "Pūrongo",
+      "pronouns": "Ngā tohutohu",
+      "location": "Te waahi",
+      "custom": "Ritenga",
+      "customOption": "Tohu ritenga"
+    }
   },
   "followedTags": {
     "follow": "Whai i #{{tag}}",

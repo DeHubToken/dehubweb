@@ -162,7 +162,25 @@
     "saved": "Campi del profilo salvati",
     "failed": "Non è stato salvato. Riprova.",
     "verified": "Link verificato",
-    "verifyHint": "Per verificare un link, aggiungi questo a quella pagina e salva di nuovo: {{snippet}}"
+    "verifyHint": "Per verificare un link, aggiungi questo a quella pagina e salva di nuovo: {{snippet}}",
+    "descriptionPresets": "Aggiungi un sito web, pronomi o qualsiasi altra cosa. I link vengono mostrati con i tuoi social.",
+    "type": "Tipo di campo",
+    "needsLabel": "Assegna un'etichetta a ciascun campo personalizzato",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "loro/loro",
+    "placeholderLocation": "Città, paese",
+    "presets": {
+      "website": "Sito web",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomi",
+      "location": "Posizione",
+      "custom": "Personalizzato",
+      "customOption": "Etichetta personalizzata"
+    }
   },
   "followedTags": {
     "follow": "Segui #{{tag}}",

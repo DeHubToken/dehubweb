@@ -162,7 +162,25 @@
     "saved": "Riqsichikuy t'aqakuna waqaychasqa",
     "failed": "Manam waqaychakurqanchu. Watiqmanta ruray.",
     "verified": "Chiqaqchasqa t'inki",
-    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}"
+    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}",
+    "descriptionPresets": "Web kitita, sutirantikunata utaq imatapas yapay. Enlaces rikuchinku socialesniykiwan.",
+    "type": "Chakra laya",
+    "needsLabel": "Sapa costumbre chakraman huk etiquetata quy",
+    "placeholderLink": "sitioyki.com nisqapi",
+    "placeholderPronouns": "paykuna/paykuna",
+    "placeholderLocation": "Llaqta, suyu",
+    "presets": {
+      "website": "Web nisqapi",
+      "blog": "Blog nisqamanta",
+      "portfolio": "Cartera nisqa",
+      "shop": "Rantiy",
+      "podcast": "Podcast",
+      "newsletter": "Willakuy qillqa",
+      "pronouns": "Suti rantikuna",
+      "location": "Tarikusqan",
+      "custom": "Chullachasqa",
+      "customOption": "Etiqueta personalizada nisqa"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} qatiy",

@@ -162,7 +162,23 @@
     "saved": "An ajiye filayen bayanan martaba",
     "failed": "Ba a ajiye ba. Sake gwadawa.",
     "verified": "Hanyar haɗi da aka tabbatar",
-    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}"
+    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}",
+    "descriptionPresets": "Ƙara shafin yanar gizo, pronouns ko wani abu. Hanyoyin haɗi suna nunawa tare da zamantakewar ku.",
+    "type": "Nau'in filin",
+    "needsLabel": "Ka ba kowane filin al'ada lakabi",
+    "placeholderLink": "nakuite.com",
+    "placeholderPronouns": "sun/sun",
+    "placeholderLocation": "City, kasar",
+    "presets": {
+      "website": "Yanar Gizo",
+      "blog": "Blog",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Wuri",
+      "custom": "Musamman",
+      "customOption": "Alamar al'ada"
+    }
   },
   "followedTags": {
     "follow": "Bi #{{tag}}",

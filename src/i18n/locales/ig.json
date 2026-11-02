@@ -162,7 +162,25 @@
     "saved": "Echekwala mpaghara profaịlụ",
     "failed": "Edebeghị ya. Nwaa ọzọ.",
     "verified": "Njikọ akwadoro",
-    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}"
+    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}",
+    "descriptionPresets": "Tinye a website, pronouns ma ọ bụ ihe ọ bụla ọzọ. Njikọ na-egosi na gị socials.",
+    "type": "Ụdị Ubi",
+    "needsLabel": "Nye mpaghara emeredịkachọrọ ọ bụla akara ngosi",
+    "placeholderLink": "gịsite.com",
+    "placeholderPronouns": "ha/ha",
+    "placeholderLocation": "Obodo, obodo",
+    "presets": {
+      "website": "Weebụsaịtị",
+      "blog": "Blog",
+      "portfolio": "Pọtụfoliyo",
+      "shop": "Ụlọ ahịa",
+      "podcast": "Podcast",
+      "newsletter": "Akwụkwọ akụkọ",
+      "pronouns": "Kpọtụrụ anyị",
+      "location": "Ebe",
+      "custom": "Omenala",
+      "customOption": "Akara emeredịkachọrọ"
+    }
   },
   "followedTags": {
     "follow": "Soro #{{tag}}",

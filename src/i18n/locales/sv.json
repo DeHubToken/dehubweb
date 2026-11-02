@@ -162,7 +162,25 @@
     "saved": "Profilfälten sparades",
     "failed": "Det sparades inte. Försök igen.",
     "verified": "Verifierad länk",
-    "verifyHint": "För att verifiera en länk lägger du till det här på den sidan och sparar igen: {{snippet}}"
+    "verifyHint": "För att verifiera en länk lägger du till det här på den sidan och sparar igen: {{snippet}}",
+    "descriptionPresets": "Lägg till en webbplats, pronomen eller något annat. Länkar visas med dina sociala medier.",
+    "type": "Fälttyp",
+    "needsLabel": "Ge varje anpassat fält en etikett",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "de/dem",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Webbplats",
+      "blog": "Blogg",
+      "portfolio": "Portfolio",
+      "shop": "Handla",
+      "podcast": "Podcast",
+      "newsletter": "Nyhetsbrev",
+      "pronouns": "Pronomen",
+      "location": "Plats",
+      "custom": "Anpassad",
+      "customOption": "Anpassad etikett"
+    }
   },
   "followedTags": {
     "follow": "Följ #{{tag}}",

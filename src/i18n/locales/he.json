@@ -162,7 +162,24 @@
     "saved": "שדות הפרופיל נשמרו",
     "failed": "לא נשמר. נסה שוב.",
     "verified": "קישור מאומת",
-    "verifyHint": "כדי לאמת קישור, הוסף את זה לעמוד ההוא ושמור שוב: {{snippet}}"
+    "verifyHint": "כדי לאמת קישור, הוסף את זה לעמוד ההוא ושמור שוב: {{snippet}}",
+    "descriptionPresets": "יש להוסיף אתר אינטרנט, כינויי גוף או כל דבר אחר. הקישורים מוצגים ברשתות החברתיות שלכם.",
+    "type": "סוג שדה",
+    "needsLabel": "תן תווית לכל שדה מותאם אישית",
+    "placeholderPronouns": "הם/הם",
+    "placeholderLocation": "עיר, ארץ",
+    "presets": {
+      "website": "אתר אינטרנט",
+      "blog": "בלוג",
+      "portfolio": "פורטפוליו",
+      "shop": "חנות",
+      "podcast": "פודקאסט",
+      "newsletter": "ניוזלטר",
+      "pronouns": "כינויים",
+      "location": "מיקום",
+      "custom": "התאמה אישית",
+      "customOption": "תווית מותאמת אישית"
+    }
   },
   "followedTags": {
     "follow": "עקוב אחרי #{{tag}}",

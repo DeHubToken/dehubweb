@@ -292,17 +292,35 @@
     "noUsername": "Fediverse adresi almak için bir kullanıcı adı seç."
   },
   "profileFields": {
-    "add": "Alan ekle",
-    "remove": "Alanı kaldır",
     "title": "Profil alanları",
     "description": "İsteğe bağlı özel profil alanları",
     "label": "Etiket",
     "content": "İçerik",
+    "add": "Alan ekle",
+    "remove": "Alanı kaldır",
     "save": "Alanları kaydet",
     "saved": "Profil alanları kaydedildi",
     "failed": "Kaydedilmedi. Tekrar dene.",
     "verified": "Doğrulanmış bağlantı",
-    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}"
+    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}",
+    "descriptionPresets": "Bir web sitesi, zamir veya başka bir şey ekleyin. Sosyal medya hesaplarınızla bağlantılar gösterilir.",
+    "type": "Alan türü",
+    "needsLabel": "Her özel alana bir etiket verin",
+    "placeholderLink": "siteniz.com",
+    "placeholderPronouns": "onlar/onlar",
+    "placeholderLocation": "Şehir, ülke",
+    "presets": {
+      "website": "Web sitesi",
+      "blog": "Blog",
+      "portfolio": "Portföy",
+      "shop": "Mağaza",
+      "podcast": "Podcast",
+      "newsletter": "Bülten",
+      "pronouns": "Zamirler",
+      "location": "Konum",
+      "custom": "Özel",
+      "customOption": "Özel etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} takip et",

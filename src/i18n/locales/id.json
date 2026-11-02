@@ -162,7 +162,25 @@
     "saved": "Kolom profil tersimpan",
     "failed": "Tidak tersimpan. Coba lagi.",
     "verified": "Tautan terverifikasi",
-    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}"
+    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}",
+    "descriptionPresets": "Tambahkan situs web, kata ganti, atau apa pun. Tautan ditampilkan dengan media sosial Anda.",
+    "type": "Jenis bidang",
+    "needsLabel": "Beri label pada setiap bidang kustom",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "mereka/mereka",
+    "placeholderLocation": "Kota, negara",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portofolio",
+      "shop": "Toko",
+      "podcast": "Podcast",
+      "newsletter": "Buletin",
+      "pronouns": "Kata ganti",
+      "location": "Lokasi",
+      "custom": "Kustom",
+      "customOption": "Label kustom"
+    }
   },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",

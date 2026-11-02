@@ -162,7 +162,25 @@
     "saved": "Profielvelde gestoor",
     "failed": "Dit is nie gestoor nie. Probeer weer.",
     "verified": "Geverifieerde skakel",
-    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}"
+    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}",
+    "descriptionPresets": "Voeg 'n webwerf, voornaamwoorde of iets anders by. Maak kontak met jou sosiale netwerke.",
+    "type": "Veldtipe",
+    "needsLabel": "Gee elke pasgemaakte veld 'n etiket",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "hulle/hulle",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Webwerf",
+      "blog": "Blog",
+      "portfolio": "Portefeulje",
+      "shop": "Winkel",
+      "podcast": "Podsending",
+      "newsletter": "Nuusbrief",
+      "pronouns": "Voornaamwoorde",
+      "location": "Ligging",
+      "custom": "Pasmaak",
+      "customOption": "Pasmaak etiket"
+    }
   },
   "followedTags": {
     "follow": "Volg #{{tag}}",

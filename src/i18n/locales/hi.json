@@ -162,7 +162,25 @@
     "saved": "प्रोफ़ाइल फ़ील्ड सेव हो गए",
     "failed": "सेव नहीं हुआ। फिर से कोशिश करें।",
     "verified": "सत्यापित लिंक",
-    "verifyHint": "लिंक सत्यापित करने के लिए इसे उस पेज पर जोड़ें, फिर दोबारा सेव करें: {{snippet}}"
+    "verifyHint": "लिंक सत्यापित करने के लिए इसे उस पेज पर जोड़ें, फिर दोबारा सेव करें: {{snippet}}",
+    "descriptionPresets": "वेबसाइट, सर्वनाम या कुछ और जोड़ें। लिंक आपके सोशल के साथ दिखाई देते हैं।",
+    "type": "फ़ील्ड का प्रकार",
+    "needsLabel": "हर कस्टम फ़ील्ड को एक लेबल दें",
+    "placeholderLink": "यoursite.com",
+    "placeholderPronouns": "वे/उन्हें",
+    "placeholderLocation": "शहर, देश",
+    "presets": {
+      "website": "वेबसाइट",
+      "blog": "ब्लॉग",
+      "portfolio": "पोर्टफ़ोलियो",
+      "shop": "खरीदारी करें",
+      "podcast": "पॉडकास्ट",
+      "newsletter": "न्यूज़लेटर",
+      "pronouns": "सर्वनाम",
+      "location": "स्थान",
+      "custom": "कस्टम",
+      "customOption": "कस्टम लेबल"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} फ़ॉलो करें",

@@ -162,7 +162,25 @@
     "saved": "Майдонҳои профил захира шуданд",
     "failed": "Захира нашуд. Боз кӯшиш кунед.",
     "verified": "Пайванди тасдиқшуда",
-    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}"
+    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o iba pang iba. Ang mga link ay ipinapakita sa iyong mga social.",
+    "type": "Навъи майдон",
+    "needsLabel": "Ба ҳар як майдони фармоишӣ барчасп диҳед",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "онҳо/онҳо",
+    "placeholderLocation": "Шаҳр, кишвар",
+    "presets": {
+      "website": "Сомона",
+      "blog": "Блог",
+      "portfolio": "Портфолио",
+      "shop": "Мағоза",
+      "podcast": "Podcast",
+      "newsletter": "Бюллетен",
+      "pronouns": "Тахаллусҳо",
+      "location": "Ҷойгиршавӣ",
+      "custom": "Оддӣ",
+      "customOption": "ТамғаиМатн"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}}-ро пайгирӣ кардан",

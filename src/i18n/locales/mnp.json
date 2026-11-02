@@ -162,7 +162,11 @@
     "saved": "个人资料字段已保存",
     "failed": "没有保存成功，请再试一次。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}",
+    "placeholderLocation": "城市、國家",
+    "presets": {
+      "custom": "定制"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",

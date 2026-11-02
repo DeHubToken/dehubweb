@@ -292,17 +292,35 @@
     "noUsername": "Elige un nombre de usuario para tener una dirección en el fediverso."
   },
   "profileFields": {
-    "add": "Añadir campo",
-    "remove": "Quitar campo",
     "title": "Campos del perfil",
     "description": "Campos de perfil personalizados opcionales",
     "label": "Etiqueta",
     "content": "Contenido",
+    "add": "Añadir campo",
+    "remove": "Quitar campo",
     "save": "Guardar campos",
     "saved": "Campos del perfil guardados",
     "failed": "No se guardó. Inténtalo de nuevo.",
     "verified": "Enlace verificado",
-    "verifyHint": "Para verificar un enlace, añade esto a esa página y vuelve a guardar: {{snippet}}"
+    "verifyHint": "Para verificar un enlace, añade esto a esa página y vuelve a guardar: {{snippet}}",
+    "descriptionPresets": "Añade un sitio web, pronombres o cualquier otra cosa. Los enlaces se muestran con tus redes sociales.",
+    "type": "Tipo de campo",
+    "needsLabel": "Dar a cada campo personalizado una etiqueta",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ellos/ellas",
+    "placeholderLocation": "Ciudad, país",
+    "presets": {
+      "website": "Sitio web",
+      "blog": "Blog",
+      "portfolio": "Cartera",
+      "shop": "Comprar",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronombres",
+      "location": "Ubicación",
+      "custom": "Personalizado",
+      "customOption": "Etiqueta personalizada"
+    }
   },
   "followedTags": {
     "follow": "Seguir #{{tag}}",

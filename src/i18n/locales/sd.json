@@ -162,7 +162,24 @@
     "saved": "پروفائل جا خانا محفوظ ٿيا",
     "failed": "محفوظ نه ٿيو. ٻيهر ڪوشش ڪريو.",
     "verified": "تصديق ٿيل لنڪ",
-    "verifyHint": "لنڪ جي تصديق لاءِ هي ان صفحي تي شامل ڪريو، پوءِ ٻيهر محفوظ ڪريو: {{snippet}}"
+    "verifyHint": "لنڪ جي تصديق لاءِ هي ان صفحي تي شامل ڪريو، پوءِ ٻيهر محفوظ ڪريو: {{snippet}}",
+    "descriptionPresets": "هڪ ويب سائيٽ شامل ڪريو, pronouns يا ٻيو ڪجھ. لنڪس توهان جي سوشلز سان ڏيکاري ٿو.",
+    "type": "فيلڊ جو قسم",
+    "needsLabel": "هر ڪسٽم فيلڊ کي هڪ ليبل ڏيو",
+    "placeholderPronouns": "انهن/انهن",
+    "placeholderLocation": "شهر، ملڪ",
+    "presets": {
+      "website": "ويب سائيٽ",
+      "blog": "بلاگ",
+      "portfolio": "پورٽ فوليو",
+      "shop": "دڪان",
+      "podcast": "پوڊ ڪاسٽ",
+      "newsletter": "نيوز ليٽر",
+      "pronouns": "ڪائنات",
+      "location": "جڳھ",
+      "custom": "حسب ضرورت",
+      "customOption": "ڪسٽم ليبل"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} فالو ڪريو",

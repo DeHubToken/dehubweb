@@ -162,7 +162,25 @@
     "saved": "ପ୍ରୋଫାଇଲ୍ ଫିଲ୍ଡ ସେଭ୍ ହେଲା",
     "failed": "ସେଭ୍ ହେଲା ନାହିଁ। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
     "verified": "ଯାଞ୍ଚ ହୋଇଥିବା ଲିଙ୍କ",
-    "verifyHint": "ଲିଙ୍କ ଯାଞ୍ଚ ପାଇଁ ଏହାକୁ ସେହି ପେଜରେ ଯୋଡ଼ନ୍ତୁ, ତାପରେ ପୁଣି ସେଭ୍ କରନ୍ତୁ: {{snippet}}"
+    "verifyHint": "ଲିଙ୍କ ଯାଞ୍ଚ ପାଇଁ ଏହାକୁ ସେହି ପେଜରେ ଯୋଡ଼ନ୍ତୁ, ତାପରେ ପୁଣି ସେଭ୍ କରନ୍ତୁ: {{snippet}}",
+    "descriptionPresets": "ଗୋଟିଏ ୱେବସାଇଟ, ସର୍ବନାମ କିମ୍ବା ଅନ୍ୟ କିଛି ଯୋଗ କରନ୍ତୁ । ସାମାଜିକ ସମ୍ପର୍କ ଆପଣଙ୍କ ସହ ଯୋଡ଼ିହୋଇ ରହିଥାଏ ।",
+    "type": "କ୍ଷେତ୍ର ପ୍ରକାର",
+    "needsLabel": "ପ୍ରତ୍ୟେକ ଇଚ୍ଛାମୁତାବକ କ୍ଷେତ୍ରକୁ ଗୋଟିଏ ନାମପଟି ଦିଅନ୍ତୁ",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "ସେମାନେ/ସେମାନେ",
+    "placeholderLocation": "ସହର, ଦେଶ",
+    "presets": {
+      "website": "ୱେବସାଇଟ",
+      "blog": "ବ୍ଲଗ",
+      "portfolio": "ପୋର୍ଟଫୋଲିଓ",
+      "shop": "ଦୋକାନ",
+      "podcast": "PodcastName",
+      "newsletter": "Newsletter",
+      "pronouns": "ଉଚ୍ଚାରଣ",
+      "location": "ଅବସ୍ଥାନ",
+      "custom": "ଇଚ୍ଛାରୂପଣ",
+      "customOption": "ଇଚ୍ଛାରୂପଣ ନାମପଟି"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ଫଲୋ କରନ୍ତୁ",
