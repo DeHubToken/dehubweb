@@ -75,7 +75,7 @@ export function GeneratedStageCover({
       role="img"
       aria-label={m.title ? _copy('copy.99ca327a47b5', { defaultValue: 'Cover graphic for {{value1}}', value1: m.title }) : undefined}
       className={cn('relative w-full aspect-video overflow-hidden select-none', className)}
-      style={{ containerType: 'inline-size', backgroundColor: BASE, color: '#fff', fontFamily: 'Exo, system-ui, sans-serif' }}
+      style={{ containerType: 'inline-size', backgroundColor: BASE, color: '#fff', fontFamily: 'Manrope, system-ui, sans-serif' }}
     >
       <img aria-hidden alt="" src={`${KIT}/bg/${m.background}.jpg`} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
       <div aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,5,6,0.8) 0%, rgba(5,5,6,0.45) 60%, rgba(5,5,6,0.3) 100%)' }} />

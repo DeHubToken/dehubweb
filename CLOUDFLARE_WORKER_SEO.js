@@ -4273,7 +4273,7 @@ const APP_ESCAPE_PARAM = 'app';
  * which looked nothing at all like the product it was advertising.
  *
  * This is the app's own design system (the rule block at the top of
- * src/index.css: black / white / zinc only, Exo, liquid glass, no coloured
+ * src/index.css: black / white / zinc only, Manrope, liquid glass, no coloured
  * accents) reduced to one inline stylesheet. Inline on purpose — a crawler
  * fetches one document and the page has to render from it alone, so a
  * stylesheet request is a request that may never be made.
@@ -4282,10 +4282,10 @@ const APP_ESCAPE_PARAM = 'app';
  * proxied from the ssr-seo function: that function deploys on its own track
  * and cannot be relied on to change, so its markup is restyled here instead.
  */
-const PRERENDER_STYLE = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"><style>
+const PRERENDER_STYLE = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style>
 :root{--dh-bg:#000;--dh-panel:#131316;--dh-line:rgba(255,255,255,.12);--dh-fg:#fff;--dh-muted:#a1a1aa;--dh-dim:#71717a}
 *{box-sizing:border-box}
-body{margin:0;background:var(--dh-bg);color:var(--dh-fg);font-family:'Exo','Apple Color Emoji','Noto Color Emoji','Segoe UI Emoji',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+body{margin:0;background:var(--dh-bg);color:var(--dh-fg);font-family:'Manrope','Apple Color Emoji','Noto Color Emoji','Segoe UI Emoji',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
 .dh-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--dh-line);background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 .dh-head img{height:26px;width:auto;display:block;border:0;border-radius:0;margin:0}
 .dh-head a{border:0}

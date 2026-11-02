@@ -16,7 +16,7 @@
 .ur-lock svg { position: absolute; left: 15px; top: 12px; width: 30px; height: 36px; overflow: visible; animation: ur-lock-go .35s 1.12s ease-in forwards; }
 .ur-shk { transform-box: fill-box; transform-origin: 100% 100%; animation: ur-shk .34s .76s cubic-bezier(.3,1.8,.5,1) forwards; }
 .ur-coinface { position: absolute; left: 18px; top: 2px; width: 24px; height: 24px; opacity: 0; animation: ur-drop .5s .12s cubic-bezier(.55,0,.8,.3) forwards, ur-in .16s .62s ease-in forwards; }
-.ur-coinface i { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c7, #ffd36b 35%, #d79a1e 70%, #8a5a0b); box-shadow: inset 0 0 0 2px rgb(255 255 255 / .2), 0 2px 6px rgb(0 0 0 / .5); font: 900 12px/1 Exo, sans-serif; font-style: normal; color: #7a4a00; animation: ur-spin .2s .12s linear 3; }
+.ur-coinface i { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c7, #ffd36b 35%, #d79a1e 70%, #8a5a0b); box-shadow: inset 0 0 0 2px rgb(255 255 255 / .2), 0 2px 6px rgb(0 0 0 / .5); font: 800 12px/1 Manrope, sans-serif; font-style: normal; color: #7a4a00; animation: ur-spin .2s .12s linear 3; }
 .ur-ring { position: absolute; inset: 12px; border-radius: 50%; border: 2px solid #ffd36b; opacity: 0; animation: ur-ring .6s .76s ease-out; }
 .ur-spark { position: absolute; left: 28px; top: 28px; width: 4px; height: 4px; border-radius: 50%; background: #ffe9a6; box-shadow: 0 0 6px #ffd36b; opacity: 0; animation: ur-spark .55s .78s ease-out; }
 @keyframes ur-iris { to { --ur-r: 150%; } }

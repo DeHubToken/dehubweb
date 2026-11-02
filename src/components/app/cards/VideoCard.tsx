@@ -3091,7 +3091,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               data-on-media
               data-video-speed
               className="h-8 w-[44px] text-white flex items-center justify-center tabular-nums"
-              style={{ fontFamily: 'Exo, sans-serif', touchAction: 'manipulation' }}
+              style={{ fontFamily: 'Manrope, sans-serif', touchAction: 'manipulation' }}
               onClick={cyclePlaybackRate}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
