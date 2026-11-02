@@ -165,6 +165,7 @@ const OG_CARD_ROUTES = new Set([
   'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
   'docs/token/governance', 'docs/token/bridge', 'docs/roadmap', 'docs/faq',
   'docs/team', 'docs/contact', 'docs/privacy', 'docs/terms',
+  'docs/developers',
   'docs/terms-of-service', 'docs/advertising', 'docs/security', 'docs/featured-in',
   'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
   'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
@@ -426,6 +427,15 @@ const DOCS_PAGES = {
   // here, so every crawler following that link got a 404. No card of its own
   // in public/og yet, so it borrows the docs section's.
   'guidelines': { title: 'Community Guidelines — DeHub', description: 'What is and is not allowed on DeHub, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
+  // Developer docs. Bodies come from src/data/developer-docs.json via
+  // scripts/build-developer-docs-content.mjs; all share one card.
+  'developers': { title: 'DeHub Developers — Build Apps on DeHub', description: 'Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
+  'developers/mini-apps': { title: 'Build a DeHub Mini App — SDK and Manifest', description: 'Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
+  'auth': { title: 'Sign in with DeHub — OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
+  'webhooks': { title: 'DeHub Webhooks and Notifications API', description: 'Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.', og: 'docs/developers' },
+  'endpoints': { title: 'DeHub API Reference — REST and Mastodon APIs', description: 'The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
+  'examples': { title: 'DeHub Developer Examples — Copy and Paste Code', description: 'Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.', og: 'docs/developers' },
+  'troubleshooting': { title: 'DeHub Developer Troubleshooting', description: 'Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.', og: 'docs/developers' },
 };
 
 /** Legacy and typo'd /docs slugs Google still holds. `quick-start` (the real
@@ -441,11 +451,10 @@ const DOCS_PAGES = {
  *  answer: the page really does exist, it just has nothing to rank.
  *
  *  quickstart sits here too until it gets a DOCS_PAGES entry and a sitemap
- *  row. installation and endpoints were template pages for a made-up API and
- *  now redirect to the real pages (DOCS_REDIRECTS). */
+ *  row. installation was a template page for a made-up API and
+ *  now redirects to the real page (DOCS_REDIRECTS). */
 const DOCS_COMING_SOON = new Set([
-  'website', 'app', 'dehub', 'x', 'instagram', 'architecture', 'configuration',
-  'data-models', 'auth', 'webhooks', 'best-practices', 'troubleshooting', 'examples',
+  'website', 'app', 'dehub', 'x', 'instagram', 'architecture',
   'quickstart',
 ]);
 
@@ -456,7 +465,10 @@ const DOCS_REDIRECTS = {
   'ai-toolkits': '/docs/dapps#ai-suite',
   'token': '/docs/token/overview',
   'installation': '/dehub-app',
-  'endpoints': '/connect',
+  // Folded into the developer docs (src/data/developer-docs.json).
+  'best-practices': '/docs/developers#best-practices',
+  'configuration': '/docs/developers/mini-apps#manifest',
+  'data-models': '/docs/endpoints',
 };
 
 const _docsContentCache = new Map();
@@ -6224,6 +6236,9 @@ async function handleRequest(request, env, ctx) {
     '/app/radio': '/music',
     '/mcp': '/connect',
     '/app/mcp': '/connect',
+    // Short address for the developer hub (App.tsx redirects it the same way).
+    '/developers': '/docs/developers',
+    '/developer': '/docs/developers',
     // The sidebar calls the board 'Requests'; the SPA redirects both to the
     // board (dehubweb#1427) and 'requests' is a reserved username, but without
     // this crawlers still read it as a username and served Not Found.

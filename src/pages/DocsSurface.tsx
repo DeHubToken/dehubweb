@@ -72,6 +72,7 @@ const Blog = lazy(() => import("./docs/Blog"));
 const BlogPost = lazy(() => import("./docs/BlogPost"));
 const FAQ = lazy(() => import("./docs/FAQ"));
 const Donate = lazy(() => import("./docs/Donate"));
+const DeveloperDoc = lazy(() => import("./docs/DeveloperDoc"));
 
 // The DeHub mark inverts to black under `html.light`, which next-themes pins
 // for the light/minimal app themes — so this reads on paper docs and on the
@@ -81,6 +82,13 @@ const PageLoader = () => <DeHubPageLoader minHeight="400px" />;
 const wrap = (El: React.ComponentType) => (
   <Suspense fallback={<PageLoader />}>
     <El />
+  </Suspense>
+);
+
+/** One developer docs page from src/data/developer-docs.json. */
+const dev = (route: string) => (
+  <Suspense fallback={<PageLoader />}>
+    <DeveloperDoc route={route} />
   </Suspense>
 );
 
@@ -173,7 +181,16 @@ export default function DocsSurface() {
                 means getting the app; API access is the assistant connector.
                 Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
             <Route path="/docs/installation" element={<Navigate to="/dehub-app" replace />} />
-            <Route path="/docs/endpoints" element={<Navigate to="/connect" replace />} />
+            <Route path="/docs/developers" element={dev('developers')} />
+            <Route path="/docs/developers/mini-apps" element={dev('developers/mini-apps')} />
+            <Route path="/docs/endpoints" element={dev('endpoints')} />
+            <Route path="/docs/auth" element={dev('auth')} />
+            <Route path="/docs/webhooks" element={dev('webhooks')} />
+            <Route path="/docs/examples" element={dev('examples')} />
+            <Route path="/docs/troubleshooting" element={dev('troubleshooting')} />
+            <Route path="/docs/best-practices" element={<Navigate to="/docs/developers#best-practices" replace />} />
+            <Route path="/docs/configuration" element={<Navigate to="/docs/developers/mini-apps#manifest" replace />} />
+            <Route path="/docs/data-models" element={<Navigate to="/docs/endpoints" replace />} />
             <Route path="/docs/blog" element={wrap(Blog)} />
             {/* Blog posts share ONE BlogPost mount across both URLs. The card
                 links use the canonical /guides/<slug>; /docs/blog/<slug> stays
@@ -189,13 +206,6 @@ export default function DocsSurface() {
             <Route path="/docs/x" element={<ComingSoonPage title={_copy("copy.deace4186d0f", { defaultValue: "X Integration" })} description={_copy("copy.6f5fcdf9e99b", { defaultValue: "Social media integration and X platform features." })} />} />
             <Route path="/docs/instagram" element={<ComingSoonPage title={_copy("copy.4d10e3879b66", { defaultValue: "Instagram Integration" })} description={_copy("copy.4036f800a55f", { defaultValue: "Instagram connectivity and social features." })} />} />
             <Route path="/docs/architecture" element={<ComingSoonPage title={_copy("copy.cd74053c5481", { defaultValue: "Architecture" })} description={_copy("copy.b12f30287c18", { defaultValue: "System architecture and technical infrastructure details." })} />} />
-            <Route path="/docs/configuration" element={<ComingSoonPage title={_copy("copy.b332c3492d5e", { defaultValue: "Configuration" })} description={_copy("copy.d99327d3c6c1", { defaultValue: "Setup and configuration guides for developers." })} />} />
-            <Route path="/docs/data-models" element={<ComingSoonPage title={_copy("copy.91be83cf9b94", { defaultValue: "Data Models" })} description={_copy("copy.36a77cf40009", { defaultValue: "Database schemas and data structure documentation." })} />} />
-            <Route path="/docs/auth" element={<ComingSoonPage title={_copy("copy.66880d2d8216", { defaultValue: "Authentication" })} description={_copy("copy.4b0d7d4e55b5", { defaultValue: "Security protocols and authentication methods." })} />} />
-            <Route path="/docs/webhooks" element={<ComingSoonPage title={_copy("copy.45808d75bf89", { defaultValue: "Webhooks" })} description={_copy("copy.115c96518de0", { defaultValue: "Real-time notifications and webhook integration guides." })} />} />
-            <Route path="/docs/best-practices" element={<ComingSoonPage title={_copy("copy.46d9a34a79d2", { defaultValue: "Best Practices" })} description={_copy("copy.46f973a21dce", { defaultValue: "Recommended approaches and coding standards." })} />} />
-            <Route path="/docs/troubleshooting" element={<ComingSoonPage title={_copy("copy.c3af076f92c5", { defaultValue: "Troubleshooting" })} description={_copy("copy.7b5478b6d329", { defaultValue: "Common issues and solutions for developers." })} />} />
-            <Route path="/docs/examples" element={<ComingSoonPage title={_copy("copy.e68ee04dff59", { defaultValue: "Examples" })} description={_copy("copy.0a862da14a3b", { defaultValue: "Code examples and implementation samples." })} />} />
           </Route>
         </Routes>
       </SearchProvider>

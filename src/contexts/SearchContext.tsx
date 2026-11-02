@@ -305,6 +305,69 @@ const createSearchIndex = (): SearchIndex[] => {
       keywords: ['blog', 'news', 'updates', 'announcements', 'community', 'articles']
     },
     {
+      id: 'dev-developers',
+      title: "Build on DeHub",
+      content: "Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
+      path: '/docs/developers',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-developers-mini-apps',
+      title: "Mini apps",
+      content: "Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
+      path: '/docs/developers/mini-apps',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-auth',
+      title: "Sign in with DeHub",
+      content: "Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
+      path: '/docs/auth',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-webhooks',
+      title: "Webhooks and notifications",
+      content: "Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.",
+      path: '/docs/webhooks',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-endpoints',
+      title: "API reference",
+      content: "The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
+      path: '/docs/endpoints',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-examples',
+      title: "Examples",
+      content: "Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.",
+      path: '/docs/examples',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
+      id: 'dev-troubleshooting',
+      title: "Troubleshooting",
+      content: "Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
+      path: '/docs/troubleshooting',
+      category: 'Development',
+      type: 'page',
+      keywords: ["developers", "api", "sdk", "mini apps", "app store", "build"]
+    },
+    {
       id: 'quickstart',
       title: 'Quick Start',
       content: 'Quick start guide for DeHub platform, getting started, first steps, setup instructions',

@@ -378,6 +378,8 @@ const DOCS_META_ONLY = [
   'terms', 'terms-of-service', 'privacy', 'guidelines',
   'brand-assets', 'brand-guidelines', 'featured-in',
   'faq', 'donate',
+  // Developer docs (src/data/developer-docs.json).
+  'developers', 'developers/mini-apps', 'auth', 'webhooks', 'endpoints', 'examples', 'troubleshooting',
 ];
 const allDocsRoutes = [...new Set([...docsRoutes, ...DOCS_META_ONLY])];
 // Each docs row keeps the lastmod it already carries: the date that page's copy
