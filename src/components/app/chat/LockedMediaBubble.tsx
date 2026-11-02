@@ -32,6 +32,23 @@ import { sendTip } from '@/lib/contracts/stream-controller';
 import { toastTxError } from '@/lib/tx-error-toast';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { formatLockDhb, formatLockUsd, lockDhbForUsd, lockUsdOf } from '@/lib/dm-lock-price';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { UnlockConfirmSheet, type UnlockPhase } from '@/components/app/unlock/UnlockConfirmSheet';
+import { UnlockReveal } from '@/components/app/unlock/UnlockReveal';
+import { nextUnlockRevealKind, type UnlockRevealKind } from '@/components/app/unlock/unlock-reveal-kind';
+
+/** Warm the real file while the tick shows, so the reveal opens onto a loaded picture. */
+function preloadImage(url: string | undefined, maxMs = 2500): Promise<void> {
+  if (!url || typeof Image === 'undefined') return Promise.resolve();
+  return new Promise(resolve => {
+    const img = new Image();
+    const done = () => resolve();
+    img.onload = done; img.onerror = done;
+    setTimeout(done, maxMs);
+    img.src = url;
+  });
+}
+const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 export const lockedMediaKey = (messageId: string) => ['dm-locked', messageId] as const;
 
@@ -62,6 +79,11 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
   const mine = message.author === 'me';
   const isTemp = message._id.startsWith('temp-');
   const [paying, setPaying] = useState(false);
+  // Phones confirm in a sheet and finish with a reveal on the photo; desktop pays on the tap as before.
+  const isMobile = useIsMobile();
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [phase, setPhase] = useState<UnlockPhase>('idle');
+  const [revealKind, setRevealKind] = useState<UnlockRevealKind | null>(null);
 
   const { data: status } = useQuery<DmLockStatus>({
     queryKey: lockedMediaKey(message._id),
@@ -88,7 +110,60 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
   const dhbNow = status?.lock?.price ?? lockDhbForUsd(usd);
   const kindWord = lock.kind === 'video' ? t('dmPaidLock.lockedVideo', 'video') : t('dmPaidLock.lockedPhoto', 'photo');
 
+  // Phone flow: Pay in the sheet → Paying → Confirming → tick → sheet closes → reveal on the photo.
+  const handleSheetPay = async () => {
+    if (paying || !status?.payTo) return;
+    const me = auth?.walletAddress;
+    if (!me) {
+      toast.error(t('dmPaidLock.lockedSignIn', 'Sign in to unlock this.'));
+      return;
+    }
+    setPaying(true);
+    setPhase('paying');
+    try {
+      const chainId = await pickChain(me, dhbNow);
+      if (!chainId) {
+        toast.error(t('dmPaidLock.lockedNotEnoughUsd', { defaultValue: 'You need {{dhb}} ({{price}}) on Base or BNB to unlock this.', dhb: formatLockDhb(dhbNow), price: formatLockUsd(usd) }));
+        setPhase('idle');
+        return;
+      }
+      const tip = await sendTip({ tokenId: 0, amount: dhbNow, to: status.payTo, chainId, skipBalanceCheck: true });
+      setPhase('confirming');
+      let res = await unlockLockedMedia(message._id, tip.hash);
+      if (res.status === 'pending') {
+        await tip.confirmed?.catch(() => null);
+        res = await unlockLockedMedia(message._id, tip.hash).catch(() => res);
+      }
+      // Paid either way: whenever the real file arrives, it opens with a reveal.
+      setRevealKind(nextUnlockRevealKind());
+      if (res.status === 'unlocked') {
+        setPhase('done');
+        const realNow = res.lock?.mediaUrl;
+        await Promise.all([
+          wait(800),
+          lock.kind === 'video' ? Promise.resolve() : preloadImage(realNow ? getMediaUrl(realNow) || realNow : undefined),
+        ]);
+        setSheetOpen(false);
+        await wait(250);
+        queryClient.setQueryData(lockedMediaKey(message._id), res);
+      } else {
+        queryClient.setQueryData(lockedMediaKey(message._id), res);
+        setSheetOpen(false);
+        toast.message(t('dmPaidLock.lockedStillConfirming', 'Payment sent. It opens as soon as it confirms.'));
+      }
+    } catch (err) {
+      setPhase('idle');
+      toastTxError(err, t('dmPaidLock.lockedPayFailed', 'Could not unlock'));
+    } finally {
+      setPaying(false);
+    }
+  };
+
   const handleUnlock = async () => {
+    if (isMobile) {
+      if (!pending) { setPhase('idle'); setSheetOpen(true); }
+      return;
+    }
     if (paying || !status?.payTo) return;
     const me = auth?.walletAddress;
     if (!me) {
@@ -122,12 +197,13 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
   };
 
   const priceLabel = formatLockUsd(usd);
+  const senderName = message.sender?.displayName || message.sender?.username || '';
 
   // ── Sender, or someone who has paid: the real thing ──
   if (realUrl) {
     const src = getMediaUrl(realUrl) || realUrl;
     return (
-      <div data-dm-locked="open" className="relative inline-block max-w-full">
+      <div data-dm-locked="open" className={cn('relative inline-block max-w-full', revealKind && 'overflow-hidden rounded-lg')}>
         {lock.kind === 'video' ? (
           <video src={src} controls playsInline preload="metadata" className="max-w-full max-h-64 rounded-lg bg-black" />
         ) : (
@@ -149,6 +225,13 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
             </>
           )}
         </span>
+        {revealKind && !mine && (
+          <UnlockReveal
+            kind={revealKind}
+            cover={previewUrl ? <img src={previewUrl} alt="" className="scale-110" /> : <div className="bg-zinc-900" />}
+            onDone={() => setRevealKind(null)}
+          />
+        )}
         {mine && !(view.unlockCount ?? 0) && (
           <p className="mt-1 text-[11px] opacity-60">{t('dmPaidLock.lockedNotYet', 'Not unlocked yet')}</p>
         )}
@@ -199,6 +282,21 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
           </span>
         )}
       </div>
+      {isMobile && (
+        <UnlockConfirmSheet
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+          title={lock.kind === 'video' ? t('dmPaidLock.sheetTitleVideo', 'Unlock video') : t('dmPaidLock.sheetTitlePhoto', 'Unlock photo')}
+          who={senderName ? t('dmPaidLock.sheetFrom', { defaultValue: 'From {{name}}', name: senderName }) : t('dmPaidLock.sheetFromThem', 'From this chat')}
+          sub={senderName ? t('dmPaidLock.sheetAllTo', { defaultValue: 'All of it goes to {{name}}', name: senderName }) : t('dmPaidLock.sheetAllToThem', 'All of it goes to them')}
+          previewUrl={previewUrl}
+          priceLabel={priceLabel}
+          dhbLabel={`≈ ${formatLockDhb(dhbNow)}`}
+          phase={phase}
+          doneLabel={lock.kind === 'video' ? t('dmPaidLock.sheetOpeningVideo', 'Opening your video…') : t('dmPaidLock.sheetOpeningPhoto', 'Opening your photo…')}
+          onPay={handleSheetPay}
+        />
+      )}
     </div>
   );
 }
