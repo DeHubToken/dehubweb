@@ -199,7 +199,7 @@ export default function NftMarketPage() {
       <PageIsland
         icon="nfts"
         title={t('nftMarket.title', { defaultValue: 'NFT Market' })}
-        subtitle={t('nftMarket.subtitle', { defaultValue: 'Buy, sell and offer on BNB and Base' })}
+        subtitle={t('nftMarket.subtitle', { defaultValue: 'Buy, sell and offer on BNB, Base, Ethereum and Robinhood' })}
         tabs={
           <PageTabs
             value={tab}
