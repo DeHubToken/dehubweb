@@ -4352,7 +4352,6 @@ export type Database = {
           image_urls: string[] | null
           like_count: number
           shipped_url: string | null
-          status_note: string | null
           status: string
           status_note: string | null
           title: string
@@ -4373,7 +4372,6 @@ export type Database = {
           image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
-          status_note?: string | null
           status?: string
           status_note?: string | null
           title: string
@@ -4394,7 +4392,6 @@ export type Database = {
           image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
-          status_note?: string | null
           status?: string
           status_note?: string | null
           title?: string
@@ -10362,6 +10359,7 @@ export type Database = {
         Returns: undefined
       }
       evict_stale_post_translations: { Args: never; Returns: number }
+      feature_request_status_editor_wallets: { Args: never; Returns: string[] }
       feature_request_watcher_wallets: { Args: never; Returns: string[] }
       finish_provider_attempt: {
         Args: {
@@ -10474,6 +10472,7 @@ export type Database = {
         Args: { _community_id: string; _wallet_address: string }
         Returns: boolean
       }
+      is_feature_request_status_editor: { Args: never; Returns: boolean }
       is_signed_costream_host: {
         Args: { p_costream_id: string }
         Returns: boolean
@@ -10634,6 +10633,35 @@ export type Database = {
       set_dex_pool_image: {
         Args: { p_image_url: string; p_pool_id: string }
         Returns: undefined
+      }
+      set_feature_request_status: {
+        Args: { p_id: string; p_status: string }
+        Returns: {
+          author_avatar: string | null
+          author_username: string | null
+          author_wallet_address: string
+          category: string
+          comment_count: number
+          created_at: string
+          description: string
+          dislike_count: number
+          id: string
+          image_url: string | null
+          image_urls: string[] | null
+          like_count: number
+          shipped_url: string | null
+          status: string
+          status_note: string | null
+          title: string
+          updated_at: string
+          vote_count: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "feature_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       social_credit_add: {
         Args: {
