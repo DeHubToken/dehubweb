@@ -74,6 +74,9 @@ import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import type { DeHubPoll, DmLock, DmLockStatus, DmMessage } from '@/lib/api/dehub';
 import { LockedMediaBubble, lockedMediaKey } from '@/components/app/chat/LockedMediaBubble';
+import { UnlockReveal } from '@/components/app/unlock/UnlockReveal';
+import { UnlockConfirmSheet, type UnlockPhase } from '@/components/app/unlock/UnlockConfirmSheet';
+import type { UnlockRevealKind } from '@/components/app/unlock/unlock-reveal-kind';
 import { LockPriceControl } from '@/components/app/chat/LockPriceControl';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -664,6 +667,58 @@ function LockedDmGallery() {
   );
 }
 
+/** Paid unlock: the confirm sheet's steps and the three reveals that take turns after paying. */
+function UnlockRevealGallery() {
+  const real = `${window.location.origin}/og/agents.jpg`;
+  const [plays, setPlays] = useState<Record<UnlockRevealKind, number>>({ coin: 0, confetti: 0, foil: 0 });
+  const [phase, setPhase] = useState<UnlockPhase | null>(null);
+  const tile = (kind: UnlockRevealKind, label: string) => (
+    <div className="flex flex-col gap-1.5" key={kind}>
+      <span className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</span>
+      <div data-reveal-tile={kind} className="relative w-[200px] overflow-hidden rounded-lg" style={{ aspectRatio: '4 / 5' }}>
+        <img src={real} alt="" className="h-full w-full object-cover" />
+        {plays[kind] > 0 && (
+          <UnlockReveal
+            key={plays[kind]}
+            kind={kind}
+            cover={<img src={GALLERY_LOCK_BLUR} alt="" className="scale-125 blur-xl" />}
+            onDone={() => undefined}
+          />
+        )}
+      </div>
+      <Button variant="glass" size="sm" data-play-reveal={kind} onClick={() => setPlays(p => ({ ...p, [kind]: p[kind] + 1 }))}>Play</Button>
+    </div>
+  );
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-unlock-reveal-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Paid unlock reveal</h2>
+      <div className="flex flex-wrap items-start gap-4 text-white">
+        {tile('coin', 'Coin drop')}
+        {tile('confetti', 'Confetti')}
+        {tile('foil', 'Foil peel')}
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {(['idle', 'paying', 'confirming', 'done'] as UnlockPhase[]).map(ph => (
+          <Button key={ph} variant="glass" size="sm" data-unlock-phase={ph} onClick={() => setPhase(ph)}>Sheet: {ph}</Button>
+        ))}
+      </div>
+      <UnlockConfirmSheet
+        open={phase !== null}
+        onOpenChange={o => { if (!o) setPhase(null); }}
+        title="Unlock photo"
+        who="From angela"
+        sub="All of it goes to angela"
+        previewUrl={GALLERY_LOCK_BLUR}
+        priceLabel="$5"
+        dhbLabel="≈ 5,000 DHB"
+        phase={phase ?? 'idle'}
+        doneLabel="Opening your photo…"
+        onPay={() => setPhase('paying')}
+      />
+    </section>
+  );
+}
+
 /** Mint chain picker: Mint on an off-chain post, with each chain's live price. */
 function MintChainGallery() {
   const [open, setOpen] = useState<null | 'dehub' | 'own'>(null);
@@ -1145,6 +1200,7 @@ export default function StateGalleryPage() {
 
         <TipMessageGallery />
         <LockedDmGallery />
+        <UnlockRevealGallery />
         <MintChainGallery />
         <WhenSheetGallery />
         <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
