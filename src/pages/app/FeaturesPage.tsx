@@ -27,6 +27,9 @@ import { Loader2, CheckCircle2, MoreVertical, ImagePlus, Github } from "lucide-r
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Pencil from "@/components/ui/cut-icons/edit";
+import QueuedIcon from "@/components/ui/cut-icons/clock";
+import ShippedIcon from "@/components/ui/cut-icons/check";
+import BackToRequestsIcon from "@/components/ui/cut-icons/undo";
 
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
@@ -59,6 +62,8 @@ import {
   useVoteFeatureRequest,
   useEditFeatureRequest,
   useDeleteFeatureRequest,
+  useSetFeatureStatus,
+  isFeatureStatusEditor,
   CATEGORY_LABELS,
   STATUS_LABELS,
   type FeatureCategory,
@@ -252,7 +257,17 @@ function FeatureCard({
   const editMutation = useEditFeatureRequest();
   const deleteMutation = useDeleteFeatureRequest();
 
+  const statusMutation = useSetFeatureStatus();
+
   const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
+  // The board's owners can move anyone's request to Queued or Shipped.
+  const canSetStatus = isFeatureStatusEditor(walletAddress);
+  const isQueued = feature.status === 'in_progress';
+  const isShipped = feature.status === 'shipped' || feature.status === 'completed';
+  const setStatus = (status: 'open' | 'in_progress' | 'shipped') => {
+    setShowMenu(false);
+    statusMutation.mutate({ id: feature.id, status });
+  };
 
   const dbAvatarUrl = feature.author_avatar
     ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
@@ -335,7 +350,7 @@ function FeatureCard({
           badgeLookupId={feature.author_username || feature.author_wallet_address}
           timestamp={formatTimeAgo(feature.created_at)}
         />
-        {isAuthor && (
+        {(isAuthor || canSetStatus) && (
           <div className="relative shrink-0" ref={menuRef}>
             <button
               type="button"
@@ -345,7 +360,39 @@ function FeatureCard({
               <MoreVertical className="w-4 h-4" />
             </button>
             {showMenu && (
-              <div data-glass-menu className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
+              <div data-glass-menu className={cn("absolute right-0 top-9 z-50 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden", canSetStatus ? 'w-48' : 'w-36')}>
+                {canSetStatus && (
+                  <>
+                    {!isQueued && (
+                      <button
+                        type="button"
+                        onClick={() => setStatus('in_progress')}
+                        disabled={statusMutation.isPending}
+                        className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                      >
+                        <QueuedIcon className="w-3.5 h-3.5" />{_copy("copy.63eb38b938b8", { defaultValue: "Mark Queued" })}</button>
+                    )}
+                    {!isShipped && (
+                      <button
+                        type="button"
+                        onClick={() => setStatus('shipped')}
+                        disabled={statusMutation.isPending}
+                        className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                      >
+                        <ShippedIcon className="w-3.5 h-3.5" />{_copy("copy.2fffca525795", { defaultValue: "Mark Shipped" })}</button>
+                    )}
+                    {(isQueued || isShipped) && (
+                      <button
+                        type="button"
+                        onClick={() => setStatus('open')}
+                        disabled={statusMutation.isPending}
+                        className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                      >
+                        <BackToRequestsIcon className="w-3.5 h-3.5" />{_copy("copy.3ee050a08bfa", { defaultValue: "Back to Requests" })}</button>
+                    )}
+                  </>
+                )}
+                {isAuthor && (<>
                 <button
                   type="button"
                   onClick={handleEdit}
@@ -358,6 +405,7 @@ function FeatureCard({
                   className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</button>
+                </>)}
               </div>
             )}
           </div>
