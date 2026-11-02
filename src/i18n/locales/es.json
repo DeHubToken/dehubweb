@@ -6480,6 +6480,14 @@
     "raw": "Original"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filtros",
+    "forSale": "En venta",
+    "openToOffers": "Abierto a ofertas",
+    "freshMints": "Recién creados en DeHub",
+    "makeOffer": "Hacer oferta",
+    "offersOpen": "Abierto a ofertas",
+    "mintedCount": "{{n}} acuñados",
     "trending": "Colecciones en tendencia",
     "floor": "Precio mínimo",
     "listedCount": "{{n}} en venta",

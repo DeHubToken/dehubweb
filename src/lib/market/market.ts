@@ -131,11 +131,28 @@ export interface MarketCollection {
   image: string | null;
   isDehub: boolean;
   listed: number;
-  floor: { amount: string; symbol: string; decimals: number };
+  floor: { amount: string; symbol: string; decimals: number } | null;
+  /** DeHub Posts: how many are minted (listed or not). */
+  minted?: number;
+}
+
+export interface ShowcaseNft {
+  chainId: number;
+  contract: string;
+  tokenId: string;
+  name: string;
+  image: string | null;
+  minter: string | null;
 }
 
 export const fetchCollections = (params: Record<string, string | number | undefined>) =>
   apiCall<{ items: MarketCollection[] }>('/api/market/collections', { params });
+
+export const fetchShowcase = (params: Record<string, string | number | undefined>) =>
+  apiCall<{ items: ShowcaseNft[]; collections: { chainId: number; contract: string; name: string; image: string | null; minted: number }[] }>(
+    '/api/market/showcase',
+    { params },
+  );
 
 export const fetchNft = (chainId: number, contract: string, tokenId: string) =>
   apiCall<NftDetail>(`/api/market/nft/${chainId}/${contract}/${tokenId}`);

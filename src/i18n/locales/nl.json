@@ -6670,6 +6670,14 @@
     "raw": "Ruw"
   },
   "nftMarket": {
+    "shortTitle": "NFT's",
+    "filters": "Filters",
+    "forSale": "Te koop",
+    "openToOffers": "Open voor biedingen",
+    "freshMints": "Vers van DeHub-makers",
+    "makeOffer": "Bod doen",
+    "offersOpen": "Open voor biedingen",
+    "mintedCount": "{{n}} gemint",
     "trending": "Populaire collecties",
     "floor": "Bodemprijs",
     "listedCount": "{{n}} te koop",

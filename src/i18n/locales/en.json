@@ -6433,6 +6433,14 @@
     "raw": "Raw"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filters",
+    "forSale": "For sale",
+    "openToOffers": "Open to offers",
+    "freshMints": "Fresh from DeHub creators",
+    "makeOffer": "Make offer",
+    "offersOpen": "Open to offers",
+    "mintedCount": "{{n}} minted",
     "title": "NFT Market",
     "trending": "Trending collections",
     "floor": "Floor",
