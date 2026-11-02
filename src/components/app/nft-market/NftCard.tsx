@@ -79,9 +79,9 @@ export function NftCard({
         {badge ? (
           <span className="absolute right-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>{badge}</span>
         ) : null}
-        {compact && price ? (
+        {compact && (price || priceLabel) ? (
           <span className="absolute bottom-1.5 left-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-full px-2 py-0.5 text-[10.5px] font-semibold tabular-nums" style={BADGE}>
-            {formatPrice(price.amount, price.decimals)} {price.symbol}
+            {price ? `${formatPrice(price.amount, price.decimals)} ${price.symbol}` : priceLabel}
           </span>
         ) : null}
       </div>

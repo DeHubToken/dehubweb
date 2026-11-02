@@ -6484,6 +6484,14 @@
     "raw": "Matières"
   },
   "nftMarket": {
+    "shortTitle": "NFT",
+    "filters": "Filtres",
+    "forSale": "En vente",
+    "openToOffers": "Ouvert aux offres",
+    "freshMints": "Tout juste créés sur DeHub",
+    "makeOffer": "Faire une offre",
+    "offersOpen": "Ouvert aux offres",
+    "mintedCount": "{{n}} créés",
     "trending": "Collections tendance",
     "floor": "Prix plancher",
     "listedCount": "{{n}} en vente",

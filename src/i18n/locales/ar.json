@@ -6488,6 +6488,14 @@
     "raw": "النص الخام"
   },
   "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "الفلاتر",
+    "forSale": "للبيع",
+    "openToOffers": "مفتوح للعروض",
+    "freshMints": "جديد من صنّاع DeHub",
+    "makeOffer": "قدّم عرضًا",
+    "offersOpen": "مفتوح للعروض",
+    "mintedCount": "تم سكّ {{n}}",
     "trending": "مجموعات رائجة",
     "floor": "أدنى سعر",
     "listedCount": "{{n}} للبيع",

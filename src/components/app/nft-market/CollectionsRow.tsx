@@ -46,9 +46,15 @@ export function CollectionsRow({
               <div className="flex min-w-0 flex-col gap-0.5 p-2.5">
                 <p className="truncate text-[13px] font-semibold text-white">{c.name || `${c.contract.slice(0, 6)}…${c.contract.slice(-4)}`}</p>
                 <p className="truncate text-[11.5px] tabular-nums text-zinc-400">
-                  {t('nftMarket.floor', { defaultValue: 'Floor' })} {formatPrice(c.floor.amount, c.floor.decimals)} {c.floor.symbol}
+                  {c.floor
+                    ? `${t('nftMarket.floor', { defaultValue: 'Floor' })} ${formatPrice(c.floor.amount, c.floor.decimals)} ${c.floor.symbol}`
+                    : t('nftMarket.offersOpen', { defaultValue: 'Open to offers' })}
                 </p>
-                <p className="text-[11px] text-zinc-500">{t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: c.listed })}</p>
+                <p className="text-[11px] text-zinc-500">
+                  {c.listed
+                    ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: c.listed })
+                    : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: c.minted ?? 0 })}
+                </p>
               </div>
             </button>
           );
