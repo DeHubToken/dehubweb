@@ -4,7 +4,7 @@ import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useId, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
@@ -71,7 +71,9 @@ import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
 import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
-import type { DeHubPoll } from '@/lib/api/dehub';
+import type { DeHubPoll, DmLock, DmLockStatus, DmMessage } from '@/lib/api/dehub';
+import { LockedMediaBubble, lockedMediaKey } from '@/components/app/chat/LockedMediaBubble';
+import { LockPriceControl } from '@/components/app/chat/LockPriceControl';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { Community, PinnedCommunity } from '@/hooks/use-communities';
@@ -514,6 +516,60 @@ function TipMessageGallery() {
           {open ? <TipModal open={open} onOpenChange={setOpen} creatorAddress="0x00000000000000000000000000000000000000aa" creatorName="angela" tokenId="5581" /> : null}
         </Suspense>
       </AuthContext.Provider>
+    </section>
+  );
+}
+
+/** Pay-to-unlock DM photos: what each side sees, plus the composer's lock. */
+const GALLERY_LOCK_BLUR = 'data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAD6AMgDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAQACAwQFBv/EABoQAQEBAQEBAQAAAAAAAAAAAAABEQISAxP/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/FYsaxYDOLGsWAzgxrFgM4sKAYsKALCgGBpAyigAKAIgEkQSSBIoHXDiIDBjSBmxmxus0GQ1QARQApAEUARABFAymsWAycOLACKAIoHZAgkkArNarNAUKgCggJBBJEAGlgM4sawyAzh8tzlqcg5+R5dvIvIONgsdbyxYDCNiB0QQFBAqzSKABAJJASCBSQFIwFI1Io1zAM5anJkbkBnyLHTBYDj1HOx26jn1AcrEbECSQJJAAUDKKBlFAiCBQIExlqA1HTlzjfNB0jcc5WpQbZtWs2gzXPpu1igxUqgSSBJIAigZTQBkNAAiAKCAmVk6DpK1K5Styg6yta5StaDes2jWbQNrNVAJJAljXkzkGMPl0nJnIOXleXbwvAOPkeXbyLyDj5FjteWLAcsTdjNgMg0AiEDUrUrm1KDpKdYlMoNaggSRgLEUDv4M4d/zanzBwnzanDvPm1OAef8ANeHp8C8A814ZvD1XgXgHkvDn1y9fXLl1yDy9cufUenrlx6gONDXTNAJICYyQbhZhgNIECYDAMRiB9fwZw3DAZnB8ugoMYzY2z1QZxmxrVQcuo5dR36c+oDy9xw7j1fSPN3AcOmK6dOdAJIEQQMajMagGGCNQE0IYBiMQPrc9tzp5Ofo3PoD1ehenH9Gb2DremOunO9sXsHb0fTz+2vQOl6Y6rN6F6Bnt5u3buuHYOPTnXTpzoBJAiCBjUZjUBqEQg0WSDSCB15+jfP0eSdNzsHr/AEV+jze17B3vbN7cfa9A7TtqdPPOmvQO3oXpy9L0DXXTl1TenO0GemK1WaASQJIgo1BGoBhBAlkgUkDhrU6YQOnpenPVoOvpenPToOkrWuUp0HTVrGrQatZtWgBQQASQJJA1DBDAJCAoatBpM6gckkCSQIggSyQaQQEJAgQCBQApAYWSBWhAtWgaDWpnUAKILEUDKIBIIGtTJAoIGkCCBQBEAkkCSAIJAkkBaZOgUNWgqKrQCQQFMkCgtBrTrKBpDVoFDVoELQBCQJBAkkB1aEDWjQgOjUASCAoICtCA6dZIHVoQNatZQNaNCA6ggSQAoIH/2Q==';
+function lockedGalleryMessage(id: string, author: 'me' | 'other', kind: 'image' | 'video' = 'image'): DmMessage {
+  return {
+    _id: id, conversation: 'gallery', content: '', msgType: 'media', author,
+    sender: { _id: author === 'me' ? 'me' : 'them', username: '', address: '', displayName: '', avatarImageUrl: '' },
+    mediaUrls: [{ url: GALLERY_LOCK_BLUR, type: 'image', mimeType: 'image/jpeg' }],
+    uploadStatus: 'success', voiceDuration: null, isRead: false, isEdited: false, editedAt: null, isForwarded: false,
+    replyTo: null, paymentStatus: null, paymentTxHash: null, tipAmount: null, tipSymbol: null, isDeleted: false,
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+    lock: { price: 25, symbol: 'DHB', kind, previewUrl: GALLERY_LOCK_BLUR, unlocked: author === 'me', mine: author === 'me', ready: true },
+  };
+}
+function LockedDmGallery() {
+  const queryClient = useQueryClient();
+  const [price, setPrice] = useState<number | null>(25);
+  const real = `${window.location.origin}/og/agents.jpg`;
+  const status = (id: string, over: Partial<DmLock>, pendingTxHash?: string): DmLockStatus => ({
+    messageId: id, conversationId: 'gallery', payTo: '0x00000000000000000000000000000000000000aa',
+    lock: { price: 25, symbol: 'DHB', kind: 'image', previewUrl: GALLERY_LOCK_BLUR, unlocked: false, ready: true, ...over },
+    ...(pendingTxHash ? { pendingTxHash } : {}),
+  });
+  // Seeded before the bubbles mount, so nothing here asks the API.
+  useState(() => {
+    queryClient.setQueryData(lockedMediaKey('g-lock-closed'), status('g-lock-closed', {}));
+    queryClient.setQueryData(lockedMediaKey('g-lock-video'), status('g-lock-video', { kind: 'video' }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-pending'), status('g-lock-pending', {}, '0xpending'));
+    queryClient.setQueryData(lockedMediaKey('g-lock-bought'), status('g-lock-bought', { unlocked: true, mediaUrl: real }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-mine'), status('g-lock-mine', { unlocked: true, mine: true, unlockCount: 0, mediaUrl: real }));
+    queryClient.setQueryData(lockedMediaKey('g-lock-mine-sold'), status('g-lock-mine-sold', { unlocked: true, mine: true, unlockCount: 1, mediaUrl: real }));
+    return null;
+  });
+  const cell = (label: string, node: ReactNode) => (
+    <div className="flex flex-col gap-1.5">
+      <span className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</span>
+      {node}
+    </div>
+  );
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-locked-dm-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Locked DM photos</h2>
+      <div className="flex flex-wrap items-start gap-4 text-white">
+        {cell('Them: locked', <LockedMediaBubble message={lockedGalleryMessage('g-lock-closed', 'other')} />)}
+        {cell('Them: video', <LockedMediaBubble message={lockedGalleryMessage('g-lock-video', 'other', 'video')} />)}
+        {cell('Them: paying', <LockedMediaBubble message={lockedGalleryMessage('g-lock-pending', 'other')} />)}
+        {cell('Them: unlocked', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-bought', 'other')} /></div>)}
+        {cell('You: not yet', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-mine', 'me')} /></div>)}
+        {cell('You: unlocked', <div className="w-[240px]"><LockedMediaBubble message={lockedGalleryMessage('g-lock-mine-sold', 'me')} /></div>)}
+        {cell('Composer', <div className="w-[260px] rounded-2xl bg-black/30 p-3"><img src={real} alt="" className="h-20 rounded-lg object-cover" /><LockPriceControl value={price} onChange={setPrice} kind="image" /></div>)}
+      </div>
     </section>
   );
 }
@@ -995,6 +1051,7 @@ export default function StateGalleryPage() {
         </section>
 
         <TipMessageGallery />
+        <LockedDmGallery />
         <MintChainGallery />
         <WhenSheetGallery />
         <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />

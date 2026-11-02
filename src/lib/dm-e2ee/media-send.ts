@@ -112,13 +112,19 @@ export async function uploadDmMedia(
     txHash?: string;
     mediaOptions?: DmVideoOptions;
     destruct?: DmDestructChoice;
+    /**
+     * Pay-to-unlock price. A locked file is never sealed: the server has to
+     * hold it to hand it over once the payment lands. The caption still is.
+     */
+    lockPrice?: number;
   },
   deps: Partial<MediaSendDeps> = {},
 ): Promise<{ message: DmMessage; plain?: Blob }> {
   const d = { ...defaultDeps, ...deps };
   const { peerAddress, caption, msgType, voiceDuration, replyTo, txHash, mediaOptions, destruct } = opts;
+  const lockPrice = opts.lockPrice && opts.lockPrice > 0 && msgType === 'media' ? opts.lockPrice : undefined;
 
-  const sealed = await sealMediaForPeer(file, { peerAddress, caption, msgType, voiceDuration, mediaOptions }, d);
+  const sealed = lockPrice ? null : await sealMediaForPeer(file, { peerAddress, caption, msgType, voiceDuration, mediaOptions }, d);
   if (sealed) {
     const sent = await d.upload(sealed.file, conversationId, senderId, {
       content: sealed.content,
@@ -144,6 +150,7 @@ export async function uploadDmMedia(
     txHash,
     ...(mediaOptions ? { mediaOptions } : {}),
     ...(destruct ? { destruct } : {}),
+    ...(lockPrice ? { lockPrice } : {}),
   });
   // The upload response echoes what we sent; keep the plaintext caption.
   const withOptions = mediaOptions && !sent.mediaOptions ? { ...sent, mediaOptions } : sent;

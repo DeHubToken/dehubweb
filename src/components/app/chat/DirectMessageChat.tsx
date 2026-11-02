@@ -72,6 +72,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
+import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
@@ -738,7 +739,11 @@ const MessageBubble = memo(function MessageBubble({
                 )}
               </div>
             )}
-            {message.msgType === 'media' && !encMedia && !isLockedMedia && (
+            {/* Pay-to-unlock photo or video: its own card, never the plain media path. */}
+            {message.msgType === 'media' && message.lock && (
+              <LockedMediaBubble message={message} onOpenImage={onOpenImage} />
+            )}
+            {message.msgType === 'media' && !message.lock && !encMedia && !isLockedMedia && (
               <div>
                 {primaryMediaUrl && isFileMedia ? (
                   <>
@@ -1862,6 +1867,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     duration,
     mediaOptions,
     destruct,
+    lockPrice,
   }: {
     content: string;
     type: 'msg' | 'media' | 'gif' | 'voice';
@@ -1870,6 +1876,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     duration?: number;
     mediaOptions?: DmVideoOptions;
     destruct?: DmDestructChoice;
+    lockPrice?: number;
   }) => {
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
@@ -2072,6 +2079,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         replyPreview,
         mediaOptions,
         destruct,
+        lockPrice,
       },
     ).then(
         (data) => {
@@ -2551,6 +2559,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}
+        allowLock
         replyTo={composerReplyTo}
         onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}

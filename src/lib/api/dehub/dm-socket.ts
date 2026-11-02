@@ -514,6 +514,19 @@ export function onFeeConfirmed(cb: (data: FeeConfirmedData) => void): () => void
   return addPersistentListener('feeConfirmed', cb as AnyFn);
 }
 
+/** A locked photo or video in one of my chats was paid for. */
+export interface DmMediaUnlockedData {
+  messageId: string;
+  dmId: string;
+  buyerAddress: string;
+  amount: number;
+  symbol: string;
+}
+
+export function onDmMediaUnlocked(cb: (data: DmMediaUnlockedData) => void): () => void {
+  return addPersistentListener('dmMediaUnlocked', cb as AnyFn);
+}
+
 /** Revalidated message (e.g. after media upload completes). */
 export interface ReValidateMessageData {
   dmId: string;
