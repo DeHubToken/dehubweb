@@ -6,6 +6,7 @@ import { Film, Star, Pin, ListVideo, ThumbsDown } from "lucide-react";
 import Image from "@/components/ui/cut-icons/images";
 import Radio from "@/components/ui/cut-icons/live";
 import PieChart from "@/components/ui/cut-icons/fractions";
+import { useFractionPortfolio } from "@/hooks/use-fraction-portfolio";
 
 import Home from "@/components/ui/cut-icons/home";
 import ArticleIcon from "@/components/ui/cut-icons/blog";
@@ -486,8 +487,13 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const dislikesQuery = useProfileDislikes(apiProfile?.walletAddress, showDislikesTab && secondaryEnabled);
   const dislikesCount = dislikesQuery.data?.pages?.[0]?.totalCount ?? 0;
 
+  // Fractions: the same portfolio read the tab itself lists (shared cache, so
+  // opening the tab is instant). Blank until it answers, never a false 0.
+  const fractionsQuery = useFractionPortfolio(apiProfile?.walletAddress, { enabled: secondaryEnabled });
+  const fractionsCount: number | null = fractionsQuery.data ? fractionsQuery.data.length : null;
+
   const articleCount = tabCount('articles', activeTab === 'articles' ? PROFILE_POSTS.length : 0);
-  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number | null }[] = useMemo(() => {
     // All also merges in reposts the server total leaves out.
     const homeCount = Math.max(tabCount('home', 0), activeTab === 'home' && !isContentFiltered ? ALL_CONTENT.length : 0);
     const homeTab = { icon: Home, label: _copy("copy.a52ace420f21", { defaultValue: "All" }), value: 'home' as TabValue, count: homeCount };
@@ -498,7 +504,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       { icon: Star, label: _copy("copy.17371507e9f7", { defaultValue: "Subs" }), value: 'subscribers' as TabValue, count: plans.length },
       { icon: Play, label: _copy("copy.bc1b88907d3b", { defaultValue: "Audio" }), value: 'songs' as TabValue, count: tabCount('songs', ALL_PROFILE_VIDEOS.length) },
       { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: tabCount('live', PROFILE_LIVE.length) },
-      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
+      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: fractionsCount },
       { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
       // Only once the profile has an article; kept while open so a search
       // with no matches does not pull the tab out from under the visitor.
@@ -508,7 +514,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       ...(playlistCount > 0
         ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
         : []),
-    ].sort((a, b) => b.count - a.count);
+    ].sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
     // Last, not sorted in: it is about what you turned away, not what you made.
     const dislikesTab = showDislikesTab
       ? [{ icon: ThumbsDown as unknown as typeof Home, label: _copy("profile.tabs.dislikes", { defaultValue: "Dislikes" }), value: 'dislikes' as TabValue, count: dislikesCount }]
@@ -516,7 +522,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     return [homeTab, ...restTabs, ...dislikesTab];
     // tabCount reads only the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, showDislikesTab, dislikesCount, _copy]);
+  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, fractionsCount, showDislikesTab, dislikesCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled

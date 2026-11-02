@@ -22,7 +22,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { getMyPosts, searchNFTs } from '@/lib/api/dehub/feed';
-import { getFractionBalance } from '@/lib/api/token-holders';
+import { getFractionBalance, getFractionBalances } from '@/lib/api/token-holders';
 import { fractionImageFor } from '@/lib/fraction-thumb';
 import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
@@ -49,38 +49,55 @@ interface Candidate {
   isCreator: boolean;
 }
 
-/** Read balances a few at a time — a whale with 60 positions should not open 60 sockets. */
+/**
+ * One balanceOfBatch per chain gives every candidate's balance in a single
+ * eth_call, cheap enough that the profile tab badge can show the real count.
+ * A chain whose batch read fails falls back to one balanceOf per candidate.
+ */
 async function resolveBalances(
   candidates: Candidate[],
   address: string,
 ): Promise<PortfolioPosition[]> {
   const positions: PortfolioPosition[] = [];
-  const BATCH = 8;
+  const balances = new Map<Candidate, number | null>();
+
+  const byChain = new Map<number, Candidate[]>();
+  for (const c of candidates) {
+    const list = byChain.get(c.chainId) || [];
+    list.push(c);
+    byChain.set(c.chainId, list);
+  }
+
+  for (const [chainId, list] of byChain) {
+    const batch = await getFractionBalances(address, list.map((c) => c.tokenId), chainId);
+    if (batch) {
+      for (const c of list) balances.set(c, batch.get(c.tokenId) ?? 0);
+      continue;
+    }
+    // A few at a time, so a whale with 60 positions does not open 60 sockets.
+    const STEP = 8;
+    for (let i = 0; i < list.length; i += STEP) {
+      const slice = list.slice(i, i + STEP);
+      const results = await Promise.all(slice.map((c) => getFractionBalance(address, c.tokenId, c.chainId)));
+      slice.forEach((c, k) => balances.set(c, results[k]));
+    }
+  }
+
   // A zero balance comes back as 0; null means the read itself failed.
   let answered = 0;
-
-  for (let i = 0; i < candidates.length; i += BATCH) {
-    const batch = candidates.slice(i, i + BATCH);
-    const results = await Promise.all(
-      batch.map(async (c) => ({
-        candidate: c,
-        balance: await getFractionBalance(address, c.tokenId, c.chainId),
-      })),
-    );
-    for (const { candidate, balance } of results) {
-      if (balance !== null) answered++;
-      if (!balance || balance <= 0) continue;
-      positions.push({
-        tokenId: candidate.tokenId,
-        chainId: candidate.chainId,
-        balance,
-        percentage: (balance / 1000) * 100,
-        title: candidate.title,
-        imageUrl: candidate.imageUrl,
-        postType: candidate.postType,
-        isCreator: candidate.isCreator,
-      });
-    }
+  for (const [candidate, balance] of balances) {
+    if (balance !== null) answered++;
+    if (!balance || balance <= 0) continue;
+    positions.push({
+      tokenId: candidate.tokenId,
+      chainId: candidate.chainId,
+      balance,
+      percentage: (balance / 1000) * 100,
+      title: candidate.title,
+      imageUrl: candidate.imageUrl,
+      postType: candidate.postType,
+      isCreator: candidate.isCreator,
+    });
   }
 
   // Every read failing is an outage, not an empty portfolio.
@@ -91,7 +108,10 @@ async function resolveBalances(
   return positions.sort((a, b) => b.balance - a.balance);
 }
 
-export function useFractionPortfolio(address: string | null | undefined) {
+export function useFractionPortfolio(
+  address: string | null | undefined,
+  options: { enabled?: boolean } = {},
+) {
   const key = (address || '').toLowerCase();
   const { walletAddress } = useAuth();
   // `/api/myPosts` is scoped to the signed-in token, so it may only contribute
@@ -197,8 +217,8 @@ export function useFractionPortfolio(address: string | null | undefined) {
 
       return resolveBalances(Array.from(candidates.values()), key);
     },
-    enabled: !!key,
-    // Each refresh is one eth_call per position, so this is deliberately long.
+    enabled: !!key && options.enabled !== false,
+    // Each refresh reads every position's balance, so this is deliberately long.
     // Selling surfaces read the single-token balance hook instead, which is the
     // one that must be fresh.
     staleTime: 2 * 60_000,
