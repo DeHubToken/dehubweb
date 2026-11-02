@@ -26,7 +26,6 @@ import { AudioVisualizer } from '@/components/app/audio';
 import { FilterEditor } from './FilterEditor';
 import { CropRotateEditor } from './CropRotateEditor';
 import { AudioTrimmer } from './AudioTrimmer';
-import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS, applyEditsToImageFile } from '@/lib/filters';
 import { ImageAnnotator } from './ImageAnnotator';
 import { PhotoStudio, type StudioTab, type StudioResult } from './PhotoStudio';
@@ -34,6 +33,29 @@ import type { StudioEdits } from '../lib/studioPaint';
 import { DraftVideoProgress } from './DraftVideoProgress';
 import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
+import { DmMediaStudio, type DmStudioItem } from '@/components/app/chat/DmVideoStudio';
+
+/** The frame at `at` seconds as a JPEG blob URL, for the post's cover. */
+function grabVideoFrame(url: string, at: number): Promise<string | null> {
+  return new Promise((resolve) => {
+    const v = document.createElement('video');
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    v.src = url;
+    const done = (out: string | null) => { v.removeAttribute('src'); v.load(); resolve(out); };
+    v.addEventListener('error', () => done(null), { once: true });
+    v.addEventListener('loadedmetadata', () => { v.currentTime = Math.min(Math.max(0, at), Math.max(0, (v.duration || at) - 0.05)); }, { once: true });
+    v.addEventListener('seeked', () => {
+      const c = document.createElement('canvas');
+      c.width = v.videoWidth; c.height = v.videoHeight;
+      const ctx = c.getContext('2d');
+      if (!ctx || !c.width) return done(null);
+      ctx.drawImage(v, 0, 0, c.width, c.height);
+      c.toBlob((b) => done(b ? URL.createObjectURL(b) : null), 'image/jpeg', 0.9);
+    }, { once: true });
+  });
+}
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -140,7 +162,40 @@ export function PostMediaPreview({
   // The photo studio (Crop / Looks / Adjust / Draw in one editor) for every
   // still photo; GIFs keep the old CSS editors since a bake would freeze them.
   const [studio, setStudio] = useState<{ index: number; tab: StudioTab } | null>(null);
-  const [videoTrimmerIndex, setVideoTrimmerIndex] = useState<number | null>(null);
+  // The video edit screen (Cover and Trim). It opens by itself when a video
+  // is added, on Cover, and Confirm brings the choices back to the post.
+  const [videoEdit, setVideoEdit] = useState<{ index: number; item: DmStudioItem } | null>(null);
+  const openVideoEdit = useCallback((index: number) => {
+    const m = media[index];
+    if (!m || m.type !== 'video') return;
+    setVideoEdit({
+      index,
+      item: {
+        id: m.preview, file: m.file, url: m.preview, kind: 'video', duration: m.duration,
+        options: { trimStart: m.trimStart, trimEnd: m.trimEnd }, destruct: null, lockPrice: null,
+      },
+    });
+  }, [media]);
+  const seenVideos = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const videos = media.filter((m) => m.type === 'video').map((m) => m.preview);
+    if (!seenVideos.current) { seenVideos.current = new Set(videos); return; }
+    const fresh = media.findIndex((m) => m.type === 'video' && !seenVideos.current!.has(m.preview));
+    videos.forEach((v) => seenVideos.current!.add(v));
+    if (fresh >= 0 && !videoEdit) openVideoEdit(fresh);
+  }, [media, videoEdit, openVideoEdit]);
+  const confirmVideoEdit = async () => {
+    if (!videoEdit) return;
+    const { index, item } = videoEdit;
+    setVideoEdit(null);
+    const dur = item.duration ?? media[index]?.duration ?? 0;
+    const o = item.options;
+    if (o.trimStart != null || o.trimEnd != null) onApplyTrim?.(index, o.trimStart ?? 0, o.trimEnd ?? dur);
+    if (o.coverAt != null && onAddThumbnail) {
+      const frame = await grabVideoFrame(item.url, o.coverAt);
+      if (frame) onAddThumbnail(index, frame);
+    }
+  };
   const [videoFrames, setVideoFrames] = useState<Map<number, string[]>>(new Map());
   // Width / height of each attached video, by preview URL, so its frame can match it.
   const [videoRatios, setVideoRatios] = useState<Record<string, number>>({});
@@ -1028,7 +1083,7 @@ export function PostMediaPreview({
                             <button
                               type="button"
                               aria-label={_copy("copy.8d9346258548", { defaultValue: "Trim video" })}
-                              onClick={(e) => { e.stopPropagation(); setVideoTrimmerIndex(index); }}
+                              onClick={(e) => { e.stopPropagation(); openVideoEdit(index); }}
                               className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
                                 ${m.trimStart !== undefined || m.trimEnd !== undefined
                                   ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
@@ -1253,21 +1308,19 @@ export function PostMediaPreview({
         />
       )}
 
-      {/* Video Trimmer Modal */}
-      {videoTrimmerIndex !== null && media[videoTrimmerIndex]?.type === 'video' && (
-        <VideoTrimmer
-          isOpen={true}
-          onClose={() => setVideoTrimmerIndex(null)}
-          videoUrl={media[videoTrimmerIndex].preview}
-          duration={media[videoTrimmerIndex].duration || 0}
-          fileName={media[videoTrimmerIndex].file.name}
-          initialStart={media[videoTrimmerIndex].trimStart}
-          initialEnd={media[videoTrimmerIndex].trimEnd}
-          onPickCover={onAddThumbnail ? (url) => onAddThumbnail(videoTrimmerIndex, url) : undefined}
-          onApply={(trimStart, trimEnd) => {
-            onApplyTrim?.(videoTrimmerIndex, trimStart, trimEnd);
-            setVideoTrimmerIndex(null);
-          }}
+      {/* Video edit screen: Cover and Trim, Confirm back to the post */}
+      {videoEdit && (
+        <DmMediaStudio
+          items={[videoEdit.item]}
+          active={0}
+          onActiveChange={() => undefined}
+          onItemChange={(_i, patch) => setVideoEdit((v) => (v ? { ...v, item: { ...v.item, ...patch } } : v))}
+          onRemoveItem={() => { const i = videoEdit.index; setVideoEdit(null); onRemove(i); }}
+          onClose={() => setVideoEdit(null)}
+          onConfirm={() => { void confirmVideoEdit(); }}
+          onlyTabs={['cover', 'trim']}
+          initialTab="cover"
+          allowTimer={false}
         />
       )}
 
