@@ -164,6 +164,13 @@ export interface DmMessage {
   author: 'me' | 'other';
   createdAt: string;
   updatedAt: string;
+  /**
+   * Local only. The id the line was first drawn under while it was being sent.
+   * It survives the swap to the server id so the bubble keeps its element.
+   */
+  clientKey?: string;
+  /** Local only. Set while a send of your own is in flight, or after it failed. */
+  sendState?: 'sending' | 'failed';
 }
 
 export interface DmFee {

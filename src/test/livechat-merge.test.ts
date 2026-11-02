@@ -53,6 +53,18 @@ describe('mergeIncoming', () => {
     expect(out.map((m) => m.id)).toEqual(['real-1']);
   });
 
+  it('hands the pending row its client key so the line keeps its element', () => {
+    const prev = [{ ...msg('temp-1', 'hello', 1, '0xme'), client_key: 'temp-1', send_state: 'sending' as const }];
+    const out = mergeIncoming(prev, [msg('real-1', 'hello', 1, '0xME')]);
+    expect(out.map((m) => [m.id, m.client_key, m.send_state])).toEqual([['real-1', 'temp-1', undefined]]);
+  });
+
+  it('leaves a failed row alone for its Retry', () => {
+    const prev = [{ ...msg('temp-1', 'hello', 1, '0xme'), client_key: 'temp-1', send_state: 'failed' as const }];
+    const out = mergeIncoming(prev, [msg('real-1', 'hello', 2, '0xme')]);
+    expect(out.map((m) => m.id)).toEqual(['temp-1', 'real-1']);
+  });
+
   it('keeps an optimistic row a different sender happened to duplicate', () => {
     const prev = [msg('temp-1', 'gm', 1, '0xme')];
     const out = mergeIncoming(prev, [msg('real-1', 'gm', 1, '0xsomeoneelse')]);

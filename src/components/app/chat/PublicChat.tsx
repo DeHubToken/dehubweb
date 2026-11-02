@@ -70,6 +70,8 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     audioDuration: msg.audio_duration || undefined,
 
     isEdited: msg.is_edited,
+    clientKey: msg.client_key,
+    sendState: msg.send_state,
     reactions: msg.reactions,
     replyTo: msg.reply_to ? {
       id: msg.reply_to.id,
@@ -132,8 +134,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [rooms, selectedRoomId]);
 
   const {
-    messages: apiMessages, isLoading: messagesLoading, isSending, isBanned,
-    send, addReaction, removeReaction, editMessage, deleteMessage, refetch,
+    messages: apiMessages, isLoading: messagesLoading, isBanned,
+    send, retrySend, discardSend, addReaction, removeReaction, editMessage, deleteMessage, refetch,
   } = useLiveChatMessages(selectedRoomId);
 
   // Fetch full room details
@@ -533,7 +535,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 />
               ) : (
               <ChatMessage
-                key={message.id}
+                key={message.clientKey ?? message.id}
                 message={message}
                 showActions={isModerator}
                 moderators={roomDetails?.moderators}
@@ -545,6 +547,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onReact={addReaction}
                 onRemoveReaction={removeReaction}
                 onReply={isAuthenticated ? handleReply : undefined}
+                onRetrySend={retrySend}
+                onDiscardSend={discardSend}
               />
               )
             ))
@@ -556,10 +560,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
       
       {/* Input Area */}
       <div className="relative">
-        {isSending && (
-          <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-zinc-400 bg-zinc-800/90 rounded-full px-3 py-1">
-            <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.286a3af7348e", { defaultValue: "Sending..." })}</div>
-        )}
         <ChatInput
         voiceMaxDuration={29}
           onSendMessage={handleSendMessage}

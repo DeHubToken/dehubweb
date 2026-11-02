@@ -36,6 +36,7 @@ import {
 import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
+import { SendStatus } from './SendStatus';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -88,6 +89,10 @@ export interface Message {
   replyTo?: ReplyToData;
   /** Rewritten after it was posted — labelled so nobody is quoted on words they replaced. */
   isEdited?: boolean;
+  /** Local only: the id your own line was first drawn under (kept as the React key). */
+  clientKey?: string;
+  /** Local only: your line is still going out, or failed to. */
+  sendState?: 'sending' | 'failed';
 }
 
 interface ChatMessageProps {
@@ -103,6 +108,9 @@ interface ChatMessageProps {
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
   onReply?: (message: Message) => void;
+  /** Resend / drop one of your own lines that failed, by its client key. */
+  onRetrySend?: (clientKey: string) => void;
+  onDiscardSend?: (clientKey: string) => void;
 }
 
 /** Inline moderator badge shown next to the username */
@@ -197,7 +205,19 @@ export const ChatMessage = memo(function ChatMessage({
   onReact,
   onRemoveReaction,
   onReply,
+  onRetrySend,
+  onDiscardSend,
 }: ChatMessageProps) {
+  // Your own line carries a small ring while it is going out; when it lands
+  // the ring stops in its fixed box, so the line never shifts.
+  const sendMark = message.clientKey ? (
+    <SendStatus
+      state={message.sendState}
+      className="text-zinc-500"
+      onRetry={onRetrySend && (() => onRetrySend(message.clientKey!))}
+      onDiscard={onDiscardSend && (() => onDiscardSend(message.clientKey!))}
+    />
+  ) : null;
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
@@ -483,6 +503,7 @@ export const ChatMessage = memo(function ChatMessage({
               <AssetRefCards refs={chatAssetRefs} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {sendMark}
                 {!isTooShort && (
                   isTranslateLoading ? (
                     <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -517,6 +538,7 @@ export const ChatMessage = memo(function ChatMessage({
             )}
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {sendMark}
               {message.content && !isTooShort && (
                 isTranslateLoading ? (
                   <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -549,6 +571,7 @@ export const ChatMessage = memo(function ChatMessage({
             <VoiceWaveformPlayer src={message.audioUrl} />
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {sendMark}
             </div>
           </div>
         )}

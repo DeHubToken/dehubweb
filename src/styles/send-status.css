@@ -1,0 +1,43 @@
+/*
+ * The state of a message that is on its way out.
+ *
+ * The bubble is drawn exactly as it will look once delivered; only this small
+ * mark says it is still going. When the send lands the attribute flips and the
+ * ring simply stops: same box, same size, nothing moves.
+ */
+.dh-send-status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  vertical-align: middle;
+}
+.dh-send-status::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.dh-send-status[data-state="sending"]::before {
+  opacity: 0.7;
+  animation: dh-send-spin 0.8s linear infinite;
+}
+@keyframes dh-send-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dh-send-status[data-state="sending"]::before {
+    animation: dh-send-pulse 1.2s ease-in-out infinite;
+    border-right-color: currentColor;
+  }
+  @keyframes dh-send-pulse {
+    50% { opacity: 0.25; }
+  }
+}
