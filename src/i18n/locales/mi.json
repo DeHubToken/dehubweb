@@ -10657,8 +10657,12 @@
       "restore": "Whakahoutia",
       "restored": "Whakahoutia te putanga {{version}}"
     },
-    "stakeForAllowance": "Tāwhiria ngā tohu DeHub hei whakanui ake i tō whakaaetanga hanga ia rā",
     "buildInChat": "Hangaia i ō karere tōtika me @assistant",
+    "modelLabel": "Tauira",
+    "creditsLeft": "{{amount}} i ngā whiwhinga",
+    "perPrompt": "≈ {{price}} mō ia tono",
+    "pricingNote": "Ka utua ia tono i ō whiwhinga ki te utu o te tauira me te 30% atu. Ka puritia te utu nui rawa ka taea e tētahi tono i a ia e rere ana, ā, ka whakahokia te wāhanga kāore i whakamahia.",
+    "topUpCredits": "Tāpiri whiwhinga",
     "landerTitle": "Hangaia he taupānga ma te tono noa",
     "landerSubtitle": "Korero @ assistanthe aha e hiahia ana koe i roto i to koutou karere. Ka hanga e ia te taupānga, ka manaaki i a ia, ka tuku i tetahi hononga ki a koe ka taea e tetahi te whakatuwhera. Whakautu ki te huri i tetahi mea.",
     "promptPlaceholder": "Whakaahuahia te taupānga e hiahia ana koe...",

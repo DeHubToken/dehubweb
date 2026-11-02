@@ -10691,8 +10691,12 @@
       "restore": "Buyisela",
       "restored": "Uhlobo olubuyiselwe {{version}}"
     },
-    "stakeForAllowance": "Amathokheni e-Stake DeHub ukuze ukhuphule imali yakho yokwakha yansuku zonke",
     "buildInChat": "Yakha kuma-DM akho no-@assistant",
+    "modelLabel": "Imodeli",
+    "creditsLeft": "{{amount}} kumakhredithi",
+    "perPrompt": "≈ {{price}} ngomyalelo ngamunye",
+    "pricingNote": "Umyalelo ngamunye ukhokhelwa ngamakhredithi akho ngenani lemodeli kanye no-30%. Inani eliphezulu umyalelo ongalibiza liyabanjwa ngenkathi usebenza, bese ingxenye engasetshenziswanga ibuyiselwa.",
+    "topUpCredits": "Faka amakhredithi",
     "landerTitle": "Yakha i-app ngokubuza nje",
     "landerSubtitle": "Tshela u- @assistant ukuthi yini oyifunayo emiyalezweni yakho. Yakha i-app, iyibungaze futhi ikuthumele ilinki noma ubani angayivula. Phendula ukuze ushintshe noma yini.",
     "promptPlaceholder": "Chaza i-app oyifunayo...",

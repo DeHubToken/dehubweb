@@ -11478,8 +11478,12 @@
       "restore": "Restaurar",
       "restored": "Versión restaurada {{version}}"
     },
-    "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria",
     "buildInChat": "Crea en tus mensajes directos con @assistant",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} en créditos",
+    "perPrompt": "≈ {{price}} por solicitud",
+    "pricingNote": "Cada solicitud se paga con tus créditos al costo del modelo más un 30 %. Lo máximo que puede costar una solicitud se retiene mientras se ejecuta y la parte no utilizada se devuelve.",
+    "topUpCredits": "Recargar créditos",
     "landerTitle": "Crea una aplicación con solo preguntar",
     "landerSubtitle": "Dile a @Assistant lo que quieres en tus mensajes. Crea la aplicación, la aloja y te envía un enlace que cualquiera puede abrir. Responde para cambiar cualquier cosa.",
     "promptPlaceholder": "Describe la aplicación que quieres...",

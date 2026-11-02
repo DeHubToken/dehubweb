@@ -10618,8 +10618,12 @@
       "restore": "Mayar da",
       "restored": "Sake dawo da sigar {{version}}"
     },
-    "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun",
     "buildInChat": "Gina a cikin saƙonninka na sirri tare da @assistant",
+    "modelLabel": "Samfuri",
+    "creditsLeft": "{{amount}} a kiredit",
+    "perPrompt": "≈ {{price}} kowace buƙata",
+    "pricingNote": "Ana biyan kowace buƙata daga kiredit ɗinka bisa kuɗin samfurin tare da ƙarin 30%. Ana riƙe mafi yawan kuɗin da buƙata za ta iya ci yayin da take aiki, kuma a mayar da sashin da ba a yi amfani da shi ba.",
+    "topUpCredits": "Ƙara kiredit",
     "landerTitle": "Gina aikace-aikacen kawai ta hanyar tambaya",
     "landerSubtitle": "Faɗa wa @mataimaki abin da kuke so a cikin saƙonninku. Yana gina aikace-aikacen, yana karɓar bakuncin sa kuma yana aiko muku da hanyar haɗi wanda kowa zai iya buɗewa. Amsa don canza komai.",
     "promptPlaceholder": "Bayyana aikace-aikacen da kuke so...",

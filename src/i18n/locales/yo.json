@@ -10622,8 +10622,12 @@
       "restore": "Pada",
       "restored": "Àtúnṣe àtúnṣe {{version}}"
     },
-    "stakeForAllowance": "Fi tóka DeHub pamọ́ láti mú ìyọ̀ọ̀da ìkógun rẹ ojoojúmọ́ gbòòrò",
     "buildInChat": "Kọ́ nínú àwọn ìfiránṣẹ́ àdáni rẹ pẹ̀lú @assistant",
+    "modelLabel": "Àwòṣe",
+    "creditsLeft": "{{amount}} ní kírẹ́dìtì",
+    "perPrompt": "≈ {{price}} fún ìbéèrè kọ̀ọ̀kan",
+    "pricingNote": "A máa ń san fún ìbéèrè kọ̀ọ̀kan láti inú kírẹ́dìtì rẹ ní iye owó àwòṣe náà pẹ̀lú àfikún 30%. A máa ń di iye tó pọ̀ jùlọ tí ìbéèrè lè ná mú nígbà tó ń ṣiṣẹ́, a sì máa dá apá tí a kò lò padà.",
+    "topUpCredits": "Ṣàfikún kírẹ́dìtì",
     "landerTitle": "Kọ́ ohun èlò kan nípa bíbéèrè",
     "landerSubtitle": "Sọ fún @olùrànlọ́wọ́ ohun tí o fẹ́ nínú àwọn àtẹ̀jíṣẹ́ rẹ. Ó máa ń kọ́ ohun èlò náà, ó máa ń gbà á, ó sì máa ń rán ọ ní àsopọ̀ tí ẹnikẹ́ni lè ṣí. Fèsì láti yí ohunkóhun padà.",
     "promptPlaceholder": "Ṣàlàyé ohun èlò tí o fẹ́...",

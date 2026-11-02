@@ -10699,8 +10699,12 @@
       "restore": "Pulihkan",
       "restored": "Versi yang dipulihkan {{version}}"
     },
-    "stakeForAllowance": "Pertaruhkan token DeHub untuk menaikkan kuota pembuatan harian Anda",
     "buildInChat": "Bangun di DM kamu bersama @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} dalam kredit",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Setiap prompt dibayar dari kredit Anda sebesar biaya model ditambah 30%. Biaya maksimum sebuah prompt ditahan selama prompt berjalan, dan bagian yang tidak terpakai dikembalikan.",
+    "topUpCredits": "Isi ulang kredit",
     "landerTitle": "Buat aplikasi hanya dengan bertanya",
     "landerSubtitle": "Beri tahu @assistant apa yang Anda inginkan di pesan Anda. Ini membangun aplikasi, menghostingnya, dan mengirimi Anda tautan yang bisa dibuka siapa saja. Balas untuk mengubah apa pun.",
     "promptPlaceholder": "Jelaskan aplikasi yang Anda inginkan…",

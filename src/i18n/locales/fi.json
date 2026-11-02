@@ -10681,8 +10681,12 @@
       "restore": "Palauta",
       "restored": "Palautettu versio {{version}}"
     },
-    "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa",
     "buildInChat": "Rakenna yksityisviesteissä @assistantin kanssa",
+    "modelLabel": "Malli",
+    "creditsLeft": "{{amount}} krediitteinä",
+    "perPrompt": "≈ {{price}} / kehote",
+    "pricingNote": "Jokainen kehote maksetaan krediiteistäsi mallin hinnalla plus 30 %. Kehotteen suurin mahdollinen hinta varataan sen ajon ajaksi, ja käyttämätön osa palautetaan.",
+    "topUpCredits": "Lisää krediittejä",
     "landerTitle": "Rakenna sovellus kysymällä",
     "landerSubtitle": "Kerro avustajalle @Assistant, mitä haluat viesteistäsi. Se rakentaa sovelluksen, isännöi sitä ja lähettää sinulle linkin, jonka kuka tahansa voi avata. Vastaa muuttaaksesi jotain.",
     "promptPlaceholder": "Kuvaile haluamaasi sovellusta…",

@@ -10936,8 +10936,12 @@
       "restore": "Pulihkan",
       "restored": "Versi dipulihkan {{version}}"
     },
-    "stakeForAllowance": "Pertaruhkan token DeHub untuk meningkatkan elaun binaan harian anda",
     "buildInChat": "Bina dalam DM anda bersama @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} dalam kredit",
+    "perPrompt": "≈ {{price}} setiap gesaan",
+    "pricingNote": "Setiap gesaan dibayar daripada kredit anda pada kos model ditambah 30%. Kos maksimum sesuatu gesaan ditahan semasa ia berjalan dan bahagian yang tidak digunakan dipulangkan.",
+    "topUpCredits": "Tambah nilai kredit",
     "landerTitle": "Bina aplikasi hanya dengan bertanya",
     "landerSubtitle": "Beritahu @assistant apa yang anda mahu dalam mesej anda. Ia membina aplikasi, menjadi hos dan menghantar pautan kepada anda yang boleh dibuka oleh sesiapa sahaja. Jawab untuk mengubah apa-apa.",
     "promptPlaceholder": "Terangkan aplikasi yang anda mahu...",

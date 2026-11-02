@@ -11403,8 +11403,12 @@
       "restore": "Restore",
       "restored": "Restored version {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance",
     "buildInChat": "Build in your DMs with @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} in credits",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Each prompt is paid from your credits at the model's cost plus 30%. The most a prompt can cost is held while it runs and the unused part is returned.",
+    "topUpCredits": "Top up credits",
     "landerTitle": "Build an app just by asking",
     "landerSubtitle": "Tell @assistant what you want in your messages. It builds the app, hosts it and sends you a link anyone can open. Reply to change anything.",
     "promptPlaceholder": "Describe the app you want…",

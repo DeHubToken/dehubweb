@@ -10680,8 +10680,12 @@
       "restore": "Taasta",
       "restored": "Taastatud versioon {{version}}"
     },
-    "stakeForAllowance": "Panustage DeHub žetoone, et suurendada oma igapäevast ehitusluba",
     "buildInChat": "Loo oma otsesõnumites koos @assistant'iga",
+    "modelLabel": "Mudel",
+    "creditsLeft": "{{amount}} krediitides",
+    "perPrompt": "≈ {{price}} päringu kohta",
+    "pricingNote": "Iga päring makstakse sinu krediitidest mudeli hinnaga pluss 30%. Päringu suurim võimalik hind broneeritakse selle töötamise ajaks ja kasutamata osa tagastatakse.",
+    "topUpCredits": "Lisa krediite",
     "landerTitle": "Koosta rakendus lihtsalt küsides",
     "landerSubtitle": "Ütle assistendile @, mida oma sõnumites soovid. See loob rakenduse, majutab seda ja saadab sulle lingi, mida igaüks saab avada. Vasta, et midagi muuta.",
     "promptPlaceholder": "Kirjelda soovitud rakendust…",

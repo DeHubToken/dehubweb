@@ -2,15 +2,15 @@
 //
 // Ported from the open-source Rilable build pipeline (github.com/rbrown101010/rilable,
 // MIT): same strict ===FILE=== generation protocol and generate/edit/self-status loop,
-// re-hosted on DeHub's stack — Lovable AI Gateway for codegen (no Anthropic key
+// re-hosted on DeHub's stack — fal's OpenRouter router for codegen (no Anthropic key
 // needed), Postgres for projects/messages/files, and the builder-serve edge function
 // as the static host (no Daytona sandboxes).
 //
 // Auth: wallet-native (x-wallet-address + x-dehub-token, verified against
 // api.dehub.io), or the DeHub API building for someone who asked @assistant in
 // a DM (x-assistant-secret + x-wallet-address). Metering: each generation
-// consumes 1 build from a daily allowance derived from the caller's DHB staking
-// badge (builder_usage table) — the same allowance either way.
+// is paid from the caller's USD credit balance (provider cost + 30%), on the
+// model they picked (builder_prefs) — the same price either way.
 import {
   corsHeaders,
   handleCorsPreflight,
@@ -20,70 +20,72 @@ import {
   rateLimitByIp,
   serviceClient,
 } from "../_shared/auth.ts";
-import { aiChat } from "../_shared/ai-chat.ts";
+import { debitCredits, refundCreditsOutcome } from "../_shared/credits.ts";
 import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } from "../_shared/builder-host.ts";
 
-const DEHUB_API_BASE = "https://api.dehub.io";
-// Model picker: "best" (default) for the hard codegen path, "fast" for quick edits.
-const BUILD_MODELS: Record<string, string> = {
-  best: "google/gemini-2.5-pro",
-  fast: "google/gemini-2.5-flash",
-};
-
-function resolveModel(key: string | undefined): string {
-  return BUILD_MODELS[key ?? "best"] ?? BUILD_MODELS.best;
-}
 
 // ---------------------------------------------------------------------------
-// Build allowance — DHB staking badge → builds per day.
-// Keep in sync with src/lib/builder/allowance.ts (client-side display copy).
+// Models and pricing. Every build and edit is paid from the caller's USD
+// credit balance at provider cost plus MARKUP — there is no free tier.
+// Runs on fal's OpenRouter router (FAL_KEY), never the metered gateway.
+// Keep in sync with BUILDER_MODELS in src/lib/builder/api.ts and
+// services/builder.service.ts (mobile).
 // ---------------------------------------------------------------------------
 
-const BUILDS_BY_BADGE: Array<{ name: string; min: number; builds: number }> = [
-  { name: "Megalodon", min: 50_000_000, builds: 120 },
-  { name: "Blue Whale", min: 25_000_000, builds: 90 },
-  { name: "Killer Whale", min: 10_000_000, builds: 75 },
-  { name: "Great White Shark", min: 5_000_000, builds: 60 },
-  { name: "Tiger Shark", min: 3_000_000, builds: 50 },
-  { name: "Dolphin", min: 2_000_000, builds: 40 },
-  { name: "Crocodile", min: 1_000_000, builds: 30 },
-  { name: "Octopus", min: 500_000, builds: 25 },
-  { name: "King Cobra", min: 250_000, builds: 20 },
-  { name: "Giant Tortoise", min: 100_000, builds: 15 },
-  { name: "Piranha", min: 50_000, builds: 10 },
-  { name: "Ghost Lobster", min: 25_000, builds: 8 },
-  { name: "Crab", min: 10_000, builds: 5 },
+type BuilderModel = { id: string; label: string; inUsdPerM: number; outUsdPerM: number };
+
+const BUILDER_MODELS: BuilderModel[] = [
+  { id: "anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5", inUsdPerM: 3, outUsdPerM: 15 },
+  { id: "openai/gpt-5", label: "GPT-5", inUsdPerM: 1.25, outUsdPerM: 10 },
+  { id: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro", inUsdPerM: 1.25, outUsdPerM: 10 },
+  { id: "anthropic/claude-haiku-4.5", label: "Claude Haiku 4.5", inUsdPerM: 1, outUsdPerM: 5 },
+  { id: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash", inUsdPerM: 0.3, outUsdPerM: 2.5 },
 ];
+const DEFAULT_MODEL = BUILDER_MODELS[0].id;
+// Legacy picker keys the @assistant bridge may still send.
+const MODEL_ALIASES: Record<string, string> = { best: DEFAULT_MODEL, fast: "google/gemini-2.5-flash" };
 
-const BASELINE_BUILDS = 3;
+const MARKUP = 1.3;
+const MAX_OUTPUT_TOKENS = 32000;
+/** What a typical turn writes — used for the "about $x per prompt" quote only. */
+const TYPICAL_OUTPUT_TOKENS = 12000;
+const CHARS_PER_TOKEN = 3.5;
+/** Smallest charge, so a near-empty answer still covers the request. */
+const MIN_CHARGE_MICROS = 1_000;
 
-function allowanceForBalance(badgeBalance: number): { tierName: string; buildsPerDay: number } {
-  for (const tier of BUILDS_BY_BADGE) {
-    if (badgeBalance >= tier.min) return { tierName: tier.name, buildsPerDay: tier.builds };
-  }
-  return { tierName: "Starter", buildsPerDay: BASELINE_BUILDS };
+function findModel(id: string | undefined | null): BuilderModel | null {
+  if (!id) return null;
+  const key = MODEL_ALIASES[id] ?? id;
+  return BUILDER_MODELS.find((m) => m.id === key) ?? null;
 }
 
-/** DHB badge balance (holdings + staked) as api.dehub.io reports it. */
-async function fetchBadgeBalance(wallet: string, token: string): Promise<number> {
-  try {
-    // A public profile route, so a service call with no user token still reads it.
-    const res = await fetch(`${DEHUB_API_BASE}/api/account_info/${wallet}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-    if (!res.ok) return 0;
-    const data = await res.json();
-    const info = data?.result ?? data;
-    if (typeof info?.lnBalance === "number") return info.lnBalance;
-    const rows: Array<{ walletBalance?: number; staked?: number }> = info?.balanceData ?? [];
-    return rows.reduce((s, b) => s + (b.walletBalance || 0) + (b.staked || 0), 0);
-  } catch {
-    return 0;
-  }
+function tokensFor(chars: number): number {
+  return Math.ceil(chars / CHARS_PER_TOKEN);
 }
 
-function todayUtc(): string {
-  return new Date().toISOString().slice(0, 10);
+/** Provider USD → what the user pays, in micro-dollars. */
+function chargeMicros(model: BuilderModel, inputTokens: number, outputTokens: number, providerUsd?: number): number {
+  const usd = typeof providerUsd === "number" && providerUsd > 0
+    ? providerUsd
+    : (inputTokens * model.inUsdPerM + outputTokens * model.outUsdPerM) / 1_000_000;
+  return Math.max(MIN_CHARGE_MICROS, Math.ceil(usd * MARKUP * 1_000_000));
+}
+
+function quoteFor(model: BuilderModel, inputChars: number) {
+  const input = tokensFor(inputChars);
+  return {
+    typicalMicros: chargeMicros(model, input, TYPICAL_OUTPUT_TOKENS),
+    maxMicros: chargeMicros(model, input, MAX_OUTPUT_TOKENS),
+  };
+}
+
+async function preferredModel(db: Db, wallet: string): Promise<BuilderModel> {
+  const { data } = await db.from("builder_prefs").select("model").eq("wallet", wallet).maybeSingle();
+  return findModel(data?.model) ?? findModel(DEFAULT_MODEL)!;
+}
+
+function modelMenu(inputChars: number) {
+  return BUILDER_MODELS.map((m) => ({ id: m.id, label: m.label, ...quoteFor(m, inputChars) }));
 }
 
 // ---------------------------------------------------------------------------
@@ -182,29 +184,89 @@ function editUserPrompt(
   return `CURRENT FILES:\n${fileBlock}\n\nRECENT CONVERSATION:\n${convo}\n\nCHANGE REQUEST: ${request}`;
 }
 
-// Google direct on GEMINI_API_KEY only. The metered gateway is never a
-// fallback here: one build is ~32k output tokens billed to the same credit
-// pool that pays for deploys.
-async function callModel(system: string, user: string, model: string): Promise<string> {
-  const res = await aiChat(
-    {
-      model,
-      messages: [
-        { role: "system", content: system },
-        { role: "user", content: user },
-      ],
-      max_completion_tokens: 32000,
-    },
-    { label: "builder-api", skipGateway: true, noFree: true, signal: AbortSignal.timeout(300_000) },
-  );
+type ModelResult = { text: string; inputTokens: number; outputTokens: number; providerUsd?: number };
+
+// fal's OpenRouter router on FAL_KEY. The metered gateway is never used here:
+// one build is up to 32k output tokens.
+async function callModel(system: string, user: string, model: BuilderModel): Promise<ModelResult> {
+  const key = Deno.env.get("FAL_KEY");
+  if (!key) throw new Error("The builder is not configured");
+  const res = await fetch("https://fal.run/openrouter/router", {
+    method: "POST",
+    headers: { Authorization: `Key ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: model.id,
+      system_prompt: system,
+      prompt: user,
+      max_tokens: MAX_OUTPUT_TOKENS,
+    }),
+    signal: AbortSignal.timeout(300_000),
+  });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`AI provider error (${res.status}): ${body.slice(0, 200)}`);
   }
   const data = await res.json();
-  const text: string = data.choices?.[0]?.message?.content || "";
+  const text: string = typeof data.output === "string" ? data.output : "";
   if (!text.trim()) throw new Error("The AI returned an empty response");
-  return text;
+  const usage = data.usage ?? {};
+  return {
+    text,
+    inputTokens: Number(usage.prompt_tokens) || tokensFor(system.length + user.length),
+    outputTokens: Number(usage.completion_tokens) || tokensFor(text.length),
+    providerUsd: typeof usage.cost === "number" ? usage.cost : undefined,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Charging: hold the worst case before the run, settle to the real cost after.
+// ---------------------------------------------------------------------------
+
+type Charge = { wallet: string; key: string; model: BuilderModel; holdMicros: number };
+
+/** Debits the worst case up front. Returns null when the balance is short. */
+async function holdCharge(wallet: string, model: BuilderModel, inputChars: number): Promise<Charge | "short" | "error"> {
+  const holdMicros = quoteFor(model, inputChars).maxMicros;
+  const key = `builder:${wallet}:${crypto.randomUUID()}`;
+  const outcome = await debitCredits(wallet, holdMicros, `${key}:hold`);
+  if (outcome !== "debited") return outcome;
+  return { wallet, key, model, holdMicros };
+}
+
+/** Releases the hold, then charges what the run actually cost (nothing on failure). */
+async function settleCharge(charge: Charge, result: ModelResult | null): Promise<number> {
+  const refund = await refundCreditsOutcome(`${charge.key}:hold`);
+  if (refund !== "restored") {
+    // A hold that could not be released stands as the charge — never bill twice.
+    console.error("[builder-api] hold not released", refund, charge.key);
+    return charge.holdMicros;
+  }
+  if (!result) return 0;
+  const micros = chargeMicros(charge.model, result.inputTokens, result.outputTokens, result.providerUsd);
+  const outcome = await debitCredits(charge.wallet, micros, `${charge.key}:final`);
+  if (outcome !== "debited") console.error("[builder-api] final debit", outcome, charge.key);
+  return micros;
+}
+
+function formatUsd(micros: number): string {
+  return `$${(micros / 1_000_000).toFixed(micros < 10_000 ? 4 : 2)}`;
+}
+
+const TOP_UP_URL = "https://dehub.io/builder?topup=1";
+
+function paymentRequired(outcome: "short" | "error", model: BuilderModel, inputChars: number): Response {
+  if (outcome === "error") return jsonResponse({ error: "Could not reach your credit balance. Try again in a moment." }, 503);
+  const quote = quoteFor(model, inputChars);
+  return jsonResponse(
+    {
+      error: `Not enough credits. This prompt on ${model.label} costs about ${formatUsd(quote.typicalMicros)} (up to ${formatUsd(quote.maxMicros)} is held and the unused part returned). Top up at ${TOP_UP_URL}`,
+      code: "insufficient_credits",
+      model: model.id,
+      ...quote,
+      topUpUrl: TOP_UP_URL,
+    },
+    402,
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -329,11 +391,13 @@ function errorMessage(err: unknown): string {
 // Build runners (fire-and-forget via EdgeRuntime.waitUntil; client polls `get`)
 // ---------------------------------------------------------------------------
 
-async function runBuild(db: Db, projectId: string, prompt: string, model: string) {
+async function runBuild(db: Db, projectId: string, prompt: string, charge: Charge) {
+  let result: ModelResult | null = null;
   try {
     await setStatus(db, projectId, "generating", "The AI is designing your app");
     await log(db, projectId, "🧠 Writing your app…");
-    const raw = await callModel(GENERATE_SYSTEM, `Build this web app: ${prompt}`, model);
+    result = await callModel(GENERATE_SYSTEM, `Build this web app: ${prompt}`, charge.model);
+    const raw = result.text;
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     const slug = await ensureSlug(db, projectId, app.name);
@@ -363,13 +427,17 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
       })
       .eq("id", projectId);
     const home = `${appOrigin(slug)}/`;
+    const cost = await settleCharge(charge, result);
+    result = null;
     await log(
       db,
       projectId,
-      app.summary ? `✅ ${app.name} is live at ${home} ${app.summary}` : `✅ ${app.name} is live at ${home}`,
+      `${app.summary ? `✅ ${app.name} is live at ${home} ${app.summary}` : `✅ ${app.name} is live at ${home}`} (${charge.model.label}, ${formatUsd(cost)})`,
       "agent",
     );
   } catch (err) {
+    // A run the model answered is paid for even if its output was unusable.
+    await settleCharge(charge, result);
     await db
       .from("builder_projects")
       .update({
@@ -383,7 +451,8 @@ async function runBuild(db: Db, projectId: string, prompt: string, model: string
   }
 }
 
-async function runEdit(db: Db, projectId: string, request: string, model: string) {
+async function runEdit(db: Db, projectId: string, request: string, charge: Charge) {
+  let result: ModelResult | null = null;
   const { data: project } = await db
     .from("builder_projects")
     .select("name, emoji, version")
@@ -406,7 +475,8 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
 
     await setStatus(db, projectId, "updating", "The AI is applying your changes");
     await log(db, projectId, "🛠️ Updating your app…");
-    const raw = await callModel(EDIT_SYSTEM, editUserPrompt(files, conversation, request), model);
+    result = await callModel(EDIT_SYSTEM, editUserPrompt(files, conversation, request), charge.model);
+    const raw = result.text;
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     await ensureSlug(db, projectId, app.name);
@@ -424,8 +494,16 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
         updated_at: new Date().toISOString(),
       })
       .eq("id", projectId);
-    await log(db, projectId, app.summary ? `✅ Updated! ${app.summary}` : "✅ Updated!", "agent");
+    const cost = await settleCharge(charge, result);
+    result = null;
+    await log(
+      db,
+      projectId,
+      `${app.summary ? `✅ Updated! ${app.summary}` : "✅ Updated!"} (${charge.model.label}, ${formatUsd(cost)})`,
+      "agent",
+    );
   } catch (err) {
+    await settleCharge(charge, result);
     // Fall back to live if a previous version is still being served.
     const { data: existing } = await db
       .from("builder_files")
@@ -444,37 +522,6 @@ async function runEdit(db: Db, projectId: string, request: string, model: string
       .eq("id", projectId);
     await log(db, projectId, `❌ Update failed: ${errorMessage(err)}`, "agent");
   }
-}
-
-// ---------------------------------------------------------------------------
-// Allowance metering
-// ---------------------------------------------------------------------------
-
-async function getUsage(db: Db, wallet: string): Promise<number> {
-  const { data } = await db
-    .from("builder_usage")
-    .select("builds")
-    .eq("wallet", wallet)
-    .eq("day", todayUtc())
-    .maybeSingle();
-  return data?.builds ?? 0;
-}
-
-async function bumpUsage(db: Db, wallet: string) {
-  const day = todayUtc();
-  const used = await getUsage(db, wallet);
-  await db.from("builder_usage").upsert({ wallet, day, builds: used + 1 });
-}
-
-type Allowance = { used: number; limit: number; tierName: string };
-
-async function loadAllowance(db: Db, wallet: string, token: string): Promise<Allowance> {
-  const [balance, used] = await Promise.all([
-    fetchBadgeBalance(wallet, token),
-    getUsage(db, wallet),
-  ]);
-  const { tierName, buildsPerDay } = allowanceForBalance(balance);
-  return { used, limit: buildsPerDay, tierName };
 }
 
 const BUSY_STATUSES = new Set(["queued", "generating", "publishing", "updating"]);
@@ -643,8 +690,21 @@ Deno.serve(async (req) => {
 
   try {
     switch (body.action) {
-      case "allowance": {
-        return jsonResponse({ allowance: await loadAllowance(db, wallet, token) });
+      case "pricing": {
+        // The model menu with a per-prompt quote for a typical new build.
+        const current = await preferredModel(db, wallet);
+        return jsonResponse({
+          model: current.id,
+          markup: MARKUP,
+          models: modelMenu(GENERATE_SYSTEM.length + 400),
+        });
+      }
+
+      case "set_model": {
+        const model = findModel(body.model);
+        if (!model) return jsonResponse({ error: "Unknown model" }, 400);
+        await db.from("builder_prefs").upsert({ wallet, model: model.id, updated_at: new Date().toISOString() });
+        return jsonResponse({ model: model.id });
       }
 
       case "list": {
@@ -662,42 +722,29 @@ Deno.serve(async (req) => {
         if (!prompt) return jsonResponse({ error: "Tell me what to build first." }, 400);
         if (prompt.length > 2000) return jsonResponse({ error: "Prompt too long (2000 chars max)." }, 400);
 
-        // Defense in depth: the per-wallet allowance already caps builds, but
-        // requireDeHubAuth cannot currently distinguish spoofed wallets
-        // (api.dehub.io accepts any token — platform-wide, see July audit), so
-        // an attacker could rotate wallets for 3 free gateway builds each. Cap
-        // the actual expensive path per IP too.
         if (!isServiceCall) {
           const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
           if (ipLimited) return ipLimited;
         }
 
-        const allowance = await loadAllowance(db, wallet, token);
-        if (allowance.used >= allowance.limit) {
-          return jsonResponse(
-            {
-              error: `Daily build allowance reached (${allowance.limit}/day on the ${allowance.tierName} tier). Stake more DHB to raise it, or come back tomorrow.`,
-              allowance,
-            },
-            402,
-          );
-        }
+        const model = findModel(body.model) ?? await preferredModel(db, wallet);
+        const charge = await holdCharge(wallet, model, GENERATE_SYSTEM.length + prompt.length + 40);
+        if (charge === "short" || charge === "error") return paymentRequired(charge, model, GENERATE_SYSTEM.length + prompt.length);
 
         const { data: project, error } = await db
           .from("builder_projects")
           .insert({ wallet, prompt, status: "queued", status_detail: "Queued for build" })
           .select("id")
           .single();
-        if (error || !project) throw new Error(error?.message ?? "Could not create the project");
+        if (error || !project) {
+          await settleCharge(charge, null);
+          throw new Error(error?.message ?? "Could not create the project");
+        }
         await log(db, project.id, prompt, "user");
-        await bumpUsage(db, wallet);
 
         // @ts-ignore - EdgeRuntime is provided by Supabase
-        EdgeRuntime.waitUntil(runBuild(db, project.id, prompt, resolveModel(body.model)));
-        return jsonResponse({
-          projectId: project.id,
-          allowance: { ...allowance, used: allowance.used + 1 },
-        });
+        EdgeRuntime.waitUntil(runBuild(db, project.id, prompt, charge));
+        return jsonResponse({ projectId: project.id, model: model.id, heldMicros: charge.holdMicros });
       }
 
       case "send": {
@@ -722,46 +769,40 @@ Deno.serve(async (req) => {
           return jsonResponse({ error: "Hold on — a build is already running for this app." }, 409);
         }
 
-        const allowance = await loadAllowance(db, wallet, token);
-        if (allowance.used >= allowance.limit) {
-          return jsonResponse(
-            {
-              error: `Daily build allowance reached (${allowance.limit}/day on the ${allowance.tierName} tier). Stake more DHB to raise it, or come back tomorrow.`,
-              allowance,
-            },
-            402,
-          );
-        }
+        // An edit sends the whole app back to the model, so it is priced on that.
+        const { data: fileRows } = await db
+          .from("builder_files")
+          .select("content")
+          .eq("project_id", projectId);
+        const fileChars = (fileRows ?? []).reduce((n, r: { content: string }) => n + (r.content?.length ?? 0), 0);
+        const rebuild = project.status === "error" && fileChars === 0;
+        const inputChars = rebuild
+          ? GENERATE_SYSTEM.length + project.prompt.length + content.length
+          : EDIT_SYSTEM.length + fileChars + content.length + 30 * 400;
+
+        const model = findModel(body.model) ?? await preferredModel(db, wallet);
+        const charge = await holdCharge(wallet, model, inputChars);
+        if (charge === "short" || charge === "error") return paymentRequired(charge, model, inputChars);
 
         await log(db, projectId, content, "user");
-        await bumpUsage(db, wallet);
         // Busy before this returns, not whenever the background run gets to
         // it. Until then the project still read "live" at its old version, so
         // anything watching for the result took the untouched app for a
         // finished edit.
         await setStatus(db, projectId, "queued", "Queued for build");
 
-        const model = resolveModel(body.model);
-        const isRetry = project.status === "error";
-        if (isRetry) {
-          const { data: files } = await db
-            .from("builder_files")
-            .select("path")
-            .eq("project_id", projectId)
-            .limit(1);
-          if ((files ?? []).length === 0) {
-            // Nothing was ever generated — rebuild from scratch. Build from the
-            // project's ORIGINAL prompt plus the follow-up so a bare "try again"
-            // doesn't become the app spec.
-            const rebuildPrompt = `${project.prompt}\n\nAdditional note from the user: ${content}`;
-            // @ts-ignore - EdgeRuntime is provided by Supabase
-            EdgeRuntime.waitUntil(runBuild(db, projectId, rebuildPrompt, model));
-            return jsonResponse({ ok: true, version: project.version, allowance: { ...allowance, used: allowance.used + 1 } });
-          }
+        if (rebuild) {
+          // Nothing was ever generated — rebuild from scratch. Build from the
+          // project's ORIGINAL prompt plus the follow-up so a bare "try again"
+          // doesn't become the app spec.
+          const rebuildPrompt = `${project.prompt}\n\nAdditional note from the user: ${content}`;
+          // @ts-ignore - EdgeRuntime is provided by Supabase
+          EdgeRuntime.waitUntil(runBuild(db, projectId, rebuildPrompt, charge));
+        } else {
+          // @ts-ignore - EdgeRuntime is provided by Supabase
+          EdgeRuntime.waitUntil(runEdit(db, projectId, content, charge));
         }
-        // @ts-ignore - EdgeRuntime is provided by Supabase
-        EdgeRuntime.waitUntil(runEdit(db, projectId, content, model));
-        return jsonResponse({ ok: true, version: project.version, allowance: { ...allowance, used: allowance.used + 1 } });
+        return jsonResponse({ ok: true, version: project.version, model: model.id, heldMicros: charge.holdMicros });
       }
 
       case "status": {
