@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { LucideIcon } from 'lucide-react';
@@ -58,6 +58,22 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
   const [artFailed, setArtFailed] = useState(false);
   const { theme } = useAppTheme();
   useEffect(() => setArtFailed(false), [iconKey, theme]);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = labelRef.current;
+    if (!el) return;
+    const fit = () => {
+      el.style.fontSize = '';
+      if (el.scrollWidth > el.clientWidth + 0.5) {
+        el.style.fontSize = `${Math.max(10, (11.5 * el.clientWidth) / el.scrollWidth).toFixed(2)}px`;
+      }
+    };
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(fit);
+    ro.observe(el.parentElement ?? el); // the tile: its width, not the label height the fit changes
+    return () => ro.disconnect();
+  }, [label, theme]);
   return (
     <>
       <span className="relative flex h-[44px] w-[44px] items-center justify-center">
@@ -79,7 +95,9 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
           </span>
         )}
       </span>
-      <span className={cn('w-full truncate text-center text-[11.5px] leading-tight', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
+      {/* Names fit instead of ending in "…": two words wrap onto a second
+          line, and only a single word too long for the tile eases down. */}
+      <span ref={labelRef} className={cn('w-full line-clamp-2 text-center text-[11.5px] leading-tight [text-wrap:balance]', active ? 'font-semibold text-white' : 'font-medium text-zinc-200')}>
         {label}
       </span>
     </>
@@ -87,7 +105,8 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
 }
 
 const tileClass = (active: boolean) => cn(
-  'flex flex-col items-center justify-center gap-1.5 rounded-[14px] px-1 py-2.5 min-h-[84px] border transition-colors',
+  // justify-start: in a row where one name wraps, every icon stays on one line.
+  'flex flex-col items-center justify-start gap-1.5 rounded-[14px] px-1 py-2.5 min-h-[84px] border transition-colors',
   active
     ? 'bg-white/[0.12] border-white/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
     : 'bg-white/[0.04] border-white/[0.08] active:bg-white/[0.08]',
