@@ -21,6 +21,7 @@ import {
   writeContractAA,
 } from '@/lib/contracts/aa-utils';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { ROBINHOOD_EXPLORER_URL } from '@/lib/chains/robinhood';
 import {
   NFT_IFACE,
   SEAPORT_ADDRESS,
@@ -35,11 +36,16 @@ import {
   type FeeTerms,
 } from './seaport';
 
-export const MARKET_CHAINS = [56, 8453] as const;
+export const MARKET_CHAINS = [56, 8453, 1, 4663] as const;
 export type MarketChainId = (typeof MARKET_CHAINS)[number];
 
-export const CHAIN_LABEL: Record<number, string> = { 56: 'BNB', 8453: 'Base' };
-export const EXPLORER: Record<number, string> = { 56: 'https://bscscan.com', 8453: 'https://basescan.org' };
+export const CHAIN_LABEL: Record<number, string> = { 56: 'BNB', 8453: 'Base', 1: 'Ethereum', 4663: 'Robinhood' };
+export const EXPLORER: Record<number, string> = {
+  56: 'https://bscscan.com',
+  8453: 'https://basescan.org',
+  1: 'https://etherscan.io',
+  4663: ROBINHOOD_EXPLORER_URL,
+};
 
 export interface MarketCurrency {
   address: string;
