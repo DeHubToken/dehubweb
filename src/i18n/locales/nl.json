@@ -2382,7 +2382,11 @@
     "checkingTokenBalance": "Je tokenbalans controleren...",
     "deleteConversationFailed": "Kon het gesprek niet verwijderen",
     "message": "Bericht",
-    "noConversationsYet": "Nog geen gesprekken"
+    "noConversationsYet": "Nog geen gesprekken",
+    "sending": "Verzenden",
+    "notSent": "Niet verzonden",
+    "retrySend": "Opnieuw",
+    "discardSend": "Verwijderen"
   },
   "music": {
     "listeningCount_one": "{{count}} luisteren",
