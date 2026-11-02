@@ -20067,6 +20067,7 @@
     "taken": "O DeHub profilinde zaten bu GitHub hesabı var.",
     "failed": "GitHub'a bağlanamadı. Lütfen tekrar deneyin.",
     "unavailable": "GitHub doğrulaması yakında gelecek.",
-    "connect": "Bağlan GitHub'a"
+    "connect": "Bağlan GitHub'a",
+    "disconnect": "Bağlantıyı kes"
   }
 }
