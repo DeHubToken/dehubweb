@@ -280,6 +280,16 @@ function ImageSlide({
           return;
         }
 
+        // A feed kept alive on a hidden page has no box at all. That is not
+        // "scrolled far away", and releasing there leaves blank photos when
+        // the page comes back, so only release a slide that is laid out.
+        const box = entry.boundingClientRect;
+        if (box && box.width === 0 && box.height === 0) {
+          if (releaseTimer) clearTimeout(releaseTimer);
+          releaseTimer = undefined;
+          return;
+        }
+
         // Native lazy-loading never unloads an image once decoded. Release it
         // only after it has stayed far outside the viewport, leaving a wide
         // buffer and grace period so ordinary scroll-back remains instant.
