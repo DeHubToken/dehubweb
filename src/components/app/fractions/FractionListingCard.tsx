@@ -13,12 +13,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { ImageIcon } from "lucide-react";
-import Music from "@/components/ui/cut-icons/music";
-import Video from "@/components/ui/cut-icons/video";
 import Users from "@/components/ui/cut-icons/communities";
 
-import { cdnImage } from '@/lib/media-url';
+import { FractionThumb } from './FractionThumb';
 import { truncateAddress } from '@/lib/api/token-holders';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { SellerTrustBadge } from './SellerTrustBadge';
@@ -32,12 +29,6 @@ interface FractionListingCardProps {
   onClick: () => void;
 }
 
-const TYPE_ICON: Record<string, typeof ImageIcon> = {
-  audio: Music,
-  video: Video,
-  image: ImageIcon,
-};
-
 export const FractionListingCard = memo(function FractionListingCard({
   listing,
   stats,
@@ -50,8 +41,6 @@ export const FractionListingCard = memo(function FractionListingCard({
   const { data: prices } = useTokenPrices();
   const dhbUsd = prices?.DHB ?? 0;
 
-  const Icon = TYPE_ICON[listing.post_type || ''] || ImageIcon;
-  const thumbnail = listing.post_image_url ? cdnImage(listing.post_image_url, { width: 400 }) : '';
   // Share of the whole upload this listing represents. It is the number that
   // makes a fraction price mean something — 50 of 1000 is 5% of the post.
   const sharePct = (available / TOTAL_FRACTIONS) * 100;
@@ -62,18 +51,13 @@ export const FractionListingCard = memo(function FractionListingCard({
       className="text-left rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-white/20 transition-colors group"
     >
       <div className="aspect-square bg-white/5 relative overflow-hidden">
-        {thumbnail ? (
-          <img
-            src={thumbnail}
-            alt={listing.post_title || t('fractions.postNumber', { id: listing.token_id })}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/20">
-            <Icon className="w-8 h-8" />
-          </div>
-        )}
+        <FractionThumb
+          tokenId={String(listing.token_id)}
+          imageUrl={listing.post_image_url}
+          title={listing.post_title}
+          postType={listing.post_type}
+          className="group-hover:scale-105 transition-transform duration-300"
+        />
         <span data-on-media className="absolute top-2 left-2 text-[10px] font-semibold bg-black/70 text-white/90 px-1.5 py-0.5 rounded backdrop-blur-sm">
           {available} / {TOTAL_FRACTIONS}
         </span>

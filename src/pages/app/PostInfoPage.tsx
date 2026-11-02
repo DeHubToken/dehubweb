@@ -71,7 +71,7 @@ const VISIBILITY_OPTIONS: { value: TokenVisibility; icon: React.ReactNode }[] = 
 // /app/fractions renders. It used to be ~440 lines inlined here, which is how
 // it ended up being the only place fractions could be traded at all.
 import { FractionMarketPanel } from '@/components/app/fractions/FractionMarketPanel';
-import { buildImageUrl } from '@/lib/media-url';
+import { fractionImageFor } from '@/lib/fraction-thumb';
 import { resolveViewCount } from '@/lib/engagement';
 
 
@@ -626,7 +626,7 @@ export default function PostInfoPage() {
             chainId={nftInfo.chainId || 8453}
             post={{
               title: nftInfo.name || nftInfo.title,
-              imageUrl: buildImageUrl(nftInfo.tokenId, nftInfo.imageUrl, 400) || undefined,
+              imageUrl: fractionImageFor(nftInfo, 400) || undefined,
               type: nftInfo.postType,
               creatorAddress: nftInfo.minter,
               creatorUsername: nftInfo.minterUsername || nftInfo.mintername,
