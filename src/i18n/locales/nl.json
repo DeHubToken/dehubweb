@@ -292,8 +292,10 @@
     "noUsername": "Kies een gebruikersnaam om een fediverse-adres te krijgen."
   },
   "profileFields": {
+    "add": "Veld toevoegen",
+    "remove": "Veld verwijderen",
     "title": "Profielvelden",
-    "description": "Tot vier extra regels op je profiel, zoals een website of je voornaamwoorden.",
+    "description": "Optionele aangepaste profielvelden",
     "label": "Label",
     "content": "Inhoud",
     "save": "Velden opslaan",

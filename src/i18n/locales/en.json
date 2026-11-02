@@ -293,9 +293,11 @@
   },
   "profileFields": {
     "title": "Profile fields",
-    "description": "Up to four extra lines on your profile, such as a website or your pronouns.",
+    "description": "Optional custom profile fields",
     "label": "Label",
     "content": "Content",
+    "add": "Add field",
+    "remove": "Remove field",
     "save": "Save fields",
     "saved": "Profile fields saved",
     "failed": "That didn't save. Try again.",
