@@ -2091,9 +2091,20 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
   // drip (one state update per resolved actor) doesn't recompute it every
   // render — it re-runs only when the list or avatar map actually changes.
+  // Whether each bundle was unread when it was first listed. New is one block
+  // at the top (a reaction bundle bumped today sat among older read rows, so
+  // the headings ran New, This week, New), and a bundle you open stays where
+  // it was rather than dropping out from under you.
+  const listedUnreadRef = useRef(new Map<string, boolean>());
+  const listedUnread = useCallback((bundle: BundledNotification) => {
+    const key = String(bundle.primary.id);
+    if (!listedUnreadRef.current.has(key)) listedUnreadRef.current.set(key, !bundle.allNotifications.every((n) => n.read));
+    return listedUnreadRef.current.get(key)!;
+  }, []);
   const bundledNotifications = useMemo(
-    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
-    [notifications, enrichedAvatars]
+    () => [...bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars)]
+      .sort((a, b) => Number(listedUnread(b)) - Number(listedUnread(a))),
+    [notifications, enrichedAvatars, listedUnread]
   );
 
   // Hooks must run unconditionally on every render. This page stays mounted in
@@ -2394,7 +2405,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // Day headings for the feed: everything unread sits under New, the rest by
   // when it happened.
   const feedGroupOf = (bundle: BundledNotification): 'new' | 'today' | 'week' | 'earlier' => {
-    if (!bundle.allNotifications.every((n) => n.read)) return 'new';
+    if (listedUnread(bundle)) return 'new';
     const at = new Date(bundle.primary.createdAt).getTime();
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
