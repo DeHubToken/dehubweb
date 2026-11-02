@@ -35,6 +35,8 @@ import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { AppState } from '@/components/app/AppState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
+import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
@@ -460,6 +462,7 @@ function HomeTabPanel({
   isContentFiltered?: boolean;
 }) {
   const { t: _copy } = _useCopy();
+  const isMobile = useIsMobile();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
@@ -475,7 +478,16 @@ function HomeTabPanel({
         return !ALL_CONTENT.some((apiItem) => apiItem.data.id === op.id);
       })
     : [];
-  
+
+  // Phones get every post type in one grid; desktop keeps the feed cards.
+  if (isMobile) {
+    const entries: MixedGridEntry[] = [
+      ...filteredOptimisticPosts.map((op) => ({ key: `op-${op.id}`, type: op.type, data: op.data, isOptimistic: true }) as MixedGridEntry),
+      ...ALL_CONTENT.map((item) => ({ key: `${item.isRepost ? 'rp-' : ''}${item.data.id}`, type: item.type, data: item.data, isPinned: item.isPinned, isRepost: item.isRepost }) as MixedGridEntry),
+    ];
+    return <ProfileMixedGrid entries={entries} />;
+  }
+
   return (
     <div className="space-y-3">
       {filteredOptimisticPosts.map((op) => {
