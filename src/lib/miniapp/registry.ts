@@ -168,6 +168,11 @@ export function recordPayment(input: {
   return userCall({ action: 'payment', ...input });
 }
 
+/** Test mode: the app's own developer "pays" without moving DHB; the receipt says test: true. */
+export function recordTestPayment(input: { slug: string; amount: number; memo: string | null }): Promise<{ txHash: string; chainId: number; amount: number; receipt: string; test: true }> {
+  return userCall({ action: 'testPayment', ...input });
+}
+
 /** A fresh notify key for an app the caller owns. Shown once. */
 export async function createNotifyKey(slug: string): Promise<string> {
   return (await registryCall<{ key: string }>({ action: 'notifyKey', slug })).key;
@@ -245,4 +250,41 @@ export async function fetchLatestRewards(): Promise<{ weekStart: string | null; 
     .eq('week_start', weekStart)
     .order('amount_dhb', { ascending: false });
   return { weekStart, rows: (data ?? []) as RewardRow[], monthlyPool };
+}
+
+export interface WebhookDelivery {
+  event: string;
+  status: number | null;
+  ok: boolean;
+  error: string | null;
+  created_at: string;
+}
+
+/** Send a `ping` to the app's webhookUrl now (owner only). */
+export async function testWebhook(slug: string): Promise<{ ok: boolean; status: number | null; error: string | null }> {
+  return registryCall({ action: 'webhookTest', slug });
+}
+
+/** The last 20 webhooks DeHub sent the app (owner only). */
+export async function fetchWebhookDeliveries(slug: string): Promise<WebhookDelivery[]> {
+  return (await registryCall<{ deliveries: WebhookDelivery[] }>({ action: 'deliveries', slug })).deliveries;
+}
+
+export interface AppStats {
+  daily: { day: string; people: number }[];
+  people30: number;
+  people7: number;
+  added: number;
+  added30: number;
+  notificationsOn: number;
+  payments30: number;
+  dhb30: number;
+  dhbAll: number;
+  notified30: number;
+  rewardsDhb: number;
+}
+
+/** Usage for one of the caller's apps over the last 30 days (owner only). */
+export async function fetchAppStats(slug: string): Promise<AppStats> {
+  return (await registryCall<{ stats: AppStats }>({ action: 'stats', slug })).stats;
 }

@@ -1,0 +1,25 @@
+{
+  "name": "dehub-sdk",
+  "version": "1.0.0",
+  "description": "Build mini apps for DeHub: sign-in, payments, posting and notifications, plus server helpers to verify tokens, receipts and webhooks.",
+  "license": "MIT",
+  "homepage": "https://dehub.io/docs/developers",
+  "repository": { "type": "git", "url": "https://github.com/DeHubToken/dehubweb.git", "directory": "packages/dehub-sdk" },
+  "keywords": ["dehub", "mini-app", "miniapp", "sdk", "web3", "social"],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./server": { "types": "./dist/server.d.ts", "import": "./dist/server.js" }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": { "jose": ">=5" },
+  "peerDependenciesMeta": { "jose": { "optional": true } },
+  "devDependencies": { "jose": "^5.9.6", "typescript": "^5.6.3" }
+}

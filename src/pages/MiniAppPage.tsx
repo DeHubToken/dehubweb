@@ -29,7 +29,7 @@ import { useMiniAppHost, type PaymentResult } from '@/lib/miniapp/host-bridge';
 import { payDhb } from '@/lib/dhb-payment';
 import { launchUrl, parseAppUrl, type LaunchSource, type MiniAppContext } from '@/lib/miniapp/protocol';
 import { useFarcasterHost } from '@/lib/miniapp/farcaster-host';
-import { addApp, fetchAddedApps, fetchAppBySlug, recordOpen, recordPayment, type MiniAppListing } from '@/lib/miniapp/registry';
+import { addApp, fetchAddedApps, fetchAppBySlug, recordOpen, recordPayment, recordTestPayment, type MiniAppListing } from '@/lib/miniapp/registry';
 
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then((m) => ({ default: m.PostModal })),
@@ -165,11 +165,19 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
     return { added: true };
   }, [slug]);
 
+  // Test mode: the developer opening their own app. Payments are simulated, so
+  // they can try the whole flow without sending DHB to themselves.
+  const testMode = Boolean(walletAddress && app.ownerWallet && walletAddress.toLowerCase() === app.ownerWallet.toLowerCase());
   const payFlow = useCallback(
     async (request: { amount: number; memo: string | null }): Promise<PaymentResult> => {
       if (!slug || !app.ownerWallet) throw Object.assign(new Error(t('miniApps.pay.noOwner')), { code: 'unsupported' });
       const allowed = await new Promise<boolean>((resolve) => setPayAsk({ ...request, resolve }));
       if (!allowed) throw Object.assign(new Error('The user declined to pay.'), { code: 'rejected' });
+      if (testMode) {
+        const recorded = await recordTestPayment({ slug, amount: request.amount, memo: request.memo });
+        toast.success(t('miniApps.pay.testSent', { amount: recorded.amount }));
+        return recorded;
+      }
       const toastId = toast.loading(t('miniApps.pay.sending'));
       try {
         const sent = await payDhb(request.amount, app.ownerWallet, { context: `${app.name} payment` });
@@ -181,7 +189,7 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
         throw error;
       }
     },
-    [slug, app.ownerWallet, app.name, t],
+    [slug, app.ownerWallet, app.name, t, testMode],
   );
 
   // One open per launch, for the ranking. Previews are not registered apps.
@@ -323,12 +331,15 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
       {payAsk ? (
         <div className="absolute inset-0 z-20 flex items-end justify-center bg-black/70 p-4 sm:items-center">
           <div className="w-full max-w-sm rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
+            {testMode ? (
+              <p className="mb-2 inline-block rounded-full bg-amber-400/15 px-2.5 py-0.5 text-[11px] font-semibold text-amber-300">{t('miniApps.pay.testBadge')}</p>
+            ) : null}
             <p className="text-base font-semibold text-white">{t('miniApps.pay.title', { name: app.name })}</p>
             <p className="mt-1 font-mono text-xs text-zinc-400">{app.url.host}</p>
             <p className="mt-4 text-3xl font-bold tabular-nums text-white">{payAsk?.amount.toLocaleString()} {tokenLabel()}</p>
             {payAsk?.memo ? <p className="mt-1 text-sm text-zinc-300">{payAsk.memo}</p> : null}
             <p className="mt-3 text-xs leading-relaxed text-zinc-400">
-              {t('miniApps.pay.body', { wallet: `${app.ownerWallet?.slice(0, 6)}…${app.ownerWallet?.slice(-4)}` })}
+              {testMode ? t('miniApps.pay.testBody') : t('miniApps.pay.body', { wallet: `${app.ownerWallet?.slice(0, 6)}…${app.ownerWallet?.slice(-4)}` })}
             </p>
             <div className="mt-5 flex gap-2">
               <button

@@ -12390,6 +12390,26 @@
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
       "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Events DeHub sent your webhookUrl. Test sends a ping event.",
+        "test": "Send test",
+        "ok": "Webhook answered {{status}}",
+        "failed": "Webhook failed: {{reason}}",
+        "none": "No webhooks sent yet."
+      },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "People who opened your app, last 30 days",
+        "peak_one": "Peak {{count}} a day",
+        "peak_other": "Peak {{count}} a day",
+        "people30": "People, 30 days",
+        "people7": "People, 7 days",
+        "added": "Added it",
+        "dhb30": "DHB paid, 30 days",
+        "notified30": "Notifications sent, 30 days",
+        "rewards": "DHB rewards earned"
+      },
       "signin": {
         "title": "Sign in with DeHub",
         "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",
@@ -12432,7 +12452,10 @@
       "confirm": "Pay {{amount}} tokens",
       "sending": "Sending your payment…",
       "sent": "Paid {{amount}} tokens to {{name}}.",
-      "noOwner": "This app has no verified wallet to pay yet."
+      "noOwner": "This app has no verified wallet to pay yet.",
+      "testBadge": "Test mode",
+      "testBody": "You own this app, so this is a test: no tokens move and the receipt is marked test.",
+      "testSent": "Test payment of {{amount}} tokens. Nothing was sent."
     },
     "add": {
       "title": "Add {{name}}?",

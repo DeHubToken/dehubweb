@@ -12469,6 +12469,26 @@
       "rewardPaid": "Payant",
       "rewardPending": "En attente",
       "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Événements envoyés par DeHub à votre webhookUrl. Le test envoie un événement ping.",
+        "test": "Envoyer un test",
+        "ok": "Le webhook a répondu {{status}}",
+        "failed": "Échec du webhook : {{reason}}",
+        "none": "Aucun webhook envoyé pour l'instant."
+      },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "Personnes ayant ouvert votre app, 30 derniers jours",
+        "peak_one": "Pic de {{count}} par jour",
+        "peak_other": "Pic de {{count}} par jour",
+        "people30": "Personnes, 30 jours",
+        "people7": "Personnes, 7 jours",
+        "added": "L'ont ajoutée",
+        "dhb30": "DHB payés, 30 jours",
+        "notified30": "Notifications envoyées, 30 jours",
+        "rewards": "Récompenses en DHB"
+      },
       "signin": {
         "title": "Se connecter avec DeHub",
         "body": "Permettez aux gens de se connecter à votre site ou app avec leur compte DeHub. Créez une clé ici, puis suivez le guide.",
@@ -12511,7 +12531,10 @@
       "confirm": "Payez {{amount}} jetons",
       "sending": "Envoyez votre paiement…",
       "sent": "Paiement {{amount}} jetons à {{name}}.",
-      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer."
+      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer.",
+      "testBadge": "Mode test",
+      "testBody": "Cette app est à vous, c'est donc un test : aucun jeton ne bouge et le reçu est marqué test.",
+      "testSent": "Paiement test de {{amount}} jetons. Rien n'a été envoyé."
     },
     "add": {
       "title": "Ajouter {{name}} ?",

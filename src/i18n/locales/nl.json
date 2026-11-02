@@ -12714,6 +12714,26 @@
       "rewardPaid": "Uitbetaalde",
       "rewardPending": "Openstaand",
       "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Gebeurtenissen die DeHub naar je webhookUrl stuurde. Testen stuurt een ping-gebeurtenis.",
+        "test": "Test sturen",
+        "ok": "Webhook antwoordde {{status}}",
+        "failed": "Webhook mislukt: {{reason}}",
+        "none": "Nog geen webhooks verstuurd."
+      },
+      "stats": {
+        "button": "Statistieken",
+        "chartTitle": "Mensen die je app openden, laatste 30 dagen",
+        "peak_one": "Piek {{count}} per dag",
+        "peak_other": "Piek {{count}} per dag",
+        "people30": "Mensen, 30 dagen",
+        "people7": "Mensen, 7 dagen",
+        "added": "Toegevoegd",
+        "dhb30": "DHB betaald, 30 dagen",
+        "notified30": "Meldingen verstuurd, 30 dagen",
+        "rewards": "Verdiende DHB-beloningen"
+      },
       "signin": {
         "title": "Inloggen met DeHub",
         "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",
@@ -12756,7 +12776,10 @@
       "confirm": "Betaal {{amount}} tokens",
       "sending": "Stuur je betaling op…",
       "sent": "Betaald {{amount}} tokens aan {{name}}.",
-      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen."
+      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen.",
+      "testBadge": "Testmodus",
+      "testBody": "Deze app is van jou, dus dit is een test: er gaan geen tokens over en het bewijs is gemarkeerd als test.",
+      "testSent": "Testbetaling van {{amount}} tokens. Er is niets verstuurd."
     },
     "add": {
       "title": "Vul {{name}} toe?",

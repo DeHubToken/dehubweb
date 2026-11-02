@@ -12465,6 +12465,26 @@
       "rewardPaid": "Ödendi",
       "rewardPending": "Bekleyen",
       "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "DeHub'ın webhookUrl adresinize gönderdiği olaylar. Test, bir ping olayı gönderir.",
+        "test": "Test gönder",
+        "ok": "Webhook {{status}} ile yanıt verdi",
+        "failed": "Webhook başarısız: {{reason}}",
+        "none": "Henüz webhook gönderilmedi."
+      },
+      "stats": {
+        "button": "İstatistikler",
+        "chartTitle": "Uygulamanızı açan kişiler, son 30 gün",
+        "peak_one": "Günde en çok {{count}}",
+        "peak_other": "Günde en çok {{count}}",
+        "people30": "Kişi, 30 gün",
+        "people7": "Kişi, 7 gün",
+        "added": "Ekleyen",
+        "dhb30": "Ödenen DHB, 30 gün",
+        "notified30": "Gönderilen bildirim, 30 gün",
+        "rewards": "Kazanılan DHB ödülleri"
+      },
       "signin": {
         "title": "DeHub ile giriş yap",
         "body": "İnsanların web sitenize veya uygulamanıza DeHub hesaplarıyla giriş yapmasını sağlayın. Burada bir anahtar oluşturun, sonra kılavuzu izleyin.",
@@ -12507,7 +12527,10 @@
       "confirm": "Pay {{amount}} jeton",
       "sending": "Ödeme gönderiliyor...",
       "sent": "Ödenmiş {{amount}} jeton'yi {{name}}.",
-      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
+      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok.",
+      "testBadge": "Test modu",
+      "testBody": "Bu uygulama sizin, bu yüzden bu bir test: token hareket etmez ve makbuz test olarak işaretlenir.",
+      "testSent": "{{amount}} token test ödemesi. Hiçbir şey gönderilmedi."
     },
     "add": {
       "title": "{{name}}?",

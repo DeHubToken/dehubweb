@@ -12465,6 +12465,26 @@
       "rewardPaid": "Pagado",
       "rewardPending": "Pendiente",
       "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Eventos que DeHub envió a tu webhookUrl. Probar envía un evento ping.",
+        "test": "Enviar prueba",
+        "ok": "El webhook respondió {{status}}",
+        "failed": "El webhook falló: {{reason}}",
+        "none": "Aún no se ha enviado ningún webhook."
+      },
+      "stats": {
+        "button": "Estadísticas",
+        "chartTitle": "Personas que abrieron tu app, últimos 30 días",
+        "peak_one": "Máximo {{count}} al día",
+        "peak_other": "Máximo {{count}} al día",
+        "people30": "Personas, 30 días",
+        "people7": "Personas, 7 días",
+        "added": "La añadieron",
+        "dhb30": "DHB pagados, 30 días",
+        "notified30": "Notificaciones enviadas, 30 días",
+        "rewards": "Recompensas en DHB"
+      },
       "signin": {
         "title": "Iniciar sesión con DeHub",
         "body": "Permite que la gente inicie sesión en tu web o app con su cuenta de DeHub. Crea una clave aquí y sigue la guía.",
@@ -12507,7 +12527,10 @@
       "confirm": "Paga {{amount}} tokens",
       "sending": "Enviando tu pago…",
       "sent": "Pagado {{amount}} tokens a {{name}}.",
-      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos."
+      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos.",
+      "testBadge": "Modo de prueba",
+      "testBody": "Esta app es tuya, así que es una prueba: no se mueven tokens y el recibo queda marcado como prueba.",
+      "testSent": "Pago de prueba de {{amount}} tokens. No se envió nada."
     },
     "add": {
       "title": "¿Añadir {{name}}?",
