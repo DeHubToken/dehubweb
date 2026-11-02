@@ -107,6 +107,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -707,6 +708,25 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
   // auto={false} throughout: VideoCard translates title+description itself and
   // passes the result in. Left on, each of these re-translated text that had
   // already been translated — three requests per video instead of one.
+  // Feed: three lines, then "Show more" opens a capped scroll box. Post pages
+  // (clampLines < 4) keep their short inline "more".
+  if (clampLines === 4) {
+    return (
+      <div className="mb-2">
+        {description ? (
+          <FeedCaptionExpander
+            textKey={description}
+            preview={<TranslatableText publicContent text={squeezeBlankLines(description)} className="text-zinc-400 text-[14px]" as="p" auto={false} />}
+          >
+            <TranslatableText publicContent text={description} className="text-zinc-400 text-[14px]" as="p" auto={false} />
+          </FeedCaptionExpander>
+        ) : null}
+        <DehubLinkEmbeds links={dehubLinks} />
+        <FeedLinkPreviews text={normalized} />
+        <AssetRefCards refs={assetRefs} />
+      </div>
+    );
+  }
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation
     return (
