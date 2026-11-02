@@ -21,7 +21,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Loader2, ChevronDown, ImageIcon, XCircle, Zap, AudioLines, LifeBuoy } from "lucide-react";
+import { Loader2, ChevronDown, ImageIcon, XCircle, Zap, AudioLines, LifeBuoy, ArrowDown } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Copy from "@/components/ui/cut-icons/copy";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -425,6 +425,8 @@ function AssistantPageForAccount() {
   const [isLoading, setIsLoading] = useState(false);
   /** Tools the agent is running right now — shown in place of "Thinking…". */
   const [activeTools, setActiveTools] = useState<string[]>([]);
+  /** True once the answer's first words are on screen: the thinking row gives way to the text. */
+  const [streamingReply, setStreamingReply] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   useEffect(() => {
     if (!lightboxImage) return;
@@ -1023,16 +1025,42 @@ function AssistantPageForAccount() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Scroll to bottom helper
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // Follow the newest text only while the reader is at the bottom. Scrolling
+  // up while an answer streams leaves them where they are, with a
+  // "Jump to latest" button instead.
+  const followBottom = useRef(true);
+  const [showJump, setShowJump] = useState(false);
+  const lastScrollTop = useRef(0);
+  const chatViewport = () => scrollRef.current?.querySelector<HTMLElement>('[data-radix-scroll-area-viewport]') ?? null;
+  const scrollToBottom = (force = false) => {
+    if (force) { followBottom.current = true; setShowJump(false); }
+    if (!followBottom.current) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: force ? 'smooth' : 'auto', block: 'end' });
   };
+  useEffect(() => {
+    const viewport = chatViewport();
+    if (!viewport) return;
+    const onScroll = () => {
+      const top = viewport.scrollTop;
+      const fromBottom = viewport.scrollHeight - viewport.clientHeight - top;
+      if (fromBottom < 48) {
+        if (!followBottom.current) { followBottom.current = true; setShowJump(false); }
+      } else if (top < lastScrollTop.current - 2) {
+        // Only the reader moves the page up; following only ever scrolls down.
+        followBottom.current = false;
+      }
+      lastScrollTop.current = top;
+    };
+    viewport.addEventListener('scroll', onScroll, { passive: true });
+    return () => viewport.removeEventListener('scroll', onScroll);
+  });
 
   // Auto-scroll to bottom on messages change or loading state
   // Skip scrolling on initial welcome message so header stays visible
   useEffect(() => {
     if (messages.length > 1 || isLoading) {
-      scrollToBottom();
+      if (followBottom.current) scrollToBottom();
+      else if (isLoading) setShowJump(true);
     }
   }, [messages, isLoading]);
 
@@ -1660,6 +1688,7 @@ function AssistantPageForAccount() {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    scrollToBottom(true);
     // Save user message to conversation
     queueMessage(userMessage);
     
@@ -1793,6 +1822,14 @@ function AssistantPageForAccount() {
         const streamingMsgId = (Date.now() + 1).toString();
         let streamedContent = '';
         let isFirstToken = true;
+        // Empty the box the moment the message goes; it comes back only if the answer fails.
+        const sentDraft = !overrideMessage ? { text: input, image: attachedImage } : null;
+        if (sentDraft && setInput.complete(sentDraft.text, '')) setAttachedImage(null);
+        const restoreDraft = () => {
+          if (!sentDraft) return;
+          setInput((previous) => (previous.trim() ? previous : sentDraft.text));
+          if (sentDraft.image) setAttachedImage((previous) => previous ?? sentDraft.image);
+        };
 
         await streamChat({
           body: chatBody,
@@ -1806,6 +1843,7 @@ function AssistantPageForAccount() {
             if (isFirstToken) {
               // Create the assistant message on first token
               isFirstToken = false;
+              setStreamingReply(true);
               setMessages(prev => [...prev, {
                 id: streamingMsgId,
                 role: 'assistant',
@@ -1829,7 +1867,7 @@ function AssistantPageForAccount() {
             }
           },
           onDone: () => {
-            if (!overrideMessage && setInput.complete(input, '')) setAttachedImage(null);
+            setStreamingReply(false);
             setActiveTools([]);
             // Save to conversation history
             const finalMessage: Message = {
@@ -1847,6 +1885,8 @@ function AssistantPageForAccount() {
             }
           },
           onError: (err) => {
+            setStreamingReply(false);
+            restoreDraft();
             // Surface error to the UI
             const errorCode = (err as any)?.errorCode || 'UNKNOWN';
             let userErrorMessage: string;
@@ -1933,6 +1973,7 @@ function AssistantPageForAccount() {
     } finally {
       setIsLoading(false);
       setIsImageLoading(false);
+      setStreamingReply(false);
     }
   };
 
@@ -3110,7 +3151,7 @@ function AssistantPageForAccount() {
                 {isImageLoading && (
                   <ImageGenerationLoader startTime={imageLoadStartTime} />
                 )}
-                {isLoading && !isImageLoading && (
+                {isLoading && !isImageLoading && !streamingReply && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -3135,6 +3176,23 @@ function AssistantPageForAccount() {
                 <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
+            <AnimatePresence>
+              {showJump && (
+                <motion.button
+                  type="button"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.15 }}
+                  onClick={() => scrollToBottom(true)}
+                  className="fixed bottom-[150px] md:bottom-[160px] left-1/2 -translate-x-1/2 z-40 lg:absolute lg:bottom-24 flex items-center gap-1.5 h-9 px-4 rounded-full bg-zinc-800/95 border border-white/15 text-sm font-semibold text-zinc-100 shadow-lg"
+                  aria-label={_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
+                >
+                  <ArrowDown className="w-4 h-4" />
+                  {_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
+                </motion.button>
+              )}
+            </AnimatePresence>
 
           {/* Message box: above the bottom nav on phones, in the page on desktop */}
           <div className="fixed bottom-[69px] md:bottom-[75px] left-0 right-0 px-3 z-40 lg:bottom-4 lg:left-auto lg:right-auto lg:px-4 lg:w-full lg:max-w-4xl lg:mx-auto lg:relative lg:z-auto lg:-translate-y-[5.3px]">
