@@ -11,6 +11,9 @@
  *        record a DHB payment the host just sent to the app's owner wallet,
  *        after checking the transfer on chain, and answer with a signed
  *        receipt the app's server verifies against the same JWKS as sign-in.
+ *   POST { action: 'testPayment', slug, amount, memo? }
+ *        test mode: only the app's own developer, no chain transfer, and a
+ *        receipt marked `test: true` (txHash "test_…", chainId 0).
  *
  * add/remove/payment also POST a signed event to the app's webhookUrl
  * ({ event, token }, see _shared/miniapp-webhook.ts) in the background: an
@@ -47,6 +50,7 @@ interface AppRow {
   domain: string;
   name: string;
   owner_wallet: string | null;
+  submitted_by: string | null;
   status: string;
   manifest: { webhookUrl?: string; webhookEvents?: string[] } | null;
 }
@@ -55,7 +59,7 @@ async function appBySlug(db: Db, slug: unknown): Promise<AppRow | null> {
   if (typeof slug !== "string" || !/^[a-z0-9][a-z0-9-]{1,39}$/.test(slug)) return null;
   const { data } = await db
     .from("miniapp_apps")
-    .select("id, slug, domain, name, owner_wallet, status, manifest")
+    .select("id, slug, domain, name, owner_wallet, submitted_by, status, manifest")
     .eq("slug", slug)
     .maybeSingle();
   return data && data.status === "live" ? (data as AppRow) : null;
@@ -133,6 +137,24 @@ Deno.serve(async (req: Request) => {
       await db.from("miniapp_installs").delete().eq("wallet", auth.wallet).eq("app_id", app.id);
       background(deliverWebhook(db, app, auth.wallet, "app_removed"));
       return jsonResponse({ removed: true });
+    }
+
+    // Test mode: a developer paying their own app. Nothing moves on chain; the
+    // receipt and webhook say `test: true` so the app's server can tell.
+    if (body.action === "testPayment") {
+      if (auth.wallet !== app.owner_wallet && auth.wallet !== app.submitted_by) {
+        return jsonResponse({ error: "Test payments are only for the app's own developer." }, 403);
+      }
+      const amount = Number(body.amount);
+      const memo = typeof body.memo === "string" ? body.memo.slice(0, 140) : null;
+      if (!Number.isFinite(amount) || amount <= 0 || amount > MAX_PAYMENT_DHB) return jsonResponse({ error: "Bad amount." }, 400);
+      const txHash = `test_${crypto.randomUUID().replaceAll("-", "")}`;
+      const receipt = await signMiniAppToken(
+        { sub: auth.wallet, aud: app.domain, typ: "payment", test: true, amount, token: "DHB", chainId: 0, txHash, memo },
+        24 * 3600,
+      );
+      background(deliverWebhook(db, app, auth.wallet, "payment", { test: true, amount, token: "DHB", chainId: 0, txHash, memo }));
+      return jsonResponse({ txHash, chainId: 0, amount, receipt, test: true });
     }
 
     if (body.action === "payment") {

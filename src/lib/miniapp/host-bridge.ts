@@ -96,6 +96,8 @@ export interface PaymentResult {
   amount: number;
   /** Signed receipt for the app's server: iss dehub.io, aud = its domain, typ 'payment'. */
   receipt: string;
+  /** Test mode (the developer paying their own app): nothing moved on chain. */
+  test?: boolean;
 }
 
 export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: MiniAppHostOptions): void {

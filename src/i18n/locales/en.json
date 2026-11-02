@@ -12452,7 +12452,10 @@
       "confirm": "Pay {{amount}} tokens",
       "sending": "Sending your payment…",
       "sent": "Paid {{amount}} tokens to {{name}}.",
-      "noOwner": "This app has no verified wallet to pay yet."
+      "noOwner": "This app has no verified wallet to pay yet.",
+      "testBadge": "Test mode",
+      "testBody": "You own this app, so this is a test: no tokens move and the receipt is marked test.",
+      "testSent": "Test payment of {{amount}} tokens. Nothing was sent."
     },
     "add": {
       "title": "Add {{name}}?",

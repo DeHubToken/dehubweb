@@ -12,5 +12,11 @@
   ", and ignore any body whose token does not verify. Answer within 5 seconds with a 2xx. A network error or 5xx is retried once after 3 seconds. Every attempt is listed under Webhook on": "، وتجاهل أي محتوى لا يمكن التحقق من رمزه. أجب خلال 5 ثوانٍ بـ 2xx. يُعاد خطأ الشبكة أو 5xx مرة واحدة بعد 3 ثوانٍ. تظهر كل محاولة تحت Webhook في",
   ". Still treat": ". ومع ذلك اعتبر",
   "resolves only after DeHub has checked the transfer on chain, and hands your app a signed receipt to verify on your server. The": "لا يكتمل إلا بعد أن تتحقق DeHub من التحويل على السلسلة، ويعطي تطبيقك إيصالًا موقّعًا للتحقق منه على خادمك. إن",
-  "webhook is a second copy for your server, sent in the background. See": "webhook نسخة ثانية لخادمك تُرسل في الخلفية. راجع"
+  "webhook is a second copy for your server, sent in the background. See": "webhook نسخة ثانية لخادمك تُرسل في الخلفية. راجع",
+  "Test mode.": "وضع الاختبار.",
+  "When you open your own app on DeHub with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and": "عندما تفتح تطبيقك على DeHub بالمحفظة المالكة له، تكون المدفوعات محاكاة: لا يتحرك شيء على السلسلة، ويحمل الإيصال و",
+  "webhook carry": "webhook القيم",
+  "and a": "و",
+  "starting with": "يبدأ بـ",
+  ". Never deliver paid goods for a test receipt in production.": ". لا تسلّم أبدًا سلعًا مدفوعة مقابل إيصال اختبار في بيئة الإنتاج."
 }

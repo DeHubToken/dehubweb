@@ -12,5 +12,11 @@
   ", and ignore any body whose token does not verify. Answer within 5 seconds with a 2xx. A network error or 5xx is retried once after 3 seconds. Every attempt is listed under Webhook on": ", et ignorez tout corps dont le jeton n'est pas vérifié. Répondez en 5 secondes avec un 2xx. Une erreur réseau ou un 5xx est relancé une fois après 3 secondes. Chaque tentative est listée sous Webhook sur",
   ". Still treat": ". Considérez quand même",
   "resolves only after DeHub has checked the transfer on chain, and hands your app a signed receipt to verify on your server. The": "ne se résout qu'après que DeHub a vérifié le transfert sur la chaîne, et remet à votre app un reçu signé à vérifier sur votre serveur. Le webhook",
-  "webhook is a second copy for your server, sent in the background. See": "est une seconde copie pour votre serveur, envoyée en arrière-plan. Voir"
+  "webhook is a second copy for your server, sent in the background. See": "est une seconde copie pour votre serveur, envoyée en arrière-plan. Voir",
+  "Test mode.": "Mode test.",
+  "When you open your own app on DeHub with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and": "Quand vous ouvrez votre propre app sur DeHub avec le portefeuille propriétaire, les paiements sont simulés : rien ne bouge sur la chaîne, et le reçu et le",
+  "webhook carry": "webhook portent",
+  "and a": "et un",
+  "starting with": "commençant par",
+  ". Never deliver paid goods for a test receipt in production.": ". Ne livrez jamais de biens payants pour un reçu de test en production."
 }

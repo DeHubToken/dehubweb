@@ -46,6 +46,8 @@ export interface PayResult {
   amount: number;
   /** JWT, typ "payment". Send it to your server and verify it there. */
   receipt: string;
+  /** True in test mode (you paying your own app): nothing moved on chain. */
+  test?: boolean;
 }
 
 export type HapticStyle = 'light' | 'medium' | 'heavy';

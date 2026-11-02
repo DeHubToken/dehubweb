@@ -12531,7 +12531,10 @@
       "confirm": "Payez {{amount}} jetons",
       "sending": "Envoyez votre paiement…",
       "sent": "Paiement {{amount}} jetons à {{name}}.",
-      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer."
+      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer.",
+      "testBadge": "Mode test",
+      "testBody": "Cette app est à vous, c'est donc un test : aucun jeton ne bouge et le reçu est marqué test.",
+      "testSent": "Paiement test de {{amount}} jetons. Rien n'a été envoyé."
     },
     "add": {
       "title": "Ajouter {{name}} ?",

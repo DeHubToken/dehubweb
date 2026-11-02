@@ -168,6 +168,11 @@ export function recordPayment(input: {
   return userCall({ action: 'payment', ...input });
 }
 
+/** Test mode: the app's own developer "pays" without moving DHB; the receipt says test: true. */
+export function recordTestPayment(input: { slug: string; amount: number; memo: string | null }): Promise<{ txHash: string; chainId: number; amount: number; receipt: string; test: true }> {
+  return userCall({ action: 'testPayment', ...input });
+}
+
 /** A fresh notify key for an app the caller owns. Shown once. */
 export async function createNotifyKey(slug: string): Promise<string> {
   return (await registryCall<{ key: string }>({ action: 'notifyKey', slug })).key;
