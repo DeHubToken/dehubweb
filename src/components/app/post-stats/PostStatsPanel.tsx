@@ -41,7 +41,11 @@ function WatchRow({ label, s }: { label: string; s: PostWatchSummary | null }) {
   );
 }
 
-export function PostStatsPanel({ tokenId }: { tokenId: string }) {
+export function PostStatsPanel({ tokenId, views }: {
+  tokenId: string;
+  /** The post's view count, the same number its card shows. */
+  views?: number;
+}) {
   const { t } = useTranslation();
   const { data, isLoading, isError } = usePostStats(tokenId);
   const best = useQuery({ queryKey: ['post-stats-best-times'], queryFn: getBestTimes, staleTime: 10 * 60_000, retry: false });
@@ -76,7 +80,13 @@ export function PostStatsPanel({ tokenId }: { tokenId: string }) {
     <div className="space-y-6" data-post-stats-panel>
       <StatsSection title={t('postStats.reach', 'Reach')}>
         <div className="grid grid-cols-3 gap-2">
-          <StatTile label={t('postStats.people', 'People')} value={fmt(reach.people)} sub={<VsUsual value={reach.people} usual={usual?.people} />} />
+          {/* Lead with the number the post's card shows, so the two never
+              disagree; unique people sit under it. */}
+          {views != null ? (
+            <StatTile label={t('postInfo.views', 'Views')} value={fmt(Math.max(views, reach.plays))} sub={t('postStats.uniquePeople', { defaultValue: '{{n}} people', n: fmt(reach.people) })} />
+          ) : (
+            <StatTile label={t('postStats.people', 'People')} value={fmt(reach.people)} sub={<VsUsual value={reach.people} usual={usual?.people} />} />
+          )}
           <StatTile label={t('postStats.members', 'Members')} value={fmt(reach.signedIn)} sub={t('postStats.signedIn', 'signed in')} />
           <StatTile label={t('postStats.visitors', 'Signed out')} value={fmt(reach.signedOut)} sub={t('postStats.noAccount', 'no account')} />
           <StatTile label={t('postStats.plays', 'Plays')} value={fmt(reach.plays)} sub={t('postStats.withRepeats', { defaultValue: '{{n}} repeats', n: fmt(reach.repeats) })} />
