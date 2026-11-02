@@ -1516,7 +1516,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const chromeInert = overlaysHidden;
 
   const handleCopyLink = () => {
-    const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
+    const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.articleSlug || currentShort.id}`);
     navigator.clipboard.writeText(url);
     toast.success(_copy("copy.e91de547a0b8", { defaultValue: "Post URL copied to clipboard" }));
     // A copy is a share: it counts once per actor per post, next to reposts.
@@ -2467,7 +2467,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       <ShareToDmModal
         open={shareToDmOpen}
         onOpenChange={setShareToDmOpen}
-        url={viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`)}
+        url={viewerShareUrl(`${window.location.origin}/app/post/${currentShort.articleSlug || currentShort.id}`)}
       />
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent scrollable glass className="px-4 pb-6">

@@ -1088,6 +1088,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       return {
         id,
         type: 'short' as const,
+        articleSlug: (item as any).articleSlug,
         username: item.minterDisplayName || item.minterUsername || 'user',
         verified: (item as any).minterUser?.isVerified || false,
         avatar: avatarUrl || undefined,
