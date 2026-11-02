@@ -7,7 +7,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-// @ts-expect-error plain .mjs build script
 import { contentFor } from '../../scripts/build-developer-docs-content.mjs';
 import developerDocs from '@/data/developer-docs.json';
 
