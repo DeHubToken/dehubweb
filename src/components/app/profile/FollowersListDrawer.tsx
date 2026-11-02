@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -104,6 +104,154 @@ function mapFollowListItem(item: FollowListItem & { isPrivate?: boolean }): User
     badgeBalance: item.hideBadgeAndBalance ? 0 : item.badgeBalance,
   };
 }
+
+interface FollowListRowProps {
+  user: UserListItem;
+  isNew: boolean;
+  isSelf: boolean;
+  canGroup: boolean;
+  inGroup: boolean;
+  followDisabled: boolean;
+  onUserClick: (user: UserListItem) => void;
+  onFollowToggle: (user: UserListItem, e: React.MouseEvent) => void;
+  onToggleGrouping: (address: string, clearDraft?: boolean) => void;
+}
+
+/**
+ * One person in the list. Memoised, with identity-stable handlers from the
+ * drawer, so tapping Follow re-renders the row that changed and nothing else.
+ */
+const FollowListRow = memo(function FollowListRow({
+  user,
+  isNew,
+  isSelf,
+  canGroup,
+  inGroup,
+  followDisabled,
+  onUserClick,
+  onFollowToggle,
+  onToggleGrouping,
+}: FollowListRowProps) {
+  const { t: _copy } = _useCopy();
+  const { t } = useTranslation();
+  return (
+    <button
+      onClick={() => onUserClick(user)}
+      className={cn(
+        'w-full flex items-center gap-3 p-3 rounded-xl backdrop-blur-md border hover:bg-white/10 transition-colors text-left',
+        isNew ? 'bg-white/10 border-white/30 ring-1 ring-white/40' : 'bg-white/5 border-white/10',
+      )}
+    >
+      <Avatar className="w-[4.25rem] h-[4.25rem] rounded-xl shrink-0 self-start">
+        {user.avatarUrl ? (
+          <AvatarImage src={user.avatarUrl} alt={user.displayName || _copy("copy.b512d97e7cbf", { defaultValue: "User" })} />
+        ) : null}
+        <AvatarFallback className="bg-zinc-800 text-white rounded-xl text-lg">
+          {(user.displayName || user.username || '?')[0].toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      
+      {/* Name, handle and relationship get a line each. The handle
+          used to share its row with the Follows you chip, and both
+          were truncated, so an ordinary username was cut in half to
+          make room for a badge. */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-1.5">
+          <BadgedName
+            badgeBalance={user.badgeBalance}
+            username={user.username}
+            className="font-semibold text-white break-words line-clamp-2"
+          >
+            {user.displayName || user.username || truncateAddress(user.address)}
+          </BadgedName>
+          {user.isVerified && <VerifiedBadge className="w-4 h-4 shrink-0 mt-1" />}
+        </div>
+        {user.username ? (
+          <div className="text-zinc-500 text-sm break-all">@{user.username.replace('@', '')}</div>
+        ) : (
+          <div className="text-zinc-600 text-sm break-all font-mono">{truncateAddress(user.address)}</div>
+        )}
+        {(isNew || (user.followsYou && !isSelf)) && (
+          <div className="mt-1 flex items-center gap-1.5">
+            {isNew && (
+              <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded border border-current text-white font-semibold">
+                {t('follow.new')}
+              </span>
+            )}
+            {user.followsYou && !isSelf && (
+              <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
+                {t('follow.followsYou')}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Group filing. Sits before the follow button so the
+          destructive-ish action stays where the thumb expects it. */}
+      {canGroup && !isSelf && (
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label={t('follow.addToGroup', { name: user.displayName || user.username || t('follow.someone') })}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleGrouping(user.address);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            e.preventDefault();
+            e.stopPropagation();
+            onToggleGrouping(user.address, false);
+          }}
+          className={cn(
+            'shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-colors cursor-pointer',
+            inGroup
+              ? 'bg-white/15 text-white'
+              : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white',
+          )}
+        >
+          <FolderPlus className="w-4 h-4" />
+        </span>
+      )}
+
+      {/* Follow/Unfollow button - hide for self */}
+      {!isSelf && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={(e) => onFollowToggle(user, e)}
+          disabled={user.isPending || followDisabled}
+          className={cn(
+            "shrink-0 rounded-lg",
+            user.isFollowing
+              ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
+              : user.isPending
+                ? "bg-zinc-800 text-zinc-400 cursor-default"
+                : "bg-white/10 text-white hover:bg-white/20"
+          )}
+        >
+          {user.isFollowing ? (
+            <>
+              <UserMinus className="w-4 h-4 mr-1" />
+              {t('follow.following')}
+            </>
+          ) : user.isPending ? (
+            <>
+              <Clock className="w-4 h-4 mr-1" />
+              {t('follow.requested')}
+            </>
+          ) : (
+            <>
+              <UserPlus className="w-4 h-4 mr-1" />
+              {user.followsYou ? t('follow.followBack') : t('follow.follow')}
+            </>
+          )}
+        </Button>
+      )}
+    </button>
+  );
+});
 
 export function FollowersListDrawer({
   open,
@@ -481,13 +629,35 @@ export function FollowersListDrawer({
     });
   };
 
+  // Rows are memoised; these keep their props identity-stable so a Follow tap
+  // only re-renders the row it changed.
+  const handleUserClickRef = useRef(handleUserClick);
+  handleUserClickRef.current = handleUserClick;
+  const handleFollowToggleRef = useRef(handleFollowToggle);
+  handleFollowToggleRef.current = handleFollowToggle;
+  const onUserClickStable = useCallback((user: UserListItem) => handleUserClickRef.current(user), []);
+  const onFollowToggleStable = useCallback(
+    (user: UserListItem, e: React.MouseEvent) => handleFollowToggleRef.current(user, e),
+    [],
+  );
+  const newGroupNameRef = useRef({ value: newGroupName, set: setNewGroupName });
+  newGroupNameRef.current = { value: newGroupName, set: setNewGroupName };
+  const onToggleGrouping = useCallback((address: string, clearDraft = true) => {
+    setGroupingAddress(prev => (prev === address ? null : address));
+    if (clearDraft) newGroupNameRef.current.set.complete(newGroupNameRef.current.value, '');
+  }, []);
+  const groupMemberSet = useMemo(
+    () => new Set(groups.flatMap(g => g.members.map(m => m.toLowerCase()))),
+    [groups],
+  );
+
   const isCurrentUser = useCallback((address: string) =>
     currentUserAddress?.toLowerCase() === address.toLowerCase(), [currentUserAddress]);
 
   // Cross-surface follow overrides win over the fetched list state
   const displayUsers = useMemo(() => users.map(u => {
     const override = followOverrides.get(u.address.toLowerCase());
-    return override === undefined ? u : { ...u, isFollowing: override };
+    return override === undefined || override === u.isFollowing ? u : { ...u, isFollowing: override };
   }), [users, followOverrides]);
 
   // Followers a grouped notification was about. The list is newest first by
@@ -791,122 +961,17 @@ export function FollowersListDrawer({
                 );
                 return (
                 <div key={user.address}>
-                <button
-                  onClick={() => handleUserClick(user)}
-                  className={cn(
-                    'w-full flex items-center gap-3 p-3 rounded-xl backdrop-blur-md border hover:bg-white/10 transition-colors text-left',
-                    isNew ? 'bg-white/10 border-white/30 ring-1 ring-white/40' : 'bg-white/5 border-white/10',
-                  )}
-                >
-                  <Avatar className="w-[4.25rem] h-[4.25rem] rounded-xl shrink-0 self-start">
-                    {user.avatarUrl ? (
-                      <AvatarImage src={user.avatarUrl} alt={user.displayName || _copy("copy.b512d97e7cbf", { defaultValue: "User" })} />
-                    ) : null}
-                    <AvatarFallback className="bg-zinc-800 text-white rounded-xl text-lg">
-                      {(user.displayName || user.username || '?')[0].toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  
-                  {/* Name, handle and relationship get a line each. The handle
-                      used to share its row with the Follows you chip, and both
-                      were truncated, so an ordinary username was cut in half to
-                      make room for a badge. */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-1.5">
-                      <BadgedName
-                        badgeBalance={user.badgeBalance}
-                        username={user.username}
-                        className="font-semibold text-white break-words line-clamp-2"
-                      >
-                        {user.displayName || user.username || truncateAddress(user.address)}
-                      </BadgedName>
-                      {user.isVerified && <VerifiedBadge className="w-4 h-4 shrink-0 mt-1" />}
-                    </div>
-                    {user.username ? (
-                      <div className="text-zinc-500 text-sm break-all">@{user.username.replace('@', '')}</div>
-                    ) : (
-                      <div className="text-zinc-600 text-sm break-all font-mono">{truncateAddress(user.address)}</div>
-                    )}
-                    {(isNew || (user.followsYou && !isCurrentUser(user.address))) && (
-                      <div className="mt-1 flex items-center gap-1.5">
-                        {isNew && (
-                          <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded border border-current text-white font-semibold">
-                            {t('follow.new')}
-                          </span>
-                        )}
-                        {user.followsYou && !isCurrentUser(user.address) && (
-                          <span className="whitespace-nowrap text-xs px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                            {t('follow.followsYou')}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Group filing. Sits before the follow button so the
-                      destructive-ish action stays where the thumb expects it. */}
-                  {canGroup && !isCurrentUser(user.address) && (
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      aria-label={t('follow.addToGroup', { name: user.displayName || user.username || t('follow.someone') })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setGroupingAddress(prev => (prev === user.address ? null : user.address));
-                        setNewGroupName.complete(newGroupName, '');
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key !== 'Enter' && e.key !== ' ') return;
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setGroupingAddress(prev => (prev === user.address ? null : user.address));
-                      }}
-                      className={cn(
-                        'shrink-0 flex items-center justify-center w-9 h-9 rounded-lg transition-colors cursor-pointer',
-                        groups.some(g => g.members.includes(user.address.toLowerCase()))
-                          ? 'bg-white/15 text-white'
-                          : 'bg-white/5 text-zinc-400 hover:bg-white/10 hover:text-white',
-                      )}
-                    >
-                      <FolderPlus className="w-4 h-4" />
-                    </span>
-                  )}
-
-                  {/* Follow/Unfollow button - hide for self */}
-                  {!isCurrentUser(user.address) && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => handleFollowToggle(user, e)}
-                      disabled={user.isPending || isResolvingStatus}
-                      className={cn(
-                        "shrink-0 rounded-lg",
-                        user.isFollowing
-                          ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
-                          : user.isPending
-                            ? "bg-zinc-800 text-zinc-400 cursor-default"
-                            : "bg-white/10 text-white hover:bg-white/20"
-                      )}
-                    >
-                      {user.isFollowing ? (
-                        <>
-                          <UserMinus className="w-4 h-4 mr-1" />
-                          {t('follow.following')}
-                        </>
-                      ) : user.isPending ? (
-                        <>
-                          <Clock className="w-4 h-4 mr-1" />
-                          {t('follow.requested')}
-                        </>
-                      ) : (
-                        <>
-                          <UserPlus className="w-4 h-4 mr-1" />
-                          {user.followsYou ? t('follow.followBack') : t('follow.follow')}
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </button>
+                <FollowListRow
+                  user={user}
+                  isNew={isNew}
+                  isSelf={isCurrentUser(user.address)}
+                  canGroup={canGroup}
+                  inGroup={groupMemberSet.has(user.address.toLowerCase())}
+                  followDisabled={isResolvingStatus}
+                  onUserClick={onUserClickStable}
+                  onFollowToggle={onFollowToggleStable}
+                  onToggleGrouping={onToggleGrouping}
+                />
 
                 {/* Group picker, inline under the row. Deliberately not a
                     nested drawer: a vaul Root inside an open Root fights the
