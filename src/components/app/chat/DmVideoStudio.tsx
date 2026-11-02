@@ -15,6 +15,7 @@ import {
 } from '@/lib/dm-video-options';
 import { DESTRUCT_CHOICES, destructLabel, destructShort, type DmDestructChoice } from '@/lib/dm-destruct';
 import { DmVideoFrame } from './DmVideo';
+import { LockPriceControl, LOCK_QUICK_PRICES } from './LockPriceControl';
 
 type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'hide' | 'timer';
 const FRAME_COUNT = 10;
@@ -138,7 +139,12 @@ export function DmVideoStudio({
   sendDisabled,
   destruct = null,
   onDestructChange,
+  lockPrice = null,
+  onLockPriceChange,
 }: {
+  /** Pay-to-unlock price in DHB; null = not locked. Absent handler = locking not offered here. */
+  lockPrice?: number | null;
+  onLockPriceChange?: (p: number | null) => void;
   destruct?: DmDestructChoice | null;
   onDestructChange?: (c: DmDestructChoice | null) => void;
   open: boolean;
@@ -237,7 +243,7 @@ export function DmVideoStudio({
             videoRef={videoRef}
             autoPlay={open}
             loop
-            blurred={options.hidden === 'reveal'}
+            blurred={options.hidden === 'reveal' || lockPrice != null}
           >
             {options.hidden === 'reveal' && (
               <span className="absolute left-1/2 top-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold">
@@ -245,6 +251,11 @@ export function DmVideoStudio({
               </span>
             )}
             {destruct && <DestructChip choice={destruct} />}
+            {lockPrice != null && (
+              <span className="absolute bottom-2 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold">
+                <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedFor', { defaultValue: 'Unlock for {{value1}} DHB', value1: lockPrice })}
+              </span>
+            )}
           </DmVideoFrame>
         </div>
 
@@ -339,26 +350,33 @@ export function DmVideoStudio({
             {tab === 'hide' && (
               <div className="grid grid-cols-3 gap-1.5">
                 <HideOption
-                  active={options.hidden !== 'reveal'}
-                  onClick={() => set({ hidden: undefined })}
+                  active={options.hidden !== 'reveal' && lockPrice == null}
+                  onClick={() => { set({ hidden: undefined }); onLockPriceChange?.(null); }}
                   icon={<Eye className="h-3.5 w-3.5" />}
                   title={_copy('dmVideo.showNormally', { defaultValue: 'Show normally' })}
                   body={_copy('dmVideo.showNormallyBody', { defaultValue: 'They see it right away' })}
                 />
                 <HideOption
-                  active={options.hidden === 'reveal'}
-                  onClick={() => set({ hidden: 'reveal' })}
+                  active={options.hidden === 'reveal' && lockPrice == null}
+                  onClick={() => { set({ hidden: 'reveal' }); onLockPriceChange?.(null); }}
                   icon={<EyeOff className="h-3.5 w-3.5" />}
                   title={_copy('dmVideo.hideUntilTap', { defaultValue: 'Hide until tapped' })}
                   body={_copy('dmVideo.hideUntilTapBody', { defaultValue: 'Blurred until they tap it' })}
                 />
                 <HideOption
-                  disabled
+                  disabled={!onLockPriceChange}
+                  active={lockPrice != null}
+                  onClick={() => { set({ hidden: undefined }); if (lockPrice == null) onLockPriceChange?.(LOCK_QUICK_PRICES[1]); }}
                   icon={<Lock className="h-3.5 w-3.5" />}
                   title={_copy('dmVideo.hidePrice', { defaultValue: 'Hide behind a price' })}
-                  body={_copy('dmVideo.soon', { defaultValue: 'Coming soon' })}
+                  body={onLockPriceChange
+                    ? _copy('dmVideo.hidePriceBody', { defaultValue: 'Blurred until they pay you' })
+                    : _copy('dmVideo.priceUnavailable', { defaultValue: 'Not in this chat' })}
                 />
               </div>
+            )}
+            {tab === 'hide' && lockPrice != null && onLockPriceChange && (
+              <LockPriceControl value={lockPrice} onChange={onLockPriceChange} kind="video" />
             )}
             {tab === 'timer' && onDestructChange && (
               <div className="space-y-2">
