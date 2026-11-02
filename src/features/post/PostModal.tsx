@@ -422,7 +422,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setSelectedCategory={actions.setSelectedCategory}
         markCategorySaved={actions.markCategorySaved}
         showTitle={state.showTitle}
-        setShowTitle={actions.setShowTitle}
+        setShowTitle={actions.setShowTitlePref}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
         quotePolicy={state.quotePolicy}
