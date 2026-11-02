@@ -19,10 +19,15 @@ interface VideoTrimmerProps {
   videoUrl: string;
   duration: number;
   fileName?: string;
+  /** A trim already applied, so reopening starts where it was left. */
+  initialStart?: number;
+  initialEnd?: number;
+  /** Use the frame under the playhead as the post's cover. */
+  onPickCover?: (frameUrl: string) => void;
   onApply: (trimStart: number, trimEnd: number) => void;
 }
 
-const PLAYBACK_SPEEDS = [0.1, 0.2, 0.3, 0.4, 0.5, 1, 1.5, 2] as const;
+const PLAYBACK_SPEEDS = [0.5, 1, 2] as const;
 type PlaybackSpeed = typeof PLAYBACK_SPEEDS[number];
 
 const ARROW_STEP = 0.5;
@@ -40,13 +45,17 @@ export function VideoTrimmer({
   videoUrl,
   duration,
   fileName,
+  initialStart,
+  initialEnd,
+  onPickCover,
   onApply,
 }: VideoTrimmerProps) {
   const { t: _copy } = _useCopy();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [trimStart, setTrimStart] = useState(0);
-  const [trimEnd, setTrimEnd] = useState(duration);
+  const [trimStart, setTrimStart] = useState(initialStart ?? 0);
+  const [trimEnd, setTrimEnd] = useState(initialEnd ?? duration);
+  const [coverAt, setCoverAt] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState<'start' | 'end' | 'window' | null>(null);
   const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(1);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
@@ -259,10 +268,31 @@ export function VideoTrimmer({
     setCurrentTime(clampedTime);
   };
 
+  /** Grab the frame on screen at full size and hand it over as the cover. */
+  const handleSetCover = () => {
+    const video = videoRef.current;
+    if (!video || !onPickCover || !video.videoWidth) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const at = video.currentTime;
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      onPickCover(URL.createObjectURL(blob));
+      setCoverAt(at);
+      toast.success(_copy("post.trim.coverSet", { defaultValue: "Cover set" }));
+    }, 'image/jpeg', 0.9);
+  };
+
   const handleApply = () => {
-    onApply(trimStart, trimEnd);
+    // Keeping the whole clip is no trim at all.
+    const whole = trimStart < 0.05 && duration - trimEnd < 0.05;
+    if (whole) onApply(0, duration);
+    else onApply(trimStart, trimEnd);
     onClose();
-    toast.success(_copy("copy.817e82cace2e", { defaultValue: "Video trimmed!" }));
   };
 
   const selectionDuration = trimEnd - trimStart;
@@ -313,8 +343,8 @@ export function VideoTrimmer({
             </div>
           )}
 
-          {/* Video Preview */}
-          <div className="relative aspect-video mb-4 rounded-xl overflow-hidden bg-black">
+          {/* Video Preview — the clip's own shape, capped so the strip stays in view */}
+          <div className="relative h-[42dvh] max-h-[420px] mb-4 rounded-xl overflow-hidden bg-black">
             <video
               ref={videoRef}
               src={videoUrl}
@@ -453,6 +483,15 @@ export function VideoTrimmer({
                   </div>
                 </div>
 
+                {/* Cover pin */}
+                {coverAt !== null && (
+                  <div
+                    className="absolute inset-y-0 w-0.5 bg-[#ffd84d] pointer-events-none"
+                    style={{ left: `${getPositionFromTime(coverAt)}%` }}
+                    aria-hidden
+                  />
+                )}
+
                 {/* Playhead */}
                 {currentTime >= trimStart && currentTime <= trimEnd && (
                   <div
@@ -471,7 +510,16 @@ export function VideoTrimmer({
           </div>
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-3 sm:gap-4 mt-6">
+          <div className="flex items-center justify-center flex-wrap gap-3 sm:gap-4 mt-6">
+            {onPickCover && (
+              <button
+                type="button"
+                onClick={handleSetCover}
+                className="px-3 py-1.5 rounded-xl text-xs font-medium bg-white text-black hover:bg-zinc-200 transition-colors"
+              >
+                {_copy("post.trim.useFrameAsCover", { defaultValue: "Use this frame as cover" })}
+              </button>
+            )}
             {/* Playback Speed */}
             <div className="flex items-center gap-1 sm:gap-2">
               {PLAYBACK_SPEEDS.map(speed => (
