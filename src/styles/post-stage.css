@@ -439,6 +439,13 @@ html[data-theme='light'] [data-comments-split],
 html[data-system-tone='light'] [data-comments-split] {
   border-top-color: rgb(0 0 0 / 0.08);
 }
+/* Feed cards: the feed above the sheet only takes a tap, which closes it. */
+[data-comments-split-catch] {
+  position: fixed;
+  inset: 0 0 50dvh 0;
+  z-index: 29;
+  touch-action: none;
+}
 [data-comments-split-handle] {
   flex: none;
   height: 1.25rem;

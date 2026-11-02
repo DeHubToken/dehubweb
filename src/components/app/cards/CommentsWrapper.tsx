@@ -1,10 +1,9 @@
 /**
  * CommentsWrapper
  * ===============
- * Phone (<md): full-width bottom-sheet drawer, the same shape as the mobile
- *   app's comment sheet. Inline expansion left a nested reply with ~200px of
- *   card to live in and its action row running off the right edge; the sheet
- *   gives the thread the whole viewport width and 82% of its height.
+ * Phone (<md): the half-screen comments split (Pill Split), like a post page
+ *   with its comments open: the card slides up under the top chrome and the
+ *   thread takes the full width of the bottom half, the same as the app.
  * Feed cards (md and up): inline expandable section that grows the bottom
  *   of the post bento — no drawer, no scrim, the card just gets taller.
  * Immersive surfaces (fullscreen shorts / immersive video, `immersive` prop):
@@ -21,6 +20,7 @@ import { dismissKeyboard, useKeyboardSafeSheet } from '@/hooks/use-keyboard-open
 import { lazy, Suspense, useState, useEffect, useRef, useCallback, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ReplyPolicy } from '@/lib/api/dehub/types';
+import { PostCommentsSplit } from '@/components/app/post-stage/PostCommentsSplit';
 
 // The thread itself is a lazy chunk. This wrapper sits inside every feed card,
 // so CommentsSection (the composer, reactions, likers drawer, translation…)
@@ -321,87 +321,53 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
   // Both sheets put the composer at their bottom edge, which on iOS is behind
   // the keyboard: see useKeyboardSafeSheet for why `dvh` and `bottom: 0` are
   // not enough there.
-  const { style: keyboardStyle } = useKeyboardSafeSheet(open && (phoneSheet || immersiveSheet));
+  const { style: keyboardStyle } = useKeyboardSafeSheet(open && immersiveSheet);
+  const splitAnchorRef = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!phoneSheet || !open) return;
+    const card = splitAnchorRef.current?.closest<HTMLElement>('[data-feed-item]') ?? splitAnchorRef.current?.parentElement;
+    if (card) bringCardUnderChrome(card);
+  }, [phoneSheet, open]);
   const guard = useCloseGuard(onOpenChange);
   // Inline expansion only — the immersive drawer sits over fullscreen media and
   // should keep the scroll to itself.
   const wheelChainRef = useWheelChaining(open && !isPhone && !(isTabletOrMobile && immersive));
 
-  // Phone, non-immersive: the sheet. Modal, because unlike the immersive case
-  // there is nothing behind it worth keeping visible, and the scrim is what
-  // makes the thread read as its own surface instead of part of the card.
+  // Phone, non-immersive: the half-screen split (Pill Split), right over the
+  // feed. The card slides up under the top chrome first, so the post stays in
+  // view above its comments, the same picture as a post page with them open.
   if (phoneSheet) {
     return (
-      <Drawer
-        open={open}
-        onOpenChange={guard.handleOpenChange}
-        modal
-        // Unsent text turns the drag-down off rather than letting vaul run its
-        // close path and be refused — `closeDrawer` does not put the transform
-        // back, so a declined drag would leave the sheet stranded half off the
-        // screen. useCloseGuard's dragProps warn in its place.
-        dismissible={!guard.hasUnsent}
-        // vaul's own keyboard handling writes height/bottom onto this same
-        // node from a `resize` listener that never sees iOS's viewport pan.
-        // The geometry below is measured; the two cannot both be right.
-        repositionInputs={false}
-      >
-        <DrawerContent
-          glass
-          hideHandle={false}
-          data-comments-wrapper
-          className="flex flex-col overflow-hidden"
-          style={{
-            height: '82dvh',
-            maxHeight: 'calc(100dvh - env(safe-area-inset-top) - 8px)',
-            ...keyboardStyle,
-          }}
-          onPointerDownOutside={e => {
-            if (!guard.hasUnsent) return;
-            e.preventDefault();
-            guard.requestClose();
-          }}
-          onEscapeKeyDown={e => {
-            if (!guard.hasUnsent) return;
-            e.preventDefault();
-            guard.requestClose();
-          }}
-          {...guard.dragProps}
-        >
-          {/* One padding step and no nested card: the indent budget the replies
-              spend is the viewport's, not what a bento left over. The section itself
-              carries px-2 on mobile, so this is one 12px gutter, not two. */}
-          <div
-            className="flex-1 min-h-0 h-full px-1"
-            style={{
-              // Above the keyboard there is no home indicator to clear, and
-              // every pixel spent here comes off the composer.
-              paddingBottom: keyboardStyle ? 4 : 'max(env(safe-area-inset-bottom), 12px)',
-            }}
-            data-vaul-no-drag
-          >
-            <Suspense fallback={null}>
-              {/* Keyed on the post, here and below: a host that swaps the post
-                  under a mounted wrapper would otherwise hand the section's
-                  draft, reply target and optimistic rows to the next post. */}
-              <CommentsSection
-                key={tokenId}
-                tokenId={tokenId}
-                onClose={guard.requestClose}
-                initialTab={initialTab}
-                commentsDisabled={commentsDisabled}
-                replyPolicy={replyPolicy}
-                forKids={forKids}
-                postAuthorAddress={postAuthorAddress}
-                onDirtyChange={guard.onDirtyChange}
-              />
-            </Suspense>
-          </div>
-          {guard.confirming && (
-            <DiscardGuard onKeepWriting={guard.keepWriting} onDiscard={guard.discard} />
+      <>
+        <span ref={splitAnchorRef} hidden />
+        <AnimatePresence>
+          {open && (
+            <PostCommentsSplit key="feed-comments-split" onClose={guard.requestClose} closeOnTapAbove>
+              <div data-comments-wrapper className="px-1">
+                <Suspense fallback={null}>
+                  {/* Keyed on the post: a host that swaps the post under a
+                      mounted wrapper would otherwise hand the section's draft,
+                      reply target and optimistic rows to the next post. */}
+                  <CommentsSection
+                    key={tokenId}
+                    tokenId={tokenId}
+                    onClose={guard.requestClose}
+                    initialTab={initialTab}
+                    commentsDisabled={commentsDisabled}
+                    replyPolicy={replyPolicy}
+                    forKids={forKids}
+                    postAuthorAddress={postAuthorAddress}
+                    onDirtyChange={guard.onDirtyChange}
+                  />
+                </Suspense>
+              </div>
+              {guard.confirming && (
+                <DiscardGuard onKeepWriting={guard.keepWriting} onDiscard={guard.discard} />
+              )}
+            </PostCommentsSplit>
           )}
-        </DrawerContent>
-      </Drawer>
+        </AnimatePresence>
+      </>
     );
   }
 
@@ -543,4 +509,22 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
       )}
     </AnimatePresence>
   );
+}
+
+/**
+ * Slides a feed card so its top sits just under whatever top chrome is on
+ * screen (the logo bar and the feed pill), leaving the bottom half for the
+ * comments split. scroll-margin does the offset, so it works whichever
+ * element scrolls the card.
+ */
+function bringCardUnderChrome(card: HTMLElement) {
+  let top = 0;
+  for (const el of document.querySelectorAll<HTMLElement>('[data-mobile-header], [data-feed-nav]')) {
+    const box = el.getBoundingClientRect();
+    if (box.height > 0 && box.bottom > 0 && box.top < window.innerHeight / 3) top = Math.max(top, box.bottom);
+  }
+  const previous = card.style.scrollMarginTop;
+  card.style.scrollMarginTop = `${Math.round(top + 8)}px`;
+  card.scrollIntoView?.({ block: 'start', behavior: 'smooth' });
+  card.style.scrollMarginTop = previous;
 }
