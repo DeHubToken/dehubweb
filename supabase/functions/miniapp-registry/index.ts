@@ -500,6 +500,15 @@ async function deliveries(req: Request, slug: unknown): Promise<Response> {
   return jsonResponse({ deliveries: data ?? [] });
 }
 
+/** Opens, adds, payments and notifications for the last 30 days. */
+async function stats(req: Request, slug: unknown): Promise<Response> {
+  const own = await ownApp(req, slug);
+  if ("response" in own) return own.response!;
+  const { data, error } = await own.db.rpc("miniapp_app_stats", { p_app: own.app.id });
+  if (error) throw error;
+  return jsonResponse({ stats: data });
+}
+
 async function mine(req: Request): Promise<Response> {
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
@@ -533,6 +542,7 @@ Deno.serve(async (req: Request) => {
     if (body?.action === "notifyKey") return await notifyKey(req, body.slug);
     if (body?.action === "webhookTest") return await webhookTest(req, body.slug);
     if (body?.action === "deliveries") return await deliveries(req, body.slug);
+    if (body?.action === "stats") return await stats(req, body.slug);
     return jsonResponse({ error: "Unknown action." }, 400);
   } catch (error) {
     console.error("[miniapp-registry]", error);

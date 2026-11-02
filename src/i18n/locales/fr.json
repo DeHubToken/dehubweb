@@ -12477,6 +12477,18 @@
         "failed": "Échec du webhook : {{reason}}",
         "none": "Aucun webhook envoyé pour l'instant."
       },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "Personnes ayant ouvert votre app, 30 derniers jours",
+        "peak_one": "Pic de {{count}} par jour",
+        "peak_other": "Pic de {{count}} par jour",
+        "people30": "Personnes, 30 jours",
+        "people7": "Personnes, 7 jours",
+        "added": "L'ont ajoutée",
+        "dhb30": "DHB payés, 30 jours",
+        "notified30": "Notifications envoyées, 30 jours",
+        "rewards": "Récompenses en DHB"
+      },
       "signin": {
         "title": "Se connecter avec DeHub",
         "body": "Permettez aux gens de se connecter à votre site ou app avec leur compte DeHub. Créez une clé ici, puis suivez le guide.",

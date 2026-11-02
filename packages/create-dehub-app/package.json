@@ -1,0 +1,12 @@
+{
+  "name": "create-dehub-app",
+  "version": "1.0.0",
+  "description": "Start a DeHub mini app: plain HTML, React + Vite, or a Node server with sign-in, payments and webhooks.",
+  "license": "MIT",
+  "homepage": "https://dehub.io/docs/examples",
+  "repository": { "type": "git", "url": "https://github.com/DeHubToken/dehubweb.git", "directory": "packages/create-dehub-app" },
+  "type": "module",
+  "bin": { "create-dehub-app": "index.mjs" },
+  "files": ["index.mjs", "templates"],
+  "engines": { "node": ">=18" }
+}

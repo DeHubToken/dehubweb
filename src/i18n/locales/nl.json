@@ -12722,6 +12722,18 @@
         "failed": "Webhook mislukt: {{reason}}",
         "none": "Nog geen webhooks verstuurd."
       },
+      "stats": {
+        "button": "Statistieken",
+        "chartTitle": "Mensen die je app openden, laatste 30 dagen",
+        "peak_one": "Piek {{count}} per dag",
+        "peak_other": "Piek {{count}} per dag",
+        "people30": "Mensen, 30 dagen",
+        "people7": "Mensen, 7 dagen",
+        "added": "Toegevoegd",
+        "dhb30": "DHB betaald, 30 dagen",
+        "notified30": "Meldingen verstuurd, 30 dagen",
+        "rewards": "Verdiende DHB-beloningen"
+      },
       "signin": {
         "title": "Inloggen met DeHub",
         "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",

@@ -1,0 +1,18 @@
+{
+  "app": {
+    "name": "{{APP_NAME}}",
+    "homeUrl": "https://YOUR-DOMAIN/",
+    "iconUrl": "https://YOUR-DOMAIN/icon-1024.png",
+    "subtitle": "Built on DeHub",
+    "description": "Say what your app does in one or two sentences.",
+    "category": "utility",
+    "tags": ["starter"],
+    "splashBackgroundColor": "#0B0B0B",
+    "permissions": ["wallet", "compose", "notifications"]
+  },
+  "ownership": {
+    "address": "0xYOUR_DEHUB_WALLET",
+    "domain": "YOUR-DOMAIN",
+    "signature": "Sign on https://dehub.io/apps/dev and paste it here"
+  }
+}

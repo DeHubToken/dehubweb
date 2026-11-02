@@ -32,7 +32,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
 import { createDeveloperApp, deleteDeveloperApp, listDeveloperApps, rotateDeveloperSecret, type DeveloperSignInApp } from '@/lib/api/dehub/mastodon-apps';
-import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, fetchWebhookDeliveries, submitApp, testWebhook, type ManifestCheck } from '@/lib/miniapp/registry';
+import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, fetchAppStats, fetchWebhookDeliveries, submitApp, testWebhook, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
 <script>
@@ -135,6 +135,54 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
       <h2 className="text-sm font-semibold text-white">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/** Usage for one app: a 30-day opens chart and a row of headline numbers. */
+function StatsPanel({ slug }: { slug: string }) {
+  const { t } = useTranslation();
+  const { data, isLoading, error } = useQuery({ queryKey: ['miniapp-stats', slug], queryFn: () => fetchAppStats(slug), staleTime: 60_000 });
+  if (isLoading) return <div className="h-32 animate-pulse rounded-xl bg-black/30 ring-1 ring-white/10" />;
+  if (error || !data) return <p className="text-xs text-zinc-500">{(error as Error | null)?.message ?? ''}</p>;
+  const max = Math.max(1, ...data.daily.map((d) => d.people));
+  const fmt = (n: number) => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  const tiles: [string, string][] = [
+    [t('miniApps.dev.stats.people30'), fmt(data.people30)],
+    [t('miniApps.dev.stats.people7'), fmt(data.people7)],
+    [t('miniApps.dev.stats.added'), fmt(data.added)],
+    [t('miniApps.dev.stats.dhb30'), fmt(data.dhb30)],
+    [t('miniApps.dev.stats.notified30'), fmt(data.notified30)],
+    [t('miniApps.dev.stats.rewards'), fmt(data.rewardsDhb)],
+  ];
+  return (
+    <div className="space-y-3 rounded-xl bg-black/30 p-2.5 ring-1 ring-white/10">
+      <div>
+        <p className="mb-1.5 text-xs text-zinc-400">{t('miniApps.dev.stats.chartTitle')}</p>
+        <div className="flex h-20 items-end gap-[2px]" role="img" aria-label={t('miniApps.dev.stats.chartTitle')}>
+          {data.daily.map((d) => (
+            <div key={d.day} title={`${new Date(d.day).toLocaleDateString()}: ${d.people}`} className="group flex h-full flex-1 items-end">
+              <div
+                className="w-full rounded-t-[4px] bg-zinc-200/80 group-hover:bg-white"
+                style={{ height: d.people ? `${Math.max(4, (d.people / max) * 100)}%` : '2px', opacity: d.people ? 1 : 0.25 }}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="mt-1 flex justify-between text-[10px] text-zinc-500">
+          <span>{data.daily.length ? new Date(data.daily[0].day).toLocaleDateString() : ''}</span>
+          <span>{t('miniApps.dev.stats.peak', { count: max })}</span>
+          <span>{data.daily.length ? new Date(data.daily[data.daily.length - 1].day).toLocaleDateString() : ''}</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {tiles.map(([label, value]) => (
+          <div key={label} className="rounded-lg bg-black/40 p-2">
+            <p className="text-sm font-semibold text-white">{value}</p>
+            <p className="text-[10px] leading-tight text-zinc-400">{label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -315,6 +363,7 @@ export default function AppsDevPage() {
   const { data: rewards } = useQuery({ queryKey: ['miniapp-rewards'], queryFn: fetchLatestRewards, staleTime: 5 * 60_000 });
   const [notifyKey, setNotifyKey] = useState<{ slug: string; key: string } | null>(null);
   const [webhookSlug, setWebhookSlug] = useState<string | null>(null);
+  const [statsSlug, setStatsSlug] = useState<string | null>(null);
   const makeNotifyKey = async (slug: string) => {
     try {
       setNotifyKey({ slug, key: await createNotifyKey(slug) });
@@ -568,6 +617,13 @@ export default function AppsDevPage() {
                   ) : null}
                   <button
                     type="button"
+                    onClick={() => setStatsSlug(statsSlug === app.slug ? null : app.slug)}
+                    className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
+                  >
+                    {t('miniApps.dev.stats.button')}
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setWebhookSlug(webhookSlug === app.slug ? null : app.slug)}
                     className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
                   >
@@ -575,6 +631,7 @@ export default function AppsDevPage() {
                   </button>
                 </div>
               ))}
+              {statsSlug ? <StatsPanel slug={statsSlug} /> : null}
               {webhookSlug ? <WebhookPanel slug={webhookSlug} /> : null}
               {notifyKey ? (
                 <div className="space-y-1.5">
