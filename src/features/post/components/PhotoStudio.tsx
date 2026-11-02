@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, Crop, FlipHorizontal2, Loader2, Palette, Pencil, RotateCw, SlidersHorizontal, Trash2, Type, Undo2, X } from 'lucide-react';
+import { AtSign, ChevronLeft, ChevronRight, Crop, DollarSign, FlipHorizontal2, Loader2, Palette, Pencil, RotateCw, SlidersHorizontal, Smile, Trash2, Type, Undo2, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ADJUST_RANGES, STUDIO_LOOKS, type StudioAdjustKey } from '../lib/studioColor';
@@ -13,7 +13,11 @@ import {
   loadPicture,
   outputSize,
   paintStudio,
+  textBox,
+  inkOn,
   turnedSize,
+  type StudioFont,
+  type StudioText,
   type CropRatioId,
   type StudioEdits,
   type StudioPoint,
@@ -51,12 +55,23 @@ interface Props {
 const COLORS = ['#ffffff', '#000000', '#ff3b30', '#ff9500', '#ffcc00', '#34c759', '#0a84ff', '#bf5af2'];
 const BRUSH_SIZES = [0.006, 0.014, 0.028];
 const TEXT_SIZES = [0.05, 0.08, 0.13];
+const FONTS: { id: StudioFont; label: string; css: React.CSSProperties }[] = [
+  { id: 'clean', label: 'Clean', css: { fontWeight: 600 } },
+  { id: 'bold', label: 'Bold', css: { fontWeight: 900, fontStyle: 'italic' } },
+  { id: 'serif', label: 'Serif', css: { fontFamily: 'Georgia, serif', fontWeight: 700 } },
+  { id: 'mono', label: 'Mono', css: { fontFamily: 'ui-monospace, Menlo, monospace', fontWeight: 600 } },
+];
+const EMOJI = ['😍', '🔥', '😂', '❤️', '👏', '✨', '🎉', '👀', '💯', '🚀'];
 const ADJUST_ORDER: StudioAdjustKey[] = ['light', 'contrast', 'warmth', 'tint', 'colour', 'fade', 'vignette'];
 const MIN_CROP = 0.08;
 /** The preview paints from a smaller copy so dragging a slider stays smooth. */
 const PREVIEW_SIDE = 1600;
 
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+function pendingToItem(p: { at: StudioPoint; font: StudioFont; bg: boolean; color: string; size: number }, text: string): StudioText {
+  return { kind: 'text', at: p.at, text, color: p.color, size: p.size, ...(p.font !== 'clean' ? { font: p.font } : {}), ...(p.bg ? { bg: true } : {}) };
+}
 
 function downscale(img: HTMLImageElement, side: number): HTMLCanvasElement {
   const k = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight));
@@ -152,10 +167,14 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
   const [comparing, setComparing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [adjustKey, setAdjustKey] = useState<StudioAdjustKey>('light');
-  const [tool, setTool] = useState<'draw' | 'text'>('draw');
+  const [tool, setTool] = useState<'draw' | 'text' | 'sticker'>('draw');
+  const [font, setFont] = useState<StudioFont>('clean');
+  const [textBg, setTextBg] = useState(false);
+  /** The text or sticker layer picked to move or restyle. */
+  const [selected, setSelected] = useState<number | null>(null);
   const [color, setColor] = useState(COLORS[0]);
   const [sizeStep, setSizeStep] = useState(1);
-  const [pendingText, setPendingText] = useState<{ at: StudioPoint; value: string } | null>(null);
+  const [pendingText, setPendingText] = useState<{ at: StudioPoint; value: string; font: StudioFont; bg: boolean; color: string; size: number } | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -313,9 +332,32 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
     setPendingText(null);
     const text = pending?.value.trim();
     if (pending && text) {
-      setEdits((e) => ({ ...e, items: [...e.items, { kind: 'text', at: pending.at, text, color, size: TEXT_SIZES[sizeStep] }] }));
+      setEdits((e) => ({ ...e, items: [...e.items, pendingToItem(pending, text)] }));
     }
-  }, [color, sizeStep, setEdits]);
+  }, [setEdits]);
+
+  const newPending = (at: StudioPoint, value = '', bg = textBg) =>
+    setPendingText({ at, value, font, bg, color, size: TEXT_SIZES[sizeStep] });
+
+  /** Restyle the picked layer (and the next one typed). */
+  const styleSelected = (patch: Partial<StudioText>) => {
+    if (pendingRef.current) setPendingText((p) => (p ? { ...p, ...patch } : p));
+    if (selected === null) return;
+    setEdits((e) => ({ ...e, items: e.items.map((it, i) => (i === selected && it.kind === 'text' ? { ...it, ...patch } : it)) }));
+  };
+
+  const hitText = (p: StudioPoint): number | null => {
+    if (!box) return null;
+    for (let i = edits.items.length - 1; i >= 0; i--) {
+      const it = edits.items[i];
+      if (it.kind !== 'text') continue;
+      const b = textBox(it, box.w, box.h);
+      const x = p.x * box.w;
+      const y = p.y * box.h;
+      if (x >= b.x - 6 && x <= b.x + b.w + 6 && y >= b.y - 6 && y <= b.y + b.h + 6) return i;
+    }
+    return null;
+  };
 
   const pointFrom = (e: { clientX: number; clientY: number }): StudioPoint | null => {
     const el = boxRef.current;
@@ -330,8 +372,44 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
     if (!p) return;
     ev.preventDefault();
     commitText();
+    // Text and stickers can be picked up and moved; a second tap edits the words.
+    const hit = tool === 'draw' ? null : hitText(p);
+    if (hit !== null) {
+      const it = edits.items[hit] as StudioText;
+      const wasSelected = selected === hit;
+      setSelected(hit);
+      setColor(it.color);
+      setFont(it.font ?? 'clean');
+      setTextBg(!!it.bg);
+      const start = { x: ev.clientX, y: ev.clientY };
+      const from = { ...it.at };
+      let moved = false;
+      const move = (e: PointerEvent) => {
+        const dx = (e.clientX - start.x) / (box?.w || 1);
+        const dy = (e.clientY - start.y) / (box?.h || 1);
+        if (Math.abs(e.clientX - start.x) + Math.abs(e.clientY - start.y) > 4) moved = true;
+        setEdits((e2) => ({ ...e2, items: e2.items.map((m, i) => (i === hit && m.kind === 'text' ? { ...m, at: { x: clamp(from.x + dx, -0.2, 0.98), y: clamp(from.y + dy, 0, 1) } } : m)) }));
+      };
+      const up = () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        window.removeEventListener('pointercancel', up);
+        if (!moved && wasSelected && !/^\p{Extended_Pictographic}/u.test(it.text)) {
+          // Edit the words: lift the layer back into the text box.
+          setEdits((e2) => ({ ...e2, items: e2.items.filter((_, i) => i !== hit) }));
+          setSelected(null);
+          setPendingText({ at: it.at, value: it.text, font: it.font ?? 'clean', bg: !!it.bg, color: it.color, size: it.size });
+        }
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+      window.addEventListener('pointercancel', up);
+      return;
+    }
+    setSelected(null);
+    if (tool === 'sticker') return;
     if (tool === 'text') {
-      setPendingText({ at: p, value: '' });
+      newPending(p);
       return;
     }
     setEdits((e) => ({ ...e, items: [...e.items, { kind: 'stroke', points: [p], color, width: BRUSH_SIZES[sizeStep] }] }));
@@ -380,7 +458,7 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
     const text = pending?.value.trim();
     const latest = allRef.current.map((e, i) =>
       i === index && pending && text
-        ? { ...e, items: [...e.items, { kind: 'text' as const, at: pending.at, text, color, size: TEXT_SIZES[sizeStep] }] }
+        ? { ...e, items: [...e.items, pendingToItem(pending, text)] }
         : e,
     );
     setPendingText(null);
@@ -511,6 +589,11 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
               </>
             ) : null}
 
+            {tab === 'draw' && selected !== null && edits.items[selected]?.kind === 'text' ? (() => {
+              const b = textBox(edits.items[selected] as StudioText, box.w, box.h);
+              return <div className="pointer-events-none absolute rounded-lg border border-dashed border-white/80" style={{ left: b.x - 4, top: b.y - 4, width: b.w + 8, height: b.h + 8 }} />;
+            })() : null}
+
             {pendingText ? (
               <input
                 autoFocus
@@ -522,14 +605,16 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
                 placeholder={_copy('copy.studio.typeHere', { defaultValue: 'Type here' })}
-                className="absolute rounded-md border border-white/30 bg-black/40 px-1.5 py-0.5 font-semibold outline-none placeholder:text-white/50"
+                className="absolute rounded-md border border-white/30 px-1.5 py-0.5 outline-none placeholder:opacity-60"
                 style={{
                   left: pendingText.at.x * box.w,
                   top: pendingText.at.y * box.h,
                   transform: 'translateY(-50%)',
-                  color,
-                  fontSize: Math.max(12, TEXT_SIZES[sizeStep] * Math.min(box.w, box.h)),
+                  color: pendingText.bg ? inkOn(pendingText.color) : pendingText.color,
+                  backgroundColor: pendingText.bg ? pendingText.color : 'rgba(0,0,0,0.4)',
+                  fontSize: Math.max(12, pendingText.size * Math.min(box.w, box.h)),
                   maxWidth: box.w - pendingText.at.x * box.w,
+                  ...FONTS.find((f) => f.id === pendingText.font)?.css,
                 }}
               />
             ) : null}
@@ -633,26 +718,86 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
         {tab === 'draw' ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <ToolButton on={tool === 'draw'} onClick={() => { commitText(); setTool('draw'); }} label={_copy('copy.studio.pen', { defaultValue: 'Pen' })}>
+              <ToolButton on={tool === 'draw'} onClick={() => { commitText(); setSelected(null); setTool('draw'); }} label={_copy('copy.studio.pen', { defaultValue: 'Pen' })}>
                 <Pencil className="h-4 w-4" />
               </ToolButton>
               <ToolButton on={tool === 'text'} onClick={() => setTool('text')} label={_copy('copy.studio.text', { defaultValue: 'Text' })}>
                 <Type className="h-4 w-4" />
               </ToolButton>
+              <ToolButton on={tool === 'sticker'} onClick={() => { commitText(); setTool('sticker'); }} label={_copy('copy.studio.stickers', { defaultValue: 'Stickers' })}>
+                <Smile className="h-4 w-4" />
+              </ToolButton>
               <div className="mx-auto flex gap-2">
                 {[0, 1, 2].map((i) => (
-                  <ToolButton key={i} on={sizeStep === i} onClick={() => setSizeStep(i)} label={_copy('copy.studio.size', { defaultValue: 'Size {{n}}', n: i + 1 })}>
+                  <ToolButton key={i} on={sizeStep === i} onClick={() => { setSizeStep(i); if (tool !== 'draw') styleSelected({ size: TEXT_SIZES[i] }); }} label={_copy('copy.studio.size', { defaultValue: 'Size {{n}}', n: i + 1 })}>
                     <span className="rounded-full bg-white" style={{ width: 4 + i * 4, height: 4 + i * 4 }} />
                   </ToolButton>
                 ))}
               </div>
-              <ToolButton disabled={!hasItems} onClick={() => { if (pendingText) setPendingText(null); else setEdits((e) => ({ ...e, items: e.items.slice(0, -1) })); }} label={_copy('copy.studio.undo', { defaultValue: 'Undo' })}>
-                <Undo2 className="h-4 w-4" />
-              </ToolButton>
-              <ToolButton disabled={!hasItems} onClick={() => { setPendingText(null); setEdits((e) => ({ ...e, items: [] })); }} label={_copy('copy.studio.clear', { defaultValue: 'Clear all' })}>
-                <Trash2 className="h-4 w-4" />
+              <ToolButton
+                disabled={!hasItems}
+                onClick={() => {
+                  if (pendingText) setPendingText(null);
+                  else if (selected !== null) setEdits((e) => ({ ...e, items: e.items.filter((_, i) => i !== selected) }));
+                  else setEdits((e) => ({ ...e, items: e.items.slice(0, -1) }));
+                  setSelected(null);
+                }}
+                label={selected !== null ? _copy('copy.studio.deleteLayer', { defaultValue: 'Delete' }) : _copy('copy.studio.undo', { defaultValue: 'Undo' })}
+              >
+                {selected !== null ? <Trash2 className="h-4 w-4" /> : <Undo2 className="h-4 w-4" />}
               </ToolButton>
             </div>
+
+            {tool === 'sticker' ? (
+              <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 pb-1 scrollbar-hide">
+                <button type="button" onClick={() => newPending({ x: 0.3, y: 0.5 }, '@', true)} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs text-white">
+                  <AtSign className="h-3.5 w-3.5" />{_copy('copy.studio.mention', { defaultValue: 'Mention' })}
+                </button>
+                <button type="button" onClick={() => newPending({ x: 0.3, y: 0.5 }, '$', true)} className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/15 px-3 py-1.5 text-xs text-white">
+                  <DollarSign className="h-3.5 w-3.5" />{_copy('copy.studio.ticker', { defaultValue: 'Ticker' })}
+                </button>
+                {EMOJI.map((em) => (
+                  <button
+                    key={em}
+                    type="button"
+                    aria-label={em}
+                    onClick={() => {
+                      setEdits((e) => ({ ...e, items: [...e.items, { kind: 'text', at: { x: 0.42, y: 0.45 }, text: em, color: '#ffffff', size: 0.16 }] }));
+                      setSelected(edits.items.length);
+                    }}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-xl"
+                  >
+                    {em}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
+            {tool !== 'draw' ? (
+              <div className="-mx-4 flex items-center gap-1.5 overflow-x-auto px-4 scrollbar-hide">
+                {FONTS.map((f) => (
+                  <button
+                    key={f.id}
+                    type="button"
+                    aria-pressed={font === f.id}
+                    onClick={() => { setFont(f.id); styleSelected({ font: f.id }); }}
+                    className={cn('shrink-0 rounded-full border px-3 py-1.5 text-xs', font === f.id ? 'border-white bg-white text-black' : 'border-white/15 text-white/70')}
+                    style={f.css}
+                  >
+                    {_copy(`copy.studio.font.${f.id}`, { defaultValue: f.label })}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  aria-pressed={textBg}
+                  onClick={() => { setTextBg(!textBg); styleSelected({ bg: !textBg }); }}
+                  className={cn('shrink-0 rounded-full border px-3 py-1.5 text-xs', textBg ? 'border-white bg-white text-black' : 'border-white/15 text-white/70')}
+                >
+                  {_copy('copy.studio.textBg', { defaultValue: 'Background' })}
+                </button>
+              </div>
+            ) : null}
+
             <div className="flex gap-2">
               {COLORS.map((c) => (
                 <button
@@ -660,12 +805,15 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
                   type="button"
                   aria-label={c}
                   aria-pressed={color === c}
-                  onClick={() => setColor(c)}
+                  onClick={() => { setColor(c); if (tool !== 'draw') styleSelected({ color: c }); }}
                   className={cn('h-7 w-7 rounded-full border-2 transition-transform', color === c ? 'scale-110 border-white' : 'border-white/20')}
                   style={{ backgroundColor: c }}
                 />
               ))}
             </div>
+            {tool !== 'draw' ? (
+              <p className="text-[11px] text-white/45">{_copy('copy.studio.layerHint', { defaultValue: 'Drag words and stickers to move them. Tap twice to change the words.' })}</p>
+            ) : null}
           </div>
         ) : null}
       </div>
