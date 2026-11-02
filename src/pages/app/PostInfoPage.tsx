@@ -372,8 +372,11 @@ export default function PostInfoPage() {
   const chainInfo = getChainInfo(chainId);
   
   // Get stats with fallbacks
-  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? 0;
-  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
+  // A feed copy painted first names these likes/dislikes, so read those too
+  // rather than flashing 0 until the full post lands.
+  const feedCounts = nftInfo as { likes?: number; dislikes?: number };
+  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? feedCounts.likes ?? 0;
+  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? feedCounts.dislikes ?? 0;
   const views = resolveViewCount(nftInfo);
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
   const totalTips = nftInfo.minterUser?.receivedTips ?? 0;
