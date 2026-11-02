@@ -1041,9 +1041,12 @@ export function usePostForm(
   }, []);
 
   const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
-    setMedia(prev => prev.map((m, i) => 
-      i === index ? { ...m, trimStart, trimEnd } : m
-    ));
+    setMedia(prev => prev.map((m, i) => {
+      if (i !== index) return m;
+      // The whole clip kept is no trim.
+      const whole = trimStart < 0.05 && (!m.duration || m.duration - trimEnd < 0.05);
+      return whole ? { ...m, trimStart: undefined, trimEnd: undefined } : { ...m, trimStart, trimEnd };
+    }));
   }, []);
 
   /**
@@ -2031,11 +2034,24 @@ export function usePostForm(
         if (draftVideoId && !isDraftUsable(draft.getSnapshot())) draftVideoId = null;
       }
 
+      // Trims are cut on the server from the draft upload; a post that has to
+      // send the file itself goes up whole, and says so.
+      const trimmed = media[0]?.type === 'video' && media[0].trimStart !== undefined;
+      const warnUntrimmed = () => {
+        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim." }));
+      };
+
       let mintResponse: MintResponse;
       if (draftVideoId) {
         try {
           mintResponse = await mintPost(
-            { ...mintParams, files: undefined, draftVideoId },
+            {
+              ...mintParams,
+              files: undefined,
+              draftVideoId,
+              trimStart: media[0]?.trimStart,
+              trimEnd: media[0]?.trimEnd,
+            },
             (percent) => setUploadProgress(Math.max(55, Math.round(percent * 0.6))),
           );
         } catch (err) {
@@ -2043,9 +2059,11 @@ export function usePostForm(
           console.warn('[Mint] Draft video unavailable — uploading the file with the post');
           setUploadProgress(5);
           mintResponse = await mintPost(mintParams, uploadWithFile);
+          warnUntrimmed();
         }
       } else {
         mintResponse = await mintPost(mintParams, uploadWithFile);
+        warnUntrimmed();
       }
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
