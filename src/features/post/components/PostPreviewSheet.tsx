@@ -23,7 +23,8 @@ interface Props {
   media: MediaFile[];
 }
 
-const PREVIEW_ID = 'composer-preview';
+// Numeric like a real token id, so per-post lookups stay valid queries; no post has it.
+const PREVIEW_ID = '-1';
 
 export function PostPreviewSheet({ open, onOpenChange, text, title, media }: Props) {
   const { t } = useTranslation();
