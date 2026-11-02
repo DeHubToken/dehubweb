@@ -878,6 +878,7 @@ export function useSendMessage(conversationId: string) {
       forwardedFrom,
       mediaOptions,
       destruct,
+      lockPrice,
     }: {
       content: string;
       msgType?: DmMsgType;
@@ -891,6 +892,8 @@ export function useSendMessage(conversationId: string) {
       forwardedFrom?: { messageId: string };
       mediaOptions?: DmVideoOptions;
       destruct?: DmDestructChoice;
+      /** Pay-to-unlock price for a photo or video. */
+      lockPrice?: number;
     }): Promise<DmMessage> => {
       // Virtual conversations need createAndStart first to get real ID (applies to all message types)
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
@@ -937,6 +940,7 @@ export function useSendMessage(conversationId: string) {
           txHash,
           mediaOptions,
           destruct,
+          lockPrice,
         });
         if (plain) seedSentMedia(sent._id, plain);
         return sent;
@@ -978,7 +982,7 @@ export function useSendMessage(conversationId: string) {
       };
     },
 
-    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview, mediaOptions, destruct }) => {
+    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview, mediaOptions, destruct, lockPrice }) => {
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
       // Optimistic: prepend temp message
       const optimisticMessage: DmMessage = {
@@ -1022,6 +1026,19 @@ export function useSendMessage(conversationId: string) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+      // A locked send shows the sender their own photo, tagged with its price.
+      if (lockPrice && lockPrice > 0 && mediaFile && msgType === 'media') {
+        optimisticMessage.lock = {
+          price: lockPrice,
+          symbol: 'DHB',
+          kind: mediaFile.type.startsWith('video/') ? 'video' : 'image',
+          previewUrl: null,
+          unlocked: true,
+          mine: true,
+          ready: false,
+          mediaUrl: optimisticMessage.mediaUrls[0]?.url,
+        };
+      }
 
       queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
         const newPages = old?.pages?.length ? [...old.pages] : [{ items: [], totalCount: 0, hasMore: false }];

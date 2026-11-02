@@ -27,6 +27,7 @@ import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
 import { voiceRecordingFile } from '@/lib/voice-recording';
 import { SmartReplyRail } from './SmartReplyRail';
+import { LockPriceControl } from './LockPriceControl';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
 import {
@@ -53,6 +54,8 @@ export interface ChatInputSendArgs {
   mediaOptions?: DmVideoOptions;
   /** Self-destruct: gone after one view or a set time. */
   destruct?: DmDestructChoice;
+  /** Pay-to-unlock price for a photo or video (DHB). */
+  lockPrice?: number;
 }
 
 interface ChatInputProps {
@@ -114,9 +117,11 @@ interface ChatInputProps {
    */
   allowDocuments?: boolean;
   voiceMaxDuration?: number;
+  /** Offer "Lock photo" (pay to unlock) on a picked photo or video. 1:1 DMs only. */
+  allowLock?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59, allowLock = false }: ChatInputProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
@@ -137,6 +142,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [videoDestruct, setVideoDestruct] = useState<DmDestructChoice | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | undefined>(undefined);
   const [videoStudioOpen, setVideoStudioOpen] = useState(false);
+  // Pay-to-unlock price for the picked photo/video; null = not locked.
+  const [lockPrice, setLockPrice] = useState<number | null>(null);
   const [dropHover, setDropHover] = useState(false);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
@@ -308,6 +315,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
         mediaFile: imageFile,
         ...(mediaKind === 'video' ? { mediaOptions: cleanVideoOptions(videoOptions, videoDuration) } : {}),
         ...(mediaKind === 'video' && videoDestruct ? { destruct: videoDestruct } : {}),
+        ...(allowLock && lockPrice && mediaKind !== 'audio' ? { lockPrice } : {}),
       });
       if (!sent) return;
       clearImage();
@@ -539,6 +547,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     setVideoOptions({});
     setVideoDuration(undefined);
     setVideoStudioOpen(false);
+    setLockPrice(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -658,6 +667,11 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
           >
             <X className="w-3 h-3 text-white" />
           </button>
+        </div>
+      )}
+      {imagePreviewUrl && allowLock && mediaKind !== 'audio' && (
+        <div className="mb-2 -mt-1">
+          <LockPriceControl value={lockPrice} onChange={setLockPrice} kind={mediaKind} />
         </div>
       )}
 

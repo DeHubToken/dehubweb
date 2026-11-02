@@ -89,6 +89,35 @@ export interface ReplyPreview {
   sender: DmSender;
 }
 
+/**
+ * A photo or video the sender put behind a price (pay to unlock). The real
+ * file is only ever in `mediaUrl`, and only for the sender or a buyer;
+ * `mediaUrls[0]` is always the blurred preview.
+ */
+export interface DmLock {
+  price: number;
+  symbol: string;
+  kind: 'image' | 'video';
+  previewUrl: string | null;
+  unlocked: boolean;
+  mine?: boolean;
+  /** False while the upload is still being processed. */
+  ready?: boolean;
+  unlockCount?: number;
+  /** Signed URL of the real file (sender or buyer only). */
+  mediaUrl?: string;
+  mediaUrlExpiresAt?: string;
+}
+
+export interface DmLockStatus {
+  messageId: string;
+  conversationId: string;
+  /** The sender's address: who the unlock payment goes to. */
+  payTo: string;
+  lock: DmLock;
+  pendingTxHash?: string;
+}
+
 export interface DmMessage {
   _id: string;
   conversation: string;
@@ -123,6 +152,8 @@ export interface DmMessage {
   tipSymbol: string | null;
   /** Only set when msgType === 'poll'; votes are read from the poll itself. */
   poll?: { tokenId: number; question: string } | null;
+  /** Set for a locked (pay-to-unlock) photo or video. */
+  lock?: DmLock | null;
   isDeleted: boolean;
   author: 'me' | 'other';
   createdAt: string;
@@ -263,6 +294,25 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
   };
 }
 
+type RawLock = Partial<DmLock> & { price?: number | string; unlockCount?: number | string };
+
+export function parseDmLock(input: unknown, mine: boolean): DmLock | null {
+  if (!input || typeof input !== 'object') return null;
+  const raw = input as RawLock;
+  if (!(Number(raw.price) > 0)) return null;
+  return {
+    price: Number(raw.price),
+    symbol: raw.symbol || 'DHB',
+    kind: raw.kind === 'video' ? 'video' : 'image',
+    previewUrl: raw.previewUrl ?? null,
+    unlocked: !!raw.unlocked || mine,
+    mine: raw.mine ?? mine,
+    ready: raw.ready ?? !!raw.previewUrl,
+    ...(raw.unlockCount != null && { unlockCount: Number(raw.unlockCount) }),
+    ...(raw.mediaUrl && { mediaUrl: raw.mediaUrl, mediaUrlExpiresAt: raw.mediaUrlExpiresAt }),
+  };
+}
+
 function parseDmMessage(raw: any, myAddress: string): DmMessage {
   const msgType: DmMsgType =
     raw.msgType === 'text' ? 'msg' :
@@ -302,6 +352,7 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     tipAmount: raw.tipAmount ?? null,
     tipSymbol: raw.tipSymbol ?? null,
     poll: raw.poll && typeof raw.poll.tokenId === 'number' ? { tokenId: raw.poll.tokenId, question: raw.poll.question || '' } : null,
+    lock: parseDmLock(raw.lock, author === 'me'),
     isDeleted: raw.isDeleted ?? false,
     author,
     createdAt: raw.createdAt || new Date().toISOString(),
@@ -629,6 +680,8 @@ export async function uploadAndSendMedia(
     mediaOptions?: DmVideoOptions;
     /** Self-destruct choice; works for encrypted files too (only the timer is in the clear). */
     destruct?: DmDestructChoice;
+    /** Put the photo or video behind this price (DHB). Never combined with encryptedKind. */
+    lockPrice?: number;
   }
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
@@ -645,12 +698,28 @@ export async function uploadAndSendMedia(
   if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
   if (opts?.mediaOptions) formData.append('mediaOptions', JSON.stringify(opts.mediaOptions));
   if (opts?.destruct) formData.append('destruct', String(opts.destruct));
+  if (opts?.lockPrice && opts.lockPrice > 0 && !opts.encryptedKind) formData.append('lockPrice', String(opts.lockPrice));
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,
   });
   const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
   return parseDmMessage(raw, myAddress);
+}
+
+/** Price, who to pay, and (for the sender or a buyer) the real file. */
+export async function getLockedMedia(messageId: string): Promise<DmLockStatus> {
+  const res = await apiCall<DmLockStatus>(`/api/dm/locked/${messageId}`, { method: 'GET', requiresAuth: true });
+  return { ...res, lock: parseDmLock(res?.lock, !!res?.lock?.mine) as DmLock };
+}
+
+/**
+ * Hand in the tip that pays for a locked photo. `pending` means the payment
+ * has not been indexed yet; a `dmMediaUnlocked` socket event follows.
+ */
+export async function unlockLockedMedia(messageId: string, txHash: string): Promise<DmLockStatus & { status: 'unlocked' | 'pending' }> {
+  const res = await apiCall<DmLockStatus & { status: 'unlocked' | 'pending' }>(`/api/dm/locked/${messageId}/unlock`, { method: 'POST', body: { txHash }, requiresAuth: true });
+  return { ...res, lock: parseDmLock(res?.lock, false) as DmLock };
 }
 
 /**
