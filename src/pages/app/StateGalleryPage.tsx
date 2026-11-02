@@ -4,7 +4,8 @@ import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useId, useMemo, useState, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { PostActionBar } from '@/features/post/components/PostActionBar';
 import { createPortal } from 'react-dom';
 import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
@@ -370,6 +371,52 @@ function CaptureCardGallery() {
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
 const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
+/** Composer tool row: the ... sheet holds Poll, then Comic, then the rest. */
+function PostOptionsGallery() {
+  const imageRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
+  const audioRef = useRef<HTMLInputElement>(null);
+  const [poll, setPoll] = useState(false);
+  const [comic, setComic] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const noop = () => {};
+  return (
+    <section data-page-bento data-post-options-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Post options</h2>
+      {/* The gallery has no sign-in; the bar's pickers only read it. */}
+      <AuthContext.Provider value={GALLERY_AUTH}>
+      <PostActionBar
+        imageInputRef={imageRef}
+        videoInputRef={videoRef}
+        audioInputRef={audioRef}
+        onImageSelect={noop}
+        onVideoSelect={noop}
+        onAudioSelect={noop}
+        onStartRecording={noop}
+        liveMode={null}
+        setLiveMode={noop}
+        onInsertFormatting={noop}
+        onInsertEmoji={noop}
+        onInsertGif={noop}
+        onCameraCapture={noop}
+        onEnhanceWithAI={noop}
+        onPost={noop}
+        canPost={false}
+        isEnhancing={false}
+        isPosting={false}
+        hasText={false}
+        onTogglePoll={() => setPoll((v) => !v)}
+        hasPoll={poll}
+        onToggleComic={() => setComic((v) => !v)}
+        isComic={comic}
+        onToggleContentWarning={() => setWarning((v) => !v)}
+        hasContentWarning={warning}
+      />
+      </AuthContext.Provider>
+    </section>
+  );
+}
 
 /** Composer ALT pill: empty vs saved. Tap a picture's pill to flip it. */
 function AltPillGallery() {
@@ -1105,6 +1152,7 @@ export default function StateGalleryPage() {
         <TooltipsGallery />
         <AppTokensGallery />
         <AudioGallery />
+        <PostOptionsGallery />
         <AltPillGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
