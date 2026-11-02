@@ -155,6 +155,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     id,
     type: 'post',
     articleBody: nft.articleBody,
+    articleSlug: (nft as any).articleSlug,
     articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,

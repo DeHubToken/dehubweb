@@ -30,6 +30,7 @@ import {
   mergeViewerState,
 } from '@/lib/engagement';
 import { SEOHead } from '@/components/SEOHead';
+import { Loader2 } from 'lucide-react';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
@@ -50,7 +51,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
-import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
+import { getNFTInfo, getLiveStream, resolveArticleSlug, type DeHubNFT } from '@/lib/api/dehub';
 import { parseSoundtrackTag, findCachedFeedPost } from '@/hooks/use-unified-feed';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
@@ -735,8 +736,49 @@ interface SinglePostPageProps {
  * the worker's crawler page declares and the post sitemap lists; a self
  * canonical on /posts/* pointed the other way.
  */
-function postSeoUrl(id?: string): string {
-  return canonicalUrl(`/app/post/${id}`);
+function postSeoUrl(id?: string, articleSlug?: string): string {
+  return canonicalUrl(`/app/post/${articleSlug || id}`);
+}
+
+/** A post id is a tokenId (digits) or a stream ObjectId; anything else with a letter is an article slug. */
+function isArticleSlugParam(value?: string): value is string {
+  return !!value && !/^\d+$/.test(value) && !/^[a-f\d]{24}$/i.test(value) && /^[a-z0-9][a-z0-9-]*$/i.test(value) && /[a-z]/i.test(value);
+}
+
+/**
+ * /app/post/<article-title-slug>: resolve the slug to its tokenId, then render
+ * the post AT the readable URL (everything inside keys on the tokenId).
+ */
+function ArticleSlugPostPage({ slug, ...props }: SinglePostPageProps & { slug: string }) {
+  const { t: _copy } = _useCopy();
+  const navigate = useNavigate();
+  const { data, isLoading } = useQuery({
+    queryKey: ['article-slug', slug.toLowerCase()],
+    queryFn: () => resolveArticleSlug(slug.toLowerCase()),
+    staleTime: 10 * 60_000,
+  });
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <SEOHead title="DeHub" noindex noCanonical />
+        <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
+        <SEOHead title="Post not found — DeHub" noindex noCanonical />
+        <p className="text-foreground font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
+        <p className="text-muted-foreground text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
+        <button
+          onClick={() => navigate('/app')}
+          className="mt-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-foreground rounded-xl text-sm font-medium transition-colors"
+        >{_copy("copy.4027386e8d11", { defaultValue: "Go to feed" })}</button>
+      </div>
+    );
+  }
+  return <SinglePostPage {...props} overrideId={String(data.tokenId)} />;
 }
 
 /** The app shares comment links as ?c=, web as ?comment=. */
@@ -758,6 +800,10 @@ export default function SinglePostPage(props: SinglePostPageProps = {}) {
   const { search } = useLocation();
   const id = props.overrideId || postId || tokenId;
   const focusCommentId = commentId || commentFromSearch(search);
+
+  if (!props.overrideId && isArticleSlugParam(postId)) {
+    return <ArticleSlugPostPage {...props} slug={postId} />;
+  }
 
   return (
     <FocusCommentProvider tokenId={id} commentId={focusCommentId}>
@@ -1008,6 +1054,17 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       return applyVoteStateToNFT(data, cached);
     },
   });
+
+  // An article opened by its number (/app/post/7074, /post/7074) moves to its
+  // readable address in place: same page, no reload, ?ref and ?comment kept.
+  // The resolved slug is seeded so the slug route paints without a lookup.
+  const articleSlug = (post as any)?.articleSlug as string | undefined;
+  useEffect(() => {
+    if (inOverlay || overrideId || !articleSlug || !id) return;
+    if (!/^\/(?:app\/)?post\/\d+\/?$/.test(location.pathname)) return;
+    queryClient.setQueryData(['article-slug', articleSlug], { tokenId: Number(id), articleSlug });
+    navigate(`/app/post/${articleSlug}${location.search}${location.hash}`, { replace: true, state: location.state });
+  }, [articleSlug, id, inOverlay, overrideId, location.pathname, location.search, location.hash, location.state, navigate, queryClient]);
 
   // Check if we have cached data (from feed navigation) to show immediately
   const hasCachedData = !!post;
@@ -1398,7 +1455,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         <SEOHead
           title={videoSeoTitle}
           description={videoSeoDesc.slice(0, 155)}
-          url={postSeoUrl(id)}
+          url={postSeoUrl(id, (post as any)?.articleSlug)}
           type="article"
           aiScraping={getAiScrapingPreference((post as any).minterUser?.customs)}
           jsonLd={{
@@ -1406,7 +1463,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
             '@type': 'VideoObject',
             name: videoSeoTitle,
             description: videoSeoDesc,
-            url: postSeoUrl(id),
+            url: postSeoUrl(id, (post as any)?.articleSlug),
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
             publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
@@ -1516,7 +1573,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
               {/* Download removed until implemented — dead button. */}
               <button 
                 onClick={() => {
-                  const url = viewerShareUrl(`${window.location.origin}/app/post/${id}`);
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${(post as any)?.articleSlug || id}`);
                   trackShare('copy_link', { kind: 'post' });
                   navigator.clipboard.writeText(url)
                     .then(() => toast.success(t('postOptions.linkCopied')))
@@ -1721,7 +1778,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
         title={seoTitle}
         description={seoDesc}
         image={post?.socialImageUrl ? buildFeedImageUrls([post.socialImageUrl])?.[0] : post?.articleImageUrl ? buildFeedImageUrls([post.articleImageUrl])?.[0] : undefined}
-        url={postSeoUrl(id)}
+        url={postSeoUrl(id, (post as any)?.articleSlug)}
         type="article"
         aiScraping={getAiScrapingPreference((post as any)?.minterUser?.customs)}
         jsonLd={{
@@ -1729,7 +1786,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           '@type': 'Article',
           headline: seoTitle,
           description: seoDesc,
-          url: postSeoUrl(id),
+          url: postSeoUrl(id, (post as any)?.articleSlug),
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
