@@ -264,3 +264,22 @@ export async function testWebhook(slug: string): Promise<{ ok: boolean; status: 
 export async function fetchWebhookDeliveries(slug: string): Promise<WebhookDelivery[]> {
   return (await registryCall<{ deliveries: WebhookDelivery[] }>({ action: 'deliveries', slug })).deliveries;
 }
+
+export interface AppStats {
+  daily: { day: string; people: number }[];
+  people30: number;
+  people7: number;
+  added: number;
+  added30: number;
+  notificationsOn: number;
+  payments30: number;
+  dhb30: number;
+  dhbAll: number;
+  notified30: number;
+  rewardsDhb: number;
+}
+
+/** Usage for one of the caller's apps over the last 30 days (owner only). */
+export async function fetchAppStats(slug: string): Promise<AppStats> {
+  return (await registryCall<{ stats: AppStats }>({ action: 'stats', slug })).stats;
+}

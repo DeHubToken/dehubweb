@@ -12473,6 +12473,18 @@
         "failed": "Webhook başarısız: {{reason}}",
         "none": "Henüz webhook gönderilmedi."
       },
+      "stats": {
+        "button": "İstatistikler",
+        "chartTitle": "Uygulamanızı açan kişiler, son 30 gün",
+        "peak_one": "Günde en çok {{count}}",
+        "peak_other": "Günde en çok {{count}}",
+        "people30": "Kişi, 30 gün",
+        "people7": "Kişi, 7 gün",
+        "added": "Ekleyen",
+        "dhb30": "Ödenen DHB, 30 gün",
+        "notified30": "Gönderilen bildirim, 30 gün",
+        "rewards": "Kazanılan DHB ödülleri"
+      },
       "signin": {
         "title": "DeHub ile giriş yap",
         "body": "İnsanların web sitenize veya uygulamanıza DeHub hesaplarıyla giriş yapmasını sağlayın. Burada bir anahtar oluşturun, sonra kılavuzu izleyin.",

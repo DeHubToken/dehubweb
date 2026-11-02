@@ -1,0 +1,39 @@
+name: Publish developer packages
+
+# Publishes dehub-sdk and create-dehub-app to npm from packages/.
+# Needs the NPM_TOKEN repository secret (an npm "Automation" token).
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Which package to publish
+        type: choice
+        options: [both, dehub-sdk, create-dehub-app]
+        default: both
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: dehub-sdk
+        if: inputs.package != 'create-dehub-app'
+        working-directory: packages/dehub-sdk
+        run: |
+          npm install --no-save --no-package-lock jose@5.9.6 typescript@5.6.3
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: create-dehub-app
+        if: inputs.package != 'dehub-sdk'
+        working-directory: packages/create-dehub-app
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

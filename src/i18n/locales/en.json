@@ -12398,6 +12398,18 @@
         "failed": "Webhook failed: {{reason}}",
         "none": "No webhooks sent yet."
       },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "People who opened your app, last 30 days",
+        "peak_one": "Peak {{count}} a day",
+        "peak_other": "Peak {{count}} a day",
+        "people30": "People, 30 days",
+        "people7": "People, 7 days",
+        "added": "Added it",
+        "dhb30": "DHB paid, 30 days",
+        "notified30": "Notifications sent, 30 days",
+        "rewards": "DHB rewards earned"
+      },
       "signin": {
         "title": "Sign in with DeHub",
         "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",
