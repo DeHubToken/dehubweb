@@ -12776,7 +12776,10 @@
       "confirm": "Betaal {{amount}} tokens",
       "sending": "Stuur je betaling op…",
       "sent": "Betaald {{amount}} tokens aan {{name}}.",
-      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen."
+      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen.",
+      "testBadge": "Testmodus",
+      "testBody": "Deze app is van jou, dus dit is een test: er gaan geen tokens over en het bewijs is gemarkeerd als test.",
+      "testSent": "Testbetaling van {{amount}} tokens. Er is niets verstuurd."
     },
     "add": {
       "title": "Vul {{name}} toe?",

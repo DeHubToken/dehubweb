@@ -12527,7 +12527,10 @@
       "confirm": "Pay {{amount}} jeton",
       "sending": "Ödeme gönderiliyor...",
       "sent": "Ödenmiş {{amount}} jeton'yi {{name}}.",
-      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
+      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok.",
+      "testBadge": "Test modu",
+      "testBody": "Bu uygulama sizin, bu yüzden bu bir test: token hareket etmez ve makbuz test olarak işaretlenir.",
+      "testSent": "{{amount}} token test ödemesi. Hiçbir şey gönderilmedi."
     },
     "add": {
       "title": "{{name}}?",

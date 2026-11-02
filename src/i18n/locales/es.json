@@ -12527,7 +12527,10 @@
       "confirm": "Paga {{amount}} tokens",
       "sending": "Enviando tu pago…",
       "sent": "Pagado {{amount}} tokens a {{name}}.",
-      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos."
+      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos.",
+      "testBadge": "Modo de prueba",
+      "testBody": "Esta app es tuya, así que es una prueba: no se mueven tokens y el recibo queda marcado como prueba.",
+      "testSent": "Pago de prueba de {{amount}} tokens. No se envió nada."
     },
     "add": {
       "title": "¿Añadir {{name}}?",

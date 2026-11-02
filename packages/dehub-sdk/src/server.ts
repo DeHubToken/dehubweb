@@ -41,6 +41,8 @@ export interface DehubPayment {
   chainId: number;
   txHash: string;
   memo: string | null;
+  /** Test mode receipt (the developer paying their own app). Nothing moved on chain: never deliver paid goods for it in production. */
+  test: boolean;
 }
 
 /** A payment receipt from `dehub.actions.pay()`. Store `txHash` so a receipt is only honoured once. */
@@ -53,6 +55,7 @@ export async function verifyDehubPayment(receipt: string, options: VerifyOptions
     chainId: Number(p.chainId),
     txHash: String(p.txHash),
     memo: (p.memo as string | null) ?? null,
+    test: p.test === true,
   };
 }
 

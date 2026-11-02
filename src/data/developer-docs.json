@@ -165,7 +165,8 @@
           "heading": "Payments in DHB",
           "blocks": [
             { "code": "const { txHash, chainId, amount, receipt } = await dehub.actions.pay({\n  amount: 50,          // DHB, whole numbers, up to 1,000,000\n  memo: 'Order #1042', // optional, 140 characters\n});\n\n// Send `receipt` to your server and verify it there.\nawait fetch('/api/orders/1042/paid', { method: 'POST', body: receipt });", "lang": "js" },
-            { "p": "DeHub shows the amount, your app and your wallet, the user confirms in their wallet, and DeHub checks the transfer on chain (Base or BNB Chain) before answering. The `receipt` is a signed token with `typ: \"payment\"`, `sub` (the payer's wallet), `aud` (your domain), `amount`, `token`, `chainId`, `txHash` and `memo`. Verify it exactly like a sign-in token. Only registered apps with a signed manifest can take payments." }
+            { "p": "DeHub shows the amount, your app and your wallet, the user confirms in their wallet, and DeHub checks the transfer on chain (Base or BNB Chain) before answering. The `receipt` is a signed token with `typ: \"payment\"`, `sub` (the payer's wallet), `aud` (your domain), `amount`, `token`, `chainId`, `txHash` and `memo`. Verify it exactly like a sign-in token. Only registered apps with a signed manifest can take payments." },
+            { "p": "**Test mode.** When you open your own app on DeHub with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and `payment` webhook carry `test: true`, `chainId: 0` and a `txHash` starting with `test_`. Never deliver paid goods for a test receipt in production." }
           ]
         },
         {
