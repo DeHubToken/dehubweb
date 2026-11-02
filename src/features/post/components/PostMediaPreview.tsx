@@ -34,9 +34,10 @@ import { DraftVideoProgress } from './DraftVideoProgress';
 import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
 import { DmMediaStudio, type DmStudioItem } from '@/components/app/chat/DmVideoStudio';
+import { hasVideoEdits, paintEditedFrame, svgMatrixValues, videoEditsMatrix, vignetteBackground, type PostVideoEdits } from '../lib/video-edits';
 
-/** The frame at `at` seconds as a JPEG blob URL, for the post's cover. */
-function grabVideoFrame(url: string, at: number): Promise<string | null> {
+/** The frame at `at` seconds, with the video's edits painted on, as a JPEG blob URL for the post's cover. */
+function grabVideoFrame(url: string, at: number, edits?: PostVideoEdits | null): Promise<string | null> {
   return new Promise((resolve) => {
     const v = document.createElement('video');
     v.muted = true;
@@ -47,11 +48,8 @@ function grabVideoFrame(url: string, at: number): Promise<string | null> {
     v.addEventListener('error', () => done(null), { once: true });
     v.addEventListener('loadedmetadata', () => { v.currentTime = Math.min(Math.max(0, at), Math.max(0, (v.duration || at) - 0.05)); }, { once: true });
     v.addEventListener('seeked', () => {
-      const c = document.createElement('canvas');
-      c.width = v.videoWidth; c.height = v.videoHeight;
-      const ctx = c.getContext('2d');
-      if (!ctx || !c.width) return done(null);
-      ctx.drawImage(v, 0, 0, c.width, c.height);
+      if (!v.videoWidth) return done(null);
+      const c = paintEditedFrame(v, v.videoWidth, v.videoHeight, edits);
       c.toBlob((b) => done(b ? URL.createObjectURL(b) : null), 'image/jpeg', 0.9);
     }, { once: true });
   });
@@ -71,6 +69,10 @@ interface PostMediaPreviewProps {
   onApplyCrop?: (index: number, settings: CropSettings) => void;
   onClearCrop?: (index: number) => void;
   onApplyTrim?: (index: number, trimStart: number, trimEnd: number) => void;
+  /** Swap the attached video for another file. */
+  onReplaceVideo?: (file: File) => Promise<void> | void;
+  /** Merge fields into one item: video edits, the post timer, music video. */
+  onUpdateMedia?: (index: number, patch: Partial<MediaFile>) => void;
   /** Replace an image's bytes outright — used by the annotator, which bakes. */
   onReplaceImage?: (index: number, file: File, studio?: { original: File; edits: StudioEdits }) => void;
   /** Alt text for one image or video; without it the ALT buttons are not shown. */
@@ -105,6 +107,14 @@ const VIDEO_EDITS_SUPPORTED = false;
  * trimEnd), so the trimmer is on.
  */
 const VIDEO_TRIM_SUPPORTED = true;
+
+/** The old cover strip beside the video; the cover is picked in the editor now. */
+const SHOW_FRAME_STRIP = false;
+
+/** "1h", "12h", "1d", "7d", "30d" for the post timer chip. */
+function postDestructShort(s: number): string {
+  return s % 86400 === 0 ? `${s / 86400}d` : `${Math.round(s / 3600)}h`;
+}
 
 // Helper to check if crop is applied
 function hasCropApplied(settings?: CropSettings): boolean {
@@ -144,6 +154,8 @@ export function PostMediaPreview({
   onApplyCrop,
   onClearCrop,
   onApplyTrim,
+  onReplaceVideo,
+  onUpdateMedia,
   onReplaceImage,
   onFullscreenChange,
   draftVideo,
@@ -164,19 +176,28 @@ export function PostMediaPreview({
   const [studio, setStudio] = useState<{ index: number; tab: StudioTab } | null>(null);
   // The video edit screen (Cover and Trim). It opens by itself when a video
   // is added, on Cover, and Confirm brings the choices back to the post.
-  const [videoEdit, setVideoEdit] = useState<{ index: number; item: DmStudioItem } | null>(null);
+  const [videoEdit, setVideoEdit] = useState<{ index: number; item: DmStudioItem; timer: number | null; music: boolean } | null>(null);
   const openVideoEdit = useCallback((index: number) => {
     const m = media[index];
     if (!m || m.type !== 'video') return;
+    const e = m.videoEdits;
     setVideoEdit({
       index,
+      timer: m.destructSeconds ?? null,
+      music: !!m.isMusicVideo,
       item: {
         id: m.preview, file: m.file, url: m.preview, kind: 'video', duration: m.duration,
-        options: { trimStart: m.trimStart, trimEnd: m.trimEnd }, destruct: null, lockPrice: null,
+        options: { trimStart: m.trimStart, trimEnd: m.trimEnd, mirror: e?.mirror, rotate: e?.rotate || undefined },
+        destruct: null, lockPrice: null,
         description: m.description ?? '',
+        look: e?.look, strength: e?.strength, adjust: e?.adjust,
       },
     });
   }, [media]);
+  // Covers the creator uploaded, so a later edit does not paint over them.
+  const ownCovers = useRef<Set<string>>(new Set());
+  const coverInputRef = useRef<HTMLInputElement | null>(null);
+  const videoReplaceInputRef = useRef<HTMLInputElement | null>(null);
   const seenVideos = useRef<Set<string> | null>(null);
   useEffect(() => {
     const videos = media.filter((m) => m.type === 'video').map((m) => m.preview);
@@ -196,14 +217,35 @@ export function PostMediaPreview({
   }, [media, studio, videoEdit, onReplaceImage]);
   const confirmVideoEdit = async () => {
     if (!videoEdit) return;
-    const { index, item } = videoEdit;
+    const { index, item, timer, music } = videoEdit;
     setVideoEdit(null);
-    const dur = item.duration ?? media[index]?.duration ?? 0;
+    const m = media[index];
+    const dur = item.duration ?? m?.duration ?? 0;
     const o = item.options;
-    if (onSetDescription && (item.description ?? '').trim() !== (media[index]?.description ?? '').trim()) onSetDescription(index, (item.description ?? '').trim());
+    if (onSetDescription && (item.description ?? '').trim() !== (m?.description ?? '').trim()) onSetDescription(index, (item.description ?? '').trim());
     if (o.trimStart != null || o.trimEnd != null) onApplyTrim?.(index, o.trimStart ?? 0, o.trimEnd ?? dur);
-    if (o.coverAt != null && onAddThumbnail) {
-      const frame = await grabVideoFrame(item.url, o.coverAt);
+    const edits: PostVideoEdits = {
+      mirror: o.mirror || undefined,
+      rotate: (o.rotate || undefined) as PostVideoEdits['rotate'],
+      look: item.look && item.look !== 'normal' ? item.look : undefined,
+      strength: item.strength,
+      adjust: item.adjust,
+    };
+    const editsOn = hasVideoEdits(edits);
+    const editsChanged = JSON.stringify(videoEditsMatrix(edits)) !== JSON.stringify(videoEditsMatrix(m?.videoEdits))
+      || !!edits.mirror !== !!m?.videoEdits?.mirror || (edits.rotate ?? 0) !== (m?.videoEdits?.rotate ?? 0)
+      || (edits.adjust?.vignette ?? 0) !== (m?.videoEdits?.adjust?.vignette ?? 0);
+    onUpdateMedia?.(index, { videoEdits: editsOn ? edits : undefined, destructSeconds: timer, isMusicVideo: music });
+    if (!onAddThumbnail) return;
+    if (item.coverUrl) {
+      ownCovers.current.add(item.coverUrl);
+      onAddThumbnail(index, item.coverUrl);
+      return;
+    }
+    // A picked frame, or edits that change how the auto cover looks.
+    const ownCover = !!m?.thumbnail && ownCovers.current.has(m.thumbnail);
+    if (o.coverAt != null || (editsChanged && !ownCover)) {
+      const frame = await grabVideoFrame(item.url, o.coverAt ?? Math.max(0.1, o.trimStart ?? 0), edits);
       if (frame) onAddThumbnail(index, frame);
     }
   };
@@ -622,7 +664,7 @@ export function PostMediaPreview({
         }
         
         // Extract frames if not already done
-        if (!videoFrames.has(index) && !extractingFrames.has(index)) {
+        if (SHOW_FRAME_STRIP && !videoFrames.has(index) && !extractingFrames.has(index)) {
           extractVideoFrames(m.preview, index);
         }
       }
@@ -680,6 +722,27 @@ export function PostMediaPreview({
         className="hidden"
         onChange={handleReplacementImage}
       />
+      <input
+        ref={videoReplaceInputRef}
+        type="file"
+        accept="video/*"
+        className="hidden"
+        onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void onReplaceVideo?.(f); }}
+      />
+      <input
+        ref={coverInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (!f) return;
+          if (!f.type.startsWith('image/')) { toast.error(_copy("copy.024eff991771", { defaultValue: "Please select an image file" })); return; }
+          const url = URL.createObjectURL(f);
+          setVideoEdit((v) => (v ? { ...v, item: { ...v.item, coverUrl: url, options: { ...v.item.options, coverAt: undefined } } } : v));
+        }}
+      />
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -697,7 +760,8 @@ export function PostMediaPreview({
                 {m.type === 'image' ? (
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
-                    {onSetDescription && (
+                    {/* Photos keep alt text in the editor; a GIF has no editor, so it keeps the button. */}
+                    {onSetDescription && (m.file.type === 'image/gif' || !onReplaceImage) && (
                       <AltTextButton hasText={!!m.description} onClick={() => setAltEditorIndex(index)} className="absolute bottom-2 right-2" />
                     )}
                     {media.filter(item => item.type === 'image').length > 1 && (
@@ -750,50 +814,17 @@ export function PostMediaPreview({
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'looks' }); else setFilterEditorIndex(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'crop' }); else setFilterEditorIndex(index); }}
+                              className="flex h-7 w-7 items-center justify-center rounded-xl text-white transition-all duration-300 hover:scale-105
                                 bg-black/60 backdrop-blur-xl border border-white/20
                                 hover:bg-black/70 hover:border-white/40"
+                              aria-label={_copy("post.media.editPhoto", { defaultValue: "Edit photo {{value1}}", value1: index + 1 })}
                             >
-                              <Paintbrush className="w-3 h-3 text-white" />
+                              <Pencil className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.4ab51caa4298", { defaultValue: "Edit filters" })}</TooltipContent>
+                          <TooltipContent>{_copy("post.media.editHint", { defaultValue: "Crop, looks, adjust, draw and alt text" })}</TooltipContent>
                         </Tooltip>
-                        
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); if (onReplaceImage && m.file.type !== 'image/gif') setStudio({ index, tab: 'crop' }); else setCropEditorIndex(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-black/70 hover:border-white/40"
-                            >
-                              <Crop className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
-                        </Tooltip>
-
-                        {/* A canvas draw flattens an animated GIF to one
-                            frame, so it does not get the pencil. */}
-                        {onReplaceImage && m.file.type !== 'image/gif' && (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                type="button"
-                                onClick={(e) => { e.stopPropagation(); setStudio({ index, tab: 'draw' }); }}
-                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                  bg-black/60 backdrop-blur-xl border border-white/20
-                                  hover:bg-black/70 hover:border-white/40"
-                              >
-                                <Pencil className="w-3 h-3 text-white" />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent>{_copy("copy.151d506b10d7", { defaultValue: "Draw & write" })}</TooltipContent>
-                          </Tooltip>
-                        )}
 
                         {/* Audio controls for images — gated off, see IMAGE_AUDIO_SUPPORTED. */}
                         {IMAGE_AUDIO_SUPPORTED && (recordingIndex === index ? (
@@ -968,7 +999,7 @@ export function PostMediaPreview({
                     {/* Same height as a 16:9 preview always had, with the width taken
                         from the video itself, so tall, square and extra-wide
                         clips show whole instead of cropped into a 16:9 box. */}
-                    <div className="relative self-start max-w-full h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900" style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}>
+                    <div className="relative self-start max-w-full min-w-[150px] h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900" style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}>
                       {/* Processing overlay */}
                       {processingVideos.has(index) && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
@@ -992,10 +1023,16 @@ export function PostMediaPreview({
                         src={m.preview} 
                         playsInline
                         {...{"webkit-playsinline": ""}}
+                        poster={m.thumbnail}
                         className="w-full h-full object-contain rounded-2xl pointer-events-none"
                         style={{ 
-                          filter: m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
-                          transform: generateCropTransform(m.cropSettings),
+                          filter: videoEditsMatrix(m.videoEdits) ? `url(#post-video-fx-${index})` : m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                          transform: [
+                            m.videoEdits?.rotate ? `rotate(${m.videoEdits.rotate}deg)` : '',
+                            m.videoEdits?.rotate === 90 || m.videoEdits?.rotate === 270 ? `scale(${Math.min(videoRatios[m.preview] ?? 16 / 9, 1 / (videoRatios[m.preview] ?? 16 / 9))})` : '',
+                            m.videoEdits?.mirror ? 'scaleX(-1)' : '',
+                            generateCropTransform(m.cropSettings) ?? '',
+                          ].filter(Boolean).join(' ') || undefined,
                         }}
                         onLoadedMetadata={(e) => noteVideoRatio(m.preview, e.currentTarget)}
                         onEnded={() => setPlayingVideoIndex(null)}
@@ -1004,6 +1041,17 @@ export function PostMediaPreview({
                         }}
                       />
                       
+                      {videoEditsMatrix(m.videoEdits) && (
+                        <svg aria-hidden width="0" height="0" className="absolute">
+                          <filter id={`post-video-fx-${index}`} colorInterpolationFilters="sRGB">
+                            <feColorMatrix type="matrix" values={svgMatrixValues(videoEditsMatrix(m.videoEdits)!)} />
+                          </filter>
+                        </svg>
+                      )}
+                      {(m.videoEdits?.adjust?.vignette ?? 0) > 0 && (
+                        <span className="pointer-events-none absolute inset-0 rounded-2xl" style={{ background: vignetteBackground(m.videoEdits!.adjust!.vignette) }} />
+                      )}
+
                       {/* Play/Pause overlay */}
                       {!processingVideos.has(index) && (
                         <button
@@ -1053,62 +1101,43 @@ export function PostMediaPreview({
                         </button>
                       )}
                       
-                      {/* Top left: Trim (+ Filter and Crop, gated off — see
-                          VIDEO_EDITS_SUPPORTED). */}
-                      {(VIDEO_EDITS_SUPPORTED || VIDEO_TRIM_SUPPORTED) && (
-                      <div className="absolute top-2 left-2 flex items-center gap-1.5 flex-wrap">
-                        {VIDEO_EDITS_SUPPORTED && (<>
+                      {/* Top left: Replace and Edit. Everything else lives in the editor. */}
+                      <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                        {onReplaceVideo && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={(e) => { e.stopPropagation(); videoReplaceInputRef.current?.click(); }}
+                                className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
+                                  bg-black/60 backdrop-blur-xl border border-white/20
+                                  hover:bg-black/70 hover:border-white/40"
+                                aria-label={_copy("post.media.replaceVideo", { defaultValue: "Change video" })}
+                              >
+                                <Upload className="w-3 h-3 text-white" />
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>{_copy("post.media.replaceVideo", { defaultValue: "Change video" })}</TooltipContent>
+                          </Tooltip>
+                        )}
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
                               type="button"
-                              onClick={(e) => { e.stopPropagation(); setFilterEditorIndex(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-black/70 hover:border-white/40"
-                            >
-                              <Paintbrush className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.4ab51caa4298", { defaultValue: "Edit filters" })}</TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); setCropEditorIndex(index); }}
-                              className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
-                                bg-black/60 backdrop-blur-xl border border-white/20
-                                hover:bg-black/70 hover:border-white/40"
-                            >
-                              <Crop className="w-3 h-3 text-white" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
-                        </Tooltip>
-                        </>)}
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              aria-label={_copy("copy.8d9346258548", { defaultValue: "Trim video" })}
+                              aria-label={_copy("post.media.editVideo", { defaultValue: "Edit video" })}
                               onClick={(e) => { e.stopPropagation(); openVideoEdit(index); }}
-                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
-                                ${m.trimStart !== undefined || m.trimEnd !== undefined
-                                  ? 'bg-black/70 text-white backdrop-blur-xl border border-white/40'
-                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
-                                }`}
+                              className="flex h-7 items-center justify-center gap-1 rounded-xl px-2 text-xs font-semibold text-white transition-all duration-300 hover:scale-105
+                                bg-black/60 backdrop-blur-xl border border-white/20
+                                hover:bg-black/70 hover:border-white/40"
                             >
-                              <Scissors className="w-3 h-3 text-white" />
+                              <Pencil className="w-3 h-3 text-white" />
+                              {(videoRatios[m.preview] ?? 16 / 9) >= 1 && _copy("post.media.edit", { defaultValue: "Edit" })}
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.8d9346258548", { defaultValue: "Trim video" })}</TooltipContent>
+                          <TooltipContent>{_copy("post.media.editVideoHint", { defaultValue: "Cover, trim, looks, timer, alt text and more" })}</TooltipContent>
                         </Tooltip>
                       </div>
-                      )}
-                      
+
                       {/* Duration badge */}
                       {m.duration && (
                         <div data-keep-dark className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
@@ -1119,29 +1148,15 @@ export function PostMediaPreview({
                         </div>
                       )}
                       
-                      {/* Bottom right: alt text, then the Music Video Toggle */}
-                      <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
-                        {onSetDescription && (
-                          <AltTextButton hasText={!!m.description} onClick={() => setAltEditorIndex(index)} />
-                        )}
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type="button"
-                              onClick={(e) => { e.stopPropagation(); onToggleMusicVideo?.(index); }}
-                              className={`flex items-center justify-center w-7 h-7 rounded-xl transition-all duration-300 hover:scale-105
-                                ${m.isMusicVideo 
-                                  ? 'bg-white/20 text-white backdrop-blur-xl border border-white/30' 
-                                  : 'bg-black/60 backdrop-blur-xl border border-white/20 text-white hover:bg-black/70 hover:border-white/40'
-                                }`}
-                            >
-                              <Music className="w-3 h-3" />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent>{_copy("copy.3246187f056d", { defaultValue: "Mark as music video" })}</TooltipContent>
-                        </Tooltip>
-                      </div>
-                      
+                      {/* What the editor set, at a glance. */}
+                      {(m.destructSeconds || m.isMusicVideo || m.description) && (
+                        <div data-keep-dark className="pointer-events-none absolute bottom-2 right-2 flex items-center gap-1">
+                          {m.isMusicVideo && <span className="flex h-5 w-5 items-center justify-center rounded-md bg-black/70"><Music className="h-3 w-3 text-white" /></span>}
+                          {m.description && <span className="rounded-md bg-black/70 px-1 text-[9px] font-bold leading-5 text-white">ALT</span>}
+                          {m.destructSeconds ? <span className="rounded-md bg-black/70 px-1.5 text-[10px] font-semibold leading-5 text-white">{postDestructShort(m.destructSeconds)}</span> : null}
+                        </div>
+                      )}
+
                       {/* Remove button */}
                       <button
                         onClick={() => onRemove(index)}
@@ -1153,100 +1168,6 @@ export function PostMediaPreview({
 
                     <DraftVideoProgress draft={draftVideo} />
                     
-                    {/* Thumbnail preview - same dimensions as video with drag & drop */}
-                    <div 
-                      style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}
-                      className="relative self-start max-w-full h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900 border-2 border-dashed border-white/20 hover:border-white/40 transition-colors cursor-pointer group"
-                      onClick={() => triggerThumbnailUpload(index)}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.classList.add('border-white', 'bg-white/10');
-                      }}
-                      onDragLeave={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.classList.remove('border-white', 'bg-white/10');
-                        const file = e.dataTransfer.files?.[0];
-                        if (file && file.type.startsWith('image/')) {
-                          const url = URL.createObjectURL(file);
-                          onAddThumbnail?.(index, url);
-                        } else if (file) {
-                          toast.error(_copy("copy.9dea3ce2a91b", { defaultValue: "Please drop an image file" }));
-                        }
-                      }}
-                    >
-                      {m.thumbnail ? (
-                        <>
-                          <img 
-                            src={m.thumbnail} 
-                            alt={_copy("copy.f3fe2c93b34f", { defaultValue: "Thumbnail" })}
-                            className="w-full h-full object-contain bg-black"
-                          />
-                          {/* Overlay on hover */}
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <Upload className="w-6 h-6 text-white" />
-                          </div>
-                          {/* Remove thumbnail */}
-                          <button
-                            type="button"
-                            onClick={(e) => { e.stopPropagation(); onRemoveThumbnail?.(index); }}
-                            className="absolute top-2 right-2 p-1.5 bg-black/70 hover:bg-red-500/80 rounded-xl transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-white" />
-                          </button>
-                        </>
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
-                          <Upload className="w-8 h-8" />
-                          <span className="px-2 text-center text-sm">{_copy("copy.7bc3101b4182", { defaultValue: "Drop image or click" })}</span>
-                        </div>
-                      )}
-                      {/* Label */}
-                      <div className="absolute bottom-2 left-2">
-                        <span data-keep-dark className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">{_copy("copy.f3fe2c93b34f", { defaultValue: "Thumbnail" })}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Frame Selection Strip */}
-                    <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-1 w-[280px] sm:w-[320px] md:w-[380px]">
-                      {/* Upload button */}
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); triggerThumbnailUpload(index); }}
-                        className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 hover:border-white/40 flex items-center justify-center transition-colors"
-                      >
-                        <Upload className="w-4 h-4 text-white/60" />
-                      </button>
-                      
-                      {/* Loading indicator */}
-                      {extractingFrames.has(index) && (
-                        <div className="flex-shrink-0 w-16 h-9 rounded-lg bg-zinc-800 border border-white/20 flex items-center justify-center">
-                          <Loader2 className="w-4 h-4 text-white/60 animate-spin" />
-                        </div>
-                      )}
-                      
-                      {/* Frame thumbnails */}
-                      {videoFrames.get(index)?.map((frameUrl, frameIndex) => (
-                        <button
-                          key={frameIndex}
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); onAddThumbnail?.(index, frameUrl); }}
-                          className={`flex-shrink-0 w-16 h-9 rounded-lg overflow-hidden border-2 transition-colors ${
-                            m.thumbnail === frameUrl 
-                              ? 'border-white' 
-                              : 'border-transparent hover:border-white/50'
-                          }`}
-                        >
-                          <img src={frameUrl} alt={_copy("copy.0238af30a6db", { defaultValue: "Frame {{value1}}", value1: frameIndex + 1 })} className="w-full h-full object-contain bg-black" />
-                        </button>
-                      ))}
-                    </div>
                   </div>
                 ) : null}
               </div>
@@ -1325,14 +1246,22 @@ export function PostMediaPreview({
           items={[videoEdit.item]}
           active={0}
           onActiveChange={() => undefined}
-          onItemChange={(_i, patch) => setVideoEdit((v) => (v ? { ...v, item: { ...v.item, ...patch } } : v))}
+          onItemChange={(_i, patch) => setVideoEdit((v) => {
+            if (!v) return v;
+            // Tapping a frame takes over from an uploaded cover picture.
+            const frameCover = patch.options?.coverAt != null && patch.options.coverAt !== v.item.options.coverAt;
+            return { ...v, item: { ...v.item, ...patch, ...(frameCover ? { coverUrl: undefined } : null) } };
+          })}
           onRemoveItem={() => { const i = videoEdit.index; setVideoEdit(null); onRemove(i); }}
           onClose={() => setVideoEdit(null)}
           onConfirm={() => { void confirmVideoEdit(); }}
-          onlyTabs={['cover', 'trim', 'alt']}
+          onlyTabs={['cover', 'trim', 'mirror', 'rotate', 'looks', 'adjust', 'expire', 'alt', 'music']}
           allowAlt={!!onSetDescription}
           initialTab="cover"
           allowTimer={false}
+          postTimer={onUpdateMedia ? { value: videoEdit.timer, onChange: (t) => setVideoEdit((v) => (v ? { ...v, timer: t } : v)) } : undefined}
+          music={onUpdateMedia ? { on: videoEdit.music, onChange: (on) => setVideoEdit((v) => (v ? { ...v, music: on } : v)) } : undefined}
+          onUploadCover={onAddThumbnail ? () => coverInputRef.current?.click() : undefined}
         />
       )}
 

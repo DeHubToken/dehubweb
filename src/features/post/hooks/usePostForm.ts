@@ -20,6 +20,7 @@ import { createLogger } from '@/lib/logger';
 const mintLogger = createLogger('PostForm.handlePost');
 import { useCreatorPlansLite } from '@/hooks/use-creator-plans';
 import { mintPost, createPoll, getMintFee, getPostQuota, quotePostCharge, keepPostOffChain, AuthenticationError, PaymentRequiredError, UploadHttpError, type MintFeeQuoteResponse, type MintResponse, type PostQuotaStatus, type ShopLink } from '@/lib/api/dehub';
+import { videoEditsPayload, hasVideoEdits } from '../lib/video-edits';
 import { startDraftVideo, isDraftUsable, type DraftVideoUpload, type DraftVideoSnapshot } from '../lib/draft-video';
 import { usePostProcessingStore } from '@/store/postProcessingStore';
 // Cheap localStorage reads, no wallet stack — safe to import statically even
@@ -777,15 +778,15 @@ export function usePostForm(
     e.target.value = '';
   }, []);
 
-  const processVideoFile = useCallback(async (file: File) => {
+  const processVideoFile = useCallback(async (file: File, replace = false) => {
     // Can't add video if there are already images
-    if (hasImage) {
+    if (hasImage && !replace) {
       toast.error(_copy("copy.e38adb0be028", { defaultValue: "Remove images first to add a video" }));
       return;
     }
 
     // Can't add more than 1 video
-    if (hasVideo) {
+    if (hasVideo && !replace) {
       toast.error(_copy("copy.ffbd0be1d6f7", { defaultValue: "Only 1 video allowed per post" }));
       return;
     }
@@ -1060,6 +1061,18 @@ export function usePostForm(
     setMedia(prev => prev.map((m, i) => 
       i === index ? { ...m, cropSettings: undefined } : m
     ));
+  }, []);
+
+  const replaceVideoFile = useCallback(async (file: File) => {
+    if (!file.type.startsWith('video/')) {
+      toast.error(_copy("post.replaceVideo.notVideo", { defaultValue: "Choose a video file" }));
+      return;
+    }
+    await processVideoFile(file, true);
+  }, [processVideoFile, _copy]);
+
+  const updateMediaItem = useCallback((index: number, patch: Partial<MediaFile>) => {
+    setMedia(prev => prev.map((m, i) => (i === index ? { ...m, ...patch } : m)));
   }, []);
 
   const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
@@ -2043,6 +2056,8 @@ export function usePostForm(
           : undefined,
         spoilerText: contentWarning?.trim() || undefined,
         hideAssetCards: hideAssetCards || undefined,
+        // Self-destructing video post: the server deletes it when time is up.
+        destruct: media[0]?.type === 'video' && !liveMode && !isQuoting ? media[0].destructSeconds ?? undefined : undefined,
         // A comic: the photos show as collector cards, a caption per page.
         layout: postLayout === 'comic' && hasImage && !liveMode && !isQuoting ? 'comic' : undefined,
         mediaCaptions: postLayout === 'comic' && media.some(m => m.caption?.trim())
@@ -2079,9 +2094,9 @@ export function usePostForm(
 
       // Trims are cut on the server from the draft upload; a post that has to
       // send the file itself goes up whole, and says so.
-      const trimmed = media[0]?.type === 'video' && media[0].trimStart !== undefined;
+      const trimmed = media[0]?.type === 'video' && (media[0].trimStart !== undefined || hasVideoEdits(media[0].videoEdits));
       const warnUntrimmed = () => {
-        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim." }));
+        if (trimmed) toast.info(_copy("post.trim.notApplied", { defaultValue: "This video was posted without your trim and edits." }));
       };
 
       let mintResponse: MintResponse;
@@ -2094,6 +2109,7 @@ export function usePostForm(
               draftVideoId,
               trimStart: media[0]?.trimStart,
               trimEnd: media[0]?.trimEnd,
+              videoEdits: videoEditsPayload(media[0]?.videoEdits) ?? undefined,
             },
             (percent) => setUploadProgress(Math.max(55, Math.round(percent * 0.6))),
           );
@@ -2945,6 +2961,8 @@ export function usePostForm(
       clearCropFromMedia,
       applyTrimToMedia,
       replaceImageFile,
+      replaceVideoFile,
+      updateMediaItem,
       setMediaDescription,
       setMediaCaption,
       setPostLayout,
