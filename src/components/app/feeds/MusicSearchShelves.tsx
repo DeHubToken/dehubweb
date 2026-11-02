@@ -11,7 +11,6 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation as _useCopy } from 'react-i18next';
-import Play from '@/components/ui/cut-icons/play';
 import { useLiveSpaces, useScheduledSpaces, useStage } from '@/contexts/StageContext';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
@@ -52,7 +51,14 @@ export function useMusicSearchShelves(q: string) {
       .filter((space) => !seen.has(space.id) && (seen.add(space.id), true))
       .sort((a, b) => (STATUS_ORDER[a.status] ?? 2) - (STATUS_ORDER[b.status] ?? 2));
   }, [enabled, term, liveSpaces, scheduledSpaces, recordings.data]);
-  const stations = useMemo(() => (enabled ? (radio.data ?? []).slice(0, STATION_LIMIT) : []), [enabled, radio.data]);
+  // The directory lists some stations more than once under the same name.
+  const stations = useMemo(() => {
+    if (!enabled) return [];
+    const seen = new Set<string>();
+    return (radio.data ?? [])
+      .filter((station) => { const key = station.name.trim().toLocaleLowerCase(); return !seen.has(key) && (seen.add(key), true); })
+      .slice(0, STATION_LIMIT);
+  }, [enabled, radio.data]);
 
   return {
     stages,
@@ -118,13 +124,12 @@ export function MusicSearchShelves({ stages, stations, showMusicTitle }: { stage
               return (
                 <button key={station.stationuuid} type="button" onClick={() => toggleStation(station)} className={cn('w-28 shrink-0 overflow-hidden rounded-xl border bg-white/[0.03] text-left', onAir ? 'border-white/50' : 'border-white/[0.12]')}>
                   <span className="relative flex aspect-square items-center justify-center bg-white/[0.06]">
-                    {station.favicon ? (
-                      <img src={station.favicon} alt="" className="h-full w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                    ) : (
-                      <span className="text-2xl font-bold text-white/60">{station.name.trim().charAt(0).toUpperCase()}</span>
+                    <span className="text-2xl font-bold text-white/60">{station.name.trim().charAt(0).toUpperCase()}</span>
+                    {station.favicon && (
+                      <img src={station.favicon} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                     )}
-                    <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white text-black">
-                      {onAir ? <span className="h-2.5 w-2.5 rounded-[2px] bg-black" /> : <Play className="h-3 w-3 fill-current" />}
+                    <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full" style={{ background: '#fff', color: '#000' }}>
+                      {onAir ? <span className="h-2.5 w-2.5 rounded-[2px] bg-black" /> : <svg aria-hidden viewBox="0 0 10 10" className="ml-0.5 h-2.5 w-2.5"><path d="M2 1l7 4-7 4z" style={{ fill: '#000' }} /></svg>}
                     </span>
                   </span>
                   <span className="block truncate px-2 pt-1.5 text-xs font-semibold text-white">{station.name.trim()}</span>
