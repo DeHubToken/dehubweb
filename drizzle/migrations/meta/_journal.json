@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793593953597,
+      "tag": "0000_create_builder_prefs_and_message_cost",
+      "breakpoints": true
+    }
+  ]
+}
