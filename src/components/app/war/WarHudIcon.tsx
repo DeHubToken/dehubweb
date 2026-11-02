@@ -1,5 +1,5 @@
 import type React from 'react';
-import { AudioLines, AtSign, Crosshair, Film, Layers, Mail, Rocket, Star, Wand2, Palette, Clapperboard, Flame, Lamp, Ticket, Tv, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
+import { AudioLines, AtSign, Crosshair, Gem, Film, Layers, Mail, Rocket, Star, Wand2, Palette, Clapperboard, Flame, Lamp, Ticket, Tv, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
 import BarChart3 from "@/components/ui/cut-icons/stats";
 import CalendarDays from "@/components/ui/cut-icons/events";
 import Coins from "@/components/ui/cut-icons/coins";
@@ -130,7 +130,7 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy'
+  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy' | 'nfts'
   | 'second-wind' | 'comment-anchor' | 'trend-jacker' | 'timeline-bomber'
   | 'signal-flare' | 'flak-jacket' | 'precision-strike' | 'harpoon'
   | 'team-up' | 'front-row' | 'deep-current';
@@ -201,7 +201,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
-  'dao', 'staking', 'bridge', 'buy',
+  'dao', 'staking', 'bridge', 'buy', 'nfts',
   'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
   'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
   'team-up', 'front-row', 'deep-current',
@@ -271,6 +271,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   staking: Vault,
   bridge: Link2,
   buy: Coins,
+  nfts: Gem,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {

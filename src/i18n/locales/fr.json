@@ -6447,6 +6447,12 @@
     "docsLoadFailed": "# Erreur\nÉchec du chargement de la documentation de la compétence.",
     "raw": "Matières"
   },
+  "nftMarket": {
+    "title": "Marché NFT",
+    "subtitle": "Achetez, vendez et faites des offres sur BNB et Base",
+    "seoTitle": "Marché NFT : achetez et vendez des NFT sur BNB et Base | DeHub",
+    "seoDescription": "Achetez, vendez et faites des offres sur des NFT sur BNB Chain et Base. Payez en BNB, ETH ou DHB. Chaque échange transfère le NFT et le paiement en une seule étape."
+  },
   "usernames": {
     "seoTitle": "Nom d'utilisateur Marketplace | DeHub",
     "seoDescription": "Achetez et vendez des noms d'utilisateur DeHub avec jetons. Recherchez des poignées courtes, numériques et originales à vendre, ou répertoriez les vôtres — le transfert se fait en chaîne au moment où le paiement est effacé.",

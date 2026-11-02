@@ -6396,6 +6396,12 @@
     "docsLoadFailed": "# Error\nFailed to load skill documentation.",
     "raw": "Raw"
   },
+  "nftMarket": {
+    "title": "NFT Market",
+    "subtitle": "Buy, sell and offer on BNB and Base",
+    "seoTitle": "NFT Market: buy and sell NFTs on BNB and Base | DeHub",
+    "seoDescription": "Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step."
+  },
   "usernames": {
     "seoTitle": "Username Marketplace | DeHub",
     "seoDescription": "Buy and sell DeHub usernames with tokens. Search short, numeric and original handles for sale, or list your own — the transfer happens on-chain the moment payment clears.",

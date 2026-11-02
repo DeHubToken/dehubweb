@@ -6633,6 +6633,12 @@
     "docsLoadFailed": "# Fout\nKon vaardigheidsdocumentatie niet laden.",
     "raw": "Ruw"
   },
+  "nftMarket": {
+    "title": "NFT-markt",
+    "subtitle": "Kopen, verkopen en bieden op BNB en Base",
+    "seoTitle": "NFT-markt: koop en verkoop NFT’s op BNB en Base | DeHub",
+    "seoDescription": "Koop, verkoop en doe biedingen op NFT’s op BNB Chain en Base. Betaal in BNB, ETH of DHB. Elke transactie ruilt de NFT en de betaling in één stap."
+  },
   "usernames": {
     "seoTitle": "Gebruikersnaammarktplaats | DeHub",
     "seoDescription": "Koop en verkoop DeHub-gebruikersnamen met tokens. Zoek naar korte, numerieke en originele gebruikersnamen die te koop staan, of bied je eigen gebruikersnaam aan — de overdracht vindt on-chain plaats zodra de betaling is verwerkt.",

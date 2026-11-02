@@ -6443,6 +6443,12 @@
     "docsLoadFailed": "# Hata\nSkill belgeleri yüklenemedi.",
     "raw": "Ham hâli"
   },
+  "nftMarket": {
+    "title": "NFT Pazarı",
+    "subtitle": "BNB ve Base üzerinde al, sat ve teklif ver",
+    "seoTitle": "NFT Pazarı: BNB ve Base üzerinde NFT al ve sat | DeHub",
+    "seoDescription": "BNB Chain ve Base üzerinde NFT al, sat ve teklif ver. BNB, ETH veya DHB ile öde. Her işlem NFT’yi ve ödemeyi tek adımda takas eder."
+  },
   "usernames": {
     "seoTitle": "Kullanıcı Adı Pazarı | DeHub",
     "seoDescription": "DeHub kullanıcı adlarını jeton ile alıp satın. Satıştaki kısa, sayısal ve özgün kullanıcı adlarını arayın ya da kendinizinkini listeleyin — ödeme onaylandığı anda devir zincir üstünde gerçekleşir.",

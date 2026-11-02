@@ -46,6 +46,7 @@ export const SEO_I18N_ROUTES = {
   launchpad: '/launchpad',
   // The namespace is `migrate`; the page has always lived at /migrate-youtube.
   migrate: '/migrate-youtube',
+  nftMarket: '/nfts',
   premium: '/premium',
   prompt: '/prompt',
   stages: '/stages',

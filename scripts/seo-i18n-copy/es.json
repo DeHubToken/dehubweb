@@ -67,5 +67,9 @@
   "/usernames": {
     "h1": "Mercado de nombres de usuario de DeHub",
     "body": "<p>Cada perfil de DeHub vive en <strong>dehub.io/tunombre</strong>, y solo existe uno de cada. El mercado de nombres de usuario es donde esos nombres cambian de manos: busca lo que está a la venta, paga al titular directamente en tokens y el nombre pasa a tu cuenta en cuanto la transferencia se confirma on-chain.</p>\n<h2>Comprar un nombre</h2>\n<p>El precio lo indica DeHub, no el navegador, y el pago va de monedero a monedero: DeHub no se lleva comisión ni custodia tus fondos. Busca el nombre que quieres y DeHub te dirá también si simplemente está libre, en cuyo caso puedes quedártelo gratis en lugar de comprarlo.</p>\n<h2>Vender el tuyo</h2>\n<p>Puedes poner a la venta el nombre que usas ahora, al precio en tokens que quieras. Antes de publicar el anuncio eliges el nombre al que te cambiarás, así que el intercambio es instantáneo y queda cerrado en cuanto un comprador paga. Tus publicaciones, tus seguidores y tu monedero se quedan exactamente donde están: solo cambia el nombre.</p>"
+  },
+  "/nfts": {
+    "h1": "Mercado NFT de DeHub",
+    "body": "<p>El mercado NFT de DeHub es donde cualquier NFT de BNB Chain o Base cambia de manos: publicaciones de DeHub acuñadas como NFT y cualquier otra colección de tu monedero. Ponlo a la venta a precio fijo, compra un anuncio o haz una oferta en DHB que el titular puede aceptar.</p>\n<h2>Cómo funciona una operación</h2>\n<p>Las operaciones se liquidan en Seaport, el contrato abierto de intercambio de NFT. El NFT y el pago se mueven en la misma transacción, así que nadie paga sin recibir ni envía sin cobrar. DeHub nunca custodia tus NFT ni tu dinero.</p>\n<h2>Comisiones</h2>\n<p>DeHub cobra un 2% de una venta pagada en BNB o ETH, y un 1% si se paga en DHB. Los creadores reciben la regalía que fija su colección, con un máximo del 10%. El vendedor recibe el resto en cuanto se liquida la operación.</p>"
   }
 }

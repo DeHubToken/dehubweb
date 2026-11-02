@@ -67,5 +67,9 @@
   "/usernames": {
     "h1": "DeHub Kullanıcı Adı Pazarı",
     "body": "<p>Her DeHub profili <strong>dehub.io/adınız</strong> adresinde yaşar ve her addan yalnızca bir tane vardır. Kullanıcı adı pazarı bu adların el değiştirdiği yerdir: satıştakileri arayın, sahibine doğrudan jeton ile ödeyin; transfer zincir üstünde onaylandığı anda ad hesabınıza geçer.</p>\n<h2>Kullanıcı adı satın almak</h2>\n<p>Fiyatı tarayıcı değil DeHub belirtir ve ödeme cüzdandan cüzdana gider; DeHub komisyon almaz ve fonlarınızı asla elinde tutmaz. İstediğiniz adı aradığınızda DeHub size o adın boşta olup olmadığını da söyler; boştaysa satın almak yerine ücretsiz alabilirsiniz.</p>\n<h2>Kendi adınızı satmak</h2>\n<p>Şu anda kullandığınız adı jeton cinsinden istediğiniz fiyata listeleyebilirsiniz. Listelemeden önce geçeceğiniz yeni adı seçersiniz; böylece takas anında gerçekleşir ve alıcı ödediği anda tamamlanır. Gönderileriniz, takipçileriniz ve cüzdanınız tam olarak oldukları yerde kalır; yalnızca kullanıcı adı değişir.</p>"
+  },
+  "/nfts": {
+    "h1": "DeHub NFT Pazarı",
+    "body": "<p>DeHub NFT Pazarı, BNB Chain veya Base üzerindeki her NFT’nin el değiştirdiği yerdir: NFT olarak basılmış DeHub gönderileri ve cüzdanındaki diğer tüm koleksiyonlar. Sabit fiyatla satışa çıkar, bir ilanı satın al ya da sahibinin kabul edebileceği bir DHB teklifi ver.</p>\n<h2>İşlem nasıl yapılır</h2>\n<p>İşlemler açık NFT takas sözleşmesi Seaport üzerinde gerçekleşir. NFT ve ödeme aynı işlemde hareket eder; kimse almadan ödemez, kimse ödenmeden göndermez. DeHub NFT’lerini veya paranı asla tutmaz.</p>\n<h2>Ücretler</h2>\n<p>DeHub, BNB veya ETH ile ödenen satışlardan %2, DHB ile ödenenlerden %1 alır. İçerik üreticileri koleksiyonlarının belirlediği telif ücretini alır, en fazla %10. Kalanı işlem tamamlandığı anda satıcıya geçer.</p>"
   }
 }
