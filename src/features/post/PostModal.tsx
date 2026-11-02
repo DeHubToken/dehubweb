@@ -473,7 +473,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
           actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}) });
         }}
-        onPreview={() => setPreviewOpen(true)}
+        // Photos, a video or plain text: what the feed card can show as it will post.
+        onPreview={articleMode || computed.hasAudio || state.poll ? undefined : () => setPreviewOpen(true)}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
