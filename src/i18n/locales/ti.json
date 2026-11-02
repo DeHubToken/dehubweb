@@ -162,7 +162,24 @@
     "saved": "መዳያታት መግለጺ ተዓቂቦም",
     "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።",
     "verified": "ዝተረጋገጸ ኣገናኝ",
-    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}"
+    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}",
+    "descriptionPresets": "ድረ ገጽ ፡ ኣቃውማ ወይ ካልእ ነገር ኣክሊልካ ። ምስ ማሕበራዊ መራኸቢታትካ ምትእስሳር የርኢ ።",
+    "type": "ዓይነት ሜዳ",
+    "needsLabel": "ንነፍሲ ወከፍ እተለምደ ሜዳ ምልክት ሃቦ",
+    "placeholderPronouns": "ንሳቶም/ንሳቶም",
+    "placeholderLocation": "ከተማ ፡ ሃገር",
+    "presets": {
+      "website": "ወብ ሳይት",
+      "blog": "ብሎግ",
+      "portfolio": "ፖርትፎሊዮ",
+      "shop": "ድኳን",
+      "podcast": "ፖድካስት",
+      "newsletter": "ጋዜጣ",
+      "pronouns": "ክብርታት",
+      "location": "ቦታ",
+      "custom": "እተለምደ",
+      "customOption": "እተለምደ መርትዖ"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ተኸተል",

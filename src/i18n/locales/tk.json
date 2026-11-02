@@ -162,7 +162,25 @@
     "saved": "Profil meýdanlary ýatda saklandy",
     "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
     "verified": "Tassyklanan baglanyşyk",
-    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}"
+    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}",
+    "descriptionPresets": "Web-sayt, sözbaşy ýa-da başga bir zat goş. Çepler öz içi syrlary bilen görkezilýär.",
+    "type": "Meýdanyň Türü",
+    "needsLabel": "Her bir meýdança üçin bir etiket goýuň",
+    "placeholderLink": "scanoir.com",
+    "placeholderPronouns": "olar",
+    "placeholderLocation": "Şäheri, ýurdy",
+    "presets": {
+      "website": "Web-sayt",
+      "blog": "Blog",
+      "portfolio": "Portfeli",
+      "shop": "Dükan",
+      "podcast": "Podkastlar",
+      "newsletter": "Bülleten",
+      "pronouns": "Çykyşlar",
+      "location": "Ýer",
+      "custom": "Adat",
+      "customOption": "Özgür etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} yzarla",

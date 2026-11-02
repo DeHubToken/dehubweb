@@ -102,6 +102,8 @@ import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
+import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
+import { ProfileFieldsEditor, type FieldRow } from '@/components/app/settings/ProfileFieldsSetting';
 import type { SuggestedAccount } from '@/lib/api/dehub';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { filterNavItems } from '@/components/app/navigation/nav-search';
@@ -1043,6 +1045,7 @@ export default function StateGalleryPage() {
 
         <PageKitGallery />
         <GithubLinkGallery />
+        <ProfileFieldsGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.64392c53237a", { defaultValue: "Theme controls" })}</h2>
@@ -1472,6 +1475,35 @@ function GithubLinkGallery() {
       <GithubLinkSetting address="0xgallery-github-on" />
       <div className="flex justify-end" data-github-links-pill>
         <ProfileLinksPill githubLogin="octocat" customs={{ twitterLink: 'x.com/dehub', youtubeLink: 'youtube.com/@dehub' }} />
+      </div>
+    </section>
+  );
+}
+
+const GALLERY_FIELDS = [
+  { name: 'Website', value: 'https://dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+  { name: 'Pronouns', value: 'they/them' },
+  { name: 'Location', value: 'Lisbon, Portugal' },
+  { name: 'Favourite DJ', value: 'Four Tet' },
+];
+
+/** Profile fields: the editor (presets + delete) and how they read on a profile. */
+function ProfileFieldsGallery() {
+  const [rows, setRows] = useState<FieldRow[]>([
+    { key: -1, preset: 'website', name: 'Website', value: 'dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+    { key: -2, preset: 'pronouns', name: 'Pronouns', value: 'they/them' },
+    { key: -3, preset: 'custom', name: 'Favourite DJ', value: 'Four Tet' },
+  ]);
+  return (
+    <section data-page-bento data-profile-fields-gallery className="mb-5 space-y-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="text-sm font-semibold">Profile fields</h2>
+      <ProfileFieldsEditor rows={rows} onChange={setRows} username="dehub" />
+      <div>
+        <p className="mt-1 text-white/90">Bio goes here.</p>
+        <ProfileFieldsList fields={GALLERY_FIELDS} />
+        <div className="mt-2 flex justify-end" data-profile-fields-links>
+          <ProfileLinksPill fields={GALLERY_FIELDS} customs={{ twitterLink: 'x.com/dehub', youtubeLink: 'youtube.com/@dehub' }} />
+        </div>
       </div>
     </section>
   );

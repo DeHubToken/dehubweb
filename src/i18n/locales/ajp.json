@@ -162,7 +162,24 @@
     "saved": "انحفظت حقول الملف",
     "failed": "ما انحفظ. جرّب كمان مرة.",
     "verified": "رابط موثّق",
-    "verifyHint": "لتوثّق رابط، ضيف هاد عالصفحة وبعدين احفظ كمان مرة: {{snippet}}"
+    "verifyHint": "لتوثّق رابط، ضيف هاد عالصفحة وبعدين احفظ كمان مرة: {{snippet}}",
+    "descriptionPresets": "ضيف موقع، ضمائر أو أي شي تاني. الروابط بتظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "عطي كل حقل مخصص اسم",
+    "placeholderPronouns": "هم/هم",
+    "placeholderLocation": "مدينة، دولة",
+    "presets": {
+      "website": "موقع",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "اسم مخصص"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",

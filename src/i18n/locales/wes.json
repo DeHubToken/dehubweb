@@ -162,7 +162,23 @@
     "saved": "Profile fields don save",
     "failed": "E no save. Try again.",
     "verified": "Verified link",
-    "verifyHint": "For verify link, add this one for that page, then save again: {{snippet}}"
+    "verifyHint": "For verify link, add this one for that page, then save again: {{snippet}}",
+    "type": "Field type",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Follow #{{tag}}",

@@ -162,7 +162,25 @@
     "saved": "Meelaha astaanta waa la kaydiyay",
     "failed": "Lama kaydin. Isku day mar kale.",
     "verified": "Xiriir la xaqiijiyay",
-    "verifyHint": "Si aad u xaqiijiso xiriir, kan ku dar boggaas, kadibna mar kale kaydi: {{snippet}}"
+    "verifyHint": "Si aad u xaqiijiso xiriir, kan ku dar boggaas, kadibna mar kale kaydi: {{snippet}}",
+    "descriptionPresets": "Ku dar websaydh, ku dhawaaqid ama wax kale. Xiriirada waxay muujinayaan bulshadaada.",
+    "type": "Nooca goobta",
+    "needsLabel": "Siiya beer kasta oo caadada ah calaamad",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ay/ay",
+    "placeholderLocation": "Magaalada, waddanka",
+    "presets": {
+      "website": "Websaydhka",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Dukaan",
+      "podcast": "Podcast",
+      "newsletter": "Wargayska",
+      "pronouns": "Pronouns",
+      "location": "Goobta",
+      "custom": "Custom",
+      "customOption": "Calaamad Custom"
+    }
   },
   "followedTags": {
     "follow": "Raac #{{tag}}",

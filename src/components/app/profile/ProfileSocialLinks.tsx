@@ -1,5 +1,5 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
@@ -9,6 +9,8 @@ import { normalizeSocialUrl } from '@/lib/social-links';
 import { BadgeCheck } from 'lucide-react';
 import { GithubMark } from './GithubMark';
 import { githubProfileUrl } from '@/lib/github-link';
+import { presetById, splitProfileFields, type StoredProfileField } from '@/lib/profile-field-presets';
+import { PROFILE_FIELD_ICONS } from './profileFieldIcons';
 
 export const SOCIAL_CONFIGS = [
   {
@@ -80,6 +82,8 @@ interface ProfileLinksPillProps {
   customs?: Record<string, unknown>;
   /** A GitHub the owner proved by signing in. Never read from `customs`, which anyone can write. */
   githubLogin?: string;
+  /** Profile fields: the Website (Blog, Shop, …) ones join the links here. */
+  fields?: StoredProfileField[];
   className?: string;
 }
 
@@ -94,7 +98,7 @@ function displayUrl(url: string) {
  * from the name and a long display name got cut or crushed beside them.
  * Tapping them opens the full list.
  */
-export function ProfileLinksPill({ customs, githubLogin, className }: ProfileLinksPillProps) {
+export function ProfileLinksPill({ customs, githubLogin, fields, className }: ProfileLinksPillProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -103,8 +107,24 @@ export function ProfileLinksPill({ customs, githubLogin, className }: ProfileLin
     return typeof val === 'string' && val.trim().length > 0;
   }) : [];
 
-  if (links.length === 0 && !githubLogin) return null;
+  // The owner's own sites lead, right after a proven GitHub.
+  const sites = splitProfileFields(fields).links.map((field, index) => {
+    const Icon = PROFILE_FIELD_ICONS[field.preset];
+    return {
+      key: `field-${index}`,
+      label: t(`profileFields.presets.${field.preset}`, presetById(field.preset)!.name),
+      url: field.url,
+      verified: !!field.verifiedAt,
+      icon: <Icon className="w-3.5 h-3.5" />,
+    };
+  });
+
+  if (links.length === 0 && sites.length === 0 && !githubLogin) return null;
   const githubUrl = githubLogin ? githubProfileUrl(githubLogin) : null;
+  const cornerIcons = [
+    ...sites.map(({ key, icon }) => ({ key, icon })),
+    ...links.map(({ key, icon }) => ({ key, icon: icon as ReactNode })),
+  ].slice(0, githubLogin ? 2 : 3);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -120,7 +140,7 @@ export function ProfileLinksPill({ customs, githubLogin, className }: ProfileLin
           aria-label={t('profile.links', 'Links')}
         >
           {githubLogin ? <GithubMark /> : null}
-          {links.slice(0, githubLogin ? 2 : 3).map(({ key, icon }) => (
+          {cornerIcons.map(({ key, icon }) => (
             <span key={key} className="contents">{icon}</span>
           ))}
         </button>
@@ -150,6 +170,29 @@ export function ProfileLinksPill({ customs, githubLogin, className }: ProfileLin
               <ExternalLink className="ml-auto w-4 h-4 shrink-0 text-zinc-500" />
             </a>
           ) : null}
+          {sites.map(({ key, label, url, verified, icon }) => (
+            <a
+              key={key}
+              href={url}
+              target="_blank"
+              rel="me nofollow noopener noreferrer"
+              className="flex items-center gap-3 rounded-xl bg-white/[0.06] border border-white/10 px-3 py-2.5 hover:bg-white/[0.12] transition-colors"
+            >
+              <span className="w-9 h-9 shrink-0 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-zinc-300 [&_svg]:w-4 [&_svg]:h-4">
+                {icon}
+              </span>
+              <span className="min-w-0 flex flex-col">
+                <span className="flex items-center gap-1 text-sm font-semibold text-white">
+                  {label}
+                  {verified ? (
+                    <BadgeCheck className="w-3.5 h-3.5 shrink-0 text-emerald-400" aria-label={t('profileFields.verified')} />
+                  ) : null}
+                </span>
+                <span className="text-xs text-zinc-400 truncate">{displayUrl(url)}</span>
+              </span>
+              <ExternalLink className="ml-auto w-4 h-4 shrink-0 text-zinc-500" />
+            </a>
+          ))}
           {links.map(({ key, label, icon }) => {
             const url = normalizeSocialUrl(key, customs[key] as string);
             return (

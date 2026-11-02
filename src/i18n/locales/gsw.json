@@ -162,7 +162,24 @@
     "saved": "Profilfälder gspeicheret",
     "failed": "Das isch nöd gspeicheret worde. Probier's nomal.",
     "verified": "Bestätigte Link",
-    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}"
+    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}",
+    "type": "Feldtyp",
+    "needsLabel": "Gebt jedem benutzerdefinierten Feld einen Label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "sie/ihm",
+    "placeholderLocation": "Stadt, Land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomen",
+      "location": "Ort",
+      "custom": "Benutzerdefiniert",
+      "customOption": "Benutzerdefinierter Label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} folge",

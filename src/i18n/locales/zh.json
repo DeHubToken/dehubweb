@@ -162,7 +162,20 @@
     "saved": "个人资料字段已保存",
     "failed": "保存失败，请重试。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}",
+    "descriptionPresets": "添加网站、代词或其他内容。社交媒体链接会显示在我的社交平台上。",
+    "type": "字段类型",
+    "placeholderPronouns": "他们/她们",
+    "placeholderLocation": "城市，国家",
+    "presets": {
+      "website": "网站",
+      "blog": "博客",
+      "shop": "商店",
+      "podcast": "播客",
+      "location": "地点",
+      "custom": "自定义",
+      "customOption": "自定义标签"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",

@@ -162,7 +162,25 @@
     "saved": "Profilfelt lagret",
     "failed": "Det ble ikke lagret. Prøv igjen.",
     "verified": "Bekreftet lenke",
-    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}"
+    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}",
+    "descriptionPresets": "Legg til en nettside, pronomen eller noe annet. Lenker vises på sosiale medier.",
+    "type": "Felttype",
+    "needsLabel": "Gi hvert egendefinerte felt en etikett",
+    "placeholderLink": "dittnettsted.com",
+    "placeholderPronouns": "de/dem",
+    "placeholderLocation": "By, land",
+    "presets": {
+      "website": "Nettsted",
+      "blog": "Blogg",
+      "portfolio": "Portefølje",
+      "shop": "Butikk",
+      "podcast": "Podkast",
+      "newsletter": "Nyhetsbrev",
+      "pronouns": "Pronomen",
+      "location": "Sted",
+      "custom": "Skikk",
+      "customOption": "Tilpasset etikett"
+    }
   },
   "followedTags": {
     "follow": "Følg #{{tag}}",

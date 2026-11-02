@@ -162,7 +162,24 @@
     "saved": "프로필 항목을 저장했어요",
     "failed": "저장하지 못했어요. 다시 시도해 주세요.",
     "verified": "인증된 링크",
-    "verifyHint": "링크를 인증하려면 그 페이지에 이걸 넣고 다시 저장하세요: {{snippet}}"
+    "verifyHint": "링크를 인증하려면 그 페이지에 이걸 넣고 다시 저장하세요: {{snippet}}",
+    "descriptionPresets": "웹사이트, 대명사 등을 추가하세요. 링크는 소셜 미디어와 함께 표시됩니다.",
+    "type": "필드 유형",
+    "needsLabel": "각 사용자 지정 필드에 레이블을 지정합니다.",
+    "placeholderPronouns": "그들/그들",
+    "placeholderLocation": "도시, 국가",
+    "presets": {
+      "website": "웹사이트",
+      "blog": "블로그",
+      "portfolio": "포트폴리오",
+      "shop": "상점",
+      "podcast": "팟캐스트",
+      "newsletter": "뉴스레터",
+      "pronouns": "대명사",
+      "location": "위치",
+      "custom": "사용자 지정",
+      "customOption": "사용자 지정 레이블"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} 팔로우",

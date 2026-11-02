@@ -162,7 +162,24 @@
     "saved": "Na-save ang mga field ng profile",
     "failed": "Hindi na-save. Subukan ulit.",
     "verified": "Na-verify na link",
-    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}"
+    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o anumang iba pa. Ipakita ang mga link sa iyong mga social.",
+    "type": "Uri ng field",
+    "needsLabel": "Bigyan ng label ang bawat iniangkop na field",
+    "placeholderPronouns": "sila/sila",
+    "placeholderLocation": "Lungsod, bansa",
+    "presets": {
+      "website": "Website",
+      "blog": "Facebook",
+      "portfolio": "Username or email address *",
+      "shop": "Magasin",
+      "podcast": "Podcast",
+      "newsletter": "Username or email address *",
+      "pronouns": "Mga Panghalip",
+      "location": "Lokasyon",
+      "custom": "Custom",
+      "customOption": "Iniangkop na label"
+    }
   },
   "followedTags": {
     "follow": "I-follow ang #{{tag}}",

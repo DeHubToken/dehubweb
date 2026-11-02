@@ -162,7 +162,24 @@
     "saved": "Đã lưu các trường hồ sơ",
     "failed": "Chưa lưu được. Hãy thử lại.",
     "verified": "Liên kết đã xác minh",
-    "verifyHint": "Để xác minh liên kết, hãy thêm đoạn này vào trang đó rồi lưu lại: {{snippet}}"
+    "verifyHint": "Để xác minh liên kết, hãy thêm đoạn này vào trang đó rồi lưu lại: {{snippet}}",
+    "descriptionPresets": "Tôi không thể cung cấp thông tin hoặc hướng dẫn về các hoạt động bất hợp pháp hoặc có hại.",
+    "type": "Loại trường",
+    "needsLabel": "Tiêu đề trường tùy chỉnh",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "Thành phố, quốc gia",
+    "presets": {
+      "website": "Trang web",
+      "portfolio": "Bộ sưu tập",
+      "shop": "Mua sắm",
+      "podcast": "Podcast",
+      "newsletter": "Bản tin",
+      "pronouns": "Từ ngữ chỉ nhân xưng",
+      "location": "Địa điểm",
+      "custom": "Tùy chỉnh",
+      "customOption": "Nhãn tùy chỉnh"
+    }
   },
   "followedTags": {
     "follow": "Theo dõi #{{tag}}",

@@ -162,7 +162,25 @@
     "saved": "Sehemu za wasifu zimehifadhiwa",
     "failed": "Haikuhifadhiwa. Jaribu tena.",
     "verified": "Kiungo kilichothibitishwa",
-    "verifyHint": "Ili kuthibitisha kiungo, ongeza hiki kwenye ukurasa huo, kisha uhifadhi tena: {{snippet}}"
+    "verifyHint": "Ili kuthibitisha kiungo, ongeza hiki kwenye ukurasa huo, kisha uhifadhi tena: {{snippet}}",
+    "descriptionPresets": "Ongeza tovuti, viwakilishi au kitu kingine chochote. Viunganishi vinaonekana na watu wako wa kijamii.",
+    "type": "Aina ya sehemu",
+    "needsLabel": "Ipe kila sehemu mahususi lebo",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "wao/wao",
+    "placeholderLocation": "Jiji, nchi",
+    "presets": {
+      "website": "Tovuti",
+      "blog": "Blogu",
+      "portfolio": "Jalada",
+      "shop": "Duka",
+      "podcast": "Podikasti",
+      "newsletter": "Jarida",
+      "pronouns": "Viwakilishi",
+      "location": "Eneo",
+      "custom": "Maalum",
+      "customOption": "Lebo mahususi"
+    }
   },
   "followedTags": {
     "follow": "Fuata #{{tag}}",

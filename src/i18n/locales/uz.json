@@ -162,7 +162,22 @@
     "saved": "Profil maydonlari saqlandi",
     "failed": "Saqlanmadi. Qayta urinib ko'ring.",
     "verified": "Tasdiqlangan havola",
-    "verifyHint": "Havolani tasdiqlash uchun buni o'sha sahifaga qo'shing, so'ng qayta saqlang: {{snippet}}"
+    "verifyHint": "Havolani tasdiqlash uchun buni o'sha sahifaga qo'shing, so'ng qayta saqlang: {{snippet}}",
+    "descriptionPresets": "Manzilga qo'shish uchun, sizning veb-saytingiz, ismlaringiz yoki boshqa ma'lumotlaringizni qo'shing. Mening ijtimoiy tarmoqlarim:",
+    "type": "Maydon turi",
+    "needsLabel": "Har bir maxsus maydonga yorliq bering",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ular/ularni",
+    "placeholderLocation": "Shahar, mamlakat",
+    "presets": {
+      "website": "Veb-sayt",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Do'kon",
+      "podcast": "Podkast",
+      "location": "Mekan",
+      "custom": "Kamolot"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ni kuzatish",

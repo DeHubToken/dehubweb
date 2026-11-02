@@ -162,7 +162,25 @@
     "saved": "Zapisano pola profilu",
     "failed": "Nie zapisano. Spróbuj ponownie.",
     "verified": "Zweryfikowany link",
-    "verifyHint": "Aby zweryfikować link, dodaj to na tamtej stronie i zapisz ponownie: {{snippet}}"
+    "verifyHint": "Aby zweryfikować link, dodaj to na tamtej stronie i zapisz ponownie: {{snippet}}",
+    "descriptionPresets": "Dodaj stronę internetową, zaimki lub cokolwiek innego. Linki pokazują się z Twoimi portalami społecznościowymi.",
+    "type": "Typ pola",
+    "needsLabel": "Nadaj każdemu polu niestandardowemu etykietę",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "oni/oni",
+    "placeholderLocation": "Miasto, kraj",
+    "presets": {
+      "website": "Strona internetowa",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Sklep",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Zaimki",
+      "location": "Lokalizacja",
+      "custom": "Niestandardowe",
+      "customOption": "Etykieta niestandardowa"
+    }
   },
   "followedTags": {
     "follow": "Obserwuj #{{tag}}",
