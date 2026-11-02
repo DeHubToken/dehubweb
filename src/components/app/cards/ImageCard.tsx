@@ -283,7 +283,8 @@ function ImageSlide({
         // A feed kept alive on a hidden page has no box at all. That is not
         // "scrolled far away", and releasing there leaves blank photos when
         // the page comes back, so only release a slide that is laid out.
-        if (entry.boundingClientRect.width === 0 && entry.boundingClientRect.height === 0) {
+        const box = entry.boundingClientRect;
+        if (box && box.width === 0 && box.height === 0) {
           if (releaseTimer) clearTimeout(releaseTimer);
           releaseTimer = undefined;
           return;
