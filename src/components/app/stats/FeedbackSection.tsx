@@ -230,7 +230,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
             {approved.map((item) => (
               <figure key={item.id} className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
-                <blockquote className="text-xs text-zinc-300 leading-relaxed">“{item.body}”</blockquote>
+                <blockquote className="whitespace-pre-line text-xs text-zinc-300 leading-relaxed">“{item.body}”</blockquote>
                 <figcaption className="mt-2 text-[11px] text-zinc-500">
                   {item.username
                     ? `@${item.username}`
