@@ -65,6 +65,7 @@ import { APP_TOKENS_QUERY_KEY } from '@/hooks/use-app-tokens';
 import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { PollEditor } from '@/features/post/components/PollEditor';
+import { AltTextButton } from '@/features/post/components/AltTextEditor';
 import type { PollData } from '@/features/post/types';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
@@ -320,6 +321,23 @@ function CaptureCardGallery() {
  * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
  */
 const GALLERY_LYRICS_TRACK = { tokenId: 'state-gallery-lyrics', audioUrl: '', title: 'Late night lo-fi', artist: 'juno' };
+
+/** Composer ALT pill: empty vs saved. Tap a picture's pill to flip it. */
+function AltPillGallery() {
+  const [saved, setSaved] = useState([false, true]);
+  return (
+    <section data-page-bento data-alt-pill-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Alt text pill</h2>
+      <div className="grid max-w-md grid-cols-2 gap-3">
+        {saved.map((on, i) => (
+          <div key={i} className="relative h-36 overflow-hidden rounded-xl bg-cover bg-center" style={{ backgroundImage: `url(${i ? '/og-image.png' : '/dehub-header-logo.png'})`, backgroundColor: i ? '#f4f1ea' : '#1b2a3a' }}>
+            <AltTextButton hasText={on} onClick={() => setSaved((s) => s.map((v, j) => (j === i ? !v : v)))} className="absolute bottom-2 right-2" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function VoiceNotesGallery() {
   const { t: _copy } = _useCopy();
@@ -979,6 +997,7 @@ export default function StateGalleryPage() {
         <TooltipsGallery />
         <AppTokensGallery />
         <AudioGallery />
+        <AltPillGallery />
         <VoiceNotesGallery />
         <StageCoversGallery />
         <CaptureCardGallery />
