@@ -11727,8 +11727,12 @@
       "restore": "Herstellen",
       "restored": "Herstelde versie {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub-tokens om je dagelijkse build-toelage te verhogen",
     "buildInChat": "Bouw in je DM's met @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} aan tegoed",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Elke prompt wordt betaald uit je tegoed tegen de kosten van het model plus 30%. Het maximale bedrag dat een prompt kan kosten wordt vastgehouden zolang hij loopt, en het ongebruikte deel wordt teruggegeven.",
+    "topUpCredits": "Tegoed opwaarderen",
     "landerTitle": "Bouw een app door te vragen",
     "landerSubtitle": "Vertel @assistent wat je wilt in je berichten. Het bouwt de app, host deze en stuurt je een link die iedereen kan openen. Reageer om iets te wijzigen.",
     "promptPlaceholder": "Beschrijf de app die je wilt...",

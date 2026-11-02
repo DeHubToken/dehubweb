@@ -33,6 +33,7 @@ import dehubIcon from '@/assets/dehub-logo-compact.png';
 import { ASSISTANT_ADDRESS, ASSISTANT_USERNAME } from '@/lib/assistant';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
+import { BuilderModelPicker } from '@/components/builder/BuilderModelPicker';
 
 const TEXT_DIM = 'text-[#949499]';
 const STROKE = 'border-[rgba(255,255,255,0.09)]';
@@ -220,12 +221,7 @@ export default function BuilderPage() {
             {t('builder.buildInChat')}
           </Button>
 
-          <button
-            onClick={() => navigate('/stake')}
-            className={cn('block mx-auto mt-4 text-[13px] underline-offset-4 hover:underline', dim)}
-          >
-            {t('builder.stakeForAllowance')}
-          </button>
+          {isAuthenticated && <BuilderModelPicker isLight={isLight} />}
         </main>
       </div>
     </div>

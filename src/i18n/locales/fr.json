@@ -11482,8 +11482,12 @@
       "restore": "Restaurer",
       "restored": "Version restaurée {{version}}"
     },
-    "stakeForAllowance": "Staker des tokens DeHub pour augmenter votre allocation de création quotidienne",
     "buildInChat": "Créez dans vos messages privés avec @assistant",
+    "modelLabel": "Modèle",
+    "creditsLeft": "{{amount}} en crédits",
+    "perPrompt": "≈ {{price}} par requête",
+    "pricingNote": "Chaque requête est payée avec vos crédits au coût du modèle plus 30 %. Le montant maximal qu'une requête peut coûter est bloqué pendant son exécution, et la partie non utilisée est restituée.",
+    "topUpCredits": "Recharger des crédits",
     "landerTitle": "Créez une application en demandant simplement",
     "landerSubtitle": "Dites à @assistant ce que vous voulez dans vos messages. Il crée l'application, l'héberge et vous envoie un lien que tout le monde peut ouvrir. Répondez pour changer quoi que ce soit.",
     "promptPlaceholder": "Décrivez l'application que vous voulez…",

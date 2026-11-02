@@ -10683,8 +10683,12 @@
       "restore": "Obnovit",
       "restored": "Obnovená verze {{version}}"
     },
-    "stakeForAllowance": "Vsaďte tokeny DeHub pro navýšení denního povoleného množství pro tvorbu",
     "buildInChat": "Tvořte v soukromých zprávách s @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} v kreditech",
+    "perPrompt": "≈ {{price}} za dotaz",
+    "pricingNote": "Každý dotaz se platí z vašich kreditů ve výši ceny modelu plus 30 %. Nejvyšší možná cena dotazu se během jeho běhu zablokuje a nevyužitá část se vrátí.",
+    "topUpCredits": "Dobít kredity",
     "landerTitle": "Vytvořte aplikaci pouhým požádáním",
     "landerSubtitle": "Řekněte @assistant, co chcete ve svých zprávách. Vytváří aplikaci, hostí ji a pošle ti odkaz, který může otevřít kdokoli. Chcete-li cokoli změnit, odpovězte.",
     "promptPlaceholder": "Popiš aplikaci, kterou chceš…",

@@ -10691,8 +10691,12 @@
       "restore": "복원",
       "restored": "복원된 버전 {{version}}"
     },
-    "stakeForAllowance": "DeHub 토큰을 스테이킹하여 일일 빌드 허용량을 늘리세요.",
     "buildInChat": "@assistant와 DM에서 만들기",
+    "modelLabel": "모델",
+    "creditsLeft": "크레딧 {{amount}}",
+    "perPrompt": "프롬프트당 약 {{price}}",
+    "pricingNote": "각 프롬프트는 모델 비용에 30%를 더한 금액이 크레딧에서 결제됩니다. 실행되는 동안 프롬프트의 최대 비용이 보류되며, 사용되지 않은 부분은 반환됩니다.",
+    "topUpCredits": "크레딧 충전",
     "landerTitle": "요청만으로 앱을 빌드하세요",
     "landerSubtitle": "메시지에서 @ assistant에게 무엇을 원하는지 알려주세요. 앱을 빌드하고 호스팅하며 누구나 열 수 있는 링크를 전송합니다. 무엇이든 변경하려면 회신하세요.",
     "promptPlaceholder": "원하는 앱에 대해 설명해 주세요...",

@@ -10653,8 +10653,12 @@
       "restore": "修復",
       "restored": "還原版本 {{version}}"
     },
-    "stakeForAllowance": "質押 DeHub 代幣以提高您的每日建置配額",
     "buildInChat": "喺私訊同 @assistant 一齊整",
+    "modelLabel": "模型",
+    "creditsLeft": "{{amount}} 積分",
+    "perPrompt": "≈ 每次提問 {{price}}",
+    "pricingNote": "每次提問都會由你嘅積分扣，按模型成本加 30% 計。運行期間會先凍結最高可能嘅費用，用唔晒嘅部分會退返俾你。",
+    "topUpCredits": "增值積分",
     "landerTitle": "只需要問就可以建立一個應用程式",
     "landerSubtitle": "喺你嘅訊息入面話畀 @ 助理知你想要啲咩。佢會構建應用程式，托管應用程式，然後向你發送任何人都可以打開嘅連結。回覆要改任何嘢。",
     "promptPlaceholder": "描述下你想要嘅應用程式⋯",

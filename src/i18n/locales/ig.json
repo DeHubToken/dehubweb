@@ -10629,8 +10629,12 @@
       "restore": "Weghachi",
       "restored": "E weghachitere ụdị {{version}}"
     },
-    "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị",
     "buildInChat": "Wuo n'ozi nzuzo gị na @assistant",
+    "modelLabel": "Ụdị",
+    "creditsLeft": "{{amount}} na kredit",
+    "perPrompt": "≈ {{price}} kwa ajụjụ",
+    "pricingNote": "A na-akwụ ụgwọ ajụjụ ọ bụla site na kredit gị na ọnụahịa ụdị ahụ gbakwunyere 30%. A na-ejide ego kachasị nke ajụjụ nwere ike ịfụ mgbe ọ na-arụ ọrụ, a na-eweghachikwa akụkụ a na-ejighị.",
+    "topUpCredits": "Tinye kredit",
     "landerTitle": "Mepụta ngwa naanị site n 'ịjụ",
     "landerSubtitle": "Gwa @nnyemaaka ihe ị chọrọ na ozi gị. Ọ na-ewu ngwa ahụ, na-akwado ya ma na-ezitere gị njikọ onye ọ bụla nwere ike imeghe. Zaghachi ịgbanwe ihe ọ bụla.",
     "promptPlaceholder": "Ihe ọzọ bụ na, you can reach all these destinations by train…",

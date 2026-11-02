@@ -10765,8 +10765,12 @@
       "restore": "Herstel",
       "restored": "Herstelde weergawe {{version}}"
     },
-    "stakeForAllowance": "Stel DeHub-tokens in om jou daaglikse bou-toelae te verhoog",
     "buildInChat": "Bou in jou DM's met @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} in krediete",
+    "perPrompt": "≈ {{price}} per opdrag",
+    "pricingNote": "Elke opdrag word uit jou krediete betaal teen die model se koste plus 30%. Die meeste wat 'n opdrag kan kos, word gehou terwyl dit loop, en die ongebruikte deel word teruggegee.",
+    "topUpCredits": "Laai krediete aan",
     "landerTitle": "Bou 'n app net deur te vra",
     "landerSubtitle": "Vertel @assistent wat jy in jou boodskappe wil hê. Dit bou die app, huisves dit en stuur jou 'n skakel wat enigiemand kan oopmaak. Antwoord om iets te veranderen.",
     "promptPlaceholder": "Beskryf die app wat jy wil hê...",

@@ -573,16 +573,16 @@ function lockedGalleryMessage(id: string, author: 'me' | 'other', kind: 'image' 
     uploadStatus: 'success', voiceDuration: null, isRead: false, isEdited: false, editedAt: null, isForwarded: false,
     replyTo: null, paymentStatus: null, paymentTxHash: null, tipAmount: null, tipSymbol: null, isDeleted: false,
     createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-    lock: { price: 25, symbol: 'DHB', kind, previewUrl: GALLERY_LOCK_BLUR, unlocked: author === 'me', mine: author === 'me', ready: true },
+    lock: { price: 5000, priceUsd: 5, symbol: 'DHB', kind, previewUrl: GALLERY_LOCK_BLUR, unlocked: author === 'me', mine: author === 'me', ready: true },
   };
 }
 function LockedDmGallery() {
   const queryClient = useQueryClient();
-  const [price, setPrice] = useState<number | null>(25);
+  const [price, setPrice] = useState<number | null>(5);
   const real = `${window.location.origin}/og/agents.jpg`;
   const status = (id: string, over: Partial<DmLock>, pendingTxHash?: string): DmLockStatus => ({
     messageId: id, conversationId: 'gallery', payTo: '0x00000000000000000000000000000000000000aa',
-    lock: { price: 25, symbol: 'DHB', kind: 'image', previewUrl: GALLERY_LOCK_BLUR, unlocked: false, ready: true, ...over },
+    lock: { price: 5000, priceUsd: 5, dhbPriceUsd: 0.001, symbol: 'DHB', kind: 'image', previewUrl: GALLERY_LOCK_BLUR, unlocked: false, ready: true, ...over },
     ...(pendingTxHash ? { pendingTxHash } : {}),
   });
   // Seeded before the bubbles mount, so nothing here asks the API.

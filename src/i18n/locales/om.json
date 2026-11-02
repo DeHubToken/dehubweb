@@ -10675,8 +10675,12 @@
       "restore": "Bakka duraaniitti deebisuu",
       "restored": "Vershinii deebi'ee argame {{version}}"
     },
-    "stakeForAllowance": "Tokens DeHub stake gochuun kaffaltii ijaarsaa guyyaa guyyaa keessanii ol kaasaa",
     "buildInChat": "Ergaa dhuunfaa kee keessatti @assistant waliin ijaari",
+    "modelLabel": "Moodeela",
+    "creditsLeft": "{{amount}} kireeditiin",
+    "perPrompt": "≈ gaaffii tokkoon {{price}}",
+    "pricingNote": "Gaaffiin hundi kireeditii kee irraa gatii moodeelaa fi dabalata 30% kaffalama. Gatiin olaanaan gaaffiin baasuu danda'u yeroo hojjetu qabama, kutaan hin fayyadamne immoo deebi'a.",
+    "topUpCredits": "Kireeditii dabali",
     "landerTitle": "Gaafachuu qofaan app ijaaraa",
     "landerSubtitle": "Ergaa keessan keessatti waan barbaaddan @assistant itti himaa. Appicha ijaaree, host godhee link namni kamiyyuu banuu danda'u siif erga. Waan fedhe jijjiiruuf deebii kenni.",
     "promptPlaceholder": "Appii barbaaddan ibsi...",

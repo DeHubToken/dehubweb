@@ -10680,8 +10680,12 @@
       "restore": "Visszaállítás",
       "restored": "Visszaállított verzió {{version}}"
     },
-    "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez",
     "buildInChat": "Építs a privát üzeneteidben az @assistant segítségével",
+    "modelLabel": "Modell",
+    "creditsLeft": "{{amount}} kreditben",
+    "perPrompt": "≈ {{price}} / kérés",
+    "pricingNote": "Minden kérést a kreditjeidből fizetsz a modell költsége plusz 30% áron. A kérés lehetséges legnagyobb költségét futás közben zároljuk, a fel nem használt részt pedig visszaadjuk.",
+    "topUpCredits": "Kredit feltöltése",
     "landerTitle": "Hozzon létre egy alkalmazást csupán egy kéréssel",
     "landerSubtitle": "Üzeneteiben közölje @ assistantrel, hogy mit szeretne. Megépíti az alkalmazást, házigazdává teszi, és elküldi neked azt a linket, amelyet bárki megnyithat. Válaszolj, ha bármit megváltoztatsz.",
     "promptPlaceholder": "Írd le a kívánt alkalmazást…",

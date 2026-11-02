@@ -10772,8 +10772,12 @@
       "restore": "Khôi phục",
       "restored": "Đã khôi phục phiên bản {{version}}"
     },
-    "stakeForAllowance": "Đặt cược token DeHub để tăng hạn mức xây dựng hàng ngày của bạn",
     "buildInChat": "Tạo trong tin nhắn riêng với @assistant",
+    "modelLabel": "Mô hình",
+    "creditsLeft": "{{amount}} tín dụng",
+    "perPrompt": "≈ {{price}} mỗi lời nhắc",
+    "pricingNote": "Mỗi lời nhắc được trả từ tín dụng của bạn theo chi phí của mô hình cộng thêm 30%. Mức tối đa mà một lời nhắc có thể tốn sẽ được giữ lại trong khi chạy và phần chưa dùng sẽ được hoàn lại.",
+    "topUpCredits": "Nạp tín dụng",
     "landerTitle": "Xây dựng một ứng dụng chỉ bằng cách yêu cầu",
     "landerSubtitle": "Hãy cho @assistant biết bạn muốn gì trong tin nhắn của mình. Nó xây dựng ứng dụng, lưu trữ ứng dụng và gửi cho bạn một liên kết mà bất kỳ ai cũng có thể mở. Trả lời để thay đổi bất cứ điều gì.",
     "promptPlaceholder": "Mô tả ứng dụng bạn muốn…",

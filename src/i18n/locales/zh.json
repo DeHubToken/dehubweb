@@ -10697,8 +10697,12 @@
       "restore": "恢复",
       "restored": "还原版本{{version}}"
     },
-    "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度",
     "buildInChat": "在私信中与 @assistant 一起搭建",
+    "modelLabel": "模型",
+    "creditsLeft": "{{amount}} 积分",
+    "perPrompt": "≈ 每次提问 {{price}}",
+    "pricingNote": "每次提问从你的积分中扣除，按模型成本加 30% 计费。运行期间会冻结该提问可能产生的最高费用，未用完的部分将退回。",
+    "topUpCredits": "充值积分",
     "landerTitle": "只需询问即可构建应用程序",
     "landerSubtitle": "告诉@ assistant您想要的消息内容。它构建应用程序，托管应用程序，并向您发送任何人都可以打开的链接。回复以更改任何内容。",
     "promptPlaceholder": "描述您想要的应用……",

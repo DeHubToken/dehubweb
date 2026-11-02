@@ -60,6 +60,7 @@ import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange,
 import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
 import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { lockDhbForUsd } from '@/lib/dm-lock-price';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -1029,7 +1030,8 @@ export function useSendMessage(conversationId: string) {
       // A locked send shows the sender their own photo, tagged with its price.
       if (lockPrice && lockPrice > 0 && mediaFile && msgType === 'media') {
         optimisticMessage.lock = {
-          price: lockPrice,
+          price: lockDhbForUsd(lockPrice),
+          priceUsd: lockPrice,
           symbol: 'DHB',
           kind: mediaFile.type.startsWith('video/') ? 'video' : 'image',
           previewUrl: null,

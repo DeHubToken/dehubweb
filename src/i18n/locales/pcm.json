@@ -9766,8 +9766,12 @@
       "restore": "Restore",
       "restored": "Restored version {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
     "buildInChat": "Build for your DM wit @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} for credit",
+    "perPrompt": "≈ {{price}} for each prompt",
+    "pricingNote": "Every prompt dey pay from your credit for di model cost plus 30%. Di highest wey one prompt fit cost, we go hold am while e dey run, and di part wey you no use go come back to you.",
+    "topUpCredits": "Add credit",
     "landerTitle": "Build app just by asking",
     "landerSubtitle": "Tell @assistant wetin you want for your messages. E go build the app, host am, come send you link wey anybody fit open. Reply make you change anything.",
     "promptPlaceholder": "Talk the kain app wey you want…",

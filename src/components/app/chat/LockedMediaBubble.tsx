@@ -2,7 +2,9 @@
  * A pay-to-unlock photo or video in a DM.
  *
  * The other person sees the server's blurred preview with the price and an
- * Unlock button. Paying is an ordinary chat tip to the sender; the server
+ * Unlock button. The price is in dollars; the button shows what that is in
+ * DHB right now (the server's live figure), and that is what gets paid.
+ * Paying is an ordinary chat tip to the sender; the server
  * checks it and hands back a signed URL to the real file. The sender sees
  * their own photo with its price and whether it has been unlocked yet.
  *
@@ -29,6 +31,7 @@ import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { toastTxError } from '@/lib/tx-error-toast';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { formatLockDhb, formatLockUsd, lockDhbForUsd, lockUsdOf } from '@/lib/dm-lock-price';
 
 export const lockedMediaKey = (messageId: string) => ['dm-locked', messageId] as const;
 
@@ -80,6 +83,9 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
   const realUrl = view.mediaUrl || (mine ? lock.mediaUrl : undefined);
   const pending = !!status?.pendingTxHash || paying;
   const previewUrl = getMediaUrl(view.previewUrl || message.mediaUrls?.[0]?.url || '') || undefined;
+  const usd = lockUsdOf(view);
+  // The server prices every read at the live rate; the socket copy is only a quote.
+  const dhbNow = status?.lock?.price ?? lockDhbForUsd(usd);
   const kindWord = lock.kind === 'video' ? t('dmPaidLock.lockedVideo', 'video') : t('dmPaidLock.lockedPhoto', 'photo');
 
   const handleUnlock = async () => {
@@ -92,13 +98,13 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
     setPaying(true);
     const toastId = `dm-unlock-${message._id}`;
     try {
-      toast.loading(t('dmPaidLock.lockedPaying', { defaultValue: 'Paying {{price}} DHB…', price: formatPrice(lock.price) }), { id: toastId });
-      const chainId = await pickChain(me, lock.price);
+      toast.loading(t('dmPaidLock.lockedPayingUsd', { defaultValue: 'Paying {{dhb}} ({{price}})…', dhb: formatLockDhb(dhbNow), price: formatLockUsd(usd) }), { id: toastId });
+      const chainId = await pickChain(me, dhbNow);
       if (!chainId) {
-        toast.error(t('dmPaidLock.lockedNotEnough', { defaultValue: 'You need {{price}} DHB on Base or BNB to unlock this.', price: formatPrice(lock.price) }), { id: toastId });
+        toast.error(t('dmPaidLock.lockedNotEnoughUsd', { defaultValue: 'You need {{dhb}} ({{price}}) on Base or BNB to unlock this.', dhb: formatLockDhb(dhbNow), price: formatLockUsd(usd) }), { id: toastId });
         return;
       }
-      const tip = await sendTip({ tokenId: 0, amount: lock.price, to: status.payTo, chainId, skipBalanceCheck: true });
+      const tip = await sendTip({ tokenId: 0, amount: dhbNow, to: status.payTo, chainId, skipBalanceCheck: true });
       let res = await unlockLockedMedia(message._id, tip.hash);
       if (res.status === 'pending') {
         toast.loading(t('dmPaidLock.lockedConfirming', 'Confirming payment…'), { id: toastId });
@@ -115,7 +121,7 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
     }
   };
 
-  const priceLabel = `${formatPrice(lock.price)} ${lock.symbol || 'DHB'}`;
+  const priceLabel = formatLockUsd(usd);
 
   // ── Sender, or someone who has paid: the real thing ──
   if (realUrl) {
@@ -187,6 +193,11 @@ export function LockedMediaBubble({ message, onOpenImage }: LockedMediaBubblePro
             ? t('dmPaidLock.lockedConfirming', 'Confirming payment…')
             : t('dmPaidLock.lockedUnlockFor', { defaultValue: 'Unlock for {{price}}', price: priceLabel })}
         </button>
+        {!pending && (
+          <span data-lock-dhb className="text-[11px] font-medium opacity-75">
+            {t('dmPaidLock.lockedDhbNow', { defaultValue: '{{dhb}} at today’s price', dhb: formatLockDhb(dhbNow) })}
+          </span>
+        )}
       </div>
     </div>
   );
