@@ -3178,6 +3178,7 @@ function AssistantPageForAccount() {
             </ScrollArea>
             <AnimatePresence>
               {showJump && (
+                <div className="pointer-events-none fixed inset-x-0 bottom-[160px] md:bottom-[170px] z-40 flex justify-center lg:absolute lg:bottom-28">
                 <motion.button
                   type="button"
                   initial={{ opacity: 0, y: 6 }}
@@ -3185,12 +3186,13 @@ function AssistantPageForAccount() {
                   exit={{ opacity: 0, y: 6 }}
                   transition={{ duration: 0.15 }}
                   onClick={() => scrollToBottom(true)}
-                  className="fixed bottom-[150px] md:bottom-[160px] left-1/2 -translate-x-1/2 z-40 lg:absolute lg:bottom-24 flex items-center gap-1.5 h-9 px-4 rounded-full bg-zinc-800/95 border border-white/15 text-sm font-semibold text-zinc-100 shadow-lg"
+                  className="pointer-events-auto flex items-center gap-1.5 h-9 px-4 rounded-full bg-zinc-800/95 border border-white/15 text-sm font-semibold text-zinc-100 shadow-lg"
                   aria-label={_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
                 >
                   <ArrowDown className="w-4 h-4" />
                   {_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
                 </motion.button>
+                </div>
               )}
             </AnimatePresence>
 
