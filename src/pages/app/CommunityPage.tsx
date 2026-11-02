@@ -16,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
 import { useCommunityAbilities, isEffectivelyActive, isActivelyBanned } from '@/hooks/use-community-admin';
 import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
+import { holderGateOf, holderGateMessage, runHolderCheck } from '@/hooks/use-holder-gate';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { AddExistingPost } from '@/components/app/communities/AddExistingPost';
@@ -56,6 +57,7 @@ export default function CommunityPage() {
   const { data: members = [] } = useCommunityMembers(community?.id);
   const { data: membership } = useIsCommunityMember(community?.id);
   const joinMutation = useJoinCommunity();
+  const [checkingHolder, setCheckingHolder] = useState(false);
   const leaveMutation = useLeaveCommunity();
 
   // Membership resolves through the same helper the permission mirror uses, so
@@ -121,7 +123,24 @@ export default function CommunityPage() {
         onSuccess: () => { toast.success(t('communities.requestCancelled')); },
       });
     } else {
-      joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+      const gate = holderGateOf(community);
+      if (!gate || abilities.isOwner) {
+        joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+        return;
+      }
+      // Holder groups: the database reads the wallet's balance first, and only
+      // a passing read lets the membership row in.
+      setCheckingHolder(true);
+      runHolderCheck(community.id, walletAddress)
+        .then(result => {
+          if (result.status === 'open' || result.eligible) {
+            joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+          } else {
+            toast.error(holderGateMessage(result, gate));
+          }
+        })
+        .catch(() => toast.error(holderGateMessage({ status: 'failed' }, gate)))
+        .finally(() => setCheckingHolder(false));
     }
   };
 
@@ -149,7 +168,7 @@ export default function CommunityPage() {
         canManage={abilities.canManage}
         canInvite={!isMember || abilities.can('add_members')}
         onManage={() => setManageOpen(true)}
-        isPending={joinMutation.isPending || leaveMutation.isPending}
+        isPending={checkingHolder || joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
       />
 

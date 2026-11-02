@@ -14,6 +14,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { holderGateOf, runHolderCheck } from '@/hooks/use-holder-gate';
 import { useQueryClient } from '@tanstack/react-query';
 import { markCommunityChatSeen, COMMUNITY_CHAT_SEEN_INTERVAL_MS } from '@/lib/community-chat-notify';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
@@ -234,6 +235,13 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
+  // Holder groups: re-read this member's balance when the chat opens, so a
+  // top-up lets them talk again and a sale is caught before they type.
+  useEffect(() => {
+    if (!active || !isMember || !walletAddress || !holderGateOf(community)) return;
+    if (membership?.role === 'owner' || membership?.role === 'admin') return;
+    runHolderCheck(communityId, walletAddress).catch(() => { /* the send guard still decides */ });
+  }, [active, isMember, walletAddress, communityId, community, membership?.role]);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 

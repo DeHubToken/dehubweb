@@ -31,6 +31,12 @@ export interface Community {
   slow_mode_seconds: number;
   /** What a plain member may do; per-admin grants override it. */
   default_permissions: Record<string, boolean> | null;
+  /** Holder groups: set together, or all null when anyone may join. */
+  holder_gate_chain_id?: number | null;
+  holder_gate_token?: string | null;
+  holder_gate_min?: number | string | null;
+  holder_gate_symbol?: string | null;
+  holder_gate_decimals?: number | null;
   created_at: string;
   updated_at: string;
 }
