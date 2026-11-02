@@ -1693,6 +1693,7 @@ export type Database = {
       builder_messages: {
         Row: {
           content: string
+          cost_usd_micros: number | null
           created_at: string
           id: string
           project_id: string
@@ -1700,6 +1701,7 @@ export type Database = {
         }
         Insert: {
           content: string
+          cost_usd_micros?: number | null
           created_at?: string
           id?: string
           project_id: string
@@ -1707,6 +1709,7 @@ export type Database = {
         }
         Update: {
           content?: string
+          cost_usd_micros?: number | null
           created_at?: string
           id?: string
           project_id?: string
@@ -1721,6 +1724,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      builder_prefs: {
+        Row: {
+          model: string
+          updated_at: string
+          wallet: string
+        }
+        Insert: {
+          model: string
+          updated_at?: string
+          wallet: string
+        }
+        Update: {
+          model?: string
+          updated_at?: string
+          wallet?: string
+        }
+        Relationships: []
       }
       builder_projects: {
         Row: {
