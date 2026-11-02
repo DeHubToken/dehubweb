@@ -20,6 +20,8 @@ export enum ItemType {
   ERC20 = 1,
   ERC721 = 2,
   ERC1155 = 3,
+  ERC721_WITH_CRITERIA = 4,
+  ERC1155_WITH_CRITERIA = 5,
 }
 
 export const SEAPORT_TYPES = {
@@ -82,8 +84,11 @@ const CITEM = '(uint8 itemType,address token,uint256 identifierOrCriteria,uint25
 const PARAMS = `(address offerer,address zone,${ITEM}[] offer,${CITEM}[] consideration,uint8 orderType,uint256 startTime,uint256 endTime,bytes32 zoneHash,uint256 salt,bytes32 conduitKey,uint256 totalOriginalConsiderationItems)`;
 const COMPONENTS = `(address offerer,address zone,${ITEM}[] offer,${CITEM}[] consideration,uint8 orderType,uint256 startTime,uint256 endTime,bytes32 zoneHash,uint256 salt,bytes32 conduitKey,uint256 counter)`;
 
+const RESOLVER = '(uint256 orderIndex,uint8 side,uint256 index,uint256 identifier,bytes32[] criteriaProof)';
+
 export const SEAPORT_IFACE = new Interface([
   `function fulfillOrder((${PARAMS} parameters, bytes signature) order, bytes32 fulfillerConduitKey) payable returns (bool)`,
+  `function fulfillAdvancedOrder((${PARAMS} parameters, uint120 numerator, uint120 denominator, bytes signature, bytes extraData) advancedOrder, ${RESOLVER}[] criteriaResolvers, bytes32 fulfillerConduitKey, address recipient) payable returns (bool)`,
   `function cancel(${COMPONENTS}[] orders) returns (bool)`,
   'function getCounter(address offerer) view returns (uint256)',
 ]);
@@ -126,10 +131,21 @@ export interface NftRef {
   amount?: string;
 }
 
+export interface RoyaltyTerm {
+  receiver: string;
+  amount: string;
+}
+
 export interface FeeTerms {
   feeRecipient: string;
   feeBps: number;
-  royalty: { receiver: string; amount: string } | null;
+  /** One per creator owed (a bundle can owe several), at the start price. */
+  royalty: RoyaltyTerm | RoyaltyTerm[] | null;
+}
+
+function royalties(terms: FeeTerms): RoyaltyTerm[] {
+  if (!terms.royalty) return [];
+  return (Array.isArray(terms.royalty) ? terms.royalty : [terms.royalty]).filter((r) => BigInt(r.amount) > 0n);
 }
 
 const DAY = 24 * 60 * 60;
@@ -160,11 +176,14 @@ function base(offerer: string, days: number, counter: string) {
   };
 }
 
-/** Royalty owed by someone other than the seller, or nothing. */
+/** Royalties owed to people other than the seller. */
+function owedRoyalties(terms: FeeTerms, seller: string): RoyaltyTerm[] {
+  return royalties(terms).filter((r) => r.receiver.toLowerCase() !== seller.toLowerCase());
+}
+
+/** Total royalty owed by someone other than the seller. */
 function royaltyFor(terms: FeeTerms, seller: string): bigint {
-  if (!terms.royalty) return 0n;
-  if (terms.royalty.receiver.toLowerCase() === seller.toLowerCase()) return 0n;
-  return BigInt(terms.royalty.amount);
+  return owedRoyalties(terms, seller).reduce((s, r) => s + BigInt(r.amount), 0n);
 }
 
 /** What the seller keeps from a sale at `price`. */
@@ -172,52 +191,84 @@ export function sellerProceeds(price: bigint, terms: FeeTerms, seller: string): 
   return price - (price * BigInt(terms.feeBps)) / 10_000n - royaltyFor(terms, seller);
 }
 
-function feeItems(itemType: number, currency: string, price: bigint, terms: FeeTerms, seller: string): ConsiderationItem[] {
+/**
+ * DeHub fee and royalties. With `endPrice` below `price` every amount falls in
+ * step (a price-drop auction), worked out the same way the backend checks it.
+ */
+function feeItems(itemType: number, currency: string, price: bigint, terms: FeeTerms, seller: string, endPrice = price): ConsiderationItem[] {
   const out: ConsiderationItem[] = [];
-  const fee = (price * BigInt(terms.feeBps)) / 10_000n;
-  const item = (amount: bigint, recipient: string): ConsiderationItem => ({
+  const item = (start: bigint, end: bigint, recipient: string): ConsiderationItem => ({
     itemType,
     token: currency,
     identifierOrCriteria: '0',
-    startAmount: amount.toString(),
-    endAmount: amount.toString(),
+    startAmount: start.toString(),
+    endAmount: end.toString(),
     recipient: recipient.toLowerCase(),
   });
-  if (fee > 0n) out.push(item(fee, terms.feeRecipient));
-  const royalty = royaltyFor(terms, seller);
-  if (royalty > 0n) out.push(item(royalty, terms.royalty!.receiver));
+  const bps = BigInt(terms.feeBps);
+  const fee = (price * bps) / 10_000n;
+  if (fee > 0n) out.push(item(fee, (endPrice * bps) / 10_000n, terms.feeRecipient));
+  for (const r of owedRoyalties(terms, seller)) {
+    const start = BigInt(r.amount);
+    out.push(item(start, (start * endPrice) / price, r.receiver));
+  }
   return out;
 }
 
-/** A listing: the NFT for `price` (total the buyer pays) in `currency`. */
+/**
+ * A listing: one NFT, or a bundle of up to four, for `price` (total the buyer
+ * pays) in `currency`. With `endPrice` the price falls steadily to it by the
+ * end (a price-drop auction).
+ */
 export function buildListing(args: {
   seller: string;
-  nft: NftRef;
+  nft: NftRef | NftRef[];
   currency: string;
   price: bigint;
+  endPrice?: bigint;
   terms: FeeTerms;
   days: number;
   counter: string;
 }): OrderComponents {
   const currency = args.currency.toLowerCase();
   const itemType = currency === NATIVE ? ItemType.NATIVE : ItemType.ERC20;
-  const proceeds = sellerProceeds(args.price, args.terms, args.seller);
-  if (proceeds <= 0n) throw new Error('Price is too low to cover fees');
+  const endPrice = args.endPrice && args.endPrice > 0n && args.endPrice < args.price ? args.endPrice : args.price;
+  const fees = feeItems(itemType, currency, args.price, args.terms, args.seller, endPrice);
+  const proceeds = args.price - fees.reduce((s, f) => s + BigInt(f.startAmount), 0n);
+  const endProceeds = endPrice - fees.reduce((s, f) => s + BigInt(f.endAmount), 0n);
+  if (proceeds <= 0n || endProceeds <= 0n) throw new Error('Price is too low to cover fees');
+  const nfts = Array.isArray(args.nft) ? args.nft : [args.nft];
   return {
     ...base(args.seller, args.days, args.counter),
-    offer: [nftItem(args.nft)],
+    offer: nfts.map(nftItem),
     consideration: [
       {
         itemType,
         token: currency,
         identifierOrCriteria: '0',
         startAmount: proceeds.toString(),
-        endAmount: proceeds.toString(),
+        endAmount: endProceeds.toString(),
         recipient: args.seller.toLowerCase(),
       },
-      ...feeItems(itemType, currency, args.price, args.terms, args.seller),
+      ...fees,
     ],
   };
+}
+
+/** What a listing costs right now (it falls over time on a price-drop auction). */
+export function currentPrice(c: OrderComponents, nowSeconds = Math.floor(Date.now() / 1000)): bigint {
+  const start = BigInt(c.startTime);
+  const end = BigInt(c.endTime);
+  const now = BigInt(Math.min(Math.max(nowSeconds, Number(c.startTime)), Number(c.endTime)));
+  return c.consideration
+    .filter((i) => i.itemType === ItemType.NATIVE || i.itemType === ItemType.ERC20)
+    .reduce((sum, i) => {
+      const a = BigInt(i.startAmount);
+      const b = BigInt(i.endAmount);
+      if (a === b || end <= start) return sum + a;
+      // Seaport rounds up for consideration; close enough for display.
+      return sum + (a * (end - now) + b * (now - start)) / (end - start);
+    }, 0n);
 }
 
 /**
@@ -234,10 +285,16 @@ export function buildOffer(args: {
   counter: string;
   /** Who currently holds it; a royalty owed to them is skipped. */
   holder?: string;
+  /** Any token of the collection (accepted by whoever holds one). */
+  collection?: boolean;
 }): OrderComponents {
   const currency = args.currency.toLowerCase();
   if (currency === NATIVE) throw new Error('Offers are made in a token, not the native coin');
   const nft = nftItem(args.nft);
+  if (args.collection) {
+    nft.itemType = args.nft.standard === 'erc721' ? ItemType.ERC721_WITH_CRITERIA : ItemType.ERC1155_WITH_CRITERIA;
+    nft.identifierOrCriteria = '0';
+  }
   return {
     ...base(args.buyer, args.days, args.counter),
     offer: [{ itemType: ItemType.ERC20, token: currency, identifierOrCriteria: '0', startAmount: args.price.toString(), endAmount: args.price.toString() }],
