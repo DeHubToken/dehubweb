@@ -136,7 +136,7 @@ export function useFractionPortfolio(address: string | null | undefined) {
               tokenId,
               chainId: (post as { chainId?: number }).chainId || 8453,
               title: post.name || post.title || null,
-              imageUrl: buildImageUrl(post.tokenId, post.imageUrl, 400) || null,
+              imageUrl: fractionImageFor(post, 400) || null,
               postType: post.postType || null,
               isCreator: true,
             });
