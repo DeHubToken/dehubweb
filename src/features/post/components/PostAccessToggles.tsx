@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { DIRECT_TIP_TOKENS } from '@/lib/direct-tip-tokens';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type ReactNode } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby, Quote, MessageSquareReply, Scissors } from "lucide-react";
@@ -732,97 +732,70 @@ export function PostAccessToggles({
         </label>
         )}
 
-        {/* Who may see the post — everyone, followers, or only the people it
-            mentions. First of the three, because it decides the other two:
-            a post nobody else can see is not one anybody else can quote. */}
+        {/* Who may see / quote / stitch / reply. Each is one row with a
+            switch: off is the open default, on shows the narrower choices as
+            buttons underneath. */}
         {setVisibility && (
-        <div className="py-0.5">
-          <label className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 min-w-0">
-              <Eye className="w-4 h-4 text-white shrink-0" />
-              <span className="text-sm text-white">{t('postVisibility.label')}</span>
-            </div>
-            <select
-              value={visibility}
-              onChange={(e) => setVisibility(e.target.value as PostVisibility)}
-              onClick={e => e.stopPropagation()}
-              aria-label={t('postVisibility.label')}
-              className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
-            >
-              <option value="public">{t('postVisibility.public')}</option>
-              <option value="followers">{t('postVisibility.followers')}</option>
-              <option value="direct">{t('postVisibility.direct')}</option>
-            </select>
-          </label>
-          {visibility === 'direct' && (
-            <p className="mt-1 pl-6 text-xs text-white/60">{t('postVisibility.directHint')}</p>
-          )}
-        </div>
+          <ChoiceRow
+            icon={<Eye className="w-4 h-4 text-white shrink-0" />}
+            label={t('postVisibility.label')}
+            value={visibility}
+            offValue="public"
+            offLabel={t('postVisibility.public')}
+            options={[
+              { value: 'followers', label: t('postVisibility.followers') },
+              { value: 'direct', label: t('postVisibility.direct') },
+            ]}
+            onChange={(v) => setVisibility(v as PostVisibility)}
+            hint={visibility === 'direct' ? t('postVisibility.directHint') : undefined}
+          />
         )}
 
-        {/* Who may quote the post — anyone, followers, or only the creator. */}
         {setQuotePolicy && visibility === 'public' && (
-        <label className="flex items-center justify-between py-0.5 gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <Quote className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">{t('quotePolicy.label')}</span>
-          </div>
-          <select
+          <ChoiceRow
+            icon={<Quote className="w-4 h-4 text-white shrink-0" />}
+            label={t('quotePolicy.label')}
             value={quotePolicy}
-            onChange={(e) => setQuotePolicy(e.target.value as QuotePolicy)}
-            onClick={e => e.stopPropagation()}
-            aria-label={t('quotePolicy.label')}
-            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
-          >
-            <option value="public">{t('quotePolicy.public')}</option>
-            <option value="followers">{t('quotePolicy.followers')}</option>
-            <option value="nobody">{t('quotePolicy.nobody')}</option>
-          </select>
-        </label>
+            offValue="public"
+            offLabel={t('quotePolicy.public')}
+            options={[
+              { value: 'followers', label: t('quotePolicy.followers') },
+              { value: 'nobody', label: t('quotePolicy.nobody') },
+            ]}
+            onChange={(v) => setQuotePolicy(v as QuotePolicy)}
+          />
         )}
 
-        {/* Who may stitch the video — up to 5 seconds of it, then their own clip. */}
         {setStitchPolicy && visibility === 'public' && (
-        <label className="flex items-center justify-between py-0.5 gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <Scissors className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">{t('remixLinks.stitch.allow', 'Allow stitches')}</span>
-          </div>
-          <select
+          <ChoiceRow
+            icon={<Scissors className="w-4 h-4 text-white shrink-0" />}
+            label={t('remixLinks.stitch.allow', 'Allow stitches')}
             value={stitchPolicy ?? ''}
-            onChange={(e) => setStitchPolicy((e.target.value || null) as RemixPolicy | null)}
-            onClick={e => e.stopPropagation()}
-            aria-label={t('remixLinks.stitch.allow', 'Allow stitches')}
-            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
-          >
-            <option value="">{t('remixLinks.policy.default', 'My default')}</option>
-            <option value="everyone">{t('remixLinks.policy.everyone', 'Everyone')}</option>
-            <option value="followers">{t('remixLinks.policy.followers', 'Followers')}</option>
-            <option value="nobody">{t('remixLinks.policy.nobody', 'No one')}</option>
-          </select>
-        </label>
+            offValue=""
+            offLabel={t('remixLinks.policy.default', 'My default')}
+            options={[
+              { value: 'everyone', label: t('remixLinks.policy.everyone', 'Everyone') },
+              { value: 'followers', label: t('remixLinks.policy.followers', 'Followers') },
+              { value: 'nobody', label: t('remixLinks.policy.nobody', 'No one') },
+            ]}
+            onChange={(v) => setStitchPolicy((v || null) as RemixPolicy | null)}
+          />
         )}
 
-        {/* Who may reply — narrower than "comments on", wider than "off". */}
         {setReplyPolicy && (
-        <label className="flex items-center justify-between py-0.5 gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <MessageSquareReply className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">{t('replyPolicy.label')}</span>
-          </div>
-          <select
+          <ChoiceRow
+            icon={<MessageSquareReply className="w-4 h-4 text-white shrink-0" />}
+            label={t('replyPolicy.label')}
             value={replyPolicy}
-            onChange={(e) => setReplyPolicy(e.target.value as ReplyPolicy)}
-            onClick={e => e.stopPropagation()}
-            aria-label={t('replyPolicy.label')}
-            className="rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none"
-          >
-            <option value="public">{t('replyPolicy.public')}</option>
-            <option value="followers">{t('replyPolicy.followers')}</option>
-            <option value="following">{t('replyPolicy.following')}</option>
-            <option value="mentioned">{t('replyPolicy.mentioned')}</option>
-          </select>
-        </label>
+            offValue="public"
+            offLabel={t('replyPolicy.public')}
+            options={[
+              { value: 'followers', label: t('replyPolicy.followers') },
+              { value: 'following', label: t('replyPolicy.following') },
+              { value: 'mentioned', label: t('replyPolicy.mentioned') },
+            ]}
+            onChange={(v) => setReplyPolicy(v as ReplyPolicy)}
+          />
         )}
 
         {/* Mature content — the creator's own declaration. Marking it keeps the
@@ -1298,5 +1271,71 @@ export function PostAccessToggles({
         </DrawerContent>
       </Drawer>
     </>
+  );
+}
+
+/**
+ * One post option as a single row: icon, title, switch. Off keeps the open
+ * default (shown greyed after the title); on picks the first narrower choice
+ * and shows every narrower choice as a button under the row.
+ */
+function ChoiceRow({
+  icon,
+  label,
+  value,
+  offValue,
+  offLabel,
+  options,
+  onChange,
+  hint,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  offValue: string;
+  offLabel: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+  hint?: string;
+}) {
+  const on = value !== offValue;
+  return (
+    <div className="py-0.5">
+      <label className="flex items-center justify-between gap-3 cursor-pointer">
+        <div className="flex items-center gap-2 min-w-0">
+          {icon}
+          <span className="text-sm text-white">{label}</span>
+          {!on && <span className="text-xs text-white/50 truncate">({offLabel})</span>}
+        </div>
+        <Switch
+          checked={on}
+          onCheckedChange={(next) => onChange(next ? options[0].value : offValue)}
+          aria-label={label}
+          className="data-[state=checked]:bg-white scale-75"
+        />
+      </label>
+      {on && (
+        <div className="mt-1 mb-1 flex flex-wrap gap-1.5 pl-6" role="radiogroup" aria-label={label}>
+          {options.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              role="radio"
+              aria-checked={value === o.value}
+              onClick={() => onChange(o.value)}
+              className={cn(
+                'rounded-lg px-2.5 py-1 text-xs transition-colors',
+                value === o.value
+                  ? 'bg-white text-black font-semibold'
+                  : 'bg-white/10 text-white hover:bg-white/15',
+              )}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {on && hint && <p className="mb-1 pl-6 text-xs text-white/60">{hint}</p>}
+    </div>
   );
 }
