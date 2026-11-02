@@ -18818,5 +18818,17 @@
     "privacy": "Endast används för att informera dig om lanseringen.",
     "seoTitle": "Token lanseras snart | DeHub",
     "seoDescription": "Den nya DeHub-tokenen lanseras snart. Gå med i listan och få ett e‑mail så snart den går live, och köp sedan direkt från din DeHub-plånbok."
+  },
+  "githubLink": {
+    "hint": "Logga in på GitHub för att bekräfta att kontot är ditt. DeHub ser endast din offentliga GitHub-profil.",
+    "verified": "Verifierad",
+    "verifiedAria": "Verifierad GitHub-konto",
+    "connected": "GitHub kopplat",
+    "disconnected": "GitHub disconnected",
+    "taken": "Den GitHub-konto är redan kopplad till ett annat DeHub-profil.",
+    "failed": "Kunde inte ansluta till GitHub. Försök igen.",
+    "unavailable": "GitHub-verifiering kommer snart.",
+    "connect": "Anslut GitHub",
+    "disconnect": "Avsluta"
   }
 }

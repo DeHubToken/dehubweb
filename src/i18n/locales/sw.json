@@ -18813,5 +18813,17 @@
     "privacy": "Inatumika tu kukujulisha kuhusu uzinduzi.",
     "seoTitle": "Token itakazoanzishwa hivi karibuni | DeHub",
     "seoDescription": "Token mpya ya DeHub itakazoanzishwa hivi karibuni. Jiunge kwenye orodha na upate barua pepe mara tu itakapokuwa hai, kisha nunua moja kwa moja kutoka kwenye mkoba wako wa DeHub."
+  },
+  "githubLink": {
+    "hint": "Ingia kwenye GitHub ili kuthibitisha kuwa akaunti ni yako. DeHub inaona tu profili yako ya umma ya GitHub.",
+    "verified": "Tajiri",
+    "verifiedAria": "Kuhusu akaunti ya GitHub iliyeshawekesha (verified)",
+    "connected": "GitHub imetungajiwa",
+    "disconnected": "GitHub imekopwa",
+    "taken": "Hesabu ya GitHub hiyo imeandikwa katika profaili ya DeHub ya nyingine.",
+    "failed": "Hakuwezi kuunganisha GitHub. Ubaki na kufanya tena.",
+    "unavailable": "GitHub verification itatokea baadaye.",
+    "connect": "Kutoka GitHub",
+    "disconnect": "Ondoa"
   }
 }

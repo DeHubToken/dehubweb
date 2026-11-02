@@ -373,6 +373,7 @@
   },
   "nav": {
     "reorderHint": "Hold and drag any icon wey you like so you can rearrange dem.",
+    "reorderReset": "Reset",
     "reorderResetLong": "Reset menu order",
     "home": "Home",
     "explore": "Waka Look",
@@ -417,8 +418,7 @@
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
     "converter": "Converter",
-    "affiliate": "Affiliate",
-    "reorderReset": "Reset"
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "View {{name}}'s profile",
@@ -16210,5 +16210,15 @@
     "failed": "No go save dat. Try again.",
     "privacy": "Wahala na me go tell you about the launch.",
     "seoTitle": "Token launching soon | DeHub"
+  },
+  "githubLink": {
+    "hint": "Sign in to GitHub wey go prove account be yours. DeHub no dey see any other thing like your private profile, only your public GitHub profile dey.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

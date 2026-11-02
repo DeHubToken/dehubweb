@@ -49,7 +49,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'profile', anchor: 'display-name', label: 'Display Name', labelKey: 'settings.displayName', keywords: 'nickname rename' },
   { tab: 'profile', anchor: 'username', label: 'Username', labelKey: 'settings.username', keywords: 'handle rename @' },
   { tab: 'profile', anchor: 'bio', label: 'Bio', labelKey: 'settings.bio', keywords: 'about description' },
-  { tab: 'profile', anchor: 'social-links', label: 'Social Links', labelKey: 'settings.socialLinks', keywords: 'twitter x instagram tiktok youtube discord telegram facebook followers follower count total reach audience' },
+  { tab: 'profile', anchor: 'social-links', label: 'Social Links', labelKey: 'settings.socialLinks', keywords: 'twitter x instagram tiktok youtube discord telegram facebook github verified followers follower count total reach audience' },
   { tab: 'profile', anchor: 'profile-fields', label: 'Profile fields', labelKey: 'profileFields.title', keywords: 'website pronouns links verify rel me metadata fields' },
   { tab: 'profile', anchor: 'fediverse', label: 'Fediverse', labelKey: 'fediverse.title', keywords: 'mastodon activitypub federation handle follow decentralised' },
   { tab: 'profile', anchor: 'connected-apps', label: 'Connected apps', labelKey: 'mastodonApps.connectedTitle', keywords: 'mastodon ivory tusky elk ice cubes apps sign in signed in oauth revoke remove access' },

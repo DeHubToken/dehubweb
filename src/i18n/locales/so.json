@@ -18718,5 +18718,17 @@
     "eyebrow": "Imaanshaha ugu dhakhsaha badan",
     "failed": "Ma badbaadin karo taas. isku day mar kale.",
     "seoDescription": "Token cusub ee DeHub ayaa lagu sii dayn doona dhow. Ku biir liiska oo hel email hal mar markii ay bilaabato, ka dibna iibso sida toos ah meesha DeHub wallet-kaaga."
+  },
+  "githubLink": {
+    "hint": "Waxbarashada GitHub ku xidha inyo aad ugu xidha shaqaalaha aad ugu tahay. DeHub waxaad u baahantahay profileka GitHub-kaaga ah.",
+    "verified": "Verified",
+    "verifiedAria": "GitHub-kaaga ah waxaa la aaminaa",
+    "connected": "GitHub waxaa la xidhaa",
+    "disconnected": "GitHub waxaa la xidhaa",
+    "taken": "GitHub-kaaga ah waxaa la aaminaa kuwa aad ugu xidhaa profileka DeHub kana ah.",
+    "failed": "Waxaa la dhaadsaday GitHub. Fadlan xidhaa.",
+    "unavailable": "GitHub-kaaga ah waxaa la aaminaa inay ka dhac.",
+    "connect": "Xidhaa GitHub",
+    "disconnect": "Xidhaa GitHub"
   }
 }

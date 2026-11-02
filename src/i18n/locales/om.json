@@ -18734,6 +18734,11 @@
     "seoTitle": "Token dhuma keessa dhufa | DeHub",
     "seoDescription": "Token DeHub haaraan dhuma keessa dhufa. Listaa keessa seeni ergaa email tokko argadhu yeroo inni jiraatu, sana booda DeHub wallet kee irraa bitaa."
   },
+  "githubLink": {
+    "hint": "Guddisaa fi GitHub-ii isaa dhufeera. DeHub ammoo hubatii fi GitHub-ii isaa keessa jira.",
+    "connected": "GitHub garee garee.",
+    "taken": "Waa GitHub accounttiin isaa DeHub profilettiin walitti bu'ura."
+  },
   "spaces": {
     "title": "Bakkeewwan",
     "live": "Kallattii",

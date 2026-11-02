@@ -18818,5 +18818,17 @@
     "privacy": "Kuvame ukukutshela kuphela ngokuqaliswa.",
     "seoTitle": "Ukuqalisa ithokheni maduzane | I-DeHub",
     "seoDescription": "Ithokheni entsha ye-DeHub izokwethulwa maduzane. Joyina uhlu bese uthola i-imeyili eyodwa ngesikhathi iqala ukusebenza, bese uthenga ngokuqondile esikhwameni sakho semali se-DeHub."
+  },
+  "githubLink": {
+    "hint": "Ngena ku-GitHub ukuze uqinisekise ukuthi i-akhawunti ingeyakho. I-DeHub ibona kuphela iphrofayela yakho yomphakathi ye-GitHub.",
+    "verified": "Kuqinisekisiwe",
+    "verifiedAria": "I-akhawunti ye-GitHub eqinisekisiwe",
+    "connected": "I-GitHub ixhunyiwe",
+    "disconnected": "I-GitHub ixhunyiwe",
+    "taken": "Le akhawunti ye-GitHub isivele ikhona kwenye iphrofayela ye-DeHub.",
+    "failed": "Ayikwazanga ukuxhuma i-GitHub. Zama futhi.",
+    "unavailable": "Ukuqinisekiswa kwe-GitHub kuza maduzane.",
+    "connect": "Xhuma i-GitHub",
+    "disconnect": "Ndisulule"
   }
 }

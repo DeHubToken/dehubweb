@@ -18705,5 +18705,17 @@
     "privacy": "仅用于告诉您有关发布的信息。",
     "seoTitle": "代币即将推出| DeHub",
     "seoDescription": "新的DeHub代币即将推出。加入列表，在上线时收到一封电子邮件，然后直接从DeHub钱包购买。"
+  },
+  "githubLink": {
+    "hint": "登录 GitHub 以证明该账户是您的。DeHub 只能看到您的公开 GitHub 资料。",
+    "verified": "已验证",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 已断开连接",
+    "taken": "该 GitHub 账户已在另一个 DeHub 资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
   }
 }

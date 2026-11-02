@@ -406,6 +406,8 @@
     "gasSponsorshipFailed": "ما قدرناش نخلصو هاد المعاملة. عاود جرب من بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الصفحة الرئيسية",
     "explore": "استكشف",
@@ -450,9 +452,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -18773,5 +18773,16 @@
     "privacy": "مستعمل غير باش نخبرك بالطلق.",
     "seoTitle": "الرمز سيتطلق قريباً | DeHub",
     "seoDescription": "الرمز الجديد ديال DeHub غادي يطلق قريباً. انضم للقائمة وخد إيميل ف اللحظة اللي يطلق فيها، ومن بعد شري مباشرة من محفظة DeHub ديالك."
+  },
+  "githubLink": {
+    "hint": "سجّل الدخول إلى GitHub لإثبات أن الحساب لك. يرى DeHub ملفك الشخصي العام على GitHub فقط.",
+    "verified": "تم التحقق",
+    "verifiedAria": "تم التحقق من حساب GitHub",
+    "connected": "GitHub متصل",
+    "disconnected": "GitHub غير متصل",
+    "taken": "حساب GitHub هذا موجود بالفعل في ملف تعريف DeHub آخر.",
+    "failed": "تعذر الاتصال بـ GitHub. حاول مرة أخرى.",
+    "unavailable": "التحقق من GitHub قريبًا.",
+    "disconnect": "قطع الاتصال"
   }
 }

@@ -18812,5 +18812,17 @@
     "privacy": "Koristi se samo da bi ti obavijestili o lansiranju.",
     "seoTitle": "Token lansira se brzo | DeHub",
     "seoDescription": "Novi DeHub token brzo dolazi. Priključite se listi i dobijte jedan email trenutno kada postane dostupan, a zatim kupite direktno iz vašeg DeHub novčanika."
+  },
+  "githubLink": {
+    "hint": "Prijavite se na GitHub kako biste dokazali da je račun vaš. DeHub vidi samo vaš javni GitHub profil.",
+    "verified": "Verificirano",
+    "verifiedAria": "Verificirani GitHub račun",
+    "connected": "GitHub je povezan",
+    "disconnected": "GitHub je odspojen",
+    "taken": "Taj GitHub račun već je na drugom DeHub profilu.",
+    "failed": "Povezivanje s GitHubom nije uspjelo. Pokušajte ponovno.",
+    "unavailable": "Uskoro stiže GitHub potvrda.",
+    "connect": "Poveži GitHub",
+    "disconnect": "Prekini vezu"
   }
 }

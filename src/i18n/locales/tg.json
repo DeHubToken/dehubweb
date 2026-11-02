@@ -18738,5 +18738,13 @@
     "privacy": "Танҳо барои огоҳ кардани шумо дар бораи оғоз истифода мешавад.",
     "seoTitle": "Токен дар ҳоли барпоиш | DeHub",
     "seoDescription": "Токени нави DeHub дар ҳоли барпоиш аст. Ба рӯйхат ҳамроҳ шавед ва ҳангоми фаъолшавии он, як почтаи электронӣ гиред, сипас бевосита аз ҳамёни DeHub худ харид кунед."
+  },
+  "githubLink": {
+    "hint": "Roʻyxatdan oʻtish uchun GitHubga kirishingiz kerak, shuning uchun hisobingiz siznikiga aylandi. DeHub faqat sizning umumiy GitHub profilingizni koʻrishadi.",
+    "verified": "Tasdiq etilgan",
+    "connected": "GitHub roʻyxatdan etilgan",
+    "taken": "Inshakhs, hesob GitHubi dar profili DeHubi baʼziy roʻy berde ast.",
+    "failed": "Qayd rosh qilib boʿd GitHub. Yana urinish konid.",
+    "disconnect": "Парокандашавондан."
   }
 }

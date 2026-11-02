@@ -18685,5 +18685,17 @@
     "failed": "اھو محفوظ نه ٿي سگھيو. ٻيهر ڪوشش ڪريو.",
     "privacy": "صرف توهان کي لانچ جي باري ۾ ٻڌائڻ لاء استعمال ڪيو ويو.",
     "seoTitle": "ٽوڪن جلد لانچ ٿيندو | DeHub"
+  },
+  "githubLink": {
+    "hint": "ڪمپيوٽر ۾ GitHub تي لاگ ان ڪري ڏسو تہ ڪنٽاڪٽ ڪيل اڪائونٽ آپ جي ۾ ۾ آهي.",
+    "verified": "ورفيڊ",
+    "verifiedAria": "ورفيڊ GitHub اڪائونٽ",
+    "connected": "GitHub جوڙيل",
+    "disconnected": "GitHub جوڙيل",
+    "taken": "ڪنهن بہ اڪائونٽ تي GitHub جوڙيل آهي.",
+    "failed": "GitHub جوڙڻ ۾ ناکام. ٻيو ڪوشش ڪريو.",
+    "unavailable": "GitHub ورفيڪيشن پڻ اچڻ ۾ آهي.",
+    "connect": "GitHub سان ڳنڍو",
+    "disconnect": "ڌار ڪريو"
   }
 }

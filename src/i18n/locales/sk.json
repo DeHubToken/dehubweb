@@ -18928,6 +18928,18 @@
     "seoTitle": "Token sa blíži k uvedeniu | DeHub",
     "seoDescription": "Nový token DeHub sa blíži k uvedeniu. Pridajte sa do zoznamu a dostanete jeden email, keď sa uvedie do prevádzky, a môžete potom kúpiť rovnako z vášho portfólia DeHub."
   },
+  "githubLink": {
+    "hint": "Prihláste sa na GitHub, aby ste preukázali, že účet je váš. DeHub vidí iba váš verejný profil na GitHube.",
+    "verified": "Overené",
+    "verifiedAria": "Overený účet GitHub",
+    "connected": "GitHub pripojený",
+    "disconnected": "GitHub odpojený",
+    "taken": "Tento účet GitHub je už na inom profile DeHub.",
+    "failed": "Nepodarilo sa pripojiť GitHub. Skúste znova.",
+    "unavailable": "Overenie GitHub čoskoro príde.",
+    "connect": "Pripojiť GitHub",
+    "disconnect": "Rozpojenie"
+  },
   "post": {
     "like": "Páči sa mi",
     "comment": "Komentár",

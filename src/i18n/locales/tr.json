@@ -20055,5 +20055,16 @@
     "privacy": "Sadece bu lansman hakkında söylemek için kullanılıyor.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Yeni DeHub tokenı çok yakında çıkıyor. Listeye katılın, yayına girdiği anda tek bir e-posta alın ve doğrudan DeHub cüzdanınızdan satın alın."
+  },
+  "githubLink": {
+    "hint": "GitHub'a giriş yapın hesabınızın sizin olduğunuzu kanıtlamak için. DeHub sadece sizin GitHub profilinizi görür.",
+    "verified": "Doğrulanmış",
+    "verifiedAria": "Doğrulanmış GitHub hesabı",
+    "connected": "GitHub bağlantılı",
+    "disconnected": "GitHub bağlantısı kesildi",
+    "taken": "O DeHub profilinde zaten bu GitHub hesabı var.",
+    "failed": "GitHub'a bağlanamadı. Lütfen tekrar deneyin.",
+    "unavailable": "GitHub doğrulaması yakında gelecek.",
+    "connect": "Bağlan GitHub'a"
   }
 }

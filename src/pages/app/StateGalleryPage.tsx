@@ -93,6 +93,8 @@ import followAvatarRio from '@/assets/avatars/riooo.png';
 import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
+import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import type { SuggestedAccount } from '@/lib/api/dehub';
 
 /**
@@ -900,6 +902,7 @@ export default function StateGalleryPage() {
         </section>
 
         <PageKitGallery />
+        <GithubLinkGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.64392c53237a", { defaultValue: "Theme controls" })}</h2>
@@ -1256,6 +1259,27 @@ function StreamerArtworkGallery() {
             </div>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/** Verified GitHub: the Settings row both ways, and the profile's links with it. */
+function GithubLinkGallery() {
+  const queryClient = useQueryClient();
+  // Seeded once, before the rows mount, so neither asks the API.
+  useState(() => {
+    queryClient.setQueryData(['github-link', '0xgallery-github-off'], { available: true, connected: false, login: null, verifiedAt: null });
+    queryClient.setQueryData(['github-link', '0xgallery-github-on'], { available: true, connected: true, login: 'octocat', verifiedAt: '2026-11-02T00:00:00Z' });
+    return true;
+  });
+  return (
+    <section data-page-bento data-github-link-gallery className="mb-5 space-y-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="text-sm font-semibold">GitHub</h2>
+      <GithubLinkSetting address="0xgallery-github-off" />
+      <GithubLinkSetting address="0xgallery-github-on" />
+      <div className="flex justify-end" data-github-links-pill>
+        <ProfileLinksPill githubLogin="octocat" customs={{ twitterLink: 'x.com/dehub', youtubeLink: 'youtube.com/@dehub' }} />
       </div>
     </section>
   );

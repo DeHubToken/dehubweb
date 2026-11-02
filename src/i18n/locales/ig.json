@@ -18722,5 +18722,17 @@
     "privacy": "Naanị ejiri ya ịkwu gị ihe banyere mmalite ahụ.",
     "seoTitle": "Token na-amalite n'oge na-adịghị anya | DeHub",
     "seoDescription": "Ọhụụ token DeHub ọhụụ na-abịa n'oge na-adịghị anya. Sonye na ndepụta ma nata imeyl otu mgbe ọ na-amalite, mgbe ahụ zụta ozugbo site na akpa ego DeHub gị."
+  },
+  "githubLink": {
+    "hint": "Banye na GitHub iji gosi na akaụntụ ahụ bụ nke gị. DeHub na-ahụ naanị profaịlụ GitHub gị.",
+    "verified": "Nyochaa",
+    "verifiedAria": "Gosiri GitHub akaụntụ",
+    "connected": "GitHub ejikọrọ",
+    "disconnected": "E kewapụla GitHub",
+    "taken": "Akaụntụ GitHub ahụ adịworị na profaịlụ DeHub ọzọ.",
+    "failed": "Enweghị m ike ijikọ GitHub. Gbalịa ọzọ.",
+    "unavailable": "Nyocha GitHub na-abịa n 'oge na-adịghị anya.",
+    "connect": "Jikọọ GitHub",
+    "disconnect": "Kwụpụ"
   }
 }

@@ -408,6 +408,7 @@
   },
   "nav": {
     "reorderHint": "Tieni premuto e trascina qualsiasi icona per riorganizzare",
+    "reorderReset": "Ripristina",
     "reorderResetLong": "Ripristina l'ordine del menu",
     "home": "Casa",
     "explore": "Esplora",
@@ -452,8 +453,7 @@
     "getTheApp": "Scarica l'app",
     "connectAi": "Collega l'IA",
     "converter": "Convertitore",
-    "affiliate": "Affiliazione",
-    "reorderReset": "Ripristina"
+    "affiliate": "Affiliazione"
   },
   "feed": {
     "viewProfile": "Visualizza il profilo di {{name}}",
@@ -18832,5 +18832,17 @@
     "privacy": "Utilizzato solo per informarti del lancio.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Il nuovo token DeHub sarà lanciato presto. Iscriviti alla lista e ricevi un'email nel momento in cui sarà disponibile, quindi acquista direttamente dal tuo portafoglio DeHub."
+  },
+  "githubLink": {
+    "hint": "Accedi a GitHub per dimostrare che l'account è tuo. DeHub vede solo il tuo profilo GitHub pubblico.",
+    "verified": "Verificato",
+    "verifiedAria": "Account GitHub verificato",
+    "connected": "GitHub connesso",
+    "disconnected": "GitHub disconnesso",
+    "taken": "Quell' account GitHub è già su un altro profilo DeHub.",
+    "failed": "Impossibile collegare GitHub. Riprova.",
+    "unavailable": "La verifica di GitHub è in arrivo.",
+    "connect": "Connetti GitHub",
+    "disconnect": "Disconnetti"
   }
 }

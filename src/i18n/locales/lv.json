@@ -18815,5 +18815,17 @@
     "failed": "Nevarēja to saglabāt. Mēģiniet vēlreiz.",
     "privacy": "Tikai lai tevi informētu par izlaidi.",
     "seoTitle": "Token launchēsies brīdinā | DeHub"
+  },
+  "githubLink": {
+    "hint": "Pierakstieties GitHub, lai pierādītu, ka konts ir jūsu. DeHub redz tikai jūsu publisko GitHub profilu.",
+    "verified": "Pārbaudīts",
+    "verifiedAria": "Pārbaudīts GitHub konts",
+    "connected": "GitHub savienots",
+    "disconnected": "GitHub atvienots",
+    "taken": "Šis GitHub konts jau ir citā DeHub profilā.",
+    "failed": "Nevarēja izveidot savienojumu ar GitHub. Mēģiniet vēlreiz.",
+    "unavailable": "Drīzumā gaidāma GitHub pārbaude.",
+    "connect": "Sajaukties ar GitHub.",
+    "disconnect": "Atvienot"
   }
 }

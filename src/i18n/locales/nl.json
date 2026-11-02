@@ -20304,5 +20304,17 @@
     "privacy": "Alleen gebruikt om je op de hoogte te houden van de lancering.",
     "seoTitle": "Token gaat spoedig live | DeHub",
     "seoDescription": "Het nieuwe DeHub-token gaat spoedig live. Voeg je toe aan de lijst en ontvang één e-mail zodra het live gaat, en koop direct vanuit je DeHub-wallet."
+  },
+  "githubLink": {
+    "hint": "Meld je aan bij GitHub om aan te tonen dat de account van jou is. DeHub ziet alleen je openbare GitHub-profiel.",
+    "verified": "Gecontroleerd",
+    "verifiedAria": "Gecontroleerde GitHub-account",
+    "connected": "GitHub verbonden",
+    "disconnected": "GitHub losgekoppeld",
+    "taken": "Die GitHub-account is al gekoppeld aan een andere DeHub-profiel.",
+    "failed": "Kon GitHub niet verbinden. Probeer het opnieuw.",
+    "unavailable": "GitHub-verificatie komt binnenkort.",
+    "connect": "GitHub verbinden",
+    "disconnect": "Ontkoppelen"
   }
 }

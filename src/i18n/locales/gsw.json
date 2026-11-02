@@ -404,6 +404,7 @@
   },
   "nav": {
     "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
+    "reorderReset": "Zrüggsetze",
     "reorderResetLong": "Reset Menü-Reihenfolge",
     "home": "Hei",
     "explore": "Entdecke",
@@ -448,8 +449,7 @@
     "getTheApp": "App lade",
     "connectAi": "KI verbinde",
     "converter": "Converter",
-    "affiliate": "Partnerprogramm",
-    "reorderReset": "Zrüggsetze"
+    "affiliate": "Partnerprogramm"
   },
   "feed": {
     "viewProfile": "Lueg {{name}}'s Profil aa",
@@ -18711,5 +18711,17 @@
     "privacy": "Nur für die Info über die Lancierung.",
     "seoTitle": "Token wird bald lanciert | DeHub",
     "seoDescription": "Der neue DeHub-Token wird bald lanciert. Schreib dich auf die Liste und bekomm eine E-Mail, sobald er live geht, dann kannst du direkt aus deinem DeHub-Wallet kaufen."
+  },
+  "githubLink": {
+    "hint": "Logg dich bei GitHub ein, um zu beweisen, dass das Konto deinig ist. DeHub sieht nur dein öffentliches GitHub-Profil.",
+    "verified": "Bestätigt",
+    "verifiedAria": "Verifiziert",
+    "connected": "Verifiziertes GitHub-Konto",
+    "disconnected": "GitHub verbunden",
+    "taken": "GitHub getrennt",
+    "failed": "Dieses GitHub-Konto ist bereits mit einem anderen DeHub-Profil verbunden.",
+    "unavailable": "GitHub-Verifizierung ist bald verfügbar. Konnte GitHub nicht verbinden. Versuche es erneut.",
+    "connect": "Verifiziertes GitHub-Konto",
+    "disconnect": "GitHub verbinden"
   }
 }

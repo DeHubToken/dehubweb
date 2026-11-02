@@ -18,6 +18,7 @@ import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } f
 import type { DateFilterValue, PostTypeFilterValue } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { verifiedGithubLogin } from '@/lib/github-link';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
@@ -42,6 +43,12 @@ export interface ProfileData {
    * link with `verifiedAt` was proven to link back to this profile by rel="me".
    */
   profileFields?: Array<{ name: string; value: string; verifiedAt?: string | null }>;
+  /**
+   * The GitHub account this profile proved it owns by signing in to GitHub
+   * (dehub-stream-backend src/github-link). Read only from the top-level
+   * `githubLogin`, never from `customs`, which the owner can write freely.
+   */
+  githubLogin?: string;
   avatarUrl?: string;
   coverUrl?: string;
   joinedDate: string;
@@ -142,6 +149,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     verified: user.isVerified || user.is_verified || false,
     bio: user.bio || user.aboutMe || '',
     profileFields: Array.isArray((user as any).profileFields) ? (user as any).profileFields : undefined,
+    githubLogin: verifiedGithubLogin((user as { githubLogin?: unknown }).githubLogin),
     avatarUrl,
     coverUrl,
     joinedDate: joinDate,

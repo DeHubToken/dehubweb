@@ -18574,5 +18574,17 @@
     "failed": "A man tɛ se ka sɛbɛn. Segin fɔ.",
     "privacy": "A ka se fɛ ka kɔ ni i ma ka sɛbɛn.",
     "seoDescription": "DeHub jatɔ koura ye sɔrɔ kɔnɔ. Lisiw la cɛ ka, o ye imɛyili kelen fɛ sɔrɔ na a bɛ kɔ, seko DeHub walɛ la cɛ ka sɔn."
+  },
+  "githubLink": {
+    "hint": "I ka kan ka don GitHub la walisa k'a yira ko i ka ladɛrɛsi ye i ta ye. DeHub be i ka GitHub kunnafoniw dɔrɔn lo ye.",
+    "verified": "Ka tugu a kɔ",
+    "verifiedAria": "GitHub ka baara kɛcogo",
+    "connected": "GitHub ka koo",
+    "disconnected": "GitHub ka baara dabila",
+    "taken": "GitHub ka kunnafoniw be sɔrɔ yɔrɔ wɛrɛ la.",
+    "failed": "Ne tɛ se ka GitHub bila ɲɔgɔn na.",
+    "unavailable": "GitHub ka sɛgɛsɛgɛri bena kɛ yanni dɔɔni.",
+    "connect": "GitHub ka baara kɛcogo",
+    "disconnect": "Ka bɔ ɲɔgɔn na"
   }
 }

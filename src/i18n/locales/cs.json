@@ -18815,5 +18815,17 @@
     "privacy": "Pouze pro informace o lancování.",
     "seoTitle": "Lancování tokenu brzy | DeHub",
     "seoDescription": "Nový token DeHub brzy vyjde. Přidejte se na seznam a obdržíte jeden email okamžitě, jakmile bude live, poté můžete koupit přímo z vaší DeHub peněženky."
+  },
+  "githubLink": {
+    "hint": "Přihlaste se na GitHub, abyste dokázali, že je účet váš. DeHub vidí pouze váš veřejný profil na GitHubu.",
+    "verified": "Ověřeno",
+    "verifiedAria": "Ověřený účet na GitHubu",
+    "connected": "Připojeno k GitHubu",
+    "disconnected": "GitHub odpojen",
+    "taken": "Tento účet GitHub je již na jiném profilu DeHub.",
+    "failed": "Nelze připojit GitHub. Zkuste to znovu.",
+    "unavailable": "Ověření na GitHubu již brzy.",
+    "connect": "Připojit GitHub",
+    "disconnect": "Odpojit"
   }
 }

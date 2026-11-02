@@ -18699,6 +18699,18 @@
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Yangi DeHub tokeni qoʻshilmoqda. Roʻyxatga kiring va unda chiqqanidan bir martta elektron pochta olgan holda, undan oʻzingizning DeHub walletidan olib, sotib olishingiz mumkin."
   },
+  "githubLink": {
+    "hint": "GitHubga kirish uchun hisobingizga tegishli ekanligini isbot qilish uchun. DeHub faqat sizning ochiq GitHub profilingizni koʻradi.",
+    "verified": "Tasdiqlangan",
+    "verifiedAria": "Tasdiqlangan GitHub hisob",
+    "connected": "GitHub bilan bogʻlangan",
+    "disconnected": "GitHubdan ajralgan",
+    "taken": "Ushbu GitHub hisobi boshqa DeHub profilida ham mavjud.",
+    "failed": "GitHub bilan bogʻlanishga muvaffaqiyatsizlik. Qayta urinib koʻring.",
+    "unavailable": "GitHub tasdiqlanishi qiyosan kelmoqda.",
+    "connect": "GitHubga ulangish qiling",
+    "disconnect": "Uzish"
+  },
   "spaces": {
     "title": "Boʻlimlar",
     "live": "Jonli",

@@ -516,7 +516,7 @@ export function ProfileHeader({
                 <MutualFollowers profileAddress={apiProfile?.walletAddress} />
               )}
             </div>
-            <ProfileLinksPill customs={profile.customs} className="shrink-0 mt-2" />
+            <ProfileLinksPill customs={profile.customs} githubLogin={profile.githubLogin} className="shrink-0 mt-2" />
           </div>
 
           {/* The streamer ladder. Renders nothing for a profile that has

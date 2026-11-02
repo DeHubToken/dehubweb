@@ -388,6 +388,9 @@
     "gasSponsorshipFailed": "จ่ายค่าธรรมเนียมธุรกรรมนี้บ่ได้ ลองใหม่อีกเทื่อในบ่ดนนี้"
   },
   "nav": {
+    "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
+    "reorderReset": "รีเซ็ต",
+    "reorderResetLong": "รีเซ็ตลำดับเมนู",
     "home": "บ้าน",
     "explore": "สำหลวด",
     "prompt": "ความต้องการ",
@@ -431,10 +434,7 @@
     "getTheApp": "ดาวน์โหลดแอป",
     "connectAi": "เชื่อมต่อ AI",
     "converter": "ตัวแปลง",
-    "affiliate": "พันธมิตร",
-    "reorderHint": "กดค้างแล้วลากไอคอนใดก็ได้เพื่อจัดเรียงใหม่",
-    "reorderReset": "รีเซ็ต",
-    "reorderResetLong": "รีเซ็ตลำดับเมนู"
+    "affiliate": "พันธมิตร"
   },
   "feed": {
     "viewProfile": "ดูโปรไฟล์ {{name}}",
@@ -18294,5 +18294,16 @@
     "failed": "assistant",
     "privacy": "แค่บอกเฉพาะเรื่องการเปิดตัวเท่านั้น",
     "seoTitle": "Token ล็อกแล้วไม่นาน | DeHub"
+  },
+  "githubLink": {
+    "hint": "ลงชื่อเข้าใช้ GitHub เพื่อแสดงว่าบัญชีของคุณเป็นของคุณเอง DeHub จะเห็นโปรไฟล์ GitHub ของคุณที่เปิดสาธารณะ",
+    "verified": "ตรวจสอบแล้ว",
+    "verifiedAria": "บัญชี GitHub ที่ตรวจสอบแล้ว",
+    "connected": "GitHub ต่อ",
+    "disconnected": "GitHub หยุดเชื่อมต่อ",
+    "taken": "บัญชี GitHub นั้นอยู่ในโปรไฟล์ DeHub อีกโปรไฟล์หนึ่งแล้ว",
+    "failed": "ไม่สามารถเชื่อมต่อกับ GitHub ได้ ลองอีกครั้ง",
+    "unavailable": "การตรวจสอบ GitHub กำลังจะมาsoon",
+    "disconnect": "แยกออก"
   }
 }

@@ -19062,5 +19062,17 @@
     "privacy": "Hanya digunakan untuk memberitahu tentang pelancaran.",
     "seoTitle": "Token pelancaran akan segera | DeHub",
     "seoDescription": "Token DeHub baru akan dilancarkan segera. Sertai senarai dan dapatkan satu borang e-mel segera apabila ia dilancarkan, kemudian beli terus dari dompet DeHub anda."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub untuk membuktikan akaun itu milik anda. DeHub hanya melihat profil GitHub awam anda.",
+    "verified": "Sah",
+    "verifiedAria": "Akaun GitHub yang sah",
+    "connected": "GitHub disambungkan",
+    "disconnected": "GitHub tidak disambungkan",
+    "taken": "Akaun GitHub itu sudah ada pada profil DeHub lain.",
+    "failed": "Tidak dapat menyambungkan GitHub. Cuba lagi.",
+    "unavailable": "Pengesahan GitHub akan datang tidak lama lagi.",
+    "connect": "Sambungkan GitHub",
+    "disconnect": "Putuskan sambungan"
   }
 }

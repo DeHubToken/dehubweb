@@ -8,7 +8,7 @@ import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
-import { profileFieldLinks } from './server/profile-fields.js';
+import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
 import { embedRoute, handleEmbedPage, handleOembed, oembedLinkTag } from './server/post-embed.js';
@@ -3041,10 +3041,10 @@ function rewriteJsonLd(html, edit) {
  * which tells a consumer nothing; that link is dropped and any real external
  * one kept. The @handle rides as alternateName, the site-unique identifier.
  */
-function profilePageLd(value, handle) {
+function profilePageLd(value, handle, verified = []) {
   if (value['@type'] !== 'Person') return null;
   const { '@context': _context, '@type': _type, sameAs, ...person } = value;
-  const external = [].concat(sameAs || []).filter(
+  const external = [...new Set([].concat(sameAs || [], verified))].filter(
     (u) => typeof u === 'string' && u !== person.url && !u.startsWith(`${APP_URL}/`),
   );
   return {
@@ -7453,7 +7453,8 @@ async function handleRequest(request, env, ctx) {
       // rel="me" for each link in the profile fields, so another site — a
       // Mastodon profile, a personal page — can prove this DeHub profile
       // links back to it. Those checks read the HTML and run no script.
-      const relMe = profileFieldLinks(account).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
+      // A verified GitHub joins them; it is proven, so it is also a sameAs below.
+      const relMe = [...profileFieldLinks(account), verifiedGithubUrl(account)].filter(Boolean).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
       if (relMe) html = html.replace('</head>', () => `${relMe}</head>`);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -7504,7 +7505,8 @@ async function handleRequest(request, env, ctx) {
     if (proxiedPostId) {
       html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
-      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
+      const verifiedLinks = [verifiedGithubUrl(profileShareAccount)].filter(Boolean);
+      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle, verifiedLinks));
     } else if (proxiedCommunity) {
       html = cardProxiedImage(rewriteJsonLd(html, communityPageLd));
     }

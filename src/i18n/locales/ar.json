@@ -547,6 +547,7 @@
   },
   "nav": {
     "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الرئيسية",
     "explore": "استكشاف",
@@ -591,8 +592,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -20063,5 +20063,17 @@
     "privacy": "يُستخدم فقط لإخبارك عن الإطلاق.",
     "seoTitle": "إطلاق الرمز قريبًا | DeHub",
     "seoDescription": "سيُطلق رمز DeHub الجديد قريبًا. انضم إلى القائمة واحصل على بريد إلكتروني في اللحظة التي يصبح فيها مباشرًا، ثم اشترِ مباشرة من محفظتك DeHub."
+  },
+  "githubLink": {
+    "hint": "سجّل الدخول إلى GitHub لإثبات أن الحساب لك. يرى DeHub ملفك الشخصي العام على GitHub فقط.",
+    "verified": "تم التحقق",
+    "verifiedAria": "تم التحقق من حساب GitHub",
+    "connected": "GitHub متصل",
+    "disconnected": "GitHub غير متصل",
+    "taken": "حساب GitHub هذا موجود بالفعل في ملف تعريف DeHub آخر.",
+    "failed": "تعذر الاتصال بـ GitHub. حاول مرة أخرى.",
+    "unavailable": "التحقق من GitHub قريبًا.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "قطع الاتصال"
   }
 }

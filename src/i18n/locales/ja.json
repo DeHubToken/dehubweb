@@ -18759,5 +18759,17 @@
     "privacy": "このリリースについてのみお知らせするために使用されます。",
     "seoTitle": "トークンのローンチが間近です | DeHub",
     "seoDescription": "新しいDeHubトークンが近々リリースされます。リストに登録してリリース直後に1通のメールで知らせを受け取り、DeHubウォレットから直接購入できます。"
+  },
+  "githubLink": {
+    "hint": "GitHubにサインインして、アカウントがあなたのものであることを証明します。 DeHubには公開されているGitHubプロファイルのみが表示されます。",
+    "verified": "認証済み",
+    "verifiedAria": "認証済みGitHubアカウント",
+    "connected": "GitHubに接続しました",
+    "disconnected": "GitHubが切断されました",
+    "taken": "そのGitHubアカウントはすでに別のDeHubプロファイルにあります。",
+    "failed": "GitHubに接続できませんでした。もう一度お試しください。",
+    "unavailable": "GitHubの検証がまもなく開始されます。",
+    "connect": "GitHubを接続",
+    "disconnect": "GitHubを切断"
   }
 }

@@ -18809,5 +18809,17 @@
     "privacy": "Përdoret vetëm për t'ju informuar për lançimin.",
     "seoTitle": "Tokeni po niset së shpejti | DeHub",
     "seoDescription": "Tokeni i ri DeHub po niset së shpejti. Bashkohuni në listë dhe merrni një email në momentin kur të jetë i drejtpërdrejtë, pastaj blini drejtpërdrejt nga portofoli juaj DeHub."
+  },
+  "githubLink": {
+    "hint": "Hyrni në GitHub për të provuar se llogaria është juaja. DeHub sheh vetëm profilin tuaj publik në GitHub.",
+    "verified": "Verified",
+    "verifiedAria": "Llogaria e Verifikuar në GitHub",
+    "connected": "GitHub është i lidhur",
+    "disconnected": "GitHub është i ndarë",
+    "taken": "Llogaria GitHub është e regjistruar në një profili tjetër DeHub.",
+    "failed": "Nuk mund të lidhesh me GitHub. Pritni edhe një herë.",
+    "unavailable": "Verifikimi i GitHub-it është në rrugën e pritjes.",
+    "connect": "Kërkoni lidhjen me GitHub",
+    "disconnect": "Ndalo lidhjen me GitHub"
   }
 }

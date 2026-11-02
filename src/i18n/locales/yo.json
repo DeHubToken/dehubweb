@@ -18728,5 +18728,17 @@
     "privacy": "Mo kàn máa ń sọ fún ọ nípa ìfilọ́lẹ̀ náà.",
     "seoTitle": "Àmì ìfilọ̀ láìpẹ́_DeHub",
     "seoDescription": "Àmì tuntun DeHub yóò jáde láìpẹ́. Darapọ̀ mọ́ àtòjọ náà kí o sì gba ímeèlì kan ní àsìkò tí ó bá lọ sí ayé, kí o sì ra tààrà láti inú àpamọ́ DeHub rẹ."
+  },
+  "githubLink": {
+    "hint": "Wọlé sí GitHub láti fi hàn pé àkọọlẹ náà jẹ́ tiẹ. DeHub kan rí àwòrán àkọọlẹ GitHub àkọ́kọ́ rẹ.",
+    "verified": "Ti jẹ́rìí",
+    "verifiedAria": "Ti jẹ́rìí àkọọlẹ GitHub",
+    "connected": "GitHub ti so pọ̀",
+    "disconnected": "GitHub ti yọkúrò",
+    "taken": "Àkọọlẹ GitHub yìí ti wà lórí àkọọlẹ DeHub míì.",
+    "failed": "Kò lè so GitHub pọ̀. Gbìyànjú lẹ́ẹ̀kan síi.",
+    "unavailable": "Ìmúlò GitHub ń bọ́ laipẹ́.",
+    "connect": "Kọọkọ GitHub",
+    "disconnect": "Kọọkọkọ"
   }
 }

@@ -18619,5 +18619,17 @@
     "privacy": "ብቶክን ምውጣት ንምፍላጥ ጥራይ ይጠቀም።",
     "seoTitle": "ቶክን ብቍርበት ይወጣል | DeHub",
     "seoDescription": "ሓድሽ DeHub ቶክን ብቍርበት ይወጣል። ብዝርዝር ተሳተፍ ወይ ሓንጺጹ ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክትቀበል፣ ድሕሪኡ ካብ DeHub ዋሌትካ ብቀጥታ ግዛት።"
+  },
+  "githubLink": {
+    "hint": "ናብ GitHub ተመልሰ ሎግ ኢን ንምክልኻል ሂወትካ ምክልኻል። DeHub ብሉጽ GitHub ገጽ ብቐንዱ ይርኢ።",
+    "verified": "ተረጋገጠ",
+    "verifiedAria": "ተረጋገጠ GitHub ሂወት",
+    "connected": "GitHub ተራኢ",
+    "disconnected": "GitHub ተቋረጠ",
+    "taken": "ዚ GitHub ሂወት ናብ ካልእ DeHub ገጽ ተወሲዱ ኣሎ።",
+    "failed": "GitHub ተራኢ ክኸውን ኣይከኣለን። ድሕሪ ሓንቲ ግዜ ሞክር።",
+    "unavailable": "GitHub ምክልኻል ብቐርቦ ክመጽእ ኣሎ።",
+    "connect": "GitHub ተገናኺ",
+    "disconnect": "ተላላይ"
   }
 }

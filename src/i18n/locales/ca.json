@@ -18813,5 +18813,17 @@
     "privacy": "Només s'utilitza per informar-vos del llançament.",
     "seoTitle": "Llançament de token pròximament | DeHub",
     "seoDescription": "El nou token de DeHub es llança pròximament. Uniteu a la llista i rebereu un correu electrònic en el moment que es posi en línia, després compreu directament des del vostre butxaca DeHub."
+  },
+  "githubLink": {
+    "hint": "Inicia sessió a GitHub per comprovar que el compte és teu. DeHub només veu el teu perfil públic de GitHub.",
+    "verified": "Verificat",
+    "verifiedAria": "Compte de GitHub verificat",
+    "connected": "GitHub connectat",
+    "disconnected": "GitHub desconnectat",
+    "taken": "Aquest compte de GitHub ja està en un altre perfil de DeHub.",
+    "failed": "No s'ha pogut connectar a GitHub. Torna-ho a provar.",
+    "unavailable": "Aviat arribarà la verificació de GitHub.",
+    "connect": "Connecta el GitHub",
+    "disconnect": "Desconnecta"
   }
 }
