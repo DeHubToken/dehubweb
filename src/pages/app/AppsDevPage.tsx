@@ -31,6 +31,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
+import { createDeveloperApp, deleteDeveloperApp, listDeveloperApps, rotateDeveloperSecret, type DeveloperSignInApp } from '@/lib/api/dehub/mastodon-apps';
 import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
@@ -134,6 +135,120 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
       <h2 className="text-sm font-semibold text-white">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/** "Sign in with DeHub" keys for ordinary websites (OAuth, the same server Mastodon apps use). */
+function SignInApps({ signedIn }: { signedIn: boolean }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [name, setName] = useState('');
+  const [website, setWebsite] = useState('');
+  const [redirects, setRedirects] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [secret, setSecret] = useState<{ name: string; clientId: string; clientSecret: string } | null>(null);
+  const { data: apps } = useQuery({ queryKey: ['developer-signin-apps'], queryFn: listDeveloperApps, enabled: signedIn });
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ['developer-signin-apps'] });
+
+  const create = async () => {
+    setBusy(true);
+    try {
+      const app = await createDeveloperApp({
+        name: name.trim(),
+        website: website.trim() || undefined,
+        redirectUris: redirects.split(/\s+/).filter(Boolean),
+      });
+      setSecret({ name: app.name, clientId: app.clientId, clientSecret: app.clientSecret ?? '' });
+      setName('');
+      setWebsite('');
+      setRedirects('');
+      void refresh();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const rotate = async (app: DeveloperSignInApp) => {
+    if (!window.confirm(t('miniApps.dev.signin.rotateConfirm', { name: app.name }))) return;
+    try {
+      const out = await rotateDeveloperSecret(app.clientId);
+      setSecret({ name: app.name, clientId: out.clientId, clientSecret: out.clientSecret });
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
+  const remove = async (app: DeveloperSignInApp) => {
+    if (!window.confirm(t('miniApps.dev.signin.deleteConfirm', { name: app.name }))) return;
+    try {
+      await deleteDeveloperApp(app.clientId);
+      if (secret?.clientId === app.clientId) setSecret(null);
+      void refresh();
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  };
+
+  const input = 'w-full rounded-lg bg-black/40 px-3 py-2 text-sm text-white ring-1 ring-white/10 placeholder:text-zinc-500 focus:outline-none focus:ring-white/30';
+  return (
+    <Section title={t('miniApps.dev.signin.title')}>
+      <p className="text-xs leading-relaxed text-zinc-400">
+        {t('miniApps.dev.signin.body')}{' '}
+        <Link to="/docs/auth" className="text-white underline underline-offset-2">{t('miniApps.dev.signin.guide')}</Link>
+      </p>
+      {!signedIn ? <p className="text-xs text-zinc-500">{t('miniApps.dev.signInFirst')}</p> : (
+        <>
+          {apps?.map((app) => (
+            <div key={app.clientId} className="space-y-1.5 rounded-xl bg-black/40 p-2.5 ring-1 ring-white/10">
+              <div className="flex items-center gap-2">
+                <p className="min-w-0 flex-1 truncate text-sm font-semibold text-white">{app.name}</p>
+                <span className="shrink-0 text-xs text-zinc-400">{t('miniApps.dev.signin.users', { count: app.users })}</span>
+              </div>
+              <p className="truncate font-mono text-[11px] text-zinc-400">{app.clientId}</p>
+              <p className="truncate text-[11px] text-zinc-500">{app.redirectUris.join(' · ')}</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    void navigator.clipboard?.writeText(app.clientId);
+                    toast.success(t('miniApps.dev.copied'));
+                  }}
+                  className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
+                >
+                  {t('miniApps.dev.signin.copyId')}
+                </button>
+                <button type="button" onClick={() => void rotate(app)} className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700">
+                  {t('miniApps.dev.signin.rotate')}
+                </button>
+                <button type="button" onClick={() => void remove(app)} className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-red-300 hover:bg-zinc-700">
+                  {t('miniApps.dev.signin.delete')}
+                </button>
+              </div>
+            </div>
+          ))}
+          {secret ? (
+            <div className="space-y-1.5">
+              <p className="text-xs text-amber-300">{t('miniApps.dev.signin.secretOnce', { name: secret.name })}</p>
+              <CodeBlock code={`client_id=${secret.clientId}\nclient_secret=${secret.clientSecret}`} />
+            </div>
+          ) : null}
+          <div className="space-y-2">
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('miniApps.dev.signin.name')} className={input} maxLength={100} />
+            <input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder={t('miniApps.dev.signin.website')} className={input} inputMode="url" />
+            <textarea value={redirects} onChange={(e) => setRedirects(e.target.value)} placeholder={t('miniApps.dev.signin.redirects')} className={`${input} min-h-[64px]`} />
+            <button
+              type="button"
+              onClick={() => void create()}
+              disabled={busy || !name.trim() || !redirects.trim()}
+              className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-black disabled:opacity-40"
+            >
+              {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+              {t('miniApps.dev.signin.create')}
+            </button>
+          </div>
+        </>
+      )}
+    </Section>
   );
 }
 
@@ -411,6 +526,8 @@ export default function AppsDevPage() {
             </div>
           </Section>
         ) : null}
+
+        <SignInApps signedIn={!!walletAddress} />
 
         <Section title={t('miniApps.dev.ownershipTitle')}>
           <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.ownershipBody')}</p>

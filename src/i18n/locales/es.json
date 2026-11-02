@@ -12453,7 +12453,24 @@
       "rewardsWeek": "Semana de {{date}}",
       "rewardPaid": "Pagado",
       "rewardPending": "Pendiente",
-      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes."
+      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes.",
+      "signin": {
+        "title": "Iniciar sesión con DeHub",
+        "body": "Permite que la gente inicie sesión en tu web o app con su cuenta de DeHub. Crea una clave aquí y sigue la guía.",
+        "guide": "Leer la guía",
+        "users_one": "{{count}} usuario",
+        "users_other": "{{count}} usuarios",
+        "copyId": "Copiar ID de cliente",
+        "rotate": "Nuevo secreto",
+        "delete": "Eliminar",
+        "rotateConfirm": "¿Crear un nuevo secreto para {{name}}? El secreto anterior deja de funcionar al instante.",
+        "deleteConfirm": "¿Eliminar {{name}}? Todos los que iniciaron sesión con ella cerrarán sesión.",
+        "secretOnce": "Secreto de {{name}}. Cópialo ahora: solo se muestra una vez.",
+        "name": "Nombre de la app",
+        "website": "Sitio web (opcional)",
+        "redirects": "URL de redirección, una por línea (https://tusitio.com/callback)",
+        "create": "Crear clave"
+      }
     },
     "card": {
       "open": "Abierto"

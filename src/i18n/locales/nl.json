@@ -12702,7 +12702,24 @@
       "rewardsWeek": "Week van {{date}}",
       "rewardPaid": "Uitbetaalde",
       "rewardPending": "Openstaand",
-      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag."
+      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag.",
+      "signin": {
+        "title": "Inloggen met DeHub",
+        "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",
+        "guide": "Lees de handleiding",
+        "users_one": "{{count}} gebruiker",
+        "users_other": "{{count}} gebruikers",
+        "copyId": "Client-ID kopiëren",
+        "rotate": "Nieuw geheim",
+        "delete": "Verwijderen",
+        "rotateConfirm": "Nieuw geheim maken voor {{name}}? Het oude geheim werkt meteen niet meer.",
+        "deleteConfirm": "{{name}} verwijderen? Iedereen die ermee is ingelogd wordt uitgelogd.",
+        "secretOnce": "Geheim voor {{name}}. Kopieer het nu: het wordt maar één keer getoond.",
+        "name": "Naam van de app",
+        "website": "Website (optioneel)",
+        "redirects": "Redirect-URL's, één per regel (https://jouwsite.com/callback)",
+        "create": "Sleutel maken"
+      }
     },
     "card": {
       "open": "Open"

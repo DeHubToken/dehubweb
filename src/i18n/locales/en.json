@@ -12378,7 +12378,24 @@
       "rewardsWeek": "Week of {{date}}",
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
-      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday."
+      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday.",
+      "signin": {
+        "title": "Sign in with DeHub",
+        "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",
+        "guide": "Read the guide",
+        "users_one": "{{count}} user",
+        "users_other": "{{count}} users",
+        "copyId": "Copy client ID",
+        "rotate": "New secret",
+        "delete": "Delete",
+        "rotateConfirm": "Make a new secret for {{name}}? The old secret stops working right away.",
+        "deleteConfirm": "Delete {{name}}? Everyone signed in with it is signed out.",
+        "secretOnce": "Secret for {{name}}. Copy it now: it is shown only once.",
+        "name": "App name",
+        "website": "Website (optional)",
+        "redirects": "Redirect URLs, one per line (https://yoursite.com/callback)",
+        "create": "Create key"
+      }
     },
     "card": {
       "open": "Open"
