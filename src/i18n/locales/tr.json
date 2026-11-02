@@ -1326,7 +1326,10 @@
     "messageWallNote": "Bahşiş onaylanınca bahşiş duvarında görünür.",
     "sendWithMessage": "Mesajla gönder",
     "messageFailed": "Mesajın eklenemedi. Bahşiş gönderilmedi.",
-    "wallLabel": "Bahşiş mesajları"
+    "wallLabel": "Bahşiş mesajları",
+    "railTitle": "Bahşişler",
+    "railTotal": "{{amount}} token",
+    "tokensUnit": "token"
   },
   "postOptions": {
     "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",

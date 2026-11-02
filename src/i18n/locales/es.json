@@ -1326,7 +1326,10 @@
     "messageWallNote": "Aparece en el muro de propinas cuando la propina se confirma.",
     "sendWithMessage": "Enviar con mensaje",
     "messageFailed": "No se pudo añadir tu mensaje. No se envió ninguna propina.",
-    "wallLabel": "Mensajes de propinas"
+    "wallLabel": "Mensajes de propinas",
+    "railTitle": "Propinas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Ahora sigues a {{name}}. Recibirás una notificación cuando transmita en vivo.",
