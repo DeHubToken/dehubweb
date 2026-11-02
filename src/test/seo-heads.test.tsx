@@ -159,6 +159,8 @@ vi.mock('@/hooks/use-feature-requests', () => ({
   useDeleteFeatureRequest: () => ({ mutateAsync: vi.fn() }),
   useUpdateFeatureRequest: () => ({ mutateAsync: vi.fn() }),
   useEditFeatureRequest: () => ({ mutate: vi.fn(), isPending: false }),
+  useSetFeatureStatus: () => ({ mutate: vi.fn(), isPending: false }),
+  isFeatureStatusEditor: () => false,
   useFeatureCounts: () => ({ data: { total: 0, open: 0 } }),
   CATEGORY_LABELS: {},
   STATUS_LABELS: {},
