@@ -12439,6 +12439,7 @@
       "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
+      "stateRejected": "Bağlantıyla yayında · mağaza için onaylanmadı",
       "copyLink": "Bağlantıyı kopyala",
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",

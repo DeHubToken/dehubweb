@@ -367,7 +367,9 @@ export default function AppsDevPage() {
                       {app.status === 'suspended'
                         ? t('miniApps.dev.stateSuspended')
                         : app.tier === 'unlisted'
-                          ? t('miniApps.dev.stateUnlisted')
+                          ? app.review_state === 'rejected'
+                            ? t('miniApps.dev.stateRejected')
+                            : t('miniApps.dev.stateUnlisted')
                           : t('miniApps.dev.stateListed')}
                       {app.review_note ? ` · ${app.review_note}` : ''}
                     </p>

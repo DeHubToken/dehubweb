@@ -12443,6 +12443,7 @@
       "stateUnlisted": "En ligne par lien · en attente de la boutique",
       "stateListed": "Dans la boutique",
       "stateSuspended": "Suspendue",
+      "stateRejected": "En ligne par lien · non approuvée pour la boutique",
       "copyLink": "Copier le lien",
       "notifyKey": "Notifier la touche",
       "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",

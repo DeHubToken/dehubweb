@@ -12439,6 +12439,7 @@
       "stateUnlisted": "Vive por enlace · en revisión para la tienda",
       "stateListed": "En la tienda",
       "stateSuspended": "Suspendido",
+      "stateRejected": "Vive por enlace · no aprobada para la tienda",
       "copyLink": "Copiar enlace",
       "notifyKey": "Notificar clave",
       "notifyKeyOnce": "Nueva clave de notificación para {{name}}. Copiala ahora: se muestra una sola vez, y hacer otra la reemplaza.",

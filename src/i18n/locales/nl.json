@@ -12688,6 +12688,7 @@
       "stateUnlisted": "Live via link · in beoordeling voor de winkel",
       "stateListed": "In de winkel",
       "stateSuspended": "Opgeschort",
+      "stateRejected": "Live via link · niet goedgekeurd voor de winkel",
       "copyLink": "Link kopiëren",
       "notifyKey": "Meldingssleutel",
       "notifyKeyOnce": "Nieuwe meldingssleutel voor {{name}}. Kopieer hem nu: hij wordt één keer getoond, en een nieuwe vervangt hem.",

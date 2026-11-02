@@ -12364,6 +12364,7 @@
       "stateUnlisted": "Live by link · in review for the store",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
+      "stateRejected": "Live by link · not approved for the store",
       "copyLink": "Copy link",
       "notifyKey": "Notify key",
       "notifyKeyOnce": "New notify key for {{name}}. Copy it now: it is shown once, and making another replaces it.",

@@ -98,6 +98,9 @@ export interface MyApp {
   source: 'dehub' | 'farcaster' | 'base' | 'first_party';
   owner_wallet: string | null;
   review_note: string | null;
+  review_state?: 'pending' | 'approved' | 'rejected' | null;
+  submitted_at?: string | null;
+  reviewed_at?: string | null;
   updated_at: string;
 }
 
