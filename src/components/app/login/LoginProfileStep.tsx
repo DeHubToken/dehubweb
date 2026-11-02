@@ -52,6 +52,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import { usePendingAction } from '@/hooks/use-pending-action';
 import { isReservedUsername } from '@/lib/reserved-usernames';
+import { currentHold } from '@/lib/username-hold';
 import { cn } from '@/lib/utils';
 import { createLogger } from '@/lib/logger';
 import { clearAuthTrace } from '@/lib/auth-trace';
@@ -134,6 +135,12 @@ export function LoginProfileStep() {
   const [saved, setSaved] = useState(false);
 
   const [username, setUsername] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:username", '');
+  // Came in through "Reserve now" on a free profile link: start with that name.
+  useEffect(() => {
+    const hold = currentHold();
+    if (hold && !username) setUsername(hold.username);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [displayName, setDisplayName] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:displayName", '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

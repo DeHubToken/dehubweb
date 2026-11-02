@@ -100,6 +100,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     data: apiProfile,
     isLoading: isLoadingProfile,
     isError: isProfileError,
+    error: profileError,
     isFetchingProfile,
     setFollowStatus,
     refetch: refetchProfile,
@@ -618,6 +619,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     isLoadingProfile,
     isFetchingProfile,
     isProfileError,
+    // Nobody has this handle (the API answers 404, or an empty shell). Not a
+    // load failure: the page offers the free name instead of "try again".
+    isProfileNotFound:
+      isProfileError &&
+      ((profileError as (Error & { httpStatus?: number }) | null)?.httpStatus === 404 ||
+        (profileError as Error | null)?.message === 'Profile not found'),
     refetchProfile,
     isOwnProfile,
     isViewingOwnProfile,
