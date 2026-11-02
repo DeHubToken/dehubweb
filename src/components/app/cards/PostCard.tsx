@@ -100,6 +100,7 @@ import {
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { FeedCaptionExpander } from './FeedCaptionExpander';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
@@ -785,7 +786,13 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          !stage && !threadSlot ? (
+            <FeedCaptionExpander lines={6} textKey={displayBody}>
+              <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+            </FeedCaptionExpander>
+          ) : (
+            <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          )
         ) : null}
         </>
         )}
