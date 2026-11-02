@@ -19,7 +19,7 @@ interface CreateCommunityModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-async function resolveUniqueSlug(baseSlug: string): Promise<string> {
+export async function resolveUniqueSlug(baseSlug: string): Promise<string> {
   const { data } = await supabase
     .from('communities')
     .select('slug')

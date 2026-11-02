@@ -265,6 +265,16 @@ export function adminErrorMessage(error: unknown, fallback: string): string {
     return _translateCopy('communities.holderGate.required', { defaultValue: 'Holders only: your wallet doesn\'t hold enough of this community\'s token to chat.' });
   }
 
+  if (raw.includes('channel_admins_only')) {
+    return _translateCopy('communities.newChat.adminsOnly', { defaultValue: 'Only admins post in this channel.' });
+  }
+  if (raw.includes('entry_payment_required')) {
+    return _translateCopy('communities.entry.required', { defaultValue: 'This one has an entry price. Pay it to join.' });
+  }
+  if (raw.includes('tx_already_used')) {
+    return _translateCopy('communities.entry.txUsed', { defaultValue: 'That payment was already used to join.' });
+  }
+
   const slow = raw.match(/slow_mode_active:(\d+)/);
   if (slow) {
     const seconds = Number(slow[1]);

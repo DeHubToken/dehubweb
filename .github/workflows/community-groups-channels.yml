@@ -1,0 +1,39 @@
+name: Community groups and channels
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261102020000_community_holder_gate.sql'
+      - 'supabase/migrations/20261102060000_community_groups_channels.sql'
+      - 'tests/sql/community-groups-channels*.sql'
+      - 'tests/sql/community-holder-gate*.sql'
+      - 'tests/sql/community-chat-history-bootstrap.sql'
+      - 'tests/sql/community-posts-bootstrap.sql'
+      - '.github/workflows/community-groups-channels.yml'
+  workflow_dispatch:
+jobs:
+  database:
+    name: Channel posting and paid entry
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: holder-test
+          POSTGRES_DB: holder_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: holder-test
+      PGDATABASE: holder_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-groups-channels-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261102020000_community_holder_gate.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261102060000_community_groups_channels.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-groups-channels.sql
