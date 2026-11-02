@@ -19,7 +19,9 @@ import { canManageAgents } from '@/lib/agent-access';
 import NotFound from '@/pages/NotFound';
 import { NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
-import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fetchOrders, fetchWalletNfts, type MarketOrder } from '@/lib/market/market';
+import { CollectionsRow } from '@/components/app/nft-market/CollectionsRow';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fetchCollections, fetchOrders, fetchWalletNfts, type MarketCollection, type MarketOrder } from '@/lib/market/market';
 import { currentPrice } from '@/lib/market/seaport';
 
 type Tab = 'browse' | 'sell' | 'mine' | 'sales';
@@ -54,6 +56,10 @@ export default function NftMarketPage() {
   const [sort, setSort] = useState<Sort>('new');
   const [dehubOnly, setDehubOnly] = useState(false);
   const [open, setOpen] = useState<NftSheetTarget | null>(null);
+  const isMobile = useIsMobile();
+  // Collections first: pick a collection from the trending row to see only its items.
+  const [coll, setColl] = useState<MarketCollection | null>(null);
+  const [collOffer, setCollOffer] = useState<NftSheetTarget | null>(null);
   // Bundle builder on the Sell tab: pick two to four NFTs, list them together.
   const [picking, setPicking] = useState(false);
   const [picked, setPicked] = useState<NftSheetTarget[]>([]);
@@ -88,11 +94,12 @@ export default function NftMarketPage() {
   };
 
   const browse = useInfiniteQuery({
-    queryKey: ['nft-market', 'browse', chain, sort, dehubOnly],
+    queryKey: ['nft-market', 'browse', chain, sort, dehubOnly, coll?.chainId, coll?.contract],
     queryFn: ({ pageParam }) =>
       fetchOrders({
         kind: 'listing',
-        chainId: chain === 'all' ? undefined : chain,
+        chainId: coll ? coll.chainId : chain === 'all' ? undefined : chain,
+        contract: coll?.contract,
         sort,
         dehub: dehubOnly ? 'true' : undefined,
         limit: 24,
@@ -103,6 +110,18 @@ export default function NftMarketPage() {
     enabled: tab === 'browse',
     staleTime: 20_000,
   });
+
+  const collections = useQuery({
+    queryKey: ['nft-market', 'collections', chain, dehubOnly],
+    queryFn: () => fetchCollections({ chainId: chain === 'all' ? undefined : chain, dehub: dehubOnly ? 'true' : undefined, limit: 12 }),
+    enabled: tab === 'browse',
+    staleTime: 30_000,
+  });
+
+  // A chain or filter change can hide the picked collection; drop it then.
+  useEffect(() => {
+    if (coll && chain !== 'all' && coll.chainId !== chain) setColl(null);
+  }, [chain, coll]);
 
   const wallet = useQuery({
     queryKey: ['nft-market', 'wallet', me, sellChain],
@@ -225,14 +244,36 @@ export default function NftMarketPage() {
         <div className="flex flex-col gap-3">
           {tab === 'browse' ? (
             <>
+              <CollectionsRow items={collections.data?.items ?? []} selected={coll} onSelect={setColl} />
+              {coll ? (
+                <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+                  <p className="min-w-0 truncate text-[13px] font-semibold text-white">
+                    {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
+                    <span className="font-normal text-zinc-500"> · {t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: coll.listed })}</span>
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <KitButton
+                      variant="quiet"
+                      disabled={!listings.length}
+                      onClick={() => listings[0] && setCollOffer(targetOf(listings[0]))}
+                    >
+                      {t('nftMarket.collectionOffer', { defaultValue: 'Offer on any' })}
+                    </KitButton>
+                    <KitButton variant="quiet" onClick={() => setColl(null)}>
+                      {t('nftMarket.showAll', { defaultValue: 'Show all' })}
+                    </KitButton>
+                  </div>
+                </div>
+              ) : null}
               {browse.isLoading ? (
                 <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-zinc-500" /></div>
               ) : listings.length ? (
                 <>
-                  <div data-nft-grid className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">
+                  <div data-nft-grid className={coll && isMobile ? 'grid grid-cols-3 gap-1.5' : 'grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4'}>
                     {listings.map((o) => (
                       <NftCard
                         key={o.orderHash}
+                        compact={!!coll && isMobile}
                         name={o.nftName || `#${o.tokenId}`}
                         collection={o.collectionName}
                         image={o.nftImage}
@@ -392,6 +433,7 @@ export default function NftMarketPage() {
       </PageBody>
 
       <NftSheet target={open} onClose={closeSheet} />
+      <NftSheet target={collOffer} collectionOffer onClose={() => setCollOffer(null)} />
       <NftSheet
         target={bundle?.[0] ?? null}
         bundle={bundle}
