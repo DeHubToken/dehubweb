@@ -41,7 +41,9 @@ export function ConnectedAppsSetting() {
     }
   };
 
-  if (!isAuthenticated) return null;
+  // Only people who have actually signed a Mastodon app in see this block.
+  // Everyone else (nearly everyone) gets nothing, not an empty card.
+  if (!isAuthenticated || !apps || apps.length === 0) return null;
 
   const when = (iso: string | null) =>
     iso ? new Date(iso).toLocaleDateString(i18n.language, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
@@ -53,12 +55,7 @@ export function ConnectedAppsSetting() {
         {t('mastodonApps.connectedTitle')}
       </h3>
       <p className="-mt-2 mb-3 text-xs text-zinc-500">{t('mastodonApps.connectedDescription')}</p>
-      {apps === null ? (
-        <div className="h-10 animate-pulse rounded-xl theme-skeleton" />
-      ) : apps.length === 0 ? (
-        <p className="text-sm text-zinc-400">{t('mastodonApps.connectedEmpty')}</p>
-      ) : (
-        <ul className="space-y-2">
+      <ul className="space-y-2">
           {apps.map((app) => (
             <li key={app.clientId} className="flex items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2">
               <div className="min-w-0 flex-1">
@@ -78,8 +75,7 @@ export function ConnectedAppsSetting() {
               </Button>
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
     </div>
   );
 }
