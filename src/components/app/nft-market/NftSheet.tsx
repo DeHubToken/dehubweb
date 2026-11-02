@@ -124,9 +124,12 @@ function royaltyTotal(r: RoyaltyTerm | RoyaltyTerm[] | null | undefined, skip: s
 export function NftSheet({
   target,
   bundle,
+  collectionOffer,
   onClose,
 }: {
   target: NftSheetTarget | null;
+  /** Opens straight into an offer on any NFT in the target's collection. */
+  collectionOffer?: boolean;
   /** Two to four NFTs to list together; opens straight into the listing form. */
   bundle?: NftSheetTarget[] | null;
   onClose: () => void;
@@ -151,14 +154,14 @@ export function NftSheet({
   const [qty, setQty] = useState('1');
 
   useEffect(() => {
-    setMode(isBundle ? 'list' : 'view');
+    setMode(isBundle ? 'list' : collectionOffer ? 'offer' : 'view');
     setPriceText('');
     setEndText('');
     setDropping(false);
-    setAnyInCollection(false);
+    setAnyInCollection(!!collectionOffer);
     setQty('1');
     setBusy(null);
-  }, [target?.chainId, target?.contract, target?.tokenId, isBundle]);
+  }, [target?.chainId, target?.contract, target?.tokenId, isBundle, collectionOffer]);
 
   const me: string = String(authWallet ?? '').toLowerCase();
 

@@ -6462,6 +6462,12 @@
     "raw": "Ham hâli"
   },
   "nftMarket": {
+    "trending": "Popüler koleksiyonlar",
+    "floor": "Taban fiyat",
+    "listedCount": "{{n}} satışta",
+    "thisCollection": "Bu koleksiyon",
+    "collectionOffer": "Herhangi birine teklif ver",
+    "showAll": "Tümünü göster",
     "title": "NFT Pazarı",
     "subtitle": "BNB ve Base üzerinde al, sat ve teklif ver",
     "seoTitle": "NFT Pazarı: BNB ve Base üzerinde NFT al ve sat | DeHub",

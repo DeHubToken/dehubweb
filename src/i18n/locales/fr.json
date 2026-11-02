@@ -6466,6 +6466,12 @@
     "raw": "Matières"
   },
   "nftMarket": {
+    "trending": "Collections tendance",
+    "floor": "Prix plancher",
+    "listedCount": "{{n}} en vente",
+    "thisCollection": "Cette collection",
+    "collectionOffer": "Offre sur n'importe lequel",
+    "showAll": "Tout afficher",
     "title": "Marché NFT",
     "subtitle": "Achetez, vendez et faites des offres sur BNB et Base",
     "seoTitle": "Marché NFT : achetez et vendez des NFT sur BNB et Base | DeHub",

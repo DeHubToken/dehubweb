@@ -6652,6 +6652,12 @@
     "raw": "Ruw"
   },
   "nftMarket": {
+    "trending": "Populaire collecties",
+    "floor": "Bodemprijs",
+    "listedCount": "{{n}} te koop",
+    "thisCollection": "Deze collectie",
+    "collectionOffer": "Bied op een willekeurige",
+    "showAll": "Alles tonen",
     "title": "NFT-markt",
     "subtitle": "Kopen, verkopen en bieden op BNB en Base",
     "seoTitle": "NFT-markt: koop en verkoop NFT’s op BNB en Base | DeHub",

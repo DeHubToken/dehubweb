@@ -124,6 +124,19 @@ export const fetchMarketConfig = () => apiCall<MarketConfig>('/api/market/config
 export const fetchOrders = (params: Record<string, string | number | undefined>) =>
   apiCall<{ items: MarketOrder[]; hasMore: boolean }>('/api/market/orders', { params });
 
+export interface MarketCollection {
+  chainId: number;
+  contract: string;
+  name: string | null;
+  image: string | null;
+  isDehub: boolean;
+  listed: number;
+  floor: { amount: string; symbol: string; decimals: number };
+}
+
+export const fetchCollections = (params: Record<string, string | number | undefined>) =>
+  apiCall<{ items: MarketCollection[] }>('/api/market/collections', { params });
+
 export const fetchNft = (chainId: number, contract: string, tokenId: string) =>
   apiCall<NftDetail>(`/api/market/nft/${chainId}/${contract}/${tokenId}`);
 

@@ -46,8 +46,11 @@ export function NftCard({
   price,
   priceLabel,
   badge,
+  compact,
   onClick,
 }: {
+  /** Art only, price on the image: the 3-across phone grid inside a collection. */
+  compact?: boolean;
   name: string;
   collection?: string | null;
   image: string | null;
@@ -68,14 +71,21 @@ export function NftCard({
       <div className="relative aspect-square w-full overflow-hidden">
         <NftArt src={image} alt={name} className="h-full w-full" />
         {/* Inline colours: these sit on the art, so they must not follow the light themes' text remaps. */}
-        <span className="absolute left-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>
-          {CHAIN_LABEL[chainId] ?? chainId}
-        </span>
+        {compact ? null : (
+          <span className="absolute left-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>
+            {CHAIN_LABEL[chainId] ?? chainId}
+          </span>
+        )}
         {badge ? (
           <span className="absolute right-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>{badge}</span>
         ) : null}
+        {compact && price ? (
+          <span className="absolute bottom-1.5 left-1.5 max-w-[calc(100%-0.75rem)] truncate rounded-full px-2 py-0.5 text-[10.5px] font-semibold tabular-nums" style={BADGE}>
+            {formatPrice(price.amount, price.decimals)} {price.symbol}
+          </span>
+        ) : null}
       </div>
-      <div className="flex min-w-0 flex-col gap-0.5 p-2.5">
+      {compact ? null : <div className="flex min-w-0 flex-col gap-0.5 p-2.5">
         {collection ? <p className="truncate text-[11px] text-zinc-500">{collection}</p> : null}
         <p className="truncate text-[13.5px] font-semibold text-white">{name}</p>
         {price ? (
@@ -84,7 +94,7 @@ export function NftCard({
             {formatPrice(price.amount, price.decimals)} <span className="text-zinc-400">{price.symbol}</span>
           </p>
         ) : null}
-      </div>
+      </div>}
     </button>
   );
 }

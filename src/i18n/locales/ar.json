@@ -6470,6 +6470,12 @@
     "raw": "النص الخام"
   },
   "nftMarket": {
+    "trending": "مجموعات رائجة",
+    "floor": "أدنى سعر",
+    "listedCount": "{{n}} للبيع",
+    "thisCollection": "هذه المجموعة",
+    "collectionOffer": "قدّم عرضًا على أي منها",
+    "showAll": "عرض الكل",
     "title": "سوق NFT",
     "subtitle": "اشترِ وبِع وقدّم عروضًا على BNB وBase",
     "seoTitle": "سوق NFT: اشترِ وبِع رموز NFT على BNB وBase | DeHub",
