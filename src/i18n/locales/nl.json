@@ -12714,6 +12714,14 @@
       "rewardPaid": "Uitbetaalde",
       "rewardPending": "Openstaand",
       "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Gebeurtenissen die DeHub naar je webhookUrl stuurde. Testen stuurt een ping-gebeurtenis.",
+        "test": "Test sturen",
+        "ok": "Webhook antwoordde {{status}}",
+        "failed": "Webhook mislukt: {{reason}}",
+        "none": "Nog geen webhooks verstuurd."
+      },
       "signin": {
         "title": "Inloggen met DeHub",
         "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",

@@ -32,7 +32,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { signEncryptionMessage } from '@/lib/dm-e2ee/signer';
 import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
 import { createDeveloperApp, deleteDeveloperApp, listDeveloperApps, rotateDeveloperSecret, type DeveloperSignInApp } from '@/lib/api/dehub/mastodon-apps';
-import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, submitApp, type ManifestCheck } from '@/lib/miniapp/registry';
+import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, fetchWebhookDeliveries, submitApp, testWebhook, type ManifestCheck } from '@/lib/miniapp/registry';
 
 const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
 <script>
@@ -135,6 +135,56 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
       <h2 className="text-sm font-semibold text-white">{title}</h2>
       {children}
     </section>
+  );
+}
+
+/** A developer's own view of the webhooks DeHub sent their app, with a test button. */
+function WebhookPanel({ slug }: { slug: string }) {
+  const { t } = useTranslation();
+  const [testing, setTesting] = useState(false);
+  const { data, refetch } = useQuery({ queryKey: ['miniapp-deliveries', slug], queryFn: () => fetchWebhookDeliveries(slug) });
+  const test = async () => {
+    setTesting(true);
+    try {
+      const r = await testWebhook(slug);
+      if (r.ok) toast.success(t('miniApps.dev.webhook.ok', { status: r.status }));
+      else toast.error(t('miniApps.dev.webhook.failed', { reason: r.error ?? String(r.status) }));
+      void refetch();
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      setTesting(false);
+    }
+  };
+  return (
+    <div className="space-y-2 rounded-xl bg-black/30 p-2.5 ring-1 ring-white/10">
+      <div className="flex items-center gap-2">
+        <p className="min-w-0 flex-1 text-xs text-zinc-400">{t('miniApps.dev.webhook.body')}</p>
+        <button
+          type="button"
+          onClick={() => void test()}
+          disabled={testing}
+          className="flex shrink-0 items-center gap-1.5 rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700 disabled:opacity-40"
+        >
+          {testing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
+          {t('miniApps.dev.webhook.test')}
+        </button>
+      </div>
+      {data && data.length ? (
+        <ul className="space-y-1">
+          {data.slice(0, 8).map((d, i) => (
+            <li key={i} className="flex items-center gap-2 text-[11px]">
+              {d.ok ? <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-400" /> : <AlertTriangle className="h-3 w-3 shrink-0 text-amber-400" />}
+              <span className="font-mono text-zinc-300">{d.event}</span>
+              <span className="text-zinc-500">{d.status ?? d.error}</span>
+              <span className="ml-auto text-zinc-500">{new Date(d.created_at).toLocaleString()}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-[11px] text-zinc-500">{t('miniApps.dev.webhook.none')}</p>
+      )}
+    </div>
   );
 }
 
@@ -264,6 +314,7 @@ export default function AppsDevPage() {
   const [submitting, setSubmitting] = useState(false);
   const { data: rewards } = useQuery({ queryKey: ['miniapp-rewards'], queryFn: fetchLatestRewards, staleTime: 5 * 60_000 });
   const [notifyKey, setNotifyKey] = useState<{ slug: string; key: string } | null>(null);
+  const [webhookSlug, setWebhookSlug] = useState<string | null>(null);
   const makeNotifyKey = async (slug: string) => {
     try {
       setNotifyKey({ slug, key: await createNotifyKey(slug) });
@@ -515,8 +566,16 @@ export default function AppsDevPage() {
                       {t('miniApps.dev.notifyKey')}
                     </button>
                   ) : null}
+                  <button
+                    type="button"
+                    onClick={() => setWebhookSlug(webhookSlug === app.slug ? null : app.slug)}
+                    className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-zinc-700"
+                  >
+                    {t('miniApps.dev.webhook.button')}
+                  </button>
                 </div>
               ))}
+              {webhookSlug ? <WebhookPanel slug={webhookSlug} /> : null}
               {notifyKey ? (
                 <div className="space-y-1.5">
                   <p className="text-xs text-amber-300">{t('miniApps.dev.notifyKeyOnce', { name: notifyKey.slug })}</p>
