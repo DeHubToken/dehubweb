@@ -4,7 +4,7 @@ import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { lazy, Suspense, useEffect, useId, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { PenSquare, Cable, ThumbsDown, Undo2 } from 'lucide-react';
 import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
@@ -94,6 +94,9 @@ import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
 import type { SuggestedAccount } from '@/lib/api/dehub';
+import { NAV_ITEMS } from '@/constants/app.constants';
+import { filterNavItems } from '@/components/app/navigation/nav-search';
+import { MobileMenuGrid } from '@/components/app/navigation/MobileMenuGrid';
 
 /**
  * Who to follow cover cards in every state they ship in: a cover, no cover
@@ -273,6 +276,21 @@ function LiveAvatarsGallery() {
  * Go Live > Capture card. Behind a button because it opens real devices and
  * would otherwise ask every gallery visitor for camera access.
  */
+/**
+ * The phone menu's tile grid, live: hold a tile to lift it and drag it to a
+ * new spot (hooks/use-drag-reorder). Uses this browser's saved order, so
+ * Reset under the grid puts the default back.
+ */
+function MenuReorderGallery() {
+  const { t } = useTranslation();
+  const items = useMemo(() => filterNavItems(NAV_ITEMS, '', t, false), [t]);
+  return (
+    <section data-page-bento data-menu-reorder-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-zinc-950 p-4">
+      <MobileMenuGrid items={items} currentPath="/app" notificationCount={3} messageCount={12} onNavigate={() => {}} />
+    </section>
+  );
+}
+
 function CaptureCardGallery() {
   const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
@@ -961,6 +979,7 @@ export default function StateGalleryPage() {
         <VoiceNotesGallery />
         <StageCoversGallery />
         <CaptureCardGallery />
+        <MenuReorderGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
         <DislikesGallery />

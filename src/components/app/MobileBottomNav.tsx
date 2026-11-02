@@ -197,6 +197,8 @@ export function MobileBottomNav() {
   const { order: liveBarOrder, draggingId: barDraggingId, itemProps: barDragProps } = useDragReorder({
     ids: barIds,
     onCommit: onBarCommit,
+    liftScale: 1.08,
+    axis: 'x',
   });
   const barOrder = useMemo(() => {
     const out = [...liveBarOrder];
@@ -355,7 +357,7 @@ export function MobileBottomNav() {
                     onPointerEnter={() => { if (isAuthenticated) warmPostComposer(); }}
                     onFocus={() => { if (isAuthenticated) warmPostComposer(); }}
                     aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
-                    className="flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
+                    className="relative z-10 flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
                   >
                       <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
                         <div
@@ -403,7 +405,10 @@ export function MobileBottomNav() {
                   aria-label={item.label === 'Explore' ? t('nav.explore') : navLabel(item.label)}
                   className={cn(
                     'relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 rounded-xl transition-colors duration-200 text-white',
-                    barDraggingId === id && 'bg-white/15 shadow-[0_8px_20px_rgba(0,0,0,0.4)]'
+                    // The lifted fill sits inside the slot with the bar's own inset,
+                    // so the bar's edge never cuts it off.
+                    "before:pointer-events-none before:absolute before:inset-x-1.5 before:inset-y-1 before:rounded-[14px] before:bg-transparent before:transition-[background-color,box-shadow] before:duration-[250ms] before:ease-[cubic-bezier(0.22,1,0.36,1)] before:content-['']",
+                    barDraggingId === id && 'before:bg-white/15 before:shadow-[0_6px_16px_rgba(0,0,0,0.35)]'
                   )}
                   style={{ ...drag.style, width: '20%' }}
                 >
