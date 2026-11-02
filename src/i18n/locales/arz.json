@@ -407,6 +407,7 @@
   },
   "nav": {
     "reorderHint": "احتفظ و اسحب أي أيكون لتغيير ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الرئيسية",
     "explore": "استكشاف",
@@ -451,8 +452,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "اربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -18745,5 +18745,17 @@
     "failed": "تعذر حفظ ذلك. حاول مرة أخرى.",
     "seoTitle": "توكن سيُطلق قريبًا | ديهوب",
     "seoDescription": "الطوق الجديد لـ DeHub سيعمل قريبًا. انضم إلى القائمة واستلم بريدًا إلكترونيًا في اللحظة التي ينطلق فيها، ثم اشتري مباشرة من محفظة DeHub الخاصة بك."
+  },
+  "githubLink": {
+    "hint": "سجّل الدخول إلى GitHub لإثبات أن الحساب لك. يرى DeHub ملفك الشخصي العام على GitHub فقط.",
+    "verified": "تم التحقق",
+    "verifiedAria": "تم التحقق من حساب GitHub",
+    "connected": "GitHub متصل",
+    "disconnected": "GitHub غير متصل",
+    "taken": "حساب GitHub هذا موجود بالفعل في ملف تعريف DeHub آخر.",
+    "failed": "تعذر الاتصال بـ GitHub. حاول مرة أخرى.",
+    "unavailable": "التحقق من GitHub قريبًا.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "قطع الاتصال"
   }
 }

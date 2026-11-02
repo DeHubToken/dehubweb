@@ -23,3 +23,13 @@ export function profileFieldLinks(account) {
   }
   return links;
 }
+
+/**
+ * The GitHub the account proved by signing in to GitHub (dehub-stream-backend
+ * src/github-link), as a profile URL, or null. Only the top-level
+ * `githubLogin` counts: it is written by that sign-in and nothing else.
+ */
+export function verifiedGithubUrl(account) {
+  const login = account && typeof account.githubLogin === 'string' ? account.githubLogin : '';
+  return /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/.test(login) ? `https://github.com/${login}` : null;
+}

@@ -18088,6 +18088,16 @@
     "seoTitle": "Token 发布即将开始 | DeHub",
     "seoDescription": "新版DeHub代币即将上线。加入名单，等待即将上线的通知，然后直接从DeHub钱包购买。"
   },
+  "githubLink": {
+    "hint": "登入 GitHub 來證明帳戶是你的。DeHub 只會看到你的公開 GitHub 簡介。",
+    "connected": "GitHub 連接好喽！",
+    "disconnected": "GitHub 断开连接",
+    "taken": "那個 GitHub 帳號已經在另一個 DeHub 個人檔案上了。",
+    "failed": "無法連結 GitHub。請再試一次。",
+    "unavailable": "GitHub 驗證即將到來。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开"
+  },
   "post": {
     "like": "赞",
     "comment": "评论",

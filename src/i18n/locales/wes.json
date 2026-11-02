@@ -382,6 +382,9 @@
     "gasSponsorshipFailed": "We no fit pay for dis transaction. Try again small time."
   },
   "nav": {
+    "reorderHint": "Hold and drag any icon to rearrange am",
+    "reorderReset": "Reset",
+    "reorderResetLong": "Reset menu order",
     "home": "Haus",
     "explore": "Eksplore",
     "prompt": "Prompt",
@@ -425,10 +428,7 @@
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
     "converter": "Chenja",
-    "affiliate": "Affiliate",
-    "reorderHint": "Hold and drag any icon to rearrange am",
-    "reorderReset": "Reset",
-    "reorderResetLong": "Reset menu order"
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "Luk {{name}} profil",
@@ -17410,5 +17410,15 @@
     "privacy": "Wah! Na me go tell you go launch a go dey.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "DeHub token new wey go launch soon. Come join list wey, get one email straight when go live, den buy straight from wallet wey you have for DeHub."
+  },
+  "githubLink": {
+    "hint": "Log in for GitHub make dem see say di account na yours. DeHub only dey see your public GitHub profile.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

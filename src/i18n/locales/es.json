@@ -20057,5 +20057,17 @@
     "privacy": "Solo se usa para avisarte sobre el lanzamiento.",
     "seoTitle": "Lanzamiento de tokens pronto | DeHub",
     "seoDescription": "El nuevo token de DeHub se lanzará pronto. Únete a la lista y recibe un correo electrónico en el momento en que se lance, luego compra directamente desde tu billetera DeHub."
+  },
+  "githubLink": {
+    "hint": "Inicia sesión en GitHub para comprobar que la cuenta es tuya. DeHub solo ve tu perfil público de GitHub.",
+    "verified": "Verificado",
+    "verifiedAria": "Cuenta de GitHub verificada",
+    "connected": "GitHub conectado",
+    "disconnected": "GitHub desconectado",
+    "taken": "Esa cuenta de GitHub ya está en otro perfil de DeHub.",
+    "failed": "No se ha podido conectar con GitHub. Inténtalo de nuevo.",
+    "unavailable": "La verificación de GitHub llegará pronto.",
+    "connect": "Conectar GitHub",
+    "disconnect": "Desconectar"
   }
 }

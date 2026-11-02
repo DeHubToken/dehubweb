@@ -18910,5 +18910,17 @@
     "privacy": "Chỉ được sử dụng để thông báo cho bạn về sự ra mắt.",
     "seoTitle": "Token sắp ra mắt | DeHub",
     "seoDescription": "Token mới của DeHub sắp ra mắt. Tham gia danh sách và nhận một email ngay khi nó ra mắt, sau đó mua trực tiếp từ ví DeHub của bạn."
+  },
+  "githubLink": {
+    "hint": "Đăng nhập vào GitHub để chứng minh tài khoản là của bạn. DeHub chỉ thấy hồ sơ GitHub công khai của bạn.",
+    "verified": "Đã xác minh",
+    "verifiedAria": "Tài khoản GitHub đã xác minh",
+    "connected": "GitHub kết nối",
+    "disconnected": "GitHub không kết nối",
+    "taken": "Tài khoản GitHub đó đã được thêm vào hồ sơ DeHub khác.",
+    "failed": "Không thể kết nối GitHub. Hãy thử lại.",
+    "unavailable": "Xác minh GitHub sắp có sẵn.",
+    "connect": "Kết nối GitHub",
+    "disconnect": "Ngắt kết nối"
   }
 }

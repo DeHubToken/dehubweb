@@ -18698,5 +18698,9 @@
     "privacy": "Diňe çykyş barada size habar bermek üçin ulanylýar.",
     "seoTitle": "Token tezden çykyş | DeHub",
     "seoDescription": "Täze DeHub tokeni tezden çykyş edýär. Sanawynyza goşulyň we onuň işe girende bir e-poçta alyň, soňra DeHub şkiliňizden gönüden-göni satyn alyň."
+  },
+  "githubLink": {
+    "verified": "Tasdiqlanmýş",
+    "disconnect": "Baglan"
   }
 }

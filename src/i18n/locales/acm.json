@@ -406,6 +406,9 @@
     "gasSponsorshipFailed": "ما كدرنا نتكفل بهاي المعاملة. جرب مرة ثانية بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "اطلب",
@@ -449,10 +452,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
-    "reorderReset": "إعادة تعيين",
-    "reorderResetLong": "إعادة ترتيب القائمة الأصلي"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -18100,5 +18100,11 @@
     "privacy": "بس نخبرك عن الإطلاق.",
     "seoTitle": "إطلاق التوكن قريبًا | DeHub",
     "seoDescription": "توكن DeHub الجديد يطلق قريبًا. انضم للقائمة واستلم إيميل لحظة ما يطلق، بعدين اشترِ مباشرة من محفظة DeHub مالك."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبت أن الحساب لك. DeHub تراه فقط ملفك العام على GitHub.",
+    "failed": "شوفتش GitHub مش عملت. حاول تاني.",
+    "unavailable": "GitHub التّوثيق بيجي قريب.",
+    "disconnect": "تقطع"
   }
 }

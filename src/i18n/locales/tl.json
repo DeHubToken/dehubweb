@@ -18903,6 +18903,18 @@
     "seoTitle": "Maglalabas na ang token | DeHub",
     "seoDescription": "Maglalabas na ang bagong token ng DeHub. Maging bahagi ng listahan at magkaroon ka ng isang email sa sandali na ito ay maglulabas, pagkatapos ay bumili ka direktang mula sa iyong wallet ng DeHub."
   },
+  "githubLink": {
+    "hint": "Mag-log in sa GitHub upang ipatunayang ang account ay iyong sarili. Ang DeHub ay lamang nakikita sa iyong profile sa GitHub na maipapamahagi.",
+    "verified": "Verified",
+    "verifiedAria": "Tinatanggap na GitHub account",
+    "connected": "GitHub ay konektado",
+    "disconnected": "Naghihinto ang GitHub.",
+    "taken": "Ang GitHub account na iyon ay nasa ibang profile ng DeHub na.",
+    "failed": "Hindi makapag-ugnay sa GitHub. Subukan mo ulit.",
+    "unavailable": "Ang pagpapatunay ng GitHub ay dumating na.",
+    "connect": "Kumonek sa GitHub",
+    "disconnect": "Huwag magkabit"
+  },
   "walletSelector": {
     "title": "Piliin ang Wallet",
     "description": "Piliin ang wallet na gusto mong ikonekta sa app na ito."

@@ -18745,5 +18745,17 @@
     "privacy": "오직 출시 소식을 알려주기 위해만 사용됩니다.",
     "seoTitle": "토큰 출시 예정 | DeHub",
     "seoDescription": "새로운 DeHub 토큰이 곧 출시됩니다. 리스트에 가입하고 라이브가 되는 순간 이메일을 받아 DeHub 지갑에서 바로 구매하세요."
+  },
+  "githubLink": {
+    "hint": "GitHub에 로그인하여 계정이 본인 것임을 증명하세요. DeHub는 공개 GitHub 프로필만 볼 수 있습니다.",
+    "verified": "인증됨",
+    "verifiedAria": "인증된 GitHub 계정",
+    "connected": "GitHub 연결됨",
+    "disconnected": "GitHub 연결 해제됨",
+    "taken": "해당 GitHub 계정은 이미 다른 DeHub 프로필에 있습니다.",
+    "failed": "GitHub에 연결할 수 없습니다. 다시 시도하세요.",
+    "unavailable": "GitHub 인증이 곧 제공될 예정입니다.",
+    "connect": "GitHub에 연결하세요",
+    "disconnect": "분리"
   }
 }

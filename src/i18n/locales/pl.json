@@ -18893,5 +18893,17 @@
     "privacy": "Używane tylko po to, aby powiadomić Cię o uruchomieniu.",
     "seoTitle": "Token wkrótce | DeHub",
     "seoDescription": "Nowy token DeHub wkrótce pójdzie na żywo. Dołącz do listy i otrzymasz jeden e-mail w momencie, gdy pójdzie na żywo, a następnie kupuj bezpośrednio z Twojego portfela DeHub."
+  },
+  "githubLink": {
+    "hint": "Zaloguj się do GitHub, aby potwierdzić, że konto należy do Ciebie. DeHub widzi tylko Twoją publiczną profil GitHub.",
+    "verified": "Zweryfikowany",
+    "verifiedAria": "Konto GitHub zweryfikowane",
+    "connected": "GitHub połączony",
+    "disconnected": "GitHub odłączył się",
+    "taken": "Ten kont GitHub jest już przypisany do innego profilu DeHub.",
+    "failed": "Nie udało się połączyć z GitHub. Spróbuj ponownie.",
+    "unavailable": "Weryfikacja GitHub będzie wkrótce dostępna.",
+    "connect": "Połącz z GitHub",
+    "disconnect": "Rozłącz"
   }
 }

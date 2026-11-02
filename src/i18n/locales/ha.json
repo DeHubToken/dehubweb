@@ -18641,5 +18641,17 @@
     "privacy": "Kawai ake magana da ku da shirin da aka kaddamar a cikin wannan wata.",
     "seoTitle": "Kamfanin Token ya zo zuwa kasa | DeHub",
     "seoDescription": "Tashin DeHub token ya zo daidai. Ci gaba a cikin jerin da kuma samu abinci mai lamba a wani lokaci, kuma kada ku shiga a cikin DeHub wallet ku kada."
+  },
+  "githubLink": {
+    "hint": "Shiga cikin GitHub don tabbatar da asusun naku ne. DeHub kawai yana ganin bayanan ku na GitHub na jama'a.",
+    "verified": "Tabbatacce",
+    "verifiedAria": "Tabbatar da asusun GitHub",
+    "connected": "GitHub da aka haɗa",
+    "disconnected": "GitHub ya katse",
+    "taken": "Cewa asusun GitHub ya riga ya kasance a kan wani bayanin martaba na DeHub.",
+    "failed": "Ba za a iya haɗa GitHub ba. sake gwadawa.",
+    "unavailable": "Tabbatar da GitHub yana zuwa ba da daɗewa ba.",
+    "connect": "Haɗa GitHub",
+    "disconnect": "Kashe haɗin kai"
   }
 }

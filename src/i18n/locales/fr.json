@@ -20061,5 +20061,17 @@
     "privacy": "Seulement utilisé pour vous informer du lancement.",
     "seoTitle": "Lancement de jeton imminent | DeHub",
     "seoDescription": "Le nouveau jeton DeHub va bientôt être lancé. Inscris-toi à la liste et reçois un email dès qu'il sera en ligne, puis achète directement depuis ton portefeuille DeHub."
+  },
+  "githubLink": {
+    "hint": "Connectez-vous à GitHub pour prouver que le compte vous appartient. DeHub ne voit que votre profil GitHub public.",
+    "verified": "Vérifié",
+    "verifiedAria": "Compte GitHub vérifié",
+    "connected": "GitHub connecté",
+    "disconnected": "GitHub déconnecté",
+    "taken": "Ce compte GitHub est déjà sur un autre profil DeHub.",
+    "failed": "Impossible de connecter GitHub. Réessayez.",
+    "unavailable": "La vérification GitHub arrive bientôt.",
+    "connect": "Connecter GitHub",
+    "disconnect": "Déconnecter"
   }
 }

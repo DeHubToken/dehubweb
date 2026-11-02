@@ -408,6 +408,7 @@
   },
   "nav": {
     "reorderHint": "Hou en sleep enige ikoon vas om dit te herskik",
+    "reorderReset": "Herstel",
     "reorderResetLong": "Stel kieslysbestelling terug",
     "home": "Tuis",
     "explore": "Verken",
@@ -452,8 +453,7 @@
     "getTheApp": "Kry die app",
     "connectAi": "Koppel KI",
     "converter": "Converter",
-    "affiliate": "Vennoot",
-    "reorderReset": "Herstel"
+    "affiliate": "Vennoot"
   },
   "feed": {
     "viewProfile": "Bekyk {{name}} se profiel",
@@ -18900,6 +18900,18 @@
     "privacy": "Slegs gebruik om jou van die bekendstelling in te lig.",
     "seoTitle": "Token word binnekort geloods | DeHub",
     "seoDescription": "Die nuwe DeHub-token word binnekort geloods. Sluit aan by die lys en ontvang 'n e-pos die oomblik dit lewendig gaan, dan koop direk vanaf jou DeHub-beursie."
+  },
+  "githubLink": {
+    "hint": "Teken in op GitHub om te bewys dat die rekening joune is. DeHub sien slegs jou publieke GitHub-profiel.",
+    "verified": "Geverifieer",
+    "verifiedAria": "Geverifieerde GitHub-rekening",
+    "connected": "GitHub verbind",
+    "disconnected": "GitHub ontkoppel",
+    "taken": "Die GitHub-rekening is reeds op 'n ander DeHub-profiel.",
+    "failed": "Kon nie GitHub koppel nie. Probeer weer.",
+    "unavailable": "GitHub is soon.",
+    "connect": "Verbind met GitHub",
+    "disconnect": "Ontkoppel"
   },
   "footer": {
     "company": "Maatskappy",

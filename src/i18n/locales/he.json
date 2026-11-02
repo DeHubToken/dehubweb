@@ -18699,5 +18699,17 @@
     "privacy": "משמש רק כדי להודיע לך על ההשקה.",
     "seoTitle": "השקת טוקן בקרוב | DeHub",
     "seoDescription": "הטוקן החדש של DeHub יושק בקרוב. הצטרף לרשימה וקבל אימייל אחד ברגע שהוא יופעל, ואז קנה ישירות מהארנק DeHub שלך."
+  },
+  "githubLink": {
+    "hint": "היכנס ל - GitHub כדי להוכיח שהחשבון שלך. DeHub רואה רק את פרופיל ה - GitHub הציבורי שלך.",
+    "verified": "מאומת",
+    "verifiedAria": "חשבון GitHub מאומת",
+    "connected": "GitHub מחובר",
+    "disconnected": "GitHub מנותק",
+    "taken": "חשבון GitHub זה כבר נמצא בפרופיל DeHub אחר.",
+    "failed": "לא הצלחנו לחבר את GitHub. נסו שוב.",
+    "unavailable": "האימות של GitHub יגיע בקרוב.",
+    "connect": "חיבור GitHub",
+    "disconnect": "התנתקות"
   }
 }

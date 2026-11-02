@@ -18815,5 +18815,16 @@
     "failed": "Kunne ikke lagre det. Prøv igjen.",
     "privacy": "Bare for å fortelle deg om lanseringen.",
     "seoDescription": "Den nye DeHub-tokenen lanserer snart. Meld deg på listen og få en e-post øyeblikket den går live, så kjøp direkte fra din DeHub-lommebok."
+  },
+  "githubLink": {
+    "hint": "Logg inn på GitHub for å bekrefte at kontoen er din. DeHub ser kun din offentlige GitHub-profil.",
+    "verified": "Verifisert",
+    "verifiedAria": "Verifisert GitHub-konto",
+    "connected": "GitHub koblet sammen",
+    "disconnected": "GitHub ble avkoblet",
+    "taken": "Den GitHub-kontoen er allerede knyttet til et annet DeHub-profil.",
+    "failed": "Kunne ikke koble til GitHub. Prøv på nytt.",
+    "unavailable": "GitHub-verifisering kommer snart.",
+    "connect": "Koble til GitHub"
   }
 }

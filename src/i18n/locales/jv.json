@@ -398,6 +398,7 @@
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
   "nav": {
+    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang",
     "reorderReset": "Reset",
     "reorderResetLong": "Kembalikan urutan menu",
     "home": "Beranda",
@@ -443,8 +444,7 @@
     "getTheApp": "Njupuk aplikasi",
     "connectAi": "Nyambungake AI",
     "converter": "Converter",
-    "affiliate": "Afiliasi",
-    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang"
+    "affiliate": "Afiliasi"
   },
   "feed": {
     "viewProfile": "Deleng profil {{name}}",
@@ -18554,5 +18554,14 @@
     "joinedBodyNoEmail": "Kami bakal ngirim email ke gwe kanggo ngaweni token lanjar.",
     "failed": "Saya nggih ora bisa ngerti apa inggung.",
     "privacy": "Gampang aja ngomongin tentang peluncuran."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub ngawasih kanggo ngerti akun kanggo kanggo. DeHub cuma nglihat profil GitHub kanggo kanggo.",
+    "disconnected": "GitHub nganggo",
+    "taken": "Github account keneh udah dadi di profil DeHub lanang.",
+    "failed": "Gak bisa koneksi ke GitHub. Coba lagi.",
+    "unavailable": "GitHub verification kanggo dadi dekat.",
+    "connect": "Hubungin GitHub",
+    "disconnect": "Ngapus hubungan"
   }
 }

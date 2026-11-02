@@ -18515,6 +18515,18 @@
     "privacy": "仅用于通知您发布的信息。",
     "seoDescription": "新的 DeHub 代币即将上线。加入名单，一旦上线即可收到一封邮件，然后直接从您的 DeHub 钱包购买。"
   },
+  "githubLink": {
+    "hint": "请登录 GitHub 以证明账户归属。DeHub 仅能看到您的公开 GitHub 个人资料。",
+    "verified": "验证通过",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 断开连接",
+    "taken": "这个 GitHub 账户已经绑定在另一个 DeHub 个人资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证功能即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
+  },
   "post": {
     "like": "喜欢",
     "comment": "评论",

@@ -409,6 +409,8 @@
   },
   "nav": {
     "reorderHint": "Hildin û derêjin herîkoka ku we li serê xwe de ye bo ku bi rêza xwe re bi kar bînin.",
+    "reorderReset": "Vegerîne",
+    "reorderResetLong": "Rêza menuyê vegerîne",
     "home": "Destpêk",
     "explore": "Keşf bike",
     "prompt": "Prompt",
@@ -452,9 +454,7 @@
     "getTheApp": "Sepanê bistîne",
     "connectAi": "AI girêde",
     "converter": "Veguherîner",
-    "affiliate": "Hevkarî",
-    "reorderReset": "Vegerîne",
-    "reorderResetLong": "Rêza menuyê vegerîne"
+    "affiliate": "Hevkarî"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",
@@ -18769,5 +18769,14 @@
     "failed": "Nêzêk kirina nekir. Bêhn re bi kar bîne.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Nû tokenê DeHubê li ser xwe ye. Bi destxistina listê re, bi dest bixî û yekî emailê di şûna ku li ser xwe bike, paşê bi karî bi xwezîna DeHubê xwe bixerike."
+  },
+  "githubLink": {
+    "verified": "Tasdîq kirî ye",
+    "verifiedAria": "Accounta GitHubê ya wekandî ye.",
+    "disconnected": "GitHub dereng bûye.",
+    "taken": "Evîfa GitHubê li ser profilek din ê DeHubê ye.",
+    "failed": "Nekare GitHubê ve. Lêgerîn bikin.",
+    "unavailable": "GitHubê diyarkirina bi ser dibe.",
+    "disconnect": "Hevqetandin"
   }
 }

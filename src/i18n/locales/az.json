@@ -407,6 +407,7 @@
   },
   "nav": {
     "reorderHint": "Dəstək və simvolları yerinə yetirmək üçün tutaraq sırala bilərsiniz.",
+    "reorderReset": "Sıfırla",
     "reorderResetLong": "Menyu sifarişini sıfırla",
     "home": "Ana səhifə",
     "explore": "Kəşf et",
@@ -451,8 +452,7 @@
     "getTheApp": "Tətbiqi yüklə",
     "connectAi": "Süni intellekti qoş",
     "converter": "Konvertor",
-    "affiliate": "Tərəfdaş",
-    "reorderReset": "Sıfırla"
+    "affiliate": "Tərəfdaş"
   },
   "feed": {
     "viewProfile": "{{name}} adlı şəxsin profilinə baxın",
@@ -18774,5 +18774,17 @@
     "privacy": "Yalnız bu ilan üçün istifadə olunur.",
     "seoTitle": "Token ləğv edilməsi yaxşıda | DeHub",
     "seoDescription": "Yeni DeHub tokenı çox çabuk yayımlanacaq. Siqışın və tokenin canlı olarkən bir email almaq üçün siyahıya düşün. Sonra DeHub cibinizdən doğrudan satın alın."
+  },
+  "githubLink": {
+    "hint": "Hesabın sizin olduğunu sübut etmək üçün GitHub-a daxil olun. DeHub yalnız ictimai GitHub profilinizi görür.",
+    "verified": "Təsdiqlənib",
+    "verifiedAria": "Təsdiqlənmiş GitHub hesabı",
+    "connected": "GitHub qoşuldu",
+    "disconnected": "GitHub bağlantısı kəsildi",
+    "taken": "GitHub hesabı artıq başqa DeHub profilindədir.",
+    "failed": "GitHub-a qoşulmaq mümkün olmadı. Yenidən cəhd edin.",
+    "unavailable": "GitHub təsdiqləməsi tezliklə göndəriləcək.",
+    "connect": "GitHub-ı qoşun",
+    "disconnect": "Əlaqəni kəs"
   }
 }

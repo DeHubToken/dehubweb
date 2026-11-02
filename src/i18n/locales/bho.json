@@ -403,6 +403,7 @@
   },
   "nav": {
     "reorderHint": "Hold aur drag karke koi bhi icon ke rearrange kariं",
+    "reorderReset": "रीसेट करीं",
     "reorderResetLong": "मेनू ऑर्डर समायोजित करें",
     "home": "घरे",
     "explore": "खोजीं",
@@ -447,8 +448,7 @@
     "getTheApp": "ऐप लीं",
     "connectAi": "AI जोड़ीं",
     "converter": "कनवर्टर बदलें",
-    "affiliate": "एफिलिएट",
-    "reorderReset": "रीसेट करीं"
+    "affiliate": "एफिलिएट"
   },
   "feed": {
     "viewProfile": "{{name}} के प्रोफाइल देखीं",
@@ -18468,5 +18468,17 @@
     "privacy": "केवल लॉन्च के बारे में बतावे खातिर इस्तेमाल होखेला.",
     "seoTitle": "टोकन लॉन्च हो रहा है जल्द | DeHub",
     "seoDescription": "देहरादून के नया ट्रेलर जल्दिये लॉन्च होखे जा रहल बा. सूची में शामिल करें और लाइव होने के समय एक ईमेल प्राप्त करें, फिर अपने DeHub वॉलेट से सीधे खरीदें ।"
+  },
+  "githubLink": {
+    "hint": "GitHub पर साइन इन करें, यह साबित करें कि आपका खाता मौजूद है । अब, आपातकालीन ड्राइव BSRPD के डिजाइन के संबंध में ।",
+    "verified": "सत्यापित कइल गइल",
+    "verifiedAria": "GitHub खाता सत्यापित करें",
+    "connected": "पन्ना जेवन \"टेम्पलेटःUser link\" से",
+    "disconnected": "पन्ना जेवन \"टेम्पलेटःUser disconnected\" से जुड़ल बा",
+    "taken": "पन्ना जेवन \"टेम्पलेटःCountry data Dehub\" से जुड़ल बा",
+    "failed": "GitHub से जुड़ने में विफल रहे, फिर से कोशिश करें",
+    "unavailable": "GitHub सत्यापन जल्द ही जारी कइल जाई.",
+    "connect": "Github पे क्लिक करे",
+    "disconnect": "डिस्कनेक्ट करें"
   }
 }

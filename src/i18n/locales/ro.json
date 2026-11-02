@@ -18815,6 +18815,18 @@
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Tokenul nou DeHub este pe punctul de lansare. Alătură-te listei și primești un email în momentul în care se pune în circulație, apoi cumpară direct din portofelul tău DeHub."
   },
+  "githubLink": {
+    "hint": "Autentifică-te pe GitHub pentru a dovedi că contul este al tău. DeHub vede doar profilul public GitHub.",
+    "verified": "Verificat",
+    "verifiedAria": "Cont GitHub verificat",
+    "connected": "GitHub conectat",
+    "disconnected": "GitHub deconectat",
+    "taken": "Acest cont GitHub este deja asociat cu alt profil DeHub.",
+    "failed": "Nu s-a putut conecta GitHub. Încercați din nou.",
+    "unavailable": "Verificarea GitHub este în curând disponibilă.",
+    "connect": "Conectează-te la GitHub",
+    "disconnect": "Deconectează"
+  },
   "footer": {
     "about": "Despre noi",
     "contact": "Contact",

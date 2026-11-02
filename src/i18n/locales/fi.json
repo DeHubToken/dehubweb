@@ -18806,5 +18806,17 @@
     "failed": "Ei voinut tallentaa sitä. Yritä uudelleen.",
     "privacy": "Ainoastaan kerron sinulle uuden julkaisun tiedoista.",
     "seoDescription": "Uusi DeHub-token lähtee pian markkinoille. Liity listalle ja saat yhden sähköpostiviestin heti, kun se tulee liveksi, ja osta suoraan DeHub-lompakostasi."
+  },
+  "githubLink": {
+    "hint": "Kirjaudu GitHubiin todistaaksesi, että tili on sinun. DeHub näkee vain julkisen GitHub-profiilisi.",
+    "verified": "Vahvistettu",
+    "verifiedAria": "Vahvistettu GitHub-tili",
+    "connected": "GitHub yhdistetty",
+    "disconnected": "GitHub-yhteys katkaistu",
+    "taken": "Kyseinen GitHub-tili on jo toisessa DeHub-profiilissa.",
+    "failed": "GitHubia ei voitu yhdistää. Yritä uudelleen.",
+    "unavailable": "GitHub-vahvistus on tulossa pian.",
+    "connect": "Yhdistä GitHub",
+    "disconnect": "Katkaise yhteys"
   }
 }

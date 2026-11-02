@@ -380,6 +380,9 @@
     "gasSponsorshipFailed": "搿笔交易垫勿出。歇歇再试。"
   },
   "nav": {
+    "reorderHint": "按住并拖动任意图标来重新排列",
+    "reorderReset": "重置",
+    "reorderResetLong": "重置菜单顺序",
     "home": "主页",
     "explore": "探索",
     "prompt": "提示",
@@ -423,10 +426,7 @@
     "getTheApp": "下载应用",
     "connectAi": "连接 AI",
     "converter": "轉換器",
-    "affiliate": "推广联盟",
-    "reorderHint": "按住并拖动任意图标来重新排列",
-    "reorderReset": "重置",
-    "reorderResetLong": "重置菜单顺序"
+    "affiliate": "推广联盟"
   },
   "feed": {
     "viewProfile": "看 {{name}} 的资料",
@@ -18126,5 +18126,16 @@
     "joinedBody": "代币上线辰光，我会给{{email}}发邮件。",
     "seoTitle": "Token 就快上架囉 | DeHub",
     "seoDescription": "新的DeHub代幣快出來囉！加入名單，一旦上線就會收到一封email，然後直接用你的DeHub錢包買入囉！"
+  },
+  "githubLink": {
+    "hint": "登录 GitHub 以证明账户是你的。DeHub 只能看到你的公开 GitHub 资料。",
+    "verified": "已验证",
+    "verifiedAria": "已验证 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 已断开",
+    "taken": "该 GitHub 账户已经在另一个 DeHub 资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证功能即将推出。",
+    "disconnect": "断开连接"
   }
 }

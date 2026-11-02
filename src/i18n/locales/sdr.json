@@ -398,6 +398,7 @@
     "gasSponsorshipFailed": "نەکرا خەرجی ئەم مامەڵەیە بدرێت. تکایە پاش ماوەیەک هەوڵ بدەرەوە."
   },
   "nav": {
+    "reorderHint": "किसी भी आइकन को दबाकर रखें और खींचकर क्रम बदलें",
     "reorderReset": "assistant",
     "reorderResetLong": "بازنشانی ترتیب منوی اصلی",
     "home": "گھر",
@@ -443,8 +444,7 @@
     "getTheApp": "ایپ لو",
     "connectAi": "AI جوڑو",
     "converter": "کنورٹر",
-    "affiliate": "هاوبەشی",
-    "reorderHint": "किसी भी आइकन को दबाकर रखें और खींचकर क्रम बदलें"
+    "affiliate": "هاوبەشی"
   },
   "feed": {
     "viewProfile": "{{name}} के प्रोफाइल को देखें",
@@ -17681,6 +17681,12 @@
     "privacy": "فقط برای تو خبر دادن از راه اندازی استفاده می شود.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "DeHub tokeni yeni çıksa. Listeye katılın ve canlı olduğu anda bir e-posta alın, ardından DeHub cüzdanınızdan doğrudan satın alın."
+  },
+  "githubLink": {
+    "connected": "GitHub واریده شد.",
+    "disconnected": "GitHub وایکونکشه.",
+    "failed": "نمی‌تونم به GitHub وصل بشم. دوباره امتحان کن.",
+    "connect": "GitHub"
   },
   "post": {
     "like": "پسند",

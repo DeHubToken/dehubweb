@@ -18807,5 +18807,17 @@
     "privacy": "Csak azért használjuk, hogy a token indításáról értesítsünk.",
     "seoTitle": "Token indítása közeledik | DeHub",
     "seoDescription": "Az új DeHub token hamarosan indítódik. Csatlakozz a listához, és kapj egy emailt, amikor online lesz, majd vásárolhat közvetlenül a DeHub péntekéből."
+  },
+  "githubLink": {
+    "hint": "Jelentkezzen be a GitHubra, és igazolja, hogy a fiók az Öné. A DeHub csak a nyilvános GitHub-profilodat látja.",
+    "verified": "Igazolt",
+    "verifiedAria": "Igazolt GitHub-fiók",
+    "connected": "GitHub csatlakoztatva",
+    "disconnected": "GitHub leválasztva",
+    "taken": "Ez a GitHub-fiók már egy másik DeHub-profilban van.",
+    "failed": "Nem sikerült csatlakozni a GitHubhoz. Próbálkozz újra.",
+    "unavailable": "Hamarosan jön a GitHub-hitelesítés.",
+    "connect": "GitHub csatlakoztatása",
+    "disconnect": "Leválasztás"
   }
 }

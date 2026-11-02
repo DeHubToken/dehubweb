@@ -18799,6 +18799,18 @@
     "seoTitle": "Tokony amin'ny fahafito | DeHub",
     "seoDescription": "Ireo DeHub token any amin'ny fahafito. Hita amin'ny lisitry ny amin'ny fahafito, ary hiverina ny email amin'ny fahafito amin'ny fahafito, ka tsy ho atao amin'ny DeHub wallet."
   },
+  "githubLink": {
+    "hint": "Midira ao amin'ny GitHub mba hanaporofoana fa anao ny kaonty. DeHub dia mahita ny mombamomba ny GitHub.",
+    "verified": "Voamarina",
+    "verifiedAria": "Kaonty GitHub voamarina",
+    "connected": "Mampifandray ny GitHub",
+    "disconnected": "Nitsahatra ny GitHub",
+    "taken": "Fa ny kaonty GitHub dia efa ao amin'ny profil DeHub hafa.",
+    "failed": "Tsy afaka nampifandray ny GitHub. Andramo indray.",
+    "unavailable": "Ho avy tsy ho ela ny GitHub.",
+    "connect": "Mampiasa GitHub",
+    "disconnect": "Atsaharo"
+  },
   "createPost": {
     "title": "Mamorona",
     "whatsOnYourMind": "Inona no ao an-tsainao?",

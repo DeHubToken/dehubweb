@@ -18809,5 +18809,17 @@
     "privacy": "Naudojamas tik pranešti apie išleidimą.",
     "seoTitle": "Tokenas pasirodys greitai | DeHub",
     "seoDescription": "Naujas DeHub tokenas pasirodys greitai. Prisijunkite prie sąrašo ir gaukite vieną el. laišką, kai jis bus prieinamas, tada nusipirkti tiesiog iš savo DeHub portfelio."
+  },
+  "githubLink": {
+    "hint": "Prisijunkite prie „GitHub“ ir įrodykite, kad paskyra priklauso jums. DeHub mato tik jūsų viešą „GitHub“ profilį.",
+    "verified": "Patvirtinta",
+    "verifiedAria": "Patvirtinta „GitHub“ paskyra",
+    "connected": "„GitHub“ prijungtas",
+    "disconnected": "„GitHub“ atjungtas",
+    "taken": "Ta „GitHub“ paskyra jau yra kitame „DeHub“ profilyje.",
+    "failed": "Nepavyko prisijungti prie „GitHub“. Bandykite dar kartą.",
+    "unavailable": "Netrukus bus patvirtintas „GitHub“.",
+    "connect": "Prijungti GitHub",
+    "disconnect": "Atjungti"
   }
 }

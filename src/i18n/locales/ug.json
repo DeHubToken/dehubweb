@@ -18714,5 +18714,17 @@
     "failed": "بۇنى ساقلاپ بولالمىدى. قايتا سىناپ بېقىڭ.",
     "privacy": "Men sizni laqiqatni xabar qilish uchun faqat foydalanish uchun ishlatiladi.",
     "seoDescription": "Yeni DeHub token yengä qeling. Ro'yhatga kirip, token yengä qilingincha bir email alip, so'ngra DeHub waletinizdan to'g'ri buyurip aling."
+  },
+  "githubLink": {
+    "hint": "GitHubغا كىرىپ ھېساباتنىڭ سىزگە تەۋە ئىكەنلىكىنى دەلىللەڭ. DeHub پەقەت سىزنىڭ ئاممىۋى GitHub پروفېلىڭىزنى كۆرەلەيدۇ.",
+    "verified": "Tasdiqlanmighan",
+    "verifiedAria": "دەلىللەنگەن GitHub ھېساباتى",
+    "connected": "GitHub باغلانغان",
+    "disconnected": "GitHub toqtalashdi.",
+    "taken": "بۇ GitHub ھېساباتى ئاللىقاچان باشقا DeHub پروفېلىدە بار.",
+    "failed": "GitHubنى باغلاپ بولمىدى. قايتا سىناپ بېقىڭ.",
+    "unavailable": "GitHub tasdiqlash kelish kelayaq.",
+    "connect": "GitHub نى باغلا",
+    "disconnect": "قۇرالۇش"
   }
 }

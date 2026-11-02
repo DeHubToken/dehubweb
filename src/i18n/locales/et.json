@@ -18813,5 +18813,17 @@
     "privacy": "Kasutatakse ainult, et teavitada teid tokeni avaldumisest.",
     "seoTitle": "Tokeni lükkamine peagi | DeHub",
     "seoDescription": "Uus DeHub token lükkab peagi välja. Liitu nimekirja ja saad ühe e-maili hetkel, kui see avaldub, siis ostake sustrakti DeHub-kooslusest."
+  },
+  "githubLink": {
+    "hint": "Logi sisse GitHubi, et tõestada, et konto on sinu oma. DeHub näeb ainult sinu avalikku GitHubi profiili.",
+    "verified": "Kinnitatud",
+    "verifiedAria": "Kinnitatud GitHubi konto",
+    "connected": "GitHub ühendatud",
+    "disconnected": "GitHubi ühendus on katkestatud",
+    "taken": "See GitHubi konto on juba teisel DeHubi profiilil.",
+    "failed": "GitHubiga ei saanud ühendust luua. Proovige uuesti.",
+    "unavailable": "GitHubi kinnitus on peagi tulekul.",
+    "connect": "Ühenda GitHub",
+    "disconnect": "Katkesta ühendus"
   }
 }

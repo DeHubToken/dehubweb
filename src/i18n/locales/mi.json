@@ -18748,5 +18748,17 @@
     "privacy": "Anake hei whakamōhio ki a koe mō te whakatupuranga.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Kei te tae mai te token DeHub hou. Tomo ki te rārangi me te tīkina he īmēra kotahi i te wā e whakatupu ai, katahi ka hoko tika mai i tō pūkoro DeHub."
+  },
+  "githubLink": {
+    "hint": "Hokona ki GitHub ki te whakamatau i te pūkete ko koutou. DeHub anake kite i to koutou pūkete GitHub tūmatanui.",
+    "verified": "Whakamātauria",
+    "verifiedAria": "Ko te kaute GitHub kua whakamanahia",
+    "connected": "GitHub hono",
+    "disconnected": "Ko te GitHub kua whakakorehia",
+    "taken": "Ko te pūkete GitHub kei runga i tētahi atu pūkete DeHub.",
+    "failed": "Kaore e taea te hono atu ki a GitHub. Whakamātauria ano.",
+    "unavailable": "Ka hohoro te haere mai o te tirotiro GitHub.",
+    "connect": "Tūhono ki te GitHub",
+    "disconnect": "Tūhuratia"
   }
 }

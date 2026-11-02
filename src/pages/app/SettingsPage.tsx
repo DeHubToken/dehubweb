@@ -130,6 +130,7 @@ import { GettingStartedSetting } from '@/components/app/settings/GettingStartedS
 import { BadgeDelegationSection } from '@/components/app/settings/BadgeDelegationSection';
 import type { SocialPlatform, VerifiedSocialAccount } from '@/lib/social-reach';
 import { SocialConnectControl, useOwnSocialReach } from '@/components/app/settings/SocialReachConnect';
+import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
@@ -1223,6 +1224,11 @@ function ProfileSettings() {
               }
             />
           </CollapsibleStack>
+          {/* Outside the stack so it is never folded away: a verified GitHub
+              is proven by signing in, not typed, which is the point of it. */}
+          <div className="mt-6">
+            <GithubLinkSetting />
+          </div>
         </div>
 
         {/* How you get back in. */}

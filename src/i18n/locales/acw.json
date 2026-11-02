@@ -380,6 +380,8 @@
   },
   "nav": {
     "reorderHint": "احفظ و اسحب أي أيكون ليغير ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "تجهيز",
@@ -423,9 +425,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderReset": "إعادة تعيين",
-    "reorderResetLong": "إعادة ترتيب القائمة الأصلي"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -18165,5 +18165,17 @@
     "privacy": "بس عشان نخبرك عن الإطلاق.",
     "seoTitle": "الرمز بيطلق قريبًا | DeHub",
     "seoDescription": "رمز DeHub الجديد بيطلق قريبًا. انضم للقائمة واستلم إيميل أول ما يطلع، بعدين اشترِ مباشرة من محفظة DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول ل GitHub ليُثبتوا إن الحساب لك. DeHub بتشوفك فقط من خلال ملفك العام على GitHub.",
+    "verified": "مصادقة",
+    "verifiedAria": "حساب GitHub مصادق",
+    "connected": "GitHub متصّل",
+    "disconnected": "GitHub منقطّع",
+    "taken": "الحساب ده على حساب GitHub تاني على DeHub",
+    "failed": "ما بيسوّد GitHub. حاول تاني.",
+    "unavailable": "GitHub verification (التحقق من GitHub) بتجي قريب.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "انقطّع"
   }
 }

@@ -382,6 +382,8 @@
     "gasSponsorshipFailed": "ما قدرنا نغطي المعاملة دي. حاول تاني بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "الرئيسية",
     "explore": "تصفّح",
@@ -426,9 +428,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -18062,5 +18062,16 @@
     "privacy": "مستخدم بس عشان نخبرك باللانش.",
     "seoTitle": "إطلاق التوكن قريب | DeHub",
     "seoDescription": "التوكن الجديد DeHub بيطلق قريب. انضم لللستة وخد إيميل فور ما يطلق، بعدين اشتري مباشرة من محفظتك DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبت أن الحساب لك. DeHub تراه فقط ملفك العام على GitHub.",
+    "verified": "مُصادَق عليه",
+    "verifiedAria": "حساب GitHub مُصادَق عليه",
+    "connected": "GitHub مُرتبط",
+    "disconnected": "GitHub مُفصَل",
+    "taken": "الحساب ده على جيت هاب موجود في بروفيل ديهوب تانيه.",
+    "failed": "مفشل اتصل GitHub. حاول تاني.",
+    "unavailable": "التحقق من GitHub جاي قريب.",
+    "disconnect": "افصل"
   }
 }

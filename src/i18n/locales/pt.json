@@ -20024,5 +20024,17 @@
     "privacy": "Apenas para te contar sobre o lançamento.",
     "seoTitle": "Lançamento de token em breve | DeHub",
     "seoDescription": "O novo token DeHub está prestes a ser lançado. Junte-se à lista e receba um e-mail assim que for lançado, então compre diretamente da sua carteira DeHub."
+  },
+  "githubLink": {
+    "hint": "Faça login no GitHub para comprovar que a conta é sua. O DeHub só vê seu perfil público do GitHub.",
+    "verified": "Verificado",
+    "verifiedAria": "Conta GitHub verificada",
+    "connected": "GitHub conectado",
+    "disconnected": "GitHub desconectado",
+    "taken": "Essa conta do GitHub já está em outro perfil DeHub.",
+    "failed": "Não foi possível conectar ao GitHub. Tente novamente.",
+    "unavailable": "A verificação do GitHub em breve.",
+    "connect": "Conecte-se ao GitHub",
+    "disconnect": "Desconectar"
   }
 }
