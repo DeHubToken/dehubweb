@@ -416,8 +416,19 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         return; // stay on the offer; they can skip or retry
       }
       // Enrolment is a convenience, never a gate on signing in — fall through.
-      console.warn('[WalletUnlock] Biometric enrolment failed:', err);
-      toast.error(err instanceof Error ? err.message : _copy("copy.8e9a4bd17e64", { defaultValue: "Could not turn on biometric unlock" }));
+      // No error toast: the unlock right below succeeds, and a red "could not
+      // turn on biometric unlock" flashed in front of "wallet unlocked" reads
+      // as the whole thing failing. Remember it on this device instead, so the
+      // offer stops coming back at every unlock (a failed enrolment never set
+      // the "works here" marker, which is what kept re-asking). Settings →
+      // Account Security can still turn it on.
+      declineBiometricOffer(userId);
+      biometricLogger.warn('Biometric enrolment after unlock failed', {
+        userId,
+        errorName: err instanceof Error ? err.name : 'unknown',
+        message: err instanceof Error ? err.message : String(err),
+        host: window.location.hostname,
+      });
     }
 
     setPendingSecret(null);
