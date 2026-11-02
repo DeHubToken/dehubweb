@@ -56,8 +56,14 @@ describe('menu search — the query someone actually types', () => {
   it('leaves the menu alone, by identity, when nothing is typed', () => {
     // Not cosmetic: the rail re-runs this on every render, and a fresh array
     // each time would remount all 28 rows.
-    expect(filterNavItems(NAV_ITEMS, '', t)).toBe(NAV_ITEMS);
-    expect(filterNavItems(NAV_ITEMS, '   ', t)).toBe(NAV_ITEMS);
+    expect(filterNavItems(NAV_ITEMS, '', t, true)).toBe(NAV_ITEMS);
+    expect(filterNavItems(NAV_ITEMS, '   ', t, true)).toBe(NAV_ITEMS);
+    expect(filterNavItems(NAV_ITEMS, '', t)).toBe(filterNavItems(NAV_ITEMS, '', t));
+  });
+  it('keeps the NFT market owner-only while it is in preview', () => {
+    expect(filterNavItems(NAV_ITEMS, '', t).some(item => item.path === '/nfts')).toBe(false);
+    expect(filterNavItems(NAV_ITEMS, 'nft', t).some(item => item.path === '/nfts')).toBe(false);
+    expect(filterNavItems(NAV_ITEMS, '', t, true).some(item => item.path === '/nfts')).toBe(true);
   });
 
   it('finds the Arcade from "games", which is the word the row does not use', () => {
