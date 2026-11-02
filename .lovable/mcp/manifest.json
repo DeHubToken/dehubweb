@@ -26,7 +26,6 @@
           "type": "object",
           "properties": {
             "sort": {
-              "description": "new = latest, hot = most liked, trending = most viewed, discussed = most commented",
               "type": "string",
               "enum": [
                 "new",
@@ -36,24 +35,16 @@
               ]
             },
             "category": {
-              "description": "Optional category filter",
               "type": "string"
             },
             "search": {
-              "description": "Keyword to match against post titles and descriptions",
               "type": "string"
             },
             "limit": {
-              "description": "Max posts (1-50)",
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 50
+              "type": "number"
             },
             "offset": {
-              "description": "Pagination offset",
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 9007199254740991
+              "type": "number"
             }
           }
         },
@@ -73,9 +64,7 @@
           "type": "object",
           "properties": {
             "token_id": {
-              "type": "string",
-              "minLength": 1,
-              "description": "The post's token ID"
+              "type": "string"
             }
           },
           "required": [
@@ -98,21 +87,13 @@
           "type": "object",
           "properties": {
             "token_id": {
-              "type": "string",
-              "minLength": 1,
-              "description": "The post's token ID"
+              "type": "string"
             },
             "limit": {
-              "description": "Max comments (1-50)",
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 50
+              "type": "number"
             },
             "page": {
-              "description": "Zero-based page number",
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 9007199254740991
+              "type": "number"
             }
           },
           "required": [
@@ -135,12 +116,9 @@
           "type": "object",
           "properties": {
             "query": {
-              "type": "string",
-              "minLength": 1,
-              "description": "Search query"
+              "type": "string"
             },
             "type": {
-              "description": "Restrict results to posts or users",
               "type": "string",
               "enum": [
                 "all",
@@ -149,10 +127,7 @@
               ]
             },
             "limit": {
-              "description": "Max results per section (1-50)",
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 50
+              "type": "number"
             }
           },
           "required": [
@@ -175,9 +150,7 @@
           "type": "object",
           "properties": {
             "user": {
-              "type": "string",
-              "minLength": 1,
-              "description": "Wallet address (0x...) or username to look up"
+              "type": "string"
             }
           },
           "required": [
