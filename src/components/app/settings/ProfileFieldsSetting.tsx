@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, cloneElement, useContext, useEffect, useRef, useState, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BadgeCheck, Check, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
@@ -13,11 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { AuthContext } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import type { ProfileField } from '@/lib/api/dehub/profile-fields';
 import {
-  PROFILE_FIELD_PRESETS,
   fieldLink,
   isLinkPreset,
   normalizeFieldValue,
@@ -29,6 +30,12 @@ import { PROFILE_FIELD_ICONS } from '@/components/app/profile/profileFieldIcons'
 import { SETTINGS_HEADING_CLASS, SETTINGS_INLINE_ACTION_CLASS } from './SettingsRow';
 
 export const MAX_PROFILE_FIELDS = 4;
+
+/**
+ * The kinds offered when adding or changing a field. Older saved fields of
+ * another kind (Blog, Pronouns, …) still load and save as they are.
+ */
+const PICKER_PRESETS: ProfileFieldPresetId[] = ['website', 'location', 'shop', 'custom'];
 
 export type FieldRow = { key: number; preset: ProfileFieldPresetId; name: string; value: string; verifiedAt?: string | null };
 
@@ -219,8 +226,9 @@ export function ProfileFieldsEditor({
         </ul>
       )}
       {rows.length < MAX_PROFILE_FIELDS && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <PresetChooser
+          onPick={add}
+          trigger={
             <button
               type="button"
               className={cn(
@@ -231,9 +239,8 @@ export function ProfileFieldsEditor({
               <Plus className="size-4" />
               {t('profileFields.add')}
             </button>
-          </DropdownMenuTrigger>
-          <PresetMenu onPick={add} />
-        </DropdownMenu>
+          }
+        />
       )}
       {showHint && <p className="mt-3 break-all text-xs text-zinc-500">{t('profileFields.verifyHint', { snippet })}</p>}
     </div>
@@ -262,8 +269,10 @@ function PresetPicker({
   const Icon = PROFILE_FIELD_ICONS[value];
   const label = t(`profileFields.presets.${value}`, presetById(value)?.name ?? 'Custom');
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <PresetChooser
+      onPick={onPick}
+      selected={value}
+      trigger={
         <button
           type="button"
           aria-label={`${t('profileFields.type', 'Field type')} ${index + 1}: ${label}`}
@@ -273,29 +282,89 @@ function PresetPicker({
           {!compact && <span className="max-w-[6.5rem] truncate">{label}</span>}
           <ChevronDown className="size-3.5 shrink-0 text-zinc-500" />
         </button>
-      </DropdownMenuTrigger>
-      <PresetMenu onPick={onPick} selected={value} />
-    </DropdownMenu>
+      }
+    />
+  );
+}
+
+const presetLabel = (t: (k: string, d: string) => string, id: ProfileFieldPresetId) =>
+  id === 'custom'
+    ? t('profileFields.presets.customOption', 'Custom label')
+    : t(`profileFields.presets.${id}`, presetById(id)!.name);
+
+/** A dropdown on desktop, a bottom sheet on mobile, like the app's other menus. */
+function PresetChooser({
+  trigger,
+  onPick,
+  selected,
+}: {
+  trigger: ReactElement<{ onClick?: () => void }>;
+  onPick: (id: ProfileFieldPresetId) => void;
+  selected?: ProfileFieldPresetId;
+}) {
+  const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+
+  if (!isMobile) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+        <PresetMenu onPick={onPick} selected={selected} />
+      </DropdownMenu>
+    );
+  }
+
+  return (
+    <>
+      {cloneElement(trigger, { onClick: () => setOpen(true) })}
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent column glass className="border-t border-white/10 pb-[env(safe-area-inset-bottom)]">
+          <DrawerHeader className="border-b border-white/10">
+            <DrawerTitle className="text-base">{t('profileFields.type', 'Field type')}</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-2">
+            {PICKER_PRESETS.map((id) => {
+              const Icon = PROFILE_FIELD_ICONS[id];
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onPick(id);
+                  }}
+                  className="flex h-12 w-full items-center gap-3 rounded-xl px-3 text-left text-sm text-zinc-200 transition-colors hover:bg-white/5 active:bg-white/10"
+                >
+                  <Icon className="size-[18px] shrink-0 text-zinc-400" />
+                  <span className="flex-1">{presetLabel(t, id)}</span>
+                  {selected === id && <Check className="size-4 shrink-0 text-zinc-400" />}
+                </button>
+              );
+            })}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }
 
 function PresetMenu({ onPick, selected }: { onPick: (id: ProfileFieldPresetId) => void; selected?: ProfileFieldPresetId }) {
   const { t } = useTranslation();
-  const items = useMemo(() => [...PROFILE_FIELD_PRESETS.map((p) => p.id), 'custom' as const], []);
   return (
     <DropdownMenuContent align="start" className="z-[80] min-w-[12rem]">
-      {items.map((id) => {
+      {PICKER_PRESETS.map((id) => {
         const Icon = PROFILE_FIELD_ICONS[id];
         return (
           <Fragment key={id}>
-            {id === 'custom' && <DropdownMenuSeparator />}
-            <DropdownMenuItem onSelect={() => onPick(id)} className="gap-2.5 py-2">
+            {id === 'custom' && <DropdownMenuSeparator className="bg-white/10" />}
+            {/* Dark hover, not the theme's light accent, so the grey icon stays visible. */}
+            <DropdownMenuItem
+              onSelect={() => onPick(id)}
+              className="gap-2.5 py-2 text-zinc-200 focus:bg-white/10 focus:text-white"
+            >
               <Icon className="size-4 shrink-0 text-zinc-400" />
-              <span className="flex-1">
-                {id === 'custom'
-                  ? t('profileFields.presets.customOption', 'Custom label')
-                  : t(`profileFields.presets.${id}`, presetById(id)!.name)}
-              </span>
+              <span className="flex-1">{presetLabel(t, id)}</span>
               {selected === id && <Check className="size-4 shrink-0 text-zinc-400" />}
             </DropdownMenuItem>
           </Fragment>
