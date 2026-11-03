@@ -396,8 +396,8 @@ export default function NftMarketPage() {
                   ) : null}
 
                   {coll ? (
-                    <div className="flex items-center justify-between gap-2 px-1">
-                      <p className="min-w-0 truncate text-[15px] font-bold text-white">
+                    <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
+$1 font-bold text-white">
                         {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
                         <span className="text-[13px] font-normal text-zinc-500">
                           {' · '}
@@ -427,7 +427,7 @@ export default function NftMarketPage() {
                   {gridListings.length ? (
                     <section className="flex flex-col gap-2">
                       {!coll ? (
-                        <h2 className="px-1 text-[15px] font-bold text-white">{t('nftMarket.forSale', { defaultValue: 'For sale' })}</h2>
+                        <h2 data-page-bento className="rounded-xl bg-zinc-900 px-3 py-2 text-[15px] font-bold text-white">{t('nftMarket.forSale', { defaultValue: 'For sale' })}</h2>
                       ) : null}
                       <div data-nft-grid className={gridClass}>
                         {gridListings.map((o, i) => (
@@ -467,7 +467,7 @@ export default function NftMarketPage() {
 
                   {gridMints.length && (!coll || !listings.length) ? (
                     <section className="flex flex-col gap-2">
-                      <div className="flex items-baseline justify-between gap-2 px-1">
+                      <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
                         <h2 className="text-[15px] font-bold text-white">
                           {coll ? t('nftMarket.openToOffers', { defaultValue: 'Open to offers' }) : t('nftMarket.latestMints', { defaultValue: 'Latest mints' })}
                         </h2>

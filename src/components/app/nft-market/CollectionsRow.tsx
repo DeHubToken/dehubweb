@@ -19,7 +19,7 @@ export function CollectionsRow({
   if (!items.length) return null;
   return (
     <section data-nft-collections className="flex flex-col gap-2">
-      <h2 className="px-1 text-[15px] font-bold text-white">
+      <h2 data-page-bento className="rounded-xl bg-zinc-900 px-3 py-2 text-[15px] font-bold text-white">
         {t('nftMarket.collections', { defaultValue: 'Collections' })}
       </h2>
       <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
