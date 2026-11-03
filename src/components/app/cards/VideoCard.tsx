@@ -214,6 +214,7 @@ import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
 import { useTabletPortraitFeed } from '@/hooks/use-tablet-portrait-feed';
 import { tabletPortraitTitleSize } from '@/lib/tablet-portrait-feed';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -862,6 +863,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const { selfReaction, sendLiveReaction } = useLiveReaction(video.liveStreamId, !!video.isLivePost && !!video.isLiveNow);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
@@ -1586,8 +1588,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const openPreviewInShorts = useCallback(() => {
     pauseVideo();
     videoPlaybackManager.stop(instanceId);
+    noteProfileFeedOpen(profileFeed, video.id);
     openBrainrotFeed(video.id, videoItemToShort(video));
-  }, [pauseVideo, instanceId, video]);
+  }, [pauseVideo, instanceId, video, profileFeed]);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -2081,8 +2084,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       }
     }
     cacheVideoForNavigation(queryClient, video);
+    noteProfileFeedOpen(profileFeed, video.id);
     navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video, mediaAspect, isPPVLocked]);
+  }, [navigate, queryClient, video, mediaAspect, isPPVLocked, profileFeed]);
   const openPost = useVideoCardOpen({
     mediaRef: containerRef,
     shorts: feedShortsTarget,

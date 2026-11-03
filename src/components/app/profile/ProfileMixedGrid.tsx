@@ -32,6 +32,7 @@ import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed
 import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import type { ProfileContentItem } from '@/hooks/use-profile-page';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 import './profile-mixed-grid.css';
 
 /** One cell's worth of content. Optimistic posts arrive in the same shape. */
@@ -90,8 +91,11 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
   const navigate = useNavigate();
   const [viewer, setViewer] = useState<{ images: string[]; postId: string } | null>(null);
 
-  const openPost = (id: string, slug?: string) =>
+  const profileFeed = useProfileFeedContext();
+  const openPost = (id: string, slug?: string) => {
+    noteProfileFeedOpen(profileFeed, id);
     navigate(`/app/post/${slug || id}`, { state: { fromFeed: true } });
+  };
 
   return (
     <>
@@ -178,7 +182,10 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
 
           const post = entry.data as TextPost;
           const isArticle = !!post.articleBody;
-          const openThis = () => navigate(post.articleSlug ? `/app/post/${post.articleSlug}` : post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`, { state: { fromFeed: true } });
+          const openThis = () => {
+            noteProfileFeedOpen(profileFeed, post.id);
+            navigate(post.articleSlug ? `/app/post/${post.articleSlug}` : post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`, { state: { fromFeed: true } });
+          };
 
           if (isArticle) {
             const cover = post.articleImageUrl;

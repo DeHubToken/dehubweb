@@ -2,7 +2,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Repeat2 from "@/components/ui/cut-icons/repost";
 import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
@@ -53,6 +53,7 @@ import { isPlanPublished } from '@/lib/api/dehub';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
+import { ProfileFeedOriginContext, isContinuableProfileTab, type ProfileFeedOrigin, type ProfileFeedQuery, type ProfileFeedSource } from '@/lib/profile-feed-origin';
 import type { UserCommentItem, UserCommentParent } from '@/lib/api/dehub/users';
 import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { QuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
@@ -181,6 +182,8 @@ interface ProfileTabContentProps {
   isViewingOwnProfile: boolean | undefined;
   /** A sort or search from the channel toolbar is narrowing what's shown. */
   isContentFiltered?: boolean;
+  /** The content query behind the tab lists, so an opened post can continue it. */
+  contentQuery?: ProfileFeedQuery;
   // Optimistic
   optimisticPosts: OptimisticPost[];
   // Subscriptions
@@ -212,6 +215,7 @@ export function ProfileTabContent({
   isPending,
   isViewingOwnProfile,
   isContentFiltered = false,
+  contentQuery,
   optimisticPosts,
   isLoadingPlans,
   hasPlans,
@@ -248,6 +252,14 @@ export function ProfileTabContent({
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
+  // A post opened from this tab carries on through the same list.
+  const feedOrigin = useMemo<ProfileFeedOrigin | null>(
+    () => (contentQuery?.userId && isContinuableProfileTab(activeTab) ? { tab: activeTab, query: contentQuery } : null),
+    [activeTab, contentQuery],
+  );
+  const feedSource = useRef<ProfileFeedSource>({ current: null });
+  feedSource.current.current = feedOrigin;
+
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -267,6 +279,7 @@ export function ProfileTabContent({
   const showLoading = isLoadingContent && !hasData;
 
   return (
+    <ProfileFeedOriginContext.Provider value={feedSource.current}>
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
       {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
@@ -441,6 +454,7 @@ export function ProfileTabContent({
         />
       )}
     </div>
+    </ProfileFeedOriginContext.Provider>
   );
 }
 
