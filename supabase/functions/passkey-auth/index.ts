@@ -122,6 +122,12 @@ function resolveRp(req: Request, body: Record<string, unknown>): Rp | null {
     if (url.protocol !== "https:") return null;
     return { rpId: APEX, origins: [origin] };
   }
+  // riftn.com shares dehub.io's passkeys through WebAuthn related origins
+  // (dehub.io/.well-known/webauthn), so its ceremonies use the dehub.io RP.
+  if (host === "riftn.com" || host.endsWith(".riftn.com")) {
+    if (url.protocol !== "https:") return null;
+    return { rpId: APEX, origins: [origin] };
+  }
   if (host === "localhost" || host === "127.0.0.1") {
     return { rpId: host, origins: [origin] };
   }

@@ -6398,6 +6398,8 @@ async function handleRequest(request, env, ctx) {
     '/.well-known/assetlinks.json',
     '/.well-known/apple-app-site-association',
     '/apple-app-site-association',
+    // WebAuthn related origins: lets riftn.com use passkeys made for dehub.io.
+    '/.well-known/webauthn',
   ]);
   // Profiles (/mal, /mal.eth) open in the iOS app too, but a one-segment
   // catch-all can only be said to iOS as "everything else": exclude each

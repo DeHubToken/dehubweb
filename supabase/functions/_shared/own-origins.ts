@@ -13,7 +13,7 @@
 // get-rpc-endpoints keeps its own, stricter list on purpose: it guards a paid
 // RPC key, and widening it to previews and LAN hosts is a separate decision.
 
-const DEHUB_HOST = /(?:^|\.)dehub\.(?:io|net)$/;
+const DEHUB_HOST = /(?:^|\.)(?:dehub\.(?:io|net)|riftn\.com)$/;
 
 const PROJECT_PREVIEW_HOST =
   /^(?:(?:id-preview(?:-[a-z0-9]+)?|project)--)?7d59b29a-7055-4e27-94fd-0c2253be10ad(?:-dev)?\.(?:lovable\.app|lovableproject(?:-dev)?\.com)$/;

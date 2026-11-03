@@ -301,6 +301,10 @@
   Content-Type: application/json
   Cache-Control: public, max-age=300
 
+/.well-known/webauthn
+  Content-Type: application/json
+  Cache-Control: public, max-age=300
+
 /arcade-touch/*
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate

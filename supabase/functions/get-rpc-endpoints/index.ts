@@ -20,6 +20,8 @@ const ALLOWED_ORIGINS = new Set(
     "https://dehub.io",
     "https://www.dehub.io",
     "https://staging.dehub.io",
+    "https://riftn.com",
+    "https://www.riftn.com",
     ...(Deno.env.get("RPC_ALLOWED_ORIGINS") || "")
       .split(",")
       .map((s) => s.trim())
