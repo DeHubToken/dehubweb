@@ -209,7 +209,7 @@ function sameOriginTransform(url: string | undefined): string | undefined {
   const PIN = 'https://dehub.io';
   if (!url.startsWith(`${PIN}/cdn-cgi/`)) return url;
   const host = window.location.hostname;
-  if (host !== 'dehub.io' && !host.endsWith('.dehub.io')) return url;
+  if (host !== 'dehub.io' && !host.endsWith('.dehub.io') && host !== 'riftn.com' && !host.endsWith('.riftn.com')) return url;
   return window.location.origin + url.slice(PIN.length);
 }
 
