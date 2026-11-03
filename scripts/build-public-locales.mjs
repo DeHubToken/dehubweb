@@ -170,13 +170,14 @@ function lookupBranded(dictionary, key) {
   }
   return undefined;
 }
+const brandedDictionary = entries => new Proxy(entries, { get: (target, key) => typeof key === 'string' && !(key in Object.prototype) ? lookupBranded(target, key) : target[key] });
 
 export function buildPublicLocales(root) {
   const sources = collectPublicSources(root);
   const extras = EXTRA_LOCALES.filter(lang => fs.existsSync(path.join(root, `scripts/public-page-translations/${lang}.json`)));
   const languages = [...PRIORITY_LOCALES, ...extras];
   const dictionaries = Object.fromEntries(languages.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
-  const normalizedDictionaries = Object.fromEntries(languages.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]));
+  const normalizedDictionaries = Object.fromEntries(languages.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]).map(([lang, entries]) => [lang, brandedDictionary(entries)]));
   const version = digest({ sources, dictionaries });
   const table = {}, assets = {}, routes = {};
   for (const [route, source] of Object.entries(sources)) {
@@ -188,14 +189,14 @@ export function buildPublicLocales(root) {
         const dictionary = dictionaries[lang];
         const translate = text => {
           if (!text || neutralCopy(normalizeCopy(text)) || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
-          const translated = dictionary[text] || lookupBranded(normalizedDictionaries[lang], normalizeCopy(text));
+          const translated = dictionary[text] || normalizedDictionaries[lang][normalizeCopy(text)];
           if (typeof translated === 'string' && translated.trim()) return validatePageTranslation(text, translated);
           if (/<[a-zA-Z/]/.test(text)) {
             const body = text.split(/(<code\b[^>]*>[\s\S]*?<\/code>|<[^>]*>)/i).map(part => {
               if (part.startsWith('<')) return part;
               const source = normalizeCopy(part);
               if (!source || neutralCopy(source) || !/[A-Za-z]{2}/.test(source)) return part;
-              const target = lookupBranded(normalizedDictionaries[lang], source);
+              const target = normalizedDictionaries[lang][source];
               if (!target) throw new Error(route + ':' + lang + ' missing HTML text: ' + source.slice(0,100));
               return part.match(/^\s*/)[0] + escapeHtml(target.trim()) + part.match(/\s*$/)[0];
             }).join('');
