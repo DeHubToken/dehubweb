@@ -5379,7 +5379,7 @@ const SUPABASE_RELAY_PREFIX = '/_sb';
 const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 // Hosts that serve the web app. The client picks its own origin as the relay
 // base on these, so each has to answer /_sb itself.
-const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io']);
+const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io', 'riftn.com', 'www.riftn.com']);
 const HOP_BY_HOP_HEADERS = [
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
   'proxy-connection', 'te', 'trailer', 'transfer-encoding', 'upgrade',
