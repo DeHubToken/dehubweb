@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Nuna dukkan shafuka {{count}}"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Saukewa akan App Store",

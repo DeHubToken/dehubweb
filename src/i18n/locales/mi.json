@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Whakaaturia ngā whārangi {{count}} katoa"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Tikiake i runga i te App Store",

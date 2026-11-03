@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "সব {{count}}টা পেজ দেহাও"
+  },
   "dehubAppPage": {
     "android": "অ্যান্ড্রয়েড",
     "appStore": "অ্যাপ স্টোরে ডাউনলোড করুন",

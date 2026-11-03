@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Ähli {{count}} sahypany görkez"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store-da barlaň",

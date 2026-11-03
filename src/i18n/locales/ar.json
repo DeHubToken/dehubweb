@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "عرض كل الصفحات الـ {{count}}"
+  },
   "duet": {
     "with": "دويتو مع @{{username}}",
     "withOriginal": "دويتو · عرض الأصلي",

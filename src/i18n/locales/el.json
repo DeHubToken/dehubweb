@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Εμφάνιση και των {{count}} σελίδων"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Λήψη από το App Store",

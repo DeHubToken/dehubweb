@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Näytä kaikki {{count}} sivua"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lataa App Storesta",

@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ሁሉንም {{count}} ገጾች አሳይ"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "የመተግበሪያ መደብር ላይ ያውርዱ",

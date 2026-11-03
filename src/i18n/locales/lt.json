@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Rodyti visus {{count}} puslapius"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Įdiegti App Store",

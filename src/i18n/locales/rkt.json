@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "সব {{count}}টা পাতা দেখাও"
+  },
   "dehubAppPage": {
     "android": "আন্ড্রয়েড",
     "appStore": "আপ স্টোর থেকে ডাউনলোড করুন",

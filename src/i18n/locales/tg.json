@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Нишон додани ҳамаи {{count}} саҳифа"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download дар Store Барномасозони",

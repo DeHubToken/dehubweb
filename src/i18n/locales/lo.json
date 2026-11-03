@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ສະແດງທັງໝົດ {{count}} ໜ້າ"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "ດາວໂຫລດໃນ App Store",

@@ -83,10 +83,14 @@ html[data-theme="lavalamp"] [data-comic] { --foil-a: #ffe6cc; --foil-b: #fdba74;
   background: rgba(0, 0, 0, 0.7); color: #fff; font: 700 9px/1.4 system-ui, sans-serif; letter-spacing: 0.04em;
 }
 .comic-floor { position: absolute; border-radius: 50%; background: rgba(0, 0, 0, 0.7); filter: blur(14px); pointer-events: none; }
-.comic-chip {
-  position: absolute; z-index: 5; display: flex; align-items: center; gap: 5px; pointer-events: none;
-  padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 500; color: #fff;
-  background: rgba(10, 6, 8, 0.62); border: 1px solid rgba(255, 255, 255, 0.12);
+/* The face card's width. Leaves room on the right for the fanned cards behind. */
+.comic-stack { width: min(82%, 360px, 56vh); }
+.comic-stack[data-wide] { width: min(90%, 440px); }
+@media (min-width: 1024px) {
+  .comic-stack { width: min(84%, 440px, 54vh); }
+  .comic-stack[data-wide] { width: min(92%, 600px); }
+  .comic-stack[data-full] { width: min(86%, 500px, 60vh); }
+  .comic-stack[data-full][data-wide] { width: min(92%, 680px); }
 }
 .comic-mini {
   position: absolute; bottom: 0; left: 50%; width: 30px; aspect-ratio: 63 / 88; margin-left: -15px; padding: 2px;

@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Gosi ibe {{count}} niile"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download na App Store",

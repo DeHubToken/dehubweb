@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Onyesha kurasa zote {{count}}"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Pakua kwenye Duka la Programu",

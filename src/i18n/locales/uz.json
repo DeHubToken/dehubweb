@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Barcha {{count}} sahifani ko‘rsatish"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store’dan yuklab oling",

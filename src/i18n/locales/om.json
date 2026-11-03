@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Fuula {{count}} hunda agarsiisi"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store irratti buufadhu",

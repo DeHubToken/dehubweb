@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Bütün {{count}} səhifəni göstər"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Tətbiq Mağazasında endirin",

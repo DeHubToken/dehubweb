@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "显示全部 {{count}} 页"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "在 App Store 下載",

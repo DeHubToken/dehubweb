@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ኩሉ {{count}} ገጻት ኣርኢ"
+  },
   "dehubAppPage": {
     "android": "ኣንድሮይድ",
     "appStore": "ኣብ App Store ኣውርድዎ",

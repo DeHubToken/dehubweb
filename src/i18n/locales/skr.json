@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "سارے {{count}} صفحے ݙکھاؤ"
+  },
   "dehubAppPage": {
     "android": "اندرائڈ",
     "appStore": "اپ اسٹور پر ڈاؤنلوڈ کرو",

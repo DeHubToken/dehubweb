@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Барлық {{count}} бетті көрсету"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store дүкенінен жүктеп алу",
