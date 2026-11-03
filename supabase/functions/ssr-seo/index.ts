@@ -934,7 +934,7 @@ serve(async (req) => {
         const html = generateMetaHTML({
             title: "Riftn — Open Source, User Owned & Censorship Resistant Media",
             description:
-                "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
+                "riftn.com is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
             image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg",
             url: canonicalUrl,
             twitterCard: "summary_large_image",
