@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Bütün {{count}} səhifəni göstər"
   },
+  "comicBorder": {
+    "title": "Haşiyə",
+    "theme": "Mövzu",
+    "silver": "Gümüş",
+    "bronze": "Bürünc",
+    "matteBlack": "Mat qara",
+    "carbonFibre": "Karbon lif",
+    "holographic": "Holoqrafik",
+    "shiny": "Parlaq",
+    "glitter": "Parıltı",
+    "saved": "Haşiyə saxlanıldı",
+    "failed": "Haşiyəni saxlamaq olmadı"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Tətbiq Mağazasında endirin",

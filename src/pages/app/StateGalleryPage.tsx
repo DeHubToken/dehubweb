@@ -178,6 +178,7 @@ function ComicGallery() {
     file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
     caption: GALLERY_COMIC_CAPTIONS[i], description: i === 0 ? GALLERY_COMIC_ALTS[0] : undefined,
   }));
+  const [pickedBorder, setPickedBorder] = useState<ComicBorder | null>('holographic');
   const noop = () => {};
   return (
     <section data-comic-gallery className="mb-5 space-y-6">
@@ -193,6 +194,18 @@ function ComicGallery() {
       <div className="rounded-2xl bg-zinc-950 p-3">
         <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Comic tab</p>
         <ComicPagesEditor media={media} limit={50} onAddPages={noop} onRemove={noop} onMove={noop} onCaption={noop} onAlt={noop} />
+        <div className="mt-3"><ComicBorderPicker value={pickedBorder} onChange={setPickedBorder} cover={GALLERY_COMIC_PAGES[0]} title="The Walking Bed" /></div>
+      </div>
+      <div data-comic-borders>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Border presets</p>
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          {COMIC_BORDERS.map(border => (
+            <div key={border} data-comic-border-sample={border}>
+              <p className="text-center text-[11px] text-zinc-400">{border}</p>
+              <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} title="The Walking Bed" border={border} onOpen={noop} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -259,6 +272,8 @@ import { ComicDeck } from '@/components/app/comic/ComicDeck';
 import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
 import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
+import { ComicBorderPicker } from '@/features/post/components/ComicBorderPicker';
+import { COMIC_BORDERS, type ComicBorder } from '@/lib/comic-borders';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
 // The standard public BIP-39 test vector: owns nothing, safe to show.

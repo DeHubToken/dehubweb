@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "എല്ലാ {{count}} പേജുകളും കാണിക്കുക"
   },
+  "comicBorder": {
+    "title": "ബോർഡർ",
+    "theme": "തീം",
+    "silver": "വെള്ളി",
+    "bronze": "വെങ്കലം",
+    "matteBlack": "മാറ്റ് കറുപ്പ്",
+    "carbonFibre": "കാർബൺ ഫൈബർ",
+    "holographic": "ഹോളോഗ്രാഫിക്",
+    "shiny": "തിളക്കമുള്ള",
+    "glitter": "ഗ്ലിറ്റർ",
+    "saved": "ബോർഡർ സംരക്ഷിച്ചു",
+    "failed": "ബോർഡർ സംരക്ഷിക്കാനായില്ല"
+  },
   "dehubAppPage": {
     "android": "ആൻഡ്രോയ്ഡ്",
     "appStore": "ആപ്പ് സ്റ്റോറിൽ ഡൗൺലോഡ് ചെയ്യുക",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Asehoy ny pejy {{count}} rehetra"
   },
+  "comicBorder": {
+    "title": "Sisiny",
+    "theme": "Lohahevitra",
+    "silver": "Volafotsy",
+    "bronze": "Varahina",
+    "matteBlack": "Mainty matroka",
+    "carbonFibre": "Kofehy karbôna",
+    "holographic": "Hôlôgrafika",
+    "shiny": "Mamirapiratra",
+    "glitter": "Manjelanjelatra",
+    "saved": "Voatahiry ny sisiny",
+    "failed": "Tsy voatahiry ny sisiny"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download ao amin'ny App Store",

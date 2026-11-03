@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "सबै {{count}} पृष्ठ देखाउनुहोस्"
   },
+  "comicBorder": {
+    "title": "किनारा",
+    "theme": "थिम",
+    "silver": "चाँदी",
+    "bronze": "काँसा",
+    "matteBlack": "म्याट कालो",
+    "carbonFibre": "कार्बन फाइबर",
+    "holographic": "होलोग्राफिक",
+    "shiny": "चम्किलो",
+    "glitter": "ग्लिटर",
+    "saved": "किनारा सुरक्षित गरियो",
+    "failed": "किनारा सुरक्षित गर्न सकिएन"
+  },
   "dehubAppPage": {
     "android": "एन्ड्रोइड",
     "appStore": "एप स्टोरमा डाउनलोड गर्नुहोस्",

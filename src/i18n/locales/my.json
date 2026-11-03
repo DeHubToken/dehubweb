@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "စာမျက်နှာ {{count}} ခုလုံး ပြပါ"
   },
+  "comicBorder": {
+    "title": "ဘောင်",
+    "theme": "အပြင်အဆင်",
+    "silver": "ငွေရောင်",
+    "bronze": "ကြေးရောင်",
+    "matteBlack": "မှိန်သောအနက်",
+    "carbonFibre": "ကာဗွန်ဖိုင်ဘာ",
+    "holographic": "ဟိုလိုဂရမ်",
+    "shiny": "တောက်ပ",
+    "glitter": "တဖိတ်ဖိတ်",
+    "saved": "ဘောင်ကို သိမ်းပြီးပါပြီ",
+    "failed": "ဘောင်ကို မသိမ်းနိုင်ပါ"
+  },
   "dehubAppPage": {
     "android": "အန်ဒရွိုဒ်",
     "appStore": "App Store တွင် ဒေါင်းလုပ်ဆွဲပါ",

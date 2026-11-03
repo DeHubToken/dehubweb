@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ሁሉንም {{count}} ገጾች አሳይ"
   },
+  "comicBorder": {
+    "title": "ጠርዝ",
+    "theme": "ገጽታ",
+    "silver": "ብር",
+    "bronze": "ነሐስ",
+    "matteBlack": "ደብዛዛ ጥቁር",
+    "carbonFibre": "የካርቦን ፋይበር",
+    "holographic": "ሆሎግራፊክ",
+    "shiny": "አንጸባራቂ",
+    "glitter": "ብልጭልጭ",
+    "saved": "ጠርዝ ተቀምጧል",
+    "failed": "ጠርዙን ማስቀመጥ አልተቻለም"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "የመተግበሪያ መደብር ላይ ያውርዱ",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Tunjukkan semua {{count}} halaman"
   },
+  "comicBorder": {
+    "title": "Bingkai",
+    "theme": "Tema",
+    "silver": "Perak",
+    "bronze": "Gangsa",
+    "matteBlack": "Hitam matte",
+    "carbonFibre": "Gentian karbon",
+    "holographic": "Holografik",
+    "shiny": "Berkilat",
+    "glitter": "Gemerlap",
+    "saved": "Bingkai disimpan",
+    "failed": "Tidak dapat menyimpan bingkai"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Muat turun di App Store",

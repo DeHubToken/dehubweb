@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Show all {{count}} pages"
   },
+  "comicBorder": {
+    "title": "Border",
+    "theme": "Theme",
+    "silver": "Silver",
+    "bronze": "Bronze",
+    "matteBlack": "Matte black",
+    "carbonFibre": "Carbon fibre",
+    "holographic": "Holographic",
+    "shiny": "Shiny",
+    "glitter": "Glitter",
+    "saved": "Border don save",
+    "failed": "We no fit save di border"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download for iOS",

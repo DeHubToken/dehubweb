@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Ver las {{count}} páginas"
   },
+  "comicBorder": {
+    "title": "Borde",
+    "theme": "Tema",
+    "silver": "Plata",
+    "bronze": "Bronce",
+    "matteBlack": "Negro mate",
+    "carbonFibre": "Fibra de carbono",
+    "holographic": "Holográfico",
+    "shiny": "Brillante",
+    "glitter": "Purpurina",
+    "saved": "Borde guardado",
+    "failed": "No se pudo guardar el borde"
+  },
   "duet": {
     "with": "Dúo con @{{username}}",
     "withOriginal": "Dúo · ver original",

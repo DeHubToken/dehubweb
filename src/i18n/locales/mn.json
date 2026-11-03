@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Бүх {{count}} хуудсыг харуулах"
   },
+  "comicBorder": {
+    "title": "Хүрээ",
+    "theme": "Загвар",
+    "silver": "Мөнгөлөг",
+    "bronze": "Хүрэл",
+    "matteBlack": "Царцсан хар",
+    "carbonFibre": "Нүүрстөрөгчийн утас",
+    "holographic": "Голограф",
+    "shiny": "Гялгар",
+    "glitter": "Гялтгануур",
+    "saved": "Хүрээ хадгалагдлаа",
+    "failed": "Хүрээг хадгалж чадсангүй"
+  },
   "dehubAppPage": {
     "android": "Андройд",
     "appStore": "App Store-оос татах",

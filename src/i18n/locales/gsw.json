@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Alli {{count}} Siite zeige"
   },
+  "comicBorder": {
+    "title": "Rahme",
+    "theme": "Theme",
+    "silver": "Silber",
+    "bronze": "Bronze",
+    "matteBlack": "Mattschwarz",
+    "carbonFibre": "Carbon",
+    "holographic": "Holografisch",
+    "shiny": "Glänzig",
+    "glitter": "Glitzer",
+    "saved": "Rahme gspeicheret",
+    "failed": "Rahme het nöd chöne gspeicheret wärde"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Im App Store herunterladen",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Barcha {{count}} sahifani ko‘rsatish"
   },
+  "comicBorder": {
+    "title": "Hoshiya",
+    "theme": "Mavzu",
+    "silver": "Kumush",
+    "bronze": "Bronza",
+    "matteBlack": "Xira qora",
+    "carbonFibre": "Uglerod tola",
+    "holographic": "Golografik",
+    "shiny": "Yaltiroq",
+    "glitter": "Yaltiroq zarra",
+    "saved": "Hoshiya saqlandi",
+    "failed": "Hoshiyani saqlab bo‘lmadi"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store’dan yuklab oling",

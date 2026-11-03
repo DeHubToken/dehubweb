@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Прикажи свих {{count}} страница"
   },
+  "comicBorder": {
+    "title": "Оквир",
+    "theme": "Тема",
+    "silver": "Сребрна",
+    "bronze": "Бронзана",
+    "matteBlack": "Мат црна",
+    "carbonFibre": "Карбонска влакна",
+    "holographic": "Холографска",
+    "shiny": "Сјајна",
+    "glitter": "Шљокице",
+    "saved": "Оквир је сачуван",
+    "failed": "Чување оквира није успело"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Преузмите на Апп Сторе",

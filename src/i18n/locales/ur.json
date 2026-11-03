@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "تمام {{count}} صفحات دکھائیں"
   },
+  "comicBorder": {
+    "title": "بارڈر",
+    "theme": "تھیم",
+    "silver": "چاندی",
+    "bronze": "کانسی",
+    "matteBlack": "میٹ سیاہ",
+    "carbonFibre": "کاربن فائبر",
+    "holographic": "ہولوگرافک",
+    "shiny": "چمکدار",
+    "glitter": "گلٹر",
+    "saved": "بارڈر محفوظ ہو گیا",
+    "failed": "بارڈر محفوظ نہیں ہو سکا"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "ڈاؤن لوڈ کریں App Store سے",

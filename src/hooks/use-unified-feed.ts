@@ -93,6 +93,8 @@ export interface UnifiedFeedItem {
   layout?: 'comic';
   /** Comic captions, one per page in display order. */
   mediaCaptions?: string[];
+  /** The comic's border preset; absent is the theme foil. */
+  comicBorder?: string;
   /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
   hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
@@ -350,6 +352,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     mediaDescriptions: item.mediaDescriptions,
     layout: item.layout,
     mediaCaptions: item.mediaCaptions,
+    comicBorder: item.comicBorder,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
@@ -453,6 +456,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     mediaDescriptions: item.mediaDescriptions,
     layout: item.layout,
     mediaCaptions: item.mediaCaptions,
+    comicBorder: item.comicBorder,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,
@@ -528,6 +532,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     mediaDescriptions: item.mediaDescriptions,
     layout: item.layout,
     mediaCaptions: item.mediaCaptions,
+    comicBorder: item.comicBorder,
     hideAssetCards: item.hideAssetCards,
     spoilerText: item.spoilerText,
     quotePolicy: item.quotePolicy,

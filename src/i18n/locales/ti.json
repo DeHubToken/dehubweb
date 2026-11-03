@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ኩሉ {{count}} ገጻት ኣርኢ"
   },
+  "comicBorder": {
+    "title": "ደረት",
+    "theme": "ገጽታ",
+    "silver": "ብሩር",
+    "bronze": "ነሓስ",
+    "matteBlack": "ዘይበርህ ጸሊም",
+    "carbonFibre": "ካርቦን ፋይበር",
+    "holographic": "ሆሎግራፊክ",
+    "shiny": "ዝበርህ",
+    "glitter": "ብልጭልጭ",
+    "saved": "ደረት ተዓቂቡ",
+    "failed": "ደረት ክዕቀብ ኣይከኣለን"
+  },
   "dehubAppPage": {
     "android": "ኣንድሮይድ",
     "appStore": "ኣብ App Store ኣውርድዎ",

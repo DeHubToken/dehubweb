@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "نمایش همه {{count}} صفحه"
   },
+  "comicBorder": {
+    "title": "حاشیه",
+    "theme": "پوسته",
+    "silver": "نقره‌ای",
+    "bronze": "برنزی",
+    "matteBlack": "مشکی مات",
+    "carbonFibre": "فیبر کربن",
+    "holographic": "هولوگرافیک",
+    "shiny": "براق",
+    "glitter": "اکلیلی",
+    "saved": "حاشیه ذخیره شد",
+    "failed": "ذخیره حاشیه ممکن نشد"
+  },
   "dehubAppPage": {
     "android": "اندروید",
     "appStore": "دانلود از اپ استور",

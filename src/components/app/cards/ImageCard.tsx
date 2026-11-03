@@ -1447,6 +1447,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                 <ComicDeckLazy
                   images={images}
                   captions={post.mediaCaptions}
+                  border={post.comicBorder}
                   descriptions={post.mediaDescriptions}
                   title={post.title}
                   aboveFold={aboveFold}

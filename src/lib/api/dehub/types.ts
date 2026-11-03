@@ -323,6 +323,8 @@ export interface DeHubNFT {
   layout?: 'comic';
   /** Comic captions, one per page in display order. */
   mediaCaptions?: string[];
+  /** The comic's border preset; absent is the theme foil. */
+  comicBorder?: string;
   /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
   hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */

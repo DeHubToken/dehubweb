@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Visa alla {{count}} sidor"
   },
+  "comicBorder": {
+    "title": "Kant",
+    "theme": "Tema",
+    "silver": "Silver",
+    "bronze": "Brons",
+    "matteBlack": "Mattsvart",
+    "carbonFibre": "Kolfiber",
+    "holographic": "Holografisk",
+    "shiny": "Blank",
+    "glitter": "Glitter",
+    "saved": "Kanten sparades",
+    "failed": "Det gick inte att spara kanten"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ladda ner på App Store",

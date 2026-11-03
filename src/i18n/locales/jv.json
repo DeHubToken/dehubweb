@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Tampilake kabeh {{count}} kaca"
   },
+  "comicBorder": {
+    "title": "Pinggiran",
+    "theme": "Tema",
+    "silver": "Salaka",
+    "bronze": "Prunggu",
+    "matteBlack": "Ireng doff",
+    "carbonFibre": "Serat karbon",
+    "holographic": "Holografik",
+    "shiny": "Mengkilap",
+    "glitter": "Glitter",
+    "saved": "Pinggiran disimpen",
+    "failed": "Ora bisa nyimpen pinggiran"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Unduh di App Store",

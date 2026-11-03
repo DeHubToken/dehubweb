@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ସମସ୍ତ {{count}} ପୃଷ୍ଠା ଦେଖାନ୍ତୁ"
   },
+  "comicBorder": {
+    "title": "ବର୍ଡର",
+    "theme": "ଥିମ୍",
+    "silver": "ରୂପା",
+    "bronze": "କଂସା",
+    "matteBlack": "ମ୍ୟାଟ କଳା",
+    "carbonFibre": "କାର୍ବନ ଫାଇବର",
+    "holographic": "ହୋଲୋଗ୍ରାଫିକ",
+    "shiny": "ଚକଚକିଆ",
+    "glitter": "ଗ୍ଲିଟର",
+    "saved": "ବର୍ଡର ସେଭ ହେଲା",
+    "failed": "ବର୍ଡର ସେଭ ହୋଇପାରିଲା ନାହିଁ"
+  },
   "dehubAppPage": {
     "android": "ଆଣ୍ଡ୍ରଏଡName",
     "appStore": "ଆପ ଷ୍ଟୋରରେ ଡାଉନଲୋଡ କରନ୍ତୁ",

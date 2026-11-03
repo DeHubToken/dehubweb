@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Ɲɛ {{count}} bɛɛ jira"
   },
+  "comicBorder": {
+    "title": "Dan",
+    "theme": "Tɛmu",
+    "silver": "Warijɛ",
+    "bronze": "Siranɛ",
+    "matteBlack": "Fin min tɛ manamana",
+    "carbonFibre": "Karbɔni juru",
+    "holographic": "Olografiki",
+    "shiny": "Manamanatɔ",
+    "glitter": "Yeelenmisɛnw",
+    "saved": "Dan marala",
+    "failed": "Dan ma se ka mara"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ka tɛmɛ o kan, i ka kan ka tɛmɛ o kan.",

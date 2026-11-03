@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Mostra les {{count}} pàgines"
   },
+  "comicBorder": {
+    "title": "Vora",
+    "theme": "Tema",
+    "silver": "Plata",
+    "bronze": "Bronze",
+    "matteBlack": "Negre mat",
+    "carbonFibre": "Fibra de carboni",
+    "holographic": "Hologràfica",
+    "shiny": "Brillant",
+    "glitter": "Purpurina",
+    "saved": "Vora desada",
+    "failed": "No s’ha pogut desar la vora"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Descàrrega a l’App Store",

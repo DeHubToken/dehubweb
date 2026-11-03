@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Näytä kaikki {{count}} sivua"
   },
+  "comicBorder": {
+    "title": "Reunus",
+    "theme": "Teema",
+    "silver": "Hopea",
+    "bronze": "Pronssi",
+    "matteBlack": "Mattamusta",
+    "carbonFibre": "Hiilikuitu",
+    "holographic": "Holografinen",
+    "shiny": "Kiiltävä",
+    "glitter": "Glitter",
+    "saved": "Reunus tallennettu",
+    "failed": "Reunuksen tallennus epäonnistui"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lataa App Storesta",

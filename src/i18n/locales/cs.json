@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Zobrazit všech {{count}} stránek"
   },
+  "comicBorder": {
+    "title": "Okraj",
+    "theme": "Motiv",
+    "silver": "Stříbrná",
+    "bronze": "Bronzová",
+    "matteBlack": "Matná černá",
+    "carbonFibre": "Uhlíkové vlákno",
+    "holographic": "Holografická",
+    "shiny": "Lesklá",
+    "glitter": "Třpytky",
+    "saved": "Okraj uložen",
+    "failed": "Okraj se nepodařilo uložit"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Stáhnout z App Store",

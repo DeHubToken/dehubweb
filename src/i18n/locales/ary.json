@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "عرض كل الصفحات الـ {{count}}"
   },
+  "comicBorder": {
+    "title": "الإطار",
+    "theme": "الثيم",
+    "silver": "فضي",
+    "bronze": "برونزي",
+    "matteBlack": "كحل مطفي",
+    "carbonFibre": "ألياف الكربون",
+    "holographic": "هولوغرافي",
+    "shiny": "كيلمع",
+    "glitter": "بريق",
+    "saved": "تحفظ الإطار",
+    "failed": "ما قدرناش نحفظو الإطار"
+  },
   "dehubAppPage": {
     "android": "أندرويد",
     "appStore": "التنزيل من App Store",

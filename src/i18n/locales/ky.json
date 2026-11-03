@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Бардык {{count}} баракты көрсөтүү"
   },
+  "comicBorder": {
+    "title": "Чек",
+    "theme": "Тема",
+    "silver": "Күмүш",
+    "bronze": "Коло",
+    "matteBlack": "Күңүрт кара",
+    "carbonFibre": "Көмүртек була",
+    "holographic": "Голографиялык",
+    "shiny": "Жылтыр",
+    "glitter": "Жаркылдак",
+    "saved": "Чек сакталды",
+    "failed": "Чекти сактоо мүмкүн болбоду"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store дүкөнүнөн жүктөө",

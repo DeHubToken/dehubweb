@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Ähli {{count}} sahypany görkez"
   },
+  "comicBorder": {
+    "title": "Serhet",
+    "theme": "Tema",
+    "silver": "Kümüş",
+    "bronze": "Bürünç",
+    "matteBlack": "Mat gara",
+    "carbonFibre": "Uglerod süýümi",
+    "holographic": "Golografik",
+    "shiny": "Ýalpyldawuk",
+    "glitter": "Ýalpyldy",
+    "saved": "Serhet ýatda saklandy",
+    "failed": "Serhedi ýatda saklap bolmady"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store-da barlaň",

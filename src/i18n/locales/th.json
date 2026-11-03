@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "แสดงทั้งหมด {{count}} หน้า"
   },
+  "comicBorder": {
+    "title": "ขอบ",
+    "theme": "ธีม",
+    "silver": "เงิน",
+    "bronze": "บรอนซ์",
+    "matteBlack": "ดำด้าน",
+    "carbonFibre": "คาร์บอนไฟเบอร์",
+    "holographic": "โฮโลแกรม",
+    "shiny": "เงางาม",
+    "glitter": "กากเพชร",
+    "saved": "บันทึกขอบแล้ว",
+    "failed": "บันทึกขอบไม่ได้"
+  },
   "dehubAppPage": {
     "android": "แอนดรอยด์",
     "appStore": "ดาวน์โหลดจาก App Store",

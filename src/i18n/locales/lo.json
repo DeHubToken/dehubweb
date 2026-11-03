@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ສະແດງທັງໝົດ {{count}} ໜ້າ"
   },
+  "comicBorder": {
+    "title": "ຂອບ",
+    "theme": "ທີມ",
+    "silver": "ເງິນ",
+    "bronze": "ທອງແດງ",
+    "matteBlack": "ດຳດ້ານ",
+    "carbonFibre": "ເສັ້ນໄຍຄາບອນ",
+    "holographic": "ໂຮໂລແກຣມ",
+    "shiny": "ເງົາງາມ",
+    "glitter": "ກາກເພັດ",
+    "saved": "ບັນທຶກຂອບແລ້ວ",
+    "failed": "ບໍ່ສາມາດບັນທຶກຂອບໄດ້"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "ດາວໂຫລດໃນ App Store",

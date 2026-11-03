@@ -1,4 +1,5 @@
 import type { PostVideoEdits } from './lib/video-edits';
+import type { ComicBorder } from '@/lib/comic-borders';
 import type { PostQuotaStatus } from '@/lib/api/dehub';
 import type { PostVisibility, QuotePolicy, ReplyPolicy } from '@/lib/api/dehub/types';
 import type { FilterSettings, CropSettings } from './types/filters';
@@ -112,6 +113,8 @@ export interface PostFormState {
   mintAwaitingWallet: boolean;
   /** 'comic' posts the photos as collector cards. */
   postLayout: 'comic' | null;
+  /** The comic's border preset; null is the theme's own foil. */
+  comicBorder: ComicBorder | null;
 }
 
 export interface PostFormActions {
@@ -133,6 +136,7 @@ export interface PostFormActions {
   setLiveMode: (value: LiveMode) => void;
   setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   setContentWarning: (value: string | null) => void;
+  setComicBorder: (border: ComicBorder | null) => void;
   setHideAssetCards: (value: boolean) => void;
   setQuotePolicy: (value: import('@/lib/api/dehub/types').QuotePolicy) => void;
   setStitchPolicy: (value: import('@/lib/remix-links').RemixPolicy | null) => void;
