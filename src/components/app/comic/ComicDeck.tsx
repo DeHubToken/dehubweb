@@ -3,8 +3,9 @@
  *
  * Every page of a comic is a foil card: the art, its caption under it and the
  * page number on top. The card leans toward the finger (or the mouse) on a
- * spring, the holo layer follows the light, sideways swipes deal the next card
- * and a tap flips it over to the caption and alt text in full.
+ * spring, the holo layer follows the light, and a tap or sideways swipe deals
+ * the next card. Tapping a caption cut off with … (or the ALT tag) flips the
+ * card over to the caption and alt text in full; a tap on the back flips it back.
  *
  * The feed shows the top card with the next two fanned behind it; tapping
  * opens the post. The post page adds the hand of every page under the card
@@ -116,7 +117,30 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     setIndex(next);
   }, [total]);
 
-  // Pointer: lean toward the finger, swipe sideways for the next card, tap to open or flip.
+  // Is the caption cut off by its line clamp (showing …)? Only then is there
+  // more to read on the back, so only then does tapping it flip the card.
+  const capRef = useRef<HTMLDivElement>(null);
+  const [capClamped, setCapClamped] = useState(false);
+  useEffect(() => {
+    const el = capRef.current;
+    if (!el) return;
+    const measure = () => setCapClamped(el.scrollHeight > el.clientHeight + 1);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [index, captions]);
+
+  /** A plain tap: back to the front if flipped, flip for more text, else the next page. */
+  const tap = (target: EventTarget | null) => {
+    if (flipped) { setFlipped(false); return; }
+    const hit = target instanceof Element ? target.closest('.comic-cap, .comic-alt') : null;
+    if (hit && (hit.classList.contains('comic-alt') || capClamped)) { setFlipped(true); return; }
+    if (index < total - 1) go(index + 1);
+  };
+
+  // Pointer: lean toward the finger, swipe sideways or tap for the next card.
   const drag = useRef<{ x: number; y: number; t: number; id: number; sideways: boolean } | null>(null);
   const lean = (clientX: number, clientY: number) => {
     const el = cardRef.current;
@@ -175,7 +199,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     }
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && performance.now() - d.t < 450) {
       if (onOpen) onOpen();
-      else setFlipped(f => !f);
+      else tap(e.target);
     }
     if (e.pointerType !== 'mouse') settle();
   };
@@ -186,7 +210,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
     else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (onOpen) onOpen(); else setFlipped(f => !f);
+      if (onOpen) onOpen(); else if (flipped || capClamped) setFlipped(f => !f); else go(index + 1);
     }
   };
 
@@ -297,7 +321,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
           tabIndex={0}
           aria-label={onOpen
             ? t('comic.open', { defaultValue: 'Open comic, page {{page}} of {{total}}', page: index + 1, total })
-            : t('comic.flip', { defaultValue: 'Page {{page}} of {{total}}. Tap to flip', page: index + 1, total })}
+            : t('comic.next', { defaultValue: 'Page {{page}} of {{total}}. Tap for the next page', page: index + 1, total })}
           className="comic-card cursor-pointer outline-none"
           style={{ touchAction: 'pan-y' }}
           onPointerDown={onPointerDown}
@@ -324,7 +348,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
                 />
                 {alt ? <span className="comic-alt">ALT</span> : null}
               </div>
-              <div className="comic-cap">{caption}</div>
+              <div ref={capRef} className={cn('comic-cap', capClamped && 'cursor-help')}>{caption}</div>
             </div>
             <div className="comic-holo" />
             <div className="comic-sheen" />
