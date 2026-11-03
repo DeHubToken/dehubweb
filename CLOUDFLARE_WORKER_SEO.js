@@ -1471,7 +1471,7 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li><a href="${DEHUB_APP_LINKS.apk}">Download the Riftn APK</a> for Android without Google Play</li></ul>
 <h2>Frequently asked questions</h2>
 ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
-<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is Riftn?</a> covers the platform in depth.</p>`,
+<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is DeHub?</a> covers the platform in depth.</p>`,
   },
 
   // The moderation handbook, published. The page itself is an iframe around a
