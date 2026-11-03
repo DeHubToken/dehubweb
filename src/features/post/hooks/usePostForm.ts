@@ -1,4 +1,3 @@
-        comicBorder: postLayout === 'comic' ? comicBorder ?? undefined : undefined,
 import { useTranslation as _useCopy } from 'react-i18next';
 import type { StudioEdits } from '../lib/studioPaint';
 import { useDraftState } from '@/hooks/use-draft-state';
@@ -2068,6 +2067,7 @@ export function usePostForm(
         mediaCaptions: postLayout === 'comic' && media.some(m => m.caption?.trim())
           ? media.filter(m => m.type === 'image').map(m => m.caption?.trim() || '')
           : undefined,
+        comicBorder: postLayout === 'comic' ? comicBorder ?? undefined : undefined,
         quotePolicy,
         replyPolicy,
         // A livestream and a quote are always public.
