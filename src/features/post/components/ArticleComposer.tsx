@@ -11,9 +11,13 @@ import Quote from "@/components/ui/cut-icons/quote";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 import X from "@/components/ui/cut-icons/close";
 
+import { toast } from 'sonner';
 import {
-  ARTICLE_BODY_MAX, ARTICLE_BODY_MIN, ARTICLE_SUMMARY_MAX, articleReadingMinutes, articleSummaryFromBody, articleWordCount,
+  ARTICLE_BODY_MAX, ARTICLE_BODY_MIN, ARTICLE_CAPTION_MAX, ARTICLE_IMAGE_MAX, ARTICLE_RAW_MAX, ARTICLE_SUMMARY_MAX,
+  articleImageMarkdown, articleImages, articleReadingMinutes, articleSummaryFromBody, articleTextLength, articleWordCount,
+  removeArticleImage, setArticleImageCaption,
 } from '@/lib/article';
+import { uploadArticleImage } from '../lib/articleImages';
 import { ArticleBody } from '@/components/app/article/ArticleBody';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
@@ -82,8 +86,53 @@ export function ArticleComposer(props: ArticleComposerProps) {
 
   const words = articleWordCount(body);
   const minutes = articleReadingMinutes(body);
-  const bodyReady = body.trim().length >= ARTICLE_BODY_MIN;
-  const canContinue = title.trim().length > 0 && bodyReady;
+  const textLength = articleTextLength(body);
+  const images = articleImages(body);
+  const bodyReady = textLength >= ARTICLE_BODY_MIN;
+  const bodyTooLong = textLength > ARTICLE_BODY_MAX;
+  const tooManyImages = images.length > ARTICLE_IMAGE_MAX;
+  const canContinue = title.trim().length > 0 && bodyReady && !bodyTooLong && !tooManyImages;
+  const [uploading, setUploading] = useState(0);
+  // Latest body for uploads that finish after more typing.
+  const bodyNow = useRef(body);
+  bodyNow.current = body;
+
+  /** Uploads picked pictures and puts each one where the cursor was. */
+  const addImages = async (picked: FileList | null) => {
+    const files = Array.from(picked ?? []).filter(f => f.type.startsWith('image/'));
+    if (!files.length) return;
+    const room = ARTICLE_IMAGE_MAX - articleImages(bodyNow.current).length - uploading;
+    if (room <= 0) {
+      toast.error(t('articles.imageLimit', { count: ARTICLE_IMAGE_MAX, defaultValue: 'Articles can hold up to {{count}} images' }));
+      return;
+    }
+    if (files.length > room) {
+      toast.error(t('articles.imageLimitSome', { count: room, defaultValue: 'Only {{count}} more images fit in this article' }));
+    }
+    const take = files.slice(0, room);
+    const editor = bodyRef.current;
+    let at = editor && !preview ? editor.selectionEnd : bodyNow.current.length;
+    setUploading(n => n + take.length);
+    for (const file of take) {
+      try {
+        const url = await uploadArticleImage(file);
+        const current = bodyNow.current;
+        const pos = Math.min(at, current.length);
+        const before = current.slice(0, pos).replace(/\n*$/, '');
+        const after = current.slice(pos).replace(/^\n*/, '');
+        const block = `${before ? '\n\n' : ''}${articleImageMarkdown(url)}\n\n`;
+        const next = `${before}${block}${after}`;
+        if (next.length > ARTICLE_RAW_MAX) throw new Error('too long');
+        at = before.length + block.length;
+        bodyNow.current = next;
+        setBody(next);
+      } catch {
+        toast.error(t('articles.imageFailed', 'That image could not be added. Try another one.'));
+      } finally {
+        setUploading(n => n - 1);
+      }
+    }
+  };
   const canPublish = canContinue && summary.trim().length > 0 && formReady && !isPosting;
 
   // The summary starts as the article's first paragraph until the writer
@@ -100,7 +149,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
     const end = editor.selectionEnd;
     const selected = body.slice(start, end) || tool.placeholder;
     const prefix = tool.block && start > 0 && body[start - 1] !== '\n' ? '\n' : '';
-    setBody(`${body.slice(0, start)}${prefix}${tool.before}${selected}${tool.after}${body.slice(end)}`.slice(0, ARTICLE_BODY_MAX));
+    setBody(`${body.slice(0, start)}${prefix}${tool.before}${selected}${tool.after}${body.slice(end)}`.slice(0, ARTICLE_RAW_MAX));
     requestAnimationFrame(() => {
       editor.focus();
       const from = start + prefix.length + tool.before.length;
@@ -108,11 +157,17 @@ export function ArticleComposer(props: ArticleComposerProps) {
     });
   };
 
-  const hint = !title.trim()
-    ? t('articles.needTitle', 'Add a title to continue')
-    : !bodyReady
-      ? t('articles.needBody', { count: ARTICLE_BODY_MIN - body.trim().length, defaultValue: '{{count}} more characters to go' })
-      : null;
+  const hint = uploading > 0
+    ? t('articles.imagesUploading', { count: uploading, defaultValue: 'Adding images ({{count}})…' })
+    : !title.trim()
+      ? t('articles.needTitle', 'Add a title to continue')
+      : !bodyReady
+        ? t('articles.needBody', { count: ARTICLE_BODY_MIN - textLength, defaultValue: '{{count}} more characters to go' })
+        : bodyTooLong
+          ? t('articles.bodyTooLong', { count: textLength - ARTICLE_BODY_MAX, defaultValue: '{{count}} characters over the limit' })
+          : tooManyImages
+            ? t('articles.imageLimit', { count: ARTICLE_IMAGE_MAX, defaultValue: 'Articles can hold up to {{count}} images' })
+            : null;
 
   if (step === 'publish') {
     return (
@@ -158,7 +213,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
               <button type="button" onClick={onAbandonMint} className="underline">{t('common.cancel', 'Cancel')}</button>
             </div>
           )}
-          <button type="button" onClick={onPublish} disabled={!canPublish} className="article-cta w-full py-3 text-[15px]">
+          <button type="button" onClick={onPublish} disabled={!canPublish || uploading > 0} className="article-cta w-full py-3 text-[15px]">
             {isPosting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Check className="h-4 w-4" aria-hidden />}
             {isPosting ? t('articles.publishing', 'Publishing…') : t('articles.publish', 'Publish article')}
           </button>
@@ -175,7 +230,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
           {preview ? <PencilLine className="h-3.5 w-3.5" aria-hidden /> : <Eye className="h-3.5 w-3.5" aria-hidden />}
           {preview ? t('articles.edit', 'Edit') : t('articles.preview', 'Preview')}
         </button>
-        <button type="button" onClick={() => setStep('publish')} disabled={!canContinue} className="article-cta py-1.5">{t('articles.next', 'Next')}</button>
+        <button type="button" onClick={() => setStep('publish')} disabled={!canContinue || uploading > 0} className="article-cta py-1.5">{t('articles.next', 'Next')}</button>
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-6">
@@ -231,17 +286,64 @@ export function ArticleComposer(props: ArticleComposerProps) {
                     <tool.icon />
                   </button>
                 ))}
+                <label
+                  className={`article-tool cursor-pointer${images.length >= ARTICLE_IMAGE_MAX ? ' pointer-events-none opacity-40' : ''}`}
+                  aria-label={t('articles.format.image', 'Add images')}
+                  title={t('articles.format.image', 'Add images')}
+                  onMouseDown={e => e.preventDefault()}
+                >
+                  {uploading > 0 ? <Loader2 className="animate-spin" aria-hidden /> : <ImagePlus aria-hidden />}
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
+                    className="sr-only"
+                    onChange={e => { void addImages(e.target.files); e.target.value = ''; }}
+                  />
+                </label>
               </div>
             </div>
             <textarea
               ref={bodyRef}
               id="article-body"
               value={body}
-              onChange={e => setBody(e.target.value.slice(0, ARTICLE_BODY_MAX))}
+              onChange={e => setBody(e.target.value.slice(0, ARTICLE_RAW_MAX))}
               placeholder={t('articles.bodyPlaceholder', 'Tell your story. Select text and use the bar above for headings, bold, quotes and lists.')}
               aria-label={t('articles.bodyLabel', 'Article body')}
               className="article-input article-body mt-2 min-h-[40dvh] overflow-hidden"
             />
+            {images.length > 0 && (
+              <section className="mt-4" aria-label={t('articles.imagesLabel', 'Images')}>
+                <p className="article-label mb-2">
+                  {t('articles.imagesCount', { count: images.length, max: ARTICLE_IMAGE_MAX, defaultValue: 'Images · {{count}}/{{max}}' })}
+                </p>
+                <ul className="space-y-2">
+                  {images.map(img => (
+                    <li key={img.index} className="article-caption-row">
+                      <img src={img.url} alt="" loading="lazy" decoding="async" className="h-14 w-14 shrink-0 rounded-[10px] object-cover" />
+                      <input
+                        type="text"
+                        value={img.caption}
+                        maxLength={ARTICLE_CAPTION_MAX}
+                        onChange={e => setBody(setArticleImageCaption(bodyNow.current, img.index, e.target.value))}
+                        onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}
+                        placeholder={t('articles.captionPlaceholder', 'Add a caption')}
+                        aria-label={t('articles.captionLabel', { n: img.index + 1, defaultValue: 'Caption for image {{n}}' })}
+                        className="article-input min-w-0 flex-1 text-[15px]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setBody(removeArticleImage(bodyNow.current, img.index))}
+                        className="article-tool shrink-0"
+                        aria-label={t('articles.removeImage', { n: img.index + 1, defaultValue: 'Remove image {{n}}' })}
+                      >
+                        <X />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
           </>
         )}
       </div>

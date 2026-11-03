@@ -4,8 +4,14 @@
  * writer sees while typing are the numbers readers see on the post.
  */
 
+/** Characters of writing. Picture markup does not count toward it. */
 export const ARTICLE_BODY_MAX = 20000;
 export const ARTICLE_BODY_MIN = 100;
+/** Pictures inside one article (the cover is separate). Same as the backend. */
+export const ARTICLE_IMAGE_MAX = 40;
+/** Raw body cap: the writing plus room for every picture with a long caption. */
+export const ARTICLE_RAW_MAX = ARTICLE_BODY_MAX + ARTICLE_IMAGE_MAX * 450;
+export const ARTICLE_CAPTION_MAX = 200;
 /** Article summaries keep the base post cap whatever the author's tier. */
 export const ARTICLE_SUMMARY_MAX = 500;
 
@@ -119,4 +125,52 @@ export function articleLinkBlocks(markdown: string): string {
     out.push(line.split(/(`[^`]*`|!?\[[^\]]*\]\([^)]*\)|<[^>\s]+>)/).map((part, k) => (k % 2 ? part : part.replace(INLINE_URL, '$1<$2>'))).join(''));
   }
   return out.join('\n').replace(/\n{3,}/g, '\n\n');
+}
+
+const IMAGE_MARKUP = /!\[([^\]\n]*)\]\(([^)\s]*)(?:\s+"([^"\n]*)")?\)/g;
+
+export interface ArticleImage { index: number; start: number; end: number; url: string; caption: string }
+
+/** Every picture in the body, in order, with where its markup sits. */
+export function articleImages(markdown: string): ArticleImage[] {
+  const out: ArticleImage[] = [];
+  for (const m of markdown.matchAll(IMAGE_MARKUP)) {
+    out.push({ index: out.length, start: m.index ?? 0, end: (m.index ?? 0) + m[0].length, url: m[2], caption: m[3] ?? m[1] });
+  }
+  return out;
+}
+
+/** The writing's length, without picture markup. */
+export function articleTextLength(markdown: string): number {
+  return markdown.replace(IMAGE_MARKUP, '').trim().length;
+}
+
+/** A caption made safe to sit inside `![...]`. */
+export function cleanArticleCaption(caption: string): string {
+  return caption.replace(/[[\]\n\r]+/g, ' ').replace(/\s{2,}/g, ' ').slice(0, ARTICLE_CAPTION_MAX);
+}
+
+export function articleImageMarkdown(url: string, caption = ''): string {
+  return `![${cleanArticleCaption(caption)}](${url})`;
+}
+
+/** The body with picture `index` given a new caption. */
+export function setArticleImageCaption(markdown: string, index: number, caption: string): string {
+  const img = articleImages(markdown)[index];
+  if (!img) return markdown;
+  return markdown.slice(0, img.start) + articleImageMarkdown(img.url, caption) + markdown.slice(img.end);
+}
+
+/** The body with picture `index` taken out, and the blank lines around it. */
+export function removeArticleImage(markdown: string, index: number): string {
+  const img = articleImages(markdown)[index];
+  if (!img) return markdown;
+  return (markdown.slice(0, img.start).replace(/\n+$/, '') + '\n\n' + markdown.slice(img.end).replace(/^\n+/, '')).replace(/^\n+/, '');
+}
+
+/** Width and height a picture's address carries (`#w=1200&h=800`), so the reader can hold its space. */
+export function articleImageSize(url: string | undefined): { w: number; h: number } | null {
+  const m = /#w=(\d+)&h=(\d+)$/.exec(url ?? '');
+  const w = Number(m?.[1]); const h = Number(m?.[2]);
+  return w > 0 && h > 0 ? { w, h } : null;
 }
