@@ -159,8 +159,8 @@ export function validatePageTranslation(source, translated) {
 // DeHub is now Riftn. Pages and their stored translations moved over at
 // different times, so a line may be stored under either name: try both and
 // give the translation the same name the source uses.
-const toRiftn = text => text.replace(/\bDeHubbers\b/g, 'Riftners').replace(/\bDe[Hh]ub\b/g, 'Riftn').replace(/\bDEHUB\b/g, 'RIFTN').replace(/(?<![\w.@-])dehub\.io\b/g, 'riftn.com');
-const toDeHub = text => text.replace(/\bRiftners\b/g, 'DeHubbers').replace(/\bRiftn\b/g, 'DeHub').replace(/(?<![\w.@-])riftn\.com\b/g, 'dehub.io');
+const toRiftn = text => text.replace(/\bDeHubbers\b/g, 'Riftners').replace(/(?<![A-Za-z0-9_])De[Hh]ub(?![A-Z0-9_])/g, 'Riftn').replace(/(?<![A-Za-z0-9_])DEHUB(?![A-Za-z0-9_])/g, 'RIFTN').replace(/(?<![\w.@-])dehub\.io\b/g, 'riftn.com');
+const toDeHub = text => text.replace(/\bRiftners\b/g, 'DeHubbers').replace(/(?<![A-Za-z0-9_])Riftn(?![A-Z0-9_])/g, 'DeHub').replace(/(?<![\w.@-])riftn\.com\b/g, 'dehub.io');
 function lookupBranded(dictionary, key) {
   for (const variant of [key, toRiftn(key), toDeHub(key)]) {
     const found = dictionary[variant];
