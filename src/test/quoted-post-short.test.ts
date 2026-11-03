@@ -15,6 +15,9 @@ describe('quoted media entry into Shorts', () => {
     expect(open(photo)).toMatchObject({ id: '43', videoUrl: '', soundtrackUrl: expect.stringContaining('/feed-audio/7.mp3') });
     expect(open(photo)?.imageUrls).toHaveLength(1);
   });
+  it('supports legacy image posts with a soundtrack', () => {
+    expect(open({ ...photo, postType: 'image' })?.imageUrls).toHaveLength(1);
+  });
   it.each([
     { ...photo, description: 'Silent photo' }, { tokenId: 44, postType: 'feed-simple' },
     { ...video, postType: 'live' }, { ...video, postType: 'feed-audio' },

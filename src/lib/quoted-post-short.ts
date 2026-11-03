@@ -9,8 +9,9 @@ export function quotedPostShort(post: DeHubNFT) {
   const video = ['video', 'feed-video', 'short'].includes(kind) ||
     (kind !== 'audio' && kind !== 'feed-audio' && kind !== 'live' &&
       (post.media_type === 'video' || !!post.videoUrl));
-  if ((!video && !isShortsPhoto(post)) || !isBrainrotPlayable({ ...post, transcodingStatus: video ? post.transcodingStatus : undefined }) ||
+  const mediaPost = kind === 'image' ? { ...post, postType: 'feed-images' } : post;
+  if ((!video && !isShortsPhoto(mediaPost)) || !isBrainrotPlayable({ ...post, transcodingStatus: video ? post.transcodingStatus : undefined }) ||
       post.spoilerText || post.is_locked || post.is_live || (post.stream?.isActive && !post.stream?.endedAt) ||
       (post.visibility && post.visibility !== 'public') || post.isBlocked || post.blockedYou) return null;
-  return mapToShortVideo(post, 0);
+  return mapToShortVideo(mediaPost, 0);
 }
