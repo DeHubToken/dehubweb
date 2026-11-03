@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { localizedNotificationContent } from "@/lib/notification-content";
+import appI18n from '@/i18n';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
@@ -766,6 +767,7 @@ function getNotificationContent(
   // ahead of the switch rather than as cases — same shape as the routing above.
   // Naming the bounty matters here in a way it doesn't for a like: a poster with
   // several open bounties can't act on "someone applied" alone.
+  if (typeStr === 'new_message') return tr('reactionInfo.newMessage', { name: actorName });
   if (typeStr === 'work_application_reply') {
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
     return tr(jobTitle ? 'notifications.custom.bountyReplyNamed' : 'notifications.custom.bountyReply', { name: actorName, title: jobTitle });
@@ -783,6 +785,7 @@ function getNotificationContent(
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
+    case 'creator_comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
     case 'mention': {
       // Where the reader was named. Every mention used to say "in a comment",
@@ -807,10 +810,11 @@ function getNotificationContent(
         ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
       return tr('notifications.custom.followRequest', { name: actorName });
-    // The server's sentence names the milestone ("reached 100 likes"); the
-    // shared translation only says "a new milestone", so it is the fallback.
+    // The server's sentence names the milestone ("reached 100 likes") but is
+    // English, so other languages get the shared "a new milestone" instead.
     case 'video_milestone':
-      return (notification as any).content || tr('notifications.postMilestone');
+      return ((appI18n.language || 'en').startsWith('en') && (notification as any).content)
+        || tr('notifications.postMilestone');
     case 'livestream_start':
       return tr('notifications.startedStreaming', { name: actorName });
     case 'comment_like': {
@@ -831,8 +835,11 @@ function getNotificationContent(
     }
     case 'video_removal':
       return tr('notifications.postRemoved');
+    // Reposts, quotes, flares, badges and accepted requests have a shared
+    // sentence too; the server's English is only for types that do not.
     default:
-      return (notification as any).content || tr('notifications.newNotification');
+      return localizedNotificationContent({ ...notification, actorUsername: actorName } as any, tr)
+        ?? ((notification as any).content || tr('notifications.newNotification'));
   }
 }
 

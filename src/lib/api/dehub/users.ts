@@ -143,6 +143,8 @@ export interface UpdateProfileData {
    */
   showMatureContent?: boolean;
   notificationPreferences?: string;
+  /** The app's language (a 2-3 letter code), so pushes are written in it. */
+  preferredLanguage?: string;
   twitterLink?: string;
   discordLink?: string;
   instagramLink?: string;
@@ -179,6 +181,7 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   if (data.hideBadgeAndBalance !== undefined) formData.append("hideBadgeAndBalance", String(data.hideBadgeAndBalance));
   if (data.showMatureContent !== undefined) formData.append("showMatureContent", String(data.showMatureContent));
   if (data.notificationPreferences !== undefined) formData.append("notificationPreferences", data.notificationPreferences);
+  if (data.preferredLanguage !== undefined) formData.append("preferredLanguage", data.preferredLanguage);
   if (data.twitterLink !== undefined) formData.append("twitterLink", data.twitterLink);
   if (data.discordLink !== undefined) formData.append("discordLink", data.discordLink);
   if (data.instagramLink !== undefined) formData.append("instagramLink", data.instagramLink);
