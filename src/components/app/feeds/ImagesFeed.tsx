@@ -67,6 +67,7 @@ function useInfiniteLoaderRef(
   hasNextPage: boolean | undefined,
   fetchNextPage: () => Promise<unknown>,
   isFetchingRef: React.MutableRefObject<boolean>,
+  pageCount: number,
 ): React.RefCallback<HTMLDivElement> {
   // Read through refs so the callback identity never changes: a new identity
   // would detach and re-attach the observer on every render of the feed.
@@ -76,12 +77,26 @@ function useInfiniteLoaderRef(
   fetchNextPageRef.current = fetchNextPage;
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+
+  // The observer only reports changes. When a page lands and the grid is still
+  // too short to push the sentinel out of view (twelve tiles on a phone), it
+  // never leaves and so never "enters" again, and paging stops for good.
+  // Re-observing after each page makes it report where the sentinel is now.
+  useEffect(() => {
+    const observer = observerRef.current;
+    const node = nodeRef.current;
+    if (!observer || !node || !hasNextPage) return;
+    observer.unobserve(node);
+    observer.observe(node);
+  }, [pageCount, hasNextPage]);
 
   return useCallback((node: HTMLDivElement | null) => {
     if (observerRef.current) {
       observerRef.current.disconnect();
       observerRef.current = null;
     }
+    nodeRef.current = node;
     if (!node) return;
 
     observerRef.current = new IntersectionObserver(
@@ -542,16 +557,27 @@ export function ImagesFeed({
     }
   }, [refreshKey, refetch]);
 
-  // Map API data to ImagePost array
+  // Map API data to ImagePost array. Pages from search_nfts overlap (a later
+  // page repeats the tail of the one before), so each post is kept once:
+  // a repeated id would draw the same photo twice and collide as a React key.
   const imagePosts = useMemo(() => {
+    let mapped: ImagePost[];
     if (useUnifiedSource) {
       if (!unifiedData?.pages) return [];
       const allItems = unifiedData.pages.flatMap(page => page.items || []);
-      return allItems.map((item, index) => mapToImagePost(item, index));
+      mapped = allItems.map((item, index) => mapToImagePost(item, index));
+    } else {
+      if (!apiData?.pages) return [];
+      const allNFTs = apiData.pages.flatMap(page => page.data || []);
+      mapped = allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
     }
-    if (!apiData?.pages) return [];
-    const allNFTs = apiData.pages.flatMap(page => page.data || []);
-    return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
+    const seen = new Set<string>();
+    return mapped.filter((post) => {
+      const id = String(post.id);
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
   }, [apiData, unifiedData, useUnifiedSource]);
 
   // Handle image click in collage - switch to feed view
@@ -559,8 +585,9 @@ export function ImagesFeed({
     onPostSelected?.(postId);
   };
 
-  const collageLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
-  const feedLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
+  const pageCount = (useUnifiedSource ? unifiedData?.pages.length : apiData?.pages.length) ?? 0;
+  const collageLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef, pageCount);
+  const feedLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef, pageCount);
 
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
