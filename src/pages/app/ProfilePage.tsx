@@ -62,6 +62,10 @@ import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButto
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
+import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { mergePostBg, parsePostBg, postBgById } from '@/lib/post-backgrounds';
+import { updateProfile } from '@/lib/api/dehub';
+import { useQueryClient } from '@tanstack/react-query';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos', 'articles'];
@@ -261,6 +265,38 @@ export default function ProfilePage() {
   // aren't clobbered, and navigating to a different profile re-applies theirs.
   const appliedDefaultTabFor = useRef<string | null>(null);
   const profileKey = data.apiProfile?.walletAddress || null;
+
+  // Text-post backdrop the owner picked (customs.postBg). A save shows at once
+  // through the override and the profile query catches up behind it.
+  const queryClient = useQueryClient();
+  const [postBgOpen, setPostBgOpen] = useState(false);
+  const [postBgSaving, setPostBgSaving] = useState(false);
+  const [postBgOverride, setPostBgOverride] = useState<{ owner: string; id: string | null } | null>(null);
+  const postBg = postBgOverride && postBgOverride.owner === profileKey
+    ? postBgById(postBgOverride.id)
+    : parsePostBg(data.apiProfile?.customs);
+  const openPostBg = useCallback(() => setPostBgOpen(true), []);
+  const postBgHold = usePostBgHold(!!data.isViewingOwnProfile, openPostBg);
+  const postBgSample = useMemo(
+    () => data.PROFILE_POSTS.find((p) => !p.articleBody && p.content?.trim())?.content,
+    [data.PROFILE_POSTS],
+  );
+  const savePostBg = useCallback(async (id: string | null) => {
+    if (!profileKey) return;
+    if ((postBg?.id ?? null) === id) { setPostBgOpen(false); return; }
+    setPostBgSaving(true);
+    try {
+      const customs = mergePostBg(data.apiProfile?.customs, id) as Record<string, string | number | boolean>;
+      await updateProfile({ customs });
+      setPostBgOverride({ owner: profileKey, id });
+      setPostBgOpen(false);
+      void queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    } catch {
+      toast.error(t('postBg.saveFailed', "Couldn't save your background. Try again."));
+    } finally {
+      setPostBgSaving(false);
+    }
+  }, [profileKey, postBg, data.apiProfile?.customs, queryClient, t]);
   useEffect(() => {
     if (!profileKey || appliedDefaultTabFor.current === profileKey) return;
     appliedDefaultTabFor.current = profileKey;
@@ -437,6 +473,7 @@ export default function ProfilePage() {
       isBlocked={data.isBlocked}
       isBlockLoading={data.isBlockLoading}
       handleBlock={data.handleBlock}
+      onPostBackground={data.isViewingOwnProfile ? openPostBg : undefined}
     />
   );
 
@@ -645,7 +682,12 @@ export default function ProfilePage() {
       
       <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div ref={profileHeaderRef} className="relative max-sm:-mx-2">
+        <div
+          ref={(el) => { (profileHeaderRef as { current: HTMLDivElement | null }).current = el; postBgHold.hostRef.current = el; }}
+          className="relative max-sm:-mx-2"
+          {...postBgHold.handlers}
+        >
+        {postBgHold.ringEl}
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
@@ -792,6 +834,7 @@ export default function ProfilePage() {
             isLoading={data.isLoadingContent}
           />
         )}
+        <ProfilePostBgContext.Provider value={postBg}>
         <StableHeightContainer activeTab={activeTab}>
             <ProfileTabContent
               activeTab={activeTab}
@@ -823,8 +866,23 @@ export default function ProfilePage() {
             />
 
         </StableHeightContainer>
+        </ProfilePostBgContext.Provider>
         </div>
       </div>
+
+      {data.isViewingOwnProfile && (
+        <PostBgPicker
+          open={postBgOpen}
+          current={postBg}
+          name={data.profile.name}
+          handle={data.profile.handle}
+          avatarUrl={data.profile.avatarUrl}
+          sampleText={postBgSample}
+          saving={postBgSaving}
+          onCancel={() => setPostBgOpen(false)}
+          onSave={savePostBg}
+        />
+      )}
 
       {/* Make Offer Drawer */}
       <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>

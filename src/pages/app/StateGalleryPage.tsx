@@ -1,5 +1,10 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
+import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
+import { postBgById } from '@/lib/post-backgrounds';
+import type { TextPost as GalleryTextPost } from '@/types/feed.types';
 import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
 import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
@@ -1182,6 +1187,7 @@ export default function StateGalleryPage() {
         <StreamerArtworkGallery />
 
         <PinnedProfileGallery />
+        <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
 
         <PollGallery />
         <LockedChatGallery />
@@ -1555,6 +1561,68 @@ function LiveViewerGallery() {
         <div data-live-chat-desktop-frame className="mx-auto mt-4 w-[380px] max-w-full rounded-2xl border border-white/10 bg-black/40 p-4">
           <LivePostChat tokenId="0" streamId={GALLERY_STREAM_ID} />
         </div>
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const GALLERY_TEXT_POSTS: GalleryTextPost[] = [
+  'Shot the whole city in the rain last night. Uploading the best twelve tomorrow.',
+  'Hot take: night photos look better slightly underexposed.',
+  'Who is coming to the meetup on Friday?',
+  'New lens arrived. First walk tonight at 11.',
+  'Thank you for 18k. Every one of you made this real.',
+  'Sunday reset. Coffee, long walk, no notifications.',
+].map((content, i) => ({
+  id: `gallery-text-${i}`, type: 'post', content, createdAt: new Date(Date.now() - (i + 1) * 3_600_000).toISOString(),
+  author: { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false },
+  stats: { comments: 12 + i * 7, reposts: i, likes: 140 + i * 53, dislikes: 0 },
+}) as GalleryTextPost);
+
+/** Profile text-post backgrounds: the owner's hold-to-pick picker, phone grid tiles and a desktop card. */
+function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: string | null; initiallyOpen: boolean }) {
+  const [bgId, setBgId] = useState<string | null>(postBgById(initialBg)?.id ?? 'aurora');
+  const [open, setOpen] = useState(initiallyOpen);
+  const bg = postBgById(bgId);
+  const hold = usePostBgHold(true, () => setOpen(true));
+  const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-post-bg-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Profile post backgrounds</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div
+          ref={(el) => { hold.hostRef.current = el; }}
+          {...hold.handlers}
+          className="relative mb-3 flex items-center gap-3 rounded-2xl border border-white/10 p-3 select-none"
+          data-post-bg-hold
+        >
+          {hold.ringEl}
+          <img src={galleryAvatar} alt="" className="h-12 w-12 rounded-full object-cover" />
+          <div><p className="font-bold text-white">Marco V</p><p className="text-xs text-zinc-400">Hold here to choose a background</p></div>
+        </div>
+        <ProfilePostBgContext.Provider value={bg}>
+          <div className="grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+            <div data-post-bg-phone-grid><ProfileMixedGrid entries={entries} /></div>
+            <div data-post-bg-desktop className="space-y-3">
+              {GALLERY_TEXT_POSTS.slice(0, 2).map((post) => (
+                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
+                  {bg && <span aria-hidden className={`pbg pbg-${bg.id}`} />}
+                  <GalleryPostCard post={post} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </ProfilePostBgContext.Provider>
+        <PostBgPicker
+          open={open}
+          current={bg}
+          name="Marco V"
+          handle="@marco_v"
+          avatarUrl={galleryAvatar}
+          sampleText={GALLERY_TEXT_POSTS[0].content}
+          onCancel={() => setOpen(false)}
+          onSave={(id) => { setBgId(id); setOpen(false); }}
+        />
       </AuthContext.Provider>
     </section>
   );

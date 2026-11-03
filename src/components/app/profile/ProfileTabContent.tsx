@@ -36,6 +36,7 @@ import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { AppState } from '@/components/app/AppState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { PostBgLayer, postBgHostProps, useProfilePostBg } from '@/components/app/profile/PostBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
@@ -477,6 +478,7 @@ function HomeTabPanel({
 }) {
   const { t: _copy } = _useCopy();
   const isMobile = useIsMobile();
+  const postBg = useProfilePostBg();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
@@ -511,7 +513,8 @@ function HomeTabPanel({
           ? <ImageCard key={op.id} post={op.data as ImagePost} />
           : <VideoCard key={op.id} video={op.data as VideoItem} />;
         return (
-          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" {...(op.type === 'post' ? postBgHostProps(postBg) : {})}>
+            {op.type === 'post' && <PostBgLayer bg={postBg} />}
             {card}
           </div>
         );
@@ -532,7 +535,9 @@ function HomeTabPanel({
             data-cinematic={item.type}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={offscreenCardStyle(item.type, index)}
+            {...(isPlainTextItem(item) ? postBgHostProps(postBg) : {})}
           >
+            {isPlainTextItem(item) && <PostBgLayer bg={postBg} />}
             {item.isPinned && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Pin className="w-3.5 h-3.5 fill-current" />
@@ -551,6 +556,11 @@ function HomeTabPanel({
       })}
     </div>
   );
+}
+
+/** A text post that is not an article or a proposal link: these get the owner's backdrop. */
+function isPlainTextItem(item: ProfileContentItem): boolean {
+  return item.type === 'post' && !(item.data as TextPost).articleBody && !item.isRepost;
 }
 
 function PostsTabPanel({
@@ -580,6 +590,7 @@ function PostsTabPanel({
 }) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
+  const postBg = useProfilePostBg();
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
     const ids = new Set<string>();
@@ -645,8 +656,10 @@ function PostsTabPanel({
       {mergedItems.map((item, index) => {
         const cvStyle = offscreenCardStyle('post', index);
         if (item.type === 'post') {
+          const plain = !(item.data as TextPost).articleBody;
           return (
-            <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle}>
+            <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle} {...(plain ? postBgHostProps(postBg) : {})}>
+              {plain && <PostBgLayer bg={postBg} />}
               <PostCard post={item.data as TextPost} />
             </div>
           );
