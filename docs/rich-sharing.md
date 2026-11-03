@@ -26,7 +26,7 @@ Both clients use the same parser and normalizer. Keep rich-links.ts and rich-lin
 
 ## Production verification
 
-Use https://dehub.io/app and the production mobile channel. Staging is retired. Preserve any existing composer draft, paste examples temporarily, inspect the resulting cards, then restore the draft without publishing a test post.
+Use https://riftn.com/app and the production mobile channel. Staging is retired. Preserve any existing composer draft, paste examples temporarily, inspect the resulting cards, then restore the draft without publishing a test post.
 
 - https://snapshot.org/#/yam.eth/proposal/0xaee9727ec0319e77da7ac49d5e4db631a75fb034aa27748e688c4bfb8458c349
 - https://audius.co/camouflybeats/hypermantra-86216

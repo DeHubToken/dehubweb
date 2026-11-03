@@ -98,12 +98,12 @@ export default function CinemaPage() {
           _copy("copy.9f731f9393a8", { defaultValue: "Where to stream, rent or buy {{value1}} in {{value2}} and 140+ other countries.", value1: openTitle.title, value2: current.country }),
         // Pinned to the production origin on purpose: shareOrigin() reads the
         // current one, which on staging would point every canonical there.
-        url: `https://dehub.io/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
+        url: `https://riftn.com/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
       }
     : {
         title: _copy("copy.06ce40d90680", { defaultValue: "Cinema | Where to Stream, Rent or Buy Any Film | DeHub" }),
         description: pageDescription(),
-        url: 'https://dehub.io/cinema',
+        url: 'https://riftn.com/cinema',
       };
 
   const jsonLd = useMemo(
@@ -113,7 +113,7 @@ export default function CinemaPage() {
         {
           '@type': 'WebApplication',
           name: 'DeHub Cinema',
-          url: 'https://dehub.io/cinema',
+          url: 'https://riftn.com/cinema',
           applicationCategory: 'EntertainmentApplication',
           operatingSystem: 'Web',
           description: pageDescription(),
@@ -122,9 +122,9 @@ export default function CinemaPage() {
         {
           '@type': 'WebPage',
           name: 'DeHub Cinema',
-          url: 'https://dehub.io/cinema',
+          url: 'https://riftn.com/cinema',
           description: pageDescription(),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' },
         },
       ],
     }),
@@ -138,7 +138,7 @@ export default function CinemaPage() {
       <SEOHead
         title={seo.title}
         description={seo.description}
-        image="https://dehub.io/og/cinema.jpg"
+        image="https://riftn.com/og/cinema.jpg"
         url={seo.url}
         jsonLd={jsonLd}
       />

@@ -8,7 +8,7 @@ afterEach(() => vi.restoreAllMocks());
 describe('registered Creator source downloads', () => {
   it('streams a registered original across the hosted studio boundary without forwarding credentials', async () => {
     const upstream = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('video', { headers: { 'Content-Type': 'video/mp4' } }));
-    const response = await handleCreatorMotionSource(new Request(`https://dehub.io/api/creator-motion-source?id=${id}`, {
+    const response = await handleCreatorMotionSource(new Request(`https://riftn.com/api/creator-motion-source?id=${id}`, {
       headers: { Origin: 'https://live.dehub.io', Authorization: 'private', Cookie: 'private' },
     }), env);
     expect(response.status).toBe(200); expect(await response.text()).toBe('video');
@@ -20,12 +20,12 @@ describe('registered Creator source downloads', () => {
   });
   it('rejects unregistered IDs and never fetches a URL supplied in the query', async () => {
     const upstream = vi.spyOn(globalThis, 'fetch');
-    const response = await handleCreatorMotionSource(new Request(`https://dehub.io/api/creator-motion-source?id=${'2'.repeat(20)}&url=http://127.0.0.1`), env);
+    const response = await handleCreatorMotionSource(new Request(`https://riftn.com/api/creator-motion-source?id=${'2'.repeat(20)}&url=http://127.0.0.1`), env);
     expect(response.status).toBe(404); expect(upstream).not.toHaveBeenCalled();
   });
   it('rejects redirects without following them on the Workers runtime', async () => {
     const upstream = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(null, { status: 302, headers: { Location: 'http://127.0.0.1' } }));
-    const response = await handleCreatorMotionSource(new Request(`https://dehub.io/api/creator-motion-source?id=${id}`), env);
+    const response = await handleCreatorMotionSource(new Request(`https://riftn.com/api/creator-motion-source?id=${id}`), env);
     expect(response.status).toBe(502);
     expect(response.headers.get('X-Source-Status')).toBe('302');
     expect(upstream).toHaveBeenCalledTimes(1);
@@ -33,7 +33,7 @@ describe('registered Creator source downloads', () => {
   });
   it('keeps oversized sources out of the upload flow and permits only a single range', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('video', { headers: { 'Content-Length': String(101 * 1024 * 1024) } }));
-    expect((await handleCreatorMotionSource(new Request(`https://dehub.io/api/creator-motion-source?id=${id}`), env)).status).toBe(413);
-    expect((await handleCreatorMotionSource(new Request(`https://dehub.io/api/creator-motion-source?id=${id}`, { headers: { Range: 'bytes=0-1,3-4' } }), env)).status).toBe(400);
+    expect((await handleCreatorMotionSource(new Request(`https://riftn.com/api/creator-motion-source?id=${id}`), env)).status).toBe(413);
+    expect((await handleCreatorMotionSource(new Request(`https://riftn.com/api/creator-motion-source?id=${id}`, { headers: { Range: 'bytes=0-1,3-4' } }), env)).status).toBe(400);
   });
 });

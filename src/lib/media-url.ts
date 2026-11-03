@@ -229,7 +229,7 @@ export function cdnImageSrcSet(url: string | undefined, widths: number[]): strin
 function isProductionHost(): boolean {
   if (typeof window === 'undefined') return true;
   const host = window.location.hostname;
-  return host === 'dehub.io' || host === 'www.dehub.io';
+  return host === 'riftn.com' || host === 'www.riftn.com' || host === 'dehub.io' || host === 'www.dehub.io';
 }
 
 /**

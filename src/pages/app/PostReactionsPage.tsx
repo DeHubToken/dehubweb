@@ -69,7 +69,7 @@ export default function PostReactionsPage() {
   const total = counts?.[postId]?.reactions ?? rows.length;
   const title = original?.name?.trim() || t('reactions.thisVideo', 'this video');
   const creator = original?.mintername || original?.minterUsername;
-  const url = `https://dehub.io/app/post/${postId}/reactions`;
+  const url = `https://riftn.com/app/post/${postId}/reactions`;
   const image = original ? buildImageUrl(postId, original.thumbnail_url || original.imageUrl, 1200) : undefined;
 
   return (
@@ -89,7 +89,7 @@ export default function PostReactionsPage() {
           '@type': 'CollectionPage',
           name: `Reactions to ${title}`,
           url,
-          about: { '@type': 'VideoObject', name: title, url: `https://dehub.io/app/post/${postId}` },
+          about: { '@type': 'VideoObject', name: title, url: `https://riftn.com/app/post/${postId}` },
         }}
       />
       <Link to={`/app/post/${postId}`} className="mb-4 inline-flex items-center gap-2 text-sm text-white/70 hover:text-white">

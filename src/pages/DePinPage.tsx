@@ -301,20 +301,20 @@ export default function DePinPage() {
       <SEOHead
         title={t('depin.seoTitle')}
         description={t('depin.seoDescription')}
-        image="https://dehub.io/og/depin.jpg"
-        url="https://dehub.io/depin"
+        image="https://riftn.com/og/depin.jpg"
+        url="https://riftn.com/depin"
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [
             {
               '@type': 'WebPage',
               name: 'DeHub DePin',
-              url: 'https://dehub.io/depin',
+              url: 'https://riftn.com/depin',
               description: pageDescription,
               isPartOf: {
                 '@type': 'WebSite',
                 name: 'DeHub',
-                url: 'https://dehub.io',
+                url: 'https://riftn.com',
               },
             },
             {

@@ -33,7 +33,7 @@ export function localizePublicChrome(html, route, lang, table) {
   });
   out = out.replace(/(<a\b[^>]*class="[^"]*dh-cta[^"]*"[^>]*>)[^<]*(<\/a>)/g, (_, open, close) => `${open}${escapeHtml(labels[13])}${close}`);
   out = out.replace(/<em>By /g, `<em>${escapeHtml(labels[14])} `);
-  out = out.replace(/(<a\b[^>]*href=")(https:\/\/dehub\.io[^"#]*)([^"]*"[^>]*>)([^<]*)(<\/a>)/g, (match, before, href, after, text, close) => {
+  out = out.replace(/(<a\b[^>]*href=")(https:\/\/(?:riftn\.com|dehub\.io)[^"#]*)([^"]*"[^>]*>)([^<]*)(<\/a>)/g, (match, before, href, after, text, close) => {
     const url = new URL(decodeHtml(href));
     const linked = table[url.pathname]?.[lang];
     if (!linked) return match;
@@ -50,21 +50,21 @@ export function localizePublicChrome(html, route, lang, table) {
 
 /** Keep structured data attached to the localized document, including @graph. */
 export function localizePageJsonLd(value, route, lang, page) {
-  const canonical = `https://dehub.io${route}?hl=${lang}`;
+  const canonical = `https://riftn.com${route}?hl=${lang}`;
       const visit = (value, depth = 0, graphChild = false) => {
         if (Array.isArray(value)) return value.map(item => visit(item, depth, graphChild)).filter(item => item !== null);
         if (!value || typeof value !== 'object') return value;
         const out = Object.fromEntries(Object.entries(value).map(([key, item]) => [key, visit(item, depth + 1, key === '@graph')]));
         const type = Array.isArray(out['@type']) ? out['@type'] : [out['@type']];
-        const base = 'https://dehub.io' + route;
+        const base = 'https://riftn.com' + route;
         const ownsDocument = out.url === base || out['@id'] === base || out.mainEntityOfPage === base || out.mainEntityOfPage?.['@id'] === canonical || ((!out.url && !out['@id']) && (depth === 0 || graphChild));
         if (ownsDocument && type.some(item => ['Article', 'TechArticle', 'BlogPosting', 'WebPage', 'CollectionPage', 'Blog', 'WebApplication', 'SoftwareApplication', 'MusicPlaylist', 'DefinedTermSet', 'Table', 'VideoGame'].includes(item))) {
           out.inLanguage = lang;
           if (out.name) out.name = page.title;
           if (out.headline) out.headline = page.h1 || page.title;
           if (out.description) out.description = page.description;
-          if (out.url === `https://dehub.io${route}`) out.url = canonical;
-          if (out['@id'] === `https://dehub.io${route}`) out['@id'] = canonical;
+          if (out.url === `https://riftn.com${route}`) out.url = canonical;
+          if (out['@id'] === `https://riftn.com${route}`) out['@id'] = canonical;
           if (typeof out.mainEntityOfPage === 'string') out.mainEntityOfPage = canonical;
         }
         if (type.includes('FAQPage')) {
@@ -76,7 +76,7 @@ export function localizePageJsonLd(value, route, lang, page) {
           out.inLanguage = lang;
           out.mainEntity = questions.map(item => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } }));
         }
-        if (out.item === `https://dehub.io${route}`) { out.item = canonical; out.name = page.h1 || page.title; }
+        if (out.item === `https://riftn.com${route}`) { out.item = canonical; out.name = page.h1 || page.title; }
         return out;
       };
   return visit(value);

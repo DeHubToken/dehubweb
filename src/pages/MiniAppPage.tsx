@@ -434,14 +434,14 @@ export default function MiniAppPage() {
   const url = listing ? launchUrl(listing.home_url, searchParams) : null;
   if (!listing || !url) return <Unavailable message={t('miniApps.host.notFound')} />;
 
-  const pageUrl = `https://dehub.io/apps/${listing.slug}`;
+  const pageUrl = `https://riftn.com/apps/${listing.slug}`;
   return (
     <>
       <SEOHead
         title={`${listing.name} | ${t('miniApps.store.title')} | DeHub`}
         description={listing.description ?? listing.subtitle ?? undefined}
         url={pageUrl}
-        image="https://dehub.io/og/apps.jpg"
+        image="https://riftn.com/og/apps.jpg"
         noindex={listing.tier === 'unlisted'}
         jsonLd={{
           '@context': 'https://schema.org',

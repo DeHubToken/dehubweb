@@ -207,7 +207,7 @@ export default function BridgePage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title={_copy("copy.9d0539b1cde8", { defaultValue: "Bridge — Transfer tokens Cross-Chain" })} description={_copy("copy.6bba5091f244", { defaultValue: "Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." })} url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: _copy("copy.e09bfd7e137e", { defaultValue: "Bridge DeHub tokens between Base and BNB Chain." }), operatingSystem: 'Web' }} />
+      <SEOHead title={_copy("copy.9d0539b1cde8", { defaultValue: "Bridge — Transfer tokens Cross-Chain" })} description={_copy("copy.6bba5091f244", { defaultValue: "Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." })} url="https://riftn.com/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://riftn.com/app/bridge', applicationCategory: 'FinanceApplication', description: _copy("copy.e09bfd7e137e", { defaultValue: "Bridge DeHub tokens between Base and BNB Chain." }), operatingSystem: 'Web' }} />
       <h1 className="sr-only">{_copy("copy.4fb54b631e6b", { defaultValue: "DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon="bridge"

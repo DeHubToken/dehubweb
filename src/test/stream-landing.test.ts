@@ -10,11 +10,11 @@ import { STREAM_PAGE, streamerInviteLink } from '@/lib/streamer-page.js';
 
 describe('streamer invite link', () => {
   it('builds /r/<CODE>?to=/stream', () => {
-    expect(streamerInviteLink('https://dehub.io/', 'ABC123')).toBe('https://dehub.io/r/ABC123?to=/stream');
+    expect(streamerInviteLink('https://riftn.com/', 'ABC123')).toBe('https://riftn.com/r/ABC123?to=/stream');
   });
 
   it('deep-links the referral landing to /stream', () => {
-    const url = new URL(streamerInviteLink('https://dehub.io', 'ABC123'));
+    const url = new URL(streamerInviteLink('https://riftn.com', 'ABC123'));
     expect(resolveDeepLinkTarget(undefined, url.search)).toBe(STREAM_PAGE.path);
     expect(resolveDeepLinkTarget('stream', '')).toBe(STREAM_PAGE.path);
   });

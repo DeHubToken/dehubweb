@@ -82,7 +82,7 @@ export function mergeFinanceSummary(upstream, history, sharing = { days: [] }) {
     days: reinvestOperatingFunds([...days.values()].sort((a, b) => a.date.localeCompare(b.date))),
     notes: [...(upstream.notes ?? []), ...history.notes.filter(note => !note.startsWith('The retained operating funds')), history.valuation, REINVESTMENT.note, BNB_SHARING.note],
     marketplaceHistory: history.verification,
-    provenance: { ...upstream.provenance, endpoint: 'https://dehub.io/api/finance-stats', marketplaceSnapshot: 'https://dehub.io/finance-history/marketplace.json', bnbSharingSnapshot: 'https://dehub.io/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note, liveCostsSince: LIVE_COSTS_SINCE },
+    provenance: { ...upstream.provenance, endpoint: 'https://riftn.com/api/finance-stats', marketplaceSnapshot: 'https://riftn.com/finance-history/marketplace.json', bnbSharingSnapshot: 'https://riftn.com/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note, liveCostsSince: LIVE_COSTS_SINCE },
   };
 }
 

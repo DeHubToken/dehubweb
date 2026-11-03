@@ -10,7 +10,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-export const FINANCE_STATS_ENDPOINT = 'https://dehub.io/api/finance-stats';
+export const FINANCE_STATS_ENDPOINT = 'https://riftn.com/api/finance-stats';
 
 export type FinanceKind = 'revenue' | 'cost';
 

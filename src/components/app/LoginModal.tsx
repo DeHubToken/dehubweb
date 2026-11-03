@@ -320,8 +320,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       i18nKey="copy.5d486dd87845"
       defaults="By continuing, you agree to our <terms>Terms</terms> and <privacy>Privacy Policy</privacy>"
       components={{
-        terms: <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
-        privacy: <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+        terms: <a href="https://riftn.com/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+        privacy: <a href="https://riftn.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
       }}
     />
   );

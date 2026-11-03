@@ -42,7 +42,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
 };
 
-const SITE = "https://dehub.io";
+const SITE = "https://riftn.com";
 const VALID_SLUG = /^[a-z0-9][a-z0-9-]{0,200}$/i;
 
 async function fetchWithTimeout(url: string, ms = 3500): Promise<Response | null> {

@@ -14,8 +14,8 @@ import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
 import dehubWordmark from "@/assets/dehub-wordmark-white.png";
 
-const PAGE_URL = "https://dehub.io/apk";
-const OG_IMAGE = "https://dehub.io/og/apk.jpg";
+const PAGE_URL = "https://riftn.com/apk";
+const OG_IMAGE = "https://riftn.com/og/apk.jpg";
 const PLAY_URL = "https://play.google.com/store/apps/details?id=io.dehub.mobile";
 
 // The build is published as a GitHub release asset rather than shipped in
@@ -205,7 +205,7 @@ export default function ApkPage() {
     publisher: {
       "@type": "Organization",
       name: "DeHub",
-      url: "https://dehub.io",
+      url: "https://riftn.com",
       sameAs: [
         "https://x.com/dehub_official",
         "https://t.me/dehub_dhb",

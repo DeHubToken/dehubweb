@@ -230,7 +230,7 @@ export default function Top100CryptosPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.dcd9f0047f78", { defaultValue: "Top Assets — Live Prices for Stocks, Commodities & Crypto" })} description={_copy("copy.d5e22f862878", { defaultValue: "Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." })} url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: _copy("copy.7038f259078d", { defaultValue: "Live prices and market data for top stocks, commodities and cryptocurrencies." }) }} />
+      <SEOHead title={_copy("copy.dcd9f0047f78", { defaultValue: "Top Assets — Live Prices for Stocks, Commodities & Crypto" })} description={_copy("copy.d5e22f862878", { defaultValue: "Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." })} url="https://riftn.com/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://riftn.com/app/top-100', description: _copy("copy.7038f259078d", { defaultValue: "Live prices and market data for top stocks, commodities and cryptocurrencies." }) }} />
       <h1 className="sr-only">{_copy("copy.0ea0134b0336", { defaultValue: "DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto" })}</h1>
 
       <div className="max-w-5xl mx-auto">

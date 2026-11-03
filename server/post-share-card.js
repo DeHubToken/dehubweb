@@ -1,6 +1,6 @@
 export const POST_CARD_VERSION = 'v5';
 export const POST_CARD_TTL = 300;
-const ORIGIN = 'https://dehub.io';
+const ORIGIN = 'https://riftn.com';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
 
 export function postShareImageUrl(tokenId) {

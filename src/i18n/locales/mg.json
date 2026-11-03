@@ -324,10 +324,10 @@
     "empty": "Tsy misy fifandraisana amin'ny kaonty miasa.",
     "disconnect": "Atsaharo",
     "failed": "Tsy nahavita nifandray. Miditra indray.",
-    "intro": "Tsidiho ny DeHub ao amin'ny ChatGPT, na mampifandray ny kaontinao manokana amin'ny fanavaozana ny mombamomba anao, mamoaka lahatsoratra ary mampiasa ny Creator Studio. Ampio ny https://dehub.io/mcp ho toy ny connector OAuth ho an'ny fanaraha-maso ny kaonty.",
+    "intro": "Tsidiho ny DeHub ao amin'ny ChatGPT, na mampifandray ny kaontinao manokana amin'ny fanavaozana ny mombamomba anao, mamoaka lahatsoratra ary mampiasa ny Creator Studio. Ampio ny https://riftn.com/mcp ho toy ny connector OAuth ho an'ny fanaraha-maso ny kaonty.",
     "what": "Tsidiho ny lahatsoratra sy ny mombamomba ny daholobe. Miaraka amin'ny fifandraisana amin'ny kaonty OAuth, mitantana ny mombamomba anao sy ny fiainanao manokana, mamoaka lahatsoratra sy fanehoan-kevitra, araho ny olona, vakio ny fampandrenesana, vonjeo ny rohy ary mamorona sary, lahatsary, feo ary 3D fananana. Ny Generation dia mampiasa ny fitsipika mifehy ny fandoavam-bola efa misy DeHub.",
     "account": "Raha tsy izany, tsy ilaina ny manohana ny kaonty Twitter-nao. Ampifandraiso ny kaontinao DeHub mba hitantana ny mombamomba anao ary hamoronana na hamoahana votoaty.",
-    "step": "Ho an'ny fanaraha-maso ny kaonty, ampio https://dehub.io/mcp ho toy ny connector OAuth, midira ao amin'ny DeHub ary avereno jerena ny fahazoan-dàlana alohan'ny hamelana ny fidirana.",
+    "step": "Ho an'ny fanaraha-maso ny kaonty, ampio https://riftn.com/mcp ho toy ny connector OAuth, midira ao amin'ny DeHub ary avereno jerena ny fahazoan-dàlana alohan'ny hamelana ny fidirana.",
     "profilePrompt": "Amboary ny mombamomba ahy ao DeHub: Mpamorona mahaleo tena mamoaka sarimihetsika sy mozika.",
     "generatePrompt": "Asehoy ahy ny sarin'i DeHub ary manonona sary iray alohan'ny hamokarana azy.",
     "libraryPrompt": "Asehoy ny fananana farany ao amin'ny tranombokin'ny mpamorona DeHub."

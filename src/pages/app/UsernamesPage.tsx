@@ -23,7 +23,7 @@ const JSON_LD = {
   '@type': 'WebPage',
   name: 'DeHub Username Marketplace',
   get description() { return _translateCopy("copy.eedbc3b3bda6", { defaultValue: "Buy and sell DeHub usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain." }); },
-  url: 'https://dehub.io/usernames',
+  url: 'https://riftn.com/usernames',
 };
 
 export default function UsernamesPage() {
@@ -53,8 +53,8 @@ export default function UsernamesPage() {
       <SEOHead
         title={t('usernames.seoTitle')}
         description={t('usernames.seoDescription')}
-        image="https://dehub.io/og/usernames.jpg"
-        url="https://dehub.io/usernames"
+        image="https://riftn.com/og/usernames.jpg"
+        url="https://riftn.com/usernames"
         jsonLd={JSON_LD}
       />
 

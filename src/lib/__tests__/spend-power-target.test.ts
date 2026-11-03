@@ -13,14 +13,14 @@ import { WEEK_MS, ageSuits, postIdFromInput } from '../spend-power-target';
 
 describe('postIdFromInput', () => {
   it('reads a post id out of the three things people actually paste', () => {
-    expect(postIdFromInput('https://dehub.io/app/post/2008')).toBe(2008);
+    expect(postIdFromInput('https://riftn.com/app/post/2008')).toBe(2008);
     expect(postIdFromInput('/app/post/2008')).toBe(2008);
     expect(postIdFromInput('2008')).toBe(2008);
   });
 
   it('ignores the rest of a link', () => {
-    expect(postIdFromInput('https://dehub.io/app/post/2008?ref=x#comments')).toBe(2008);
-    expect(postIdFromInput('  https://dehub.io/app/post/7  ')).toBe(7);
+    expect(postIdFromInput('https://riftn.com/app/post/2008?ref=x#comments')).toBe(2008);
+    expect(postIdFromInput('  https://riftn.com/app/post/7  ')).toBe(7);
   });
 
   it('treats anything else as a search term, which is what makes one box work', () => {
@@ -30,7 +30,7 @@ describe('postIdFromInput', () => {
     // A username with digits in it is a search, not a post.
     expect(postIdFromInput('mal2008')).toBeNull();
     // A profile link is not a post link.
-    expect(postIdFromInput('https://dehub.io/maldoteth')).toBeNull();
+    expect(postIdFromInput('https://riftn.com/maldoteth')).toBeNull();
   });
 });
 

@@ -16,7 +16,7 @@ describe('link display', () => {
   });
 
   it('does not count links toward the limit', () => {
-    expect(countPostChars('see riftn.com and <https://dehub.io/app>')).toBe('see  and '.length);
+    expect(countPostChars('see riftn.com and <https://riftn.com/app>')).toBe('see  and '.length);
     expect(countPostChars('plain text')).toBe(10);
   });
 

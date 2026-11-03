@@ -128,7 +128,7 @@ async function noindexShell(resp) {
 
 const SUPABASE_FN_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1';
 const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 // Organization.logo. Google wants a square mark of at least 112px, crawlable,
 // and uses it as-is in the knowledge panel. The old value was a 1200x630 JPEG
 // share banner on the Supabase host, which it had to crop into a square.
@@ -2945,7 +2945,8 @@ async function fetchPostRecord(tokenId) {
  * transformed, since the transform refuses the Supabase origin.
  */
 const CDN_ORIGIN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
-const IMAGE_TRANSFORM_BASE = `${APP_URL}/cdn-cgi/image/`;
+// Image transforms are enabled on the dehub.io zone, which stays ours.
+const IMAGE_TRANSFORM_BASE = 'https://dehub.io/cdn-cgi/image/';
 
 function transformedImageUrl(url) {
   if (!url.startsWith(`${CDN_ORIGIN}/`)) return url;
@@ -5379,6 +5380,12 @@ const SUPABASE_RELAY_PREFIX = '/_sb';
 const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 // Hosts that serve the web app. The client picks its own origin as the relay
 // base on these, so each has to answer /_sb itself.
+// Paths that keep answering on dehub.io after the move: APIs, the relay,
+// app-link and passkey files, built assets and image transforms.
+const DEHUB_IO_KEEP_PATHS = [
+  /^\/api\//, /^\/_sb(?:\/|$)/, /^\/\.well-known\//, /^\/apple-app-site-association$/,
+  /^\/assets\//, /^\/cdn-cgi\//, /^\/_handoff-out$/,
+];
 const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io', 'riftn.com', 'www.riftn.com']);
 const HOP_BY_HOP_HEADERS = [
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
@@ -5872,7 +5879,7 @@ async function handleRequest(request, env, ctx) {
 
   // Mirror hosts (staging, previews, aliases) serve identical content and
   // must not index as duplicates of dehub.io.
-  const isCanonicalHost = url.hostname === 'dehub.io';
+  const isCanonicalHost = url.hostname === 'riftn.com';
   // Every prerendered response passes through here, which makes it the one
   // place that can put the site's own look on all of them — the pages built
   // in this file and the ones proxied from the ssr-seo function alike.
@@ -6018,17 +6025,38 @@ async function handleRequest(request, env, ctx) {
     // ?type=latest are legacy view state with no meaning on dehub.io, and
     // carrying them through would mint one duplicate URL per tab out of a
     // redirect whose whole job is to collapse them onto one page.
-    const target = `https://dehub.io${mapped ? mapped[1] : cleanPath}`;
+    const target = `https://riftn.com${mapped ? mapped[1] : cleanPath}`;
     // Raw 301, deliberately not through guard() — see the block below: noindex
     // on a domain-move redirect risks suppressing the equity transfer.
     return new Response(null, { status: 301, headers: { Location: target } });
   }
-  if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
+  // dehub.io moved to riftn.com (November 2026). A browser navigation goes
+  // through dehub.io/_handoff-out, which carries this browser's login,
+  // settings and any unsecured wallet across before continuing to the same
+  // path on riftn.com (server/domain-handoff.js). Crawlers and apps, which
+  // send no Sec-Fetch-Mode, get a plain path-preserving 301. Machine-facing
+  // paths and in-page fetches keep answering here: installed apps, app-link
+  // verifiers and tabs still open on dehub.io call them.
+  if (aliasHost === 'dehub.io' && (request.method === 'GET' || request.method === 'HEAD')) {
+    const fetchMode = request.headers.get('Sec-Fetch-Mode');
+    const keep = DEHUB_IO_KEEP_PATHS.some((re) => re.test(url.pathname));
+    if (!keep && fetchMode === 'navigate') {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: `/_handoff-out?next=${encodeURIComponent(`${url.pathname}${url.search}`)}`, 'Cache-Control': 'no-store' },
+      });
+    }
+    if (!keep && fetchMode === null) {
+      return new Response(null, { status: 301, headers: { Location: `https://riftn.com${url.pathname}${url.search}`, 'Cache-Control': 'public, max-age=3600' } });
+    }
+  }
+
+  if (aliasHost === 'www.dehub.io' || aliasHost === 'www.riftn.com' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
     // Plain 301 WITHOUT guard(): X-Robots-Tag noindex is for mirror hosts
     // serving duplicate content, not for domain-move redirects — mixing
     // noindex with an equity-passing 301 risks suppressing the transfer.
-    let target = `https://dehub.io${url.pathname}${url.search}`;
-    if (aliasHost !== 'www.dehub.io') {
+    let target = `https://riftn.com${url.pathname}${url.search}`;
+    if (aliasHost !== 'www.dehub.io' && aliasHost !== 'www.riftn.com') {
       const p = (url.pathname.replace(/\/+$/, '') || '/').toLowerCase();
       // The apex and its www keep the path-preserving redirect —
       // dehub.net/<username> → dehub.io/<username> is the point of the domain
@@ -6044,22 +6072,22 @@ async function handleRequest(request, env, ctx) {
         const id = encodeURIComponent(nft[1].replace(/\.json$/i, ''));
         target = `https://api.dehub.io/api/nft_metadata/${id}.json`;
       } else if (sub !== null) {
-        target = `https://dehub.io${RETIRED_SUBDOMAIN_TARGETS[sub] || '/'}`;
+        target = `https://riftn.com${RETIRED_SUBDOMAIN_TARGETS[sub] || '/'}`;
       } else {
         // Legacy dehub.net URL spaces with no dehub.io equivalent, each mapped
         // to a real destination. Anything not named here (/guides/*, and every
         // /<username>) keeps the path-preserving redirect.
         const web = LEGACY_WEB_PREFIXES.find(([from]) => p === from || p.startsWith(`${from}/`));
         if (web) {
-          target = `https://dehub.io${web[1]}`;
+          target = `https://riftn.com${web[1]}`;
         } else if (p === '/web' || p.startsWith('/web/')) {
-          target = 'https://dehub.io/';
+          target = 'https://riftn.com/';
         } else if (p === '/learn' || p.startsWith('/learn/')) {
-          target = 'https://dehub.io/docs';
+          target = 'https://riftn.com/docs';
         } else if (LEGACY_NET_PATHS[p]) {
-          target = `https://dehub.io${LEGACY_NET_PATHS[p]}`;
+          target = `https://riftn.com${LEGACY_NET_PATHS[p]}`;
         } else if (p === '/streams' || p.startsWith('/streams/')) {
-          target = 'https://dehub.io/videos';
+          target = 'https://riftn.com/videos';
         }
       }
     }
@@ -6070,7 +6098,7 @@ async function handleRequest(request, env, ctx) {
   // custom domain answers on both schemes and the zone has no Always Use HTTPS
   // rule. Checkers that probe http:// first (Google's OAuth verification among
   // them) were reading an insecure origin. Placed AFTER the alias block on
-  // purpose: those hosts already 301 straight to an absolute https://dehub.io
+  // purpose: those hosts already 301 straight to an absolute https://riftn.com
   // target, so upgrading first would cost them a second hop.
   if (url.protocol === 'http:') {
     return redirect301(`https://${url.host}${url.pathname}${url.search}`);
@@ -7449,7 +7477,7 @@ async function handleRequest(request, env, ctx) {
     const proxiedSegments = cleanPath.split('/').filter(Boolean);
     const proxiedHandle =
       proxiedSegments.length === 1 && couldBeProfileSegment(firstSegmentOf(cleanPath), SYSTEM_ROUTES)
-        ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
+        ? ((html.match(/<link rel="canonical" href="https:\/\/(?:riftn\.com|dehub\.io)\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
     let postShareRecord = null;
     let profileShareAccount = null;
@@ -7610,12 +7638,12 @@ async function handleRequest(request, env, ctx) {
     // pages; route internal link equity straight to the canonical URLs. The
     // edge-rendered sections and marketing pages count too — /app/explore,
     // /app/stages and /app/stake all have a bare canonical twin.
-    html = html.replace(/href="(?:https:\/\/dehub\.io)?\/app\/([a-z0-9-]+)"/g, (m, seg) =>
+    html = html.replace(/href="(?:https:\/\/(?:riftn\.com|dehub\.io))?\/app\/([a-z0-9-]+)"/g, (m, seg) =>
       SSR_STATIC_ROUTES.has(seg) || Object.hasOwn(SECTION_PAGES, seg) || Object.hasOwn(MARKETING_PAGES, seg)
         ? `href="${APP_URL}/${seg}"`
         : m);
     // Bare /guides is only a 301 to the blog index.
-    html = html.replace(/href="(?:https:\/\/dehub\.io)?\/guides\/?"/g, `href="${APP_URL}/docs/blog"`);
+    html = html.replace(/href="(?:https:\/\/(?:riftn\.com|dehub\.io))?\/guides\/?"/g, `href="${APP_URL}/docs/blog"`);
 
     // Homepage for bots was a ~70-word shell with nav-only links, leaving
     // posts/profiles crawlable solely via sitemap. Inject the latest posts

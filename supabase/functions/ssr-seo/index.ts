@@ -7,7 +7,7 @@ const corsHeaders = {
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
-const APP_URL = "https://dehub.io"; // Change to actual production URL if different
+const APP_URL = "https://riftn.com"; // Change to actual production URL if different
 
 // This page is prerendered HTML, and its "View on DeHub" button points at the
 // page's own URL. Anything classified as a crawler therefore gets the same
@@ -398,7 +398,7 @@ serve(async (req) => {
         // Facebook/Twitter scrapers need proper MIME types to display images
         const proxyImageUrl = url.searchParams.get("image_url");
         if (proxyImageUrl) {
-            if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://dehub.io/") && !proxyImageUrl.startsWith("https://aigxuutjaqsywioxjefr.supabase.co/storage/")) {
+            if (!proxyImageUrl.startsWith(DEHUB_CDN_BASE) && !proxyImageUrl.startsWith("https://riftn.com/") && !proxyImageUrl.startsWith("https://aigxuutjaqsywioxjefr.supabase.co/storage/")) {
                 return new Response("Forbidden", { status: 403 });
             }
             const imgResp = await fetch(proxyImageUrl);
@@ -720,7 +720,7 @@ serve(async (req) => {
                     ...(datePublished && { datePublished }),
                     ...(dateModified && { dateModified }),
                     ...(nft.minterDisplayName && { author: { '@type': 'Person', name: nft.minterDisplayName } }),
-                    publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+                    publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' },
                     ...(postImage && { image: postImage }),
                 };
                 const jsonLd: Record<string, unknown> = videoUrl
@@ -948,18 +948,18 @@ serve(async (req) => {
                     {
                         '@type': 'WebSite',
                         name: 'DeHub',
-                        url: 'https://dehub.io',
+                        url: 'https://riftn.com',
                         description: 'Open source, user owned and censorship resistant media.',
                         potentialAction: {
                             '@type': 'SearchAction',
-                            target: 'https://dehub.io/app/explore?q={search_term_string}',
+                            target: 'https://riftn.com/app/explore?q={search_term_string}',
                             'query-input': 'required name=search_term_string',
                         },
                     },
                     {
                         '@type': 'Organization',
                         name: 'DeHub',
-                        url: 'https://dehub.io',
+                        url: 'https://riftn.com',
                         logo: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg',
                         sameAs: [
                             'https://www.wikidata.org/wiki/Q140518527',

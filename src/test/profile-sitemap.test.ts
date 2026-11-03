@@ -31,7 +31,7 @@ describe('profileSitemapXml', () => {
       [{ username: 'alice', lastmod: '2026-08-01' }, { username: 'bob', lastmod: '2026-07-30' }],
       SYSTEM_ROUTES,
     );
-    expect(locs(xml)).toEqual(['https://dehub.io/alice', 'https://dehub.io/bob']);
+    expect(locs(xml)).toEqual(['https://riftn.com/alice', 'https://riftn.com/bob']);
     expect(xml).toContain('<lastmod>2026-08-01</lastmod>');
   });
 
@@ -46,7 +46,7 @@ describe('profileSitemapXml', () => {
       [{ username: 'admin' }, { username: 'Explore' }, { username: 'blog' }, { username: 'real' }],
       SYSTEM_ROUTES,
     );
-    expect(locs(xml)).toEqual(['https://dehub.io/real']);
+    expect(locs(xml)).toEqual(['https://riftn.com/real']);
   });
 
   it('keeps a .eth handle and drops anything else with a dot', () => {
@@ -54,17 +54,17 @@ describe('profileSitemapXml', () => {
       [{ username: 'mal.eth' }, { username: 'favicon.ico' }, { username: 'a.b' }],
       SYSTEM_ROUTES,
     );
-    expect(locs(xml)).toEqual(['https://dehub.io/mal.eth']);
+    expect(locs(xml)).toEqual(['https://riftn.com/mal.eth']);
   });
 
   it('de-duplicates case-insensitively, because the router matches that way', () => {
     const xml = profileSitemapXml([{ username: 'Alice' }, { username: 'alice' }], SYSTEM_ROUTES);
-    expect(locs(xml)).toEqual(['https://dehub.io/Alice']);
+    expect(locs(xml)).toEqual(['https://riftn.com/Alice']);
   });
 
   it('percent-encodes a name rather than letting it break the XML', () => {
     const xml = profileSitemapXml([{ username: 'a&b' }], SYSTEM_ROUTES);
-    expect(xml).toContain('<loc>https://dehub.io/a%26b</loc>');
+    expect(xml).toContain('<loc>https://riftn.com/a%26b</loc>');
     expect(xml).not.toContain('a&b');
   });
 
@@ -73,7 +73,7 @@ describe('profileSitemapXml', () => {
       [{ username: 'nodate', lastmod: 'yesterday' }, { username: 'nulldate', lastmod: null }],
       SYSTEM_ROUTES,
     );
-    expect(locs(xml)).toEqual(['https://dehub.io/nodate', 'https://dehub.io/nulldate']);
+    expect(locs(xml)).toEqual(['https://riftn.com/nodate', 'https://riftn.com/nulldate']);
     expect(xml).not.toContain('<lastmod>');
   });
 
@@ -90,9 +90,9 @@ describe('profileSitemapXml', () => {
 const INDEX = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  '  <sitemap><loc>https://dehub.io/sitemap-static.xml</loc><lastmod>2026-09-01</lastmod></sitemap>',
-  '  <sitemap><loc>https://dehub.io/sitemap-posts-1.xml</loc><lastmod>2026-09-01</lastmod></sitemap>',
-  '  <sitemap><loc>https://dehub.io/sitemap-profiles-1.xml</loc><lastmod>2024-11-02</lastmod></sitemap>',
+  '  <sitemap><loc>https://riftn.com/sitemap-static.xml</loc><lastmod>2026-09-01</lastmod></sitemap>',
+  '  <sitemap><loc>https://riftn.com/sitemap-posts-1.xml</loc><lastmod>2026-09-01</lastmod></sitemap>',
+  '  <sitemap><loc>https://riftn.com/sitemap-profiles-1.xml</loc><lastmod>2024-11-02</lastmod></sitemap>',
   '</sitemapindex>',
 ].join('\n');
 
@@ -100,7 +100,7 @@ describe('patchProfileChunks', () => {
   it('replaces the suggestion cache date with the real newest-profile date', () => {
     const out = patchProfileChunks(INDEX, { total: 3500, lastmod: '2026-08-31' });
     expect(out).toContain(
-      '<loc>https://dehub.io/sitemap-profiles-1.xml</loc><lastmod>2026-08-31</lastmod>',
+      '<loc>https://riftn.com/sitemap-profiles-1.xml</loc><lastmod>2026-08-31</lastmod>',
     );
     expect(out).not.toContain('2024-11-02');
   });
@@ -112,8 +112,8 @@ describe('patchProfileChunks', () => {
 
   it('adds the chunks the upstream function does not know exist', () => {
     const out = patchProfileChunks(INDEX, { total: 120000, lastmod: '2026-08-31' });
-    expect(out).toContain('<loc>https://dehub.io/sitemap-profiles-2.xml</loc>');
-    expect(out).toContain('<loc>https://dehub.io/sitemap-profiles-3.xml</loc>');
+    expect(out).toContain('<loc>https://riftn.com/sitemap-profiles-2.xml</loc>');
+    expect(out).toContain('<loc>https://riftn.com/sitemap-profiles-3.xml</loc>');
     expect(out.trimEnd().endsWith('</sitemapindex>')).toBe(true);
   });
 

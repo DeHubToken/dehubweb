@@ -2674,7 +2674,7 @@ export function usePostForm(
           tokenId: String(mintResponse.createdTokenId),
           streamKey: provisioned.streamKey,
           ingestUrl: provisioned.ingestUrl || '',
-          playbackUrl: `https://dehub.io/app/post/${mintResponse.createdTokenId}`,
+          playbackUrl: `https://riftn.com/app/post/${mintResponse.createdTokenId}`,
           streamId: String(provisioned._id),
           playbackId: provisioned.playbackId,
           provider: provisioned.provider,

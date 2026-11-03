@@ -13,7 +13,7 @@ export const DEHUB_API_REQUEST_BASE = DEHUB_API_BASE;
 
 function apiRelayBase(): string {
   return typeof window !== 'undefined' && window.location.hostname === 'staging.dehub.io'
-    ? 'https://staging.dehub.io/_api' : 'https://dehub.io/_api';
+    ? 'https://staging.dehub.io/_api' : 'https://riftn.com/_api';
 }
 
 function apiRequestUrl(endpoint: string): string {

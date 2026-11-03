@@ -63,7 +63,7 @@ export function RecapPanel({ address, streamId }: Props) {
   const r = recap.data;
   const share = async () => {
     if (!r) return;
-    const url = r.tokenId != null ? `https://dehub.io/app/post/${r.tokenId}` : 'https://dehub.io';
+    const url = r.tokenId != null ? `https://riftn.com/app/post/${r.tokenId}` : 'https://riftn.com';
     const text = t('liveRecap.shareText', {
       title: r.title || t('liveRecap.untitled'),
       duration: formatDuration(r.durationSec),

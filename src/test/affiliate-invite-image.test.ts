@@ -27,7 +27,7 @@ describe('affiliate invitation layout', () => {
 
   it('never truncates a valid referral code, including the widest 40-character code', () => {
     for (const code of ['CFMVZEH2', 'W'.repeat(40), 'A_B-C'.repeat(8)]) {
-      const label = `dehub.io/r/${code}`;
+      const label = `riftn.com/r/${code}`;
       const fitted = fitInviteText(label, 853, 36, 18);
       expect(fitted.text).toBe(label);
       expect(fitted.width).toBeLessThanOrEqual(853);
@@ -46,7 +46,7 @@ describe('affiliate invitation layout', () => {
   it('has a useful image without profile media or an invite code', () => {
     const svg = buildInviteSvg({ ...base, code: '', name: 'DeHub', username: null });
     expect(svg).toContain('You’re invited.');
-    expect(svg).toContain('>dehub.io</text>');
+    expect(svg).toContain('>riftn.com</text>');
     expect(svg).not.toContain('/r/INVITE');
     expect(svg).not.toContain('href=""');
   });

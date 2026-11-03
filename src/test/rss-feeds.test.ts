@@ -74,7 +74,7 @@ describe('feed routes', () => {
   });
 
   it('builds the advertised URL from the bare handle', () => {
-    expect(profileFeedUrl('https://dehub.io', '@maldoteth')).toBe('https://dehub.io/maldoteth.rss');
+    expect(profileFeedUrl('https://riftn.com', '@maldoteth')).toBe('https://riftn.com/maldoteth.rss');
   });
 });
 
@@ -93,7 +93,7 @@ describe('what a feed carries', () => {
   });
 
   it('carries a content-warned post as its warning and link only', () => {
-    const deps = { appUrl: 'https://dehub.io', imageOf: () => 'https://cdn.example/i.jpg', mediaUrl: (p: string) => p, labelOf: () => 'Label' };
+    const deps = { appUrl: 'https://riftn.com', imageOf: () => 'https://cdn.example/i.jpg', mediaUrl: (p: string) => p, labelOf: () => 'Label' };
     const item = rssItemXml(row(11, { spoilerText: 'Spoilers', videoUrl: 'videos/11.mp4' }), deps);
     expect(item).toContain('<title>Spoilers</title>');
     expect(item).not.toContain('caption long enough');
@@ -111,17 +111,17 @@ describe('profile feed', () => {
         row(10, { description: 'Line one <b>bold</b> & more\n\nSecond paragraph' }),
       ],
     });
-    const res = await get('https://dehub.io/maldoteth.rss');
+    const res = await get('https://riftn.com/maldoteth.rss');
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Type')).toContain('application/rss+xml');
     expect(res.headers.get('X-Robots-Tag')).toBe('noindex');
     const xml = await res.text();
     expect(xml).toContain('<title>mal (@maldoteth) on DeHub</title>');
-    expect(xml).toContain('<link>https://dehub.io/maldoteth</link>');
-    expect(xml).toContain('<atom:link href="https://dehub.io/maldoteth.rss" rel="self"');
+    expect(xml).toContain('<link>https://riftn.com/maldoteth</link>');
+    expect(xml).toContain('<atom:link href="https://riftn.com/maldoteth.rss" rel="self"');
     expect(xml).toContain('<description>building DeHub.</description>');
-    expect(xml).toContain('<guid isPermaLink="true">https://dehub.io/app/post/12</guid>');
-    expect(xml).toContain('<guid isPermaLink="true">https://dehub.io/app/post/10</guid>');
+    expect(xml).toContain('<guid isPermaLink="true">https://riftn.com/app/post/12</guid>');
+    expect(xml).toContain('<guid isPermaLink="true">https://riftn.com/app/post/10</guid>');
     expect(xml).not.toContain('/app/post/11<');
     expect(xml).toContain('medium="video" duration="31"');
     expect(xml).toContain('https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/12.mp4');
@@ -135,19 +135,19 @@ describe('profile feed', () => {
 
   it('answers the @ form too', async () => {
     stubApi();
-    expect((await get('https://dehub.io/@maldoteth.rss')).status).toBe(200);
+    expect((await get('https://riftn.com/@maldoteth.rss')).status).toBe(200);
   });
 
   it('has no feed for an unknown or private account', async () => {
     stubApi({ acct: null });
-    expect((await get('https://dehub.io/nobody.rss')).status).toBe(404);
+    expect((await get('https://riftn.com/nobody.rss')).status).toBe(404);
     stubApi({ acct: { ...account, isPrivate: true } });
-    expect((await get('https://dehub.io/maldoteth.rss')).status).toBe(404);
+    expect((await get('https://riftn.com/maldoteth.rss')).status).toBe(404);
   });
 
   it('says so, rather than serving an empty feed, when the API is down', async () => {
     stubApi({ feedDown: true });
-    const res = await get('https://dehub.io/maldoteth.rss');
+    const res = await get('https://riftn.com/maldoteth.rss');
     expect(res.status).toBe(503);
     expect(res.headers.get('Retry-After')).toBe('300');
   });
@@ -156,11 +156,11 @@ describe('profile feed', () => {
 describe('tag feed', () => {
   it('serves every public post carrying the tag', async () => {
     stubApi();
-    const res = await get('https://dehub.io/tags/Music.rss');
+    const res = await get('https://riftn.com/tags/Music.rss');
     expect(res.status).toBe(200);
     const xml = await res.text();
     expect(xml).toContain('<title>#music on DeHub</title>');
-    expect(xml).toContain('<link>https://dehub.io/app?category=music</link>');
+    expect(xml).toContain('<link>https://riftn.com/app?category=music</link>');
     expect(feedQueries[0].get('category')).toBe('music');
   });
 });
@@ -175,7 +175,7 @@ describe('the client copy of the feed URL', () => {
   it('matches what the worker advertises', async () => {
     const { profileFeedUrl: clientFeedUrl } = await import('@/lib/profile-feed-url');
     for (const handle of ['maldoteth', '@maldoteth', 'mal.eth', 'name with space']) {
-      expect(clientFeedUrl(handle)).toBe(profileFeedUrl('https://dehub.io', handle));
+      expect(clientFeedUrl(handle)).toBe(profileFeedUrl('https://riftn.com', handle));
     }
   });
 });

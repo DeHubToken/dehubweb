@@ -1018,7 +1018,7 @@ serve(async (req) => {
     // back looking like a translation of the caller's post.
     //
     // URLs, @mentions, #hashtags and $tags count as untranslatable too, even
-    // though they contain letters: a post that is only "https://dehub.io/…" got
+    // though they contain letters: a post that is only "https://riftn.com/…" got
     // past the letter check, and the model's reply — "I don't see any text to
     // translate in your message. You've only provided a URL link…" — was cached
     // and rendered in the feed as the post's translation. Tags are judged, not

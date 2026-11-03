@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
       latitude: row.latitude,
       longitude: row.longitude,
       avatar_url: row.avatar_url,
-      profile_url: row.username ? `https://dehub.io/${encodeURIComponent(row.username)}` : null,
+      profile_url: row.username ? `https://riftn.com/${encodeURIComponent(row.username)}` : null,
     })) });
   }
 

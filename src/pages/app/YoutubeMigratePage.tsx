@@ -548,8 +548,8 @@ export default function YoutubeMigratePage() {
       <SEOHead
         title={t('migrate.seoTitle')}
         description={t('migrate.seoDescription')}
-        url="https://dehub.io/migrate-youtube"
-        image="https://dehub.io/og/migrate-youtube.jpg"
+        url="https://riftn.com/migrate-youtube"
+        image="https://riftn.com/og/migrate-youtube.jpg"
       />
 
       {/* Sticky nav pill — the page's own header bento, pinned below the

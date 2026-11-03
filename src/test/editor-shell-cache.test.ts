@@ -6,7 +6,7 @@ const browser = 'Mozilla/5.0 Chrome/130.0.0.0 Safari/537.36';
 const shell = '<!doctype html><html><head><script type="module" src="/assets/current-shell.js"></script></head><body><div id="root"></div></body></html>';
 const serve = (path: string, body = shell, type = 'text/html', cache = 'public, max-age=0, must-revalidate') => {
   const fetch = vi.fn(async () => new Response(body, { headers: { 'Content-Type': type, 'Cache-Control': cache } }));
-  return { fetch, response: worker.fetch(new Request(`https://dehub.io${path}`, { headers: { 'User-Agent': browser } }), { ASSETS: { fetch } }, {}) as Promise<Response> };
+  return { fetch, response: worker.fetch(new Request(`https://riftn.com${path}`, { headers: { 'User-Agent': browser } }), { ASSETS: { fetch } }, {}) as Promise<Response> };
 };
 
 describe('fresh editor shell after a deployment', () => {
@@ -32,7 +32,7 @@ describe('fresh editor shell after a deployment', () => {
   });
   it('retains the separate cached editor information page for crawlers', async () => {
     const fetch = vi.fn(async () => new Response('{}', { headers: { 'Content-Type': 'application/json' } }));
-    const result = await worker.fetch(new Request('https://dehub.io/editor', { headers: { 'User-Agent': 'Googlebot/2.1' } }), { ASSETS: { fetch } }, {}) as Response;
+    const result = await worker.fetch(new Request('https://riftn.com/editor', { headers: { 'User-Agent': 'Googlebot/2.1' } }), { ASSETS: { fetch } }, {}) as Response;
     expect(result.status).toBe(200);
     expect(result.headers.get('Cache-Control')).toContain('s-maxage=3600');
     expect(result.headers.get('CDN-Cache-Control')).toBeNull();

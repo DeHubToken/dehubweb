@@ -87,7 +87,7 @@ That is the lens we apply across the market in our roundup of the [best watch-to
 
 ## Getting started with DeHub watch-to-earn
 
-If you want to try it rather than just read about it, the path is short. Create an account on the DeHub web app at **https://dehub.io/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on DeHub, watching to earn does not start with a purchase.
+If you want to try it rather than just read about it, the path is short. Create an account on the DeHub web app at **https://riftn.com/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on DeHub, watching to earn does not start with a purchase.
 
 ## Frequently asked questions
 

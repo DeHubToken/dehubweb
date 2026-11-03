@@ -1,6 +1,6 @@
 /**
  * The app's head tags must say what the worker's crawler pages say for the
- * same URL. They did not: /explore declared https://dehub.io/app/explore while
+ * same URL. They did not: /explore declared https://riftn.com/app/explore while
  * the worker declared /explore for /app/explore, two canonicals pointing at
  * each other, and /videos and /shorts carried the home page's H1.
  *
@@ -99,10 +99,10 @@ describe('canonical rules match the worker', () => {
   });
 
   it('normalises explicit dehub.io URLs and leaves other hosts alone', () => {
-    expect(canonicalUrl('https://dehub.io/app/explore')).toBe('https://dehub.io/explore');
-    expect(canonicalUrl('https://dehub.io/app/music')).toBe('https://dehub.io/music');
-    expect(canonicalUrl('https://dehub.io/features?feature=abc')).toBe('https://dehub.io/features?feature=abc');
-    expect(canonicalUrl('/posts/7/b')).toBe('https://dehub.io/app/post/7');
+    expect(canonicalUrl('https://riftn.com/app/explore')).toBe('https://riftn.com/explore');
+    expect(canonicalUrl('https://riftn.com/app/music')).toBe('https://riftn.com/music');
+    expect(canonicalUrl('https://riftn.com/features?feature=abc')).toBe('https://riftn.com/features?feature=abc');
+    expect(canonicalUrl('/posts/7/b')).toBe('https://riftn.com/app/post/7');
     expect(canonicalUrl('https://example.com/app/explore')).toBe('https://example.com/app/explore');
   });
 });
@@ -113,7 +113,7 @@ describe('hub head strings match the worker', () => {
   it('home', () => {
     expect(t(HUB_ROUTE_META.home.titleKey)).toBe(workerConst('HOME_TITLE'));
     expect(t(HUB_ROUTE_META.home.descriptionKey)).toBe(workerConst('HOME_DESCRIPTION'));
-    expect(HUB_ROUTE_META.home.url).toBe('https://dehub.io/');
+    expect(HUB_ROUTE_META.home.url).toBe('https://riftn.com/');
   });
 
   it.each(['explore', 'videos', 'shorts'] as const)('%s', (key) => {
@@ -126,7 +126,7 @@ describe('hub head strings match the worker', () => {
     expect(t(meta.titleKey)).toBe(m![1]);
     expect(t(meta.descriptionKey)).toBe(m![3]);
     if ('headingKey' in meta) expect(t(meta.headingKey)).toBe(m![2]);
-    expect(meta.url).toBe(`https://dehub.io/${key}`);
+    expect(meta.url).toBe(`https://riftn.com/${key}`);
   });
 
   it('docs index', () => {

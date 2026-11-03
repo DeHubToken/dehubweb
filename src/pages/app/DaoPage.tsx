@@ -320,15 +320,15 @@ export default function DaoPage() {
       <SEOHead
         title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury — Fund DeHub and Earn a Say" })}
         description={_copy("copy.02ce53459982", { defaultValue: "The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent." })}
-        url="https://dehub.io/dao"
-        image="https://dehub.io/og/dao.jpg"
+        url="https://riftn.com/dao"
+        image="https://riftn.com/og/dao.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebPage',
           name: 'DeHub DAO Treasury',
-          url: 'https://dehub.io/dao',
+          url: 'https://riftn.com/dao',
           description: _copy("copy.9bab7b8fd081", { defaultValue: "The DeHub DAO treasury — live balance, contributors and their decision-making share." }),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' },
         }}
       />
       <h1 className="sr-only">{_copy("copy.730f5eed0d6e", { defaultValue: "DeHub DAO Treasury — Decentralised, User Owned Social Media" })}</h1>

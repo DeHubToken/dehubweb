@@ -77,7 +77,7 @@ export function collectPublicSources(root) {
   const source = fs.readFileSync(path.join(root, 'CLOUDFLARE_WORKER_SEO.js'), 'utf8');
   const ast = ts.createSourceFile('worker.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   const declarations = ast.statements.filter(ts.isVariableStatement).flatMap(statement => [...statement.declarationList.declarations]);
-  const context = { APP_URL: 'https://dehub.io', arcadeGameLd: () => ({}), ...streamerPage, ...dehubAppPage };
+  const context = { APP_URL: 'https://riftn.com', arcadeGameLd: () => ({}), ...streamerPage, ...dehubAppPage };
   const value = name => {
     const declaration = declarations.find(item => item.name.getText(ast) === name);
     if (!declaration?.initializer) throw new Error(`Missing crawler source: ${name}`);
@@ -92,7 +92,7 @@ export function collectPublicSources(root) {
   const en = readJson(path.join(root, 'src/i18n/locales/en.json'));
   const manifest = readJson(path.join(root, 'public/blog-manifest.json'));
   const sitemap = fs.readFileSync(path.join(root, 'public/sitemap-static.xml'), 'utf8');
-  const routes = [...sitemap.matchAll(/<loc>https:\/\/dehub.io([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
+  const routes = [...sitemap.matchAll(/<loc>https:\/\/riftn\.com([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
   const out = {};
   for (const route of routes) {
     let meta, body = '', md;
@@ -122,8 +122,8 @@ export function collectPublicSources(root) {
     if (meta) out[route] = { title: meta.title, description: meta.description, h1: meta.heading || meta.title, body, ...(md ? { md } : {}), ...(meta.intro ? { lede: meta.intro } : {}) };
   }
   out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'DeHub — Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
-  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'DeHub Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://dehub.io/docs/${slug}">${escapeHtml(page.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
-  out['/docs/blog'] = { title: 'DeHub Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.', h1: 'DeHub Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://dehub.io/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
+  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'DeHub Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
+  out['/docs/blog'] = { title: 'DeHub Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.', h1: 'DeHub Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
   for (const route of routes) if (!out[route]?.body) throw new Error(`Public route has no source body: ${route}`);
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }

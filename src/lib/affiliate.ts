@@ -48,7 +48,7 @@ export function parseLandingCtas(raw: unknown): AffiliateLandingCta[] {
 
 /** Keep the referral code on the destination so attribution survives a cleared cookie. */
 export function withAffiliateRef(destination: string, code: string, subId?: string | null): string {
-  const url = new URL(destination, 'https://dehub.io');
+  const url = new URL(destination, 'https://riftn.com');
   const existingCode = url.searchParams.get('ref');
   if (existingCode && existingCode.toUpperCase() !== code.toUpperCase()) return destination;
   url.searchParams.set('ref', code);

@@ -323,10 +323,10 @@
     "empty": "Walqabsiisni akkaawuntii hojjetu hin jiru.",
     "disconnect": "Addaan kuti",
     "failed": "Walqabsiisa xumuruu hin danda'amne. Irra deebitee seenuuf yaali.",
-    "intro": "ChatGPT keessatti DeHub daawwadhu, ykn piroofaayilii kee haaromsuuf, postiiwwan maxxansuuf fi Creator Studio fayyadamuuf akkaawuntii kee walqabsiisi. To'annoo akkaawuntiitiif https://dehub.io/mcp akka OAuth connector itti dabali.",
+    "intro": "ChatGPT keessatti DeHub daawwadhu, ykn piroofaayilii kee haaromsuuf, postiiwwan maxxansuuf fi Creator Studio fayyadamuuf akkaawuntii kee walqabsiisi. To'annoo akkaawuntiitiif https://riftn.com/mcp akka OAuth connector itti dabali.",
     "what": "Postiiwwan fi piroofaayiloota ifa ta'an daawwadhu. Walqabsiisa akkaawuntii OAuth wajjin, piroofaayilii fi iccitii kee bulchi, postiiwwan fi yaada maxxansi, namoota hordofi, beeksisoota dubbisi, buukmaarkiiwwan olkaa'i fi suuroota, viidiyoo, sagalee fi qabeenya 3D uumi. Uumamuun seera kaffaltii DeHub kan jiru fayyadama.",
     "account": "Daawwannaan ifa ta'e akkaawuntii hin barbaadu. Piroofaayilii kee bulchuuf fi qabiyyee uumuuf ykn maxxansuuf akkaawuntii DeHub kee walqabsiisi.",
-    "step": "To'annoo akkaawuntiitiif, https://dehub.io/mcp akka OAuth connector itti dabali, DeHub irratti seeni fi hayyama kennuun dura hayyamoota sakatta'i.",
+    "step": "To'annoo akkaawuntiitiif, https://riftn.com/mcp akka OAuth connector itti dabali, DeHub irratti seeni fi hayyama kennuun dura hayyamoota sakatta'i.",
     "profilePrompt": "Biyo (bio) DeHub koo gara kanaatti haaromsi: Uumaa walaba ta'e kan fiilmii fi muuziqaa hojjetu.",
     "generatePrompt": "Moodeloota suuraa DeHub natti argisiisi fi suuraa namaa (portrait) uumuu kee dura gatii isaa natti himi.",
     "libraryPrompt": "Qabeenya dhihoo laayibrarii Uumaa (Creator library) DeHub koo keessa jiru natti argisiisi."

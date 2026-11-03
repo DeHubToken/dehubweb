@@ -35,7 +35,7 @@ describe('entity sitemaps', () => {
       { job_number: 3, status: 'completed', updated_at: '2026-09-22T10:00:00Z' },
     ]]);
     parses(xml);
-    expect(locs(xml)).toEqual(['https://dehub.io/bounty/1', 'https://dehub.io/bounty/2']);
+    expect(locs(xml)).toEqual(['https://riftn.com/bounty/1', 'https://riftn.com/bounty/2']);
     expect(xml).toContain('<image:image><image:loc>https://cdn.example/b1.jpg</image:loc></image:image>');
     expect(xml).toContain('<lastmod>2026-09-20</lastmod>');
     expect(WORKER).toMatch(/entry: \(j\) => \(isBountyIndexable\(j\)/);
@@ -49,7 +49,7 @@ describe('entity sitemaps', () => {
       { slug: 'join', description: TEXT, member_count: 50 },
     ]]);
     parses(xml);
-    expect(locs(xml)).toEqual(['https://dehub.io/app/communities/night-walks', 'https://dehub.io/app/communities/busy']);
+    expect(locs(xml)).toEqual(['https://riftn.com/app/communities/night-walks', 'https://riftn.com/app/communities/busy']);
     expect(WORKER).toContain("query: () => 'communities?is_private=eq.false");
   });
 
@@ -63,8 +63,8 @@ describe('entity sitemaps', () => {
     ]);
     parses(xml);
     expect(locs(xml)).toEqual([
-      'https://dehub.io/stores/aaaaaaaa-1111',
-      'https://dehub.io/stores/aaaaaaaa-1111?listing=cccccccc-3333',
+      'https://riftn.com/stores/aaaaaaaa-1111',
+      'https://riftn.com/stores/aaaaaaaa-1111?listing=cccccccc-3333',
     ]);
     // Image URLs are escaped, or one ampersand invalidates the whole file.
     expect(xml).toContain('<image:loc>https://cdn.example/s.jpg?w=1&amp;h=2</image:loc>');
@@ -76,7 +76,7 @@ describe('entity sitemaps', () => {
   it('events: public and upcoming only', () => {
     const xml = entitySitemapXml('events', [[{ event_number: 7, created_at: '2026-09-10T00:00:00Z' }]]);
     parses(xml);
-    expect(locs(xml)).toEqual(['https://dehub.io/app/events/7']);
+    expect(locs(xml)).toEqual(['https://riftn.com/app/events/7']);
     const query = WORKER.slice(WORKER.indexOf('  events: [{'), WORKER.indexOf('  packs: [{'));
     expect(query).toContain('is_private=eq.false');
     expect(query).toContain('starts_at.gte.');
@@ -86,10 +86,10 @@ describe('entity sitemaps', () => {
   it('packs and flows: only ids the route itself would answer', () => {
     const packs = entitySitemapXml('packs', [[{ slug: 'Cats_1', updated_at: '2026-09-01' }, { slug: 'x' }]]);
     parses(packs);
-    expect(locs(packs)).toEqual(['https://dehub.io/packs/cats_1']);
+    expect(locs(packs)).toEqual(['https://riftn.com/packs/cats_1']);
     const flows = entitySitemapXml('flows', [[{ id: 'abc123def', updated_at: '2026-09-01' }, { id: 'NOT-VALID' }]]);
     parses(flows);
-    expect(locs(flows)).toEqual(['https://dehub.io/creator/flow/abc123def']);
+    expect(locs(flows)).toEqual(['https://riftn.com/creator/flow/abc123def']);
     expect(WORKER).toContain('creator_flows?is_public=eq.true');
   });
 
@@ -99,14 +99,14 @@ describe('entity sitemaps', () => {
       { id: 'p2', title: 'hi', description: '' },
     ]]);
     parses(proposals);
-    expect(locs(proposals)).toEqual(['https://dehub.io/app/governance/p1']);
+    expect(locs(proposals)).toEqual(['https://riftn.com/app/governance/p1']);
     const features = entitySitemapXml('features', [[
       { id: 'f1', title: 'Dark mode for Stages', description: TEXT, status: 'open', updated_at: '2026-09-01' },
       { id: 'f2', title: 'Dark mode for Stages', description: TEXT, status: 'declined' },
       { id: 'f3', title: 'bug', description: 'broken', status: 'open' },
     ]]);
     parses(features);
-    expect(locs(features)).toEqual(['https://dehub.io/features?feature=f1']);
+    expect(locs(features)).toEqual(['https://riftn.com/features?feature=f1']);
   });
 
   it('is a valid, empty urlset when a table has no rows', () => {
@@ -124,15 +124,15 @@ describe('entity sitemaps', () => {
 
 describe('the sitemap index', () => {
   const xml = sitemapIndexXml([
-    { loc: 'https://dehub.io/sitemap-static.xml', lastmod: '2026-09-28T00:00:00.000Z' },
-    { loc: 'https://dehub.io/sitemap-posts-1.xml', lastmod: '' },
-    { loc: 'https://dehub.io/sitemap-bounties.xml', lastmod: '2026-09-22' },
+    { loc: 'https://riftn.com/sitemap-static.xml', lastmod: '2026-09-28T00:00:00.000Z' },
+    { loc: 'https://riftn.com/sitemap-posts-1.xml', lastmod: '' },
+    { loc: 'https://riftn.com/sitemap-bounties.xml', lastmod: '2026-09-22' },
   ]);
 
   it('parses and carries each child’s own date, or none', () => {
     parses(xml);
-    expect(xml).toContain('<sitemap><loc>https://dehub.io/sitemap-static.xml</loc><lastmod>2026-09-28</lastmod></sitemap>');
-    expect(xml).toContain('<sitemap><loc>https://dehub.io/sitemap-posts-1.xml</loc></sitemap>');
+    expect(xml).toContain('<sitemap><loc>https://riftn.com/sitemap-static.xml</loc><lastmod>2026-09-28</lastmod></sitemap>');
+    expect(xml).toContain('<sitemap><loc>https://riftn.com/sitemap-posts-1.xml</loc></sitemap>');
     expect(xml).toContain('<lastmod>2026-09-22</lastmod>');
   });
 
@@ -157,11 +157,11 @@ describe('post and profile rows', () => {
     parses(xml);
     expect(xml).toContain('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"');
     expect(xml).toContain(
-      '<loc>https://dehub.io/app/post/5</loc><lastmod>2026-09-01</lastmod><changefreq>weekly</changefreq><priority>0.6</priority>'
+      '<loc>https://riftn.com/app/post/5</loc><lastmod>2026-09-01</lastmod><changefreq>weekly</changefreq><priority>0.6</priority>'
       + '<image:image><image:loc>https://dehub.io/cdn-cgi/image/format=jpeg,width=1200,fit=scale-down/https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/5.jpg</image:loc></image:image>',
     );
     expect(xml).toContain('https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/6.png</image:loc>');
-    expect(xml).toContain('<loc>https://dehub.io/app/post/7</loc><lastmod>2026-09-03</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>');
+    expect(xml).toContain('<loc>https://riftn.com/app/post/7</loc><lastmod>2026-09-03</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>');
   });
 
   it('profile rows carry an avatar only when the API row has one', () => {
@@ -174,7 +174,7 @@ describe('post and profile rows', () => {
     );
     parses(xml);
     expect(xml).toContain('/avatars/0xabc.jpg</image:loc>');
-    expect(xml).toContain('<loc>https://dehub.io/bob</loc><lastmod>2026-09-02</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>');
+    expect(xml).toContain('<loc>https://riftn.com/bob</loc><lastmod>2026-09-02</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>');
   });
 });
 

@@ -39,20 +39,20 @@ describe('sitemap-static.xml', () => {
   });
 
   it('lists every indexable page the worker renders', () => {
-    const missing = routes.filter((r) => !LOCS.has(`https://dehub.io${r}`) && !Object.prototype.hasOwnProperty.call(NOT_IN_SITEMAP, r));
+    const missing = routes.filter((r) => !LOCS.has(`https://riftn.com${r}`) && !Object.prototype.hasOwnProperty.call(NOT_IN_SITEMAP, r));
     expect(missing).toEqual([]);
   });
 
   it('lists no page the worker marks noindex', () => {
     for (const [key, m] of Object.entries(MARKETING_PAGES as Record<string, Page>)) {
-      if (m.noindex) expect(LOCS.has(`https://dehub.io${m.path || `/${key}`}`), key).toBe(false);
+      if (m.noindex) expect(LOCS.has(`https://riftn.com${m.path || `/${key}`}`), key).toBe(false);
     }
   });
 
   it('keeps the exception list honest', () => {
     for (const route of Object.keys(NOT_IN_SITEMAP)) {
       expect(routes, route).toContain(route);
-      expect(LOCS.has(`https://dehub.io${route}`), route).toBe(false);
+      expect(LOCS.has(`https://riftn.com${route}`), route).toBe(false);
     }
   });
 

@@ -413,7 +413,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = viewerShareUrl(`https://dehub.io${postOwnPath(post)}`);
+      const postUrl = viewerShareUrl(`https://riftn.com${postOwnPath(post)}`);
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({

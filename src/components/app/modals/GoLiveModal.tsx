@@ -1084,7 +1084,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
         playbackId,
         provider,
         ingestUrl,
-        playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
+        playbackUrl: playbackUrl || `https://riftn.com/app/post/${tokenId}`,
         hlsUrl,
       };
 

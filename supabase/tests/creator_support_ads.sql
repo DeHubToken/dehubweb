@@ -15,7 +15,7 @@ BEGIN
   INSERT INTO ad_campaigns(id,wallet_address,name,status,daily_budget_usd,total_budget_usd,targeting)
     VALUES(campaign,advertiser,'Support transaction verification','active',1,1,'{"creatorSupport":true}');
   INSERT INTO ad_creatives(id,campaign_id,wallet_address,kind,media_url,headline,duration_seconds,status)
-    VALUES(creative,campaign,advertiser,'video','https://dehub.io/test-video.mp4','Support verification',31,'approved');
+    VALUES(creative,campaign,advertiser,'video','https://riftn.com/test-video.mp4','Support verification',31,'approved');
   INSERT INTO ad_creator_support_sessions(id,viewer_wallet,creator_wallet,post_id,campaign_id,creative_id,viewer_tier,price_usd,creator_share_usd,expires_at)
     VALUES(session,viewer,creator,'6175',campaign,creative,'none',0.1,0.05,now()+interval '15 minutes');
 

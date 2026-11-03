@@ -48,7 +48,7 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
   const name = fitInviteText(opts.name, opts.badgeDataUri ? 708 : 770, 78, 44);
   const handle = fitInviteText(opts.username ? `@${opts.username.replace(/^@+/, "")}` : "", 770, 36, 28);
   // All supported codes (up to 40 characters) remain complete and legible.
-  const link = hasIdentity ? `dehub.io/r/${opts.code}` : "dehub.io";
+  const link = hasIdentity ? `riftn.com/r/${opts.code}` : "riftn.com";
   const linkText = fitInviteText(link, 853, 36, 18);
   const qrSize = 178;
   const qrQuietModules = 4;

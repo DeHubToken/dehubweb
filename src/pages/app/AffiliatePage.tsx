@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { PageBody } from "@/components/app/page-kit/PageKit";
 import { trackEvent } from "@/lib/analytics";
 
-const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
+const SITE = typeof window !== "undefined" ? window.location.origin : "https://riftn.com";
 
 function formatMoney(cents: number, currency = "USD") {
   try {
@@ -395,7 +395,7 @@ export default function AffiliatePage() {
                       to={`/r/${stats.code}`}
                       className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono truncate hover:bg-white/15 inline-flex items-center gap-2"
                     >
-                      {`${typeof window !== "undefined" ? window.location.origin : "https://dehub.io"}/r/${stats.code}`}
+                      {`${typeof window !== "undefined" ? window.location.origin : "https://riftn.com"}/r/${stats.code}`}
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </Link>
                     <Button

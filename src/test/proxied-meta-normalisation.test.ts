@@ -63,7 +63,7 @@ const page = (title: string, description: string) => `<!DOCTYPE html>
 <head>
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <link rel="canonical" href="https://dehub.io/app/post/4676">
+  <link rel="canonical" href="https://riftn.com/app/post/4676">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/4676.jpg">
@@ -121,7 +121,7 @@ describe('proxied meta normalisation', () => {
    */
   it('touches no tag outside titles and descriptions', () => {
     const out = normalizeProxiedMeta(page('x'.repeat(200), 'y'.repeat(400)));
-    expect(out).toContain('<link rel="canonical" href="https://dehub.io/app/post/4676">');
+    expect(out).toContain('<link rel="canonical" href="https://riftn.com/app/post/4676">');
     expect(out).toContain('images/4676.jpg');
   });
 

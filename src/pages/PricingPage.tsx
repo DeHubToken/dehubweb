@@ -15,7 +15,7 @@ export default function PricingPage() {
       <SEOHead
         title={_copy("copy.5d627221715e", { defaultValue: "Pricing — DeHub Creator Studio" })}
         description={_copy("copy.cb8e92496287", { defaultValue: "DeHub Creator Studio pricing in USD. Creator, Ultra, Team and Scale plans with monthly tokens for AI image, video, music and poster generation." })}
-        url="https://dehub.io/pricing"
+        url="https://riftn.com/pricing"
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [
@@ -28,7 +28,7 @@ export default function PricingPage() {
                 '@type': 'Offer',
                 price: String(getAiPlanOffer('ultra', 'annual').displayPriceUsd),
                 priceCurrency: 'USD',
-                url: 'https://dehub.io/pricing',
+                url: 'https://riftn.com/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
@@ -48,7 +48,7 @@ export default function PricingPage() {
                 '@type': 'Offer',
                 price: String(getAiPlanOffer('team', 'annual').displayPriceUsd),
                 priceCurrency: 'USD',
-                url: 'https://dehub.io/pricing',
+                url: 'https://riftn.com/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
@@ -68,7 +68,7 @@ export default function PricingPage() {
                 '@type': 'Offer',
                 price: String(getAiPlanOffer('scale', 'annual').displayPriceUsd),
                 priceCurrency: 'USD',
-                url: 'https://dehub.io/pricing',
+                url: 'https://riftn.com/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
@@ -88,7 +88,7 @@ export default function PricingPage() {
                 '@type': 'Offer',
                 price: String(getAiPlanOffer('creator', 'annual').displayPriceUsd),
                 priceCurrency: 'USD',
-                url: 'https://dehub.io/pricing',
+                url: 'https://riftn.com/pricing',
                 availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',

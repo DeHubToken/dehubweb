@@ -7,7 +7,7 @@ const proof = {
   purpose: 'login-web' as const, timestamp: 1_800_000_000,
   message: [
     'dehub.io requests wallet verification.', '',
-    'URI: https://dehub.io', 'Version: 2',
+    'URI: https://riftn.com', 'Version: 2',
     'Address: ' + address, 'Chain ID: 8453', 'Purpose: login-web',
     'Nonce: ' + 'a'.repeat(64),
     'Issued At: 2027-01-15T08:00:00.000Z',

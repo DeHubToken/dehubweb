@@ -1479,7 +1479,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
             url: postSeoUrl(id, (post as any)?.articleSlug),
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
-            publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+            publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' },
             usageInfo: getAiScrapingPreference((post as any).minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
           }}
         />
@@ -1802,7 +1802,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           url: postSeoUrl(id, (post as any)?.articleSlug),
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
-          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' },
           usageInfo: getAiScrapingPreference((post as any)?.minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
         }}
       />

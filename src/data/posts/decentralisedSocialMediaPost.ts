@@ -107,7 +107,7 @@ For British creators specifically, the pull is straightforward: keep ownership o
 
 ## Getting started with decentralised social media in the UK
 
-You do not need to understand blockchains to try one. The pragmatic path is to pick a platform whose economics and values suit you, create an account, and post as normal, learning the ownership mechanics as you go. If you want a hands-on start with a Web3 social network built for creators, open the [DeHub app](https://dehub.io/app) in your browser or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). It is free to sign up and free to post.
+You do not need to understand blockchains to try one. The pragmatic path is to pick a platform whose economics and values suit you, create an account, and post as normal, learning the ownership mechanics as you go. If you want a hands-on start with a Web3 social network built for creators, open the [DeHub app](https://riftn.com/app) in your browser or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). It is free to sign up and free to post.
 
 Whatever you choose, the direction of travel is clear. Social media is slowly moving from platforms you rent to networks you help own, and 2026 is a sensible moment for UK creators to plant a flag.
 

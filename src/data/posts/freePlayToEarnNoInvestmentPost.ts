@@ -29,7 +29,7 @@ Below are titles you can genuinely start for free. We lead with DeHub's own arca
 
 ### Last Chad Standing (DeHub arcade)
 
-**Last Chad Standing** is DeHub's flagship game: an MMA fighter battle royale featuring licensed fighters, playable straight from the browser at [the DeHub app](https://dehub.io/app) and through the arcade in the Google Play build. There is no NFT to buy before you fight and no starter pack to unlock the mode. You open it and play.
+**Last Chad Standing** is DeHub's flagship game: an MMA fighter battle royale featuring licensed fighters, playable straight from the browser at [the DeHub app](https://riftn.com/app) and through the arcade in the Google Play build. There is no NFT to buy before you fight and no starter pack to unlock the mode. You open it and play.
 
 What makes it a clean fit for this list is the plumbing around it. DeHub is a [decentralised social network](/guides/what-is-dehub) where the arcade sits next to the feed, live streaming and watch-to-earn bounties, so the game is one earning surface among several rather than a walled-off token machine. Rewards flow through the ecosystem token, $DHB, on Base. We will not quote you a figure, because your results depend on how you play and on live conditions, and honest coverage does not invent numbers.
 
@@ -37,7 +37,7 @@ The practical appeal is the zero-friction start. Because DeHub's arcade is play-
 
 ### The wider DeHub arcade and watch-to-earn
 
-Beyond the flagship title, DeHub runs a play-to-earn arcade plus watch-to-earn bounties that reward attention rather than purchases. This matters for the no-investment crowd: even if a given game does not suit you, the same free account lets you earn by watching and engaging. It is a more forgiving on-ramp than a single game that only pays skilled competitive players. You can open all of it from [the DeHub app](https://dehub.io/app) or the [DeHub Android app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+Beyond the flagship title, DeHub runs a play-to-earn arcade plus watch-to-earn bounties that reward attention rather than purchases. This matters for the no-investment crowd: even if a given game does not suit you, the same free account lets you earn by watching and engaging. It is a more forgiving on-ramp than a single game that only pays skilled competitive players. You can open all of it from [the DeHub app](https://riftn.com/app) or the [DeHub Android app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 
 ### Gods Unchained
 
@@ -117,7 +117,7 @@ Often, yes. Crypto received from playing can be treated as income when you recei
 
 ### Where can I start for free right now?
 
-Open [the DeHub app](https://dehub.io/app) in a browser to try Last Chad Standing and the arcade with no deposit, or install the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) for the mobile-first experience with the arcade, watch-to-earn and the social feed in one place.`,
+Open [the DeHub app](https://riftn.com/app) in a browser to try Last Chad Standing and the arcade with no deposit, or install the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) for the mobile-first experience with the arcade, watch-to-earn and the social feed in one place.`,
   bannerImage: '/media/free-play-to-earn-games-no-investment-2026-banner.png',
   bannerImageAlt: 'DeHub free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base',
   author: { name: 'DeHub Team' },

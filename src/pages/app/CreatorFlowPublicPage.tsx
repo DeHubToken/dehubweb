@@ -26,7 +26,7 @@ export default function CreatorFlowPublicPage() {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[#090a0b] text-white">
-      <SEOHead title={title} description={description} url={`https://dehub.io/creator/flow/${id}`} image={flow?.coverUrl ?? undefined} />
+      <SEOHead title={title} description={description} url={`https://riftn.com/creator/flow/${id}`} image={flow?.coverUrl ?? undefined} />
       <header className="flex h-12 shrink-0 items-center gap-3 border-b border-white/10 bg-zinc-950/80 px-3 backdrop-blur-xl">
         <Link to="/creator/flow" className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:bg-white/10 hover:text-white" aria-label={t('creatorFlow.backToFlows')}>
           <ArrowLeft size={15} />

@@ -332,7 +332,7 @@ export default function FullWalletPage() {
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
     // attribute (portals escape this subtree).
     <div data-wallet-page className="min-h-screen">
-      <SEOHead title={_copy("copy.b98adf20f5f3", { defaultValue: "Wallet — Manage Your Crypto Assets" })} description={_copy("copy.00787feeb046", { defaultValue: "View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." })} url="https://dehub.io/app/wallet" />
+      <SEOHead title={_copy("copy.b98adf20f5f3", { defaultValue: "Wallet — Manage Your Crypto Assets" })} description={_copy("copy.00787feeb046", { defaultValue: "View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." })} url="https://riftn.com/app/wallet" />
       <h1 className="sr-only">{_copy("copy.112e22b0fd15", { defaultValue: "DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Back square only when navigated from command centre */}
       <PageIsland

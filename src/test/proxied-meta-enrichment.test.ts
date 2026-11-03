@@ -90,7 +90,7 @@ const postPage = (id: string, title: string, description: string, video = true, 
 <head>
   <title>${attr(title)}</title>
   <meta name="description" content="${attr(description)}">
-  <link rel="canonical" href="https://dehub.io/app/post/${id}">
+  <link rel="canonical" href="https://riftn.com/app/post/${id}">
   <meta property="og:type" content="${video ? 'video.other' : 'article'}">
   <meta property="og:title" content="${attr(title)}">
   <meta property="og:description" content="${attr(description)}">
@@ -106,7 +106,7 @@ ${video ? `  <meta property="og:video" content="https://dehubcdn.ams3.cdn.digita
         '@type': 'Article',
         headline: title,
         description,
-        url: `https://dehub.io/app/post/${id}`,
+        url: `https://riftn.com/app/post/${id}`,
         author: { '@type': 'Person', name: author },
       },
       { '@type': 'VideoObject', name: title, description },
@@ -124,7 +124,7 @@ const profilePage = (handle: string, description: string) => `<!DOCTYPE html>
 <head>
   <title>@${handle} on DeHub — posts, videos &amp; profile</title>
   <meta name="description" content="${attr(description)}">
-  <link rel="canonical" href="https://dehub.io/${handle}">
+  <link rel="canonical" href="https://riftn.com/${handle}">
   <meta property="og:description" content="${attr(description)}">
   <meta name="twitter:description" content="${attr(description)}">
 </head>
@@ -420,7 +420,7 @@ describe('profile description enrichment', () => {
 describe('profile titles', () => {
   const withPerson = (handle: string, name: string) =>
     profilePage(handle, 'A bio long enough to be left exactly as it was written, thanks.')
-      .replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name, url: `https://dehub.io/${handle}` })}</script>\n</head>`)
+      .replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name, url: `https://riftn.com/${handle}` })}</script>\n</head>`)
       .replace('</html>', `<body><h1>@${handle} on DeHub — posts, videos &amp; profile</h1></body></html>`);
 
   it('leads with the display name people search for, from the Person JSON-LD', () => {
@@ -531,7 +531,7 @@ describe('the body paragraph, not just the head', () => {
 </head><body>
   <h1>${attr(title)}</h1>
   <p>${attr(description)}</p>
-  <p><a class="dh-cta" href="https://dehub.io/app/post/1?app=1">View on DeHub</a></p>
+  <p><a class="dh-cta" href="https://riftn.com/app/post/1?app=1">View on DeHub</a></p>
 </body></html>`;
 
   const bodyProfile = (handle: string, description: string) => `<!DOCTYPE html>

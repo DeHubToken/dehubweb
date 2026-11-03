@@ -1,6 +1,6 @@
 /**
  * extractUrlsFromText used to require an explicit http(s):// scheme, so a
- * bare "dehub.io/work" typed into a comment or caption never got a preview
+ * bare "riftn.com/work" typed into a comment or caption never got a preview
  * card even though TranslatableText's own linkifier already turns the exact
  * same text into a clickable link. These pin the scheme-optional match and
  * the normalization that keeps every downstream caller (the fetch, cache
@@ -36,24 +36,24 @@ describe('shared link images', () => {
 
 describe('extractUrlsFromText', () => {
   it('matches a scheme-less domain and normalizes it to https', () => {
-    expect(extractUrlsFromText('check this out: dehub.io/work')).toEqual([
-      'https://dehub.io/work',
+    expect(extractUrlsFromText('check this out: riftn.com/work')).toEqual([
+      'https://riftn.com/work',
     ]);
   });
 
   it('leaves an already-schemed URL as written', () => {
-    expect(extractUrlsFromText('see http://dehub.io/work now')).toEqual([
-      'http://dehub.io/work',
+    expect(extractUrlsFromText('see http://riftn.com/work now')).toEqual([
+      'http://riftn.com/work',
     ]);
   });
 
   it('strips trailing sentence punctuation before normalizing', () => {
-    expect(extractUrlsFromText('link: dehub.io/work.')).toEqual(['https://dehub.io/work']);
-    expect(extractUrlsFromText('is this it (dehub.io/work)?')).toEqual(['https://dehub.io/work']);
+    expect(extractUrlsFromText('link: riftn.com/work.')).toEqual(['https://riftn.com/work']);
+    expect(extractUrlsFromText('is this it (riftn.com/work)?')).toEqual(['https://riftn.com/work']);
   });
 
   it('requires a path, so a bare domain with no slash is not a URL', () => {
-    expect(extractUrlsFromText('reach out at hello@dehub.io')).toEqual([]);
+    expect(extractUrlsFromText('reach out at hello@riftn.com')).toEqual([]);
   });
 
   it('does not match plain decimals or filenames', () => {
@@ -61,8 +61,8 @@ describe('extractUrlsFromText', () => {
   });
 
   it('dedupes repeated links, keyed by the normalized form', () => {
-    const found = extractUrlsFromText('dehub.io/work and again https://dehub.io/work');
-    expect(found).toEqual(['https://dehub.io/work']);
+    const found = extractUrlsFromText('riftn.com/work and again https://riftn.com/work');
+    expect(found).toEqual(['https://riftn.com/work']);
   });
 
   it('returns an empty array for text with no links', () => {

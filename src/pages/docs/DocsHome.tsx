@@ -111,7 +111,7 @@ const DocsHome = () => {
   }, {
     title: _copy("copy.2b9910127168", { defaultValue: "DeHub App" }),
     icon: ExternalLink,
-    path: 'https://dehub.io',
+    path: 'https://riftn.com',
     color: 'from-middle-blue to-royal-blue',
     external: true
   }];

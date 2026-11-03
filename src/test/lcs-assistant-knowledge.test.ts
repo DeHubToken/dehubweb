@@ -17,7 +17,7 @@ describe('LCS assistant knowledge', () => {
 
   it('points to the canonical guide and forbids volatile guesses', () => {
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain(
-      'https://dehub.io/guides/last-chad-standing-mma-battle-royale-play-to-earn'
+      'https://riftn.com/guides/last-chad-standing-mma-battle-royale-play-to-earn'
     );
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain('Never invent prize pools, reward rates');
     expect(LCS_ASSISTANT_KNOWLEDGE).toContain('Never present an old announcement as current fact');

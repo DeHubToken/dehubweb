@@ -187,7 +187,7 @@ for (const page of developerDocs.pages) {
   DOCS_SEO[page.route] = { title: page.seoTitle, description: page.description };
 }
 
-const BASE_URL = "https://dehub.io";
+const BASE_URL = "https://riftn.com";
 
 /** The en.ts docsSeo key stem for a DOCS_SEO slug. */
 const docsSeoKey = (slug: string): string =>

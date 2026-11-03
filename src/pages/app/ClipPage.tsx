@@ -70,7 +70,7 @@ export default function ClipPage() {
         title={`${title} — ${t('liveClips.seoSuffix', 'Clip on DeHub')}`}
         description={description}
         image={clip.card_url ?? undefined}
-        url={`https://dehub.io/clip/${clip.short_id}`}
+        url={`https://riftn.com/clip/${clip.short_id}`}
         type="video.other"
         jsonLd={{
           '@context': 'https://schema.org',

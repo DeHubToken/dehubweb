@@ -610,7 +610,7 @@ export default function MessagesPage() {
 
   return (
     <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
-      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://dehub.io/app/messages" />
+      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
       <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <div className="h-full lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries

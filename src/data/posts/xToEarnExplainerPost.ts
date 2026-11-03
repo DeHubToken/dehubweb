@@ -61,7 +61,7 @@ Judged this way, watch-to-earn and mature play-and-own tend to score best, becau
 
 Most x-to-earn apps do exactly one thing. DeHub is unusual in offering both **watch-to-earn** and **play-to-earn** inside a single platform, alongside creator tools, live streaming and on-chain tradable subscriptions. That matters for sustainability: the rewards are spread across multiple real revenue sources (advertising, tokenised uploads, subscriptions and games) rather than a single token faucet.
 
-It is built as [DeHub, the decentralised social network](/guides/what-is-dehub), so the "earn" sits on top of a product people use for its own sake, which is precisely the structure the healthiest x-to-earn models share. If you want to try it, the [DeHub app](https://dehub.io/app) is live on the web and on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+It is built as [DeHub, the decentralised social network](/guides/what-is-dehub), so the "earn" sits on top of a product people use for its own sake, which is precisely the structure the healthiest x-to-earn models share. If you want to try it, the [DeHub app](https://riftn.com/app) is live on the web and on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 
 ## Frequently asked questions
 

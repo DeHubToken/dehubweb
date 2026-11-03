@@ -156,20 +156,20 @@ export default function RafflePage() {
       <SEOHead
         title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on DeHub" })}
         description={pageDescription()}
-        image="https://dehub.io/og/raffle.jpg"
-        url="https://dehub.io/raffle"
+        image="https://riftn.com/og/raffle.jpg"
+        url="https://riftn.com/raffle"
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [
             {
               '@type': 'WebPage',
               name: _copy("copy.42478a42211c", { defaultValue: "DeHub Prize Draws" }),
-              url: 'https://dehub.io/raffle',
+              url: 'https://riftn.com/raffle',
               description: pageDescription(),
               isPartOf: {
                 '@type': 'WebSite',
                 name: 'DeHub',
-                url: 'https://dehub.io',
+                url: 'https://riftn.com',
               },
             },
             {

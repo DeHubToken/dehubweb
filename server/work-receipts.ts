@@ -47,7 +47,7 @@ async function rpc(chain: number, method: string, params: unknown[], fetcher: ty
 
 function response(request: Request, body: unknown, status = 200) {
   const origin = request.headers.get('Origin');
-  const allowed = origin && ['https://dehub.io','https://staging.dehub.io'].includes(origin);
+  const allowed = origin && ['https://riftn.com','https://dehub.io','https://staging.dehub.io'].includes(origin);
   return new Response(status === 204 ? null : JSON.stringify(body), { status, headers: {
     'Content-Type': 'application/json', 'Cache-Control': 'no-store',
     ...(allowed ? { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin' } : {}),

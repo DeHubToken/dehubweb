@@ -71,7 +71,7 @@ Do not delete anything. TikTok remains an unmatched top-of-funnel for finding ne
 
 ### 2. Set up your owned home base
 
-Create your account on [the DeHub app](https://dehub.io/app) or via [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Set up your wallet, claim your profile, and post a few pieces so the space is not empty when your audience arrives. Because you can mint uploads to your wallet on the spot, you can be building equity from your very first post.
+Create your account on [the DeHub app](https://riftn.com/app) or via [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Set up your wallet, claim your profile, and post a few pieces so the space is not empty when your audience arrives. Because you can mint uploads to your wallet on the spot, you can be building equity from your very first post.
 
 ### 3. Repurpose, do not just cross-post
 
@@ -95,7 +95,7 @@ A TikTok alternative UK creators own is not a magic money button, and it would b
 
 But if you are the kind of British creator who wants to own the relationship, set your own prices, earn a majority revenue share, and hold assets you can actually move, the case for building on DeHub in 2026 is strong, and it gets stronger the earlier you plant your flag. The creators who own their base now are the ones who will not be at the mercy of the next algorithm change.
 
-Ready to build somewhere you own? [Start on DeHub](https://dehub.io) and claim your handle before someone else does.
+Ready to build somewhere you own? [Start on DeHub](https://riftn.com) and claim your handle before someone else does.
 
 ## Frequently asked questions
 

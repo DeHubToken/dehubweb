@@ -31,7 +31,7 @@ export function DocsSEO() {
       headline: title,
       description,
       url: canonical,
-      isPartOf: { '@type': 'WebSite', name: 'DeHub Docs', url: 'https://dehub.io/docs' },
+      isPartOf: { '@type': 'WebSite', name: 'DeHub Docs', url: 'https://riftn.com/docs' },
     }}
   />;
 }

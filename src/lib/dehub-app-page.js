@@ -11,7 +11,7 @@
  * both render from this one object, so the two UA variants cannot drift.
  */
 
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 
 export const DEHUB_APP_LINKS = {
   googlePlay: 'https://play.google.com/store/apps/details?id=io.dehub.mobile',

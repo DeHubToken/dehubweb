@@ -103,14 +103,3 @@ export async function clearDeviceSeed(userId: string): Promise<void> {
     console.warn("[DeviceSeed] Could not clear the stored wallet:", e);
   }
 }
-
-/** True when this browser holds the words of at least one unsecured wallet. */
-export async function hasAnyDeviceSeed(): Promise<boolean> {
-  if (!usable()) return false;
-  try {
-    const db = await getDb();
-    return (await db.count(STORE)) > 0;
-  } catch {
-    return false;
-  }
-}

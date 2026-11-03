@@ -12,6 +12,6 @@ export const template = {
     subject: 'You received a tip',
     heading: 'You received a tip',
     body: 'alice tipped you 5 DHB on your video "Morning ride"',
-    actionUrl: 'https://dehub.io/app/post/1234',
+    actionUrl: 'https://riftn.com/app/post/1234',
   },
 } satisfies TemplateEntry

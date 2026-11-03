@@ -18,12 +18,12 @@ import { currentLiveReaction, forgetReactionSummary, reactionSummary, tokenIdFro
 
 describe('tokenIdFromPostUrl', () => {
   it('reads the post id from DeHub post links only', () => {
-    expect(tokenIdFromPostUrl('https://dehub.io/app/post/123')).toBe(123);
-    expect(tokenIdFromPostUrl('https://dehub.io/post/45?ref=x')).toBe(45);
+    expect(tokenIdFromPostUrl('https://riftn.com/app/post/123')).toBe(123);
+    expect(tokenIdFromPostUrl('https://riftn.com/post/45?ref=x')).toBe(45);
     expect(tokenIdFromPostUrl('https://staging.dehub.io/app/video/9')).toBe(9);
-    expect(tokenIdFromPostUrl('https://dehub.io.evil.io/app/post/1')).toBeNull();
+    expect(tokenIdFromPostUrl('https://riftn.com.evil.io/app/post/1')).toBeNull();
     expect(tokenIdFromPostUrl('http://dehub.io/app/post/1')).toBeNull();
-    expect(tokenIdFromPostUrl('https://dehub.io/app/post/abc')).toBeNull();
+    expect(tokenIdFromPostUrl('https://riftn.com/app/post/abc')).toBeNull();
   });
 });
 

@@ -675,7 +675,7 @@ export const cjy = {
     studioB5: '创建者流程与预设：',
     tocConverter: '转换器',
     converterTitle: '转换器：带来您的内容',
-    converterDesc: '将你在其他地方已拥有的内容发布到你的 DeHub 个人资料上，[dehub.io/converter](https://dehub.io/converter) 会将其转换为帖子。粘贴一个链接，查看它将如何发布，然后可以排队多个——它们会一个接一个在后台运行，并在你的网格中显示，你可以继续或重试。',
+    converterDesc: '将你在其他地方已拥有的内容发布到你的 DeHub 个人资料上，[dehub.io/converter](https://riftn.com/converter) 会将其转换为帖子。粘贴一个链接，查看它将如何发布，然后可以排队多个——它们会一个接一个在后台运行，并在你的网格中显示，你可以继续或重试。',
     converterB1: '二十一个来源：',
     converterB1Desc: 'YouTube、SoundCloud、Instagram等平台上发布的视频、音频或图片，具体形式取决于链接的类型。',
     converterB2: '迁移所有：',

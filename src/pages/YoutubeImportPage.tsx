@@ -339,8 +339,8 @@ export default function YoutubeImportPage() {
       <SEOHead
         title={t('converter.seoTitle')}
         description={t('converter.seoDescription')}
-        url="https://dehub.io/converter"
-        image="https://dehub.io/og/converter.jpg"
+        url="https://riftn.com/converter"
+        image="https://riftn.com/og/converter.jpg"
       />
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">

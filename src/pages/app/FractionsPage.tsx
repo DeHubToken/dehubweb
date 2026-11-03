@@ -43,8 +43,8 @@ export default function FractionsPage() {
       <SEOHead
         title={t('fractions.seoTitle')}
         description={t('fractions.seoDescription')}
-        url="https://dehub.io/app/fractions"
-        image="https://dehub.io/og/fractions.jpg"
+        url="https://riftn.com/app/fractions"
+        image="https://riftn.com/og/fractions.jpg"
       />
 
       <PageIsland

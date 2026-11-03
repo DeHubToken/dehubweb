@@ -131,7 +131,7 @@ async function decide(db: Db, who: Reviewer, action: string, slug: string, note:
         type: 'miniapp',
         content: MESSAGES[action](app.name, note),
         reference_id: app.slug,
-        reference_title: action === 'reject' || action === 'unlist' ? 'https://dehub.io/apps/dev' : null,
+        reference_title: action === 'reject' || action === 'unlist' ? 'https://riftn.com/apps/dev' : null,
       })),
     );
     if (notifyError) console.error('miniapp-admin notify failed', notifyError.message);

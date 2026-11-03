@@ -70,7 +70,7 @@ A clean, above-board setup takes about an evening. Here is the practical sequenc
 - **Log every reward as you earn it.** Date, token, quantity, and the sterling value that day. This one habit turns January's Self Assessment from a nightmare into a copy-and-paste job.
 - **Keep the FCA warning front of mind.** Only ever risk what you can afford to lose entirely.
 
-When you are ready, you can jump straight into the games and the feed at the [DeHub web app](https://dehub.io/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
+When you are ready, you can jump straight into the games and the feed at the [DeHub web app](https://riftn.com/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
 
 ## Why DeHub is a sensible UK starting point
 

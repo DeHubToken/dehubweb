@@ -42,7 +42,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
       {
         chainId: 'base',
         dexId: 'dehub',
-        url: 'https://dehub.io',
+        url: 'https://riftn.com',
         pairAddress: '',
         baseToken: {
           address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',

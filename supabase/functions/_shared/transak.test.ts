@@ -27,7 +27,7 @@ test("request bounds", () => {
 
 test("sell widget locks the order to our reference", () => {
   const cfg = { apiKey: "k", apiSecret: "s", env: "staging" as const, referrerDomain: "dehub.io" };
-  const p = sellWidgetParams(cfg, { orderId: "o", wallet: "0xabc", amount: 10, network: "bsc", redirectURL: "https://dehub.io" });
+  const p = sellWidgetParams(cfg, { orderId: "o", wallet: "0xabc", amount: 10, network: "bsc", redirectURL: "https://riftn.com" });
   assert.equal(p.productsAvailed, "SELL");
   assert.equal(p.partnerOrderId, "o");
   assert.equal(p.cryptoCurrencyCode, "USDC");

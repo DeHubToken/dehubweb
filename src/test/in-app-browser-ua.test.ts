@@ -148,12 +148,12 @@ describe('link-preview crawlers still get the prerendered HTML', () => {
 
 describe('appHref', () => {
   it('marks a bare URL', () => {
-    expect(appHref('https://dehub.io/r/ABC')).toBe('https://dehub.io/r/ABC?app=1');
+    expect(appHref('https://riftn.com/r/ABC')).toBe('https://riftn.com/r/ABC?app=1');
   });
 
   it('appends to a URL that already has a query', () => {
-    expect(appHref('https://dehub.io/app/post/7?ref=x')).toBe(
-      'https://dehub.io/app/post/7?ref=x&app=1',
+    expect(appHref('https://riftn.com/app/post/7?ref=x')).toBe(
+      'https://riftn.com/app/post/7?ref=x&app=1',
     );
   });
 
@@ -163,6 +163,6 @@ describe('appHref', () => {
    * whenever the two are in step.
    */
   it('leaves an already-marked URL alone', () => {
-    expect(appHref('https://dehub.io/r/ABC?app=1')).toBe('https://dehub.io/r/ABC?app=1');
+    expect(appHref('https://riftn.com/r/ABC?app=1')).toBe('https://riftn.com/r/ABC?app=1');
   });
 });

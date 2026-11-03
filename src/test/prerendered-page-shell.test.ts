@@ -20,18 +20,18 @@ const FN_PAGE = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <title>Someone invited you to DeHub</title>
   <meta name="description" content="Use invite code ABC123 to join DeHub.">
-  <meta property="og:image" content="https://dehub.io/card.jpg">
-  <link rel="canonical" href="https://dehub.io/r/ABC123">
+  <meta property="og:image" content="https://riftn.com/card.jpg">
+  <link rel="canonical" href="https://riftn.com/r/ABC123">
   <script type="application/ld+json">{"@type":"WebPage","name":"Invite"}</script>
 </head>
 <body style="font-family: sans-serif; background: black; color: white; display: flex;">
   <div style="max-width: 720px; text-align: center; padding: 20px;">
     <h1>Someone invited you to DeHub</h1>
     <p>Use invite code ABC123 to join DeHub.</p>
-    <img src="https://dehub.io/card.jpg" style="max-width: 100%;" alt="Invite" />
-    <p style="margin-top: 30px;"><a class="dh-cta" href="https://dehub.io/r/ABC123?app=1" rel="nofollow">View on DeHub</a></p>
+    <img src="https://riftn.com/card.jpg" style="max-width: 100%;" alt="Invite" />
+    <p style="margin-top: 30px;"><a class="dh-cta" href="https://riftn.com/r/ABC123?app=1" rel="nofollow">View on DeHub</a></p>
     <nav style="margin-top: 20px;">
-      <a href="https://dehub.io/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
+      <a href="https://riftn.com/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
     </nav>
   </div>
 </body>
@@ -42,10 +42,10 @@ const WORKER_PAGE = `<!DOCTYPE html>
 <html lang="en">
 <head><title>DeHub Docs — Overview</title><meta name="description" content="What DeHub is."></head>
 <body>
-<p><a href="https://dehub.io/">DeHub</a> › Overview</p>
+<p><a href="https://riftn.com/">DeHub</a> › Overview</p>
 <h1>Overview</h1>
 <p>What DeHub is.</p>
-<nav aria-label="DeHub sections"><h2>Explore DeHub</h2><ul><li><a href="https://dehub.io/app/music">Music</a></li></ul></nav>
+<nav aria-label="DeHub sections"><h2>Explore DeHub</h2><ul><li><a href="https://riftn.com/app/music">Music</a></li></ul></nav>
 </body>
 </html>`;
 
@@ -83,7 +83,7 @@ describe('stylePrerendered keeps everything a crawler came for', () => {
   });
 
   it('keeps the canonical', () => {
-    expect(stylePrerendered(FN_PAGE)).toContain('<link rel="canonical" href="https://dehub.io/r/ABC123">');
+    expect(stylePrerendered(FN_PAGE)).toContain('<link rel="canonical" href="https://riftn.com/r/ABC123">');
   });
 });
 

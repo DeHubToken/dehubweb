@@ -50,8 +50,8 @@ export default function LaunchpadPage() {
       <SEOHead
         title={t('launchpad.seoTitle')}
         description={t('launchpad.seoDescription')}
-        url="https://dehub.io/launchpad"
-        image="https://dehub.io/og/launchpad.jpg"
+        url="https://riftn.com/launchpad"
+        image="https://riftn.com/og/launchpad.jpg"
         noindex
       />
 

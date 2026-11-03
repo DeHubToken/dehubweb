@@ -31,7 +31,7 @@ export default function VideoRemix() {
     const mode: RemixMode | undefined = state?.mode === 'collab' ? 'duet' : state?.mode === 'cut' ? 'stitch' : state?.mode;
     if (!state || !mode || !['green-screen', 'duet', 'sound', 'stitch', 'react'].includes(mode)
       || typeof state.videoUrl !== 'string' || !state.videoUrl.startsWith('https://')
-      || typeof state.sourceUrl !== 'string' || !/^https:\/\/dehub\.io\/app\/post\/[^/?#]+$/.test(state.sourceUrl)) return null;
+      || typeof state.sourceUrl !== 'string' || !/^https:\/\/(?:riftn\.com|dehub\.io)\/app\/post\/[^/?#]+$/.test(state.sourceUrl)) return null;
     return { mode, videoUrl: state.videoUrl, sourceUrl: state.sourceUrl,
       title: String(state.title || 'Video').slice(0, 200), creator: typeof state.creator === 'string' ? state.creator.slice(0, 100) : undefined,
       layout: ['side', 'stacked', 'pip', 'behind'].includes(state.layout) ? state.layout as DuetLayout : undefined,

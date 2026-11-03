@@ -24,7 +24,7 @@ const env = {
   },
 };
 
-const serve = (path: string) => worker.fetch(new Request(`https://dehub.io${path}`), env);
+const serve = (path: string) => worker.fetch(new Request(`https://riftn.com${path}`), env);
 
 type Component = { '/': string; exclude?: boolean; caseSensitive?: boolean };
 

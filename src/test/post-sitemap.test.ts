@@ -76,8 +76,8 @@ describe('postSitemapXml', () => {
 
   it('emits qualifying posts only, at the canonical URL, lowest id first', () => {
     expect(locs(postSitemapXml(posts))).toEqual([
-      'https://dehub.io/app/post/10',
-      'https://dehub.io/app/post/30',
+      'https://riftn.com/app/post/10',
+      'https://riftn.com/app/post/30',
     ]);
   });
 
@@ -86,7 +86,7 @@ describe('postSitemapXml', () => {
       { tokenId: 41, name: REAL_CAPTION },
       { tokenId: 41, name: REAL_CAPTION },
     ]);
-    expect(locs(xml)).toEqual(['https://dehub.io/app/post/41']);
+    expect(locs(xml)).toEqual(['https://riftn.com/app/post/41']);
   });
 
   it('writes lastmod as a bare date, and omits it rather than emit a bad one', () => {
@@ -111,7 +111,7 @@ describe('postSitemapXml', () => {
       { name: REAL_CAPTION },
       { tokenId: 'abc', name: REAL_CAPTION },
       { tokenId: 7, name: REAL_CAPTION },
-    ]))).toEqual(['https://dehub.io/app/post/7']);
+    ]))).toEqual(['https://riftn.com/app/post/7']);
   });
 });
 

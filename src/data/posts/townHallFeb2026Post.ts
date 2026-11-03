@@ -18,7 +18,7 @@ We didn't expect Apple to be this stubborn. They even have a number we can call 
 
 In case you missed the previous update: The original plan was to begin campaigns this quarter for the launch of the mobile apps on Google and Apple, with the new web app under development and releasing later as part of its own marketing campaign. When Apple derailed that timeline, we pivoted instead of waiting. The team shifted the strategy to launching campaigns with the Google app and the web app instead of Apple, ensuring iOS users could still access DeHub through the browser.
 
-Launching campaigns with only the Google app would have been pointless and wasted budgets as half the world couldn't use the app. So we sprinted. We got the web app ready in under a month — even though it was initially projected to take three. You can now check it out at [dehub.io](https://dehub.io) — almost all features are live. It just needs a few more days (hopefully) of polish, and then we're truly rocking and rolling.
+Launching campaigns with only the Google app would have been pointless and wasted budgets as half the world couldn't use the app. So we sprinted. We got the web app ready in under a month — even though it was initially projected to take three. You can now check it out at [dehub.io](https://riftn.com) — almost all features are live. It just needs a few more days (hopefully) of polish, and then we're truly rocking and rolling.
 
 AI has helped accelerate development, but building an app of this size, with full cross-compatibility across app stores and web, still requires significant manual work. That said, we're here. And only days stand between us and the world beginning to hear about DeHub.
 

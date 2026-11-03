@@ -3,9 +3,9 @@
 // ?page=1 → tokenIds 1..50000, ?page=2 → 50001..100000, etc.
 //
 // We page through api.dehub.io/api/feed to enumerate real minted posts in
-// the target range (gaps skipped) and emit <loc>https://dehub.io/app/post/{id}</loc>.
+// the target range (gaps skipped) and emit <loc>https://riftn.com/app/post/{id}</loc>.
 
-const APP_URL = "https://dehub.io";
+const APP_URL = "https://riftn.com";
 const DEHUB_API_BASE = "https://api.dehub.io";
 const CHUNK_SIZE = 50000;
 

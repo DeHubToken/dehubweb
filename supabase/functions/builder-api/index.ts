@@ -337,7 +337,7 @@ function formatUsd(micros: number): string {
   return `$${(micros / 1_000_000).toFixed(micros < 10_000 ? 4 : 2)}`;
 }
 
-const TOP_UP_URL = "https://dehub.io/builder?topup=1";
+const TOP_UP_URL = "https://riftn.com/builder?topup=1";
 
 function paymentRequired(outcome: "short" | "error", model: BuilderModel, inputChars: number): Response {
   if (outcome === "error") return jsonResponse({ error: "Could not reach your credit balance. Try again in a moment." }, 503);
@@ -675,7 +675,7 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
         ? { review_state: "pending", submitted_at: new Date().toISOString() }
         : {};
       await db.from("miniapp_apps").update({ ...fields, ...review, status: "live", review_note: null }).eq("id", existing.id);
-      return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://dehub.io/apps/${existing.slug}` };
+      return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://riftn.com/apps/${existing.slug}` };
     }
   }
   let appSlug = project.slug!;
@@ -699,7 +699,7 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
     .single();
   if (error || !created) throw new Error(error?.message ?? "Could not publish this app");
   await db.from("builder_projects").update({ miniapp_app_id: created.id }).eq("id", project.id);
-  return { appSlug: created.slug, tier: created.tier, storeUrl: `https://dehub.io/apps/${created.slug}` };
+  return { appSlug: created.slug, tier: created.tier, storeUrl: `https://riftn.com/apps/${created.slug}` };
 }
 
 /** Take the app out of the store, keeping its listing so republishing restores it. */

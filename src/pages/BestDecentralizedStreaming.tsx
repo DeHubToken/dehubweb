@@ -190,7 +190,7 @@ function Figure({ src, alt }: { src: string; alt: string }) {
 
 export default function BestDecentralizedStreaming() {
   const { t: _copy } = _useCopy();
-  const url = 'https://dehub.io/guides/best-decentralized-streaming-apps';
+  const url = 'https://riftn.com/guides/best-decentralized-streaming-apps';
   const localized = usePublicPageLocale('/guides/best-decentralized-streaming-apps');
   const jsonLd = {
     '@context': 'https://schema.org',

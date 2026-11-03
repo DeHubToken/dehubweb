@@ -70,7 +70,7 @@ async function safeFetch(raw: string, method: "GET" | "HEAD" = "GET"): Promise<R
     const res = await fetch(parsed.toString(), {
       method,
       redirect: "manual",
-      headers: { "User-Agent": "dehub-miniapp-registry/1 (+https://dehub.io/apps/dev)", Accept: "*/*" },
+      headers: { "User-Agent": "dehub-miniapp-registry/1 (+https://riftn.com/apps/dev)", Accept: "*/*" },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     }).catch(() => null);
     if (!res) return null;

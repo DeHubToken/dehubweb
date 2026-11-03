@@ -3551,7 +3551,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             {!video.isAudio && !video.isLivePost && !video.isAd && !isContentGated && !requiresVideoAccess && !accessFallback
               && !contentWarning.hidden && (!video.visibility || video.visibility === 'public')
               && (isOwnPost || !video.quotePolicy || video.quotePolicy === 'public') && playableVideoUrl && (
-              <RemixMenuItems source={{ videoUrl: playableVideoUrl, sourceUrl: `https://dehub.io/app/post/${video.id}`,
+              <RemixMenuItems source={{ videoUrl: playableVideoUrl, sourceUrl: `https://riftn.com/app/post/${video.id}`,
                 title: video.title || 'Video', creator: video.creatorUsername, tokenId: String(video.id), creatorAddress: video.creatorId }}
                 isOwner={!!isOwnPost}
                 onStart={() => { videoRef.current?.pause(); setShowOptionsDrawer(false); }} />

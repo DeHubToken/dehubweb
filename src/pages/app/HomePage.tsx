@@ -1080,17 +1080,17 @@ export default function HomePage() {
           longer read as the home page. */}
       {tabFromPathname(location.pathname) === 'videos' ? (
         <>
-          <SEOHead title={t('videos.seoTitle')} description={t('videos.seoDescription')} url={HUB_ROUTE_META.videos.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: HUB_ROUTE_META.videos.url, description: t('videos.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('videos.seoTitle')} description={t('videos.seoDescription')} url={HUB_ROUTE_META.videos.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: HUB_ROUTE_META.videos.url, description: t('videos.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('videos.heading')}</h1>
         </>
       ) : tabFromPathname(location.pathname) === 'shorts' ? (
         <>
-          <SEOHead title={t('shorts.seoTitle')} description={t('shorts.seoDescription')} url={HUB_ROUTE_META.shorts.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: HUB_ROUTE_META.shorts.url, description: t('shorts.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('shorts.seoTitle')} description={t('shorts.seoDescription')} url={HUB_ROUTE_META.shorts.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: HUB_ROUTE_META.shorts.url, description: t('shorts.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('shorts.heading')}</h1>
         </>
       ) : (
         <>
-          <SEOHead title={t('home.seoTitle')} description={t('home.seoDescription')} url={HUB_ROUTE_META.home.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: HUB_ROUTE_META.home.url, description: t('home.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('home.seoTitle')} description={t('home.seoDescription')} url={HUB_ROUTE_META.home.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: HUB_ROUTE_META.home.url, description: t('home.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('home.seoTitle')}</h1>
         </>
       )}

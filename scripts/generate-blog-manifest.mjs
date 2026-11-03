@@ -31,7 +31,7 @@ import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES, cleanBlogSlug
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 // Hand-built React guide pages that also live under /guides/ — never touch
 // their sitemap entries and never treat them as manifest posts. The two older
 // ones now 301 into a post (CONSOLIDATED_GUIDES), so their rows are dropped.
@@ -348,7 +348,7 @@ const xmlEsc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').rep
 const smPath = path.join(PUBLIC, 'sitemap-static.xml');
 let sm = fs.readFileSync(smPath, 'utf8');
 sm = sm.replace(
-  /\s*<url>\s*<loc>https:\/\/dehub\.io\/guides\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
+  /\s*<url>\s*<loc>https:\/\/riftn\.com\/guides\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
   (block, slug) => (STANDALONE_GUIDES.has(decodeURIComponent(slug.trim())) ? block : '')
 );
 const blogUrls = sorted.map((p) => {
@@ -387,11 +387,11 @@ const allDocsRoutes = [...new Set([...docsRoutes, ...DOCS_META_ONLY])];
 // "now", and a sitemap stamping every page with today's date teaches Google to
 // ignore its lastmod.
 const docsLastmod = new Map(
-  [...sm.matchAll(/<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+  [...sm.matchAll(/<loc>https:\/\/riftn\.com\/docs\/([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
     .map(([, route, lastmod]) => [route.trim(), lastmod.trim()]),
 );
 sm = sm.replace(
-  /\s*<url>\s*<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
+  /\s*<url>\s*<loc>https:\/\/riftn\.com\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
   (block, sub) => (sub.trim() === 'blog' ? block : '')
 );
 const docsUrls = allDocsRoutes.map((r) => {

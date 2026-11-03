@@ -26,7 +26,7 @@ const SRC_FILES = ['src/features/work/components/JobCard.tsx', 'src/pages/app/Wo
 describe('bounty URLs', () => {
   it('builds the canonical shape', () => {
     expect(bountyPath({ job_number: 7 })).toBe('/bounty/7');
-    expect(bountyUrl({ job_number: 7 })).toBe('https://dehub.io/bounty/7');
+    expect(bountyUrl({ job_number: 7 })).toBe('https://riftn.com/bounty/7');
   });
 
   it('reserves `bounty` so no account can shadow the route', () => {

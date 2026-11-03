@@ -43,7 +43,7 @@ function fnHomepage(originalUrl: string) {
 <meta name="twitter:url" content="${originalUrl}">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"DeHub","sameAs":["https://x.com/DeHubApp"]}</script>
 </head>
-<body><h1>DeHub</h1><nav><a href="https://dehub.io/app/explore">Explore</a> <a href="https://dehub.io/app/stages">Stages</a> <a href="https://dehub.io/app/stake">Stake</a> <a href="https://dehub.io/guides">Blog</a></nav></body>
+<body><h1>DeHub</h1><nav><a href="https://riftn.com/app/explore">Explore</a> <a href="https://riftn.com/app/stages">Stages</a> <a href="https://riftn.com/app/stake">Stake</a> <a href="https://riftn.com/guides">Blog</a></nav></body>
 </html>`;
 }
 
@@ -81,7 +81,7 @@ function makeEnv() {
   };
 }
 
-async function get(path: string, ua = GOOGLEBOT, host = 'https://dehub.io') {
+async function get(path: string, ua = GOOGLEBOT, host = 'https://riftn.com') {
   const res = await worker.fetch(new Request(`${host}${path}`, { headers: { 'User-Agent': ua } }), makeEnv(), {
     waitUntil() {},
   });
@@ -138,9 +138,9 @@ describe('homepage canonical', () => {
     it(`does not self-canonicalise /${q}`, async () => {
       const { status, body } = await get(`/${q}`);
       expect(status).toBe(200);
-      expect(canonicalOf(body)).toBe('https://dehub.io/');
-      expect(ogUrlOf(body)).toBe('https://dehub.io/');
-      expect(twitterUrlOf(body)).toBe('https://dehub.io/');
+      expect(canonicalOf(body)).toBe('https://riftn.com/');
+      expect(ogUrlOf(body)).toBe('https://riftn.com/');
+      expect(twitterUrlOf(body)).toBe('https://riftn.com/');
       expect(body.match(/rel="canonical"/g)).toHaveLength(1);
     });
   }
@@ -151,20 +151,20 @@ describe('homepage canonical', () => {
     it(`301s /${q} to the bare homepage`, async () => {
       const { status, location } = await get(`/${q}`);
       expect(status).toBe(301);
-      expect(location).toBe('https://dehub.io/');
+      expect(location).toBe('https://riftn.com/');
     });
   }
 
   it('keeps the ?hl= self-canonical for a locale the page is translated into', async () => {
     const { body } = await get('/?hl=es&utm_source=x');
-    expect(canonicalOf(body)).toBe('https://dehub.io/?hl=es');
-    expect(ogUrlOf(body)).toBe('https://dehub.io/?hl=es');
-    expect(twitterUrlOf(body)).toBe('https://dehub.io/?hl=es');
+    expect(canonicalOf(body)).toBe('https://riftn.com/?hl=es');
+    expect(ogUrlOf(body)).toBe('https://riftn.com/?hl=es');
+    expect(twitterUrlOf(body)).toBe('https://riftn.com/?hl=es');
   });
 
   it('canonicalises a mirror host onto dehub.io', async () => {
     const { body } = await get('/?ref=abc', GOOGLEBOT, 'https://staging.dehub.io');
-    expect(canonicalOf(body)).toBe('https://dehub.io/');
+    expect(canonicalOf(body)).toBe('https://riftn.com/');
   });
 
   it('links the canonical twins, not /app/* or the /guides redirect', async () => {
@@ -172,9 +172,9 @@ describe('homepage canonical', () => {
     for (const bad of ['/app/explore"', '/app/stages"', '/app/stake"', 'dehub.io/guides"']) {
       expect(body, bad).not.toContain(bad);
     }
-    expect(body).toContain('href="https://dehub.io/stages"');
-    expect(body).toContain('href="https://dehub.io/stake"');
-    expect(body).toContain('href="https://dehub.io/docs/blog"');
+    expect(body).toContain('href="https://riftn.com/stages"');
+    expect(body).toContain('href="https://riftn.com/stake"');
+    expect(body).toContain('href="https://riftn.com/docs/blog"');
   });
 
   it('publishes the current brand profiles and not the dead CoinGecko page', async () => {
@@ -188,10 +188,10 @@ describe('homepage canonical', () => {
 describe('setPageUrl', () => {
   it('replaces every copy and adds what is missing', () => {
     const html = '<html><head><link rel="canonical" href="https://x/?a=1" /><meta property="og:url" content="https://x/?a=1"></head><body></body></html>';
-    const out = setPageUrl(html, 'https://dehub.io/');
+    const out = setPageUrl(html, 'https://riftn.com/');
     expect(out.match(/rel="canonical"/g)).toHaveLength(1);
-    expect(canonicalOf(out)).toBe('https://dehub.io/');
-    expect(ogUrlOf(out)).toBe('https://dehub.io/');
+    expect(canonicalOf(out)).toBe('https://riftn.com/');
+    expect(ogUrlOf(out)).toBe('https://riftn.com/');
     expect(out).not.toContain('twitter:url');
   });
 });
@@ -256,10 +256,10 @@ describe('entity misses', () => {
     };
     const pack = await get('/packs/lofi-drums');
     expect(pack.status).toBe(200);
-    expect(canonicalOf(pack.body)).toBe('https://dehub.io/packs/lofi-drums');
+    expect(canonicalOf(pack.body)).toBe('https://riftn.com/packs/lofi-drums');
     const pool = await get('/dex/base/0x0000000000000000000000000000000000000001');
     expect(pool.status).toBe(200);
-    expect(canonicalOf(pool.body)).toBe('https://dehub.io/dex/base/0x0000000000000000000000000000000000000001');
+    expect(canonicalOf(pool.body)).toBe('https://riftn.com/dex/base/0x0000000000000000000000000000000000000001');
   });
 
   it('404s a store id that cannot be a store', async () => {
@@ -336,29 +336,29 @@ describe('files that are not there', () => {
     for (const path of ['/uploads/DeHub-English-Whitepaper.pdf', '/uploads/DeHub%20White%20Paper.pdf', '/uploads/dehub_litepaper_v2.pdf']) {
       const res = await get(path, CHROME);
       expect(res.status, path).toBe(301);
-      expect(res.location).toBe('https://dehub.io/docs');
+      expect(res.location).toBe('https://riftn.com/docs');
     }
   });
 });
 
 describe('URL-space redirects', () => {
   it('lowercases docs and blog paths', async () => {
-    expect(await get('/Docs')).toMatchObject({ status: 301, location: 'https://dehub.io/docs' });
-    expect(await get('/DOCS/FAQ')).toMatchObject({ status: 301, location: 'https://dehub.io/docs/faq' });
+    expect(await get('/Docs')).toMatchObject({ status: 301, location: 'https://riftn.com/docs' });
+    expect(await get('/DOCS/FAQ')).toMatchObject({ status: 301, location: 'https://riftn.com/docs/faq' });
     expect(await get('/Guides/What-Is-Dehub')).toMatchObject({
       status: 301,
-      location: 'https://dehub.io/guides/what-is-dehub',
+      location: 'https://riftn.com/guides/what-is-dehub',
     });
-    expect(await get('/Guides')).toMatchObject({ status: 301, location: 'https://dehub.io/docs/blog' });
+    expect(await get('/Guides')).toMatchObject({ status: 301, location: 'https://riftn.com/docs/blog' });
   });
 
   it('301s /index.html to the homepage', async () => {
-    expect(await get('/index.html', CHROME)).toMatchObject({ status: 301, location: 'https://dehub.io/' });
+    expect(await get('/index.html', CHROME)).toMatchObject({ status: 301, location: 'https://riftn.com/' });
   });
 
   it('301s a profile deep path to the profile', async () => {
-    expect(await get('/aaron/anything/deeper')).toMatchObject({ status: 301, location: 'https://dehub.io/aaron' });
-    expect(await get('/@aaron/x', CHROME)).toMatchObject({ status: 301, location: 'https://dehub.io/aaron' });
+    expect(await get('/aaron/anything/deeper')).toMatchObject({ status: 301, location: 'https://riftn.com/aaron' });
+    expect(await get('/@aaron/x', CHROME)).toMatchObject({ status: 301, location: 'https://riftn.com/aaron' });
   });
 
   it('renders /%40user as the /@user profile for crawlers', async () => {
@@ -366,14 +366,14 @@ describe('URL-space redirects', () => {
       if (!u.pathname.endsWith('/ssr-seo')) return undefined;
       const user = (u.searchParams.get('path') || '').replace('/@', '');
       return new Response(
-        `<!DOCTYPE html><html><head><title>Join @${user} on DeHub today!</title><link rel="canonical" href="https://dehub.io/${user}"></head><body><p>hi</p></body></html>`,
+        `<!DOCTYPE html><html><head><title>Join @${user} on DeHub today!</title><link rel="canonical" href="https://riftn.com/${user}"></head><body><p>hi</p></body></html>`,
         { headers: { 'Content-Type': 'text/html' } },
       );
     };
     const res = await get('/%40aaron');
     expect(res.status).toBe(200);
     expect(upstreamCalls.some((c) => new URL(c).searchParams.get('path') === '/@aaron')).toBe(true);
-    expect(canonicalOf(res.body)).toBe('https://dehub.io/aaron');
+    expect(canonicalOf(res.body)).toBe('https://riftn.com/aaron');
   });
 });
 
@@ -434,8 +434,8 @@ describe('bounty indexability', () => {
 describe('site-wide crawler chrome', () => {
   it('links the canonical explore page and blog index', () => {
     const html = stylePrerendered('<html><head></head><body><p>x</p></body></html>');
-    expect(html).toContain('href="https://dehub.io/explore">Open DeHub');
-    expect(html).toContain('href="https://dehub.io/docs/blog">Blog');
+    expect(html).toContain('href="https://riftn.com/explore">Open DeHub');
+    expect(html).toContain('href="https://riftn.com/docs/blog">Blog');
     expect(html).not.toContain('/app/explore');
     expect(html).not.toContain('dehub.io/guides"');
   });
@@ -450,7 +450,7 @@ describe('robots.txt', () => {
   it('keeps crawlers out of the API relays and nothing else', () => {
     const disallows = robots.match(/^Disallow: .*$/gm);
     expect(disallows).toEqual(['Disallow: /_api/', 'Disallow: /_sb/', 'Disallow: /api/']);
-    expect(robots).toContain('Sitemap: https://dehub.io/sitemap.xml');
+    expect(robots).toContain('Sitemap: https://riftn.com/sitemap.xml');
   });
 });
 
@@ -484,7 +484,7 @@ describe('docs routes', () => {
     const res = await get('/docs/guidelines');
     expect(res.status).toBe(200);
     expect(res.body).toContain('Community Guidelines');
-    expect(res.body).toContain('https://dehub.io/og/docs.jpg');
-    expect(canonicalOf(res.body)).toBe('https://dehub.io/docs/guidelines');
+    expect(res.body).toContain('https://riftn.com/og/docs.jpg');
+    expect(canonicalOf(res.body)).toBe('https://riftn.com/docs/guidelines');
   });
 });
