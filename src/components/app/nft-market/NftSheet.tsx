@@ -212,8 +212,9 @@ export function NftSheet({
   const nft = detail.data?.nft;
   const name = isBundle
     ? t('nftMarket.bundleOf', { defaultValue: 'Bundle of {{n}}', n: bundle!.length })
-    : nft?.name || target?.name || `#${target?.tokenId ?? ''}`;
-  const image = nft?.image ?? target?.image ?? null;
+    : nft?.name?.trim() || target?.name?.trim() || `#${target?.tokenId ?? ''}`;
+  // The grid's CDN art first: it is already loaded, and the API's copy can be slower.
+  const image = target?.image ?? nft?.image ?? null;
   const collection = nft?.collectionName ?? target?.collectionName ?? null;
   const listings = detail.data?.listings ?? [];
   const offers = detail.data?.offers ?? [];
