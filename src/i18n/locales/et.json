@@ -5064,6 +5064,7 @@
     "yourFractions": "Sinu murded",
     "acrossPosts_one": "üle {{count}} postituse",
     "acrossPosts_other": "üle {{count}} postituse",
+    "deletedPosts": "Kustutatud postitused ({{count}})",
     "noneHeldYet": "Sul pole veel ühtegi murdu",
     "noneHeldHint": "Vermi postitus, et omada kõiki selle 1000 osa, või osta osa kellegi teise postitusest.",
     "listedForSale": "Müügiks loetletud",

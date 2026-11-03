@@ -5034,6 +5034,7 @@
     "yourFractions": "Фраксияҳои шумо",
     "acrossPosts_one": "дар тамоми {{count}} post",
     "acrossPosts_other": "дар тамоми {{count}} Заметки",
+    "deletedPosts": "Паёмҳои нестшуда ({{count}})",
     "noneHeldYet": "Hindi ka pa rin ng anumang mga fraction",
     "noneHeldHint": "Постеро минт кунед, то соҳиби ҳамаи 1000 ҳиссаи он шавед, ё аз пости каси дигар ҳисса харед.",
     "listedForSale": "Феҳрист барои фурӯш",

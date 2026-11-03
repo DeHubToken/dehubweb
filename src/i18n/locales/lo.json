@@ -5026,6 +5026,7 @@
     "yourFractions": "ສ່ວນຂອງທ່ານ",
     "acrossPosts_one": "ໃນ {{count}} ໂພສ",
     "acrossPosts_other": "ໃນ {{count}} ໂພສ",
+    "deletedPosts": "ໂພສທີ່ຖືກລຶບ ({{count}})",
     "noneHeldYet": "ທ່ານຍັງບໍ່ໄດ້ຖືສ່ວນໃດໆ",
     "noneHeldHint": "Mint ໂພສເພື່ອຖືຄອງທັງໝົດ 1000 ສ່ວນຂອງມັນ, ຫຼື ຊື້ເຂົ້າໃນໂພສຂອງຄົນອື່ນ.",
     "listedForSale": "ລາຍການຂາຍ",

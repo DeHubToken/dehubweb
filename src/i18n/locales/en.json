@@ -5209,6 +5209,7 @@
     "yourFractions": "Your fractions",
     "acrossPosts_one": "across {{count}} post",
     "acrossPosts_other": "across {{count}} posts",
+    "deletedPosts": "Deleted posts ({{count}})",
     "noneHeldYet": "You don't hold any fractions yet",
     "noneHeldHint": "Mint a post to hold all 1000 of its fractions, or buy into someone else's.",
     "listedForSale": "Listed for sale",

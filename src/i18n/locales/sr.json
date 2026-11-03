@@ -5067,6 +5067,7 @@
     "yourFractions": "Ваши разломци",
     "acrossPosts_one": "преко {{count}} поста",
     "acrossPosts_other": "преко {{count}} постова",
+    "deletedPosts": "Обрисане објаве ({{count}})",
     "noneHeldYet": "Још увек немате ниједан разломак",
     "noneHeldHint": "Искујте објаву да бисте држали свих њених 1000 удела, или купите део туђе објаве.",
     "listedForSale": "Нуди се на продају",

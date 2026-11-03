@@ -5044,6 +5044,7 @@
     "yourFractions": "Ko o koutou wehenga",
     "acrossPosts_one": "puta noa i {{count}} pou",
     "acrossPosts_other": "puta noa i {{count}} pou",
+    "deletedPosts": "Ngā pou kua mukua ({{count}})",
     "noneHeldYet": "E kore koe e pupuri i tetahi wahi",
     "noneHeldHint": "Whakaputaina tētahi pou kia mau i a koe ōna wāhanga 1000 katoa, hokona mai rānei he wāhanga o te pou a tētahi atu.",
     "listedForSale": "Kua whakarārangitia mō te hoko",

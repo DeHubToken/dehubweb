@@ -5032,6 +5032,7 @@
     "yourFractions": "Qaybahaaga",
     "acrossPosts_one": "badiyadka to{{count}} post",
     "acrossPosts_other": "badiyadka to{{count}} posts",
+    "deletedPosts": "Qoraallada la tirtiray ({{count}})",
     "noneHeldYet": "Ilaa iyo hadda ma jiraan wax war ah oo ka soo baxay dhinacyada.",
     "noneHeldHint": "Mint-garee qoraal si aad u haysato dhammaan 1000-kiisa qaybood, ama iibso qayb ka mid ah qoraal qof kale.",
     "listedForSale": "Liiska iibka",

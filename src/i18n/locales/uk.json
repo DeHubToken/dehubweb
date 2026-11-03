@@ -5425,6 +5425,7 @@
     "yourFractions": "Ваші частки",
     "acrossPosts_one": "у {{count}} дописі",
     "acrossPosts_other": "у {{count}} дописах",
+    "deletedPosts": "Видалені дописи ({{count}})",
     "noneHeldYet": "У вас ще немає жодних часток",
     "noneHeldHint": "Викарбуйте допис, щоб володіти всіма його 1000 частками, або купіть частку в чужому дописі.",
     "listedForSale": "Виставлено на продаж",

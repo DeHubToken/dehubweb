@@ -5069,6 +5069,7 @@
     "yourFractions": "আপনার ফ্র্যাকশন",
     "acrossPosts_one": "অক্স্রস {{count}} পোস্ট",
     "acrossPosts_other": "{{count}} পোস্টের উপর",
+    "deletedPosts": "মুছি ফেলা পোস্ট ({{count}})",
     "noneHeldYet": "আপনার কোনো ফ্রেকশন নেই যেটা বেচা-খরা আছে",
     "noneHeldHint": "একটা পোস্ট মিন্ট গরি এর 1000টা ফ্র্যাকশনই রাখন, নইলে অন্য কেউর পোস্টত কিনন।",
     "listedForSale": "বিক্রির তালিকাভুক্ত",

@@ -4947,6 +4947,7 @@
     "yourFractions": "كسورك",
     "acrossPosts_one": "عبر {{count}} بوست",
     "acrossPosts_other": "عبر {{count}} بوستات",
+    "deletedPosts": "منشورات محذوفة ({{count}})",
     "noneHeldYet": "ما عندك كسورش منشووش",
     "noneHeldHint": "اسك بوست عشان تمتلك الـ1000 جزء بتوعه كلهم، أو اشتري في بوست حد تاني.",
     "listedForSale": "مستعمله للبيع",

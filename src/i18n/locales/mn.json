@@ -5050,6 +5050,7 @@
     "yourFractions": "ТАНЫ БҮТЭЭГДЭХҮҮН",
     "acrossPosts_one": "даяар {{count}} post",
     "acrossPosts_other": "{{count}} Posts дээр дарна уу",
+    "deletedPosts": "Устгагдсан нийтлэлүүд ({{count}})",
     "noneHeldYet": "Та одоохондоо нэг ч бутархай агуулаагүй",
     "noneHeldHint": "Нийтлэлээ минт хийж түүний бүх 1000 хувьцааг эзэмшээрэй, эсвэл бусдын нийтлэлээс хувьцаа худалдаж аваарай.",
     "listedForSale": "Хямдарсан",

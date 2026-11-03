@@ -5085,6 +5085,7 @@
     "yourFractions": "หุ้นของคุณ",
     "acrossPosts_one": "ข้าม {{count}} โพสต์",
     "acrossPosts_other": "ข้าม {{count}} โพสต์",
+    "deletedPosts": "โพสต์ที่ถูกลบ ({{count}})",
     "noneHeldYet": "คุณยังไม่ถือหุ้นใดๆ",
     "noneHeldHint": "มินต์โพสต์เพื่อถือครองเศษส่วนทั้ง 1000 ของโพสต์นั้น หรือซื้อเข้าไปในโพสต์ของคนอื่น",
     "listedForSale": "ขายแล้ว",

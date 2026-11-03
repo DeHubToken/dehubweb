@@ -5069,6 +5069,7 @@
     "yourFractions": "Az Ön törtjei",
     "acrossPosts_one": "{{count}} poszt között",
     "acrossPosts_other": "{{count}} posztok között",
+    "deletedPosts": "Törölt bejegyzések ({{count}})",
     "noneHeldYet": "Még nem rendelkezel törtekkel",
     "noneHeldHint": "Verj NFT-vé egy posztot, hogy mind az 1000 részesedését birtokold, vagy vásárolj be valaki más posztjába.",
     "listedForSale": "Eladásra kijelölt",

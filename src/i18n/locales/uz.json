@@ -5068,6 +5068,7 @@
     "yourFractions": "Kasrlaringiz",
     "acrossPosts_one": "Across {{count}} post",
     "acrossPosts_other": "Across {{count}} posts",
+    "deletedPosts": "Oʻchirilgan postlar ({{count}})",
     "noneHeldYet": "Siz hali fraksiyalarga ega emasiz",
     "noneHeldHint": "Postning barcha 1000 ta fraksiyasiga egalik qilish uchun uni mint qiling yoki boshqa birovning postidan ulush sotib oling.",
     "listedForSale": "Sotilayotgan roʻyxatda",

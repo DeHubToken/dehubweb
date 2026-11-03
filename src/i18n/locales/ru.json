@@ -5082,6 +5082,7 @@
     "yourFractions": "Ваши доли",
     "acrossPosts_one": "в {{count}} посте",
     "acrossPosts_other": "в {{count}} постах",
+    "deletedPosts": "Удалённые посты ({{count}})",
     "noneHeldYet": "У вас еще нет долей",
     "noneHeldHint": "Сминтите пост, чтобы владеть всеми его 1000 долями, или купите долю в чужом.",
     "listedForSale": "Выставлено на продажу",

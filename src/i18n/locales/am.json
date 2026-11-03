@@ -5085,6 +5085,7 @@
     "yourFractions": "የእርስዎ ክፍሎች",
     "acrossPosts_one": "በመላ {{count}} ፖስት",
     "acrossPosts_other": "በመላ {{count}} ልጥፎች",
+    "deletedPosts": "የተሰረዙ ልጥፎች ({{count}})",
     "noneHeldYet": "እስካሁን ድረስ ምንም ክፍልፍሎች የሉዎትም",
     "noneHeldHint": "ሁሉንም 1000 ክፍልፋዮቹን ለመያዝ ልጥፍ ይምቱ፣ ወይም የሌላ ሰው ልጥፍ ድርሻ ይግዙ።",
     "listedForSale": "ለሽያጭ ተዘርዝሯል",

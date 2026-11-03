@@ -5033,6 +5033,7 @@
     "yourFractions": "您的份额",
     "acrossPosts_one": "跨 {{count}} 帖子",
     "acrossPosts_other": "跨 {{count}} 帖子",
+    "deletedPosts": "已删除的帖子（{{count}}）",
     "noneHeldYet": "您尚未持有任何份额",
     "noneHeldHint": "铸造一个帖子就能持有它全部 1000 份碎片，或者买入别人嘞帖子。",
     "listedForSale": "待售清单",

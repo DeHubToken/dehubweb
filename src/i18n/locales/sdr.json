@@ -4929,6 +4929,7 @@
     "yourFractions": "قطعات شما",
     "acrossPosts_one": "در {{count}} پست",
     "acrossPosts_other": "{{count}} पोस्ट सभ में",
+    "deletedPosts": "हटाए गए पोस्ट ({{count}})",
     "noneHeldYet": "شما هنوز هیچ قطعه‌ای ندارید",
     "noneHeldHint": "کوئی پوسٹ مِنٹ کرو تاکہ اس کے سارے 1000 فریکشن تمہارے پاس ہوں، یا کسی اور کی پوسٹ میں خریدو۔",
     "listedForSale": "فروش در دست است",

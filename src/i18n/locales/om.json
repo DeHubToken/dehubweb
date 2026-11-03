@@ -5060,6 +5060,7 @@
     "yourFractions": "Firaakshinoota kee",
     "acrossPosts_one": "karaa {{count}} maxxansa",
     "acrossPosts_other": "maxxansa {{count}} hunda irratti",
+    "deletedPosts": "Barreeffamoota haqaman ({{count}})",
     "noneHeldYet": "Ammatti firaakshinii tokkollee hin qabdu",
     "noneHeldHint": "Qooda isaa 1000 hunda qabaachuuf maxxansaa tokko mint godhi, ykn maxxansaa nama biraa keessaa bitadhu.",
     "listedForSale": "Gurgurtaaf tarreeffameera",

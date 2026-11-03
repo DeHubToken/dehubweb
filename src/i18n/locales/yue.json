@@ -5050,6 +5050,7 @@
     "yourFractions": "你嘅分數",
     "acrossPosts_one": "對面 {{count}} 帖子",
     "acrossPosts_other": "跨越 {{count}} 帖子",
+    "deletedPosts": "已刪除嘅帖文（{{count}}）",
     "noneHeldYet": "你仲未攞到任何分數",
     "noneHeldHint": "鑄造一個帖子就可以持有佢全部 1000 份碎片，或者買入其他人嘅帖子。",
     "listedForSale": "上市出售",

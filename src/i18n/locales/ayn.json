@@ -4981,6 +4981,7 @@
     "yourFractions": "أجزاءك",
     "acrossPosts_one": "على {{count}} قائمة",
     "acrossPosts_other": "على {{count}} قوائم",
+    "deletedPosts": "منشورات محذوفة ({{count}})",
     "noneHeldYet": "لا تزال لا تحتفظ بأي أجزاء حتى الآن",
     "noneHeldHint": "اسكّ منشور عشان تملك كل أجزائه الـ1000، أو اشترِ حصة في منشور حد ثاني.",
     "listedForSale": "قائمة للبيع",

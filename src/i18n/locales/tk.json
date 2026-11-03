@@ -5028,6 +5028,7 @@
     "yourFractions": "Seniň bölekleriň",
     "acrossPosts_one": "{{count}} ýazgyda",
     "acrossPosts_other": "{{count}} Posts",
+    "deletedPosts": "Pozulan ýazgylar ({{count}})",
     "noneHeldYet": "Sen henizem hiç bir bölekleri saklamaýarsyň",
     "noneHeldHint": "Ýazgyny mint edip, onuň ähli 1000 paýyna eýe boluň ýa-da başga biriniň ýazgysyndan paý satyn alyň.",
     "listedForSale": "Satylýan ýerler",

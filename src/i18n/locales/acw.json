@@ -4914,6 +4914,7 @@
     "yourFractions": "أجزاءك",
     "acrossPosts_one": "على {{count}} منشور",
     "acrossPosts_other": "على {{count}} منشورات",
+    "deletedPosts": "منشورات محذوفة ({{count}})",
     "noneHeldYet": "ما عندكش غير قطعش حاليا",
     "noneHeldHint": "اسكّ منشور عشان تملك كل أجزاءه الـ 1000، أو اشترِ حصة في منشور غيرك.",
     "listedForSale": "قطع متاحة للبيع",

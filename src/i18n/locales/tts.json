@@ -4954,6 +4954,7 @@
     "yourFractions": "ส่วนของคุณ",
     "acrossPosts_one": "กระจายไปยัง {{count}} โพสต์",
     "acrossPosts_other": "กระจายไปยัง {{count}} โพสต์",
+    "deletedPosts": "โพสต์ที่ถืกลบ ({{count}})",
     "noneHeldYet": "คุณยังไม่ถือส่วนใดๆ",
     "noneHeldHint": "มินต์โพสต์เพื่อถือส่วนแบ่งทั้งหมด 1000 ส่วนของมัน หรือซื้อส่วนแบ่งในโพสต์ของคนอื่น",
     "listedForSale": "ขายอยู่",

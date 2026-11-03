@@ -5018,6 +5018,7 @@
     "yourFractions": "अपन अपन दरबज्जा",
     "acrossPosts_one": "{{count}} पोस्ट पर",
     "acrossPosts_other": "{{count}} पोस्ट्स पर",
+    "deletedPosts": "हटावल पोस्ट ({{count}})",
     "noneHeldYet": "अब तक न हई केन्द्र",
     "noneHeldHint": "कउनो पोस्ट मिंट करू आउ ओकर सब 1000 फ़्रैक्शन रखू, या केकरो दोसर के पोस्ट में खरीदू।",
     "listedForSale": "बिक्री के लिए कैलक्यूलेटर",

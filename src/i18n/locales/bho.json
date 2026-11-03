@@ -4970,6 +4970,7 @@
     "yourFractions": "तेरे हिस्से",
     "acrossPosts_one": "{{count}} पोस्ट पर",
     "acrossPosts_other": "{{count}} पोस्ट्स पर",
+    "deletedPosts": "हटावल पोस्ट ({{count}})",
     "noneHeldYet": "तेरे पास अभी कोई हिस्सा नही है",
     "noneHeldHint": "कवनो पोस्ट मिंट करीं आ ओकर सगरी 1000 फ़्रैक्शन रखीं, भा केहू दोसरा के पोस्ट में खरीदीं।",
     "listedForSale": "बिकने के लिए सूचीबद्ध",

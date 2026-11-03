@@ -5065,6 +5065,7 @@
     "yourFractions": "Fracțiunile tale",
     "acrossPosts_one": "pe {{count}} postare",
     "acrossPosts_other": "pe {{count}} postări",
+    "deletedPosts": "Postări șterse ({{count}})",
     "noneHeldYet": "Nu deții încă nicio fracțiune",
     "noneHeldHint": "Mintează o postare pentru a deține toate cele 1000 de fracțiuni ale ei sau cumpără din postarea altcuiva.",
     "listedForSale": "Listate pentru vânzare",

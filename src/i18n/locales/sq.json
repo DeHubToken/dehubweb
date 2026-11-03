@@ -5066,6 +5066,7 @@
     "yourFractions": "Fraksionet e tua",
     "acrossPosts_one": "nëpër {{count}} post",
     "acrossPosts_other": "postimet nëpër {{count}}",
+    "deletedPosts": "Postime të fshira ({{count}})",
     "noneHeldYet": "Nuk ke ende asnjë fraksion",
     "noneHeldHint": "Minto një postim për të mbajtur të 1000 pjesët e tij, ose bli pjesë në postimin e dikujt tjetër.",
     "listedForSale": "Listuar për shitje",

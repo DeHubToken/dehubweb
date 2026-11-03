@@ -5210,6 +5210,7 @@
     "yourFractions": "Paylarınız",
     "acrossPosts_one": "{{count}} gönderide",
     "acrossPosts_other": "{{count}} gönderide",
+    "deletedPosts": "Silinen gönderiler ({{count}})",
     "noneHeldYet": "Henüz hiç payınız yok",
     "noneHeldHint": "Bir gönderiyi mint ederek 1000 payının tamamına sahip olun ya da başkasının gönderisinden pay alın.",
     "listedForSale": "Satışta listelenen",
