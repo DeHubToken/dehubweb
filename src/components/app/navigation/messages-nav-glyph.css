@@ -1,0 +1,30 @@
+.messages-nav-glyph { position: relative; display: inline-flex; overflow: visible; }
+.messages-nav-glyph__letter { display: none; }
+/* Phones only. Desktop keeps the sidebar and its count chip unchanged. */
+@media (max-width: 767px) {
+  .messages-nav-glyph {
+    --messages-letter: var(--stage-accent, currentColor);
+    --messages-letter-line: rgb(0 0 0 / .35);
+  }
+  html:is([data-theme='light'], [data-system-tone='light']) .messages-nav-glyph { --messages-letter-line: rgb(255 255 255 / .6); }
+  .messages-nav-glyph__letter {
+    display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+    overflow: visible; pointer-events: none;
+  }
+  .messages-nav-glyph__card {
+    transform-box: view-box;
+    transform: translateY(-2.6px);
+    animation: messages-letter-peek 3.9s cubic-bezier(.3,.7,.3,1) both;
+  }
+}
+@keyframes messages-letter-peek {
+  0% { transform: translateY(6px); }
+  9% { transform: translateY(-5px); }
+  20% { transform: translateY(0); }
+  42% { transform: translateY(-5px); }
+  53% { transform: translateY(0); }
+  75% { transform: translateY(-5px); }
+  88%, 100% { transform: translateY(-2.6px); }
+}
+html.reduce-motion .messages-nav-glyph__card { animation: none; }
+@media (prefers-reduced-motion: reduce) { .messages-nav-glyph__card { animation: none !important; } }
