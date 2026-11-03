@@ -1095,7 +1095,7 @@ export const cjy = {
     burnedTokens: '已销毁代币',
     buybackInfo: '回购信息',
     emissionsSchedule: '排放时间表',
-    emissionsDesc: '$DHB 代币遵循可控嘞排放模式。',
+    emissionsDesc: '$RIFT 代币遵循可控嘞排放模式。',
     supplyDistribution: '供应分配',
     communitySales: '社区销售与空投',
     burn: '燒傷',

@@ -1090,7 +1090,7 @@ export const jv = {
     useAiTitle: 'Generasi AI',
     useRewardsDesc: 'Kanggo ngarani payout, ngawakti reward, buntian saka kontén lan kampanye komunitas yén udah dipublikasi, ngendi-ngendi ngarani saka ngawakti deni dhuwur saka Riftn token.',
     title: 'Ringkasan',
-    intro: 'Riftn tokens adalah mata uang utilitas asli jaringan Riftn; DHB adalah simbol ticker-nya. Mereka adalah satuan akun tunggal di setiap d\'app — hal yang kamu gunakan untuk memberi tip, membuka konten, mendapatkan dengan menonton dan menciptakan, serta menghabiskan untuk generasi AI. Karena mereka ada di rantai blok, setiap gerakan nilai di ekosistem ini dapat diverifikasi secara publik daripada tersimpan di buku besar pribadi yang harus kita percaya.',
+    intro: 'Riftn tokens adalah mata uang utilitas asli jaringan Riftn; $RIFT adalah simbol ticker-nya. Mereka adalah satuan akun tunggal di setiap d\'app — hal yang kamu gunakan untuk memberi tip, membuka konten, mendapatkan dengan menonton dan menciptakan, serta menghabiskan untuk generasi AI. Karena mereka ada di rantai blok, setiap gerakan nilai di ekosistem ini dapat diverifikasi secara publik daripada tersimpan di buku besar pribadi yang harus kita percaya.',
     howItWorksTitle: 'Bagaimana mata uang bekerja di dalam aplikasi',
     howItWorksDesc2: 'Memegang dan menstaking juga mengubah perilaku aplikasi untukmu. Semakin banyak Riftn tokens yang kamu miliki, semakin rendah biaya platformmu dan semakin banyak kemampuan yang terbuka — badge, verifikasi, boost tren, tingkat klub, dan hak yang diperluas di seluruh jaringan. Dalam praktiknya, mata uang ini bukan tambahan: itu adalah lapisan izin, rel insentif, dan kasir sekaligus.',
     useCasesTitle: 'Untuk apa digunakan',

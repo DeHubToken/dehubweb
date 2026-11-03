@@ -1103,7 +1103,7 @@ export const acw = {
     salesTitle: 'المبيعات',
     supplyDistribution: 'توزيع المعروض',
     title: 'اقتصاديات التوكن',
-    subtitle: 'اقتصاديات وتوزيع ومعلومات إصدار توكن DHB.',
+    subtitle: 'اقتصاديات وتوزيع ومعلومات إصدار توكن $RIFT.',
     totalSupply: 'الإجمالي',
     circulatingSupply: 'المتداول',
     burned: 'المحروق',
