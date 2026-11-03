@@ -1747,6 +1747,12 @@
     "nOthers": "{{count}} mìíràn",
     "burstBody": "{{count}} ìkìlọ̀ tuntun láti ọ̀dọ̀ {{who}}",
     "community": {
+      "chatOne": "{{name}} fi ìfiránṣẹ́ ránṣẹ́",
+      "chatOneNamed": "{{name}} fi ìfiránṣẹ́ ránṣẹ́ nínú “{{community}}”",
+      "chatMany": "{{name}} + àwọn {{others}} mìíràn fi àwọn ìfiránṣẹ́ ránṣẹ́",
+      "chatTwo": "{{name}} àti {{second}} fi àwọn ìfiránṣẹ́ ránṣẹ́",
+      "chatTwoNamed": "{{name}} àti {{second}} fi àwọn ìfiránṣẹ́ ránṣẹ́ nínú “{{community}}”",
+      "chatManyNamed": "{{name}} + àwọn {{others}} mìíràn fi àwọn ìfiránṣẹ́ ránṣẹ́ nínú “{{community}}”",
       "joined": "{{name}} darapọ mọ agbegbe rẹ",
       "joinedNamed": "{{name}} darapọ mọ \"{{community}}@\"",
       "requested": "{{name}} beere lati darapọ mọ agbegbe rẹ",

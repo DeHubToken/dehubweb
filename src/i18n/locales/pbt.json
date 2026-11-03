@@ -1735,6 +1735,12 @@
     "nOthers": "{{count}} نور",
     "burstBody": "{{count}} نوي خبرتیاوې له {{who}} څخه",
     "community": {
+      "chatOne": "{{name}} یو پیغام واستاوه",
+      "chatOneNamed": "{{name}} په «{{community}}» کې یو پیغام واستاوه",
+      "chatMany": "{{name}} + {{others}} نورو پیغامونه واستول",
+      "chatTwo": "{{name}} او {{second}} پیغامونه واستول",
+      "chatTwoNamed": "{{name}} او {{second}} په «{{community}}» کې پیغامونه واستول",
+      "chatManyNamed": "{{name}} + {{others}} نورو په «{{community}}» کې پیغامونه واستول",
       "joined": "{{name}} د تواټه ټولنې ته لېږدول شول",
       "joinedNamed": "{{name}} د “{{community}}” ټولنې ته لېږدول شول",
       "requested": "{{name}} د تواټه ټولنې ته غوښتنه وکړه",
@@ -1749,6 +1755,9 @@
     "tipTokens": "{{amount}} ټوکنونه",
     "tokenAmount": "{{amount}} ټوکنونه",
     "custom": {
+      "publicChatMention": "{{name}} په عامه چټ کې ستاسو یادونه وکړه",
+      "liveChatMention": "{{name}} په ژوندۍ چټ کې ستاسو یادونه وکړه",
+      "postMention": "{{name}} په یوه پوسټ کې ستاسو یادونه وکړه",
       "featureLikeNamed": "{{name}} ستاسو د فیچر غوښتنه \"{{title}}\" خوښه کړه",
       "featureLike": "{{name}} ستاسو د فیچر غوښتنه خوښه کړه",
       "featureCommentNamed": "{{name}} ستاسو د فیچر غوښتنې \"{{title}}\" په اړه تبصره وکړه",

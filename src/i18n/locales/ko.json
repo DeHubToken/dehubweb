@@ -1779,6 +1779,7 @@
     "tipTokens": "{{amount}} 토큰",
     "tokenAmount": "{{amount}} 토큰",
     "custom": {
+      "repostedPosts": "{{name}} 님이 회원님의 게시물 {{count}}개를 다시 게시했습니다",
       "featureLikeNamed": "{{name}}는 \" {{title}}\"라는 기능 요청에 좋아요를 눌렀습니다.",
       "featureLike": "{{name}}는 기능 요청에 좋아요를 눌렀습니다.",
       "featureCommentNamed": "{{name}}는 \" {{title}}\"라는 기능 요청에 댓글을 남겼습니다.",

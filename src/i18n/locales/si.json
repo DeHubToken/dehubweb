@@ -1745,6 +1745,12 @@
     "nOthers": "තවත් {{count}} ක්",
     "burstBody": "{{count}} නව දැනුම්දීම් {{who}} වෙතින්",
     "community": {
+      "chatOne": "{{name}} පණිවිඩයක් යැව්වා",
+      "chatOneNamed": "{{name}} “{{community}}” හි පණිවිඩයක් යැව්වා",
+      "chatMany": "{{name}} + තවත් {{others}} දෙනෙක් පණිවිඩ යැව්වා",
+      "chatTwo": "{{name}} සහ {{second}} පණිවිඩ යැව්වා",
+      "chatTwoNamed": "{{name}} සහ {{second}} “{{community}}” හි පණිවිඩ යැව්වා",
+      "chatManyNamed": "{{name}} + තවත් {{others}} දෙනෙක් “{{community}}” හි පණිවිඩ යැව්වා",
       "joined": "{{name}} ඔබේ ප්‍රජාවට එක් විය",
       "joinedNamed": "{{name}} “{{community}}” හා සම්බන්ධ විය",
       "requested": "{{name}} ඔබේ ප්‍රජාව හා සම්බන්ධ වීමට ඉල්ලා සිටියේය",
@@ -1759,6 +1765,7 @@
     "tipTokens": "{{amount}} ටෝකන්",
     "tokenAmount": "{{amount}} ටෝකන්",
     "custom": {
+      "repostedPosts": "{{name}} ඔබේ පළ කිරීම් {{count}}ක් නැවත පළ කළේය",
       "featureLikeNamed": "{{name}} ඔබේ විශේෂාංග ඉල්ලීම “{{title}}” ට කැමැත්ත පළ කළේය",
       "featureCommentNamed": "{{name}} ඔබේ විශේෂාංග ඉල්ලීම මත අදහස් දැක්වීය “{{title}}”",
       "featureComment": "{{name}} ඔබේ විශේෂාංග ඉල්ලීම මත අදහස් දැක්වීය",

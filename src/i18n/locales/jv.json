@@ -1731,6 +1731,12 @@
     "nOthers": "{{count}} liyane",
     "burstBody": "{{count}} kabar anyar saka {{who}}",
     "community": {
+      "chatOne": "{{name}} ngirim pesen",
+      "chatOneNamed": "{{name}} ngirim pesen ing “{{community}}”",
+      "chatMany": "{{name}} + {{others}} liyane ngirim pesen",
+      "chatTwo": "{{name}} lan {{second}} ngirim pesen",
+      "chatTwoNamed": "{{name}} lan {{second}} ngirim pesen ing “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} liyane ngirim pesen ing “{{community}}”",
       "joined": "{{name}} gabung ing komunitasmu",
       "joinedNamed": "{{name}} gabung ing “{{community}}”",
       "requested": "{{name}} njaluk gabung ing komunitasmu",
@@ -1745,6 +1751,9 @@
     "tipTokens": "{{amount}} token",
     "tokenAmount": "{{amount}} token",
     "custom": {
+      "publicChatMention": "{{name}} nyebut sampeyan ing obrolan umum",
+      "liveChatMention": "{{name}} nyebut sampeyan ing obrolan langsung",
+      "postMention": "{{name}} nyebut sampeyan ing postingan",
       "featureLikeNamed": "{{name}} seneng karo pangajenganmu \"{{title}}\"",
       "featureLike": "{{name}} seneng karo permintaanmu",
       "featureCommentNamed": "{{name}} nglayani omong-omongé \"{{title}}\"",

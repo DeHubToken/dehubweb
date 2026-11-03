@@ -1756,6 +1756,12 @@
     "nOthers": "abanye abangu-{{count}}",
     "burstBody": "{{count}} izaziso ezintsha ezivela ku {{who}}",
     "community": {
+      "chatOne": "U-{{name}} uthumele umlayezo",
+      "chatOneNamed": "U-{{name}} uthumele umlayezo ku-“{{community}}”",
+      "chatMany": "U-{{name}} + abanye abangu-{{others}} bathumele imilayezo",
+      "chatTwo": "U-{{name}} no-{{second}} bathumele imilayezo",
+      "chatTwoNamed": "U-{{name}} no-{{second}} bathumele imilayezo ku-“{{community}}”",
+      "chatManyNamed": "U-{{name}} + abanye abangu-{{others}} bathumele imilayezo ku-“{{community}}”",
       "joined": "{{name}} ujoyine umphakathi wakini",
       "joinedNamed": "{{name}} ujoyine \"{{community}}\"",
       "requested": "{{name}} ucele ukujoyina umphakathi wakini",

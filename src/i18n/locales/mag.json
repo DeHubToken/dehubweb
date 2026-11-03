@@ -1732,6 +1732,12 @@
     "nOthers": "{{count}} अउर",
     "burstBody": "{{count}} नई सूचनाएं {{who}} से",
     "community": {
+      "chatOne": "{{name}} एगो मैसेज भेजलक",
+      "chatOneNamed": "{{name}} “{{community}}” में एगो मैसेज भेजलक",
+      "chatMany": "{{name}} + {{others}} आउ लोग मैसेज भेजलन",
+      "chatTwo": "{{name}} आउ {{second}} मैसेज भेजलन",
+      "chatTwoNamed": "{{name}} आउ {{second}} “{{community}}” में मैसेज भेजलन",
+      "chatManyNamed": "{{name}} + {{others}} आउ लोग “{{community}}” में मैसेज भेजलन",
       "joined": "{{name}} ने तुझको समुदाय में शामिल कर लिया",
       "joinedNamed": "{{name}} ने “{{community}}” समुदाय में शामिल हो गया",
       "requested": "{{name}} ने तुझको समुदाय में शामिल होने का अनुरोध किया",
@@ -1746,6 +1752,9 @@
     "tipTokens": "{{amount}} टोकन",
     "tokenAmount": "{{amount}} टोकन",
     "custom": {
+      "publicChatMention": "{{name}} पब्लिक चैट में तोहर जिक्र कइलक",
+      "liveChatMention": "{{name}} लाइव चैट में तोहर जिक्र कइलक",
+      "postMention": "{{name}} एगो पोस्ट में तोहर जिक्र कइलक",
       "featureLikeNamed": "{{name}} ने तुझको फीचर रिक्वेस्ट “{{title}}” को पसंद किया",
       "featureLike": "{{name}} ने फीचर रिक्वेस्ट को पसंद किया",
       "featureCommentNamed": "{{name}} ने फीचर रिक्वेस्ट “{{title}}” पर टिप्पणी की",

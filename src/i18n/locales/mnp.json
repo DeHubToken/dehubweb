@@ -1703,6 +1703,12 @@
     "nOthers": "{{count}} 个其他人",
     "burstBody": "{{count}} 条新通知来自 {{who}}",
     "community": {
+      "chatOne": "{{name}} 發了一條消息",
+      "chatOneNamed": "{{name}} 在「{{community}}」發了一條消息",
+      "chatMany": "{{name}} + 另外 {{others}} 人發了消息",
+      "chatTwo": "{{name}} 和 {{second}} 發了消息",
+      "chatTwoNamed": "{{name}} 和 {{second}} 在「{{community}}」發了消息",
+      "chatManyNamed": "{{name}} + 另外 {{others}} 人在「{{community}}」發了消息",
       "joined": "{{name}} 伓入你个社区",
       "joinedNamed": "{{name}} 伓入“{{community}}”",
       "requested": "{{name}} 乞求伓入你个社区",
@@ -1717,6 +1723,9 @@
     "tipTokens": "{{amount}} 代幣",
     "tokenAmount": "{{amount}} 代幣",
     "custom": {
+      "publicChatMention": "{{name}} 在公開聊天中提到了你",
+      "liveChatMention": "{{name}} 在直播聊天中提到了你",
+      "postMention": "{{name}} 在帖子中提到了你",
       "featureLikeNamed": "{{name}}喜欢您的功能请求“{{title}}”",
       "featureLike": "{{name}} 你的功能請求被喜歡了",
       "featureCommentNamed": "{{name}} 在你的功能請求「{{title}}」上留了言",

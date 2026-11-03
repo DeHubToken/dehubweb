@@ -1742,6 +1742,12 @@
     "nOthers": "{{count}} ಇತರರು",
     "burstBody": "{{count}} ಹೊಸ ಅಧಿಸೂಚನೆಗಳು {{who}} ರಿಂದ",
     "community": {
+      "chatOne": "{{name}} ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "chatOneNamed": "{{name}} “{{community}}” ನಲ್ಲಿ ಸಂದೇಶ ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "chatMany": "{{name}} + ಇನ್ನೂ {{others}} ಜನ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "chatTwo": "{{name}} ಮತ್ತು {{second}} ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "chatTwoNamed": "{{name}} ಮತ್ತು {{second}} “{{community}}” ನಲ್ಲಿ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ",
+      "chatManyNamed": "{{name}} + ಇನ್ನೂ {{others}} ಜನ “{{community}}” ನಲ್ಲಿ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಿದ್ದಾರೆ",
       "joined": "{{name}}@ ನಿಮ್ಮ ಸಮುದಾಯಕ್ಕೆ ಸೇರಿದ್ದಾರೆ",
       "joinedNamed": "{{name}} @ \"{{community}}\" ಸೇರಿಕೊಂಡರು",
       "requested": "{{name}} @ ನಿಮ್ಮ ಸಮುದಾಯಕ್ಕೆ ಸೇರಲು ಕೇಳಿದ್ದಾರೆ",

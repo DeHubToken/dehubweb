@@ -1796,6 +1796,12 @@
     "nOthers": "আরও {{count}} জন",
     "burstBody": "{{count}} থেকে নতুন নোটিফিকেশন {{who}}",
     "community": {
+      "chatOne": "{{name}} একটা মেসেজ পাঠাইছে",
+      "chatOneNamed": "{{name}} “{{community}}”-ত একটা মেসেজ পাঠাইছে",
+      "chatMany": "{{name}} + আরো {{others}} জন মেসেজ পাঠাইছে",
+      "chatTwo": "{{name}} আর {{second}} মেসেজ পাঠাইছে",
+      "chatTwoNamed": "{{name}} আর {{second}} “{{community}}”-ত মেসেজ পাঠাইছে",
+      "chatManyNamed": "{{name}} + আরো {{others}} জন “{{community}}”-ত মেসেজ পাঠাইছে",
       "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিয়েছে",
       "joinedNamed": "{{name}} \"{{community}}\" এ যোগ দিয়েছে",
       "requested": "{{name}} আপনার কমিউনিটিতে যোগ দিতে চেয়েছে",
@@ -1810,6 +1816,9 @@
     "tipTokens": "{{amount}} টোকেন",
     "tokenAmount": "{{amount}} টোকেন",
     "custom": {
+      "publicChatMention": "{{name}} পাবলিক চ্যাটত তোমাৰ নাম মেনশন কৰিছে",
+      "liveChatMention": "{{name}} লাইভ চ্যাটত তোমাৰ নাম মেনশন কৰিছে",
+      "postMention": "{{name}} কোনো পোস্টত তোমাৰ নাম মেনশন কৰিছে",
       "featureLikeNamed": "{{name}} তোমার ফিচার রিকুয়েস্ট “{{title}}” পছন্দ করেছে",
       "featureLike": "{{name}} তোমার ফিচার রিকুয়েস্ট পছন্দ করেছে",
       "featureCommentNamed": "{{name}} আপনার ফিচার রিকোয়েস্ট “{{title}}”-এ মন্তব্য করেছে",

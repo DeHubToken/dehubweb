@@ -1796,6 +1796,12 @@
     "nOthers": "{{count}} pa",
     "burstBody": "{{count}} bagong notipikasyon mula sa {{who}}",
     "community": {
+      "chatOne": "Nagpadala ng mensahe si {{name}}",
+      "chatOneNamed": "Nagpadala ng mensahe si {{name}} sa “{{community}}”",
+      "chatMany": "Nagpadala ng mga mensahe si {{name}} + {{others}} iba pa",
+      "chatTwo": "Nagpadala ng mga mensahe sina {{name}} at {{second}}",
+      "chatTwoNamed": "Nagpadala ng mga mensahe sina {{name}} at {{second}} sa “{{community}}”",
+      "chatManyNamed": "Nagpadala ng mga mensahe si {{name}} + {{others}} iba pa sa “{{community}}”",
       "joined": "Sumali sa iyong komunidad si {{name}}",
       "joinedNamed": "Sumali si {{name}} sa “{{community}}”",
       "requested": "Hiniling ni {{name}} na sumali sa iyong komunidad",

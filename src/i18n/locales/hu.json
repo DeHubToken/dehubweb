@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} másik",
     "burstBody": "{{count}} új értesítés innen: {{who}}",
     "community": {
+      "chatOne": "{{name}} üzenetet küldött",
+      "chatOneNamed": "{{name}} üzenetet küldött ide: „{{community}}”",
+      "chatMany": "{{name}} + {{others}} másik üzeneteket küldtek",
+      "chatTwo": "{{name}} és {{second}} üzeneteket küldtek",
+      "chatTwoNamed": "{{name}} és {{second}} üzeneteket küldtek ide: „{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} másik üzeneteket küldtek ide: „{{community}}”",
       "joined": "{{name}} csatlakozott a közösségedhez",
       "joinedNamed": "{{name}} csatlakozott: „{{community}}”",
       "requested": "{{name}} kérte, hogy csatlakozhasson a közösségedhez",

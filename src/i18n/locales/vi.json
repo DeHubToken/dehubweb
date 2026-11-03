@@ -1770,6 +1770,12 @@
     "nOthers": "{{count}} người khác",
     "burstBody": "{{count}} thông báo mới từ {{who}}",
     "community": {
+      "chatOne": "{{name}} đã gửi một tin nhắn",
+      "chatOneNamed": "{{name}} đã gửi một tin nhắn trong “{{community}}”",
+      "chatMany": "{{name}} + {{others}} người khác đã gửi tin nhắn",
+      "chatTwo": "{{name}} và {{second}} đã gửi tin nhắn",
+      "chatTwoNamed": "{{name}} và {{second}} đã gửi tin nhắn trong “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} người khác đã gửi tin nhắn trong “{{community}}”",
       "joined": "{{name}} đã tham gia cộng đồng của bạn",
       "joinedNamed": "{{name}} đã tham gia “{{community}}”",
       "requested": "{{name}} đã yêu cầu tham gia cộng đồng của bạn",

@@ -1728,6 +1728,12 @@
     "nOthers": "{{count}} تانيين",
     "burstBody": "{{count}} إشعارات جديدة من {{who}}",
     "community": {
+      "chatOne": "{{name}} رسّل رسالة",
+      "chatOneNamed": "{{name}} رسّل رسالة في “{{community}}”",
+      "chatMany": "{{name}} + {{others}} تانين رسّلوا رسايل",
+      "chatTwo": "{{name}} و{{second}} رسّلوا رسايل",
+      "chatTwoNamed": "{{name}} و{{second}} رسّلوا رسايل في “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} تانين رسّلوا رسايل في “{{community}}”",
       "joined": "{{name}} انضم لمجموعتك",
       "joinedNamed": "{{name}} انضم لـ “{{community}}”",
       "requested": "{{name}} طلب الانضمام لمجموعتك",

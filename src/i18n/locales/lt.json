@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} kitų",
     "burstBody": "{{count}} naujų pranešimų iš {{who}}",
     "community": {
+      "chatOne": "{{name}} išsiuntė žinutę",
+      "chatOneNamed": "{{name}} išsiuntė žinutę bendruomenėje „{{community}}“",
+      "chatMany": "{{name}} + dar {{others}} išsiuntė žinučių",
+      "chatTwo": "{{name}} ir {{second}} išsiuntė žinučių",
+      "chatTwoNamed": "{{name}} ir {{second}} išsiuntė žinučių bendruomenėje „{{community}}“",
+      "chatManyNamed": "{{name}} + dar {{others}} išsiuntė žinučių bendruomenėje „{{community}}“",
       "joined": "{{name}} prisijungė prie jūsų bendruomenės",
       "joinedNamed": "{{name}} prisijungė prie „{{community}}“",
       "requested": "{{name}} paprašė prisijungti prie jūsų bendruomenės",

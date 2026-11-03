@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} andra",
     "burstBody": "{{count}} nya aviseringar från {{who}}",
     "community": {
+      "chatOne": "{{name}} skickade ett meddelande",
+      "chatOneNamed": "{{name}} skickade ett meddelande i ”{{community}}”",
+      "chatMany": "{{name}} + {{others}} andra skickade meddelanden",
+      "chatTwo": "{{name}} och {{second}} skickade meddelanden",
+      "chatTwoNamed": "{{name}} och {{second}} skickade meddelanden i ”{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} andra skickade meddelanden i ”{{community}}”",
       "joined": "{{name}} gick med i din community",
       "joinedNamed": "{{name}} gick med i \"{{community}}\"",
       "requested": "{{name}} ombedd att gå med i din community",

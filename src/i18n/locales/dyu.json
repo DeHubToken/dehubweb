@@ -1742,6 +1742,12 @@
     "nOthers": "{{count}} kɔrɔbɔ",
     "burstBody": "{{count}} kibaru kura {{who}} fɛ",
     "community": {
+      "chatOne": "{{name}} ye cikan dɔ ci",
+      "chatOneNamed": "{{name}} ye cikan dɔ ci “{{community}}” kɔnɔ",
+      "chatMany": "{{name}} + mɔgɔ {{others}} wɛrɛw ye cikanw ci",
+      "chatTwo": "{{name}} ni {{second}} ye cikanw ci",
+      "chatTwoNamed": "{{name}} ni {{second}} ye cikanw ci “{{community}}” kɔnɔ",
+      "chatManyNamed": "{{name}} + mɔgɔ {{others}} wɛrɛw ye cikanw ci “{{community}}” kɔnɔ",
       "joined": "{{name}} don na i ka jamana kɔnɔ",
       "joinedNamed": "{{name}} joined {{community}}",
       "requested": "{{name}} ka don i ka sigida la",
@@ -1756,6 +1762,8 @@
     "tipTokens": "{{amount}} tɔkɛns",
     "tokenAmount": "{{amount}} tɔkɛns",
     "custom": {
+      "liveChatMention": "{{name}} y’i tɔgɔ fɔ live chat kɔnɔ",
+      "postMention": "{{name}} y’i tɔgɔ fɔ positi dɔ kɔnɔ",
       "featureLikeNamed": "{{name}} i ka ɲinini “{{title}}” nɔgɔya",
       "featureLike": "{{name}} i ka ɲinini nɔgɔya",
       "featureCommentNamed": "{{name}} i ka ɲinini “{{title}}” kɔnɔ kɔmenti kɛ",

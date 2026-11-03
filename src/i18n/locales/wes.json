@@ -1691,6 +1691,12 @@
     "oneOther": "1 oda",
     "nOthers": "{{count}} oda",
     "community": {
+      "chatOne": "{{name}} send message",
+      "chatOneNamed": "{{name}} send message for “{{community}}”",
+      "chatMany": "{{name}} + {{others}} oda pipul send message dem",
+      "chatTwo": "{{name}} an {{second}} send message dem",
+      "chatTwoNamed": "{{name}} an {{second}} send message dem for “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} oda pipul send message dem for “{{community}}”",
       "joined": "{{name}} join your community",
       "joinedNamed": "{{name}} join “{{community}}”",
       "requested": "{{name}} ask to join your community",
@@ -1705,6 +1711,8 @@
     "tipTokens": "{{amount}} token",
     "tokenAmount": "{{amount}} token",
     "custom": {
+      "publicChatMention": "{{name}} mention yu long public chat",
+      "liveChatMention": "{{name}} mention yu long live chat",
       "featureLikeNamed": "{{name}} like yu feature request “{{title}}”",
       "featureLike": "{{name}} like yu feature request",
       "featureCommentNamed": "{{name}} don kamkpepia feature request {{title}}.",

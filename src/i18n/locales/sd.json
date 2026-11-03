@@ -1732,6 +1732,12 @@
     "nOthers": "{{count}} ٻيا",
     "burstBody": "{{count}} نوان نوٽيفڪيشن {{who}} کان",
     "community": {
+      "chatOne": "{{name}} هڪ پيغام موڪليو",
+      "chatOneNamed": "{{name}} “{{community}}” ۾ هڪ پيغام موڪليو",
+      "chatMany": "{{name}} + {{others}} ٻين پيغام موڪليا",
+      "chatTwo": "{{name}} ۽ {{second}} پيغام موڪليا",
+      "chatTwoNamed": "{{name}} ۽ {{second}} “{{community}}” ۾ پيغام موڪليا",
+      "chatManyNamed": "{{name}} + {{others}} ٻين “{{community}}” ۾ پيغام موڪليا",
       "joined": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيو",
       "joinedNamed": "{{name}} شامل ٿيو “{{community}}",
       "requested": "{{name}} توهان جي ڪميونٽي ۾ شامل ٿيڻ لاءِ چيو",

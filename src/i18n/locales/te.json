@@ -1750,6 +1750,12 @@
     "nOthers": "{{count}} ఇతరులు",
     "burstBody": "{{count}} కొత్త నోటిఫికేషన్‌లు {{who}} నుండి",
     "community": {
+      "chatOne": "{{name}} ఒక సందేశం పంపారు",
+      "chatOneNamed": "{{name}} “{{community}}”లో ఒక సందేశం పంపారు",
+      "chatMany": "{{name}} + మరో {{others}} మంది సందేశాలు పంపారు",
+      "chatTwo": "{{name}} మరియు {{second}} సందేశాలు పంపారు",
+      "chatTwoNamed": "{{name}} మరియు {{second}} “{{community}}”లో సందేశాలు పంపారు",
+      "chatManyNamed": "{{name}} + మరో {{others}} మంది “{{community}}”లో సందేశాలు పంపారు",
       "joined": "{{name}}@ మీ కమ్యూనిటీలో చేరారు",
       "joinedNamed": "{{name}}@ \"{{community}}\" లో చేరారు",
       "requested": "{{name}} మీ కమ్యూనిటీలో చేరమని అడిగారు",

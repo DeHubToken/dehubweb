@@ -1756,6 +1756,12 @@
     "nOthers": "{{count}} kanneen biroo",
     "burstBody": "{{count}} beeksisa haaraa {{who}} irraa",
     "community": {
+      "chatOne": "{{name}} ergaa erge",
+      "chatOneNamed": "{{name}} “{{community}}” keessatti ergaa erge",
+      "chatMany": "{{name}} + warri biroo {{others}} ergaawwan ergan",
+      "chatTwo": "{{name}} fi {{second}} ergaawwan ergan",
+      "chatTwoNamed": "{{name}} fi {{second}} “{{community}}” keessatti ergaawwan ergan",
+      "chatManyNamed": "{{name}} + warri biroo {{others}} “{{community}}” keessatti ergaawwan ergan",
       "joined": "{{name}} hawaasa keessanitti makame",
       "joinedNamed": "{{name}} “{{community}}”tti makame.",
       "requested": "{{name}} hawaasa keessanitti makamuuf gaafatan",

@@ -1734,6 +1734,12 @@
     "nOthers": "{{count}} अउ",
     "burstBody": "{{count}} नए सूचनाएं {{who}} से",
     "community": {
+      "chatOne": "{{name}} ह एक मैसेज भेजिस",
+      "chatOneNamed": "{{name}} ह “{{community}}” म एक मैसेज भेजिस",
+      "chatMany": "{{name}} + {{others}} अउ मन मैसेज भेजिन",
+      "chatTwo": "{{name}} अउ {{second}} मैसेज भेजिन",
+      "chatTwoNamed": "{{name}} अउ {{second}} “{{community}}” म मैसेज भेजिन",
+      "chatManyNamed": "{{name}} + {{others}} अउ मन “{{community}}” म मैसेज भेजिन",
       "joined": "{{name}} तोर समुदाय म जुड़गे",
       "joinedNamed": "{{name}} “{{community}}” म जुड़गे",
       "requested": "{{name}} अपन समुदाय म शामिल होए बर अनुरोध करिस",
@@ -1748,6 +1754,9 @@
     "tipTokens": "{{amount}} टोकन",
     "tokenAmount": "{{amount}} टोकन",
     "custom": {
+      "publicChatMention": "{{name}} ह पब्लिक चैट म तोर जिक्र करिस",
+      "liveChatMention": "{{name}} ह लाइव चैट म तोर जिक्र करिस",
+      "postMention": "{{name}} ह एक पोस्ट म तोर जिक्र करिस",
       "featureLike": "{{name}} tes amour अउ आप के अनुरोध ल पसंद करत हंव",
       "featureCommentNamed": "{{name}} ने आपकी फीचर रिक्वेस्ट “{{title}}” पर कमेंट किया है।",
       "featureComment": "{{name}} ने आपकी विशेषता पर कमेंट किया",

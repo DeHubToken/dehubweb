@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} citi",
     "burstBody": "{{count}} jauni paziņojumi no {{who}}",
     "community": {
+      "chatOne": "{{name}} nosūtīja ziņu",
+      "chatOneNamed": "{{name}} nosūtīja ziņu kopienā “{{community}}”",
+      "chatMany": "{{name}} + vēl {{others}} nosūtīja ziņas",
+      "chatTwo": "{{name}} un {{second}} nosūtīja ziņas",
+      "chatTwoNamed": "{{name}} un {{second}} nosūtīja ziņas kopienā “{{community}}”",
+      "chatManyNamed": "{{name}} + vēl {{others}} nosūtīja ziņas kopienā “{{community}}”",
       "joined": "{{name}} pievienojās jūsu kopienai",
       "joinedNamed": "{{name}} pievienojās “{{community}}”",
       "requested": "{{name}} lūdza pievienoties jūsu kopienai",

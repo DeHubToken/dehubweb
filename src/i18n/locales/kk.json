@@ -1767,6 +1767,12 @@
     "nOthers": "{{count}} басқа",
     "burstBody": "{{count}} жаңа хабарлама {{who}}-дан",
     "community": {
+      "chatOne": "{{name}} хабарлама жіберді",
+      "chatOneNamed": "{{name}} «{{community}}» қауымдастығында хабарлама жіберді",
+      "chatMany": "{{name}} + тағы {{others}} адам хабарламалар жіберді",
+      "chatTwo": "{{name}} және {{second}} хабарламалар жіберді",
+      "chatTwoNamed": "{{name}} және {{second}} «{{community}}» қауымдастығында хабарламалар жіберді",
+      "chatManyNamed": "{{name}} + тағы {{others}} адам «{{community}}» қауымдастығында хабарламалар жіберді",
       "joined": "{{name}} Сіздің қауымдастығыңызға қосылды",
       "joinedNamed": "{{name}} «{{community}}» қосылды",
       "requested": "{{name}} Сіздің қауымдастығыңызға қосылуды сұрады",

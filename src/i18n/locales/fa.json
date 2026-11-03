@@ -1756,6 +1756,12 @@
     "nOthers": "{{count}} نفر دیگر",
     "burstBody": "{{count}} اعلان جدید از {{who}}",
     "community": {
+      "chatOne": "{{name}} یک پیام فرستاد",
+      "chatOneNamed": "{{name}} در «{{community}}» یک پیام فرستاد",
+      "chatMany": "{{name}} + {{others}} نفر دیگر پیام فرستادند",
+      "chatTwo": "{{name}} و {{second}} پیام فرستادند",
+      "chatTwoNamed": "{{name}} و {{second}} در «{{community}}» پیام فرستادند",
+      "chatManyNamed": "{{name}} + {{others}} نفر دیگر در «{{community}}» پیام فرستادند",
       "joined": "{{name}} به انجمن شما پیوست",
       "joinedNamed": "{{name}} به «{{community}}» پیوست",
       "requested": "{{name}} از شما خواسته شده است که به انجمن شما بپیوندد",

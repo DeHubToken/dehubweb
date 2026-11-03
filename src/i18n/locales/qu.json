@@ -1750,6 +1750,12 @@
     "nOthers": "{{count}} hukkuna",
     "burstBody": "{{count}} musuq willakuykuna {{who}}manta",
     "community": {
+      "chatOne": "{{name}} willakuyta apachirqan",
+      "chatOneNamed": "{{name}} “{{community}}” nisqapi willakuyta apachirqan",
+      "chatMany": "{{name}} + {{others}} wakkuna willakuykunata apachirqanku",
+      "chatTwo": "{{name}} {{second}} ima willakuykunata apachirqanku",
+      "chatTwoNamed": "{{name}} {{second}} ima “{{community}}” nisqapi willakuykunata apachirqanku",
+      "chatManyNamed": "{{name}} + {{others}} wakkuna “{{community}}” nisqapi willakuykunata apachirqanku",
       "joined": "{{name}} llaqtaykiman hukllawakurqa",
       "joinedNamed": "{{name}} “{{community}}” nisqaman hukllawakurqan.",
       "requested": "{{name}} llaqtaykiman hukllawakunanpaq mañakurqa",

@@ -1761,6 +1761,12 @@
     "nOthers": "{{count}} innych",
     "burstBody": "{{count}} nowych powiadomień od {{who}}",
     "community": {
+      "chatOne": "{{name}} wysłał(a) wiadomość",
+      "chatOneNamed": "{{name}} wysłał(a) wiadomość w „{{community}}”",
+      "chatMany": "{{name}} + {{others}} innych wysłało wiadomości",
+      "chatTwo": "{{name}} i {{second}} wysłali wiadomości",
+      "chatTwoNamed": "{{name}} i {{second}} wysłali wiadomości w „{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} innych wysłało wiadomości w „{{community}}”",
       "joined": "{{name}} dołączył do Twojej społeczności",
       "joinedNamed": "{{name}} dołączył (a) do „{{community}}”",
       "requested": "{{name}} prosi o dołączenie do Twojej społeczności",

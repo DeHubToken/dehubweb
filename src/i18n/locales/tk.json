@@ -1739,6 +1739,12 @@
     "nOthers": "{{count}} beýleki",
     "burstBody": "{{count}} täze bildiriş {{who}}-dan",
     "community": {
+      "chatOne": "{{name}} habar iberdi",
+      "chatOneNamed": "{{name}} “{{community}}” toparynda habar iberdi",
+      "chatMany": "{{name}} + ýene {{others}} adam habarlar iberdi",
+      "chatTwo": "{{name}} we {{second}} habarlar iberdi",
+      "chatTwoNamed": "{{name}} we {{second}} “{{community}}” toparynda habarlar iberdi",
+      "chatManyNamed": "{{name}} + ýene {{others}} adam “{{community}}” toparynda habarlar iberdi",
       "joined": "{{name}} siziň jemgyýetiňize goşuldy",
       "joinedNamed": "{{name}} \"{{community}}\" bilen birleşdi",
       "requested": "{{name}} siziň jemgyýetiňize goşulmagy sorady",
@@ -1753,6 +1759,9 @@
     "tipTokens": "{{amount}} token",
     "tokenAmount": "{{amount}} token",
     "custom": {
+      "publicChatMention": "{{name}} umumy söhbetdeşlikde sizi belläp geçdi",
+      "liveChatMention": "{{name}} göni söhbetdeşlikde sizi belläp geçdi",
+      "postMention": "{{name}} ýazgyda sizi belläp geçdi",
       "featureLikeNamed": "{{name}} Özgürligiňiziň haýyşyny halaýarsyňyz {{title}}",
       "featureLike": "{{name}} Özgürligiňiziň haýyşyny halaýarsyňyz",
       "featureCommentNamed": "{{name}} özellik soraga jogap berdi {{title}}",

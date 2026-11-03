@@ -1756,6 +1756,12 @@
     "nOthers": "{{count}} başqası",
     "burstBody": "{{count}} yeni bildiriş {{who}}-dan",
     "community": {
+      "chatOne": "{{name}} mesaj göndərdi",
+      "chatOneNamed": "{{name}} “{{community}}” icmasında mesaj göndərdi",
+      "chatMany": "{{name}} + {{others}} nəfər mesaj göndərdi",
+      "chatTwo": "{{name}} və {{second}} mesaj göndərdi",
+      "chatTwoNamed": "{{name}} və {{second}} “{{community}}” icmasında mesaj göndərdi",
+      "chatManyNamed": "{{name}} + {{others}} nəfər “{{community}}” icmasında mesaj göndərdi",
       "joined": "{{name}} icmanıza qoşuldu",
       "joinedNamed": "{{name}} qoşuldu “{{community}}”",
       "requested": "{{name}} icmanıza qoşulmaq istədi",

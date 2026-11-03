@@ -1753,6 +1753,12 @@
     "nOthers": "{{count}} ਹੋਰ",
     "burstBody": "{{count}} ਨਵੀਆਂ ਸੂਚਨਾਵਾਂ {{who}} ਤੋਂ",
     "community": {
+      "chatOne": "{{name}} ਨੇ ਸੁਨੇਹਾ ਭੇਜਿਆ",
+      "chatOneNamed": "{{name}} ਨੇ “{{community}}” ਵਿੱਚ ਸੁਨੇਹਾ ਭੇਜਿਆ",
+      "chatMany": "{{name}} + {{others}} ਹੋਰਾਂ ਨੇ ਸੁਨੇਹੇ ਭੇਜੇ",
+      "chatTwo": "{{name}} ਅਤੇ {{second}} ਨੇ ਸੁਨੇਹੇ ਭੇਜੇ",
+      "chatTwoNamed": "{{name}} ਅਤੇ {{second}} ਨੇ “{{community}}” ਵਿੱਚ ਸੁਨੇਹੇ ਭੇਜੇ",
+      "chatManyNamed": "{{name}} + {{others}} ਹੋਰਾਂ ਨੇ “{{community}}” ਵਿੱਚ ਸੁਨੇਹੇ ਭੇਜੇ",
       "joined": "{{name}} ਤੁਹਾਡੀ ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਏ",
       "joinedNamed": "{{name}} ਨੇ “{{community}}” ਜੁਆਇਨ ਕੀਤਾ",
       "requested": "{{name}} ਨੂੰ ਤੁਹਾਡੀ ਕਮਿ communityਨਿਟੀ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਣ ਲਈ ਕਿਹਾ ਗਿਆ",

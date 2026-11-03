@@ -1741,6 +1741,12 @@
     "nOthers": "{{count}} ndị ọzọ",
     "burstBody": "{{count}} ngosi ọhụrụ sitere na {{who}}",
     "community": {
+      "chatOne": "{{name}} zitere ozi",
+      "chatOneNamed": "{{name}} zitere ozi na “{{community}}”",
+      "chatMany": "{{name}} + {{others}} ndị ọzọ zitere ozi",
+      "chatTwo": "{{name}} na {{second}} zitere ozi",
+      "chatTwoNamed": "{{name}} na {{second}} zitere ozi na “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} ndị ọzọ zitere ozi na “{{community}}”",
       "joined": "{{name}} sonyeere obodo gị",
       "joinedNamed": "{{name}} sonyeere “{{community}}”",
       "requested": "{{name}} jụrụ isonyere obodo gị",
@@ -1755,6 +1761,7 @@
     "tipTokens": "{{amount}} tokenịị",
     "tokenAmount": "{{amount}} tokenịị",
     "custom": {
+      "postMention": "{{name}} kwuru gị n'otu post",
       "featureLikeNamed": "{{name}} nwere mmasị na arịrịọ atụmatụ gị “{{title}}”",
       "featureLike": "{{name}} nwere mmasị na arịrịọ atụmatụ gị",
       "featureCommentNamed": "{{name}} kwuru okwu na arịrịọ atụmatụ gị “{{title}}”",

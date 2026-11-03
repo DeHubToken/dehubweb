@@ -1745,6 +1745,12 @@
     "nOthers": "{{count}} дигар",
     "burstBody": "{{count}} огоҳии нав аз {{who}}",
     "community": {
+      "chatOne": "{{name}} паём фиристод",
+      "chatOneNamed": "{{name}} дар «{{community}}» паём фиристод",
+      "chatMany": "{{name}} + {{others}} нафари дигар паёмҳо фиристоданд",
+      "chatTwo": "{{name}} ва {{second}} паёмҳо фиристоданд",
+      "chatTwoNamed": "{{name}} ва {{second}} дар «{{community}}» паёмҳо фиристоданд",
+      "chatManyNamed": "{{name}} + {{others}} нафари дигар дар «{{community}}» паёмҳо фиристоданд",
       "joined": "{{name}}adin ang iyong komunidad",
       "joinedNamed": "{{name}} ҳамроҳ шуд “{{community}}”",
       "requested": "{{name}} request to join your community",

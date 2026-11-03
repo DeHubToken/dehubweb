@@ -1748,6 +1748,12 @@
     "nOthers": "{{count}}位其他人",
     "burstBody": "{{count}} 個新通知來自 {{who}}",
     "community": {
+      "chatOne": "{{name}} 傳咗一條訊息",
+      "chatOneNamed": "{{name}} 喺「{{community}}」傳咗一條訊息",
+      "chatMany": "{{name}} + 另外 {{others}} 個人傳咗訊息",
+      "chatTwo": "{{name}} 同 {{second}} 傳咗訊息",
+      "chatTwoNamed": "{{name}} 同 {{second}} 喺「{{community}}」傳咗訊息",
+      "chatManyNamed": "{{name}} + 另外 {{others}} 個人喺「{{community}}」傳咗訊息",
       "joined": "{{name}} 加入咗你嘅社群",
       "joinedNamed": "{{name}} 加入 “ {{community}} ”",
       "requested": "{{name}} 要求加入你嘅社群",

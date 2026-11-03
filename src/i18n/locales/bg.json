@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} други",
     "burstBody": "{{count}} нови известия от {{who}}",
     "community": {
+      "chatOne": "{{name}} изпрати съобщение",
+      "chatOneNamed": "{{name}} изпрати съобщение в „{{community}}“",
+      "chatMany": "{{name}} + {{others}} други изпратиха съобщения",
+      "chatTwo": "{{name}} и {{second}} изпратиха съобщения",
+      "chatTwoNamed": "{{name}} и {{second}} изпратиха съобщения в „{{community}}“",
+      "chatManyNamed": "{{name}} + {{others}} други изпратиха съобщения в „{{community}}“",
       "joined": "{{name}} се присъедини към вашата общност",
       "joinedNamed": "{{name}} се присъедини към „{{community}}“",
       "requested": "{{name}} поиска да се присъедини към вашата общност",

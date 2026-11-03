@@ -1737,6 +1737,12 @@
     "nOthers": "{{count}} ຄົນອື່ນ",
     "burstBody": "ການແຈ້ງເຕືອນໃໝ່ {{count}} ຈາກ {{who}}",
     "community": {
+      "chatOne": "{{name}} ສົ່ງຂໍ້ຄວາມ",
+      "chatOneNamed": "{{name}} ສົ່ງຂໍ້ຄວາມໃນ “{{community}}”",
+      "chatMany": "{{name}} + ອີກ {{others}} ຄົນສົ່ງຂໍ້ຄວາມ",
+      "chatTwo": "{{name}} ແລະ {{second}} ສົ່ງຂໍ້ຄວາມ",
+      "chatTwoNamed": "{{name}} ແລະ {{second}} ສົ່ງຂໍ້ຄວາມໃນ “{{community}}”",
+      "chatManyNamed": "{{name}} + ອີກ {{others}} ຄົນສົ່ງຂໍ້ຄວາມໃນ “{{community}}”",
       "joined": "{{name}} ເຂົ້າຮ່ວມຊຸມຊົນຂອງທ່ານ",
       "joinedNamed": "{{name}} ເຂົ້າຮ່ວມ \"{{community}}@\"",
       "requested": "{{name}} ຖືກຮ້ອງຂໍໃຫ້ເຂົ້າຮ່ວມຊຸມຊົນຂອງທ່ານ",

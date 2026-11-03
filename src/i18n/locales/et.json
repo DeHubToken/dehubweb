@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} teist",
     "burstBody": "{{count}} uut teadet {{who}}-lt",
     "community": {
+      "chatOne": "{{name}} saatis sõnumi",
+      "chatOneNamed": "{{name}} saatis sõnumi kogukonnas „{{community}}“",
+      "chatMany": "{{name}} + {{others}} teist saatsid sõnumeid",
+      "chatTwo": "{{name}} ja {{second}} saatsid sõnumeid",
+      "chatTwoNamed": "{{name}} ja {{second}} saatsid sõnumeid kogukonnas „{{community}}“",
+      "chatManyNamed": "{{name}} + {{others}} teist saatsid sõnumeid kogukonnas „{{community}}“",
       "joined": "{{name}} liitus sinu kogukonnaga",
       "joinedNamed": "{{name}} liitus kasutajaga „{{community}}“",
       "requested": "{{name}} palus sul oma kogukonnaga liituda",
