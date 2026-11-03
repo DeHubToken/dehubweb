@@ -466,7 +466,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                         <div className="flex items-center gap-1.5 min-w-0">
                           <TickerLogo symbol={ticker.symbol} size={16} />
                           <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
-                            {ticker.symbol}
+                            {/^(?:DHB|DEHUB)$/i.test(ticker.symbol) ? 'RIFT' : ticker.symbol}
                           </span>
                         </div>
                       </div>
