@@ -1,0 +1,14 @@
+name: Own provider keys
+on:
+  pull_request:
+    paths: ['supabase/functions/_shared/byok*.ts', 'supabase/functions/provider-keys/**', 'supabase/functions/builder-api/**', '.github/workflows/own-provider-keys.yml']
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with: { deno-version: v2.x }
+      - run: deno test --node-modules-dir=none --allow-env supabase/functions/_shared/byok.test.ts
+      - run: deno check --node-modules-dir=none supabase/functions/provider-keys/index.ts supabase/functions/builder-api/index.ts
