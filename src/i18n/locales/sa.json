@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "सर्वाणि {{count}} पृष्ठानि दर्शय"
   },
+  "comicBorder": {
+    "title": "सीमा",
+    "theme": "विषयः",
+    "silver": "रजतम्",
+    "bronze": "कांस्यम्",
+    "matteBlack": "निष्प्रभं कृष्णम्",
+    "carbonFibre": "कार्बन-तन्तुः",
+    "holographic": "होलोग्राफिकम्",
+    "shiny": "दीप्तिमत्",
+    "glitter": "स्फुरत्",
+    "saved": "सीमा रक्षिता",
+    "failed": "सीमा रक्षितुं न शक्यते"
+  },
   "dehubAppPage": {
     "android": "अण्ड्रोइड",
     "appStore": "App Store पे जाकर Download करे",

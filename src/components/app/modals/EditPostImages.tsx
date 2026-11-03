@@ -10,6 +10,8 @@ import { buildFeedImageUrls } from '@/lib/media-url';
 import { applyImageReplacement } from '@/lib/optimistic-edit';
 import { toast } from 'sonner';
 import { MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
+import { ComicBorderPicker } from '@/features/post/components/ComicBorderPicker';
+import { isComicBorder, type ComicBorder } from '@/lib/comic-borders';
 
 export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   tokenId: number | string; disabled: boolean; onBusyChange: (busy: boolean) => void;
@@ -18,6 +20,9 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   const queryClient = useQueryClient();
   const [images, setImages] = useState<string[]>([]);
   const [descriptions, setDescriptions] = useState<string[]>([]);
+  // Comics only: the strip round the cards, saved as soon as it is picked.
+  const [comic, setComic] = useState(false);
+  const [border, setBorder] = useState<ComicBorder | null>(null);
   const [altIndex, setAltIndex] = useState<number | null>(null);
   const [imageLimit, setImageLimit] = useState<number | null>(null);
   const addInput = useRef<HTMLInputElement>(null);
@@ -39,6 +44,8 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       if (active) {
         setImages(['feed-images', 'image'].includes(post.postType) ? post.imageUrls ?? [] : []);
         setDescriptions(post.mediaDescriptions ?? []);
+        setComic(post.layout === 'comic');
+        setBorder(isComicBorder(post.comicBorder) ? post.comicBorder : null);
       }
     }).catch(() => { if (active) setFailed(true); })
       .finally(() => { if (active) setLoading(false); });
@@ -113,12 +120,26 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     }
   };
 
+  const saveBorder = async (next: ComicBorder | null) => {
+    const previous = border;
+    setBorder(next);
+    try {
+      await editPost(tokenId, { comicBorder: next ?? '' });
+      void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      toast.success(_copy('comicBorder.saved'));
+    } catch {
+      setBorder(previous);
+      toast.error(_copy('comicBorder.failed'));
+    }
+  };
+
   if (loading) return <p className="text-sm text-zinc-400">{_copy("copy.0adcf927c8a1", { defaultValue: "Loading post images…" })}</p>;
   if (failed) return <button type="button" className="text-sm text-zinc-300" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.868ffd193290", { defaultValue: "Could not load post images. Retry" })}</button>;
   if (!images.length) return null;
   const previews = buildFeedImageUrls(images) ?? [];
   return <section className="space-y-2">
     <h3 className="text-sm font-medium text-zinc-300">{_copy("copy.be7e2f201293", { defaultValue: "Images" })}</h3>
+    {comic ? <ComicBorderPicker value={border} onChange={(next) => { void saveBorder(next); }} cover={previews[0]} disabled={busy || disabled} /> : null}
     <p className="text-xs text-zinc-400">{_copy("copy.0f0d5afa82cf", { defaultValue: "Adding or replacing images saves immediately. Your post keeps its link, views and comments." })}</p>
     {imageLimit === null ? <button type="button" disabled={busy || disabled} className="text-xs text-zinc-400" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.f6a4983ea9c5", { defaultValue: "Image allowance unavailable. Retry" })}</button> :
       <p className="text-xs text-zinc-400">{_copy("copy.1034a88fc92e", { defaultValue: "{{value1}} / {{value2}} images · Based on your badge tier", value1: images.length, value2: imageLimit })}</p>}

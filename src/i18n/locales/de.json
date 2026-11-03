@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Alle {{count}} Seiten anzeigen"
   },
+  "comicBorder": {
+    "title": "Rahmen",
+    "theme": "Theme",
+    "silver": "Silber",
+    "bronze": "Bronze",
+    "matteBlack": "Mattschwarz",
+    "carbonFibre": "Carbon",
+    "holographic": "Holografisch",
+    "shiny": "Glänzend",
+    "glitter": "Glitzer",
+    "saved": "Rahmen gespeichert",
+    "failed": "Rahmen konnte nicht gespeichert werden"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download im App Store",

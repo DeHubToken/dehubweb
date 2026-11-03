@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Muuji dhammaan {{count}} bog"
   },
+  "comicBorder": {
+    "title": "Xuduud",
+    "theme": "Muuqaal",
+    "silver": "Lacag",
+    "bronze": "Naxaas",
+    "matteBlack": "Madow aan dhalaalin",
+    "carbonFibre": "Fiber kaarboon",
+    "holographic": "Holografik",
+    "shiny": "Dhalaalaya",
+    "glitter": "Biliqsi",
+    "saved": "Xuduudka waa la keydiyay",
+    "failed": "Lama keydin karin xuduudka"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ka soo dejiso App Store",

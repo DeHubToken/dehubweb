@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Wys al {{count}} bladsye"
   },
+  "comicBorder": {
+    "title": "Rand",
+    "theme": "Tema",
+    "silver": "Silwer",
+    "bronze": "Brons",
+    "matteBlack": "Mat swart",
+    "carbonFibre": "Koolstofvesel",
+    "holographic": "Holografies",
+    "shiny": "Blink",
+    "glitter": "Glitter",
+    "saved": "Rand gestoor",
+    "failed": "Kon nie die rand stoor nie"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Laai af by die App Store",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Gosi ibe {{count}} niile"
   },
+  "comicBorder": {
+    "title": "Ọnụ ọnụ",
+    "theme": "Isiokwu",
+    "silver": "Ọlaọcha",
+    "bronze": "Ọla nchara",
+    "matteBlack": "Oji na-adịghị egbuke",
+    "carbonFibre": "Eriri carbon",
+    "holographic": "Holographic",
+    "shiny": "Na-egbuke egbuke",
+    "glitter": "Ntụpọ na-egbuke",
+    "saved": "Echekwala ọnụ ọnụ",
+    "failed": "Enweghị ike ịchekwa ọnụ ọnụ"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download na App Store",

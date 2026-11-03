@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "सब्बो {{count}} पेज देखाव"
   },
+  "comicBorder": {
+    "title": "बॉर्डर",
+    "theme": "थीम",
+    "silver": "चाँदी",
+    "bronze": "काँसा",
+    "matteBlack": "मैट करिया",
+    "carbonFibre": "कार्बन फाइबर",
+    "holographic": "होलोग्राफिक",
+    "shiny": "चमकीला",
+    "glitter": "ग्लिटर",
+    "saved": "बॉर्डर सेव होगे",
+    "failed": "बॉर्डर सेव नइ हो सकिस"
+  },
   "dehubAppPage": {
     "android": "एन्ड्रोइड",
     "appStore": "ऐप स्टोर म डाउनलोड करे",

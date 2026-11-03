@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Alle {{count}} pagina's tonen"
   },
+  "comicBorder": {
+    "title": "Rand",
+    "theme": "Thema",
+    "silver": "Zilver",
+    "bronze": "Brons",
+    "matteBlack": "Matzwart",
+    "carbonFibre": "Koolstofvezel",
+    "holographic": "Holografisch",
+    "shiny": "Glanzend",
+    "glitter": "Glitter",
+    "saved": "Rand opgeslagen",
+    "failed": "Kan de rand niet opslaan"
+  },
   "duet": {
     "with": "Duet met @{{username}}",
     "withOriginal": "Duet · bekijk origineel",

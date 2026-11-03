@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ټولې {{count}} پاڼې وښایاست"
   },
+  "comicBorder": {
+    "title": "چوکاټ",
+    "theme": "بڼه",
+    "silver": "سپین زر",
+    "bronze": "برونز",
+    "matteBlack": "مات تور",
+    "carbonFibre": "کاربن فایبر",
+    "holographic": "هولوګرافیک",
+    "shiny": "ځلانده",
+    "glitter": "ځلیدونکی",
+    "saved": "چوکاټ خوندي شو",
+    "failed": "چوکاټ خوندي نه شو"
+  },
   "dehubAppPage": {
     "android": "د Android په اړه",
     "appStore": "په اپیل پلورنځي کې ډاونلوډ کړئ",

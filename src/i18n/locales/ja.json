@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "全{{count}}ページを表示"
   },
+  "comicBorder": {
+    "title": "フチ",
+    "theme": "テーマ",
+    "silver": "シルバー",
+    "bronze": "ブロンズ",
+    "matteBlack": "マットブラック",
+    "carbonFibre": "カーボンファイバー",
+    "holographic": "ホログラム",
+    "shiny": "シャイニー",
+    "glitter": "グリッター",
+    "saved": "フチを保存しました",
+    "failed": "フチを保存できませんでした"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Storeでダウンロード",

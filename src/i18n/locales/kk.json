@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Барлық {{count}} бетті көрсету"
   },
+  "comicBorder": {
+    "title": "Жиек",
+    "theme": "Тақырып",
+    "silver": "Күміс",
+    "bronze": "Қола",
+    "matteBlack": "Күңгірт қара",
+    "carbonFibre": "Көміртек талшығы",
+    "holographic": "Голографиялық",
+    "shiny": "Жылтыр",
+    "glitter": "Жарқылдақ",
+    "saved": "Жиек сақталды",
+    "failed": "Жиекті сақтау мүмкін болмады"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store дүкенінен жүктеп алу",

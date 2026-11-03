@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Показать все страницы ({{count}})"
   },
+  "comicBorder": {
+    "title": "Рамка",
+    "theme": "Тема",
+    "silver": "Серебро",
+    "bronze": "Бронза",
+    "matteBlack": "Матовый чёрный",
+    "carbonFibre": "Карбон",
+    "holographic": "Голографическая",
+    "shiny": "Глянцевая",
+    "glitter": "Блёстки",
+    "saved": "Рамка сохранена",
+    "failed": "Не удалось сохранить рамку"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Скачать в App Store",

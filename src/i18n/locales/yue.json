@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "顯示全部 {{count}} 頁"
   },
+  "comicBorder": {
+    "title": "邊框",
+    "theme": "主題",
+    "silver": "銀色",
+    "bronze": "古銅",
+    "matteBlack": "啞黑",
+    "carbonFibre": "碳纖維",
+    "holographic": "全息",
+    "shiny": "亮面",
+    "glitter": "閃粉",
+    "saved": "已儲存邊框",
+    "failed": "儲存唔到邊框"
+  },
   "dehubAppPage": {
     "android": "安卓",
     "appStore": "喺 App Store 下載",

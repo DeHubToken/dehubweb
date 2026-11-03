@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "បង្ហាញទំព័រទាំង {{count}}"
   },
+  "comicBorder": {
+    "title": "ស៊ុម",
+    "theme": "រចនាប័ទ្ម",
+    "silver": "ប្រាក់",
+    "bronze": "សំរិទ្ធ",
+    "matteBlack": "ខ្មៅស្រអាប់",
+    "carbonFibre": "សរសៃកាបូន",
+    "holographic": "ហូឡូក្រាម",
+    "shiny": "ភ្លឺរលោង",
+    "glitter": "ភ្លឺផ្លេកៗ",
+    "saved": "បានរក្សាទុកស៊ុម",
+    "failed": "មិនអាចរក្សាទុកស៊ុមបានទេ"
+  },
   "dehubAppPage": {
     "android": "អន្តរដ្ឋអាន្តរដ្ឋ",
     "appStore": "ទាញយកនៅលើ App Store",

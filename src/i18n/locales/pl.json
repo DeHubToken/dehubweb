@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Pokaż wszystkie strony ({{count}})"
   },
+  "comicBorder": {
+    "title": "Ramka",
+    "theme": "Motyw",
+    "silver": "Srebrna",
+    "bronze": "Brązowa",
+    "matteBlack": "Matowa czerń",
+    "carbonFibre": "Włókno węglowe",
+    "holographic": "Holograficzna",
+    "shiny": "Błyszcząca",
+    "glitter": "Brokat",
+    "saved": "Zapisano ramkę",
+    "failed": "Nie udało się zapisać ramki"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Pobierz w App Store",

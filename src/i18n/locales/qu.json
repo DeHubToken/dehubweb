@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Llapan {{count}} rapikunata rikuchiy"
   },
+  "comicBorder": {
+    "title": "Patan",
+    "theme": "Rikchay",
+    "silver": "Qullqi",
+    "bronze": "Antawari",
+    "matteBlack": "Yana mana k’anchaq",
+    "carbonFibre": "Karbun q’aytu",
+    "holographic": "Holografiku",
+    "shiny": "K’ancharishaq",
+    "glitter": "Lliphiq",
+    "saved": "Patan waqaychasqa",
+    "failed": "Mana patanta waqaychayta atikunchu"
+  },
   "dehubAppPage": {
     "android": "Android nisqa",
     "appStore": "App Store nisqapi uraykachiy",

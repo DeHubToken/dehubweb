@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "{{count}} sayfanın tümünü göster"
   },
+  "comicBorder": {
+    "title": "Çerçeve",
+    "theme": "Tema",
+    "silver": "Gümüş",
+    "bronze": "Bronz",
+    "matteBlack": "Mat siyah",
+    "carbonFibre": "Karbon fiber",
+    "holographic": "Holografik",
+    "shiny": "Parlak",
+    "glitter": "Simli",
+    "saved": "Çerçeve kaydedildi",
+    "failed": "Çerçeve kaydedilemedi"
+  },
   "duet": {
     "with": "@{{username}} ile düet",
     "withOriginal": "Düet · orijinali gör",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Whakaaturia ngā whārangi {{count}} katoa"
   },
+  "comicBorder": {
+    "title": "Tapa",
+    "theme": "Kaupapa",
+    "silver": "Hiriwa",
+    "bronze": "Parahi",
+    "matteBlack": "Pango kore kanapa",
+    "carbonFibre": "Muka waro",
+    "holographic": "Hōkaiahua",
+    "shiny": "Kanapa",
+    "glitter": "Kōrapa",
+    "saved": "Kua tiakina te tapa",
+    "failed": "Kāore i taea te tiaki i te tapa"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Tikiake i runga i te App Store",

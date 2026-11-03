@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Voir les {{count}} pages"
   },
+  "comicBorder": {
+    "title": "Bordure",
+    "theme": "Thème",
+    "silver": "Argent",
+    "bronze": "Bronze",
+    "matteBlack": "Noir mat",
+    "carbonFibre": "Fibre de carbone",
+    "holographic": "Holographique",
+    "shiny": "Brillant",
+    "glitter": "Paillettes",
+    "saved": "Bordure enregistrée",
+    "failed": "Impossible d’enregistrer la bordure"
+  },
   "duet": {
     "with": "Duo avec @{{username}}",
     "withOriginal": "Duo · voir l'original",

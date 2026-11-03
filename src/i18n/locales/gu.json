@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "બધા {{count}} પાનાં બતાવો"
   },
+  "comicBorder": {
+    "title": "બોર્ડર",
+    "theme": "થીમ",
+    "silver": "ચાંદી",
+    "bronze": "કાંસ્ય",
+    "matteBlack": "મેટ કાળો",
+    "carbonFibre": "કાર્બન ફાઇબર",
+    "holographic": "હોલોગ્રાફિક",
+    "shiny": "ચમકદાર",
+    "glitter": "ગ્લિટર",
+    "saved": "બોર્ડર સાચવી",
+    "failed": "બોર્ડર સાચવી શકાઈ નહીં"
+  },
   "dehubAppPage": {
     "android": "અંડ્રોઇડ",
     "appStore": "એપ સ્ટોર પર ડાઉનલોડ કરો",

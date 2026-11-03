@@ -1,3 +1,4 @@
+        comicBorder: postLayout === 'comic' ? comicBorder ?? undefined : undefined,
 import { useTranslation as _useCopy } from 'react-i18next';
 import type { StudioEdits } from '../lib/studioPaint';
 import { useDraftState } from '@/hooks/use-draft-state';
@@ -31,6 +32,7 @@ import { startDraftImage, resolveDraftImages } from '../lib/draftImages';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
 import { shrinkComicPages } from '@/lib/comic-pages';
+import type { ComicBorder } from '@/lib/comic-borders';
 import { getComicImageLimitForBadge, getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
@@ -372,6 +374,8 @@ export function usePostForm(
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   // The content warning being written: null is "none", '' is "toggled on, still empty".
   const [contentWarning, setContentWarning] = useState<string | null>(null);
+  /** The comic's border preset; null is the theme's own foil. */
+  const [comicBorder, setComicBorder] = useState<ComicBorder | null>(null);
   // The poster closed the $TICKER / address card, so the post goes out without one.
   const [hideAssetCards, setHideAssetCards] = useState(false);
   /** 'comic' when the Comic tab is open: photos post as collector cards. */
@@ -1279,6 +1283,7 @@ export function usePostForm(
     setContentWarning(null);
     setHideAssetCards(false);
     setPostLayout(null);
+    setComicBorder(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
     setStitchPolicy(null);
@@ -2859,7 +2864,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, hideAssetCards, postLayout, quotePolicy, replyPolicy, visibility, stitchPolicy,
+    isQuoting, quotedPost, contentWarning, hideAssetCards, postLayout, comicBorder, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 
@@ -2895,6 +2900,7 @@ export function usePostForm(
       contentWarning,
       hideAssetCards,
       postLayout,
+      comicBorder,
       quotePolicy,
       replyPolicy,
       stitchPolicy,
@@ -2966,6 +2972,7 @@ export function usePostForm(
       setMediaDescription,
       setMediaCaption,
       setPostLayout,
+      setComicBorder,
       addComicPages,
       handleEnhanceWithAI,
       insertFormatting,

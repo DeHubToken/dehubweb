@@ -14,6 +14,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cdnImage } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
+import { ANIMATED_COMIC_BORDERS, isComicBorder } from '@/lib/comic-borders';
 import '@/styles/comic.css';
 
 export interface ComicDeckProps {
@@ -26,6 +27,8 @@ export interface ComicDeckProps {
   /** Post page: the hand of pages and the full read. */
   full?: boolean;
   aboveFold?: boolean;
+  /** Border preset (src/lib/comic-borders); absent is the theme's foil. */
+  border?: string;
 }
 
 const K = 160;
@@ -39,7 +42,7 @@ function prefersReducedMotion() {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
 
-export const ComicDeck = memo(function ComicDeck({ images, captions, descriptions, title, onOpen, full = false, aboveFold = false }: ComicDeckProps) {
+export const ComicDeck = memo(function ComicDeck({ images, captions, descriptions, title, onOpen, full = false, aboveFold = false, border }: ComicDeckProps) {
   const { t } = useTranslation();
   const total = images.length;
   const [index, setIndex] = useState(0);
@@ -208,6 +211,18 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     img.src = cdnImage(images[0], { width: 720 }) || '';
   }, [images]);
 
+  // Holographic and glitter strips only move while the card is on screen.
+  const preset = isComicBorder(border) ? border : undefined;
+  const animated = !!preset && ANIMATED_COMIC_BORDERS.has(preset);
+  const [live, setLive] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!animated || !el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => setLive(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, [animated, reading]);
+
   const behind = useMemo(() => [index + 1, index + 2].filter(i => i < total), [index, total]);
 
   if (reading) {
@@ -244,6 +259,8 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     <div
       ref={rootRef}
       data-comic
+      data-comic-border={preset}
+      data-comic-live={animated && live ? '' : undefined}
       data-no-swipe={total > 1 ? '' : undefined}
       className={cn('relative flex flex-col items-center select-none pt-3', full ? 'pb-3' : 'pb-5')}
       style={{ perspective: 1100 }}

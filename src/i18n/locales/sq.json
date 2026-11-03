@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Shfaq të gjitha {{count}} faqet"
   },
+  "comicBorder": {
+    "title": "Kornizë",
+    "theme": "Temë",
+    "silver": "Argjend",
+    "bronze": "Bronz",
+    "matteBlack": "E zezë mat",
+    "carbonFibre": "Fibër karboni",
+    "holographic": "Holografike",
+    "shiny": "E shndritshme",
+    "glitter": "Shkëlqim",
+    "saved": "Korniza u ruajt",
+    "failed": "Korniza nuk u ruajt"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lëshimi në App Store",

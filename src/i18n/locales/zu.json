@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Bonisa wonke amakhasi angu-{{count}}"
   },
+  "comicBorder": {
+    "title": "Umngcele",
+    "theme": "Itimu",
+    "silver": "Isiliva",
+    "bronze": "Ithusi",
+    "matteBlack": "Mnyama ongacwebezeli",
+    "carbonFibre": "Ifayibha yekhabhoni",
+    "holographic": "I-holographic",
+    "shiny": "Okucwebezelayo",
+    "glitter": "Okucwazimulayo",
+    "saved": "Umngcele ulondoloziwe",
+    "failed": "Ayikwazanga ukulondoloza umngcele"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Dawuniloda ku-App Store",

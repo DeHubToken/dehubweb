@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Ցույց տալ բոլոր {{count}} էջերը"
   },
+  "comicBorder": {
+    "title": "Եզրագիծ",
+    "theme": "Թեմա",
+    "silver": "Արծաթ",
+    "bronze": "Բրոնզ",
+    "matteBlack": "Փայլատ սև",
+    "carbonFibre": "Ածխածնային մանրաթել",
+    "holographic": "Հոլոգրաֆիկ",
+    "shiny": "Փայլուն",
+    "glitter": "Փայլփլուն",
+    "saved": "Եզրագիծը պահպանվեց",
+    "failed": "Չհաջողվեց պահպանել եզրագիծը"
+  },
   "dehubAppPage": {
     "android": "Անդրոիդ",
     "appStore": "Ներբեռնել App Store - ում",

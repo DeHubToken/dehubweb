@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Покажи всички {{count}} страници"
   },
+  "comicBorder": {
+    "title": "Рамка",
+    "theme": "Тема",
+    "silver": "Сребро",
+    "bronze": "Бронз",
+    "matteBlack": "Матово черно",
+    "carbonFibre": "Въглеродни влакна",
+    "holographic": "Холографска",
+    "shiny": "Лъскава",
+    "glitter": "Брокат",
+    "saved": "Рамката е запазена",
+    "failed": "Рамката не можа да се запази"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Изтеглете от App Store",

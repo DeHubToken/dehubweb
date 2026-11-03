@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "सब {{count}} पन्ना देखाव"
   },
+  "comicBorder": {
+    "title": "بارڈر",
+    "theme": "تھیم",
+    "silver": "چاندی",
+    "bronze": "کانسی",
+    "matteBlack": "میٹ کالا",
+    "carbonFibre": "کاربن فائبر",
+    "holographic": "ہولوگرافک",
+    "shiny": "چمکدار",
+    "glitter": "گلٹر",
+    "saved": "بارڈر محفوظ ہو گیا",
+    "failed": "بارڈر محفوظ نہیں ہو سکیا"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store par download karu",

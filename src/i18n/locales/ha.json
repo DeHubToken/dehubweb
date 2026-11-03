@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Nuna dukkan shafuka {{count}}"
   },
+  "comicBorder": {
+    "title": "Iyaka",
+    "theme": "Jigo",
+    "silver": "Azurfa",
+    "bronze": "Tagulla",
+    "matteBlack": "Baƙi mara sheƙi",
+    "carbonFibre": "Zaren carbon",
+    "holographic": "Holographic",
+    "shiny": "Mai sheƙi",
+    "glitter": "Ƙyalƙyali",
+    "saved": "An ajiye iyaka",
+    "failed": "Ba a iya ajiye iyaka ba"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Saukewa akan App Store",

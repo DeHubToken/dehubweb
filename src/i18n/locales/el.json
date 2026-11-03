@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Εμφάνιση και των {{count}} σελίδων"
   },
+  "comicBorder": {
+    "title": "Περίγραμμα",
+    "theme": "Θέμα",
+    "silver": "Ασημί",
+    "bronze": "Χάλκινο",
+    "matteBlack": "Ματ μαύρο",
+    "carbonFibre": "Ανθρακονήματα",
+    "holographic": "Ολογραφικό",
+    "shiny": "Γυαλιστερό",
+    "glitter": "Γκλίτερ",
+    "saved": "Το περίγραμμα αποθηκεύτηκε",
+    "failed": "Δεν ήταν δυνατή η αποθήκευση του περιγράμματος"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Λήψη από το App Store",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Näita kõiki {{count}} lehekülge"
   },
+  "comicBorder": {
+    "title": "Ääris",
+    "theme": "Teema",
+    "silver": "Hõbe",
+    "bronze": "Pronks",
+    "matteBlack": "Matt must",
+    "carbonFibre": "Süsinikkiud",
+    "holographic": "Holograafiline",
+    "shiny": "Läikiv",
+    "glitter": "Sädelus",
+    "saved": "Ääris salvestatud",
+    "failed": "Äärist ei õnnestunud salvestada"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Laadi alla App Store’lt",

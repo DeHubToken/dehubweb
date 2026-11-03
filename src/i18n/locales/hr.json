@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Prikaži svih {{count}} stranica"
   },
+  "comicBorder": {
+    "title": "Obrub",
+    "theme": "Tema",
+    "silver": "Srebrna",
+    "bronze": "Brončana",
+    "matteBlack": "Mat crna",
+    "carbonFibre": "Karbonska vlakna",
+    "holographic": "Holografska",
+    "shiny": "Sjajna",
+    "glitter": "Šljokice",
+    "saved": "Obrub spremljen",
+    "failed": "Spremanje obruba nije uspjelo"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Preuzmi na App Store",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Rādīt visas {{count}} lapas"
   },
+  "comicBorder": {
+    "title": "Apmale",
+    "theme": "Motīvs",
+    "silver": "Sudrabs",
+    "bronze": "Bronza",
+    "matteBlack": "Matēti melns",
+    "carbonFibre": "Oglekļa šķiedra",
+    "holographic": "Hologrāfiska",
+    "shiny": "Spīdīga",
+    "glitter": "Spīguļi",
+    "saved": "Apmale saglabāta",
+    "failed": "Neizdevās saglabāt apmali"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lejupielādēt App Store",

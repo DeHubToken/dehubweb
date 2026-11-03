@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "সব {{count}}টি পৃষ্ঠা দেখান"
   },
+  "comicBorder": {
+    "title": "বর্ডার",
+    "theme": "থিম",
+    "silver": "রুপালি",
+    "bronze": "ব্রোঞ্জ",
+    "matteBlack": "ম্যাট কালো",
+    "carbonFibre": "কার্বন ফাইবার",
+    "holographic": "হলোগ্রাফিক",
+    "shiny": "চকচকে",
+    "glitter": "গ্লিটার",
+    "saved": "বর্ডার সংরক্ষিত হয়েছে",
+    "failed": "বর্ডার সংরক্ষণ করা যায়নি"
+  },
   "dehubAppPage": {
     "android": "অ্যান্ড্রয়েড",
     "appStore": "অ্যাপ স্টোরে ডাউনলোড করুন",

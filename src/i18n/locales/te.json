@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "మొత్తం {{count}} పేజీలను చూపించు"
   },
+  "comicBorder": {
+    "title": "అంచు",
+    "theme": "థీమ్",
+    "silver": "వెండి",
+    "bronze": "కంచు",
+    "matteBlack": "మ్యాట్ నలుపు",
+    "carbonFibre": "కార్బన్ ఫైబర్",
+    "holographic": "హోలోగ్రాఫిక్",
+    "shiny": "మెరిసే",
+    "glitter": "గ్లిట్టర్",
+    "saved": "అంచు సేవ్ అయింది",
+    "failed": "అంచును సేవ్ చేయలేకపోయాం"
+  },
   "dehubAppPage": {
     "android": "ఆండ్రాయిడ్",
     "appStore": "యాప్ స్టోర్ ‌ లో డౌన్ ‌ లోడ్ చేయండి",

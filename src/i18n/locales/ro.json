@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "Arată toate cele {{count}} pagini"
   },
+  "comicBorder": {
+    "title": "Chenar",
+    "theme": "Temă",
+    "silver": "Argintiu",
+    "bronze": "Bronz",
+    "matteBlack": "Negru mat",
+    "carbonFibre": "Fibră de carbon",
+    "holographic": "Holografic",
+    "shiny": "Lucios",
+    "glitter": "Sclipici",
+    "saved": "Chenar salvat",
+    "failed": "Chenarul nu a putut fi salvat"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Descărcați din App Store",

@@ -2,6 +2,19 @@
   "comic": {
     "showAll": "ਸਾਰੇ {{count}} ਪੰਨੇ ਵਿਖਾਓ"
   },
+  "comicBorder": {
+    "title": "ਬਾਰਡਰ",
+    "theme": "ਥੀਮ",
+    "silver": "ਚਾਂਦੀ",
+    "bronze": "ਕਾਂਸੀ",
+    "matteBlack": "ਮੈਟ ਕਾਲਾ",
+    "carbonFibre": "ਕਾਰਬਨ ਫਾਈਬਰ",
+    "holographic": "ਹੋਲੋਗ੍ਰਾਫਿਕ",
+    "shiny": "ਚਮਕਦਾਰ",
+    "glitter": "ਗਲਿਟਰ",
+    "saved": "ਬਾਰਡਰ ਸੇਵ ਹੋ ਗਿਆ",
+    "failed": "ਬਾਰਡਰ ਸੇਵ ਨਹੀਂ ਹੋ ਸਕਿਆ"
+  },
   "dehubAppPage": {
     "android": "ਅੰਡਰੋਇਡ",
     "appStore": "ਐਪ ਸਟੋਰ 'ਤੇ ਡਾਉਨਲੋਡ ਕਰੋ",
