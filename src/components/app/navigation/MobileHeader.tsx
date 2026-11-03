@@ -17,7 +17,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { useCallback, useLayoutEffect, useRef, memo } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -33,31 +33,30 @@ import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FeedIslandCapsule } from './FeedIslandCapsule';
 import { usePostFeedLook } from '@/lib/post-feed-look';
 
+// DEHUB pixel-rots into RIFTN on the phone bar too (the domain moved to
+// riftn.com). Loaded after first paint; the still mark shows until then.
+const GlitchWordmark = React.lazy(() => import('./DesktopGlitchWordmark').then(m => ({ default: m.DesktopGlitchWordmark })));
+const PHONE_WORDMARK_WIDTH = 96;
+
 const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenticated }: {
   onClick: (e: React.MouseEvent) => void;
   onPointerDown: () => void;
   isAuthenticated: boolean;
 }) {
   const { t: _copy } = _useCopy();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
+  const light = theme === 'light' || themeChoice === 'system-light';
   return (
-    <button data-entry-logo onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button data-entry-logo onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 min-w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
       <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-9 w-[42px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
         <WarLogo src={dehubMark} alt="dehub" className="h-9 w-[42px]" />
       ) : (
-        <img
-          src={dehubMark}
-          alt="dehub"
-          className="block h-9 w-[42px] object-contain"
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
-          width={42}
-          height={36}
-        />
+        <React.Suspense fallback={<img src="/dehub-header-logo.png" alt="dehub" className="block object-contain" style={{ width: PHONE_WORDMARK_WIDTH, height: PHONE_WORDMARK_WIDTH * 0.3 }} decoding="async" fetchPriority="high" />}>
+          <GlitchWordmark light={light} width={PHONE_WORDMARK_WIDTH} media="(max-width: 1023px)" speed={2 / 3} />
+        </React.Suspense>
       )}</ElectricLogo>
       </FeedRefreshLogo>
     </button>

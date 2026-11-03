@@ -74,12 +74,14 @@ async function mask(src,dark,light=false){
 
 /** @param {HTMLCanvasElement} canvas
  * @param {string[]} sources
- * @param {{ light?: boolean }} options
+ * @param {{ light?: boolean, media?: string, speed?: number }} options
+ *   media: where the loop runs (desktop sidebar by default). speed < 1 stretches the loop.
  */
 export async function createDesktopGlitch(canvas, sources, options = {}) {
  const views = [canvas];
  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
- const desktop = matchMedia('(min-width: 1024px)');
+ const desktop = matchMedia(options.media ?? '(min-width: 1024px)');
+ const speed = options.speed ?? 1;
  let elapsed = 0, last = 0, frame = 0, disposed = false, visible = true;
  let light = options.light ?? false;
  const masks = await Promise.all([false, true].map(mode => Promise.all(sources.map((src, i) => mask(src, i === 1, mode)))));
@@ -162,7 +164,7 @@ export async function createDesktopGlitch(canvas, sources, options = {}) {
  function tick(now) {
   frame = 0;
   if (!running()) { last = 0; return; }
-  if (last) elapsed += Math.max(0, now - last);
+  if (last) elapsed += Math.max(0, now - last) * speed;
   last = now;
   const phase = phaseAt(elapsed), key = phase.index === undefined ? 'transition' : String(phase.index);
   const flicker = riftnFlickerAt(elapsed) > 0;
