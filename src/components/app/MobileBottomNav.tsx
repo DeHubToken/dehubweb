@@ -35,6 +35,7 @@ import Gamepad2 from "@/components/ui/cut-icons/arcade";
 import Home from "@/components/ui/cut-icons/home";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
+import { MessagesNavGlyph } from '@/components/app/navigation/MessagesNavGlyph';
 import Plus from "@/components/ui/cut-icons/add";
 import User from "@/components/ui/cut-icons/profile";
 import Search from "@/components/ui/cut-icons/search";
@@ -415,6 +416,8 @@ export function MobileBottomNav() {
                   <div className="relative w-5 h-5 md:w-6 md:h-6">
                     {item.label === 'Home' && isHomeRefreshing ? (
                       <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]" />
+                    ) : item.label === 'Messages' ? (
+                      <MessagesNavGlyph unread={messagesUnread} data-messages-nav-glyph className={glyphClass} />
                     ) : item.themedIcon ? (
                       <ThemedIcon icon={item.themedIcon} alt="" className={cn(glyphClass, 'object-contain')} />
                     ) : (
@@ -425,7 +428,7 @@ export function MobileBottomNav() {
                       />
                     )}
                     {badge > 0 && (
-                      <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none whitespace-nowrap">
+                      <span data-unread-chip className={cn(item.label === 'Messages' && 'max-md:hidden', "absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none whitespace-nowrap")}>
                         {badge > 99 ? '99+' : badge}
                       </span>
                     )}
