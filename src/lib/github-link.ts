@@ -3,7 +3,7 @@
  *
  * The link is never typed: the owner signs in to GitHub and the backend
  * (dehub-stream-backend src/github-link) stores the account GitHub vouched
- * for. One GitHub account can only sit on one DeHub profile.
+ * for. One GitHub account can only sit on one Riftn profile.
  */
 import { apiCall } from '@/lib/api/dehub/core';
 

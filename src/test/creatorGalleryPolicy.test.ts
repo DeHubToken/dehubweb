@@ -5,7 +5,7 @@ const request = { bannerRenderer: 'template' };
 const result = { success: true, renderer: 'template', imageUrl: 'data:image/png;base64,iVBORw0KGgo=' };
 
 describe('public Creator gallery eligibility', () => {
-  it('accepts free outputs completed by the DeHub Poster template renderer', () => {
+  it('accepts free outputs completed by the Riftn Poster template renderer', () => {
     expect(freePosterPng(request, 0, result)).toBeInstanceOf(Uint8Array);
   });
   const excluded: Parameters<typeof freePosterPng>[] = [

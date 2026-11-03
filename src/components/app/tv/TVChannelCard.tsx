@@ -327,7 +327,7 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         cardId,
         {
           title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
-          artist: 'DeHub TV',
+          artist: 'Riftn TV',
           artwork: channel.logo || null,
         },
         { nexttrack: handler, previoustrack: handler },

@@ -44,7 +44,7 @@ describe('affiliate invitation layout', () => {
   });
 
   it('has a useful image without profile media or an invite code', () => {
-    const svg = buildInviteSvg({ ...base, code: '', name: 'DeHub', username: null });
+    const svg = buildInviteSvg({ ...base, code: '', name: 'Riftn', username: null });
     expect(svg).toContain('You’re invited.');
     expect(svg).toContain('>riftn.com</text>');
     expect(svg).not.toContain('/r/INVITE');

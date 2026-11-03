@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { useTranslation as _useCopy } from 'react-i18next';
 
 /**
- * DeHub preloader — the animated DeHub mark (a ring sweeping around the "U").
+ * Riftn preloader — the animated Riftn mark (a ring sweeping around the "U").
  *
  * Ported from the original dehub-nx monorepo loader
  * (libs/shared/asset/dehub/src/lib/dehub-loader.gif, the `dhb-loader` shown on
@@ -114,7 +114,7 @@ export const DeHubPageLoader = ({
 
 
 /**
- * Inline button preloader — the same DeHub mark, icon-sized, for the moment
+ * Inline button preloader — the same Riftn mark, icon-sized, for the moment
  * between a click and the thing it asked for finishing.
  *
  * Why not `DeHubLoader`: that one fades in on a 250 ms delay so a fast route

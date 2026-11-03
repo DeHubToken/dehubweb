@@ -110,7 +110,7 @@ describe('proxied meta normalisation', () => {
   });
 
   it('leaves copy that is already short and single-line exactly as it was', () => {
-    const html = page('First Dehub Stream', 'Post by Top Streamer on DeHub.');
+    const html = page('First Riftn Stream', 'Post by Top Streamer on Riftn.');
     expect(normalizeProxiedMeta(html)).toBe(html);
   });
 
@@ -144,7 +144,7 @@ describe('proxied meta normalisation', () => {
 
   it('is wired into the proxy branch, after the profile-title rewrite', () => {
     const call = WORKER.indexOf('html = normalizeProxiedMeta(html);');
-    const profileTitle = WORKER.indexOf('on DeHub — posts, videos &amp; profile');
+    const profileTitle = WORKER.indexOf('on Riftn — posts, videos &amp; profile');
     expect(profileTitle).toBeGreaterThan(-1);
     expect(call).toBeGreaterThan(profileTitle);
   });

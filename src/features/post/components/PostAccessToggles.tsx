@@ -832,7 +832,7 @@ export function PostAccessToggles({
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-2 space-y-2 text-sm text-white/70">
-            <p>{t('drawers.madeForKidsConfirmAudience', 'Children using Kids Mode will be shown this post. Nothing else on DeHub reaches them.')}</p>
+            <p>{t('drawers.madeForKidsConfirmAudience', 'Children using Kids Mode will be shown this post. Nothing else on Riftn reaches them.')}</p>
             <p>{t('drawers.madeForKidsConfirmReach', 'It also comes off the ordinary feeds — people still find it on your profile, in search and through a link you share.')}</p>
             <p>{t('drawers.madeForKidsConfirmComments', 'Only Kids Mode can comment on it. You can still reply to them yourself.')}</p>
           </div>

@@ -76,12 +76,12 @@ describe('bounty URLs', () => {
    * apart unnoticed — the shape of a cloaking complaint.
    */
   it('keeps the worker`s bounty copy in step with the SPA`s', () => {
-    expect(bountyTitle({ title: 'Widget' })).toBe('Widget — DeHub Bounties');
-    expect(WORKER).toContain('const title = `${name} — DeHub Bounties`;');
+    expect(bountyTitle({ title: 'Widget' })).toBe('Widget — Riftn Bounties');
+    expect(WORKER).toContain('const title = `${name} — Riftn Bounties`;');
     // The fallback sentence for a description-less bounty, verbatim in both.
-    const fallback = 'bounty on DeHub paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.';
+    const fallback = 'bounty on Riftn paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.';
     expect(WORKER).toContain(fallback);
-    expect(SEO_TS).toContain('bounty on DeHub paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.');
+    expect(SEO_TS).toContain('bounty on Riftn paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.');
     // Both format the budget in a fixed locale, or a de-DE browser disagrees
     // with the edge about where the decimal point goes.
     expect(SEO_TS).toContain("toLocaleString('en-US'");

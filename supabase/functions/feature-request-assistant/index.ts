@@ -3,7 +3,7 @@
  * ========================================
  *
  * Somebody tags @assistant in a thread at dehub.io/features and this writes
- * the reply. The board is where DeHub talks to the people who took the time to
+ * the reply. The board is where Riftn talks to the people who took the time to
  * report something — a request gets marked shipped, the reporter comes back
  * with "still broken on Android" or "thanks, does it do X too", and until now
  * nobody answered until a human happened to scroll past. That reply is the
@@ -14,7 +14,7 @@
  *
  * - The client calls this straight after posting a comment that mentions the
  *   assistant, with that comment's id. The caller proves who they are with
- *   their DeHub token, which is also what the per-wallet rate limit counts.
+ *   their Riftn token, which is also what the per-wallet rate limit counts.
  * - Everything the reply is based on — the mention, the request, the thread —
  *   is read back out of Postgres here rather than trusted from the body. A
  *   caller can name a comment; it cannot describe one.
@@ -43,7 +43,7 @@ import {
 
 /**
  * The assistant's real account. Not a placeholder — @assistant is a live
- * DeHub account with its own display name and avatar, and writing a different
+ * Riftn account with its own display name and avatar, and writing a different
  * address here creates a second, nameless one.
  */
 const ASSISTANT_WALLET = (
@@ -103,7 +103,7 @@ serve(async (req) => {
   if (preflight) return preflight;
 
   try {
-    // Identity is the DeHub token, same as every other write path. This is not
+    // Identity is the Riftn token, same as every other write path. This is not
     // about protecting the assistant's words — it is that an unauthenticated
     // endpoint which spends model time is an endpoint somebody will spend for
     // us.

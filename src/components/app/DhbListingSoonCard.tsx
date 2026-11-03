@@ -93,7 +93,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-white font-semibold">{tokenLabel()}</span>
-            <span className="text-zinc-400 text-sm">Dehub</span>
+            <span className="text-zinc-400 text-sm">Riftn</span>
             <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
               {t('hero.comingSoon', 'Coming Soon')}
             </span>
@@ -114,7 +114,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
       ) : (
         <>
           <p className="text-sm text-zinc-400 mt-3">
-            {t('dhbListing.body', "DeHub tokens aren't trading yet. Get an email the moment it lists.")}
+            {t('dhbListing.body', "Riftn tokens aren't trading yet. Get an email the moment it lists.")}
           </p>
 
           {step === 'ask' ? (

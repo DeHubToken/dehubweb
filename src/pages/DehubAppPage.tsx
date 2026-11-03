@@ -24,8 +24,8 @@ const JSON_LD = {
       name: DEHUB_APP_PAGE.title,
       description: DEHUB_APP_PAGE.description,
       url: PAGE_URL,
-      about: { "@type": "Thing", name: "DeHub", sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
-      publisher: { "@type": "Organization", name: "DeHub", url: SITE_URL },
+      about: { "@type": "Thing", name: "Riftn", sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
+      publisher: { "@type": "Organization", name: "Riftn", url: SITE_URL },
     },
     dehubAppFaqLd(),
   ],
@@ -65,11 +65,11 @@ export default function DehubAppPage() {
         className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 text-xs text-white/50 transition-colors hover:text-white sm:left-6 sm:top-6 sm:text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
-        DeHub
+        Riftn
       </Link>
 
       <main className="mx-auto flex max-w-2xl flex-col px-5 pb-20 pt-20 sm:pt-24">
-        <img src={dehubWordmark} alt="DeHub" className="h-7 w-auto self-start object-contain opacity-90" />
+        <img src={dehubWordmark} alt="Riftn" className="h-7 w-auto self-start object-contain opacity-90" />
 
         <h1 className="mt-8 text-4xl font-black italic leading-[0.95] tracking-tight sm:text-5xl">
           {t("dehubAppPage.heading")}

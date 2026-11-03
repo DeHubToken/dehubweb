@@ -12,8 +12,8 @@ describe('shared minute market', () => {
   it('accepts an empty sell book without inventing a price', () => {
     expect(parseSharedMarket({ ...snapshot, price: null }).price).toBeNull();
   });
-  it('requires the DeHub pool scope before displaying prices or candles', () => {
-    expect(() => parseDehubMarket(snapshot)).toThrow('DeHub pool snapshot');
+  it('requires the Riftn pool scope before displaying prices or candles', () => {
+    expect(() => parseDehubMarket(snapshot)).toThrow('Riftn pool snapshot');
     expect(parseDehubMarket({ ...snapshot, marketScope: 'base-dhb-usdc-0-1' }).price).toBe(2);
   });
   it('excludes other fee tiers and chains from the public book', () => {

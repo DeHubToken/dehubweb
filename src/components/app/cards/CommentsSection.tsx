@@ -9,7 +9,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Comments Section Component
  * ==========================
  * Full-featured comments UI with tabs (Replies/Quotes), search, sorting, and voice notes.
- * Now fetches real comments from the DeHub API.
+ * Now fetches real comments from the Riftn API.
  * 
  * @example
  * ```tsx
@@ -2539,7 +2539,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     void submitComment();
   }, [markCommonGroundDone, submitComment]);
 
-  // A banned account reads every comment on DeHub and writes none of them.
+  // A banned account reads every comment on Riftn and writes none of them.
   const canPost = !accountBanned && (newComment.trim() || voiceNote || commentImage || commentGifUrl) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)

@@ -23,7 +23,7 @@ export default function TVPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={t('tv.seoTitle')} description={t('tv.seoDescription')} url="https://riftn.com/app/tv" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Live TV', url: 'https://riftn.com/app/tv', applicationCategory: 'EntertainmentApplication', description: _copy("copy.38db75210b51", { defaultValue: "Watch free live TV channels from around the world." }), offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, operatingSystem: 'Web' }} />
+      <SEOHead title={t('tv.seoTitle')} description={t('tv.seoDescription')} url="https://riftn.com/app/tv" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Riftn Live TV', url: 'https://riftn.com/app/tv', applicationCategory: 'EntertainmentApplication', description: _copy("copy.38db75210b51", { defaultValue: "Watch free live TV channels from around the world." }), offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, operatingSystem: 'Web' }} />
       <h1 className="sr-only">{t('tv.srHeading')}</h1>
       <PageIsland back icon="tv" title={t('tv.title')} />
       <PageBody>

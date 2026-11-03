@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { communityPostTarget, validCommunityPostId, resolveCommunityPosts, uniqueCommunityPosts } from '../lib/community-posts-core';
 
 describe('existing community posts', () => {
-  it('accepts original and off-chain DeHub links, including top-level production URLs', () => {
+  it('accepts original and off-chain Riftn links, including top-level production URLs', () => {
     expect(communityPostTarget('https://riftn.com/post/6552')).toEqual({tokenId:'6552'});
     expect(communityPostTarget('https://riftn.com/app/post/6552?comment=4')).toEqual({tokenId:'6552'});
     expect(communityPostTarget('dehub.io/newpost/12')).toEqual({newPostId:'12'});

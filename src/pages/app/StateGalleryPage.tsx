@@ -290,8 +290,8 @@ const SAMPLE_ARTICLE = {
   cover: '/media/ai-creator-studio-banner.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
-    'Moving to DeHub was not about crypto. It was about owning the relationship with the people who watch us every night.',
-    '![Our first night streaming on DeHub, 214 people in chat](/media/fig-athlete-who-owns-the-fan.jpg#w=1200&h=630)',
+    'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',
+    '![Our first night streaming on Riftn, 214 people in chat](/media/fig-athlete-who-owns-the-fan.jpg#w=1200&h=630)',
     '# What actually changed',
     'Tips land in our wallet the moment they are sent. **Subscribers unlock posts with a tier**, not an algorithm.',
     '> We stopped asking permission to get paid.',
@@ -639,7 +639,7 @@ function AudioGallery() {
 const GALLERY_STAGES = [
   { id: 'gallery-stage-1', title: 'Town Hall: what ships next', host_username: 'maldoteth', scheduled_at: '2026-10-23T19:00:00Z' },
   { id: 'gallery-stage-2', title: 'Late night lo-fi', host_username: 'juno', started_at: '2026-10-24T23:30:00Z', status: 'live' },
-  { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on DeHub', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
+  { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on Riftn', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
   { id: 'gallery-stage-4', title: 'Market open', host_wallet_address: '0x8f3a00000000000000000000000000000000c0de', started_at: '2026-10-30T08:00:00Z', ended_at: '2026-10-30T08:52:00Z', status: 'ended' },
 ];
 
@@ -832,7 +832,7 @@ function MintChainGallery() {
     <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-mint-chain-gallery>
       <h2 className="mb-3 text-sm font-semibold">Mint chain picker</h2>
       <div className="flex flex-wrap gap-3">
-        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>DeHub wallet</Button>
+        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>Riftn wallet</Button>
         <Button variant="glass" size="sm" data-open-mint-sheet="own" onClick={() => setOpen('own')}>Own wallet</Button>
       </div>
       <MintChainSheet open={open !== null} onOpenChange={(o) => { if (!o) setOpen(null); }} defaultChainId={8453} sponsored={open === 'dehub'} onConfirm={() => setOpen(null)} />
@@ -1892,7 +1892,7 @@ function AgentWelcomeGallery() {
     queryClient.setQueryData(['agent-welcomes'], {
       limits: { maxPerDay: 10, defaultPerDay: 3, ownerMessagesPerDay: 20, maxText: 500 },
       agents: [{ address: GALLERY_AGENT, username: 'welcomebot', displayName: 'Welcome Bot', avatarImageUrl: null, follow: true, message: true,
-        text: 'Hey {name}, welcome to DeHub! 👋 Shout if you need a hand finding your people.', perDay: 3, today: { follows: 2, messages: 1 } }],
+        text: 'Hey {name}, welcome to Riftn! 👋 Shout if you need a hand finding your people.', perDay: 3, today: { follows: 2, messages: 1 } }],
     });
     const at = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
     const target = (n: string) => ({ address: `0x${n.padStart(40, '0')}`, username: n, displayName: n, avatarImageUrl: null });

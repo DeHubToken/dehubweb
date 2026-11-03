@@ -34,7 +34,7 @@ import { hasReturningWagmiSession, clearWagmiStorage } from '@/lib/wagmi-session
 export { hasReturningWagmiSession, clearWagmiStorage }
 
 /**
- * Prevent wagmi auto-reconnect on page load when there's no valid DeHub session.
+ * Prevent wagmi auto-reconnect on page load when there's no valid Riftn session.
  */
 function clearStaleWagmiState() {
   if (typeof window === 'undefined') return;

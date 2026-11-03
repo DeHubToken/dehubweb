@@ -64,7 +64,7 @@ const CSS = `
 /**
  * The ghost, all vector: one silhouette whose tail ripples (a path morph, so
  * it stays sharp at any pixel density), soft shading clipped inside it, a
- * white rim, and the DeHub mark as its face riding the same float.
+ * white rim, and the Riftn mark as its face riding the same float.
  */
 function Ghost() {
   return (

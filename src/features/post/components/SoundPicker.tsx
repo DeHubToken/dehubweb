@@ -3,7 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Sound Picker
  * =============
- * Bottom sheet to browse and search audio posts from DeHub.
+ * Bottom sheet to browse and search audio posts from Riftn.
  * Users can preview and select a track to attach to their post.
  */
 

@@ -150,7 +150,7 @@ test('buildAss times captions, watermark and end card to the clip', () => {
   assert.match(ass, /PlayResX: 1080/);
   assert.match(ass, /PlayResY: 1920/);
   assert.match(ass, /Dialogue: 0,0:00:00\.00,0:00:02\.00,Caption,,0,0,0,,\{\\k\d+\}Hello \{\\k\d+\}\(world\)/);
-  assert.match(ass, /Dialogue: 1,0:00:00\.00,0:00:40\.00,Mark,,0,0,0,,DeHub/);
+  assert.match(ass, /Dialogue: 1,0:00:00\.00,0:00:40\.00,Mark,,0,0,0,,Riftn/);
   assert.match(ass, new RegExp(`0:00:40\\.00,0:00:${40 + END_CARD_S}\\.00,CardUrl,.*dehub\\.io/stages/42`));
   // Karaoke durations add up to the cue.
   const ks = [...ass.matchAll(/\\k(\d+)/g)].map((m) => Number(m[1]));

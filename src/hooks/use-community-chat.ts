@@ -99,7 +99,7 @@ export function useCommunityChat(
 
   // Collect unique sender wallet addresses (excluding the current user — we
   // already have their fresh profile from useAuth) so we can fetch each one's
-  // latest profile from the DeHub API. Cached for 5 minutes per address.
+  // latest profile from the Riftn API. Cached for 5 minutes per address.
   const uniqueSenderAddresses = useMemo(() => {
     const set = new Set<string>();
     for (const msg of rawMessages) {
@@ -131,7 +131,7 @@ export function useCommunityChat(
   }, [senderProfiles]);
 
   // Overlay latest profile onto each message: current user from useAuth, others
-  // from the cached DeHub profile lookup. Messages store a snapshot at insert
+  // from the cached Riftn profile lookup. Messages store a snapshot at insert
   // time, so this keeps display name / username / avatar fresh after renames.
   // Memoized: this double map (plus reply resolution below) used to rebuild
   // message objects on every render — including each composer keystroke.

@@ -50,7 +50,7 @@ export default function SkillPage() {
             </Button>
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-white" />
-              <h1 className="text-lg font-semibold">{_copy("copy.ff7a48f27df6", { defaultValue: "DeHub MCP API" })}</h1>
+              <h1 className="text-lg font-semibold">{_copy("copy.ff7a48f27df6", { defaultValue: "Riftn MCP API" })}</h1>
             </div>
           </div>
           <a 

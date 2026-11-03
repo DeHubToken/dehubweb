@@ -11,17 +11,17 @@ export const PostSpecificContent: React.FC = () => {
           <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-sky-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.6fa13ff61869", { defaultValue: "Revolutionary Messaging Architecture" })}</h3>
             
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.feab98be249d", { defaultValue: "DeHub's advanced messaging system represents a paradigm shift in social media communication, introducing " })}<strong>{_copy("copy.cf08185f7e3a", { defaultValue: "tokenized interactions" })}</strong>{_copy("copy.8f65a56c5050", { defaultValue: " that create real economic value for content creators while maintaining the seamless user experience that modern platforms demand. Our three-tier messaging architecture—free DMs, paid DMs, and premium group chats—transforms every conversation into a potential revenue stream." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.feab98be249d", { defaultValue: "Riftn's advanced messaging system represents a paradigm shift in social media communication, introducing " })}<strong>{_copy("copy.cf08185f7e3a", { defaultValue: "tokenized interactions" })}</strong>{_copy("copy.8f65a56c5050", { defaultValue: " that create real economic value for content creators while maintaining the seamless user experience that modern platforms demand. Our three-tier messaging architecture—free DMs, paid DMs, and premium group chats—transforms every conversation into a potential revenue stream." })}</p>
 
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.36efe06b5bd3", { defaultValue: "Unlike traditional social platforms where messaging is purely transactional, DeHub's system recognizes that a creator's time and attention have inherent value. By implementing smart pricing mechanisms and blockchain-powered microtransactions, we've created the first messaging system where quality conversations are financially rewarded, spam is economically disincentivized, and creators maintain complete control over their accessibility." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.36efe06b5bd3", { defaultValue: "Unlike traditional social platforms where messaging is purely transactional, Riftn's system recognizes that a creator's time and attention have inherent value. By implementing smart pricing mechanisms and blockchain-powered microtransactions, we've created the first messaging system where quality conversations are financially rewarded, spam is economically disincentivized, and creators maintain complete control over their accessibility." })}</p>
 
             <div className="mt-8 mb-8">
               <img 
                 src="/media/0b942277-3ce4-450a-95cc-116ccdb1aa7b.png" 
-                alt={_copy("copy.986fef7c1d5a", { defaultValue: "DeHub advanced messaging interface showing user conversations and paid content sharing" })} 
+                alt={_copy("copy.986fef7c1d5a", { defaultValue: "Riftn advanced messaging interface showing user conversations and paid content sharing" })} 
                 className="w-full rounded-lg shadow-lg border border-sky-blue/20"
               />
-              <p className="text-center text-sm text-royal-blue/60 mt-2 font-exo italic">{_copy("copy.361bf2c330ea", { defaultValue: "DeHub's advanced messaging interface demonstrating seamless integration of free and paid messaging features" })}</p>
+              <p className="text-center text-sm text-royal-blue/60 mt-2 font-exo italic">{_copy("copy.361bf2c330ea", { defaultValue: "Riftn's advanced messaging interface demonstrating seamless integration of free and paid messaging features" })}</p>
             </div>
           </div>
 
@@ -99,7 +99,7 @@ export const PostSpecificContent: React.FC = () => {
           <div className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-cyan-50 rounded-lg border border-sky-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.b40607b57d38", { defaultValue: "Premium Group Chats: Exclusive Community Building" })}</h3>
             
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.92c578f99135", { defaultValue: "DeHub's tokenized group chat system creates " })}<strong>{_copy("copy.25f1ee9823fb", { defaultValue: "exclusive communities" })}</strong>{_copy("copy.14b2f5993285", { defaultValue: " where access is gated by DHB token holdings, subscription status, or direct payment. This creates high-value environments where creators can build intimate relationships with their most dedicated supporters while generating significant recurring revenue." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.92c578f99135", { defaultValue: "Riftn's tokenized group chat system creates " })}<strong>{_copy("copy.25f1ee9823fb", { defaultValue: "exclusive communities" })}</strong>{_copy("copy.14b2f5993285", { defaultValue: " where access is gated by DHB token holdings, subscription status, or direct payment. This creates high-value environments where creators can build intimate relationships with their most dedicated supporters while generating significant recurring revenue." })}</p>
 
             <h4 className="text-lg font-bold text-royal-blue mb-3 mt-6 font-exo">{_copy("copy.00a28efe6bb7", { defaultValue: "Multi-Tier Access Control" })}</h4>
             
@@ -145,7 +145,7 @@ export const PostSpecificContent: React.FC = () => {
           <div className="mt-6 p-6 bg-gradient-to-r from-royal-blue/10 to-middle-blue/10 rounded-lg border border-royal-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.26b01b951d4a", { defaultValue: "Technical Excellence & User Experience" })}</h3>
             
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.f8797457ac41", { defaultValue: "Behind DeHub's messaging system lies cutting-edge technology that ensures " })}<strong>{_copy("copy.6ac059d90728", { defaultValue: "real-time performance" })}</strong>{_copy("copy.7b869339df60", { defaultValue: ", end-to-end encryption, and seamless blockchain integration. Our infrastructure handles millions of messages daily while maintaining the responsiveness users expect from modern messaging platforms." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.f8797457ac41", { defaultValue: "Behind Riftn's messaging system lies cutting-edge technology that ensures " })}<strong>{_copy("copy.6ac059d90728", { defaultValue: "real-time performance" })}</strong>{_copy("copy.7b869339df60", { defaultValue: ", end-to-end encryption, and seamless blockchain integration. Our infrastructure handles millions of messages daily while maintaining the responsiveness users expect from modern messaging platforms." })}</p>
 
             <h4 className="text-lg font-bold text-royal-blue mb-3 mt-6 font-exo">{_copy("copy.3740ef336d2b", { defaultValue: "Performance & Security" })}</h4>
             
@@ -174,7 +174,7 @@ export const PostSpecificContent: React.FC = () => {
             <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.32ba83b61325", { defaultValue: "The system includes sophisticated anti-spam measures, automated content moderation, and AI-powered conversation insights that help creators optimize their messaging strategies without compromising user privacy or security." })}</p>
 
             <div className="pt-4 border-t border-royal-blue/30">
-              <p className="text-royal-blue/80 font-exo text-sm italic">{_copy("copy.e0a51ac5dd2a", { defaultValue: "DeHub's messaging system isn't just communication—it's the foundation of a new creator economy where every interaction has the potential to generate value, build community, and strengthen the bonds between creators and their most dedicated supporters." })}</p>
+              <p className="text-royal-blue/80 font-exo text-sm italic">{_copy("copy.e0a51ac5dd2a", { defaultValue: "Riftn's messaging system isn't just communication—it's the foundation of a new creator economy where every interaction has the potential to generate value, build community, and strengthen the bonds between creators and their most dedicated supporters." })}</p>
             </div>
           </div>
         </>
@@ -214,15 +214,15 @@ export const PostSpecificContent: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.48ba4a71ba17", { defaultValue: "For DeHub, integrating with Livepeer represents a strategic alignment with our core principles of decentralization while providing immediate access to proven, scalable video infrastructure. This partnership enables us to support " })}<strong>{_copy("copy.7e05b8dcc423", { defaultValue: "50,000+ concurrent viewers initially" })}</strong>{_copy("copy.f1d810cf6def", { defaultValue: ", with unlimited scaling potential as our user base grows." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.48ba4a71ba17", { defaultValue: "For Riftn, integrating with Livepeer represents a strategic alignment with our core principles of decentralization while providing immediate access to proven, scalable video infrastructure. This partnership enables us to support " })}<strong>{_copy("copy.7e05b8dcc423", { defaultValue: "50,000+ concurrent viewers initially" })}</strong>{_copy("copy.f1d810cf6def", { defaultValue: ", with unlimited scaling potential as our user base grows." })}</p>
           </div>
 
           <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-sky-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.ea5df28683cd", { defaultValue: "Strategic Vision: From Partnership to DePIN Leadership" })}</h3>
             
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.e7bab0d695d7", { defaultValue: "While our integration with Livepeer provides immediate technical capabilities and proven decentralized infrastructure, our long-term vision extends far beyond this partnership. DeHub is actively developing our own " })}<strong>{_copy("copy.b594f0976b98", { defaultValue: "Decentralized Physical Infrastructure Network (DePIN)" })}</strong>{_copy("copy.6e15542bd0f7", { defaultValue: " that will eventually encompass video streaming, data storage, computational resources, and networking capabilities." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.e7bab0d695d7", { defaultValue: "While our integration with Livepeer provides immediate technical capabilities and proven decentralized infrastructure, our long-term vision extends far beyond this partnership. Riftn is actively developing our own " })}<strong>{_copy("copy.b594f0976b98", { defaultValue: "Decentralized Physical Infrastructure Network (DePIN)" })}</strong>{_copy("copy.6e15542bd0f7", { defaultValue: " that will eventually encompass video streaming, data storage, computational resources, and networking capabilities." })}</p>
 
-            <h4 className="text-lg font-bold text-royal-blue mb-3 mt-6 font-exo">{_copy("copy.8a82a97963dc", { defaultValue: "The Future of DeHub DePIN" })}</h4>
+            <h4 className="text-lg font-bold text-royal-blue mb-3 mt-6 font-exo">{_copy("copy.8a82a97963dc", { defaultValue: "The Future of Riftn DePIN" })}</h4>
             
             <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.2a53ce116102", { defaultValue: "Our proprietary DePIN infrastructure is designed to create a comprehensive ecosystem where community members can contribute computational resources, storage capacity, and bandwidth in exchange for DHB token rewards. This approach will enable:" })}</p>
 
@@ -245,9 +245,9 @@ export const PostSpecificContent: React.FC = () => {
           <div className="mt-6 p-6 bg-gradient-to-r from-royal-blue/10 to-middle-blue/10 rounded-lg border border-royal-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.750c5f2aed19", { defaultValue: "Technical Excellence Meets Decentralized Values" })}</h3>
             
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.40cd6ff6a869", { defaultValue: "The integration with Livepeer showcases how DeHub consistently chooses solutions that align with our commitment to decentralization, community empowerment, and technical excellence. Rather than relying on centralized cloud providers that concentrate power and profits in the hands of tech giants, we partner with protocols that distribute both." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.40cd6ff6a869", { defaultValue: "The integration with Livepeer showcases how Riftn consistently chooses solutions that align with our commitment to decentralization, community empowerment, and technical excellence. Rather than relying on centralized cloud providers that concentrate power and profits in the hands of tech giants, we partner with protocols that distribute both." })}</p>
 
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.c0b9bbd915f3", { defaultValue: "This decision reflects our broader philosophy: every technical choice should advance the cause of decentralization while delivering superior user experiences. As we continue building DeHub into the premier decentralized social platform, partnerships like this demonstrate our commitment to walking the walk, not just talking about decentralization." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.c0b9bbd915f3", { defaultValue: "This decision reflects our broader philosophy: every technical choice should advance the cause of decentralization while delivering superior user experiences. As we continue building Riftn into the premier decentralized social platform, partnerships like this demonstrate our commitment to walking the walk, not just talking about decentralization." })}</p>
 
             <div className="pt-4 border-t border-royal-blue/30">
               <p className="text-royal-blue/80 font-exo text-sm italic">{_copy("copy.eb840931ec0c", { defaultValue: "Join us as we scale new heights in decentralized infrastructure, bringing the future of social media to life through innovative partnerships and our own cutting-edge DePIN development." })}</p>

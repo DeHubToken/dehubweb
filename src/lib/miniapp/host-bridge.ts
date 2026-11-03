@@ -190,7 +190,7 @@ export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: Min
         }
         case 'actions.addApp': {
           if (!o.addApp) return fail('unsupported', 'Only registered apps can be added.');
-          if (!o.context.user) return fail('signin', 'The user is not signed in to DeHub.');
+          if (!o.context.user) return fail('signin', 'The user is not signed in to Riftn.');
           if (busy.current) return fail('busy', 'Another request is already open.');
           busy.current = true;
           try {
@@ -204,7 +204,7 @@ export function useMiniAppHost(frame: RefObject<HTMLIFrameElement>, options: Min
         }
         case 'actions.pay': {
           if (!o.pay) return fail('unsupported', 'Only registered apps can take payments.');
-          if (!o.context.user) return fail('signin', 'The user is not signed in to DeHub.');
+          if (!o.context.user) return fail('signin', 'The user is not signed in to Riftn.');
           const request = cleanPayment(req.params);
           if (!request) return fail('invalid', 'amount must be a positive number of DHB.');
           if (busy.current) return fail('busy', 'Another request is already open.');

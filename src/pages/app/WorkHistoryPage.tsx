@@ -70,8 +70,8 @@ export default function WorkHistoryPage() {
           head or it inherits the title and canonical of whatever route came
           before it — see src/lib/head-meta.ts. */}
       <SEOHead
-        title={_copy("copy.d329c3be85eb", { defaultValue: "My Bounties | DeHub" })}
-        description={_copy("copy.3ee01181e096", { defaultValue: "Every bounty you've posted or worked on DeHub, with their on-chain escrow and payout transactions." })}
+        title={_copy("copy.d329c3be85eb", { defaultValue: "My Bounties | Riftn" })}
+        description={_copy("copy.3ee01181e096", { defaultValue: "Every bounty you've posted or worked on Riftn, with their on-chain escrow and payout transactions." })}
         url="https://riftn.com/work/history"
         noindex
       />

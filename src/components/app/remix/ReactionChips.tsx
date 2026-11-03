@@ -1,5 +1,5 @@
 /**
- * Credit lines for reactions to DeHub videos.
+ * Credit lines for reactions to Riftn videos.
  *
  *   ReactionOfChip   on a reaction post: "Reaction to @creator", to the original
  *   ReactionsLink    on an original: "12 reactions", to its reactions page

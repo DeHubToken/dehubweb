@@ -175,7 +175,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       await assertWalletAddress(derived.ethAddress, current.ethAddress);
       // A wallet whose ONLY key is this passkey is one lost handset from being
       // unreachable, and the person cannot discover that until the day they
-      // try DeHub somewhere else. This is the moment to warn them: they have
+      // try Riftn somewhere else. This is the moment to warn them: they have
       // just proved themselves, the plaintext seed is in hand, and the wrap
       // costs them one password and no second prompt.
       //
@@ -655,7 +655,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         </div>
         <div className="space-y-2 text-center">
           <p className="text-white text-sm font-medium">{_copy("copy.942e455132bc", { defaultValue: "Your wallet has no backup" })}</p>
-          <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.0daefee695b7", { defaultValue: "It only opens with biometrics on this device — lose the device and nobody, including DeHub, can get you back in. A password fixes that and lets you sign in anywhere. Your fingerprint keeps working here." })}</p>
+          <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.0daefee695b7", { defaultValue: "It only opens with biometrics on this device — lose the device and nobody, including Riftn, can get you back in. A password fixes that and lets you sign in anywhere. Your fingerprint keeps working here." })}</p>
         </div>
         <form
           onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && !busy) handleSetPassword(); }}
@@ -854,10 +854,10 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
           <p>
             {seedIsPasskeyWrapped && wraps.length === 0
-              ? _copy("copy.2005886825d3", { defaultValue: "This wallet’s biometric unlock was set up in the DeHub mobile app. Open the app on that phone to use the wallet — or add a wallet password there, from its Settings, to unlock it here." })
+              ? _copy("copy.2005886825d3", { defaultValue: "This wallet’s biometric unlock was set up in the Riftn mobile app. Open the app on that phone to use the wallet — or add a wallet password there, from its Settings, to unlock it here." })
               : biometricEnrolledElsewhere
-                ? _copy("copy.dfc115c3ddca", { defaultValue: "This wallet unlocks with biometrics, which this browser doesn’t support. Open DeHub on the device you set it up on — or add a wallet password there, from Settings → Account Security." })
-                : _copy("copy.7a78d69bd927", { defaultValue: "This wallet unlocks with biometrics, but none are set up on this device. Open DeHub on the device you set it up on, or add a wallet password there from Settings → Account Security." })}
+                ? _copy("copy.dfc115c3ddca", { defaultValue: "This wallet unlocks with biometrics, which this browser doesn’t support. Open Riftn on the device you set it up on — or add a wallet password there, from Settings → Account Security." })
+                : _copy("copy.7a78d69bd927", { defaultValue: "This wallet unlocks with biometrics, but none are set up on this device. Open Riftn on the device you set it up on, or add a wallet password there from Settings → Account Security." })}
           </p>
         </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
@@ -911,7 +911,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           {someWrapReachableHere
             ? _copy("copy.392e06a714e1", { defaultValue: "Your passkey can answer from that device: when the passkey sheet opens, choose “use another device” and scan the QR code with it." })
             : allWrapsDeviceBound
-              ? _copy("copy.5f94fde59ced", { defaultValue: "That credential only works on the device it was made on — open DeHub there, or add a wallet password from its Settings → Account Security to unlock anywhere." })
+              ? _copy("copy.5f94fde59ced", { defaultValue: "That credential only works on the device it was made on — open Riftn there, or add a wallet password from its Settings → Account Security to unlock anywhere." })
               : _copy("copy.ab55b7d985f8", { defaultValue: "On a different device, choose that device if your browser offers it — or open Settings → Account Security there to add a wallet password." })}
         </p>
       )}

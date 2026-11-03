@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Images Feed Component
  * =====================
  * Displays image posts in collage or endless scroll view.
- * Fetches from DeHub API.
+ * Fetches from Riftn API.
  * 
  * @module components/app/feeds/ImagesFeed
  */
@@ -498,7 +498,7 @@ export function ImagesFeed({
     resetContentFilters();
   }, [setSelectedSort, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
-  // Fetch from DeHub API (default - no content filters)
+  // Fetch from Riftn API (default - no content filters)
   const {
     data: apiData,
     fetchNextPage: fetchNextPageDefault,

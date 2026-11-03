@@ -10,7 +10,7 @@
  *
  * What this cannot remove is the wallet signature. Fractions live in the
  * seller's own wallet, and only that wallet can authorise moving them; the only
- * way to skip the signature would be for DeHub to hold everyone's keys. For a
+ * way to skip the signature would be for Riftn to hold everyone's keys. For a
  * social-login (Web3Auth) account the transaction is sponsored, so it is a
  * confirm rather than a gas payment.
  *

@@ -3,13 +3,13 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Auth Provider (heavy implementation — loaded via the WalletProviders chunk)
  * ============
- * Two login paths, both ending in a signed message to the DeHub backend:
+ * Two login paths, both ending in a signed message to the Riftn backend:
  *
  * 1. Social / email (self-custody smart wallet — replaces Web3Auth):
  *    Supabase Auth (email OTP / OAuth) establishes identity, then the user's
  *    client-side encrypted wallet (lib/wallet-core) is created or unlocked.
  *    The derived ETH key powers a Safe Smart Account via Pimlico
- *    (lib/smart-wallet) and signs the DeHub auth message (EIP-1271/6492).
+ *    (lib/smart-wallet) and signs the Riftn auth message (EIP-1271/6492).
  *    connectionSource stays 'web3auth' for backward compatibility — dozens of
  *    consumers branch on that string; it now means "smart-wallet session".
  *
@@ -163,7 +163,7 @@ function readsEnglish(): boolean {
  *
  * Returns the key to sign in with, or null to keep the visible setup step:
  *  - "Migrate account" / "Import" was chosen on the login sheet;
- *  - this login may have an older DeHub account (the step offers to bring it
+ *  - this login may have an older Riftn account (the step offers to bring it
  *    back — a silent wallet here would be a second account), or the check
  *    could not answer (old Web3Auth storage on this browser only matters
  *    then: a definite "none" from the backend outranks it);
@@ -333,7 +333,7 @@ function mapSocialProvider(provider: SocialProvider): string | null {
   }
 }
 
-/** Build auth meta (shown on the DeHub profile) from the Supabase user. */
+/** Build auth meta (shown on the Riftn profile) from the Supabase user. */
 async function getSupabaseAuthMeta(): Promise<Web3AuthMeta | undefined> {
   try {
     const { data } = await supabase.auth.getUser();
@@ -733,7 +733,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Awaited, exactly as switchToProfile awaits it. setSession persists
         // after at least one turn — and refreshes over the network first when
         // the stored access token has expired — so reloading straight into it
-        // can land on a browser holding the restored account's DeHub keys with
+        // can land on a browser holding the restored account's Riftn keys with
         // no Supabase session under them. Worse, a refresh cut off mid-flight
         // has already rotated the pair server-side, which kills the stored
         // refresh token this profile switches back with.
@@ -797,7 +797,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * also opened over live sessions — "Add a profile", and the mid-session
    * wallet-unlock request — and those must stay up until they have done their
    * own work. `walletPhase` holds it open across the create/unlock handoff,
-   * where a DeHub session can exist before the wallet step is done.
+   * where a Riftn session can exist before the wallet step is done.
    */
   useEffect(() => {
     if (!isLoginModalOpen || isProcessingRedirect) return;
@@ -871,7 +871,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Every caller (the SIGNED_IN listener, verifyEmailOtp, verifyPhoneOtp,
    * OAuth redirect return) converges here, so the stale-identity check lives
    * HERE rather than being duplicated per caller. Without it, a browser that
-   * still has a valid cached DeHub session (dehub_token/dehub_wallet/user)
+   * still has a valid cached Riftn session (dehub_token/dehub_wallet/user)
    * from a DIFFERENT account keeps showing that account's data on screen
    * while this new identity's wallet flow runs underneath in the modal.
    */
@@ -1039,7 +1039,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openLoginModal]);
 
-  // Check for existing DeHub session on mount
+  // Check for existing Riftn session on mount
   useEffect(() => {
     // Keep this device's profile snapshots fresh (token refreshes, pagehide).
     initProfileTracking();
@@ -1157,7 +1157,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               } catch { /* ignore */ }
             }
           } else {
-            // The DeHub pair is gone; try the independent identity session
+            // The Riftn pair is gone; try the independent identity session
             // before deciding this browser is genuinely signed out.
             if (await recoverExistingSupabaseSession()) return;
             clearAuthSession();
@@ -1207,10 +1207,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!localStorage.getItem(SUPA_LOGIN_PENDING_KEY)) return;
 
       // "Already fully logged in, nothing to resume" is only true if the
-      // cached DeHub session belongs to THIS Supabase user. Without this
+      // cached Riftn session belongs to THIS Supabase user. Without this
       // check, a cross-device magic-link confirmation (or any SIGNED_IN for
       // a different account on a browser that still has an old, unexpired
-      // DeHub session) would silently keep the OLD account on screen while
+      // Riftn session) would silently keep the OLD account on screen while
       // the underlying Supabase session had already switched users.
       const cachedUid = localStorage.getItem('dehub_supabase_uid');
       const sameIdentity = !!cachedUid && cachedUid === session.user.id;
@@ -1338,7 +1338,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Note this is the SMART ACCOUNT address, which does not join to
         // user_wallets.eth_address (the EOA). Carry the Supabase id too, or
         // linking a log row back to an account means a round-trip through the
-        // DeHub profile API to translate one address into the other.
+        // Riftn profile API to translate one address into the other.
         walletAddress: localStorage.getItem('dehub_wallet'),
         supabaseUserId: uid,
         // Which of the two reasons this was: the auto-lock interval genuinely
@@ -1440,7 +1440,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // valid; the next tick (or the next 401) will recover.
           console.warn('[Auth] Proactive refresh failed transiently — keeping session, will retry');
         } else {
-          // The DeHub pair is dead, but the independently-managed Supabase
+          // The Riftn pair is dead, but the independently-managed Supabase
           // session may still prove who this is. Exchange it before changing
           // the visible auth state, so a cross-tab refresh collision never
           // flashes the user through the logged-out UI.
@@ -1644,7 +1644,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               );
               if (saved) {
                 // Both accounts are saved here, so honour the wallet's choice:
-                // switching accounts in MetaMask switches DeHub accounts, and
+                // switching accounts in MetaMask switches Riftn accounts, and
                 // switching back switches back. Neither session is destroyed.
                 void switchToProfileRef.current?.(saved.id);
                 return;
@@ -1801,7 +1801,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, connectionSource, isWagmiConnected, isLoading, isConnecting]);
 
   /**
-   * Complete DeHub auth using Wagmi (Sign Message).
+   * Complete Riftn auth using Wagmi (Sign Message).
    *
    * Every failure in here used to end at `console.error`, and `createLogger`
    * does not patch the console — so the entire external-wallet login path wrote
@@ -1988,7 +1988,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else if (staleBuild) {
         // The tab has been open across a deploy. Nothing the user does to the
         // wallet will help, and telling them to try again just repeats it.
-        toast.error(_copy("copy.a37c96c1e133", { defaultValue: "DeHub has been updated" }), {
+        toast.error(_copy("copy.a37c96c1e133", { defaultValue: "Riftn has been updated" }), {
           description: _copy("copy.fc3665c13829", { defaultValue: "This tab is running an older version. Refresh, then sign in again." }),
           action: { label: _copy("copy.0e9161011702", { defaultValue: "Refresh" }), onClick: () => window.location.reload() },
           duration: 12_000,
@@ -2193,20 +2193,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.success(
       authResponse.result?.isNewAccount
-        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to DeHub!')
+        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to Riftn!')
         : i18n.t('toasts.welcome_back', 'Welcome back!'),
     );
     authLogger.info('Login success', { method: 'wagmi', address: authAddress, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
 
   /**
-   * Sign the DeHub auth message with the active smart-wallet session and
-   * establish the DeHub backend session. Prefers the Safe Smart Account
+   * Sign the Riftn auth message with the active smart-wallet session and
+   * establish the Riftn backend session. Prefers the Safe Smart Account
    * (sponsored gas, same address as the old Web3Auth flow for the same key);
    * falls back to the EOA if Pimlico is unavailable.
    */
   /**
-   * Apply a successful DeHub auth response to local state and storage.
+   * Apply a successful Riftn auth response to local state and storage.
    *
    * Shared by the two ways a session can be established — signing with the
    * wallet, and exchanging a Supabase session (see completeLoginWithoutUnlock).
@@ -2241,7 +2241,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
     writeConnectionSource(source);
-    // Tag this DeHub session with the Supabase identity that produced it, so
+    // Tag this Riftn session with the Supabase identity that produced it, so
     // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
     // magic-link sync) can tell "still me, just refreshing" apart from
     // "someone else signed in on this browser" instead of silently keeping
@@ -2304,7 +2304,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Finish logging in WITHOUT unlocking the wallet, by exchanging the current
-   * Supabase session for a DeHub token.
+   * Supabase session for a Riftn token.
    *
    * The whole point is that a returning user gets no password or biometric
    * prompt on entry: their key stays encrypted until something actually needs a
@@ -2325,7 +2325,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const authResponse = await authenticateProfileSession(userId);
       const address = authResponse.user?.address?.toLowerCase();
       if (!address) {
-        // The exchange succeeded, so a DeHub token is already in storage, but
+        // The exchange succeeded, so a Riftn token is already in storage, but
         // there is no address to hang a session on. Drop the token rather than
         // leave an authenticated API client sitting behind a logged-out UI.
         clearAuthSession();
@@ -2356,10 +2356,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           reason: e.message,
         });
       } else if (restoringExistingSession && e instanceof SupabaseSessionMissingError) {
-        // The Supabase session lapsed but the DeHub token did not, and the
+        // The Supabase session lapsed but the Riftn token did not, and the
         // restore carries on with that token. Nothing failed, yet this used to
         // write a "session expired" warning on every page load (~125 a week),
-        // which read as the DeHub token dying when it had not.
+        // which read as the Riftn token dying when it had not.
       } else {
         authLogger.warn('Supabase profile session exchange unavailable', {
           error: e instanceof Error ? e.message : String(e),
@@ -2497,7 +2497,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.success(
       authResponse.result?.isNewAccount
-        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to DeHub!')
+        ? i18n.t('toasts.welcome_to_dehub', 'Welcome to Riftn!')
         : i18n.t('toasts.welcome_back', 'Welcome back!'),
       { id: toastId },
     );
@@ -2556,8 +2556,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!matchesExpected) {
           throw new AuthCopyError(
             predictedSafe
-              ? _translateCopy("copy.258b822fbbb6", { defaultValue: "This login recovered a different wallet from the selected DeHub profile. Nothing was changed." })
-              : _translateCopy("copy.06157a92311c", { defaultValue: "We could not verify this wallet against the selected DeHub profile. Try the recovery again." }),
+              ? _translateCopy("copy.258b822fbbb6", { defaultValue: "This login recovered a different wallet from the selected Riftn profile. Nothing was changed." })
+              : _translateCopy("copy.06157a92311c", { defaultValue: "We could not verify this wallet against the selected Riftn profile. Try the recovery again." }),
           );
         }
       }
@@ -3085,7 +3085,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   /**
    * Telegram, step 2 of either route: turn Telegram's signed payload into a
-   * DeHub session. The edge function verifies the HMAC and mints the session;
+   * Riftn session. The edge function verifies the HMAC and mints the session;
    * from setSession on this is the phone path. `supaLoginHandledRef` keeps the
    * SIGNED_IN listener off it — setSession fires that listener, and both paths
    * calling proceedToWalletPhase would run the wallet lookup twice.
@@ -3434,7 +3434,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // The wagmi effect is defined above this and needs to reach it (a wallet
-  // switching to an account already saved here switches DeHub accounts rather
+  // switching to an account already saved here switches Riftn accounts rather
   // than logging anybody out). It only ever calls through after mount.
   switchToProfileRef.current = switchToProfile;
 
@@ -3460,7 +3460,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Re-establish a usable DeHub session.
+   * Re-establish a usable Riftn session.
    *
    * `force` skips the "the token still looks fine locally" shortcut. Callers
    * reacting to a REJECTED request must pass it: expiry here is pure arithmetic

@@ -60,8 +60,8 @@ export default function CoStreamJoinPage() {
   const host = room ? participantLabel(room.host_username, room.host_wallet) : '';
   const live = room?.status === 'active';
   const title = host
-    ? t('costream.joinTitle', { defaultValue: 'Join {{name}} live on DeHub', name: host })
-    : t('costream.joinTitleGeneric', { defaultValue: 'Join a live on DeHub' });
+    ? t('costream.joinTitle', { defaultValue: 'Join {{name}} live on Riftn', name: host })
+    : t('costream.joinTitleGeneric', { defaultValue: 'Join a live on Riftn' });
 
   const act = async (task: () => Promise<void>) => {
     setBusy(true);
@@ -80,7 +80,7 @@ export default function CoStreamJoinPage() {
       <SEOHead
         title={title}
         description={t('costream.joinDescription', {
-          defaultValue: 'You have been invited on screen in a live video stream on DeHub. Open the link to join with your camera.',
+          defaultValue: 'You have been invited on screen in a live video stream on Riftn. Open the link to join with your camera.',
         })}
         noindex
       />
@@ -93,7 +93,7 @@ export default function CoStreamJoinPage() {
           <p className="text-sm text-zinc-400">
             {t('costream.linkEndedBody', { defaultValue: 'The host has closed their guest seats. Catch them next time they go live.' })}
           </p>
-          <Link to="/" className={BTN}>{t('costream.home', { defaultValue: 'Go to DeHub' })}</Link>
+          <Link to="/" className={BTN}>{t('costream.home', { defaultValue: 'Go to Riftn' })}</Link>
         </div>
       ) : (
         <div className="space-y-5 rounded-2xl border border-white/10 bg-white/5 p-5">

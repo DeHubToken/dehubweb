@@ -13,7 +13,7 @@ function keywords(version: string, file: string): EmojiKeywords {
 }
 
 describe('emoji dataset', () => {
-  it('covers the full Unicode set and every DeHub pick', async () => {
+  it('covers the full Unicode set and every Riftn pick', async () => {
     const data = await loadEmojiData();
     expect(data.entries.length).toBeGreaterThan(1800);
     for (const pick of DEHUB_PICKS) expect(data.byChar.get(pick)).toBeTruthy();
@@ -29,7 +29,7 @@ describe('emoji dataset', () => {
     }
   });
 
-  it('finds emoji by keyword, shortcode and DeHub slang', async () => {
+  it('finds emoji by keyword, shortcode and Riftn slang', async () => {
     const data = await loadEmojiData();
     const en = keywords(data.version, 'en');
     const first = (q: string) => searchEmoji(q, data.entries, [en])[0]?.char;

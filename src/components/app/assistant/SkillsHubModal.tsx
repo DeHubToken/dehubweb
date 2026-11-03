@@ -3,7 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * SkillsHubModal
  * ==============
- * Browse, search, use, and create AI Skills — the DeHub equivalent of
+ * Browse, search, use, and create AI Skills — the Riftn equivalent of
  * ChatGPT's GPTs / Claude Projects / Poe bots. A skill bundles a name,
  * trigger phrases, a system prompt, optional reference asset URLs, and
  * a preferred model. When picked from here it gets injected into the

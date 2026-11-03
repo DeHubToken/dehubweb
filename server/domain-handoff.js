@@ -109,7 +109,7 @@ const IN_SCRIPT = `${CODEC}
 `;
 
 function page(script) {
-  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>DeHub</title><style>html,body{margin:0;height:100%;background:#000;color:#fff;font:15px system-ui,sans-serif;display:flex;align-items:center;justify-content:center}</style></head><body><p>Moving you to riftn.com…</p><script>${script}</script></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Riftn</title><style>html,body{margin:0;height:100%;background:#000;color:#fff;font:15px system-ui,sans-serif;display:flex;align-items:center;justify-content:center}</style></head><body><p>Moving you to riftn.com…</p><script>${script}</script></body></html>`;
   return new Response(html, {
     status: 200,
     headers: {

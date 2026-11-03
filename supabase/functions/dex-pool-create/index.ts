@@ -5,7 +5,7 @@
 // already exists, and quotes the fee in DHB. Nothing is written.
 //
 // `{ chain, tokenAddress, txHash, imageUrl? }` opens the pool. The wallet comes
-// from the verified DeHub token, the fee transfer is confirmed and claimed by
+// from the verified Riftn token, the fee transfer is confirmed and claimed by
 // `claimDhbPayment`, and the hash is stored on the row — `dex_pools.fee_tx_hash`
 // is unique, so one transfer opens exactly one pool. Token details are always
 // read here, never taken from the request.

@@ -1,5 +1,5 @@
 /**
- * Profiles — every DeHub account saved on this browser.
+ * Profiles — every Riftn account saved on this browser.
  * =====================================================
  * Rendered at the top of Settings → Profile. Each row switches to that
  * account; the "+" tile opens the sign-in sheet (wallet, email, phone,

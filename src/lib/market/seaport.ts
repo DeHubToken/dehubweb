@@ -1,5 +1,5 @@
 /**
- * Seaport 1.6 orders for the DeHub NFT market.
+ * Seaport 1.6 orders for the Riftn NFT market.
  *
  * Seaport is the open swap contract the market settles on: one canonical
  * deployment at the same address on BNB and Base. A seller signs an order
@@ -192,7 +192,7 @@ export function sellerProceeds(price: bigint, terms: FeeTerms, seller: string): 
 }
 
 /**
- * DeHub fee and royalties. With `endPrice` below `price` every amount falls in
+ * Riftn fee and royalties. With `endPrice` below `price` every amount falls in
  * step (a price-drop auction), worked out the same way the backend checks it.
  */
 function feeItems(itemType: number, currency: string, price: bigint, terms: FeeTerms, seller: string, endPrice = price): ConsiderationItem[] {

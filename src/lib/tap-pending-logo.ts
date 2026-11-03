@@ -1,5 +1,5 @@
 /**
- * The DeHub logo, armed the moment a finger or mouse goes down on something
+ * The Riftn logo, armed the moment a finger or mouse goes down on something
  * that opens a page (a profile, a post, an in-app link, a Back button).
  *
  * A page change renders inside the click, and on a busy feed that keeps the

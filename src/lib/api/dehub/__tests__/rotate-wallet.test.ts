@@ -90,12 +90,12 @@ describe('rotateWallet', () => {
   });
 
   it('keeps other refusals distinct — the destination already has an account', async () => {
-    mockFetch({ code: 'ADDRESS_IN_USE', message: 'That wallet already has a DeHub account.' }, 409);
+    mockFetch({ code: 'ADDRESS_IN_USE', message: 'That wallet already has a Riftn account.' }, 409);
 
     const error = await rotate().catch((e) => e);
     expect(error).toBeInstanceOf(Error);
     expect(error).not.toBeInstanceOf(WalletNotLinkedError);
-    expect(error.message).toMatch(/already has a DeHub account/);
+    expect(error.message).toMatch(/already has a Riftn account/);
   });
 
   it('surfaces a server that has no such endpoint', async () => {

@@ -1,5 +1,5 @@
 /**
- * Whether a DeHub video may be remixed: a finished, public, free video with
+ * Whether a Riftn video may be remixed: a finished, public, free video with
  * nothing gated behind it. For a duet, stitch or reaction the creator's allow
  * setting is asked of the shared remix links too; if that service cannot
  * answer the browser checks here still stand, and a real "no" still stops it.

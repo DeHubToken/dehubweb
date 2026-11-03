@@ -1,5 +1,5 @@
 /**
- * The host rule: a card is a claim that the content is DeHub's, so only our own
+ * The host rule: a card is a claim that the content is Riftn's, so only our own
  * hosts (and host-less paths, which can only be ours) may produce one.
  *
  * findDehubLinks scans twice — once for whole URLs, once for bare in-app paths.

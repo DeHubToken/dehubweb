@@ -1,7 +1,7 @@
 /**
  * Get Stream Ingest URL for OBS
  * =============================
- * Fetches stream credentials from DeHub nft_info and returns OBS-ready
+ * Fetches stream credentials from Riftn nft_info and returns OBS-ready
  * ingest URL + stream key. Use when api.dehub.io /api/live/* endpoints fail.
  *
  * POST body: { tokenId: string }

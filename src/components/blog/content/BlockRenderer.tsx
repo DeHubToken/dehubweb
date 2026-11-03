@@ -154,7 +154,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={index} className="space-y-6">
           <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-sky-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.b4cd31c743bf", { defaultValue: "Revolutionary Live Streaming Experience" })}</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.feb5cde351e8", { defaultValue: "DeHub's live streaming platform transforms traditional broadcasting into an " })}<strong>{_copy("copy.04768b4b8dc3", { defaultValue: "interactive, monetized experience" })}</strong>{_copy("copy.1471e76dd037", { defaultValue: " where creators and audiences engage through real-time tipping, animated reactions, and blockchain-powered rewards. Our streaming infrastructure supports unlimited concurrent viewers while maintaining the personal connection that makes live content special." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.feb5cde351e8", { defaultValue: "Riftn's live streaming platform transforms traditional broadcasting into an " })}<strong>{_copy("copy.04768b4b8dc3", { defaultValue: "interactive, monetized experience" })}</strong>{_copy("copy.1471e76dd037", { defaultValue: " where creators and audiences engage through real-time tipping, animated reactions, and blockchain-powered rewards. Our streaming infrastructure supports unlimited concurrent viewers while maintaining the personal connection that makes live content special." })}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -200,7 +200,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
 
           <div className="p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-sky-blue/20">
             <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.0fddd5e4ab0d", { defaultValue: "Decentralized Infrastructure Benefits" })}</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.95e2f4bccc55", { defaultValue: "Built on decentralized video infrastructure, our streaming platform offers " })}<strong>{_copy("copy.d545c7dd7038", { defaultValue: "unprecedented reliability and cost efficiency" })}</strong>{_copy("copy.92c6f9f23af1", { defaultValue: ". Unlike centralized platforms that can experience downtime or impose arbitrary restrictions, DeHub's distributed network ensures your stream stays live and your content remains accessible globally." })}</p>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.95e2f4bccc55", { defaultValue: "Built on decentralized video infrastructure, our streaming platform offers " })}<strong>{_copy("copy.d545c7dd7038", { defaultValue: "unprecedented reliability and cost efficiency" })}</strong>{_copy("copy.92c6f9f23af1", { defaultValue: ". Unlike centralized platforms that can experience downtime or impose arbitrary restrictions, Riftn's distributed network ensures your stream stays live and your content remains accessible globally." })}</p>
             
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-white/50 p-4 rounded-lg">
@@ -228,7 +228,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
     }
   }
 
-  // Check if this is the DeHub Card blog post and add silver card image after Card Variants
+  // Check if this is the Riftn Card blog post and add silver card image after Card Variants
   if (window.location.pathname.includes('off-ramp-service-revealed-dehub-card-coming-soon')) {
     // Add silver card image after "💳 Each card is designed with crypto users in mind" paragraph
     if (block.includes('💳 Each card is designed with crypto users in mind')) {
@@ -238,7 +238,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-card-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/82928389-9659-4117-8bbe-351a68241694.png" 
-            alt={_copy("copy.58b616dd23f3", { defaultValue: "DeHub Card in premium silver finish showcasing modern crypto payment solution" })} 
+            alt={_copy("copy.58b616dd23f3", { defaultValue: "Riftn Card in premium silver finish showcasing modern crypto payment solution" })} 
             className="w-full h-auto object-cover"
           />
         </div>
@@ -253,7 +253,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-card-stack-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/dd33f339-f2d6-46ac-9e87-98b96f3060ca.png" 
-            alt={_copy("copy.c321934d39bd", { defaultValue: "Stack of DeHub Cards showing multiple card variants in elegant presentation" })} 
+            alt={_copy("copy.c321934d39bd", { defaultValue: "Stack of Riftn Cards showing multiple card variants in elegant presentation" })} 
             className="w-full h-auto object-cover"
           />
         </div>
@@ -269,7 +269,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/79082851-6427-4cc2-847b-a7780deb8f44.png" 
-            alt={_copy("copy.39e5bdc9314b", { defaultValue: "DeHub Airdrop Calculator interface showing allocation calculations" })} 
+            alt={_copy("copy.39e5bdc9314b", { defaultValue: "Riftn Airdrop Calculator interface showing allocation calculations" })} 
             className="w-full h-auto object-cover"
           />
         </div>,
@@ -285,7 +285,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/d306700c-5d81-4ec5-8010-864d72d705a2.png" 
-            alt={_copy("copy.39e5bdc9314b", { defaultValue: "DeHub Airdrop Calculator interface showing allocation calculations" })} 
+            alt={_copy("copy.39e5bdc9314b", { defaultValue: "Riftn Airdrop Calculator interface showing allocation calculations" })} 
             className="w-full h-auto object-cover"
           />
         </div>,

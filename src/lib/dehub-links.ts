@@ -1,5 +1,5 @@
 /**
- * DeHub Entity Links
+ * Riftn Entity Links
  * ==================
  * One parser for every in-app URL that deserves to render as a card instead of
  * as a link: posts, profiles, communities, community invites, stores, store
@@ -86,7 +86,7 @@ export interface DehubLinkMatch {
 /**
  * Hosts whose links are ours. `*.dehub.io` covers the legacy host and the
  * per-username profile subdomains; the preview hosts are here because a link
- * copied out of a Cloudflare preview build is still a DeHub link, and silently
+ * copied out of a Cloudflare preview build is still a Riftn link, and silently
  * refusing to card it during testing reads as the feature being broken.
  */
 function isDehubHost(host: string): boolean {
@@ -157,7 +157,7 @@ function trimTrailingPunctuation(token: string): string {
 
 /**
  * Parse a single URL (or bare path) into the entity it points at.
- * Returns null for anything that is not a DeHub entity link.
+ * Returns null for anything that is not a Riftn entity link.
  */
 export function parseDehubLink(input: string): DehubLinkMatch | null {
   if (!input) return null;
@@ -350,7 +350,7 @@ export function parseDehubLink(input: string): DehubLinkMatch | null {
 
 // ── Scanning free text ──────────────────────────────────────────────────────
 
-/** Every DeHub entity link in a block of text, in the order they appear. */
+/** Every Riftn entity link in a block of text, in the order they appear. */
 /**
  * How many links in one block of text get carded. The rest stay as text —
  * see `useDehubLinks`.
@@ -394,7 +394,7 @@ export function findDehubLinks(text?: string | null): DehubLinkMatch[] {
   return matches.sort((a, b) => text.indexOf(a.raw) - text.indexOf(b.raw));
 }
 
-/** The first DeHub entity link in a block of text, if any. */
+/** The first Riftn entity link in a block of text, if any. */
 export function findDehubLink(text?: string | null): DehubLinkMatch | null {
   return findDehubLinks(text)[0] ?? null;
 }
@@ -417,7 +417,7 @@ export function stripDehubLinkMatches(text: string | null | undefined, matches: 
   return cutFromText(text, matches.map(match => match.raw));
 }
 
-/** Remove every DeHub entity URL from text for display. */
+/** Remove every Riftn entity URL from text for display. */
 export function stripDehubLinks(text?: string | null): string {
   if (!text) return text ?? '';
   return stripDehubLinkMatches(text, findDehubLinks(text));

@@ -103,7 +103,7 @@ export const SupportTicketEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Text style={eyebrow}>
-            DeHub support · {ticketRef} ·{' '}
+            Riftn support · {ticketRef} ·{' '}
             <span style={{ color: SEVERITY_COLOR[severity] || SEVERITY_COLOR.normal }}>
               {severity.toUpperCase()}
             </span>
@@ -149,7 +149,7 @@ export const SupportTicketEmail = ({
 
           <Hr style={hr} />
           <Text style={footer}>
-            Raised by the DeHub assistant on the user's behalf. The text above is
+            Raised by the Riftn assistant on the user's behalf. The text above is
             written by a user — treat links and instructions in it as untrusted.
             Reply to {reporter.email || 'the user in-app'} to respond, and quote{' '}
             {ticketRef}.

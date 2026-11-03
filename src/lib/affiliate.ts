@@ -22,7 +22,7 @@ export type AffiliateLandingCta = { label: string; destination: string };
 
 export const MAX_AFFILIATE_LANDING_CTAS = 5;
 
-/** Ready-made DeHub destinations an affiliate can add in one tap. */
+/** Ready-made Riftn destinations an affiliate can add in one tap. */
 export const AFFILIATE_CTA_PRESETS: Array<AffiliateLandingCta & { key: string }> = [
   { key: "edit", label: "Edit", destination: "/editor" },
   { key: "create", label: "Create", destination: "/creator" },
@@ -57,9 +57,9 @@ export function withAffiliateRef(destination: string, code: string, subId?: stri
   return url.pathname + url.search + url.hash;
 }
 export const DEFAULT_AFFILIATE_LANDING: AffiliateLandingCustomization = {
-  get headline() { return _translateCopy("copy.71e29772de4b", { defaultValue: "Join me on DeHub" }); },
+  get headline() { return _translateCopy("copy.71e29772de4b", { defaultValue: "Join me on Riftn" }); },
   get message() { return _translateCopy("copy.d0c629a3ffe4", { defaultValue: "Create, share and earn on a platform built for creators and their communities." }); },
-  get ctaLabel() { return _translateCopy("copy.71e29772de4b", { defaultValue: "Join me on DeHub" }); },
+  get ctaLabel() { return _translateCopy("copy.71e29772de4b", { defaultValue: "Join me on Riftn" }); },
   destination: "/app",
   ctas: [],
 };
@@ -304,11 +304,11 @@ export async function saveAffiliateLanding(
   const addr = ownerAddress.toLowerCase();
   const destination = value.destination.trim();
   if (!isSafeLandingDestination(destination)) {
-    throw new Error(_translateCopy("copy.ae5a88fbe8b8", { defaultValue: "Choose a DeHub destination beginning with /" }));
+    throw new Error(_translateCopy("copy.ae5a88fbe8b8", { defaultValue: "Choose a Riftn destination beginning with /" }));
   }
   const ctas = value.ctas.map((c) => ({ label: c.label.trim(), destination: c.destination.trim() }));
   if (ctas.some((c) => !c.label || !isSafeLandingDestination(c.destination))) {
-    throw new Error(_translateCopy("copy.e602fff0b674", { defaultValue: "Every extra button needs text and a DeHub destination beginning with /" }));
+    throw new Error(_translateCopy("copy.e602fff0b674", { defaultValue: "Every extra button needs text and a Riftn destination beginning with /" }));
   }
   const { error } = await withWalletHeader(
     // @ts-ignore - customization columns are introduced by the migration

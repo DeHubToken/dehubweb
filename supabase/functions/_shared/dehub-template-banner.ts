@@ -1,4 +1,4 @@
-// DeHub "SM Template 2.0" deterministic banner renderer — design language v2.
+// Riftn "SM Template 2.0" deterministic banner renderer — design language v2.
 //
 // Instead of asking a diffusion model to imitate the brand, this renders the
 // official template system directly: silk background (with an opt-in dust/grid/
@@ -155,7 +155,7 @@ function clampSpec(raw: Partial<BannerSpec>, manifest: KitManifest, format: Bann
     }))
     .filter((l) => l.text)
     .slice(0, 2);
-  if (!lines.length) lines.push({ text: "DEHUB", blurTail: 0 });
+  if (!lines.length) lines.push({ text: "RIFTN", blurTail: 0 });
   const iconRaw = coerceStr(raw.icon), icon2Raw = coerceStr(raw.icon2);
   const icon = iconKeys.has(iconRaw) ? iconRaw : undefined;
   const icon2 = iconKeys.has(icon2Raw) && icon2Raw !== icon ? icon2Raw : undefined;
@@ -187,7 +187,7 @@ function heuristicSpec(prompt: string, manifest: KitManifest, format: BannerForm
   const quoted = prompt.match(/["“”']([^"“”']{2,28})["“”']/)?.[1];
   const base = (quoted || prompt.replace(/\b(dehub|make|create|generate|a|an|the|for|please|banner|poster|graphic|image)\b/gi, " "))
     .trim().split(/\s+/).filter(Boolean);
-  const l1 = (base[0] || "DEHUB").toUpperCase().slice(0, 12);
+  const l1 = (base[0] || "RIFTN").toUpperCase().slice(0, 12);
   const l2 = base.slice(1, 3).join(" ").toUpperCase().slice(0, 13);
   const headline = l2 ? [{ text: l1, blurTail: 0 }, { text: l2, blurTail: 2 }] : [{ text: l1, blurTail: 2 }];
   return clampSpec({ layout: "hero", headline, subtitle: snake(prompt.slice(0, 40)), typeTag: "graphic", icon }, manifest, format);
@@ -203,11 +203,11 @@ export async function buildSpecFromPrompt(opts: {
 }): Promise<BannerSpec> {
   const manifest = await kitManifest();
   const inventory = manifest.icons.map((i) => `${i.key} (${i.tags.join(", ")})`).join("; ");
-  const sys = `You fill a JSON spec for DeHub's official monochrome banner template. Rules:
+  const sys = `You fill a JSON spec for Riftn's official monochrome banner template. Rules:
 - headline: 1-2 lines, UPPERCASE, punchy marketing copy, max 12 chars per line (hard limit 14). blurTail = 1-3 trailing letters to motion-blur on the LAST line, 0 on the first.
 - subtitle: short snake_case descriptor (e.g. get_paid_to_watch). extra: optional tiny snake_case fact (e.g. 2026, no_investment).
 - typeTag: one snake word categorizing it (guide, game, ranking, announcement, product, reward, brand, explainer...).
-- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the DeHub logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
+- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the Riftn logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
 - layout: "wordmark" ONLY for a pure brand/logo card with no other subject; otherwise "hero".
 Icon inventory: ${inventory}.
 Shape (exact — subtitle/extra/typeTag/icon are PLAIN STRINGS, never objects): {"layout":"hero","headline":[{"text":"GO","blurTail":0},{"text":"LIVE","blurTail":1}],"subtitle":"web3_streaming","extra":"2026","typeTag":"product","icon":"mic","icon2":""}

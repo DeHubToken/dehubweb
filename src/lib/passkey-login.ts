@@ -121,7 +121,7 @@ export interface PasskeySignInResult {
 }
 
 /**
- * Sign in with an existing DeHub passkey. Throws `PasskeyLoginError` with
+ * Sign in with an existing Riftn passkey. Throws `PasskeyLoginError` with
  * code `UNKNOWN_CREDENTIAL` when the chosen passkey has no account, which
  * the sheet turns into an offer to create one.
  */

@@ -487,7 +487,7 @@ function describeStageFailure(err: unknown): string {
   const message = e.message || '';
 
   if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || /permission denied/i.test(message)) {
-    return _translateCopy("copy.8cf2f5e1ffb4", { defaultValue: "DeHub needs microphone access to put you on air — allow it for dehub.io and try again." });
+    return _translateCopy("copy.8cf2f5e1ffb4", { defaultValue: "Riftn needs microphone access to put you on air — allow it for dehub.io and try again." });
   }
   if (name === 'NotFoundError' || name === 'NotReadableError' || name === 'OverconstrainedError') {
     return _translateCopy("copy.85494984469a", { defaultValue: "No microphone available. Check nothing else is using it and try again." });

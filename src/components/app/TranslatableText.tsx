@@ -322,7 +322,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
         continue;
       }
 
-      // A link to something inside DeHub stays inside DeHub: same 🔗 affordance,
+      // A link to something inside Riftn stays inside Riftn: same 🔗 affordance,
       // but a client navigation instead of a new tab.
       //
       // This used to `continue` for community and store links — dropping them
@@ -404,7 +404,7 @@ export function renderTextWithLinks(text: string, opts?: { flagged?: boolean }):
  * copy, and no way to judge a link before opening it. `title` is not the answer
  * either: these bubbles are mostly read on a touchscreen, where nothing hovers.
  *
- * DeHub's own links are usually carded up by the caller before they reach here
+ * Riftn's own links are usually carded up by the caller before they reach here
  * (see `findDehubLinks` in the DM bubble); any that survive stripping still
  * navigate in-app rather than through a new tab.
  */

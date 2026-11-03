@@ -108,7 +108,7 @@ async function sendSolana(
     ? await import('@/lib/smart-wallet').then(wallet => wallet.getDerivedSolanaAddress())
     : phantom ? await connectSolanaWallet() : null;
   if (!payerAddress) {
-    throw new Error(_translateCopy("copy.128034cc629d", { defaultValue: "Unlock your DeHub wallet or connect Phantom to pay on Solana." }));
+    throw new Error(_translateCopy("copy.128034cc629d", { defaultValue: "Unlock your Riftn wallet or connect Phantom to pay on Solana." }));
   }
 
   const payer = new PublicKey(payerAddress);

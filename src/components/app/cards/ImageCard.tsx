@@ -714,7 +714,7 @@ function FeedDescription({
     return [title, description];
   }, [isTranslated, translatedText, title, description]);
   
-  // DeHub links become cards, so they come out of the text — and they come out
+  // Riftn links become cards, so they come out of the text — and they come out
   // BEFORE the truncation below, not after. Stripping afterwards meant a URL
   // could be cut in half by the 150-character clamp and then no longer match,
   // leaving half a link on screen next to its own card; it also spent a third

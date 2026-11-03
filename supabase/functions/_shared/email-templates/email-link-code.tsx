@@ -22,12 +22,12 @@ interface EmailLinkCodeEmailProps {
 export const EmailLinkCodeEmail = ({ code }: EmailLinkCodeEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your DeHub sign-in code</Preview>
+    <Preview>Your Riftn sign-in code</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Link your email to DeHub</Heading>
+        <Heading style={h1}>Link your email to Riftn</Heading>
         <Text style={text}>
-          Use the code below to finish linking this email address to your DeHub
+          Use the code below to finish linking this email address to your Riftn
           account. After that you can sign in with a code sent here.
         </Text>
         <Text style={codeStyle}>{code}</Text>

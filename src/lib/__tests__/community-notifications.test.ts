@@ -28,7 +28,7 @@ function row(overrides: Record<string, unknown> = {}): DeHubNotification {
     updatedAt: '2026-09-07T00:00:00.000Z',
     actorAddress: '0xactor',
     _customReferenceId: 'dehub-whales',
-    _customReferenceTitle: 'DeHub Whales',
+    _customReferenceTitle: 'Riftn Whales',
     ...overrides,
   } as unknown as DeHubNotification;
 }
@@ -92,12 +92,12 @@ describe('the sentence a row renders', () => {
   // A locale with none of these keys must still print English, not the key.
   it('falls back to English and interpolates it', () => {
     expect(communityNotificationSentence(row(), 'alice', untranslated))
-      .toBe('alice joined “DeHub Whales”');
+      .toBe('alice joined “Riftn Whales”');
   });
 
   it('names the action a request rather than a join', () => {
     expect(communityNotificationSentence(row({ content: 'requested to join your community' }), 'alice', untranslated))
-      .toBe('alice asked to join “DeHub Whales”');
+      .toBe('alice asked to join “Riftn Whales”');
   });
 
   it('drops the community when the surface already names it', () => {
@@ -109,15 +109,15 @@ describe('the sentence a row renders', () => {
   // chat message with no subject.
   it('gives mentions and @here a subject', () => {
     expect(communityNotificationSentence(row({ type: 'community_mention', content: 'hey @bob' }), 'alice', untranslated))
-      .toBe('alice mentioned you in “DeHub Whales”');
+      .toBe('alice mentioned you in “Riftn Whales”');
     expect(communityNotificationSentence(row({ type: 'community_here', content: 'raid at 8' }), 'alice', untranslated))
-      .toBe('alice messaged everyone in “DeHub Whales”');
+      .toBe('alice messaged everyone in “Riftn Whales”');
   });
 
   it('uses a translation when the locale has one', () => {
     const t = (key: string, opts?: Record<string, unknown>) =>
       key === 'notifications.community.joinedNamed' ? `${opts?.name} ist ${opts?.community} beigetreten` : key;
-    expect(communityNotificationSentence(row(), 'alice', t)).toBe('alice ist DeHub Whales beigetreten');
+    expect(communityNotificationSentence(row(), 'alice', t)).toBe('alice ist Riftn Whales beigetreten');
   });
 });
 

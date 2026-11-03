@@ -116,7 +116,7 @@ export const getVideoResolutions = (model: VideoModel | undefined): string[] =>
 
 export const VIDEO_MODELS: Record<string, VideoModel> = {
   ...Object.fromEntries(Object.entries(VENICE_VIDEO_MODELS).map(([id, model]) => [id, {
-    id, name: model.name, description: 'Live Venice quote · zero DeHub markup',
+    id, name: model.name, description: 'Live Venice quote · zero Riftn markup',
     supports: [model.imageRequired ? 'image-to-video' as const : 'text-to-video' as const],
     duration: '5–15s', tier: 'standard' as const, emoji: '◈', baseCostUsd: 0,
     defaultDuration: 5, minDuration: 5, maxDuration: 15, allowedDurations: [5, 10, 15],

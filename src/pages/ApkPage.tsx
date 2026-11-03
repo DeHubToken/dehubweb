@@ -192,19 +192,19 @@ export default function ApkPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "DeHub for Android",
-    alternateName: "DeHub APK",
+    name: "Riftn for Android",
+    alternateName: "Riftn APK",
     description: t("apk.ldDescription"),
     url: PAGE_URL,
     significantLink: DOWNLOAD_URL,
-    about: { "@type": "Thing", name: "DeHub for Android", sameAs: PLAY_URL },
+    about: { "@type": "Thing", name: "Riftn for Android", sameAs: PLAY_URL },
     // Omitted entirely rather than filled in with a guess — a stale date in
     // structured data is the same lie as one on the page.
     ...(release?.iso ? { datePublished: release.iso, dateModified: release.iso } : {}),
     image: OG_IMAGE,
     publisher: {
       "@type": "Organization",
-      name: "DeHub",
+      name: "Riftn",
       url: "https://riftn.com",
       sameAs: [
         "https://x.com/dehub_official",
@@ -257,7 +257,7 @@ export default function ApkPage() {
       <main className="relative z-10 flex h-full flex-col items-center justify-center px-5 pb-[clamp(3rem,9vh,4.5rem)] text-center">
         <img
           src={dehubWordmark}
-          alt="DeHub"
+          alt="Riftn"
           className="h-[clamp(1.25rem,3.2vh,2rem)] w-auto object-contain opacity-90"
         />
 

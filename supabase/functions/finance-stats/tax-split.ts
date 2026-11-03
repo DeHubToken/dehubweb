@@ -1,9 +1,9 @@
 /**
  * Where the original token's trading tax went
  * ===========================================
- * The first DeHub token (BSC, 2021–22) charged a tax on every trade. Part of it
- * bought DeHub back and burned it, part was paid out to holders and stakers as
- * BNB, and part went to DeHub operations to run the company. All three were traced
+ * The first Riftn token (BSC, 2021–22) charged a tax on every trade. Part of it
+ * bought Riftn back and burned it, part was paid out to holders and stakers as
+ * BNB, and part went to Riftn operations to run the company. All three were traced
  * once from the chain into _shared/finance-tax-split.json and
  * _shared/finance-history.json; this file turns them into the summary the
  * Stats page draws and the ledger that proves it, line by line.
@@ -75,7 +75,7 @@ const OPERATIONS = new Set([
 const TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
 
 export const TAX_LEDGER_SOURCES = [
-  { id: 'bsc_token_tax', label: 'DeHub operations' },
+  { id: 'bsc_token_tax', label: 'Riftn operations' },
   { id: 'bsc_token_burn', label: 'Bought back and burned' },
   { id: 'bsc_holder_share', label: 'Paid to holders and stakers' },
   { id: 'bsc_holder_funding', label: 'Paid into the holder rewards contract' },
@@ -100,7 +100,7 @@ export function taxSplitSummary(split: TaxSplitData) {
 }
 
 /**
- * Every line behind the three totals: each tax payout to DeHub operations (and each
+ * Every line behind the three totals: each tax payout to Riftn operations (and each
  * time it passed BNB on to holders), each buyback-and-burn, each day of
  * holder and staker claims, and each deposit into the rewards contract.
  */
@@ -125,7 +125,7 @@ export function taxLedgerItems(split: TaxSplitData, history: TaxHistoryEntry[]):
       amount: b.bnb,
       unit: 'BNB',
       ref: { chain: 'bsc', tx: b.tx },
-      note: `${b.tokens.toLocaleString('en-US')} DeHub burned`,
+      note: `${b.tokens.toLocaleString('en-US')} Riftn burned`,
     });
   }
   // Claims were 18,000 separate transactions, so they are listed as a total

@@ -69,7 +69,7 @@ export function communityNotificationRef(notification: DeHubNotification): strin
 }
 
 /**
- * Grouped chat rows come from the DeHub API, not Supabase, so they carry the
+ * Grouped chat rows come from the Riftn API, not Supabase, so they carry the
  * community and the people talking in `metadata` (backend
  * community-chat-notification.service.ts).
  */
@@ -180,7 +180,7 @@ export function communityNotificationSentence(
   /**
    * Drop the community's name from the sentence. The Communities page already
    * heads each block with it, so repeating it turns every row into "alice
-   * joined “DeHub Whales”" under a heading that reads "DeHub Whales".
+   * joined “Riftn Whales”" under a heading that reads "Riftn Whales".
    */
   options?: { withCommunity?: boolean },
 ): string {

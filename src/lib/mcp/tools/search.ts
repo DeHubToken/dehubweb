@@ -4,8 +4,8 @@ import { callDeHubTool } from "./dehub-rpc";
 
 export default defineTool({
   name: "dehub_search",
-  title: "Search DeHub",
-  description: "Search DeHub for posts (by title and description) and people (by username and display name).",
+  title: "Search Riftn",
+  description: "Search Riftn for posts (by title and description) and people (by username and display name).",
   inputSchema: {
     query: z.string().min(1).describe("Search query"),
     type: z.enum(["all", "posts", "users"]).optional().describe("Restrict results to posts or users"),

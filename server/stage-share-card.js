@@ -110,7 +110,7 @@ export function renderStageCardSvg(stage, images = {}) {
   ${m.sparkles.map(sparkle).join('')}
 
   <rect x="${n(left)}" y="${n(4.2 * U)}" width="${n(wordmarkW + 2.8 * U)}" height="${n(wordmarkH + 1.8 * U)}" rx="${n(0.9 * U)}" fill="#f4f4f5"/>
-  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left + 1.4 * U)}" y="${n(5.1 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left + 1.4 * U)}" y="${n(5.1 * U + wordmarkH * 0.85)}" font-family="Exo" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#09090b">DEHUB</text>`}
+  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left + 1.4 * U)}" y="${n(5.1 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left + 1.4 * U)}" y="${n(5.1 * U + wordmarkH * 0.85)}" font-family="Exo" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#09090b">RIFTN</text>`}
   <text x="${n(W - 5.7 * U)}" y="${n(6.2 * U)}" text-anchor="end" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".82">// type = "${escape(t('stageCover.stage'))}"</text>
   <path d="M${n(W - 22 * U)} ${n(5.2 * U)}v-${n(U)}h${n(U)}M${n(W - 4.4 * U)} ${n(6.6 * U)}v${n(U)}h-${n(U)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/>
 

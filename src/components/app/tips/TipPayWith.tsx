@@ -5,7 +5,7 @@ import { tokenLabel } from '@/lib/token-label';
  * DHB stays the default and behaves exactly as before. When the wallet does
  * not hold enough DHB, the richest other EVM balance is picked instead — USDC
  * on Arc, ETH on Ethereum, anything on Base — and the tip is funded from it
- * on send — DeHub Pay first, Uniswap as the fallback (see lib/tip-funding).
+ * on send — Riftn Pay first, Uniswap as the fallback (see lib/tip-funding).
  *
  * Loaded lazily: it reads wallet balances, which reach the wallet stack, and
  * the surfaces that use it are imported by eager feed cards.
@@ -225,8 +225,8 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
               <span className="text-white/45">
                 {planUsesDpay(plan)
                   ? plan.kind === 'bridge'
-                    ? t('tip.payViaBridgeDpay', 'Moved to Base and paid to DeHub Pay, tokens arrive in about a minute')
-                    : t('tip.payViaDpay', 'Paid to DeHub Pay, tokens arrive in about 30s')
+                    ? t('tip.payViaBridgeDpay', 'Moved to Base and paid to Riftn Pay, tokens arrive in about a minute')
+                    : t('tip.payViaDpay', 'Paid to Riftn Pay, tokens arrive in about 30s')
                   : plan.kind === 'bridge'
                     ? t('tip.payViaBridge', 'Swapped to tokens on Uniswap, arrives in ~{{seconds}}s', { seconds: Math.max(2, plan.fillSeconds) })
                     : t('tip.payViaSwap', 'Swapped to tokens on Uniswap')}

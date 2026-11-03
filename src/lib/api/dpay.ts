@@ -1,5 +1,5 @@
 /**
- * DeHub Payment (DPay) API Integration
+ * Riftn Payment (DPay) API Integration
  * =====================================
  * Handles fiat onramp, token purchases, and payment processing.
  */
@@ -196,7 +196,7 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
           });
         }
       }
-      return tokens.length > 0 ? tokens : [{ symbol: 'DHB', name: 'DeHub Token', decimals: 18 }];
+      return tokens.length > 0 ? tokens : [{ symbol: 'DHB', name: 'Riftn Token', decimals: 18 }];
     }
 
     // Handle legacy response formats
@@ -216,7 +216,7 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
     // Default to DHB if API returns nothing useful
     return [{
       symbol: 'DHB',
-      name: 'DeHub Token',
+      name: 'Riftn Token',
       decimals: 18,
     }];
   } catch (error) {
@@ -224,7 +224,7 @@ export async function getAvailableTokens(): Promise<DPayToken[]> {
     // Return default token on error
     return [{
       symbol: 'DHB',
-      name: 'DeHub Token',
+      name: 'Riftn Token',
       decimals: 18,
     }];
   }

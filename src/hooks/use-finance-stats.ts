@@ -1,7 +1,7 @@
 /**
  * Revenue and costs
  * =================
- * Reads the finance-stats edge function — the one place DeHub's money is added
+ * Reads the finance-stats edge function — the one place Riftn's money is added
  * up: what people buy in the app, the fees kept on payments between people,
  * and what running the platform costs. Every figure is a daily total in USD.
  *
@@ -58,9 +58,9 @@ export interface FinanceStats {
 /** All amounts in BNB as paid, and in USD at that day's BNB price. */
 export interface TaxSplit {
   period: { from: string; to: string };
-  /** The tax BNB that went to DeHub operations: what reached the operations wallets, less what they passed on to holders. */
+  /** The tax BNB that went to Riftn operations: what reached the operations wallets, less what they passed on to holders. */
   team: { bnb: number; usd: number; grossBnb: number; passedOnBnb: number; payouts: number };
-  /** BNB spent buying DeHub back from the pool and sending it to the burn address. */
+  /** BNB spent buying Riftn back from the pool and sending it to the burn address. */
   burned: { bnb: number; usd: number; tokens: number; buybacks: number; firstDay: string; lastDay: string };
   /** BNB holders and stakers claimed from the rewards contract. */
   shared: {

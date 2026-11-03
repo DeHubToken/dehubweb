@@ -11,7 +11,7 @@ import i18n from 'i18next';
 const authToastTranslations: Record<string, Record<string, string>> = {
   en: {
     welcome_back: 'Welcome back!',
-    welcome_to_dehub: 'Welcome to DeHub!',
+    welcome_to_dehub: 'Welcome to Riftn!',
     connecting_to_google: 'Connecting to Google...',
     connecting_to_x: 'Connecting to X...',
     connecting_to_discord: 'Connecting to Discord...',
@@ -19,7 +19,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   es: {
     welcome_back: '¡Bienvenido de nuevo!',
-    welcome_to_dehub: '¡Bienvenido a DeHub!',
+    welcome_to_dehub: '¡Bienvenido a Riftn!',
     connecting_to_google: 'Conectando con Google...',
     connecting_to_x: 'Conectando con X...',
     connecting_to_discord: 'Conectando con Discord...',
@@ -27,7 +27,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   fr: {
     welcome_back: 'Bon retour !',
-    welcome_to_dehub: 'Bienvenue sur DeHub !',
+    welcome_to_dehub: 'Bienvenue sur Riftn !',
     connecting_to_google: 'Connexion à Google...',
     connecting_to_x: 'Connexion à X...',
     connecting_to_discord: 'Connexion à Discord...',
@@ -35,7 +35,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   de: {
     welcome_back: 'Willkommen zurück!',
-    welcome_to_dehub: 'Willkommen bei DeHub!',
+    welcome_to_dehub: 'Willkommen bei Riftn!',
     connecting_to_google: 'Verbindung mit Google...',
     connecting_to_x: 'Verbindung mit X...',
     connecting_to_discord: 'Verbindung mit Discord...',
@@ -43,7 +43,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   pt: {
     welcome_back: 'Bem-vindo de volta!',
-    welcome_to_dehub: 'Bem-vindo ao DeHub!',
+    welcome_to_dehub: 'Bem-vindo ao Riftn!',
     connecting_to_google: 'Conectando ao Google...',
     connecting_to_x: 'Conectando ao X...',
     connecting_to_discord: 'Conectando ao Discord...',
@@ -51,7 +51,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   zh: {
     welcome_back: '欢迎回来！',
-    welcome_to_dehub: '欢迎来到 DeHub！',
+    welcome_to_dehub: '欢迎来到 Riftn！',
     connecting_to_google: '正在连接 Google...',
     connecting_to_x: '正在连接 X...',
     connecting_to_discord: '正在连接 Discord...',
@@ -59,7 +59,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ja: {
     welcome_back: 'おかえりなさい！',
-    welcome_to_dehub: 'DeHubへようこそ！',
+    welcome_to_dehub: 'Riftnへようこそ！',
     connecting_to_google: 'Googleに接続中...',
     connecting_to_x: 'Xに接続中...',
     connecting_to_discord: 'Discordに接続中...',
@@ -67,7 +67,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ko: {
     welcome_back: '다시 오신 것을 환영합니다!',
-    welcome_to_dehub: 'DeHub에 오신 것을 환영합니다!',
+    welcome_to_dehub: 'Riftn에 오신 것을 환영합니다!',
     connecting_to_google: 'Google에 연결 중...',
     connecting_to_x: 'X에 연결 중...',
     connecting_to_discord: 'Discord에 연결 중...',
@@ -75,7 +75,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ar: {
     welcome_back: 'مرحباً بعودتك!',
-    welcome_to_dehub: 'مرحباً بك في DeHub!',
+    welcome_to_dehub: 'مرحباً بك في Riftn!',
     connecting_to_google: 'جاري الاتصال بـ Google...',
     connecting_to_x: 'جاري الاتصال بـ X...',
     connecting_to_discord: 'جاري الاتصال بـ Discord...',
@@ -83,7 +83,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   hi: {
     welcome_back: 'वापसी पर स्वागत है!',
-    welcome_to_dehub: 'DeHub में आपका स्वागत है!',
+    welcome_to_dehub: 'Riftn में आपका स्वागत है!',
     connecting_to_google: 'Google से कनेक्ट हो रहा है...',
     connecting_to_x: 'X से कनेक्ट हो रहा है...',
     connecting_to_discord: 'Discord से कनेक्ट हो रहा है...',
@@ -91,7 +91,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ru: {
     welcome_back: 'С возвращением!',
-    welcome_to_dehub: 'Добро пожаловать в DeHub!',
+    welcome_to_dehub: 'Добро пожаловать в Riftn!',
     connecting_to_google: 'Подключение к Google...',
     connecting_to_x: 'Подключение к X...',
     connecting_to_discord: 'Подключение к Discord...',
@@ -99,7 +99,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   tr: {
     welcome_back: 'Tekrar hoş geldiniz!',
-    welcome_to_dehub: "DeHub'a hoş geldiniz!",
+    welcome_to_dehub: "Riftn'a hoş geldiniz!",
     connecting_to_google: "Google'a bağlanılıyor...",
     connecting_to_x: "X'e bağlanılıyor...",
     connecting_to_discord: "Discord'a bağlanılıyor...",
@@ -107,7 +107,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   it: {
     welcome_back: 'Bentornato!',
-    welcome_to_dehub: 'Benvenuto su DeHub!',
+    welcome_to_dehub: 'Benvenuto su Riftn!',
     connecting_to_google: 'Connessione a Google...',
     connecting_to_x: 'Connessione a X...',
     connecting_to_discord: 'Connessione a Discord...',
@@ -115,7 +115,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   nl: {
     welcome_back: 'Welkom terug!',
-    welcome_to_dehub: 'Welkom bij DeHub!',
+    welcome_to_dehub: 'Welkom bij Riftn!',
     connecting_to_google: 'Verbinden met Google...',
     connecting_to_x: 'Verbinden met X...',
     connecting_to_discord: 'Verbinden met Discord...',
@@ -123,7 +123,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   pl: {
     welcome_back: 'Witaj ponownie!',
-    welcome_to_dehub: 'Witaj w DeHub!',
+    welcome_to_dehub: 'Witaj w Riftn!',
     connecting_to_google: 'Łączenie z Google...',
     connecting_to_x: 'Łączenie z X...',
     connecting_to_discord: 'Łączenie z Discord...',
@@ -131,7 +131,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   uk: {
     welcome_back: 'З поверненням!',
-    welcome_to_dehub: 'Ласкаво просимо до DeHub!',
+    welcome_to_dehub: 'Ласкаво просимо до Riftn!',
     connecting_to_google: 'Підключення до Google...',
     connecting_to_x: 'Підключення до X...',
     connecting_to_discord: 'Підключення до Discord...',
@@ -139,7 +139,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   vi: {
     welcome_back: 'Chào mừng trở lại!',
-    welcome_to_dehub: 'Chào mừng đến với DeHub!',
+    welcome_to_dehub: 'Chào mừng đến với Riftn!',
     connecting_to_google: 'Đang kết nối với Google...',
     connecting_to_x: 'Đang kết nối với X...',
     connecting_to_discord: 'Đang kết nối với Discord...',
@@ -147,7 +147,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   th: {
     welcome_back: 'ยินดีต้อนรับกลับ!',
-    welcome_to_dehub: 'ยินดีต้อนรับสู่ DeHub!',
+    welcome_to_dehub: 'ยินดีต้อนรับสู่ Riftn!',
     connecting_to_google: 'กำลังเชื่อมต่อกับ Google...',
     connecting_to_x: 'กำลังเชื่อมต่อกับ X...',
     connecting_to_discord: 'กำลังเชื่อมต่อกับ Discord...',
@@ -155,7 +155,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   id: {
     welcome_back: 'Selamat datang kembali!',
-    welcome_to_dehub: 'Selamat datang di DeHub!',
+    welcome_to_dehub: 'Selamat datang di Riftn!',
     connecting_to_google: 'Menghubungkan ke Google...',
     connecting_to_x: 'Menghubungkan ke X...',
     connecting_to_discord: 'Menghubungkan ke Discord...',
@@ -163,7 +163,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ms: {
     welcome_back: 'Selamat kembali!',
-    welcome_to_dehub: 'Selamat datang ke DeHub!',
+    welcome_to_dehub: 'Selamat datang ke Riftn!',
     connecting_to_google: 'Menyambung ke Google...',
     connecting_to_x: 'Menyambung ke X...',
     connecting_to_discord: 'Menyambung ke Discord...',
@@ -171,7 +171,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   bn: {
     welcome_back: 'আবার স্বাগতম!',
-    welcome_to_dehub: 'DeHub-এ স্বাগতম!',
+    welcome_to_dehub: 'Riftn-এ স্বাগতম!',
     connecting_to_google: 'Google-এ সংযোগ হচ্ছে...',
     connecting_to_x: 'X-এ সংযোগ হচ্ছে...',
     connecting_to_discord: 'Discord-এ সংযোগ হচ্ছে...',
@@ -179,7 +179,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ta: {
     welcome_back: 'மீண்டும் வரவேற்கிறோம்!',
-    welcome_to_dehub: 'DeHub-க்கு வரவேற்கிறோம்!',
+    welcome_to_dehub: 'Riftn-க்கு வரவேற்கிறோம்!',
     connecting_to_google: 'Google-உடன் இணைக்கிறது...',
     connecting_to_x: 'X-உடன் இணைக்கிறது...',
     connecting_to_discord: 'Discord-உடன் இணைக்கிறது...',
@@ -187,7 +187,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   te: {
     welcome_back: 'తిరిగి స్వాగతం!',
-    welcome_to_dehub: 'DeHubకి స్వాగతం!',
+    welcome_to_dehub: 'Riftnకి స్వాగతం!',
     connecting_to_google: 'Googleకి కనెక్ట్ అవుతోంది...',
     connecting_to_x: 'Xకి కనెక్ట్ అవుతోంది...',
     connecting_to_discord: 'Discordకి కనెక్ట్ అవుతోంది...',
@@ -195,7 +195,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ur: {
     welcome_back: 'واپسی پر خوش آمدید!',
-    welcome_to_dehub: 'DeHub میں خوش آمدید!',
+    welcome_to_dehub: 'Riftn میں خوش آمدید!',
     connecting_to_google: 'Google سے منسلک ہو رہا ہے...',
     connecting_to_x: 'X سے منسلک ہو رہا ہے...',
     connecting_to_discord: 'Discord سے منسلک ہو رہا ہے...',
@@ -203,7 +203,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   fa: {
     welcome_back: 'خوش آمدید!',
-    welcome_to_dehub: 'به DeHub خوش آمدید!',
+    welcome_to_dehub: 'به Riftn خوش آمدید!',
     connecting_to_google: 'در حال اتصال به Google...',
     connecting_to_x: 'در حال اتصال به X...',
     connecting_to_discord: 'در حال اتصال به Discord...',
@@ -211,7 +211,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   sv: {
     welcome_back: 'Välkommen tillbaka!',
-    welcome_to_dehub: 'Välkommen till DeHub!',
+    welcome_to_dehub: 'Välkommen till Riftn!',
     connecting_to_google: 'Ansluter till Google...',
     connecting_to_x: 'Ansluter till X...',
     connecting_to_discord: 'Ansluter till Discord...',
@@ -219,7 +219,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   no: {
     welcome_back: 'Velkommen tilbake!',
-    welcome_to_dehub: 'Velkommen til DeHub!',
+    welcome_to_dehub: 'Velkommen til Riftn!',
     connecting_to_google: 'Kobler til Google...',
     connecting_to_x: 'Kobler til X...',
     connecting_to_discord: 'Kobler til Discord...',
@@ -227,7 +227,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   da: {
     welcome_back: 'Velkommen tilbage!',
-    welcome_to_dehub: 'Velkommen til DeHub!',
+    welcome_to_dehub: 'Velkommen til Riftn!',
     connecting_to_google: 'Forbinder til Google...',
     connecting_to_x: 'Forbinder til X...',
     connecting_to_discord: 'Forbinder til Discord...',
@@ -235,7 +235,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   fi: {
     welcome_back: 'Tervetuloa takaisin!',
-    welcome_to_dehub: 'Tervetuloa DeHubiin!',
+    welcome_to_dehub: 'Tervetuloa Riftniin!',
     connecting_to_google: 'Yhdistetään Googleen...',
     connecting_to_x: 'Yhdistetään X:ään...',
     connecting_to_discord: 'Yhdistetään Discordiin...',
@@ -243,7 +243,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   cs: {
     welcome_back: 'Vítejte zpět!',
-    welcome_to_dehub: 'Vítejte v DeHub!',
+    welcome_to_dehub: 'Vítejte v Riftn!',
     connecting_to_google: 'Připojování ke Google...',
     connecting_to_x: 'Připojování k X...',
     connecting_to_discord: 'Připojování k Discord...',
@@ -251,7 +251,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   hu: {
     welcome_back: 'Üdv újra!',
-    welcome_to_dehub: 'Üdvözöljük a DeHub-ban!',
+    welcome_to_dehub: 'Üdvözöljük a Riftn-ban!',
     connecting_to_google: 'Csatlakozás a Google-höz...',
     connecting_to_x: 'Csatlakozás az X-hez...',
     connecting_to_discord: 'Csatlakozás a Discord-hoz...',
@@ -259,7 +259,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ro: {
     welcome_back: 'Bine ai revenit!',
-    welcome_to_dehub: 'Bine ai venit pe DeHub!',
+    welcome_to_dehub: 'Bine ai venit pe Riftn!',
     connecting_to_google: 'Conectare la Google...',
     connecting_to_x: 'Conectare la X...',
     connecting_to_discord: 'Conectare la Discord...',
@@ -267,7 +267,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   bg: {
     welcome_back: 'Добре дошли отново!',
-    welcome_to_dehub: 'Добре дошли в DeHub!',
+    welcome_to_dehub: 'Добре дошли в Riftn!',
     connecting_to_google: 'Свързване с Google...',
     connecting_to_x: 'Свързване с X...',
     connecting_to_discord: 'Свързване с Discord...',
@@ -275,7 +275,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   sr: {
     welcome_back: 'Добро дошли назад!',
-    welcome_to_dehub: 'Добро дошли у DeHub!',
+    welcome_to_dehub: 'Добро дошли у Riftn!',
     connecting_to_google: 'Повезивање са Google...',
     connecting_to_x: 'Повезивање са X...',
     connecting_to_discord: 'Повезивање са Discord...',
@@ -283,7 +283,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   hr: {
     welcome_back: 'Dobrodošli natrag!',
-    welcome_to_dehub: 'Dobrodošli na DeHub!',
+    welcome_to_dehub: 'Dobrodošli na Riftn!',
     connecting_to_google: 'Povezivanje s Google...',
     connecting_to_x: 'Povezivanje s X...',
     connecting_to_discord: 'Povezivanje s Discord...',
@@ -291,7 +291,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   sk: {
     welcome_back: 'Vitajte späť!',
-    welcome_to_dehub: 'Vitajte v DeHub!',
+    welcome_to_dehub: 'Vitajte v Riftn!',
     connecting_to_google: 'Pripájanie ku Google...',
     connecting_to_x: 'Pripájanie k X...',
     connecting_to_discord: 'Pripájanie k Discord...',
@@ -299,7 +299,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   el: {
     welcome_back: 'Καλώς ήρθατε πίσω!',
-    welcome_to_dehub: 'Καλώς ήρθατε στο DeHub!',
+    welcome_to_dehub: 'Καλώς ήρθατε στο Riftn!',
     connecting_to_google: 'Σύνδεση στο Google...',
     connecting_to_x: 'Σύνδεση στο X...',
     connecting_to_discord: 'Σύνδεση στο Discord...',
@@ -307,7 +307,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   he: {
     welcome_back: '!ברוך שובך',
-    welcome_to_dehub: '!ברוך הבא ל-DeHub',
+    welcome_to_dehub: '!ברוך הבא ל-Riftn',
     connecting_to_google: '...מתחבר ל-Google',
     connecting_to_x: '...מתחבר ל-X',
     connecting_to_discord: '...מתחבר ל-Discord',
@@ -315,7 +315,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ka: {
     welcome_back: 'კეთილი იყოს თქვენი დაბრუნება!',
-    welcome_to_dehub: 'კეთილი იყოს თქვენი მობრძანება DeHub-ში!',
+    welcome_to_dehub: 'კეთილი იყოს თქვენი მობრძანება Riftn-ში!',
     connecting_to_google: 'Google-თან დაკავშირება...',
     connecting_to_x: 'X-თან დაკავშირება...',
     connecting_to_discord: 'Discord-თან დაკავშირება...',
@@ -323,7 +323,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   sw: {
     welcome_back: 'Karibu tena!',
-    welcome_to_dehub: 'Karibu DeHub!',
+    welcome_to_dehub: 'Karibu Riftn!',
     connecting_to_google: 'Kuunganisha na Google...',
     connecting_to_x: 'Kuunganisha na X...',
     connecting_to_discord: 'Kuunganisha na Discord...',
@@ -331,7 +331,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   tl: {
     welcome_back: 'Maligayang pagbabalik!',
-    welcome_to_dehub: 'Maligayang pagdating sa DeHub!',
+    welcome_to_dehub: 'Maligayang pagdating sa Riftn!',
     connecting_to_google: 'Kumokonekta sa Google...',
     connecting_to_x: 'Kumokonekta sa X...',
     connecting_to_discord: 'Kumokonekta sa Discord...',
@@ -339,7 +339,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   af: {
     welcome_back: 'Welkom terug!',
-    welcome_to_dehub: 'Welkom by DeHub!',
+    welcome_to_dehub: 'Welkom by Riftn!',
     connecting_to_google: 'Verbind met Google...',
     connecting_to_x: 'Verbind met X...',
     connecting_to_discord: 'Verbind met Discord...',
@@ -347,7 +347,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   mr: {
     welcome_back: 'पुन्हा स्वागत!',
-    welcome_to_dehub: 'DeHub मध्ये स्वागत!',
+    welcome_to_dehub: 'Riftn मध्ये स्वागत!',
     connecting_to_google: 'Google शी कनेक्ट होत आहे...',
     connecting_to_x: 'X शी कनेक्ट होत आहे...',
     connecting_to_discord: 'Discord शी कनेक्ट होत आहे...',
@@ -355,7 +355,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   pa: {
     welcome_back: 'ਵਾਪਸ ਸੁਆਗਤ ਹੈ!',
-    welcome_to_dehub: 'DeHub ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ!',
+    welcome_to_dehub: 'Riftn ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ!',
     connecting_to_google: 'Google ਨਾਲ ਕਨੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...',
     connecting_to_x: 'X ਨਾਲ ਕਨੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...',
     connecting_to_discord: 'Discord ਨਾਲ ਕਨੈਕਟ ਹੋ ਰਿਹਾ ਹੈ...',
@@ -363,7 +363,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   gu: {
     welcome_back: 'ફરી સ્વાગત છે!',
-    welcome_to_dehub: 'DeHub માં આપનું સ્વાગત છે!',
+    welcome_to_dehub: 'Riftn માં આપનું સ્વાગત છે!',
     connecting_to_google: 'Google સાથે કનેક્ટ થઈ રહ્યું છે...',
     connecting_to_x: 'X સાથે કનેક્ટ થઈ રહ્યું છે...',
     connecting_to_discord: 'Discord સાથે કનેક્ટ થઈ રહ્યું છે...',
@@ -371,7 +371,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ml: {
     welcome_back: 'തിരികെ സ്വാഗതം!',
-    welcome_to_dehub: 'DeHub-ലേക്ക് സ്വാഗതം!',
+    welcome_to_dehub: 'Riftn-ലേക്ക് സ്വാഗതം!',
     connecting_to_google: 'Google-ലേക്ക് കണക്റ്റ് ചെയ്യുന്നു...',
     connecting_to_x: 'X-ലേക്ക് കണക്റ്റ് ചെയ്യുന്നു...',
     connecting_to_discord: 'Discord-ലേക്ക് കണക്റ്റ് ചെയ്യുന്നു...',
@@ -379,7 +379,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   kn: {
     welcome_back: 'ಮರಳಿ ಸ್ವಾಗತ!',
-    welcome_to_dehub: 'DeHub ಗೆ ಸ್ವಾಗತ!',
+    welcome_to_dehub: 'Riftn ಗೆ ಸ್ವಾಗತ!',
     connecting_to_google: 'Google ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...',
     connecting_to_x: 'X ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...',
     connecting_to_discord: 'Discord ಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ...',
@@ -387,7 +387,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   si: {
     welcome_back: 'නැවත සාදරයෙන් පිළිගනිමු!',
-    welcome_to_dehub: 'DeHub වෙත සාදරයෙන් පිළිගනිමු!',
+    welcome_to_dehub: 'Riftn වෙත සාදරයෙන් පිළිගනිමු!',
     connecting_to_google: 'Google වෙත සම්බන්ධ වෙමින්...',
     connecting_to_x: 'X වෙත සම්බන්ධ වෙමින්...',
     connecting_to_discord: 'Discord වෙත සම්බන්ධ වෙමින්...',
@@ -395,7 +395,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ne: {
     welcome_back: 'फेरि स्वागत छ!',
-    welcome_to_dehub: 'DeHub मा स्वागत छ!',
+    welcome_to_dehub: 'Riftn मा स्वागत छ!',
     connecting_to_google: 'Google मा जडान हुँदैछ...',
     connecting_to_x: 'X मा जडान हुँदैछ...',
     connecting_to_discord: 'Discord मा जडान हुँदैछ...',
@@ -403,7 +403,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   my: {
     welcome_back: 'ပြန်လာတာ ကြိုဆိုပါတယ်!',
-    welcome_to_dehub: 'DeHub မှ ကြိုဆိုပါတယ်!',
+    welcome_to_dehub: 'Riftn မှ ကြိုဆိုပါတယ်!',
     connecting_to_google: 'Google သို့ ချိတ်ဆက်နေသည်...',
     connecting_to_x: 'X သို့ ချိတ်ဆက်နေသည်...',
     connecting_to_discord: 'Discord သို့ ချိတ်ဆက်နေသည်...',
@@ -411,7 +411,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   km: {
     welcome_back: 'សូមស្វាគមន៍ត្រលប់មកវិញ!',
-    welcome_to_dehub: 'សូមស្វាគមន៍មកកាន់ DeHub!',
+    welcome_to_dehub: 'សូមស្វាគមន៍មកកាន់ Riftn!',
     connecting_to_google: 'កំពុងភ្ជាប់ទៅ Google...',
     connecting_to_x: 'កំពុងភ្ជាប់ទៅ X...',
     connecting_to_discord: 'កំពុងភ្ជាប់ទៅ Discord...',
@@ -419,7 +419,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   lo: {
     welcome_back: 'ຍິນດີຕ້ອນຮັບກັບຄືນ!',
-    welcome_to_dehub: 'ຍິນດີຕ້ອນຮັບສູ່ DeHub!',
+    welcome_to_dehub: 'ຍິນດີຕ້ອນຮັບສູ່ Riftn!',
     connecting_to_google: 'ກຳລັງເຊື່ອมຕໍ່ກັບ Google...',
     connecting_to_x: 'ກຳລັງເຊື່ອມຕໍ່ກັບ X...',
     connecting_to_discord: 'ກຳລັງເຊື່ອມຕໍ່ກັບ Discord...',
@@ -427,7 +427,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   mn: {
     welcome_back: 'Тавтай морилно уу!',
-    welcome_to_dehub: 'DeHub-д тавтай морилно уу!',
+    welcome_to_dehub: 'Riftn-д тавтай морилно уу!',
     connecting_to_google: 'Google-д холбогдож байна...',
     connecting_to_x: 'X-д холбогдож байна...',
     connecting_to_discord: 'Discord-д холбогдож байна...',
@@ -435,7 +435,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   az: {
     welcome_back: 'Xoş gəldiniz!',
-    welcome_to_dehub: 'DeHub-a xoş gəldiniz!',
+    welcome_to_dehub: 'Riftn-a xoş gəldiniz!',
     connecting_to_google: 'Google-a qoşulur...',
     connecting_to_x: 'X-ə qoşulur...',
     connecting_to_discord: 'Discord-a qoşulur...',
@@ -443,7 +443,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   kk: {
     welcome_back: 'Қайта қош келдіңіз!',
-    welcome_to_dehub: 'DeHub-қа қош келдіңіз!',
+    welcome_to_dehub: 'Riftn-қа қош келдіңіз!',
     connecting_to_google: 'Google-ға қосылуда...',
     connecting_to_x: 'X-ке қосылуда...',
     connecting_to_discord: 'Discord-қа қосылуда...',
@@ -451,7 +451,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   uz: {
     welcome_back: 'Qaytganingizdan xursandmiz!',
-    welcome_to_dehub: 'DeHub-ga xush kelibsiz!',
+    welcome_to_dehub: 'Riftn-ga xush kelibsiz!',
     connecting_to_google: 'Google-ga ulanmoqda...',
     connecting_to_x: 'X-ga ulanmoqda...',
     connecting_to_discord: 'Discord-ga ulanmoqda...',
@@ -459,7 +459,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   am: {
     welcome_back: 'እንኳን ደህና መጡ!',
-    welcome_to_dehub: 'ወደ DeHub እንኳን ደህና መጡ!',
+    welcome_to_dehub: 'ወደ Riftn እንኳን ደህና መጡ!',
     connecting_to_google: 'ከGoogle ጋር በመገናኘት ላይ...',
     connecting_to_x: 'ከX ጋር በመገናኘት ላይ...',
     connecting_to_discord: 'ከDiscord ጋር በመገናኘት ላይ...',
@@ -467,7 +467,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   so: {
     welcome_back: 'Ku soo dhawoow!',
-    welcome_to_dehub: 'Ku soo dhawoow DeHub!',
+    welcome_to_dehub: 'Ku soo dhawoow Riftn!',
     connecting_to_google: 'Ku xiraya Google...',
     connecting_to_x: 'Ku xiraya X...',
     connecting_to_discord: 'Ku xiraya Discord...',
@@ -475,7 +475,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ha: {
     welcome_back: 'Barka da dawowar!',
-    welcome_to_dehub: 'Barka da zuwa DeHub!',
+    welcome_to_dehub: 'Barka da zuwa Riftn!',
     connecting_to_google: 'Ana haɗawa da Google...',
     connecting_to_x: 'Ana haɗawa da X...',
     connecting_to_discord: 'Ana haɗawa da Discord...',
@@ -483,7 +483,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   yo: {
     welcome_back: 'Ẹ kú àbọ̀!',
-    welcome_to_dehub: 'Ẹ kú àbọ̀ sí DeHub!',
+    welcome_to_dehub: 'Ẹ kú àbọ̀ sí Riftn!',
     connecting_to_google: 'Ń sopọ̀ mọ́ Google...',
     connecting_to_x: 'Ń sopọ̀ mọ́ X...',
     connecting_to_discord: 'Ń sopọ̀ mọ́ Discord...',
@@ -491,7 +491,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ig: {
     welcome_back: 'Nnọọ azụ!',
-    welcome_to_dehub: 'Nnọọ na DeHub!',
+    welcome_to_dehub: 'Nnọọ na Riftn!',
     connecting_to_google: 'Na-ejikọ na Google...',
     connecting_to_x: 'Na-ejikọ na X...',
     connecting_to_discord: 'Na-ejikọ na Discord...',
@@ -499,7 +499,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   zu: {
     welcome_back: 'Siyakwamukela futhi!',
-    welcome_to_dehub: 'Siyakwamukela ku-DeHub!',
+    welcome_to_dehub: 'Siyakwamukela ku-Riftn!',
     connecting_to_google: 'Ixhuma ku-Google...',
     connecting_to_x: 'Ixhuma ku-X...',
     connecting_to_discord: 'Ixhuma ku-Discord...',
@@ -507,7 +507,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ca: {
     welcome_back: 'Benvingut de nou!',
-    welcome_to_dehub: 'Benvingut a DeHub!',
+    welcome_to_dehub: 'Benvingut a Riftn!',
     connecting_to_google: 'Connectant amb Google...',
     connecting_to_x: 'Connectant amb X...',
     connecting_to_discord: 'Connectant amb Discord...',
@@ -515,7 +515,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   lt: {
     welcome_back: 'Sveiki sugrįžę!',
-    welcome_to_dehub: 'Sveiki atvykę į DeHub!',
+    welcome_to_dehub: 'Sveiki atvykę į Riftn!',
     connecting_to_google: 'Jungiamasi prie Google...',
     connecting_to_x: 'Jungiamasi prie X...',
     connecting_to_discord: 'Jungiamasi prie Discord...',
@@ -523,7 +523,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   et: {
     welcome_back: 'Tere tulemast tagasi!',
-    welcome_to_dehub: 'Tere tulemast DeHubi!',
+    welcome_to_dehub: 'Tere tulemast Riftni!',
     connecting_to_google: 'Ühendamine Google\'iga...',
     connecting_to_x: 'Ühendamine X-iga...',
     connecting_to_discord: 'Ühendamine Discordiga...',
@@ -531,7 +531,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   lv: {
     welcome_back: 'Laipni lūdzam atpakaļ!',
-    welcome_to_dehub: 'Laipni lūdzam DeHub!',
+    welcome_to_dehub: 'Laipni lūdzam Riftn!',
     connecting_to_google: 'Savienojas ar Google...',
     connecting_to_x: 'Savienojas ar X...',
     connecting_to_discord: 'Savienojas ar Discord...',
@@ -539,7 +539,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   sq: {
     welcome_back: 'Mirësevini përsëri!',
-    welcome_to_dehub: 'Mirësevini në DeHub!',
+    welcome_to_dehub: 'Mirësevini në Riftn!',
     connecting_to_google: 'Duke u lidhur me Google...',
     connecting_to_x: 'Duke u lidhur me X...',
     connecting_to_discord: 'Duke u lidhur me Discord...',
@@ -547,7 +547,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   be: {
     welcome_back: 'Сардэчна запрашаем зноў!',
-    welcome_to_dehub: 'Сардэчна запрашаем у DeHub!',
+    welcome_to_dehub: 'Сардэчна запрашаем у Riftn!',
     connecting_to_google: 'Падключэнне да Google...',
     connecting_to_x: 'Падключэнне да X...',
     connecting_to_discord: 'Падключэнне да Discord...',
@@ -555,7 +555,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   hy: {
     welcome_back: 'Բարի վերադdelays!',
-    welcome_to_dehub: 'Բարի գdelays DeHub!',
+    welcome_to_dehub: 'Բարի գdelays Riftn!',
     connecting_to_google: 'Միանում է Google-ին...',
     connecting_to_x: 'Միdelays X-ին...',
     connecting_to_discord: 'Միdelays Discord-ին...',
@@ -563,7 +563,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   ku: {
     welcome_back: 'Bi xêr hatî!',
-    welcome_to_dehub: 'Bi xêr hatî DeHub!',
+    welcome_to_dehub: 'Bi xêr hatî Riftn!',
     connecting_to_google: 'Bi Google ve girêdayî...',
     connecting_to_x: 'Bi X ve girêdayî...',
     connecting_to_discord: 'Bi Discord ve girêdayî...',
@@ -571,7 +571,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   yue: {
     welcome_back: '歡迎返嚟！',
-    welcome_to_dehub: '歡迎嚟到 DeHub！',
+    welcome_to_dehub: '歡迎嚟到 Riftn！',
     connecting_to_google: '連接緊 Google...',
     connecting_to_x: '連接緊 X...',
     connecting_to_discord: '連接緊 Discord...',
@@ -579,7 +579,7 @@ const authToastTranslations: Record<string, Record<string, string>> = {
   },
   wuu: {
     welcome_back: '欢迎回来！',
-    welcome_to_dehub: '欢迎来到 DeHub！',
+    welcome_to_dehub: '欢迎来到 Riftn！',
     connecting_to_google: '连接 Google 中...',
     connecting_to_x: '连接 X 中...',
     connecting_to_discord: '连接 Discord 中...',

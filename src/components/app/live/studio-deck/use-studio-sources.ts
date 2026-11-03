@@ -143,7 +143,7 @@ export function useStudioSources(program: ProgramOutput, desk: AudioDesk | null,
   // Released with the broadcast.
   useEffect(
     () => () => {
-      // A DeHub video still on screen when the broadcast ends is no longer being reacted to.
+      // A Riftn video still on screen when the broadcast ends is no longer being reacted to.
       for (const c of latest.current) if (c.reaction?.linkId) void endLiveReaction(c.reaction.linkId).catch(() => undefined);
       live.current.forEach((l) => l.release());
       live.current.clear();

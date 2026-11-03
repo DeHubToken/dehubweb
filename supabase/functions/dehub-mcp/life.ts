@@ -140,7 +140,7 @@ function weighted<T extends { weight: number }>(items: T[]): T {
 }
 
 function personaBrief(persona: Persona, agentName: string): string {
-  return `Write for the DeHub character ${persona.display_name} (@${agentName}). Character background, for interests and tone only: ${persona.about}
+  return `Write for the Riftn character ${persona.display_name} (@${agentName}). Character background, for interests and tone only: ${persona.about}
 Where you live: ${persona.home}.
 How you type: ${persona.voice}${persona.lowercase ? " You type in lowercase." : ""}${persona.emoji?.length ? ` Emoji you sometimes use (rarely, never more than one): ${persona.emoji.join(" ")}.` : " You don't use emoji."}
 Topic threads to explore, not evidence of real events: ${persona.threads.join("; ")}.

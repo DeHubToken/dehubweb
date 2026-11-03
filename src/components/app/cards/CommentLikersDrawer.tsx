@@ -39,7 +39,7 @@ interface CommentLikersDrawerProps {
   onOpenChange: (open: boolean) => void;
   /** Null while no comment is selected — the query stays disabled. */
   commentId: string | null;
-  /** Where the likers come from; post comments read the DeHub API. */
+  /** Where the likers come from; post comments read the Riftn API. */
   loadPage?: typeof getCommentLikers;
   /** Keeps a different source's pages out of the post cache. */
   cacheScope?: string;

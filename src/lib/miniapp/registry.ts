@@ -137,7 +137,7 @@ export async function fetchAppByDomain(domain: string): Promise<MiniAppListing |
 
 async function userCall<T>(body: Record<string, unknown>): Promise<T> {
   const session = getAuthToken();
-  if (!session) throw Object.assign(new Error(_translateCopy('copy.066d1daed191', { defaultValue: 'Sign in to DeHub first.' })), { code: 'signin' });
+  if (!session) throw Object.assign(new Error(_translateCopy('copy.066d1daed191', { defaultValue: 'Sign in to Riftn first.' })), { code: 'signin' });
   const res = await fetch(`${FUNCTIONS_URL}/miniapp-user`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-dehub-token': session },
@@ -265,7 +265,7 @@ export async function testWebhook(slug: string): Promise<{ ok: boolean; status: 
   return registryCall({ action: 'webhookTest', slug });
 }
 
-/** The last 20 webhooks DeHub sent the app (owner only). */
+/** The last 20 webhooks Riftn sent the app (owner only). */
 export async function fetchWebhookDeliveries(slug: string): Promise<WebhookDelivery[]> {
   return (await registryCall<{ deliveries: WebhookDelivery[] }>({ action: 'deliveries', slug })).deliveries;
 }

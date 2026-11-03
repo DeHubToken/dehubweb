@@ -1,5 +1,5 @@
 /**
- * og-image — Dynamic OG card generator for DeHub text posts
+ * og-image — Dynamic OG card generator for Riftn text posts
  *
  * Generates a 1200×630 PNG image rendering the post text in a styled card,
  * similar to how X/Twitter shows "tweet screenshot" cards when sharing.
@@ -89,7 +89,7 @@ serve(async (req) => {
         const rawText = (post.title || post.name || "").trim();
         if (!rawText) return Response.redirect(FALLBACK_CARD, 302);
 
-        const authorName = post.minterDisplayName || post.mintername || post.minterUsername || "DeHub";
+        const authorName = post.minterDisplayName || post.mintername || post.minterUsername || "Riftn";
         const username = post.minterUsername || "";
         const avatarUrl = post.minterUser ? buildAvatarUrl(post.minterUser) : DEHUB_LOGO;
 
@@ -246,7 +246,7 @@ serve(async (req) => {
                                 position: "relative" as const,
                             },
                             children: [
-                                // DeHub logo + domain
+                                // Riftn logo + domain
                                 {
                                     type: "div",
                                     props: {

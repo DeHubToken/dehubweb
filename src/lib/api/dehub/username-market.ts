@@ -1,7 +1,7 @@
 /**
  * Username marketplace
  * ====================
- * Client for `/api/username_market/*` on the DeHub API.
+ * Client for `/api/username_market/*` on the Riftn API.
  *
  * Handles are the one genuinely scarce thing on the platform — profiles live
  * at `dehub.io/:username` and there is exactly one of each — so this is the

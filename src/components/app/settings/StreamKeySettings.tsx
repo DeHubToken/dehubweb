@@ -144,7 +144,7 @@ export function StreamKeySettings() {
         <span>
           {t(
             'settings.streamKey.blurb',
-            'Paste these into OBS, your capture app or your console once. They never change — press Start in your encoder and DeHub creates the live post for you.',
+            'Paste these into OBS, your capture app or your console once. They never change — press Start in your encoder and Riftn creates the live post for you.',
           )}
         </span>
       </p>

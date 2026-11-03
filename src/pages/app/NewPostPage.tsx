@@ -43,7 +43,7 @@ export default function NewPostPage() {
         {/* Until the slug resolves this URL is not yet a post: say nothing
             indexable. SinglePostPage writes the real head (canonical
             /app/post/<tokenId>) once it renders. */}
-        <SEOHead title="DeHub" noindex noCanonical />
+        <SEOHead title="Riftn" noindex noCanonical />
         <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
       </div>
     );
@@ -52,7 +52,7 @@ export default function NewPostPage() {
   if (!data) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 p-8 text-center">
-        <SEOHead title={`${t('postInfo.notFound')} — DeHub`} description={t('postInfo.notFound')} noindex noCanonical />
+        <SEOHead title={`${t('postInfo.notFound')} — Riftn`} description={t('postInfo.notFound')} noindex noCanonical />
         <p className="text-white font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
         <p className="text-white/50 text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
         <button

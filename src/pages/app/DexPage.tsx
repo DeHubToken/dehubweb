@@ -251,7 +251,7 @@ export default function DexPage() {
 
   const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment), [venuePositions, increment]);
   const bestAsk = snapshot?.price ?? null;
-  // Price and both liquidity sides belong to the DeHub Base pool.
+  // Price and both liquidity sides belong to the Riftn Base pool.
   const usdPrice = snapshot?.usdPrice ?? null;
   const liquidityUsd = snapshot?.liquidityUsd != null
     ? snapshot.liquidityUsd + (snapshot.lpDhb != null && usdPrice != null ? snapshot.lpDhb * usdPrice : 0)
@@ -276,7 +276,7 @@ export default function DexPage() {
     const live = venuePositions.find((p) => p.poolFee === 0 && Number.isFinite(p.marketPrice) && p.marketPrice > 0);
     return live?.marketPrice ?? null;
   }, [venuePositions]);
-  // Both references now describe the same DeHub pool.
+  // Both references now describe the same Riftn pool.
   const referencePrice = useCallback((next: 'buy' | 'sell') => seedReference(next, poolPrice, usdPrice) ?? bestAsk, [poolPrice, usdPrice, bestAsk]);
   const seedPrice = useMemo(() => referencePrice(side), [referencePrice, side]);
   useEffect(() => {
@@ -397,7 +397,7 @@ export default function DexPage() {
 
   return <div className="dex-terminal">
     <SEOHead title={t('dex.seoTitle')} description={t('dex.seoDescription')} url="https://riftn.com/dex"
-      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub DEX', url: 'https://riftn.com/dex',
+      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Riftn DEX', url: 'https://riftn.com/dex',
         description: t('dex.seoDescription') }} />
     <header className="dex-top">
       <PoolPicker current={null} />

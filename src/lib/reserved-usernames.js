@@ -67,7 +67,7 @@ export const ROUTE_SEGMENTS = [
 
 /**
  * Names that are not routes but must not be handed to a stranger: a profile at
- * dehub.io/support or dehub.io/official reads as DeHub speaking.
+ * dehub.io/support or dehub.io/official reads as Riftn speaking.
  *
  * Deliberately NOT given to the worker. These are claimable-looking names, and
  * if any existing account already holds one, treating it as a system route
@@ -121,7 +121,7 @@ export const WORKER_ASSET_ROUTES = [
 ];
 
 /**
- * Brand names. `riftn` is the name DeHub is moving to (riftn.com), so nobody
+ * Brand names. `riftn` is the name Riftn is moving to (riftn.com), so nobody
  * may hold it or an obvious copy of it: `riftn_`, `riftn-official`, `RIFTN`,
  * `r1ftn`, `official_riftn` and the like. Matched by rule rather than listed,
  * because the copies are endless.

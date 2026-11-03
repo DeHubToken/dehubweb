@@ -189,7 +189,7 @@ const getMenuItems = (t: (key: string) => string) => [{
       path: '/docs/developers/mini-apps'
     },
     {
-      get title() { return _translateCopy("copy.ce5655253a4c", { defaultValue: "Sign in with DeHub" }); },
+      get title() { return _translateCopy("copy.ce5655253a4c", { defaultValue: "Sign in with Riftn" }); },
       path: '/docs/auth'
     },
     {
@@ -429,7 +429,7 @@ const DocsLayoutContent = () => {
   };
 
   const logo = <Link to="/app" className="flex items-center gap-2 shrink-0 text-foreground">
-      <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
+      <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "Riftn Logo" })} className="w-6 h-6 dark:invert" />
       <span className="text-[15px] font-semibold tracking-tight">{_copy("nav.docs", { defaultValue: "Docs" })}</span>
     </Link>;
 

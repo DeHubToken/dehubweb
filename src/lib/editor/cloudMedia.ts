@@ -4,7 +4,7 @@
  * Supabase Storage, with a matching row in `public.editor_assets`.
  *
  * Every read and write goes through the `editor-assets` edge function, which
- * takes the wallet from the verified DeHub token. The table and bucket are not
+ * takes the wallet from the verified Riftn token. The table and bucket are not
  * reachable from the browser directly.
  */
 import { supabase } from "@/integrations/supabase/client";

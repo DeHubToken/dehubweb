@@ -16,7 +16,7 @@ const account = {
   address: ADDRESS,
   username: 'maldoteth',
   displayName: 'mal',
-  aboutMe: 'building DeHub.',
+  aboutMe: 'building Riftn.',
   avatarImageUrl: `avatars/${ADDRESS}.jpg`,
   uploads: 4,
 };
@@ -116,10 +116,10 @@ describe('profile feed', () => {
     expect(res.headers.get('Content-Type')).toContain('application/rss+xml');
     expect(res.headers.get('X-Robots-Tag')).toBe('noindex');
     const xml = await res.text();
-    expect(xml).toContain('<title>mal (@maldoteth) on DeHub</title>');
+    expect(xml).toContain('<title>mal (@maldoteth) on Riftn</title>');
     expect(xml).toContain('<link>https://riftn.com/maldoteth</link>');
     expect(xml).toContain('<atom:link href="https://riftn.com/maldoteth.rss" rel="self"');
-    expect(xml).toContain('<description>building DeHub.</description>');
+    expect(xml).toContain('<description>building Riftn.</description>');
     expect(xml).toContain('<guid isPermaLink="true">https://riftn.com/app/post/12</guid>');
     expect(xml).toContain('<guid isPermaLink="true">https://riftn.com/app/post/10</guid>');
     expect(xml).not.toContain('/app/post/11<');
@@ -159,7 +159,7 @@ describe('tag feed', () => {
     const res = await get('https://riftn.com/tags/Music.rss');
     expect(res.status).toBe(200);
     const xml = await res.text();
-    expect(xml).toContain('<title>#music on DeHub</title>');
+    expect(xml).toContain('<title>#music on Riftn</title>');
     expect(xml).toContain('<link>https://riftn.com/app?category=music</link>');
     expect(feedQueries[0].get('category')).toBe('music');
   });
@@ -167,7 +167,7 @@ describe('tag feed', () => {
 
 describe('discovery', () => {
   it('advertises the profile feed on the crawler page', () => {
-    expect(WORKER).toContain('type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"');
+    expect(WORKER).toContain('type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on Riftn`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"');
   });
 });
 

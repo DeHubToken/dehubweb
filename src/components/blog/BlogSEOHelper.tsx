@@ -16,7 +16,7 @@ export const BlogSEOHelper: React.FC = () => {
       <meta name="bingbot" content={isCanonicalHost ? 'index, follow' : 'noindex, nofollow'} />
 
       {/* RSS/Feed discovery */}
-      <link rel="alternate" type="application/rss+xml" title={_copy("copy.f40c6616855d", { defaultValue: "DeHub Blog RSS Feed" })} href="/rss.xml" />
+      <link rel="alternate" type="application/rss+xml" title={_copy("copy.f40c6616855d", { defaultValue: "Riftn Blog RSS Feed" })} href="/rss.xml" />
 
       {/* Preconnect to external domains for faster loading */}
       <link rel="preconnect" href="https://images.unsplash.com" />

@@ -64,22 +64,22 @@ export const SLIDES = [
     get preview() { return _translateCopy("copy.27dd6cafb16f", { defaultValue: "Your data, assets and audience are yours forever" }); },
     sub: 'ownership_economy',
     extra: 'user_owned = true',
-    get description() { return _translateCopy("copy.6c6b4f33bb99", { defaultValue: "The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you." }); },
+    get description() { return _translateCopy("copy.6c6b4f33bb99", { defaultValue: "The ownership economy means your data, assets and audience are yours forever. Even the Riftn network is owned by its users, you." }); },
   },
 ] as const;
 
 const entityCopy = () =>
-  _translateCopy("copy.a64c2e2ad08c", { defaultValue: "DeHub is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again." });
+  _translateCopy("copy.a64c2e2ad08c", { defaultValue: "Riftn is an open-source, user owned entertainment platform offering full feature social media, gaming experiences, streaming services, content creation tools and a plethora of peer-to-peer utilities. Monetize without permission and from your first view, never fearing the algorithm again." });
 
 /* Docs lead, guides follow. The two /docs entries at the front are the pages
    that answer "what is this" outright — the guides are all downstream of that
    question, so leading with a feature explainer asked a visitor to care about
-   watch-to-earn before knowing what DeHub is. /docs/faq also emits FAQPage
+   watch-to-earn before knowing what Riftn is. /docs/faq also emits FAQPage
    JSON-LD at the edge (faqJsonLd in CLOUDFLARE_WORKER_SEO.js), so a home-page
    link into it is worth more than another sibling guide.
    Keep in sync with HOME_INTRO_LINKS in CLOUDFLARE_WORKER_SEO.js. */
 const LINKS: { to: string; label: string }[] = [
-  { to: '/docs/overview', get label() { return _translateCopy("copy.370aae90c548", { defaultValue: "DeHub overview" }); } },
+  { to: '/docs/overview', get label() { return _translateCopy("copy.370aae90c548", { defaultValue: "Riftn overview" }); } },
   { to: '/docs/faq', get label() { return _translateCopy("copy.e956a9404b46", { defaultValue: "Frequently asked questions" }); } },
   { to: '/guides/what-is-watch-to-earn', get label() { return _translateCopy("copy.e38e06989024", { defaultValue: "What is watch-to-earn?" }); } },
   { to: '/guides/tokenized-subscriptions-explained', get label() { return _translateCopy("copy.23373242820a", { defaultValue: "Tokenised subscriptions" }); } },
@@ -277,17 +277,10 @@ export function HomeIntroPanel({
       {/* --- HUD chrome ---------------------------------------------------- */}
       <div className="relative z-10 px-5 py-5 sm:px-8 sm:py-7">
         <div className="dehub-intro-top mb-5 flex items-start justify-between gap-3">
-          {/* White DEHUB pill, ALWAYS top-left (blog cards crop object-bottom). */}
-          <span
-            className="dehub-intro-brand inline-flex items-center rounded-[14px] bg-[#f4f4f2] px-4 py-2"
-            style={{ boxShadow: '0 0 34px rgba(255,255,255,.38), 0 0 90px rgba(255,255,255,.14)' }}
-          >
-            {/* -web.webp: the kit's wordmark-black.png is 1752x417 for a logo
-                drawn 18px tall — a 23x linear oversample, 45 KB. This is 222x53
-                (3x, covering every DPR that exists) at 3 KB. The PNG stays: it
-                is byte-identical to /brand/wordmark-black.png, which the brand
-                assets page offers as a download. */}
-            <img src="/brand-kit/brand/wordmark-black-web.webp" alt="DeHub" width={74} height={18} className="h-[18px] w-auto" />
+          {/* Plain white Riftn wordmark, ALWAYS top-left (blog cards crop object-bottom).
+              203x60 is 3x the drawn height, covering every DPR that exists. */}
+          <span className="dehub-intro-brand inline-flex items-center py-1">
+            <img src="/brand-kit/brand/riftn-wordmark-white-web.png" alt="Riftn" width={68} height={20} className="h-[20px] w-auto" />
           </span>
           <div className="flex items-center gap-2">
             <span
@@ -306,7 +299,7 @@ export function HomeIntroPanel({
           </div>
         </div>
 
-        <h2 id="dehub-intro-heading" className="sr-only">{_copy("copy.6e881ada6406", { defaultValue: "Welcome to DeHub — the open-source, user-owned social platform" })}</h2>
+        <h2 id="dehub-intro-heading" className="sr-only">{_copy("copy.6e881ada6406", { defaultValue: "Welcome to Riftn — the open-source, user-owned social platform" })}</h2>
 
         {/* Progress pills — 47x8, white on white/25 (mobile ProgressPill). */}
         <div className="dehub-intro-pills mb-4 flex gap-1.5">
@@ -393,7 +386,7 @@ export function HomeIntroPanel({
             onClick={onJoin}
             onPointerDown={onWarmLogin}
             onMouseEnter={onWarmLogin}
-          >{_copy("copy.3e87484b3183", { defaultValue: "Join DeHub" })}</Button>
+          >{_copy("copy.3e87484b3183", { defaultValue: "Join Riftn" })}</Button>
           {/* Secondary CTA points at the docs home, not /guide. Relabelled with
               it: a button promising a "tour" that lands on documentation is a
               broken promise, and the honest label is the cheap half of the
@@ -449,7 +442,7 @@ export function HomeIntroPanel({
           >{_copy("copy.fa9a1cd7ddb3", { defaultValue: "// featured_in" })}</span>
           {/* <nav>, not a div: this is a labelled set of links, and aria-label
               on a generic element is ignored by most screen readers. */}
-          <nav className="dehub-press-viewport mt-2" aria-label={_copy("copy.f7a75b542419", { defaultValue: "DeHub in the press" })}>
+          <nav className="dehub-press-viewport mt-2" aria-label={_copy("copy.f7a75b542419", { defaultValue: "Riftn in the press" })}>
             <div className="dehub-press-track">
               {[0, 1].map((copy) => (
                 <div
@@ -476,7 +469,7 @@ export function HomeIntroPanel({
           </nav>
         </div>
 
-        <nav aria-label={_copy("copy.1cf9b8eabf7f", { defaultValue: "Learn more about DeHub" })} className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
+        <nav aria-label={_copy("copy.1cf9b8eabf7f", { defaultValue: "Learn more about Riftn" })} className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
           {LINKS.map((l) => (
             <Link key={l.to} to={l.to} className="text-zinc-400 underline underline-offset-2 hover:text-white">
               {l.label}

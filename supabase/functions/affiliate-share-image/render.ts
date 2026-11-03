@@ -86,11 +86,11 @@ export function buildInviteSvg(opts: InviteImageOptions): string {
     <image href="${DEHUB_LOGO_DATA_URI}" x="64" y="52" width="206" height="${206 / (1752 / 417)}" preserveAspectRatio="xMidYMid meet"/>
     ${opts.avatarDataUri ? `<image href="${escapeXml(opts.avatarDataUri)}" x="64" y="171" width="246" height="246" preserveAspectRatio="xMidYMid slice" clip-path="url(#avatarClip)"/>` : `
     <rect x="64" y="171" width="246" height="246" rx="28" fill="#25272c"/>
-    <text x="187" y="330" fill="#fff" font-size="112" font-weight="700" text-anchor="middle">${escapeXml(Array.from(hasIdentity ? opts.name : "DeHub")[0]?.toUpperCase() || "D")}</text>`}
+    <text x="187" y="330" fill="#fff" font-size="112" font-weight="700" text-anchor="middle">${escapeXml(Array.from(hasIdentity ? opts.name : "Riftn")[0]?.toUpperCase() || "D")}</text>`}
     <text x="366" y="219" fill="#fff" font-weight="700" ${fitted(name)}>${escapeXml(name.text)}</text>
     ${opts.badgeDataUri ? `<image href="${escapeXml(opts.badgeDataUri)}" x="${366 + name.width + 10}" y="${badgeY}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>` : ""}
     ${handle.text ? `<text x="366" y="271" fill="#bdc0c5" ${fitted(handle)}>${escapeXml(handle.text)}</text>` : ""}
-    <text x="366" y="365" fill="#fff" font-size="56" font-weight="700">${hasIdentity ? "Join me on DeHub." : "You’re invited."}</text>
+    <text x="366" y="365" fill="#fff" font-size="56" font-weight="700">${hasIdentity ? "Join me on Riftn." : "You’re invited."}</text>
     <path d="M64 464H917" stroke="#56595e"/>
     <text x="64" y="531" fill="#bdc0c5" font-size="33">Your invitation</text>
     <text x="64" y="578" fill="#fff" font-weight="700" ${fitted(linkText)}>${escapeXml(linkText.text)}</text>

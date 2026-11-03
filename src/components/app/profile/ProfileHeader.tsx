@@ -505,7 +505,7 @@ export function ProfileHeader({
                   )}
                 </div>
               )}
-              {/* DeHub followers plus the verified counts of the creator's
+              {/* Riftn followers plus the verified counts of the creator's
                   connected socials. Absent until one carries a count. */}
               <TotalReachPill wallet={apiProfile?.walletAddress ?? profile.walletAddress} followers={profile.followers} />
               {/* On a phone the links ride at the end of the counts line and

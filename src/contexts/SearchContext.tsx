@@ -64,7 +64,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'docs-home',
       title: 'Documentation Home',
-      content: 'Welcome to DeHub documentation. Learn about our decentralized infrastructure platform, token economics, DePIN network, and development tools.',
+      content: 'Welcome to Riftn documentation. Learn about our decentralized infrastructure platform, token economics, DePIN network, and development tools.',
       path: '/docs',
       category: 'Main',
       type: 'page',
@@ -73,7 +73,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'overview',
       title: 'Overview',
-      content: 'DeHub platform overview, architecture, core features, decentralized infrastructure, blockchain technology, Web3 ecosystem',
+      content: 'Riftn platform overview, architecture, core features, decentralized infrastructure, blockchain technology, Web3 ecosystem',
       path: '/docs/overview',
       category: 'Main',
       type: 'page',
@@ -82,7 +82,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dapps',
       title: "d'App",
-      content: 'Decentralized applications on DeHub platform, development tools, APIs, SDKs, smart contracts, badges, tipping, moderation, wallet, rewards, games, raffle',
+      content: 'Decentralized applications on Riftn platform, development tools, APIs, SDKs, smart contracts, badges, tipping, moderation, wallet, rewards, games, raffle',
       path: '/docs/dapps',
       category: 'Main',
       type: 'page',
@@ -91,7 +91,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'games',
       title: 'Games',
-      content: 'Gaming ecosystem on DeHub, play-to-earn, NFT integration, gaming infrastructure, tournaments, raffle, lottery',
+      content: 'Gaming ecosystem on Riftn, play-to-earn, NFT integration, gaming infrastructure, tournaments, raffle, lottery',
       path: '/docs/games',
       category: 'Main',
       type: 'page',
@@ -100,7 +100,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-overview',
       title: 'Currency Overview',
-      content: 'How DeHub tokens work in-app, tipping creators, purchasing pay-per-view content, rewards currency, AI generation credits, stores and marketplace, fees and staking, profit share from protocol revenue, utility token pegged at $0.001, DEX listing and freely tradable, no guaranteed APY',
+      content: 'How Riftn tokens work in-app, tipping creators, purchasing pay-per-view content, rewards currency, AI generation credits, stores and marketplace, fees and staking, profit share from protocol revenue, utility token pegged at $0.001, DEX listing and freely tradable, no guaranteed APY',
       path: '/docs/token/overview',
       category: 'Token',
       type: 'page',
@@ -109,7 +109,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-economics',
       title: 'Token Economics & Emissions',
-      content: 'DeHub token economics, emission schedule, tokenomics model, distribution, supply mechanics, burn, deflation',
+      content: 'Riftn token economics, emission schedule, tokenomics model, distribution, supply mechanics, burn, deflation',
       path: '/docs/token/economics',
       category: 'Token',
       type: 'page',
@@ -118,7 +118,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'token-utility',
       title: 'Token Utility & Holder Benefits',
-      content: 'DeHub token utility, holder benefits, staking rewards, governance rights, ecosystem benefits, badges, tipping, content creation, moderation',
+      content: 'Riftn token utility, holder benefits, staking rewards, governance rights, ecosystem benefits, badges, tipping, content creation, moderation',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'page',
@@ -154,7 +154,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'where-to-buy',
       title: 'Where to Buy',
-      content: 'Buy DeHub tokens on exchanges, trading pairs, liquidity pools, DEX, CEX listings, Uniswap, PancakeSwap',
+      content: 'Buy Riftn tokens on exchanges, trading pairs, liquidity pools, DEX, CEX listings, Uniswap, PancakeSwap',
       path: '/docs/token/where-to-buy',
       category: 'Token',
       type: 'page',
@@ -163,7 +163,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'governance',
       title: 'Governance',
-      content: 'DeHub governance system, voting mechanisms, proposals, DAO structure, community decisions, voting power',
+      content: 'Riftn governance system, voting mechanisms, proposals, DAO structure, community decisions, voting power',
       path: '/docs/token/governance',
       category: 'Token',
       type: 'page',
@@ -172,7 +172,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'stake',
       title: 'Stake',
-      content: 'Staking DeHub tokens, staking rewards, validation, network security, staking pools, APY, yield',
+      content: 'Staking Riftn tokens, staking rewards, validation, network security, staking pools, APY, yield',
       path: '/docs/token/stake',
       category: 'Token',
       type: 'page',
@@ -181,7 +181,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'bridge',
       title: 'Bridge',
-      content: 'Cross-chain token bridge for DeHub tokens between BASE and BNB networks, token transfer, cross-chain swap',
+      content: 'Cross-chain token bridge for Riftn tokens between BASE and BNB networks, token transfer, cross-chain swap',
       path: '/docs/token/bridge',
       category: 'Token',
       type: 'page',
@@ -235,7 +235,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'donate',
       title: 'Donate',
-      content: 'Donate to DeHub project, support development, community donations, funding, contribute',
+      content: 'Donate to Riftn project, support development, community donations, funding, contribute',
       path: '/docs/donate',
       category: 'Main',
       type: 'page',
@@ -244,7 +244,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'team',
       title: 'Team',
-      content: 'DeHub team members, founders, developers, advisors, company information. Malik CEO and founder.',
+      content: 'Riftn team members, founders, developers, advisors, company information. Malik CEO and founder.',
       path: '/docs/team',
       category: 'Main',
       type: 'page',
@@ -262,7 +262,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'roadmap',
       title: 'Roadmap',
-      content: 'DeHub development roadmap, future plans, milestones, upcoming features, timeline, phases',
+      content: 'Riftn development roadmap, future plans, milestones, upcoming features, timeline, phases',
       path: '/docs/roadmap',
       category: 'Main',
       type: 'page',
@@ -271,7 +271,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'brand-assets',
       title: 'Brand Assets',
-      content: 'DeHub brand assets, logos, graphics, brand guidelines, marketing materials, downloads',
+      content: 'Riftn brand assets, logos, graphics, brand guidelines, marketing materials, downloads',
       path: '/docs/brand-assets',
       category: 'Brand',
       type: 'page',
@@ -280,7 +280,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'featured-in',
       title: 'Featured In',
-      content: 'DeHub in the press, media coverage, featured articles, US Weekly, Yahoo Finance, Entrepreneur, Investing.com, publications, press features',
+      content: 'Riftn in the press, media coverage, featured articles, US Weekly, Yahoo Finance, Entrepreneur, Investing.com, publications, press features',
       path: '/docs/featured-in',
       category: 'Brand',
       type: 'page',
@@ -289,7 +289,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'contact',
       title: 'Contact',
-      content: 'Contact DeHub team, support, partnerships, business inquiries, community, email, social media',
+      content: 'Contact Riftn team, support, partnerships, business inquiries, community, email, social media',
       path: '/docs/contact',
       category: 'Main',
       type: 'page',
@@ -298,7 +298,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'blog',
       title: 'Community Blog',
-      content: 'DeHub community blog, latest news, updates, announcements, insights, stories, articles',
+      content: 'Riftn community blog, latest news, updates, announcements, insights, stories, articles',
       path: '/docs/blog',
       category: 'Blog',
       type: 'blog',
@@ -306,8 +306,8 @@ const createSearchIndex = (): SearchIndex[] => {
     },
     {
       id: 'dev-developers',
-      title: "Build on DeHub",
-      content: "Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
+      title: "Build on Riftn",
+      content: "Everything you need to build on Riftn: mini apps for the Riftn app store, Sign in with Riftn, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
       path: '/docs/developers',
       category: 'Development',
       type: 'page',
@@ -316,7 +316,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dev-developers-mini-apps',
       title: "Mini apps",
-      content: "Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
+      content: "Build a mini app for the Riftn app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
       path: '/docs/developers/mini-apps',
       category: 'Development',
       type: 'page',
@@ -324,8 +324,8 @@ const createSearchIndex = (): SearchIndex[] => {
     },
     {
       id: 'dev-auth',
-      title: "Sign in with DeHub",
-      content: "Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
+      title: "Sign in with Riftn",
+      content: "Let people sign in to your app or website with Riftn: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
       path: '/docs/auth',
       category: 'Development',
       type: 'page',
@@ -334,7 +334,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dev-webhooks',
       title: "Webhooks and notifications",
-      content: "Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.",
+      content: "Receive signed webhook events when people add or remove your Riftn mini app, and send notifications to your users on web and phone with one API call.",
       path: '/docs/webhooks',
       category: 'Development',
       type: 'page',
@@ -343,7 +343,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dev-endpoints',
       title: "API reference",
-      content: "The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
+      content: "The Riftn REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
       path: '/docs/endpoints',
       category: 'Development',
       type: 'page',
@@ -352,7 +352,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dev-examples',
       title: "Examples",
-      content: "Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.",
+      content: "Copy and paste examples for Riftn apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with Riftn button.",
       path: '/docs/examples',
       category: 'Development',
       type: 'page',
@@ -361,7 +361,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'dev-troubleshooting',
       title: "Troubleshooting",
-      content: "Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
+      content: "Fixes for the most common problems building Riftn mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
       path: '/docs/troubleshooting',
       category: 'Development',
       type: 'page',
@@ -370,7 +370,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'quickstart',
       title: 'Quick Start',
-      content: 'Quick start guide for DeHub platform, getting started, first steps, setup instructions',
+      content: 'Quick start guide for Riftn platform, getting started, first steps, setup instructions',
       path: '/docs/quickstart',
       category: 'Development',
       type: 'page',
@@ -379,7 +379,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'terms',
       title: 'Terms',
-      content: 'DeHub terms and conditions, user agreement, platform terms, legal terms',
+      content: 'Riftn terms and conditions, user agreement, platform terms, legal terms',
       path: '/docs/terms',
       category: 'Legal',
       type: 'page',
@@ -388,7 +388,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'terms-of-service',
       title: 'Terms of Service',
-      content: 'DeHub terms of service, service agreement, user responsibilities, platform rules',
+      content: 'Riftn terms of service, service agreement, user responsibilities, platform rules',
       path: '/docs/terms-of-service',
       category: 'Legal',
       type: 'page',
@@ -397,7 +397,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'privacy-policy',
       title: 'Privacy Policy',
-      content: 'DeHub privacy policy, data protection, user privacy, information collection, GDPR compliance',
+      content: 'Riftn privacy policy, data protection, user privacy, information collection, GDPR compliance',
       path: '/docs/privacy',
       category: 'Legal',
       type: 'page',
@@ -406,7 +406,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'brand-guidelines',
       title: 'Brand Guidelines',
-      content: 'DeHub brand guidelines, brand identity, logo usage, design standards, marketing guidelines',
+      content: 'Riftn brand guidelines, brand identity, logo usage, design standards, marketing guidelines',
       path: '/docs/brand-guidelines',
       category: 'Brand',
       type: 'page',
@@ -415,7 +415,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'faq',
       title: 'FAQ',
-      content: 'Frequently asked questions about DeHub platform, common questions, troubleshooting, help',
+      content: 'Frequently asked questions about Riftn platform, common questions, troubleshooting, help',
       path: '/docs/faq',
       category: 'Support',
       type: 'page',
@@ -434,7 +434,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'wallet',
       title: 'Wallet & Holdings',
-      content: 'DeHub token wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
+      content: 'Riftn token wallet, token holdings, balance, portfolio, wallet connect, MetaMask, crypto wallet',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',
@@ -443,7 +443,7 @@ const createSearchIndex = (): SearchIndex[] => {
     {
       id: 'rewards',
       title: 'Rewards & Earnings',
-      content: 'Earning rewards on DeHub, content rewards, staking earnings, referral rewards, passive income',
+      content: 'Earning rewards on Riftn, content rewards, staking earnings, referral rewards, passive income',
       path: '/docs/token/utility',
       category: 'Token',
       type: 'section',

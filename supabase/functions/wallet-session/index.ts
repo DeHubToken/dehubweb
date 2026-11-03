@@ -1,6 +1,6 @@
 // Mints the signed wallet session that row-level security trusts.
 //
-// The wallet comes from the verified DeHub token, never from the request, so a
+// The wallet comes from the verified Riftn token, never from the request, so a
 // session can only ever be issued to the wallet that is actually signed in.
 // Clients send the result as x-wallet-session on every REST and storage call;
 // see get_request_wallet_address() in 20260925090000_wallet_sessions.sql.

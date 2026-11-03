@@ -354,7 +354,7 @@ export function useBuyPlan() {
         throw new Error(i18n.t('subscriptions.tokenCheckoutNotReady'));
       }
 
-      // Paying with another token: DeHub Pay (or Uniswap as the fallback)
+      // Paying with another token: Riftn Pay (or Uniswap as the fallback)
       // turns it into exactly this plan's DHB on Base before the transfer.
       if (fundFrom && targetChain === BASE_CHAIN_ID) {
         setStage('funding');
@@ -362,7 +362,7 @@ export function useBuyPlan() {
         if (!ready) throw new Error(FUNDING_ABORTED);
       }
 
-      // DHB stays in DeHub custody. Nothing is sold or swapped at checkout;
+      // DHB stays in Riftn custody. Nothing is sold or swapped at checkout;
       // the backend verifies this exact transfer before activating access and
       // credits the creator the frozen USDT value of the plan.
       setStage('wallet');

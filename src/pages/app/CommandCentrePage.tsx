@@ -17,8 +17,8 @@ export default function CommandCentrePage() {
 
   return (
     <div data-command-centre-page className="min-h-screen">
-      <SEOHead title={_copy("copy.a2364c207356", { defaultValue: "Command — Your Dashboard & Wallet" })} description={_copy("copy.d97180b4753f", { defaultValue: "Your command centre on DeHub. Manage your wallet, track balances, and oversee your account in one dashboard." })} url="https://riftn.com/app/command-centre" />
-      <h1 className="sr-only">{_copy("copy.064512ec24f9", { defaultValue: "DeHub Command — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.a2364c207356", { defaultValue: "Command — Your Dashboard & Wallet" })} description={_copy("copy.d97180b4753f", { defaultValue: "Your command centre on Riftn. Manage your wallet, track balances, and oversee your account in one dashboard." })} url="https://riftn.com/app/command-centre" />
+      <h1 className="sr-only">{_copy("copy.064512ec24f9", { defaultValue: "Riftn Command — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland icon="command" title={t('commandCentre.title')} />
 
       <PageBody>

@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The card a /cinema/<type>/<id> link turns into.
  *
- * Rendered wherever DeHub shows user-written text, so a shared film in a DM
+ * Rendered wherever Riftn shows user-written text, so a shared film in a DM
  * looks like a shared film in the feed. Like every other entity card it must
  * hand back a fallback rather than `null` when the title cannot be loaded:
  * surfaces strip the URL out of the text on the assumption the card replaces

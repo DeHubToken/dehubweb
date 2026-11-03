@@ -17,7 +17,7 @@ export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
- * Cloudflare Worker for DeHub Dynamic SEO/SSR
+ * Cloudflare Worker for Riftn Dynamic SEO/SSR
  *
  * CANONICAL implementation (retired the previous edge-function setup when the
  * site moved to Cloudflare in July 2026). Static assets come from the
@@ -156,7 +156,7 @@ const GOOGLE_SITE_VERIFICATION = 'fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ';
 // served by the ASSETS binding. Key = the canonical route path without its
 // leading slash; 'home' and 'fallback' are the two pages with no route of
 // their own. Before this, every /docs page, every product page and the blog
-// index shared one card, so a feed full of DeHub links showed one repeated
+// index shared one card, so a feed full of Riftn links showed one repeated
 // image. Anything absent here still falls back to SHARE_IMAGE, so adding a
 // route without its card is safe.
 const OG_CARD_ROUTES = new Set([
@@ -249,10 +249,10 @@ function breadcrumbScript(trail) {
   return `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...breadcrumbLd(trail) })}</script>`;
 }
 
-const HOME_CRUMB = { name: 'DeHub', url: `${APP_URL}/` };
+const HOME_CRUMB = { name: 'Riftn', url: `${APP_URL}/` };
 
 /**
- * The trail an entity page already draws as `<a>` links (`DeHub › Stores`),
+ * The trail an entity page already draws as `<a>` links (`Riftn › Stores`),
  * read back into crumbs so the visible breadcrumb and the BreadcrumbList can't
  * disagree. The page itself is appended by the caller.
  */
@@ -277,25 +277,25 @@ const ORG_SAME_AS = [
   'https://play.google.com/store/apps/details?id=io.dehub.mobile',
   // Instagram and TikTok as recorded on the Wikidata item (P2003, P7085). The
   // CoinGecko coin page is gone: it now redirects to CoinGecko's home page,
-  // which says nothing about who DeHub is.
+  // which says nothing about who Riftn is.
   'https://www.instagram.com/dehub_official/',
   'https://www.tiktok.com/@dehub_official',
   'https://coinmarketcap.com/currencies/dehub/',
 ];
 const ORG_JSONLD = {
   '@type': 'Organization',
-  name: 'DeHub',
+  name: 'Riftn',
   url: APP_URL,
   logo: ORG_LOGO,
-  description: 'DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.',
+  description: 'Riftn is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.',
   sameAs: ORG_SAME_AS,
 };
 // Browser SPA <title> in index.html — bot HTML must carry the same string so
 // the two variants never diverge (cloaking-suspicion surface).
-const HOME_TITLE = 'DeHub — Open Source, User Owned Social Media';
-const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+const HOME_TITLE = 'Riftn — Open Source, User Owned Social Media';
+const HOME_TITLE_LEGACY = 'Riftn — Open Source, User Owned & Censorship Resistant Media';
 // Browser SPA <meta name="description"> in index.html, for the same reason.
-const HOME_DESCRIPTION = 'DeHub is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.';
+const HOME_DESCRIPTION = 'Riftn is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.';
 
 // Signed-out introduction on "/". MIRRORS src/components/app/HomeIntro.tsx —
 // keep the prose identical in both, or the bot and browser variants diverge and
@@ -304,15 +304,15 @@ const HOME_DESCRIPTION = 'DeHub is an open source, user owned and censorship res
 // what it reads here is what a signed-out human reads in the SPA.
 //
 // Why it exists: dehub.net 301s into "/", and a 301 only carries a ranking if
-// the destination can hold the query. The old marketing site explained DeHub in
+// the destination can hold the query. The old marketing site explained Riftn in
 // prose; the feed it redirects into gave crawlers ~149 words of nav plus scraped
-// post titles, so the brand term had nothing to land on. "DeHub" is also a
+// post titles, so the brand term had nothing to land on. "Riftn" is also a
 // contested string (DePaul's student portal, deHUB Access, Rowan's DEHub), and
 // entity establishment has to happen in crawlable body copy.
 const HOME_INTRO_LINKS = [
   // Docs lead, guides follow — see the LINKS comment in HomeIntro.tsx. Both
   // lists must stay identical; this is the copy crawlers actually get.
-  ['/docs/overview', 'DeHub overview'],
+  ['/docs/overview', 'Riftn overview'],
   ['/docs/faq', 'Frequently asked questions'],
   ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
   ['/guides/tokenized-subscriptions-explained', 'Tokenised subscriptions'],
@@ -325,10 +325,10 @@ const HOME_INTRO_LINKS = [
 const HOME_INTRO_SLIDES = [
   ['Censorship resistant media for the next generation', 'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.'],
   ['No bias or centralized authority', 'No algorithms that favor one side of the argument. Everyone is amplified equally and fairly with open source code.'],
-  ['You will own everything and be happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
+  ['You will own everything and be happy', 'The ownership economy means your data, assets and audience are yours forever. Even the Riftn network is owned by its users, you.'],
 ];
 
-// Outlets that have covered DeHub — mirrors PRESS in HomeIntro.tsx, where they
+// Outlets that have covered Riftn — mirrors PRESS in HomeIntro.tsx, where they
 // render as a wordmark marquee under the entity copy. Worth emitting at the
 // edge rather than leaving to the SPA: naming four established publishers in
 // crawlable body copy is corroboration for a contested brand string, which is
@@ -338,12 +338,12 @@ const HOME_INTRO_SLIDES = [
 const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investing.com'];
 
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
-<h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
+<h2 style="font-size:16px">Welcome to Riftn — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>Riftn is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
-<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">DeHub press coverage</a></p>
-<nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
+<p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">Riftn press coverage</a></p>
+<nav aria-label="Learn more about Riftn"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
     `<li style="margin:6px 0"><a href="${APP_URL}${href}">${label}</a></li>`
   ).join('')
@@ -369,14 +369,14 @@ const GUIDE_PAGES = {
   // human-visible page actually states. Dates are the React page's first and
   // latest commits.
   'best-decentralized-streaming-apps': {
-    title: 'Best Decentralized Streaming Apps 2026 — DeHub Guide',
-    description: 'The decentralized streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared.',
+    title: 'Best Decentralized Streaming Apps 2026 — Riftn Guide',
+    description: 'The decentralized streaming apps you can actually watch on in 2026 — Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared.',
     datePublished: '2026-09-13',
     dateModified: '2026-09-29',
     bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app — they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
 <h2>The six</h2>
 <ul>
-<li><strong>DeHub</strong> — user-owned media platform on Base, BNB, Robinhood Chain and Solana. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
+<li><strong>Riftn</strong> — user-owned media platform on Base, BNB, Robinhood Chain and Solana. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
 <li><strong>Streamplace</strong> — open-source live video for the AT Protocol, so your Bluesky handle is your streaming identity. Very early, and no creator payments yet.</li>
 <li><strong>Odysee</strong> — the largest audience here, built on the LBRY protocol. Video-first, with livestreaming as a supplement to uploads.</li>
 <li><strong>3Speak</strong> — video and live on the Hive blockchain, where creator rewards are paid by the chain rather than by advertisers.</li>
@@ -384,8 +384,8 @@ const GUIDE_PAGES = {
 <li><strong>Audius</strong> — decentralized music streaming on Solana, and the largest user base of any app in this category.</li>
 </ul>
 <h2>How to choose</h2>
-<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap DeHub is built to fill — and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
-<p><a href="${APP_URL}/">Try DeHub free</a>.</p>`,
+<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap Riftn is built to fill — and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
+<p><a href="${APP_URL}/">Try Riftn free</a>.</p>`,
   },
 };
 
@@ -394,20 +394,20 @@ const GUIDE_PAGES = {
 // dehub-docs-content.txt. Bots used to get the raw SPA shell (homepage meta,
 // no canonical) for the entire /docs section.
 const DOCS_PAGES = {
-  'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
-  'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
-  'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
-  'token/overview': { title: 'Currency Overview — DeHub Docs', description: 'How DeHub tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
-  'token/economics': { title: 'DeHub tokens Economics — DeHub Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
-  'token/stake': { title: 'Staking tokens — DeHub Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across DeHub.' },
-  'roadmap': { title: 'DeHub Roadmap — DeHub Docs', description: "Where DeHub is headed: shipped milestones and what's next across the app, token and games." },
-  'faq': { title: 'DeHub FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about DeHub, DeHub tokens, staking, governance and the platform.' },
-  'team': { title: 'DeHub Team — DeHub Docs', description: 'The founders and team behind DeHub: backgrounds across social media, gaming, entertainment and Web3.' },
-  'contact': { title: 'Contact DeHub — DeHub Docs', description: 'How to reach the DeHub team: support, partnerships, press and community channels.' },
-  'privacy': { title: 'Privacy Policy — DeHub', description: "DeHub's privacy policy: what data the platform handles and how." },
-  'terms': { title: 'Legal Disclaimer & Terms — DeHub', description: "DeHub's legal disclaimer and terms of use." },
-  'advertising': { title: 'Advertising on DeHub — POVR Ad Tech', description: "DeHub's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
-  'security': { title: 'Security at DeHub — DeHub Docs', description: "The Certik audit of DeHub's smart contracts and how to report vulnerabilities to the team." },
+  'overview': { title: 'Riftn Docs — Overview', description: 'What Riftn is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
+  'dapps': { title: "Riftn dApps — The Complete Ecosystem", description: "Riftn's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
+  'games': { title: 'Riftn Games — Play & Win On-Chain', description: "Riftn's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
+  'token/overview': { title: 'Currency Overview — Riftn Docs', description: 'How Riftn tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
+  'token/economics': { title: 'Riftn tokens Economics — Riftn Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
+  'token/stake': { title: 'Staking tokens — Riftn Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across Riftn.' },
+  'roadmap': { title: 'Riftn Roadmap — Riftn Docs', description: "Where Riftn is headed: shipped milestones and what's next across the app, token and games." },
+  'faq': { title: 'Riftn FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about Riftn, Riftn tokens, staking, governance and the platform.' },
+  'team': { title: 'Riftn Team — Riftn Docs', description: 'The founders and team behind Riftn: backgrounds across social media, gaming, entertainment and Web3.' },
+  'contact': { title: 'Contact Riftn — Riftn Docs', description: 'How to reach the Riftn team: support, partnerships, press and community channels.' },
+  'privacy': { title: 'Privacy Policy — Riftn', description: "Riftn's privacy policy: what data the platform handles and how." },
+  'terms': { title: 'Legal Disclaimer & Terms — Riftn', description: "Riftn's legal disclaimer and terms of use." },
+  'advertising': { title: 'Advertising on Riftn — POVR Ad Tech', description: "Riftn's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
+  'security': { title: 'Security at Riftn — Riftn Docs', description: "The Certik audit of Riftn's smart contracts and how to report vulnerabilities to the team." },
   // These ten are in sitemap-static.xml but had no entry here, so bots got the
   // raw SPA shell — the homepage title/description with no canonical. Ten of
   // the twenty-eight docs URLs we submit were presenting to Google as homepage
@@ -415,28 +415,28 @@ const DOCS_PAGES = {
   // has a hand-kept public/docs-content JSON mirroring its React page; the
   // description-only body in buildDocsHtml is only the fallback for a failed
   // fetch. docs-content-coverage.test.ts fails if an entry lands without one.
-  'token/utility': { title: 'DeHub tokens Utility & Holder Benefits — DeHub Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across DeHub.' },
-  'token/where-to-buy': { title: 'Where to Buy Tokens — DeHub Docs', description: 'Where to buy DeHub tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
-  'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
-  'token/bridge': { title: 'Bridge tokens Between BASE & BNB — DeHub Docs', description: 'How to move tokens between the BASE and BNB networks with the manual DeHub bridge, and what to expect while it processes.' },
-  'featured-in': { title: 'DeHub in the Press — Featured In', description: 'Press and media coverage of DeHub, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
-  'brand-assets': { title: 'DeHub Brand Assets — Logos & Downloads', description: 'Official DeHub brand assets: logos, icons, graphics and marketing materials available to download.' },
-  'brand-guidelines': { title: 'DeHub Brand Guidelines', description: 'How to use the DeHub brand: identity, logo usage, colour and design standards.' },
-  'donate': { title: 'Donate to DeHub', description: 'Support DeHub development through community donations and contributions.' },
-  'terms-of-service': { title: 'Terms of Service — DeHub', description: "DeHub's terms of service: the agreement, user responsibilities and platform rules." },
+  'token/utility': { title: 'Riftn tokens Utility & Holder Benefits — Riftn Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across Riftn.' },
+  'token/where-to-buy': { title: 'Where to Buy Tokens — Riftn Docs', description: 'Where to buy Riftn tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
+  'token/governance': { title: 'Riftn Governance — Voting & Proposals', description: 'How Riftn governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
+  'token/bridge': { title: 'Bridge tokens Between BASE & BNB — Riftn Docs', description: 'How to move tokens between the BASE and BNB networks with the manual Riftn bridge, and what to expect while it processes.' },
+  'featured-in': { title: 'Riftn in the Press — Featured In', description: 'Press and media coverage of Riftn, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
+  'brand-assets': { title: 'Riftn Brand Assets — Logos & Downloads', description: 'Official Riftn brand assets: logos, icons, graphics and marketing materials available to download.' },
+  'brand-guidelines': { title: 'Riftn Brand Guidelines', description: 'How to use the Riftn brand: identity, logo usage, colour and design standards.' },
+  'donate': { title: 'Donate to Riftn', description: 'Support Riftn development through community donations and contributions.' },
+  'terms-of-service': { title: 'Terms of Service — Riftn', description: "Riftn's terms of service: the agreement, user responsibilities and platform rules." },
   // Linked from the docs sidebar (DocsLayout) on every docs page, and missing
   // here, so every crawler following that link got a 404. No card of its own
   // in public/og yet, so it borrows the docs section's.
-  'guidelines': { title: 'Community Guidelines — DeHub', description: 'What is and is not allowed on DeHub, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
+  'guidelines': { title: 'Community Guidelines — Riftn', description: 'What is and is not allowed on Riftn, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
   // Developer docs. Bodies come from src/data/developer-docs.json via
   // scripts/build-developer-docs-content.mjs; all share one card.
-  'developers': { title: 'DeHub Developers — Build Apps on DeHub', description: 'Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
-  'developers/mini-apps': { title: 'Build a DeHub Mini App — SDK and Manifest', description: 'Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
-  'auth': { title: 'Sign in with DeHub — OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
-  'webhooks': { title: 'DeHub Webhooks and Notifications API', description: 'Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.', og: 'docs/developers' },
-  'endpoints': { title: 'DeHub API Reference — REST and Mastodon APIs', description: 'The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
-  'examples': { title: 'DeHub Developer Examples — Copy and Paste Code', description: 'Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.', og: 'docs/developers' },
-  'troubleshooting': { title: 'DeHub Developer Troubleshooting', description: 'Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.', og: 'docs/developers' },
+  'developers': { title: 'Riftn Developers — Build Apps on Riftn', description: 'Everything you need to build on Riftn: mini apps for the Riftn app store, Sign in with Riftn, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
+  'developers/mini-apps': { title: 'Build a Riftn Mini App — SDK and Manifest', description: 'Build a mini app for the Riftn app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
+  'auth': { title: 'Sign in with Riftn — OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with Riftn: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
+  'webhooks': { title: 'Riftn Webhooks and Notifications API', description: 'Receive signed webhook events when people add or remove your Riftn mini app, and send notifications to your users on web and phone with one API call.', og: 'docs/developers' },
+  'endpoints': { title: 'Riftn API Reference — REST and Mastodon APIs', description: 'The Riftn REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
+  'examples': { title: 'Riftn Developer Examples — Copy and Paste Code', description: 'Copy and paste examples for Riftn apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with Riftn button.', og: 'docs/developers' },
+  'troubleshooting': { title: 'Riftn Developer Troubleshooting', description: 'Fixes for the most common problems building Riftn mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.', og: 'docs/developers' },
 };
 
 /** Legacy and typo'd /docs slugs Google still holds. `quick-start` (the real
@@ -518,9 +518,9 @@ function faqJsonLd(contentHtml) {
 
 function buildDocsHtml(route, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/docs/${route}`;
-  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the DeHub docs</a>.</p>`;
+  const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the Riftn docs</a>.</p>`;
   const nav = Object.entries(DOCS_PAGES).slice(0, 12).map(([r, m]) =>
-    `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a></li>`).join('');
+    `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — Riftn( Docs)?$/, ''))}</a></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -529,7 +529,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta name="description" content="${escHtml(meta.description)}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
@@ -541,46 +541,46 @@ ${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
   image: shareImage(meta.og || `docs/${route}`),
-  author: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
+  author: { '@type': 'Organization', name: 'Riftn', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>${route === 'faq' ? faqJsonLd(contentHtml) : ''}
-${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name: meta.title.replace(/ — DeHub( Docs)?$/, ''), url: canonicalUrl }])}
+${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name: meta.title.replace(/ — Riftn( Docs)?$/, ''), url: canonicalUrl }])}
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs">Docs</a></p>
-<article><h1>${escHtml(meta.title.replace(/ — DeHub( Docs)?$/, ''))}</h1>
+<p><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs">Docs</a></p>
+<article><h1>${escHtml(meta.title.replace(/ — Riftn( Docs)?$/, ''))}</h1>
 <!--hl-body-->${body}<!--/hl-body--></article>
-<nav aria-label="DeHub documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
-<p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<nav aria-label="Riftn documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
+<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
 
-const DOCS_INDEX_DESCRIPTION = 'Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.';
+const DOCS_INDEX_DESCRIPTION = 'Official Riftn documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.';
 
 function buildDocsIndexHtml() {
   const canonicalUrl = `${APP_URL}/docs`;
   const items = Object.entries(DOCS_PAGES).map(([r, m]) =>
-    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
+    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — Riftn( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DeHub Documentation — Guides, Token, dApps &amp; FAQ</title>
+<title>Riftn Documentation — Guides, Token, dApps &amp; FAQ</title>
 <meta name="description" content="${DOCS_INDEX_DESCRIPTION}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
-<meta property="og:title" content="DeHub Documentation">
+<meta property="og:title" content="Riftn Documentation">
 <meta property="og:description" content="${DOCS_INDEX_DESCRIPTION}">
-${twitterTextTags('DeHub Documentation', DOCS_INDEX_DESCRIPTION)}
-${shareMetaTags('docs', 'DeHub Documentation')}
+${twitterTextTags('Riftn Documentation', DOCS_INDEX_DESCRIPTION)}
+${shareMetaTags('docs', 'Riftn Documentation')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'CollectionPage',
-  name: 'DeHub Documentation', url: canonicalUrl,
+  name: 'Riftn Documentation', url: canonicalUrl,
   description: DOCS_INDEX_DESCRIPTION,
   image: shareImage('docs'),
   publisher: ORG_JSONLD,
@@ -589,10 +589,10 @@ ${shareMetaTags('docs', 'DeHub Documentation')}
 ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: canonicalUrl }])}
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › Docs</p>
-<h1>DeHub Documentation</h1>
+<p><a href="${APP_URL}/">Riftn</a> › Docs</p>
+<h1>Riftn Documentation</h1>
 <!--hl-body--><ul style="list-style:none;padding:0">${items}</ul><!--/hl-body-->
-<p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -673,14 +673,14 @@ function snippet(text, max = 160) {
 }
 
 /**
- * <title> for a post. The 64 milestone posts carry "<headline> | DeHub 2024
+ * <title> for a post. The 64 milestone posts carry "<headline> | Riftn 2024
  * Roadmap", which runs past the ~60 characters a results page shows and cut
- * off the brand; those drop to "<headline> | DeHub".
+ * off the brand; those drop to "<headline> | Riftn".
  */
 function blogTitle(post) {
-  const title = post.seoTitle || `${post.title} — DeHub Blog`;
+  const title = post.seoTitle || `${post.title} — Riftn Blog`;
   if (title.length <= 60) return title;
-  const short = title.replace(/\s*\|\s*DeHub \d{4} Roadmap$/, ' | DeHub');
+  const short = title.replace(/\s*\|\s*Riftn \d{4} Roadmap$/, ' | Riftn');
   return short.length < title.length ? short : title;
 }
 
@@ -756,20 +756,20 @@ function relatedPostsHtml(manifest, currentSlug, limit = 4) {
   if (!others.length) return '';
   const items = others.map((p) =>
     `<li><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}">${escHtml(p.title)}</a></li>`).join('');
-  return `<nav aria-label="More from the DeHub blog"><h2>More from the DeHub Blog</h2><ul>${items}</ul></nav>`;
+  return `<nav aria-label="More from the Riftn blog"><h2>More from the Riftn Blog</h2><ul>${items}</ul></nav>`;
 }
 
 /**
- * Article.author for a manifest post. Every post so far is bylined "DeHub
- * Team" or "DeHub" — the company, not a person — and Google reads a Person
- * named "DeHub Team" as a made-up author. A real name, when a post has one,
+ * Article.author for a manifest post. Every post so far is bylined "Riftn
+ * Team" or "Riftn" — the company, not a person — and Google reads a Person
+ * named "Riftn Team" as a made-up author. A real name, when a post has one,
  * stays a Person.
  */
 const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team']);
 function blogAuthorLd(author) {
   const name = String(author || '').replace(/\s+/g, ' ').trim();
   return BRAND_BYLINES.has(name.toLowerCase())
-    ? { '@type': 'Organization', name: 'DeHub', url: APP_URL }
+    ? { '@type': 'Organization', name: 'Riftn', url: APP_URL }
     : { '@type': 'Person', name };
 }
 
@@ -838,7 +838,7 @@ function postVideoLd(contentHtml, post) {
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
   const image = buildBlogShareImage(post);
   const title = blogTitle(post);
-  const longDescription = (post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`).replace(/\s+/g, ' ').trim();
+  const longDescription = (post.seoDescription || post.excerpt || `${post.title} — read on Riftn.`).replace(/\s+/g, ' ').trim();
   const description = snippet(longDescription);
   const ogDescription = snippet(longDescription, 280);
   const imageAlt = post.bannerImageAlt || post.title;
@@ -848,7 +848,7 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
   const tags = Array.isArray(post.tags) ? post.tags.filter(Boolean) : [];
   const body = contentHtml
     ? contentHtml
-    : `<p>${escHtml(post.excerpt || '')}</p><p><a href="${escHtml(canonicalUrl)}">Read the full post on DeHub</a></p>`;
+    : `<p>${escHtml(post.excerpt || '')}</p><p><a href="${escHtml(canonicalUrl)}">Read the full post on Riftn</a></p>`;
   const bannerDims = post.bannerWidth && post.bannerHeight
     ? ` width="${Number(post.bannerWidth)}" height="${Number(post.bannerHeight)}"`
     : '';
@@ -875,7 +875,7 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
         inLanguage: 'en',
         url: canonicalUrl,
         mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
-        isPartOf: { '@type': 'Blog', '@id': `${APP_URL}/docs/blog#blog`, name: 'DeHub Blog', url: `${APP_URL}/docs/blog` },
+        isPartOf: { '@type': 'Blog', '@id': `${APP_URL}/docs/blog#blog`, name: 'Riftn Blog', url: `${APP_URL}/docs/blog` },
         ...(tags.length ? { keywords: tags.join(', '), articleSection: tags[0] } : {}),
         ...(wordCount ? { wordCount } : {}),
         ...(post.readingTime ? { timeRequired: `PT${Number(post.readingTime)}M` } : {}),
@@ -897,9 +897,9 @@ function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
 <meta name="description" content="${escHtml(description)}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
-<link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="Riftn Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
@@ -912,10 +912,10 @@ ${ogLocaleTag()}
 <meta property="og:image:alt" content="${escHtml(imageAlt)}">
 <meta property="article:published_time" content="${escHtml(published)}">
 <meta property="article:modified_time" content="${escHtml(modified)}">
-<meta property="article:author" content="${escHtml(post.author || 'DeHub Team')}">
+<meta property="article:author" content="${escHtml(post.author || 'Riftn Team')}">
 <meta property="article:section" content="Blog">
 ${tagMeta}
-<meta name="author" content="${escHtml(post.author || 'DeHub Team')}">
+<meta name="author" content="${escHtml(post.author || 'Riftn Team')}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escHtml(title)}">
 <meta name="twitter:description" content="${escHtml(ogDescription)}">
@@ -925,17 +925,17 @@ ${tagMeta}
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body>
-<nav aria-label="Breadcrumb"><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></nav>
+<nav aria-label="Breadcrumb"><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs/blog">Blog</a></nav>
 <main>
 <article>
 <h1>${escHtml(post.title)}</h1>
-<p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
+<p><em>By ${escHtml(post.author || 'Riftn Team')}${published ? ` — <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
 ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(imageAlt)}"${bannerDims} fetchpriority="high" decoding="async" style="max-width:100%;height:auto">` : ''}
 <!--hl-body-->${body}<!--/hl-body-->
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
 </main>
-<p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -952,12 +952,12 @@ function buildBlogIndexHtml(manifest) {
     const date = (p.publishedAt || '').slice(0, 10);
     return `<li style="margin:14px 0"><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}">${escHtml(p.title)}</a>${date ? ` <small>(${date})</small>` : ''}<br><small>${escHtml((p.excerpt || '').slice(0, 200))}</small></li>`;
   }).join('');
-  const blogDescription = 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.';
+  const blogDescription = 'News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
     '@id': `${canonicalUrl}#blog`,
-    name: 'DeHub Blog',
+    name: 'Riftn Blog',
     description: blogDescription,
     url: canonicalUrl,
     inLanguage: 'en',
@@ -976,27 +976,27 @@ function buildBlogIndexHtml(manifest) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DeHub Blog — News, Guides &amp; Product Updates</title>
+<title>Riftn Blog — News, Guides &amp; Product Updates</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="${escHtml(blogDescription)} ${posts.length} posts and counting.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <link rel="canonical" href="${canonicalUrl}">
-<link rel="alternate" type="application/rss+xml" title="DeHub Blog RSS Feed" href="${APP_URL}/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="Riftn Blog RSS Feed" href="${APP_URL}/rss.xml">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
-<meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
+<meta property="og:title" content="Riftn Blog — News, Guides &amp; Product Updates">
 <meta property="og:description" content="${escHtml(blogDescription)}">
-${twitterTextTags('DeHub Blog — News, Guides & Product Updates', blogDescription)}
-${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
+${twitterTextTags('Riftn Blog — News, Guides & Product Updates', blogDescription)}
+${shareMetaTags('blog', 'Riftn Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › Blog</p>
-<h1>DeHub Blog</h1>
+<p><a href="${APP_URL}/">Riftn</a> › Blog</p>
+<h1>Riftn Blog</h1>
 <ul style="list-style:none;padding:0">${items}</ul>
 <p><a href="${APP_URL}/">dehub.io home</a></p>
 </body>
@@ -1016,7 +1016,7 @@ const PRIMARY_NAV = [
   { path: '/videos', label: 'Video Feed' },
   { path: '/shorts', label: 'Shorts' },
   { path: '/music', label: 'Music' },
-  { path: '/tv', label: 'DeHub TV' },
+  { path: '/tv', label: 'Riftn TV' },
 ];
 
 // The keyword-targeted guides, linked from the homepage. Before this the
@@ -1028,20 +1028,20 @@ const HOME_GUIDE_LINKS = [
   ['/guides/what-is-watch-to-earn', 'What is watch-to-earn?'],
   ['/guides/best-watch-to-earn-platforms-2026', 'Best watch-to-earn platforms 2026'],
   ['/guides/is-watch-to-earn-legit', 'Is watch-to-earn legit?'],
-  ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: DeHub vs Cheelee, Theta.tv and XCAD'],
+  ['/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn', 'Cheelee alternative: Riftn vs Cheelee, Theta.tv and XCAD'],
   ['/guides/web3-live-streaming-decentralised-twitch-alternative', 'Web3 live streaming: a decentralised Twitch alternative'],
   ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
   ['/guides/higgsfield-genjutsu-alternative', 'Higgsfield Genjutsu alternative: swap anyone in a video'],
   ['/guides/how-does-higgsfield-genjutsu-work', 'How does Higgsfield Genjutsu work? Step by step'],
   ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
-  ['/dehub-app', 'Get the DeHub app'],
+  ['/dehub-app', 'Get the Riftn app'],
 ];
 
 function homeGuidesHtml() {
   const items = HOME_GUIDE_LINKS.map(([href, label]) =>
     `<li style="margin:6px 0"><a href="${APP_URL}${href}">${escHtml(label)}</a></li>`
   ).join('');
-  return `<nav aria-label="DeHub guides"><h2 style="font-size:16px">Guides</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
+  return `<nav aria-label="Riftn guides"><h2 style="font-size:16px">Guides</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
 }
 
 function primaryNavHtml(currentPath = '') {
@@ -1050,7 +1050,7 @@ function primaryNavHtml(currentPath = '') {
       ? `<li style="margin:6px 0"><strong>${escHtml(n.label)}</strong></li>`
       : `<li style="margin:6px 0"><a href="${APP_URL}${n.path}">${escHtml(n.label)}</a></li>`
   ).join('');
-  return `<nav aria-label="DeHub sections"><h2 style="font-size:16px">Explore DeHub</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
+  return `<nav aria-label="Riftn sections"><h2 style="font-size:16px">Explore Riftn</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
 }
 
 // Feed section pages (/explore, /videos, /shorts). These are real SPA routes
@@ -1060,15 +1060,15 @@ function primaryNavHtml(currentPath = '') {
 // yield its generic homepage fallback (a soft-duplicate).
 const SECTION_PAGES = {
   explore: {
-    title: 'Explore DeHub — Trending Creators, Videos & Communities',
-    heading: 'Explore DeHub',
-    description: 'Discover what’s trending on DeHub: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
-    intro: 'Find trending creators, videos, shorts, music and communities across DeHub — the open source, user-owned social platform where posts can be minted on-chain and creators earn natively.',
+    title: 'Explore Riftn — Trending Creators, Videos & Communities',
+    heading: 'Explore Riftn',
+    description: 'Discover what’s trending on Riftn: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
+    intro: 'Find trending creators, videos, shorts, music and communities across Riftn — the open source, user-owned social platform where posts can be minted on-chain and creators earn natively.',
     bodyHtml: `<ul>
 <li><a href="${APP_URL}/videos">Video Feed</a> — the latest on-chain videos from creators.</li>
 <li><a href="${APP_URL}/shorts">Shorts</a> — a vertical, swipeable short-form feed.</li>
-<li><a href="${APP_URL}/music">Music</a> — tracks and audio from DeHub artists.</li>
-<li><a href="${APP_URL}/tv">DeHub TV</a> — lean-back, continuous video.</li>
+<li><a href="${APP_URL}/music">Music</a> — tracks and audio from Riftn artists.</li>
+<li><a href="${APP_URL}/tv">Riftn TV</a> — lean-back, continuous video.</li>
 <li><a href="${APP_URL}/stages">Stages</a> — live audio rooms, with recordings kept afterwards.</li>
 <li><a href="${APP_URL}/communities">Communities</a> — public groups around a topic, each with its own feed.</li>
 </ul>
@@ -1078,24 +1078,24 @@ const SECTION_PAGES = {
 <p>You can read all of it signed out. Signing in — with an email, a social account, a passkey or a wallet — gives you a wallet of your own with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
   },
   videos: {
-    title: 'Video Feed — Watch On-Chain Videos on DeHub',
-    heading: 'DeHub Video Feed',
-    description: 'Watch the latest on-chain videos from creators on DeHub: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
-    intro: 'Watch the newest videos from DeHub creators — long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
-    bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
+    title: 'Video Feed — Watch On-Chain Videos on Riftn',
+    heading: 'Riftn Video Feed',
+    description: 'Watch the latest on-chain videos from creators on Riftn: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
+    intro: 'Watch the newest videos from Riftn creators — long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
+    bodyHtml: `<p>Riftn’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
 <h2>What you can do with a video here</h2>
 <p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
-<p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">DeHub TV</a> as a continuous lean-back channel.</p>`,
+<p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">Riftn TV</a> as a continuous lean-back channel.</p>`,
   },
   shorts: {
-    title: 'Shorts — Short-Form Videos on DeHub',
-    heading: 'DeHub Shorts',
-    description: 'Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
-    intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Shorts can be minted on-chain, so creators keep ownership and earn natively.',
-    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on DeHub — one open, censorship-resistant home for every format.</p>
+    title: 'Shorts — Short-Form Videos on Riftn',
+    heading: 'Riftn Shorts',
+    description: 'Scroll the latest short-form videos on Riftn: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
+    intro: 'Scroll a vertical feed of short-form videos from Riftn creators — quick, swipeable clips on the user-owned social platform. Shorts can be minted on-chain, so creators keep ownership and earn natively.',
+    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on Riftn — one open, censorship-resistant home for every format.</p>
 <h2>What counts as a short</h2>
 <p>A short is any video under a minute. There is no separate upload path and no separate account: a clip posted to the video feed that runs under sixty seconds is a short, and it appears in both places. That keeps a creator's catalogue in one profile whatever the length of the work.</p>
-<p>The lane plays full-screen and vertical, one clip at a time, and swiping moves to the next. Tap to pause, hold to scrub, and react, comment or tip without leaving the player. Shorts earn the same way every post on DeHub does — tips, pay-per-view and badge-gated access are all available to a sixty-second clip — and every view and reaction is counted on the post itself rather than in a feed that can be switched off.</p>`,
+<p>The lane plays full-screen and vertical, one clip at a time, and swiping moves to the next. Tap to pause, hold to scrub, and react, comment or tip without leaving the player. Shorts earn the same way every post on Riftn does — tips, pay-per-view and badge-gated access are all available to a sixty-second clip — and every view and reaction is counted on the post itself rather than in a feed that can be switched off.</p>`,
   },
 };
 
@@ -1107,7 +1107,7 @@ function buildSectionHtml(key, meta) {
     name: meta.title,
     description: meta.description,
     url: canonicalUrl,
-    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
     publisher: ORG_JSONLD,
   };
   return `<!DOCTYPE html>
@@ -1118,7 +1118,7 @@ function buildSectionHtml(key, meta) {
 <meta name="description" content="${escHtml(meta.description)}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
@@ -1130,12 +1130,12 @@ ${shareMetaTags(key, meta.title)}
 ${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
+<p><a href="${APP_URL}/">Riftn</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 <p>${escHtml(meta.intro)}</p>
 <!--hl-body-->${meta.bodyHtml || ''}<!--/hl-body-->
 ${primaryNavHtml(`/${key}`)}
-<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on Riftn</a></p>
 </body>
 </html>`;
 }
@@ -1171,115 +1171,115 @@ const MARKETING_PAGES = {
   'dex': {
     title: 'DEX — Trade tokens at your price',
     description: 'Set your token buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
-    heading: 'DeHub DEX',
+    heading: 'Riftn DEX',
     bodyHtml: `<p>Trade tokens at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
 <p>The terminal shows the live order book, market depth and one shared USD price.</p>
 <p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
   'ads': {
-    title: 'Ads Manager | DeHub',
-    description: 'Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens.',
-    heading: 'DeHub Ads Manager',
-    bodyHtml: `<p>Run ad campaigns on DeHub with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in tokens.</p>
+    title: 'Ads Manager | Riftn',
+    description: 'Launch POVR ad campaigns on Riftn: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens.',
+    heading: 'Riftn Ads Manager',
+    bodyHtml: `<p>Run ad campaigns on Riftn with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in tokens.</p>
 <p>Create a campaign, choose who it reaches and follow its results from one dashboard.</p>
 <p><a href="${APP_URL}/ads">Open Ads Manager</a> or <a href="${APP_URL}/docs/advertising">read how POVR works</a>.</p>`,
   },
   'buy': {
-    title: 'Buy — Purchase Crypto on DeHub',
-    description: 'Buy tokens and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported.',
-    heading: 'Buy Crypto on DeHub',
-    bodyHtml: `<p>Buy tokens and other cryptocurrencies directly on DeHub with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
+    title: 'Buy — Purchase Crypto on Riftn',
+    description: 'Buy tokens and other cryptocurrencies directly on Riftn with your credit card. Fast checkout, multiple chains supported.',
+    heading: 'Buy Crypto on Riftn',
+    bodyHtml: `<p>Buy tokens and other cryptocurrencies directly on Riftn with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
 <p><a href="${APP_URL}/buy">Buy crypto</a>, <a href="${APP_URL}/dex">trade tokens at your price</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
   'builder': {
-    title: 'Builder — Build Apps with AI on DeHub',
-    description: 'Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open.',
-    heading: 'DeHub Builder',
-    bodyHtml: `<p>DeHub Builder turns a sentence into a working mini app. Message @assistant with what you want; it writes the app, hosts it on DeHub and sends the link back in the same chat — nothing to install, deploy or configure.</p>
+    title: 'Builder — Build Apps with AI on Riftn',
+    description: 'Tell @assistant what you want in your Riftn messages. It builds the app, hosts it and sends you a link anyone can open.',
+    heading: 'Riftn Builder',
+    bodyHtml: `<p>Riftn Builder turns a sentence into a working mini app. Message @assistant with what you want; it writes the app, hosts it on Riftn and sends the link back in the same chat — nothing to install, deploy or configure.</p>
 <h2>It stays a conversation</h2>
 <p>An app is never finished at the first attempt. Reply in the chat for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version. Every build lives in your messages.</p>
 <h2>Shareable by default</h2>
-<p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on DeHub or sent to somebody who has never opened it before.</p>
-<p>Building needs a free DeHub account — sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your DeHub plan.</p>`,
+<p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on Riftn or sent to somebody who has never opened it before.</p>
+<p>Building needs a free Riftn account — sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your Riftn plan.</p>`,
   },
   'depin': {
-    title: 'DePin | Community-Powered Media Infrastructure | DeHub',
-    description: 'DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.',
-    heading: 'DeHub DePin',
-    bodyHtml: `<p>DePin is DeHub's community-powered media infrastructure, now in development. Operators will be able to set limits for spare storage, bandwidth and compute while DeHub coordinates useful hosting, transcoding and delivery work.</p>
+    title: 'DePin | Community-Powered Media Infrastructure | Riftn',
+    description: 'Riftn DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.',
+    heading: 'Riftn DePin',
+    bodyHtml: `<p>DePin is Riftn's community-powered media infrastructure, now in development. Operators will be able to set limits for spare storage, bandwidth and compute while Riftn coordinates useful hosting, transcoding and delivery work.</p>
 <h2>Designed for nodes to go offline</h2>
-<p>Community nodes never hold the only copy. DeHub origin storage remains the source of truth, online replicas serve available segments, and playback falls back to origin automatically when peers leave.</p>
+<p>Community nodes never hold the only copy. Riftn origin storage remains the source of truth, online replicas serve available segments, and playback falls back to origin automatically when peers leave.</p>
 <h2>Protected content stays encrypted</h2>
-<p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through DeHub.</p>
+<p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through Riftn.</p>
 <h2>Variable, revenue-funded rewards</h2>
 <p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future tokens settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
 <p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
   },
   'connect': {
-    title: 'Connect DeHub to your AI assistant',
-    description: 'Connect ChatGPT, Claude, or any MCP-compatible assistant to DeHub with a single URL.',
-    heading: 'Connect DeHub to your AI assistant',
-    bodyHtml: `<p>DeHub ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public DeHub posts, search topics and look up creator profiles.</p>
+    title: 'Connect Riftn to your AI assistant',
+    description: 'Connect ChatGPT, Claude, or any MCP-compatible assistant to Riftn with a single URL.',
+    heading: 'Connect Riftn to your AI assistant',
+    bodyHtml: `<p>Riftn ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public Riftn posts, search topics and look up creator profiles.</p>
 <ul>
-<li><a href="${APP_URL}/connect/chatgpt">DeHub for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
-<li><a href="${APP_URL}/connect/claude">DeHub for Claude</a> — add the connector to Claude in one click.</li>
-<li><a href="${APP_URL}/skill.md">skill.md</a> — the agent-readable spec for the DeHub MCP API.</li>
+<li><a href="${APP_URL}/connect/chatgpt">Riftn for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
+<li><a href="${APP_URL}/connect/claude">Riftn for Claude</a> — add the connector to Claude in one click.</li>
+<li><a href="${APP_URL}/skill.md">skill.md</a> — the agent-readable spec for the Riftn MCP API.</li>
 </ul>`,
   },
   'connect/chatgpt': {
-    title: 'DeHub for ChatGPT — Use DeHub inside ChatGPT (MCP Connector)',
-    description: 'Add DeHub to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside ChatGPT.',
-    heading: 'Use DeHub inside ChatGPT',
+    title: 'Riftn for ChatGPT — Use Riftn inside ChatGPT (MCP Connector)',
+    description: 'Add Riftn to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside ChatGPT.',
+    heading: 'Use Riftn inside ChatGPT',
     bodyHtml: `<ol>
-<li><strong>Open the DeHub connector in ChatGPT</strong> — ChatGPT jumps straight to the DeHub connector inside Settings → Connectors.</li>
-<li><strong>Enable the connector</strong> — toggle DeHub on and approve access so ChatGPT can read public posts, profiles and trending topics.</li>
-<li><strong>Start a new chat</strong> — mention DeHub in your prompt and ChatGPT calls the connector automatically.</li>
+<li><strong>Open the Riftn connector in ChatGPT</strong> — ChatGPT jumps straight to the Riftn connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong> — toggle Riftn on and approve access so ChatGPT can read public posts, profiles and trending topics.</li>
+<li><strong>Start a new chat</strong> — mention Riftn in your prompt and ChatGPT calls the connector automatically.</li>
 </ol>
 <h2>FAQ</h2>
-<p><strong>Is it free?</strong> The DeHub app is free to add; you need a ChatGPT plan that supports connectors (Plus, Pro, Team or Enterprise).</p>
-<p><strong>What can it do?</strong> Browse public DeHub posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
-<p><strong>Do I need a DeHub account?</strong> No — reading public content works without one.</p>`,
+<p><strong>Is it free?</strong> The Riftn app is free to add; you need a ChatGPT plan that supports connectors (Plus, Pro, Team or Enterprise).</p>
+<p><strong>What can it do?</strong> Browse public Riftn posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
+<p><strong>Do I need a Riftn account?</strong> No — reading public content works without one.</p>`,
   },
   'connect/claude': {
-    title: 'DeHub for Claude — Use DeHub inside Claude (MCP Connector)',
-    description: 'Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude.',
-    heading: 'Use DeHub inside Claude',
+    title: 'Riftn for Claude — Use Riftn inside Claude (MCP Connector)',
+    description: 'Add Riftn to Claude in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside Claude.',
+    heading: 'Use Riftn inside Claude',
     bodyHtml: `<ol>
-<li><strong>Open the DeHub connector in Claude</strong> — Claude opens directly on the DeHub connector inside Settings → Connectors.</li>
-<li><strong>Enable the connector</strong> — turn DeHub on and approve access so Claude can browse public posts, profiles and trending topics.</li>
-<li><strong>Start a chat</strong> — mention DeHub in your message and Claude calls the connector automatically.</li>
+<li><strong>Open the Riftn connector in Claude</strong> — Claude opens directly on the Riftn connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong> — turn Riftn on and approve access so Claude can browse public posts, profiles and trending topics.</li>
+<li><strong>Start a chat</strong> — mention Riftn in your message and Claude calls the connector automatically.</li>
 </ol>
 <h2>FAQ</h2>
 <p><strong>Is it free?</strong> The connector is free to add; you need a Claude plan that supports custom connectors (Pro, Team or Enterprise).</p>
-<p><strong>What can it do?</strong> Browse public DeHub posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
-<p><strong>Do I need a DeHub account?</strong> No — reading public content works without one.</p>`,
+<p><strong>What can it do?</strong> Browse public Riftn posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
+<p><strong>Do I need a Riftn account?</strong> No — reading public content works without one.</p>`,
   },
   'pricing': {
-    title: 'Pricing — DeHub Creator Studio',
-    description: 'DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.',
-    heading: 'DeHub Creator Studio Pricing',
+    title: 'Pricing — Riftn Creator Studio',
+    description: 'Riftn Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.',
+    heading: 'Riftn Creator Studio Pricing',
     bodyHtml: `<ul>
 <li><strong>Ultra</strong> — £99/mo billed annually (£129 month-to-month): 3,500 credits/mo and access to all models including Seedance 2.0 and Nano Banana Pro.</li>
 <li><strong>Team</strong> — £65/seat/mo billed annually (£79 month-to-month): 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support.</li>
 <li><strong>Scale</strong> — £150/seat/mo billed annually (£215 month-to-month): 15,000 credits/mo, 5–15 seats, SSO, priority queue and admin controls.</li>
 </ul>
-<p>Looking for the DeHub Extra social membership instead? <a href="${APP_URL}/premium">See Premium</a>.</p>`,
+<p>Looking for the Riftn Extra social membership instead? <a href="${APP_URL}/premium">See Premium</a>.</p>`,
   },
   'communities': {
-    title: 'Communities — Find Your People on DeHub',
-    description: 'Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
-    heading: 'DeHub Communities',
-    bodyHtml: `<p>Communities are public groups on DeHub — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
+    title: 'Communities — Find Your People on Riftn',
+    description: 'Discover Riftn communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
+    heading: 'Riftn Communities',
+    bodyHtml: `<p>Communities are public groups on Riftn — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
 <h2>How a community works</h2>
-<p>Every community has a feed of its own, a member list, and a page at its own address that anyone can read without an account. Members post into it the same way they post anywhere on DeHub — video, shorts, images, audio or text — and the community's feed is those posts in the order they were made. Joining one adds its posts to your home feed; leaving removes them. Nothing is hidden behind an algorithm.</p>
+<p>Every community has a feed of its own, a member list, and a page at its own address that anyone can read without an account. Members post into it the same way they post anywhere on Riftn — video, shorts, images, audio or text — and the community's feed is those posts in the order they were made. Joining one adds its posts to your home feed; leaving removes them. Nothing is hidden behind an algorithm.</p>
 <p>A community can host live audio <a href="${APP_URL}/stages">Stages</a> and schedule events, and the people who run it can pin posts, set rules and moderate what appears. Creating one takes a name, a description and a picture; anyone with an account can do it, and there is no cap on how many you can join or run.</p>
-<p><a href="${APP_URL}/communities">Browse communities on DeHub</a>.</p>`,
+<p><a href="${APP_URL}/communities">Browse communities on Riftn</a>.</p>`,
   },
   'stages': {
-    title: 'Stages — Live Audio Rooms on DeHub',
-    description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform.',
-    heading: 'DeHub Stages',
-    bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
+    title: 'Stages — Live Audio Rooms on Riftn',
+    description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn — the decentralized, open source social platform.',
+    heading: 'Riftn Stages',
+    bodyHtml: `<p>Stages are live audio rooms on Riftn: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
 <h2>Live, then kept</h2>
 <p>A Stage has a host, speakers and an audience. Listeners can raise a hand to be brought up to speak, the host can share a screen or play audio into the room, and anyone can tip a speaker in tokens while they talk. Rooms can be scheduled ahead of time with a reminder and a short link to share, or opened on the spot.</p>
 <p>When a Stage ends its recording is kept at the same address, seekable, with live captions carried over as a transcript that can be read or searched. So a Stage is a conversation while it happens and a page afterwards — one that a search engine, a link preview and a listener who missed it all get the same way.</p>
@@ -1291,19 +1291,19 @@ const MARKETING_PAGES = {
   // are what somebody actually searches for, and one shared page for all of
   // them would be a soft duplicate of every one.
   'arcade': {
-    // Not the SPA's `Arcade | DeHub`: fourteen characters with no word anyone
+    // Not the SPA's `Arcade | Riftn`: fourteen characters with no word anyone
     // searches for, over a description Google cut at 160. The ?hl= variants
     // keep their seo-i18n rows until the locale keys are rewritten to match.
-    title: 'DeHub Arcade — Free Browser Games, No Download',
-    description: 'Free browser games on DeHub: cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor.',
-    heading: 'DeHub Arcade',
-    bodyHtml: `<p>A collection of DeHub built and open sourced games, worlds or experiences. They run in the browser tab — nothing to install, nothing to buy, all served from DeHub itself.</p>
+    title: 'Riftn Arcade — Free Browser Games, No Download',
+    description: 'Free browser games on Riftn: cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor.',
+    heading: 'Riftn Arcade',
+    bodyHtml: `<p>A collection of Riftn built and open sourced games, worlds or experiences. They run in the browser tab — nothing to install, nothing to buy, all served from Riftn itself.</p>
 <ul>
-<li><a href="${APP_URL}/arcade/gods-eye">God's Eye</a> — a live spatial-intelligence globe where you can find the DeHub community across a 3D Earth.</li>
+<li><a href="${APP_URL}/arcade/gods-eye">God's Eye</a> — a live spatial-intelligence globe where you can find the Riftn community across a 3D Earth.</li>
 <li><a href="${APP_URL}/arcade/kings-gambit">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
 <li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
 <li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
-<li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for DeHub rather than found.</li>
+<li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for Riftn rather than found.</li>
 <li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a> — a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
   },
@@ -1311,32 +1311,32 @@ const MARKETING_PAGES = {
   // listed here: they live in the registry, and until the SSR function learns
   // them a shared /apps/<slug> link falls back to the store's card.
   'apps': {
-    title: 'DeHub Apps — mini apps for DeHub',
-    description: 'Mini apps built for DeHub by anyone: games, tools and more that open inside DeHub, already signed in, with sharing back to the feed.',
-    heading: 'DeHub Apps',
-    bodyHtml: `<p>Mini apps are web apps that open inside DeHub. You arrive already signed in, and anything worth sharing goes straight back to the feed. Every app shows its real web address, so you always know who you are dealing with.</p>
+    title: 'Riftn Apps — mini apps for Riftn',
+    description: 'Mini apps built for Riftn by anyone: games, tools and more that open inside Riftn, already signed in, with sharing back to the feed.',
+    heading: 'Riftn Apps',
+    bodyHtml: `<p>Mini apps are web apps that open inside Riftn. You arrive already signed in, and anything worth sharing goes straight back to the feed. Every app shows its real web address, so you always know who you are dealing with.</p>
 <p><a href="${APP_URL}/apps">Browse the apps</a> or <a href="${APP_URL}/apps/dev">build one</a>.</p>`,
   },
   'apps/dev': {
-    title: 'Build a DeHub mini app',
-    description: 'Build a mini app for DeHub: one script tag, sign in with DeHub, share to the feed. Check your manifest and preview your app in the real host.',
-    heading: 'Build a DeHub mini app',
-    bodyHtml: `<p>A DeHub mini app is any website plus one script tag. Add a manifest at /.well-known/dehub.json — or keep your Farcaster manifest, which DeHub reads as it is — and your app opens inside DeHub with the user already signed in.</p>
+    title: 'Build a Riftn mini app',
+    description: 'Build a mini app for Riftn: one script tag, sign in with Riftn, share to the feed. Check your manifest and preview your app in the real host.',
+    heading: 'Build a Riftn mini app',
+    bodyHtml: `<p>A Riftn mini app is any website plus one script tag. Add a manifest at /.well-known/dehub.json — or keep your Farcaster manifest, which Riftn reads as it is — and your app opens inside Riftn with the user already signed in.</p>
 <p><a href="${APP_URL}/apps/dev">Check your manifest and launch your app</a>.</p>`,
   },
   'arcade/gods-eye': {
-    title: "God's Eye | DeHub Arcade",
-    description: 'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community.',
-    heading: "God's Eye — Find The DeHub Community On A Living 3D Earth",
+    title: "God's Eye | Riftn Arcade",
+    description: 'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the Riftn community.',
+    heading: "God's Eye — Find The Riftn Community On A Living 3D Earth",
     ...arcadeGameLd('/arcade/gods-eye.jpg'),
     bodyHtml: `<p>A live spatial-intelligence globe in the browser tab: flights, satellites, earthquakes and street traffic drawn over a 3D Earth you can spin, zoom and fly down into.</p>
-<p>It is also the DeHub community on a map. Opting in places a deliberately approximate version of you on the globe — never your exact location — so you can see who else is out there. Nothing is placed until you choose to.</p>
+<p>It is also the Riftn community on a map. Opting in places a deliberately approximate version of you on the globe — never your exact location — so you can see who else is out there. Nothing is placed until you choose to.</p>
 <p>Built on the open-source <a href="https://github.com/bilawalsidhu/gods-eye-view" rel="nofollow">God's Eye View</a> (MIT). Needs a browser with WebGL 2 and hardware acceleration switched on.</p>
 <p><a href="${APP_URL}/arcade/gods-eye">Open the globe</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/kings-gambit': {
-    title: "King's Gambit | DeHub Arcade",
-    description: "Play King's Gambit on DeHub — cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
+    title: "King's Gambit | Riftn Arcade",
+    description: "Play King's Gambit on Riftn — cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
     heading: "King's Gambit — Cinematic 3D Chess",
     ...arcadeGameLd('/arcade/kings-gambit.webp'),
     bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds.</p>
@@ -1344,8 +1344,8 @@ const MARKETING_PAGES = {
 <p><a href="${APP_URL}/arcade/kings-gambit">Play King's Gambit</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/claude-of-duty': {
-    title: 'Claude of Duty | DeHub Arcade',
-    description: 'Play Claude of Duty on DeHub — a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
+    title: 'Claude of Duty | Riftn Arcade',
+    description: 'Play Claude of Duty on Riftn — a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
     heading: 'Claude of Duty — A Browser FPS With No Assets',
     ...arcadeGameLd('/arcade/claude-of-duty.webp'),
     bodyHtml: `<p>A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads.</p>
@@ -1353,8 +1353,8 @@ const MARKETING_PAGES = {
 <p><a href="${APP_URL}/arcade/claude-of-duty">Play Claude of Duty</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/jungle-trail': {
-    title: 'Jungle Trail | DeHub Arcade',
-    description: 'Walk Jungle Trail on DeHub — a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
+    title: 'Jungle Trail | Riftn Arcade',
+    description: 'Walk Jungle Trail on Riftn — a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
     heading: 'Jungle Trail — A Procedural Rainforest Walk',
     ...arcadeGameLd('/arcade/jungle-trail.webp'),
     bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
@@ -1366,8 +1366,8 @@ const MARKETING_PAGES = {
     // the page is noindex, is not in the sitemap and the grid copy does not
     // link it. See UNLISTED_ARCADE_GAMES in src/config/arcade-games.ts.
     noindex: true,
-    title: 'Love Lock Bridge | DeHub Arcade',
-    description: 'Walk Love Lock Bridge on DeHub — a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
+    title: 'Love Lock Bridge | Riftn Arcade',
+    description: 'Walk Love Lock Bridge on Riftn — a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
     heading: 'Love Lock Bridge — Leave A Lock Above The Clouds',
     ...arcadeGameLd('/arcade/love-lock-bridge.webp'),
     bodyHtml: `<p>A first-person walk across a gilded bridge through rose gardens, a river and lake, Paris terraces and drifting cloud. Choose a spot on either golden railing, write up to 64 characters and leave your lock.</p>
@@ -1375,16 +1375,16 @@ const MARKETING_PAGES = {
 <p><a href="${APP_URL}/arcade/love-lock-bridge">Walk the bridge</a>.</p>`,
   },
   'arcade/street-slayer': {
-    title: 'Street Slayer | DeHub Arcade',
-    description: "Play Street Slayer on DeHub — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
+    title: 'Street Slayer | Riftn Arcade',
+    description: "Play Street Slayer on Riftn — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
     heading: "Street Slayer — A Neon-Street Beat 'Em Up",
     ...arcadeGameLd('/arcade/street-slayer.webp'),
     bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
-<p>The only game in the arcade that was not found: it was commissioned for DeHub and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
+<p>The only game in the arcade that was not found: it was commissioned for Riftn and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
 <p><a href="${APP_URL}/arcade/street-slayer">Play Street Slayer</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/trenchstar': {
-    title: 'Chartopia | DeHub Arcade',
+    title: 'Chartopia | Riftn Arcade',
     description: 'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
     heading: 'Chartopia — A Trading Floor Built Out Of Live Markets',
     ...arcadeGameLd('/arcade/trenchstar.webp'),
@@ -1393,12 +1393,12 @@ const MARKETING_PAGES = {
 <p><a href="${APP_URL}/arcade/trenchstar">Take the desk</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'guide': {
-    title: 'DeHub Guide — Visual Walkthrough of the App',
-    description: 'A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
-    heading: 'DeHub Guide',
-    bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
+    title: 'Riftn Guide — Visual Walkthrough of the App',
+    description: 'A visual walkthrough of Riftn: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
+    heading: 'Riftn Guide',
+    bodyHtml: `<p>A screen-by-screen walkthrough of the Riftn app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
 <h2>What the guide covers</h2>
-<p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet DeHub creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer — including what minting a post on-chain does and why it is optional.</p>
+<p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet Riftn creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer — including what minting a post on-chain does and why it is optional.</p>
 <p>The second half is the parts people ask about: direct messages and group chats, live audio Stages, the wallet and how tokens moves in and out of it, staking for a badge and what each badge unlocks, and the governance page where token holders vote on what gets built. Each screen is shown as it looks in the app, with the controls labelled.</p>
 <p><a href="${APP_URL}/guide">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs">documentation</a>.</p>`,
   },
@@ -1409,20 +1409,20 @@ const MARKETING_PAGES = {
   // reads both from the releases API, but a crawler runs no JS, so these are
   // what a share card and a search result will carry.
   'apk': {
-    title: 'Download the DeHub APK — Latest Android Build',
-    description: 'Skip the stores and get the latest version of DeHub right here. Direct APK download for Android — open source, user-owned social media, no store account needed.',
-    heading: 'Download the DeHub APK',
+    title: 'Download the Riftn APK — Latest Android Build',
+    description: 'Skip the stores and get the latest version of Riftn right here. Direct APK download for Android — open source, user-owned social media, no store account needed.',
+    heading: 'Download the Riftn APK',
     // A WebPage about the app, not a SoftwareApplication: Google's Software
     // App result requires an aggregateRating or review, the APK has neither,
     // and without one Search Console lists the page as an invalid item.
     jsonLdExtra: {
-      alternateName: 'DeHub APK',
+      alternateName: 'Riftn APK',
       significantLink: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
-      about: { '@type': 'Thing', name: 'DeHub for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
+      about: { '@type': 'Thing', name: 'Riftn for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
-    bodyHtml: `<p>Skip the stores and get the latest version of DeHub right here — straight from us, no store account and no waiting on a review queue.</p>
-<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the DeHub APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
-<p>Prefer the store? DeHub is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
+    bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here — straight from us, no store account and no waiting on a review queue.</p>
+<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
+<p>Prefer the store? Riftn is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
   // The streamer landing page, and where affiliates send streamers
   // (/r/<CODE>?to=/stream). Copy and FAQ come from src/lib/streamer-page.js,
@@ -1438,7 +1438,7 @@ const MARKETING_PAGES = {
 <ul>${STREAM_PAGE.proof.map(({ value, label }) => `<li><strong>${value}</strong> ${label}</li>`).join('\n')}</ul>
 ${STREAM_PAGE.reasons.map(({ title, body }) => `<h2>${title}</h2>\n<p>${body}</p>`).join('\n')}
 <h2>Get started</h2>
-<ul><li><a href="${STREAM_LINKS.start}">Start streaming on DeHub</a></li>
+<ul><li><a href="${STREAM_LINKS.start}">Start streaming on Riftn</a></li>
 <li><a href="${STREAM_LINKS.migrate}">Import your YouTube channel</a></li>
 <li><a href="${STREAM_LINKS.affiliate}">Get your invite link</a></li></ul>
 <h2>Frequently asked questions</h2>
@@ -1447,7 +1447,7 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 
   },
 
-  // The "DeHub app" brand query. Copy and structured data come from
+  // The "Riftn app" brand query. Copy and structured data come from
   // src/lib/dehub-app-page.js, which DehubAppPage.tsx renders too. A WebPage
   // about the app, like /apk, plus FAQPage for its questions. No card of its
   // own in public/og: it shares the brand card (SHARE_IMAGE).
@@ -1457,18 +1457,18 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     heading: DEHUB_APP_PAGE.heading,
     og: 'brand',
     jsonLdExtra: {
-      about: { '@type': 'Thing', name: 'DeHub', sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
+      about: { '@type': 'Thing', name: 'Riftn', sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
     },
     extraJsonLd: [dehubAppFaqLd()],
     // The copy is fixed text from the shared module, so it goes in unescaped
     // like every other bodyHtml here; build-public-locales.mjs evaluates this
     // table to build the translated variants.
     bodyHtml: `${DEHUB_APP_PAGE.intro.map((p) => `<p>${p}</p>`).join('\n')}
-<h2>Download DeHub</h2>
-<ul><li><a href="${DEHUB_APP_LINKS.googlePlay}">DeHub on Google Play</a> for Android</li>
-<li><a href="${DEHUB_APP_LINKS.appStore}">DeHub on the App Store</a> for iPhone</li>
-<li><a href="${DEHUB_APP_LINKS.web}">Open DeHub in your browser</a>, no install needed</li>
-<li><a href="${DEHUB_APP_LINKS.apk}">Download the DeHub APK</a> for Android without Google Play</li></ul>
+<h2>Download Riftn</h2>
+<ul><li><a href="${DEHUB_APP_LINKS.googlePlay}">Riftn on Google Play</a> for Android</li>
+<li><a href="${DEHUB_APP_LINKS.appStore}">Riftn on the App Store</a> for iPhone</li>
+<li><a href="${DEHUB_APP_LINKS.web}">Open Riftn in your browser</a>, no install needed</li>
+<li><a href="${DEHUB_APP_LINKS.apk}">Download the Riftn APK</a> for Android without Google Play</li></ul>
 <h2>Frequently asked questions</h2>
 ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is DeHub?</a> covers the platform in depth.</p>`,
@@ -1480,16 +1480,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   // it is deliberately the three golden rules rather than a summary of the
   // page, because those are the part anyone linking to it is arguing about.
   'admin-manual': {
-    title: 'The DeHub Moderation Handbook',
+    title: 'The Riftn Moderation Handbook',
     description: 'The rules our moderators work to, published in full. Only malicious actors get banned, adult content is marked mature rather than deleted, and everything else is left to the community.',
-    heading: 'The DeHub Moderation Handbook',
+    heading: 'The Riftn Moderation Handbook',
     jsonLdType: 'TechArticle',
     jsonLdExtra: {
       inLanguage: 'en',
       isAccessibleForFree: true,
       about: 'Content moderation policy',
     },
-    bodyHtml: `<p>DeHub is community owned and community run, so the rules its moderators work to are not an internal document. This is the handbook they read and sign before they can moderate anything, published in full.</p>
+    bodyHtml: `<p>Riftn is community owned and community run, so the rules its moderators work to are not an internal document. This is the handbook they read and sign before they can moderate anything, published in full.</p>
 <p>Three golden rules outrank everything else in it:</p>
 <ol>
 <li>Only malicious actors get banned — people gaming the system or scamming users. Being disliked, wrong or unpopular is not a ban.</li>
@@ -1507,16 +1507,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   // copy ships with the worker and can never drift from what was merged.
   //
   // Titles and descriptions are lifted from each page's SPA SEOHead so the two
-  // UA variants match. They did not before: /music billed itself as "DeHub Music
-  // — Web3 Songs & Radio" to crawlers and "Music — Listen & Discover on DeHub"
+  // UA variants match. They did not before: /music billed itself as "Riftn Music
+  // — Web3 Songs & Radio" to crawlers and "Music — Listen & Discover on Riftn"
   // to people, and /jobs, /bridge, /glossary and /top-100 diverged the same way.
   // /creator, /prompt, /affiliate and /premium have no SEOHead of their own yet,
   // so those four keep the fn's wording until the pages grow one.
   'features': {
-    title: 'Feature Requests & Bug Reporting — DeHub',
-    description: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features.",
-    heading: 'DeHub Feature Requests & Bug Reporting',
-    bodyHtml: `<p>The DeHub Features page is a community board: submit new feature ideas, report bugs, and vote on suggestions to help shape the roadmap.</p>
+    title: 'Feature Requests & Bug Reporting — Riftn',
+    description: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features.",
+    heading: 'Riftn Feature Requests & Bug Reporting',
+    bodyHtml: `<p>The Riftn Features page is a community board: submit new feature ideas, report bugs, and vote on suggestions to help shape the roadmap.</p>
 <ul>
 <li><strong>Submit ideas &amp; bug reports</strong> — suggest features or report bugs with device details and attachments.</li>
 <li><strong>Community voting</strong> — vote on requests to help prioritise what gets built next.</li>
@@ -1525,9 +1525,9 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 </ul>`,
   },
   'creator': {
-    title: 'DeHub Creator — Image, Video, Audio & 3D Studio',
+    title: 'Riftn Creator — Image, Video, Audio & 3D Studio',
     description: 'Create images, videos, audio and 3D assets. See the price before generating, save to your private library, and edit in your browser.',
-    heading: 'DeHub Creator Studio',
+    heading: 'Riftn Creator Studio',
     bodyHtml: `<p>Choose image, video, audio or 3D, enter a prompt and optionally attach reference media. Paid generations show a server quote and use tokens per job. Existing unspent payment receipts are reused before requesting another transfer.</p>
 <ul>
 <li>Image generation with Nano Banana, Gemini, FLUX and other available models.</li>
@@ -1538,10 +1538,10 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Choose a model in <a href="${APP_URL}/creator">Creator</a> to see its current per-job price before paying. A confirmed failed render restores its receipt amount for reuse; this is not an on-chain refund transfer.</p>`,
   },
   'editor': {
-    title: 'DeHub Editor — In-Browser Video Editor',
-    description: 'Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub.',
-    heading: 'DeHub Video Editor',
-    bodyHtml: `<p>The DeHub Video Editor is a multi-track timeline that runs entirely in the browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text, then publish to the feed as a video post or Short.</p>
+    title: 'Riftn Editor — In-Browser Video Editor',
+    description: 'Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to Riftn.',
+    heading: 'Riftn Video Editor',
+    bodyHtml: `<p>The Riftn Video Editor is a multi-track timeline that runs entirely in the browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text, then publish to the feed as a video post or Short.</p>
 <ul>
 <li>Multi-track timeline with drag-and-drop trimming and audio waveforms.</li>
 <li>Effects, transitions and adjustable colour filters.</li>
@@ -1550,16 +1550,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 </ul>`,
   },
   'prompt': {
-    title: 'DeHub Prompt — Personalize Your Feed',
-    description: 'Tell DeHub what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.',
-    heading: 'DeHub Prompt',
-    bodyHtml: `<p>DeHub Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the home feed in real time. Save prompts as tabs, switch between them, and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
+    title: 'Riftn Prompt — Personalize Your Feed',
+    description: 'Tell Riftn what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.',
+    heading: 'Riftn Prompt',
+    bodyHtml: `<p>Riftn Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the home feed in real time. Save prompts as tabs, switch between them, and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
   },
   'work': {
-    title: 'Bounties — Post & Hunt Paid Tasks | DeHub',
-    description: 'Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC.',
-    heading: 'DeHub Work — Bounties',
-    bodyHtml: `<p>DeHub Work is an on-chain marketplace for creator jobs. Post a bounty with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p>
+    title: 'Bounties — Post & Hunt Paid Tasks | Riftn',
+    description: 'Browse open bounties on Riftn: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC.',
+    heading: 'Riftn Work — Bounties',
+    bodyHtml: `<p>Riftn Work is an on-chain marketplace for creator jobs. Post a bounty with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p>
 <ul>
 <li><strong>Clipping</strong> — pay per verified view for short clips of streams or long-form video.</li>
 <li><strong>Social tasks</strong> — pay for high-quality engagement across posts.</li>
@@ -1569,170 +1569,170 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   'nfts': {
     title: 'NFT Market: Buy & Sell NFTs on BNB Chain and Base',
     description: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step, so nobody waits on the other side.',
-    heading: 'DeHub NFT Market',
-    bodyHtml: `<p>The DeHub NFT market is where any NFT on BNB Chain or Base changes hands: DeHub posts minted as NFTs, and any other collection in your wallet. List one at a fixed price, buy a listing, or make an offer in DHB that the holder can accept.</p>
+    heading: 'Riftn NFT Market',
+    bodyHtml: `<p>The Riftn NFT market is where any NFT on BNB Chain or Base changes hands: Riftn posts minted as NFTs, and any other collection in your wallet. List one at a fixed price, buy a listing, or make an offer in DHB that the holder can accept.</p>
 <h2>How a trade works</h2>
-<p>Trades settle on Seaport, the open NFT swap contract. The NFT and the payment move in the same transaction, so a buyer never pays without receiving and a seller never sends without being paid. DeHub never holds your NFTs or your money.</p>
+<p>Trades settle on Seaport, the open NFT swap contract. The NFT and the payment move in the same transaction, so a buyer never pays without receiving and a seller never sends without being paid. Riftn never holds your NFTs or your money.</p>
 <h2>Fees</h2>
-<p>DeHub takes 2% of a sale paid in BNB or ETH, and 1% when paid in DHB. Creators receive the royalty their collection sets, capped at 10%. The seller receives the rest the moment the trade settles.</p>`,
+<p>Riftn takes 2% of a sale paid in BNB or ETH, and 1% when paid in DHB. Creators receive the royalty their collection sets, capped at 10%. The seller receives the rest the moment the trade settles.</p>`,
   },
   'usernames': {
-    title: 'Username Marketplace — Buy & Sell DeHub Handles for tokens',
-    description: 'Browse DeHub usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
-    heading: 'DeHub Username Marketplace',
-    bodyHtml: `<p>Every DeHub profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
+    title: 'Username Marketplace — Buy & Sell Riftn Handles for tokens',
+    description: 'Browse Riftn usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
+    heading: 'Riftn Username Marketplace',
+    bodyHtml: `<p>Every Riftn profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
 <h2>Buying a handle</h2>
-<p>The asking price is quoted by DeHub, not by the browser, and the payment goes wallet-to-wallet — DeHub takes no cut and never holds your funds. Search a name you want and DeHub also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
+<p>The asking price is quoted by Riftn, not by the browser, and the payment goes wallet-to-wallet — Riftn takes no cut and never holds your funds. Search a name you want and Riftn also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
 <h2>Selling yours</h2>
 <p>You can list the handle you are currently using, at any price in tokens. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are — only the handle moves.</p>`,
   },
   'affiliate': {
-    title: 'DeHub Affiliate — Earn 20% Revenue Share',
-    description: 'Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
-    heading: 'DeHub Affiliate Program',
-    bodyHtml: `<p>Every DeHub user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in tokens and are visible on-chain.</p>`,
+    title: 'Riftn Affiliate — Earn 20% Revenue Share',
+    description: 'Refer creators to Riftn and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
+    heading: 'Riftn Affiliate Program',
+    bodyHtml: `<p>Every Riftn user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in tokens and are visible on-chain.</p>`,
   },
   'premium': {
-    title: 'DeHub Extra — Premium Membership',
-    description: 'Unlock DeHub Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across DeHub.',
-    heading: 'DeHub Extra',
+    title: 'Riftn Extra — Premium Membership',
+    description: 'Unlock Riftn Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across Riftn.',
+    heading: 'Riftn Extra',
     bodyHtml: `<ul>
 <li>Larger video and image upload limits.</li>
 <li>Priority AI credits and faster queue times in the Creator Studio.</li>
 <li>Extra bookmark folders, saved prompts and profile customisation.</li>
 <li>Exclusive drops, badges and community events.</li>
 </ul>
-<p>DeHub Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
+<p>Riftn Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
   },
   'dao': {
-    title: 'DAO Treasury — Fund DeHub and Earn a Say',
-    description: 'The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
-    heading: 'DeHub DAO Treasury',
+    title: 'DAO Treasury — Fund Riftn and Earn a Say',
+    description: 'The Riftn DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
+    heading: 'Riftn DAO Treasury',
     bodyHtml: `<p>The DAO treasury is a single wallet that anyone can send tokens to, from inside the app or from any exchange or wallet. Its balance and every contribution are read straight from the Base and BNB chains, so nothing on this page depends on a database.</p>
 <p>Each contributor holds a share of the pool equal to what they put in. That share is the weight their vote carries when the DAO decides how the treasury is spent — see <a href="${APP_URL}/governance">governance</a> for the proposals.</p>`,
   },
   'governance': {
     title: 'Governance — Vote on Community Proposals',
-    description: "Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
-    heading: 'DeHub Governance',
-    bodyHtml: `<p>Token holders shape the DeHub roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked token weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
+    description: "Participate in decentralized governance on Riftn. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
+    heading: 'Riftn Governance',
+    bodyHtml: `<p>Token holders shape the Riftn roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked token weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
   },
   'packs': {
-    title: 'Emoji, Sticker & GIF Packs — DeHub',
-    description: 'Custom emoji, sticker and GIF packs made by DeHub badge holders. Add any pack to your picker and use it in chats, comments and reactions.',
+    title: 'Emoji, Sticker & GIF Packs — Riftn',
+    description: 'Custom emoji, sticker and GIF packs made by Riftn badge holders. Add any pack to your picker and use it in chats, comments and reactions.',
     heading: 'Emoji, Sticker & GIF Packs',
-    bodyHtml: `<p>Packs are custom emoji, stickers and GIFs published by DeHub badge holders. Anyone can add a pack to their picker and use it in chats, comments and reactions. Staking for a badge unlocks creating your own: a Crab badge runs one pack of each kind, and every tier up to Megalodon adds more packs and more room in each.</p>
+    bodyHtml: `<p>Packs are custom emoji, stickers and GIFs published by Riftn badge holders. Anyone can add a pack to their picker and use it in chats, comments and reactions. Staking for a badge unlocks creating your own: a Crab badge runs one pack of each kind, and every tier up to Megalodon adds more packs and more room in each.</p>
 <p>Share a pack with its link and anyone who opens it can add it in one tap. <a href="${APP_URL}/stake">Get a badge</a> to start your own.</p>`,
   },
   'leaderboard': {
     title: 'Leaderboard — Top Creators & Earners',
-    description: "See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods.",
-    heading: 'DeHub Leaderboard',
-    bodyHtml: `<p>The leaderboard ranks DeHub's biggest creators, tippers and token stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
+    description: "See who's leading on Riftn. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods.",
+    heading: 'Riftn Leaderboard',
+    bodyHtml: `<p>The leaderboard ranks Riftn's biggest creators, tippers and token stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
   },
   'top-100': {
     title: 'Top Assets — Live Prices for Stocks, Commodities & Crypto',
-    description: 'Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub.',
-    heading: 'Top Assets on DeHub',
-    bodyHtml: `<p>Track live prices, 24h volume and sparkline charts for thousands of assets — crypto, equities and commodities — without leaving DeHub. Open any ticker for the full chart, add it to a watchlist, or share it straight to the feed as a post.</p>`,
+    description: 'Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on Riftn.',
+    heading: 'Top Assets on Riftn',
+    bodyHtml: `<p>Track live prices, 24h volume and sparkline charts for thousands of assets — crypto, equities and commodities — without leaving Riftn. Open any ticker for the full chart, add it to a watchlist, or share it straight to the feed as a post.</p>`,
   },
   'music': {
-    title: 'Music — Listen & Discover on DeHub',
-    description: 'Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform.',
-    heading: 'DeHub Music',
-    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in tokens, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
+    title: 'Music — Listen & Discover on Riftn',
+    description: 'Stream music, discover new artists, listen to live radio and watch music videos on Riftn — the decentralized open source media platform.',
+    heading: 'Riftn Music',
+    bodyHtml: `<p>Riftn Music hosts songs from independent Web3 artists — stream them free, tip in tokens, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
 <h2>For listeners</h2>
-<p>Tracks play in a persistent player that keeps going while you browse the rest of DeHub, with a visualiser and a queue. Follow an artist to get their releases in your home feed, tip a track you like straight from the player, and add it to a playlist of your own. The radio channel plays continuously from the catalogue.</p>
+<p>Tracks play in a persistent player that keeps going while you browse the rest of Riftn, with a visualiser and a queue. Follow an artist to get their releases in your home feed, tip a track you like straight from the player, and add it to a playlist of your own. The radio channel plays continuously from the catalogue.</p>
 <h2>For artists</h2>
-<p>An audio post is a normal DeHub post: upload the track, add artwork and a description, and decide whether it is free, tipped, pay-per-play, or unlocked for badge holders and subscribers. Minting it on-chain gives you a permanent record of the release that you own wherever the platform goes. Plays, reactions and comments count on the post and toward your badge standing, like every other format here.</p>`,
+<p>An audio post is a normal Riftn post: upload the track, add artwork and a description, and decide whether it is free, tipped, pay-per-play, or unlocked for badge holders and subscribers. Minting it on-chain gives you a permanent record of the release that you own wherever the platform goes. Plays, reactions and comments count on the post and toward your badge standing, like every other format here.</p>`,
   },
   'tv': {
     title: 'Live TV — Free Channels From Around the World',
-    description: 'Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
-    heading: 'DeHub TV',
-    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in tokens straight from the player.</p>
+    description: 'Watch free live TV channels from around the world on Riftn. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
+    heading: 'Riftn TV',
+    bodyHtml: `<p>Riftn TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in tokens straight from the player.</p>
 <h2>What is on</h2>
-<p>The guide is grouped by country and by genre — news, sport, film, music, kids, documentary — and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on DeHub appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
+<p>The guide is grouped by country and by genre — news, sport, film, music, kids, documentary — and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on Riftn appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
 <p>Playback works on the web and in the apps, with the player able to detach into a corner while you read the feed. A live creator stream can be tipped in tokens from the player, and it is kept afterwards as a normal video post on the creator's profile, with the chat that ran beside it.</p>`,
   },
   // Title and description are copied verbatim from CinemaPage's SEOHead — see
   // the note above MARKETING_PAGES about the two UA variants never diverging.
   'cinema': {
-    title: 'Cinema | Where to Stream, Rent or Buy Any Film | DeHub',
-    description: 'Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries.',
-    heading: 'DeHub Cinema',
-    bodyHtml: `<p>Search any film or series and DeHub Cinema shows every legal way to watch it where you are — what it streams on, what a rental costs, and what it costs to own. Prices come back in your own currency.</p>
+    title: 'Cinema | Where to Stream, Rent or Buy Any Film | Riftn',
+    description: 'Find out where to stream, rent or buy any film or series, with live prices for your country. Riftn Cinema covers every major service in 140+ countries.',
+    heading: 'Riftn Cinema',
+    bodyHtml: `<p>Search any film or series and Riftn Cinema shows every legal way to watch it where you are — what it streams on, what a rental costs, and what it costs to own. Prices come back in your own currency.</p>
 <h2>Rights are per country</h2>
 <p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
     title: 'Glossary — Icons, Features & Web3 Terms',
-    description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
-    heading: 'DeHub Glossary',
-    bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and DeHub tokens. Written for creators, not engineers.</p>`,
+    description: "Learn what every icon, button and feature means on Riftn. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
+    heading: 'Riftn Glossary',
+    bodyHtml: `<p>Plain-English definitions for everything you meet on Riftn — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and Riftn tokens. Written for creators, not engineers.</p>`,
   },
   'compare': {
-    title: 'Compare DeHub with YouTube, X, Twitch and more',
-    description: 'Compare DeHub features with YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. Sources and conditions included.',
-    heading: 'Compare DeHub',
-    bodyHtml: `<p>Compare publishing, live video and audio, creator income, communities, studio tools, ownership, automation, safety and entertainment across DeHub and eleven other platforms.</p><p>Choose a platform, search for a feature or browse every category. Each documented entry links to a first-party source. Conditional features and related products are distinguished from native capabilities. An unverified entry is a research gap, not a claim that a feature is absent.</p><p>DeHub web, Android and iOS capabilities differ. Crypto purchase and reward actions are unavailable in the iOS app. This growing research catalogue was reviewed on 27 October 2026.</p>`,
+    title: 'Compare Riftn with YouTube, X, Twitch and more',
+    description: 'Compare Riftn features with YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. Sources and conditions included.',
+    heading: 'Compare Riftn',
+    bodyHtml: `<p>Compare publishing, live video and audio, creator income, communities, studio tools, ownership, automation, safety and entertainment across Riftn and eleven other platforms.</p><p>Choose a platform, search for a feature or browse every category. Each documented entry links to a first-party source. Conditional features and related products are distinguished from native capabilities. An unverified entry is a research gap, not a claim that a feature is absent.</p><p>Riftn web, Android and iOS capabilities differ. Crypto purchase and reward actions are unavailable in the iOS app. This growing research catalogue was reviewed on 27 October 2026.</p>`,
   },
   'bridge': {
     title: 'Bridge — Transfer tokens Cross-Chain',
-    description: 'Bridge your tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking.',
-    heading: 'DeHub Bridge',
-    bodyHtml: `<p>The DeHub Bridge moves tokens between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
+    description: 'Bridge your tokens between Base and BNB Chain seamlessly on Riftn. Fast, secure cross-chain transfers with live transaction tracking.',
+    heading: 'Riftn Bridge',
+    bodyHtml: `<p>The Riftn Bridge moves tokens between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
   },
   'agents': {
     title: 'AI Agents — Build & Manage Bots',
-    description: 'Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API.',
-    heading: 'DeHub Agents',
-    bodyHtml: `<p>DeHub Agents are configurable AI assistants that post on a schedule, reply to comments, moderate your community, curate feeds and report on growth. Start from a pre-built agent or build your own against the DeHub MCP server and API.</p>
-<p>See <a href="${APP_URL}/connect">Connect</a> to wire DeHub into ChatGPT or Claude.</p>`,
+    description: 'Create and manage AI-powered agents on Riftn. Automate posting, engage with your audience, and integrate with the Riftn API.',
+    heading: 'Riftn Agents',
+    bodyHtml: `<p>Riftn Agents are configurable AI assistants that post on a schedule, reply to comments, moderate your community, curate feeds and report on growth. Start from a pre-built agent or build your own against the Riftn MCP server and API.</p>
+<p>See <a href="${APP_URL}/connect">Connect</a> to wire Riftn into ChatGPT or Claude.</p>`,
   },
   'assistant': {
     title: 'AI Assistant — Chat, Generate Images & Video',
-    description: "Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place.",
-    heading: 'DeHub Assistant',
-    bodyHtml: `<p>The DeHub Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how DeHub tokens work — then publish the result without leaving the conversation.</p>`,
+    description: "Chat with Riftn's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place.",
+    heading: 'Riftn Assistant',
+    bodyHtml: `<p>The Riftn Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how Riftn tokens work — then publish the result without leaving the conversation.</p>`,
   },
   'creators': {
     title: 'Become a Creator',
-    description: 'Apply to become a creator on DeHub — the open source, censorship resistant media platform.',
-    heading: 'Become a DeHub Creator',
-    bodyHtml: `<p>Apply for a creator account on DeHub and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
+    description: 'Apply to become a creator on Riftn — the open source, censorship resistant media platform.',
+    heading: 'Become a Riftn Creator',
+    bodyHtml: `<p>Apply for a creator account on Riftn and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
   },
   'stake': {
-    title: 'Stake tokens — Earn Rewards on DeHub',
-    description: 'Stake tokens from the DeHub wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
+    title: 'Stake tokens — Earn Rewards on Riftn',
+    description: 'Stake tokens from the Riftn wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
     heading: 'Stake tokens',
-    bodyHtml: `<p>Staking puts a token balance to work inside DeHub. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
+    bodyHtml: `<p>Staking puts a token balance to work inside Riftn. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
 <h2>How staking works</h2>
 <p>Choose an amount and confirm the transaction; the position then appears in your wallet. Rewards accumulate per epoch and can be claimed at any time, and unstaking returns the principal in full once the position closes.</p>
 <h2>Rates are variable</h2>
 <p>The rate depends on total staked supply and on platform revenue for the period. There is no fixed APY, no minimum return and no guarantee, and staking carries the ordinary risks of holding a volatile asset.</p>`,
   },
   'raffle': {
-    title: 'Prize Draws — Win tokens, Hardware and NFTs on DeHub',
-    description: 'DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
-    heading: 'DeHub Prize Draws',
-    bodyHtml: `<p>Prize draws are DeHub's recurring community raffles. Each draw opens with a stated prize, a stated closing time and a stated entry route, then picks its winner from the entry list on-chain, so the result can be checked by anyone.</p>
+    title: 'Prize Draws — Win tokens, Hardware and NFTs on Riftn',
+    description: 'Riftn prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
+    heading: 'Riftn Prize Draws',
+    bodyHtml: `<p>Prize draws are Riftn's recurring community raffles. Each draw opens with a stated prize, a stated closing time and a stated entry route, then picks its winner from the entry list on-chain, so the result can be checked by anyone.</p>
 <h2>Earning entries</h2>
 <p>Entries come from taking part rather than from paying to play. Posting, staking tokens, playing arcade titles and joining stages all count towards a draw when it names them. Some draws also accept a token ticket; where they do, the ticket price and the per-wallet cap are published with the draw.</p>
 <h2>How a winner is picked</h2>
 <p>When a draw closes the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness. The transaction, the snapshot and the winning entry are published together, so nobody has to take the result on trust.</p>
 <h2>Claiming a prize</h2>
-<p>Winners are notified in-app and have 14 days to claim. Token prizes settle to the winner's DeHub wallet on Base; physical prizes are arranged with the team directly. Draws are void where local law prohibits them, and DeHub staff are not eligible.</p>`,
+<p>Winners are notified in-app and have 14 days to claim. Token prizes settle to the winner's Riftn wallet on Base; physical prizes are arranged with the team directly. Draws are void where local law prohibits them, and Riftn staff are not eligible.</p>`,
   },
   'jobs': {
-    title: 'Careers — Join the DeHub Team',
-    description: 'Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social.',
-    heading: 'Careers at DeHub',
-    bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
+    title: 'Careers — Join the Riftn Team',
+    description: 'Join the team building the future of decentralized media. Explore open positions at Riftn and help shape Web3 social.',
+    heading: 'Careers at Riftn',
+    bodyHtml: `<p>Riftn is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
 <h2>How we work</h2>
 <p>The whole product is open source, and the team works in the open too: changes ship through public pull requests, the roadmap is voted on by token holders through <a href="${APP_URL}/governance">governance</a>, and feature requests come from the people using the app. We are remote by default, across time zones, and we hire for people who can own a problem end to end rather than for a job title.</p>
 <p>Engineering roles cover the web app, the Android and iOS apps, the API and the on-chain contracts. Design, growth and community roles work directly with creators on the network. Every role is paid, and part of the compensation can be taken in tokens for those who want it.</p>
-<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">DeHub bounties</a> — scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
+<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">Riftn bounties</a> — scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
   },
 
   // --- app surfaces that had no crawler copy at all --------------------------
@@ -1743,103 +1743,103 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   // three that lived only under /app; all three answer at the bare URL now, so
   // the default canonical (`/<key>`) is the right one and the overrides are out.
   'superpowers': {
-    title: 'SuperPowers — Spend Your DeHub Badge on Reach',
+    title: 'SuperPowers — Spend Your Riftn Badge on Reach',
     description: 'Badge holders get boosts every fortnight: twelve powers across thirteen tiers, with a larger allowance at every rung.',
-    heading: 'DeHub SuperPowers',
-    bodyHtml: `<p>A DeHub staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
+    heading: 'Riftn SuperPowers',
+    bodyHtml: `<p>A Riftn staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
 <h2>Refilled, not bought</h2>
 <p>Boosts arrive with the badge and refill every fortnight. They are earned by staking rather than sold, so the top of the feed cannot simply be paid for.</p>
 <h2>Thirteen rungs</h2>
 <p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake">staking</a> for how a badge is earned.</p>`,
   },
   'converter': {
-    title: 'Converter — import a video to DeHub',
-    description: 'Paste a link from YouTube, TikTok, Instagram, X, Twitch, Vimeo and more, and publish it as a DeHub post. The video is fetched, transcoded and posted to your feed with its title and thumbnail.',
+    title: 'Converter — import a video to Riftn',
+    description: 'Paste a link from YouTube, TikTok, Instagram, X, Twitch, Vimeo and more, and publish it as a Riftn post. The video is fetched, transcoded and posted to your feed with its title and thumbnail.',
     heading: 'Import a video',
-    bodyHtml: `<p>Paste a link and DeHub fetches the video, transcodes it and publishes it as a post on your profile — title and thumbnail carried across.</p>
+    bodyHtml: `<p>Paste a link and Riftn fetches the video, transcodes it and publishes it as a post on your profile — title and thumbnail carried across.</p>
 <h2>Twenty-one places to import from</h2>
 <p>YouTube, TikTok, Instagram, X, Facebook, Twitch, Kick, Rumble, Vimeo, Dailymotion, Reddit, Bluesky, Odysee, Streamable, Loom, Tumblr, Pinterest, Snapchat, VK, Rutube and Bilibili.</p>
 <h2>Your back catalogue, in one place</h2>
-<p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary DeHub post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
-<p>Importing needs a DeHub account and applies to videos you have the right to publish.</p>`,
+<p>Imports run in a queue, so a batch can be started and left alone. Each finished import becomes an ordinary Riftn post: it can be minted, tipped, fractionalised and monetised like anything else you upload.</p>
+<p>Importing needs a Riftn account and applies to videos you have the right to publish.</p>`,
   },
   'migrate-youtube': {
-    title: 'Migrate all — bring a whole profile to DeHub',
-    description: 'Bulk-import a whole channel or profile to DeHub in one batch — YouTube, TikTok, Vimeo, SoundCloud and more. Pick what to bring, edit the titles, pay once.',
+    title: 'Migrate all — bring a whole profile to Riftn',
+    description: 'Bulk-import a whole channel or profile to Riftn in one batch — YouTube, TikTok, Vimeo, SoundCloud and more. Pick what to bring, edit the titles, pay once.',
     heading: 'Bring a whole profile over',
-    bodyHtml: `<p>Paste a channel or profile address and DeHub lists its public uploads. Choose what to bring across, retitle anything you want to read differently, and pay once for the batch — then close the tab while it runs.</p>
+    bodyHtml: `<p>Paste a channel or profile address and Riftn lists its public uploads. Choose what to bring across, retitle anything you want to read differently, and pay once for the batch — then close the tab while it runs.</p>
 <h2>One payment, not one per video</h2>
 <p>The whole batch is priced before it starts and every video is cheaper than the one before it. Anything already on your profile is skipped and never charged twice, and a video that cannot be imported has its share credited back toward the next migration.</p>
 <h2>Edit before it publishes</h2>
 <p>Each video in the picker carries its own title and description, so a back catalogue does not have to arrive worded the way another platform worded it. What you review is what publishes, hours later, when the job reaches it.</p>
 <h2>Not just YouTube</h2>
 <p>The same batch importer reads TikTok, Vimeo, SoundCloud, Dailymotion, Rumble and the rest of the sources behind the <a href="${APP_URL}/converter">single-video converter</a>.</p>
-<p>Migrating needs a DeHub account and applies to videos you have the right to publish.</p>`,
+<p>Migrating needs a Riftn account and applies to videos you have the right to publish.</p>`,
   },
   'launchpad': {
     // The page ships `noindex` in its own SEOHead; the crawler variant has to
     // say the same thing or the two describe the same URL differently.
     noindex: true,
-    title: 'Launchpad — DeHub',
-    description: 'Tokenise a business on the DeHub launchpad: browse live coins or create your own.',
-    heading: 'DeHub Launchpad',
-    bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on DeHub. Live launches are listed with their activity, and creating one runs from the same page.</p>
+    title: 'Launchpad — Riftn',
+    description: 'Tokenise a business on the Riftn launchpad: browse live coins or create your own.',
+    heading: 'Riftn Launchpad',
+    bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on Riftn. Live launches are listed with their activity, and creating one runs from the same page.</p>
 <p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
   },
   'live-studio': {
-    title: 'Live Studio — Stream Alerts, Goals and Overlays | DeHub',
+    title: 'Live Studio — Stream Alerts, Goals and Overlays | Riftn',
     description:
-      'Add tip alerts, follower alerts, goal bars and top supporter boards to your DeHub live streams. Drawn for every viewer, from any phone, browser, capture card or encoder.',
-    heading: 'DeHub Live Studio',
-    bodyHtml: `<p>Live Studio is where a DeHub creator sets up what appears over their live streams: an alert for every tip, sized to the tier it buys; alerts when someone follows, subscribes, shares or arrives; a goal bar; a board of the stream's biggest supporters; a viewer count; and text, lower thirds and frames.</p>
+      'Add tip alerts, follower alerts, goal bars and top supporter boards to your Riftn live streams. Drawn for every viewer, from any phone, browser, capture card or encoder.',
+    heading: 'Riftn Live Studio',
+    bodyHtml: `<p>Live Studio is where a Riftn creator sets up what appears over their live streams: an alert for every tip, sized to the tier it buys; alerts when someone follows, subscribes, shares or arrives; a goal bar; a board of the stream's biggest supporters; a viewer count; and text, lower thirds and frames.</p>
 <h2>Drawn for every viewer</h2>
-<p>Each viewer's DeHub app draws the overlay over the stream itself, so it works whatever the stream comes from — a phone, the browser, an HDMI capture card or an encoder like OBS — and costs the streamer nothing to run.</p>
+<p>Each viewer's Riftn app draws the overlay over the stream itself, so it works whatever the stream comes from — a phone, the browser, an HDMI capture card or an encoder like OBS — and costs the streamer nothing to run.</p>
 <h2>Counted from the chain</h2>
-<p>Tips on DeHub are on-chain payments. Goals and the supporters board count what the chain actually paid, not what a client claimed, so they cannot be moved by a fake event.</p>`,
+<p>Tips on Riftn are on-chain payments. Goals and the supporters board count what the chain actually paid, not what a client claimed, so they cannot be moved by a fake event.</p>`,
   },
   'stats': {
-    title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
-    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, DeHub's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
-    heading: 'DeHub Live Stats',
+    title: 'Live Site Stats — Riftn Visitors and Members in Real Time',
+    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
+    heading: 'Riftn Live Stats',
     bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
 <h2>Members as well as traffic</h2>
-<p>Alongside traffic the page publishes DeHub's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>
+<p>Alongside traffic the page publishes Riftn's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>
 <h2>Revenue and costs</h2>
-<p>The page also adds up what DeHub earns and what it spends to run it, in USD: in-app buys, platform fees and token-tax history against AI compute, infrastructure and payment fees. Every on-chain line links to its transaction, and the full ledger downloads as CSV.</p>
-<p>The original DeHub token's 2021–23 trading tax is split three ways — what went to DeHub operations, what bought back and burned DeHub, and what was paid to holders and stakers in BNB — each valued at the BNB price on the day it moved.</p>`,
+<p>The page also adds up what Riftn earns and what it spends to run it, in USD: in-app buys, platform fees and token-tax history against AI compute, infrastructure and payment fees. Every on-chain line links to its transaction, and the full ledger downloads as CSV.</p>
+<p>The original Riftn token's 2021–23 trading tax is split three ways — what went to Riftn operations, what bought back and burned Riftn, and what was paid to holders and stakers in BNB — each valued at the BNB price on the day it moved.</p>`,
   },
   'accounts': {
-    title: 'Account Marketplace — DeHub',
-    description: 'Buy and sell established DeHub accounts for tokens. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
-    heading: 'DeHub Account Marketplace',
-    bodyHtml: `<p>An established DeHub account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
+    title: 'Account Marketplace — Riftn',
+    description: 'Buy and sell established Riftn accounts for tokens. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
+    heading: 'Riftn Account Marketplace',
+    bodyHtml: `<p>An established Riftn account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
 <h2>Settled on-chain</h2>
-<p>Payment is in tokens and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
+<p>Payment is in tokens and goes straight to the seller — Riftn does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
   },
   'fractions': {
-    title: 'Fractions | DeHub',
-    description: 'Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in tokens.',
-    heading: 'DeHub Fractions',
-    bodyHtml: `<p>Every DeHub upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
+    title: 'Fractions | Riftn',
+    description: 'Buy and sell fractions of Riftn posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in tokens.',
+    heading: 'Riftn Fractions',
+    bodyHtml: `<p>Every Riftn upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
 <h2>An open order book</h2>
 <p>Fractions trade in tokens against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
 <p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
   },
   'stores': {
-    title: 'Stores | DeHub',
-    description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens.',
-    heading: 'DeHub Stores',
-    bodyHtml: `<p>Stores are creator-run shops on DeHub. Anyone can open one and list digital goods, merch, art or services, priced in tokens and paid peer to peer.</p>
+    title: 'Stores | Riftn',
+    description: 'Browse and sell items on the Riftn peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens.',
+    heading: 'Riftn Stores',
+    bodyHtml: `<p>Stores are creator-run shops on Riftn. Anyone can open one and list digital goods, merch, art or services, priced in tokens and paid peer to peer.</p>
 <h2>The shop is part of the profile</h2>
 <p>A store sits beside the creator's posts rather than off on another site, so the audience that already follows the work is the audience that sees what is for sale.</p>`,
   },
   'events': {
     // EventsPage ships `noindex`; the crawler variant matches it.
     noindex: true,
-    title: 'Events — Meetups & Community Events on DeHub',
-    description: 'Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform.',
-    heading: 'DeHub Events',
-    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on DeHub. Browse what is coming up, RSVP to anything open, and host your own — each event gets its own page and share card.</p>`,
+    title: 'Events — Meetups & Community Events on Riftn',
+    description: 'Browse upcoming Riftn community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform.',
+    heading: 'Riftn Events',
+    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on Riftn. Browse what is coming up, RSVP to anything open, and host your own — each event gets its own page and share card.</p>`,
   },
 };
 
@@ -1868,7 +1868,7 @@ function buildMarketingHtml(key, meta) {
     description: meta.description,
     url: canonicalUrl,
     ...(meta.jsonLdExtra || {}),
-    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
     publisher: ORG_JSONLD,
   };
   // Home › [parent section] › page. `arcade/gods-eye` sits under the arcade,
@@ -1890,7 +1890,7 @@ function buildMarketingHtml(key, meta) {
 <meta name="description" content="${escHtml(meta.description)}">
 ${robots}<link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
@@ -1902,11 +1902,11 @@ ${shareMetaTags(meta.og || key, meta.title)}
 ${breadcrumbScript(trail)}
 ${(meta.extraJsonLd || []).map((node) => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...node })}</script>\n`).join('')}</head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
+<p><a href="${APP_URL}/">Riftn</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 <!--hl-body-->${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}<!--/hl-body-->
 ${primaryNavHtml()}
-<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on Riftn</a></p>
 </body>
 </html>`;
 }
@@ -1915,7 +1915,7 @@ ${primaryNavHtml()}
 // Stores, shop items and events — edge-rendered crawler HTML
 // ==========================================================================
 // These three route families used to fall straight through to the SPA, so a
-// shop item posted to X, WhatsApp or Telegram unfurled as the DeHub homepage:
+// shop item posted to X, WhatsApp or Telegram unfurled as the Riftn homepage:
 // same title, same description, same generic card for every item in every
 // store. They are rendered here rather than added to the ssr-seo function
 // because the function only moves on a manual `supabase functions deploy`
@@ -2035,7 +2035,7 @@ function entityImageMetaTags(imageUrl, alt) {
  * belong in.
  */
 function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrumb, heading, bodyHtml, ogType = 'website', noindex = false, extraHead = '' }) {
-  // Every title here is `${name} — DeHub <section>` with `name` straight out
+  // Every title here is `${name} — Riftn <section>` with `name` straight out
   // of a user-editable column, so it inherits that column's newlines and
   // length. Callers already cap the description; capping both in one place is
   // what makes that true of the next renderer too. The looser title cap is on
@@ -2053,7 +2053,7 @@ function entityHtml({ canonicalUrl, title, description, image, jsonLd, breadcrum
 ${noindex ? '<meta name="robots" content="noindex, follow">' : ''}
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
 <meta property="og:type" content="${ogType}">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
@@ -2069,7 +2069,7 @@ ${breadcrumbScript([...crumbsFromHtml(breadcrumb), { name: truncate(heading, 110
 <h1>${escHtml(heading)}</h1>
 ${image ? `<img src="${escHtml(image)}" alt="${escHtml(heading)}" style="max-width:100%">` : ''}
 ${bodyHtml}
-<p style="margin-top:24px"><a class="dh-cta" href="${escHtml(appHref(canonicalUrl))}" rel="nofollow">Open on DeHub</a></p>
+<p style="margin-top:24px"><a class="dh-cta" href="${escHtml(appHref(canonicalUrl))}" rel="nofollow">Open on Riftn</a></p>
 </body>
 </html>`;
 }
@@ -2095,15 +2095,15 @@ function clipAtWord(text, max) {
   return `${cut.replace(/[\s|—–\-:·,;&]+$/u, '')}…`;
 }
 
-/** A closing ` | DeHub`, ` — DeHub Guide`, ` - DeHub Docs`, ` | DeHub 2025 Roadmap` clause. */
-const BRAND_SUFFIX = /\s+[|—–-]\s+[^|—–]*\bDeHub\b[^|—–]*$/;
+/** A closing ` | Riftn`, ` — Riftn Guide`, ` - Riftn Docs`, ` | Riftn 2025 Roadmap` clause. */
+const BRAND_SUFFIX = /\s+[|—–-]\s+[^|—–]*\b(?:Riftn|DeHub)\b[^|—–]*$/;
 
 /**
  * Fit a <title> into `max` characters the way a person would shorten it.
  *
  * Titles here are written to rank and most end in a brand clause, so the old
  * mid-word cut ate the suffix first and left the fragment on screen: the
- * 2026-09-29 crawl found ~45 of 126 blog titles ending `| De…`, `| DeHub
+ * 2026-09-29 crawl found ~45 of 126 blog titles ending `| De…`, `| Riftn
  * 2025…` or `Pla…`. The brand clause is the cheapest thing to lose — the
  * result already says dehub.io — so it goes first; only a title still too
  * long without it is cut, at a word boundary.
@@ -2119,7 +2119,7 @@ function clampTitle(text, max) {
 /** Longest <title> Google will render before it writes its own. Applied to
  *  post text, which is a snippet with no brand suffix to protect. */
 const TITLE_MAX = 70;
-/** Guard for `${name} — DeHub <section>` titles: pathological lengths only. */
+/** Guard for `${name} — Riftn <section>` titles: pathological lengths only. */
 const ENTITY_TITLE_MAX = 110;
 /** Matches the cap the entity renderers below already pass to truncate(). */
 const DESCRIPTION_MAX = 200;
@@ -2173,10 +2173,10 @@ function normalizeProxiedMeta(html) {
  * The deployed fn describes a post with its body text and a profile with its
  * bio — sound, except that neither is required. A post with no body (every
  * plain video upload, most photo posts) gets
- * `Post by <author> on DeHub — join the decentralized creator network.`, so
+ * `Post by <author> on Riftn — join the decentralized creator network.`, so
  * one account's whole back-catalogue carries an identical description: the
  * 2026-09-02 sitemap crawl found 128 of 400 posts sharing theirs, 33 of them
- * one author's. A profile with no bio gets `Connect with <name> on DeHub…`,
+ * one author's. A profile with no bio gets `Connect with <name> on Riftn…`,
  * which collides whenever two accounts share a display name, and a
  * five-character bio ("DHB ❤") ships as the whole description.
  *
@@ -2186,8 +2186,8 @@ function normalizeProxiedMeta(html) {
  * normalizeProxiedMeta above: the fn does not move, so the fix is a rewrite.
  * Pure string functions, tested in src/test/proxied-meta-enrichment.test.ts.
  */
-const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on DeHub — join the decentralized creator network\./;
-const PROFILE_DESCRIPTION_TEMPLATE = /Connect with (.+?) on DeHub, the open source alternative to legacy media\./;
+const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on Riftn — join the decentralized creator network\./;
+const PROFILE_DESCRIPTION_TEMPLATE = /Connect with (.+?) on Riftn, the open source alternative to legacy media\./;
 /** A bio shorter than this says nothing about the page on its own. */
 const PROFILE_DESCRIPTION_MIN = 40;
 /** What the composer stores for an upload with no caption. */
@@ -2223,7 +2223,7 @@ function titleSaysNothing(title) {
 }
 
 /** What the deployed fn titles a post that has no title of its own. */
-const FN_FALLBACK_TITLE = /^Post #\d+ by .+ on DeHub$/;
+const FN_FALLBACK_TITLE = /^Post #\d+ by .+ on Riftn$/;
 /** A caption standing in for a title: long enough to say what the post is. */
 const POST_CAPTION_TITLE_MAX = 60;
 
@@ -2316,7 +2316,7 @@ function replacePostTitle(html, oldTitle, newTitle) {
   if (oldJson) {
     // `"name"` is the VideoObject's title, and also the Person's name in the
     // author node. A post titled with its author's own name — seven posts are
-    // called `DeHub` — would otherwise get its author renamed to the branded
+    // called `Riftn` — would otherwise get its author renamed to the branded
     // title. Skip the one that follows a Person type.
     const needle = `"name":"${oldJson}"`;
     out = out
@@ -2331,7 +2331,7 @@ function enrichPostMeta(html, postId, nft) {
   const templated = html.match(POST_DESCRIPTION_TEMPLATE);
   // Two different things. `authorName` is empty when the page genuinely does
   // not say who wrote it, and a title must never claim otherwise — `Stream —
-  // a post by someone on DeHub` is three identical titles again, with a lie
+  // a post by someone on Riftn` is three identical titles again, with a lie
   // added. `author` keeps the old wording for the description, where the
   // template being present guarantees a real name anyway.
   const authorName = postAuthor(html, nft, templated);
@@ -2344,7 +2344,7 @@ function enrichPostMeta(html, postId, nft) {
     .filter(Boolean)
     .slice(0, 5);
   // The fn's own stand-in for a post with no title — `Post #3419 by Sultan on
-  // DeHub` — is a title that says nothing too, it just has letters in it. When
+  // Riftn` — is a title that says nothing too, it just has letters in it. When
   // either kind sits on a post that does carry a caption, the caption's
   // opening words are the better title: /app/post/3419 has 140 characters
   // about a watercolour of a Royal Haveli and was indexed as a post number.
@@ -2359,23 +2359,23 @@ function enrichPostMeta(html, postId, nft) {
     // three of those from one account are three identical <title>s. The fn's
     // own fallback shape, with the id keeping siblings apart.
     const named = `${kind.charAt(0).toUpperCase()}${kind.slice(1)} #${postId}`;
-    out = replacePostTitle(out, title, authorName ? `${named} by ${authorName} on DeHub` : `${named} on DeHub`);
+    out = replacePostTitle(out, title, authorName ? `${named} by ${authorName} on Riftn` : `${named} on Riftn`);
   } else if (authorName) {
-    // A real but short title — `Fun`, `stream`, `DeHub` — is a weak result on
+    // A real but short title — `Fun`, `stream`, `Riftn` — is a weak result on
     // its own and collides with everyone else who typed it: `stream` was 30
-    // posts, `Promote DeHub` 14. Name the author and the format rather than
+    // posts, `Promote Riftn` 14. Name the author and the format rather than
     // discard what they wrote. Longer titles are distinctive already and are
     // left exactly as they are, which is also what keeps this inside
     // TITLE_MAX: the suffix is only applied when the result still fits, and
     // the shorter form is tried before giving up.
     const article = `a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind}`;
-    const suffixed = [`${chosen} — ${article} by ${authorName} on DeHub`, `${chosen} — ${authorName} on DeHub`].find(
+    const suffixed = [`${chosen} — ${article} by ${authorName} on Riftn`, `${chosen} — ${authorName} on Riftn`].find(
       (candidate) => candidate.length <= TITLE_MAX,
     );
     // A title that already carries the brand needs no branding, and one that
     // already has an em-dash clause reads badly with a second one bolted on
-    // (`A — B — davyJones on DeHub`). Both are distinctive enough as they are.
-    const alreadyShaped = /\bon DeHub\b/i.test(chosen) || chosen.includes(' — ');
+    // (`A — B — davyJones on Riftn`). Both are distinctive enough as they are.
+    const alreadyShaped = /\bon Riftn\b/i.test(chosen) || chosen.includes(' — ');
     const next = suffixed && !alreadyShaped ? suffixed : chosen;
     if (next !== title) out = replacePostTitle(out, title, next);
   } else if (chosen !== title) {
@@ -2388,19 +2388,19 @@ function enrichPostMeta(html, postId, nft) {
   if (!templated) return out;
 
   const lead = untitled
-    ? `${verb} ${kind} #${postId} by ${author} on DeHub`
-    : `${verb} "${chosen}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on DeHub`;
+    ? `${verb} ${kind} #${postId} by ${author} on Riftn`
+    : `${verb} "${chosen}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on Riftn`;
   const topicsText = topics.length ? ` Topics: ${topics.join(', ')}.` : '';
   const description = truncate(`${lead}, the open source, user-owned social network.${topicsText}`, DESCRIPTION_MAX);
   const attrDesc = escFnAttr(description);
   const jsonDesc = escJsonText(description);
   return out
     .replace(
-      /(content=")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      /(content=")Post by .+? on Riftn — join the decentralized creator network\.(")/g,
       (m, a, b) => `${a}${attrDesc}${b}`,
     )
     .replace(
-      /("description":")Post by .+? on DeHub — join the decentralized creator network\.(")/g,
+      /("description":")Post by .+? on Riftn — join the decentralized creator network\.(")/g,
       (m, a, b) => `${a}${jsonDesc}${b}`,
     )
     // The fn writes that same sentence a third time, as the page's only
@@ -2410,16 +2410,16 @@ function enrichPostMeta(html, postId, nft) {
     // 2026-09-16, which matches the 32% the description census found, and those
     // are the same pages sitting in "Crawled - currently not indexed".
     .replace(
-      /(<p>)Post by .+? on DeHub — join the decentralized creator network\.(<\/p>)/g,
+      /(<p>)Post by .+? on Riftn — join the decentralized creator network\.(<\/p>)/g,
       (m, a, b) => `${a}${attrDesc}${b}`,
     );
 }
 
 /**
- * `Display Name (@handle) on DeHub` in place of the handle-only title.
+ * `Display Name (@handle) on Riftn` in place of the handle-only title.
  *
  * The title rewrite in the proxy branch turns the fn's CTA into `@handle on
- * DeHub — posts, videos & profile`, which never contains the name people
+ * Riftn — posts, videos & profile`, which never contains the name people
  * actually search for: /c0chraniz3r is Jesse Cochran, and nothing on the
  * page's title, heading or card said so. The name comes off the fn's own
  * Person JSON-LD, or the account record when the caller has it. A name that
@@ -2429,8 +2429,8 @@ function profileTitle(html, handle, displayName) {
   const ld = html.match(/"@type":"Person","name":"((?:[^"\\]|\\.)*)"/);
   const name = String(displayName || (ld ? decodeFnText(ld[1]) : '')).replace(/\s+/g, ' ').trim();
   if (!name || name.replace(/^@/, '').toLowerCase() === handle.toLowerCase()) return html;
-  const title = escFnAttr(clampTitle(`${name} (@${handle}) on DeHub`, TITLE_MAX));
-  const current = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} on DeHub — posts, videos &amp; profile`, 'gi');
+  const title = escFnAttr(clampTitle(`${name} (@${handle}) on Riftn`, TITLE_MAX));
+  const current = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} on Riftn — posts, videos &amp; profile`, 'gi');
   return html.replace(current, title);
 }
 
@@ -2443,15 +2443,15 @@ function enrichProfileMeta(html, username, displayName) {
   if (templated) {
     const name = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim();
     const who = name && name.toLowerCase() !== handle.toLowerCase() ? `${name} (@${handle})` : `@${handle}`;
-    description = `Connect with ${who} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+    description = `Connect with ${who} on Riftn — posts, videos, music and live streams on the open source, user-owned social network.`;
   } else {
     const current = html.match(/<meta name="description" content="([^"]*)">/);
     if (!current) return html;
     const bio = decodeFnText(current[1]).replace(/\s+/g, ' ').trim();
     if (bio.length >= PROFILE_DESCRIPTION_MIN) return html;
     description = bio
-      ? `${bio} — @${handle} on DeHub, the open source, user-owned social network.`
-      : `@${handle} on DeHub — posts, videos, music and live streams on the open source, user-owned social network.`;
+      ? `${bio} — @${handle} on Riftn, the open source, user-owned social network.`
+      : `@${handle} on Riftn — posts, videos, music and live streams on the open source, user-owned social network.`;
   }
   const attr = escFnAttr(truncate(description, DESCRIPTION_MAX));
   const out = html.replace(
@@ -2465,7 +2465,7 @@ function enrichProfileMeta(html, username, displayName) {
   // to have padded it.
   if (!templated) return out;
   return out.replace(
-    /(<p>)Connect with .+? on DeHub, the open source alternative to legacy media\.(<\/p>)/g,
+    /(<p>)Connect with .+? on Riftn, the open source alternative to legacy media\.(<\/p>)/g,
     (m, a, b) => `${a}${attr}${b}`,
   );
 }
@@ -2781,7 +2781,7 @@ function shortsOf(rows, max = 12) {
 async function sectionLiveHtml(key) {
   if (key === 'videos') return postListHtml('Latest videos', await fetchFeedRows('postType=video'));
   if (key === 'shorts') return postListHtml('Latest shorts', shortsOf(await fetchFeedRows('postType=video', 100)));
-  if (key === 'explore') return postListHtml('Latest on DeHub', await fetchFeedRows(''));
+  if (key === 'explore') return postListHtml('Latest on Riftn', await fetchFeedRows(''));
   if (key === 'music') return postListHtml('Latest tracks', await fetchFeedRows('postType=feed-audio'));
   return '';
 }
@@ -2894,7 +2894,7 @@ function enrichVideoPost(html, record) {
   });
 }
 
-/** Puts crawler content ahead of a page's "Open on DeHub" call to action, or at the end of the body. */
+/** Puts crawler content ahead of a page's "Open on Riftn" call to action, or at the end of the body. */
 function injectBeforeCta(html, sectionHtml) {
   if (!sectionHtml) return html;
   const cta = html.search(/<p[^>]*><a class="dh-cta"/);
@@ -3127,7 +3127,7 @@ function socialPostingLd(value, record) {
  * A community as a CollectionPage — the page of its posts — rather than the
  * fn's Organization. An Organization named after the community collided with
  * the brand: the community called "dehub" was marked up as an Organization
- * named "DeHub", a second, rival brand entity on dehub.io.
+ * named "Riftn", a second, rival brand entity on dehub.io.
  */
 function communityPageLd(value) {
   if (value['@type'] !== 'Organization') return null;
@@ -3135,9 +3135,9 @@ function communityPageLd(value) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: name ? `${name} — community on DeHub` : 'Community on DeHub',
+    name: name ? `${name} — community on Riftn` : 'Community on Riftn',
     ...fields,
-    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
   };
 }
 
@@ -3268,7 +3268,7 @@ function profileBannerCard(html) {
 }
 
 /**
- * A profile with no avatar gets the fn's fallback share image, the DeHub logo
+ * A profile with no avatar gets the fn's fallback share image, the Riftn logo
  * file, declared 200×200 with a `summary` card. The file is a 1200×630
  * banner: scrapers that trust the hint crop it to a square thumbnail, and 7
  * of 38 sampled profiles unfurled that way. Say what the file actually is.
@@ -3289,13 +3289,13 @@ function logoCardDimensions(html) {
 }
 
 /**
- * The fn titles a community `Join <name>'s community on DeHub today`, which
- * reads `Join DeHub Whales's community` for any name ending in s. English
+ * The fn titles a community `Join <name>'s community on Riftn today`, which
+ * reads `Join Riftn Whales's community` for any name ending in s. English
  * drops the second s there.
  */
 function fixCommunityPossessive(html) {
-  return html.replace(/Join ([^<"]+?)'s community on DeHub today/g, (m, name) =>
-    /s$/i.test(name) ? `Join ${name}' community on DeHub today` : m);
+  return html.replace(/Join ([^<"]+?)'s community on Riftn today/g, (m, name) =>
+    /s$/i.test(name) ? `Join ${name}' community on Riftn today` : m);
 }
 
 /**
@@ -3325,9 +3325,9 @@ function entityLooksThin({ name, description, image }) {
 function buildStoreHtml(store) {
   const canonicalUrl = `${APP_URL}/stores/${store.id}`;
   const name = store.name || 'Store';
-  const title = `${name} — DeHub Stores`;
+  const title = `${name} — Riftn Stores`;
   const description = truncate(
-    store.description || `Shop ${name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`,
+    store.description || `Shop ${name} on Riftn. Peer-to-peer commerce paid in tokens or USDC.`,
     200,
   );
   const image = absolutize(store.banner_url || store.avatar_url);
@@ -3339,7 +3339,7 @@ function buildStoreHtml(store) {
     ogType: 'profile',
     noindex: entityLooksThin({ name: store.name, description: store.description, image }),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores">Stores</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/stores">Stores</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
     // OnlineStore, not Store: Store is a LocalBusiness, and Google reports a
     // LocalBusiness without a street address as an error. These shops have no
@@ -3360,12 +3360,12 @@ function buildListingHtml(listing) {
   const storeId = listing.store_id;
   const canonicalUrl = `${APP_URL}/stores/${storeId}?listing=${listing.id}`;
   const name = listing.title || 'Item';
-  const storeName = (listing.stores && listing.stores.name) || 'a DeHub store';
+  const storeName = (listing.stores && listing.stores.name) || 'a Riftn store';
   const price = Number(listing.price) || 0;
   const currency = (listing.currency || 'USD').toUpperCase();
-  const title = `${name} — ${storeName} on DeHub`;
+  const title = `${name} — ${storeName} on Riftn`;
   const description = truncate(
-    listing.description || `${name} from ${storeName}, on DeHub. Paid in tokens or USDC.`,
+    listing.description || `${name} from ${storeName}, on Riftn. Paid in tokens or USDC.`,
     200,
   );
   const images = Array.isArray(listing.images) ? listing.images : [];
@@ -3382,7 +3382,7 @@ function buildListingHtml(listing) {
     // link still unfurls for anyone who shares it.
     noindex: listing.status !== 'active' || entityLooksThin({ name: listing.title, description: listing.description, image }),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/stores/${escHtml(storeId)}">${escHtml(storeName)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${price.toLocaleString('en-US', { style: 'currency', currency: currency === 'DHB' ? 'USD' : currency })}</strong>${listing.is_digital ? ' · digital' : ''}${inStock ? '' : ' · sold out'}</p>`,
     jsonLd: {
@@ -3419,11 +3419,11 @@ function eventOrganizerLd(event) {
 function buildEventHtml(event) {
   const canonicalUrl = `${APP_URL}/app/events/${event.event_number}`;
   const name = event.title || 'Event';
-  const title = `${name} — DeHub Events`;
+  const title = `${name} — Riftn Events`;
   const startsAt = event.starts_at || '';
   const when = startsAt ? new Date(startsAt).toUTCString() : '';
   const description = truncate(
-    event.description || `${name} on DeHub${event.location ? ` · ${event.location}` : ''}${when ? ` · ${when}` : ''}`,
+    event.description || `${name} on Riftn${event.location ? ` · ${event.location}` : ''}${when ? ` · ${when}` : ''}`,
     200,
   );
   const image = absolutize(event.cover_image_url);
@@ -3437,7 +3437,7 @@ function buildEventHtml(event) {
     // A private event is shareable by whoever holds the link, not crawlable.
     noindex: !!event.is_private || entityLooksThin({ name: event.title, description: event.description, image }),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/events">Events</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/app/events">Events</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
 ${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
@@ -3458,12 +3458,12 @@ ${event.location ? `<p>${escHtml(event.location)}</p>` : ''}
       // scheduled one.
       eventStatus: 'https://schema.org/EventScheduled',
       // location is required on every Event. An online one happens on its own
-      // DeHub page, which is what VirtualLocation names; a typed-in place is
+      // Riftn page, which is what VirtualLocation names; a typed-in place is
       // the only address there is, so it is the address.
       location: event.location
         ? { '@type': 'Place', name: event.location, address: event.location }
         : { '@type': 'VirtualLocation', url: canonicalUrl },
-      // Whoever created the event hosts it; DeHub only lists it.
+      // Whoever created the event hosts it; Riftn only lists it.
       organizer: eventOrganizerLd(event),
     },
   });
@@ -3491,15 +3491,15 @@ function buildDexPoolHtml(pool) {
   const chain = DEX_POOL_CHAIN_NAMES[pool.chain] || pool.chain;
   const canonicalUrl = `${APP_URL}/dex/${pool.chain}/${pool.token_address}`;
   const pair = `${pool.symbol}/USD`;
-  const title = `${pair} — ${pool.name} on the DeHub DEX`;
-  const description = truncate(`Trade ${pool.name} (${pool.symbol}) on ${chain}: live order book, limit orders and instant buys and sells on the DeHub DEX.`, 200);
+  const title = `${pair} — ${pool.name} on the Riftn DEX`;
+  const description = truncate(`Trade ${pool.name} (${pool.symbol}) on ${chain}: live order book, limit orders and instant buys and sells on the Riftn DEX.`, 200);
   return entityHtml({
     canonicalUrl,
     title,
     description,
     image: pool.image_url,
     heading: `${pair} · ${chain}`,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/dex">DEX</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/dex">DEX</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p>Token contract: <code>${escHtml(pool.token_address)}</code></p>`,
     // WebPage, not WebApplication: see buildMarketingHtml — an app type with
@@ -3512,7 +3512,7 @@ function buildDexPoolHtml(pool) {
       url: canonicalUrl,
       ...(pool.image_url ? { image: pool.image_url } : {}),
       about: { '@type': 'Thing', name: `${pool.name} (${pool.symbol})`, identifier: pool.token_address },
-      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+      isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
     },
   });
 }
@@ -3521,23 +3521,23 @@ function buildStageHtml(stage) {
   const canonicalUrl = stage.short_id != null
     ? `${APP_URL}/stages/${stage.short_id}`
     : `${APP_URL}/stage/${stage.id}`;
-  const host = stage.host_username ? `@${stage.host_username}` : 'a DeHub host';
+  const host = stage.host_username ? `@${stage.host_username}` : 'a Riftn host';
   const isLive = stage.status === 'live';
   const isScheduled = stage.status === 'scheduled';
   const name = stage.title || 'Live Stage';
   const title = isScheduled
-    ? `${name} — Upcoming Stage on DeHub`
+    ? `${name} — Upcoming Stage on Riftn`
     : isLive
-      ? `${name} — Live now on DeHub`
-      : `${name} — Stage on DeHub`;
+      ? `${name} — Live now on Riftn`
+      : `${name} — Stage on Riftn`;
   const when = isScheduled && stage.scheduled_at ? new Date(stage.scheduled_at).toUTCString() : '';
   const description = truncate(
     stage.description ||
       (isScheduled
-        ? `Live audio Stage hosted by ${host} on DeHub${when ? ` · ${when}` : ''}. Set a reminder or add it to your calendar.`
+        ? `Live audio Stage hosted by ${host} on Riftn${when ? ` · ${when}` : ''}. Set a reminder or add it to your calendar.`
         : isLive
-          ? `Live audio Stage hosted by ${host} on DeHub — listen in now, no account needed.`
-          : `A recorded audio Stage hosted by ${host} on DeHub.`),
+          ? `Live audio Stage hosted by ${host} on Riftn — listen in now, no account needed.`
+          : `A recorded audio Stage hosted by ${host} on Riftn.`),
     200,
   );
   // The share image is the stage's own cover when the host set one; failing
@@ -3556,7 +3556,7 @@ function buildStageHtml(stage) {
     // A finished stage is shareable by whoever holds the link, not crawlable.
     noindex: stage.status === 'ended',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/stages">Stages</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/stages">Stages</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
 <p>Hosted by ${escHtml(host)}</p>`,
@@ -3570,7 +3570,7 @@ ${when ? `<p><strong>${escHtml(when)}</strong></p>` : ''}
       ...(startsAt ? { startDate: startsAt } : {}),
       ...(stage.ended_at ? { endDate: stage.ended_at } : {}),
       ...(image ? { image } : {}),
-      publishedOn: { '@type': 'BroadcastService', name: 'DeHub Stages', url: `${APP_URL}/stages` },
+      publishedOn: { '@type': 'BroadcastService', name: 'Riftn Stages', url: `${APP_URL}/stages` },
     },
   });
 }
@@ -3583,15 +3583,15 @@ function buildDuetsHtml(post, tokenId) {
   const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
   const creator = post.minterUsername || post.mintername || '';
   const title = creator ? `Duets of ${name} by @${creator}` : `Duets of ${name}`;
-  const description = truncate(`Watch every duet of ${creator ? `@${creator}'s` : 'this'} video on DeHub, or record your own side by side.`, 200);
+  const description = truncate(`Watch every duet of ${creator ? `@${creator}'s` : 'this'} video on Riftn, or record your own side by side.`, 200);
   return entityHtml({
     canonicalUrl,
-    title: `${title} — DeHub`,
+    title: `${title} — Riftn`,
     description,
     image: postShareImageUrl(tokenId),
     ogType: 'website',
     heading: title,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
     jsonLd: {
@@ -3613,15 +3613,15 @@ function buildReactionsHtml(post, tokenId) {
   const name = truncate(String(post.name || '').trim() || `Video #${tokenId}`, 90);
   const creator = post.minterUsername || post.mintername || '';
   const title = creator ? `Reactions to ${name} by @${creator}` : `Reactions to ${name}`;
-  const description = truncate(`Watch creators react to ${creator ? `@${creator}'s` : 'this'} video on DeHub, recorded and live, or record your own reaction.`, 200);
+  const description = truncate(`Watch creators react to ${creator ? `@${creator}'s` : 'this'} video on Riftn, recorded and live, or record your own reaction.`, 200);
   return entityHtml({
     canonicalUrl,
-    title: `${title} — DeHub`,
+    title: `${title} — Riftn`,
     description,
     image: postShareImageUrl(tokenId),
     ogType: 'website',
     heading: title,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/app/post/${escHtml(tokenId)}">${escHtml(name)}</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><a href="${APP_URL}/app/post/${escHtml(tokenId)}">Watch the original</a></p>`,
     jsonLd: {
@@ -3642,9 +3642,9 @@ const LIVE_CLIP_COLUMNS = 'short_id,title,stream_title,stream_token_id,streamer_
 function buildClipHtml(clip) {
   const canonicalUrl = `${APP_URL}/clip/${clip.short_id}`;
   const name = clip.title || clip.stream_title || 'Live clip';
-  const streamer = clip.streamer_username ? `@${clip.streamer_username}` : 'a DeHub streamer';
+  const streamer = clip.streamer_username ? `@${clip.streamer_username}` : 'a Riftn streamer';
   const by = clip.kind === 'viewer' && clip.clipper_username ? `, clipped by @${clip.clipper_username}` : '';
-  const description = truncate(`A clip from ${streamer}'s live stream on DeHub${by}. Watch it, then catch the next stream live.`, 200);
+  const description = truncate(`A clip from ${streamer}'s live stream on Riftn${by}. Watch it, then catch the next stream live.`, 200);
   const video = clip.video_url || '';
   const extraHead = video
     ? `
@@ -3656,13 +3656,13 @@ function buildClipHtml(clip) {
     : '';
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Clip on DeHub`,
+    title: `${name} — Clip on Riftn`,
     description,
     image: clip.card_url || clip.poster_url || '',
     ogType: 'video.other',
     extraHead,
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/shorts">Shorts</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/shorts">Shorts</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 ${video ? `<video src="${escHtml(video)}" poster="${escHtml(clip.poster_url || '')}" controls playsinline style="max-width:360px;width:100%"></video>` : ''}
 <p><a href="${APP_URL}/post/${escHtml(String(clip.stream_token_id))}">Watch the stream</a>${clip.post_token_id != null ? ` · <a href="${APP_URL}/post/${escHtml(String(clip.post_token_id))}">Open the Short</a>` : ''}</p>`,
@@ -3692,7 +3692,7 @@ function buildMiniAppHtml(app) {
   const canonicalUrl = `${APP_URL}/apps/${app.slug}`;
   const name = app.name || 'Mini app';
   const description = truncate(
-    app.description || app.subtitle || `${name} is a mini app on DeHub. Open it inside DeHub, already signed in.`,
+    app.description || app.subtitle || `${name} is a mini app on Riftn. Open it inside Riftn, already signed in.`,
     200,
   );
   const manifest = app.manifest && typeof app.manifest === 'object' ? app.manifest : {};
@@ -3706,21 +3706,21 @@ function buildMiniAppHtml(app) {
     description,
     url: canonicalUrl,
     ...(app.icon_url ? { image: absolutize(app.icon_url) } : {}),
-    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
   };
   return entityHtml({
     canonicalUrl,
-    title: `${name} — DeHub Apps`,
+    title: `${name} — Riftn Apps`,
     description,
     image,
     jsonLd,
     ogType: 'website',
     noindex: app.tier === 'unlisted',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/apps">Apps</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/apps">Apps</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p>Runs at <strong>${escHtml(app.domain)}</strong>${app.category ? ` · ${escHtml(String(app.category).replace(/-/g, ' '))}` : ''}</p>
-<p><a href="${canonicalUrl}">Open ${escHtml(name)} in DeHub</a> or <a href="${APP_URL}/apps">browse the other apps</a>.</p>`,
+<p><a href="${canonicalUrl}">Open ${escHtml(name)} in Riftn</a> or <a href="${APP_URL}/apps">browse the other apps</a>.</p>`,
   });
 }
 
@@ -3760,9 +3760,9 @@ function buildCoStreamHtml(room) {
   const canonicalUrl = `${APP_URL}/app/live/join/${room.id}`;
   const name = room.host_username ? `@${String(room.host_username).replace(/^@/, '')}` : '';
   const live = room.status === 'active';
-  const title = name ? `Join ${name} live on DeHub` : 'Join a live on DeHub';
+  const title = name ? `Join ${name} live on Riftn` : 'Join a live on Riftn';
   const description = live
-    ? 'You have been invited on screen in a live video stream on DeHub. Open the link to join with your camera.'
+    ? 'You have been invited on screen in a live video stream on Riftn. Open the link to join with your camera.'
     : 'This live has ended. The host has closed their guest seats.';
   return entityHtml({
     canonicalUrl,
@@ -3771,7 +3771,7 @@ function buildCoStreamHtml(room) {
     image: SHARE_IMAGE,
     noindex: true,
     heading: title,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>`,
     jsonLd: {
       '@context': 'https://schema.org',
@@ -3779,7 +3779,7 @@ function buildCoStreamHtml(room) {
       name: title,
       description,
       url: canonicalUrl,
-      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+      isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
     },
   });
 }
@@ -3788,26 +3788,26 @@ function buildBuilderPreviewHtml(id, appMeta) {
   const canonicalUrl = `${APP_URL}/builder/preview/${id}`;
   const name = truncate((appMeta && appMeta.title) || '', 80);
   const description = truncate(
-    (appMeta && appMeta.description) || (name ? `${name} — an app built on DeHub Builder.` : 'An app built on DeHub Builder.'),
+    (appMeta && appMeta.description) || (name ? `${name} — an app built on Riftn Builder.` : 'An app built on Riftn Builder.'),
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: name ? `${name} — Built with DeHub Builder` : 'Built with DeHub Builder',
+    title: name ? `${name} — Built with Riftn Builder` : 'Built with Riftn Builder',
     description,
     image: shareImage('builder'),
     noindex: true,
-    heading: name || 'Built with DeHub Builder',
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/builder">Builder</a>`,
+    heading: name || 'Built with Riftn Builder',
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/builder">Builder</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
-<p><a href="${APP_URL}/builder">Build your own with DeHub Builder</a>.</p>`,
+<p><a href="${APP_URL}/builder">Build your own with Riftn Builder</a>.</p>`,
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: name || 'Built with DeHub Builder',
+      name: name || 'Built with Riftn Builder',
       description,
       url: canonicalUrl,
-      isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+      isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
     },
   });
 }
@@ -3829,7 +3829,7 @@ function bountyMetaDescription(job) {
   const budget = Number(job.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 });
   return truncate(
     job.description ||
-      `A ${job.job_type} bounty on DeHub paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.`,
+      `A ${job.job_type} bounty on Riftn paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.`,
     200,
   );
 }
@@ -3856,10 +3856,10 @@ function bountyBriefHtml(brief, fallback) {
 function buildBountyHtml(job) {
   const canonicalUrl = `${APP_URL}/bounty/${job.job_number}`;
   const name = job.title || 'Bounty';
-  const title = `${name} — DeHub Bounties`;
+  const title = `${name} — Riftn Bounties`;
   const description = bountyMetaDescription(job);
   // The poster's own cover art when there is one; otherwise the board's card,
-  // which at least says "bounty" rather than showing the generic DeHub banner.
+  // which at least says "bounty" rather than showing the generic Riftn banner.
   const image = absolutize(job.cover_image_url) || shareImage('work');
   const budget = Number(job.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 });
 
@@ -3901,7 +3901,7 @@ function buildBountyHtml(job) {
     ogType: 'website',
     noindex: !isBountyIndexable(job),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/work">Bounties</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/work">Bounties</a>`,
     // The whole brief, not the 200-character meta cut of it: the crawl found
     // every bounty page at ~76 words, which was that cut plus the facts line.
     bodyHtml: `${bountyBriefHtml(job.description, description)}
@@ -3909,8 +3909,8 @@ function buildBountyHtml(job) {
 ${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10).map((t) => escHtml(String(t))).join(', ')}</p>` : ''}
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 <p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
-<h2>How a DeHub bounty works</h2>
-<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
+<h2>How a Riftn bounty works</h2>
+<p>A bounty is a scoped task with a budget attached, posted by a Riftn account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
   });
 }
 
@@ -3924,17 +3924,17 @@ function buildCreatorFlowHtml(flow) {
   const name = flow.name || 'Creator Flow';
   const nodeCount = Number(flow.node_count) || 0;
   const description = truncate(
-    `${name} — a shared AI generation flow on DeHub with ${nodeCount} node${nodeCount === 1 ? '' : 's'}. Open a copy in Creator Flow to run it with your own prompts and references.`,
+    `${name} — a shared AI generation flow on Riftn with ${nodeCount} node${nodeCount === 1 ? '' : 's'}. Open a copy in Creator Flow to run it with your own prompts and references.`,
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: `${name} — DeHub Creator Flow`,
+    title: `${name} — Riftn Creator Flow`,
     description,
     image: absolutize(flow.cover_url) || shareImage('creator'),
     ogType: 'article',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/creator">Creator</a> › <a href="${APP_URL}/creator/flow">Flow</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/creator">Creator</a> › <a href="${APP_URL}/creator/flow">Flow</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this flow</a> · <a href="${APP_URL}/creator/flow">Build your own</a></p>`,
     jsonLd: {
@@ -3947,7 +3947,7 @@ function buildCreatorFlowHtml(flow) {
       ...(flow.updated_at ? { dateModified: flow.updated_at } : {}),
       // A WebPage: a nested SoftwareApplication is still a Software App item
       // to Google, and invalid without a rating.
-      isPartOf: { '@type': 'WebPage', name: 'DeHub Creator Flow', url: `${APP_URL}/creator/flow` },
+      isPartOf: { '@type': 'WebPage', name: 'Riftn Creator Flow', url: `${APP_URL}/creator/flow` },
     },
   });
 }
@@ -3961,14 +3961,14 @@ function buildCreatorPackHtml(pack) {
   const name = pack.name || 'Pack';
   const kind = pack.kind === 'emoji' ? 'emoji pack' : pack.kind === 'sticker' ? 'sticker pack' : 'GIF pack';
   const count = Number(pack.item_count) || 0;
-  const description = `${name} — a DeHub ${kind} with ${count} item${count === 1 ? '' : 's'}. Add it to your picker and use it in chats, comments and reactions.`;
+  const description = `${name} — a Riftn ${kind} with ${count} item${count === 1 ? '' : 's'}. Add it to your picker and use it in chats, comments and reactions.`;
   return entityHtml({
     canonicalUrl,
-    title: `${name} — DeHub ${kind}`,
+    title: `${name} — Riftn ${kind}`,
     description,
     image: pack.cover_url || shareImage('packs'),
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/packs">Packs</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/packs">Packs</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Add this pack</a> · <a href="${APP_URL}/packs">Browse packs</a></p>`,
     jsonLd: {
@@ -3997,19 +3997,19 @@ function buildProposalHtml(proposal) {
   const status = String(proposal.status || 'open').replace(/_/g, ' ');
   const votes = Number(proposal.vote_count) || 0;
   const description = truncate(
-    proposal.description || `${name} — a governance proposal on DeHub, ${status}, with ${votes} votes.`,
+    proposal.description || `${name} — a governance proposal on Riftn, ${status}, with ${votes} votes.`,
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: `${name} — DeHub Governance`,
+    title: `${name} — Riftn Governance`,
     description,
     image: proposal.media_type === 'image' && /^https:\/\//.test(String(proposal.media_url || ''))
       ? proposal.media_url
       : shareImage('governance'),
     ogType: 'article',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/governance">Governance</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/governance">Governance</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${escHtml(status)}</strong> · ${votes} votes · ${Number(proposal.comment_count) || 0} comments · proposed by ${escHtml(author)}</p>`,
     jsonLd: {
@@ -4044,9 +4044,9 @@ function buildProposalHtml(proposal) {
 function buildFeatureRequestHtml(feature) {
   const canonicalUrl = `${APP_URL}/features?feature=${feature.id}`;
   const name = feature.title || 'Feature Request';
-  const title = `${name} — DeHub Feature Requests`;
+  const title = `${name} — Riftn Feature Requests`;
   const description = truncate(
-    feature.description || 'A community feature request or bug report on the DeHub roadmap board.',
+    feature.description || 'A community feature request or bug report on the Riftn roadmap board.',
     200,
   );
   const image = absolutize(feature.image_url) || shareImage('features');
@@ -4066,7 +4066,7 @@ function buildFeatureRequestHtml(feature) {
     // finished bounty: shareable by whoever holds the link, not crawlable.
     noindex: feature.status === 'declined',
     heading: name,
-    breadcrumb: `<a href="${APP_URL}">DeHub</a> › <a href="${APP_URL}/features">Feature Requests</a>`,
+    breadcrumb: `<a href="${APP_URL}">Riftn</a> › <a href="${APP_URL}/features">Feature Requests</a>`,
     bodyHtml: `<p>${escHtml(description)}</p>
 <p><strong>${escHtml(status)}</strong> · ${escHtml(category)}</p>
 <p>${Number(feature.vote_count) || 0} votes · ${Number(feature.comment_count) || 0} comments · posted by ${escHtml(authorName)}</p>`,
@@ -4119,7 +4119,7 @@ ${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}`;
 <meta name="description" content="${escHtml(meta.description)}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="DeHub">
+<meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
@@ -4135,15 +4135,15 @@ ${shareMetaTags(`guides/${slug}`, meta.title)}
   image: shareImage(`guides/${slug}`),
   ...(meta.datePublished ? { datePublished: meta.datePublished } : {}),
   ...(meta.dateModified || meta.datePublished ? { dateModified: meta.dateModified || meta.datePublished } : {}),
-  author: { '@type': 'Organization', name: 'DeHub', url: APP_URL },
+  author: { '@type': 'Organization', name: 'Riftn', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>
-${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: meta.title.replace(/ — DeHub Guide$/, ''), url: canonicalUrl }])}
+${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: meta.title.replace(/ — Riftn Guide$/, ''), url: canonicalUrl }])}
 </head>
 <body>
-<p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
+<p><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
 <article><!--hl-body-->${article}<!--/hl-body--></article>
-<p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
 }
@@ -4157,8 +4157,8 @@ function buildFallbackHtml(pathname, canonicalUrl) {
   const postMatch = pathname.match(/\/post\/(\d+)/);
   const postId = postMatch ? postMatch[1] : null;
   const title = postId
-    ? `Post #${postId} on DeHub`
-    : 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+    ? `Post #${postId} on Riftn`
+    : 'Riftn — Open Source, User Owned & Censorship Resistant Media';
   const description = 'Open source, user owned and censorship resistant media.';
   const image = shareImage('fallback');
   // Canonical must never echo mirror hostnames or query strings.
@@ -4224,7 +4224,7 @@ const SYSTEM_ROUTES = new Set([
 // Cardyb, Mastodon before 4.2 (`http.rb/… (Mastodon/…)`), Teams/Skype,
 // Embedly, Iframely, VK, Google Chat's snippet fetcher, and the user-triggered
 // AI fetchers (the `*-User/1.0` agents, matched on `-user/`). Each of them unfurled
-// every DeHub link as the homepage card. Naver's Yeti and Yahoo's Slurp are
+// every Riftn link as the homepage card. Naver's Yeti and Yahoo's Slurp are
 // search crawlers that do not run the SPA.
 const BOT_UA_PATTERN = /bot|crawl|spider|wordpress|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie|cardyb|bluesky|mastodon|http\.rb|skypeuripreview|embedly|iframely|vkshare|yeti|slurp|-user\/|google \(\+https/i;
 
@@ -4244,9 +4244,9 @@ export function isSearchBotUa(ua) {
 // of an ordinary WebView user agent belonging to a PERSON who tapped a shared
 // link — and they matched `twitter`, `linkedin` and `whatsapp`, so everyone
 // arriving from those apps was served the prerendered crawler page instead of
-// DeHub. The only control on that page is a link back to its own URL, which is
+// Riftn. The only control on that page is a link back to its own URL, which is
 // classified the same way and answers with the same page — the reported
-// "View on DeHub does nothing". It covered every shared post, profile, doc and
+// "View on Riftn does nothing". It covered every shared post, profile, doc and
 // referral landing, which is the whole point of sharing a link.
 //
 // The tell is the rendering engine. A fetcher either omits it entirely
@@ -4272,7 +4272,7 @@ export function isCrawlerUa(ua) {
 }
 
 // The escape hatch out of a prerendered page. Every self-referencing CTA in
-// crawler HTML ("View on DeHub", "Open X on DeHub") points at the page's own
+// crawler HTML ("View on Riftn", "Open X on Riftn") points at the page's own
 // URL, so without a marker the link re-requests that URL, is judged the same
 // way and renders the same page again. `?app=1` forces the React SPA for any
 // user agent, and its response carries a noindex so the query-string twin
@@ -4280,10 +4280,10 @@ export function isCrawlerUa(ua) {
 const APP_ESCAPE_PARAM = 'app';
 
 /**
- * Every prerendered page is DeHub's front door. It is what a crawler indexes,
+ * Every prerendered page is Riftn's front door. It is what a crawler indexes,
  * what a preview card is built from, and what anyone lands on when a link is
  * opened somewhere an ordinary browser is not. For years it was raw markup —
- * pale-green links on black, a #00ff00 "View on DeHub" button, sans-serif —
+ * pale-green links on black, a #00ff00 "View on Riftn" button, sans-serif —
  * which looked nothing at all like the product it was advertising.
  *
  * This is the app's own design system (the rule block at the top of
@@ -4342,9 +4342,9 @@ th{color:#fff;font-weight:700}
 // Site-wide links on every crawler page point at canonical URLs: /app/explore
 // canonicalises to /explore and /guides 301s to /docs/blog, so linking either
 // spent a hop or a duplicate on every page.
-const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="DeHub" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/explore">Open DeHub</a></header><main class="dh-main">`;
+const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="Riftn" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/explore">Open Riftn</a></header><main class="dh-main">`;
 
-const PRERENDER_FOOTER = `</main><footer class="dh-foot">DeHub — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/docs/blog">Blog</a> · <a href="${APP_URL}/explore">Explore</a></footer>`;
+const PRERENDER_FOOTER = `</main><footer class="dh-foot">Riftn — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/docs/blog">Blog</a> · <a href="${APP_URL}/explore">Explore</a></footer>`;
 
 /**
  * The other half of the problem: every builder in this file, and the ssr-seo
@@ -4495,8 +4495,8 @@ export function setPageUrl(html, pageUrl) {
  *  lookup comes back empty. Serving them as 200 minted an indexable thin
  *  page for every random URL; they must be 404s. */
 const NOT_FOUND_TITLES = [
-  '<title>Post by someone on DeHub</title>',
-  '<title>DeHub — Open Source, User Owned & Censorship Resistant Media</title>',
+  '<title>Post by someone on Riftn</title>',
+  '<title>Riftn — Open Source, User Owned & Censorship Resistant Media</title>',
 ];
 
 /** Resolve an off-chain post slug (/newpost/<n>) to the tokenId every other
@@ -6267,7 +6267,7 @@ async function handleRequest(request, env, ctx) {
   // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
   // so both resolved somewhere a human can never land: /radio is in
   // SSR_STATIC_ROUTES, so it was proxied to the Supabase fn and served an
-  // indexable "DeHub Radio — 24/7 Web3 Stations" page that no browser ever
+  // indexable "Riftn Radio — 24/7 Web3 Stations" page that no browser ever
   // sees, and /mcp isn't in SYSTEM_ROUTES, so it was read as a username and
   // 404'd. 301 both to where a human actually ends up; the /app twins go too,
   // since canonicalizePath collapses /app/radio onto /radio.
@@ -6289,7 +6289,7 @@ async function handleRequest(request, env, ctx) {
   if (spaTarget) return redirect301(`${APP_URL}${spaTarget}`);
 
   // /radio is `<Navigate to="/music" replace />` in the SPA, but crawlers were
-  // handed a standalone "DeHub Radio" page by the Supabase fn — a URL that only
+  // handed a standalone "Riftn Radio" page by the Supabase fn — a URL that only
   // exists for bots, describing a page no human can land on. Match the router.
   if (trimmedPath.toLowerCase() === '/radio') return redirect301(`${APP_URL}/music`);
 
@@ -6426,7 +6426,7 @@ async function handleRequest(request, env, ctx) {
   //  3. The bare /apple-app-site-association twin that older iOS probes has no
   //     dot in it, so the static-asset skip further down never catches it and
   //     shouldServeSSR() reads it as a USERNAME. It currently renders a profile
-  //     page to browsers and a "Not Found — DeHub" page to crawlers.
+  //     page to browsers and a "Not Found — Riftn" page to crawlers.
   //
   // Pinned in code rather than only in public/_headers because Cloudflare
   // documents _headers as not applying when `assets.run_worker_first` is set,
@@ -7427,10 +7427,10 @@ async function handleRequest(request, env, ctx) {
 
     // The prerendered page's only control is a link to its own URL. For a
     // crawler that is harmless; for anything else it is a button that reloads
-    // the page it is already on — the reported dead "View on DeHub". Point it
+    // the page it is already on — the reported dead "View on Riftn". Point it
     // at the escape hatch, which forces the SPA for any user agent.
     html = html.replace(
-      /<a href="(https:\/\/[^"]+)"([^>]*)>(View on DeHub)<\/a>/g,
+      /<a href="(https:\/\/[^"]+)"([^>]*)>(View on Riftn)<\/a>/g,
       (m, href, attrs, label) => `<a class="dh-cta" href="${appHref(href)}" rel="nofollow">${label}</a>`,
     );
 
@@ -7468,9 +7468,9 @@ async function handleRequest(request, env, ctx) {
       html = setPageUrl(html, pageUrl);
     }
 
-    // Profile titles from the deployed fn are CTA-first ("Join @x on DeHub
+    // Profile titles from the deployed fn are CTA-first ("Join @x on Riftn
     // today!") — entity-led titles rank and read better in SERPs.
-    html = html.replace(/Join @([A-Za-z0-9_.-]+) on DeHub today!/g, '@$1 on DeHub — posts, videos &amp; profile');
+    html = html.replace(/Join @([A-Za-z0-9_.-]+) on Riftn today!/g, '@$1 on Riftn — posts, videos &amp; profile');
 
     // …and its titles/descriptions are raw post text and bios: unbounded and
     // full of newlines. Runs after the rewrite above so the profile title it
@@ -7555,11 +7555,11 @@ async function handleRequest(request, env, ctx) {
         // `` $` `` in a plain replacement string would splice the page in.
         html = html.replace(
           '</head>',
-          () => `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on DeHub`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
+          () => `<link rel="alternate" type="application/rss+xml" title="${escHtml(`${account.displayName || feedHandle} on Riftn`)}" href="${escHtml(profileFeedUrl(APP_URL, feedHandle))}"></head>`,
         );
       }
       // rel="me" for each link in the profile fields, so another site — a
-      // Mastodon profile, a personal page — can prove this DeHub profile
+      // Mastodon profile, a personal page — can prove this Riftn profile
       // links back to it. Those checks read the HTML and run no script.
       // A verified GitHub joins them; it is proven, so it is also a sameAs below.
       const relMe = [...profileFieldLinks(account), verifiedGithubUrl(account)].filter(Boolean).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
@@ -7661,7 +7661,7 @@ async function handleRequest(request, env, ctx) {
       // Bot and browser titles must not diverge; align to the SPA title.
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
       // …and the description: the fn's is a different sentence from the one
-      // in index.html, so the two variants disagreed on what DeHub is.
+      // in index.html, so the two variants disagreed on what Riftn is.
       html = html.replace(
         /(<meta (?:property|name)="(?:description|og:description|twitter:description)" content=")[^"]*(">)/g,
         (m, a, b) => `${a}${escFnAttr(HOME_DESCRIPTION)}${b}`,
@@ -7693,7 +7693,7 @@ async function handleRequest(request, env, ctx) {
       } else {
         html = html.replace('</head>', () => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...ORG_JSONLD })}</script></head>`);
       }
-      // What DeHub IS, in prose. Injected before the nav so it is the first
+      // What Riftn IS, in prose. Injected before the nav so it is the first
       // body content a crawler reads — this is the copy the "dehub" brand term
       // has to land on after dehub.net's 301, and it mirrors HomeIntro.tsx in
       // the SPA so the signed-out browser variant says the same thing.
@@ -7707,7 +7707,7 @@ async function handleRequest(request, env, ctx) {
       // The money guides, right under the section nav (see HOME_GUIDE_LINKS).
       html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${homeGuidesHtml()}</section></body>`);
       // Blog was linked from nowhere in bot HTML — give crawlers a path in.
-      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">DeHub Blog — news, guides &amp; product updates</a></p></body>`);
+      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">Riftn Blog — news, guides &amp; product updates</a></p></body>`);
       try {
         const feedRes = await fetch(
           'https://api.dehub.io/api/feed?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=minted',
@@ -7730,7 +7730,7 @@ async function handleRequest(request, env, ctx) {
               const authorUser = couldBeProfileSegment(authorUserRaw.toLowerCase(), SYSTEM_ROUTES) ? authorUserRaw : '';
               return `<li style="margin:6px 0"><a href="${APP_URL}/app/post/${p.tokenId}">${t}</a>${authorUser ? ` by <a href="${APP_URL}/${authorUser}">${authorName}</a>` : ''}</li>`;
             }).join('');
-            html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Latest on DeHub</h2><ul style="list-style:none;padding:0">${links}</ul></section></body>`);
+            html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Latest on Riftn</h2><ul style="list-style:none;padding:0">${links}</ul></section></body>`);
           }
         }
       } catch (e) {

@@ -1,8 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
- * DeHub Link Embed
+ * Riftn Link Embed
  * ================
- * Turns a parsed DeHub entity link into the right card. Every surface that
+ * Turns a parsed Riftn entity link into the right card. Every surface that
  * shows user-written text — feed cards, comments, DMs, community chat, the
  * composer — renders links through here, so a store link looks the same in a
  * DM as it does in the feed and a new entity kind reaches all of them at once.
@@ -256,7 +256,7 @@ export function DehubLinkEmbed({ link, compact = false, className }: DehubLinkEm
 }
 
 /**
- * Render every DeHub link found in a block of text.
+ * Render every Riftn link found in a block of text.
  *
  * Capped, because the cap is the difference between a rich message and a wall
  * of cards: a message that pastes six links gets two cards and keeps the rest

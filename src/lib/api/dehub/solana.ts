@@ -19,9 +19,9 @@ export async function getSolanaStatus(): Promise<SolanaMintStatus> {
 }
 
 /**
- * Attach a Solana account to the signed-in DeHub account.
+ * Attach a Solana account to the signed-in Riftn account.
  *
- * `signature` must be the DeHub login message for this account's EVM address,
+ * `signature` must be the Riftn login message for this account's EVM address,
  * signed by the Solana key — proving control, and binding the link to this
  * account rather than any other. The server re-derives the message from
  * `timestamp`, so all three have to describe the same moment.

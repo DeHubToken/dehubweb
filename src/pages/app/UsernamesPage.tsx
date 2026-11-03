@@ -21,8 +21,8 @@ import { UsernameVault } from '@/components/app/usernames/UsernameVault';
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'DeHub Username Marketplace',
-  get description() { return _translateCopy("copy.eedbc3b3bda6", { defaultValue: "Buy and sell DeHub usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain." }); },
+  name: 'Riftn Username Marketplace',
+  get description() { return _translateCopy("copy.eedbc3b3bda6", { defaultValue: "Buy and sell Riftn usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain." }); },
   url: 'https://riftn.com/usernames',
 };
 

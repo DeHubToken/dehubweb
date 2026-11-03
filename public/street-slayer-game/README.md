@@ -1,7 +1,7 @@
 # Street Slayer — vendored build
 
 A side-scrolling beat 'em up, and the only game in the arcade that is not a
-third-party open-source project: it was **commissioned for DeHub** and delivered
+third-party open-source project: it was **commissioned for Riftn** and delivered
 as a finished build. The three playable fighters are Mike, Indi and Lerone.
 
 | | |

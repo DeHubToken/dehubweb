@@ -133,7 +133,7 @@ export default function AppsPage() {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'DeHub Apps',
+          name: 'Riftn Apps',
           url: 'https://riftn.com/apps',
           hasPart: (apps ?? []).map((app) => ({
             '@type': 'SoftwareApplication',

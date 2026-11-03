@@ -7,12 +7,12 @@
  *
  * Two ways an account has a Solana address:
  *
- * - **Derived.** Every DeHub smart wallet has one, computed from the same
+ * - **Derived.** Every Riftn smart wallet has one, computed from the same
  *   private key (see lib/solana/derive.ts) and cached at unlock so reading it
- *   costs nothing. This is the wallet DeHub itself signs with on Solana.
+ *   costs nothing. This is the wallet Riftn itself signs with on Solana.
  * - **Linked.** A Phantom user's own Solana wallet, connected in
  *   Settings → Assets and stored on the account. Phantom sessions sign in with
- *   an external wallet and so have no DeHub key to derive from — in practice
+ *   an external wallet and so have no Riftn key to derive from — in practice
  *   the two are mutually exclusive rather than competing.
  *
  * Neither exists for an external EVM wallet (MetaMask, Rabby) that has not
@@ -49,7 +49,7 @@ export interface WalletAddresses {
   evm: string | null;
   /** The base58 Solana address, or null when this account has none. */
   solana: string | null;
-  /** True when the Solana address is a linked Phantom wallet, not DeHub's own. */
+  /** True when the Solana address is a linked Phantom wallet, not Riftn's own. */
   solanaIsExternal: boolean;
   /** True when there is a real choice to offer. */
   hasChoice: boolean;

@@ -3,7 +3,7 @@
  * ============================
  * Members of a community hear about its chat through one grouped row per
  * community ("James + 2 others sent messages in X"), built and throttled by the
- * DeHub API (backend community-chat-notification.service.ts). Two calls feed it:
+ * Riftn API (backend community-chat-notification.service.ts). Two calls feed it:
  *
  * - report: the sender, right after a message is stored. The signed wallet
  *   session goes with it so the API can re-read the message and the member

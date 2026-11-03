@@ -1,9 +1,9 @@
 /**
- * DeHub Subscription Contract
+ * Riftn Subscription Contract
  * ===========================
  * Creator subscription plans, on chain. Creators list a plan with
  * `createPlan`; subscribers no longer buy through this contract — checkout is
- * a DHB transfer into DeHub custody (see useBuyPlan in hooks/use-subscriptions).
+ * a DHB transfer into Riftn custody (see useBuyPlan in hooks/use-subscriptions).
  *
  * **Duration is whole months, 0–12, and 0 means lifetime.** Anything else
  * reverts with "Duration should be between 0 to 12 (0 for lifetime)". n months

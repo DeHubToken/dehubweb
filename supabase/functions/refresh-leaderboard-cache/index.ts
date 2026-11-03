@@ -310,7 +310,7 @@ async function fetchSnapshotDay(supabase: any, date: string, field: string): Pro
   return map;
 }
 
-// ── DeHub API ───────────────────────────────────────────────────────
+// ── Riftn API ───────────────────────────────────────────────────────
 const DEHUB_API_BASE = "https://api.dehub.io";
 const ALL_SORT_MODES = ["holdings", "sentTips", "receivedTips", "followers", "likes", "subscribers"] as const;
 type SortMode = typeof ALL_SORT_MODES[number];
@@ -356,7 +356,7 @@ const EXTRA_WALLETS: Record<string, { wallet: string; displayName?: string; avat
   jimminycrockett: { wallet: "0x388bee96cdb67bed580adf54ee8dc5b0adfe8d79", displayName: "jimminycrockett" },
 };
 
-// ── DeHub API helpers ───────────────────────────────────────────────
+// ── Riftn API helpers ───────────────────────────────────────────────
 
 async function fetchDeHubLeaderboard(sort: string, period: string): Promise<unknown> {
   const params = new URLSearchParams({ sort });
@@ -365,7 +365,7 @@ async function fetchDeHubLeaderboard(sort: string, period: string): Promise<unkn
     `${DEHUB_API_BASE}/api/leaderboard?${params.toString()}`,
     { headers: { "Content-Type": "application/json" }, signal: AbortSignal.timeout(30000) },
   );
-  if (!response.ok) throw new Error(`DeHub leaderboard fetch failed: ${response.status}`);
+  if (!response.ok) throw new Error(`Riftn leaderboard fetch failed: ${response.status}`);
   return response.json();
 }
 
@@ -408,7 +408,7 @@ async function fetchAllBoard(sort: SortMode): Promise<EnrichedEntry[]> {
   return out;
 }
 
-/** Fetch a single user's profile from DeHub API */
+/** Fetch a single user's profile from Riftn API */
 async function fetchDeHubUserProfile(account: string): Promise<Record<string, unknown> | null> {
   try {
     const response = await fetch(

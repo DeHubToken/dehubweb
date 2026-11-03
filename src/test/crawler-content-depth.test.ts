@@ -11,7 +11,7 @@
  *     itself, and no link from any post to its author;
  *   - profiles with no posts, test stores, a private community and a $50,000
  *     "i sell dehub" listing all indexable;
- *   - `Join DeHub Whales's community`, and /docs/blog/<slug> answering 200.
+ *   - `Join Riftn Whales's community`, and /docs/blog/<slug> answering 200.
  *
  * Every upstream here (the ssr-seo fn, api.dehub.io, PostgREST, ASSETS) is a
  * stub serving the shape it served live that day, trimmed to the tags in play.
@@ -104,7 +104,7 @@ function fnPage(o: {
     <h1>${t}</h1>
     <p>${d}</p>
     <img src="${o.image}" style="max-width: 100%" alt="${t}" />
-    <p style="margin-top: 30px;"><a href="${o.url}" style="color: #00ff00">View on DeHub</a></p>
+    <p style="margin-top: 30px;"><a href="${o.url}" style="color: #00ff00">View on Riftn</a></p>
   </div>
 </body>
 </html>`;
@@ -161,7 +161,7 @@ describe('the streaming guide', () => {
     expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg');
     expect(ld.datePublished).toBe('2026-09-13');
     expect(ld.dateModified).toBe('2026-09-29');
-    expect(ld.author).toEqual({ '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' });
+    expect(ld.author).toEqual({ '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' });
   });
 
   it('falls back to the summary, with its own h1, when the content file is missing', async () => {
@@ -265,7 +265,7 @@ describe('video post', () => {
   const URL_ = 'https://riftn.com/app/post/6126';
   const FN = fnPage({
     title: 'Another Monopoly Video',
-    description: 'Post by Jesse Cochran on DeHub — join the decentralized creator network.',
+    description: 'Post by Jesse Cochran on Riftn — join the decentralized creator network.',
     url: URL_,
     image: `${CDN}/images/6126.jpg`,
     video: `${CDN}/videos/6126.mp4`,
@@ -284,7 +284,7 @@ describe('video post', () => {
         {
           '@type': 'VideoObject',
           name: 'Another Monopoly Video',
-          description: 'Post by Jesse Cochran on DeHub — join the decentralized creator network.',
+          description: 'Post by Jesse Cochran on Riftn — join the decentralized creator network.',
           thumbnailUrl: `${CDN}/images/6126.jpg`,
           contentUrl: `${CDN}/videos/6126.mp4`,
           embedUrl: URL_,
@@ -348,11 +348,11 @@ describe('video post', () => {
 
   it('leaves an image post without a player', async () => {
     const image = fnPage({
-      title: 'Post #3419 by Sultan on DeHub',
+      title: 'Post #3419 by Sultan on Riftn',
       description: 'Exquisite watercolor of a Royal Haveli.',
       url: 'https://riftn.com/app/post/3419',
       image: `${CDN}/feed-images/3419-1.jpg`,
-      jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: 'Post #3419 by Sultan on DeHub' },
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: 'Post #3419 by Sultan on Riftn' },
     });
     stubUpstream((url) => {
       if (url.pathname.endsWith('/ssr-seo')) return image;
@@ -365,7 +365,7 @@ describe('video post', () => {
     const html = await (await crawl('https://riftn.com/app/post/3419')).text();
     expect(html).not.toContain('<video');
     // The caption, with the author — the longer suffix would pass 70 characters.
-    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. — Sultan on DeHub');
+    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. — Sultan on Riftn');
     expect(html).toContain('<a href="https://riftn.com/umerkhan">Sultan (@umerkhan)</a>');
   });
 
@@ -383,8 +383,8 @@ describe('video post', () => {
 describe('profiles', () => {
   const profileFn = (handle: string, name: string, image = LOGO) =>
     fnPage({
-      title: `Join @${handle} on DeHub today!`,
-      description: `Connect with ${name} on DeHub, the open source alternative to legacy media.`,
+      title: `Join @${handle} on Riftn today!`,
+      description: `Connect with ${name} on Riftn, the open source alternative to legacy media.`,
       url: `https://riftn.com/${handle}`,
       image,
       imageSize: image === LOGO ? [200, 200] : [400, 400],
@@ -421,7 +421,7 @@ describe('profiles', () => {
       [{ tokenId: 3312, name: '', description: 'Morning light over the old city walls' }],
     );
     expect(robotsOf(html)).toBe('');
-    expect(titleOf(html)).toBe('Ahmad Rasheed (@almondbloom) on DeHub');
+    expect(titleOf(html)).toBe('Ahmad Rasheed (@almondbloom) on Riftn');
     expect(html).toContain('<a data-creator-copy href="https://riftn.com/app/post/3312">Morning light over the old city walls</a>');
   });
 
@@ -442,8 +442,8 @@ describe('profiles', () => {
 describe('communities', () => {
   const communityFn = (name: string, slug: string) =>
     fnPage({
-      title: `Join ${name}'s community on DeHub today`,
-      description: 'A hub for the DeHub community’s most dedicated supporters. • 27 members',
+      title: `Join ${name}'s community on Riftn today`,
+      description: 'A hub for the Riftn community’s most dedicated supporters. • 27 members',
       url: `https://riftn.com/app/communities/${slug}`,
       image: `https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/community-media/${slug}/avatar.png`,
       imageSize: [400, 400],
@@ -461,15 +461,15 @@ describe('communities', () => {
   const PUBLIC_ROW = { name: 'Last Chad Standing', description: 'The official community for the MMA battle-royale game.', avatar_url: 'a.png', is_private: false };
 
   it("writes the possessive of a name ending in s as English does", async () => {
-    const html = await serve('DeHub Whales', 'dehub-whales', { ...PUBLIC_ROW, name: 'DeHub Whales' });
-    expect(titleOf(html)).toBe("Join DeHub Whales' community on DeHub today");
+    const html = await serve('Riftn Whales', 'dehub-whales', { ...PUBLIC_ROW, name: 'Riftn Whales' });
+    expect(titleOf(html)).toBe("Join Riftn Whales' community on Riftn today");
     expect(html).not.toContain("Whales's");
     const other = await serve('Last Chad Standing', 'last-chad-standing', PUBLIC_ROW);
-    expect(titleOf(other)).toBe("Join Last Chad Standing's community on DeHub today");
+    expect(titleOf(other)).toBe("Join Last Chad Standing's community on Riftn today");
   });
 
   it('noindexes a private community, and leaves a public one alone', async () => {
-    expect(robotsOf(await serve('DeHub Whales', 'dehub-whales', { ...PUBLIC_ROW, is_private: true }))).toBe('noindex, follow');
+    expect(robotsOf(await serve('Riftn Whales', 'dehub-whales', { ...PUBLIC_ROW, is_private: true }))).toBe('noindex, follow');
     expect(robotsOf(await serve('Last Chad Standing', 'last-chad-standing', PUBLIC_ROW))).toBe('');
   });
 
@@ -495,7 +495,7 @@ describe('thin and test entities', () => {
   it.each([
     ['a test event', { name: 'Test Event For Aaron', description: 'x'.repeat(80), image: 'a.jpg' }],
     ['a two-letter store', { name: '2L', description: 'Create', image: 'banner.jpg' }],
-    ['a listing with a line of copy and no picture', { name: 'Dehub', description: 'i sell dehub', image: null }],
+    ['a listing with a line of copy and no picture', { name: 'Riftn', description: 'i sell dehub', image: null }],
     ['a placeholder name', { name: 'asdf', description: 'x'.repeat(80), image: 'a.jpg' }],
   ])('flags %s', (_label, entity) => {
     expect(api.entityLooksThin(entity)).toBe(true);
@@ -519,7 +519,7 @@ describe('thin and test entities', () => {
 describe('/arcade', () => {
   it('has a title that says what the page is', async () => {
     const html = await (await crawl('https://riftn.com/arcade')).text();
-    expect(titleOf(html)).toBe('DeHub Arcade — Free Browser Games, No Download');
+    expect(titleOf(html)).toBe('Riftn Arcade — Free Browser Games, No Download');
     const description = html.match(/<meta name="description" content="([^"]*)">/)![1];
     expect(description.length).toBeLessThanOrEqual(160);
   });

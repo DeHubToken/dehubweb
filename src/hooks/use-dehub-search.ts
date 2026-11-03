@@ -1,7 +1,7 @@
 /**
- * DeHub Search Hook
+ * Riftn Search Hook
  * ==================
- * Provides search functionality using the DeHub /api/search endpoint.
+ * Provides search functionality using the Riftn /api/search endpoint.
  * Includes debouncing, pagination, and content type filtering.
  * 
  * @module hooks/use-dehub-search
@@ -174,7 +174,7 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
 }
 
 /**
- * Hook to search DeHub content with debouncing and pagination
+ * Hook to search Riftn content with debouncing and pagination
  */
 export function useDeHubSearch({
   query,

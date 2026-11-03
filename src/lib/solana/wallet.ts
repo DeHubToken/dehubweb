@@ -105,7 +105,7 @@ export interface SolanaLoginProof {
 }
 
 /**
- * Ask Phantom to countersign the DeHub login message with its Solana key.
+ * Ask Phantom to countersign the Riftn login message with its Solana key.
  *
  * Why the login carries this at all: Phantom signs in through its Ethereum
  * provider, and that EVM address is a by-product most Phantom users have never

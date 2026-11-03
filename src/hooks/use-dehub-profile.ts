@@ -1,7 +1,7 @@
 /**
- * DeHub Profile Hook
+ * Riftn Profile Hook
  * ===================
- * Fetches user profile and content from DeHub API.
+ * Fetches user profile and content from Riftn API.
  * 
  * @module hooks/use-dehub-profile
  */
@@ -64,7 +64,7 @@ export interface ProfileData {
   isPending?: boolean;
   /** Whether this account is private (requires follow approval) */
   isPrivate?: boolean;
-  /** Hides badge/financial details and disables DeHub payments to this account. */
+  /** Hides badge/financial details and disables Riftn payments to this account. */
   hideBadgeAndBalance?: boolean;
   /**
    * This viewer asked to be served mature posts. Only meaningful on your own
@@ -93,7 +93,7 @@ export interface ProfileData {
 }
 
 /**
- * Map DeHub user to ProfileData
+ * Map Riftn user to ProfileData
  * Handles both camelCase (API) and snake_case field names
  */
 export function mapUserToProfile(user: DeHubUser): ProfileData {

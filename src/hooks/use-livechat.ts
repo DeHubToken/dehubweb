@@ -140,7 +140,7 @@ function normalizeMsgType(raw: string | undefined | null): string {
   return raw;
 }
 
-/** Convert a DeHub API message to our internal format */
+/** Convert a Riftn API message to our internal format */
 function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId?: string): SupabaseLiveChatMessage {
   const raw = msg as unknown as Record<string, unknown>;
   const sender = (msg.sender || (raw.sender as Record<string, unknown> | undefined)) as Record<string, unknown> | undefined;

@@ -115,7 +115,7 @@ describe('wallet session fetch', () => {
     }));
   });
 
-  it('reports no_token when there is no DeHub session to mint from', async () => {
+  it('reports no_token when there is no Riftn session to mint from', async () => {
     mocks.ensureFreshToken.mockRejectedValue(new Error('Session expired. Please sign in again.'));
     await setup();
     await window.fetch(REST, { headers: { 'x-wallet-address': WALLET } });

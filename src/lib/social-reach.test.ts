@@ -15,7 +15,7 @@ const account = (platform: string, followers: number | null): VerifiedSocialAcco
 });
 
 describe('computeSocialReach', () => {
-  it('adds verified counts of connected accounts to DeHub followers, in display order', () => {
+  it('adds verified counts of connected accounts to Riftn followers, in display order', () => {
     const reach = computeSocialReach([account('youtube', 3400), account('twitter', 1200)], 50);
     expect(reach.dehub).toBe(50);
     expect(reach.socials.map((s) => s.platform)).toEqual(['twitter', 'youtube']);
@@ -33,7 +33,7 @@ describe('computeSocialReach', () => {
     expect(hasSocialReach(reach)).toBe(false);
   });
 
-  it('copes with no accounts and no DeHub count', () => {
+  it('copes with no accounts and no Riftn count', () => {
     expect(computeSocialReach(undefined, null)).toEqual({ dehub: 0, socials: [], total: 0 });
   });
 });

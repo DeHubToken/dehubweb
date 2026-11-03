@@ -1001,7 +1001,7 @@ export function ActionBar({
   // (plus a dislike before share where reactions are off)
   const engagementButtons = (
     <>
-      {/* A private-balance creator has no DeHub payment entry point. */}
+      {/* A private-balance creator has no Riftn payment entry point. */}
       {onTip ? (
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}

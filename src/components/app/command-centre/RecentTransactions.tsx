@@ -123,7 +123,7 @@ export function RecentTransactions() {
     staleTime: 30_000,
   });
 
-  // Fetch tip notifications from DeHub API (catches tips not recorded in tip_records)
+  // Fetch tip notifications from Riftn API (catches tips not recorded in tip_records)
   const { data: tipNotifications = [], isLoading: tipNotisLoading } = useQuery({
     queryKey: ['tip-notifications-for-cc'],
     queryFn: async () => {
@@ -282,7 +282,7 @@ export function RecentTransactions() {
       });
     });
 
-    // Add tip notifications from DeHub API (deduplicate by amount+actor against tip_records & on-chain)
+    // Add tip notifications from Riftn API (deduplicate by amount+actor against tip_records & on-chain)
     const existingTipKeys = new Set(unified.filter(u => u.type === 'tip' || u.type === 'transfer').map(u => `${Math.round(u.amount)}`));
     tipNotifications.forEach(noti => {
       const amount = noti.amount || 0;

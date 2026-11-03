@@ -3,7 +3,7 @@
  *
  * Two wallet stacks, two signing paths (mirrors AuthProvider's login flow):
  *  - external wallets connected through wagmi sign with `signMessage`;
- *  - the DeHub embedded wallet signs with its EOA provider via `personal_sign`
+ *  - the Riftn embedded wallet signs with its EOA provider via `personal_sign`
  *    once the vault is unlocked. A locked vault surfaces as
  *    `WalletLockedError` so the caller can wait for the unlock rather than
  *    treating it as a failure.

@@ -92,7 +92,7 @@ describe('embed page', () => {
     stubApi({ 14: { ...videoPost, tokenId: 14, spoilerText: 'Flashing lights' } });
     const html = await (await get('https://riftn.com/app/post/14/embed')).text();
     expect(html).toContain('<details class="cw"><summary>Flashing lights</summary>');
-    expect(html).toContain('<title>Flashing lights — Akçil on DeHub</title>');
+    expect(html).toContain('<title>Flashing lights — Akçil on Riftn</title>');
   });
 
   it('shows nothing of a post that is not public, whatever else it says', async () => {
@@ -126,7 +126,7 @@ describe('oEmbed', () => {
     expect(body).toMatchObject({
       version: '1.0',
       type: 'video',
-      provider_name: 'DeHub',
+      provider_name: 'Riftn',
       provider_url: 'https://riftn.com',
       title: 'Skate session',
       author_name: 'Akçil',

@@ -7,7 +7,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts'
 
-const SITE_NAME = 'DeHub'
+const SITE_NAME = 'Riftn'
 // Only links into the admin panel's onboarding page may be mailed. Even with
 // a leaked secret this function must not become an open phishing relay.
 const ALLOWED_LINK_PREFIX = 'https://godmode.dehub.io/admin/onboarding?token='

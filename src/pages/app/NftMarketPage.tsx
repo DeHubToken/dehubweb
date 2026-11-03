@@ -1,7 +1,7 @@
 /**
  * NFT Market
  * ==========
- * Buy, sell and make offers on any NFT on BNB or Base: DeHub posts and any
+ * Buy, sell and make offers on any NFT on BNB or Base: Riftn posts and any
  * other collection in your wallet. Each trade is one Seaport swap, so the NFT
  * and the payment move together and nobody waits on the other side.
  *
@@ -26,7 +26,7 @@ import { currentPrice } from '@/lib/market/seaport';
 type Tab = 'browse' | 'sell' | 'mine' | 'sales';
 type Sort = 'new' | 'price_asc' | 'price_desc';
 
-/** The one card that stands for DeHub Posts on every chain. */
+/** The one card that stands for Riftn Posts on every chain. */
 const DEHUB_ALL = 'dehub:all';
 
 const compactNumber = (n: number) => n.toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 });
@@ -34,7 +34,7 @@ const compactNumber = (n: number) => n.toLocaleString(undefined, { notation: 'co
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'DeHub NFT Market',
+  name: 'Riftn NFT Market',
   description: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Every trade swaps the NFT and the payment in one step.',
   url: 'https://riftn.com/nfts',
 };
@@ -123,7 +123,7 @@ export default function NftMarketPage() {
     staleTime: 30_000,
   });
 
-  // Minted DeHub posts, listed or not, so the market never looks empty.
+  // Minted Riftn posts, listed or not, so the market never looks empty.
   const showcase = useQuery({
     queryKey: ['nft-market', 'showcase', chain],
     queryFn: () => fetchShowcase({ chainId: chain === 'all' ? undefined : chain, limit: 30 }),
@@ -165,7 +165,7 @@ export default function NftMarketPage() {
 
   const listings = useMemo(() => browse.data?.pages.flatMap((p) => p.items) ?? [], [browse.data]);
 
-  // DeHub Posts live on every chain as one contract each; show them as one
+  // Riftn Posts live on every chain as one contract each; show them as one
   // collection, not one card per chain. Other collections keep their own card.
   const dehubTotals = useMemo(() => {
     const per = showcase.data?.collections ?? [];
@@ -184,7 +184,7 @@ export default function NftMarketPage() {
     const dehub: MarketCollection = {
       chainId: 0,
       contract: DEHUB_ALL,
-      name: t('nftMarket.dehubPostsName', { defaultValue: 'DeHub Posts' }),
+      name: t('nftMarket.dehubPostsName', { defaultValue: 'Riftn Posts' }),
       image: dehubTotals.image,
       isDehub: true,
       listed: dehubTotals.listed,
@@ -218,7 +218,7 @@ export default function NftMarketPage() {
     standard: 'erc1155',
     name: n.name,
     image: n.image,
-    collectionName: t('nftMarket.dehubPostsName', { defaultValue: 'DeHub Posts' }),
+    collectionName: t('nftMarket.dehubPostsName', { defaultValue: 'Riftn Posts' }),
   });
   const titleOf = (name: string | null | undefined, tokenId: string) => name?.trim() || `#${tokenId}`;
 
@@ -281,7 +281,7 @@ export default function NftMarketPage() {
           ]}
           beforeTabs={
             <button type="button" data-kit-chip data-size="sm" data-active={dehubOnly ? 'true' : undefined} onClick={() => setDehubOnly((v) => !v)}>
-              <span>{t('nftMarket.dehubPosts', { defaultValue: 'DeHub posts' })}</span>
+              <span>{t('nftMarket.dehubPosts', { defaultValue: 'Riftn posts' })}</span>
             </button>
           }
         />
@@ -310,7 +310,7 @@ export default function NftMarketPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={t('nftMarket.seoTitle', { defaultValue: 'NFT Market: buy and sell NFTs on BNB and Base | DeHub' })}
+        title={t('nftMarket.seoTitle', { defaultValue: 'NFT Market: buy and sell NFTs on BNB and Base | Riftn' })}
         description={t('nftMarket.seoDescription', {
           defaultValue: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step.',
         })}
@@ -493,7 +493,7 @@ export default function NftMarketPage() {
                     <PageEmpty
                       icon="nfts"
                       title={t('nftMarket.emptyTitle', { defaultValue: 'Nothing listed yet' })}
-                      body={t('nftMarket.emptyBody', { defaultValue: 'Be the first. List an NFT from your wallet and anyone on DeHub can buy it.' })}
+                      body={t('nftMarket.emptyBody', { defaultValue: 'Be the first. List an NFT from your wallet and anyone on Riftn can buy it.' })}
                       action={<KitButton onClick={() => setTab('sell')}>{t('nftMarket.sellOne', { defaultValue: 'Sell an NFT' })}</KitButton>}
                     />
                   ) : null}

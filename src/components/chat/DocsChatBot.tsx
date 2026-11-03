@@ -148,7 +148,7 @@ export const DocsChatBot = () => {
   }, [isOpen]);
 
   // The docs bot shares the main assistant's edge function. A signed-in
-  // reader's DeHub token rides along so they get the verified-user limits.
+  // reader's Riftn token rides along so they get the verified-user limits.
   const streamChat = (userMessages: Message[]) =>
     new Promise<void>((resolve, reject) => {
       let assistantContent = '';

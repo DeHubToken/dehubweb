@@ -253,18 +253,18 @@ const FAQ_KEYS = ['offline', 'canOperatorSee', 'howMuch', 'softwareAvailable', '
  * whenever a visitor arrives in another language.
  */
 const pageDescription =
-  'DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.';
+  'Riftn DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.';
 
 const faqSchema = [
   {
     question: 'What happens when a hosting node goes offline?',
     answer:
-      'The coordinator removes it from active routing. Another replica serves the segment, or playback falls back to DeHub origin storage while replacement copies are scheduled.',
+      'The coordinator removes it from active routing. Another replica serves the segment, or playback falls back to Riftn origin storage while replacement copies are scheduled.',
   },
   {
     question: 'Can a node operator see the content they host?',
     answer:
-      'Protected content is stored as encrypted segments and the host does not receive playback keys. Public content remains publicly viewable through DeHub by design.',
+      'Protected content is stored as encrypted segments and the host does not receive playback keys. Public content remains publicly viewable through Riftn by design.',
   },
   {
     question: 'How much will a node operator receive?',
@@ -308,12 +308,12 @@ export default function DePinPage() {
           '@graph': [
             {
               '@type': 'WebPage',
-              name: 'DeHub DePin',
+              name: 'Riftn DePin',
               url: 'https://riftn.com/depin',
               description: pageDescription,
               isPartOf: {
                 '@type': 'WebSite',
-                name: 'DeHub',
+                name: 'Riftn',
                 url: 'https://riftn.com',
               },
             },
@@ -339,7 +339,7 @@ export default function DePinPage() {
             className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
           >
             <Link to="/" aria-label={t('depin.dehubHome')} className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-              <img src={dehubLogo} alt="DeHub" className="h-7 w-auto" />
+              <img src={dehubLogo} alt="Riftn" className="h-7 w-auto" />
             </Link>
 
             <div className="hidden items-center gap-7 text-sm font-medium text-zinc-400 md:flex">
@@ -701,7 +701,7 @@ export default function DePinPage() {
 
         <footer className="border-t border-white/10 bg-zinc-950">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-zinc-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-            <img src={dehubLogo} alt="DeHub" className="h-6 w-auto self-start opacity-80" loading="lazy" />
+            <img src={dehubLogo} alt="Riftn" className="h-6 w-auto self-start opacity-80" loading="lazy" />
             <p className="max-w-2xl md:text-right">
               {t('depin.footerNote')}
             </p>

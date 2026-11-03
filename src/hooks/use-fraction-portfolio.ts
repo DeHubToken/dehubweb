@@ -157,7 +157,7 @@ export function useFractionPortfolio(
     queryFn: async (): Promise<PortfolioPosition[]> => {
       const candidates = new Map<string, Candidate>();
 
-      // Posts you uploaded. Needs a DeHub token; a wallet-only session simply
+      // Posts you uploaded. Needs a Riftn token; a wallet-only session simply
       // contributes nothing here rather than failing the whole query.
       if (isSelf && getAuthToken()) {
         try {

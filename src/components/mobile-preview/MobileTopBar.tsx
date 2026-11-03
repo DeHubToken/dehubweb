@@ -10,7 +10,7 @@ interface MobileTopBarProps {
   showNotification?: boolean;
 }
 
-export function MobileTopBar({ title = 'DeHub', showAvatar = true, showNotification = true }: MobileTopBarProps) {
+export function MobileTopBar({ title = 'Riftn', showAvatar = true, showNotification = true }: MobileTopBarProps) {
   const { t: _copy } = _useCopy();
   return (
     <div className="flex items-center justify-between px-4 py-2 bg-black/80 backdrop-blur-xl sticky top-0 z-30">

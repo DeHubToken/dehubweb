@@ -17,7 +17,7 @@ vi.mock('@/integrations/supabase/client', () => {
 import { currentLiveReaction, forgetReactionSummary, reactionSummary, tokenIdFromPostUrl } from '../reactions';
 
 describe('tokenIdFromPostUrl', () => {
-  it('reads the post id from DeHub post links only', () => {
+  it('reads the post id from Riftn post links only', () => {
     expect(tokenIdFromPostUrl('https://riftn.com/app/post/123')).toBe(123);
     expect(tokenIdFromPostUrl('https://riftn.com/post/45?ref=x')).toBe(45);
     expect(tokenIdFromPostUrl('https://staging.dehub.io/app/video/9')).toBe(9);

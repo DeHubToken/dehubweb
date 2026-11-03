@@ -66,7 +66,7 @@ serve(async (req) => {
       .map((m) => `${m.display_name || m.username || "User"}: ${m.content}`)
       .join("\n");
 
-    const systemPrompt = `You are "AI Admin", the live AI moderator and helper for the "${community?.name || "this"}" community on DeHub (a decentralized social platform).
+    const systemPrompt = `You are "AI Admin", the live AI moderator and helper for the "${community?.name || "this"}" community on Riftn (a decentralized social platform).
 
 Community description: ${community?.description || "(no description)"}
 Category: ${community?.category || "general"}
@@ -74,7 +74,7 @@ Category: ${community?.category || "general"}
 Your role:
 - Answer questions live for community members in chat.
 - Be helpful, friendly, and concise (2-4 sentences when possible).
-- Stay relevant to the community's topic and DeHub.
+- Stay relevant to the community's topic and Riftn.
 - When unsure, say so honestly. Never invent facts about specific members.
 - Use markdown sparingly. No emojis spam.
 

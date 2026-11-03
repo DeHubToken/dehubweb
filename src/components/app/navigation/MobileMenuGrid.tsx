@@ -40,7 +40,7 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao', Bounties: 'bounties',
   Careers: 'careers', Stores: 'stores', Fractions: 'fractions', 'NFT Market': 'nfts', Usernames: 'usernames',
   Accounts: 'accounts', Advertising: 'ads', 'Live TV': 'tv', Prompt: 'wand',
-  Glossary: 'glossary', 'Compare DeHub': 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
+  Glossary: 'glossary', 'Compare Riftn': 'glossary', Stats: 'stats', 'Buy Tokens': 'buy', Bridge: 'bridge',
   Wallet: 'buy', Affiliate: 'subscriptions', Converter: 'videos', Migrate: 'bridge',
   Guide: 'pinned', Docs: 'posts', Blog: 'email',
 };

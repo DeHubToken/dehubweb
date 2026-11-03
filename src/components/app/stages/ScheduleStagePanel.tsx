@@ -7,7 +7,7 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
  * time. Lives in its own file because the create view already carries the
  * go-live-now path and AudioSpacesModal is long enough.
  *
- * Scheduling deliberately does NOT publish a post. Publishing on DeHub is an
+ * Scheduling deliberately does NOT publish a post. Publishing on Riftn is an
  * on-chain mint from the user's wallet, so firing one as a side effect of
  * filling in a form would spend gas the host never agreed to. Instead the
  * stage is saved first, and the success state hands them the normal composer

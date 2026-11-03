@@ -18,7 +18,7 @@ import {
 import dehubCoin from '@/assets/dehub-coin.png';
 
 /**
- * App tokens in the wallet: DHB held on DeHub, not on a chain. The row opens
+ * App tokens in the wallet: DHB held on Riftn, not on a chain. The row opens
  * the balance and its history; Send moves app tokens to another account and
  * never touches a chain.
  */

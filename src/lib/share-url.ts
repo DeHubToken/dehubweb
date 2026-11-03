@@ -36,6 +36,6 @@ const isDehub = (url: string) => {
   }
 };
 
-/** `url` with the viewer's `?ref=CODE`; unchanged without one or off DeHub. */
+/** `url` with the viewer's `?ref=CODE`; unchanged without one or off Riftn. */
 export const viewerShareUrl = (url: string): string =>
   viewerCode && isDehub(url) ? withAffiliateRef(url, viewerCode) : url;

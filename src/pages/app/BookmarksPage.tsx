@@ -134,8 +134,8 @@ export default function BookmarksPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.cbcd913ec117", { defaultValue: "Bookmarks — Your Saved Content" })} description={_copy("copy.db7e42a2da74", { defaultValue: "Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." })} url="https://riftn.com/app/bookmarks" />
-      <h1 className="sr-only">{_copy("copy.bfa085c123ed", { defaultValue: "DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.cbcd913ec117", { defaultValue: "Bookmarks — Your Saved Content" })} description={_copy("copy.db7e42a2da74", { defaultValue: "Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on Riftn. Never lose track of content you love." })} url="https://riftn.com/app/bookmarks" />
+      <h1 className="sr-only">{_copy("copy.bfa085c123ed", { defaultValue: "Riftn Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={bookmark3dIcon} alt={t('nav.bookmarks')} className="h-8 w-8 object-contain" />}
         title={t('bookmarks.title')}

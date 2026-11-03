@@ -32,7 +32,7 @@
 //   * A wallet that already owns a clone is not charged for another — it marks
 //     the one it has. Enabling and disabling are free forever after.
 //
-// The wallet comes from the verified DeHub token, never the header — see
+// The wallet comes from the verified Riftn token, never the header — see
 // requireDeHubAuth. Everything that spends is keyed on that.
 import { handleCorsPreflight, jsonResponse, serviceClient, guardPaidEndpoint, requireDeHubAuth } from '../_shared/auth.ts';
 import { claimDhbPayment, DHB_TREASURY } from '../_shared/dhb-transfer.ts';
@@ -345,7 +345,7 @@ Deno.serve(async (req) => {
     cloneForm.append('files', file, file.name || 'stage-voice.webm');
     // Ownership belongs in custom_voices, not in a provider-side string that
     // the app's own voice list hands back to whoever asks.
-    cloneForm.append('description', 'DeHub stage voice');
+    cloneForm.append('description', 'Riftn stage voice');
 
     const res = await fetch('https://api.elevenlabs.io/v1/voices/add', {
       method: 'POST',

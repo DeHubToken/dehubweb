@@ -29,7 +29,7 @@ for (let index = 0; index < samples; index++) {
 }
 await writeFile(microphone, wave);
 
-const sourceHTML = `<!doctype html><title>DeHub Capture Source</title>
+const sourceHTML = `<!doctype html><title>Riftn Capture Source</title>
 <style>html,body{margin:0;overflow:hidden}canvas{display:block}button{position:fixed;left:140px;top:100px}</style>
 <canvas width="360" height="240"></canvas><button>Play source</button>
 <script>
@@ -38,7 +38,7 @@ function draw(time){context.fillStyle=Math.floor(time/350)%2?'rgb(220,20,30)':'r
 requestAnimationFrame(draw);
 document.querySelector('button').onclick=async event=>{const audio=new AudioContext();await audio.resume();const tone=audio.createOscillator(),gain=audio.createGain();tone.frequency.value=440;gain.gain.value=.4;tone.connect(gain);gain.connect(audio.destination);tone.start();event.target.remove();window.sourceAudio=audio;window.sourceRunning=true};
 </script>`;
-const captureHTML = `<!doctype html><title>DeHub Capture Recorder</title>
+const captureHTML = `<!doctype html><title>Riftn Capture Recorder</title>
 <button id="start">Record screen and voiceover</button><button id="stop">Save recording</button>
 <script type="module">
 import {startScreenCapture} from '/capture.js';
@@ -68,7 +68,7 @@ const origin = `http://127.0.0.1:${address.port}`;
 let browser;
 try {
   browser = await chromium.launch({ headless: false, ignoreDefaultArgs: ['--mute-audio'], args: [
-    '--auto-select-tab-capture-source-by-title=DeHub Capture Source',
+    '--auto-select-tab-capture-source-by-title=Riftn Capture Source',
     '--auto-accept-camera-and-microphone-capture', '--use-fake-device-for-media-stream',
     `--use-file-for-fake-audio-capture=${microphone}`, '--disable-background-timer-throttling',
   ] });

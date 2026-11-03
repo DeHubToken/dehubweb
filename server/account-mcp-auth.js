@@ -3,7 +3,7 @@ import { API, ORIGIN, RESOURCE, SCOPES, accountTools, callAccountTool, challenge
 const HOUR = 3600000, DAY = 24 * HOUR;
 // A grant stays linked while it is used: each refresh pushes the deadline out.
 const GRANT_TTL = 30 * DAY;
-// DeHub access tokens last 15 minutes, so rotate the connector's own session early.
+// Riftn access tokens last 15 minutes, so rotate the connector's own session early.
 const SESSION_REFRESH_AFTER = 12 * 60000;
 const oauthError = (message, code = 'invalid_request', status = 400) => json({ error: code, error_description: message }, status);
 const result = payload => ({ content: [{ type: 'text', text: JSON.stringify(payload) }], structuredContent: payload });
@@ -62,12 +62,12 @@ export class AccountMcpAuth {
     if (!match) throw new Error('Invalid connection token.');
     const access = await this.get(`access:${await hash(match[1])}`);
     const grant = access && await this.get(`grant:${access.grant}`);
-    if (!grant) throw new Error('Expired or revoked connection. Link your DeHub account again.');
+    if (!grant) throw new Error('Expired or revoked connection. Link your Riftn account again.');
     const current = await this.fresh(access.grant, grant);
-    if (await verifySession(current.token, this.fetcher) !== current.wallet) throw new Error('DeHub session changed. Link your account again.');
+    if (await verifySession(current.token, this.fetcher) !== current.wallet) throw new Error('Riftn session changed. Link your account again.');
     return { ...current, id: access.grant };
   }
-  // The connector gets its own DeHub session (listed in Active sessions) so it
+  // The connector gets its own Riftn session (listed in Active sessions) so it
   // outlives the 15 minute browser token it was approved with. Older backends
   // without the endpoint fall back to that browser token.
   async connectorSession(token, clientName) {
@@ -79,7 +79,7 @@ export class AccountMcpAuth {
     } catch { /* fall back below */ }
     return { token, session: null, at: Date.now() };
   }
-  // Rotates the connector's DeHub session once per grant at a time; concurrent
+  // Rotates the connector's Riftn session once per grant at a time; concurrent
   // callers share the same rotation so a refresh token is never used twice.
   async fresh(grantId, grant) {
     if (!grant.session || Date.now() - grant.at < SESSION_REFRESH_AFTER) return grant;
@@ -123,7 +123,7 @@ export class AccountMcpAuth {
     }
     let response;
     try { response = await operation(); }
-    catch (error) { response = { ...fail(error.message || 'Request outcome is unknown. Check DeHub before retrying.'), ...(error.details ? { structuredContent: { error: error.message, ...error.details } } : {}), ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge()] } } : {}) }; }
+    catch (error) { response = { ...fail(error.message || 'Request outcome is unknown. Check Riftn before retrying.'), ...(error.details ? { structuredContent: { error: error.message, ...error.details } } : {}), ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge()] } } : {}) }; }
     await this.put(key, { fingerprint, result: response }, DAY);
     return response;
   }
@@ -224,7 +224,7 @@ export class AccountMcpAuth {
       if (!await this.budget(`register:${await hash(ip)}`, 60, HOUR)) return oauthError('Registration rate limit reached.', 'temporarily_unavailable', 429);
       const input = await request.json();
       if (!Array.isArray(input.redirect_uris) || !input.redirect_uris.length || input.redirect_uris.length > 5 || !input.redirect_uris.every(validRedirect)) return oauthError('Register 1-5 exact HTTPS callback URLs.');
-      const client_id = random(), client_name = String(input.client_name || 'DeHub connection').slice(0, 100);
+      const client_id = random(), client_name = String(input.client_name || 'Riftn connection').slice(0, 100);
       await this.put(`client:${client_id}`, { redirects: input.redirect_uris, name: client_name }, 90 * DAY);
       return json({ client_id, client_name, redirect_uris: input.redirect_uris, token_endpoint_auth_method: 'none', grant_types: ['authorization_code','refresh_token'], response_types: ['code'], scope: SCOPES.join(' ') }, 201);
     }
@@ -251,7 +251,7 @@ export class AccountMcpAuth {
     if (['approve','connections','disconnect'].includes(route)) {
       if (request.method !== 'POST' || request.headers.get('Origin') !== ORIGIN) return oauthError('Open this connection on dehub.io.', 'access_denied', 403);
       const token = request.headers.get('x-dehub-token') || '';
-      if (!token || token.length > 8192) return oauthError('Sign in to DeHub first.', 'access_denied', 401);
+      if (!token || token.length > 8192) return oauthError('Sign in to Riftn first.', 'access_denied', 401);
       const wallet = await verifySession(token, this.fetcher);
       if (request.headers.get('x-wallet-address')?.toLowerCase() && request.headers.get('x-wallet-address').toLowerCase() !== wallet) return oauthError('The selected account changed. Reload and try again.', 'access_denied', 403);
       if (!await this.budget(`manage:${wallet}`, 30)) return oauthError('Please wait before changing connections.', 'temporarily_unavailable', 429);
@@ -329,7 +329,7 @@ export class AccountMcpAuth {
       if (request.method === 'GET' && (request.headers.get('Accept') || '').includes('text/html')) return new Response(null, { status: 302, headers: { Location: `${ORIGIN}/connect`, 'Cache-Control': 'no-store' } });
       if (request.method !== 'POST') return json({ error: 'Use Streamable HTTP POST.' }, 405, { Allow: 'POST, OPTIONS' });
       let grant;
-      try { grant = await this.bearer(request); } catch { return json({ error: 'Link your DeHub account again.' }, 401, { 'WWW-Authenticate': challenge() }); }
+      try { grant = await this.bearer(request); } catch { return json({ error: 'Link your Riftn account again.' }, 401, { 'WWW-Authenticate': challenge() }); }
       const raw = await request.text();
       if (raw.length > 65536) return json({ error: 'Request is too large.' }, 413);
       let rpc;
@@ -337,8 +337,8 @@ export class AccountMcpAuth {
       if (!rpc || Array.isArray(rpc) || rpc.jsonrpc !== '2.0' || typeof rpc.method !== 'string') return json({ jsonrpc: '2.0', id: null, error: { code: -32600, message: 'Invalid JSON-RPC request' } }, 400);
       if (rpc.method.startsWith('notifications/') && rpc.id === undefined) return new Response(null, { status: 202 });
       const reply = value => json({ jsonrpc: '2.0', id: rpc.id ?? null, result: value });
-      if (rpc.method === 'initialize') return reply({ protocolVersion: ['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(rpc.params?.protocolVersion) ? rpc.params.protocolVersion : '2025-06-18', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dehub-mcp', title: 'DeHub', version: '3.0.0' },
-        instructions: 'Browse DeHub publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections renew while used, expire after 30 days unused, and can be disconnected on dehub.io/connect/chatgpt.' });
+      if (rpc.method === 'initialize') return reply({ protocolVersion: ['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(rpc.params?.protocolVersion) ? rpc.params.protocolVersion : '2025-06-18', capabilities: { tools: { listChanged: false } }, serverInfo: { name: 'dehub-mcp', title: 'Riftn', version: '3.0.0' },
+        instructions: 'Browse Riftn publicly. Link an account to manage its profile, posts, relationships, bookmarks, notifications and Creator library. Confirm the connected identity before writes. Discover models and quote before generating; obtain agreement to costs. Never publish a generated asset without a request to publish. Reuse request_id for retries. Read generation status only when needed; never poll repeatedly. Account connections renew while used, expire after 30 days unused, and can be disconnected on dehub.io/connect/chatgpt.' });
       if (rpc.method === 'ping') return reply({});
       if (rpc.method === 'tools/list') return reply({ tools: accountTools.map(t => t.descriptor) });
       if (['resources/list','resources/templates/list','prompts/list'].includes(rpc.method)) return reply({ [rpc.method === 'resources/templates/list' ? 'resourceTemplates' : rpc.method.split('/')[0]]: [] });

@@ -168,8 +168,8 @@ export default function PlannedPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={t('planned.seoTitle', { defaultValue: 'Planned · DeHub' })}
-        description={t('planned.seoDescription', { defaultValue: 'Your scheduled posts, Lives and Stages on DeHub, all in one place.' })}
+        title={t('planned.seoTitle', { defaultValue: 'Planned · Riftn' })}
+        description={t('planned.seoDescription', { defaultValue: 'Your scheduled posts, Lives and Stages on Riftn, all in one place.' })}
         url="https://riftn.com/app/planned"
         noindex
       />

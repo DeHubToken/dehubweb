@@ -6,7 +6,7 @@ export const template = {
   component: NotificationEmail,
   // The backend picks the subject per notification type and passes it through,
   // so one template covers all of them without a switch in here.
-  subject: (data: Record<string, any>) => data.subject || 'New activity on DeHub',
+  subject: (data: Record<string, any>) => data.subject || 'New activity on Riftn',
   displayName: 'Activity notification',
   previewData: {
     subject: 'You received a tip',

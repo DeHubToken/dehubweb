@@ -25,7 +25,7 @@ type TranslateFn = (key: string, defaultValue: string) => string;
 /**
  * Menu search — shared by the desktop rail and the mobile menu sheet.
  *
- * This filters the NAVIGATION, not DeHub's content: the left panel carries 28
+ * This filters the NAVIGATION, not Riftn's content: the left panel carries 28
  * destinations in a box about nine rows tall, and that is the problem the field
  * is there to solve. Content search stays where it already is — the right rail
  * on desktop, and the Explore page, which both surfaces hand off to when the
@@ -66,7 +66,7 @@ type TranslateFn = (key: string, defaultValue: string) => string;
  * on every keyboard anyway.
  */
 
-/** Where the "search DeHub for …" hand-off row points. */
+/** Where the "search Riftn for …" hand-off row points. */
 export const exploreSearchHref = (query: string) =>
   `/app/explore?q=${encodeURIComponent(query.trim())}`;
 
@@ -324,7 +324,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
     'street slayer', 'beat em up', 'fighting', 'trenchstar', 'chartopia', 'trading floor',
   ],
   Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
-  'Compare DeHub': ['comparison', 'compare', 'youtube', 'twitter', 'kick', 'twitch', 'facebook', 'instagram', 'tiktok', 'rumble', 'mastodon', 'bluesky', 'farcaster'],
+  'Compare Riftn': ['comparison', 'compare', 'youtube', 'twitter', 'kick', 'twitch', 'facebook', 'instagram', 'tiktok', 'rumble', 'mastodon', 'bluesky', 'farcaster'],
   Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
   Feedback: ['feedback', 'experience', 'give feedback', 'testimonial'],
   Stats: ['analytics', 'metrics', 'live stats', 'charts', 'numbers', 'price', 'supply', 'holders', 'volume'],

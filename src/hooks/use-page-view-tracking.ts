@@ -7,7 +7,7 @@ import { recordPageView, setPageViewAddress } from '@/lib/page-view-tracker';
  *
  * Mounted directly under the router rather than inside AppContent, because two
  * routes never reach AppContent: the referral lander `/r/:code`, which is a new
- * visitor's very first touch of DeHub and so the single most interesting row in
+ * visitor's very first touch of Riftn and so the single most interesting row in
  * the table, and the state gallery. Tracking from inside the subtree that
  * handles everything *else* silently excluded exactly the page worth counting.
  *

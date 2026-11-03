@@ -9,7 +9,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const APP_URL = "https://riftn.com"; // Change to actual production URL if different
 
-// This page is prerendered HTML, and its "View on DeHub" button points at the
+// This page is prerendered HTML, and its "View on Riftn" button points at the
 // page's own URL. Anything classified as a crawler therefore gets the same
 // page back when it taps that button — which is what in-app browsers on X,
 // LinkedIn and WhatsApp were doing to real people. `?app=1` tells the
@@ -349,7 +349,7 @@ function generateMetaHTML(data: {
     <p>${description}</p>
     <img src="${imageUrl}" style="max-width: 100%; border-radius: 12px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" alt="${title}" />
     ${data.bodyContent ? `<div style="margin-top: 32px; text-align: left; line-height: 1.65; font-size: 15px; color: #ddd;">${data.bodyContent}</div>` : ""}
-    <p style="margin-top: 30px;"><a href="${appUrl(data.url)}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on DeHub</a></p>
+    <p style="margin-top: 30px;"><a href="${appUrl(data.url)}" style="color: #00ff00; text-decoration: none; font-weight: bold; border: 1px solid #00ff00; padding: 10px 20px; border-radius: 5px;">View on Riftn</a></p>
     <nav style="margin-top: 20px; font-size: 14px;">
       <a href="${APP_URL}/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
       <a href="${APP_URL}/app/stages" style="color: #aaa; margin: 0 8px;">Stages</a>
@@ -375,8 +375,8 @@ function generateMetaHTML(data: {
 
 function build404Html(url: string, isBot: boolean, functionBaseUrl: string): string {
     return generateMetaHTML({
-        title: "Not Found — DeHub",
-        description: "This page doesn't exist on DeHub.",
+        title: "Not Found — Riftn",
+        description: "This page doesn't exist on Riftn.",
         image: DEHUB_LOGO,
         url,
         twitterCard: "summary",
@@ -454,8 +454,8 @@ serve(async (req) => {
 
                 const referralUrl = `${APP_URL}/r/${code}`;
                 const shareImage = `${SUPABASE_URL}/functions/v1/affiliate-share-image?code=${encodeURIComponent(code)}&width=1200&height=630&format=png&v=6`;
-                const title = `${inviter} invited you to DeHub — earn, post & build on-chain`;
-                const description = `Use invite code ${code} to join DeHub. The decentralised creator network for video, music, social, jobs and Web3.`;
+                const title = `${inviter} invited you to Riftn — earn, post & build on-chain`;
+                const description = `Use invite code ${code} to join Riftn. The decentralised creator network for video, music, social, jobs and Web3.`;
 
                 const html = generateMetaHTML({
                     title,
@@ -488,8 +488,8 @@ serve(async (req) => {
             if (post) {
                 const canonical = `${APP_URL}/docs/blog/${slug}`;
                 const image = buildBlogShareImage(post);
-                const title = `${post.title} — DeHub Blog`;
-                const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+                const title = `${post.title} — Riftn Blog`;
+                const description = (post.excerpt || `${post.title} — read on Riftn.`).slice(0, 280);
                 const html = generateMetaHTML({
                     title,
                     description,
@@ -507,8 +507,8 @@ serve(async (req) => {
                         headline: post.title,
                         image: [image],
                         datePublished: post.publishedAt,
-                        author: { "@type": "Person", name: post.author || "DeHub Team" },
-                        publisher: { "@type": "Organization", name: "DeHub" },
+                        author: { "@type": "Person", name: post.author || "Riftn Team" },
+                        publisher: { "@type": "Organization", name: "Riftn" },
                         mainEntityOfPage: canonical,
                     },
                 });
@@ -542,14 +542,14 @@ serve(async (req) => {
             const user: DeHubUser = userData.result || userData;
 
             if (user && (user.username || user.address)) {
-                const displayName = user.displayName || user.username || "DeHub User";
+                const displayName = user.displayName || user.username || "Riftn User";
                 const profileUrl = `${APP_URL}/${user.username || username}`;
                 const avatarUrl = buildAvatarUrl(user);
                 const isLogoFallback = avatarUrl === DEHUB_LOGO;
                 const html = generateMetaHTML({
-                    title: `Join @${user.username || username} on DeHub today!`,
+                    title: `Join @${user.username || username} on Riftn today!`,
                     description:
-                        user.aboutMe || `Connect with ${displayName} on DeHub, the open source alternative to legacy media.`,
+                        user.aboutMe || `Connect with ${displayName} on Riftn, the open source alternative to legacy media.`,
                     image: avatarUrl,
                     url: profileUrl,
                     twitterCard: "summary",
@@ -588,11 +588,11 @@ serve(async (req) => {
                 const ogImage = community.avatar_url || DEHUB_LOGO;
                 const hasRealImage = !!community.avatar_url;
                 const twitterCard = "summary";
-                const title = `Join ${community.name}'s community on DeHub today`;
+                const title = `Join ${community.name}'s community on Riftn today`;
                 const memberText = community.member_count > 0 ? ` • ${community.member_count} members` : "";
                 const description = community.description
                     ? `${community.description}${memberText}`
-                    : `Join the ${community.name} community on DeHub — open source, censorship resistant media.${memberText}`;
+                    : `Join the ${community.name} community on Riftn — open source, censorship resistant media.${memberText}`;
 
                 const html = generateMetaHTML({
                     title,
@@ -647,16 +647,16 @@ serve(async (req) => {
                 // X/Twitter ignores cards with blank titles.
                 // Include the post id in the fallback: the edge fn 404s pages whose
                 // title byte-matches its NOT_FOUND_TITLES list, and the old generic
-                // "Post by someone on DeHub" collided with it for REAL posts that
+                // "Post by someone on Riftn" collided with it for REAL posts that
                 // have a blank title and an anonymous minter.
-                const title = (nft.title || nft.name || "").trim() || `Post #${postId} by ${posterName} on DeHub`;
+                const title = (nft.title || nft.name || "").trim() || `Post #${postId} by ${posterName} on Riftn`;
                 // Prefer the post's own body text as the description. Only fall
                 // back to the author-bio boilerplate when the post has no text
                 // at all — Google flags identical author-bio meta descriptions
                 // across 1,000s of URLs as low-quality/duplicate content.
                 const rawBody = (nft.description || "").trim();
                 const bodyForDesc = rawBody && rawBody.toLowerCase() !== title.toLowerCase() ? rawBody : "";
-                const description = (bodyForDesc || `Post by ${posterName} on DeHub — join the decentralized creator network.`).slice(0, 280);
+                const description = (bodyForDesc || `Post by ${posterName} on Riftn — join the decentralized creator network.`).slice(0, 280);
                 const postUrl = isNewPost ? `${APP_URL}/newpost/${slug}` : `${APP_URL}/app/post/${postId}`;
 
                 const isAudio = nft.postType === "feed-audio";
@@ -720,7 +720,7 @@ serve(async (req) => {
                     ...(datePublished && { datePublished }),
                     ...(dateModified && { dateModified }),
                     ...(nft.minterDisplayName && { author: { '@type': 'Person', name: nft.minterDisplayName } }),
-                    publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' },
+                    publisher: { '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' },
                     ...(postImage && { image: postImage }),
                 };
                 const jsonLd: Record<string, unknown> = videoUrl
@@ -768,119 +768,119 @@ serve(async (req) => {
         // on Telegram/X/Facebook show the right preview instead of the sitewide default.
         const STATIC_ROUTES: Record<string, { title: string; description: string; body: string }> = {
             "features": {
-                title: "Feature Requests & Bug Reporting — DeHub",
-                description: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features.",
-                body: `<h2>DeHub Feature Requests &amp; Bug Board</h2><p>The DeHub Features page is a community-driven board where users submit new feature ideas, report bugs and issues, and vote on suggestions to help shape DeHub's roadmap.</p><h2>How it works</h2><ul><li><strong>Submit Ideas &amp; Bug Reports</strong> — suggest new features or report bugs with device details and attachments.</li><li><strong>Community Voting</strong> — vote on feature requests to help prioritize what gets built next.</li><li><strong>Transparent Roadmap</strong> — track requests across Open, Shipping (In Progress), and Shipped status tabs.</li><li><strong>Discussion &amp; Feedback</strong> — comment on requests and collaborate with the community and core team.</li></ul><p>Explore open feature requests, vote on your favorites, or submit your own ideas to help build the future of DeHub.</p>`,
+                title: "Feature Requests & Bug Reporting — Riftn",
+                description: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features.",
+                body: `<h2>Riftn Feature Requests &amp; Bug Board</h2><p>The Riftn Features page is a community-driven board where users submit new feature ideas, report bugs and issues, and vote on suggestions to help shape Riftn's roadmap.</p><h2>How it works</h2><ul><li><strong>Submit Ideas &amp; Bug Reports</strong> — suggest new features or report bugs with device details and attachments.</li><li><strong>Community Voting</strong> — vote on feature requests to help prioritize what gets built next.</li><li><strong>Transparent Roadmap</strong> — track requests across Open, Shipping (In Progress), and Shipped status tabs.</li><li><strong>Discussion &amp; Feedback</strong> — comment on requests and collaborate with the community and core team.</li></ul><p>Explore open feature requests, vote on your favorites, or submit your own ideas to help build the future of Riftn.</p>`,
             },
             "pricing": {
-                title: "Pricing — DeHub Creator Studio",
-                description: "DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.",
-                body: `<h2>Creator Studio plans</h2><p>DeHub Creator Studio is billed monthly in GBP. Each plan includes a pool of credits that can be spent on any AI tool — image, video, song, voice or poster generation — plus higher upload limits and priority queueing.</p><ul><li><strong>Ultra</strong> — for solo creators who post daily. Includes AI image generation, short-form video, songs and voiceovers.</li><li><strong>Team</strong> — shared workspace for small studios, with multi-seat access, brand kit sharing and higher video resolution.</li><li><strong>Scale</strong> — highest credit pool, long-form video, custom AI agents and priority support.</li></ul><h2>What credits cover</h2><p>Credits are consumed per generation. Image and voice generations are the cheapest; long video renders cost the most. Unused credits roll over for one month. Every plan includes unlimited posting to the DeHub decentralized feed and unlimited use of the video editor.</p>`,
+                title: "Pricing — Riftn Creator Studio",
+                description: "Riftn Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.",
+                body: `<h2>Creator Studio plans</h2><p>Riftn Creator Studio is billed monthly in GBP. Each plan includes a pool of credits that can be spent on any AI tool — image, video, song, voice or poster generation — plus higher upload limits and priority queueing.</p><ul><li><strong>Ultra</strong> — for solo creators who post daily. Includes AI image generation, short-form video, songs and voiceovers.</li><li><strong>Team</strong> — shared workspace for small studios, with multi-seat access, brand kit sharing and higher video resolution.</li><li><strong>Scale</strong> — highest credit pool, long-form video, custom AI agents and priority support.</li></ul><h2>What credits cover</h2><p>Credits are consumed per generation. Image and voice generations are the cheapest; long video renders cost the most. Unused credits roll over for one month. Every plan includes unlimited posting to the Riftn decentralized feed and unlimited use of the video editor.</p>`,
             },
             "depin": {
-                title: "DePin | Community-Powered Media Infrastructure | DeHub",
-                description: "DeHub DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.",
-                body: `<h2>Community-powered media infrastructure</h2><p>DePin is now in development. Operators will be able to set limits for spare storage, bandwidth and compute while DeHub coordinates hosting, transcoding and delivery work.</p><h2>Designed for nodes to go offline</h2><p>Community nodes never hold the only copy. DeHub origin storage remains the source of truth, online replicas serve available segments, and playback falls back to origin when peers leave.</p><h2>Protected content stays encrypted</h2><p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through DeHub.</p><h2>Variable, revenue-funded rewards</h2><p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future DHB settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p><p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
+                title: "DePin | Community-Powered Media Infrastructure | Riftn",
+                description: "Riftn DePin lets people contribute storage, bandwidth and compute to help host, transcode and deliver media through a resilient network.",
+                body: `<h2>Community-powered media infrastructure</h2><p>DePin is now in development. Operators will be able to set limits for spare storage, bandwidth and compute while Riftn coordinates hosting, transcoding and delivery work.</p><h2>Designed for nodes to go offline</h2><p>Community nodes never hold the only copy. Riftn origin storage remains the source of truth, online replicas serve available segments, and playback falls back to origin when peers leave.</p><h2>Protected content stays encrypted</h2><p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through Riftn.</p><h2>Variable, revenue-funded rewards</h2><p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future DHB settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p><p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
             },
             "creator": {
-                title: "DeHub Creator Studio — AI Image, Video & Music",
-                description: "Generate images, videos, songs and branded posters with the DeHub Creator Studio. One workspace for every AI tool a modern creator needs.",
-                body: `<h2>One studio for every AI tool</h2><p>The DeHub Creator Studio bundles image, video, music, voice and poster generation with per-job DHB payments and a private generation library. Pick a model, describe what you want and publish the result straight to the decentralized feed — no plugins, no context switching.</p><h2>Included tools</h2><ul><li>Image generation with FLUX, Ideogram, Recraft and Nano Banana models.</li><li>Video generation with Kling, Veo, Seedance and other available models.</li><li>Music generation with ElevenLabs.</li><li>Voice cloning and text-to-speech with ElevenLabs.</li><li>Branded poster templates using the DeHub design system.</li></ul><p>Completed results are saved to your private library. Check the saved status before leaving; pending saves can be retried. Paid jobs show a quote before payment, and free audio tools require sign-in with usage limits.</p>`,
+                title: "Riftn Creator Studio — AI Image, Video & Music",
+                description: "Generate images, videos, songs and branded posters with the Riftn Creator Studio. One workspace for every AI tool a modern creator needs.",
+                body: `<h2>One studio for every AI tool</h2><p>The Riftn Creator Studio bundles image, video, music, voice and poster generation with per-job DHB payments and a private generation library. Pick a model, describe what you want and publish the result straight to the decentralized feed — no plugins, no context switching.</p><h2>Included tools</h2><ul><li>Image generation with FLUX, Ideogram, Recraft and Nano Banana models.</li><li>Video generation with Kling, Veo, Seedance and other available models.</li><li>Music generation with ElevenLabs.</li><li>Voice cloning and text-to-speech with ElevenLabs.</li><li>Branded poster templates using the Riftn design system.</li></ul><p>Completed results are saved to your private library. Check the saved status before leaving; pending saves can be retried. Paid jobs show a quote before payment, and free audio tools require sign-in with usage limits.</p>`,
             },
             "editor": {
-                title: "DeHub Video Editor — In-Browser Timeline",
-                description: "Edit video in your browser with the DeHub multi-track timeline, effects, transitions and one-click publish to the decentralized feed.",
-                body: `<h2>Edit in the browser, publish on-chain</h2><p>The DeHub Video Editor is a multi-track timeline that runs entirely in your browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text overlays, then publish directly to the decentralized feed as a video post or Short.</p><h2>What you get</h2><ul><li>Multi-track timeline with drag-and-drop clip trimming.</li><li>Effects, transitions and adjustable colour filters.</li><li>Auto-generated subtitles with translation to 90+ languages.</li><li>Overlay stickers, text and brand fonts from the DeHub design system.</li><li>Export to 1080p and publish in one click.</li></ul>`,
+                title: "Riftn Video Editor — In-Browser Timeline",
+                description: "Edit video in your browser with the Riftn multi-track timeline, effects, transitions and one-click publish to the decentralized feed.",
+                body: `<h2>Edit in the browser, publish on-chain</h2><p>The Riftn Video Editor is a multi-track timeline that runs entirely in your browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text overlays, then publish directly to the decentralized feed as a video post or Short.</p><h2>What you get</h2><ul><li>Multi-track timeline with drag-and-drop clip trimming.</li><li>Effects, transitions and adjustable colour filters.</li><li>Auto-generated subtitles with translation to 90+ languages.</li><li>Overlay stickers, text and brand fonts from the Riftn design system.</li><li>Export to 1080p and publish in one click.</li></ul>`,
             },
             "prompt": {
-                title: "DeHub Prompt — Personalize Your Feed",
-                description: "Tell DeHub what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.",
-                body: `<h2>A feed you actually describe</h2><p>DeHub Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the Home feed in real time. Save multiple prompts as tabs, switch between them and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
+                title: "Riftn Prompt — Personalize Your Feed",
+                description: "Tell Riftn what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.",
+                body: `<h2>A feed you actually describe</h2><p>Riftn Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the Home feed in real time. Save multiple prompts as tabs, switch between them and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
             },
             "work": {
-                title: "DeHub Work — Web3 Jobs, Clipping & Escrow",
-                description: "Open jobs for commenting, clipping (paid per view) and on-chain contracts with escrow and disputes on Base. Get paid to create on DeHub.",
-                body: `<h2>Get paid to create</h2><p>DeHub Work is an on-chain marketplace for creator jobs. Post a job with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p><h2>Job types</h2><ul><li><strong>Clipping</strong> — pay per verified view for short clips of your streams or long-form videos.</li><li><strong>Comment jobs</strong> — pay for high-quality engagement across posts.</li><li><strong>Custom briefs</strong> — hire creators for logos, videos, translation, community management and more.</li></ul>`,
+                title: "Riftn Work — Web3 Jobs, Clipping & Escrow",
+                description: "Open jobs for commenting, clipping (paid per view) and on-chain contracts with escrow and disputes on Base. Get paid to create on Riftn.",
+                body: `<h2>Get paid to create</h2><p>Riftn Work is an on-chain marketplace for creator jobs. Post a job with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p><h2>Job types</h2><ul><li><strong>Clipping</strong> — pay per verified view for short clips of your streams or long-form videos.</li><li><strong>Comment jobs</strong> — pay for high-quality engagement across posts.</li><li><strong>Custom briefs</strong> — hire creators for logos, videos, translation, community management and more.</li></ul>`,
             },
             "affiliate": {
-                title: "DeHub Affiliate — Earn 20% Revenue Share",
-                description: "Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.",
-                body: `<h2>How the affiliate program works</h2><p>Every DeHub user gets a personal referral link. When someone signs up through your link and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of the revenue</strong> for the lifetime of that account. Second-tier invites (their referrals) earn you another <strong>5%</strong>. Payouts happen in DHB and are fully visible on-chain.</p>`,
+                title: "Riftn Affiliate — Earn 20% Revenue Share",
+                description: "Refer creators to Riftn and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.",
+                body: `<h2>How the affiliate program works</h2><p>Every Riftn user gets a personal referral link. When someone signs up through your link and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of the revenue</strong> for the lifetime of that account. Second-tier invites (their referrals) earn you another <strong>5%</strong>. Payouts happen in DHB and are fully visible on-chain.</p>`,
             },
             "premium": {
-                title: "DeHub Extra — Premium Membership",
-                description: "Unlock DeHub Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across DeHub.",
-                body: `<h2>DeHub Extra perks</h2><ul><li>Larger video and image upload limits.</li><li>Priority AI credits and faster queue times in the Creator Studio.</li><li>Extra bookmark folders, saved prompts and profile customisation.</li><li>Exclusive drops, badges and community events.</li><li>Cashback on the XL tier for the first 50 subscribers.</li></ul><p>DeHub Extra is billed monthly via Stripe and unlocks across the entire DeHub network — social, video, music and TV.</p>`,
+                title: "Riftn Extra — Premium Membership",
+                description: "Unlock Riftn Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across Riftn.",
+                body: `<h2>Riftn Extra perks</h2><ul><li>Larger video and image upload limits.</li><li>Priority AI credits and faster queue times in the Creator Studio.</li><li>Extra bookmark folders, saved prompts and profile customisation.</li><li>Exclusive drops, badges and community events.</li><li>Cashback on the XL tier for the first 50 subscribers.</li></ul><p>Riftn Extra is billed monthly via Stripe and unlocks across the entire Riftn network — social, video, music and TV.</p>`,
             },
             "governance": {
-                title: "DeHub Governance — Vote with DHB",
-                description: "Propose and vote on the future of DeHub with the DHB token. Transparent, on-chain governance for the decentralized social network.",
-                body: `<h2>On-chain governance</h2><p>DHB holders shape DeHub's roadmap. Any staker can open a proposal — for new features, moderation rules, treasury spend or partnerships — and the community votes with their staked DHB weight. Results are transparent, tallied on-chain and executed by the core team on approved proposals.</p>`,
+                title: "Riftn Governance — Vote with DHB",
+                description: "Propose and vote on the future of Riftn with the DHB token. Transparent, on-chain governance for the decentralized social network.",
+                body: `<h2>On-chain governance</h2><p>DHB holders shape Riftn's roadmap. Any staker can open a proposal — for new features, moderation rules, treasury spend or partnerships — and the community votes with their staked DHB weight. Results are transparent, tallied on-chain and executed by the core team on approved proposals.</p>`,
             },
             "leaderboard": {
-                title: "DeHub Leaderboard — Top Creators & Stakers",
-                description: "See the top DeHub creators, DHB stakers and community leaders across Base and BNB Chain.",
-                body: `<h2>Who's on top</h2><p>The DeHub Leaderboard ranks the network's biggest creators, tippers and DHB stakers across both BNB Chain and Base. Snapshots are taken daily and the top ranks unlock silhouette badges, on-profile overlays and larger platform rewards.</p>`,
+                title: "Riftn Leaderboard — Top Creators & Stakers",
+                description: "See the top Riftn creators, DHB stakers and community leaders across Base and BNB Chain.",
+                body: `<h2>Who's on top</h2><p>The Riftn Leaderboard ranks the network's biggest creators, tippers and DHB stakers across both BNB Chain and Base. Snapshots are taken daily and the top ranks unlock silhouette badges, on-profile overlays and larger platform rewards.</p>`,
             },
             "top-100": {
-                title: "Top 100 Cryptos — Live Prices on DeHub",
-                description: "Track the top 100 cryptocurrencies with live prices, market cap and charts inside DeHub.",
+                title: "Top 100 Cryptos — Live Prices on Riftn",
+                description: "Track the top 100 cryptocurrencies with live prices, market cap and charts inside Riftn.",
                 body: `<h2>Live crypto market data</h2><p>The Top 100 page tracks the largest cryptocurrencies by market cap, with live prices, 24h volume, sparkline charts and full CMC-powered detail views. Click any ticker to open the in-app chart, add it to your watchlist or share it as a post.</p>`,
             },
             "music": {
-                title: "DeHub Music — Web3 Songs & Radio",
-                description: "Discover songs and radio stations from Web3 artists on DeHub. Stream, tip and collect on-chain.",
-                body: `<h2>Music, tipping and radio</h2><p>DeHub Music hosts songs from independent Web3 artists — stream them for free, tip in DHB or collect a token-gated release. Combine tracks into playlists, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>`,
+                title: "Riftn Music — Web3 Songs & Radio",
+                description: "Discover songs and radio stations from Web3 artists on Riftn. Stream, tip and collect on-chain.",
+                body: `<h2>Music, tipping and radio</h2><p>Riftn Music hosts songs from independent Web3 artists — stream them for free, tip in DHB or collect a token-gated release. Combine tracks into playlists, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>`,
             },
             "radio": {
-                title: "DeHub Radio — 24/7 Web3 Stations",
-                description: "Tune into DeHub Radio for 24/7 stations curated by the Web3 community.",
-                body: `<h2>Always-on Web3 radio</h2><p>DeHub Radio streams continuous audio stations curated by the community. Discover new artists, keep it in the background while you post, and tip your favourite tracks in DHB when they come on.</p>`,
+                title: "Riftn Radio — 24/7 Web3 Stations",
+                description: "Tune into Riftn Radio for 24/7 stations curated by the Web3 community.",
+                body: `<h2>Always-on Web3 radio</h2><p>Riftn Radio streams continuous audio stations curated by the community. Discover new artists, keep it in the background while you post, and tip your favourite tracks in DHB when they come on.</p>`,
             },
             "tv": {
-                title: "DeHub TV — Live Streams & Shows",
-                description: "Watch live streams and shows from creators across DeHub TV.",
-                body: `<h2>Live streams and shows</h2><p>DeHub TV brings creators' live streams together in one lineup, plus curated shows and picture-in-picture playback so you can keep watching while you scroll. Follow channels, get notified when they go live and tip in DHB from the player.</p>`,
+                title: "Riftn TV — Live Streams & Shows",
+                description: "Watch live streams and shows from creators across Riftn TV.",
+                body: `<h2>Live streams and shows</h2><p>Riftn TV brings creators' live streams together in one lineup, plus curated shows and picture-in-picture playback so you can keep watching while you scroll. Follow channels, get notified when they go live and tip in DHB from the player.</p>`,
             },
             "glossary": {
-                title: "DeHub Glossary — Web3 & DeFi Terms",
+                title: "Riftn Glossary — Web3 & DeFi Terms",
                 description: "Plain-English definitions for Web3, DeFi and DeHub-specific terms.",
-                body: `<h2>Plain-English Web3 glossary</h2><p>The DeHub Glossary explains the terms you'll encounter across the decentralized creator network — from wallet, gas and staking, to bridges, escrow, on-chain tipping and the DHB token itself. Written for creators, not for engineers.</p>`,
+                body: `<h2>Plain-English Web3 glossary</h2><p>The Riftn Glossary explains the terms you'll encounter across the decentralized creator network — from wallet, gas and staking, to bridges, escrow, on-chain tipping and the DHB token itself. Written for creators, not for engineers.</p>`,
             },
             "bridge": {
-                title: "DeHub Bridge — Move DHB Cross-Chain",
-                description: "Bridge DHB between BNB Chain and Base securely from inside DeHub.",
-                body: `<h2>Cross-chain DHB, one click</h2><p>The DeHub Bridge moves DHB tokens between BNB Chain and Base through the platform wallet. Balances are rounded down to two decimals to match the on-chain settlement, and every transfer is verified via Alchemy before your balance updates.</p>`,
+                title: "Riftn Bridge — Move DHB Cross-Chain",
+                description: "Bridge DHB between BNB Chain and Base securely from inside Riftn.",
+                body: `<h2>Cross-chain DHB, one click</h2><p>The Riftn Bridge moves DHB tokens between BNB Chain and Base through the platform wallet. Balances are rounded down to two decimals to match the on-chain settlement, and every transfer is verified via Alchemy before your balance updates.</p>`,
             },
             "agents": {
-                title: "DeHub Agents — AI Assistants for Creators",
-                description: "Custom AI agents that help you post, edit, moderate and grow on DeHub.",
-                body: `<h2>Your creator AI, always on</h2><p>DeHub Agents are configurable AI assistants that can auto-post, reply to comments, moderate your community, curate feeds and analyse growth. Pick from a library of pre-built agents or build your own via the MCP server, then let them work in the background while you create.</p>`,
+                title: "Riftn Agents — AI Assistants for Creators",
+                description: "Custom AI agents that help you post, edit, moderate and grow on Riftn.",
+                body: `<h2>Your creator AI, always on</h2><p>Riftn Agents are configurable AI assistants that can auto-post, reply to comments, moderate your community, curate feeds and analyse growth. Pick from a library of pre-built agents or build your own via the MCP server, then let them work in the background while you create.</p>`,
             },
             "assistant": {
-                title: "DeHub Assistant — Your Creator AI",
-                description: "Chat with the DeHub Assistant to generate posts, images, videos and songs in seconds.",
-                body: `<h2>Chat, generate, post</h2><p>The DeHub Assistant is a chat interface into the entire Creator Studio. Ask it to draft a post, generate an image or video, translate captions, plan a content calendar or explain how the DHB token works — then publish the result to the feed without leaving the conversation.</p>`,
+                title: "Riftn Assistant — Your Creator AI",
+                description: "Chat with the Riftn Assistant to generate posts, images, videos and songs in seconds.",
+                body: `<h2>Chat, generate, post</h2><p>The Riftn Assistant is a chat interface into the entire Creator Studio. Ask it to draft a post, generate an image or video, translate captions, plan a content calendar or explain how the DHB token works — then publish the result to the feed without leaving the conversation.</p>`,
             },
             "creators": {
-                title: "Creators on DeHub — Discover & Follow",
-                description: "Discover creators building on DeHub and follow the ones that match your taste.",
-                body: `<h2>Meet the creators</h2><p>Browse DeHub's active creators by category, chain, badge tier or trending topic. Follow the ones you like, tip them in DHB and subscribe to their premium content — all from a single decentralized identity.</p>`,
+                title: "Creators on Riftn — Discover & Follow",
+                description: "Discover creators building on Riftn and follow the ones that match your taste.",
+                body: `<h2>Meet the creators</h2><p>Browse Riftn's active creators by category, chain, badge tier or trending topic. Follow the ones you like, tip them in DHB and subscribe to their premium content — all from a single decentralized identity.</p>`,
             },
             "jobs": {
-                title: "DeHub Jobs — Work with the Team",
-                description: "Open roles at DeHub. Help build the decentralized social network.",
-                body: `<h2>Build DeHub with us</h2><p>DeHub is a small, distributed team building the decentralized creator network. Open roles cover engineering, design, growth, community and moderation. If you love Web3 and creator tools, we want to hear from you.</p>`,
+                title: "Riftn Jobs — Work with the Team",
+                description: "Open roles at Riftn. Help build the decentralized social network.",
+                body: `<h2>Build Riftn with us</h2><p>Riftn is a small, distributed team building the decentralized creator network. Open roles cover engineering, design, growth, community and moderation. If you love Web3 and creator tools, we want to hear from you.</p>`,
             },
             "delete-account": {
-                title: "Delete Account and Data — DeHub",
-                description: "Permanently delete your DeHub account and associated data.",
-                body: `<h2>Delete your account</h2><p>You can permanently delete your DeHub profile, off-chain data (bookmarks, notifications, drafts, chat history) and cached media from this page. On-chain posts, tips and DHB transactions live on public blockchains and cannot be erased — they remain visible even after the profile is removed.</p>`,
+                title: "Delete Account and Data — Riftn",
+                description: "Permanently delete your Riftn account and associated data.",
+                body: `<h2>Delete your account</h2><p>You can permanently delete your Riftn profile, off-chain data (bookmarks, notifications, drafts, chat history) and cached media from this page. On-chain posts, tips and DHB transactions live on public blockchains and cannot be erased — they remain visible even after the profile is removed.</p>`,
             },
             "guides/best-decentralized-social-media": {
-                title: "Best Decentralized Social Media 2026 — DeHub Guide",
-                description: "Compare DeHub, Mastodon, Bluesky, Farcaster and Lens — features, tokens, moderation and how to choose the right decentralized social network.",
-                body: `<h2>Best decentralized social networks in 2026</h2><p>Decentralized social networks give creators ownership of their audience and their revenue. This guide compares the biggest options — DeHub, Mastodon, Bluesky, Farcaster and Lens — across features, tokens, moderation model and creator economics, and helps you pick the right one for your audience.</p><h3>How they differ</h3><ul><li><strong>DeHub</strong> — full creator suite (social, video, music, TV, jobs, AI studio) with the DHB token on BNB Chain and Base.</li><li><strong>Mastodon</strong> — federated microblogging, no token, community-run instances.</li><li><strong>Bluesky</strong> — AT Protocol microblogging with account portability, no token.</li><li><strong>Farcaster</strong> — Ethereum-based social protocol focused on frames and casts.</li><li><strong>Lens</strong> — social protocol on Polygon with tokenised profiles and follow NFTs.</li></ul>`,
+                title: "Best Decentralized Social Media 2026 — Riftn Guide",
+                description: "Compare Riftn, Mastodon, Bluesky, Farcaster and Lens — features, tokens, moderation and how to choose the right decentralized social network.",
+                body: `<h2>Best decentralized social networks in 2026</h2><p>Decentralized social networks give creators ownership of their audience and their revenue. This guide compares the biggest options — Riftn, Mastodon, Bluesky, Farcaster and Lens — across features, tokens, moderation model and creator economics, and helps you pick the right one for your audience.</p><h3>How they differ</h3><ul><li><strong>Riftn</strong> — full creator suite (social, video, music, TV, jobs, AI studio) with the DHB token on BNB Chain and Base.</li><li><strong>Mastodon</strong> — federated microblogging, no token, community-run instances.</li><li><strong>Bluesky</strong> — AT Protocol microblogging with account portability, no token.</li><li><strong>Farcaster</strong> — Ethereum-based social protocol focused on frames and casts.</li><li><strong>Lens</strong> — social protocol on Polygon with tokenised profiles and follow NFTs.</li></ul>`,
             },
         };
 
@@ -932,9 +932,9 @@ serve(async (req) => {
         const isEntityMiss = cleanPath.includes("/post/") || cleanPath.includes("/communities/");
         // Default Fallback
         const html = generateMetaHTML({
-            title: "DeHub — Open Source, User Owned & Censorship Resistant Media",
+            title: "Riftn — Open Source, User Owned & Censorship Resistant Media",
             description:
-                "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
+                "riftn.com is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
             image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg",
             url: canonicalUrl,
             twitterCard: "summary_large_image",
@@ -947,7 +947,7 @@ serve(async (req) => {
                 '@graph': [
                     {
                         '@type': 'WebSite',
-                        name: 'DeHub',
+                        name: 'Riftn',
                         url: 'https://riftn.com',
                         description: 'Open source, user owned and censorship resistant media.',
                         potentialAction: {
@@ -958,7 +958,7 @@ serve(async (req) => {
                     },
                     {
                         '@type': 'Organization',
-                        name: 'DeHub',
+                        name: 'Riftn',
                         url: 'https://riftn.com',
                         logo: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg',
                         sameAs: [

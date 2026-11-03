@@ -6,14 +6,14 @@ import { DescriptionWithLinks, prepareDescriptionText } from '../DescriptionWith
 import { trimTrailingUrlPunctuation } from '@/components/app/TranslatableText';
 
 const DEHUB_WAVE =
-  'A bunch of us helping DeHub grow—sharing it, bringing people in, and building something big together.  Click the link below to get started: \n\nhttps://docs.google.com/spreadsheets/d/19w68xX7zGJ7Ck7R-fKjLSxYmVNXT1opGc1B4SVWy2Dk/edit?gid=1213196961#gid=1213196961';
+  'A bunch of us helping Riftn grow—sharing it, bringing people in, and building something big together.  Click the link below to get started: \n\nhttps://docs.google.com/spreadsheets/d/19w68xX7zGJ7Ck7R-fKjLSxYmVNXT1opGc1B4SVWy2Dk/edit?gid=1213196961#gid=1213196961';
 
 const render = (ui: ReactElement) => rtlRender(<TooltipProvider>{ui}</TooltipProvider>);
 
 const links = (c: HTMLElement) => Array.from(c.querySelectorAll('a')).map(a => ({ href: a.getAttribute('href'), text: a.textContent }));
 
 describe('DescriptionWithLinks', () => {
-  it('shows the Dehub Wave sheet link as an inline 🔗 with the full address', () => {
+  it('shows the Riftn Wave sheet link as an inline 🔗 with the full address', () => {
     const { container } = render(<DescriptionWithLinks text={DEHUB_WAVE} />);
     expect(links(container)).toEqual([
       { href: 'https://docs.google.com/spreadsheets/d/19w68xX7zGJ7Ck7R-fKjLSxYmVNXT1opGc1B4SVWy2Dk/edit?gid=1213196961#gid=1213196961', text: '🔗' },

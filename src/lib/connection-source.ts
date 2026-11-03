@@ -1,7 +1,7 @@
 /**
  * Connection Source
  * =================
- * Which kind of wallet backs the current DeHub session: the built-in smart
+ * Which kind of wallet backs the current Riftn session: the built-in smart
  * wallet (email/social login — an encrypted seed that only ever decrypts into
  * memory, driving a Safe smart account via Pimlico) or an external one that
  * signs for itself (MetaMask, Phantom, Trust, via wagmi).
@@ -25,7 +25,7 @@
  *
  * Losing it is therefore not a cosmetic bug. A user in that state stays
  * logged in — feed, profile, display name, engagement all work, because those
- * ride the DeHub token rather than a signature — while every post, tip and
+ * ride the Riftn token rather than a signature — while every post, tip and
  * stream fails with "No wallet connected. Please sign in first." Retrying
  * cannot help, because nothing on the retry path rewrites the tag; only a full
  * sign-out and sign-in does. That is exactly what happened to a real account,
@@ -41,7 +41,7 @@ const CONNECTION_SOURCE_KEY = 'dehub_connection_source';
  * which runs for both ways a built-in-wallet session can be established
  * (signing with the key, and exchanging a Supabase session) and for neither
  * external-wallet path. Cleared in exactly one place — clearAuthSession, which
- * drops it in the same breath as the DeHub token. Those two properties are
+ * drops it in the same breath as the Riftn token. Those two properties are
  * what make it usable as a fallback below: while a built-in-wallet session is
  * alive, this key is alive with it.
  */

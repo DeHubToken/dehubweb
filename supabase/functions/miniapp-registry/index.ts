@@ -404,7 +404,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
     if (!mayUpdate) {
       return jsonResponse({ error: `${domain} is already registered by its owner. Sign a dehub.json with the owning wallet to update it.` }, 409);
     }
-    if (existing.status === "suspended") return jsonResponse({ error: "This app is suspended. Contact DeHub support." }, 403);
+    if (existing.status === "suspended") return jsonResponse({ error: "This app is suspended. Contact Riftn support." }, 403);
     const { data, error } = await db
       .from("miniapp_apps")
       .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), ...reviewFields(existing.tier), status: "live" })

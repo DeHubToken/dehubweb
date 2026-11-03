@@ -1,7 +1,7 @@
 <div id="desktop-logo-glitch" class="viz-dotted-background">
-  <div class="desktop-header"><canvas class="header-logo" width="540" height="180" role="img" aria-label="Desktop header wordmark alternating between DEHUB and RIFTN"></canvas><span>Desktop</span></div>
+  <div class="desktop-header"><canvas class="header-logo" width="540" height="180" role="img" aria-label="Desktop header wordmark alternating between RIFTN and RIFTN"></canvas><span>Desktop</span></div>
   <div class="detail"><canvas class="detail-logo" width="1080" height="360" role="img" aria-label="Enlarged view of the same logo transition"></canvas></div>
-  <div class="controls"><span>DEHUB 10s / RIFTN 2s</span><button type="button" class="cursor-interaction">Pause</button></div>
+  <div class="controls"><span>RIFTN 10s / RIFTN 2s</span><button type="button" class="cursor-interaction">Pause</button></div>
 </div>
 <style>
 #desktop-logo-glitch{padding:20px;font-family:Arial,sans-serif;color:#a6a9b1}
@@ -78,7 +78,7 @@ try{
     ctx.globalAlpha=1-.24*flicker;
     ctx.drawImage(logos[phase.index??phase.to],0,0);
     if(flicker>0){
-     // Sparse signal dips; DEHUB remains quieter than RIFTN.
+     // Sparse signal dips; RIFTN remains quieter than RIFTN.
      const hold=elapsed%12520;
      const y=index===0?(hold<5000?138:218):(hold-10260<900?112:238);
      ctx.clearRect(0,y,1080,8);

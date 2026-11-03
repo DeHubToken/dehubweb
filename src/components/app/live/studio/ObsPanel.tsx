@@ -2,7 +2,7 @@
  * Live Studio's OBS controls: where the overlay is drawn, the browser-source
  * link, and whether an OBS page is open on it right now.
  *
- * The one switch here decides who draws the overlay. "In the DeHub app" — each
+ * The one switch here decides who draws the overlay. "In the Riftn app" — each
  * viewer's player draws it, which works from any source and costs the streamer
  * nothing. "In my video" — OBS burns it into the picture, so it is in replays
  * and anywhere the stream is watched, and the app stays out of the way. Both

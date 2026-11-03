@@ -104,7 +104,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
         // time it was also inside the outer try — so a tool API that was down,
         // misconfigured or simply slow replaced the entire answer with an
         // apology, including for the many questions that needed no tool at
-        // all. Degrade instead: keep web_search, lose the DeHub tools, and let
+        // all. Degrade instead: keep web_search, lose the Riftn tools, and let
         // the model answer from the platform knowledge in its prompt. The
         // tool-use rules tell it to say when it could not look something up,
         // which is a far better failure than "something went wrong".
@@ -261,7 +261,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
       } catch (err) {
         console.error('[Agent stream] failed:', err);
         if (!fullText) {
-          sendDelta('Something went wrong reaching DeHub data just then. Please try again.');
+          sendDelta('Something went wrong reaching Riftn data just then. Please try again.');
         }
         send({
           choices: [{ delta: {} }],

@@ -18,18 +18,18 @@ const FN_PAGE = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Someone invited you to DeHub</title>
-  <meta name="description" content="Use invite code ABC123 to join DeHub.">
+  <title>Someone invited you to Riftn</title>
+  <meta name="description" content="Use invite code ABC123 to join Riftn.">
   <meta property="og:image" content="https://riftn.com/card.jpg">
   <link rel="canonical" href="https://riftn.com/r/ABC123">
   <script type="application/ld+json">{"@type":"WebPage","name":"Invite"}</script>
 </head>
 <body style="font-family: sans-serif; background: black; color: white; display: flex;">
   <div style="max-width: 720px; text-align: center; padding: 20px;">
-    <h1>Someone invited you to DeHub</h1>
-    <p>Use invite code ABC123 to join DeHub.</p>
+    <h1>Someone invited you to Riftn</h1>
+    <p>Use invite code ABC123 to join Riftn.</p>
     <img src="https://riftn.com/card.jpg" style="max-width: 100%;" alt="Invite" />
-    <p style="margin-top: 30px;"><a class="dh-cta" href="https://riftn.com/r/ABC123?app=1" rel="nofollow">View on DeHub</a></p>
+    <p style="margin-top: 30px;"><a class="dh-cta" href="https://riftn.com/r/ABC123?app=1" rel="nofollow">View on Riftn</a></p>
     <nav style="margin-top: 20px;">
       <a href="https://riftn.com/app/explore" style="color: #aaa; margin: 0 8px;">Explore</a>
     </nav>
@@ -40,12 +40,12 @@ const FN_PAGE = `<!DOCTYPE html>
 /** The shape this worker's own builders emit. */
 const WORKER_PAGE = `<!DOCTYPE html>
 <html lang="en">
-<head><title>DeHub Docs — Overview</title><meta name="description" content="What DeHub is."></head>
+<head><title>Riftn Docs — Overview</title><meta name="description" content="What Riftn is."></head>
 <body>
-<p><a href="https://riftn.com/">DeHub</a> › Overview</p>
+<p><a href="https://riftn.com/">Riftn</a> › Overview</p>
 <h1>Overview</h1>
-<p>What DeHub is.</p>
-<nav aria-label="DeHub sections"><h2>Explore DeHub</h2><ul><li><a href="https://riftn.com/app/music">Music</a></li></ul></nav>
+<p>What Riftn is.</p>
+<nav aria-label="Riftn sections"><h2>Explore Riftn</h2><ul><li><a href="https://riftn.com/app/music">Music</a></li></ul></nav>
 </body>
 </html>`;
 
@@ -88,7 +88,7 @@ describe('stylePrerendered keeps everything a crawler came for', () => {
 });
 
 describe('stylePrerendered applies the site look', () => {
-  it('wraps the page in the DeHub shell', () => {
+  it('wraps the page in the Riftn shell', () => {
     const out = stylePrerendered(FN_PAGE);
     expect(out).toContain('class="dh-head"');
     expect(out).toContain('class="dh-main"');

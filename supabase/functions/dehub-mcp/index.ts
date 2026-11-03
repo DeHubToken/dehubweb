@@ -40,7 +40,7 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
   default: { limit: 100, windowMs: 60 * 1000 },
 };
 
-// The agent name becomes its DeHub username, so it has to satisfy the same
+// The agent name becomes its Riftn username, so it has to satisfy the same
 // rule the signup modal enforces: lowercase, digits and underscores.
 const AGENT_NAME_RE = /^[a-z0-9_]{3,20}$/;
 const API_KEY_RE = /^dehub_[0-9a-f]{64}$/;
@@ -102,7 +102,7 @@ function fail(error: string, hint?: string): ToolResult {
 const AUTH_HINT =
   "Authenticate by appending /k/<your-api-key> to the MCP server URL, or by sending an x-dehub-api-key header. Create an agent and copy its URL at https://riftn.com/app/agents.";
 
-// ============= DeHub authentication =============
+// ============= Riftn authentication =============
 
 /**
  * The backend issues a single-use challenge per sign-in (WALLET_CHALLENGE_REQUIRED),
@@ -136,13 +136,13 @@ async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { o
       body: JSON.stringify({ address, chainId: CHAIN_ID, purpose: "login-web" }),
     });
     if (!challengeResponse.ok) {
-      console.error(`[DeHub Auth] Challenge failed (${challengeResponse.status}):`, await challengeResponse.text());
+      console.error(`[Riftn Auth] Challenge failed (${challengeResponse.status}):`, await challengeResponse.text());
       return null;
     }
     const challenge = await challengeResponse.json();
     const message = buildChallengeMessage({ ...challenge, address, chainId: CHAIN_ID, purpose: "login-web" });
     if (challenge.address !== address || challenge.message !== message) {
-      console.error("[DeHub Auth] Challenge text did not match the login wording.");
+      console.error("[Riftn Auth] Challenge text did not match the login wording.");
       return null;
     }
     const sig = await wallet.signMessage(message);
@@ -154,19 +154,19 @@ async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { o
     });
 
     if (!response.ok) {
-      console.error(`[DeHub Auth] Failed (${response.status}):`, await response.text());
+      console.error(`[Riftn Auth] Failed (${response.status}):`, await response.text());
       return null;
     }
 
     const data = await response.json();
     const token = data.result?.token || data.token;
     if (!token) {
-      console.error("[DeHub Auth] No token in response:", JSON.stringify(data));
+      console.error("[Riftn Auth] No token in response:", JSON.stringify(data));
       return null;
     }
     return { token, expiresIn: Number(data.result?.expiresIn ?? data.expiresIn) || 15 * 60 };
   } catch (error) {
-    console.error("[DeHub Auth] Error:", error);
+    console.error("[Riftn Auth] Error:", error);
     return null;
   }
 }
@@ -187,7 +187,7 @@ async function getAgentToken(agent: AgentRow): Promise<string | null> {
 }
 
 /**
- * Call the DeHub API the way the web client does: JSON body, Bearer token.
+ * Call the Riftn API the way the web client does: JSON body, Bearer token.
  *
  * The previous implementation passed `wallet=<address>` as a query param and
  * sent no token at all, which every write endpoint rejects with
@@ -241,7 +241,7 @@ async function dehubApi<T = unknown>(
   }
 }
 
-/** DeHub wraps almost every payload in `{ status, result }`. */
+/** Riftn wraps almost every payload in `{ status, result }`. */
 // deno-lint-ignore no-explicit-any
 function unwrap<T = any>(data: any): T {
   return (data && typeof data === "object" && "result" in data ? data.result : data) as T;
@@ -427,12 +427,12 @@ async function requireAgent(
 ): Promise<{ agent: AgentRow } | { error: ToolResult }> {
   const agent = await getAgentFromApiKey(apiKey, supabase);
   if (!agent) {
-    return { error: fail("Authentication required — no valid DeHub agent API key on this request.", AUTH_HINT) };
+    return { error: fail("Authentication required — no valid Riftn agent API key on this request.", AUTH_HINT) };
   }
   if (opts.needsWallet && !agent.wallet_private_key) {
     return {
       error: fail(
-        `Agent "${agent.name}" has no wallet, so it cannot sign DeHub writes.`,
+        `Agent "${agent.name}" has no wallet, so it cannot sign Riftn writes.`,
         "Register a new agent with dehub_register — agents created before wallet support have no key and cannot be upgraded in place.",
       ),
     };
@@ -447,13 +447,13 @@ function touchAgent(supabase: SupabaseClient, agentId: string) {
 // ============= Registration =============
 
 const REGISTER_AUTH_HINT =
-  "Registering needs the owner's DeHub session token in the x-dehub-token header. Sign in at https://riftn.com/app/agents to create an agent with your connected wallet.";
+  "Registering needs the owner's Riftn session token in the x-dehub-token header. Sign in at https://riftn.com/app/agents to create an agent with your connected wallet.";
 
 /**
  * Shared by the dehub_register tool and the POST /register REST route the web
  * app uses. Kept in one place so the two entry points cannot drift.
  *
- * The owner is the wallet on the caller's verified DeHub token. It used to be
+ * The owner is the wallet on the caller's verified Riftn token. It used to be
  * whatever owner_wallet_address the caller sent, so anyone could file agents
  * under someone else's wallet: they showed up in that wallet's /app/agents,
  * were attributed to it, and used up its agent slots. The field
@@ -482,7 +482,7 @@ async function registerAgent(
     return {
       status: 403,
       body: {
-        error: "owner_wallet_address does not match the wallet your DeHub token belongs to.",
+        error: "owner_wallet_address does not match the wallet your Riftn token belongs to.",
         hint: "Omit owner_wallet_address, or sign in again with the wallet you meant to use.",
       },
     };
@@ -639,7 +639,7 @@ const MIN_GAS_WEI = 200_000_000_000_000n; // 0.0002 ETH
 
 /**
  * A fresh server per request, with the caller's API key and request captured
- * in the closure. Only dehub_register reads the request, for the owner's DeHub
+ * in the closure. Only dehub_register reads the request, for the owner's Riftn
  * token.
  *
  * The previous version held the key in a module-level `let` that every request
@@ -709,9 +709,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_register",
     {
-      title: "Register a DeHub agent",
+      title: "Register a Riftn agent",
       description:
-        "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, creates the DeHub account, claims the username, and returns an API key plus a ready-to-paste connector URL. The owner is the wallet your DeHub session token belongs to, sent in the x-dehub-token header — without a client that can set that header, create the agent at https://riftn.com/app/agents instead.",
+        "Register a new AI agent with a real Riftn account. Generates an Ethereum wallet, creates the Riftn account, claims the username, and returns an API key plus a ready-to-paste connector URL. The owner is the wallet your Riftn session token belongs to, sent in the x-dehub-token header — without a client that can set that header, create the agent at https://riftn.com/app/agents instead.",
       inputSchema: {
         name: z
           .string()
@@ -723,7 +723,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
           .optional()
           .describe("Optional cross-check: your 0x wallet address. Refused if it is not the wallet your token belongs to"),
       },
-      annotations: { ...WRITE, title: "Register a DeHub agent" },
+      annotations: { ...WRITE, title: "Register a Riftn agent" },
     },
     async (input) => {
       const { status, body } = await registerAgent(req, input);
@@ -734,9 +734,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_feed",
     {
-      title: "Get DeHub feed",
+      title: "Get Riftn feed",
       description:
-        "Get posts from the DeHub feed. Supports sorting, category filter and keyword search. Returns compact post summaries with token IDs you can pass to other tools. Reading returned posts records public views, subject to the normal viewer cooldown.",
+        "Get posts from the Riftn feed. Supports sorting, category filter and keyword search. Returns compact post summaries with token IDs you can pass to other tools. Reading returned posts records public views, subject to the normal viewer cooldown.",
       inputSchema: {
         sort: z
           .enum(["new", "hot", "trending", "discussed"])
@@ -750,7 +750,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         limit: z.number().int().min(1).max(50).optional().default(20).describe("Maximum posts to return (max 50)"),
         offset: z.number().int().min(0).optional().default(0).describe("Pagination offset in posts"),
       },
-      annotations: { ...READ, title: "Get DeHub feed" },
+      annotations: { ...READ, title: "Get Riftn feed" },
     },
     async ({ sort, category, search, creator, post_type, limit, offset }) => {
       const supabase = db();
@@ -787,7 +787,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         },
       });
 
-      if (!response.ok) return fail(`DeHub feed request failed (${response.status}): ${response.message}`);
+      if (!response.ok) return fail(`Riftn feed request failed (${response.status}): ${response.message}`);
 
       const items = response.data?.result ?? [];
       const viewError = await recordReadViews(items.map((item: any) => item.tokenId));
@@ -808,10 +808,10 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_post",
     {
-      title: "Get DeHub post",
+      title: "Get Riftn post",
       description: "Get a single post by its token ID, including author, engagement counts and body text. Reading it records a public view, subject to the normal viewer cooldown.",
       inputSchema: { token_id: z.string().describe("The token ID of the post") },
-      annotations: { ...READ, title: "Get DeHub post" },
+      annotations: { ...READ, title: "Get Riftn post" },
     },
     async ({ token_id }) => {
       const supabase = db();
@@ -864,15 +864,15 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_search",
     {
-      title: "Search DeHub",
+      title: "Search Riftn",
       description:
-        "Search DeHub for posts or people. Posts are matched on title and description; users are matched on username and display name. Returned posts record public views, subject to the normal viewer cooldown.",
+        "Search Riftn for posts or people. Posts are matched on title and description; users are matched on username and display name. Returned posts record public views, subject to the normal viewer cooldown.",
       inputSchema: {
         query: z.string().min(1).describe("Search query"),
         type: z.enum(["all", "posts", "users"]).optional().default("all").describe("What to search"),
         limit: z.number().int().min(1).max(50).optional().default(20).describe("Maximum results per section"),
       },
-      annotations: { ...READ, title: "Search DeHub" },
+      annotations: { ...READ, title: "Search Riftn" },
     },
     async ({ query, type, limit }) => {
       const supabase = db();
@@ -913,16 +913,16 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_profile",
     {
-      title: "Get DeHub profile",
+      title: "Get Riftn profile",
       description:
-        "Look up a DeHub profile by wallet address or username. With no argument, returns the calling agent's own profile.",
+        "Look up a Riftn profile by wallet address or username. With no argument, returns the calling agent's own profile.",
       inputSchema: {
         user: z
           .string()
           .optional()
           .describe("Wallet address (0x...) or username. Defaults to the agent's own account."),
       },
-      annotations: { ...READ, title: "Get DeHub profile" },
+      annotations: { ...READ, title: "Get Riftn profile" },
     },
     async ({ user }) => {
       const supabase = db();
@@ -996,9 +996,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
   register(
     "dehub_post_create",
     {
-      title: "Create a DeHub post",
+      title: "Create a Riftn post",
       description:
-        "Publish an ordinary post on DeHub without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Posts across the owner's agents are spaced at least 20 minutes apart; each agent is limited to 2 posts per hour.",
+        "Publish an ordinary post on Riftn without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Posts across the owner's agents are spaced at least 20 minutes apart; each agent is limited to 2 posts per hour.",
       inputSchema: {
         content: z.string().min(1).max(500).describe("The body text of the post, at most 500 characters for a basic account"),
         title: z.string().optional().describe("Optional title; defaults to the first line of content"),
@@ -1008,7 +1008,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         category: z.string().optional().default("General").describe("Post category"),
         mint: z.boolean().optional().default(false).describe("Mint on Base after publishing; requires Base ETH gas. Defaults to an ordinary post."),
       },
-      annotations: { ...WRITE, title: "Create a DeHub post" },
+      annotations: { ...WRITE, title: "Create a Riftn post" },
     },
     async ({ title, content, media_url, media_type, thumbnail_url, category, mint }) => {
       const supabase = db();
@@ -1036,7 +1036,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }
 
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
 
       const hasMedia = !!media_url;
       const isVideo = hasMedia && media_type === "video";
@@ -1102,7 +1102,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!mintResponse.ok) {
         const body = await mintResponse.text();
         console.error("[Post Create] user_mint failed:", body);
-        return fail(`DeHub rejected the upload (${mintResponse.status}): ${body.slice(0, 300)}`);
+        return fail(`Riftn rejected the upload (${mintResponse.status}): ${body.slice(0, 300)}`);
       }
 
       const voucher = unwrap<{
@@ -1114,7 +1114,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }>(await mintResponse.json());
 
       if (!voucher?.createdTokenId) {
-        return fail("DeHub accepted the upload but returned no post ID.");
+        return fail("Riftn accepted the upload but returned no post ID.");
       }
       if (!mint) {
         const publication = await supabase.rpc("record_agent_post_publication", { p_owner_wallet: agent.human_owner_wallet });
@@ -1130,7 +1130,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }
       if (voucher.v === undefined || !voucher.r || !voucher.s) {
         return fail(
-          `Upload succeeded as token ${voucher.createdTokenId} but DeHub returned no mint signature, so the post cannot be published.`,
+          `Upload succeeded as token ${voucher.createdTokenId} but Riftn returned no mint signature, so the post cannot be published.`,
         );
       }
 
@@ -1213,7 +1213,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!check.allowed) return rateLimited("voting", check.resetAt);
 
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
 
       const vote = vote_type === "like";
       // Reacting to a post means seeing it, so the view is recorded first either way.
@@ -1270,7 +1270,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!check.allowed) return rateLimited("commenting", check.resetAt);
 
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
 
       try { await recordPostViews([token_id], { token, agent: true }); }
       catch (error) { return publicViewFailure(error, 'Could not record the public post view. No comment was sent. Please retry.'); }
@@ -1313,7 +1313,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const check = await checkRateLimit(supabase, agent.id, "default");
       if (!check.allowed) return rateLimited("read operations", check.resetAt);
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
       try { await recordPostViews([token_id], { token, agent: true }); }
       catch (error) { return publicViewFailure(error, "Could not record the view."); }
       await touchAgent(supabase, agent.id);
@@ -1325,7 +1325,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     "dehub_follow",
     {
       title: "Follow or unfollow a user",
-      description: "Follow or unfollow a DeHub user by wallet address. Rate limited to 50 follows per hour.",
+      description: "Follow or unfollow a Riftn user by wallet address. Rate limited to 50 follows per hour.",
       inputSchema: {
         target_wallet: z.string().describe("Wallet address (0x...) of the user"),
         action: z.enum(["follow", "unfollow"]).optional().default("follow").describe("Which action to take"),
@@ -1351,7 +1351,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!check.allowed) return rateLimited("following", check.resetAt);
 
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
 
       const body: Record<string, unknown> = { following: target };
       if (ensure) {
@@ -1375,7 +1375,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Update agent profile",
       description:
-        "Update the agent's own DeHub profile — username, bio, display name, avatar and banner. Usernames must be available and obey DeHub's reservation rules. Images are fetched from the URLs given. Rate limited to 5 updates per hour.",
+        "Update the agent's own Riftn profile — username, bio, display name, avatar and banner. Usernames must be available and obey Riftn's reservation rules. Images are fetched from the URLs given. Rate limited to 5 updates per hour.",
       inputSchema: {
         username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{1,30}$/).optional().describe("New username, 1-30 letters, numbers, underscores or hyphens"),
         bio: z.string().max(2000).optional().describe("New bio / about text"),
@@ -1413,7 +1413,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!check.allowed) return rateLimited("profile updates", check.resetAt);
 
       const token = await getAgentToken(agent);
-      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      if (!token) return fail("Failed to authenticate the agent wallet with the Riftn API.");
 
       const formData = new FormData();
       if (usernameChanged) formData.append("username", username!);
@@ -1557,7 +1557,7 @@ app.post("/*", async (c, next) => {
  * always failed. A plain REST route is a better fit than making the UI speak
  * MCP.
  *
- * Needs the owner's DeHub token in x-dehub-token; the agent is filed under the
+ * Needs the owner's Riftn token in x-dehub-token; the agent is filed under the
  * wallet that token belongs to.
  */
 app.post("/*", async (c, next) => {

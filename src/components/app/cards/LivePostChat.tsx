@@ -162,7 +162,7 @@ interface LivePostChatProps {
    * two never matched. Nobody noticed, because the backend discarded the room
    * id and put every message in the platform's global room — so host and
    * viewers were in the same conversation by accident, along with everyone
-   * else on DeHub. Now that rooms are real, both ends have to name the same
+   * else on Riftn. Now that rooms are real, both ends have to name the same
    * one, and the tokenId is the only id both callers have.
    */
   tokenId: string;

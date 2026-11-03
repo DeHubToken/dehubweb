@@ -1,5 +1,5 @@
 /**
- * DeHub Smart Wallet session
+ * Riftn Smart Wallet session
  * ==========================
  * Replaces Web3Auth's key infrastructure with the self-custody wallet system
  * (BIP-39 seed encrypted client-side, stored in Supabase — see lib/wallet-core).
@@ -10,7 +10,7 @@
  *   - AccountAbstractionProvider  → Safe Smart Account via Pimlico (sponsored gas)
  *
  * The Smart Account address is identical to the old flow for the same key
- * (same EOA → same Safe), and the DeHub backend auth contract is unchanged.
+ * (same EOA → same Safe), and the Riftn backend auth contract is unchanged.
  *
  * Decrypted key material is never written to sessionStorage/localStorage. Any
  * script running on this origin (a compromised npm dependency, an XSS payload)
@@ -304,7 +304,7 @@ function announceLockChange(): void {
 /**
  * True when a decrypted key is available in THIS page's memory AND the user's
  * configured auto-lock interval (Settings → Account Security) hasn't elapsed.
- * Logging into DeHub never needs this — only signing a wallet action does.
+ * Logging into Riftn never needs this — only signing a wallet action does.
  *
  * Note this is the strict, synchronous reading: immediately after a reload it
  * is false even though the vault holds a perfectly good unlock, because
@@ -325,7 +325,7 @@ export function isWalletUnlocked(): boolean {
 
 /**
  * Sign a Solana transaction with the ed25519 wallet derived from the unlocked
- * DeHub key. The private key never leaves this module; callers hand in an
+ * Riftn key. The private key never leaves this module; callers hand in an
  * unsigned transaction and receive that same transaction with one signature.
  */
 export async function signDerivedSolanaTransaction(

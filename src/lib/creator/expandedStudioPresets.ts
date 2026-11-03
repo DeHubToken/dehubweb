@@ -1,4 +1,4 @@
-/** Original DeHub image and video recipes; mirrored in both clients. */
+/** Original Riftn image and video recipes; mirrored in both clients. */
 import type { CreatorPreset } from './presets';
 
 export const EXPANDED_STUDIO_PRESETS: CreatorPreset[] = [
