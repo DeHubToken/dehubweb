@@ -19,8 +19,6 @@ export interface LinkPreviewData {
   title: string;
   description: string;
   image: string | null;
-  /** The comic's border preset; null is the theme's own foil. */
-  comicBorder: ComicBorder | null;
   siteName: string;
 }
 
@@ -115,6 +113,8 @@ export interface PostFormState {
   mintAwaitingWallet: boolean;
   /** 'comic' posts the photos as collector cards. */
   postLayout: 'comic' | null;
+  /** The comic's border preset; null is the theme's own foil. */
+  comicBorder: ComicBorder | null;
 }
 
 export interface PostFormActions {
