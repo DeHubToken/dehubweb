@@ -48,7 +48,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/PageSkeletons';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
-import { getDefaultBanner, parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
@@ -293,16 +293,6 @@ export default function ProfilePage() {
     observer.observe(actions);
     return () => observer.disconnect();
   }, [!!data.profile, profileKey]);
-  const [profileTabsHeight, setProfileTabsHeight] = useState(56);
-  useEffect(() => {
-    const tabs = profileTabsRef.current;
-    if (!tabs) return;
-    const measure = () => setProfileTabsHeight(tabs.getBoundingClientRect().height);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(tabs);
-    return () => observer.disconnect();
-  }, [!!data.profile]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -485,12 +475,12 @@ export default function ProfilePage() {
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
     // The loaded page's own top bar, so the back arrow is already where it
     // stays instead of a lone arrow that jumps when the profile arrives.
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><ProfileSkeleton /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
@@ -606,15 +596,7 @@ export default function ProfilePage() {
           </div>
         </> : undefined} />
       </div>
-      <CollapsingProfileHeader
-        headerRef={profileHeaderRef}
-        tabsPinned={isTabsStuck}
-        tabsHeight={profileTabsHeight}
-        name={data.profile.name}
-        handle={data.profile.handle}
-        coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
-        followAction={<ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />}
-      />
+      <CollapsingProfileHeader tabsPinned={isTabsStuck} />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
         <div 
