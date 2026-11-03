@@ -2657,6 +2657,7 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "bringLoginOver": "Used DeHub on dehub.io? <bring>Bring your login over</bring>",
     "restoreWalletTitle": "Bring back your wallet",
     "restoreOriginalWallet": "Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined DeHub to bring that wallet back. Your profile and funds stay as they are.",
     "useAnotherLogin": "Use a different login",
