@@ -282,9 +282,13 @@ const ORG_SAME_AS = [
   'https://www.tiktok.com/@dehub_official',
   'https://coinmarketcap.com/currencies/dehub/',
 ];
+// The old name and address, so search engines and assistants keep treating
+// Riftn as the same site that used to be DeHub at dehub.io.
+const FORMER_NAMES = ['DeHub', 'dehub.io'];
 const ORG_JSONLD = {
   '@type': 'Organization',
   name: 'Riftn',
+  alternateName: FORMER_NAMES,
   url: APP_URL,
   logo: ORG_LOGO,
   description: 'Riftn is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.',
@@ -553,7 +557,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name
 <article><h1>${escHtml(meta.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</h1>
 <!--hl-body-->${body}<!--/hl-body--></article>
 <nav aria-label="Riftn documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
-<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">Riftn home</a></p>
 </body>
 </html>`;
 }
@@ -594,7 +598,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: canonicalUrl }])}
 <p><a href="${APP_URL}/">Riftn</a> › Docs</p>
 <h1>Riftn Documentation</h1>
 <!--hl-body--><ul style="list-style:none;padding:0">${items}</ul><!--/hl-body-->
-<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">Riftn home</a></p>
 </body>
 </html>`;
 }
@@ -937,7 +941,7 @@ ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(imageAlt)}"${bannerDims
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
 </main>
-<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">Riftn home</a></p>
 </body>
 </html>`;
 }
@@ -1000,7 +1004,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 <p><a href="${APP_URL}/">Riftn</a> › Blog</p>
 <h1>Riftn Blog</h1>
 <ul style="list-style:none;padding:0">${items}</ul>
-<p><a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/">Riftn home</a></p>
 </body>
 </html>`;
 }
@@ -1200,7 +1204,7 @@ const MARKETING_PAGES = {
 <h2>It stays a conversation</h2>
 <p>An app is never finished at the first attempt. Reply in the chat for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version. Every build lives in your messages.</p>
 <h2>Shareable by default</h2>
-<p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on Riftn or sent to somebody who has never opened it before.</p>
+<p>Finished apps render straight from a riftn.com link in any browser, which means they can be posted anywhere on Riftn or sent to somebody who has never opened it before.</p>
 <p>Building needs a free Riftn account, sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your Riftn plan.</p>`,
   },
   'depin': {
@@ -1581,7 +1585,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     title: 'Username Marketplace: Buy & Sell Riftn Handles for tokens',
     description: 'Browse Riftn usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears, or list your own.',
     heading: 'Riftn Username Marketplace',
-    bodyHtml: `<p>Every Riftn profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
+    bodyHtml: `<p>Every Riftn profile lives at <strong>riftn.com/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
 <h2>Buying a handle</h2>
 <p>The asking price is quoted by Riftn, not by the browser, and the payment goes wallet-to-wallet, Riftn takes no cut and never holds your funds. Search a name you want and Riftn also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
 <h2>Selling yours</h2>
@@ -1800,7 +1804,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   },
   'stats': {
     title: 'Live Site Stats: Riftn Visitors and Members in Real Time',
-    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends, revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
+    description: "Live numbers for riftn.com: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends, revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
     heading: 'Riftn Live Stats',
     bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
 <h2>Members as well as traffic</h2>
@@ -3186,6 +3190,10 @@ function homeJsonLd(value) {
       node.logo = ORG_LOGO;
       changed = true;
     }
+    if ((node['@type'] === 'Organization' || node['@type'] === 'WebSite') && !node.alternateName) {
+      node.alternateName = FORMER_NAMES;
+      changed = true;
+    }
   }
   return changed ? value : null;
 }
@@ -3936,7 +3944,7 @@ ${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10)
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 <p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
 <h2>How a Riftn bounty works</h2>
-<p>A bounty is a scoped task with a budget attached, posted by a Riftn account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? `, ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
+<p>A bounty is a scoped task with a budget attached, posted by a Riftn account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? `, ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">riftn.com/work</a>.</p>`,
   });
 }
 
@@ -4169,7 +4177,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, {
 <body>
 <p><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
 <article><!--hl-body-->${article}<!--/hl-body--></article>
-<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
+<p><a href="${APP_URL}/docs/blog">← All Riftn blog posts</a> · <a href="${APP_URL}/">Riftn home</a></p>
 </body>
 </html>`;
 }
@@ -7400,6 +7408,15 @@ async function handleRequest(request, env, ctx) {
       .replaceAll('content="@DeHubApp"', 'content="@dehub_official"')
       .replaceAll('x.com/DeHubApp', 'x.com/dehub_official')
       .replaceAll('twitter.com/DeHubApp', 'twitter.com/dehub_official');
+
+    // The site moved to riftn.com. Until the fn is redeployed it still writes
+    // dehub.io page URLs into structured data, og:url and links, which tells
+    // search engines the old host is the real one. Point page URLs at riftn.com;
+    // image transforms, APIs and well-known files really do stay on dehub.io.
+    html = html.replace(
+      /https:\/\/(?:www\.)?dehub\.io(?=[/"'?#\s<]|$)(?!\/(?:cdn-cgi|api|_sb|_api|\.well-known|assets)\/)/g,
+      APP_URL,
+    );
 
     // Nonexistent entities must be real 404s. The deployed Supabase fn
     // answers 200 with a recognizable generic page for missing posts /
