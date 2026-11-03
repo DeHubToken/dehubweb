@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
+import { fitIconInk } from '@/lib/optical-icon';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
@@ -338,6 +339,19 @@ export default function ProfilePage() {
     if (buttonRect.left < railRect.left) rail.scrollLeft += buttonRect.left - railRect.left;
     else if (buttonRect.right > railRect.right) rail.scrollLeft += buttonRect.right - railRect.right;
   }, [activeTab, isTabsStuck, tabsFadeRef]);
+  // Even out the tab glyphs: each icon set draws its shape at a different share
+  // of the box, so the film strip stood a head taller than the speech bubble.
+  // Re-fit on resize too, which also catches a cached page being shown again.
+  const profileTabKeys = data.PROFILE_TABS.map((tab) => tab.value).join();
+  useEffect(() => {
+    const rail = tabsFadeRef.current;
+    if (!rail) return;
+    const fit = () => rail.querySelectorAll<SVGSVGElement>('svg[data-tab-glyph]').forEach(fitIconInk);
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [profileTabKeys, isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -738,7 +752,7 @@ export default function ProfilePage() {
                       isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
                     )}
                   >
-                    <tab.icon className="w-[18px] h-[18px] relative z-10" />
+                    <tab.icon data-tab-glyph className="w-[18px] h-[18px] relative z-10" />
                     <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count ?? '\u00a0'}</span>
                   </button>
                 );
