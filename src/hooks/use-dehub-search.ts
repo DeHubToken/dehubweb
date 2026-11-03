@@ -42,6 +42,10 @@ export interface SearchCreator {
   followerCount?: number;
   isFollowing?: boolean;
   followsYou?: boolean;
+  /** Raw avatar path from the API, for cards that size their own avatar. */
+  avatarPath?: string;
+  /** Profile banner path, for the profile-card people results. */
+  coverImageUrl?: string | null;
 }
 
 export interface UseDeHubSearchOptions {
@@ -126,10 +130,12 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     badgeLock: account.hideBadgeAndBalance ? null : account.badgeLock,
     badgeUsername: account.username,
     verified: account.verified || false,
-    bio: account.bio,
-    followerCount: account.followerCount,
+    bio: account.bio ?? account.aboutMe ?? undefined,
+    followerCount: account.followerCount ?? account.followers,
     isFollowing: account.isFollowing,
     followsYou: account.followsYou,
+    avatarPath: rawAvatarPath || undefined,
+    coverImageUrl: account.coverImageUrl ?? null,
   };
 }
 
