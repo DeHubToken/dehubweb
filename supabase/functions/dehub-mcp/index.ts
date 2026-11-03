@@ -113,7 +113,7 @@ function buildChallengeMessage(proof: { challengeId: string; address: string; ch
   return [
     "dehub.io requests wallet verification.",
     "",
-    "URI: https://riftn.com",
+    "URI: https://dehub.io",
     "Version: 2",
     "Address: " + proof.address.toLowerCase(),
     "Chain ID: " + proof.chainId,
