@@ -21,7 +21,7 @@ import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { BadgedName } from '@/components/app/BadgedName';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { filterNavItems, exploreSearchHref } from './navigation/nav-search';
