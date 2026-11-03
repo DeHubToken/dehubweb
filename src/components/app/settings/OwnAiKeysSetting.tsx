@@ -40,7 +40,8 @@ export function OwnAiKeysSetting({ preview, previewEditing, previewShowAll }: { 
     if (isAuthenticated && !preview) load();
   }, [isAuthenticated, preview, load]);
 
-  if (!isAuthenticated) return null;
+  // Until the server side is live (or if it can't be reached) the section stays hidden.
+  if (!isAuthenticated || (rows && rows.length === 0)) return null;
 
   const statusLabel = (status: ProviderKeyStatus) => ({
     working: t('ownKeys.working', 'Working'),
