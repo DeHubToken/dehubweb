@@ -265,7 +265,14 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
       className={cn('relative flex flex-col items-center select-none pt-3', full ? 'pb-3' : 'pb-5')}
       style={{ perspective: 1100 }}
     >
-      <div className="comic-stack relative" data-wide={ratio > 1 ? '' : undefined} data-full={full ? '' : undefined}>
+      {/* The art takes at most ~60% of the screen height, so the card, its page
+          hand and the button stay on screen on a laptop. */}
+      <div
+        className="comic-stack relative"
+        data-wide={ratio > 1 ? '' : undefined}
+        data-full={full ? '' : undefined}
+        style={{ maxWidth: `calc(${ratio.toFixed(3)} * ${full ? 60 : 56}vh)` }}
+      >
         {/* The next cards in the deck, fanned behind. */}
         {behind.map((i, n) => (
           <div
