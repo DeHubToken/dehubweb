@@ -277,17 +277,10 @@ export function HomeIntroPanel({
       {/* --- HUD chrome ---------------------------------------------------- */}
       <div className="relative z-10 px-5 py-5 sm:px-8 sm:py-7">
         <div className="dehub-intro-top mb-5 flex items-start justify-between gap-3">
-          {/* White RIFTN pill, ALWAYS top-left (blog cards crop object-bottom). */}
-          <span
-            className="dehub-intro-brand inline-flex items-center rounded-[14px] bg-[#f4f4f2] px-4 py-2"
-            style={{ boxShadow: '0 0 34px rgba(255,255,255,.38), 0 0 90px rgba(255,255,255,.14)' }}
-          >
-            {/* -web.webp: the kit's wordmark-black.png is 1752x417 for a logo
-                drawn 18px tall — a 23x linear oversample, 45 KB. This is 222x53
-                (3x, covering every DPR that exists) at 3 KB. The PNG stays: it
-                is byte-identical to /brand/wordmark-black.png, which the brand
-                assets page offers as a download. */}
-            <img src="/brand-kit/brand/wordmark-black-web.webp" alt="Riftn" width={74} height={18} className="h-[18px] w-auto" />
+          {/* Plain white Riftn wordmark, ALWAYS top-left (blog cards crop object-bottom).
+              203x60 is 3x the drawn height, covering every DPR that exists. */}
+          <span className="dehub-intro-brand inline-flex items-center py-1">
+            <img src="/brand-kit/brand/riftn-wordmark-white-web.png" alt="Riftn" width={68} height={20} className="h-[20px] w-auto" />
           </span>
           <div className="flex items-center gap-2">
             <span

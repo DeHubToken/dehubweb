@@ -477,10 +477,10 @@
     "empty": "Etkin hesap bağlantısı yok.",
     "disconnect": "Bağlantıyı kes",
     "failed": "Bağlantı kurulamadı. Yeniden giriş yapmayı deneyin.",
-    "intro": "ChatGPT'de DeHub'ı keşfedin veya profilinizi düzenlemek, paylaşım yapmak ve Creator Studio'yu kullanmak için hesabınızı bağlayın. Hesap kontrolü için https://riftn.com/mcp adresini OAuth bağlayıcısı olarak ekleyin.",
+    "intro": "ChatGPT'de Riftn'ı keşfedin veya profilinizi düzenlemek, paylaşım yapmak ve Creator Studio'yu kullanmak için hesabınızı bağlayın. Hesap kontrolü için https://dehub.io/mcp adresini OAuth bağlayıcısı olarak ekleyin.",
     "what": "Herkese açık gönderi ve profilleri keşfedin. OAuth bağlantısıyla profil ve gizliliği yönetebilir, gönderi ve yorum paylaşabilir, kişileri takip edebilir, bildirimleri okuyabilir, yer imi kaydedebilir ve görsel, video, ses ve 3D varlıklar üretebilirsiniz. Riftn ödeme kuralları geçerlidir.",
     "account": "Herkese açık içerikler için hesap gerekmez. Profilinizi yönetmek, içerik oluşturmak ve paylaşmak için Riftn hesabınızı bağlayın.",
-    "step": "Hesabınızı yönetmek için https://riftn.com/mcp adresini OAuth bağlayıcısı olarak ekleyin, DeHub'a giriş yapın ve erişime izin vermeden önce izinleri inceleyin.",
+    "step": "Hesabınızı yönetmek için https://dehub.io/mcp adresini OAuth bağlayıcısı olarak ekleyin, Riftn'a giriş yapın ve erişime izin vermeden önce izinleri inceleyin.",
     "profilePrompt": "Riftn biyografimi şöyle değiştir: Bağımsız film ve müzik üreticisi.",
     "generatePrompt": "Riftn görsel modellerini göster ve bir portre üretmeden önce fiyatını belirt.",
     "libraryPrompt": "Riftn Creator arşivimdeki en yeni varlıkları göster."

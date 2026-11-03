@@ -5359,7 +5359,7 @@ export async function proxyApiRequest(request) {
       redirect: 'manual',
     });
     const response = new Response(upstream.body, upstream);
-    response.headers.set('X-Riftn-Relay', 'dehub.io');
+    response.headers.set('X-DeHub-Relay', 'dehub.io');
     return response;
   } catch {
     return new Response(JSON.stringify({
@@ -5370,7 +5370,7 @@ export async function proxyApiRequest(request) {
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Cache-Control': 'no-store',
-        'X-Riftn-Relay': 'dehub.io',
+        'X-DeHub-Relay': 'dehub.io',
       },
     });
   }
@@ -5413,7 +5413,7 @@ function supabaseRelayError(status, message) {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex',
-      'X-Riftn-Relay': 'dehub.io',
+      'X-DeHub-Relay': 'dehub.io',
     },
   });
 }
@@ -5474,7 +5474,7 @@ export async function proxySupabaseRequest(request) {
     for (const header of HOP_BY_HOP_HEADERS) response.headers.delete(header);
     response.headers.set('Cache-Control', 'no-store');
     response.headers.set('X-Robots-Tag', 'noindex');
-    response.headers.set('X-Riftn-Relay', 'dehub.io');
+    response.headers.set('X-DeHub-Relay', 'dehub.io');
     response.headers.delete('alt-svc');
     return response;
   } catch {
@@ -5486,7 +5486,7 @@ export function canonicalOriginRequest(request) {
   const target = new URL(request.url);
   // The direct gateway uses a separate upstream DNS name to avoid a loop
   // after the public apex moves. This affects URL semantics, not access rights.
-  if (target.hostname !== 'origin.dehub.io' || request.headers.get('X-Riftn-Public-Host') !== 'dehub.io') return request;
+  if (target.hostname !== 'origin.dehub.io' || request.headers.get('X-DeHub-Public-Host') !== 'dehub.io') return request;
   target.hostname = 'dehub.io';
   return new Request(target, request);
 }
@@ -6183,7 +6183,7 @@ async function handleRequest(request, env, ctx) {
   if (trimmedPath === '/guides') return redirect301(`${APP_URL}/docs/blog`);
 
   // Docs and blog paths are all lowercase, but /Docs, /DOCS/FAQ and
-  // /Guides/What-Is-Riftn answered 200 (the SPA shell, under a noindex): a
+  // /Guides/What-Is-Dehub answered 200 (the SPA shell, under a noindex): a
   // dead end for whoever typed or linked them. One hop to the real page.
   // Only these two spaces — profile handles and entity ids are case-sensitive.
   const docsCase = pathname.match(/^\/(docs|guides)(\/.*)?$/i);
@@ -6198,7 +6198,7 @@ async function handleRequest(request, env, ctx) {
   // crawler to keep the old URL. It is permanent.
   if (pathname === '/index.html') return redirect301(`${APP_URL}/${url.search}`);
 
-  // Whitepaper PDFs from the dehub.net era (/uploads/Riftn-English-Whitepaper.pdf
+  // Whitepaper PDFs from the dehub.net era (/uploads/DeHub-English-Whitepaper.pdf
   // and the like) still rank for brand queries, and dehub.net's path-preserving
   // 301 lands them here. There is no PDF any more; the docs are its successor.
   if (/^\/uploads\/[^/]*(?:white|lite)(?:[-_ ]|%20)?paper[^/]*\.pdf$/i.test(pathname)) {
@@ -6835,7 +6835,7 @@ async function handleRequest(request, env, ctx) {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
     'Vary': 'User-Agent',
-    'X-Powered-By': 'Riftn-Edge-SEO-Blog',
+    'X-Powered-By': 'DeHub-Edge-SEO-Blog',
   };
 
   // Legacy /blog URL space: a user registered the handle "blog", so these
@@ -7383,14 +7383,14 @@ async function handleRequest(request, env, ctx) {
     // newer than the deployed fn's allowlist fall to its generic fallback,
     // whose title matches NOT_FOUND_TITLES — title-sniffing those 404'd live
     // pages (this is exactly what killed /guides/best-web3-social-media-dapps).
-    // A future fn deploy can signal explicitly via X-Riftn-NotFound: 1.
+    // A future fn deploy can signal explicitly via X-DeHub-NotFound: 1.
     const isEntityRoute =
       ssrPath.includes('/post/') ||
       pathname.includes('newpost/') ||
       pathname.includes('/communities/') ||
       couldBeProfileSegment(firstSegmentOf(pathname), SYSTEM_ROUTES);
     const fnSaysNotFound =
-      response.status === 404 || response.headers.get('X-Riftn-NotFound') === '1';
+      response.status === 404 || response.headers.get('X-DeHub-NotFound') === '1';
     // A 404 is only honored on ENTITY routes (posts / profiles / communities,
     // where a miss really is a missing entity). On static marketing routes a
     // fn 404 just means the deployed fn's allowlist is stale — passing it
@@ -7761,7 +7761,7 @@ async function handleRequest(request, env, ctx) {
           ? 'public, s-maxage=300, stale-while-revalidate=600'
           : 'no-store',
         'Vary': 'User-Agent',
-        'X-Powered-By': 'Riftn-Edge-SEO',
+        'X-Powered-By': 'DeHub-Edge-SEO',
         ...(robotsHeader ? { 'X-Robots-Tag': robotsHeader } : {}),
         ...(aiReserved ? { 'tdm-reservation': '1' } : {}),
       },

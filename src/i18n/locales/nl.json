@@ -477,10 +477,10 @@
     "empty": "Geen actieve accountverbindingen.",
     "disconnect": "Verbinding verbreken",
     "failed": "Verbinding mislukt. Meld je opnieuw aan.",
-    "intro": "Bekijk DeHub in ChatGPT of koppel je account om je profiel te wijzigen, berichten te plaatsen en Creator Studio te gebruiken. Voeg https://riftn.com/mcp toe als OAuth-connector voor accountbeheer.",
+    "intro": "Bekijk Riftn in ChatGPT of koppel je account om je profiel te wijzigen, berichten te plaatsen en Creator Studio te gebruiken. Voeg https://dehub.io/mcp toe als OAuth-connector voor accountbeheer.",
     "what": "Bekijk openbare berichten en profielen. Met een OAuth-accountverbinding kun je je profiel en privacy beheren, berichten en reacties plaatsen, mensen volgen, meldingen lezen, bladwijzers opslaan en afbeeldingen, video, audio en 3D-objecten maken. De betaalregels van Riftn blijven gelden.",
     "account": "Openbare inhoud bekijken kan zonder account. Koppel je Riftn-account om je profiel te beheren en inhoud te maken of publiceren.",
-    "step": "Voeg https://riftn.com/mcp toe als OAuth-connector, meld je aan bij DeHub en controleer de rechten voordat je toegang toestaat.",
+    "step": "Voeg https://dehub.io/mcp toe als OAuth-connector, meld je aan bij Riftn en controleer de rechten voordat je toegang toestaat.",
     "profilePrompt": "Wijzig mijn Riftn-bio in: Onafhankelijke maker van films en muziek.",
     "generatePrompt": "Toon de afbeeldingsmodellen van Riftn en de prijs van een portret voordat je het maakt.",
     "libraryPrompt": "Toon de nieuwste bestanden in mijn Riftn Creator-bibliotheek."

@@ -477,10 +477,10 @@
     "empty": "No active account connections.",
     "disconnect": "Disconnect",
     "failed": "Could not complete the connection. Try signing in again.",
-    "intro": "Browse DeHub in ChatGPT, or link your own account to update your profile, publish posts and use Creator Studio. Add https://riftn.com/mcp as an OAuth connector for account controls.",
+    "intro": "Browse Riftn in ChatGPT, or link your own account to update your profile, publish posts and use Creator Studio. Add https://dehub.io/mcp as an OAuth connector for account controls.",
     "what": "Browse public posts and profiles. With an OAuth account connection, manage your profile and privacy, publish posts and comments, follow people, read notifications, save bookmarks and generate images, video, audio and 3D assets. Generation uses Riftn's existing payment rules.",
     "account": "Public browsing needs no account. Link your Riftn account to manage your profile and create or publish content.",
-    "step": "For account controls, add https://riftn.com/mcp as an OAuth connector, sign in to DeHub and review the permissions before allowing access.",
+    "step": "For account controls, add https://dehub.io/mcp as an OAuth connector, sign in to Riftn and review the permissions before allowing access.",
     "profilePrompt": "Update my Riftn bio to: Independent creator making films and music.",
     "generatePrompt": "Show me Riftn's image models and quote a portrait before generating it.",
     "libraryPrompt": "Show the latest assets in my Riftn Creator library."

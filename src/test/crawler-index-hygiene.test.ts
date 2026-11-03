@@ -333,7 +333,7 @@ describe('files that are not there', () => {
   });
 
   it('sends the legacy whitepaper PDFs to the docs', async () => {
-    for (const path of ['/uploads/DeHub-English-Whitepaper.pdf', '/uploads/Riftn%20White%20Paper.pdf', '/uploads/dehub_litepaper_v2.pdf']) {
+    for (const path of ['/uploads/DeHub-English-Whitepaper.pdf', '/uploads/DeHub%20White%20Paper.pdf', '/uploads/dehub_litepaper_v2.pdf']) {
       const res = await get(path, CHROME);
       expect(res.status, path).toBe(301);
       expect(res.location).toBe('https://riftn.com/docs');
