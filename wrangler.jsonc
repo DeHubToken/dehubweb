@@ -19,7 +19,12 @@
     { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "legacy.dehub.io/*", "zone_name": "dehub.io" },
     { "pattern": "dehub.net/*", "zone_name": "dehub.net" },
-    { "pattern": "*.dehub.net/*", "zone_name": "dehub.net" }
+    { "pattern": "*.dehub.net/*", "zone_name": "dehub.net" },
+    // riftn.com: the new address. Custom domains, so deploy creates the DNS
+    // records and certificates. Served as a noindex mirror until it becomes
+    // the canonical host.
+    { "pattern": "riftn.com", "custom_domain": true },
+    { "pattern": "www.riftn.com", "custom_domain": true }
   ],
   "assets": {
     "binding": "ASSETS",
