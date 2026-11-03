@@ -123,6 +123,10 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
         followerCount: typeof item.followers === 'number' ? item.followers : undefined,
         isFollowing: item.isFollowing,
         followsYou: item.followsYou,
+        coverImageUrl: item.coverImageUrl ?? null,
+        badgeBalance: item.badgeBalance,
+        badgeLock: item.badgeLock,
+        hideBadgeAndBalance: item.hideBadgeAndBalance,
       }))
       .filter(a => a.id && a.address);
     
@@ -165,6 +169,10 @@ export async function universalSearch(params: UniversalSearchParams): Promise<Un
         followerCount: typeof item.followers === 'number' ? item.followers : undefined,
         isFollowing: item.isFollowing,
         followsYou: item.followsYou,
+        coverImageUrl: item.coverImageUrl ?? null,
+        badgeBalance: item.badgeBalance,
+        badgeLock: item.badgeLock,
+        hideBadgeAndBalance: item.hideBadgeAndBalance,
       }))
       .filter((a: SearchAccount) => a.id && a.address);
   }
