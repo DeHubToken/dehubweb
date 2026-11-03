@@ -1,6 +1,6 @@
-// One 6 s loop. DEHUB rots into blocks in four steps, glitches hard into
+// One 6 s loop. RIFTN rots into blocks in four steps, glitches hard into
 // RIFTN, holds, then glitches back and rebuilds block by block.
-// Frame indices: 0 DEHUB, 1 RIFTN, 2..5 DEHUB pixel rot steps 1..4.
+// Frame indices: 0 RIFTN, 1 RIFTN, 2..5 RIFTN pixel rot steps 1..4.
 export const LOOP = 6000;
 const STEPS = [
  [0, 1200, 0], [1200, 1700, 2], [1700, 1820, 0], [1820, 2400, 3],
@@ -89,7 +89,7 @@ export async function createDesktopGlitch(canvas, sources, options = {}) {
   if (frameSets[key]) return frameSets[key];
   const [dehub, riftn] = masks[key];
   const logos = [dehub, riftn, ...[1, 2, 3, 4].map(level => pixelate(dehub, level))];
-  // Colour echoes only for frames the glitch uses: DEHUB, RIFTN, rot step 3 and 4.
+  // Colour echoes only for frames the glitch uses: RIFTN, RIFTN, rot step 3 and 4.
   const tinted = logos.map((logo, i) => i === 2 || i === 3 ? null : ['#71e7ff', '#ab91ff'].map(color => {
    const c = document.createElement('canvas'); c.width = 1080; c.height = 360;
    const x = c.getContext('2d'); x.drawImage(logo, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = color; x.fillRect(0, 0, 1080, 360); return c;

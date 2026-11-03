@@ -339,7 +339,7 @@ export function NftSheet({
             <div className="flex flex-wrap items-center gap-1.5 text-[12px] text-zinc-500">
               <span data-kit-chip data-size="sm" data-static><span>{CHAIN_LABEL[target?.chainId ?? 0]}</span></span>
               {detail.data?.isDehub ? (
-                <span data-kit-chip data-size="sm" data-static><span>{t('nftMarket.dehubPost', { defaultValue: 'DeHub post' })}</span></span>
+                <span data-kit-chip data-size="sm" data-static><span>{t('nftMarket.dehubPost', { defaultValue: 'Riftn post' })}</span></span>
               ) : collection ? (
                 <span data-kit-chip data-size="sm" data-static><span className="max-w-[12rem] truncate">{collection}</span></span>
               ) : null}
@@ -580,7 +580,7 @@ export function NftSheet({
               </div>
               {priceWei > 0n ? (
                 <div data-page-bento className="flex flex-col gap-1.5 rounded-xl bg-zinc-900 p-3">
-                  <Row label={t('nftMarket.dehubFee', { defaultValue: 'DeHub fee ({{pct}}%)', pct: (cur?.feeBps ?? 0) / 100 })} value={fmt(fee)} />
+                  <Row label={t('nftMarket.dehubFee', { defaultValue: 'Riftn fee ({{pct}}%)', pct: (cur?.feeBps ?? 0) / 100 })} value={fmt(fee)} />
                   {royalty > 0n ? <Row label={t('nftMarket.creatorRoyalty', { defaultValue: 'Creator royalty' })} value={fmt(royalty)} /> : null}
                   <Row
                     strong

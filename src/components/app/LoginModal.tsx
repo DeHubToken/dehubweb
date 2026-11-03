@@ -334,7 +334,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     <p className="text-xs text-white/40 text-center mt-2">
       <Trans
         i18nKey="loginModal.bringLoginOver"
-        defaults="Used DeHub on dehub.io? <bring>Bring your login over</bring>"
+        defaults="Used Riftn on dehub.io? <bring>Bring your login over</bring>"
         components={{
           bring: <a href={`https://dehub.io/_handoff-out?next=${encodeURIComponent(`${window.location.pathname}${window.location.search}`)}`} className="underline hover:text-white/60 transition-colors" />,
         }}
