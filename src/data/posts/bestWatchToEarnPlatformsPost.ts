@@ -125,7 +125,7 @@ Generally, crypto you receive as a reward can be subject to UK tax, and disposin
 `,
   bannerImage: '/media/best-watch-to-earn-platforms-2026-banner.png',
   bannerImageAlt: 'Illustration ranking the best watch-to-earn platforms of 2026 with DeHub, Theta, XCAD and others',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-31T09:45:00.000Z',
   updatedAt: '2026-05-31T09:45:00.000Z',
   tags: ['watch-to-earn', 'best watch to earn platforms 2026', 'watch2earn', 'crypto', 'DeHub', 'web3', 'get paid to watch videos'],

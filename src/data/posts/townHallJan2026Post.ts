@@ -63,7 +63,7 @@ We will maintain consistent communication through February, with regular updates
   bannerImage: '/media/town-hall-jan-2026-banner.png',
   bannerImageAlt: 'DeHub Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-01-28T12:00:00.000Z',
   tags: ['Town Hall', 'Private Sale', 'TGE', 'Last Chad Standing', 'Liquidity', 'Roadmap', '2026'],

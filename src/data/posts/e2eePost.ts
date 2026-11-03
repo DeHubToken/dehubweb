@@ -183,7 +183,7 @@ Your messages. Your privacy. Always.`,
   bannerImage: '/media/e2ee-banner.png',
   bannerImageAlt: 'DeHub End-to-End Encryption Banner - Privacy First Technology',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-10-22T00:00:00Z',
   tags: ['Privacy', 'Security', 'Encryption', 'Technology', 'E2EE'],

@@ -43,7 +43,7 @@ const countdownBeginsPost: BlogPostType = {
   bannerImage: '/media/countdown-clock-banner.png',
   bannerImageAlt: 'Countdown clock for DeHub app store launch',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-11-17T00:00:00.000Z',
   tags: ['App Store', 'Launch', 'Milestone', 'Google Play', 'iOS'],
@@ -133,7 +133,7 @@ const massiveWeekPost: BlogPostType = {
   bannerImage: '/media/town-hall-ama-banner-new.png',
   bannerImageAlt: 'DeHub Town Hall and AMA Highlights showcasing major announcements',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-11-07T12:00:00.000Z',
   tags: ['BNB Chain', 'First Class Agency', 'App Store', 'TikTok', 'Partnerships', 'DePIN', 'VR Streaming'],
@@ -250,7 +250,7 @@ const teamFirstClassAgencyPost: BlogPostType = {
   bannerImage: '/media/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png',
   bannerImageAlt: 'Mike Hales at TikTok Live Fest event, representing Team First Class Agency\'s official partnership with TikTok',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-11-22T12:00:00.000Z',
   tags: ['TikTok', 'Live Streaming', 'Agency', 'Mike Hales', 'Indi Jay Cammish', 'Creators'],
@@ -361,7 +361,7 @@ const interactiveStreamingPost: BlogPostType = {
   bannerImage: '/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png',
   bannerImageAlt: 'Interactive live streaming with animated tips - DeHub\'s revolutionary approach to on-chain content creation',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-03-10T12:00:00.000Z',
   tags: ['Live Streaming', 'Blockchain', 'Interactive', 'Tips', 'Q1 2025'],
@@ -540,7 +540,7 @@ const wrapUp2022Post: BlogPostType = {
   bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
   bannerImageAlt: '2022 Wrap Up - DeHub year in review with fireworks celebration',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-01-04T12:00:00.000Z',
   tags: ['Year Review', '2022', 'Roadmap', 'Milestones', 'Community'],
@@ -579,7 +579,7 @@ const tokenisedUploadsPost: BlogPostType = {
   bannerImage: '/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
   bannerImageAlt: 'A glowing DeHub token representing tokenized uploads.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-06-10T12:00:00.000Z',
   tags: ['Tokenomics', 'NFT', 'Feature', 'Update', 'ERC1155'],
@@ -611,7 +611,7 @@ const awardWinningInnovationPost: BlogPostType = {
   bannerImage: '/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
   bannerImageAlt: 'Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-04-20T12:00:00.000Z',
   tags: ['Award', 'Innovation', 'Gaming', 'Corporate LiveWire'],
@@ -659,7 +659,7 @@ const dubaiEventPost: BlogPostType = {
   bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
   bannerImageAlt: 'DeHub DeTour Dubai event banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-04-10T12:00:00.000Z',
   tags: ['DeHub Journey', 'Roadmap', 'Q22024', 'Events', 'Dubai'],
@@ -711,7 +711,7 @@ const basePoolPost: BlogPostType = {
   bannerImage: '/media/068250b6-b4b6-42fc-8633-f686a94990c7.png',
   bannerImageAlt: 'DeHub launching on Base network announcement banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-05-14T12:00:00.000Z',
   tags: ['Announcement', 'Base', 'DeFi', 'Uniswap'],
@@ -749,7 +749,7 @@ const dehubTakeoverPost: BlogPostType = {
   bannerImage: '/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png',
   bannerImageAlt: 'DeHub Takeover announcement banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-08-22T12:00:00.000Z',
   tags: ['Community', 'Marketing', 'Takeover', 'Update'],
@@ -795,7 +795,7 @@ const crusadersSponsorshipPost: BlogPostType = {
   bannerImage: '/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png',
   bannerImageAlt: 'DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-06-30T12:00:00.000Z',
   tags: ['Sponsorship', 'Rugby', 'Community', 'Wales'],
@@ -870,7 +870,7 @@ const publicBetaDappReportPost: BlogPostType = {
   bannerImage: '/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png',
   bannerImageAlt: 'DeHub Beta Overview banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-03-25T12:00:00.000Z',
   tags: ['DApp', 'Beta', 'Update', 'Roadmap', 'Community'],
@@ -942,7 +942,7 @@ This is just the beginning. We're planning updates to include:
 
 Your feedback drives this platform — so let us know what you love (or want improved) and help us shape the next generation of decentralized content discovery.`,
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
     avatar: '/media/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png'
   },
   publishedAt: '2025-05-03T00:00:00Z',
@@ -1062,7 +1062,7 @@ const offRampServicePost: BlogPostType = {
   bannerImage: '/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png',
   bannerImageAlt: 'DeHub Cards in premium gold finish showcasing modern crypto payment solution',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-06-18T12:00:00.000Z',
   tags: ['DeHub Card', 'Off-ramp', 'Fintech', 'Crypto Payments', 'Financial Services'],
@@ -1139,7 +1139,7 @@ const flagshipGameLaunchPost: BlogPostType = {
   bannerImage: '/media/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png',
   bannerImageAlt: 'Military helicopter in flight representing the flagship game launch and strategic partnerships',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-07-04T12:00:00.000Z',
   tags: ['Gaming', 'Airdrop', 'Last Chad Standing', 'LCS', 'Partnership'],
@@ -1263,7 +1263,7 @@ const coinbaseDHBPost: BlogPostType = {
   bannerImage: '/media/coinbase-dhb-banner.png',
   bannerImageAlt: '$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-08-19T12:00:00.000Z',
   tags: ['Coinbase', 'DHB', 'DEX', 'Decentralized Trading', 'Base', 'DeFi'],
@@ -1407,7 +1407,7 @@ const bnbPoolUpdatePost: BlogPostType = {
   bannerImage: '/media/bnb-pool-update-banner-new.png',
   bannerImageAlt: 'BNB Pool Update - DeHub\'s journey to recover 876 BNB stuck from 2022 contract issue',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-09-14T12:00:00.000Z',
   tags: ['BNB', 'Pool Recovery', 'Binance', 'Community', 'Governance'],

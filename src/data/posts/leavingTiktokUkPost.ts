@@ -124,7 +124,7 @@ No. DeHub at dehub.io is a Web3 decentralised social network for creators. It is
 Generally, yes. HMRC treats crypto income and capital gains under existing tax rules, and the specifics depend on how you earn and dispose of tokens. Keep accurate records of your earnings and take professional advice for your circumstances, exactly as you would with any other self-employed creator income.`,
   bannerImage: '/media/uk-creators-guide-leaving-tiktok-banner.png',
   bannerImageAlt: 'A UK creator moving from TikTok to a Web3 platform they own on DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-04-23T11:00:00.000Z',
   updatedAt: '2026-04-23T11:00:00.000Z',
   tags: ['tiktok alternative uk', 'creator monetisation', 'web3 creators', 'leaving tiktok', 'watch-to-earn', 'british crypto creators', 'dehub'],

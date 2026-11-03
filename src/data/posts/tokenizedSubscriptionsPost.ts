@@ -105,7 +105,7 @@ On DeHub, which runs on-chain tradable subscriptions and token-gated content as 
 `,
   bannerImage: '/media/tokenized-subscriptions-explained-banner.png',
   bannerImageAlt: 'Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-02T13:15:00.000Z',
   updatedAt: '2026-05-02T13:15:00.000Z',
   tags: ['tokenised subscriptions', 'subscription nft', 'on-chain subscriptions', 'token-gated content', 'creator economy', 'web3 social', 'DeHub'],

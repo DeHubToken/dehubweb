@@ -22,7 +22,7 @@ With app store presence secured, we're now gearing up for what will be one of th
 **[Download DeHub on Google Play Store](https://play.google.com/store/apps/details?id=io.dehub.mobile&hl)**`,
   bannerImage: '/media/google-playstore-banner.png',
   bannerImageAlt: 'DeHub Google Play Store listing announcement banner',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2025-12-01T00:00:00.000Z',
   tags: ['Announcement', 'App Store', 'Google Play', 'Milestone', '2025'],
   readingTime: 3,

@@ -151,7 +151,7 @@ Yes. Every project on this list accepts contributions, and most label easy start
 DeHub is a social and streaming app that is built in public, every day. Open [dehub.io](https://riftn.com), post a feature request on [dehub.io/features](https://riftn.com/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-most-active-open-source-projects-2026-banner.png',
   bannerImageAlt: 'Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',
   tags: ['open source', 'top 50', 'GitHub', 'most active open source projects', 'Linux', 'Chromium', 'AI', 'vLLM', 'PyTorch', 'developer tools', 'DeHub'],
   readingTime: 10,

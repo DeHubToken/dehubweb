@@ -22,7 +22,7 @@ export const awardWinningInnovationPost: BlogPostType = {
   bannerImage: '/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png',
   bannerImageAlt: 'Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-04-20T12:00:00.000Z',
   tags: ['Award', 'Innovation', 'Gaming', 'Corporate LiveWire'],

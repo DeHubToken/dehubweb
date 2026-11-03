@@ -26,7 +26,7 @@ We expect to announce official exchange listings soon. Our current target is the
   `,
   bannerImage: '/media/dehub-token-exchange-listings-2026.jpg',
   bannerImageAlt: 'DeHub listing soon announcement banner',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-09-18T19:32:10.000Z',
   tags: ['DHB', 'Token', 'Exchange Listings', 'AI Credits', 'Staking'],
   readingTime: 3,

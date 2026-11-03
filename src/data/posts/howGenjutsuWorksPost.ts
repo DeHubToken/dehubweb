@@ -195,7 +195,7 @@ Higgsfield's Genjutsu figures come from its Genjutsu page as checked in Septembe
   bannerImage: '/media/maboroshi-how-genjutsu-works-banner.jpg',
   bannerImageAlt: 'How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-10-24T06:00:00.000Z',
   tags: ['AI', 'AI video', 'Creator Studio', 'Higgsfield', 'Genjutsu', 'Katana', 'Maboroshi', 'Kling', 'Seedance', 'Video editor', 'Pricing'],

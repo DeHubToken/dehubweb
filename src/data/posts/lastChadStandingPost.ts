@@ -87,7 +87,7 @@ You earn by competing and performing well, outlasting the field in the battle ro
 `,
   bannerImage: '/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png',
   bannerImageAlt: 'Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-04-03T10:15:00.000Z',
   updatedAt: '2026-04-03T10:15:00.000Z',
   tags: ['mma play to earn game', 'last chad standing', 'crypto mma game', 'blockchain fighting game', 'play to earn', 'DeHub', 'DHB'],

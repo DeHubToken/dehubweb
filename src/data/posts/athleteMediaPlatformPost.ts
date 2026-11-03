@@ -92,7 +92,7 @@ It would not — which is the point. The alternative currently on offer is athle
 Treat the athlete's channel as an asset in the next contract rather than a risk in the current one, and run one properly resourced pilot with a small group of players — owned, measured, and with the split written down. The finding you are looking for is how much of the fan relationship you can hold directly, not how much content you can produce.`,
   bannerImage: '/media/athlete-is-becoming-a-media-platform-banner.png',
   bannerImageAlt: 'An athlete as a media property, with the fan relationship owned rather than licensed',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T10:00:00.000Z',
   updatedAt: '2026-08-28T10:00:00.000Z',
   tags: ['sports media rights', 'athlete media', 'creator economy', 'fan engagement', 'sports business', 'web3 creators', 'dehub'],

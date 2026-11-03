@@ -86,7 +86,7 @@ Move-to-earn can be worthwhile where the app treats fitness as the real product 
 Yes. DeHub offers watch-to-earn bounties and play-to-earn games (including Last Chad Standing) within one platform, funded from several real revenue streams. Spreading rewards across advertising, subscriptions and games is generally healthier than relying on a single token.`,
   bannerImage: '/media/watch-to-earn-vs-play-to-earn-vs-move-to-earn-banner.png',
   bannerImageAlt: 'Illustration comparing watch-to-earn, play-to-earn and move-to-earn as branches of x-to-earn',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-03-25T12:40:00.000Z',
   updatedAt: '2026-03-25T12:40:00.000Z',
   tags: ['x-to-earn', 'watch to earn', 'play to earn', 'move to earn', 'play-and-own', 'crypto rewards', 'DeHub'],

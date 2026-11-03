@@ -115,7 +115,7 @@ Open the DeHub app or install it from Google Play, connect a wallet to create yo
 `,
   bannerImage: '/media/web3-live-streaming-decentralised-twitch-alternative-banner.png',
   bannerImageAlt: 'DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-02-26T11:20:00.000Z',
   updatedAt: '2026-02-26T11:20:00.000Z',
   tags: ['web3 live streaming', 'decentralised twitch alternative', 'crypto live streaming', 'livepeer', 'stream to earn', 'DeHub', 'creator economy'],

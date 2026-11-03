@@ -784,7 +784,7 @@ The established apps here are real, working networks, many of them open source. 
 Open [dehub.io](https://riftn.com), browse the feed, go live, or post a feature request on [dehub.io/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-decentralized-social-apps-2026-banner.png',
   bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-25T20:00:00.000Z',
   tags: ['decentralized social media', 'top 50', 'web3 social', 'crypto social apps', 'SocialFi', 'Bluesky', 'Farcaster', 'Nostr', 'Lens Protocol', 'Mastodon', 'DeHub'],
   readingTime: 31,

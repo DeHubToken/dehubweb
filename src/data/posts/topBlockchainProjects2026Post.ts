@@ -242,7 +242,7 @@ See our sister ranking, the [Top 50 Decentralized Social Apps 2026](/guides/top-
 Open [dehub.io](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-blockchain-projects-2026-banner.png',
   bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',
   tags: ['blockchain', 'top 50', 'GitHub activity', 'crypto developers', 'Solana', 'Ethereum', 'Bitcoin', 'Layer 2', 'open source', 'DeHub'],
   readingTime: 11,
