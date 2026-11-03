@@ -33,7 +33,7 @@ export function ComicBorderPicker({ value, onChange, cover, title, disabled }: C
           </Suspense>
         </div>
       ) : null}
-      <div className="flex gap-2 overflow-x-auto pb-1" role="radiogroup" aria-label={t('comicBorder.title')}>
+      <div className="flex gap-2 overflow-x-auto px-1 pb-1 pt-2" role="radiogroup" aria-label={t('comicBorder.title')}>
         {options.map((option) => {
           const selected = option === value;
           const label = t(`comicBorder.${option ? COMIC_BORDER_LABEL[option] : 'theme'}`);
