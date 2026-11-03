@@ -8,7 +8,7 @@ import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { profileFeedUrl } from '@/lib/profile-feed-url';
 import { useTranslation } from 'react-i18next';
 
-import { Loader2 } from 'lucide-react';
+import '@/styles/profile-pull.css';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { isReservedUsername } from '@/lib/reserved-usernames';
 import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
@@ -259,6 +259,19 @@ export default function ProfilePage() {
   // All data fetching + derived state. activeTab goes in because the filter
   // panel's post-type row only applies on the All tab.
   const data = useProfilePage({ activeTab });
+  // A pull refresh keeps what is on screen; only a first load shows skeletons.
+  const headerFetching = data.isFetchingProfile && !data.isRefreshing;
+  // One short "done" beat after a pull refresh: the avatar ring closes and the photo pops.
+  const [justRefreshed, setJustRefreshed] = useState(false);
+  const wasRefreshing = useRef(false);
+  useEffect(() => {
+    if (data.isRefreshing) { wasRefreshing.current = true; return; }
+    if (!wasRefreshing.current) return;
+    wasRefreshing.current = false;
+    setJustRefreshed(true);
+    const timer = setTimeout(() => setJustRefreshed(false), 700);
+    return () => clearTimeout(timer);
+  }, [data.isRefreshing]);
 
   // Land on the tab the profile owner chose to show first. Applied once per
   // profile (keyed by wallet address) so a visitor's own tab clicks afterwards
@@ -596,6 +609,9 @@ export default function ProfilePage() {
     <div 
       ref={data.profileContainerRef}
       data-classic-feed-layout={theme === 'system' ? '' : undefined}
+      data-profile-pull-root
+      data-profile-refreshing={data.isRefreshing ? '' : undefined}
+      data-profile-refreshed={justRefreshed ? '' : undefined}
       className="min-h-screen"
       onTouchStart={data.pullHandlers.onTouchStart}
       onTouchMove={data.pullHandlers.onTouchMove}
@@ -604,6 +620,7 @@ export default function ProfilePage() {
       onMouseMove={data.pullHandlers.onMouseMove}
       onMouseUp={data.pullHandlers.onMouseUp}
       onMouseLeave={data.pullHandlers.onMouseLeave}
+      onTouchCancel={data.pullHandlers.onTouchCancel}
     >
       {/* Canonical uses the bare /handle form (no @) — the sitemap-profiles fn
           and the worker's bot HTML both use it, and an @-prefixed canonical
@@ -643,44 +660,12 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="shrink-0 pr-1">
-            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={headerFetching} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>
         </> : undefined} />
       </div>
       <CollapsingProfileHeader tabsPinned={isTabsStuck} />
-      {/* Pull-to-refresh indicator */}
-      {data.pullDistance > 0 && (
-        <div 
-          className="flex items-center justify-center transition-all duration-150"
-          style={{ height: data.pullDistance, minHeight: data.pullDistance > 0 ? 20 : 0 }}
-        >
-          <div className="relative">
-            <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
-              <circle
-                cx="16" cy="16" r="14" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"
-                strokeDasharray={2 * Math.PI * 14}
-                strokeDashoffset={2 * Math.PI * 14 * (1 - (data.isHoldingAtThreshold ? data.holdProgress : Math.min(data.pullDistance / data.PULL_THRESHOLD, 1)))}
-                className="transition-all duration-75"
-              />
-            </svg>
-            {data.isHoldingAtThreshold && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse" style={{ opacity: data.holdProgress }} />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Refreshing indicator */}
-      {data.isRefreshing && data.pullDistance === 0 && (
-        <div className="flex items-center justify-center py-4">
-          <Loader2 className="w-6 h-6 text-white animate-spin" />
-        </div>
-      )}
-      
-      <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
+      <div data-profile-pull-body className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
         <div
           ref={(el) => { (profileHeaderRef as { current: HTMLDivElement | null }).current = el; postBgHold.hostRef.current = el; }}
@@ -716,7 +701,7 @@ export default function ProfilePage() {
           translatedBio={data.translatedBio}
           setTranslatedBio={data.setTranslatedBio}
           isBlocked={data.isBlocked}
-          isFetchingProfile={data.isFetchingProfile}
+          isFetchingProfile={headerFetching}
         />
         </div>
 
@@ -803,7 +788,7 @@ export default function ProfilePage() {
           </div>
           </div>
           {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
-            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={headerFetching} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>}
         </div>
         </div>

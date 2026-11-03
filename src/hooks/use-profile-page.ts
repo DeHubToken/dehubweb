@@ -36,6 +36,7 @@ import { useUserPins, usePinnedPostIds } from '@/hooks/use-pins';
 import type { UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { getUserComments, blockUser, unblockUser, getUserReposts, getUserProposalReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -52,7 +53,7 @@ const PROFILE_TAB_POST_TYPE: Partial<Record<TabValue, string>> = {
   live: 'live',
   articles: 'article',
 };
-import { scrollDocumentTo, scrollDocumentToSmooth } from '@/lib/document-scroll';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 
 /** A reposted governance proposal on the profile timeline. */
 export interface ProfileProposalItem {
@@ -65,6 +66,8 @@ export type ProfileContentItem =
   | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean };
 
 const PULL_THRESHOLD = 80;
+const PULL_REFRESH_MIN_MS = 900;
+const PULL_REFRESH_MAX_MS = 10_000;
 
 interface UseProfilePageOptions {
   /** The tab the visitor is on. Only the filter panel's post-type row cares. */
@@ -218,6 +221,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     fetchNextPage: fetchNextContentPage,
     hasNextPage: hasNextContentPage,
     isFetchingNextPage: isFetchingNextContentPage,
+    refetch: refetchContent,
   } = useDeHubUserContent({ ...contentQuery, enabled: !!contentUserId });
 
   // Prefetch ONLY page 2 in the background after first paint. The old
@@ -598,24 +602,50 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       setIsBlockLoading(false);
     }
   }, [apiProfile, isBlocked, isBlockedBy, isBlockLoading, queryClient, handleApiError, _copy]);
-  // Pull-to-refresh
-  const triggerRefresh = useCallback(() => {
+  // Pull-to-refresh (phones only). One pull reloads the header (photo, bio,
+  // counts) and the posts together; the cover stretch and the avatar ring are
+  // driven by CSS variables so a pull never re-renders the page.
+  const isPhone = useIsMobile();
+  const triggerRefresh = useCallback(async () => {
     if (isRefreshing) return;
     setIsRefreshing(true);
-    if (isViewingOwnProfile) {
-      clearOptimisticPosts();
+    if (isViewingOwnProfile) clearOptimisticPosts();
+    const began = Date.now();
+    const work = Promise.allSettled([
+      refetchProfile(),
+      refetchContent(),
+      queryClient.invalidateQueries({ queryKey: ['user-reposts'] }),
+      queryClient.invalidateQueries({ queryKey: ['user-proposal-reposts'] }),
+      queryClient.invalidateQueries({ queryKey: ['user-comments-count'] }),
+    ]);
+    await Promise.race([work, new Promise(resolve => setTimeout(resolve, PULL_REFRESH_MAX_MS))]);
+    // Keep the ring visible long enough to read as "refreshed".
+    const wait = Math.max(0, PULL_REFRESH_MIN_MS - (Date.now() - began));
+    setTimeout(() => setIsRefreshing(false), wait);
+  }, [isRefreshing, isViewingOwnProfile, clearOptimisticPosts, refetchProfile, refetchContent, queryClient]);
+
+  const coverHeight = useRef(130);
+  const onPullMotion = useCallback((distance: number, pulling: boolean) => {
+    const node = profileContainerRef.current;
+    if (!node) return;
+    // Measure the cover once per pull, never per frame.
+    if (!node.hasAttribute('data-profile-pulling')) {
+      coverHeight.current = node.querySelector<HTMLElement>('[data-profile-cover]')?.offsetHeight || 130;
     }
-    scrollDocumentToSmooth();
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
-  }, [isRefreshing, isViewingOwnProfile, clearOptimisticPosts]);
+    node.style.setProperty('--profile-pull', `${distance.toFixed(1)}px`);
+    node.style.setProperty('--profile-pull-sy', (distance / coverHeight.current).toFixed(3));
+    node.style.setProperty('--profile-pull-p', Math.min(1, distance / PULL_THRESHOLD).toFixed(3));
+    if (distance > 0) node.setAttribute('data-profile-pulling', pulling ? 'drag' : 'return');
+    else node.removeAttribute('data-profile-pulling');
+  }, []);
 
   const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
+    enabled: isPhone,
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
     containerRef: profileContainerRef,
+    onMotion: onPullMotion,
   });
 
   return {
