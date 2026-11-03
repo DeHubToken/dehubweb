@@ -161,14 +161,14 @@ describe('post description enrichment', () => {
     expect(out).not.toContain('join the decentralized creator network');
     for (const tag of DESCRIPTION_TAGS) {
       const v = valueOf(out, tag);
-      expect(v).toContain('Watch &quot;Business&quot; — a video by LiberoArbitro on Riftn');
+      expect(v).toContain('Watch &quot;Business&quot;, a video by LiberoArbitro on Riftn');
       expect(v).toContain('Topics: business, entrepreneurship');
     }
     const ld = jsonLd(out);
-    expect(ld['@graph'][0].description).toContain('Watch "Business" — a video by LiberoArbitro on Riftn');
+    expect(ld['@graph'][0].description).toContain('Watch "Business", a video by LiberoArbitro on Riftn');
     expect(ld['@graph'][1].description).toBe(ld['@graph'][0].description);
     expect(ld['@graph'][0].description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
-    const branded = 'Business — a video by LiberoArbitro on Riftn';
+    const branded = 'Business | a video by LiberoArbitro on Riftn';
     for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(attr(branded));
     expect(ld['@graph'][0].headline).toBe(branded);
   });
@@ -188,14 +188,14 @@ describe('post description enrichment', () => {
     expect(valueOf(video, 'description')).toContain('a video by LiberoArbitro');
     expect(valueOf(video, 'description')).not.toContain('Topics:');
     const text = enrichPostMeta(postPage('77', 'Hello', POST_TEMPLATE('X'), false), '77', null);
-    expect(valueOf(text, 'description')).toContain('Read &quot;Hello&quot; — a post by X on Riftn');
+    expect(valueOf(text, 'description')).toContain('Read &quot;Hello&quot;, a post by X on Riftn');
   });
 
   it('names the format from the record for audio and photo posts', () => {
     const audio = enrichPostMeta(postPage('1', 'Set', POST_TEMPLATE('DJ'), false), '1', { postType: 'feed-audio' });
-    expect(valueOf(audio, 'description')).toContain('Listen to &quot;Set&quot; — an audio post by DJ');
+    expect(valueOf(audio, 'description')).toContain('Listen to &quot;Set&quot;, an audio post by DJ');
     const photo = enrichPostMeta(postPage('2', 'Pic', POST_TEMPLATE('P'), false), '2', { postType: 'feed-images' });
-    expect(valueOf(photo, 'description')).toContain('See &quot;Pic&quot; — a photo post by P');
+    expect(valueOf(photo, 'description')).toContain('See &quot;Pic&quot;, a photo post by P');
   });
 
   it('retitles an "Untitled" upload so siblings from one account stop sharing a <title>', () => {
@@ -269,7 +269,7 @@ describe('post titles that say nothing', () => {
   it('leaves a title that only looks filename-ish but reads as a sentence', () => {
     const title = 'How we shipped v2.0';
     const out = enrichPostMeta(postPage('900', title, 'a real caption'), '900', AUTHORED);
-    expect(valueOf(out, 'title')).toBe(attr(`${title} — a video by davyJones on Riftn`));
+    expect(valueOf(out, 'title')).toBe(attr(`${title} | a video by davyJones on Riftn`));
   });
 
   // Live /app/post/3419 on 2026-09-29: the fn titled it with its own
@@ -292,7 +292,7 @@ describe('post titles that say nothing', () => {
       ...SULTAN,
       description: 'Sunset at the pier',
     });
-    expect(valueOf(out, 'title')).toBe('Sunset at the pier — a photo post by Sultan on Riftn');
+    expect(valueOf(out, 'title')).toBe('Sunset at the pier | a photo post by Sultan on Riftn');
   });
 
   it('reads the caption off the meta description when there is no record', () => {
@@ -322,8 +322,8 @@ describe('short post titles that collide', () => {
       postType: 'video',
       displayName: 'Mart Vader',
     });
-    expect(valueOf(a, 'title')).toBe(attr('stream — a video by davyJones on Riftn'));
-    expect(valueOf(b, 'title')).toBe(attr('stream — a video by Mart Vader on Riftn'));
+    expect(valueOf(a, 'title')).toBe(attr('stream | a video by davyJones on Riftn'));
+    expect(valueOf(b, 'title')).toBe(attr('stream | a video by Mart Vader on Riftn'));
     expect(valueOf(a, 'title')).not.toBe(valueOf(b, 'title'));
   });
 
@@ -334,7 +334,7 @@ describe('short post titles that collide', () => {
       displayName: 'Bartholomew',
     });
     const value = valueOf(out, 'title');
-    expect(value).toBe(attr(`${title} — Bartholomew on Riftn`));
+    expect(value).toBe(attr(`${title} | Bartholomew on Riftn`));
     expect(value.length).toBeLessThanOrEqual(70);
   });
 
@@ -344,8 +344,8 @@ describe('short post titles that collide', () => {
       displayName: 'davyJones',
     });
     const ld = jsonLd(out);
-    expect(ld['@graph'][0].headline).toBe('davyJones — a video by davyJones on Riftn');
-    expect(ld['@graph'][1].name).toBe('davyJones — a video by davyJones on Riftn');
+    expect(ld['@graph'][0].headline).toBe('davyJones | a video by davyJones on Riftn');
+    expect(ld['@graph'][1].name).toBe('davyJones | a video by davyJones on Riftn');
     expect(ld['@graph'][0].author.name).toBe('davyJones');
   });
 
@@ -368,7 +368,7 @@ describe('short post titles that collide', () => {
       postType: 'video',
       displayName: 'davyJones',
     });
-    expect(valueOf(out, 'title')).toBe(attr('Hello — a video by davyJones on Riftn'));
+    expect(valueOf(out, 'title')).toBe(attr('Hello | a video by davyJones on Riftn'));
   });
 
   it('leaves a title long enough that no suffix fits', () => {
@@ -382,7 +382,7 @@ describe('short post titles that collide', () => {
       postType: 'video',
       displayName: 'davyJones',
     });
-    expect(valueOf(out, 'title')).toBe(attr('Promote Riftn — a video by davyJones on Riftn'));
+    expect(valueOf(out, 'title')).toBe(attr('Promote Riftn | a video by davyJones on Riftn'));
   });
 
   it('does not brand a title that already carries the brand', () => {
@@ -409,7 +409,7 @@ describe('profile description enrichment', () => {
 
   it('appends the handle to a bio too short to describe the page, and leaves a real bio alone', () => {
     const short = enrichProfileMeta(profilePage('lcfc', 'DHB ❤'), 'lcfc');
-    expect(valueOf(short, 'description')).toBe('DHB ❤ — @lcfc on Riftn, the open source, user-owned social network.');
+    expect(valueOf(short, 'description')).toBe('DHB ❤, @lcfc on Riftn, the open source, user-owned social network.');
     const bio = 'Football, crypto and coffee. Building on Riftn since 2023, one clip at a time.';
     expect(bio.length).toBeGreaterThanOrEqual(PROFILE_DESCRIPTION_MIN);
     const long = profilePage('fan', bio);

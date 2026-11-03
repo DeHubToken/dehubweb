@@ -160,7 +160,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — Riftn Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "Riftn governance proposal — vote and discuss." })).slice(0, 155)} url={`https://riftn.com${proposalPath(proposal)}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} | Riftn Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "Riftn governance proposal, vote and discuss." })).slice(0, 155)} url={`https://riftn.com${proposalPath(proposal)}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}

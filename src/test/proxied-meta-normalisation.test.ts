@@ -144,7 +144,7 @@ describe('proxied meta normalisation', () => {
 
   it('is wired into the proxy branch, after the profile-title rewrite', () => {
     const call = WORKER.indexOf('html = normalizeProxiedMeta(html);');
-    const profileTitle = WORKER.indexOf('on Riftn — posts, videos &amp; profile');
+    const profileTitle = WORKER.indexOf('on Riftn, posts, videos &amp; profile');
     expect(profileTitle).toBeGreaterThan(-1);
     expect(call).toBeGreaterThan(profileTitle);
   });

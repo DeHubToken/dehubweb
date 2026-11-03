@@ -368,7 +368,7 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.ae9fd67eae76", { defaultValue: "Leaderboard — Top Creators & Earners" })}
+        title={_copy("copy.ae9fd67eae76", { defaultValue: "Leaderboard: Top Creators & Earners" })}
         description={_copy("copy.476be3b6b085", { defaultValue: "See who's leading on Riftn. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." })}
         url="https://riftn.com/app/leaderboard"
         image="https://riftn.com/og/leaderboard.jpg"

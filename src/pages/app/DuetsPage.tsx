@@ -40,7 +40,7 @@ export default function DuetsPage() {
   if (!valid || !source) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-white">
-        <SEOHead title={t('duet.notFoundTitle', 'Video not found — Riftn')} noindex noCanonical />
+        <SEOHead title={t('duet.notFoundTitle', 'Video not found | Riftn')} noindex noCanonical />
         <p className="text-sm text-zinc-400">{t('duet.notFound', 'This video is not available.')}</p>
         <Button asChild variant="secondary"><Link to="/shorts">{t('duet.browseShorts', 'Browse Shorts')}</Link></Button>
       </div>
@@ -58,7 +58,7 @@ export default function DuetsPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 text-white">
       <SEOHead
-        title={`${title} — Riftn`}
+        title={`${title} | Riftn`}
         description={description}
         image={getTextPostShareImageUrl(postId)}
         url={`https://riftn.com${duetsPath(postId)}`}

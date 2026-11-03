@@ -96,7 +96,7 @@ export default function ConnectClaudePage() {
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
       <SEOHead
-        title={_copy("copy.31aa434fa5e5", { defaultValue: "Riftn for Claude — Use Riftn inside Claude (MCP Connector)" })}
+        title={_copy("copy.31aa434fa5e5", { defaultValue: "Riftn for Claude: Use Riftn inside Claude (MCP Connector)" })}
         description={_copy("copy.3a478f078658", { defaultValue: "Add Riftn to Claude in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside Claude." })}
         url={PAGE_URL}
         image={OG_IMAGE}

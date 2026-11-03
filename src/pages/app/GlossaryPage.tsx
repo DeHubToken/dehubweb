@@ -307,7 +307,7 @@ export default function GlossaryPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.278632c72021", { defaultValue: "Glossary — Icons, Features & Web3 Terms" })} description={_copy("copy.f36d0d409464", { defaultValue: "Learn what every icon, button and feature means on Riftn. A complete guide to the platform's UI, Web3 terms, staking badges and more." })} url="https://riftn.com/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'Riftn Glossary', url: 'https://riftn.com/app/glossary', description: _copy("copy.0e6ebb58c64c", { defaultValue: "Complete guide to Riftn icons, features and Web3 terms." }) }} />
+      <SEOHead title={_copy("copy.278632c72021", { defaultValue: "Glossary: Icons, Features & Web3 Terms" })} description={_copy("copy.f36d0d409464", { defaultValue: "Learn what every icon, button and feature means on Riftn. A complete guide to the platform's UI, Web3 terms, staking badges and more." })} url="https://riftn.com/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'Riftn Glossary', url: 'https://riftn.com/app/glossary', description: _copy("copy.0e6ebb58c64c", { defaultValue: "Complete guide to Riftn icons, features and Web3 terms." }) }} />
       <h1 className="sr-only">{_copy("copy.0af1e8b4951c", { defaultValue: "Riftn Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={glossaryIcon} alt={_copy("copy.4c4e436f9a45", { defaultValue: "Glossary" })} className="w-8 h-8 object-contain brightness-75" />}

@@ -76,8 +76,8 @@ describe('bounty URLs', () => {
    * apart unnoticed — the shape of a cloaking complaint.
    */
   it('keeps the worker`s bounty copy in step with the SPA`s', () => {
-    expect(bountyTitle({ title: 'Widget' })).toBe('Widget — Riftn Bounties');
-    expect(WORKER).toContain('const title = `${name} — Riftn Bounties`;');
+    expect(bountyTitle({ title: 'Widget' })).toBe('Widget | Riftn Bounties');
+    expect(WORKER).toContain('const title = `${name} | Riftn Bounties`;');
     // The fallback sentence for a description-less bounty, verbatim in both.
     const fallback = 'bounty on Riftn paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.';
     expect(WORKER).toContain(fallback);

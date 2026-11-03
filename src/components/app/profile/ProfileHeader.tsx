@@ -403,7 +403,7 @@ export function ProfileHeader({
                     trackShare('copy_link', { kind: 'profile' });
                     toast.success(_copy("copy.0877581001b8", { defaultValue: "ENS profile URL copied to clipboard" }));
                   }}
-                  title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name — dehub.io/{{value1}}", value1: profile.ensName })}
+                  title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name: dehub.io/{{value1}}", value1: profile.ensName })}
                   className="rounded-md bg-zinc-800/60 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700/50 hover:text-white"
                 >
                   {profile.ensName}

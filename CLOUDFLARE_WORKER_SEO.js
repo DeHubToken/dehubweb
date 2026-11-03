@@ -292,8 +292,10 @@ const ORG_JSONLD = {
 };
 // Browser SPA <title> in index.html — bot HTML must carry the same string so
 // the two variants never diverge (cloaking-suspicion surface).
-const HOME_TITLE = 'Riftn — Open Source, User Owned Social Media';
-const HOME_TITLE_LEGACY = 'Riftn — Open Source, User Owned & Censorship Resistant Media';
+const HOME_TITLE = 'Riftn | Open Source, User Owned Social Media';
+const HOME_TITLE_LEGACY = 'Riftn | Open Source, User Owned & Censorship Resistant Media';
+// What the deployed fn still writes: old name, long dash, either escaping.
+const FN_HOME_TITLE = /(?:DeHub|Riftn) (?:—|&mdash;) Open Source, User Owned (?:&amp;|&) Censorship Resistant Media/g;
 // Browser SPA <meta name="description"> in index.html, for the same reason.
 const HOME_DESCRIPTION = 'Riftn is an open source, user owned and censorship resistant social media protocol giving you all the features incumbents refused to.';
 
@@ -338,9 +340,9 @@ const HOME_INTRO_SLIDES = [
 const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investing.com'];
 
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
-<h2 style="font-size:16px">Welcome to Riftn — the open-source, user-owned social platform</h2>
+<h2 style="font-size:16px">Welcome to Riftn, the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>Riftn is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>Riftn is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different Riftn, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">Riftn press coverage</a></p>
 <nav aria-label="Learn more about Riftn"><ul style="list-style:none;padding:0;margin:0">${
@@ -369,22 +371,22 @@ const GUIDE_PAGES = {
   // human-visible page actually states. Dates are the React page's first and
   // latest commits.
   'best-decentralized-streaming-apps': {
-    title: 'Best Decentralized Streaming Apps 2026 — Riftn Guide',
-    description: 'The decentralized streaming apps you can actually watch on in 2026 — Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared.',
+    title: 'Best Decentralized Streaming Apps 2026 | Riftn Guide',
+    description: 'The decentralized streaming apps you can actually watch on in 2026, Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared.',
     datePublished: '2026-09-13',
     dateModified: '2026-09-29',
-    bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app — they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
+    bodyHtml: `<p>Most "decentralized streaming" lists open with Theta and Livepeer. Neither is a streaming app, they are decentralized delivery and transcoding networks that sit underneath other products, and you cannot open either one and watch anything. Most of those lists also still feature DLive, which <strong>shut down in April 2026</strong>. This guide covers six apps that have a front door, an audience and a pulse.</p>
 <h2>The six</h2>
 <ul>
-<li><strong>Riftn</strong> — user-owned media platform on Base, BNB, Robinhood Chain and Solana. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
-<li><strong>Streamplace</strong> — open-source live video for the AT Protocol, so your Bluesky handle is your streaming identity. Very early, and no creator payments yet.</li>
-<li><strong>Odysee</strong> — the largest audience here, built on the LBRY protocol. Video-first, with livestreaming as a supplement to uploads.</li>
-<li><strong>3Speak</strong> — video and live on the Hive blockchain, where creator rewards are paid by the chain rather than by advertisers.</li>
-<li><strong>zap.stream</strong> — Nostr live streaming paid in Bitcoin over Lightning. Tips go straight to the creator; broadcasting costs sats per minute.</li>
-<li><strong>Audius</strong> — decentralized music streaming on Solana, and the largest user base of any app in this category.</li>
+<li><strong>Riftn</strong>: user-owned media platform on Base, BNB, Robinhood Chain and Solana. Live video, uploads, audio and shorts in one app, with voice changers, a sound-effects board, camera looks and screen share built into the browser broadcaster. Tips settle on-chain as they are sent: no follower threshold, no payout cycle, spendable immediately.</li>
+<li><strong>Streamplace</strong>: open-source live video for the AT Protocol, so your Bluesky handle is your streaming identity. Very early, and no creator payments yet.</li>
+<li><strong>Odysee</strong>: the largest audience here, built on the LBRY protocol. Video-first, with livestreaming as a supplement to uploads.</li>
+<li><strong>3Speak</strong>: video and live on the Hive blockchain, where creator rewards are paid by the chain rather than by advertisers.</li>
+<li><strong>zap.stream</strong>: Nostr live streaming paid in Bitcoin over Lightning. Tips go straight to the creator; broadcasting costs sats per minute.</li>
+<li><strong>Audius</strong>: decentralized music streaming on Solana, and the largest user base of any app in this category.</li>
 </ul>
 <h2>How to choose</h2>
-<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap Riftn is built to fill — and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
+<p>If you want reach today, Odysee. If you already have a Bluesky following, Streamplace. If you want to be paid in Bitcoin, zap.stream. If you make music, Audius. If you want <strong>live streaming with ownership and monetization that works from your first viewer</strong>, that is the gap Riftn is built to fill, and it is the only one of the six that ships live production tools rather than leaving you to assemble them.</p>
 <p><a href="${APP_URL}/">Try Riftn free</a>.</p>`,
   },
 };
@@ -394,20 +396,20 @@ const GUIDE_PAGES = {
 // dehub-docs-content.txt. Bots used to get the raw SPA shell (homepage meta,
 // no canonical) for the entire /docs section.
 const DOCS_PAGES = {
-  'overview': { title: 'Riftn Docs — Overview', description: 'What Riftn is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
-  'dapps': { title: "Riftn dApps — The Complete Ecosystem", description: "Riftn's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
-  'games': { title: 'Riftn Games — Play & Win On-Chain', description: "Riftn's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
-  'token/overview': { title: 'Currency Overview — Riftn Docs', description: 'How Riftn tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
-  'token/economics': { title: 'Riftn tokens Economics — Riftn Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
-  'token/stake': { title: 'Staking tokens — Riftn Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across Riftn.' },
-  'roadmap': { title: 'Riftn Roadmap — Riftn Docs', description: "Where Riftn is headed: shipped milestones and what's next across the app, token and games." },
-  'faq': { title: 'Riftn FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about Riftn, Riftn tokens, staking, governance and the platform.' },
-  'team': { title: 'Riftn Team — Riftn Docs', description: 'The founders and team behind Riftn: backgrounds across social media, gaming, entertainment and Web3.' },
-  'contact': { title: 'Contact Riftn — Riftn Docs', description: 'How to reach the Riftn team: support, partnerships, press and community channels.' },
-  'privacy': { title: 'Privacy Policy — Riftn', description: "Riftn's privacy policy: what data the platform handles and how." },
-  'terms': { title: 'Legal Disclaimer & Terms — Riftn', description: "Riftn's legal disclaimer and terms of use." },
-  'advertising': { title: 'Advertising on Riftn — POVR Ad Tech', description: "Riftn's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
-  'security': { title: 'Security at Riftn — Riftn Docs', description: "The Certik audit of Riftn's smart contracts and how to report vulnerabilities to the team." },
+  'overview': { title: 'Riftn Docs | Overview', description: 'What Riftn is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
+  'dapps': { title: "Riftn dApps: The Complete Ecosystem", description: "Riftn's decentralized apps: streaming, feed, messaging, communities, wallet and more, how they fit together in one user-owned ecosystem." },
+  'games': { title: 'Riftn Games: Play & Win On-Chain', description: "Riftn's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
+  'token/overview': { title: 'Currency Overview | Riftn Docs', description: 'How Riftn tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
+  'token/economics': { title: 'Riftn tokens Economics | Riftn Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
+  'token/stake': { title: 'Staking tokens | Riftn Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across Riftn.' },
+  'roadmap': { title: 'Riftn Roadmap | Riftn Docs', description: "Where Riftn is headed: shipped milestones and what's next across the app, token and games." },
+  'faq': { title: 'Riftn FAQ: Frequently Asked Questions', description: 'Answers to the most common questions about Riftn, Riftn tokens, staking, governance and the platform.' },
+  'team': { title: 'Riftn Team | Riftn Docs', description: 'The founders and team behind Riftn: backgrounds across social media, gaming, entertainment and Web3.' },
+  'contact': { title: 'Contact Riftn | Riftn Docs', description: 'How to reach the Riftn team: support, partnerships, press and community channels.' },
+  'privacy': { title: 'Privacy Policy | Riftn', description: "Riftn's privacy policy: what data the platform handles and how." },
+  'terms': { title: 'Legal Disclaimer & Terms | Riftn', description: "Riftn's legal disclaimer and terms of use." },
+  'advertising': { title: 'Advertising on Riftn: POVR Ad Tech', description: "Riftn's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
+  'security': { title: 'Security at Riftn | Riftn Docs', description: "The Certik audit of Riftn's smart contracts and how to report vulnerabilities to the team." },
   // These ten are in sitemap-static.xml but had no entry here, so bots got the
   // raw SPA shell — the homepage title/description with no canonical. Ten of
   // the twenty-eight docs URLs we submit were presenting to Google as homepage
@@ -415,27 +417,27 @@ const DOCS_PAGES = {
   // has a hand-kept public/docs-content JSON mirroring its React page; the
   // description-only body in buildDocsHtml is only the fallback for a failed
   // fetch. docs-content-coverage.test.ts fails if an entry lands without one.
-  'token/utility': { title: 'Riftn tokens Utility & Holder Benefits — Riftn Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across Riftn.' },
-  'token/where-to-buy': { title: 'Where to Buy Tokens — Riftn Docs', description: 'Where to buy Riftn tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
-  'token/governance': { title: 'Riftn Governance — Voting & Proposals', description: 'How Riftn governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
-  'token/bridge': { title: 'Bridge tokens Between BASE & BNB — Riftn Docs', description: 'How to move tokens between the BASE and BNB networks with the manual Riftn bridge, and what to expect while it processes.' },
-  'featured-in': { title: 'Riftn in the Press — Featured In', description: 'Press and media coverage of Riftn, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
-  'brand-assets': { title: 'Riftn Brand Assets — Logos & Downloads', description: 'Official Riftn brand assets: logos, icons, graphics and marketing materials available to download.' },
+  'token/utility': { title: 'Riftn tokens Utility & Holder Benefits | Riftn Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across Riftn.' },
+  'token/where-to-buy': { title: 'Where to Buy Tokens | Riftn Docs', description: 'Where to buy Riftn tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
+  'token/governance': { title: 'Riftn Governance: Voting & Proposals', description: 'How Riftn governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
+  'token/bridge': { title: 'Bridge tokens Between BASE & BNB | Riftn Docs', description: 'How to move tokens between the BASE and BNB networks with the manual Riftn bridge, and what to expect while it processes.' },
+  'featured-in': { title: 'Riftn in the Press: Featured In', description: 'Press and media coverage of Riftn, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
+  'brand-assets': { title: 'Riftn Brand Assets: Logos & Downloads', description: 'Official Riftn brand assets: logos, icons, graphics and marketing materials available to download.' },
   'brand-guidelines': { title: 'Riftn Brand Guidelines', description: 'How to use the Riftn brand: identity, logo usage, colour and design standards.' },
   'donate': { title: 'Donate to Riftn', description: 'Support Riftn development through community donations and contributions.' },
-  'terms-of-service': { title: 'Terms of Service — Riftn', description: "Riftn's terms of service: the agreement, user responsibilities and platform rules." },
+  'terms-of-service': { title: 'Terms of Service | Riftn', description: "Riftn's terms of service: the agreement, user responsibilities and platform rules." },
   // Linked from the docs sidebar (DocsLayout) on every docs page, and missing
   // here, so every crawler following that link got a 404. No card of its own
   // in public/og yet, so it borrows the docs section's.
-  'guidelines': { title: 'Community Guidelines — Riftn', description: 'What is and is not allowed on Riftn, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
+  'guidelines': { title: 'Community Guidelines | Riftn', description: 'What is and is not allowed on Riftn, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
   // Developer docs. Bodies come from src/data/developer-docs.json via
   // scripts/build-developer-docs-content.mjs; all share one card.
-  'developers': { title: 'Riftn Developers — Build Apps on Riftn', description: 'Everything you need to build on Riftn: mini apps for the Riftn app store, Sign in with Riftn, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
-  'developers/mini-apps': { title: 'Build a Riftn Mini App — SDK and Manifest', description: 'Build a mini app for the Riftn app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
-  'auth': { title: 'Sign in with Riftn — OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with Riftn: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
+  'developers': { title: 'Riftn Developers: Build Apps on Riftn', description: 'Everything you need to build on Riftn: mini apps for the Riftn app store, Sign in with Riftn, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
+  'developers/mini-apps': { title: 'Build a Riftn Mini App: SDK and Manifest', description: 'Build a mini app for the Riftn app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
+  'auth': { title: 'Sign in with Riftn: OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with Riftn: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
   'webhooks': { title: 'Riftn Webhooks and Notifications API', description: 'Receive signed webhook events when people add or remove your Riftn mini app, and send notifications to your users on web and phone with one API call.', og: 'docs/developers' },
-  'endpoints': { title: 'Riftn API Reference — REST and Mastodon APIs', description: 'The Riftn REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
-  'examples': { title: 'Riftn Developer Examples — Copy and Paste Code', description: 'Copy and paste examples for Riftn apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with Riftn button.', og: 'docs/developers' },
+  'endpoints': { title: 'Riftn API Reference: REST and Mastodon APIs', description: 'The Riftn REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
+  'examples': { title: 'Riftn Developer Examples: Copy and Paste Code', description: 'Copy and paste examples for Riftn apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with Riftn button.', og: 'docs/developers' },
   'troubleshooting': { title: 'Riftn Developer Troubleshooting', description: 'Fixes for the most common problems building Riftn mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.', og: 'docs/developers' },
 };
 
@@ -520,7 +522,7 @@ function buildDocsHtml(route, meta, contentHtml) {
   const canonicalUrl = `${APP_URL}/docs/${route}`;
   const body = contentHtml || `<p>${escHtml(meta.description)}</p><p><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open this page in the Riftn docs</a>.</p>`;
   const nav = Object.entries(DOCS_PAGES).slice(0, 12).map(([r, m]) =>
-    `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — Riftn( Docs)?$/, ''))}</a></li>`).join('');
+    `<li><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</a></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -544,11 +546,11 @@ ${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
   author: { '@type': 'Organization', name: 'Riftn', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>${route === 'faq' ? faqJsonLd(contentHtml) : ''}
-${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name: meta.title.replace(/ — Riftn( Docs)?$/, ''), url: canonicalUrl }])}
+${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name: meta.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''), url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs">Docs</a></p>
-<article><h1>${escHtml(meta.title.replace(/ — Riftn( Docs)?$/, ''))}</h1>
+<article><h1>${escHtml(meta.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</h1>
 <!--hl-body-->${body}<!--/hl-body--></article>
 <nav aria-label="Riftn documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
 <p><a href="${APP_URL}/docs/blog">Riftn Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
@@ -561,12 +563,12 @@ const DOCS_INDEX_DESCRIPTION = 'Official Riftn documentation: platform overview,
 function buildDocsIndexHtml() {
   const canonicalUrl = `${APP_URL}/docs`;
   const items = Object.entries(DOCS_PAGES).map(([r, m]) =>
-    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ — Riftn( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
+    `<li style="margin:10px 0"><a href="${APP_URL}/docs/${r}">${escHtml(m.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</a><br><small>${escHtml(m.description)}</small></li>`).join('');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Riftn Documentation — Guides, Token, dApps &amp; FAQ</title>
+<title>Riftn Documentation: Guides, Token, dApps &amp; FAQ</title>
 <meta name="description" content="${DOCS_INDEX_DESCRIPTION}">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
@@ -678,7 +680,7 @@ function snippet(text, max = 160) {
  * off the brand; those drop to "<headline> | Riftn".
  */
 function blogTitle(post) {
-  const title = post.seoTitle || `${post.title} — Riftn Blog`;
+  const title = post.seoTitle || `${post.title} | Riftn Blog`;
   if (title.length <= 60) return title;
   const short = title.replace(/\s*\|\s*Riftn \d{4} Roadmap$/, ' | Riftn');
   return short.length < title.length ? short : title;
@@ -838,7 +840,7 @@ function postVideoLd(contentHtml, post) {
 function buildBlogHtml(post, canonicalUrl, contentHtml, manifest, wordCount) {
   const image = buildBlogShareImage(post);
   const title = blogTitle(post);
-  const longDescription = (post.seoDescription || post.excerpt || `${post.title} — read on Riftn.`).replace(/\s+/g, ' ').trim();
+  const longDescription = (post.seoDescription || post.excerpt || `${post.title}, read on Riftn.`).replace(/\s+/g, ' ').trim();
   const description = snippet(longDescription);
   const ogDescription = snippet(longDescription, 280);
   const imageAlt = post.bannerImageAlt || post.title;
@@ -929,7 +931,7 @@ ${tagMeta}
 <main>
 <article>
 <h1>${escHtml(post.title)}</h1>
-<p><em>By ${escHtml(post.author || 'Riftn Team')}${published ? ` — <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
+<p><em>By ${escHtml(post.author || 'Riftn Team')}${published ? `, <time datetime="${escHtml(published)}">${escHtml(published.slice(0, 10))}</time>` : ''}</em></p>
 ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(imageAlt)}"${bannerDims} fetchpriority="high" decoding="async" style="max-width:100%;height:auto">` : ''}
 <!--hl-body-->${body}<!--/hl-body-->
 </article>
@@ -952,7 +954,7 @@ function buildBlogIndexHtml(manifest) {
     const date = (p.publishedAt || '').slice(0, 10);
     return `<li style="margin:14px 0"><a href="${APP_URL}/guides/${encodeURIComponent(p.slug)}">${escHtml(p.title)}</a>${date ? ` <small>(${date})</small>` : ''}<br><small>${escHtml((p.excerpt || '').slice(0, 200))}</small></li>`;
   }).join('');
-  const blogDescription = 'News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.';
+  const blogDescription = 'News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.';
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
@@ -976,7 +978,7 @@ function buildBlogIndexHtml(manifest) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Riftn Blog — News, Guides &amp; Product Updates</title>
+<title>Riftn Blog | News, Guides &amp; Product Updates</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="${escHtml(blogDescription)} ${posts.length} posts and counting.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -986,10 +988,10 @@ function buildBlogIndexHtml(manifest) {
 <meta property="og:site_name" content="Riftn">
 ${ogLocaleTag()}
 <meta property="og:url" content="${canonicalUrl}">
-<meta property="og:title" content="Riftn Blog — News, Guides &amp; Product Updates">
+<meta property="og:title" content="Riftn Blog | News, Guides &amp; Product Updates">
 <meta property="og:description" content="${escHtml(blogDescription)}">
-${twitterTextTags('Riftn Blog — News, Guides & Product Updates', blogDescription)}
-${shareMetaTags('blog', 'Riftn Blog — news, guides and product updates')}
+${twitterTextTags('Riftn Blog | News, Guides & Product Updates', blogDescription)}
+${shareMetaTags('blog', 'Riftn Blog | news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
@@ -1059,42 +1061,42 @@ function primaryNavHtml(currentPath = '') {
 // yield its generic homepage fallback (a soft-duplicate).
 const SECTION_PAGES = {
   explore: {
-    title: 'Explore Riftn — Trending Creators, Videos & Communities',
+    title: 'Explore Riftn: Trending Creators, Videos & Communities',
     heading: 'Explore Riftn',
     description: 'Discover what’s trending on Riftn: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
-    intro: 'Find trending creators, videos, shorts, music and communities across Riftn — the open source, user-owned social platform where posts can be minted on-chain and creators earn natively.',
+    intro: 'Find trending creators, videos, shorts, music and communities across Riftn, the open source, user-owned social platform where posts can be minted on-chain and creators earn natively.',
     bodyHtml: `<ul>
-<li><a href="${APP_URL}/videos">Video Feed</a> — the latest on-chain videos from creators.</li>
-<li><a href="${APP_URL}/shorts">Shorts</a> — a vertical, swipeable short-form feed.</li>
-<li><a href="${APP_URL}/music">Music</a> — tracks and audio from Riftn artists.</li>
-<li><a href="${APP_URL}/tv">Riftn TV</a> — lean-back, continuous video.</li>
-<li><a href="${APP_URL}/stages">Stages</a> — live audio rooms, with recordings kept afterwards.</li>
-<li><a href="${APP_URL}/communities">Communities</a> — public groups around a topic, each with its own feed.</li>
+<li><a href="${APP_URL}/videos">Video Feed</a>, the latest on-chain videos from creators.</li>
+<li><a href="${APP_URL}/shorts">Shorts</a>, a vertical, swipeable short-form feed.</li>
+<li><a href="${APP_URL}/music">Music</a>, tracks and audio from Riftn artists.</li>
+<li><a href="${APP_URL}/tv">Riftn TV</a>, lean-back, continuous video.</li>
+<li><a href="${APP_URL}/stages">Stages</a>, live audio rooms, with recordings kept afterwards.</li>
+<li><a href="${APP_URL}/communities">Communities</a>, public groups around a topic, each with its own feed.</li>
 </ul>
 <h2>How the feed works</h2>
-<p>Explore is the whole network in one place: every public post, in the order it was made, with no ranking layer deciding what you see. Filter it by format — video, shorts, images, audio, text — or by the hashtag a post was filed under, and follow the creators whose work you want in your own home feed.</p>
+<p>Explore is the whole network in one place: every public post, in the order it was made, with no ranking layer deciding what you see. Filter it by format, video, shorts, images, audio, text, or by the hashtag a post was filed under, and follow the creators whose work you want in your own home feed.</p>
 <p>Posts can be minted on-chain when they are published, which gives the creator a permanent, portable record of the work and lets it be sold, tipped or collected in tokens. Minting is optional; a post that is not minted is still a normal post. Reactions, comments, reposts and tips all count toward a creator's standing on the network, and that standing is what unlocks badges and their perks.</p>
-<p>You can read all of it signed out. Signing in — with an email, a social account, a passkey or a wallet — gives you a wallet of your own with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
+<p>You can read all of it signed out. Signing in, with an email, a social account, a passkey or a wallet, gives you a wallet of your own with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
   },
   videos: {
-    title: 'Video Feed — Watch On-Chain Videos on Riftn',
+    title: 'Video Feed: Watch On-Chain Videos on Riftn',
     heading: 'Riftn Video Feed',
     description: 'Watch the latest on-chain videos from creators on Riftn: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
-    intro: 'Watch the newest videos from Riftn creators — long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
+    intro: 'Watch the newest videos from Riftn creators, long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
     bodyHtml: `<p>Riftn’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
 <h2>What you can do with a video here</h2>
-<p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
+<p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan, and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
 <p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">Riftn TV</a> as a continuous lean-back channel.</p>`,
   },
   shorts: {
-    title: 'Shorts — Short-Form Videos on Riftn',
+    title: 'Shorts: Short-Form Videos on Riftn',
     heading: 'Riftn Shorts',
     description: 'Scroll the latest short-form videos on Riftn: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
-    intro: 'Scroll a vertical feed of short-form videos from Riftn creators — quick, swipeable clips on the user-owned social platform. Shorts can be minted on-chain, so creators keep ownership and earn natively.',
-    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on Riftn — one open, censorship-resistant home for every format.</p>
+    intro: 'Scroll a vertical feed of short-form videos from Riftn creators, quick, swipeable clips on the user-owned social platform. Shorts can be minted on-chain, so creators keep ownership and earn natively.',
+    bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/music">music</a> on Riftn, one open, censorship-resistant home for every format.</p>
 <h2>What counts as a short</h2>
 <p>A short is any video under a minute. There is no separate upload path and no separate account: a clip posted to the video feed that runs under sixty seconds is a short, and it appears in both places. That keeps a creator's catalogue in one profile whatever the length of the work.</p>
-<p>The lane plays full-screen and vertical, one clip at a time, and swiping moves to the next. Tap to pause, hold to scrub, and react, comment or tip without leaving the player. Shorts earn the same way every post on Riftn does — tips, pay-per-view and badge-gated access are all available to a sixty-second clip — and every view and reaction is counted on the post itself rather than in a feed that can be switched off.</p>`,
+<p>The lane plays full-screen and vertical, one clip at a time, and swiping moves to the next. Tap to pause, hold to scrub, and react, comment or tip without leaving the player. Shorts earn the same way every post on Riftn does, tips, pay-per-view and badge-gated access are all available to a sixty-second clip, and every view and reaction is counted on the post itself rather than in a feed that can be switched off.</p>`,
   },
 };
 
@@ -1168,10 +1170,10 @@ function arcadeGameLd(art) {
 // so the two UA variants never diverge.
 const MARKETING_PAGES = {
   'dex': {
-    title: 'DEX — Trade tokens at your price',
+    title: 'DEX: Trade tokens at your price',
     description: 'Set your token buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
     heading: 'Riftn DEX',
-    bodyHtml: `<p>Trade tokens at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
+    bodyHtml: `<p>Trade tokens at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it, no watching the chart, no slippage past your number.</p>
 <p>The terminal shows the live order book, market depth and one shared USD price.</p>
 <p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
@@ -1179,27 +1181,27 @@ const MARKETING_PAGES = {
     title: 'Ads Manager | Riftn',
     description: 'Launch POVR ad campaigns on Riftn: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens.',
     heading: 'Riftn Ads Manager',
-    bodyHtml: `<p>Run ad campaigns on Riftn with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in tokens.</p>
+    bodyHtml: `<p>Run ad campaigns on Riftn with POVR, proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in tokens.</p>
 <p>Create a campaign, choose who it reaches and follow its results from one dashboard.</p>
 <p><a href="${APP_URL}/ads">Open Ads Manager</a> or <a href="${APP_URL}/docs/advertising">read how POVR works</a>.</p>`,
   },
   'buy': {
-    title: 'Buy — Purchase Crypto on Riftn',
+    title: 'Buy: Purchase Crypto on Riftn',
     description: 'Buy tokens and other cryptocurrencies directly on Riftn with your credit card. Fast checkout, multiple chains supported.',
     heading: 'Buy Crypto on Riftn',
     bodyHtml: `<p>Buy tokens and other cryptocurrencies directly on Riftn with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
 <p><a href="${APP_URL}/buy">Buy crypto</a>, <a href="${APP_URL}/dex">trade tokens at your price</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
   'builder': {
-    title: 'Builder — Build Apps with AI on Riftn',
+    title: 'Builder: Build Apps with AI on Riftn',
     description: 'Tell @assistant what you want in your Riftn messages. It builds the app, hosts it and sends you a link anyone can open.',
     heading: 'Riftn Builder',
-    bodyHtml: `<p>Riftn Builder turns a sentence into a working mini app. Message @assistant with what you want; it writes the app, hosts it on Riftn and sends the link back in the same chat — nothing to install, deploy or configure.</p>
+    bodyHtml: `<p>Riftn Builder turns a sentence into a working mini app. Message @assistant with what you want; it writes the app, hosts it on Riftn and sends the link back in the same chat, nothing to install, deploy or configure.</p>
 <h2>It stays a conversation</h2>
 <p>An app is never finished at the first attempt. Reply in the chat for another screen, a different colour or a new feature and the build updates in place, so the link you already shared shows the latest version. Every build lives in your messages.</p>
 <h2>Shareable by default</h2>
 <p>Finished apps render straight from a dehub.io link in any browser, which means they can be posted anywhere on Riftn or sent to somebody who has never opened it before.</p>
-<p>Building needs a free Riftn account — sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your Riftn plan.</p>`,
+<p>Building needs a free Riftn account, sign in with an email or social login and a sponsored-gas wallet is created for you. How many apps you can build at once depends on your Riftn plan.</p>`,
   },
   'depin': {
     title: 'DePin | Community-Powered Media Infrastructure | Riftn',
@@ -1220,68 +1222,68 @@ const MARKETING_PAGES = {
     heading: 'Connect Riftn to your AI assistant',
     bodyHtml: `<p>Riftn ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public Riftn posts, search topics and look up creator profiles.</p>
 <ul>
-<li><a href="${APP_URL}/connect/chatgpt">Riftn for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
-<li><a href="${APP_URL}/connect/claude">Riftn for Claude</a> — add the connector to Claude in one click.</li>
-<li><a href="${APP_URL}/skill.md">skill.md</a> — the agent-readable spec for the Riftn MCP API.</li>
+<li><a href="${APP_URL}/connect/chatgpt">Riftn for ChatGPT</a>, add the connector to ChatGPT in one click.</li>
+<li><a href="${APP_URL}/connect/claude">Riftn for Claude</a>, add the connector to Claude in one click.</li>
+<li><a href="${APP_URL}/skill.md">skill.md</a>, the agent-readable spec for the Riftn MCP API.</li>
 </ul>`,
   },
   'connect/chatgpt': {
-    title: 'Riftn for ChatGPT — Use Riftn inside ChatGPT (MCP Connector)',
+    title: 'Riftn for ChatGPT: Use Riftn inside ChatGPT (MCP Connector)',
     description: 'Add Riftn to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside ChatGPT.',
     heading: 'Use Riftn inside ChatGPT',
     bodyHtml: `<ol>
-<li><strong>Open the Riftn connector in ChatGPT</strong> — ChatGPT jumps straight to the Riftn connector inside Settings → Connectors.</li>
-<li><strong>Enable the connector</strong> — toggle Riftn on and approve access so ChatGPT can read public posts, profiles and trending topics.</li>
-<li><strong>Start a new chat</strong> — mention Riftn in your prompt and ChatGPT calls the connector automatically.</li>
+<li><strong>Open the Riftn connector in ChatGPT</strong>: ChatGPT jumps straight to the Riftn connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong>: toggle Riftn on and approve access so ChatGPT can read public posts, profiles and trending topics.</li>
+<li><strong>Start a new chat</strong>: mention Riftn in your prompt and ChatGPT calls the connector automatically.</li>
 </ol>
 <h2>FAQ</h2>
 <p><strong>Is it free?</strong> The Riftn app is free to add; you need a ChatGPT plan that supports connectors (Plus, Pro, Team or Enterprise).</p>
 <p><strong>What can it do?</strong> Browse public Riftn posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
-<p><strong>Do I need a Riftn account?</strong> No — reading public content works without one.</p>`,
+<p><strong>Do I need a Riftn account?</strong> No, reading public content works without one.</p>`,
   },
   'connect/claude': {
-    title: 'Riftn for Claude — Use Riftn inside Claude (MCP Connector)',
+    title: 'Riftn for Claude: Use Riftn inside Claude (MCP Connector)',
     description: 'Add Riftn to Claude in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside Claude.',
     heading: 'Use Riftn inside Claude',
     bodyHtml: `<ol>
-<li><strong>Open the Riftn connector in Claude</strong> — Claude opens directly on the Riftn connector inside Settings → Connectors.</li>
-<li><strong>Enable the connector</strong> — turn Riftn on and approve access so Claude can browse public posts, profiles and trending topics.</li>
-<li><strong>Start a chat</strong> — mention Riftn in your message and Claude calls the connector automatically.</li>
+<li><strong>Open the Riftn connector in Claude</strong>: Claude opens directly on the Riftn connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong>: turn Riftn on and approve access so Claude can browse public posts, profiles and trending topics.</li>
+<li><strong>Start a chat</strong>: mention Riftn in your message and Claude calls the connector automatically.</li>
 </ol>
 <h2>FAQ</h2>
 <p><strong>Is it free?</strong> The connector is free to add; you need a Claude plan that supports custom connectors (Pro, Team or Enterprise).</p>
 <p><strong>What can it do?</strong> Browse public Riftn posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
-<p><strong>Do I need a Riftn account?</strong> No — reading public content works without one.</p>`,
+<p><strong>Do I need a Riftn account?</strong> No, reading public content works without one.</p>`,
   },
   'pricing': {
-    title: 'Pricing — Riftn Creator Studio',
+    title: 'Pricing | Riftn Creator Studio',
     description: 'Riftn Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.',
     heading: 'Riftn Creator Studio Pricing',
     bodyHtml: `<ul>
-<li><strong>Ultra</strong> — £99/mo billed annually (£129 month-to-month): 3,500 credits/mo and access to all models including Seedance 2.0 and Nano Banana Pro.</li>
-<li><strong>Team</strong> — £65/seat/mo billed annually (£79 month-to-month): 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support.</li>
-<li><strong>Scale</strong> — £150/seat/mo billed annually (£215 month-to-month): 15,000 credits/mo, 5–15 seats, SSO, priority queue and admin controls.</li>
+<li><strong>Ultra</strong>: £99/mo billed annually (£129 month-to-month): 3,500 credits/mo and access to all models including Seedance 2.0 and Nano Banana Pro.</li>
+<li><strong>Team</strong>: £65/seat/mo billed annually (£79 month-to-month): 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support.</li>
+<li><strong>Scale</strong>: £150/seat/mo billed annually (£215 month-to-month): 15,000 credits/mo, 5–15 seats, SSO, priority queue and admin controls.</li>
 </ul>
 <p>Looking for the Riftn Extra social membership instead? <a href="${APP_URL}/premium">See Premium</a>.</p>`,
   },
   'communities': {
-    title: 'Communities — Find Your People on Riftn',
+    title: 'Communities: Find Your People on Riftn',
     description: 'Discover Riftn communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
     heading: 'Riftn Communities',
-    bodyHtml: `<p>Communities are public groups on Riftn — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
+    bodyHtml: `<p>Communities are public groups on Riftn, join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
 <h2>How a community works</h2>
-<p>Every community has a feed of its own, a member list, and a page at its own address that anyone can read without an account. Members post into it the same way they post anywhere on Riftn — video, shorts, images, audio or text — and the community's feed is those posts in the order they were made. Joining one adds its posts to your home feed; leaving removes them. Nothing is hidden behind an algorithm.</p>
+<p>Every community has a feed of its own, a member list, and a page at its own address that anyone can read without an account. Members post into it the same way they post anywhere on Riftn, video, shorts, images, audio or text, and the community's feed is those posts in the order they were made. Joining one adds its posts to your home feed; leaving removes them. Nothing is hidden behind an algorithm.</p>
 <p>A community can host live audio <a href="${APP_URL}/stages">Stages</a> and schedule events, and the people who run it can pin posts, set rules and moderate what appears. Creating one takes a name, a description and a picture; anyone with an account can do it, and there is no cap on how many you can join or run.</p>
 <p><a href="${APP_URL}/communities">Browse communities on Riftn</a>.</p>`,
   },
   'stages': {
-    title: 'Stages — Live Audio Rooms on Riftn',
-    description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn — the decentralized, open source social platform.',
+    title: 'Stages: Live Audio Rooms on Riftn',
+    description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn, the decentralized, open source social platform.',
     heading: 'Riftn Stages',
     bodyHtml: `<p>Stages are live audio rooms on Riftn: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
 <h2>Live, then kept</h2>
 <p>A Stage has a host, speakers and an audience. Listeners can raise a hand to be brought up to speak, the host can share a screen or play audio into the room, and anyone can tip a speaker in tokens while they talk. Rooms can be scheduled ahead of time with a reminder and a short link to share, or opened on the spot.</p>
-<p>When a Stage ends its recording is kept at the same address, seekable, with live captions carried over as a transcript that can be read or searched. So a Stage is a conversation while it happens and a page afterwards — one that a search engine, a link preview and a listener who missed it all get the same way.</p>
+<p>When a Stage ends its recording is kept at the same address, seekable, with live captions carried over as a transcript that can be read or searched. So a Stage is a conversation while it happens and a page afterwards, one that a search engine, a link preview and a listener who missed it all get the same way.</p>
 <p><a href="${APP_URL}/stages">See live and recorded Stages</a>.</p>`,
   },
   // The Arcade. Titles and descriptions mirror the SPA's SEOHead strings so
@@ -1293,24 +1295,24 @@ const MARKETING_PAGES = {
     // Not the SPA's `Arcade | Riftn`: fourteen characters with no word anyone
     // searches for, over a description Google cut at 160. The ?hl= variants
     // keep their seo-i18n rows until the locale keys are rewritten to match.
-    title: 'Riftn Arcade — Free Browser Games, No Download',
+    title: 'Riftn Arcade: Free Browser Games, No Download',
     description: 'Free browser games on Riftn: cinematic 3D chess, a procedurally generated shooter, a rainforest walk, a neon-street brawler and a walkable trading floor.',
     heading: 'Riftn Arcade',
-    bodyHtml: `<p>A collection of Riftn built and open sourced games, worlds or experiences. They run in the browser tab — nothing to install, nothing to buy, all served from Riftn itself.</p>
+    bodyHtml: `<p>A collection of Riftn built and open sourced games, worlds or experiences. They run in the browser tab, nothing to install, nothing to buy, all served from Riftn itself.</p>
 <ul>
-<li><a href="${APP_URL}/arcade/gods-eye">God's Eye</a> — a live spatial-intelligence globe where you can find the Riftn community across a 3D Earth.</li>
-<li><a href="${APP_URL}/arcade/kings-gambit">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
-<li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
-<li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
-<li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a> — a side-scrolling beat 'em up down a neon-lit street, built for Riftn rather than found.</li>
-<li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a> — a trading floor you can walk, built out of forty live market screens.</li>
+<li><a href="${APP_URL}/arcade/gods-eye">God's Eye</a>, a live spatial-intelligence globe where you can find the Riftn community across a 3D Earth.</li>
+<li><a href="${APP_URL}/arcade/kings-gambit">King's Gambit</a>, cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
+<li><a href="${APP_URL}/arcade/claude-of-duty">Claude of Duty</a>, a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
+<li><a href="${APP_URL}/arcade/jungle-trail">Jungle Trail</a>, a walk through a procedurally generated rainforest, with no score and no timer.</li>
+<li><a href="${APP_URL}/arcade/street-slayer">Street Slayer</a>, a side-scrolling beat 'em up down a neon-lit street, built for Riftn rather than found.</li>
+<li><a href="${APP_URL}/arcade/trenchstar">Chartopia</a>, a trading floor you can walk, built out of forty live market screens.</li>
 </ul>`,
   },
   // The mini app store and its developer page. Individual apps are not
   // listed here: they live in the registry, and until the SSR function learns
   // them a shared /apps/<slug> link falls back to the store's card.
   'apps': {
-    title: 'Riftn Apps — mini apps for Riftn',
+    title: 'Riftn Apps: mini apps for Riftn',
     description: 'Mini apps built for Riftn by anyone: games, tools and more that open inside Riftn, already signed in, with sharing back to the feed.',
     heading: 'Riftn Apps',
     bodyHtml: `<p>Mini apps are web apps that open inside Riftn. You arrive already signed in, and anything worth sharing goes straight back to the feed. Every app shows its real web address, so you always know who you are dealing with.</p>
@@ -1320,32 +1322,32 @@ const MARKETING_PAGES = {
     title: 'Build a Riftn mini app',
     description: 'Build a mini app for Riftn: one script tag, sign in with Riftn, share to the feed. Check your manifest and preview your app in the real host.',
     heading: 'Build a Riftn mini app',
-    bodyHtml: `<p>A Riftn mini app is any website plus one script tag. Add a manifest at /.well-known/dehub.json — or keep your Farcaster manifest, which Riftn reads as it is — and your app opens inside Riftn with the user already signed in.</p>
+    bodyHtml: `<p>A Riftn mini app is any website plus one script tag. Add a manifest at /.well-known/dehub.json, or keep your Farcaster manifest, which Riftn reads as it is, and your app opens inside Riftn with the user already signed in.</p>
 <p><a href="${APP_URL}/apps/dev">Check your manifest and launch your app</a>.</p>`,
   },
   'arcade/gods-eye': {
     title: "God's Eye | Riftn Arcade",
     description: 'Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the Riftn community.',
-    heading: "God's Eye — Find The Riftn Community On A Living 3D Earth",
+    heading: "God's Eye: Find The Riftn Community On A Living 3D Earth",
     ...arcadeGameLd('/arcade/gods-eye.jpg'),
     bodyHtml: `<p>A live spatial-intelligence globe in the browser tab: flights, satellites, earthquakes and street traffic drawn over a 3D Earth you can spin, zoom and fly down into.</p>
-<p>It is also the Riftn community on a map. Opting in places a deliberately approximate version of you on the globe — never your exact location — so you can see who else is out there. Nothing is placed until you choose to.</p>
+<p>It is also the Riftn community on a map. Opting in places a deliberately approximate version of you on the globe, never your exact location, so you can see who else is out there. Nothing is placed until you choose to.</p>
 <p>Built on the open-source <a href="https://github.com/bilawalsidhu/gods-eye-view" rel="nofollow">God's Eye View</a> (MIT). Needs a browser with WebGL 2 and hardware acceleration switched on.</p>
 <p><a href="${APP_URL}/arcade/gods-eye">Open the globe</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/kings-gambit': {
     title: "King's Gambit | Riftn Arcade",
-    description: "Play King's Gambit on Riftn — cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
-    heading: "King's Gambit — Cinematic 3D Chess",
+    description: "Play King's Gambit on Riftn, cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
+    heading: "King's Gambit: Cinematic 3D Chess",
     ...arcadeGameLd('/arcade/kings-gambit.webp'),
-    bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds.</p>
+    bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations, the Ivory Kingdom, the Sun Empire and the Grande Armée, march, strike and fall across a marble board in four battlegrounds.</p>
 <p>Full rules including castling, en passant and promotion; three engine strengths; a two-player hotseat; and an AI vs AI mode you can just sit and watch.</p>
 <p><a href="${APP_URL}/arcade/kings-gambit">Play King's Gambit</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/claude-of-duty': {
     title: 'Claude of Duty | Riftn Arcade',
-    description: 'Play Claude of Duty on Riftn — a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
-    heading: 'Claude of Duty — A Browser FPS With No Assets',
+    description: 'Play Claude of Duty on Riftn, a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
+    heading: 'Claude of Duty: A Browser FPS With No Assets',
     ...arcadeGameLd('/arcade/claude-of-duty.webp'),
     bodyHtml: `<p>A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads.</p>
 <p>It is also hidden inside the War theme, where an arrow key offers to deploy you.</p>
@@ -1353,10 +1355,10 @@ const MARKETING_PAGES = {
   },
   'arcade/jungle-trail': {
     title: 'Jungle Trail | Riftn Arcade',
-    description: 'Walk Jungle Trail on Riftn — a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
-    heading: 'Jungle Trail — A Procedural Rainforest Walk',
+    description: 'Walk Jungle Trail on Riftn, a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
+    heading: 'Jungle Trail: A Procedural Rainforest Walk',
     ...arcadeGameLd('/arcade/jungle-trail.webp'),
-    bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
+    bodyHtml: `<p>A first-person walk through a procedurally generated rainforest, a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
 <p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
 <p><a href="${APP_URL}/arcade/jungle-trail">Walk the trail</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
@@ -1366,8 +1368,8 @@ const MARKETING_PAGES = {
     // link it. See UNLISTED_ARCADE_GAMES in src/config/arcade-games.ts.
     noindex: true,
     title: 'Love Lock Bridge | Riftn Arcade',
-    description: 'Walk Love Lock Bridge on Riftn — a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
-    heading: 'Love Lock Bridge — Leave A Lock Above The Clouds',
+    description: 'Walk Love Lock Bridge on Riftn, a first-person stroll across a gilded bridge through rose gardens, river mist and Paris terraces. Write a message and leave your lock.',
+    heading: 'Love Lock Bridge: Leave A Lock Above The Clouds',
     ...arcadeGameLd('/arcade/love-lock-bridge.webp'),
     bodyHtml: `<p>A first-person walk across a gilded bridge through rose gardens, a river and lake, Paris terraces and drifting cloud. Choose a spot on either golden railing, write up to 64 characters and leave your lock.</p>
 <p>Walk with WASD or the arrow keys and drag to look. On a phone, hold the on-screen arrows or tap the paving to walk.</p>
@@ -1375,29 +1377,29 @@ const MARKETING_PAGES = {
   },
   'arcade/street-slayer': {
     title: 'Street Slayer | Riftn Arcade',
-    description: "Play Street Slayer on Riftn — a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
-    heading: "Street Slayer — A Neon-Street Beat 'Em Up",
+    description: "Play Street Slayer on Riftn, a side-scrolling beat 'em up down a neon-lit street, with three fighters and a boss. Free, in your browser, no install.",
+    heading: "Street Slayer: A Neon-Street Beat 'Em Up",
     ...arcadeGameLd('/arcade/street-slayer.webp'),
-    bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters — Mike, Indi or Lerone — then punch, kick and throw your way through everything the block sends at you.</p>
+    bodyHtml: `<p>A side-scrolling beat 'em up down a neon-lit street: pick one of three fighters, Mike, Indi or Lerone, then punch, kick and throw your way through everything the block sends at you.</p>
 <p>The only game in the arcade that was not found: it was commissioned for Riftn and built by Studio Shook Pixel, so it exists nowhere else. Arrows or WASD to move, Z to jump, four attack keys, and a full set of on-screen controls on a touchscreen.</p>
 <p><a href="${APP_URL}/arcade/street-slayer">Play Street Slayer</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'arcade/trenchstar': {
     title: 'Chartopia | Riftn Arcade',
     description: 'The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.',
-    heading: 'Chartopia — A Trading Floor Built Out Of Live Markets',
+    heading: 'Chartopia: A Trading Floor Built Out Of Live Markets',
     ...arcadeGameLd('/arcade/trenchstar.webp'),
     bodyHtml: `<p>The mother of all arenas. Trade like a time traveller with dozens of screens. Enjoy live feeds from Binance, Dexscreener or any thing you want from videos, to browser tabs and all between.</p>
 <p>Drag any screen to move it, drop it on another to swap them, and put a chart, a heatmap, a live web page or your own tab on any panel. Pick a character and walk the floor, or stay at the desk and fly the camera.</p>
 <p><a href="${APP_URL}/arcade/trenchstar">Take the desk</a> or <a href="${APP_URL}/arcade">see the whole arcade</a>.</p>`,
   },
   'guide': {
-    title: 'Riftn Guide — Visual Walkthrough of the App',
+    title: 'Riftn Guide | Visual Walkthrough of the App',
     description: 'A visual walkthrough of Riftn: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
     heading: 'Riftn Guide',
     bodyHtml: `<p>A screen-by-screen walkthrough of the Riftn app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
 <h2>What the guide covers</h2>
-<p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet Riftn creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer — including what minting a post on-chain does and why it is optional.</p>
+<p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet Riftn creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer, including what minting a post on-chain does and why it is optional.</p>
 <p>The second half is the parts people ask about: direct messages and group chats, live audio Stages, the wallet and how tokens moves in and out of it, staking for a badge and what each badge unlocks, and the governance page where token holders vote on what gets built. Each screen is shown as it looks in the app, with the controls labelled.</p>
 <p><a href="${APP_URL}/guide">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs">documentation</a>.</p>`,
   },
@@ -1408,8 +1410,8 @@ const MARKETING_PAGES = {
   // reads both from the releases API, but a crawler runs no JS, so these are
   // what a share card and a search result will carry.
   'apk': {
-    title: 'Download the Riftn APK — Latest Android Build',
-    description: 'Skip the stores and get the latest version of Riftn right here. Direct APK download for Android — open source, user-owned social media, no store account needed.',
+    title: 'Download the Riftn APK: Latest Android Build',
+    description: 'Skip the stores and get the latest version of Riftn right here. Direct APK download for Android, open source, user-owned social media, no store account needed.',
     heading: 'Download the Riftn APK',
     // A WebPage about the app, not a SoftwareApplication: Google's Software
     // App result requires an aggregateRating or review, the APK has neither,
@@ -1419,8 +1421,8 @@ const MARKETING_PAGES = {
       significantLink: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
       about: { '@type': 'Thing', name: 'Riftn for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
-    bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here — straight from us, no store account and no waiting on a review queue.</p>
-<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a> — Android 8 and up. Allow installs from your browser when Android asks.</p>
+    bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here, straight from us, no store account and no waiting on a review queue.</p>
+<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a>, Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? Riftn is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
   // The streamer landing page, and where affiliates send streamers
@@ -1470,7 +1472,7 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li><a href="${DEHUB_APP_LINKS.apk}">Download the Riftn APK</a> for Android without Google Play</li></ul>
 <h2>Frequently asked questions</h2>
 ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
-<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is DeHub?</a> covers the platform in depth.</p>`,
+<p>Want the full picture? <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is Riftn?</a> covers the platform in depth.</p>`,
   },
 
   // The moderation handbook, published. The page itself is an iframe around a
@@ -1491,7 +1493,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     bodyHtml: `<p>Riftn is community owned and community run, so the rules its moderators work to are not an internal document. This is the handbook they read and sign before they can moderate anything, published in full.</p>
 <p>Three golden rules outrank everything else in it:</p>
 <ol>
-<li>Only malicious actors get banned — people gaming the system or scamming users. Being disliked, wrong or unpopular is not a ban.</li>
+<li>Only malicious actors get banned, people gaming the system or scamming users. Being disliked, wrong or unpopular is not a ban.</li>
 <li>Adult or extreme content is marked mature, not deleted. It stays on the creator's profile; it just does not greet a stranger on the home page.</li>
 <li>The only thing deleted without hesitation is child sexual abuse material. Everything else is left to community moderation.</li>
 </ol>
@@ -1512,19 +1514,19 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   // /creator, /prompt, /affiliate and /premium have no SEOHead of their own yet,
   // so those four keep the fn's wording until the pages grow one.
   'features': {
-    title: 'Feature Requests & Bug Reporting — Riftn',
+    title: 'Feature Requests & Bug Reporting | Riftn',
     description: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features.",
     heading: 'Riftn Feature Requests & Bug Reporting',
     bodyHtml: `<p>The Riftn Features page is a community board: submit new feature ideas, report bugs, and vote on suggestions to help shape the roadmap.</p>
 <ul>
-<li><strong>Submit ideas &amp; bug reports</strong> — suggest features or report bugs with device details and attachments.</li>
-<li><strong>Community voting</strong> — vote on requests to help prioritise what gets built next.</li>
-<li><strong>Transparent roadmap</strong> — track requests across Open, Shipping and Shipped.</li>
-<li><strong>Discussion</strong> — comment on requests and work through them with the community and the core team.</li>
+<li><strong>Submit ideas &amp; bug reports</strong>: suggest features or report bugs with device details and attachments.</li>
+<li><strong>Community voting</strong>: vote on requests to help prioritise what gets built next.</li>
+<li><strong>Transparent roadmap</strong>: track requests across Open, Shipping and Shipped.</li>
+<li><strong>Discussion</strong>: comment on requests and work through them with the community and the core team.</li>
 </ul>`,
   },
   'creator': {
-    title: 'Riftn Creator — Image, Video, Audio & 3D Studio',
+    title: 'Riftn Creator: Image, Video, Audio & 3D Studio',
     description: 'Create images, videos, audio and 3D assets. See the price before generating, save to your private library, and edit in your browser.',
     heading: 'Riftn Creator Studio',
     bodyHtml: `<p>Choose image, video, audio or 3D, enter a prompt and optionally attach reference media. Paid generations show a server quote and use tokens per job. Existing unspent payment receipts are reused before requesting another transfer.</p>
@@ -1537,7 +1539,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Choose a model in <a href="${APP_URL}/creator">Creator</a> to see its current per-job price before paying. A confirmed failed render restores its receipt amount for reuse; this is not an on-chain refund transfer.</p>`,
   },
   'editor': {
-    title: 'Riftn Editor — In-Browser Video Editor',
+    title: 'Riftn Editor: In-Browser Video Editor',
     description: 'Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to Riftn.',
     heading: 'Riftn Video Editor',
     bodyHtml: `<p>The Riftn Video Editor is a multi-track timeline that runs entirely in the browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text, then publish to the feed as a video post or Short.</p>
@@ -1549,20 +1551,20 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 </ul>`,
   },
   'prompt': {
-    title: 'Riftn Prompt — Personalize Your Feed',
+    title: 'Riftn Prompt: Personalize Your Feed',
     description: 'Tell Riftn what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.',
     heading: 'Riftn Prompt',
-    bodyHtml: `<p>Riftn Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the home feed in real time. Save prompts as tabs, switch between them, and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
+    bodyHtml: `<p>Riftn Prompt lets you type what you want to see, topics, creators, moods, chains, and reshapes the home feed in real time. Save prompts as tabs, switch between them, and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
   },
   'work': {
-    title: 'Bounties — Post & Hunt Paid Tasks | Riftn',
+    title: 'Bounties: Post & Hunt Paid Tasks | Riftn',
     description: 'Browse open bounties on Riftn: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC.',
-    heading: 'Riftn Work — Bounties',
+    heading: 'Riftn Work: Bounties',
     bodyHtml: `<p>Riftn Work is an on-chain marketplace for creator jobs. Post a bounty with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p>
 <ul>
-<li><strong>Clipping</strong> — pay per verified view for short clips of streams or long-form video.</li>
-<li><strong>Social tasks</strong> — pay for high-quality engagement across posts.</li>
-<li><strong>Fixed-price contracts</strong> — hire creators for logos, video, translation and community work.</li>
+<li><strong>Clipping</strong>: pay per verified view for short clips of streams or long-form video.</li>
+<li><strong>Social tasks</strong>: pay for high-quality engagement across posts.</li>
+<li><strong>Fixed-price contracts</strong>: hire creators for logos, video, translation and community work.</li>
 </ul>`,
   },
   'nfts': {
@@ -1576,23 +1578,23 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Riftn takes 2% of a sale paid in BNB or ETH, and 1% when paid in DHB. Creators receive the royalty their collection sets, capped at 10%. The seller receives the rest the moment the trade settles.</p>`,
   },
   'usernames': {
-    title: 'Username Marketplace — Buy & Sell Riftn Handles for tokens',
-    description: 'Browse Riftn usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
+    title: 'Username Marketplace: Buy & Sell Riftn Handles for tokens',
+    description: 'Browse Riftn usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears, or list your own.',
     heading: 'Riftn Username Marketplace',
     bodyHtml: `<p>Every Riftn profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
 <h2>Buying a handle</h2>
-<p>The asking price is quoted by Riftn, not by the browser, and the payment goes wallet-to-wallet — Riftn takes no cut and never holds your funds. Search a name you want and Riftn also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
+<p>The asking price is quoted by Riftn, not by the browser, and the payment goes wallet-to-wallet, Riftn takes no cut and never holds your funds. Search a name you want and Riftn also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
 <h2>Selling yours</h2>
-<p>You can list the handle you are currently using, at any price in tokens. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are — only the handle moves.</p>`,
+<p>You can list the handle you are currently using, at any price in tokens. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are, only the handle moves.</p>`,
   },
   'affiliate': {
-    title: 'Riftn Affiliate — Earn 20% Revenue Share',
+    title: 'Riftn Affiliate: Earn 20% Revenue Share',
     description: 'Refer creators to Riftn and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
     heading: 'Riftn Affiliate Program',
     bodyHtml: `<p>Every Riftn user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in tokens and are visible on-chain.</p>`,
   },
   'premium': {
-    title: 'Riftn Extra — Premium Membership',
+    title: 'Riftn Extra: Premium Membership',
     description: 'Unlock Riftn Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across Riftn.',
     heading: 'Riftn Extra',
     bodyHtml: `<ul>
@@ -1601,57 +1603,57 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li>Extra bookmark folders, saved prompts and profile customisation.</li>
 <li>Exclusive drops, badges and community events.</li>
 </ul>
-<p>Riftn Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
+<p>Riftn Extra is billed monthly and unlocks across the whole network, social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing">pricing</a>.</p>`,
   },
   'dao': {
-    title: 'DAO Treasury — Fund Riftn and Earn a Say',
+    title: 'DAO Treasury: Fund Riftn and Earn a Say',
     description: 'The Riftn DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
     heading: 'Riftn DAO Treasury',
     bodyHtml: `<p>The DAO treasury is a single wallet that anyone can send tokens to, from inside the app or from any exchange or wallet. Its balance and every contribution are read straight from the Base and BNB chains, so nothing on this page depends on a database.</p>
-<p>Each contributor holds a share of the pool equal to what they put in. That share is the weight their vote carries when the DAO decides how the treasury is spent — see <a href="${APP_URL}/governance">governance</a> for the proposals.</p>`,
+<p>Each contributor holds a share of the pool equal to what they put in. That share is the weight their vote carries when the DAO decides how the treasury is spent, see <a href="${APP_URL}/governance">governance</a> for the proposals.</p>`,
   },
   'governance': {
-    title: 'Governance — Vote on Community Proposals',
+    title: 'Governance: Vote on Community Proposals',
     description: "Participate in decentralized governance on Riftn. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
     heading: 'Riftn Governance',
-    bodyHtml: `<p>Token holders shape the Riftn roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked token weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
+    bodyHtml: `<p>Token holders shape the Riftn roadmap. Any staker can open a proposal, new features, moderation rules, treasury spend or partnerships, and the community votes with staked token weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
   },
   'packs': {
-    title: 'Emoji, Sticker & GIF Packs — Riftn',
+    title: 'Emoji, Sticker & GIF Packs | Riftn',
     description: 'Custom emoji, sticker and GIF packs made by Riftn badge holders. Add any pack to your picker and use it in chats, comments and reactions.',
     heading: 'Emoji, Sticker & GIF Packs',
     bodyHtml: `<p>Packs are custom emoji, stickers and GIFs published by Riftn badge holders. Anyone can add a pack to their picker and use it in chats, comments and reactions. Staking for a badge unlocks creating your own: a Crab badge runs one pack of each kind, and every tier up to Megalodon adds more packs and more room in each.</p>
 <p>Share a pack with its link and anyone who opens it can add it in one tap. <a href="${APP_URL}/stake">Get a badge</a> to start your own.</p>`,
   },
   'leaderboard': {
-    title: 'Leaderboard — Top Creators & Earners',
+    title: 'Leaderboard: Top Creators & Earners',
     description: "See who's leading on Riftn. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods.",
     heading: 'Riftn Leaderboard',
     bodyHtml: `<p>The leaderboard ranks Riftn's biggest creators, tippers and token stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
   },
   'top-100': {
-    title: 'Top Assets — Live Prices for Stocks, Commodities & Crypto',
+    title: 'Top Assets: Live Prices for Stocks, Commodities & Crypto',
     description: 'Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on Riftn.',
     heading: 'Top Assets on Riftn',
-    bodyHtml: `<p>Track live prices, 24h volume and sparkline charts for thousands of assets — crypto, equities and commodities — without leaving Riftn. Open any ticker for the full chart, add it to a watchlist, or share it straight to the feed as a post.</p>`,
+    bodyHtml: `<p>Track live prices, 24h volume and sparkline charts for thousands of assets, crypto, equities and commodities, without leaving Riftn. Open any ticker for the full chart, add it to a watchlist, or share it straight to the feed as a post.</p>`,
   },
   'music': {
-    title: 'Music — Listen & Discover on Riftn',
-    description: 'Stream music, discover new artists, listen to live radio and watch music videos on Riftn — the decentralized open source media platform.',
+    title: 'Music: Listen & Discover on Riftn',
+    description: 'Stream music, discover new artists, listen to live radio and watch music videos on Riftn, the decentralized open source media platform.',
     heading: 'Riftn Music',
-    bodyHtml: `<p>Riftn Music hosts songs from independent Web3 artists — stream them free, tip in tokens, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
+    bodyHtml: `<p>Riftn Music hosts songs from independent Web3 artists, stream them free, tip in tokens, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
 <h2>For listeners</h2>
 <p>Tracks play in a persistent player that keeps going while you browse the rest of Riftn, with a visualiser and a queue. Follow an artist to get their releases in your home feed, tip a track you like straight from the player, and add it to a playlist of your own. The radio channel plays continuously from the catalogue.</p>
 <h2>For artists</h2>
 <p>An audio post is a normal Riftn post: upload the track, add artwork and a description, and decide whether it is free, tipped, pay-per-play, or unlocked for badge holders and subscribers. Minting it on-chain gives you a permanent record of the release that you own wherever the platform goes. Plays, reactions and comments count on the post and toward your badge standing, like every other format here.</p>`,
   },
   'tv': {
-    title: 'Live TV — Free Channels From Around the World',
-    description: 'Watch free live TV channels from around the world on Riftn. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
+    title: 'Live TV: Free Channels From Around the World',
+    description: 'Watch free live TV channels from around the world on Riftn. News, sports, entertainment and more, streamed in the browser, no subscription needed.',
     heading: 'Riftn TV',
-    bodyHtml: `<p>Riftn TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in tokens straight from the player.</p>
+    bodyHtml: `<p>Riftn TV streams free live channels from around the world, news, sports and entertainment, alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in tokens straight from the player.</p>
 <h2>What is on</h2>
-<p>The guide is grouped by country and by genre — news, sport, film, music, kids, documentary — and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on Riftn appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
+<p>The guide is grouped by country and by genre, news, sport, film, music, kids, documentary, and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on Riftn appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
 <p>Playback works on the web and in the apps, with the player able to detach into a corner while you read the feed. A live creator stream can be tipped in tokens from the player, and it is kept afterwards as a normal video post on the creator's profile, with the chat that ran beside it.</p>`,
   },
   // Title and description are copied verbatim from CinemaPage's SEOHead — see
@@ -1660,15 +1662,15 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     title: 'Cinema | Where to Stream, Rent or Buy Any Film | Riftn',
     description: 'Find out where to stream, rent or buy any film or series, with live prices for your country. Riftn Cinema covers every major service in 140+ countries.',
     heading: 'Riftn Cinema',
-    bodyHtml: `<p>Search any film or series and Riftn Cinema shows every legal way to watch it where you are — what it streams on, what a rental costs, and what it costs to own. Prices come back in your own currency.</p>
+    bodyHtml: `<p>Search any film or series and Riftn Cinema shows every legal way to watch it where you are, what it streams on, what a rental costs, and what it costs to own. Prices come back in your own currency.</p>
 <h2>Rights are per country</h2>
 <p>The same film can be included with a subscription in one country, a paid rental in another, and unavailable in a third. Cinema asks per territory rather than showing one global answer, so switching country re-checks availability and price.</p>`,
   },
   'glossary': {
-    title: 'Glossary — Icons, Features & Web3 Terms',
+    title: 'Glossary: Icons, Features & Web3 Terms',
     description: "Learn what every icon, button and feature means on Riftn. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'Riftn Glossary',
-    bodyHtml: `<p>Plain-English definitions for everything you meet on Riftn — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and Riftn tokens. Written for creators, not engineers.</p>`,
+    bodyHtml: `<p>Plain-English definitions for everything you meet on Riftn, every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and Riftn tokens. Written for creators, not engineers.</p>`,
   },
   'compare': {
     title: 'Compare Riftn with YouTube, X, Twitch and more',
@@ -1677,32 +1679,32 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     bodyHtml: `<p>Compare publishing, live video and audio, creator income, communities, studio tools, ownership, automation, safety and entertainment across Riftn and eleven other platforms.</p><p>Choose a platform, search for a feature or browse every category. Each documented entry links to a first-party source. Conditional features and related products are distinguished from native capabilities. An unverified entry is a research gap, not a claim that a feature is absent.</p><p>Riftn web, Android and iOS capabilities differ. Crypto purchase and reward actions are unavailable in the iOS app. This growing research catalogue was reviewed on 27 October 2026.</p>`,
   },
   'bridge': {
-    title: 'Bridge — Transfer tokens Cross-Chain',
+    title: 'Bridge: Transfer tokens Cross-Chain',
     description: 'Bridge your tokens between Base and BNB Chain seamlessly on Riftn. Fast, secure cross-chain transfers with live transaction tracking.',
     heading: 'Riftn Bridge',
     bodyHtml: `<p>The Riftn Bridge moves tokens between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
   },
   'agents': {
-    title: 'AI Agents — Build & Manage Bots',
+    title: 'AI Agents: Build & Manage Bots',
     description: 'Create and manage AI-powered agents on Riftn. Automate posting, engage with your audience, and integrate with the Riftn API.',
     heading: 'Riftn Agents',
     bodyHtml: `<p>Riftn Agents are configurable AI assistants that post on a schedule, reply to comments, moderate your community, curate feeds and report on growth. Start from a pre-built agent or build your own against the Riftn MCP server and API.</p>
 <p>See <a href="${APP_URL}/connect">Connect</a> to wire Riftn into ChatGPT or Claude.</p>`,
   },
   'assistant': {
-    title: 'AI Assistant — Chat, Generate Images & Video',
-    description: "Chat with Riftn's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place.",
+    title: 'AI Assistant: Chat, Generate Images & Video',
+    description: "Chat with Riftn's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities, all in one place.",
     heading: 'Riftn Assistant',
-    bodyHtml: `<p>The Riftn Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how Riftn tokens work — then publish the result without leaving the conversation.</p>`,
+    bodyHtml: `<p>The Riftn Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how Riftn tokens work, then publish the result without leaving the conversation.</p>`,
   },
   'creators': {
     title: 'Become a Creator',
-    description: 'Apply to become a creator on Riftn — the open source, censorship resistant media platform.',
+    description: 'Apply to become a creator on Riftn, the open source, censorship resistant media platform.',
     heading: 'Become a Riftn Creator',
-    bodyHtml: `<p>Apply for a creator account on Riftn and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
+    bodyHtml: `<p>Apply for a creator account on Riftn and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing, all settled on-chain.</p>`,
   },
   'stake': {
-    title: 'Stake tokens — Earn Rewards on Riftn',
+    title: 'Stake tokens: Earn Rewards on Riftn',
     description: 'Stake tokens from the Riftn wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
     heading: 'Stake tokens',
     bodyHtml: `<p>Staking puts a token balance to work inside Riftn. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
@@ -1712,7 +1714,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>The rate depends on total staked supply and on platform revenue for the period. There is no fixed APY, no minimum return and no guarantee, and staking carries the ordinary risks of holding a volatile asset.</p>`,
   },
   'raffle': {
-    title: 'Prize Draws — Win tokens, Hardware and NFTs on Riftn',
+    title: 'Prize Draws: Win tokens, Hardware and NFTs on Riftn',
     description: 'Riftn prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
     heading: 'Riftn Prize Draws',
     bodyHtml: `<p>Prize draws are Riftn's recurring community raffles. Each draw opens with a stated prize, a stated closing time and a stated entry route, then picks its winner from the entry list on-chain, so the result can be checked by anyone.</p>
@@ -1724,14 +1726,14 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Winners are notified in-app and have 14 days to claim. Token prizes settle to the winner's Riftn wallet on Base; physical prizes are arranged with the team directly. Draws are void where local law prohibits them, and Riftn staff are not eligible.</p>`,
   },
   'jobs': {
-    title: 'Careers — Join the Riftn Team',
+    title: 'Careers: Join the Riftn Team',
     description: 'Join the team building the future of decentralized media. Explore open positions at Riftn and help shape Web3 social.',
     heading: 'Careers at Riftn',
     bodyHtml: `<p>Riftn is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
 <h2>How we work</h2>
 <p>The whole product is open source, and the team works in the open too: changes ship through public pull requests, the roadmap is voted on by token holders through <a href="${APP_URL}/governance">governance</a>, and feature requests come from the people using the app. We are remote by default, across time zones, and we hire for people who can own a problem end to end rather than for a job title.</p>
 <p>Engineering roles cover the web app, the Android and iOS apps, the API and the on-chain contracts. Design, growth and community roles work directly with creators on the network. Every role is paid, and part of the compensation can be taken in tokens for those who want it.</p>
-<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">Riftn bounties</a> — scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
+<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">Riftn bounties</a>, scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
   },
 
   // --- app surfaces that had no crawler copy at all --------------------------
@@ -1742,7 +1744,7 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   // three that lived only under /app; all three answer at the bare URL now, so
   // the default canonical (`/<key>`) is the right one and the overrides are out.
   'superpowers': {
-    title: 'SuperPowers — Spend Your Riftn Badge on Reach',
+    title: 'SuperPowers: Spend Your Riftn Badge on Reach',
     description: 'Badge holders get boosts every fortnight: twelve powers across thirteen tiers, with a larger allowance at every rung.',
     heading: 'Riftn SuperPowers',
     bodyHtml: `<p>A Riftn staking badge is not only the art beside your name. Each tier carries powers, and the first of them is reach: a boost that lifts one of your posts into the slot at the top of the home feed.</p>
@@ -1752,10 +1754,10 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Powers unlock one per tier across the thirteen badges, and higher rungs both hold more boosts and hold them for longer. See <a href="${APP_URL}/stake">staking</a> for how a badge is earned.</p>`,
   },
   'converter': {
-    title: 'Converter — import a video to Riftn',
+    title: 'Converter: import a video to Riftn',
     description: 'Paste a link from YouTube, TikTok, Instagram, X, Twitch, Vimeo and more, and publish it as a Riftn post. The video is fetched, transcoded and posted to your feed with its title and thumbnail.',
     heading: 'Import a video',
-    bodyHtml: `<p>Paste a link and Riftn fetches the video, transcodes it and publishes it as a post on your profile — title and thumbnail carried across.</p>
+    bodyHtml: `<p>Paste a link and Riftn fetches the video, transcodes it and publishes it as a post on your profile, title and thumbnail carried across.</p>
 <h2>Twenty-one places to import from</h2>
 <p>YouTube, TikTok, Instagram, X, Facebook, Twitch, Kick, Rumble, Vimeo, Dailymotion, Reddit, Bluesky, Odysee, Streamable, Loom, Tumblr, Pinterest, Snapchat, VK, Rutube and Bilibili.</p>
 <h2>Your back catalogue, in one place</h2>
@@ -1763,10 +1765,10 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <p>Importing needs a Riftn account and applies to videos you have the right to publish.</p>`,
   },
   'migrate-youtube': {
-    title: 'Migrate all — bring a whole profile to Riftn',
-    description: 'Bulk-import a whole channel or profile to Riftn in one batch — YouTube, TikTok, Vimeo, SoundCloud and more. Pick what to bring, edit the titles, pay once.',
+    title: 'Migrate all: bring a whole profile to Riftn',
+    description: 'Bulk-import a whole channel or profile to Riftn in one batch, YouTube, TikTok, Vimeo, SoundCloud and more. Pick what to bring, edit the titles, pay once.',
     heading: 'Bring a whole profile over',
-    bodyHtml: `<p>Paste a channel or profile address and Riftn lists its public uploads. Choose what to bring across, retitle anything you want to read differently, and pay once for the batch — then close the tab while it runs.</p>
+    bodyHtml: `<p>Paste a channel or profile address and Riftn lists its public uploads. Choose what to bring across, retitle anything you want to read differently, and pay once for the batch, then close the tab while it runs.</p>
 <h2>One payment, not one per video</h2>
 <p>The whole batch is priced before it starts and every video is cheaper than the one before it. Anything already on your profile is skipped and never charged twice, and a video that cannot be imported has its share credited back toward the next migration.</p>
 <h2>Edit before it publishes</h2>
@@ -1779,45 +1781,45 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
     // The page ships `noindex` in its own SEOHead; the crawler variant has to
     // say the same thing or the two describe the same URL differently.
     noindex: true,
-    title: 'Launchpad — Riftn',
+    title: 'Launchpad | Riftn',
     description: 'Tokenise a business on the Riftn launchpad: browse live coins or create your own.',
     heading: 'Riftn Launchpad',
     bodyHtml: `<p>The launchpad is where a business, project or creator issues a coin on Riftn. Live launches are listed with their activity, and creating one runs from the same page.</p>
 <p>Coins are speculative assets and can lose their value entirely. Nothing here is investment advice.</p>`,
   },
   'live-studio': {
-    title: 'Live Studio — Stream Alerts, Goals and Overlays | Riftn',
+    title: 'Live Studio: Stream Alerts, Goals and Overlays | Riftn',
     description:
       'Add tip alerts, follower alerts, goal bars and top supporter boards to your Riftn live streams. Drawn for every viewer, from any phone, browser, capture card or encoder.',
     heading: 'Riftn Live Studio',
     bodyHtml: `<p>Live Studio is where a Riftn creator sets up what appears over their live streams: an alert for every tip, sized to the tier it buys; alerts when someone follows, subscribes, shares or arrives; a goal bar; a board of the stream's biggest supporters; a viewer count; and text, lower thirds and frames.</p>
 <h2>Drawn for every viewer</h2>
-<p>Each viewer's Riftn app draws the overlay over the stream itself, so it works whatever the stream comes from — a phone, the browser, an HDMI capture card or an encoder like OBS — and costs the streamer nothing to run.</p>
+<p>Each viewer's Riftn app draws the overlay over the stream itself, so it works whatever the stream comes from, a phone, the browser, an HDMI capture card or an encoder like OBS, and costs the streamer nothing to run.</p>
 <h2>Counted from the chain</h2>
 <p>Tips on Riftn are on-chain payments. Goals and the supporters board count what the chain actually paid, not what a client claimed, so they cannot be moved by a fake event.</p>`,
   },
   'stats': {
-    title: 'Live Site Stats — Riftn Visitors and Members in Real Time',
-    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
+    title: 'Live Site Stats: Riftn Visitors and Members in Real Time',
+    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends, revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
     heading: 'Riftn Live Stats',
     bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
 <h2>Members as well as traffic</h2>
-<p>Alongside traffic the page publishes Riftn's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>
+<p>Alongside traffic the page publishes Riftn's own community figures, total members, daily, weekly and monthly active users, new signups and growth, read straight from the platform database.</p>
 <h2>Revenue and costs</h2>
 <p>The page also adds up what Riftn earns and what it spends to run it, in USD: in-app buys, platform fees and token-tax history against AI compute, infrastructure and payment fees. Every on-chain line links to its transaction, and the full ledger downloads as CSV.</p>
-<p>The original Riftn token's 2021–23 trading tax is split three ways — what went to Riftn operations, what bought back and burned Riftn, and what was paid to holders and stakers in BNB — each valued at the BNB price on the day it moved.</p>`,
+<p>The original Riftn token's 2021–23 trading tax is split three ways, what went to Riftn operations, what bought back and burned Riftn, and what was paid to holders and stakers in BNB, each valued at the BNB price on the day it moved.</p>`,
   },
   'accounts': {
-    title: 'Account Marketplace — Riftn',
-    description: 'Buy and sell established Riftn accounts for tokens. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
+    title: 'Account Marketplace | Riftn',
+    description: 'Buy and sell established Riftn accounts for tokens. Browse accounts by followers, uploads and age, the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
     heading: 'Riftn Account Marketplace',
     bodyHtml: `<p>An established Riftn account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
 <h2>Settled on-chain</h2>
-<p>Payment is in tokens and goes straight to the seller — Riftn does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
+<p>Payment is in tokens and goes straight to the seller, Riftn does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
   },
   'fractions': {
     title: 'Fractions | Riftn',
-    description: 'Buy and sell fractions of Riftn posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in tokens.',
+    description: 'Buy and sell fractions of Riftn posts. A minted post is 1000 on-chain fractions, own a slice of a video, track, or image and trade it in tokens.',
     heading: 'Riftn Fractions',
     bodyHtml: `<p>Every Riftn upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
 <h2>An open order book</h2>
@@ -1835,10 +1837,10 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
   'events': {
     // EventsPage ships `noindex`; the crawler variant matches it.
     noindex: true,
-    title: 'Events — Meetups & Community Events on Riftn',
+    title: 'Events: Meetups & Community Events on Riftn',
     description: 'Browse upcoming Riftn community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform.',
     heading: 'Riftn Events',
-    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on Riftn. Browse what is coming up, RSVP to anything open, and host your own — each event gets its own page and share card.</p>`,
+    bodyHtml: `<p>Events are community meetups, AMAs and calls listed on Riftn. Browse what is coming up, RSVP to anything open, and host your own, each event gets its own page and share card.</p>`,
   },
 };
 
@@ -1873,7 +1875,7 @@ function buildMarketingHtml(key, meta) {
   // Home › [parent section] › page. `arcade/gods-eye` sits under the arcade,
   // `connect/claude` under /connect; a parent with no page of its own is
   // skipped rather than linked to a URL that has nothing at it.
-  const shortName = (m) => m.heading.split(' — ')[0];
+  const shortName = (m) => m.heading.split(/ — |: /)[0];
   const parentKey = key.includes('/') ? key.slice(0, key.lastIndexOf('/')) : '';
   const parent = parentKey && Object.hasOwn(MARKETING_PAGES, parentKey) ? MARKETING_PAGES[parentKey] : null;
   const trail = [
@@ -2185,7 +2187,32 @@ function normalizeProxiedMeta(html) {
  * normalizeProxiedMeta above: the fn does not move, so the fix is a rewrite.
  * Pure string functions, tested in src/test/proxied-meta-enrichment.test.ts.
  */
-const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on Riftn — join the decentralized creator network\./;
+/**
+ * The deployed fn still writes the old name and long dashes into titles,
+ * descriptions and JSON-LD. Swap them in the head only, so post text and
+ * bios in the body stay exactly as their authors wrote them.
+ */
+const OLD_BRAND = /(?<![\w@/.-])DeHub(?![\w-])/g;
+function plainHeadText(text, isTitle) {
+  return text
+    .replace(OLD_BRAND, 'Riftn')
+    .replace(/\s+(?:—|&mdash;)\s+(?=Riftn(?:\s+[A-Z][\w&;]*){0,3}\s*$)/, ' | ')
+    .replace(/^Riftn\s+(?:—|&mdash;)\s+/, 'Riftn | ')
+    .replace(/\s+(?:—|&mdash;)\s+/g, isTitle ? ' | ' : ', ');
+}
+function plainBrandHead(html) {
+  const end = html.indexOf('</head>');
+  if (end < 0) return html;
+  const head = html.slice(0, end)
+    .replace(/(<title>)([^<]*)(<\/title>)/i, (m, a, v, b) => a + plainHeadText(v, true) + b)
+    .replace(/(<meta (?:property|name)="([^"]+)" content=")([^"]*)(")/g, (m, a, name, v, b) =>
+      /title|description|image:alt|site_name/.test(name) ? a + plainHeadText(v, /title|alt/.test(name)) + b : m)
+    .replace(/(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g, (m, a, v, b) =>
+      a + v.replace(/("(?:name|headline|description|alternateName)":")((?:[^"\\]|\\.)*)(")/g, (mm, x, t, y) => x + plainHeadText(t, false) + y) + b);
+  return head + html.slice(end);
+}
+
+const POST_DESCRIPTION_TEMPLATE = /Post by (.+?) on Riftn(?: —|,) join the decentralized creator network\./;
 const PROFILE_DESCRIPTION_TEMPLATE = /Connect with (.+?) on Riftn, the open source alternative to legacy media\./;
 /** A bio shorter than this says nothing about the page on its own. */
 const PROFILE_DESCRIPTION_MIN = 40;
@@ -2368,13 +2395,13 @@ function enrichPostMeta(html, postId, nft) {
     // TITLE_MAX: the suffix is only applied when the result still fits, and
     // the shorter form is tried before giving up.
     const article = `a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind}`;
-    const suffixed = [`${chosen} — ${article} by ${authorName} on Riftn`, `${chosen} — ${authorName} on Riftn`].find(
+    const suffixed = [`${chosen} | ${article} by ${authorName} on Riftn`, `${chosen} | ${authorName} on Riftn`].find(
       (candidate) => candidate.length <= TITLE_MAX,
     );
     // A title that already carries the brand needs no branding, and one that
     // already has an em-dash clause reads badly with a second one bolted on
     // (`A — B — davyJones on Riftn`). Both are distinctive enough as they are.
-    const alreadyShaped = /\bon Riftn\b/i.test(chosen) || chosen.includes(' — ');
+    const alreadyShaped = /\bon Riftn\b/i.test(chosen) || chosen.includes(' — ') || chosen.includes(' | ');
     const next = suffixed && !alreadyShaped ? suffixed : chosen;
     if (next !== title) out = replacePostTitle(out, title, next);
   } else if (chosen !== title) {
@@ -2388,18 +2415,18 @@ function enrichPostMeta(html, postId, nft) {
 
   const lead = untitled
     ? `${verb} ${kind} #${postId} by ${author} on Riftn`
-    : `${verb} "${chosen}" — a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on Riftn`;
+    : `${verb} "${chosen}", a${/^[aeiou]/i.test(kind) ? 'n' : ''} ${kind} by ${author} on Riftn`;
   const topicsText = topics.length ? ` Topics: ${topics.join(', ')}.` : '';
   const description = truncate(`${lead}, the open source, user-owned social network.${topicsText}`, DESCRIPTION_MAX);
   const attrDesc = escFnAttr(description);
   const jsonDesc = escJsonText(description);
   return out
     .replace(
-      /(content=")Post by .+? on Riftn — join the decentralized creator network\.(")/g,
+      /(content=")Post by .+? on Riftn(?: —|,) join the decentralized creator network\.(")/g,
       (m, a, b) => `${a}${attrDesc}${b}`,
     )
     .replace(
-      /("description":")Post by .+? on Riftn — join the decentralized creator network\.(")/g,
+      /("description":")Post by .+? on Riftn(?: —|,) join the decentralized creator network\.(")/g,
       (m, a, b) => `${a}${jsonDesc}${b}`,
     )
     // The fn writes that same sentence a third time, as the page's only
@@ -2409,7 +2436,7 @@ function enrichPostMeta(html, postId, nft) {
     // 2026-09-16, which matches the 32% the description census found, and those
     // are the same pages sitting in "Crawled - currently not indexed".
     .replace(
-      /(<p>)Post by .+? on Riftn — join the decentralized creator network\.(<\/p>)/g,
+      /(<p>)Post by .+? on Riftn(?: —|,) join the decentralized creator network\.(<\/p>)/g,
       (m, a, b) => `${a}${attrDesc}${b}`,
     );
 }
@@ -2429,7 +2456,7 @@ function profileTitle(html, handle, displayName) {
   const name = String(displayName || (ld ? decodeFnText(ld[1]) : '')).replace(/\s+/g, ' ').trim();
   if (!name || name.replace(/^@/, '').toLowerCase() === handle.toLowerCase()) return html;
   const title = escFnAttr(clampTitle(`${name} (@${handle}) on Riftn`, TITLE_MAX));
-  const current = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} on Riftn — posts, videos &amp; profile`, 'gi');
+  const current = new RegExp(`@${handle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} on Riftn(?: —|,) posts, videos &amp; profile`, 'gi');
   return html.replace(current, title);
 }
 
@@ -2442,15 +2469,15 @@ function enrichProfileMeta(html, username, displayName) {
   if (templated) {
     const name = decodeFnText(templated[1]).replace(/\s+/g, ' ').trim();
     const who = name && name.toLowerCase() !== handle.toLowerCase() ? `${name} (@${handle})` : `@${handle}`;
-    description = `Connect with ${who} on Riftn — posts, videos, music and live streams on the open source, user-owned social network.`;
+    description = `Connect with ${who} on Riftn, posts, videos, music and live streams on the open source, user-owned social network.`;
   } else {
     const current = html.match(/<meta name="description" content="([^"]*)">/);
     if (!current) return html;
     const bio = decodeFnText(current[1]).replace(/\s+/g, ' ').trim();
     if (bio.length >= PROFILE_DESCRIPTION_MIN) return html;
     description = bio
-      ? `${bio} — @${handle} on Riftn, the open source, user-owned social network.`
-      : `@${handle} on Riftn — posts, videos, music and live streams on the open source, user-owned social network.`;
+      ? `${bio}, @${handle} on Riftn, the open source, user-owned social network.`
+      : `@${handle} on Riftn, posts, videos, music and live streams on the open source, user-owned social network.`;
   }
   const attr = escFnAttr(truncate(description, DESCRIPTION_MAX));
   const out = html.replace(
@@ -2761,7 +2788,7 @@ function postListHtml(heading, rows, { author = true } = {}) {
       const tail = [who && `<span data-public-by>by ${escHtml(who)}</span>`, views > 0 && `<span data-public-views="${views}">${views.toLocaleString('en-US')} views</span>`]
         .filter(Boolean)
         .join(' · ');
-      return `<li><a data-creator-copy href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
+      return `<li><a data-creator-copy href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? `, ${tail}` : ''}</li>`;
     });
   if (!items.length) return '';
   return `<section class="dh-list"><h2>${escHtml(heading)}</h2><ul>${items.join('')}</ul></section>`;
@@ -3134,7 +3161,7 @@ function communityPageLd(value) {
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: name ? `${name} — community on Riftn` : 'Community on Riftn',
+    name: name ? `${name}: community on Riftn` : 'Community on Riftn',
     ...fields,
     isPartOf: { '@type': 'WebSite', name: 'Riftn', url: APP_URL },
   };
@@ -3324,7 +3351,7 @@ function entityLooksThin({ name, description, image }) {
 function buildStoreHtml(store) {
   const canonicalUrl = `${APP_URL}/stores/${store.id}`;
   const name = store.name || 'Store';
-  const title = `${name} — Riftn Stores`;
+  const title = `${name} | Riftn Stores`;
   const description = truncate(
     store.description || `Shop ${name} on Riftn. Peer-to-peer commerce paid in tokens or USDC.`,
     200,
@@ -3362,7 +3389,7 @@ function buildListingHtml(listing) {
   const storeName = (listing.stores && listing.stores.name) || 'a Riftn store';
   const price = Number(listing.price) || 0;
   const currency = (listing.currency || 'USD').toUpperCase();
-  const title = `${name} — ${storeName} on Riftn`;
+  const title = `${name}, ${storeName} on Riftn`;
   const description = truncate(
     listing.description || `${name} from ${storeName}, on Riftn. Paid in tokens or USDC.`,
     200,
@@ -3418,7 +3445,7 @@ function eventOrganizerLd(event) {
 function buildEventHtml(event) {
   const canonicalUrl = `${APP_URL}/app/events/${event.event_number}`;
   const name = event.title || 'Event';
-  const title = `${name} — Riftn Events`;
+  const title = `${name} | Riftn Events`;
   const startsAt = event.starts_at || '';
   const when = startsAt ? new Date(startsAt).toUTCString() : '';
   const description = truncate(
@@ -3490,7 +3517,7 @@ function buildDexPoolHtml(pool) {
   const chain = DEX_POOL_CHAIN_NAMES[pool.chain] || pool.chain;
   const canonicalUrl = `${APP_URL}/dex/${pool.chain}/${pool.token_address}`;
   const pair = `${pool.symbol}/USD`;
-  const title = `${pair} — ${pool.name} on the Riftn DEX`;
+  const title = `${pair}, ${pool.name} on the Riftn DEX`;
   const description = truncate(`Trade ${pool.name} (${pool.symbol}) on ${chain}: live order book, limit orders and instant buys and sells on the Riftn DEX.`, 200);
   return entityHtml({
     canonicalUrl,
@@ -3525,17 +3552,17 @@ function buildStageHtml(stage) {
   const isScheduled = stage.status === 'scheduled';
   const name = stage.title || 'Live Stage';
   const title = isScheduled
-    ? `${name} — Upcoming Stage on Riftn`
+    ? `${name}, Upcoming Stage on Riftn`
     : isLive
-      ? `${name} — Live now on Riftn`
-      : `${name} — Stage on Riftn`;
+      ? `${name}, Live now on Riftn`
+      : `${name}, Stage on Riftn`;
   const when = isScheduled && stage.scheduled_at ? new Date(stage.scheduled_at).toUTCString() : '';
   const description = truncate(
     stage.description ||
       (isScheduled
         ? `Live audio Stage hosted by ${host} on Riftn${when ? ` · ${when}` : ''}. Set a reminder or add it to your calendar.`
         : isLive
-          ? `Live audio Stage hosted by ${host} on Riftn — listen in now, no account needed.`
+          ? `Live audio Stage hosted by ${host} on Riftn, listen in now, no account needed.`
           : `A recorded audio Stage hosted by ${host} on Riftn.`),
     200,
   );
@@ -3585,7 +3612,7 @@ function buildDuetsHtml(post, tokenId) {
   const description = truncate(`Watch every duet of ${creator ? `@${creator}'s` : 'this'} video on Riftn, or record your own side by side.`, 200);
   return entityHtml({
     canonicalUrl,
-    title: `${title} — Riftn`,
+    title: `${title} | Riftn`,
     description,
     image: postShareImageUrl(tokenId),
     ogType: 'website',
@@ -3615,7 +3642,7 @@ function buildReactionsHtml(post, tokenId) {
   const description = truncate(`Watch creators react to ${creator ? `@${creator}'s` : 'this'} video on Riftn, recorded and live, or record your own reaction.`, 200);
   return entityHtml({
     canonicalUrl,
-    title: `${title} — Riftn`,
+    title: `${title} | Riftn`,
     description,
     image: postShareImageUrl(tokenId),
     ogType: 'website',
@@ -3655,7 +3682,7 @@ function buildClipHtml(clip) {
     : '';
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Clip on Riftn`,
+    title: `${name}: Clip on Riftn`,
     description,
     image: clip.card_url || clip.poster_url || '',
     ogType: 'video.other',
@@ -3709,7 +3736,7 @@ function buildMiniAppHtml(app) {
   };
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Riftn Apps`,
+    title: `${name} | Riftn Apps`,
     description,
     image,
     jsonLd,
@@ -3787,12 +3814,12 @@ function buildBuilderPreviewHtml(id, appMeta) {
   const canonicalUrl = `${APP_URL}/builder/preview/${id}`;
   const name = truncate((appMeta && appMeta.title) || '', 80);
   const description = truncate(
-    (appMeta && appMeta.description) || (name ? `${name} — an app built on Riftn Builder.` : 'An app built on Riftn Builder.'),
+    (appMeta && appMeta.description) || (name ? `${name}, an app built on Riftn Builder.` : 'An app built on Riftn Builder.'),
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: name ? `${name} — Built with Riftn Builder` : 'Built with Riftn Builder',
+    title: name ? `${name}: Built with Riftn Builder` : 'Built with Riftn Builder',
     description,
     image: shareImage('builder'),
     noindex: true,
@@ -3855,7 +3882,7 @@ function bountyBriefHtml(brief, fallback) {
 function buildBountyHtml(job) {
   const canonicalUrl = `${APP_URL}/bounty/${job.job_number}`;
   const name = job.title || 'Bounty';
-  const title = `${name} — Riftn Bounties`;
+  const title = `${name} | Riftn Bounties`;
   const description = bountyMetaDescription(job);
   // The poster's own cover art when there is one; otherwise the board's card,
   // which at least says "bounty" rather than showing the generic Riftn banner.
@@ -3909,7 +3936,7 @@ ${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10)
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 <p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
 <h2>How a Riftn bounty works</h2>
-<p>A bounty is a scoped task with a budget attached, posted by a Riftn account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
+<p>A bounty is a scoped task with a budget attached, posted by a Riftn account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? `, ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
   });
 }
 
@@ -3923,12 +3950,12 @@ function buildCreatorFlowHtml(flow) {
   const name = flow.name || 'Creator Flow';
   const nodeCount = Number(flow.node_count) || 0;
   const description = truncate(
-    `${name} — a shared AI generation flow on Riftn with ${nodeCount} node${nodeCount === 1 ? '' : 's'}. Open a copy in Creator Flow to run it with your own prompts and references.`,
+    `${name}, a shared AI generation flow on Riftn with ${nodeCount} node${nodeCount === 1 ? '' : 's'}. Open a copy in Creator Flow to run it with your own prompts and references.`,
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Riftn Creator Flow`,
+    title: `${name} | Riftn Creator Flow`,
     description,
     image: absolutize(flow.cover_url) || shareImage('creator'),
     ogType: 'article',
@@ -3960,10 +3987,10 @@ function buildCreatorPackHtml(pack) {
   const name = pack.name || 'Pack';
   const kind = pack.kind === 'emoji' ? 'emoji pack' : pack.kind === 'sticker' ? 'sticker pack' : 'GIF pack';
   const count = Number(pack.item_count) || 0;
-  const description = `${name} — a Riftn ${kind} with ${count} item${count === 1 ? '' : 's'}. Add it to your picker and use it in chats, comments and reactions.`;
+  const description = `${name}, a Riftn ${kind} with ${count} item${count === 1 ? '' : 's'}. Add it to your picker and use it in chats, comments and reactions.`;
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Riftn ${kind}`,
+    title: `${name}: Riftn ${kind}`,
     description,
     image: pack.cover_url || shareImage('packs'),
     heading: name,
@@ -3996,12 +4023,12 @@ function buildProposalHtml(proposal) {
   const status = String(proposal.status || 'open').replace(/_/g, ' ');
   const votes = Number(proposal.vote_count) || 0;
   const description = truncate(
-    proposal.description || `${name} — a governance proposal on Riftn, ${status}, with ${votes} votes.`,
+    proposal.description || `${name}, a governance proposal on Riftn, ${status}, with ${votes} votes.`,
     200,
   );
   return entityHtml({
     canonicalUrl,
-    title: `${name} — Riftn Governance`,
+    title: `${name} | Riftn Governance`,
     description,
     image: proposal.media_type === 'image' && /^https:\/\//.test(String(proposal.media_url || ''))
       ? proposal.media_url
@@ -4043,7 +4070,7 @@ function buildProposalHtml(proposal) {
 function buildFeatureRequestHtml(feature) {
   const canonicalUrl = `${APP_URL}/features?feature=${feature.id}`;
   const name = feature.title || 'Feature Request';
-  const title = `${name} — Riftn Feature Requests`;
+  const title = `${name} | Riftn Feature Requests`;
   const description = truncate(
     feature.description || 'A community feature request or bug report on the Riftn roadmap board.',
     200,
@@ -4137,7 +4164,7 @@ ${shareMetaTags(`guides/${slug}`, meta.title)}
   author: { '@type': 'Organization', name: 'Riftn', url: APP_URL },
   publisher: ORG_JSONLD, mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
 })}</script>
-${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: meta.title.replace(/ — Riftn Guide$/, ''), url: canonicalUrl }])}
+${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, { name: meta.title.replace(/ (?:—|\|) Riftn Guide$/, ''), url: canonicalUrl }])}
 </head>
 <body>
 <p><a href="${APP_URL}/">Riftn</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
@@ -4157,7 +4184,7 @@ function buildFallbackHtml(pathname, canonicalUrl) {
   const postId = postMatch ? postMatch[1] : null;
   const title = postId
     ? `Post #${postId} on Riftn`
-    : 'Riftn — Open Source, User Owned & Censorship Resistant Media';
+    : 'Riftn | Open Source, User Owned & Censorship Resistant Media';
   const description = 'Open source, user owned and censorship resistant media.';
   const image = shareImage('fallback');
   // Canonical must never echo mirror hostnames or query strings.
@@ -4343,7 +4370,7 @@ th{color:#fff;font-weight:700}
 // spent a hop or a duplicate on every page.
 const PRERENDER_HEADER = `<header class="dh-head"><a href="${APP_URL}/"><img src="${APP_URL}/dehub-header-logo.png" alt="Riftn" width="270" height="81"></a><a class="dh-open" href="${APP_URL}/explore">Open Riftn</a></header><main class="dh-main">`;
 
-const PRERENDER_FOOTER = `</main><footer class="dh-foot">Riftn — open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/docs/blog">Blog</a> · <a href="${APP_URL}/explore">Explore</a></footer>`;
+const PRERENDER_FOOTER = `</main><footer class="dh-foot">Riftn | open source, user owned and censorship resistant media.<br><a href="${APP_URL}/docs">Docs</a> · <a href="${APP_URL}/docs/blog">Blog</a> · <a href="${APP_URL}/explore">Explore</a></footer>`;
 
 /**
  * The other half of the problem: every builder in this file, and the ssr-seo
@@ -4495,7 +4522,7 @@ export function setPageUrl(html, pageUrl) {
  *  page for every random URL; they must be 404s. */
 const NOT_FOUND_TITLES = [
   '<title>Post by someone on Riftn</title>',
-  '<title>Riftn — Open Source, User Owned & Censorship Resistant Media</title>',
+  '<title>Riftn | Open Source, User Owned & Censorship Resistant Media</title>',
 ];
 
 /** Resolve an off-chain post slug (/newpost/<n>) to the tokenId every other
@@ -7064,7 +7091,7 @@ async function handleRequest(request, env, ctx) {
         'work_jobs?status=in.(open,in_progress)&select=job_number,title,total_budget,currency&order=created_at.desc&limit=25',
       );
       if (rows && rows.length) {
-        const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a> — ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
+        const items = rows.map((j) => `<li style="margin:6px 0"><a href="${APP_URL}/bounty/${j.job_number}">${escHtml(truncate(j.title || `Bounty #${j.job_number}`, 90))}</a>, ${escHtml(Number(j.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(j.currency || '')}</li>`).join('');
         html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left"><h2 style="font-size:16px">Open bounties</h2><ul style="list-style:none;padding:0">${items}</ul></section></body>`);
       }
     }
@@ -7469,7 +7496,7 @@ async function handleRequest(request, env, ctx) {
 
     // Profile titles from the deployed fn are CTA-first ("Join @x on Riftn
     // today!") — entity-led titles rank and read better in SERPs.
-    html = html.replace(/Join @([A-Za-z0-9_.-]+) on Riftn today!/g, '@$1 on Riftn — posts, videos &amp; profile');
+    html = html.replace(/Join @([A-Za-z0-9_.-]+) on Riftn today!/g, '@$1 on Riftn, posts, videos &amp; profile');
 
     // …and its titles/descriptions are raw post text and bios: unbounded and
     // full of newlines. Runs after the rewrite above so the profile title it
@@ -7658,6 +7685,7 @@ async function handleRequest(request, env, ctx) {
     // as real links so crawlers get content and crawl paths.
     if (pathname === '/') {
       // Bot and browser titles must not diverge; align to the SPA title.
+      html = html.replace(FN_HOME_TITLE, HOME_TITLE);
       html = html.replaceAll(HOME_TITLE_LEGACY, HOME_TITLE);
       // …and the description: the fn's is a different sentence from the one
       // in index.html, so the two variants disagreed on what Riftn is.
@@ -7706,7 +7734,7 @@ async function handleRequest(request, env, ctx) {
       // The money guides, right under the section nav (see HOME_GUIDE_LINKS).
       html = html.replace('</body>', `<section style="max-width:600px;margin:24px auto;text-align:left">${homeGuidesHtml()}</section></body>`);
       // Blog was linked from nowhere in bot HTML — give crawlers a path in.
-      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">Riftn Blog — news, guides &amp; product updates</a></p></body>`);
+      html = html.replace('</body>', `<p style="max-width:600px;margin:16px auto"><a href="${APP_URL}/docs/blog">Riftn Blog | news, guides &amp; product updates</a></p></body>`);
       try {
         const feedRes = await fetch(
           'https://api.dehub.io/api/feed?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=minted',
@@ -7748,6 +7776,9 @@ async function handleRequest(request, env, ctx) {
       const localeRedirect = unservedLocaleRedirect(url, '/', table);
       if (localeRedirect) return redirect301(localeRedirect);
     }
+
+    // The fn still writes the old name and long dashes into the head.
+    html = plainBrandHead(html);
 
     // Last, so no later robots rewrite (noindexPage) drops the opt-out.
     if (aiReserved) html = reserveAiTraining(html);

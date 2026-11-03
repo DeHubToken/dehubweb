@@ -22,7 +22,7 @@ export const STREAM_LINKS = {
 
 export const STREAM_PAGE = {
   path: '/stream',
-  title: 'Stream on Riftn — Live Streaming for TikTok & Twitch Creators',
+  title: 'Stream on Riftn: Live Streaming for TikTok & Twitch Creators',
   description: 'Go live on Riftn: on-chain tips that land in your wallet, an audience you own, posting to your other platforms in one step, and 20% from everyone you invite.',
   heading: 'Stream on Riftn',
   intro: 'Bring your live audience to a platform you own. Go live from your phone, your browser or OBS, get tipped on-chain while you stream, and keep the audience you build. Riftn is built by the team behind First Class Agency, the UK’s number-one official TikTok LIVE partner agency, with more than 1,000 live streamers.',

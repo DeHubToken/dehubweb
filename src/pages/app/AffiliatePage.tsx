@@ -185,7 +185,7 @@ export default function AffiliatePage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.661f23a8550b", { defaultValue: "Riftn Affiliate — Earn 20% + 5% Recurring" })}
+        title={_copy("copy.661f23a8550b", { defaultValue: "Riftn Affiliate: Earn 20% + 5% Recurring" })}
         description={_copy("copy.5a56acf53e8e", { defaultValue: "Invite anyone to Riftn and earn {{value1}}% of all revenue they generate, plus {{value2}}% from everyone they invite. Forever.", value1: AFFILIATE_L1_COMMISSION_PCT, value2: AFFILIATE_L2_COMMISSION_PCT })}
       />
       {!wallet ? (
@@ -433,7 +433,7 @@ export default function AffiliatePage() {
           {/* How it works */}
           <Card data-kit-section className="border-white/10 bg-white/[0.03]">
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body={_copy("copy.54f921da537d", { defaultValue: "Drop your invite link into Discord, X, YouTube, your stream — anywhere." })} />
+              <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body={_copy("copy.54f921da537d", { defaultValue: "Drop your invite link into Discord, X, YouTube, your stream, anywhere." })} />
               <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join Riftn" })} body={_copy("copy.44255c58528d", { defaultValue: "Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." })} />
               <Step n={3} title={_copy("copy.7e44b080227f", { defaultValue: "Earn {{value1}}% direct", value1: AFFILIATE_L1_COMMISSION_PCT })} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on Riftn.`} />
               <Step n={4} title={_copy("copy.2ed16d4204db", { defaultValue: "Earn {{value1}}% secondary", value1: AFFILIATE_L2_COMMISSION_PCT })} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />

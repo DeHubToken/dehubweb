@@ -1,5 +1,5 @@
 /**
- * blogSource.ts — GENERATOR-ONLY blog data source (full article bodies).
+ * blogSource.ts, GENERATOR-ONLY blog data source (full article bodies).
  * =====================================================================
  * This module (plus src/data/blogPosts.ts, src/data/newPosts.ts and
  * src/data/posts/*) must have ZERO runtime importers: it drags every blog
@@ -87,34 +87,34 @@ Stay tuned, and get ready to play. The arena awaits.`;
     newPost.bannerImageAlt = 'Last Chad Standing character helmet';
   } else if (post.slug === 'fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025') {
     newPost.bannerImage = '/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png';
-    newPost.bannerImageAlt = 'DeHub Revamped App Feed';
+    newPost.bannerImageAlt = 'Riftn Revamped App Feed';
     newPost.publishedAt = '2025-05-03T10:00:00.000Z';
   } else if (post.slug === 'transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025') {
     newPost.bannerImage = '/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png';
     newPost.bannerImageAlt = 'DHBScan.com banner';
   } else if (post.slug === 'community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025') {
     newPost.bannerImage = '/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png';
-    newPost.bannerImageAlt = 'DeHub UGC Programme banner';
+    newPost.bannerImageAlt = 'Riftn UGC Programme banner';
     newPost.publishedAt = '2025-05-10T10:00:00.000Z';
     newPost.readingTime = 5;
-    newPost.content = `## Become a DeHub Ambassador: Announcing Our UGC Programme
+    newPost.content = `## Become a Riftn Ambassador: Announcing Our UGC Programme
 
-![DeHub UGC Programme Banner](/media/59b8a8cb-c9c7-412e-b51e-8f68b47d73a0.png)
+![Riftn UGC Programme Banner](/media/59b8a8cb-c9c7-412e-b51e-8f68b47d73a0.png)
 
 ### What is the UGC Programme?
 
-We're looking for passionate creators, storytellers, and influencers to help us spread the word about DeHub. Whether you have a massive following or a small, engaged audience, we believe everyone has a unique voice. We are opening up **50 spots** for creators to join our inaugural cohort of ambassadors.
+We're looking for passionate creators, storytellers, and influencers to help us spread the word about Riftn. Whether you have a massive following or a small, engaged audience, we believe everyone has a unique voice. We are opening up **50 spots** for creators to join our inaugural cohort of ambassadors.
 
 This programme is designed for creators of all sizes. We have opportunities for both small and large accounts, with compensation structured to reflect your reach and impact.
 
 ### What's Involved?
 
-As a DeHub Ambassador, you'll create content across various platforms to showcase what makes our ecosystem special. Your mission, should you choose to accept it, is to produce engaging content for:
+As a Riftn Ambassador, you'll create content across various platforms to showcase what makes our ecosystem special. Your mission, should you choose to accept it, is to produce engaging content for:
 
 - **X (formerly Twitter):** Share updates, create threads, and engage with the wider crypto community.
-- **YouTube:** Produce video reviews, tutorials, or deep dives into DeHub's features.
+- **YouTube:** Produce video reviews, tutorials, or deep dives into Riftn's features.
 - **Instagram:** Create visually appealing posts, Reels, and Stories.
-- **DeHub App:** Be an active, leading voice within our own platform, sharing insights and fostering discussion.
+- **Riftn App:** Be an active, leading voice within our own platform, sharing insights and fostering discussion.
 
 ### Who Are We Looking For?
 
@@ -123,16 +123,16 @@ We're seeking creative, authentic, and knowledgeable individuals who are genuine
 - Crypto enthusiast with a knack for breaking down complex topics.
 - Talented video creator or graphic designer.
 - Social media guru with an engaged following.
-- Passionate DeHub user who wants to share their experience.
+- Passionate Riftn user who wants to share their experience.
 
 ### Why Join?
 
-This is more than just a content creation gig. It's a partnership. As a DeHub Ambassador, you will receive:
+This is more than just a content creation gig. It's a partnership. As a Riftn Ambassador, you will receive:
 
 - **Ranging Compensation:** We offer competitive rewards tailored to your content and audience size.
-- **Exclusive Access:** Get sneak peeks at upcoming features and a direct line of communication with the DeHub team.
+- **Exclusive Access:** Get sneak peeks at upcoming features and a direct line of communication with the Riftn team.
 - **Official Recognition:** Be featured as an official ambassador, boosting your own profile in the Web3 space.
-- **Shape the Future:** Your feedback and content will directly contribute to the growth and direction of DeHub.
+- **Shape the Future:** Your feedback and content will directly contribute to the growth and direction of Riftn.
 
 ### Applications Closed
 
@@ -140,14 +140,14 @@ Applications for our first cohort of ambassadors are now closed. Thank you to ev
 
 Stay tuned for announcements about our selected ambassadors and future opportunities to get involved.`;
   } else if (post.slug === 'building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021') {
-    newPost.content = `DeHub's core team is officially assembled, bringing together a powerhouse of expertise from the worlds of tech, gaming, and social media. This marks a pivotal moment in our journey, laying the foundation for the innovation to come. With a shared vision and diverse skill sets, we are poised to revolutionize the digital landscape. The dream is now in the hands of a team built to make it a reality.
+    newPost.content = `Riftn's core team is officially assembled, bringing together a powerhouse of expertise from the worlds of tech, gaming, and social media. This marks a pivotal moment in our journey, laying the foundation for the innovation to come. With a shared vision and diverse skill sets, we are poised to revolutionize the digital landscape. The dream is now in the hands of a team built to make it a reality.
 
 ## Meet the Team
 
 [TEAM_SECTION_START]
 ### Malik Jan - Co-Founder
 ![Malik Jan|avatar](/media/361bb373-38ee-4888-a4b1-ab8239941261.png)
-Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue.
+Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled Riftn to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue.
 
 **Key Experience:**
 - Guide Dogs: Raised >$1m as fundraising manager with a team of 5-10 across multiple sectors
@@ -178,7 +178,7 @@ Social media, content & dance expert overseeing communications & corporate relat
 Operational powerhouse and former pro-gamer heavily connected across the gaming, music & entertainment scene.
 
 **Key Experience:**
-- Investments and tokenomics expert who played an instrumental role in the astronomical growth of DeHub in 2021
+- Investments and tokenomics expert who played an instrumental role in the astronomical growth of Riftn in 2021
 - Oversaw the Blocjerk fundraise of $1,000,000 in 2023 which gave a peak ROI of 1,000%
 - Former professional gamer, ranking globally in the top 3 COD MW2 and top 100 on Warzone under the tag RickyBobby
 [TEAM_SECTION_END]`;
@@ -186,7 +186,7 @@ Operational powerhouse and former pro-gamer heavily connected across the gaming,
     newPost.title = '2022 Wrap Up';
     newPost.status = 'published';
     newPost.bannerImage = '/media/54bc3062-44f0-456b-8183-c916d4cef34e.png';
-    newPost.bannerImageAlt = 'DeHub 2022 Wrap-Up with fireworks';
+    newPost.bannerImageAlt = 'Riftn 2022 Wrap-Up with fireworks';
     newPost.publishedAt = '2023-01-04T10:00:00.000Z';
     newPost.tags = ['2022', '2023', 'Recap'];
     newPost.content = `Thanks to each and every one of the team, community and contributors we have been ploughing through our roadmap and setting ourself up for the biggest year yet.
@@ -215,7 +215,7 @@ Our streaming and marketplace d'app upgrades set for imminent release and curren
 
 ### It's clear to see…
 
-We've been building and now we enter 2023 prepared to scale. We've laid the foundations and all of our core d'apps are coming to fruition, entering their later development phases. Development wise we're in our strongest position so far, with enough ammo and a continuous stream of reinforcements to get us through any bear market as we've proved over the last year. DeHub is not just surviving, but thriving and putting out game-changing tech through the chaos and commotion of a turbulent year. Although it's been a success development wise, there is a leaderboard out there for d'app users we aren't close to topping. That must change now.
+We've been building and now we enter 2023 prepared to scale. We've laid the foundations and all of our core d'apps are coming to fruition, entering their later development phases. Development wise we're in our strongest position so far, with enough ammo and a continuous stream of reinforcements to get us through any bear market as we've proved over the last year. Riftn is not just surviving, but thriving and putting out game-changing tech through the chaos and commotion of a turbulent year. Although it's been a success development wise, there is a leaderboard out there for d'app users we aren't close to topping. That must change now.
 
 **2023 must be better, 2023 must be bigger, 2023 must be $DHB.**
 
@@ -223,9 +223,9 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 **January 4:** LCFC started revealing art and onboarding notable club members including Lerone Murphy, Kane Mousah, Kelvin Gastelum, Mark Diakese, Brad Pickett and many more.
 
-**January 12:** DeHub community successfully raised over $2,000 to assist long term and value adding community member Skeksis who had just been beaten up and robbed.
+**January 12:** Riftn community successfully raised over $2,000 to assist long term and value adding community member Skeksis who had just been beaten up and robbed.
 
-**January 20:** Partnered with and integrated fiat on-ramp for users to buy DeHub tokens direct on our d'app via credit or debit cards.
+**January 20:** Partnered with and integrated fiat on-ramp for users to buy Riftn tokens direct on our d'app via credit or debit cards.
 
 **January 24:** Released staking whitepaper and technical specification as well as a hackathon bounty which was never cracked.
 
@@ -235,7 +235,7 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 **February 25:** Malik, Mike and Indi interview and review by Entrepreneur.com released in this article
 
-**February 27:** DeHub production & Vida Entertainment team flew out to Prague to film our genesis original production, following the emotional Oktagon return of war veteran Jay Cuciniello.
+**February 27:** Riftn production & Vida Entertainment team flew out to Prague to film our genesis original production, following the emotional Oktagon return of war veteran Jay Cuciniello.
 
 **March 1:** Official release of first original production trailer for Way of The Warrior series and featured in BigFish Boxing.
 
@@ -245,7 +245,7 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 **March 26:** Puso Group, the company part owned by Malik and overseeing initial development of the d'app officially receives SEC licenses & registration in the Philippines.
 
-**April 1:** Genesis rewards unlocked from V1 staking with over 50,000,000 in DeHub tokens distributed to all stakers.
+**April 1:** Genesis rewards unlocked from V1 staking with over 50,000,000 in Riftn tokens distributed to all stakers.
 
 **April 7:** Completed OTC deal with North Equities for $100,000 marketing campaign involving a number of KOLs and publications of which we recieved 50%. The tokens were locked into a contract and then never claimed and upon our contract upgrade are considered burned as they can now never be claimed. North Equities were understanding given the market and poor performance and we essentially came away with 3 months of marketing for free, albeit not the best.
 
@@ -253,23 +253,23 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 **May 6:** Released first custom game, Super Robin Hood, onto our arcade. A fun, simple and engaging platform game aimed at growing users and driving ad revenue to the protocol, which is shared with holders.
 
-**May 9:** DeHub production team linked up with Jorge Masvidal to film content and a trailer for episode 2 of our original series, Way of the Warrior featuring a deep dive into the groundgreaking career of UFC legend Brad Pickett.
+**May 9:** Riftn production team linked up with Jorge Masvidal to film content and a trailer for episode 2 of our original series, Way of the Warrior featuring a deep dive into the groundgreaking career of UFC legend Brad Pickett.
 
 **May 27:** Partnership secured with Raceline bringing Lamborghinis and a host of other super cars onto our marketplace while offering their customers a chance to claim a free dehub.net minted NFT with every purchase.
 
-**June 6:** Marketplace goes live on mainnet, and with it DeHub officially becomes the world's first dedicated phygital NFT marketplace with a transaction on chain. Our marketplace is custom built to host our own product lines but also opening up to public use in later stages.
+**June 6:** Marketplace goes live on mainnet, and with it Riftn officially becomes the world's first dedicated phygital NFT marketplace with a transaction on chain. Our marketplace is custom built to host our own product lines but also opening up to public use in later stages.
 
 **June 15:** Released "Whack A Schiff" onto our arcade, a play and win to earn game where users fight for high scores for whacking the mole version of Peter Schiff on the head while avoiding the bombs!
 
-**July 14:** Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews and expecting retweets from the legend Gamebred himself prior to facing technical difficulties with our stake to access d'app. This also played a role in DeHub's transformation to a free public streaming app where anyone can view content. We are working closely with all past partners to bring this to life.
+**July 14:** Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews and expecting retweets from the legend Gamebred himself prior to facing technical difficulties with our stake to access d'app. This also played a role in Riftn's transformation to a free public streaming app where anyone can view content. We are working closely with all past partners to bring this to life.
 
 **July 8:** The team attend Binance's 5th birthday celebrations in Paris and connect with key members of the Binance ecosystem.
 
-**July 25:** A $1,000,000 UK home was acquired and put up for raffle on DeHub's provably fair and random NFT raffle protocol. This was covered by a number of KOLs and publishers including bitcoin.com across multiple platforms and sales started well yet ROI became unsustainable and the home is currently renting privately and is likely to be sold on the market followed by refunds to ticket holders. The NFT will still possess utility nonetheless and revenue raised from the property will be reinvested back into the protocol.
+**July 25:** A $1,000,000 UK home was acquired and put up for raffle on Riftn's provably fair and random NFT raffle protocol. This was covered by a number of KOLs and publishers including bitcoin.com across multiple platforms and sales started well yet ROI became unsustainable and the home is currently renting privately and is likely to be sold on the market followed by refunds to ticket holders. The NFT will still possess utility nonetheless and revenue raised from the property will be reinvested back into the protocol.
 
 **August 10:** First tax halving commenced and reducing the protocol's transaction tax from 12% to 6% much to the approval of the community.
 
-**August 12:** DeHub officially partners with Travladd, bringing the growing influencer on board our marketing advisory team. Trav was one of the first to cover our project when we launched and will be with us for many years ahead.
+**August 12:** Riftn officially partners with Travladd, bringing the growing influencer on board our marketing advisory team. Trav was one of the first to cover our project when we launched and will be with us for many years ahead.
 
 **August 15:** Partnered with Lawrence Choto, TikTok star with over 1m followers focussed on positivity and random acts of kindness. We are working on a long term documentary with Lawrence as well as a number of promotional campaigns.
 
@@ -291,13 +291,13 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 **October 31:** Public LGE goes live for 11 days after integration of our new referral system along with a new bot we built to track and reward engaged users in our community. This is currently being mastered and set for updates prior to the new token launch.
 
-**November 11:** Official release of Gas Guzzler, a play and win to earn game where users collect DeHub coins while avoiding other moonboys around a track in their Lambos making sure to keep the Ethereum Gas topped up and hitting the NOS for a boost!
+**November 11:** Official release of Gas Guzzler, a play and win to earn game where users collect Riftn coins while avoiding other moonboys around a track in their Lambos making sure to keep the Ethereum Gas topped up and hitting the NOS for a boost!
 
 **Nov 18:** Banking on Zero (BOZ) trailer goes live and promises to be the most uncensored deep dive into the FTX saga and all of the victims that fell along with it.
 
 **November 23:** Malik's younger brother and team member in our gaming division secures dream job at Binance working as an investment advisor for institutional clients.
 
-**November 25:** Released first gameplay teasers for LCFC's genesis 2D game "Street Slayer" including officially licensed UFC stars and more set for launch on IOS and Android stores as well as DeHub's arcade.
+**November 25:** Released first gameplay teasers for LCFC's genesis 2D game "Street Slayer" including officially licensed UFC stars and more set for launch on IOS and Android stores as well as Riftn's arcade.
 
 **December 2:** Streaming d'app upgrade whitepaper release and technical reveal.
 
@@ -309,7 +309,7 @@ We've been building and now we enter 2023 prepared to scale. We've laid the foun
 
 Bring on 2023.`;
   } else if (post.slug === 'dehub-development-update-dapp-milestone-and-more') {
-    newPost.title = 'DeHub Development Update & D\'App';
+    newPost.title = 'Riftn Development Update & D\'App';
     newPost.slug = 'dehub-development-update-dapp-milestone-and-more';
     newPost.excerpt = 'Streaming d\'app upgrade scheduled for private beta this Friday the 16th, further major developments pipelined for imminent release, and $DHB token listing date proposed for early January.';
     newPost.content = `### TLDR;
@@ -357,10 +357,10 @@ During our sale, new community growth tool release and documentary trailer, we c
 
 As we rapidly enter the middle age of our development stages, we will no longer be able to say we are a new project in our first years. We're growing, maturing and building years of bonds above all else. Now we are at the end of this incredibly enlightening year and celebrations edge closer, it's a notorious time of year for extreme contrasts of happiness and sadness, relative to one's situation. Now more than ever some may need a community, support or just someone to talk to. We invite you all to reach out to someone you haven't heard from for a while and know that our DMs are open to anyone needing any of the above.`;
   } else if (post.slug === 'the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp---a-dehub-milestone-from-q1-2023') {
-    newPost.title = "The Vision Unfolds: Test Beta Launch of the DeHub d'App";
+    newPost.title = "The Vision Unfolds: Test Beta Launch of the Riftn d'App";
     newPost.publishedAt = '2023-01-16T10:00:00.000Z';
     newPost.bannerImage = '/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png';
-    newPost.bannerImageAlt = 'DeHub D\'App Test Beta Launch';
+    newPost.bannerImageAlt = 'Riftn D\'App Test Beta Launch';
     newPost.content = `To start, we've listed all the functions available to test in this stage of the private beta. The rest will be available in the coming days to weeks prior to public launch but as you can see, we're through the bulk of the developments and all but complete! Thank you for taking the time to test the d'app and we look forward to receiving all feedback publicly and privately to tech@dehub.net.
 
 - Standard Uploads (live stream disabled)
@@ -402,8 +402,8 @@ Here are some screenshots to guide you through adding the BSC Testnet to Metamas
 - Uploading video (MP4 only) and thumbnail (PNG or JPEG)
 - 50 MB max size for now, increasing on public launch
 - An NFT is minted simultaneously with every video upload
-- Options for token gate is now live for DHB — soon to be any token
-- Options for Pay-Per-View is now live for DHB — soon to be any token
+- Options for token gate is now live for DHB, soon to be any token
+- Options for Pay-Per-View is now live for DHB, soon to be any token
 - Bounty option available to test although not fully coded yet
 
 ![Upload page screenshot](/media/07501ace-5c3e-45af-a6aa-d5aa644e62f3.png)
@@ -419,7 +419,7 @@ Here are some screenshots to guide you through adding the BSC Testnet to Metamas
 #### Content viewing page
 [http://146.190.110.37:3000/stream_detail](http://146.190.110.37:3000/stream_detail)
 - Signing with wallet to approve balances and spend to deposit onto d'app
-- Signatures expire every 2 hours — times subject to change
+- Signatures expire every 2 hours, times subject to change
 - Recommended tab disabled
 - Public profile and comments disabled
 
@@ -474,13 +474,13 @@ Please note that although the general appearance of the app is finalised, we are
   } else if (post.slug === 'early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021') {
     newPost.title = post.title.replace('Beta App', 'Alpha App');
     newPost.publishedAt = '2021-04-20T10:00:00.000Z';
-  } else if (post.title === "Diving In: First DeHub Liquidity Pools on Pancake Swap - A DeHub Milestone from Q2 2021") {
+  } else if (post.title === "Diving In: First Riftn Liquidity Pools on Pancake Swap - A Riftn Milestone from Q2 2021") {
     newPost.publishedAt = '2021-05-30T10:00:00.000Z';
-  } else if (post.title === "Listening to Our Users: 50+ Interviews Shape DeHub - A DeHub Milestone from Q1 2021") {
+  } else if (post.title === "Listening to Our Users: 50+ Interviews Shape Riftn - A Riftn Milestone from Q1 2021") {
     newPost.publishedAt = '2021-03-30T10:00:00.000Z';
-  } else if (post.title === "Power to the People: Community Governed Listings - A DeHub Milestone from Q2 2021") {
+  } else if (post.title === "Power to the People: Community Governed Listings - A Riftn Milestone from Q2 2021") {
     newPost.publishedAt = '2021-05-15T10:00:00.000Z';
-    newPost.content = `From the very beginning, DeHub has been a project for the people, by the people. This isn't just a slogan; it's our foundational principle. Every critical decision on our path has been made transparently and democratically with our community.
+    newPost.content = `From the very beginning, Riftn has been a project for the people, by the people. This isn't just a slogan; it's our foundational principle. Every critical decision on our path has been made transparently and democratically with our community.
 
 We took to our Telegram group to vote on the most fundamental aspects of our token. The community decided:
 - The Chain: Which blockchain we would build upon.
@@ -488,10 +488,10 @@ We took to our Telegram group to vote on the most fundamental aspects of our tok
 - The Market Cap: Our starting valuation.
 - The Supply: The total token supply.
 
-Every step of the way was a collective decision. This approach ensures that DeHub is not just a platform, but a true community-governed ecosystem where every member has a voice and a stake in our shared future.
+Every step of the way was a collective decision. This approach ensures that Riftn is not just a platform, but a true community-governed ecosystem where every member has a voice and a stake in our shared future.
 
 With these foundational decisions made by the community, our path forward was clear. First, we would list on PancakeSwap. Next, we would launch marketing campaigns with top KOLs and celebrities. From there, we would build out our ambitious roadmap, developing on top of our existing alpha application.`;
-  } else if (post.title === "Navigating Challenges: Addressing a V1 Smart Contract Security Issue - A DeHub Milestone from Q2 2021") {
+  } else if (post.title === "Navigating Challenges: Addressing a V1 Smart Contract Security Issue - A Riftn Milestone from Q2 2021") {
     newPost.publishedAt = '2021-06-19T10:00:00.000Z';
     newPost.content = `Security is paramount in the Web3 space. When a vulnerability was discovered in our V1 smart contract, our team acted immediately to address it. We believe in transparency and taking swift, decisive action to protect our community and their assets.
 
@@ -500,16 +500,16 @@ The issue was identified through our continuous internal audits. We paused all i
 To ensure a seamless transition for our community, we took a snapshot of all holder balances prior to deploying the new contract. **Every single holder was then automatically airdropped their tokens on a 1:1 basis. Nobody was left behind.**
 
 This incident, while challenging, has made our platform stronger and our commitment to security even more resolute. We are grateful for our community's patience and support during this process.`;
-  } else if (post.title === "The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views - A DeHub Milestone from Q4 2024") {
+  } else if (post.title === "The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views - A Riftn Milestone from Q4 2024") {
     newPost.publishedAt = '2024-11-05T10:00:00.000Z';
-  } else if (post.title.startsWith("Reliability Perfected: 99.99% Uptime for DeHub Streaming")) {
+  } else if (post.title.startsWith("Reliability Perfected: 99.99% Uptime for Riftn Streaming")) {
     newPost.publishedAt = '2025-03-30T10:00:00.000Z';
   } else if (post.title.startsWith("Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB")) {
     newPost.publishedAt = '2025-02-01T10:00:00.000Z';
   } else if (post.title.startsWith("Connect and Converse: Advanced Messaging System with Paid/Free DMs")) {
     newPost.publishedAt = '2025-02-25T10:00:00.000Z';
-  } else if (post.title.startsWith("Leading the Way: DeHub Agency Becomes UK #1")) {
-    newPost.title = "Leading the Way: DeHub founder's agency Becomes UK #1 with 1,000 Streamers";
+  } else if (post.title.startsWith("Leading the Way: Riftn Agency Becomes UK #1")) {
+    newPost.title = "Leading the Way: Riftn founder's agency Becomes UK #1 with 1,000 Streamers";
     newPost.publishedAt = '2024-11-22T10:00:00.000Z';
   } else if (post.title.startsWith("Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers")) {
     newPost.publishedAt = '2025-03-14T10:00:00.000Z';
@@ -577,19 +577,19 @@ The contracts are live. The canvas is blank. We invite you to peruse the code, b
     newPost.content = `Our recent Town Hall AMA was a great success, and we want to thank our incredible community for their insightful questions. We've compiled the key questions and answers below to keep everyone in the loop.
 
 ### 1. Can we get a roadmap with exact release dates?
-We regularly provide release dates for imminent updates, such as the countdown on dehub.io now. We'll provide a more detailed roadmap with specific dates for upcoming features with the release of the next upgrade but the core roadmap stays the same. We've kept it phased to allow flexibility since the nature of tech and crypto is always shifting.
+We regularly provide release dates for imminent updates, such as the countdown on riftn.com now. We'll provide a more detailed roadmap with specific dates for upcoming features with the release of the next upgrade but the core roadmap stays the same. We've kept it phased to allow flexibility since the nature of tech and crypto is always shifting.
 
 ### 2. What happened to the gold tick on X (Twitter)?
-We lost the gold tick while switching account tiers on Twitter, which resulted in a double charge. We're currently awaiting a refund and customer support. Twitter doesn't allow tier changes without canceling and re-subscribing, which caused the issue. As a UK-registered company that meets all the gold tick criteria, we're determined to get it back. It's a small cost — less than £200 a month which we are spending on ads anyway as comes with ad credits too. We've also had a rough history with Twitter; our original account was permanently banned because I set the birth date to under 13 (reflecting our launch date: 04/20/2021). While we could make some noise, being suspended again would be a hassle. We're just happy to be able to promote on the platform until our own user base is strong enough.
+We lost the gold tick while switching account tiers on Twitter, which resulted in a double charge. We're currently awaiting a refund and customer support. Twitter doesn't allow tier changes without canceling and re-subscribing, which caused the issue. As a UK-registered company that meets all the gold tick criteria, we're determined to get it back. It's a small cost, less than £200 a month which we are spending on ads anyway as comes with ad credits too. We've also had a rough history with Twitter; our original account was permanently banned because I set the birth date to under 13 (reflecting our launch date: 04/20/2021). While we could make some noise, being suspended again would be a hassle. We're just happy to be able to promote on the platform until our own user base is strong enough.
 
-### 3. Will DeHub return to the BNB Chain?
+### 3. Will Riftn return to the BNB Chain?
 If we redeploy on BNB, it'll be on opBNB, which is built specifically for scalable apps like ours. Redeployment would require bridging regardless, and opBNB is BNB's new scaling chain, so it makes no sense to return to the legacy BNB chain. In future updates, we'll also discontinue in-app support for old BNB to focus on cutting-edge technology. Of course, users are still free to deploy liquidity pools (LP) where they wish.
 
 ### 4. What's the latest on LCFC and the gaming arcade?
 While we've shifted focus to the streaming app after our last game releases, the arcade is still available. We're also gearing up for the launch of our 3D hyperrealistic Battle Royale, Last Chad Standing (LCS). This game is a giant leap from the 2D arcade fun we've been having. Combined with our team reach across some of the biggest UFC fighters in the world, we're expecting major adoption of LCS, as a unique game never seen before on or off chain. The only other fighter/weaponless based Battle Royale, (Rumbleverse), discontinued and left a large player base yearning for its return.
 
 ### 5. Are Mike and Indi still involved?
-Of course, we launched this together, so Mike and Indi are still very much involved. We're actually planning a new strategy to boost Twitter engagement. If anyone's been following either on socials you'll see regular mentions and insights into DeHub and the future. During the bear market, they built one of the most successful TikTok agencies worldwide and are now managing nearly 1,000 streamers, including big names like Beavo, bringing in tens of millions of views daily at their peak. All this expertise is feeding back into what we're building at DeHub, just as we've always envisioned.
+Of course, we launched this together, so Mike and Indi are still very much involved. We're actually planning a new strategy to boost Twitter engagement. If anyone's been following either on socials you'll see regular mentions and insights into Riftn and the future. During the bear market, they built one of the most successful TikTok agencies worldwide and are now managing nearly 1,000 streamers, including big names like Beavo, bringing in tens of millions of views daily at their peak. All this expertise is feeding back into what we're building at Riftn, just as we've always envisioned.
 
 ### 6. What are the major upcoming releases, and when can we expect them?
 Aside from the imminent major upgrade, we've already teased some key features. While we can't provide exact timelines for everything just yet, there are exciting developments underway. As always, we've got some surprises, but timing will depend on our progress. We're working daily to strengthen the protocol and hit significant milestones.
@@ -601,7 +601,7 @@ During my time as a fundraising manager at Guide Dogs, one of the world's larges
 We're aiming to launch the live streaming feature within this quarter, though it's a complex build that ties directly into our agency CRM system. We're replicating TikTok's tip-based economy model, which is incredibly intricate. We're hoping to have it ready by Christmas, but we can't guarantee exact dates just yet.
 
 ### 9. Do you care about the token price, or is it all about the tech?
-We absolutely care about the token price, but we have to be cautious about how we discuss it publicly to avoid any legal risks. Protecting the business and the community is our top priority. That said, in crypto, everything inevitably circles back to the chart — whether we like it or not. We're determined to surpass all past achievements, and we won't stop until we do.
+We absolutely care about the token price, but we have to be cautious about how we discuss it publicly to avoid any legal risks. Protecting the business and the community is our top priority. That said, in crypto, everything inevitably circles back to the chart, whether we like it or not. We're determined to surpass all past achievements, and we won't stop until we do.
 
 ### 10. Will you list on centralized exchanges (CEXs) again?
 We're only interested in listing on top-tier CEXs like Binance, Coinbase, and other leading platforms. For now, we're focused on growing organically through community engagement and on-chain volume. Once our volume and LP grow, the top CEXs will naturally want to list us, and we'll aim to do it on our terms. We've never struggled to hit highs without CEXs, and we've actually thrived without them.
@@ -615,7 +615,7 @@ This AMA covered a lot of ground, and we're excited for what's to come. Stay tun
   } else if (post.title.startsWith("Interactive Streaming: On-Chain Live Streams with Animated Tips")) {
     newPost.publishedAt = '2025-03-10T10:00:00.000Z';
     newPost.bannerImage = '/media/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png';
-    newPost.bannerImageAlt = 'DeHub Live Streaming logo';
+    newPost.bannerImageAlt = 'Riftn Live Streaming logo';
   }
   
   // Clean up tags by replacing "Qx YYYY" with just "YYYY"
@@ -630,7 +630,7 @@ This AMA covered a lot of ground, and we're excited for what's to come. Stay tun
   });
   newPost.tags = Array.from(cleanedTags);
 
-  newPost.title = newPost.title.replace(/\s-\sA\sDeHub\sMilestone\sfrom\sQ\d\s\d{4}$/, '');
+  newPost.title = newPost.title.replace(/\s-\sA\s(?:DeHub|Riftn)\sMilestone\sfrom\sQ\d\s\d{4}$/, '');
   
   return newPost;
 };
@@ -641,7 +641,7 @@ export const getAllPostsWithOverrides = (): BlogPost[] => {
 
   const devUpdatePost: BlogPost = {
     id: 'dehub-development-update-dapp-dec-2022',
-    title: 'DeHub Development Update & D\'App',
+    title: 'Riftn Development Update & D\'App',
     slug: 'dehub-development-update-dapp-dec-2022',
     excerpt: 'Streaming d\'app upgrade scheduled for private beta this Friday the 16th, further major developments pipelined for imminent release, and $DHB token listing date proposed for early January.',
     content: `### TLDR;
@@ -689,7 +689,7 @@ During our sale, new community growth tool release and documentary trailer, we c
 
 As we rapidly enter the middle age of our development stages, we will no longer be able to say we are a new project in our first years. We're growing, maturing and building years of bonds above all else. Now we are at the end of this incredibly enlightening year and celebrations edge closer, it's a notorious time of year for extreme contrasts of happiness and sadness, relative to one's situation. Now more than ever some may need a community, support or just someone to talk to. We invite you all to reach out to someone you haven't heard from for a while and know that our DMs are open to anyone needing any of the above.`,
     bannerImage: '/media/09d36738-4fac-4bec-93ca-12b75da186ae.png',
-    bannerImageAlt: 'DeHub and Binance logos with lightning',
+    bannerImageAlt: 'Riftn and Binance logos with lightning',
     author: {
       name: 'Riftn Team',
     },
@@ -718,7 +718,7 @@ We're getting the best of both worlds: our token will be directly available on o
 
 Coinbase is opening its doors to countless Base tokens with integrated DEX trading. Soon, you'll be able to trade tokens on Base straight from the Coinbase app, often on the very day they're created.
 
-A new chapter in on-chain access is coming, and DeHub is proud to be at the forefront of this evolution. This integration will significantly lower the barrier to entry for new users and provide our existing community with unprecedented liquidity and ease of use.
+A new chapter in on-chain access is coming, and Riftn is proud to be at the forefront of this evolution. This integration will significantly lower the barrier to entry for new users and provide our existing community with unprecedented liquidity and ease of use.
 
 ## Why this matters more for us than for most
 
@@ -732,7 +732,7 @@ Coinbase's DEX integration removes that trade-off rather than reversing the deci
 
 Nothing about DHB. There is no new contract, no wrapped version, no custodial listing, and no arrangement between us and an exchange to be negotiated or paid for.
 
-Coinbase is opening its app to Base tokens through integrated DEX trading. DHB qualifies because it is a standard token on Base with real liquidity — which is a direct consequence of two decisions made under pressure years ago: stripping everything out of the transfer path after our contract froze, and building automated liquidity provision as an external process.
+Coinbase is opening its app to Base tokens through integrated DEX trading. DHB qualifies because it is a standard token on Base with real liquidity, which is a direct consequence of two decisions made under pressure years ago: stripping everything out of the transfer path after our contract froze, and building automated liquidity provision as an external process.
 
 Both of those looked like damage control at the time. They are the reason nothing needs to be done now.
 
@@ -790,11 +790,11 @@ Botting becomes less profitable while activity is trackable on-chain, easily con
 
 The pitch to an advertiser is not "our users are verified". It is that the verification carries financial signal, and that the signal is public.
 
-Off-chain, targeting by spending power is largely inference — inferred from a postcode, a device, a browsing history, and sold on by an intermediary who will not show you the working. Bank statements are private, so nobody in the chain actually knows what anyone can afford.
+Off-chain, targeting by spending power is largely inference, inferred from a postcode, a device, a browsing history, and sold on by an intermediary who will not show you the working. Bank statements are private, so nobody in the chain actually knows what anyone can afford.
 
 On-chain, holdings are visible. A 13-tier ranking derived from them is a targeting dimension no legacy ad network can offer at any price, because the underlying data does not exist in a form they can reach.
 
-That cuts both ways, which is the part we like. An advertiser can target whales, and can equally build offers for the lower tiers — discounts and entry-level deals aimed at people who would be invisible to a conventional spend-based system.
+That cuts both ways, which is the part we like. An advertiser can target whales, and can equally build offers for the lower tiers, discounts and entry-level deals aimed at people who would be invisible to a conventional spend-based system.
 
 ### What POVR does not claim
 
@@ -810,7 +810,7 @@ POVR is the mechanism behind the [90% ad revenue share on tokenised uploads](/gu
 
 For more information on our ad revenue sharing, refer to this thread and our whitepaper below. Also, be sure to follow us for all the latest news on app features and updates.`,
     bannerImage: '/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
-    bannerImageAlt: 'DeHub ad tech ecosystem stakeholders',
+    bannerImageAlt: 'Riftn ad tech ecosystem stakeholders',
     author: {
       name: 'Riftn Team',
     },
@@ -826,20 +826,20 @@ For more information on our ad revenue sharing, refer to this thread and our whi
     id: 'mvp-app-released-q1-2021',
     title: 'MVP App Released & Listed on Google Play Store',
     slug: 'mvp-app-released-listed-on-google-play-store',
-    excerpt: 'The DeHub MVP app is now live on the Google Play Store, featuring OTT streaming, protocol-uploaded content, and a YouTube aggregator. Discover what\'s next on our roadmap.',
-    content: `We are thrilled to announce a monumental step in DeHub's journey: the official release of our MVP application, now available for download on the Google Play Store! This is more than just an app launch; it is the culmination of months of hard work, community feedback, and a relentless drive to build the future of decentralized content.
+    excerpt: 'The Riftn MVP app is now live on the Google Play Store, featuring OTT streaming, protocol-uploaded content, and a YouTube aggregator. Discover what\'s next on our roadmap.',
+    content: `We are thrilled to announce a monumental step in Riftn's journey: the official release of our MVP application, now available for download on the Google Play Store! This is more than just an app launch; it is the culmination of months of hard work, community feedback, and a relentless drive to build the future of decentralized content.
 
 ### What's Inside the MVP?
 
-Our initial release is focused on delivering a core viewing experience that showcases the power and potential of the DeHub ecosystem. Here is what you can explore right now:
+Our initial release is focused on delivering a core viewing experience that showcases the power and potential of the Riftn ecosystem. Here is what you can explore right now:
 
 - **OTT Streaming:** Experience smooth, high-quality over-the-top streaming directly within the app. We are laying the groundwork for a robust, decentralized video delivery network.
-- **Protocol-Uploaded Content:** Dive into our first wave of original and curated content, uploaded directly to the DeHub protocol. This is just the beginning of our content library.
+- **Protocol-Uploaded Content:** Dive into our first wave of original and curated content, uploaded directly to the Riftn protocol. This is just the beginning of our content library.
 - **YouTube Aggregator:** Seamlessly discover and watch your favorite YouTube content without leaving the app. We are bringing the best of Web2 and Web3 together in one place.
 
 This MVP is the foundation upon which we will build a media empire. It is our stake in the ground, demonstrating our commitment to delivering a world-class product.
 
-### The Road Ahead: What's Next for the DeHub App?
+### The Road Ahead: What's Next for the Riftn App?
 
 The journey is just beginning. Our MVP is a launchpad for a host of revolutionary features that will redefine content creation, consumption, and monetization. Here is a glimpse of what our ambitious roadmap holds:
 
@@ -850,7 +850,7 @@ The journey is just beginning. Our MVP is a launchpad for a host of revolutionar
 
 We invite you to download the app, explore the features, and share your feedback. You are the pioneers of this new era, and your insights are crucial as we continue to build and innovate.
 
-Thank you for being part of our community. The future is bright, and it is being built on DeHub.`,
+Thank you for being part of our community. The future is bright, and it is being built on Riftn.`,
     bannerImage: '/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png',
     bannerImageAlt: 'FTV - Futurov app on Google Play Store',
     author: {
@@ -865,12 +865,12 @@ Thank you for being part of our community. The future is bright, and it is being
   allPosts.unshift(newPost);
 
   const postsToExcludeByTitle = [
-    "Safe Spaces: DeHub's Initial Content Moderation Framework - A DeHub Milestone from Q1 2021",
-    "The Genesis: DeHub's V1 Token Launch - A DeHub Milestone from Q2 2021",
-    "A Voice for All: DeHub's Basic Governance Voting Arrives - A DeHub Milestone from Q2 2021",
-    "Growing Together: DeHub's Early Adopter Community Surpasses 2,000 - A DeHub Milestone from Q2 2021",
-    "Empowering Talent: Comprehensive Creator Education Curriculum Rolls Out - A DeHub Milestone from Q2 2025",
-    "Feature Spotlight: Verification & Decentralised Moderation - A DeHub Milestone from Q3 2023"
+    "Safe Spaces: Riftn's Initial Content Moderation Framework - A Riftn Milestone from Q1 2021",
+    "The Genesis: Riftn's V1 Token Launch - A Riftn Milestone from Q2 2021",
+    "A Voice for All: Riftn's Basic Governance Voting Arrives - A Riftn Milestone from Q2 2021",
+    "Growing Together: Riftn's Early Adopter Community Surpasses 2,000 - A Riftn Milestone from Q2 2021",
+    "Empowering Talent: Comprehensive Creator Education Curriculum Rolls Out - A Riftn Milestone from Q2 2025",
+    "Feature Spotlight: Verification & Decentralised Moderation - A Riftn Milestone from Q3 2023"
   ];
   return allPosts
     .filter(post => !postsToExcludeByTitle.includes(post.title))
@@ -957,7 +957,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
     if (post.title === 'Entrepreneurial Spirit: Co-Founders Launch TikTok Agency') {
       return { ...post, publishedAt: '2024-01-09T12:00:00.000Z' };
     }
-    if (post.title === 'Back in Action: DeHub V2 Trading Resumes on Gate.io') {
+    if (post.title === 'Back in Action: Riftn V2 Trading Resumes on Gate.io') {
       return { ...post, publishedAt: '2023-02-16T12:00:00.000Z' };
     }
     if (post.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
@@ -966,7 +966,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
         title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost',
         publishedAt: '2024-10-28T12:00:00.000Z',
         bannerImage: '/media/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
-        bannerImageAlt: 'Screenshot of the new DeHub application UI'
+        bannerImageAlt: 'Screenshot of the new Riftn application UI'
       };
     }
     if (post.title === 'Revolutionizing Access: On-Chain Tradable Subscriptions Launch') {

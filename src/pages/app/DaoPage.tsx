@@ -318,7 +318,7 @@ export default function DaoPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury — Fund Riftn and Earn a Say" })}
+        title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury: Fund Riftn and Earn a Say" })}
         description={_copy("copy.02ce53459982", { defaultValue: "The Riftn DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent." })}
         url="https://riftn.com/dao"
         image="https://riftn.com/og/dao.jpg"

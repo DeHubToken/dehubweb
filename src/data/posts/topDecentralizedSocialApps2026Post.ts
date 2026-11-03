@@ -4,7 +4,7 @@ export const topDecentralizedSocialApps2026Post: BlogPostType = {
   id: 'top-50-decentralized-social-apps-2026',
   slug: 'top-50-decentralized-social-apps-2026',
   title: 'Top 50 Decentralized Social Apps 2026: The DeSoc Index',
-  seoTitle: 'Top 50 Decentralized Social Media Apps 2026, Ranked | DeHub',
+  seoTitle: 'Top 50 Decentralized Social Media Apps 2026, Ranked | Riftn',
   seoDescription: 'The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.',
   excerpt: 'We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.',
   content: `Which decentralized social apps are actually being used and built in 2026? We ranked the 50 most active decentralized and crypto social apps on four things: **how many people use them, what they can do, how hard their teams are building in public on GitHub, and where they are heading**. Every user number below links to its source, and every developer number comes from the projects' own public code.
@@ -22,28 +22,28 @@ Each app gets up to 10 points in four categories, for a total out of 40.
 
 Numbers were checked on 24 and 25 October 2026. User figures move fast, so treat them as orders of magnitude.
 
-## #1 DeHub: 34/40, our top pick
+## #1 Riftn: 34/40, our top pick
 
-![DeHub, built in public: 6,083 commits in 90 days, the most of any decentralized social app](/media/fig-desoc-dehub.jpg)
+![Riftn, built in public: 6,083 commits in 90 days, the most of any decentralized social app](/media/fig-desoc-dehub.jpg)
 
-DeHub is one of the early pioneers of decentralized streaming and social, first appearing on the scene in 2020. The audience is still small, but it is our top pick for the sheer development effort behind it, driven by a community using a first-of-its-kind prompt feature that lets anyone build the app in real time. It has almost every feature you will find on Twitter (X), Facebook, Twitch, Instagram and TikTok, and much more you will not, including hundreds of popular requested features that the likes of YouTube ignore, gathered from blogs all over the web.
+Riftn is one of the early pioneers of decentralized streaming and social, first appearing on the scene in 2020. The audience is still small, but it is our top pick for the sheer development effort behind it, driven by a community using a first-of-its-kind prompt feature that lets anyone build the app in real time. It has almost every feature you will find on Twitter (X), Facebook, Twitch, Instagram and TikTok, and much more you will not, including hundreds of popular requested features that the likes of YouTube ignore, gathered from blogs all over the web.
 
-- **Users (4/10):** 5,932 accounts and 536 monthly active users. Small, but sticky: 58% of monthly users are active every week. Accounts grew 56% in the last 12 months. Live numbers: [dehub.io/stats](https://riftn.com/stats).
+- **Users (4/10):** 5,932 accounts and 536 monthly active users. Small, but sticky: 58% of monthly users are active every week. Accounts grew 56% in the last 12 months. Live numbers: [riftn.com/stats](https://riftn.com/stats).
 - **Features (10/10):** Video and shorts, Live streaming, Posts, stories and DMs, Build-the-app prompts, Paid DMs, Pay-per-view, Tradable subscription NFTs, Token-gated posts, Tips, Mint uploads on-chain, Up to 90% ad revenue share, Community moderation votes, Stores and listings, Games, AI creator studio, Open source.
-- **Dev activity (10/10):** 6,083 public commits in 90 days across the web and mobile apps, more than any other app on this list. Contributors: 4 code authors, plus every community member who has filed a request on [dehub.io/features](https://riftn.com/features). On DeHub, users shape the roadmap directly, so each one counts as a contributor.
+- **Dev activity (10/10):** 6,083 public commits in 90 days across the web and mobile apps, more than any other app on this list. Contributors: 4 code authors, plus every community member who has filed a request on [riftn.com/features](https://riftn.com/features). On Riftn, users shape the roadmap directly, so each one counts as a contributor.
 - **Future (10/10):** the only app here with top marks for features, dev activity and future at the same time.
 
-> Disclosure: DeHub publishes this index. Every number behind DeHub's score is public at dehub.io/stats and on GitHub.
+> Disclosure: Riftn publishes this index. Every number behind Riftn's score is public at riftn.com/stats and on GitHub.
 
 ## Who is actually shipping
 
 Users tell you where a network is today. Commits tell you where it will be next year. These are the busiest public codebases in decentralized social over the last 90 days.
 
-![Public commits in the last 90 days: DeHub 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits-v2.jpg)
+![Public commits in the last 90 days: Riftn 6,083, Amethyst 4,275, Pixelfed 3,726, Hive 1,780, Damus 1,481](/media/fig-desoc-commits-v2.jpg)
 
 ## The full top 50 at a glance
 
-1. **DeHub**: 34/40. Video, live and creator economy. Users 4, features 10, dev 10, future 10.
+1. **Riftn**: 34/40. Video, live and creator economy. Users 4, features 10, dev 10, future 10.
 2. **Bluesky**: 33/40. Microblogging (AT Protocol). Users 10, features 7, dev 8, future 8.
 3. **Matrix / Element**: 33/40. Encrypted chat protocol. Users 9, features 8, dev 8, future 8.
 4. **Mastodon**: 29/40. Microblogging (ActivityPub). Users 8, features 6, dev 8, future 7.
@@ -729,11 +729,11 @@ Bluesky, with about 46 million accounts and roughly 10 million monthly active us
 
 ### Which decentralized social apps pay creators?
 
-DeHub, Audius, Zora, Hive, Paragraph, Fountain and Stacker News all pay creators natively. Bluesky and Mastodon do not.
+Riftn, Audius, Zora, Hive, Paragraph, Fountain and Stacker News all pay creators natively. Bluesky and Mastodon do not.
 
-### Why is DeHub ranked #1 if its user base is small?
+### Why is Riftn ranked #1 if its user base is small?
 
-Because of the development effort. DeHub has been building decentralized streaming and social since 2020, its community can build the app in real time with a prompt feature, and it shipped more public code in the last 90 days than any other app here. Its audience is still small, which is why it scores 4/10 on users, but it is the only app with top marks on features, dev activity and future.
+Because of the development effort. Riftn has been building decentralized streaming and social since 2020, its community can build the app in real time with a prompt feature, and it shipped more public code in the last 90 days than any other app here. Its audience is still small, which is why it scores 4/10 on users, but it is the only app with top marks on features, dev activity and future.
 
 ### How was GitHub activity measured?
 
@@ -745,7 +745,7 @@ The established apps here are real, working networks, many of them open source. 
 
 ## Sources
 
-- [DeHub live stats (dehub.io/stats)](https://riftn.com/stats)
+- [Riftn live stats (riftn.com/stats)](https://riftn.com/stats)
 - [Gigazine / Similarweb, Aug 2026](https://gigazine.net/gsc_news/en/20260812-blueskys-active-user/)
 - [Matrix.org Foundation annual report 2025](https://matrix.org/foundation/reports/2025%20Public%20Annual%20Report.pdf)
 - [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621)
@@ -781,12 +781,12 @@ The established apps here are real, working networks, many of them open source. 
 
 ## Try the #1 pick
 
-Open [dehub.io](https://riftn.com), browse the feed, go live, or post a feature request on [dehub.io/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [riftn.com](https://riftn.com), browse the feed, go live, or post a feature request on [riftn.com/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-decentralized-social-apps-2026-banner.png',
-  bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by DeHub',
+  bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-25T20:00:00.000Z',
-  tags: ['decentralized social media', 'top 50', 'web3 social', 'crypto social apps', 'SocialFi', 'Bluesky', 'Farcaster', 'Nostr', 'Lens Protocol', 'Mastodon', 'DeHub'],
+  tags: ['decentralized social media', 'top 50', 'web3 social', 'crypto social apps', 'SocialFi', 'Bluesky', 'Farcaster', 'Nostr', 'Lens Protocol', 'Mastodon', 'Riftn'],
   readingTime: 31,
   featured: true,
   status: 'published',

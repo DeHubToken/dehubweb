@@ -365,7 +365,7 @@ describe('video post', () => {
     const html = await (await crawl('https://riftn.com/app/post/3419')).text();
     expect(html).not.toContain('<video');
     // The caption, with the author — the longer suffix would pass 70 characters.
-    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. — Sultan on Riftn');
+    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. | Sultan on Riftn');
     expect(html).toContain('<a href="https://riftn.com/umerkhan">Sultan (@umerkhan)</a>');
   });
 
@@ -519,7 +519,7 @@ describe('thin and test entities', () => {
 describe('/arcade', () => {
   it('has a title that says what the page is', async () => {
     const html = await (await crawl('https://riftn.com/arcade')).text();
-    expect(titleOf(html)).toBe('Riftn Arcade — Free Browser Games, No Download');
+    expect(titleOf(html)).toBe('Riftn Arcade: Free Browser Games, No Download');
     const description = html.match(/<meta name="description" content="([^"]*)">/)![1];
     expect(description.length).toBeLessThanOrEqual(160);
   });

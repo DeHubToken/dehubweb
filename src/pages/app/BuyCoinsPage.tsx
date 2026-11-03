@@ -445,7 +445,7 @@ function BuyCoinsCheckout() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.f130c6f67cb8", { defaultValue: "Buy — Purchase Tokens on Riftn" })} description={_copy("copy.dd108c142387", { defaultValue: "Buy tokens directly on Riftn with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." })} url="https://riftn.com/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on Riftn', url: 'https://riftn.com/buy', description: _copy("copy.307346d9e44b", { defaultValue: "Purchase tokens with credit card on Riftn." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
+      <SEOHead title={_copy("copy.f130c6f67cb8", { defaultValue: "Buy: Purchase Tokens on Riftn" })} description={_copy("copy.dd108c142387", { defaultValue: "Buy tokens directly on Riftn with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." })} url="https://riftn.com/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on Riftn', url: 'https://riftn.com/buy', description: _copy("copy.307346d9e44b", { defaultValue: "Purchase tokens with credit card on Riftn." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
       <h1 className="sr-only">{_copy("copy.b4681470578d", { defaultValue: "Riftn Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
 
