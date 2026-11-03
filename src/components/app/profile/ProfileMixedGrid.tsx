@@ -33,6 +33,7 @@ import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImag
 import type { ProfileContentItem } from '@/hooks/use-profile-page';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
+import { PostBgLayer, postBgHostProps, useProfilePostBg } from './PostBackground';
 import './profile-mixed-grid.css';
 
 /** One cell's worth of content. Optimistic posts arrive in the same shape. */
@@ -88,6 +89,7 @@ function Badge({ children, label }: { children: ReactNode; label: string }) {
 
 export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: ProfileMixedGridProps) {
   const { t } = useTranslation();
+  const postBg = useProfilePostBg();
   const navigate = useNavigate();
   const [viewer, setViewer] = useState<{ images: string[]; postId: string } | null>(null);
 
@@ -204,7 +206,8 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
 
           const words = plainText(post.content || post.title);
           return (
-            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)}>
+            <button key={entry.key} type="button" data-tile="text" className="pmg-tile pmg-poster pmg-text" disabled={entry.isOptimistic} onClick={openThis} aria-label={words.slice(0, 80)} {...(entry.isRepost ? {} : postBgHostProps(postBg))}>
+              {!entry.isRepost && <PostBgLayer bg={postBg} />}
               <Badge label={t('profile.tabs.posts', 'Post')}><MessageSquare /></Badge>
               {pinChip ?? <span className="pmg-quote" aria-hidden>“</span>}
               <span className="pmg-words">{post.isLocked && !post.isUnlocked && !post.isOwner ? <><Lock className="pmg-inline-lock" />{t('profile.lockedPost', 'Locked post')}</> : words}</span>
