@@ -397,7 +397,7 @@ export default function NftMarketPage() {
 
                   {coll ? (
                     <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
-$1 font-bold text-white">
+                      <p className="min-w-0 truncate text-[15px] font-bold text-white">
                         {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
                         <span className="text-[13px] font-normal text-zinc-500">
                           {' · '}
