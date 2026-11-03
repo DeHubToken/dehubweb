@@ -140,8 +140,28 @@ export function currentProfileId(): string | null {
   return currentIdentity()?.id ?? null;
 }
 
+/**
+ * One row per DeHub account. Usernames are unique, so two rows sharing one are
+ * the same person under an old and a new address — a wallet reset moves the
+ * profile to a new smart account and leaves the old row behind. The most
+ * recently added row is the address the account lives on now.
+ */
+function withoutStaleDuplicates(profiles: StoredProfile[]): StoredProfile[] {
+  const newest = new Map<string, StoredProfile>();
+  for (const p of profiles) {
+    const key = p.username?.toLowerCase();
+    if (!key) continue;
+    const seen = newest.get(key);
+    if (!seen || p.addedAt > seen.addedAt) newest.set(key, p);
+  }
+  return profiles.filter((p) => {
+    const key = p.username?.toLowerCase();
+    return !key || newest.get(key) === p;
+  });
+}
+
 export function listProfiles(): StoredProfile[] {
-  return readStore().sort((a, b) => b.lastActiveAt - a.lastActiveAt);
+  return withoutStaleDuplicates(readStore()).sort((a, b) => b.lastActiveAt - a.lastActiveAt);
 }
 
 function parseBadgeBalance(value: number | string | null | undefined): number | null {
