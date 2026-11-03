@@ -104,7 +104,7 @@ On DeHub itself at [dehub.io](https://riftn.com), on X at [@dehub_official](http
   bannerImage: '/media/what-is-dehub-banner.png',
   bannerImageAlt: 'DeHub — the open source, user-owned social platform for creators and communities',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-06-23T10:30:00.000Z',
   tags: ['DeHub', 'Explainer', 'Web3', 'Social Media', 'DHB'],

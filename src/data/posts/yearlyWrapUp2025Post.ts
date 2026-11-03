@@ -67,7 +67,7 @@ The rest of the year focuses on expansion: consistent new features, publicity st
   bannerImage: '/media/yearly-wrap-up-2025-banner.png',
   bannerImageAlt: 'DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2025-12-31T12:00:00.000Z',
   tags: ['Year Review', '2025', 'Roadmap', '2026', 'Milestones', 'Community', 'Last Chad Standing', 'Apple', 'DePIN'],

@@ -139,7 +139,7 @@ No. DeHub at dehub.io is a Web3 social network run as an independent DAO. It is 
 `,
   bannerImage: '/media/decentralised-social-media-explained-uk-banner.png',
   bannerImageAlt: 'Illustration of a decentralised social media network with user-owned nodes connected across an open protocol',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-03-16T09:30:00.000Z',
   updatedAt: '2026-03-16T09:30:00.000Z',
   tags: ['decentralised social media', 'web3 social media', 'user owned social media', 'decentralised social media uk', 'DeHub', 'creator economy', 'censorship resistance'],

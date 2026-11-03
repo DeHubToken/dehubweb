@@ -18,7 +18,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/top-100-crypto-projects-2026-banner.png",
     "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-26T23:30:00.000Z",
     "tags": [
@@ -50,7 +50,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/top-50-most-active-open-source-projects-2026-banner.png",
     "bannerImageAlt": "Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-26T20:00:00.000Z",
     "tags": [
@@ -81,7 +81,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/top-50-blockchain-projects-2026-banner.png",
     "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-26T20:00:00.000Z",
     "tags": [
@@ -111,7 +111,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/top-50-decentralized-social-apps-2026-banner.png",
     "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-25T20:00:00.000Z",
     "tags": [
@@ -140,7 +140,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/maboroshi-how-genjutsu-works-banner.jpg",
     "bannerImageAlt": "How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-24T06:00:00.000Z",
     "tags": [
@@ -171,7 +171,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/maboroshi-genjutsu-alternative-banner.jpg",
     "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-24T03:00:00.000Z",
     "tags": [
@@ -200,7 +200,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/debate-your-side-banner.jpg",
     "bannerImageAlt": "Ready to debate your side? Bring it to DeHub.",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-09-14T10:00:00.000Z",
     "tags": [
@@ -225,7 +225,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/social-media-monetization-2026-banner.jpg",
     "bannerImageAlt": "Who pays and when: creator monetization rules across seven social platforms in 2026",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-09-03T09:00:00.000Z",
     "tags": [
@@ -256,7 +256,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/young-creators-ground-you-own-banner.png",
     "bannerImageAlt": "A young creator publishing on ground they own rather than rent",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-28T13:00:00.000Z",
     "updatedAt": "2026-08-28T13:00:00.000Z",
@@ -284,7 +284,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/nil-ends-your-audience-does-not-banner.png",
     "bannerImageAlt": "A college athlete building an audience that outlasts NIL eligibility",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-28T12:00:00.000Z",
     "updatedAt": "2026-08-28T12:00:00.000Z",
@@ -312,7 +312,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/teaching-the-creator-economy-banner.png",
     "bannerImageAlt": "A creator economy syllabus examined for what survives a platform change",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-28T11:00:00.000Z",
     "updatedAt": "2026-08-28T11:00:00.000Z",
@@ -340,7 +340,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/athlete-is-becoming-a-media-platform-banner.png",
     "bannerImageAlt": "An athlete as a media property, with the fan relationship owned rather than licensed",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-28T10:00:00.000Z",
     "updatedAt": "2026-08-28T10:00:00.000Z",
@@ -368,7 +368,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/creators-guide-leaving-instagram-banner.png",
     "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-27T13:00:00.000Z",
     "updatedAt": "2026-08-27T13:00:00.000Z",
@@ -396,7 +396,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/creators-guide-leaving-youtube-banner.png",
     "bannerImageAlt": "A creator moving from YouTube to a Web3 platform they own on DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-27T12:00:00.000Z",
     "updatedAt": "2026-08-27T12:00:00.000Z",
@@ -424,7 +424,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/creators-guide-leaving-tiktok-banner.png",
     "bannerImageAlt": "A creator moving from TikTok to a Web3 platform they own on DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-27T11:00:00.000Z",
     "updatedAt": "2026-08-27T11:00:00.000Z",
@@ -449,7 +449,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/ai-creator-studio-banner.jpg",
     "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-13T09:00:00.000Z",
     "tags": [
@@ -479,7 +479,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png",
     "bannerImageAlt": "DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-07-14T09:00:00.000Z",
     "updatedAt": "2026-07-14T09:00:00.000Z",
@@ -507,7 +507,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/how-to-buy-dhb-token-uk-banner.png",
     "bannerImageAlt": "A guide to buying the DHB token in the UK on the Base network, with the DeHub logo",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-07-03T11:30:00.000Z",
     "updatedAt": "2026-07-03T11:30:00.000Z",
@@ -535,7 +535,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/what-is-dehub-banner.png",
     "bannerImageAlt": "DeHub — the open source, user-owned social platform for creators and communities",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-06-23T10:30:00.000Z",
     "tags": [
@@ -560,7 +560,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/what-is-watch-to-earn-banner.png",
     "bannerImageAlt": "DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-06-12T14:00:00.000Z",
     "updatedAt": "2026-06-12T14:00:00.000Z",
@@ -588,7 +588,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/best-watch-to-earn-platforms-2026-banner.png",
     "bannerImageAlt": "Illustration ranking the best watch-to-earn platforms of 2026 with DeHub, Theta, XCAD and others",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-05-31T09:45:00.000Z",
     "updatedAt": "2026-05-31T09:45:00.000Z",
@@ -616,7 +616,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/is-watch-to-earn-legit-banner.png",
     "bannerImageAlt": "A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-05-21T16:20:00.000Z",
     "updatedAt": "2026-05-21T16:20:00.000Z",
@@ -643,7 +643,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png",
     "bannerImageAlt": "DeHub compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-05-12T10:00:00.000Z",
     "updatedAt": "2026-05-12T10:00:00.000Z",
@@ -671,7 +671,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/tokenized-subscriptions-explained-banner.png",
     "bannerImageAlt": "Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-05-02T13:15:00.000Z",
     "updatedAt": "2026-05-02T13:15:00.000Z",
@@ -699,7 +699,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/uk-creators-guide-leaving-tiktok-banner.png",
     "bannerImageAlt": "A UK creator moving from TikTok to a Web3 platform they own on DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-04-23T11:00:00.000Z",
     "updatedAt": "2026-04-23T11:00:00.000Z",
@@ -727,7 +727,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/free-play-to-earn-games-no-investment-2026-banner.png",
     "bannerImageAlt": "DeHub free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-04-13T15:30:00.000Z",
     "updatedAt": "2026-04-13T15:30:00.000Z",
@@ -755,7 +755,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png",
     "bannerImageAlt": "Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-04-03T10:15:00.000Z",
     "updatedAt": "2026-04-03T10:15:00.000Z",
@@ -783,7 +783,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/watch-to-earn-vs-play-to-earn-vs-move-to-earn-banner.png",
     "bannerImageAlt": "Illustration comparing watch-to-earn, play-to-earn and move-to-earn as branches of x-to-earn",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-03-25T12:40:00.000Z",
     "updatedAt": "2026-03-25T12:40:00.000Z",
@@ -811,7 +811,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/decentralised-social-media-explained-uk-banner.png",
     "bannerImageAlt": "Illustration of a decentralised social media network with user-owned nodes connected across an open protocol",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-03-16T09:30:00.000Z",
     "updatedAt": "2026-03-16T09:30:00.000Z",
@@ -839,7 +839,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/best-decentralised-social-media-platforms-2026-banner.png",
     "bannerImageAlt": "Comparison of the best decentralised social media platforms in 2026 including DeHub, Bluesky, Farcaster, Lens and Mastodon",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-03-06T14:50:00.000Z",
     "updatedAt": "2026-09-15T10:00:00.000Z",
@@ -870,7 +870,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/web3-live-streaming-decentralised-twitch-alternative-banner.png",
     "bannerImageAlt": "DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-02-26T11:20:00.000Z",
     "updatedAt": "2026-02-26T11:20:00.000Z",
@@ -898,7 +898,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png",
     "bannerImageAlt": "Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-02-19T10:00:00.000Z",
     "updatedAt": "2026-02-19T10:00:00.000Z",
@@ -924,7 +924,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/town-hall-feb-2026-banner.png",
     "bannerImageAlt": "DeHub Town Hall Overview February 2026 - A Major DeHub Update",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-02-14T12:00:00.000Z",
     "tags": [
@@ -951,7 +951,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/google-playstore-banner.png",
     "bannerImageAlt": "DeHub Google Play Store listing announcement banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-12-01T00:00:00.000Z",
     "tags": [
@@ -976,7 +976,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/e2ee-banner.png",
     "bannerImageAlt": "DeHub End-to-End Encryption Banner - Privacy First Technology",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-10-22T00:00:00Z",
     "tags": [
@@ -1001,7 +1001,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/435d9da9-f69a-405a-92e1-73c030728cd5.png",
     "bannerImageAlt": "Base logo on a blue background, representing the Coinbase integration",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-06-15T10:00:00.000Z",
     "tags": [
@@ -1024,7 +1024,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png",
     "bannerImageAlt": "DeHub UGC Programme banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-05-10T10:00:00.000Z",
     "tags": [
@@ -1049,7 +1049,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png",
     "bannerImageAlt": "DeHub Revamped App Feed",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-05-03T10:00:00.000Z",
     "tags": [
@@ -1074,7 +1074,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
     "bannerImageAlt": "DHBScan.com banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-04-03T00:00:00.000Z",
     "tags": [
@@ -1099,7 +1099,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/6d868478-769e-4981-b285-4ca5fa215dc5.png",
     "bannerImageAlt": "Last Chad Standing helicopter",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-04-01T10:00:00.000Z",
     "tags": [
@@ -1124,7 +1124,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-uptime-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Reliability Perfected: 99.99% Uptime for DeHub Streaming",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-03-30T10:00:00.000Z",
     "tags": [
@@ -1149,7 +1149,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-livepeer-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-03-14T10:00:00.000Z",
     "tags": [
@@ -1174,7 +1174,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png",
     "bannerImageAlt": "DeHub Live Streaming logo",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-03-10T10:00:00.000Z",
     "tags": [
@@ -1199,7 +1199,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-messaging-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-02-25T10:00:00.000Z",
     "tags": [
@@ -1224,7 +1224,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-ethereum-exit-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-02-01T10:00:00.000Z",
     "tags": [
@@ -1249,7 +1249,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/b632bee7-0228-48be-b4ac-7ac0ab5e9994.png",
     "bannerImageAlt": "Last Chad Standing character helmet",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-01-07T00:00:00.000Z",
     "tags": [
@@ -1274,7 +1274,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-cdn-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-01-03T00:00:00.000Z",
     "tags": [
@@ -1299,7 +1299,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-depin-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-12-13T10:00:00.000Z",
     "tags": [
@@ -1324,7 +1324,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-agency-uk-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-11-22T10:00:00.000Z",
     "tags": [
@@ -1349,7 +1349,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/ffb3a54c-cb66-4856-b9ff-491567ce3324.png",
     "bannerImageAlt": "A Look Back In Time",
     "author": {
-      "name": "DeHub"
+      "name": "Riftn"
     },
     "publishedAt": "2024-11-12T00:00:00.000Z",
     "tags": [
@@ -1375,7 +1375,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-teaser-1m-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-11-05T10:00:00.000Z",
     "tags": [
@@ -1400,7 +1400,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-subscriptions-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-10-23T10:00:00.000Z",
     "tags": [
@@ -1425,7 +1425,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/ea33e3a2-72d6-4be8-8648-07293e8b806f.png",
     "bannerImageAlt": "DeHub Town Hall & AMA banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-10-11T00:00:00.000Z",
     "tags": [
@@ -1451,7 +1451,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png",
     "bannerImageAlt": "DeHub Developments Overview",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-09-26T00:00:00.000Z",
     "tags": [
@@ -1476,7 +1476,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-ui-overhaul-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-07-02T00:00:00.000Z",
     "tags": [
@@ -1501,7 +1501,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-positive-feedback-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-07-01T00:00:00.000Z",
     "tags": [
@@ -1526,7 +1526,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-15-countries-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-04-04T00:00:00.000Z",
     "tags": [
@@ -1551,7 +1551,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-tiktok-agency-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-04-03T00:00:00.000Z",
     "tags": [
@@ -1576,7 +1576,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-dubai-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-04-02T00:00:00.000Z",
     "tags": [
@@ -1601,7 +1601,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-base-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-04-01T00:00:00.000Z",
     "tags": [
@@ -1626,7 +1626,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png",
     "bannerImageAlt": "$1,000,000 Fundraise",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-03-08T00:00:00.000Z",
     "tags": [
@@ -1651,7 +1651,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png",
     "bannerImageAlt": "Q1 Overview: A Bird's Eye View",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-02-06T00:00:00.000Z",
     "tags": [
@@ -1676,7 +1676,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-fansite-raise-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-01-02T00:00:00.000Z",
     "tags": [
@@ -1701,7 +1701,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-eth-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-01-01T00:00:00.000Z",
     "tags": [
@@ -1726,7 +1726,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-partner-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-11-21T00:00:00.000Z",
     "tags": [
@@ -1751,7 +1751,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/131924d4-97f2-468e-9b52-cbf384e718ea.png",
     "bannerImageAlt": "Bird's Eye Overview",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-10-04T00:00:00.000Z",
     "tags": [
@@ -1776,7 +1776,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-auto-liquidity-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-10-03T00:00:00.000Z",
     "tags": [
@@ -1801,7 +1801,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-dex-policy-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-10-02T00:00:00.000Z",
     "tags": [
@@ -1826,7 +1826,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-gate-delisting-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-10-01T00:00:00.000Z",
     "tags": [
@@ -1851,7 +1851,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png",
     "bannerImageAlt": "DeHub ad tech ecosystem stakeholders",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-09-30T10:00:00.000Z",
     "tags": [
@@ -1873,7 +1873,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-fork-framework-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Paving the Way: Framework for Community-Driven Forks",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-07-04T00:00:00.000Z",
     "tags": [
@@ -1898,7 +1898,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-fork-story-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-07-03T00:00:00.000Z",
     "tags": [
@@ -1923,7 +1923,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-knowledge-transfer-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-07-02T00:00:00.000Z",
     "tags": [
@@ -1948,7 +1948,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-patents-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-04-03T00:00:00.000Z",
     "tags": [
@@ -1973,7 +1973,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-press-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-04-02T00:00:00.000Z",
     "tags": [
@@ -1998,7 +1998,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-award-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2023 update: Innovation Recognized: DeHub Wins Corporate Livewire Award",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-04-01T00:00:00.000Z",
     "tags": [
@@ -2023,7 +2023,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png",
     "bannerImageAlt": "DeHub D'App Test Beta Launch",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-01-16T10:00:00.000Z",
     "tags": [
@@ -2048,7 +2048,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-gate-resume-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Back in Action: DeHub V2 Trading Resumes on Gate.io",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-01-04T00:00:00.000Z",
     "tags": [
@@ -2073,7 +2073,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-analytics-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-01-03T00:00:00.000Z",
     "tags": [
@@ -2098,7 +2098,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-tokenized-uploads-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-01-02T00:00:00.000Z",
     "tags": [
@@ -2123,7 +2123,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/09d36738-4fac-4bec-93ca-12b75da186ae.png",
     "bannerImageAlt": "DeHub and Binance logos with lightning",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-12-12T10:00:00.000Z",
     "tags": [
@@ -2145,7 +2145,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-erc20-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-10-03T00:00:00.000Z",
     "tags": [
@@ -2170,7 +2170,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-v2-migration-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-10-02T00:00:00.000Z",
     "tags": [
@@ -2195,7 +2195,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-contract-malfunction-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-10-01T00:00:00.000Z",
     "tags": [
@@ -2220,7 +2220,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-raffle-mechanics-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-07-05T00:00:00.000Z",
     "tags": [
@@ -2245,7 +2245,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-alliances-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-07-04T00:00:00.000Z",
     "tags": [
@@ -2270,7 +2270,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-palawan-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-07-03T00:00:00.000Z",
     "tags": [
@@ -2295,7 +2295,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-home-raffle-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-07-02T00:00:00.000Z",
     "tags": [
@@ -2320,7 +2320,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-nft-marketplace-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Empowering Creators: DeHub NFT Marketplace with Royalties",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-06T00:00:00.000Z",
     "tags": [
@@ -2345,7 +2345,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-compression-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-05T00:00:00.000Z",
     "tags": [
@@ -2370,7 +2370,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-sec-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Building Bridges: Philippine SEC Registration Secured",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-04T00:00:00.000Z",
     "tags": [
@@ -2395,7 +2395,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-chads-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-03T00:00:00.000Z",
     "tags": [
@@ -2420,7 +2420,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-documentary-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-02T00:00:00.000Z",
     "tags": [
@@ -2445,7 +2445,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-4k-streams-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2022 update: Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-04-01T00:00:00.000Z",
     "tags": [
@@ -2470,7 +2470,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-game-engine-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Powering Play: DeHub's Custom Mobile Game Engine",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-01-05T00:00:00.000Z",
     "tags": [
@@ -2495,7 +2495,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-challenges-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-01-04T00:00:00.000Z",
     "tags": [
@@ -2520,7 +2520,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-leaderboards-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-01-03T00:00:00.000Z",
     "tags": [
@@ -2545,7 +2545,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-5000-players-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-01-02T00:00:00.000Z",
     "tags": [
@@ -2570,7 +2570,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-arcade-launch-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2022 update: Level Up: DeHub Arcade Launches with 5 Games & Predictions",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-01-01T00:00:00.000Z",
     "tags": [
@@ -2595,7 +2595,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-8000-members-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-10-05T00:00:00.000Z",
     "tags": [
@@ -2620,7 +2620,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-provably-fair-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Fair Play: Provably Fair Randomization in DeHub Games",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-10-04T00:00:00.000Z",
     "tags": [
@@ -2645,7 +2645,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-gate-incident-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-10-03T00:00:00.000Z",
     "tags": [
@@ -2670,7 +2670,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-gate-listing-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-10-02T00:00:00.000Z",
     "tags": [
@@ -2695,7 +2695,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-prediction-games-banner.jpg",
     "bannerImageAlt": "DeHub Q4 2021 update: Game On: DeHub Launches Prediction and Raffle Games",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-10-01T00:00:00.000Z",
     "tags": [
@@ -2720,7 +2720,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-team-15-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Global Reach: DeHub Team Grows to 15 Strong",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-07-05T00:00:00.000Z",
     "tags": [
@@ -2745,7 +2745,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-certik-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-07-04T00:00:00.000Z",
     "tags": [
@@ -2770,7 +2770,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-auto-airdrop-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-07-03T00:00:00.000Z",
     "tags": [
@@ -2795,7 +2795,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-react-native-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: Building for All: App Rebuild with React Native",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-07-02T00:00:00.000Z",
     "tags": [
@@ -2820,7 +2820,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-rebrand-banner.jpg",
     "bannerImageAlt": "DeHub Q3 2021 update: A New Era: The Rebranding to DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-07-01T00:00:00.000Z",
     "tags": [
@@ -2845,7 +2845,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-v1-security-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-06-19T10:00:00.000Z",
     "tags": [
@@ -2870,7 +2870,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-pancake-pools-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Diving In: First DeHub Liquidity Pools on Pancake Swap",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-05-30T10:00:00.000Z",
     "tags": [
@@ -2895,7 +2895,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-governed-listings-banner.jpg",
     "bannerImageAlt": "DeHub Q2 2021 update: Power to the People: Community Governed Listings",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-05-15T10:00:00.000Z",
     "tags": [
@@ -2920,7 +2920,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-2000-daus-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Early Traction: DeHub's Beta App Hits 2,000 DAUs",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-04-20T10:00:00.000Z",
     "tags": [
@@ -2945,7 +2945,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-interviews-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Listening to Our Users: 50+ Interviews Shape DeHub",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-03-30T10:00:00.000Z",
     "tags": [
@@ -2970,7 +2970,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png",
     "bannerImageAlt": "FTV - Futurov app on Google Play Store",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-03-20T10:00:00.000Z",
     "tags": [
@@ -2992,7 +2992,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/milestone-core-team-banner.jpg",
     "bannerImageAlt": "DeHub Q1 2021 update: Building the Dream: DeHub's Core Team Assembled",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2021-01-01T00:00:00.000Z",
     "tags": [
@@ -3024,7 +3024,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dehub-to-riftn-transition.png",
     "bannerImageAlt": "DeHub to Riftn — the next chapter",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-22T18:00:00.000Z",
     "tags": [
@@ -3049,7 +3049,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
     "bannerImageAlt": "DeHub listing soon announcement banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-09-18T19:32:10.000Z",
     "tags": [
@@ -3074,7 +3074,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/q4-development-overview-banner.png",
     "bannerImageAlt": "Q4 Development Overview - DeHub rocket banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-10-17T12:00:00.000Z",
     "tags": [
@@ -3099,7 +3099,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/q3-development-overview-banner.png",
     "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-08-22T12:00:00.000Z",
     "updatedAt": "2026-08-24T12:00:00.000Z",
@@ -3125,7 +3125,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dev-update-jan-2026-banner.png",
     "bannerImageAlt": "DeHub Development Update January 2026 - The DeHub Era Starts",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-02-02T14:22:00.000Z",
     "tags": [
@@ -3151,7 +3151,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/town-hall-jan-2026-banner.png",
     "bannerImageAlt": "DeHub Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2026-01-28T12:00:00.000Z",
     "tags": [
@@ -3178,7 +3178,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/yearly-wrap-up-2025-banner.png",
     "bannerImageAlt": "DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-12-31T12:00:00.000Z",
     "tags": [
@@ -3207,7 +3207,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/dehub-featured-in-press-banner.png",
     "bannerImageAlt": "DeHub featured in the press — US Weekly, Yahoo Finance, Entrepreneur and Investing.com",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2022-11-18T12:00:00.000Z",
     "tags": [
@@ -3232,7 +3232,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/countdown-clock-banner.png",
     "bannerImageAlt": "Countdown clock for DeHub app store launch",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-11-17T00:00:00.000Z",
     "tags": [
@@ -3257,7 +3257,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/town-hall-ama-banner-new.png",
     "bannerImageAlt": "DeHub Town Hall and AMA Highlights showcasing major announcements",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-11-07T12:00:00.000Z",
     "tags": [
@@ -3284,7 +3284,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png",
     "bannerImageAlt": "Mike Hales at TikTok Live Fest event, representing Team First Class Agency's official partnership with TikTok",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-11-22T12:00:00.000Z",
     "tags": [
@@ -3310,7 +3310,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png",
     "bannerImageAlt": "DeHub Cards in premium gold finish showcasing modern crypto payment solution",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-06-18T12:00:00.000Z",
     "tags": [
@@ -3333,7 +3333,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "We're thrilled to unveil a brand new user interface that brings clarity, performance, and creativity to the forefront of your DeHub experience.",
     "content": "",
     "author": {
-      "name": "DeHub Team",
+      "name": "Riftn Team",
       "avatar": "/media/6ad34788-b3fe-4094-bf1b-e930af8eaf62.png"
     },
     "publishedAt": "2025-05-03T00:00:00Z",
@@ -3360,7 +3360,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png",
     "bannerImageAlt": "Interactive live streaming with animated tips - DeHub's revolutionary approach to on-chain content creation",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-03-10T12:00:00.000Z",
     "tags": [
@@ -3385,7 +3385,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/4476fbc3-58ec-467b-8c1b-30570349940c.png",
     "bannerImageAlt": "2022 Wrap Up - DeHub year in review with fireworks celebration",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-01-04T12:00:00.000Z",
     "tags": [
@@ -3410,7 +3410,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
     "bannerImageAlt": "A glowing DeHub token representing tokenized uploads.",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-06-10T12:00:00.000Z",
     "tags": [
@@ -3435,7 +3435,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png",
     "bannerImageAlt": "Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-04-20T12:00:00.000Z",
     "tags": [
@@ -3459,7 +3459,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png",
     "bannerImageAlt": "DeHub DeTour Dubai event banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-04-10T12:00:00.000Z",
     "tags": [
@@ -3484,7 +3484,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/068250b6-b4b6-42fc-8633-f686a94990c7.png",
     "bannerImageAlt": "DeHub launching on Base network announcement banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-05-14T12:00:00.000Z",
     "tags": [
@@ -3508,7 +3508,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png",
     "bannerImageAlt": "DeHub Takeover announcement banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-08-22T12:00:00.000Z",
     "tags": [
@@ -3532,7 +3532,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png",
     "bannerImageAlt": "DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2024-06-30T12:00:00.000Z",
     "tags": [
@@ -3556,7 +3556,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png",
     "bannerImageAlt": "DeHub Beta Overview banner",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2023-03-25T12:00:00.000Z",
     "tags": [
@@ -3581,7 +3581,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png",
     "bannerImageAlt": "Military helicopter in flight representing the flagship game launch and strategic partnerships",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-07-04T12:00:00.000Z",
     "tags": [
@@ -3606,7 +3606,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/coinbase-dhb-banner.png",
     "bannerImageAlt": "$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-08-19T12:00:00.000Z",
     "tags": [
@@ -3632,7 +3632,7 @@ export const newPostsMetadata: BlogPost[] = [
     "bannerImage": "/media/bnb-pool-update-banner-new.png",
     "bannerImageAlt": "BNB Pool Update - DeHub's journey to recover 876 BNB stuck from 2022 contract issue",
     "author": {
-      "name": "DeHub Team"
+      "name": "Riftn Team"
     },
     "publishedAt": "2025-09-14T12:00:00.000Z",
     "tags": [
@@ -3662,7 +3662,7 @@ export const latestPostMetadata: BlogPost | undefined = {
   "bannerImage": "/media/top-100-crypto-projects-2026-banner.png",
   "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub",
   "author": {
-    "name": "DeHub Team"
+    "name": "Riftn Team"
   },
   "publishedAt": "2026-10-26T23:30:00.000Z",
   "tags": [

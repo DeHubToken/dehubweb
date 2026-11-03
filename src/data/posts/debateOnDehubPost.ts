@@ -93,7 +93,7 @@ Think you can defend your side? Bring the debate to DeHub.
   bannerImage: '/media/debate-your-side-banner.jpg',
   bannerImageAlt: 'Ready to debate your side? Bring it to DeHub.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-09-14T10:00:00.000Z',
   tags: ['Free Speech', 'Debate', 'Stages', 'Community', 'Decentralised Social'],

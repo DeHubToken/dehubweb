@@ -844,7 +844,7 @@ serve(async (req) => {
             },
             "glossary": {
                 title: "Riftn Glossary — Web3 & DeFi Terms",
-                description: "Plain-English definitions for Web3, DeFi and DeHub-specific terms.",
+                description: "Plain-English definitions for Web3, DeFi and Riftn-specific terms.",
                 body: `<h2>Plain-English Web3 glossary</h2><p>The Riftn Glossary explains the terms you'll encounter across the decentralized creator network — from wallet, gas and staking, to bridges, escrow, on-chain tipping and the DHB token itself. Written for creators, not for engineers.</p>`,
             },
             "bridge": {

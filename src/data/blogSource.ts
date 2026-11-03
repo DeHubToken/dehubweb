@@ -691,7 +691,7 @@ As we rapidly enter the middle age of our development stages, we will no longer 
     bannerImage: '/media/09d36738-4fac-4bec-93ca-12b75da186ae.png',
     bannerImageAlt: 'DeHub and Binance logos with lightning',
     author: {
-      name: 'DeHub Team',
+      name: 'Riftn Team',
     },
     publishedAt: '2022-12-12T10:00:00.000Z',
     tags: ['Development', 'Update', '2022', 'Roadmap'],
@@ -746,7 +746,7 @@ Stay tuned for more updates as we approach this exciting milestone!`,
     bannerImage: '/media/435d9da9-f69a-405a-92e1-73c030728cd5.png',
     bannerImageAlt: 'Base logo on a blue background, representing the Coinbase integration',
     author: {
-      name: 'DeHub Team',
+      name: 'Riftn Team',
     },
     publishedAt: '2025-06-15T10:00:00.000Z',
     tags: ['Coinbase', 'Exchange', 'Listing', 'Base', 'Accessibility'],
@@ -812,7 +812,7 @@ For more information on our ad revenue sharing, refer to this thread and our whi
     bannerImage: '/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png',
     bannerImageAlt: 'DeHub ad tech ecosystem stakeholders',
     author: {
-      name: 'DeHub Team',
+      name: 'Riftn Team',
     },
     publishedAt: '2023-09-30T10:00:00.000Z',
     tags: ['Ad Tech', 'POVR', 'Advertising', 'Feature Spotlight'],
@@ -854,7 +854,7 @@ Thank you for being part of our community. The future is bright, and it is being
     bannerImage: '/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png',
     bannerImageAlt: 'FTV - Futurov app on Google Play Store',
     author: {
-      name: 'DeHub Team',
+      name: 'Riftn Team',
     },
     publishedAt: '2021-03-20T10:00:00.000Z',
     tags: ['Launch', 'MVP', 'Android', 'Q1 2021'],

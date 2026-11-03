@@ -120,7 +120,7 @@ Often, yes. Crypto received from playing can be treated as income when you recei
 Open [the DeHub app](https://riftn.com/app) in a browser to try Last Chad Standing and the arcade with no deposit, or install the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) for the mobile-first experience with the arcade, watch-to-earn and the social feed in one place.`,
   bannerImage: '/media/free-play-to-earn-games-no-investment-2026-banner.png',
   bannerImageAlt: 'DeHub free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-04-13T15:30:00.000Z',
   updatedAt: '2026-04-13T15:30:00.000Z',
   tags: ['play to earn', 'free play to earn', 'no investment', 'Last Chad Standing', 'crypto gaming', 'DeHub', 'mobile gaming'],

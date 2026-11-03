@@ -765,7 +765,7 @@ function relatedPostsHtml(manifest, currentSlug, limit = 4) {
  * named "Riftn Team" as a made-up author. A real name, when a post has one,
  * stays a Person.
  */
-const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team']);
+const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team', 'riftn', 'riftn team']);
 function blogAuthorLd(author) {
   const name = String(author || '').replace(/\s+/g, ' ').trim();
   return BRAND_BYLINES.has(name.toLowerCase())
@@ -1033,7 +1033,6 @@ const HOME_GUIDE_LINKS = [
   ['/guides/best-decentralised-social-media-platforms-2026', 'Best decentralised social media platforms 2026'],
   ['/guides/higgsfield-genjutsu-alternative', 'Higgsfield Genjutsu alternative: swap anyone in a video'],
   ['/guides/how-does-higgsfield-genjutsu-work', 'How does Higgsfield Genjutsu work? Step by step'],
-  ['/guides/dehub-vs-depaul-dehub-vs-rowan-dehub', 'DeHub vs DePaul DeHUB vs Rowan DEHub'],
   ['/dehub-app', 'Get the Riftn app'],
 ];
 

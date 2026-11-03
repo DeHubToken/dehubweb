@@ -135,7 +135,7 @@ October is only half done. The rest of Q4 continues from here, and this page wil
   bannerImage: '/media/q4-development-overview-banner.png',
   bannerImageAlt: 'Q4 Development Overview - DeHub rocket banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-10-17T12:00:00.000Z',
   tags: ['Development', 'Update', 'Q4', 'Shipping', '2026'],

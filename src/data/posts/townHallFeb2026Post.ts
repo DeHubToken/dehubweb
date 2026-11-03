@@ -45,7 +45,7 @@ This is the start of the endless campaign loop we've discussed for years. Every 
   bannerImage: '/media/town-hall-feb-2026-banner.png',
   bannerImageAlt: 'DeHub Town Hall Overview February 2026 - A Major DeHub Update',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-02-14T12:00:00.000Z',
   tags: ['Town Hall', 'Update', 'Web App', 'Airdrop', 'Last Chad Standing', 'Apple', '2026'],

@@ -525,7 +525,6 @@ describe('proxied pages', () => {
       'dehub-vs-cheelee-theta-xcad-watch-to-earn',
       'web3-live-streaming-decentralised-twitch-alternative',
       'best-decentralised-social-media-platforms-2026',
-      'dehub-vs-depaul-dehub-vs-rowan-dehub',
     ]) {
       expect(links).toContain(`https://riftn.com/guides/${slug}`);
       expect(readFileSync(resolve(ROOT, `public/blog-content/${slug}.json`), 'utf8'), slug).toBeTruthy();

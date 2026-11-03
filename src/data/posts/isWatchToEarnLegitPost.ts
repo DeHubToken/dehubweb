@@ -113,7 +113,7 @@ Yes, and you should insist on it. Genuine watch to earn without buying anything 
 `,
   bannerImage: '/media/is-watch-to-earn-legit-banner.png',
   bannerImageAlt: 'A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-21T16:20:00.000Z',
   updatedAt: '2026-05-21T16:20:00.000Z',
   tags: ['watch-to-earn', 'is watch to earn legit', 'crypto rewards', 'watch2earn scam', 'DHB token', 'DeHub'],

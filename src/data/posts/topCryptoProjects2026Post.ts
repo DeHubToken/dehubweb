@@ -307,7 +307,7 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 Open [dehub.io](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-100-crypto-projects-2026-banner.png',
   bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T23:30:00.000Z',
   tags: ['crypto', 'top 100', 'GitHub activity', 'crypto developers', 'AI', 'wallets', 'DeFi', 'Ethereum', 'Solana', 'Bitcoin', 'open source', 'DeHub'],
   readingTime: 15,

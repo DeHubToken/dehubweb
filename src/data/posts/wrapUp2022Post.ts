@@ -169,7 +169,7 @@ export const wrapUp2022Post: BlogPostType = {
   bannerImage: '/media/4476fbc3-58ec-467b-8c1b-30570349940c.png',
   bannerImageAlt: '2022 Wrap Up - DeHub year in review with fireworks celebration',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-01-04T12:00:00.000Z',
   tags: ['Year Review', '2022', 'Roadmap', 'Milestones', 'Community'],
