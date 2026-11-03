@@ -83,7 +83,7 @@ type V2Header = Argon2Header | HkdfHeader;
 
 // Domain separation for the HKDF expand step, so the same PRF output used for
 // any other purpose can never yield this wrap key.
-const HKDF_INFO = "Riftn wallet seed wrap v1";
+const HKDF_INFO = "DeHub wallet seed wrap v1";
 
 async function deriveKeyPbkdf2(
   password: string,

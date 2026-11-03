@@ -79,7 +79,7 @@ describe('assistant intent classification', () => {
   });
 
   it('brands an image only when Riftn is named alongside an artefact', () => {
-    expect(isDeHubBrandedImageRequest('make a Riftn banner for the launch')).toBe(true);
+    expect(isDeHubBrandedImageRequest('make a DeHub banner for the launch')).toBe(true);
     expect(isDeHubBrandedImageRequest('my DHB withdrawal is already pending')).toBe(false);
   });
 });
