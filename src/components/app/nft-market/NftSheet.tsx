@@ -331,7 +331,7 @@ export function NftSheet({
                 {bundle!.slice(0, 4).map((b) => <NftArt key={`${b.contract}:${b.tokenId}`} src={b.image ?? null} alt={b.name ?? ''} className="h-full w-full" />)}
               </div>
             ) : (
-              <NftArt src={image} alt={name} className="relative mx-auto aspect-square max-h-[42vh] w-full max-w-[22rem] !object-contain animate-in fade-in zoom-in-95 duration-500" />
+              <NftArt src={image} alt={name} className="relative mx-auto aspect-square max-h-[42vh] w-full max-w-[22rem] !object-contain animate-in zoom-in-95 duration-500" />
             )}
           </div>
           <div className="mt-3 flex min-w-0 flex-col gap-1">

@@ -40,7 +40,7 @@ export function NftSpotlight({ items }: { items: SpotlightItem[] }) {
     <section data-nft-spotlight className="relative overflow-hidden rounded-2xl" style={{ background: '#09090b' }}>
       {/* Its own art, blurred, as the glow behind it. */}
       {item.image ? (
-        <img key={`glow-${item.key}`} src={item.image} alt="" aria-hidden className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-60 blur-2xl animate-in fade-in duration-700" />
+        <img key={`glow-${item.key}`} src={item.image} alt="" aria-hidden className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-60 blur-2xl" />
       ) : null}
       <span aria-hidden className="pointer-events-none absolute inset-0" style={{ background: 'rgba(0,0,0,0.35)' }} />
       <div className="relative grid gap-0 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
@@ -50,7 +50,7 @@ export function NftSpotlight({ items }: { items: SpotlightItem[] }) {
           className="group relative block aspect-[4/3] w-full overflow-hidden sm:aspect-[5/4]"
           aria-label={item.name}
         >
-          <NftArt key={item.key} src={item.image} alt={item.name} className="h-full w-full transition-transform duration-700 group-hover:scale-[1.04] animate-in fade-in zoom-in-95 duration-500" />
+          <NftArt key={item.key} src={item.image} alt={item.name} className="h-full w-full transition-transform duration-700 group-hover:scale-[1.04] animate-in zoom-in-105 duration-700" />
           <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 sm:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0))' }} />
         </button>
         <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-4 sm:static sm:justify-center sm:gap-3 sm:p-7">
@@ -59,7 +59,7 @@ export function NftSpotlight({ items }: { items: SpotlightItem[] }) {
             {' · '}
             {CHAIN_LABEL[item.chainId] ?? item.chainId}
           </span>
-          <h2 key={`name-${item.key}`} className="line-clamp-2 text-[22px] font-extrabold leading-tight tracking-tight animate-in fade-in slide-in-from-bottom-2 duration-500 sm:text-[30px]" style={ON_ART}>
+          <h2 key={`name-${item.key}`} className="line-clamp-2 text-[22px] font-extrabold leading-tight tracking-tight animate-in slide-in-from-bottom-2 duration-500 sm:text-[30px]" style={ON_ART}>
             {item.name}
           </h2>
           <div className="flex items-center gap-3">

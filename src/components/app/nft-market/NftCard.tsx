@@ -61,7 +61,7 @@ export function NftCard({
   price?: { amount: string; decimals: number; symbol: string } | null;
   priceLabel?: string;
   badge?: string | null;
-  /** Position in its grid, for the staggered fade-in. */
+  /** Position in its grid, for the staggered entrance. */
   index?: number;
   onClick: () => void;
 }) {
@@ -72,7 +72,7 @@ export function NftCard({
       data-page-bento
       data-nft-card
       onClick={onClick}
-      className="group flex min-w-0 flex-col overflow-hidden rounded-xl bg-zinc-900 text-left transition-[transform,box-shadow] duration-300 animate-in fade-in slide-in-from-bottom-1 fill-mode-both hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] active:scale-[0.98]"
+      className="group flex min-w-0 flex-col overflow-hidden rounded-xl bg-zinc-900 text-left transition-[transform,box-shadow] duration-300 animate-in zoom-in-95 fill-mode-both hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] active:scale-[0.98]"
       style={{ animationDelay: `${Math.min(index, 18) * 35}ms` }}
     >
       <div className="relative aspect-square w-full overflow-hidden">
