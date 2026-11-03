@@ -8,6 +8,7 @@ import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
+import { handleDomainHandoff } from './server/domain-handoff.js';
 import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
@@ -5862,6 +5863,8 @@ async function handleRequest(request, env, ctx) {
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const handoff = handleDomainHandoff(url);
+  if (handoff) return handoff;
   if (pathname.startsWith('/locale-pages/')) {
     const asset = await serveLocaleAsset(request, env);
     if (asset) return asset;
