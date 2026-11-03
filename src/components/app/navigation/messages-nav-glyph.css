@@ -3,10 +3,10 @@
 /* Phones only. Desktop keeps the sidebar and its count chip unchanged. */
 @media (max-width: 767px) {
   .messages-nav-glyph {
-    --messages-letter: var(--stage-accent, currentColor);
-    --messages-letter-line: rgb(0 0 0 / .35);
+    --messages-letter: #ff6874;
+    --messages-letter-line: rgb(255 255 255 / .7);
   }
-  html:is([data-theme='light'], [data-system-tone='light']) .messages-nav-glyph { --messages-letter-line: rgb(255 255 255 / .6); }
+  html:is([data-theme='light'], [data-system-tone='light']) .messages-nav-glyph { --messages-letter: #dc3545; }
   .messages-nav-glyph__letter {
     display: block; position: absolute; inset: 0; width: 100%; height: 100%;
     overflow: visible; pointer-events: none;

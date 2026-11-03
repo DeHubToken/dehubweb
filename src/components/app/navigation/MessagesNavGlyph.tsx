@@ -4,8 +4,8 @@ import MessageEnvelope from '@/components/ui/cut-icons/message-envelope';
 import './messages-nav-glyph.css';
 
 /**
- * Bottom bar Messages icon. Unread messages show as a small letter in the
- * theme's colour peeking out of the envelope, not a red count chip. On each
+ * Bottom bar Messages icon. Unread messages show as a small red letter
+ * peeking out of the envelope, not a red count chip. On each
  * wake-up (page load, coming back to the tab, a new message) the letter pops
  * out 3 times, then it holds still: one 3.9s CSS run, nothing loops.
  */
