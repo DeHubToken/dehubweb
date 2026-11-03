@@ -19,8 +19,8 @@ export function CollectionsRow({
   if (!items.length) return null;
   return (
     <section data-nft-collections className="flex flex-col gap-2">
-      <h2 className="px-1 text-[13px] font-semibold text-white">
-        {t('nftMarket.trending', { defaultValue: 'Trending collections' })}
+      <h2 className="px-1 text-[15px] font-bold text-white">
+        {t('nftMarket.collections', { defaultValue: 'Collections' })}
       </h2>
       <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {items.map((c) => {
@@ -40,7 +40,7 @@ export function CollectionsRow({
               <div className="relative aspect-[4/3] w-full overflow-hidden">
                 <NftArt src={c.image} alt={c.name ?? ''} className="h-full w-full" />
                 <span className="absolute left-2 top-2 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={{ background: 'rgba(0,0,0,0.62)', color: '#fff' }}>
-                  {CHAIN_LABEL[c.chainId] ?? c.chainId}
+                  {c.chainId ? CHAIN_LABEL[c.chainId] ?? c.chainId : t('nftMarket.allChains', { defaultValue: 'All chains' })}
                 </span>
               </div>
               <div className="flex min-w-0 flex-col gap-0.5 p-2.5">
