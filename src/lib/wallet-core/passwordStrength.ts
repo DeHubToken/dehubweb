@@ -141,15 +141,22 @@ async function sha1Hex(input: string): Promise<string> {
 /**
  * HIBP k-anonymity breach check. Returns true if the password appears in a
  * known breach, false if it doesn't, and null if the check couldn't run
- * (offline / rate-limited) so callers can fail open.
+ * (offline / rate-limited / too slow) so callers can fail open. A stalled
+ * connection must not hold the wallet password step, so it gives up after
+ * BREACH_CHECK_TIMEOUT_MS.
  */
+export const BREACH_CHECK_TIMEOUT_MS = 5_000;
+
 export async function isBreached(pw: string): Promise<boolean | null> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), BREACH_CHECK_TIMEOUT_MS);
   try {
     const hash = await sha1Hex(pw);
     const prefix = hash.slice(0, 5);
     const suffix = hash.slice(5);
     const res = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`, {
       headers: { "Add-Padding": "true" },
+      signal: controller.signal,
     });
     if (!res.ok) return null;
     const text = await res.text();
@@ -160,6 +167,8 @@ export async function isBreached(pw: string): Promise<boolean | null> {
     return false;
   } catch {
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
