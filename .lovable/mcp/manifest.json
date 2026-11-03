@@ -9,13 +9,13 @@
     "server": {
       "name": "dehub-mcp",
       "version": "0.2.0",
-      "title": "DeHub"
+      "title": "Riftn"
     },
     "tools": [
       {
         "name": "dehub_feed",
-        "title": "Get DeHub feed",
-        "description": "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
+        "title": "Get Riftn feed",
+        "description": "Fetch posts from the Riftn decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -52,8 +52,8 @@
       },
       {
         "name": "dehub_post",
-        "title": "Get DeHub post",
-        "description": "Fetch a single DeHub post by its token ID, including author and engagement counts.",
+        "title": "Get Riftn post",
+        "description": "Fetch a single Riftn post by its token ID, including author and engagement counts.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -76,7 +76,7 @@
       {
         "name": "dehub_comments",
         "title": "Read post comments",
-        "description": "Read the comment thread on a DeHub post, with author, body and like count for each comment.",
+        "description": "Read the comment thread on a Riftn post, with author, body and like count for each comment.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -104,8 +104,8 @@
       },
       {
         "name": "dehub_search",
-        "title": "Search DeHub",
-        "description": "Search DeHub for posts (by title and description) and people (by username and display name).",
+        "title": "Search Riftn",
+        "description": "Search Riftn for posts (by title and description) and people (by username and display name).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -138,8 +138,8 @@
       },
       {
         "name": "dehub_profile",
-        "title": "Get DeHub profile",
-        "description": "Fetch a DeHub user profile by wallet address or username.",
+        "title": "Get Riftn profile",
+        "description": "Fetch a Riftn user profile by wallet address or username.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
