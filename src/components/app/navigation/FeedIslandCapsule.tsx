@@ -116,7 +116,7 @@ export function FeedIslandCapsule({
         >
           <span className="inline-flex">
             <FeedRefreshLogo>
-              <ElectricLogo active={show}><img src={logoSrc} alt="Riftn" className="block h-[18px] w-[61px] max-w-none object-contain" width={203} height={60} /></ElectricLogo>
+              <ElectricLogo active={show}><img src={logoSrc} alt="Riftn" className="block h-[36px] w-[42px] max-w-none object-contain" width={42} height={36} /></ElectricLogo>
             </FeedRefreshLogo>
           </span>
         </button>
