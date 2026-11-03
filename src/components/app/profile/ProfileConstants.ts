@@ -1,13 +1,13 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
-import defaultBanner1 from '@/assets/banners/default-banner-1.png';
-import defaultBanner2 from '@/assets/banners/default-banner-2.png';
-import defaultBanner3 from '@/assets/banners/default-banner-3.png';
-import defaultBanner4 from '@/assets/banners/default-banner-4.png';
-import defaultBanner5 from '@/assets/banners/default-banner-5.png';
-import defaultBanner6 from '@/assets/banners/default-banner-6.png';
-import defaultBanner7 from '@/assets/banners/default-banner-7.png';
-import defaultBanner8 from '@/assets/banners/default-banner-8.png';
-import defaultBanner9 from '@/assets/banners/default-banner-9.png';
+import defaultBanner1 from '@/assets/banners/default-banner-1.webp';
+import defaultBanner2 from '@/assets/banners/default-banner-2.webp';
+import defaultBanner3 from '@/assets/banners/default-banner-3.webp';
+import defaultBanner4 from '@/assets/banners/default-banner-4.webp';
+import defaultBanner5 from '@/assets/banners/default-banner-5.webp';
+import defaultBanner6 from '@/assets/banners/default-banner-6.webp';
+import defaultBanner7 from '@/assets/banners/default-banner-7.webp';
+import defaultBanner8 from '@/assets/banners/default-banner-8.webp';
+import defaultBanner9 from '@/assets/banners/default-banner-9.webp';
 
 // Cosmetic wallet overrides: show a different address on profile without changing backend logic
 export const DISPLAY_WALLET_OVERRIDES: Record<string, string> = {

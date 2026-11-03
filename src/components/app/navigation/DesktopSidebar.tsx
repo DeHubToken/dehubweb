@@ -38,7 +38,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 // Derived from public/brand/mark-black.png, which stays full-resolution because

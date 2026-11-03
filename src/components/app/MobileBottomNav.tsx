@@ -58,7 +58,7 @@ const PostModal = React.lazy(() =>
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { openStageModal } from '@/contexts/StageContext';
-import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';

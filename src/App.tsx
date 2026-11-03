@@ -48,6 +48,8 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
+// DM unread total for the nav badges; keeps the messaging stack out of the boot file.
+const DmUnreadBridge = lazyWithRetry(() => import("@/components/app/chat/DmUnreadBridge"));
 const DesktopWordmarkPreview = React.lazy(() => import("@/pages/DesktopWordmarkPreview"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -497,6 +499,7 @@ function AppContent() {
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       <LoginSheetHost />
+      {isAuthenticated && <Suspense fallback={null}><DmUnreadBridge /></Suspense>}
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
