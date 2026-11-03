@@ -5,7 +5,7 @@ const first='0x1111111111111111111111111111111111111111';
 const second='0x2222222222222222222222222222222222222222';
 describe('community follower invitations',()=>{
  it('puts the optional note above the link and caps it',()=>{
-  const url='https://dehub.io/app/communities/club';
+  const url='https://riftn.com/app/communities/club';
   expect(communityInviteMessage(url)).toBe(url);
   expect(communityInviteMessage(url,'   ')).toBe(url);
   expect(communityInviteMessage(url,'  Come hang out ')).toBe(`Come hang out\n${url}`);

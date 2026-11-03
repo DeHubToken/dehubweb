@@ -95,16 +95,16 @@ export default function SuperPowersPage() {
       <SEOHead
         title={_copy("copy.f57d7f82c107", { defaultValue: "SuperPowers — Spend Your DeHub Badge on Reach" })}
         description={_copy("copy.eb510e32623c", { defaultValue: "Use badge-powered boosts, or Team up with as many as seven others to unlock a higher shared badge." })}
-        url="https://dehub.io/app/superpowers"
-        image="https://dehub.io/og/superpowers.jpg"
+        url="https://riftn.com/app/superpowers"
+        image="https://riftn.com/og/superpowers.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebPage',
           name: 'DeHub SuperPowers',
           description:
             _copy("copy.91c129f862f5", { defaultValue: "DeHub SuperPowers include badge-powered boosts and Team up, which combines wallet power for a higher shared badge." }),
-          url: 'https://dehub.io/app/superpowers',
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          url: 'https://riftn.com/app/superpowers',
+          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' },
         }}
       />
 

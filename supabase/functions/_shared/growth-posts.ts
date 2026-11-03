@@ -8,7 +8,7 @@ import type { MediaItem } from './zernio.ts';
 export const KINDS = ['creator_of_day', 'growth_pulse', 'live_now', 'leaderboard', 'dhb_update', 'shorts_of_week', 'stage_clip'] as const;
 export type Kind = typeof KINDS[number];
 
-export const SITE = 'https://dehub.io';
+export const SITE = 'https://riftn.com';
 
 /** The post share card the SEO worker renders for any post, sized for social previews. */
 export const postCardImage = (tokenId: string | number) => `${SITE}/_og/post/v4/${tokenId}.png`;

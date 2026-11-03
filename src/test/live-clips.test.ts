@@ -49,13 +49,13 @@ const clip = (over: Partial<LiveClip> = {}): LiveClip => ({
 
 describe('caption', () => {
   it('credits the streamer and the clipper and links the clip page', () => {
-    expect(liveClipCaption(clip())).toBe("Clipped from @streamer's live by @fan\nhttps://dehub.io/clip/42");
+    expect(liveClipCaption(clip())).toBe("Clipped from @streamer's live by @fan\nhttps://riftn.com/clip/42");
   });
 
   it('leaves the clipper out of a highlight and of a streamer clipping themselves', () => {
-    expect(liveClipCaption(clip({ kind: 'highlight', clipperUsername: null }))).toBe("Clipped from @streamer's live\nhttps://dehub.io/clip/42");
-    expect(liveClipCaption(clip({ clipperAddress: '0xs' }))).toBe("Clipped from @streamer's live\nhttps://dehub.io/clip/42");
-    expect(liveClipLink({ shortId: 9 })).toBe('https://dehub.io/clip/9');
+    expect(liveClipCaption(clip({ kind: 'highlight', clipperUsername: null }))).toBe("Clipped from @streamer's live\nhttps://riftn.com/clip/42");
+    expect(liveClipCaption(clip({ clipperAddress: '0xs' }))).toBe("Clipped from @streamer's live\nhttps://riftn.com/clip/42");
+    expect(liveClipLink({ shortId: 9 })).toBe('https://riftn.com/clip/9');
   });
 });
 

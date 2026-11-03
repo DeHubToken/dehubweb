@@ -8,7 +8,7 @@ import {
 } from "../_shared/transak.ts";
 import { transakTokenStore } from "../_shared/transak-store.ts";
 
-const APP_ORIGIN = Deno.env.get("CASHOUT_RETURN_ORIGIN") || "https://dehub.io";
+const APP_ORIGIN = Deno.env.get("CASHOUT_RETURN_ORIGIN") || "https://riftn.com";
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);

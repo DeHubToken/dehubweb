@@ -92,7 +92,7 @@ function isAllowedRedirect(url: string): boolean {
   try {
     const u = new URL(url);
     if (u.hostname === 'localhost' || u.hostname === '127.0.0.1') return true;
-    return u.protocol === 'https:' && (u.hostname === 'dehub.io' || u.hostname.endsWith('.dehub.io'));
+    return u.protocol === 'https:' && (u.hostname === 'riftn.com' || u.hostname.endsWith('.riftn.com') || u.hostname === 'dehub.io' || u.hostname.endsWith('.dehub.io'));
   } catch {
     return false;
   }
@@ -244,7 +244,7 @@ Deno.serve(async (req) => {
         .slice(0, 10)
         .map((m: any) => ({ url: m.url, type: ['image', 'video', 'gif', 'document'].includes(m.type) ? m.type : 'image' }));
       const content = String(body.content ?? '').slice(0, 5000);
-      const link = typeof body.link === 'string' && /^https:\/\/([a-z0-9-]+\.)*dehub\.io\//.test(body.link) ? body.link : '';
+      const link = typeof body.link === 'string' && /^https:\/\/([a-z0-9-]+\.)*(dehub\.io|riftn\.com)\//.test(body.link) ? body.link : '';
 
       const scheduledAt = body.scheduledAt ? new Date(body.scheduledAt) : null;
       if (scheduledAt && Number.isNaN(scheduledAt.getTime())) return jsonResponse({ error: 'Invalid schedule time' }, 400);

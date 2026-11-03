@@ -24,7 +24,7 @@ describe('stageAvatarSources', () => {
   });
 
   it('never offers a dead blob: preview', () => {
-    expect(stageAvatarSources(WALLET, 'blob:https://dehub.io/123', 40).some((u) => u.startsWith('blob:'))).toBe(false);
+    expect(stageAvatarSources(WALLET, 'blob:https://riftn.com/123', 40).some((u) => u.startsWith('blob:'))).toBe(false);
   });
 });
 

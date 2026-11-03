@@ -33,7 +33,7 @@ const JSON_LD = {
   '@type': 'WebPage',
   name: 'DeHub NFT Market',
   description: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Every trade swaps the NFT and the payment in one step.',
-  url: 'https://dehub.io/nfts',
+  url: 'https://riftn.com/nfts',
 };
 
 function targetOf(o: MarketOrder): NftSheetTarget {
@@ -253,8 +253,8 @@ export default function NftMarketPage() {
         description={t('nftMarket.seoDescription', {
           defaultValue: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step.',
         })}
-        image="https://dehub.io/og/nfts.jpg"
-        url="https://dehub.io/nfts"
+        image="https://riftn.com/og/nfts.jpg"
+        url="https://riftn.com/nfts"
         jsonLd={JSON_LD}
       />
 

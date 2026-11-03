@@ -17,7 +17,7 @@ import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { DEFAULT_AFFILIATE_LANDING, parseLandingCtas, withAffiliateRef, type AffiliateLandingCustomization } from "@/lib/affiliate";
 
 
-const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
+const SITE = typeof window !== "undefined" ? window.location.origin : "https://riftn.com";
 
 export default function ReferralLanding() {
   const { t } = useTranslation();
@@ -158,7 +158,7 @@ export default function ReferralLanding() {
         title={title}
         description={description}
         image={ogImage}
-        url={`https://dehub.io/r/${code}`}
+        url={`https://riftn.com/r/${code}`}
         noindex
       />
 

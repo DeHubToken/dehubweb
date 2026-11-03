@@ -287,7 +287,7 @@ export default function ArcadeGamePage() {
         // must not name a different image at that size; and `art` is a WebP,
         // which several scrapers (X among them) will not render as a preview.
         // The capture stays the JSON-LD image, where a real screenshot belongs.
-        image={`https://dehub.io/og/arcade-${game.slug}.jpg`}
+        image={`https://riftn.com/og/arcade-${game.slug}.jpg`}
         // Unlisted games are shared by link while they are tested, so they keep
         // the card but stay out of the index. The worker says the same.
         noindex={game.unlisted}
@@ -296,8 +296,8 @@ export default function ArcadeGamePage() {
           '@type': 'VideoGame',
           name: game.title,
           description: game.description,
-          url: `https://dehub.io/arcade/${game.slug}`,
-          image: `https://dehub.io${game.art}`,
+          url: `https://riftn.com/arcade/${game.slug}`,
+          image: `https://riftn.com${game.art}`,
           applicationCategory: 'Game',
           gamePlatform: 'Web browser',
           operatingSystem: 'Any',

@@ -5,7 +5,7 @@
  * reason: every embedded game runs in an iframe sandboxed WITHOUT
  * `allow-same-origin`, so its frame is an opaque origin. From in there
  * `window.open` is gone, top navigation is gone, and a `fetch` leaves with
- * `Origin: null`, which the API's allowlist — pinned to https://dehub.io — can
+ * `Origin: null`, which the API's allowlist — pinned to https://riftn.com — can
  * never match. A `postMessage` is the only channel there is.
  *
  * Trenchstar's desk is three monitors showing DeHub: the feed, your profile,
@@ -196,7 +196,7 @@ const COMPOSE_MAX = 500;
 /**
  * The `/cdn-cgi/image` transform, addressed at the origin we are already on.
  *
- * The builders in media-url pin it to https://dehub.io so that dev and preview
+ * The builders in media-url pin it to https://riftn.com so that dev and preview
  * resolve somewhere real. Here that pin is the one thing we cannot have: a
  * cross-origin fetch of a transform that sends no CORS headers is unreadable,
  * and reading the bytes is the whole point. Every hostname in the zone serves
@@ -209,7 +209,7 @@ function sameOriginTransform(url: string | undefined): string | undefined {
   const PIN = 'https://dehub.io';
   if (!url.startsWith(`${PIN}/cdn-cgi/`)) return url;
   const host = window.location.hostname;
-  if (host !== 'dehub.io' && !host.endsWith('.dehub.io') && host !== 'riftn.com' && !host.endsWith('.riftn.com')) return url;
+  if (host !== 'dehub.io' && !host.endsWith('.dehub.io')) return url;
   return window.location.origin + url.slice(PIN.length);
 }
 

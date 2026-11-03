@@ -114,7 +114,7 @@ Some of the busiest projects are companies building their main product in public
 
 ![DeHub built in public: over 5,400 commits in 90 days from a small team](/media/fig-oss-dehub.jpg)
 
-We publish this index, so here is how our own open source code compares. DeHub's web and mobile apps landed **5,436 commits in the same 90 days**, more than PyTorch, TensorFlow or Kubernetes, and enough to place 22nd on commits alone. DeHub is not in the top 50 because the index also rewards the size of the crowd, and our core team is small. What makes up the difference is the community: anyone can file a request on [dehub.io/features](https://dehub.io/features) and watch it get built, often the same day.
+We publish this index, so here is how our own open source code compares. DeHub's web and mobile apps landed **5,436 commits in the same 90 days**, more than PyTorch, TensorFlow or Kubernetes, and enough to place 22nd on commits alone. DeHub is not in the top 50 because the index also rewards the size of the crowd, and our core team is small. What makes up the difference is the community: anyone can file a request on [dehub.io/features](https://riftn.com/features) and watch it get built, often the same day.
 
 > Disclosure: DeHub publishes this index. DeHub's own numbers come from its public repositories, measured in the same way as everyone else's.
 
@@ -148,7 +148,7 @@ Yes. Every project on this list accepts contributions, and most label easy start
 
 ## Build with us
 
-DeHub is a social and streaming app that is built in public, every day. Open [dehub.io](https://dehub.io), post a feature request on [dehub.io/features](https://dehub.io/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+DeHub is a social and streaming app that is built in public, every day. Open [dehub.io](https://riftn.com), post a feature request on [dehub.io/features](https://riftn.com/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-most-active-open-source-projects-2026-banner.png',
   bannerImageAlt: 'Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub',
   author: { name: 'DeHub Team' },

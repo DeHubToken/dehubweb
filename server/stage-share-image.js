@@ -2,7 +2,7 @@ import { Resvg } from '@resvg/resvg-wasm';
 import { resvgReady } from './resvg.js';
 import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardAssetPaths, stageCardSource } from './stage-share-card.js';
 
-const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
+const SHARE_IMAGE = 'https://riftn.com/og/dehub-social-share.png';
 const FONTS = ['/brand-kit/font/exo-500.ttf', '/brand-kit/font/exo-700.ttf', '/brand-kit/font/mono.ttf'];
 let fonts;
 
@@ -12,7 +12,7 @@ const images = new Map();
 /** A brand-kit picture as a data URI, cached per path; null when it can't be read. */
 function loadImage(env, path) {
   if (!images.has(path)) images.set(path, (async () => {
-    const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
+    const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error(`Stage card image unavailable: ${path}`);
     const bytes = new Uint8Array(await response.arrayBuffer());
     let binary = '';
@@ -30,7 +30,7 @@ async function loadImages(env, stage) {
 
 function loadFonts(env) {
   if (!fonts) fonts = Promise.all(FONTS.map(async (path) => {
-    const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
+    const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Stage card font unavailable');
     return new Uint8Array(await response.arrayBuffer());
   })).catch((error) => { fonts = undefined; throw error; });
@@ -52,7 +52,7 @@ export async function handleStageShareImage(request, env, ctx, id, lookup) {
     const source = stageCardSource(stage);
     const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(source)));
     const fingerprint = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
-    const key = new Request(`https://dehub.io/_og/stage/${STAGE_CARD_VERSION}/${id}.png?data=${fingerprint}`);
+    const key = new Request(`https://riftn.com/_og/stage/${STAGE_CARD_VERSION}/${id}.png?data=${fingerprint}`);
     const cache = typeof caches !== 'undefined' ? caches.default : undefined;
     const publicCache = 'public, max-age=60, s-maxage=300';
     const cached = await cache?.match(key);

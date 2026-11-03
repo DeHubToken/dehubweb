@@ -24,7 +24,7 @@ import { rssRowIsPublic, warningOf } from './rss-feeds.js';
 
 export const EMBED_WIDTH = 550;
 const MIN_WIDTH = 250;
-const EMBED_HOSTS = /^(?:www\.|staging\.)?dehub\.io$/i;
+const EMBED_HOSTS = /^(?:(?:www\.|staging\.)?dehub\.io|(?:www\.)?riftn\.com)$/i;
 
 function esc(s) {
   return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

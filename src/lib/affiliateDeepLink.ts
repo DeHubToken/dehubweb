@@ -28,7 +28,7 @@ export const sanitizeDeepLinkPath = (raw: string | null | undefined): string | n
     try {
       const url = new URL(value);
       if (url.protocol !== "https:" && url.protocol !== "http:") return null;
-      if (!/(^|\.)dehub\.io$/i.test(url.hostname)) return null;
+      if (!/(^|\.)(dehub\.io|riftn\.com)$/i.test(url.hostname)) return null;
       value = `${url.pathname}${url.search}${url.hash}`;
     } catch {
       return null;

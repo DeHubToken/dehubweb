@@ -396,8 +396,8 @@ export default function DexPage() {
     : t(side === 'buy' ? 'dex.reviewBuy' : 'dex.reviewSell');
 
   return <div className="dex-terminal">
-    <SEOHead title={t('dex.seoTitle')} description={t('dex.seoDescription')} url="https://dehub.io/dex"
-      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub DEX', url: 'https://dehub.io/dex',
+    <SEOHead title={t('dex.seoTitle')} description={t('dex.seoDescription')} url="https://riftn.com/dex"
+      jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub DEX', url: 'https://riftn.com/dex',
         description: t('dex.seoDescription') }} />
     <header className="dex-top">
       <PoolPicker current={null} />

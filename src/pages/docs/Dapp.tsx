@@ -863,7 +863,7 @@ const Dapp = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                <a href="https://dehub.io/dpay" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
+                <a href="https://riftn.com/dpay" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
                   <div>
                     <h4 className="font-semibold text-foreground font-exo">dehub.io/dpay</h4>
                     <p className="text-muted-foreground font-exo">{t('dapp.dpayDesc')}</p>

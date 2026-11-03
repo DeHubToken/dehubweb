@@ -102,8 +102,8 @@ export default function ComparePage() {
       <SEOHead
         title={copy('seoTitle', 'DeHub vs YouTube, X, TikTok, Twitch and more: every feature compared')}
         description={copy('seoDescription', `One chart of ${FEATURES.length} features across DeHub, YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. See who has the most.`)}
-        url="https://dehub.io/compare"
-        image="https://dehub.io/og/compare.jpg"
+        url="https://riftn.com/compare"
+        image="https://riftn.com/og/compare.jpg"
       />
       <PageIsland title={copy('title', 'Compare DeHub')} icon="glossary" back backFallback="/">
         <input type="search" aria-label={copy('search', 'Search features')} placeholder={copy('search', 'Search features')} value={query} onChange={event => setQuery(event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-white/30 focus:outline-none" />

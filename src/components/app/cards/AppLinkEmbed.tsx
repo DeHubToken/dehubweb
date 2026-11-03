@@ -36,7 +36,7 @@ export function AppLinkEmbed({ slug, path, fallback = null }: AppLinkEmbedProps)
 
   const open = (e: MouseEvent) => {
     e.stopPropagation();
-    const target = new URL(path, 'https://dehub.io');
+    const target = new URL(path, 'https://riftn.com');
     target.searchParams.set('from', 'feed');
     navigate(`${target.pathname}${target.search}`);
   };

@@ -18,30 +18,30 @@ afterEach(() => {
 
 describe('withAffiliateRef', () => {
   it('adds ref to absolute and root-relative links, keeping query and hash', () => {
-    expect(withAffiliateRef('https://dehub.io/app/post/12', 'ABC123')).toBe('https://dehub.io/app/post/12?ref=ABC123');
-    expect(withAffiliateRef('https://dehub.io/app/post/12?comment=4#top', 'ABC123'))
-      .toBe('https://dehub.io/app/post/12?comment=4&ref=ABC123#top');
+    expect(withAffiliateRef('https://riftn.com/app/post/12', 'ABC123')).toBe('https://riftn.com/app/post/12?ref=ABC123');
+    expect(withAffiliateRef('https://riftn.com/app/post/12?comment=4#top', 'ABC123'))
+      .toBe('https://riftn.com/app/post/12?comment=4&ref=ABC123#top');
     expect(withAffiliateRef('/newpost/7', 'ABC123')).toBe('/newpost/7?ref=ABC123');
   });
 
   it('replaces a ref already on the link with the sharer’s own', () => {
-    expect(withAffiliateRef('https://dehub.io/alice?ref=OTHER', 'MINE')).toBe('https://dehub.io/alice?ref=MINE');
+    expect(withAffiliateRef('https://riftn.com/alice?ref=OTHER', 'MINE')).toBe('https://riftn.com/alice?ref=MINE');
   });
 
   it('leaves the link alone without a code or when it cannot be parsed', () => {
-    expect(withAffiliateRef('https://dehub.io/alice', null)).toBe('https://dehub.io/alice');
+    expect(withAffiliateRef('https://riftn.com/alice', null)).toBe('https://riftn.com/alice');
     expect(withAffiliateRef('not a url', 'ABC123')).toBe('not a url');
   });
 });
 
 describe('viewerShareUrl', () => {
   it('is unchanged while no viewer code is set', () => {
-    expect(viewerShareUrl('https://dehub.io/app/post/1')).toBe('https://dehub.io/app/post/1');
+    expect(viewerShareUrl('https://riftn.com/app/post/1')).toBe('https://riftn.com/app/post/1');
   });
 
   it('credits the viewer on DeHub links only', () => {
     setViewerAffiliateCode('ALICE01');
-    expect(viewerShareUrl('https://dehub.io/app/post/1')).toBe('https://dehub.io/app/post/1?ref=ALICE01');
+    expect(viewerShareUrl('https://riftn.com/app/post/1')).toBe('https://riftn.com/app/post/1?ref=ALICE01');
     expect(viewerShareUrl('/alice')).toBe('/alice?ref=ALICE01');
     expect(viewerShareUrl('https://example.com/page')).toBe('https://example.com/page');
   });
@@ -61,14 +61,14 @@ describe('loadViewerAffiliateCode', () => {
     await m.loadViewerAffiliateCode(ALICE);
     await m.loadViewerAffiliateCode(ALICE);
     expect(findAffiliateCode).toHaveBeenCalledTimes(1);
-    expect(m.viewerShareUrl('https://dehub.io/x')).toBe('https://dehub.io/x?ref=ALICE01');
+    expect(m.viewerShareUrl('https://riftn.com/x')).toBe('https://riftn.com/x?ref=ALICE01');
   });
 
   it('leaves links plain for a viewer with no code', async () => {
     findAffiliateCode.mockResolvedValue(null);
     const m = await load();
     await m.loadViewerAffiliateCode(ALICE);
-    expect(m.viewerShareUrl('https://dehub.io/x')).toBe('https://dehub.io/x');
+    expect(m.viewerShareUrl('https://riftn.com/x')).toBe('https://riftn.com/x');
   });
 
   it('drops a lookup that finishes after sign-out', async () => {
@@ -79,7 +79,7 @@ describe('loadViewerAffiliateCode', () => {
     m.setViewerAffiliateCode(null);
     resolve({ code: 'ALICE01', share_name: null });
     await pending;
-    expect(m.viewerShareUrl('https://dehub.io/x')).toBe('https://dehub.io/x');
+    expect(m.viewerShareUrl('https://riftn.com/x')).toBe('https://riftn.com/x');
   });
 
   it('never applies one account’s code to another', async () => {
@@ -87,6 +87,6 @@ describe('loadViewerAffiliateCode', () => {
     const m = await load();
     await m.loadViewerAffiliateCode(ALICE);
     await m.loadViewerAffiliateCode(BOB);
-    expect(m.viewerShareUrl('https://dehub.io/x')).toBe('https://dehub.io/x?ref=BOB0001');
+    expect(m.viewerShareUrl('https://riftn.com/x')).toBe('https://riftn.com/x?ref=BOB0001');
   });
 });

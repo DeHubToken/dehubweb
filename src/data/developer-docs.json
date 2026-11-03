@@ -30,7 +30,7 @@
           "blocks": [
             { "list": [
               "Put any web page online over https.",
-              "Add `<script src=\"https://dehub.io/sdk/miniapp.js\"></script>` and call `dehub.ready()` once your first screen is on.",
+              "Add `<script src=\"https://riftn.com/sdk/miniapp.js\"></script>` and call `dehub.ready()` once your first screen is on.",
               "Open [dehub.io/apps/dev](/apps/dev), paste your link and press **Launch**. It runs inside the real DeHub host, localhost included.",
               "Add a `/.well-known/dehub.json` manifest. The developer page checks it field by field and signs the ownership block with your wallet.",
               "Press **Submit**. Your app gets a share link right away and goes into review for the store."
@@ -89,7 +89,7 @@
           "id": "sdk",
           "heading": "Add the SDK",
           "blocks": [
-            { "code": "<script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n<script>\n  // Hide the splash screen once your first screen is on.\n  dehub.ready();\n\n  const { user, client } = await dehub.context;\n  if (user) console.log('Hi', user.handle);\n</script>", "lang": "html" },
+            { "code": "<script src=\"https://riftn.com/sdk/miniapp.js\"></script>\n<script>\n  // Hide the splash screen once your first screen is on.\n  dehub.ready();\n\n  const { user, client } = await dehub.context;\n  if (user) console.log('Hi', user.handle);\n</script>", "lang": "html" },
             { "p": "The SDK adds one global, `dehub`. Every call returns a promise. Outside DeHub, `dehub.isInDehub()` is false and calls reject, so you can run the same page on its own." }
           ]
         },
@@ -203,7 +203,7 @@
           "heading": "Inside a mini app",
           "blocks": [
             { "code": "// In your mini app\nconst { token } = await dehub.auth.getToken();\nawait fetch('/api/session', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });", "lang": "js" },
-            { "code": "// On your server (Node, any JOSE library works)\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(\n  new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'),\n);\n\nconst { payload } = await jwtVerify(token, JWKS, {\n  issuer: 'https://dehub.io',\n  audience: 'tipjar.example.com', // your domain\n});\nconst wallet = payload.sub; // the user's DeHub wallet, lowercase", "lang": "js" },
+            { "code": "// On your server (Node, any JOSE library works)\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(\n  new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'),\n);\n\nconst { payload } = await jwtVerify(token, JWKS, {\n  issuer: 'https://riftn.com',\n  audience: 'tipjar.example.com', // your domain\n});\nconst wallet = payload.sub; // the user's DeHub wallet, lowercase", "lang": "js" },
             { "p": "The token is an ES256 JWT that lasts one hour. DeHub addresses it to the domain it actually loaded, so a token made for one app can never be used on another. The SDK caches it and fetches a fresh one when it is close to expiring." }
           ]
         },
@@ -213,14 +213,14 @@
           "blocks": [
             { "p": "DeHub speaks the Mastodon OAuth API, so any OAuth 2.0 library works, and so does every Mastodon client library. PKCE is supported and recommended." },
             { "p": "**1. Register your app once.**" },
-            { "code": "curl -X POST https://dehub.io/api/v1/apps \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"client_name\":\"Tip Jar\",\"redirect_uris\":\"https://tipjar.example.com/callback\",\"scopes\":\"profile\",\"website\":\"https://tipjar.example.com\"}'", "lang": "bash" },
+            { "code": "curl -X POST https://riftn.com/api/v1/apps \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"client_name\":\"Tip Jar\",\"redirect_uris\":\"https://tipjar.example.com/callback\",\"scopes\":\"profile\",\"website\":\"https://tipjar.example.com\"}'", "lang": "bash" },
             { "p": "Keep the `client_id` and `client_secret` it returns. They are shown once." },
             { "p": "**2. Send the user to DeHub to approve.**" },
-            { "code": "https://dehub.io/oauth/authorize\n  ?response_type=code\n  &client_id=YOUR_CLIENT_ID\n  &redirect_uri=https://tipjar.example.com/callback\n  &scope=profile\n  &state=RANDOM_STATE\n  &code_challenge=PKCE_CHALLENGE\n  &code_challenge_method=S256", "lang": "text" },
+            { "code": "https://riftn.com/oauth/authorize\n  ?response_type=code\n  &client_id=YOUR_CLIENT_ID\n  &redirect_uri=https://tipjar.example.com/callback\n  &scope=profile\n  &state=RANDOM_STATE\n  &code_challenge=PKCE_CHALLENGE\n  &code_challenge_method=S256", "lang": "text" },
             { "p": "**3. Swap the code for a token** on your server." },
-            { "code": "curl -X POST https://dehub.io/oauth/token \\\n  -d grant_type=authorization_code \\\n  -d code=CODE_FROM_REDIRECT \\\n  -d client_id=YOUR_CLIENT_ID \\\n  -d client_secret=YOUR_CLIENT_SECRET \\\n  -d redirect_uri=https://tipjar.example.com/callback \\\n  -d code_verifier=PKCE_VERIFIER", "lang": "bash" },
+            { "code": "curl -X POST https://riftn.com/oauth/token \\\n  -d grant_type=authorization_code \\\n  -d code=CODE_FROM_REDIRECT \\\n  -d client_id=YOUR_CLIENT_ID \\\n  -d client_secret=YOUR_CLIENT_SECRET \\\n  -d redirect_uri=https://tipjar.example.com/callback \\\n  -d code_verifier=PKCE_VERIFIER", "lang": "bash" },
             { "p": "**4. Read who signed in.**" },
-            { "code": "curl https://dehub.io/api/v1/accounts/verify_credentials \\\n  -H 'Authorization: Bearer ACCESS_TOKEN'", "lang": "bash" },
+            { "code": "curl https://riftn.com/api/v1/accounts/verify_credentials \\\n  -H 'Authorization: Bearer ACCESS_TOKEN'", "lang": "bash" },
             { "p": "The answer's `id` is the user's wallet address. `acct` is their handle, plus `display_name`, `avatar` and `url`." }
           ]
         },
@@ -245,7 +245,7 @@
           "id": "agents",
           "heading": "AI agents",
           "blocks": [
-            { "p": "AI assistants sign in through the DeHub MCP server at `https://dehub.io/mcp`, which runs its own OAuth flow with dynamic client registration. See [Connect](/connect)." }
+            { "p": "AI assistants sign in through the DeHub MCP server at `https://riftn.com/mcp`, which runs its own OAuth flow with dynamic client registration. See [Connect](/connect)." }
           ]
         }
       ]
@@ -324,9 +324,9 @@
             { "table": {
               "head": ["API", "Base URL", "Best for"],
               "rows": [
-                ["Mastodon-compatible", "`https://dehub.io/api/v1`", "Apps that sign people in, read timelines and post. Works with every Mastodon library."],
+                ["Mastodon-compatible", "`https://riftn.com/api/v1`", "Apps that sign people in, read timelines and post. Works with every Mastodon library."],
                 ["DeHub REST", "`https://api.dehub.io/api`", "Everything DeHub does: feeds, videos, live, tips, search, leaderboards."],
-                ["MCP", "`https://dehub.io/mcp`", "AI agents and assistants. See [Connect](/connect)."]
+                ["MCP", "`https://riftn.com/mcp`", "AI agents and assistants. See [Connect](/connect)."]
               ]
             } },
             { "p": "The full REST reference, with every endpoint and a Try it button, is at [api.dehub.io/api/docxx](https://api.dehub.io/api/docxx). The machine-readable OpenAPI file is at [api.dehub.io/api/docxx-json](https://api.dehub.io/api/docxx-json), ready for code generators and API clients." }
@@ -337,7 +337,7 @@
           "heading": "Public endpoints to start with",
           "blocks": [
             { "p": "These need no sign-in:" },
-            { "code": "# A profile, by handle or wallet\ncurl https://api.dehub.io/api/account_info/dehub\n\n# The public feed\ncurl 'https://api.dehub.io/api/feed?limit=10'\n\n# Search people and posts\ncurl 'https://api.dehub.io/api/search?q=music'\n\n# The DHB leaderboard\ncurl https://api.dehub.io/api/leaderboard\n\n# Public timeline, Mastodon format\ncurl 'https://dehub.io/api/v1/timelines/public?limit=20'", "lang": "bash" }
+            { "code": "# A profile, by handle or wallet\ncurl https://api.dehub.io/api/account_info/dehub\n\n# The public feed\ncurl 'https://api.dehub.io/api/feed?limit=10'\n\n# Search people and posts\ncurl 'https://api.dehub.io/api/search?q=music'\n\n# The DHB leaderboard\ncurl https://api.dehub.io/api/leaderboard\n\n# Public timeline, Mastodon format\ncurl 'https://riftn.com/api/v1/timelines/public?limit=20'", "lang": "bash" }
           ]
         },
         {
@@ -386,14 +386,14 @@
           "id": "hello",
           "heading": "A complete mini app page",
           "blocks": [
-            { "code": "<!doctype html>\n<html>\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n</head>\n<body>\n  <h1 id=\"hello\">Hello</h1>\n  <button id=\"share\">Share</button>\n  <script>\n    (async () => {\n      const { user } = await dehub.context;\n      if (user) document.getElementById('hello').textContent = `Hello, ${user.displayName || user.handle}`;\n      dehub.ready();\n\n      document.getElementById('share').onclick = () =>\n        dehub.actions.composePost({ text: 'I just tried this app', embedUrl: location.href });\n    })();\n  </script>\n</body>\n</html>", "lang": "html" }
+            { "code": "<!doctype html>\n<html>\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <script src=\"https://riftn.com/sdk/miniapp.js\"></script>\n</head>\n<body>\n  <h1 id=\"hello\">Hello</h1>\n  <button id=\"share\">Share</button>\n  <script>\n    (async () => {\n      const { user } = await dehub.context;\n      if (user) document.getElementById('hello').textContent = `Hello, ${user.displayName || user.handle}`;\n      dehub.ready();\n\n      document.getElementById('share').onclick = () =>\n        dehub.actions.composePost({ text: 'I just tried this app', embedUrl: location.href });\n    })();\n  </script>\n</body>\n</html>", "lang": "html" }
           ]
         },
         {
           "id": "server-session",
           "heading": "Sign the user in on your server",
           "blocks": [
-            { "code": "// Express + jose\nimport express from 'express';\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'));\nconst app = express();\n\napp.post('/api/session', async (req, res) => {\n  try {\n    const token = String(req.headers.authorization || '').replace(/^Bearer /, '');\n    const { payload } = await jwtVerify(token, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\n    res.json({ wallet: payload.sub });\n  } catch {\n    res.status(401).json({ error: 'Not signed in' });\n  }\n});", "lang": "js" }
+            { "code": "// Express + jose\nimport express from 'express';\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'));\nconst app = express();\n\napp.post('/api/session', async (req, res) => {\n  try {\n    const token = String(req.headers.authorization || '').replace(/^Bearer /, '');\n    const { payload } = await jwtVerify(token, JWKS, { issuer: 'https://riftn.com', audience: 'tipjar.example.com' });\n    res.json({ wallet: payload.sub });\n  } catch {\n    res.status(401).json({ error: 'Not signed in' });\n  }\n});", "lang": "js" }
           ]
         },
         {
@@ -401,7 +401,7 @@
           "heading": "A tip button paid in DHB",
           "blocks": [
             { "code": "document.getElementById('tip').onclick = async () => {\n  try {\n    const { receipt } = await dehub.actions.pay({ amount: 100, memo: 'Thanks!' });\n    await fetch('/api/tips', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: receipt });\n    dehub.haptics.impact('heavy');\n  } catch (error) {\n    if (error.code !== 'rejected') alert(error.message);\n  }\n};", "lang": "js" },
-            { "code": "// Server: verify the receipt before you record the tip\nconst { payload } = await jwtVerify(receipt, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\nif (payload.typ !== 'payment') throw new Error('Not a payment receipt');\n// payload.sub paid payload.amount DHB in payload.txHash on chain payload.chainId", "lang": "js" }
+            { "code": "// Server: verify the receipt before you record the tip\nconst { payload } = await jwtVerify(receipt, JWKS, { issuer: 'https://riftn.com', audience: 'tipjar.example.com' });\nif (payload.typ !== 'payment') throw new Error('Not a payment receipt');\n// payload.sub paid payload.amount DHB in payload.txHash on chain payload.chainId", "lang": "js" }
           ]
         },
         {
@@ -422,7 +422,7 @@
           "id": "oauth-button",
           "heading": "A Sign in with DeHub button for any site",
           "blocks": [
-            { "code": "// Node: start the login (register your app once first, see /docs/auth)\nimport crypto from 'node:crypto';\n\nconst verifier = crypto.randomBytes(32).toString('base64url');\nconst challenge = crypto.createHash('sha256').update(verifier).digest('base64url');\nconst state = crypto.randomBytes(16).toString('hex');\n// Save verifier and state in the user's session, then redirect:\nconst url = new URL('https://dehub.io/oauth/authorize');\nurl.search = new URLSearchParams({\n  response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,\n  scope: 'profile', state, code_challenge: challenge, code_challenge_method: 'S256',\n});\nres.redirect(url.toString());", "lang": "js" }
+            { "code": "// Node: start the login (register your app once first, see /docs/auth)\nimport crypto from 'node:crypto';\n\nconst verifier = crypto.randomBytes(32).toString('base64url');\nconst challenge = crypto.createHash('sha256').update(verifier).digest('base64url');\nconst state = crypto.randomBytes(16).toString('hex');\n// Save verifier and state in the user's session, then redirect:\nconst url = new URL('https://riftn.com/oauth/authorize');\nurl.search = new URLSearchParams({\n  response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,\n  scope: 'profile', state, code_challenge: challenge, code_challenge_method: 'S256',\n});\nres.redirect(url.toString());", "lang": "js" }
           ]
         }
       ]

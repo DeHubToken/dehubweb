@@ -490,7 +490,7 @@ export function HomeIntroPanel({
             className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
             style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
           >
-            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>{_copy("copy.ca7842e53ac8", { defaultValue: "dehub.io" })}</span>
+            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>{_copy("copy.ca7842e53ac8", { defaultValue: "riftn.com" })}</span>
           <img
             src="/brand-kit/brand/qr-dehub-io.png"
             alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to dehub.io" })}

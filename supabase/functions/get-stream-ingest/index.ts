@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const result = {
       ingestUrl: LIVEPEER_RTMP_URL,
       streamKey: stream.streamKey,
-      playbackUrl: `https://dehub.io/app/post/${tokenId}`,
+      playbackUrl: `https://riftn.com/app/post/${tokenId}`,
       hlsUrl,
       streamId: stream._id || stream.id || stream.streamId || tokenId,
     };

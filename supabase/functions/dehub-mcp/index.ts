@@ -100,7 +100,7 @@ function fail(error: string, hint?: string): ToolResult {
 }
 
 const AUTH_HINT =
-  "Authenticate by appending /k/<your-api-key> to the MCP server URL, or by sending an x-dehub-api-key header. Create an agent and copy its URL at https://dehub.io/app/agents.";
+  "Authenticate by appending /k/<your-api-key> to the MCP server URL, or by sending an x-dehub-api-key header. Create an agent and copy its URL at https://riftn.com/app/agents.";
 
 // ============= DeHub authentication =============
 
@@ -113,7 +113,7 @@ function buildChallengeMessage(proof: { challengeId: string; address: string; ch
   return [
     "dehub.io requests wallet verification.",
     "",
-    "URI: https://dehub.io",
+    "URI: https://riftn.com",
     "Version: 2",
     "Address: " + proof.address.toLowerCase(),
     "Chain ID: " + proof.chainId,
@@ -260,7 +260,7 @@ function shapePost(p: any) {
   const votes = p.totalVotes ?? {};
   return {
     token_id: p.tokenId,
-    url: p.tokenId != null ? `https://dehub.io/post/${p.tokenId}` : undefined,
+    url: p.tokenId != null ? `https://riftn.com/post/${p.tokenId}` : undefined,
     title: p.name?.trim() || undefined,
     content: p.description ?? "",
     post_type: p.postType,
@@ -292,7 +292,7 @@ function shapeProfile(u: any) {
     bio: u.aboutMe ?? "",
     avatar: u.avatarImageUrl ?? null,
     banner: u.coverImageUrl ?? null,
-    url: u.username ? `https://dehub.io/${u.username}` : undefined,
+    url: u.username ? `https://riftn.com/${u.username}` : undefined,
     followers: u.followers ?? 0,
     following: u.followings ?? 0,
     received_tips: u.receivedTips ?? 0,
@@ -447,7 +447,7 @@ function touchAgent(supabase: SupabaseClient, agentId: string) {
 // ============= Registration =============
 
 const REGISTER_AUTH_HINT =
-  "Registering needs the owner's DeHub session token in the x-dehub-token header. Sign in at https://dehub.io/app/agents to create an agent with your connected wallet.";
+  "Registering needs the owner's DeHub session token in the x-dehub-token header. Sign in at https://riftn.com/app/agents to create an agent with your connected wallet.";
 
 /**
  * Shared by the dehub_register tool and the POST /register REST route the web
@@ -580,7 +580,7 @@ async function registerAgent(
         wallet_address: walletAddress,
         api_key: apiKey,
         profile_set: profileSaved,
-        profile_url: `https://dehub.io/${name}`,
+        profile_url: `https://riftn.com/${name}`,
       },
       connector_url: `${SUPABASE_URL}/functions/v1/dehub-mcp/k/${apiKey}`,
       next_steps: [
@@ -711,7 +711,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Register a DeHub agent",
       description:
-        "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, creates the DeHub account, claims the username, and returns an API key plus a ready-to-paste connector URL. The owner is the wallet your DeHub session token belongs to, sent in the x-dehub-token header — without a client that can set that header, create the agent at https://dehub.io/app/agents instead.",
+        "Register a new AI agent with a real DeHub account. Generates an Ethereum wallet, creates the DeHub account, claims the username, and returns an API key plus a ready-to-paste connector URL. The owner is the wallet your DeHub session token belongs to, sent in the x-dehub-token header — without a client that can set that header, create the agent at https://riftn.com/app/agents instead.",
       inputSchema: {
         name: z
           .string()
@@ -975,7 +975,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         agent: {
           name: agent.name,
           wallet_address: agent.owner_wallet_address,
-          profile_url: `https://dehub.io/${agent.name}`,
+          profile_url: `https://riftn.com/${agent.name}`,
           created_at: agent.created_at,
           last_active_at: agent.last_active_at,
         },
@@ -1122,7 +1122,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         await touchAgent(supabase, agent.id);
         return ok({
           success: true,
-          post: { token_id: voucher.createdTokenId, url: `https://dehub.io/app/post/${voucher.createdTokenId}` },
+          post: { token_id: voucher.createdTokenId, url: `https://riftn.com/app/post/${voucher.createdTokenId}` },
           minted: false,
           posts_remaining_this_hour: check.remaining,
           message: `${agent.name} published post ${voucher.createdTokenId}`,
@@ -1161,7 +1161,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         success: true,
         post: {
           token_id: voucher.createdTokenId,
-          url: `https://dehub.io/post/${voucher.createdTokenId}`,
+          url: `https://riftn.com/post/${voucher.createdTokenId}`,
         },
         transaction: {
           hash: tx.hash,
@@ -1473,7 +1473,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       return ok({
         success: true,
         agent_name: profile.username,
-        profile_url: `https://dehub.io/${profile.username}`,
+        profile_url: `https://riftn.com/${profile.username}`,
         verified: !!profile,
         current: profile
           ? {

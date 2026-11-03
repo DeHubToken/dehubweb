@@ -574,14 +574,14 @@ export default function ProfilePage() {
       <SEOHead
         title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on DeHub — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on DeHub" })}
         description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
-        url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
+        url={`https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
         feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl(data.profile.handle) } : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: data.profile?.name || data.profile?.handle || 'DeHub User',
-          url: `https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`,
+          url: `https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
           ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),
           // Literal machine-readable field, never translated — a JSON-LD

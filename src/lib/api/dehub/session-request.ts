@@ -7,7 +7,7 @@ const log = createLogger('SessionRequest');
 export async function requestSession(endpoint: '/api/web/auth' | '/api/web/auth/supabase' | '/api/auth/wallet-challenge', init: RequestInit): Promise<Response> {
   // The apex relay accepts login POSTs and the staging origin's CORS headers.
   // The staging static host itself answers these POSTs with 405.
-  const relay = 'https://dehub.io/_api';
+  const relay = 'https://riftn.com/_api';
   for (const [attempt, base] of [DEHUB_API_BASE, relay].entries()) {
     log.trace?.('session-request-start', { endpoint, route: attempt ? 'relay' : 'direct' });
     const controller = new AbortController();

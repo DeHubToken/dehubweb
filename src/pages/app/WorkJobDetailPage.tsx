@@ -140,7 +140,7 @@ export default function WorkJobDetailPage() {
         title={bountyTitle(job)}
         description={bountyDescription(job)}
         url={bountyUrl(job)}
-        image={job.cover_image_url || 'https://dehub.io/og/work.jpg'}
+        image={job.cover_image_url || 'https://riftn.com/og/work.jpg'}
         noindex={!isBountyIndexable(job)}
       />
       <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">

@@ -36,7 +36,7 @@ describe('share link recognition', () => {
       'https://app.ens.domains/vitalik.eth', 'https://github.com/org/repo', 'https://ipfs.filebase.io/ipfs/' + cid,
     ]);
     expect(extractShareUrls('person@vitalik.eth vitalik.eth.attacker.com data.pdf 2.5x')).toEqual([]);
-    expect(extractShareUrls('dehub.io/work https://dehub.io/work')).toEqual(['https://dehub.io/work']);
+    expect(extractShareUrls('riftn.com/work https://riftn.com/work')).toEqual(['https://riftn.com/work']);
     expect(extractShareUrls('https://notgithub.com/org/repo')[0]).toBe('https://notgithub.com/org/repo');
   });
   it('previews explicit root links without requiring a trailing slash', () => {

@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock('@/integrations/supabase/client', () => ({ supabase: { functions: { invoke: mocks.invoke } } }));
 vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: mocks.ensureFreshToken }));
-vi.mock('@/integrations/supabase/relayFetch', () => ({ defaultRelayBase: () => 'https://dehub.io', SUPABASE_RELAY_PREFIX: '/_sb' }));
+vi.mock('@/integrations/supabase/relayFetch', () => ({ defaultRelayBase: () => 'https://riftn.com', SUPABASE_RELAY_PREFIX: '/_sb' }));
 vi.mock('@/lib/logger', () => ({ createLogger: () => ({ warn: mocks.warn, error: vi.fn(), info: vi.fn() }) }));
 
 const WALLET = '0x' + 'a'.repeat(40);
@@ -89,7 +89,7 @@ describe('wallet session fetch', () => {
   it.each(['call_sessions', 'callback_requests', 'audio_spaces', 'space_participants', 'raise_hand_requests', 'stage_reminders'])('blocks unsigned %s requests on direct and relay routes', async (table) => {
     mocks.invoke.mockResolvedValue({ data: null, error: new Error('signed out') });
     await setup();
-    for (const base of ['https://aigxuutjaqsywioxjefr.supabase.co', 'https://dehub.io/_sb']) {
+    for (const base of ['https://aigxuutjaqsywioxjefr.supabase.co', 'https://riftn.com/_sb']) {
       const response = await window.fetch(`${base}/rest/v1/${table}?select=*`, { headers: { 'x-wallet-address': WALLET } });
       expect(response.status).toBe(401);
     }
@@ -148,13 +148,13 @@ describe('wallet session fetch', () => {
 
   it('signs a request sent through the same-origin relay', async () => {
     await setup();
-    await window.fetch('https://dehub.io/_sb/rest/v1/ai_conversations?select=*', { headers: { 'x-wallet-address': WALLET } });
+    await window.fetch('https://riftn.com/_sb/rest/v1/ai_conversations?select=*', { headers: { 'x-wallet-address': WALLET } });
     expect(sentHeaders().get('x-wallet-session')).toBe(`${WALLET}.9999999999.sig`);
   });
 
   it('leaves other paths on our own origin alone', async () => {
     await setup();
-    await window.fetch('https://dehub.io/api/rest/v1/thing', { headers: { 'x-wallet-address': WALLET } });
+    await window.fetch('https://riftn.com/api/rest/v1/thing', { headers: { 'x-wallet-address': WALLET } });
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
 });

@@ -72,7 +72,7 @@ export default function WorkHistoryPage() {
       <SEOHead
         title={_copy("copy.d329c3be85eb", { defaultValue: "My Bounties | DeHub" })}
         description={_copy("copy.3ee01181e096", { defaultValue: "Every bounty you've posted or worked on DeHub, with their on-chain escrow and payout transactions." })}
-        url="https://dehub.io/work/history"
+        url="https://riftn.com/work/history"
         noindex
       />
 

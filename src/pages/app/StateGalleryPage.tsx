@@ -279,7 +279,7 @@ const SAMPLE_ARTICLE = {
     '- Revenue per viewer up 34%\n- Churn down for the first time in a year\n- Zero frozen payouts',
     '![](/media/fig-chains-bignames.jpg#w=2400&h=1260)',
     '# What we would do differently',
-    'We would have moved our [back catalogue](https://dehub.io) on day one, instead of waiting to see if the audience followed.',
+    'We would have moved our [back catalogue](https://riftn.com) on day one, instead of waiting to see if the audience followed.',
   ].join('\n\n'),
 };
 
@@ -316,7 +316,7 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.fd5dcf90c053", { defaultValue: "Reading an article" })}</p>
         <ArticleReader
           title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover}
-          createdAt="2026-09-28T12:00:00Z" shareUrl="https://dehub.io/app/post/1" onComment={onAction} onTip={onAction}
+          createdAt="2026-09-28T12:00:00Z" shareUrl="https://riftn.com/app/post/1" onComment={onAction} onTip={onAction}
         >
           <p>{SAMPLE_ARTICLE.summary}</p>
         </ArticleReader>
@@ -839,7 +839,7 @@ function WhenSheetGallery() {
 function ToastsGallery() {
   const { t } = useTranslation();
   const showUpdate = () => {
-    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://dehub.io' } as BuildVersion,
+    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://riftn.com' } as BuildVersion,
       t('toasts.refresh_to_pick_up_the_latest_changes'), false, () => {});
     toast.success(t('toasts.rewards_claimed'), { description: t('toasts.rewards_sent_to_wallet') });
   };
@@ -1706,7 +1706,7 @@ function GithubLinkGallery() {
 }
 
 const GALLERY_FIELDS = [
-  { name: 'Website', value: 'https://dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+  { name: 'Website', value: 'https://riftn.com', verifiedAt: '2026-11-02T00:00:00Z' },
   { name: 'Pronouns', value: 'they/them' },
   { name: 'Location', value: 'Lisbon, Portugal' },
   { name: 'Favourite DJ', value: 'Four Tet' },

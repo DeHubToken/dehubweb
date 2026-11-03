@@ -10,7 +10,7 @@
 (function () {
   if (window.__dehubEmbedResizer) return;
   window.__dehubEmbedResizer = true;
-  var ORIGINS = { 'https://dehub.io': 1, 'https://www.dehub.io': 1, 'https://staging.dehub.io': 1 };
+  var ORIGINS = { 'https://riftn.com': 1, 'https://www.riftn.com': 1, 'https://dehub.io': 1, 'https://www.dehub.io': 1, 'https://staging.dehub.io': 1 };
   window.addEventListener('message', function (event) {
     if (!ORIGINS[event.origin]) return;
     var data = event.data;

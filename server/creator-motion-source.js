@@ -1,5 +1,5 @@
 const HOSTS = new Set(['d2ol7oe51mr4n9.cloudfront.net', 'cdn.higgsfield.ai', 'd8j0ntlcm91z4.cloudfront.net', 'static.higgsfield.ai', 'jeanphilai.com', 'media.pixverse.ai']);
-const ORIGINS = new Set(['https://dehub.io', 'https://live.dehub.io']);
+const ORIGINS = new Set(['https://riftn.com', 'https://dehub.io', 'https://live.dehub.io']);
 const MAX_BYTES = 100 * 1024 * 1024;
 
 export async function handleCreatorMotionSource(request, env) {

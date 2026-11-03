@@ -58,7 +58,7 @@ function makeEnv() {
 
 async function get(path: string) {
   const res = await worker.fetch(
-    new Request(`https://dehub.io${path}`, { headers: { 'User-Agent': 'Twitterbot/1.0' } }),
+    new Request(`https://riftn.com${path}`, { headers: { 'User-Agent': 'Twitterbot/1.0' } }),
     makeEnv(),
     { waitUntil() {} },
   );
@@ -95,7 +95,7 @@ describe('blog share cards', () => {
     const image = meta(res.body, 'og:image');
     expect(image).toContain('/cdn-cgi/image/');
     expect(image).toContain('width=1200,height=630');
-    expect(image.endsWith(`https://dehub.io${post.bannerImage}`)).toBe(true);
+    expect(image.endsWith(`https://riftn.com${post.bannerImage}`)).toBe(true);
     expect(meta(res.body, 'twitter:image')).toBe(image);
     expect(meta(res.body, 'og:image:alt')).toBe(post.bannerImageAlt);
     expect(meta(res.body, 'twitter:card')).toBe('summary_large_image');
@@ -127,7 +127,7 @@ describe('clean blog slugs', () => {
     for (const path of [`/guides/${OLD_SLUG}`, `/docs/blog/${OLD_SLUG}`, `/blog/${OLD_SLUG}`]) {
       const res = await get(path);
       expect(res.status, path).toBe(301);
-      expect(res.location, path).toBe(`https://dehub.io/guides/${NEW_SLUG}`);
+      expect(res.location, path).toBe(`https://riftn.com/guides/${NEW_SLUG}`);
     }
   });
 
@@ -135,7 +135,7 @@ describe('clean blog slugs', () => {
     const [from, to] = Object.entries(MILESTONE_REDIRECTS)[0];
     const res = await get(`/guides/${from}`);
     expect(res.status).toBe(301);
-    expect(res.location).toBe(`https://dehub.io/guides/${to}`);
+    expect(res.location).toBe(`https://riftn.com/guides/${to}`);
   });
 });
 
@@ -144,7 +144,7 @@ describe('blog post crawler markup', () => {
     const res = await get(`/guides/${NEW_SLUG}`);
     const description = meta(res.body, 'description');
     expect(description.length).toBeLessThanOrEqual(160);
-    expect(res.body).toContain(`<link rel="canonical" href="https://dehub.io/guides/${NEW_SLUG}">`);
+    expect(res.body).toContain(`<link rel="canonical" href="https://riftn.com/guides/${NEW_SLUG}">`);
     expect(meta(res.body, 'robots')).toContain('max-image-preview:large');
     const title = (res.body.match(/<title>([^<]*)<\/title>/) || [])[1];
     expect(title.length).toBeLessThanOrEqual(70);

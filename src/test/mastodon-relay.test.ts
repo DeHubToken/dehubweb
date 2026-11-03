@@ -18,7 +18,7 @@ describe('Mastodon relay routes', () => {
   });
 
   it('forwards the app’s token and the public path it called, and nothing else', () => {
-    const request = new Request('https://dehub.io/api/v1/timelines/home?limit=20', {
+    const request = new Request('https://riftn.com/api/v1/timelines/home?limit=20', {
       headers: { authorization: 'Bearer t', 'idempotency-key': 'k', cookie: 'secret' },
     });
     const headers = mastodonRelayHeaders(request, new URL(request.url));
@@ -29,7 +29,7 @@ describe('Mastodon relay routes', () => {
   });
 
   it('passes an upload’s length and a preview’s byte range through', () => {
-    const request = new Request('https://dehub.io/api/v2/media', {
+    const request = new Request('https://riftn.com/api/v2/media', {
       method: 'POST',
       headers: { 'content-type': 'multipart/form-data; boundary=x', 'content-length': '1234', range: 'bytes=0-99' },
       body: 'x'.repeat(1234),

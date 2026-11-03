@@ -1,8 +1,8 @@
 # Connected account MCP
 
-`https://dehub.io/mcp` is the account connector. Public browsing requires no login.
+`https://riftn.com/mcp` is the account connector. Public browsing requires no login.
 Account actions use OAuth authorization code + S256 PKCE, with exact registered
-HTTPS callbacks and the MCP resource bound to `https://dehub.io/mcp`.
+HTTPS callbacks and the MCP resource bound to `https://riftn.com/mcp`.
 
 ## Tools and permissions
 
@@ -71,7 +71,7 @@ chat is needed. The previous public `/functions/v1/mcp` connector and key-based
 `dehub-mcp/k/...` agent connectors remain compatible with existing clients.
 
 An existing published ChatGPT app must be updated in its developer configuration
-to use `https://dehub.io/mcp`, OAuth discovery and a fresh tool scan. Shipping the
+to use `https://riftn.com/mcp`, OAuth discovery and a fresh tool scan. Shipping the
 server alone does not change the tool catalogue already registered with ChatGPT.
 Custom OAuth connectors can use the new endpoint immediately after deployment.
 

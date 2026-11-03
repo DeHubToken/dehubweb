@@ -930,7 +930,7 @@ export const vi = {
     miniAppsB2: 'Chia sẻ lên nguồn cấp dữ liệu:',
     miniAppsB2Desc: 'Ứng dụng có thể mở trình soạn thảo, hiển thị hồ sơ và bài đăng, và một liên kết đến ứng dụng sẽ xuất hiện trong luồng dưới dạng một thẻ có nút mở nó ngay tại chỗ.',
     miniAppsB3: 'Xây dựng một cái:',
-    miniAppsB3Desc: 'Bất kỳ trang web nào cũng trở thành một ứng dụng mini chỉ với một thẻ script. [dehub.io/apps/dev](https://dehub.io/apps/dev) kiểm tra manifest của bạn, xem trước thẻ feed và chạy ứng dụng bên trong DeHub trước khi ai đó khác nhìn thấy. Các ứng dụng mini Farcaster hoạt động như bình thường.',
+    miniAppsB3Desc: 'Bất kỳ trang web nào cũng trở thành một ứng dụng mini chỉ với một thẻ script. [dehub.io/apps/dev](https://riftn.com/apps/dev) kiểm tra manifest của bạn, xem trước thẻ feed và chạy ứng dụng bên trong DeHub trước khi ai đó khác nhìn thấy. Các ứng dụng mini Farcaster hoạt động như bình thường.',
     miniAppsB4: 'Nhà/phòng cho thuê đã đánh giá:',
     miniAppsB4Desc: 'Mỗi ứng dụng được đánh dấu là đã được xác minh, chưa được đánh giá hoặc là phiên bản thử nghiệm của nhà phát triển, vì vậy bạn biết bạn đang mở ứng dụng gì.',
     settingsB2Desc: 'Bộ chọn chủ đề với một mẫu của từng chủ đề, mật độ thoải mái hoặc nhỏ gọn, đèn mờ, màu nhấn trên các chủ đề lấy một chủ đề và chế độ thuận tay trái.',

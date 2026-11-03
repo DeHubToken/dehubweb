@@ -131,7 +131,7 @@ export default function Premium() {
       <SEOHead
         title={t('premium.seoTitle')}
         description={t('premium.seoDescription')}
-        url="https://dehub.io/premium"
+        url="https://riftn.com/premium"
       />
 
       <PaymentTestModeBanner />

@@ -124,7 +124,7 @@ export default function MaboroshiPage({ remake = false }: { remake?: boolean }) 
 
   return (
     <main data-glass-page className="relative z-[1] flex min-h-[100dvh] flex-col bg-[#090a0b] text-white">
-      <SEOHead title={remake ? `${studioName} | DeHub Creator` : _copy("copy.ce42a8ab1ca9", { defaultValue: "Maboroshi | DeHub Creator" })} description={t('creator.toolMaboroshiDesc')} url={`https://dehub.io/creator/${remake ? 'remake' : 'maboroshi'}`} />
+      <SEOHead title={remake ? `${studioName} | DeHub Creator` : _copy("copy.ce42a8ab1ca9", { defaultValue: "Maboroshi | DeHub Creator" })} description={t('creator.toolMaboroshiDesc')} url={`https://riftn.com/creator/${remake ? 'remake' : 'maboroshi'}`} />
       <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
         <Link to="/creator" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium"><ArrowLeft className="h-4 w-4" />{t('creator.srHeading')}</Link>
         <div className="flex items-center gap-3">

@@ -2479,7 +2479,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               && !downloadGate.isGated && !currentShort.spoilerText
               && visibility === 'public' && (!currentShort.visibility || currentShort.visibility === 'public')
               && (isOwnShort || !currentShort.quotePolicy || currentShort.quotePolicy === 'public') && (
-              <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://dehub.io/app/post/${currentShort.id}`,
+              <RemixMenuItems source={{ videoUrl: currentShort.videoUrl, sourceUrl: `https://riftn.com/app/post/${currentShort.id}`,
                 title: currentShort.title || 'Video', creator: currentShort.creatorUsername || currentShort.username,
                 tokenId: String(currentShort.id), creatorAddress: currentShort.creatorId }}
                 isOwner={!!isOwnShort}

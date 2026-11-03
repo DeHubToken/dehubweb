@@ -37,7 +37,7 @@ describe('cdnImageSource', () => {
 
   it('leaves anything that is not one of our transforms alone', () => {
     expect(cdnImageSource(RAW)).toBe(RAW);
-    expect(cdnImageSource('blob:https://dehub.io/9f2c')).toBe('blob:https://dehub.io/9f2c');
+    expect(cdnImageSource('blob:https://riftn.com/9f2c')).toBe('blob:https://riftn.com/9f2c');
     expect(cdnImageSource('https://api.dicebear.com/7.x/thumbs/svg?seed=x')).toBe(
       'https://api.dicebear.com/7.x/thumbs/svg?seed=x',
     );

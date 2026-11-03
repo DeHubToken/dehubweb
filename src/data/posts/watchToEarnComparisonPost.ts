@@ -41,7 +41,7 @@ The consideration for an **xcad network alternative** is structural. Because XCA
 
 ### No purchase to start earning
 
-You do not buy glasses, a headset or any entry NFT to begin. You can join [the DeHub app](https://dehub.io/app), watch content and take part in watch-to-earn bounties without an upfront spend. That removes the single biggest risk in the Cheelee model, where your earnings depend on how much you were willing to pay for better items. The DHB token ($DHB) is the ecosystem token if you choose to engage with it, but it is not a gate you must pay through to start.
+You do not buy glasses, a headset or any entry NFT to begin. You can join [the DeHub app](https://riftn.com/app), watch content and take part in watch-to-earn bounties without an upfront spend. That removes the single biggest risk in the Cheelee model, where your earnings depend on how much you were willing to pay for better items. The DHB token ($DHB) is the ecosystem token if you choose to engage with it, but it is not a gate you must pay through to start.
 
 ### On-chain-verifiable payouts
 
@@ -72,7 +72,7 @@ There is no single winner, so match the tool to your goal:
 - **Choose XCAD Network** if your viewing already lives on YouTube and you simply want a reward layer on top of creators who have opted in.
 - **Choose DeHub** if you want to start free, verify payouts on-chain, and earn inside a full social network with creator tools, streaming, games and tradable subscriptions rather than a single mechanic.
 
-If the goal is the **best watch to earn app** to actually live on rather than dabble with, DeHub's breadth and zero-cost entry make it the strongest all-round Cheelee alternative in 2026. Ready to test it yourself? Download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) or open [the DeHub app](https://dehub.io/app) in your browser, and judge the payouts on-chain rather than on our word.
+If the goal is the **best watch to earn app** to actually live on rather than dabble with, DeHub's breadth and zero-cost entry make it the strongest all-round Cheelee alternative in 2026. Ready to test it yourself? Download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) or open [the DeHub app](https://riftn.com/app) in your browser, and judge the payouts on-chain rather than on our word.
 
 ## Frequently asked questions
 

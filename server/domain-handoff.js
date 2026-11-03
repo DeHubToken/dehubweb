@@ -19,8 +19,6 @@
 export const OLD_HOSTS = new Set(['dehub.io', 'www.dehub.io']);
 export const NEW_HOSTS = new Set(['riftn.com', 'www.riftn.com']);
 export const NEW_ORIGIN = 'https://riftn.com';
-/** Set by the app on dehub.io while it holds a login or an unsecured wallet. */
-export const LOCAL_STATE_COOKIE = 'dh_local';
 
 const DEVICE_SEED_DB = 'dehub-wallet-device-seed';
 const DEVICE_SEED_STORE = 'seeds';
@@ -72,7 +70,6 @@ const OUT_SCRIPT = `${CODEC}
   } catch (e) {}
   // The new address owns the session from here on.
   try { for (const k of Object.keys(ls)) if (/^sb-.*-auth-token$/.test(k)) localStorage.removeItem(k); } catch (e) {}
-  document.cookie = '${LOCAL_STATE_COOKIE}=; Max-Age=0; Path=/; Secure; SameSite=Lax';
   location.replace(${JSON.stringify(NEW_ORIGIN)} + '/_handoff#' + enc({ v: 1, ls, seeds, next }));
 })();
 `;

@@ -17,8 +17,8 @@ const APP_URL =
   "https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f";
 // Canonical + OG must live on dehub.io — pointing them at a preview mirror
 // told Google the staging host was the real page.
-const PAGE_URL = "https://dehub.io/connect/claude";
-const OG_IMAGE = "https://dehub.io" + ogImage;
+const PAGE_URL = "https://riftn.com/connect/claude";
+const OG_IMAGE = "https://riftn.com" + ogImage;
 
 const steps = [
   {

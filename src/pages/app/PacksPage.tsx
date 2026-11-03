@@ -160,13 +160,13 @@ export default function PacksPage() {
       <SEOHead
         title={t('creatorPacks.seoTitle')}
         description={t('creatorPacks.seoDescription')}
-        url="https://dehub.io/packs"
+        url="https://riftn.com/packs"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: t('creatorPacks.seoTitle'),
           description: t('creatorPacks.seoDescription'),
-          url: 'https://dehub.io/packs',
+          url: 'https://riftn.com/packs',
         }}
       />
       <PageIsland

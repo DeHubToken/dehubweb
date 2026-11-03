@@ -3,8 +3,8 @@
   <channel>
     <title>DeHub Blog</title>
     <description>News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.</description>
-    <link>https://dehub.io/docs/blog</link>
-    <atom:link href="https://dehub.io/rss.xml" rel="self" type="application/rss+xml"/>
+    <link>https://riftn.com/docs/blog</link>
+    <atom:link href="https://riftn.com/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-US</language>
     <copyright>Copyright 2026 DeHub</copyright>
     <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
@@ -13,160 +13,160 @@
     <item>
       <title>Top 100 Crypto Projects 2026, Ranked by GitHub Activity</title>
       <description>The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.</description>
-      <link>https://dehub.io/guides/top-100-crypto-projects-2026</link>
-      <guid>https://dehub.io/guides/top-100-crypto-projects-2026</guid>
+      <link>https://riftn.com/guides/top-100-crypto-projects-2026</link>
+      <guid>https://riftn.com/guides/top-100-crypto-projects-2026</guid>
       <pubDate>Mon, 26 Oct 2026 23:30:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity</title>
       <description>The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.</description>
-      <link>https://dehub.io/guides/top-50-most-active-open-source-projects-2026</link>
-      <guid>https://dehub.io/guides/top-50-most-active-open-source-projects-2026</guid>
+      <link>https://riftn.com/guides/top-50-most-active-open-source-projects-2026</link>
+      <guid>https://riftn.com/guides/top-50-most-active-open-source-projects-2026</guid>
       <pubDate>Mon, 26 Oct 2026 20:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Top 50 Blockchain Projects 2026, Ranked by GitHub Activity</title>
       <description>The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.</description>
-      <link>https://dehub.io/guides/top-50-blockchain-projects-2026</link>
-      <guid>https://dehub.io/guides/top-50-blockchain-projects-2026</guid>
+      <link>https://riftn.com/guides/top-50-blockchain-projects-2026</link>
+      <guid>https://riftn.com/guides/top-50-blockchain-projects-2026</guid>
       <pubDate>Mon, 26 Oct 2026 20:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Top 50 Decentralized Social Apps 2026: The DeSoc Index</title>
       <description>The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.</description>
-      <link>https://dehub.io/guides/top-50-decentralized-social-apps-2026</link>
-      <guid>https://dehub.io/guides/top-50-decentralized-social-apps-2026</guid>
+      <link>https://riftn.com/guides/top-50-decentralized-social-apps-2026</link>
+      <guid>https://riftn.com/guides/top-50-decentralized-social-apps-2026</guid>
       <pubDate>Sun, 25 Oct 2026 20:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>How Does Higgsfield Genjutsu Work? And How Maboroshi Does the Same Job for Less (2026)</title>
       <description>Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it.</description>
-      <link>https://dehub.io/guides/how-does-higgsfield-genjutsu-work</link>
-      <guid>https://dehub.io/guides/how-does-higgsfield-genjutsu-work</guid>
+      <link>https://riftn.com/guides/how-does-higgsfield-genjutsu-work</link>
+      <guid>https://riftn.com/guides/how-does-higgsfield-genjutsu-work</guid>
       <pubDate>Sat, 24 Oct 2026 06:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)</title>
       <description>Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it.</description>
-      <link>https://dehub.io/guides/higgsfield-genjutsu-alternative</link>
-      <guid>https://dehub.io/guides/higgsfield-genjutsu-alternative</guid>
+      <link>https://riftn.com/guides/higgsfield-genjutsu-alternative</link>
+      <guid>https://riftn.com/guides/higgsfield-genjutsu-alternative</guid>
       <pubDate>Sat, 24 Oct 2026 03:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch</title>
       <description>DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment.</description>
-      <link>https://dehub.io/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</link>
-      <guid>https://dehub.io/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</guid>
+      <link>https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</link>
+      <guid>https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</guid>
       <pubDate>Thu, 22 Oct 2026 18:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Q4 Development Overview</title>
       <description>Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout.</description>
-      <link>https://dehub.io/guides/q4-development-overview</link>
-      <guid>https://dehub.io/guides/q4-development-overview</guid>
+      <link>https://riftn.com/guides/q4-development-overview</link>
+      <guid>https://riftn.com/guides/q4-development-overview</guid>
       <pubDate>Sat, 17 Oct 2026 12:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>DeHub Token and Exchange Listings Update</title>
       <description>DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings.</description>
-      <link>https://dehub.io/guides/dehub-token-exchange-listings-update-2026</link>
-      <guid>https://dehub.io/guides/dehub-token-exchange-listings-update-2026</guid>
+      <link>https://riftn.com/guides/dehub-token-exchange-listings-update-2026</link>
+      <guid>https://riftn.com/guides/dehub-token-exchange-listings-update-2026</guid>
       <pubDate>Fri, 18 Sep 2026 19:32:10 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Ready to Debate Your Side? Bring It to DeHub.</title>
       <description>A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage.</description>
-      <link>https://dehub.io/guides/ready-to-debate-your-side-bring-it-to-dehub</link>
-      <guid>https://dehub.io/guides/ready-to-debate-your-side-bring-it-to-dehub</guid>
+      <link>https://riftn.com/guides/ready-to-debate-your-side-bring-it-to-dehub</link>
+      <guid>https://riftn.com/guides/ready-to-debate-your-side-bring-it-to-dehub</guid>
       <pubDate>Mon, 14 Sep 2026 10:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>How monetization works on social media apps</title>
       <description>Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers.</description>
-      <link>https://dehub.io/guides/how-monetization-works-on-social-media-apps</link>
-      <guid>https://dehub.io/guides/how-monetization-works-on-social-media-apps</guid>
+      <link>https://riftn.com/guides/how-monetization-works-on-social-media-apps</link>
+      <guid>https://riftn.com/guides/how-monetization-works-on-social-media-apps</guid>
       <pubDate>Thu, 03 Sep 2026 09:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>A Note for Young Creators, and the Adults Helping Them</title>
       <description>New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.</description>
-      <link>https://dehub.io/guides/young-creators-ground-you-own</link>
-      <guid>https://dehub.io/guides/young-creators-ground-you-own</guid>
+      <link>https://riftn.com/guides/young-creators-ground-you-own</link>
+      <guid>https://riftn.com/guides/young-creators-ground-you-own</guid>
       <pubDate>Fri, 28 Aug 2026 13:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>NIL Ends. Your Audience Doesn’t Have To.</title>
       <description>Revenue sharing and NIL pay you while you are eligible. The audience you build is the only asset that outlives your last game. A guide for college athletes.</description>
-      <link>https://dehub.io/guides/nil-ends-your-audience-does-not</link>
-      <guid>https://dehub.io/guides/nil-ends-your-audience-does-not</guid>
+      <link>https://riftn.com/guides/nil-ends-your-audience-does-not</link>
+      <guid>https://riftn.com/guides/nil-ends-your-audience-does-not</guid>
       <pubDate>Fri, 28 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Are We Teaching Tomorrow’s Creator Economy With Yesterday’s Platforms?</title>
       <description>Creator economy courses teach students to succeed inside platforms whose terms they will never control. A case for teaching ownership structure, not platform tactics.</description>
-      <link>https://dehub.io/guides/teaching-the-creator-economy</link>
-      <guid>https://dehub.io/guides/teaching-the-creator-economy</guid>
+      <link>https://riftn.com/guides/teaching-the-creator-economy</link>
+      <guid>https://riftn.com/guides/teaching-the-creator-economy</guid>
       <pubDate>Fri, 28 Aug 2026 11:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>The Athlete Is Becoming a Media Platform. Who Owns the Fan?</title>
       <description>Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship — and the athlete now holds it.</description>
-      <link>https://dehub.io/guides/athlete-is-becoming-a-media-platform</link>
-      <guid>https://dehub.io/guides/athlete-is-becoming-a-media-platform</guid>
+      <link>https://riftn.com/guides/athlete-is-becoming-a-media-platform</link>
+      <guid>https://riftn.com/guides/athlete-is-becoming-a-media-platform</guid>
       <pubDate>Fri, 28 Aug 2026 10:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>The Creator Guide to Leaving Instagram for a Platform You Own (2026)</title>
       <description>An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.</description>
-      <link>https://dehub.io/guides/creators-guide-leaving-instagram</link>
-      <guid>https://dehub.io/guides/creators-guide-leaving-instagram</guid>
+      <link>https://riftn.com/guides/creators-guide-leaving-instagram</link>
+      <guid>https://riftn.com/guides/creators-guide-leaving-instagram</guid>
       <pubDate>Thu, 27 Aug 2026 13:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>The Creator Guide to Leaving YouTube for a Platform You Own (2026)</title>
       <description>A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.</description>
-      <link>https://dehub.io/guides/creators-guide-leaving-youtube</link>
-      <guid>https://dehub.io/guides/creators-guide-leaving-youtube</guid>
+      <link>https://riftn.com/guides/creators-guide-leaving-youtube</link>
+      <guid>https://riftn.com/guides/creators-guide-leaving-youtube</guid>
       <pubDate>Thu, 27 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>The Creator Guide to Leaving TikTok for a Platform You Own (2026)</title>
       <description>A TikTok alternative creators actually own. How Creator Rewards really pays, why your audience is not yours, and how a 90% revenue-share Web3 platform compares in 2026.</description>
-      <link>https://dehub.io/guides/creators-guide-leaving-tiktok</link>
-      <guid>https://dehub.io/guides/creators-guide-leaving-tiktok</guid>
+      <link>https://riftn.com/guides/creators-guide-leaving-tiktok</link>
+      <guid>https://riftn.com/guides/creators-guide-leaving-tiktok</guid>
       <pubDate>Thu, 27 Aug 2026 11:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>Q3 Development Overview</title>
       <description>Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout.</description>
-      <link>https://dehub.io/guides/q3-development-overview</link>
-      <guid>https://dehub.io/guides/q3-development-overview</guid>
+      <link>https://riftn.com/guides/q3-development-overview</link>
+      <guid>https://riftn.com/guides/q3-development-overview</guid>
       <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>
     <item>
       <title>DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)</title>
       <description>DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers.</description>
-      <link>https://dehub.io/guides/dehub-creator-vs-higgsfield-ai-credits</link>
-      <guid>https://dehub.io/guides/dehub-creator-vs-higgsfield-ai-credits</guid>
+      <link>https://riftn.com/guides/dehub-creator-vs-higgsfield-ai-credits</link>
+      <guid>https://riftn.com/guides/dehub-creator-vs-higgsfield-ai-credits</guid>
       <pubDate>Thu, 13 Aug 2026 09:00:00 GMT</pubDate>
       <dc:creator>DeHub Team</dc:creator>
     </item>

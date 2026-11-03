@@ -10,7 +10,7 @@
  * both render from this one object, so the two UA variants cannot drift.
  */
 
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 
 export const STREAM_LINKS = {
   start: `${APP_URL}/app`,
@@ -93,7 +93,7 @@ export function streamFaqLd() {
   };
 }
 
-/** An affiliate's invite that lands on this page, e.g. https://dehub.io/r/ABC123?to=/stream. */
+/** An affiliate's invite that lands on this page, e.g. https://riftn.com/r/ABC123?to=/stream. */
 export function streamerInviteLink(origin, code) {
   return `${origin.replace(/\/+$/, '')}/r/${code}?to=${STREAM_PAGE.path}`;
 }

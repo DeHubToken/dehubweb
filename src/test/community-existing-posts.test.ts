@@ -3,13 +3,13 @@ import { communityPostTarget, validCommunityPostId, resolveCommunityPosts, uniqu
 
 describe('existing community posts', () => {
   it('accepts original and off-chain DeHub links, including top-level production URLs', () => {
-    expect(communityPostTarget('https://dehub.io/post/6552')).toEqual({tokenId:'6552'});
-    expect(communityPostTarget('https://dehub.io/app/post/6552?comment=4')).toEqual({tokenId:'6552'});
+    expect(communityPostTarget('https://riftn.com/post/6552')).toEqual({tokenId:'6552'});
+    expect(communityPostTarget('https://riftn.com/app/post/6552?comment=4')).toEqual({tokenId:'6552'});
     expect(communityPostTarget('dehub.io/newpost/12')).toEqual({newPostId:'12'});
     expect(communityPostTarget('/posts/6552')).toEqual({tokenId:'6552'});
     expect(communityPostTarget('6552')).toEqual({tokenId:'6552'});
     expect(communityPostTarget('https://elsewhere.example/post/6552')).toBeNull();
-    expect(communityPostTarget('https://dehub.io.evil.example/post/6552')).toBeNull();
+    expect(communityPostTarget('https://riftn.com.evil.example/post/6552')).toBeNull();
     expect(validCommunityPostId('9007199254740992')).toBeNull();
     expect(validCommunityPostId('-1')).toBeNull();
   });

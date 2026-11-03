@@ -319,10 +319,10 @@
     "empty": "Gak ada koneksi akun yang aktif.",
     "disconnect": "Mlebu",
     "failed": "Mboten sédané nggih. Coba nglajengak siji.",
-    "intro": "Ngelmu DeHub ing ChatGPT, utawa nambahake akunmu dhéwé kanggo ngupdate profil, ngepublikasakaké postingan lan nggunakaké Creator Studio. Tambahake https://dehub.io/mcp minangka koneksi OAuth kanggo kontrol akun.",
+    "intro": "Ngelmu DeHub ing ChatGPT, utawa nambahake akunmu dhéwé kanggo ngupdate profil, ngepublikasakaké postingan lan nggunakaké Creator Studio. Tambahake https://riftn.com/mcp minangka koneksi OAuth kanggo kontrol akun.",
     "what": "Ngelmu kawruh lan ngelmu wédané. Dengan akun OAuth, ngatur profil lan privasi, nulis status lan komentar, ngikuti wong, baca notifikasi, nyimpen buku tamu lan nggawe gambar, filem, suara lan aset 3D. Pemrosesan nggunakaké aturan pembayaran DeHub.",
     "account": "Piyambaké wédané wédané ora kudu akun. Nambahaké akun DeHub karo profilmu lan buat utawa ngetokaké konten.",
-    "step": "Kanggo kontrol akun, tambahake https://dehub.io/mcp minangka koneksi OAuth, nulakake DeHub lan nyimpeni izin-izin sadurunge ngrujuk akses.",
+    "step": "Kanggo kontrol akun, tambahake https://riftn.com/mcp minangka koneksi OAuth, nulakake DeHub lan nyimpeni izin-izin sadurunge ngrujuk akses.",
     "libraryPrompt": "Tampilna aset paling anyar ing perpustakaan DeHub Creator kula."
   },
   "twitchMirror": {
@@ -14083,7 +14083,7 @@
     "fd71b3ee1178": "Fitur Sorotan",
     "306c6c8dd0db": "Judhul",
     "3f2f76bef710": "Situs web",
-    "ca7842e53ac8": "dehub.io",
+    "ca7842e53ac8": "riftn.com",
     "4e7a2f77ce7b": "Sosial Media",
     "667a759ed273": "X · TG · Discord",
     "3fb5e9de9981": "Sawise ingkang kudu dipigunakaken ing ngandika arahan tambahan.",

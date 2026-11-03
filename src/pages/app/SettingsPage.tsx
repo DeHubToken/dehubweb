@@ -365,7 +365,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://dehub.io/app/settings" />
+      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://riftn.com/app/settings" />
       <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}

@@ -373,7 +373,7 @@ export function ProfileHeader({
               <button
                 onClick={() => {
                   const username = profile.handle.replace('@', '');
-                  navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${username}`));
+                  navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${username}`));
                   trackShare('copy_link', { kind: 'profile' });
                   toast.success(_copy("copy.04a12cab619d", { defaultValue: "Profile URL copied to clipboard" }));
                 }}
@@ -389,7 +389,7 @@ export function ProfileHeader({
                    the .eth URL because that is the one worth showing off. */
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.ensName}`));
+                    navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${profile.ensName}`));
                     trackShare('copy_link', { kind: 'profile' });
                     toast.success(_copy("copy.0877581001b8", { defaultValue: "ENS profile URL copied to clipboard" }));
                   }}

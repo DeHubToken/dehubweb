@@ -318,7 +318,7 @@ export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';
  * The baseline above exists because the arcade hosts third-party engines. That
  * is not what Trenchstar is: it is ours, it lives in `public/`, it is reviewed
  * in the same pull requests as the app, and the identical file already runs
- * with full same-origin powers at https://dehub.io/trenchstar-game/. Denying it
+ * with full same-origin powers at https://riftn.com/trenchstar-game/. Denying it
  * in the frame denies it nothing it cannot already do one URL along — it only
  * decides whether the desk works.
  *
@@ -367,7 +367,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     get artAlt() { return _translateCopy("copy.0fa895900e3b", { defaultValue: "A curved wall of live candle charts and market panels around a dark trading floor in Chartopia" }); },
     credit: {
       name: 'Chartopia',
-      url: 'https://dehub.io',
+      url: 'https://riftn.com',
       licence: 'MIT',
       licenceFile: 'LICENSE-Trenchstar',
     },

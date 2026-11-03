@@ -315,10 +315,10 @@
     "empty": "冇活躍嘅帳號連接。",
     "disconnect": "斷開連接",
     "failed": "無法完成連接。試試登入一次。",
-    "intro": "用 ChatGPT 瀏覽 DeHub，或者連接你嘅帳號更新你嘅檔案，發佈文章同埋用創作者工作室。加 https://dehub.io/mcp 做 OAuth 連接器，控制帳號。",
+    "intro": "用 ChatGPT 瀏覽 DeHub，或者連接你嘅帳號更新你嘅檔案，發佈文章同埋用創作者工作室。加 https://riftn.com/mcp 做 OAuth 連接器，控制帳號。",
     "what": "瀏覽公開文章同埋檔案。有 OAuth 帳號連接，管理你嘅檔案同埋隱私，發佈文章同埋留言，追蹤人，睇通知，儲存書籤同埋生成圖像，視頻，音頻同埋 3D 資產。生成用 DeHub 嘅已有付款規則。",
     "account": "無帳號瀏覽唔需要帳號。連接你嘅 DeHub 帳號管理你嘅檔案同埋創作或發佈內容。",
-    "step": "為控制帳號，加入 https://dehub.io/mcp 做 OAuth 連接器，登入 DeHub 同埋檢視權限之前允許存取。",
+    "step": "為控制帳號，加入 https://riftn.com/mcp 做 OAuth 連接器，登入 DeHub 同埋檢視權限之前允許存取。",
     "profilePrompt": "更新我嘅 DeHub 個人簡介：獨立創作者做電影同埋音樂。",
     "generatePrompt": "顯示我 DeHub 嘅圖像模型同埋引用一張肖像之前生成。",
     "libraryPrompt": "顯示我 DeHub 創作者圖書館嘅最新資產。"

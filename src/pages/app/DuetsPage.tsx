@@ -61,14 +61,14 @@ export default function DuetsPage() {
         title={`${title} — DeHub`}
         description={description}
         image={getTextPostShareImageUrl(postId)}
-        url={`https://dehub.io${duetsPath(postId)}`}
+        url={`https://riftn.com${duetsPath(postId)}`}
         type="video.other"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: title,
           description,
-          about: { '@type': 'VideoObject', name, url: `https://dehub.io/app/post/${postId}` },
+          about: { '@type': 'VideoObject', name, url: `https://riftn.com/app/post/${postId}` },
         }}
       />
       <Link to={`/app/post/${postId}`} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3 hover:bg-white/10">

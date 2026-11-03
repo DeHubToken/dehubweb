@@ -196,7 +196,7 @@ These projects had zero commits on the default branch of their main public repo 
 
 ## For scale: DeHub
 
-DeHub is a social and streaming app, not a blockchain, so it is not ranked here. But for scale, its public web and mobile apps took 5,558 commits in the same 90 days, about twice as many as Solana, the busiest blockchain on this list. On DeHub, anyone can request a feature on [dehub.io/features](https://dehub.io/features) and watch the community build it.
+DeHub is a social and streaming app, not a blockchain, so it is not ranked here. But for scale, its public web and mobile apps took 5,558 commits in the same 90 days, about twice as many as Solana, the busiest blockchain on this list. On DeHub, anyone can request a feature on [dehub.io/features](https://riftn.com/features) and watch the community build it.
 
 ![For scale: DeHub 5,558 commits in 90 days, Solana 2,618, Dash 1,222, Base 1,185](/media/fig-chains-dehub.jpg)
 
@@ -239,7 +239,7 @@ See our sister ranking, the [Top 50 Decentralized Social Apps 2026](/guides/top-
 
 ## Build with DeHub
 
-Open [dehub.io](https://dehub.io) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [dehub.io](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-blockchain-projects-2026-banner.png',
   bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub',
   author: { name: 'DeHub Team' },

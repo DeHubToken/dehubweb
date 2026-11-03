@@ -64,7 +64,7 @@ describe('post lists', () => {
   it('links every row to its post, names the author and the views', () => {
     const out = api.postListHtml('Latest videos', [video(5660, 'G-Force – Superspie in missione')]);
     expect(out).toContain('<h2>Latest videos</h2>');
-    expect(out).toContain('<a data-creator-copy href="https://dehub.io/app/post/5660">G-Force – Superspie in missione</a> — <span data-public-by>by Trame e Recensioni</span> · <span data-public-views="19">19 views</span>');
+    expect(out).toContain('<a data-creator-copy href="https://riftn.com/app/post/5660">G-Force – Superspie in missione</a> — <span data-public-by>by Trame e Recensioni</span> · <span data-public-views="19">19 views</span>');
   });
 
   it('escapes what people typed', () => {
@@ -182,7 +182,7 @@ describe('profile wallet', () => {
     expect(api.profileAddressOf(html)).toBe('0xa65c2241ddcfe74171818e59256ad46a6bb115d9');
   });
   it('is empty when the page has no avatar', () => {
-    expect(api.profileAddressOf('<img src="https://dehub.io/logo.png">')).toBe('');
+    expect(api.profileAddressOf('<img src="https://riftn.com/logo.png">')).toBe('');
   });
 });
 

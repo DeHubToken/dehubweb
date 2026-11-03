@@ -8,7 +8,7 @@ import {
 } from '../relayFetch';
 
 const SB = SUPABASE_RELAY_TARGET;
-const RELAY = 'https://dehub.io/_sb';
+const RELAY = 'https://riftn.com/_sb';
 
 function memoryStorage(): Storage {
   const data = new Map<string, string>();
@@ -33,7 +33,7 @@ function setup(route: (url: string) => Response | Error = () => new Response('ok
   });
   const storage = memoryStorage();
   const relayFetch = createSupabaseRelayFetch({
-    relayBase: () => 'https://dehub.io',
+    relayBase: () => 'https://riftn.com',
     fetchImpl,
     storage: () => storage,
   });
@@ -166,7 +166,7 @@ describe('Supabase relay fetch', () => {
     const storage = memoryStorage();
     storage.setItem('dehub.sbRelayUntil', String(Date.now() + 60_000));
     const fetchImpl = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response('ok'));
-    const relayFetch = createSupabaseRelayFetch({ relayBase: () => 'https://dehub.io', fetchImpl, storage: () => storage });
+    const relayFetch = createSupabaseRelayFetch({ relayBase: () => 'https://riftn.com', fetchImpl, storage: () => storage });
     await relayFetch(`${SB}/storage/v1/object/public/a.png`);
     expect(fetchImpl.mock.calls[0][0]).toBe(`${RELAY}/storage/v1/object/public/a.png`);
   });
@@ -196,7 +196,7 @@ describe('Supabase relay fetch', () => {
         init?.signal?.addEventListener('abort', () => reject(init.signal!.reason));
       });
     });
-    const relayFetch = createSupabaseRelayFetch({ relayBase: () => 'https://dehub.io', fetchImpl, storage: () => null });
+    const relayFetch = createSupabaseRelayFetch({ relayBase: () => 'https://riftn.com', fetchImpl, storage: () => null });
     const pending = relayFetch(`${SB}/rest/v1/a`);
     await vi.advanceTimersByTimeAsync(20_000);
     expect(await (await pending).text()).toBe('via relay');

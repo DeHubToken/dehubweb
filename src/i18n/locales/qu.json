@@ -321,10 +321,10 @@
     "empty": "Mana ruwaq yupay tinkiykuna.",
     "disconnect": "T’aqanakuy",
     "failed": "Mana t'inkiyta tukuchiyta atirqanchu. Hukmanta yaykuyta kallpachakuy.",
-    "intro": "DeHub ChatGPT kaqpi maskay, utaq kikiyki yupayniyki t'inkiy perfilniyki musuqyachinaykipaq, qillqakunata lluqsichinaykipaq chaymanta Creator Studio llamk'achiyta. https://dehub.io/mcp yapay huk OAuth tinkiq hina yupay kamachiykunapaq.",
+    "intro": "DeHub ChatGPT kaqpi maskay, utaq kikiyki yupayniyki t'inkiy perfilniyki musuqyachinaykipaq, qillqakunata lluqsichinaykipaq chaymanta Creator Studio llamk'achiyta. https://riftn.com/mcp yapay huk OAuth tinkiq hina yupay kamachiykunapaq.",
     "what": "Llaqtapaq qillqasqakunata, perfilkunatapas maskay. Huk OAuth yupay tinkiywan, perfilniyki chaymanta sapalla willayniyki kamachiy, qillqakuna chaymanta rimaykuna lluqsichiy, runakunata qatiy, willakuykunata ñawiriy, marcadores waqaychay chaymanta siq'ikuna, video, uyarina chaymanta 3D kaqniyuq ruway. Generation DeHub kaqpa kunan kaq qullqi quy kamachiykunata llamk'achin.",
     "account": "Llaqtapaq maskayqa manam yupayta necesitanchu. DeHub yupayniykiwan tinkiy perfilniyki kamachinaykipaq chaymanta ruwanakuna ruwanapaq utaq lluqsichinaykipaq.",
-    "step": "Cuenta kamachiykunapaqqa, https://dehub.io/mcp nisqata OAuth t'inkina hina yapay, DeHub nisqaman yaykuy, hinaspataq hayk'a atiyniyuq kananta qhawariy manaraq haykuyta saqishpa.",
+    "step": "Cuenta kamachiykunapaqqa, https://riftn.com/mcp nisqata OAuth t'inkina hina yapay, DeHub nisqaman yaykuy, hinaspataq hayk'a atiyniyuq kananta qhawariy manaraq haykuyta saqishpa.",
     "profilePrompt": "DeHub bioyta kayman musuqyachiy: Sapanchasqa kamaq peliculakunata chaymanta takikunata ruwaq.",
     "generatePrompt": "DeHubpa siq'i modelonkunata qawachiway hinaspa huk retratota cita manaraq paqarichichkaspa.",
     "libraryPrompt": "DeHub Creator bibliotecaypi qhipa kaqniyuq kaqkunata rikuchiy."

@@ -11,7 +11,7 @@ import { buildStageCover, stageCoverTitleScale } from '../src/lib/stage-cover.ts
 import { wrapPostText } from './post-share-card.js';
 
 export const STAGE_CARD_VERSION = 'v2';
-const ORIGIN = 'https://dehub.io';
+const ORIGIN = 'https://riftn.com';
 
 export function stageShareImageUrl(id) {
   return `${ORIGIN}/_og/stage/${STAGE_CARD_VERSION}/${encodeURIComponent(id)}.png`;

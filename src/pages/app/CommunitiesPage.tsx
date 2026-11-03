@@ -132,14 +132,14 @@ export default function CommunitiesPage() {
       <SEOHead
         title={_copy("copy.0db2b3bc48bc", { defaultValue: "Communities — Find Your People on DeHub" })}
         description={_copy("copy.26efe78a0c95", { defaultValue: "Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform." })}
-        url="https://dehub.io/communities"
+        url="https://riftn.com/communities"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: 'DeHub Communities',
-          url: 'https://dehub.io/communities',
+          url: 'https://riftn.com/communities',
           description: _copy("copy.2eda69be1216", { defaultValue: "Public communities on the DeHub decentralized social platform." }),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' },
         }}
       />
 

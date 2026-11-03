@@ -28,7 +28,7 @@ export function validateWalletChallenge(value: WalletChallenge, address: string,
   const expected = [
     'dehub.io requests wallet verification.',
     '',
-    'URI: https://dehub.io',
+    'URI: https://riftn.com',
     'Version: 2',
     'Address: ' + value.address,
     'Chain ID: ' + chainId,

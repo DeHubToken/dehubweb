@@ -7365,13 +7365,13 @@ function paintDeskPage(ctx,w,h,d){
      · Inside /app/arcade/trenchstar it is a frame sandboxed WITHOUT
        `allow-same-origin`, which makes it an opaque origin. `window.open` is
        gone, top navigation is gone, and every request leaves with
-       `Origin: null` — which the API's allowlist, pinned to https://dehub.io,
+       `Origin: null` — which the API's allowlist, pinned to https://riftn.com,
        can never match. Nothing about that is an oversight: withholding the
        flag is what keeps game code away from app storage and cookies.
    So in a frame the desk asks the host, in the same {source,type} envelope the
    exit and readiness bridges already use, and does the work itself when there
    is no host. An action that can be done neither way is not offered at all. */
-const DH_ORIGIN='https://dehub.io',DH_API='https://api.dehub.io';
+const DH_ORIGIN='https://riftn.com',DH_API='https://api.dehub.io';
 const dhFramed=(()=>{try{return window.parent!==window;}catch(e){return true;}})();
 function dhSend(type,extra){
   try{parent.postMessage(Object.assign({source:'trenchstar',type},extra||{}),'*');}catch(e){}

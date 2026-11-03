@@ -14,7 +14,7 @@ const SUPA_LOGIN_PENDING_AT_KEY = "dehub_supa_login_pending_at";
 /**
  * Branded confirmation landing for auth emails.
  *
- * Auth emails send users to `https://dehub.io/auth/confirm?token_hash=…&type=…`
+ * Auth emails send users to `https://riftn.com/auth/confirm?token_hash=…&type=…`
  * instead of the raw Supabase verify URL. We verify the OTP client-side
  * (verifyOtp with token_hash) and then bounce into the app.
  *

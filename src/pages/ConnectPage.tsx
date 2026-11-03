@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
 
-const MCP_URL = 'https://dehub.io/mcp';
+const MCP_URL = 'https://riftn.com/mcp';
 const CLAUDE_CODE = `claude mcp add --transport http dehub ${MCP_URL}`;
 const MCP_JSON = JSON.stringify({ mcpServers: { dehub: { url: MCP_URL } } }, null, 2);
 
@@ -46,7 +46,7 @@ export default function ConnectPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
-      <SEOHead title={g('title')} description={g('desc')} url="https://dehub.io/connect" />
+      <SEOHead title={g('title')} description={g('desc')} url="https://riftn.com/connect" />
 
       <div className="max-w-3xl mx-auto px-4 py-8 md:py-14">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-8">

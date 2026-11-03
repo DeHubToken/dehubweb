@@ -1,9 +1,9 @@
-// Sitemap index — root of the sitemap tree served at https://dehub.io/sitemap.xml
+// Sitemap index — root of the sitemap tree served at https://riftn.com/sitemap.xml
 // Auto-discovers how many chunk sitemaps are needed based on:
 //   - max post tokenId from api.dehub.io (chunks of 50,000)
 //   - profile count from suggested_profiles_cache (chunks of 50,000)
 
-const APP_URL = "https://dehub.io";
+const APP_URL = "https://riftn.com";
 const DEHUB_API_BASE = "https://api.dehub.io";
 const CHUNK_SIZE = 50000;
 

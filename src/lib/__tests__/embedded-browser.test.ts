@@ -31,16 +31,16 @@ describe('embedded browser detection', () => {
 
 describe('opening the real browser', () => {
   it('hands Android an intent that falls back to the same page', () => {
-    expect(systemBrowserUrl('https://dehub.io/app?x=1', UA.instagramAndroid)).toBe(
-      'intent://dehub.io/app?x=1#Intent;scheme=https;S.browser_fallback_url=https%3A%2F%2Fdehub.io%2Fapp%3Fx%3D1;end',
+    expect(systemBrowserUrl('https://riftn.com/app?x=1', UA.instagramAndroid)).toBe(
+      'intent://riftn.com/app?x=1#Intent;scheme=https;S.browser_fallback_url=https%3A%2F%2Friftn.com%2Fapp%3Fx%3D1;end',
     );
   });
 
   it('asks iOS for Safari', () => {
-    expect(systemBrowserUrl('https://dehub.io/app', UA.facebookIos)).toBe('x-safari-https://dehub.io/app');
+    expect(systemBrowserUrl('https://riftn.com/app', UA.facebookIos)).toBe('x-safari-https://riftn.com/app');
   });
 
   it('has nothing to offer on desktop', () => {
-    expect(systemBrowserUrl('https://dehub.io/app', UA.desktop)).toBeNull();
+    expect(systemBrowserUrl('https://riftn.com/app', UA.desktop)).toBeNull();
   });
 });

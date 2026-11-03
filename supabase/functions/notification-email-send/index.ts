@@ -74,10 +74,10 @@ Deno.serve(async (req) => {
   // Only ever our own site. A notification email is the ideal place to smuggle
   // a link out of, and the copy in it is user-influenced (usernames, post
   // titles), so the destination is validated here rather than trusted.
-  let actionUrl = 'https://dehub.io/app/notifications'
+  let actionUrl = 'https://riftn.com/app/notifications'
   try {
     const parsed = new URL(payload.actionUrl || '')
-    if (parsed.protocol === 'https:' && /(^|\.)dehub\.io$/.test(parsed.hostname)) {
+    if (parsed.protocol === 'https:' && /(^|\.)(dehub\.io|riftn\.com)$/.test(parsed.hostname)) {
       actionUrl = parsed.toString()
     }
   } catch {

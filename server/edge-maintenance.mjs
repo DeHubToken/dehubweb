@@ -1,4 +1,4 @@
-const HOSTS = new Set(['dehub.io', 'origin.dehub.io']);
+const HOSTS = new Set(['riftn.com', 'dehub.io', 'origin.dehub.io']);
 const HEADERS = {
   'Cache-Control': 'no-store',
   'CDN-Cache-Control': 'no-store',

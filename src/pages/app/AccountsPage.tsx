@@ -22,7 +22,7 @@ const JSON_LD = {
   '@type': 'WebPage',
   name: 'DeHub Account Marketplace',
   get description() { return _translateCopy("copy.a0e52889552f", { defaultValue: "Buy and sell established DeHub accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet." }); },
-  url: 'https://dehub.io/accounts',
+  url: 'https://riftn.com/accounts',
 };
 
 export default function AccountsPage() {
@@ -34,8 +34,8 @@ export default function AccountsPage() {
       <SEOHead
         title={t('accounts.seoTitle')}
         description={t('accounts.seoDescription')}
-        image="https://dehub.io/og/accounts.jpg"
-        url="https://dehub.io/accounts"
+        image="https://riftn.com/og/accounts.jpg"
+        url="https://riftn.com/accounts"
         jsonLd={JSON_LD}
       />
 

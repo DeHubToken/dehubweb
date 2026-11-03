@@ -225,7 +225,7 @@ function detectSocials(prompt: string): boolean {
 }
 
 function detectWebsite(prompt: string): boolean {
-  return /\b(website|url|dehub\.io|domain|link to site)\b/i.test(prompt);
+  return /\b(website|url|dehub\.io|riftn\.com|domain|link to site)\b/i.test(prompt);
 }
 
 // ─── Prompt builder ───
@@ -261,7 +261,7 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
   if (cfg.tagline) parts.push(`Reserve clean negative space above the bottom logo area for a short headline — do NOT render any headline text yourself; the real headline is composited afterward.`);
 
   const linkBits: string[] = [];
-  if (cfg.includeWebsite) linkBits.push('dehub.io');
+  if (cfg.includeWebsite) linkBits.push('riftn.com');
   if (cfg.includeSocials) linkBits.push('x.com/dehub_official', 't.me/dehub_dhb', 'discord.gg/dehub');
   if (linkBits.length) {
     parts.push(`Include these links at the bottom in small Exo Light, pure white, generous letter-spacing: ${linkBits.join(' · ')}.`);
@@ -468,7 +468,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
                 )}
               >
                 <span>{_copy("copy.3f2f76bef710", { defaultValue: "🌐 Website" })}</span>
-                <span className="text-[10px] text-white/50">{_copy("copy.ca7842e53ac8", { defaultValue: "dehub.io" })}</span>
+                <span className="text-[10px] text-white/50">{_copy("copy.ca7842e53ac8", { defaultValue: "riftn.com" })}</span>
               </button>
               <button
                 onClick={() => setIncludeSocials(v => !v)}

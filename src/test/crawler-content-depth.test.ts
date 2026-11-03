@@ -126,7 +126,7 @@ describe('the streaming guide', () => {
   ) as { html: string; wordCount: number };
 
   it('serves the whole article, not the summary', async () => {
-    const res = await crawl('https://dehub.io/guides/best-decentralized-streaming-apps');
+    const res = await crawl('https://riftn.com/guides/best-decentralized-streaming-apps');
     expect(res.status).toBe(200);
     const html = await res.text();
     expect(content.wordCount).toBeGreaterThan(1200);
@@ -135,33 +135,33 @@ describe('the streaming guide', () => {
     // The comparison, the FAQ and the figures are all there.
     expect(html).toContain('<h2>The 6 best decentralized streaming apps</h2>');
     expect(html).toContain('<h3>Why are Theta and Livepeer not on this list?</h3>');
-    expect(html).toContain('src="https://dehub.io/guides/fig-streaming-rails-not-apps.jpg"');
+    expect(html).toContain('src="https://riftn.com/guides/fig-streaming-rails-not-apps.jpg"');
   });
 
   it('has one h1 and no h1 inside the sections', async () => {
-    const html = await (await crawl('https://dehub.io/guides/best-decentralized-streaming-apps')).text();
+    const html = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(html.indexOf('<h1')).toBeLessThan(html.indexOf('<h2'));
   });
 
   it('no longer links the page to itself or to the retired guides', async () => {
-    const page = await (await crawl('https://dehub.io/guides/best-decentralized-streaming-apps')).text();
+    const page = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     const html = page.slice(page.indexOf('<body'));
     expect(html).not.toContain('Read the full');
-    expect(html).not.toMatch(/href="https:\/\/dehub\.io\/guides\/best-decentralized-streaming-apps"/);
+    expect(html).not.toMatch(/href="https:\/\/riftn\.com\/guides\/best-decentralized-streaming-apps"/);
     expect(html).not.toContain('/guides/best-decentralized-social-media"');
     expect(html).not.toContain('/guides/best-web3-social-media-dapps"');
-    expect(html).toContain('href="https://dehub.io/guides/best-decentralised-social-media-platforms-2026"');
+    expect(html).toContain('href="https://riftn.com/guides/best-decentralised-social-media-platforms-2026"');
   });
 
   it('dates its Article, gives it the share card, and credits the organisation', async () => {
-    const html = await (await crawl('https://dehub.io/guides/best-decentralized-streaming-apps')).text();
+    const html = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     const ld = ldOf(html);
     expect(ld['@type']).toBe('Article');
-    expect(ld.image).toBe('https://dehub.io/og/guides-best-decentralized-streaming-apps.jpg');
+    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg');
     expect(ld.datePublished).toBe('2026-09-13');
     expect(ld.dateModified).toBe('2026-09-29');
-    expect(ld.author).toEqual({ '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' });
+    expect(ld.author).toEqual({ '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' });
   });
 
   it('falls back to the summary, with its own h1, when the content file is missing', async () => {
@@ -169,7 +169,7 @@ describe('the streaming guide', () => {
     vi.resetModules();
     const fresh = (await import('../../CLOUDFLARE_WORKER_SEO.js')).default;
     const res = await fresh.fetch(
-      new Request('https://dehub.io/guides/best-decentralized-streaming-apps', { headers: { 'User-Agent': GOOGLEBOT } }),
+      new Request('https://riftn.com/guides/best-decentralized-streaming-apps', { headers: { 'User-Agent': GOOGLEBOT } }),
       { ASSETS: { fetch: async () => new Response('', { status: 404 }) } },
       ctx,
     );
@@ -184,9 +184,9 @@ describe('consolidated and duplicate blog URLs', () => {
     '301s /guides/%s to the flagship post, for people and crawlers alike',
     async (slug) => {
       for (const ua of [GOOGLEBOT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36']) {
-        const res = (await worker.fetch(new Request(`https://dehub.io/guides/${slug}`, { headers: { 'User-Agent': ua } }), { ASSETS }, ctx)) as Response;
+        const res = (await worker.fetch(new Request(`https://riftn.com/guides/${slug}`, { headers: { 'User-Agent': ua } }), { ASSETS }, ctx)) as Response;
         expect(res.status).toBe(301);
-        expect(res.headers.get('Location')).toBe('https://dehub.io/guides/best-decentralised-social-media-platforms-2026');
+        expect(res.headers.get('Location')).toBe('https://riftn.com/guides/best-decentralised-social-media-platforms-2026');
       }
     },
   );
@@ -205,23 +205,23 @@ describe('consolidated and duplicate blog URLs', () => {
 
   it('the sitemap lists the streaming guide and neither redirected one', () => {
     const sitemap = readFileSync(resolve(ROOT, 'public/sitemap-static.xml'), 'utf8');
-    expect(sitemap).toContain('<loc>https://dehub.io/guides/best-decentralized-streaming-apps</loc>');
+    expect(sitemap).toContain('<loc>https://riftn.com/guides/best-decentralized-streaming-apps</loc>');
     expect(sitemap).not.toContain('/guides/best-decentralized-social-media<');
     expect(sitemap).not.toContain('/guides/best-web3-social-media-dapps<');
   });
 
   it('301s /docs/blog/<slug> to /guides/<slug>', async () => {
-    const res = await crawl('https://dehub.io/docs/blog/best-watch-to-earn-platforms-2026');
+    const res = await crawl('https://riftn.com/docs/blog/best-watch-to-earn-platforms-2026');
     expect(res.status).toBe(301);
-    expect(res.headers.get('Location')).toBe('https://dehub.io/guides/best-watch-to-earn-platforms-2026');
+    expect(res.headers.get('Location')).toBe('https://riftn.com/guides/best-watch-to-earn-platforms-2026');
     // The index itself stays where it is.
-    expect((await crawl('https://dehub.io/docs/blog')).status).toBe(200);
+    expect((await crawl('https://riftn.com/docs/blog')).status).toBe(200);
   });
 });
 
 describe('blog headings', () => {
   it('opens every section with an h2 under the post title', async () => {
-    const html = await (await crawl('https://dehub.io/guides/best-watch-to-earn-platforms-2026')).text();
+    const html = await (await crawl('https://riftn.com/guides/best-watch-to-earn-platforms-2026')).text();
     const article = html.slice(html.indexOf('<article>'), html.indexOf('</article>'));
     expect(article.match(/<h1[\s>]/g)).toHaveLength(1);
     const first = article.match(/<h([2-6])>/);
@@ -262,7 +262,7 @@ describe('video post', () => {
     reactionCounts: { like: 12 },
     comments: [],
   };
-  const URL_ = 'https://dehub.io/app/post/6126';
+  const URL_ = 'https://riftn.com/app/post/6126';
   const FN = fnPage({
     title: 'Another Monopoly Video',
     description: 'Post by Jesse Cochran on DeHub — join the decentralized creator network.',
@@ -331,9 +331,9 @@ describe('video post', () => {
 
   it('links the post to its author', async () => {
     const html = await serve();
-    expect(html).toContain('<a href="https://dehub.io/c0chraniz3r">Jesse Cochran (@c0chraniz3r)</a>');
+    expect(html).toContain('<a href="https://riftn.com/c0chraniz3r">Jesse Cochran (@c0chraniz3r)</a>');
     // …and the structured data points at the same profile.
-    expect(ldOf(html).author.url).toBe('https://dehub.io/c0chraniz3r');
+    expect(ldOf(html).author.url).toBe('https://riftn.com/c0chraniz3r');
   });
 
   it('keeps the upload date the fn had when the record is unreachable, and links no author', async () => {
@@ -350,7 +350,7 @@ describe('video post', () => {
     const image = fnPage({
       title: 'Post #3419 by Sultan on DeHub',
       description: 'Exquisite watercolor of a Royal Haveli.',
-      url: 'https://dehub.io/app/post/3419',
+      url: 'https://riftn.com/app/post/3419',
       image: `${CDN}/feed-images/3419-1.jpg`,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: 'Post #3419 by Sultan on DeHub' },
     });
@@ -362,11 +362,11 @@ describe('video post', () => {
       if (url.pathname === '/api/feed') return { result: [] };
       return undefined;
     });
-    const html = await (await crawl('https://dehub.io/app/post/3419')).text();
+    const html = await (await crawl('https://riftn.com/app/post/3419')).text();
     expect(html).not.toContain('<video');
     // The caption, with the author — the longer suffix would pass 70 characters.
     expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. — Sultan on DeHub');
-    expect(html).toContain('<a href="https://dehub.io/umerkhan">Sultan (@umerkhan)</a>');
+    expect(html).toContain('<a href="https://riftn.com/umerkhan">Sultan (@umerkhan)</a>');
   });
 
   it('writes ISO 8601 durations', () => {
@@ -385,11 +385,11 @@ describe('profiles', () => {
     fnPage({
       title: `Join @${handle} on DeHub today!`,
       description: `Connect with ${name} on DeHub, the open source alternative to legacy media.`,
-      url: `https://dehub.io/${handle}`,
+      url: `https://riftn.com/${handle}`,
       image,
       imageSize: image === LOGO ? [200, 200] : [400, 400],
       card: 'summary',
-      jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name, url: `https://dehub.io/${handle}` },
+      jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name, url: `https://riftn.com/${handle}` },
     });
 
   const serve = (handle: string, name: string, account: unknown, feed: unknown[] | null) => {
@@ -399,7 +399,7 @@ describe('profiles', () => {
       if (url.pathname === '/api/feed') return feed === null ? undefined : { result: feed };
       return undefined;
     });
-    return crawl(`https://dehub.io/${handle}`).then((r) => r.text());
+    return crawl(`https://riftn.com/${handle}`).then((r) => r.text());
   };
 
   it('noindexes a profile with no posts', async () => {
@@ -422,7 +422,7 @@ describe('profiles', () => {
     );
     expect(robotsOf(html)).toBe('');
     expect(titleOf(html)).toBe('Ahmad Rasheed (@almondbloom) on DeHub');
-    expect(html).toContain('<a data-creator-copy href="https://dehub.io/app/post/3312">Morning light over the old city walls</a>');
+    expect(html).toContain('<a data-creator-copy href="https://riftn.com/app/post/3312">Morning light over the old city walls</a>');
   });
 
   it('does not noindex on an API that did not answer', async () => {
@@ -444,7 +444,7 @@ describe('communities', () => {
     fnPage({
       title: `Join ${name}'s community on DeHub today`,
       description: 'A hub for the DeHub community’s most dedicated supporters. • 27 members',
-      url: `https://dehub.io/app/communities/${slug}`,
+      url: `https://riftn.com/app/communities/${slug}`,
       image: `https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/community-media/${slug}/avatar.png`,
       imageSize: [400, 400],
       card: 'summary',
@@ -456,7 +456,7 @@ describe('communities', () => {
       if (url.pathname.endsWith('/rest/v1/communities')) return row === null ? undefined : [row];
       return undefined;
     });
-    return crawl(`https://dehub.io/communities/${slug}`).then((r) => r.text());
+    return crawl(`https://riftn.com/communities/${slug}`).then((r) => r.text());
   };
   const PUBLIC_ROW = { name: 'Last Chad Standing', description: 'The official community for the MMA battle-royale game.', avatar_url: 'a.png', is_private: false };
 
@@ -518,7 +518,7 @@ describe('thin and test entities', () => {
 
 describe('/arcade', () => {
   it('has a title that says what the page is', async () => {
-    const html = await (await crawl('https://dehub.io/arcade')).text();
+    const html = await (await crawl('https://riftn.com/arcade')).text();
     expect(titleOf(html)).toBe('DeHub Arcade — Free Browser Games, No Download');
     const description = html.match(/<meta name="description" content="([^"]*)">/)![1];
     expect(description.length).toBeLessThanOrEqual(160);

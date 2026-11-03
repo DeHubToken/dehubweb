@@ -34,7 +34,7 @@ export default function SkillPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
-      <SEOHead title={t('skills.docsSeoTitle')} description={t('skills.docsSeoDescription')} url="https://dehub.io/skill.md" />
+      <SEOHead title={t('skills.docsSeoTitle')} description={t('skills.docsSeoDescription')} url="https://riftn.com/skill.md" />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black border-b border-white/10 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

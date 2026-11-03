@@ -300,7 +300,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
     }
     setAdding(true);
     try {
-      await checkRemixSource(`https://dehub.io/app/post/${tokenId}`, 'react');
+      await checkRemixSource(`https://riftn.com/app/post/${tokenId}`, 'react');
       const post = await getNFTInfo(String(tokenId));
       // Marks the stream for the viewers' chip, the original's credit and its
       // tip share. A refusal (reactions off, gated) stops here; if the service

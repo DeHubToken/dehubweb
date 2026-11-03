@@ -55,7 +55,7 @@ export function ProfileOptionsContent({
   const [lendingBadge, setLendingBadge] = useState(false);
 
   const handleCopyProfileUrl = () => {
-    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.handle.replace('@', '')}`));
+    navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${profile.handle.replace('@', '')}`));
     trackShare('copy_link', { kind: 'profile' });
     toast.success(t('profileOptions.profileUrlCopied'));
     setShareSheetOpen(false);

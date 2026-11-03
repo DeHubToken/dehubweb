@@ -6,7 +6,7 @@ export const withAffiliateRef = (url: string, code: string | null | undefined): 
   if (!code) return url;
   try {
     const relative = url.startsWith('/') && !url.startsWith('//');
-    const u = relative ? new URL(url, 'https://dehub.io') : new URL(url);
+    const u = relative ? new URL(url, 'https://riftn.com') : new URL(url);
     u.searchParams.set('ref', code);
     return relative ? u.pathname + u.search + u.hash : u.toString();
   } catch {
@@ -30,7 +30,7 @@ const isDehub = (url: string) => {
   if (url.startsWith('/') && !url.startsWith('//')) return true;
   try {
     const host = new URL(url).hostname;
-    return host === 'dehub.io' || host.endsWith('.dehub.io') || host === window.location.hostname;
+    return host === 'riftn.com' || host.endsWith('.riftn.com') || host === 'dehub.io' || host.endsWith('.dehub.io') || host === window.location.hostname;
   } catch {
     return false;
   }

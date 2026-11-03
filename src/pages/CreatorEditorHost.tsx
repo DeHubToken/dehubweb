@@ -102,12 +102,12 @@ export default function CreatorEditorHost() {
         <SEOHead
           title={_copy("copy.266c57b5eb4e", { defaultValue: "DeHub Creator — AI Studio, Agents & Video Tools" })}
           description={_copy("copy.34bc1a3f12ae", { defaultValue: "Generate images and videos, edit with AI, and publish to DeHub. A complete AI creator studio with metallic liquid glass design." })}
-          url="https://dehub.io/creator"
+          url="https://riftn.com/creator"
           jsonLd={{
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
             name: "DeHub Creator Studio",
-            url: "https://dehub.io/creator",
+            url: "https://riftn.com/creator",
             applicationCategory: "MultimediaApplication",
             operatingSystem: "Web",
             description:
@@ -116,7 +116,7 @@ export default function CreatorEditorHost() {
           }}
         />
       ) : (
-        <SEOHead title={_copy("copy.002f6e549556", { defaultValue: "DeHub Editor — In-Browser Video Editor" })} description={_copy("copy.909dd646a63c", { defaultValue: "Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub." })} url="https://dehub.io/editor" />
+        <SEOHead title={_copy("copy.002f6e549556", { defaultValue: "DeHub Editor — In-Browser Video Editor" })} description={_copy("copy.909dd646a63c", { defaultValue: "Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub." })} url="https://riftn.com/editor" />
       )}
       {mounted.creator && (
         <div style={isCreator ? undefined : { display: "none" }}>

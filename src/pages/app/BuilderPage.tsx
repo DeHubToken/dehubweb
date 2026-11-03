@@ -101,8 +101,8 @@ export default function BuilderPage() {
       <SEOHead
         title={_copy("copy.6da423db4ed2", { defaultValue: "Builder — Build Apps with AI on DeHub" })}
         description={_copy("copy.001cab7d69a2", { defaultValue: "Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open." })}
-        url="https://dehub.io/builder"
-        image="https://dehub.io/og/builder.jpg"
+        url="https://riftn.com/builder"
+        image="https://riftn.com/og/builder.jpg"
       />
 
       <div className="min-h-[100dvh] flex flex-col" data-builder-backdrop style={theme === 'system' ? BLOOM_BG : undefined}>

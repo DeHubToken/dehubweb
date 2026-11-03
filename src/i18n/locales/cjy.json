@@ -320,10 +320,10 @@
     "empty": "没有活跃的账户连接。",
     "disconnect": "断开",
     "failed": "无法完成连接。请尝试重新登录。",
-    "intro": "在 ChatGPT 中浏览 DeHub，或链接您自己的账户以更新个人资料、发布帖子并使用创作者工作室。将 https://dehub.io/mcp 添加为 OAuth 连接器以进行账户控制。",
+    "intro": "在 ChatGPT 中浏览 DeHub，或链接您自己的账户以更新个人资料、发布帖子并使用创作者工作室。将 https://riftn.com/mcp 添加为 OAuth 连接器以进行账户控制。",
     "what": "浏览公开帖子和个人资料。通过 OAuth 账户连接，管理您的个人资料和隐私，发布帖子和评论，关注人，查看通知，保存书签并生成图片、视频、音频和 3D 资产。生成使用 DeHub 的现有付款规则。",
     "account": "公共浏览不需要账户。链接您的 DeHub 账户以管理个人资料并创建或发布内容。",
-    "step": "对于账户控制，添加 https://dehub.io/mcp 作为 OAuth 连接器，登录 DeHub 并在允许访问前查看权限。",
+    "step": "对于账户控制，添加 https://riftn.com/mcp 作为 OAuth 连接器，登录 DeHub 并在允许访问前查看权限。",
     "profilePrompt": "将我的 DeHub 个人简介更新为：独立创作者，制作电影和音乐。",
     "generatePrompt": "展示 DeHub 的图像模型并引用一幅肖像后再生成。",
     "libraryPrompt": "展示我在 DeHub 创作者库中的最新资产。"

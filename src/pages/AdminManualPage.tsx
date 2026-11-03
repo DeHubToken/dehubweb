@@ -5,8 +5,8 @@ import ArrowLeft from "@/components/ui/cut-icons/back";
 import { SEOHead } from "@/components/SEOHead";
 import manualHtml from "@/content/godmode-manual.html?raw";
 
-const PAGE_URL = "https://dehub.io/admin-manual";
-const OG_IMAGE = "https://dehub.io/og/admin-manual.jpg";
+const PAGE_URL = "https://riftn.com/admin-manual";
+const OG_IMAGE = "https://riftn.com/og/admin-manual.jpg";
 
 /**
  * The moderation handbook, published.
@@ -38,7 +38,7 @@ const AdminManualPage = () => {
     publisher: {
       "@type": "Organization",
       name: "DeHub",
-      url: "https://dehub.io",
+      url: "https://riftn.com",
     },
   };
 

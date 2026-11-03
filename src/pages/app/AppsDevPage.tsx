@@ -34,7 +34,7 @@ import { ownershipMessage, parseAppUrl } from '@/lib/miniapp/protocol';
 import { createDeveloperApp, deleteDeveloperApp, listDeveloperApps, rotateDeveloperSecret, type DeveloperSignInApp } from '@/lib/api/dehub/mastodon-apps';
 import { checkManifest, fetchLatestRewards, createNotifyKey, fetchMyApps, fetchAppStats, fetchWebhookDeliveries, submitApp, testWebhook, type ManifestCheck } from '@/lib/miniapp/registry';
 
-const QUICKSTART = `<script src="https://dehub.io/sdk/miniapp.js"></script>
+const QUICKSTART = `<script src="https://riftn.com/sdk/miniapp.js"></script>
 <script>
   // Hide the splash screen once your first screen is on.
   dehub.ready();
@@ -56,7 +56,7 @@ const JWKS = createRemoteJWKSet(
 );
 
 const { payload } = await jwtVerify(token, JWKS, {
-  issuer: 'https://dehub.io',
+  issuer: 'https://riftn.com',
   audience: 'app.example.com', // your domain
 });
 // payload.sub is the user's wallet address`;
@@ -83,7 +83,7 @@ const { txHash, receipt } = await dehub.actions.pay({ amount: 50, memo: 'Extra l
 
 // On your server: the receipt is a JWT, checked against the same JWKS.
 const { payload } = await jwtVerify(receipt, JWKS, {
-  issuer: 'https://dehub.io',
+  issuer: 'https://riftn.com',
   audience: 'app.example.com',
 });
 // payload.typ === 'payment', payload.amount, payload.token === 'DHB', payload.txHash`;
@@ -443,13 +443,13 @@ export default function AppsDevPage() {
       <SEOHead
         title={t('miniApps.dev.seoTitle')}
         description={t('miniApps.dev.seoDescription')}
-        url="https://dehub.io/apps/dev"
-        image="https://dehub.io/og/apps.jpg"
+        url="https://riftn.com/apps/dev"
+        image="https://riftn.com/og/apps.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'TechArticle',
           headline: 'Build a DeHub mini app',
-          url: 'https://dehub.io/apps/dev',
+          url: 'https://riftn.com/apps/dev',
         }}
       />
 
@@ -592,7 +592,7 @@ export default function AppsDevPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      void navigator.clipboard?.writeText(`https://dehub.io/apps/${app.slug}`);
+                      void navigator.clipboard?.writeText(`https://riftn.com/apps/${app.slug}`);
                       toast.success(t('miniApps.dev.copied'));
                     }}
                     aria-label={t('miniApps.dev.copyLink')}

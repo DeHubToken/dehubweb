@@ -8,7 +8,7 @@ import { getRemixCounts, getRemixLinks } from '@/lib/remix-links';
 
 /** The post id at the end of a DeHub post URL, or null. */
 export function tokenIdFromPostUrl(url: string): number | null {
-  const match = url.match(/^https:\/\/(?:www\.|staging\.)?dehub\.io\/(?:app\/)?(?:post|video)\/(\d+)(?:[/?#]|$)/);
+  const match = url.match(/^https:\/\/(?:(?:www\.|staging\.)?dehub\.io|(?:www\.)?riftn\.com)\/(?:app\/)?(?:post|video)\/(\d+)(?:[/?#]|$)/);
   const id = match ? Number(match[1]) : NaN;
   return Number.isSafeInteger(id) && id > 0 ? id : null;
 }

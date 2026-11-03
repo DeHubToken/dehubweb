@@ -248,7 +248,7 @@ describe('arcade assets', () => {
       expect(pages, `MARKETING_PAGES is missing 'arcade/${game.slug}'`).toContain(`  'arcade/${game.slug}': {`);
       expect(grid, `the arcade grid's crawler copy does not link ${game.slug}`).toContain(`/arcade/${game.slug}"`);
       expect(sitemap, `sitemap-static.xml is missing /arcade/${game.slug}`).toContain(
-        `<loc>https://dehub.io/arcade/${game.slug}</loc>`,
+        `<loc>https://riftn.com/arcade/${game.slug}</loc>`,
       );
     }
   });
@@ -594,7 +594,7 @@ describe('arcade headers', () => {
       }),
     );
     const response = await worker.fetch(
-      new Request(`https://dehub.io${path}?v=community-20261011`),
+      new Request(`https://riftn.com${path}?v=community-20261011`),
       { ASSETS: { fetch } },
     );
 

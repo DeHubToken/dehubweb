@@ -23,7 +23,7 @@ import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { aiChat } from "./ai-chat.ts";
 
 // Overridable for local testing (globalThis.DEHUB_KIT_BASE).
-const KIT_BASE: string = (globalThis as Record<string, unknown>)["DEHUB_KIT_BASE"] as string ?? "https://dehub.io/brand-kit";
+const KIT_BASE: string = (globalThis as Record<string, unknown>)["DEHUB_KIT_BASE"] as string ?? "https://riftn.com/brand-kit";
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
@@ -578,7 +578,7 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
   );
 
   // //dehub.io — bottom, inset from the pill, standing on the same floor.
-  const siteTxt = "dehub.io";
+  const siteTxt = "riftn.com";
   const siteW = (siteTxt.length + 2) * fs * 0.55 + padX * 2;
   const siteH = lh + padY * 2;
   const siteX = W * (F.land ? 0.475 : 0.40), siteY = H - PAD - siteH;

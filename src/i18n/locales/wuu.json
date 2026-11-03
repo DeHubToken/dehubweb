@@ -314,7 +314,7 @@
     "empty": "無活躍帳號連線。",
     "disconnect": "断开连接",
     "failed": "請重新連接。",
-    "intro": "瀏覽 DeHub 在 ChatGPT 中，或鏈接您的帳戶以更新您的個人檔案、發布文章並使用 Creator Studio。加入 https://dehub.io/mcp 作為 OAuth 連接器以控制帳戶。",
+    "intro": "瀏覽 DeHub 在 ChatGPT 中，或鏈接您的帳戶以更新您的個人檔案、發布文章並使用 Creator Studio。加入 https://riftn.com/mcp 作為 OAuth 連接器以控制帳戶。",
     "what": "瀏覽公共帖子和個人檔案。透過OAuth帳號連結，管理個人檔案和隱私設定，發佈帖子和留言，追蹤使用者，閱讀通知，儲存書籤並生成圖像、視頻、音頻和3D資產。生成使用DeHub的現有付款規則。"
   },
   "twitchMirror": {

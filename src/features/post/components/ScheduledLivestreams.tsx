@@ -28,7 +28,7 @@ export default function ScheduledLivestreams({ onStart }: { onStart: (stream: Li
     try {
       const [key, ingest] = await Promise.all([getStreamKey(stream.streamId), getStreamIngestUrl(stream.streamId)]);
       if (!key.result.streamKey || stream.tokenId == null) throw new Error(_copy("copy.7d3a28639f46", { defaultValue: "Stream credentials are unavailable" }));
-      onStart({ tokenId: String(stream.tokenId), streamId: stream.streamId, streamKey: key.result.streamKey, ingestUrl: ingest.result.ingestUrl, playbackUrl: `https://dehub.io/app/post/${stream.tokenId}`, playbackId: stream.playbackId, provider: stream.provider });
+      onStart({ tokenId: String(stream.tokenId), streamId: stream.streamId, streamKey: key.result.streamKey, ingestUrl: ingest.result.ingestUrl, playbackUrl: `https://riftn.com/app/post/${stream.tokenId}`, playbackId: stream.playbackId, provider: stream.provider });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : _copy("copy.4341bda268a8", { defaultValue: "Could not open the scheduled stream" }));
     } finally { setStarting(null); }

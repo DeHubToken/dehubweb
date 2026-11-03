@@ -16,7 +16,7 @@ for (const [route, languages] of Object.entries(pages)) {
   const served = Object.keys(languages).filter((language) => language !== 'en');
   if (!served.length) continue;
   const urls = [...served, 'en'].map((language) =>
-    `https://dehub.io${route}${language === 'en' ? '' : `?hl=${language}`}`,
+    `https://riftn.com${route}${language === 'en' ? '' : `?hl=${language}`}`,
   );
   for (const url of urls) {
     const content = byUrl.get(url);
@@ -25,7 +25,7 @@ for (const [route, languages] of Object.entries(pages)) {
       const alternate = `<xhtml:link rel="alternate" hreflang="${language}" href="${urls[index].replaceAll('&', '&amp;')}"/>`;
       if (!content.includes(alternate)) throw new Error(`Missing ${language} alternate on ${url}`);
     }
-    if (!content.includes(`<xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io${route}"/>`)) {
+    if (!content.includes(`<xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com${route}"/>`)) {
       throw new Error(`Missing x-default alternate on ${url}`);
     }
     variants += 1;
@@ -33,7 +33,7 @@ for (const [route, languages] of Object.entries(pages)) {
 }
 
 for (const route of excluded) {
-  if (byUrl.has(`https://dehub.io${route}`) || [...byUrl.keys()].some((url) => url.startsWith(`https://dehub.io${route}?hl=`))) {
+  if (byUrl.has(`https://riftn.com${route}`) || [...byUrl.keys()].some((url) => url.startsWith(`https://riftn.com${route}?hl=`))) {
     throw new Error(`Noindex route appears in sitemap: ${route}`);
   }
 }

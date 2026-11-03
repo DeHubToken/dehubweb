@@ -17,7 +17,7 @@ export function bountyPath(job: Pick<WorkJob, 'job_number'>): string {
 }
 
 export function bountyUrl(job: Pick<WorkJob, 'job_number'>): string {
-  return `https://dehub.io${bountyPath(job)}`;
+  return `https://riftn.com${bountyPath(job)}`;
 }
 
 export function bountyTitle(job: Pick<WorkJob, 'title'>): string {

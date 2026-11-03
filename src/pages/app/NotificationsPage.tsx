@@ -1051,7 +1051,7 @@ function announcementTarget(notification: DeHubNotification): AnnouncementTarget
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
 
   const host = url.hostname.replace(/^www\./, '');
-  if (host === 'dehub.io' || url.hostname === window.location.hostname) {
+  if (host === 'riftn.com' || host === 'dehub.io' || url.hostname === window.location.hostname) {
     return { kind: 'internal', path: `${url.pathname}${url.search}${url.hash}` };
   }
   return { kind: 'external', url: url.href };
@@ -2426,7 +2426,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     // portaled settings sheet / actors drawer carry the same attribute
     // (portals escape this subtree).
     <div data-notifications-page className={inDrawer ? "min-h-full" : "min-h-screen"}>
-      {!inDrawer && <SEOHead title={_copy("copy.c598c6a2fa2a", { defaultValue: "Notifications - Stay Updated" })} description={_copy("copy.3ac4d647017f", { defaultValue: "Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." })} url="https://dehub.io/app/notifications" />}
+      {!inDrawer && <SEOHead title={_copy("copy.c598c6a2fa2a", { defaultValue: "Notifications - Stay Updated" })} description={_copy("copy.3ac4d647017f", { defaultValue: "Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." })} url="https://riftn.com/app/notifications" />}
       <h1 className="sr-only">{_copy("copy.231ec14284fc", { defaultValue: "DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header */}
       <div ref={islandHostRef} className="contents">

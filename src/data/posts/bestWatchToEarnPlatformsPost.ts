@@ -29,7 +29,7 @@ If you are new to the model itself, start with our explainer on [what watch-to-e
 
 We will be upfront that this is our platform, so weigh the section accordingly. What earns DeHub a place near the top is not marketing; it is that the earning mechanics are wired into a working, open-source social network rather than a standalone rewards gimmick.
 
-On [DeHub, the decentralised social network](/guides/what-is-dehub), watch-to-earn takes the form of on-chain **bounties**: creators and advertisers fund a reward pool, and viewers who watch qualifying content earn a share, settled on-chain in $DHB. There is no browser extension to install and no NFT to buy before you can start — you watch in the [DeHub app](https://dehub.io/app) and rewards accrue against your wallet.
+On [DeHub, the decentralised social network](/guides/what-is-dehub), watch-to-earn takes the form of on-chain **bounties**: creators and advertisers fund a reward pool, and viewers who watch qualifying content earn a share, settled on-chain in $DHB. There is no browser extension to install and no NFT to buy before you can start — you watch in the [DeHub app](https://riftn.com/app) and rewards accrue against your wallet.
 
 Because the whole platform is on-chain, the reward events are transparent and verifiable rather than a number ticking up in a private database. Creators can mint content on-chain as they upload it or any time after, the feed is chronological rather than algorithm-gated, and up to 90% of ad revenue is shared back into the ecosystem. Alongside watch-to-earn there is a play-to-earn arcade — including the flagship MMA battle royale **Last Chad Standing** — plus on-chain live streaming on Livepeer that has scaled past 50,000 concurrent viewers, and end-to-end encrypted messaging.
 
@@ -37,7 +37,7 @@ The $DHB token runs primarily on Base (an Ethereum Layer 2), with contracts also
 
 **Honest limitations.** DeHub is a full social platform, so watch-to-earn is one mechanic among many rather than the single headline number — if you only want a slot-machine "watch, tap, claim" loop, that is not the design. Bounty pools are funded by creators and advertisers, so earnings scale with genuine engagement and available campaigns rather than a fixed guaranteed rate, and, as with any token, the value of $DHB moves with the market.
 
-**Best for:** viewers who want on-chain, no-paywall earning inside a censorship-resistant network they actually own a stake in. Try it at [the DeHub web app](https://dehub.io) or on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+**Best for:** viewers who want on-chain, no-paywall earning inside a censorship-resistant network they actually own a stake in. Try it at [the DeHub web app](https://riftn.com) or on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 
 ### Theta.tv — established, but watch-to-earn is rate-limited
 
@@ -99,7 +99,7 @@ The best watch-to-earn platforms in 2026 are the ones where the reward is on-cha
 
 Our recommendation for most newcomers is to start with a no-paywall, on-chain option tied to a real network, watch how quickly and transparently rewards settle, and only then decide whether to spend more time — or any money — anywhere. A useful test is to earn a small amount on your chosen platform and try to withdraw it in the first week; a platform that lets modest earnings leave cleanly, on-chain and without a punitive fee, has already told you most of what you need to know. If a withdrawal stalls or the goalposts move, walk away before you invest more of your attention.
 
-You can start free with [DeHub watch-to-earn](https://dehub.io/app), and read the pillar guide to [what watch-to-earn is](/guides/what-is-watch-to-earn) if you want the mechanics from first principles. Whichever platform you choose, keep your expectations proportionate: watch-to-earn is a way to be paid for attention that advertisers already value, not a salary — and the platforms worth your time are the ones honest about that.
+You can start free with [DeHub watch-to-earn](https://riftn.com/app), and read the pillar guide to [what watch-to-earn is](/guides/what-is-watch-to-earn) if you want the mechanics from first principles. Whichever platform you choose, keep your expectations proportionate: watch-to-earn is a way to be paid for attention that advertisers already value, not a salary — and the platforms worth your time are the ones honest about that.
 
 ## Frequently asked questions
 

@@ -18,8 +18,8 @@ const APP_URL =
   "https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c";
 // Canonical + OG must live on dehub.io — pointing them at a preview mirror
 // told Google the staging host was the real page.
-const PAGE_URL = "https://dehub.io/connect/chatgpt";
-const OG_IMAGE = "https://dehub.io" + ogImage;
+const PAGE_URL = "https://riftn.com/connect/chatgpt";
+const OG_IMAGE = "https://riftn.com" + ogImage;
 
 const steps = [
   {
@@ -28,7 +28,7 @@ const steps = [
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    get body() { return _translateCopy('accountConnect.step', { defaultValue: 'For account controls, add https://dehub.io/mcp as an OAuth connector, sign in to DeHub and review the permissions before allowing access.' }); },
+    get body() { return _translateCopy('accountConnect.step', { defaultValue: 'For account controls, add https://riftn.com/mcp as an OAuth connector, sign in to DeHub and review the permissions before allowing access.' }); },
   },
   {
     get title() { return _translateCopy("copy.1c353e8894fb", { defaultValue: "Start a new chat and use it" }); },
