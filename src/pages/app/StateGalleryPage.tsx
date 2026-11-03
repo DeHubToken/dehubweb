@@ -252,11 +252,13 @@ const SAMPLE_ARTICLE = {
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
     'Moving to DeHub was not about crypto. It was about owning the relationship with the people who watch us every night.',
+    '![Our first night streaming on DeHub, 214 people in chat](/media/fig-athlete-who-owns-the-fan.jpg#w=1200&h=630)',
     '# What actually changed',
     'Tips land in our wallet the moment they are sent. **Subscribers unlock posts with a tier**, not an algorithm.',
     '> We stopped asking permission to get paid.',
     '# The numbers after 90 days',
     '- Revenue per viewer up 34%\n- Churn down for the first time in a year\n- Zero frozen payouts',
+    '![](/media/fig-chains-bignames.jpg#w=2400&h=1260)',
     '# What we would do differently',
     'We would have moved our [back catalogue](https://dehub.io) on day one, instead of waiting to see if the audience followed.',
   ].join('\n\n'),

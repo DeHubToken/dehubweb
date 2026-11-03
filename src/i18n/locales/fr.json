@@ -19735,7 +19735,17 @@
     "formatting": "Formatage",
     "bodyPlaceholder": "Racontez votre histoire. Sélectionnez du texte et utilisez la barre ci-dessus pour les titres, les italiques, les citations et les listes.",
     "bodyLabel": "Corps de l'article",
-    "wordCount": "{{count}} mots"
+    "wordCount": "{{count}} mots",
+    "imageLimit": "Un article peut contenir jusqu'à {{count}} images",
+    "imageLimitSome": "Seulement {{count}} images de plus peuvent être ajoutées",
+    "imageFailed": "Impossible d'ajouter cette image. Essayez-en une autre.",
+    "imagesUploading": "Ajout des images ({{count}})…",
+    "bodyTooLong": "{{count}} caractères au-delà de la limite",
+    "imagesLabel": "Images",
+    "imagesCount": "Images · {{count}}/{{max}}",
+    "captionPlaceholder": "Ajouter une légende",
+    "captionLabel": "Légende de l'image {{n}}",
+    "removeInlineImage": "Retirer l'image {{n}}"
   },
   "liveAudience": {
     "whosHere": "Qui est là",

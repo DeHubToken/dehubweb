@@ -19731,7 +19731,17 @@
     "formatting": "Biçimlendirme",
     "bodyPlaceholder": "Hikayenizi anlatın. Metni seçin ve üstteki çubuğu kullanın: başlıklar, kalın, alıntılar ve liste.",
     "bodyLabel": "Makale metni",
-    "wordCount": "{{count}} kelime"
+    "wordCount": "{{count}} kelime",
+    "imageLimit": "Makaleler en fazla {{count}} görsel içerebilir",
+    "imageLimitSome": "Bu makaleye yalnızca {{count}} görsel daha eklenebilir",
+    "imageFailed": "Bu görsel eklenemedi. Başka bir tane deneyin.",
+    "imagesUploading": "Görseller ekleniyor ({{count}})…",
+    "bodyTooLong": "Sınırın {{count}} karakter üzerinde",
+    "imagesLabel": "Görseller",
+    "imagesCount": "Görseller · {{count}}/{{max}}",
+    "captionPlaceholder": "Açıklama ekle",
+    "captionLabel": "{{n}}. görselin açıklaması",
+    "removeInlineImage": "{{n}}. görseli kaldır"
   },
   "liveAudience": {
     "whosHere": "Kimler burada",

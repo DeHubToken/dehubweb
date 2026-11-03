@@ -19747,7 +19747,17 @@
     "formatting": "التنسيق",
     "bodyPlaceholder": "أخبرنا قصةك. اختر النص واستخدم القائمة أعلاه لإنشاء رؤوس الفقرات والخطوط البولندية والاقتباسات والقوائم.",
     "bodyLabel": "نص المقال",
-    "wordCount": "{{count}} كلمات"
+    "wordCount": "{{count}} كلمات",
+    "imageLimit": "يمكن أن يحتوي المقال على {{count}} صورة كحد أقصى",
+    "imageLimitSome": "يتسع هذا المقال لـ {{count}} صور إضافية فقط",
+    "imageFailed": "تعذّرت إضافة هذه الصورة. جرّب صورة أخرى.",
+    "imagesUploading": "جارٍ إضافة الصور ({{count}})…",
+    "bodyTooLong": "{{count}} حرفًا فوق الحد",
+    "imagesLabel": "الصور",
+    "imagesCount": "الصور · {{count}}/{{max}}",
+    "captionPlaceholder": "أضف تعليقًا للصورة",
+    "captionLabel": "تعليق الصورة {{n}}",
+    "removeInlineImage": "إزالة الصورة {{n}}"
   },
   "liveAudience": {
     "whosHere": "من هنا",

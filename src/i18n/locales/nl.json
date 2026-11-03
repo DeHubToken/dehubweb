@@ -19980,7 +19980,17 @@
     "formatting": "Opmaak",
     "bodyPlaceholder": "Vertel je verhaal. Selecteer tekst en gebruik de balk hierboven voor koppen, vet, aanhalingstekens en lijsten.",
     "bodyLabel": "Artikel body",
-    "wordCount": "{{count}} woorden"
+    "wordCount": "{{count}} woorden",
+    "imageLimit": "Artikelen kunnen maximaal {{count}} afbeeldingen bevatten",
+    "imageLimitSome": "Er passen nog maar {{count}} afbeeldingen in dit artikel",
+    "imageFailed": "Die afbeelding kon niet worden toegevoegd. Probeer een andere.",
+    "imagesUploading": "Afbeeldingen toevoegen ({{count}})…",
+    "bodyTooLong": "{{count}} tekens boven de limiet",
+    "imagesLabel": "Afbeeldingen",
+    "imagesCount": "Afbeeldingen · {{count}}/{{max}}",
+    "captionPlaceholder": "Voeg een bijschrift toe",
+    "captionLabel": "Bijschrift voor afbeelding {{n}}",
+    "removeInlineImage": "Afbeelding {{n}} verwijderen"
   },
   "liveAudience": {
     "whosHere": "Wie is hier",
