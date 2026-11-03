@@ -143,7 +143,8 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
           >
             {followed ? (
               <>
-                <Check className="w-3.5 h-3.5" />
+                {/* Drawn inset in its box: pull it out so both sides of the pill match. */}
+                <Check className="w-3.5 h-3.5 -ml-[1.2px]" />
                 {followedLabel ?? _copy('copy.344b4271ca01', { defaultValue: 'Following' })}
               </>
             ) : followsYou ? (
