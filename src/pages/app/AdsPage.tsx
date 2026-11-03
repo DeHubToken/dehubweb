@@ -42,7 +42,7 @@ export default function AdsPage() {
     <div className="min-h-screen">
       <SEOHead
         title={t('ads.seoTitle')}
-        description={_copy("copy.dac3d679946e", { defaultValue: "Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens." })}
+        description={_copy("copy.dac3d679946e", { defaultValue: "Launch POVR ad campaigns on Riftn: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens." })}
       />
 
       <PageIsland

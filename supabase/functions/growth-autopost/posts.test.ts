@@ -138,7 +138,7 @@ test('stage clips carry the video and a tagged link back to the stage', () => {
   const texts = textsFor(draft, ['tiktok', 'instagram', 'youtube', 'twitter']);
   for (const [platform, text] of Object.entries(texts)) {
     assert.ok(text.includes(`https://riftn.com/stages/42?utm_source=${platform}&utm_medium=social&utm_campaign=autopost_stage_clip`), platform);
-    assert.ok(text.startsWith('From “Builders hour”, a DeHub Stage hosted by maya'), platform);
+    assert.ok(text.startsWith('From “Builders hour”, a Riftn Stage hosted by maya'), platform);
   }
   assert.ok(texts.twitter.length <= 280);
 });

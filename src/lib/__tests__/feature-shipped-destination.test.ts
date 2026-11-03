@@ -28,7 +28,7 @@ describe('getShippedFeatureDestination', () => {
   it('routes earnings requests to the command centre', () => {
     expect(getShippedFeatureDestination({
       id: 'request-4',
-      title: 'Earnings comparison dashboard - DeHub vs competitors',
+      title: 'Earnings comparison dashboard - Riftn vs competitors',
     })).toBe('/app/command-centre');
   });
 

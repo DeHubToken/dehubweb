@@ -31,7 +31,7 @@ interface McpToolResult {
  */
 function parseStreamableResponse(raw: string): { result?: McpToolResult; error?: { message?: string } } {
   const trimmed = raw.trim();
-  if (!trimmed) throw new Error("DeHub MCP returned an empty response");
+  if (!trimmed) throw new Error("Riftn MCP returned an empty response");
 
   if (trimmed.startsWith("{")) return JSON.parse(trimmed);
 
@@ -41,7 +41,7 @@ function parseStreamableResponse(raw: string): { result?: McpToolResult; error?:
     .map((line) => line.slice(5).trim())
     .filter(Boolean);
 
-  if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
+  if (!dataLines.length) throw new Error("Riftn MCP returned no data frame");
   return JSON.parse(dataLines[dataLines.length - 1]);
 }
 
@@ -65,21 +65,21 @@ export async function callDeHubTool(
   });
 
   if (!response.ok) {
-    throw new Error(`DeHub MCP request failed with HTTP ${response.status}`);
+    throw new Error(`Riftn MCP request failed with HTTP ${response.status}`);
   }
 
   const payload = parseStreamableResponse(await response.text());
-  if (payload.error) throw new Error(payload.error.message ?? "DeHub MCP error");
+  if (payload.error) throw new Error(payload.error.message ?? "Riftn MCP error");
 
   const result = payload.result;
-  if (!result) throw new Error("DeHub MCP returned no result");
+  if (!result) throw new Error("Riftn MCP returned no result");
 
   // A tool can fail while the transport succeeds; surface its message rather
   // than handing back an error object dressed as data.
   const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
   if (result.isError) {
     const message = typeof body?.error === "string" ? body.error : undefined;
-    throw new Error(message ?? "DeHub tool call failed");
+    throw new Error(message ?? "Riftn tool call failed");
   }
 
   return body ?? {};

@@ -385,7 +385,7 @@ async function readApi(r: Reading, dhbUsd: number, fx: Record<string, number>) {
   } catch (err) {
     const reason = err instanceof Error ? (err.name === 'TimeoutError' ? 'timed out' : err.message) : String(err);
     console.error('[finance-stats] core API revenue', API_BASE, reason);
-    r.notes.push(`DeHub's core API could not be read this time (${reason}), so in-app buys and the fees it reports are left out until the next read.`);
+    r.notes.push(`Riftn's core API could not be read this time (${reason}), so in-app buys and the fees it reports are left out until the next read.`);
   }
 }
 
@@ -489,7 +489,7 @@ async function compute() {
       group: source.group,
       origin: 'chain' as const,
       status: 'ok' as const,
-      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}: ${source.provenance.grossBnb.toLocaleString('en-US')} BNB received, ${source.provenance.passedOnBnb.toLocaleString('en-US')} BNB passed on to holders, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB to DeHub operations.`,
+      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}: ${source.provenance.grossBnb.toLocaleString('en-US')} BNB received, ${source.provenance.passedOnBnb.toLocaleString('en-US')} BNB passed on to holders, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB to Riftn operations.`,
     })),
     ...fixedItems.map((item) => ({
       id: item.id,
@@ -519,7 +519,7 @@ async function compute() {
         'Amounts paid in DHB are valued at DHB’s live market price on DexScreener when a pool holds at least $10,000 of liquidity, and otherwise at the $0.001 gateway peg the app sells and spends DHB at. Amounts already recorded in USD keep that value; other fiat uses the ECB reference rate.',
       excluded: [
         'Tips, pay-per-view and paid DMs go from fan to creator with no platform cut, so they are not revenue.',
-        'DHB credit balances are counted when they are spent on a DeHub product, not when they are loaded, so the same money is not counted twice.',
+        'DHB credit balances are counted when they are spent on a Riftn product, not when they are loaded, so the same money is not counted twice.',
         'Bills with no API — hosting and tools other than those listed — appear only once they are added to the fixed-cost list.',
       ],
     },
@@ -537,7 +537,7 @@ async function compute() {
       .map((s) => ({ id: s.id, label: s.label, status: s.status, note: s.note })),
     explorers: { bsc: 'https://bscscan.com', base: 'https://basescan.org' },
     addresses: [
-      { label: 'DeHub treasury (in-app DHB payments)', address: TREASURY, chains: ['base', 'bsc'] },
+      { label: 'Riftn treasury (in-app DHB payments)', address: TREASURY, chains: ['base', 'bsc'] },
       ...history.sources.flatMap((s) =>
         s.provenance.addresses.map((a) => ({ label: a.label, address: a.address, chains: [s.chain] })),
       ),

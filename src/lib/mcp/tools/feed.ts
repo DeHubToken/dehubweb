@@ -4,9 +4,9 @@ import { callDeHubTool } from "./dehub-rpc";
 
 export default defineTool({
   name: "dehub_feed",
-  title: "Get DeHub feed",
+  title: "Get Riftn feed",
   description:
-    "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
+    "Fetch posts from the Riftn decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
   inputSchema: {
     sort: z
       .enum(["new", "hot", "trending", "discussed"])

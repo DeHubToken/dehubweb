@@ -8,7 +8,7 @@ import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 /**
  * Shorts Feed Component
  * =====================
- * Displays short-form video content from DeHub API.
+ * Displays short-form video content from Riftn API.
  * 
  * @module components/app/feeds/ShortsFeed
  */
@@ -374,7 +374,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     return FALLBACK_CATEGORIES;
   }, [apiCategories]);
 
-  // Fetch from DeHub API - pass sortMode based on selected filter (default source)
+  // Fetch from Riftn API - pass sortMode based on selected filter (default source)
   const {
     data: apiData,
     fetchNextPage: fetchNextPageDefault,

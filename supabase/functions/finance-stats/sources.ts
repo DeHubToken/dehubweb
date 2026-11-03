@@ -22,8 +22,8 @@ export interface SourceMeta {
 /** The fixed catalogue. Anything a reader sees on the page is listed here. */
 export const CATALOGUE: Omit<SourceMeta, 'status'>[] = [
   // In-app buys
-  { id: 'dhb_card', label: 'DHB bought by card', kind: 'revenue', group: 'buys', origin: 'api', note: 'Card purchases of DHB through DeHub Pay that settled and were not refunded, at the amount charged.' },
-  { id: 'dhb_crypto', label: 'DHB bought with crypto', kind: 'revenue', group: 'buys', origin: 'api', note: 'Crypto purchases of DHB through DeHub Pay that completed, at the USD value that settled.' },
+  { id: 'dhb_card', label: 'DHB bought by card', kind: 'revenue', group: 'buys', origin: 'api', note: 'Card purchases of DHB through Riftn Pay that settled and were not refunded, at the amount charged.' },
+  { id: 'dhb_crypto', label: 'DHB bought with crypto', kind: 'revenue', group: 'buys', origin: 'api', note: 'Crypto purchases of DHB through Riftn Pay that completed, at the USD value that settled.' },
   { id: 'pro_plans', label: 'Pro plans', kind: 'revenue', group: 'buys', origin: 'stripe', note: 'Paid subscription invoices in Stripe for the Creator, Ultra, Team and Scale plans.' },
   { id: 'ai_generations', label: 'AI generations', kind: 'revenue', group: 'buys', origin: 'database', note: 'DHB paid for image, video, music and 3D generations, less refunds for jobs that failed, plus generations paid from credits.' },
   { id: 'ads', label: 'Ads', kind: 'revenue', group: 'buys', origin: 'database', note: 'Ad budget top-ups, at the USD value recorded when they were paid.' },

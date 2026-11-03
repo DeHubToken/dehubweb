@@ -503,7 +503,7 @@ const MessageBubble = memo(function MessageBubble({
   }, [downloadTarget, message._id, _copy]);
 
   // A shared entity: a text message whose content contains a link to something
-  // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
+  // inside Riftn. Rendered as a rich, tappable card instead of a raw link.
   //
   // This used to recognise posts only, which is why sending someone a shop item
   // or a community from the app produced a naked URL in their inbox while a post
@@ -1357,7 +1357,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     });
   }, [feeRequired, walletAddress]);
 
-  // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
+  // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns Riftn data), use it
   useEffect(() => {
     const convId = conversation.id;
     const isRealId = !convId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(convId);

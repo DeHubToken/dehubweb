@@ -266,7 +266,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
         cardId,
         {
           title: `${channel.name} ${isMutedRef.current ? '🔇' : '🔊'}`,
-          artist: 'DeHub TV',
+          artist: 'Riftn TV',
           artwork: channel.logo || null,
         },
         { nexttrack: handler, previoustrack: handler },

@@ -116,7 +116,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // With or without the /app prefix — both spellings reach the same page.
   const isPostPage = /^\/(?:app\/)?(?:post|video)\//.test(location.pathname);
   // When the post overlay is opened from the feed, the home page's sticky tab bar hosts
-  // the back button (settings-toggle slot). The top DEHUB bar stays exactly as it was on the feed.
+  // the back button (settings-toggle slot). The top RIFTN bar stays exactly as it was on the feed.
   const isOverlayFromFeed = isPostPage && !!(location.state as any)?.fromFeed;
   // The bar (menu, dehub mark, bell) belongs to the home feed only. Every
   // other page already names itself in its own pill, so the bar there was a
@@ -232,7 +232,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
       </div>
 
       {/* Notifications — right slot, only visible when logged in.
-          When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
+          When the post overlay is opened from the feed, keep the RIFTN header exactly as it was. */}
       <div className="flex items-center">
         {isAuthenticated && (
           <button

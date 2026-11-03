@@ -1,8 +1,8 @@
 /**
  * Profile Avatar Cache Hook
  * ==========================
- * Provides live avatar URLs for creators using direct DeHub API calls.
- * No edge function needed — calls go straight to the public DeHub API
+ * Provides live avatar URLs for creators using direct Riftn API calls.
+ * No edge function needed — calls go straight to the public Riftn API
  * with TanStack Query caching to minimize network requests.
  * 
  * Uses stale-while-revalidate pattern for instant display with background refresh.
@@ -23,7 +23,7 @@ const AVATAR_CACHE_GC_MS = 30 * 60 * 1000; // 30 minutes
 const AVATAR_QUERY_KEY = 'profile-avatar';
 
 /**
- * Extract avatar URL from DeHub user response
+ * Extract avatar URL from Riftn user response
  */
 function extractUserAvatarUrl(user: DeHubUser): string | undefined {
   const rawPath = extractAvatarPath(user);
@@ -32,7 +32,7 @@ function extractUserAvatarUrl(user: DeHubUser): string | undefined {
 }
 
 /**
- * Fetch a single avatar directly from the DeHub API.
+ * Fetch a single avatar directly from the Riftn API.
  * TanStack Query handles deduplication and caching.
  */
 async function fetchAvatarDirect(address: string): Promise<string | null> {
@@ -42,7 +42,7 @@ async function fetchAvatarDirect(address: string): Promise<string | null> {
 
 /**
  * Hook to get a live avatar URL for a specific wallet address.
- * Uses direct DeHub API calls with TanStack Query caching.
+ * Uses direct Riftn API calls with TanStack Query caching.
  */
 export function useProfileAvatar(
   walletAddress: string | undefined,
@@ -66,7 +66,7 @@ export function useProfileAvatar(
 
 /**
  * Hook to prefetch avatars for multiple wallet addresses at once.
- * Uses direct DeHub API calls — TanStack Query deduplicates automatically.
+ * Uses direct Riftn API calls — TanStack Query deduplicates automatically.
  */
 export function useAvatarPrefetch() {
   const queryClient = useQueryClient();

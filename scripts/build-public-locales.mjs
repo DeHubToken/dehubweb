@@ -25,7 +25,7 @@ const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCode
 const normalizeCopy = value => decodeHtml(value).replace(/\s+/g, ' ').trim();
 const neutralCopy = s=>!/\p{L}/u.test(s)||/^(?:#[a-f0-9]{3,8}|0x[a-f0-9]{40}|bc1[a-z0-9]{25,}|[^\s@]+@[^\s@]+\.[^\s@]+|(?:https?:\/\/)?[a-z0-9-]+\.(?:io|com|net|org)(?:\/\S*)?|Exo (?:Black|Semi-bold|Medium|Light) — \d+)$/i.test(s);
 const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|DeHub|ChatGPT|Claude)$/i.test(value);
+const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|Riftn|ChatGPT|Claude)$/i.test(value);
 const numbers = value => [...value.replace(/(\d)[\u00a0 ](?=\d{3}(?:\D|$))/g, '$1').matchAll(/\d[\d.,]*/g)].map(match => match[0].replace(/\D/g, ''));
 const accessibleText = (source, normalizedDictionary, route, lang) => {
   const suffix = source.endsWith('|avatar') ? '|avatar' : '';
@@ -113,7 +113,7 @@ export function collectPublicSources(root) {
       meta = docs[slug];
       if (meta) {
         body = readJson(path.join(root, `public/docs-content/${slug.replaceAll('/', '-')}.json`)).html;
-        meta = { ...meta, heading: meta.title.replace(/ — DeHub( Docs)?$/, '') };
+        meta = { ...meta, heading: meta.title.replace(/ — Riftn( Docs)?$/, '') };
       }
     } else {
       meta = marketing[route.slice(1)] || sections[route.slice(1)];
@@ -121,9 +121,9 @@ export function collectPublicSources(root) {
     }
     if (meta) out[route] = { title: meta.title, description: meta.description, h1: meta.heading || meta.title, body, ...(md ? { md } : {}), ...(meta.intro ? { lede: meta.intro } : {}) };
   }
-  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'DeHub — Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
-  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'DeHub Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
-  out['/docs/blog'] = { title: 'DeHub Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.', h1: 'DeHub Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
+  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'Riftn — Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
+  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'Riftn Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ — Riftn( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
+  out['/docs/blog'] = { title: 'Riftn Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.', h1: 'Riftn Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
   for (const route of routes) if (!out[route]?.body) throw new Error(`Public route has no source body: ${route}`);
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }

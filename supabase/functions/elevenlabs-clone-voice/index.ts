@@ -74,7 +74,7 @@ Deno.serve(async (req) => {
     // No wallet in the description. Ownership is recorded in custom_voices,
     // nothing reads this string back, and the provider's own voice list is
     // reachable from the app — so putting an address in here published it.
-    cloneFormData.append('description', 'DeHub custom voice');
+    cloneFormData.append('description', 'Riftn custom voice');
 
     const response = await fetch('https://api.elevenlabs.io/v1/voices/add', {
       method: 'POST',

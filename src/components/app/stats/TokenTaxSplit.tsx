@@ -1,8 +1,8 @@
 /**
  * Where the token tax went
  * ========================
- * The original DeHub token (BSC, 2021–23) taxed every trade. This card splits
- * that tax three ways — DeHub operations, bought back and burned, paid to holders
+ * The original Riftn token (BSC, 2021–23) taxed every trade. This card splits
+ * that tax three ways — Riftn operations, bought back and burned, paid to holders
  * and stakers — each in USD at the BNB price on the day it happened, so a
  * burn in November 2021 is worth what it cost then, not what BNB is worth now.
  *
@@ -41,7 +41,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
   const parts = [
     {
       id: 'bsc_token_tax',
-      label: t('stats.taxSplit.team', 'DeHub operations'),
+      label: t('stats.taxSplit.team', 'Riftn operations'),
       usd: split.team.usd,
       detail: t('stats.money.reinvestment', 'Marketing & developer wages'),
     },
@@ -49,7 +49,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       id: 'bsc_token_burn',
       label: t('stats.taxSplit.burned', 'Bought back and burned'),
       usd: split.burned.usd,
-      detail: t('stats.taxSplit.burnedDetail', '{{tokens}} DeHub burned in {{n}} buybacks', {
+      detail: t('stats.taxSplit.burnedDetail', '{{tokens}} Riftn burned in {{n}} buybacks', {
         tokens: formatCount(split.burned.tokens),
         n: split.burned.buybacks.toLocaleString('en-US'),
       }),
@@ -122,7 +122,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       </div>
 
       <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 pt-3 border-t border-zinc-800">
-        {t("copy.61623e0ccd12", { defaultValue: "The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by DeHub. Buybacks remain separate. Every amount and original currency can be inspected in the ledger." })}
+        {t("copy.61623e0ccd12", { defaultValue: "The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by Riftn. Buybacks remain separate. Every amount and original currency can be inspected in the ledger." })}
       </p>
     </div>
   );

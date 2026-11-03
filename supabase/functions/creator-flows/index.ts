@@ -1,7 +1,7 @@
 // Creator Flow API — persistence and sharing for the node canvas on /creator/flow.
 //
 // Ported from HeliosGen's spaces / publish / folders API routes
-// (github.com/segfault42/heliosgen, MIT) onto DeHub's stack: one edge function,
+// (github.com/segfault42/heliosgen, MIT) onto Riftn's stack: one edge function,
 // wallet-native auth (x-wallet-address + x-dehub-token, verified against
 // api.dehub.io) and Postgres via the service role, the same shape as
 // builder-api. The public read is the one unauthenticated action.

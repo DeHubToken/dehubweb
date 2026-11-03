@@ -21,13 +21,13 @@ export function bountyUrl(job: Pick<WorkJob, 'job_number'>): string {
 }
 
 export function bountyTitle(job: Pick<WorkJob, 'title'>): string {
-  return `${job.title} — DeHub Bounties`;
+  return `${job.title} — Riftn Bounties`;
 }
 
 /**
  * A bounty with no description still deserves a sentence: the budget and the
  * kind of work are the two facts a share card has to carry, and "Open bounty
- * on DeHub." on its own reads as a broken page.
+ * on Riftn." on its own reads as a broken page.
  */
 export function bountyDescription(
   job: Pick<WorkJob, 'description' | 'total_budget' | 'currency' | 'job_type'>,
@@ -38,7 +38,7 @@ export function bountyDescription(
   const budget = Number(job.total_budget).toLocaleString('en-US', { maximumFractionDigits: 4 });
   const raw =
     job.description ||
-    `A ${job.job_type} bounty on DeHub paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.`;
+    `A ${job.job_type} bounty on Riftn paying ${budget} ${job.currency}. Claim it, submit your proof and get paid from escrow.`;
   const text = raw.replace(/\s+/g, ' ').trim();
   return text.length > 200 ? `${text.slice(0, 199)}…` : text;
 }

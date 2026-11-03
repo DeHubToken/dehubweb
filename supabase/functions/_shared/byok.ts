@@ -3,7 +3,7 @@
  * ==================================================
  * A creator can save a key for any provider listed here. When a tool runs on
  * that provider and the creator has a working key, the job runs on their
- * account and DeHub charges nothing for it.
+ * account and Riftn charges nothing for it.
  *
  * Rules every caller keeps:
  *  - The key is read with `userProviderKey` for one request and then dropped.
@@ -11,9 +11,9 @@
  *  - Calls made with a creator's key must NOT go through
  *    `controlledProviderFetch` or any shared provider backoff: one bad key
  *    must never switch a provider off for everyone else.
- *  - A failing creator key never falls back to DeHub's account silently. The
+ *  - A failing creator key never falls back to Riftn's account silently. The
  *    job stops with `byokErrorResponse`, and the client offers to pay with
- *    DeHub credits instead.
+ *    Riftn credits instead.
  */
 
 import { jsonResponse, serviceClient } from './auth.ts';
@@ -25,7 +25,7 @@ export interface ByokProvider {
   label: string;
   /** Where creators get a key. */
   keysUrl: string;
-  /** What DeHub tools this key powers, shown in settings. */
+  /** What Riftn tools this key powers, shown in settings. */
   powers: string;
   /**
    * A free request that proves the key is real. `okStatuses` are answers that
@@ -150,7 +150,7 @@ export async function testProviderKey(provider: ByokProvider, key: string): Prom
 
 /**
  * The creator's key for this provider, or null when they have none (then the
- * job runs on DeHub's account exactly as before).
+ * job runs on Riftn's account exactly as before).
  */
 export async function userProviderKey(wallet: string, provider: string): Promise<string | null> {
   if (!byokProvider(provider)) return null;
@@ -182,7 +182,7 @@ const MESSAGES: Record<string, (label: string) => string> = {
 
 /**
  * The response a tool sends when a job on the creator's own key fails.
- * `canUseCredits` tells the client to offer "Use DeHub credits instead".
+ * `canUseCredits` tells the client to offer "Use Riftn credits instead".
  */
 export function byokErrorResponse(provider: string, httpStatus: number): Response {
   const label = byokProvider(provider)?.label ?? provider;

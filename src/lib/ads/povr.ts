@@ -196,7 +196,7 @@ export const CAMPAIGN_STATUS_LABELS: Record<CampaignStatus, string> = {
 };
 
 export const AD_BEHAVIOR_OPTIONS: Array<{ value: AdBehavior; label: string; hint: string }> = [
-  { value: 'tippers', get label() { return _translateCopy("copy.942bdfa695d5", { defaultValue: "Tippers" }); }, get hint() { return _translateCopy("copy.b9a8a19200c1", { defaultValue: "Users who have sent tips on DeHub" }); } },
+  { value: 'tippers', get label() { return _translateCopy("copy.942bdfa695d5", { defaultValue: "Tippers" }); }, get hint() { return _translateCopy("copy.b9a8a19200c1", { defaultValue: "Users who have sent tips on Riftn" }); } },
   { value: 'ppv_buyers', get label() { return _translateCopy("copy.7bbecafcf917", { defaultValue: "PPV buyers" }); }, get hint() { return _translateCopy("copy.2ab5a89c5c7d", { defaultValue: "Users who have purchased paid content" }); } },
   { value: 'stakers', get label() { return _translateCopy("copy.5a1a7b1cd695", { defaultValue: "Stakers" }); }, get hint() { return i18n.t('ads.stakersHint'); } },
   { value: 'streamers', get label() { return _translateCopy("copy.de43cabb212f", { defaultValue: "Streamers" }); }, get hint() { return _translateCopy("copy.3b068dde6fd6", { defaultValue: "Users who have gone live" }); } },

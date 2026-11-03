@@ -117,7 +117,7 @@ export default function MobilePreview() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex">
-      <SEOHead title={_copy("copy.ffe5b9da27f5", { defaultValue: "Mobile Preview — DeHub" })} description={_copy("copy.0cf13d60db5f", { defaultValue: "Internal preview of DeHub mobile screens." })} noindex />
+      <SEOHead title={_copy("copy.ffe5b9da27f5", { defaultValue: "Mobile Preview — Riftn" })} description={_copy("copy.0cf13d60db5f", { defaultValue: "Internal preview of Riftn mobile screens." })} noindex />
       {/* Sidebar picker */}
       <aside className="w-64 flex-shrink-0 border-r border-white/10 bg-black/50 backdrop-blur-xl p-4 overflow-y-auto">
         <h1 className="text-white font-bold text-lg mb-1">{_copy("copy.4bc65a38f7bb", { defaultValue: "Mobile Preview" })}</h1>
@@ -146,7 +146,7 @@ export default function MobilePreview() {
         </nav>
 
         <div className="mt-8 p-3 rounded-xl border border-white/10 bg-white/[0.03]">
-          <p className="text-zinc-500 text-[10px] leading-relaxed">{_copy("copy.ae51cc708cec", { defaultValue: "This preview uses static mock data. No API calls are made. All screens follow the DeHub design system tokens." })}</p>
+          <p className="text-zinc-500 text-[10px] leading-relaxed">{_copy("copy.ae51cc708cec", { defaultValue: "This preview uses static mock data. No API calls are made. All screens follow the Riftn design system tokens." })}</p>
         </div>
       </aside>
 

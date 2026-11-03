@@ -1,5 +1,5 @@
 /**
- * "Do this on DeHub" — from inside the game.
+ * "Do this on Riftn" — from inside the game.
  * ==========================================
  * The companion to the exit and readiness bridges, and it exists for the same
  * reason: every embedded game runs in an iframe sandboxed WITHOUT
@@ -8,8 +8,8 @@
  * `Origin: null`, which the API's allowlist — pinned to https://riftn.com — can
  * never match. A `postMessage` is the only channel there is.
  *
- * Trenchstar's desk is three monitors showing DeHub: the feed, your profile,
- * the composer. They are meant to be DeHub, not a painting of it, and neither
+ * Trenchstar's desk is three monitors showing Riftn: the feed, your profile,
+ * the composer. They are meant to be Riftn, not a painting of it, and neither
  * the data nor the click can reach the app from inside the frame. Both come
  * out through here.
  *
@@ -301,7 +301,7 @@ async function toCard(row: FeedRow): Promise<DeskCard> {
  *
  * One message rather than three because all three monitors repaint together,
  * and a desk that filled in over three round trips would show three different
- * moments of DeHub at once.
+ * moments of Riftn at once.
  */
 async function relayDesk(
   to: MessageEventSource | null,
@@ -662,7 +662,7 @@ async function relayTrade(
     return say(false, {
       reason: chainId === BASE_CHAIN_ID
         ? 'wallet not ready'
-        : 'the DeHub wallet cannot sign on this chain yet — connect a wallet to trade here',
+        : 'the Riftn wallet cannot sign on this chain yet — connect a wallet to trade here',
     });
   }
 

@@ -224,13 +224,13 @@ export async function enrollWalletPasskey(opts: {
 
   const prfSalt = crypto.getRandomValues(new Uint8Array(PRF_SALT_BYTES));
   const challenge = crypto.getRandomValues(new Uint8Array(32));
-  const accountLabel = opts.accountLabel?.trim() || "DeHub wallet";
+  const accountLabel = opts.accountLabel?.trim() || "Riftn wallet";
 
   let credential: PublicKeyCredential | null;
   try {
     credential = (await navigator.credentials.create({
       publicKey: {
-        rp: { id: walletPasskeyRpId(), name: "DeHub" },
+        rp: { id: walletPasskeyRpId(), name: "Riftn" },
         user: {
           // The Supabase user id, so re-enrolling on the same device replaces
           // the previous credential for this account instead of piling up.
@@ -557,7 +557,7 @@ export async function registerIdentityPasskey(options: CreationOptionsJSON): Pro
 }
 
 /**
- * Sign the server's challenge with whichever DeHub passkey the user picks.
+ * Sign the server's challenge with whichever Riftn passkey the user picks.
  *
  * No `allowCredentials`: the account is not known until the authenticator
  * answers, which is the whole point of a discoverable credential. The result

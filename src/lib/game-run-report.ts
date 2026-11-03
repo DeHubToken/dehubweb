@@ -19,7 +19,7 @@
  *
  * WHY THE HOST RELAYS RATHER THAN THE GAME POSTING DIRECTLY
  * ---------------------------------------------------------
- * The frame has no origin, no cookies and no access to the player's DeHub
+ * The frame has no origin, no cookies and no access to the player's Riftn
  * token, and it must not have any — it is third-party code. So it cannot call
  * an authenticated endpoint, and it should not be able to. The host holds the
  * identity; the game holds the facts; this is the join.

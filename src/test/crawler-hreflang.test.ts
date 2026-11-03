@@ -61,33 +61,33 @@ const api = new Function('localizePublicChrome', 'localizeStructuredData', `
 const EN_TITLE = 'Live TV — Free Channels From Around the World';
 const TABLE: Table = {
   '/tv': {
-    en: { title: EN_TITLE, description: 'Watch free live TV channels on DeHub.' },
+    en: { title: EN_TITLE, description: 'Watch free live TV channels on Riftn.' },
     de: {
       title: 'Live TV — Kostenlose Kanäle aus der ganzen Welt',
-      description: 'Kostenlose Live-TV-Kanäle auf DeHub ansehen.',
-      h1: 'DeHub TV auf Deutsch',
-      body: '<p>Deutscher Text über DeHub TV.</p>',
+      description: 'Kostenlose Live-TV-Kanäle auf Riftn ansehen.',
+      h1: 'Riftn TV auf Deutsch',
+      body: '<p>Deutscher Text über Riftn TV.</p>',
     },
     es: {
       title: 'TV en vivo — Canales gratis de todo el mundo',
-      description: 'Mira canales de TV en vivo gratis en DeHub — "sin suscripción".',
-      h1: 'DeHub TV',
+      description: 'Mira canales de TV en vivo gratis en Riftn — "sin suscripción".',
+      h1: 'Riftn TV',
       body: '<p>Texto en español.</p>',
     },
     ar: {
       title: 'بث تلفزيوني مباشر',
-      description: 'قنوات مجانية على DeHub.',
-      h1: 'DeHub TV',
+      description: 'قنوات مجانية على Riftn.',
+      h1: 'Riftn TV',
       body: '<p>نص عربي.</p>',
     },
     // A head with no body is the English page again: not served.
     fr: { title: 'Télévision en direct', description: 'Chaînes gratuites.' },
     // A "translation" that is the English title: not served.
-    nl: { title: EN_TITLE, description: 'Gratis kanalen.', h1: 'DeHub TV', body: '<p>Nederlandse tekst.</p>' },
+    nl: { title: EN_TITLE, description: 'Gratis kanalen.', h1: 'Riftn TV', body: '<p>Nederlandse tekst.</p>' },
   },
   '/events': {
-    en: { title: 'Events on DeHub', description: 'Community events.' },
-    de: { title: 'Veranstaltungen auf DeHub', description: 'Community-Events.', h1: 'Events', body: '<p>Text.</p>' },
+    en: { title: 'Events on Riftn', description: 'Community events.' },
+    de: { title: 'Veranstaltungen auf Riftn', description: 'Community-Events.', h1: 'Events', body: '<p>Text.</p>' },
   },
 };
 
@@ -96,18 +96,18 @@ const page = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <title>${EN_TITLE}</title>
-<meta name="description" content="Watch free live TV channels on DeHub.">
+<meta name="description" content="Watch free live TV channels on Riftn.">
 <link rel="canonical" href="https://riftn.com/tv">
 <meta property="og:url" content="https://riftn.com/tv">
 <meta property="og:title" content="${EN_TITLE}">
-<meta property="og:description" content="Watch free live TV channels on DeHub.">
+<meta property="og:description" content="Watch free live TV channels on Riftn.">
 <meta name="twitter:title" content="${EN_TITLE}">
-<meta name="twitter:description" content="Watch free live TV channels on DeHub.">
-<script type="application/ld+json">{"@type":"WebPage","name":"${EN_TITLE}","description":"Watch free live TV channels on DeHub.","url":"https://riftn.com/tv"}</script>
+<meta name="twitter:description" content="Watch free live TV channels on Riftn.">
+<script type="application/ld+json">{"@type":"WebPage","name":"${EN_TITLE}","description":"Watch free live TV channels on Riftn.","url":"https://riftn.com/tv"}</script>
 </head>
 <body>
-<p><a href="https://riftn.com/">DeHub</a> › DeHub TV</p>
-<h1>DeHub TV</h1>
+<p><a href="https://riftn.com/">Riftn</a> › Riftn TV</p>
+<h1>Riftn TV</h1>
 <!--hl-body--><p>English body copy.</p><!--/hl-body-->
 <nav><a href="https://riftn.com/explore">Explore</a></nav>
 </body>
@@ -223,7 +223,7 @@ describe('a noindex page', () => {
     const localized = api.localizePage(noindexPage, '/tv', 'de', TABLE);
     expect(localized).toContain('<meta name="robots" content="noindex, follow">');
     expect(localized).toContain('<html lang="de">');
-    expect(localized).toContain('Deutscher Text über DeHub TV.');
+    expect(localized).toContain('Deutscher Text über Riftn TV.');
     expect(localized).not.toContain('hreflang=');
   });
 });
@@ -235,21 +235,21 @@ describe('a translated page', () => {
     expect(value(out, /<title>([^<]*)<\/title>/)).toBe('Live TV — Kostenlose Kanäle aus der ganzen Welt');
     expect(value(out, /property="og:title" content="([^"]*)"/)).toBe('Live TV — Kostenlose Kanäle aus der ganzen Welt');
     expect(value(out, /name="twitter:title" content="([^"]*)"/)).toBe('Live TV — Kostenlose Kanäle aus der ganzen Welt');
-    expect(value(out, /name="description" content="([^"]*)"/)).toBe('Kostenlose Live-TV-Kanäle auf DeHub ansehen.');
-    expect(value(out, /property="og:description" content="([^"]*)"/)).toBe('Kostenlose Live-TV-Kanäle auf DeHub ansehen.');
+    expect(value(out, /name="description" content="([^"]*)"/)).toBe('Kostenlose Live-TV-Kanäle auf Riftn ansehen.');
+    expect(value(out, /property="og:description" content="([^"]*)"/)).toBe('Kostenlose Live-TV-Kanäle auf Riftn ansehen.');
   });
 
   it('translates the heading, the breadcrumb and the body, not just the head', () => {
-    expect(out).toContain('<h1>DeHub TV auf Deutsch</h1>');
-    expect(out).toContain('› DeHub TV auf Deutsch</p>');
-    expect(out).toContain('<!--hl-body--><p>Deutscher Text über DeHub TV.</p><!--/hl-body-->');
+    expect(out).toContain('<h1>Riftn TV auf Deutsch</h1>');
+    expect(out).toContain('› Riftn TV auf Deutsch</p>');
+    expect(out).toContain('<!--hl-body--><p>Deutscher Text über Riftn TV.</p><!--/hl-body-->');
     expect(out).not.toContain('English body copy');
   });
 
   it('names the page in its own language in JSON-LD', () => {
     const ld = JSON.parse(value(out, /<script type="application\/ld\+json">([\s\S]*?)<\/script>/));
     expect(ld.name).toBe('Live TV — Kostenlose Kanäle aus der ganzen Welt');
-    expect(ld.description).toBe('Kostenlose Live-TV-Kanäle auf DeHub ansehen.');
+    expect(ld.description).toBe('Kostenlose Live-TV-Kanäle auf Riftn ansehen.');
   });
 
   it('declares its language, og:locale and is canonical to its own URL', () => {
@@ -315,14 +315,14 @@ describe('wiring', () => {
     const table = JSON.parse(readFileSync(resolve(ROOT, 'public/seo-i18n.json'), 'utf8')) as Table;
     for (const route of ['/', '/docs']) {
       expect(api.servedLocales(route, table), route).toEqual(['ar', 'es', 'fr', 'nl', 'tr']);
-      expect(table[route].es.title).toContain('DeHub');
+      expect(table[route].es.title).toContain('Riftn');
       expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table[route].es.asset), 'utf8')).body).toContain('<a href="https://riftn.com/docs');
     }
     expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'].es.asset), 'utf8')).lede).toBeTruthy();
     for (const lang of ['ar', 'es', 'fr', 'nl', 'tr']) {
       const home = JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'][lang].asset), 'utf8'));
       expect(home.body).toContain('aria-label=');
-      expect(home.body).not.toContain('aria-label="Learn more about DeHub"');
+      expect(home.body).not.toContain('aria-label="Learn more about Riftn"');
     }
   });
 

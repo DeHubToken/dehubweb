@@ -23,7 +23,7 @@ export type ReplyPolicy = 'public' | 'followers' | 'following' | 'mentioned';
 /** Who may see a post (dehub-stream-backend common/util/post-visibility). Absent means everyone. */
 export type PostVisibility = 'public' | 'followers' | 'direct';
 
-// Types based on DeHub API response (supports both API field naming conventions)
+// Types based on Riftn API response (supports both API field naming conventions)
 export interface DeHubUser {
   _id?: string;
   id?: string;
@@ -47,7 +47,7 @@ export interface DeHubUser {
   ensVerifiedAt?: string | null;
   /**
    * The Solana account this profile owns, proven by an Ed25519 signature over
-   * the DeHub login message. This is where Solana tips and PPV payments are
+   * the Riftn login message. This is where Solana tips and PPV payments are
    * sent, so its absence is what makes "pay on Solana" unavailable for a
    * creator. Never client-writable through /update_profile — see
    * /api/solana/link.

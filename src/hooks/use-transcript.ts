@@ -1,5 +1,5 @@
 /**
- * One transcript hook for every kind of thing DeHub transcribes.
+ * One transcript hook for every kind of thing Riftn transcribes.
  *
  * Videos and stages each had their own — one polled an edge function every
  * three seconds and got the whole row back each time (segments, WebVTT and

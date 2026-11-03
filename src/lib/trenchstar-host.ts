@@ -14,7 +14,7 @@ export function useTrenchstarHost(enabled:boolean, frame:RefObject<HTMLIFrameEle
       if(d.type!=='request'||!d.body||typeof d.body!=='object')return;
       if(JSON.stringify(d.body).length>150000){reply({error:'Desk is too large'});return;}
       const token=getAuthToken();
-      if(!token){reply({error:'Sign in to DeHub to sync desks, join rooms and compete.'});return;}
+      if(!token){reply({error:'Sign in to Riftn to sync desks, join rooms and compete.'});return;}
       try {
         const {data,error}=await supabase.functions.invoke('trenchstar',{body:d.body,headers:{'x-dehub-token':token}});
         if(error) {

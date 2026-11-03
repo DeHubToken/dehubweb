@@ -280,7 +280,7 @@ export interface TrendingTopic {
  *
  * Public. Its own read rather than part of `/superpowers/slot` — that one
  * deals a POST and this a category name, and the list it lands on is not in
- * the DeHub API at all: it is computed in the browser from Supabase.
+ * the Riftn API at all: it is computed in the browser from Supabase.
  */
 export async function fetchTrendingTopic(): Promise<TrendingTopic | null> {
   const response = await apiCall<{ result: TrendingTopic | null }>(

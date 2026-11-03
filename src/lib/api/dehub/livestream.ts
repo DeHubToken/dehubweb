@@ -303,7 +303,7 @@ export async function sendLiveStreamGift(streamId: string, data: SendGiftData): 
 }
 
 export async function endLiveStream(streamId: string): Promise<{ result: boolean }> {
-  // DeHub API requires a MongoDB ObjectId (24-char hex). Numeric tokenIds will fail with 500.
+  // Riftn API requires a MongoDB ObjectId (24-char hex). Numeric tokenIds will fail with 500.
   const isObjectId = /^[a-f\d]{24}$/i.test(streamId);
   if (!isObjectId) {
     console.warn('[LiveStream] endLiveStream: streamId is not a MongoDB ObjectId, skipping API PATCH:', streamId);

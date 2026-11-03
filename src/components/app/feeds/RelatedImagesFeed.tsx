@@ -3,7 +3,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  * Related Images Feed Component
  * =============================
  * Displays an infinite scroll feed of recent images below the main image post.
- * First item is always the DeHub ad slot, followed by latest images with pagination.
+ * First item is always the Riftn ad slot, followed by latest images with pagination.
  * 
  * @module components/app/feeds/RelatedImagesFeed
  */

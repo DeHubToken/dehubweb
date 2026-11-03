@@ -93,7 +93,7 @@ function renderPresetDetail() {
   $('preset-name').textContent = selectedPreset?.name || '';
   $('preset-direction').textContent = selectedPreset?.direction || '';
   $('preset-apply').disabled = !selectedPreset || !editable() || locked();
-  $('preset-guidance').textContent = !token ? 'Sign in to DeHub to use a preset.' : !allowPayments ? 'This app supports saved previews and downloads.' : !editable() ? 'Start a new project to try another look.' : 'Replaces the direction below. Your files stay selected. You can edit the wording before saving.';
+  $('preset-guidance').textContent = !token ? 'Sign in to Riftn to use a preset.' : !allowPayments ? 'This app supports saved previews and downloads.' : !editable() ? 'Start a new project to try another look.' : 'Replaces the direction below. Your files stay selected. You can edit the wording before saving.';
 }
 const busy = () => current && ['queued', 'running'].includes(current.state);
 const locked = () => working || !!pendingPayment || !!libraryPending;
@@ -180,7 +180,7 @@ function showVideo(kind, entries) {
   if (selected) pick(selected);
 }
 function nextStep() {
-  if (pendingPayment) return 'Review the price in DeHub to continue. You can cancel the confirmation.';
+  if (pendingPayment) return 'Review the price in Riftn to continue. You can cancel the confirmation.';
   if (busy()) return 'You can leave this page. Your project and progress are saved; return here when it is ready.';
   if (current.state === 'attention') return 'Your saved files are available below. A previous submission needs review before any further paid attempt.';
   if (current.state === 'failed') return 'Your original and any completed previews are available below. Check the processing message before starting a new project.';
@@ -238,7 +238,7 @@ function render() {
   $('reject').disabled = locked() || busy() || current.state !== 'prepared';
   $('draft-section').hidden = current.state !== 'prepared' || !allowPayments;
   const hasReference = current.hasReference || !!$('reference').files[0];
-  $('draft-guidance').textContent = !current.review.approved ? 'Approve the prepared clip above to continue.' : !hasReference ? 'Choose a character reference above to continue.' : 'Your clip is approved. Continue to review the preview price in DeHub.';
+  $('draft-guidance').textContent = !current.review.approved ? 'Approve the prepared clip above to continue.' : !hasReference ? 'Choose a character reference above to continue.' : 'Your clip is approved. Continue to review the preview price in Riftn.';
   $('resolved').hidden = !current.resolvedPrompt || referencesChanged; $('resolved-prompt').textContent = current.resolvedPrompt;
   const outputs = [['final-preview.mp4', single ? `${onePass.name} result` : 'Preview'], ['hd/final-preview.mp4', '1080p']].filter(([file]) => current.files[file]);
   $('export-section').hidden = !outputs.length;
@@ -280,14 +280,14 @@ async function authenticate(data) {
   const version = ++sessionVersion;
   clearProject(); working = false; token = data.token; account = data.wallet.toLowerCase(); allowPayments = false;
   $('jobs').replaceChildren(new Option('New project', '')); render(); message('');
-  if (!token) { $('connection').textContent = 'Sign in to DeHub to save and continue a project.'; return; }
+  if (!token) { $('connection').textContent = 'Sign in to Riftn to save and continue a project.'; return; }
   try {
     const verified = await api('session');
     if (version !== sessionVersion) return;
     if (verified.wallet !== account) throw Error('The signed-in account does not match this project session. Sign in again.');
     allowPayments = permitted; await list(true);
     if (version !== sessionVersion) return;
-    $('connection').textContent = !allowPayments ? 'Saved previews and downloads are available in this app.' : !ready ? 'Processing is temporarily unavailable. Your projects stay saved.' : 'Your projects are private to your DeHub account. Each paid step asks you to confirm.';
+    $('connection').textContent = !allowPayments ? 'Saved previews and downloads are available in this app.' : !ready ? 'Processing is temporarily unavailable. Your projects stay saved.' : 'Your projects are private to your Riftn account. Each paid step asks you to confirm.';
     render();
   } catch (error) { if (version === sessionVersion) { allowPayments = false; render(); message(error.message); } }
 }
@@ -479,4 +479,4 @@ $('refresh').onclick = async () => {
 };
 window.addEventListener('beforeunload', event => { if (referencesChanged || (!current && ($('source').files.length || selectedSourceFile))) { event.preventDefault(); event.returnValue = ''; } });
 document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (!document.hidden && busy()) void load(current.id).catch(error => message(error.message)); });
-fetch('health').then(response => response.json()).then(data => { ready = data.ready; $('connection').textContent = 'Sign in to DeHub to save and continue a project.'; render(); announce(); }).catch(() => { message('Maboroshi is temporarily unavailable. Reload to reconnect.'); announce(); });
+fetch('health').then(response => response.json()).then(data => { ready = data.ready; $('connection').textContent = 'Sign in to Riftn to save and continue a project.'; render(); announce(); }).catch(() => { message('Maboroshi is temporarily unavailable. Reload to reconnect.'); announce(); });

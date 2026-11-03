@@ -97,7 +97,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
           headers: {
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            // The function takes the wallet off the verified DeHub token now,
+            // The function takes the wallet off the verified Riftn token now,
             // not off x-wallet-address — that header was the whole guard, and
             // it is a string anyone can set.
             ...dehubAuthHeaders(),

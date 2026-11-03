@@ -19,7 +19,7 @@ import { SETTINGS_FIELD_CLASS, SETTINGS_HEADING_CLASS, SETTINGS_INLINE_ACTION_CL
  * Settings → Profile → Your own AI keys.
  *
  * A creator pastes a provider key once; tools that run on that provider then
- * use their account and DeHub charges nothing. The server checks the key with
+ * use their account and Riftn charges nothing. The server checks the key with
  * one free call before saving, and only ever sends back the last 4 characters.
  */
 export function OwnAiKeysSetting({ preview, previewEditing, previewShowAll }: { preview?: ProviderKeyRow[]; previewEditing?: string; previewShowAll?: boolean } = {}) {
@@ -47,7 +47,7 @@ export function OwnAiKeysSetting({ preview, previewEditing, previewShowAll }: { 
     working: t('ownKeys.working', 'Working'),
     invalid: t('ownKeys.invalid', 'Rejected, replace it'),
     no_credit: t('ownKeys.noCredit', 'Out of credit'),
-    disabled: t('ownKeys.disabled', 'Turned off by DeHub'),
+    disabled: t('ownKeys.disabled', 'Turned off by Riftn'),
   })[status];
 
   const run = async (id: string, work: () => Promise<void>) => {
@@ -93,7 +93,7 @@ export function OwnAiKeysSetting({ preview, previewEditing, previewShowAll }: { 
         {t('ownKeys.title', 'Your own AI keys')}
       </h3>
       <p className="-mt-2 mb-3 text-xs text-zinc-500">
-        {t('ownKeys.description', 'Add a key from an AI provider and Creator tools run on your account instead. DeHub charges nothing for those jobs. Keys are encrypted and never shown again.')}
+        {t('ownKeys.description', 'Add a key from an AI provider and Creator tools run on your account instead. Riftn charges nothing for those jobs. Keys are encrypted and never shown again.')}
       </p>
       {rows === null ? (
         <Loader2 className="size-4 animate-spin text-zinc-500" />

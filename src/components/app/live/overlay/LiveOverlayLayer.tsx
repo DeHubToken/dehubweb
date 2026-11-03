@@ -1,7 +1,7 @@
 /**
  * A creator's overlay, drawn over their stream in the viewer's own player.
  *
- * This is the in-app half of stream overlays: every DeHub viewer draws the
+ * This is the in-app half of stream overlays: every Riftn viewer draws the
  * creator's widgets locally from the stream's room events, whatever the stream
  * is coming from — a phone, a browser, a capture card or OBS. The other half is
  * the OBS browser source, which burns the same widgets into the video; when the

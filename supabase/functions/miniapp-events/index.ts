@@ -2,9 +2,9 @@
  * miniapp-events
  * ==============
  * Account events for mini app webhooks: when the wallet that owns an app is
- * tipped, followed or mentioned on DeHub, its apps that listed the event in
+ * tipped, followed or mentioned on Riftn, its apps that listed the event in
  * the manifest's `webhookEvents` get a signed webhook (see
- * _shared/miniapp-webhook.ts). Called by the DeHub API, never by browsers.
+ * _shared/miniapp-webhook.ts). Called by the Riftn API, never by browsers.
  *
  * GET                                   → { wallets }: owners with at least one
  *                                         app that wants an account event, so

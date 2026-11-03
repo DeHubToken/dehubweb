@@ -321,7 +321,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     isTooShort: nothingToTranslate,
   } = useTranslation(post.content, true, viewRef, true);
 
-  // DeHub links in the body become cards, and the URLs that became cards come
+  // Riftn links in the body become cards, and the URLs that became cards come
   // out of the text. Run on the text actually being displayed so the strip
   // matches what is on screen — a translation that mangled a URL then keeps it
   // as visible text rather than dropping it for a card that never renders.
@@ -819,7 +819,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
         )}
         {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
 
-        {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
+        {/* Riftn entity cards — post, profile, community, invite, store, item, event */}
         <DehubLinkEmbeds links={dehubLinks} />
 
         {/* Market cards — a contract address somebody pasted, or a $TICKER */}

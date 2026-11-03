@@ -43,13 +43,13 @@ export function addBrandLogo(kit: BrandKit = useBrandStore.getState().kit): stri
   return id;
 }
 
-/** The official DeHub look: monochrome palette, Exo headings, Inter body, white wordmark. */
+/** The official Riftn look: monochrome palette, Exo headings, Inter body, white wordmark. */
 export const DEHUB_BRAND_COLORS = ["#ffffff", "#c9ccd1", "#6b6f76", "#1a1b1e", "#000000"];
 const DEHUB_LOGO_URL = "/brand-kit/brand/wordmark-white.png";
 const DEHUB_LOGO_NAME = "dehub-wordmark-white.png";
 
 /**
- * One click: load the DeHub brand into the kit (adding the wordmark to Media
+ * One click: load the Riftn brand into the kit (adding the wordmark to Media
  * once), restyle the design with it and put the logo on. Returns the number of
  * layers restyled.
  */

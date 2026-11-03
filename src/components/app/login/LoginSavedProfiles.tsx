@@ -3,7 +3,7 @@
  * the login sheet.
  *
  * Someone with several wallets has, until now, had to re-derive which of them
- * DeHub knows about by connecting one and reading the result — and connecting
+ * Riftn knows about by connecting one and reading the result — and connecting
  * the wrong one is what produces every variant of "it asked the wrong wallet
  * to sign". Their accounts are already on the device, each with its own stored
  * session (lib/profiles), so the fastest and least error-prone way back in is

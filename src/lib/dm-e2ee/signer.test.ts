@@ -34,7 +34,7 @@ vi.mock('@/lib/wallet-relay', () => ({
 import { signEncryptionMessage, WalletConnectionError } from './signer';
 
 const address = '0x1111111111111111111111111111111111111111';
-const message = 'DeHub Messages\nSign to unlock';
+const message = 'Riftn Messages\nSign to unlock';
 const hex = `0x${Array.from(new TextEncoder().encode(message), b => b.toString(16).padStart(2, '0')).join('')}`;
 
 beforeEach(() => {

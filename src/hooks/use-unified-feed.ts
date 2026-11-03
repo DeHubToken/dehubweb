@@ -2,7 +2,7 @@
  * Unified Feed Hook
  * =================
  * Fetches mixed content (videos, images, text posts) from the unified /api/feed endpoint.
- * All feed loads go directly to the DeHub API. TanStack Query handles client-side caching.
+ * All feed loads go directly to the Riftn API. TanStack Query handles client-side caching.
  * 
  * @module hooks/use-unified-feed
  */

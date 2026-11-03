@@ -159,7 +159,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
     return i18n.t('tokenErrors.transferFailedCheckBalance');
   }
-  // DeHub's own sponsorship account, not the reader's wallet.
+  // Riftn's own sponsorship account, not the reader's wallet.
   //
   // When the Pimlico balance empties, every smart-account user stops being
   // able to post or tip while external-wallet users carry on paying their own

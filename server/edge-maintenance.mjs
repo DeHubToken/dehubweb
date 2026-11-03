@@ -28,13 +28,13 @@ export async function edgeMaintenanceResponse(request, env) {
     } });
   }
   if (!['GET', 'HEAD'].includes(request.method) || /^\/(?:_api|api|_supabase)(?:\/|$)/.test(path)) {
-    return new Response(request.method === 'HEAD' ? null : JSON.stringify({ error: 'MAINTENANCE', message: 'DeHub is temporarily offline for maintenance.' }), {
+    return new Response(request.method === 'HEAD' ? null : JSON.stringify({ error: 'MAINTENANCE', message: 'Riftn is temporarily offline for maintenance.' }), {
       status: 503, headers: { ...headers, 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' },
     });
   }
 
   const page = await env.ASSETS.fetch(new Request(new URL('/maintenance-edge.html', url), { method: 'GET' }));
-  if (!page.ok) return new Response(request.method === 'HEAD' ? null : 'DeHub is temporarily offline for maintenance.', { status: 503, headers });
+  if (!page.ok) return new Response(request.method === 'HEAD' ? null : 'Riftn is temporarily offline for maintenance.', { status: 503, headers });
   return new Response(request.method === 'HEAD' ? null : page.body, {
     status: 503, headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8' },
   });

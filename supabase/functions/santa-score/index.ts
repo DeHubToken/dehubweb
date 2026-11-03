@@ -3,7 +3,7 @@
 // The only writer to `public.santa_snake_scores`. The table used to accept
 // inserts and updates from anyone with the anon key, which meant any wallet
 // could be handed any score. Writes now go through here: the wallet is the
-// one the DeHub token verifies to, and a run only lands if it beats that
+// one the Riftn token verifies to, and a run only lands if it beats that
 // wallet's own best. Reads stay direct — the board is public.
 
 import {

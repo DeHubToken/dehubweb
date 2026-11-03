@@ -21,7 +21,7 @@ const TIMESTAMP = 1788112920;
 describe('buildDeHubLoginMessage', () => {
   it('matches the string the API reconstructs, byte for byte', () => {
     expect(buildDeHubLoginMessage(ADDRESS, TIMESTAMP)).toBe(
-      'Welcome to DeHub!\n' +
+      'Welcome to Riftn!\n' +
         '\n' +
         'Click to sign in for authentication.\n' +
         'Signatures are valid for 24 hours.\n' +

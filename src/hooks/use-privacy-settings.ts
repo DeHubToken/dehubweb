@@ -12,7 +12,7 @@ import { getShowOnline, mergeShowOnline } from '@/lib/online-presence';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
- * Follow visibility modes stored in DeHub API customs.followVisibility:
+ * Follow visibility modes stored in Riftn API customs.followVisibility:
  * - 'public'      → numbers visible AND clickable (lists accessible)
  * - 'counts-only' → numbers visible but NOT clickable
  * - 'hidden'      → numbers completely hidden from visitors
@@ -39,7 +39,7 @@ export function parseVisibility(raw?: unknown): { showFollowersFollowing: boolea
 }
 
 /**
- * Hook to manage the current user's privacy settings via the DeHub API customs field.
+ * Hook to manage the current user's privacy settings via the Riftn API customs field.
  */
 export function usePrivacySettings() {
   const { t: _copy } = _useCopy();

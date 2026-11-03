@@ -2,7 +2,7 @@
  * legacy-account-check
  * ====================
  * Tells the wallet-create step whether the CURRENT user's verified email
- * belongs to pre-migration (Web3Auth-era) DeHub account(s), so the UI can
+ * belongs to pre-migration (Web3Auth-era) Riftn account(s), so the UI can
  * auto-select the Migrate tab and preview what's known about them, instead
  * of the user blind-guessing which old login to use.
  *

@@ -38,7 +38,7 @@ const usdFormat = (value: number) => value.toLocaleString(undefined, { style: 'c
 
 /**
  * Add subscription tokens. The subscriber picks a dollar amount, sends that
- * much DHB at today's price to DeHub, and the API credits it at the price
+ * much DHB at today's price to Riftn, and the API credits it at the price
  * when the transfer landed. Loaded only when opened: it carries the wallet.
  */
 export default function SubscriptionCreditsTopUpDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {

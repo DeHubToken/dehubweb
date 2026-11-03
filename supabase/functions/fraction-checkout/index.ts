@@ -253,7 +253,7 @@ type ReceiptCheck =
 /**
  * Fetch a receipt, assert it succeeded, and assert it is recent.
  *
- * Deliberately no check on `receipt.from`. A DeHub account is a smart wallet,
+ * Deliberately no check on `receipt.from`. A Riftn account is a smart wallet,
  * so `tx.from` is the bundler that relayed the userOp, not the person acting —
  * asserting on it rejects every sponsored transaction. Every caller below
  * follows this with `dhbPaid` or `fractionsDelivered`, which pin the acting

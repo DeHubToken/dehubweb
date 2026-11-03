@@ -2,7 +2,7 @@
  * Solana — the one supported chain that is not EVM.
  *
  * Kept beside `robinhood.ts` and shaped like it on purpose: both are chains
- * DeHub supports before DHB exists on them, and that shape (a pending token
+ * Riftn supports before DHB exists on them, and that shape (a pending token
  * address plus a flag that un-hides it) is the pattern that let Robinhood ship
  * without a second code change on the day it bridged.
  *
@@ -47,13 +47,13 @@ export const SPL_TOKEN_PROGRAM_ID = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
 export const SPL_TOKEN_2022_PROGRAM_ID = 'TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb';
 
 /**
- * Wrapped SOL. Used as the *identifier* for native SOL throughout DeHub — the
+ * Wrapped SOL. Used as the *identifier* for native SOL throughout Riftn — the
  * API's `NATIVE_SOL_MINT` is this address — rather than as a token anyone
  * holds a balance of.
  */
 export const NATIVE_SOL_MINT = 'So11111111111111111111111111111111111111112';
 
-/** Mints DeHub shows by name. Anything else with a balance still appears, unnamed. */
+/** Mints Riftn shows by name. Anything else with a balance still appears, unnamed. */
 export const SOLANA_TOKENS = {
   USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',

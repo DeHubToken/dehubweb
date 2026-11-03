@@ -292,7 +292,7 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
       {
         title: station.name,
         artist: station.country || _translateCopy("copy.fc7331753319", { defaultValue: "Live radio" }),
-        album: 'DeHub Radio',
+        album: 'Riftn Radio',
         artwork: station.favicon || null,
       },
       { play: resume, pause, stop },

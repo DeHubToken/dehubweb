@@ -1,7 +1,7 @@
 /**
  * StreamCollection Smart Contract Integration
  * ============================================
- * ERC1155 contract for minting DeHub content NFTs.
+ * ERC1155 contract for minting Riftn content NFTs.
  * Supports Base and BNB chains with chain-specific contract addresses.
  */
 

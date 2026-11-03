@@ -1,4 +1,4 @@
-// Which browser origins count as DeHub's own web app.
+// Which browser origins count as Riftn's own web app.
 //
 // Used by client-logs to drop errors from other sites running a copy of the
 // web build. It is deliberately narrower than "anything on the preview zone":
@@ -33,7 +33,7 @@ function isPrivateIPv4(host: string): boolean {
 }
 
 /**
- * True when a request's Origin header belongs to DeHub, or when there is no
+ * True when a request's Origin header belongs to Riftn, or when there is no
  * web origin to judge: a missing header, the opaque `null` origin, and
  * non-http(s) schemes all pass, since that is what native apps send.
  */

@@ -37,7 +37,7 @@ describe('LCS assistant knowledge', () => {
   });
 });
 
-describe('DeHub platform knowledge', () => {
+describe('Riftn platform knowledge', () => {
   /**
    * The failure this file exists to stop is the assistant inventing a section
    * name — "check the Referrals area" for a page called Affiliate. The map is

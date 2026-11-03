@@ -151,7 +151,7 @@
   font-size: 0.75rem; color: var(--fc-muted); font-variant-numeric: tabular-nums;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
 }
-/* Follow: DeHub's chrome glass, squared off. A banded white sheen over the
+/* Follow: Riftn's chrome glass, squared off. A banded white sheen over the
    theme's accent, a bright top edge and a soft drop, the same family as the
    glass Button variant. --fc-btn picks the tint; light themes swap the ink. */
 [data-follow-card] [data-fc-follow] {

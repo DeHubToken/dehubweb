@@ -2219,7 +2219,7 @@ export function GoLiveBroadcaster({
   };
 
   // Widgets burned into the video. "In my video" is the same switch OBS
-  // users flip: while it is on, DeHub viewers' apps stop drawing their own
+  // users flip: while it is on, Riftn viewers' apps stop drawing their own
   // copy, so nobody sees an alert twice.
   const { data: myOverlay, refetch: refetchMyOverlay } = useQuery({
     queryKey: ['my-overlay'],
@@ -2815,7 +2815,7 @@ export function GoLiveBroadcaster({
       {/* Leaving the broadcast, top-right, on the same baseline as the live
           chip opposite it.
           This was a red "End" pill, which broke the design system twice over:
-          coloured button fills are not used anywhere on DeHub, and it made the
+          coloured button fills are not used anywhere on Riftn, and it made the
           most destructive control on the screen the brightest thing on it. It
           is a glass circle now, the same glass as every other floating control,
           and the confirmation dialog is what stops an accidental end — not a

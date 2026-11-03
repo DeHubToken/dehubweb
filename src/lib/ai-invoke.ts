@@ -3,7 +3,7 @@
  * =============================================
  * generate-image, generate-video, generate-3d and fal-ai-tools charge live
  * DHB per job, which means they need to know who is calling. They read the
- * DeHub token from `x-dehub-token` and the wallet from `x-wallet-address`
+ * Riftn token from `x-dehub-token` and the wallet from `x-wallet-address`
  * rather than a Supabase JWT, so `supabase.functions.invoke` has to be handed
  * those headers explicitly.
  *

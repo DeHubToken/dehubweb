@@ -104,7 +104,7 @@ export const EXCLUDED_WITHOUT_COUNTERPART = [
  *                                       so a re-added post can never sit behind
  *                                       a 301 the way the milestone orphans did
  *
- * The DeLabs incorporation milestone is retired because DeHub is an
+ * The DeLabs incorporation milestone is retired because Riftn is an
  * independent DAO governed by its token holders, not a company subsidiary;
  * governance is the page that answers the question the old post was asked for.
  */

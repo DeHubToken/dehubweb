@@ -4,7 +4,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * StageRadioPanel — the host's deck: radio stations, or their own clips
  * =====================================================================
  *
- * Two sources, one air path. **Stations** is the DeHub Radio catalogue — the
+ * Two sources, one air path. **Stations** is the Riftn Radio catalogue — the
  * same radio-browser client, the same genre channels and the same react-query
  * keys the Radio page uses, so a host who was already browsing opens this on a
  * warm cache. **My music** is whatever the host has uploaded: a set they can

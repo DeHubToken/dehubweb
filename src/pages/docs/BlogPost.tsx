@@ -141,7 +141,7 @@ const BlogPost = () => {
           image: shareImage,
           datePublished: post.publishedAt,
           author: { '@type': 'Person', name: post.author.name },
-          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' },
+          publisher: { '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' },
           mainEntityOfPage: { '@type': 'WebPage', '@id': shareUrl },
         }}
       />

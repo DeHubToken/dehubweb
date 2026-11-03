@@ -1,7 +1,7 @@
 /**
  * DHB Token Configuration
  * =======================
- * DeHub token configuration per chain.
+ * Riftn token configuration per chain.
  */
 
 import type { ChainId } from '@/components/app/ChainSelector';

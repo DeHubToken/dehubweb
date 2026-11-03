@@ -1,5 +1,5 @@
 /**
- * Multistream destinations: the other platforms a creator's DeHub broadcast is
+ * Multistream destinations: the other platforms a creator's Riftn broadcast is
  * pushed to while they are live. Stream keys go up once and never come back —
  * the server only ever returns a hint of the last four characters.
  */

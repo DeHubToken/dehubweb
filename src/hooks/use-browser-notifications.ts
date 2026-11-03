@@ -209,7 +209,7 @@ export function useBrowserNotifications() {
   // A push subscription is not permanent: the browser rotates it, clearing site
   // data drops it, and a rotated VAPID key invalidates it. The event for that
   // is `pushsubscriptionchange` in the service worker, but the worker cannot
-  // act on it — re-registering needs the DeHub bearer token, which lives in
+  // act on it — re-registering needs the Riftn bearer token, which lives in
   // localStorage where a worker cannot reach. So it is reconciled here instead,
   // on the next visit. subscribeToWebPush already reuses a subscription that is
   // still valid, so the usual case is one cheap check and no network write.

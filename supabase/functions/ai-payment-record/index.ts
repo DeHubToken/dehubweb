@@ -26,7 +26,7 @@
  *   { txHash }         record a transfer (idempotent on the hash)
  *   { action: 'list' } the caller's receipts that still have DHB on them
  *
- * Both are scoped to the wallet the DeHub token belongs to, never to a wallet
+ * Both are scoped to the wallet the Riftn token belongs to, never to a wallet
  * the caller names.
  */
 

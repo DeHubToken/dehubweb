@@ -47,7 +47,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
     if (post.title === 'Entrepreneurial Spirit: Co-Founders Launch TikTok Agency') {
       return { ...post, publishedAt: '2024-01-09T12:00:00.000Z' };
     }
-    if (post.title === 'Back in Action: DeHub V2 Trading Resumes on Gate.io') {
+    if (post.title === 'Back in Action: Riftn V2 Trading Resumes on Gate.io') {
       return { ...post, publishedAt: '2023-02-16T12:00:00.000Z' };
     }
     if (post.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
@@ -56,7 +56,7 @@ export const getAllBlogListPosts = (): BlogPost[] => {
         title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost',
         publishedAt: '2024-10-28T12:00:00.000Z',
         bannerImage: '/media/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
-        bannerImageAlt: 'Screenshot of the new DeHub application UI'
+        bannerImageAlt: 'Screenshot of the new Riftn application UI'
       };
     }
     if (post.title === 'Revolutionizing Access: On-Chain Tradable Subscriptions Launch') {

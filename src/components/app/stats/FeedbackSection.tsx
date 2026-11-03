@@ -140,7 +140,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
         <p className="text-xs text-zinc-400 leading-relaxed mb-3">
           {t(
             'stats.feedback.intro',
-            'Been using DeHub for a while? Tell us what it has been like. Good, bad or specific — all of it is read. If you are happy for us to quote you, tick the box and we may use it in posts, videos or on the site.',
+            'Been using Riftn for a while? Tell us what it has been like. Good, bad or specific — all of it is read. If you are happy for us to quote you, tick the box and we may use it in posts, videos or on the site.',
           )}
         </p>
 
@@ -192,7 +192,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
               <span className="text-xs text-zinc-400 leading-relaxed">
                 {t(
                   'stats.feedback.consentPromo',
-                  'I authorise DeHub to quote this feedback in marketing and promotional materials.',
+                  'I authorise Riftn to quote this feedback in marketing and promotional materials.',
                 )}
               </span>
             </label>
@@ -259,7 +259,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
             {approved.map((item) => {
               const account = item.username ? accounts?.[item.username.toLowerCase()] : undefined;
               const handle = account?.username ?? item.username;
-              const name = account?.displayName || handle || t('stats.feedback.anonymous', 'A DeHub member');
+              const name = account?.displayName || handle || t('stats.feedback.anonymous', 'A Riftn member');
               const avatar = account?.address && account.avatarImageUrl ? buildAvatarUrl(account.address, account.avatarImageUrl) : undefined;
               const face = (
                 <Avatar className="w-8 h-8 shrink-0">

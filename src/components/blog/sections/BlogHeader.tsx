@@ -7,7 +7,7 @@ export const BlogHeader: React.FC = () => {
   return <>
       <div className="text-center space-y-6">
         <h1 className="text-5xl font-bold text-foreground leading-tight font-exo">
-          DeHub
+          Riftn
           <span className="block bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">{t('blog.communityBlog')}</span>
         </h1>
         

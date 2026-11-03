@@ -24,7 +24,7 @@ const DePIN = () => {
             <div className="bg-muted p-6 rounded-lg font-mono text-sm mb-6 overflow-x-auto">
               <pre className="whitespace-pre text-muted-foreground">
               {`----------------------        -----------------
-|  DeHub Application |        |   End Users   |   - ${t('depin.diagramDataFlowStart')}
+|  Riftn Application |        |   End Users   |   - ${t('depin.diagramDataFlowStart')}
 ----------------------        -----------------
          ⬇ ⬆                       ⬇ ⬆                                     
 ----------------------------------------------

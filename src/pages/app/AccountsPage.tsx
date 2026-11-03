@@ -20,8 +20,8 @@ import { SellTab } from '@/components/app/accounts/SellTab';
 const JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
-  name: 'DeHub Account Marketplace',
-  get description() { return _translateCopy("copy.a0e52889552f", { defaultValue: "Buy and sell established DeHub accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet." }); },
+  name: 'Riftn Account Marketplace',
+  get description() { return _translateCopy("copy.a0e52889552f", { defaultValue: "Buy and sell established Riftn accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet." }); },
   url: 'https://riftn.com/accounts',
 };
 

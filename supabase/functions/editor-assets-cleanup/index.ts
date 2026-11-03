@@ -1,5 +1,5 @@
 // Daily cleanup: deletes editor assets that have been unused for 12+ months
-// and are not flagged preserved (i.e. not attached to a posted DeHub video).
+// and are not flagged preserved (i.e. not attached to a posted Riftn video).
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 import { maintenanceGate } from '../_shared/maintenance-auth.ts';

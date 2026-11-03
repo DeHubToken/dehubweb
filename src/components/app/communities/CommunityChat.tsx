@@ -85,7 +85,7 @@ import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
 const FOREVER_YEAR = 9000;
 
 /**
- * A text message with its DeHub links carded. A shared community or invite
+ * A text message with its Riftn links carded. A shared community or invite
  * leads and the words follow, matching the DM bubble and the app; before this
  * the channel printed an invite as a lone 🔗 with nothing behind it.
  */

@@ -1,7 +1,7 @@
 /**
  * ads-topup
  * =========
- * Credits an advertiser account after an on-chain DHB payment to the DeHub
+ * Credits an advertiser account after an on-chain DHB payment to the Riftn
  * treasury. The client sends the tx hash; we independently verify the
  * transfer via Alchemy asset-transfer enumeration (same pattern as
  * sync-staking-deposits): from = claimed wallet, to = treasury, token = DHB,

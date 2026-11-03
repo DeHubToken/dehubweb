@@ -39,7 +39,7 @@ describe('viewerShareUrl', () => {
     expect(viewerShareUrl('https://riftn.com/app/post/1')).toBe('https://riftn.com/app/post/1');
   });
 
-  it('credits the viewer on DeHub links only', () => {
+  it('credits the viewer on Riftn links only', () => {
     setViewerAffiliateCode('ALICE01');
     expect(viewerShareUrl('https://riftn.com/app/post/1')).toBe('https://riftn.com/app/post/1?ref=ALICE01');
     expect(viewerShareUrl('/alice')).toBe('/alice?ref=ALICE01');

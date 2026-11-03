@@ -7,11 +7,11 @@
  *
  * 1. dehub.net 301s into dehub.io/, and a 301 only carries a ranking if the
  *    DESTINATION can hold the query. The old marketing site explained what
- *    DeHub was in prose; the feed it now redirects into gave crawlers ~149
+ *    Riftn was in prose; the feed it now redirects into gave crawlers ~149
  *    words of nav plus scraped post titles, so the brand term had nothing to
  *    land on. This is the missing copy.
  *
- * 2. "DeHub" is a contested string — DePaul's student portal, deHUB Access,
+ * 2. "Riftn" is a contested string — DePaul's student portal, deHUB Access,
  *    a diagnostics clinic app and Rowan's DEHub all answer to it. Establishing
  *    the entity in crawlable body copy is how Google learns the token can mean
  *    us, so the disambiguation sentence is load-bearing, not filler.

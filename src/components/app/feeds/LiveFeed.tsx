@@ -4,7 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Live Feed Component
  * ===================
  * Displays live streams and TV channels with sub-tab navigation.
- * Fetches content from DeHub API and iptv-org.
+ * Fetches content from Riftn API and iptv-org.
  * 
  * @module components/app/feeds/LiveFeed
  */
@@ -70,7 +70,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch live content from DeHub API
+  // Fetch live content from Riftn API
   const {
     data: apiData,
     fetchNextPage,

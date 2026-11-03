@@ -13,7 +13,7 @@
  *   /ap/...                 -> /api/ap/...
  *
  * And when another server asks a human page for ActivityPub (Accept:
- * application/activity+json) — someone pasted a DeHub link into Mastodon's
+ * application/activity+json) — someone pasted a Riftn link into Mastodon's
  * search — the profile and post pages answer with their actor and Note.
  */
 

@@ -95,7 +95,7 @@ async function loadLiveChatRooms(): Promise<LiveChatRoom[]> {
       const room: LiveChatRoom = {
         id: (raw as any).id || (raw as any).roomId || (raw as any)._id || 'general',
         name: (raw as any).name || 'General',
-        topic: (raw as any).topic || (raw as any).description || 'DeHub Community Chat',
+        topic: (raw as any).topic || (raw as any).description || 'Riftn Community Chat',
         ...raw as any,
       };
       return [room];
@@ -105,7 +105,7 @@ async function loadLiveChatRooms(): Promise<LiveChatRoom[]> {
   }
 
   // Fallback default room
-  return [{ id: 'general', name: 'General', topic: 'DeHub Community Chat' }];
+  return [{ id: 'general', name: 'General', topic: 'Riftn Community Chat' }];
 }
 
 /**

@@ -3,10 +3,10 @@ import { validatePageTranslation } from '../../scripts/build-public-locales.mjs'
 import { localizePublicChrome, localizePageJsonLd } from '../../server/public-page-locales.js';
 
 describe('public page language consistency', () => {
-  const page = { title: 'Guía de DeHub', h1: 'Una guía', description: 'Descripción traducida', body: '<h2>¿Cómo funciona?</h2><p>Así funciona.</p>' };
+  const page = { title: 'Guía de Riftn', h1: 'Una guía', description: 'Descripción traducida', body: '<h2>¿Cómo funciona?</h2><p>Así funciona.</p>' };
   it('updates nested article identifiers without changing publisher identity', () => {
-    const localized = localizePageJsonLd({ '@graph': [{ '@type': 'Article', headline: 'A guide', description: 'English', mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://riftn.com/guides/example' }, publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://riftn.com' } }] }, '/guides/example', 'es', page);
-    expect(localized['@graph'][0]).toMatchObject({ headline: 'Una guía', description: 'Descripción traducida', inLanguage: 'es', mainEntityOfPage: { '@id': 'https://riftn.com/guides/example?hl=es' }, publisher: { name: 'DeHub', url: 'https://riftn.com' } });
+    const localized = localizePageJsonLd({ '@graph': [{ '@type': 'Article', headline: 'A guide', description: 'English', mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://riftn.com/guides/example' }, publisher: { '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' } }] }, '/guides/example', 'es', page);
+    expect(localized['@graph'][0]).toMatchObject({ headline: 'Una guía', description: 'Descripción traducida', inLanguage: 'es', mainEntityOfPage: { '@id': 'https://riftn.com/guides/example?hl=es' }, publisher: { name: 'Riftn', url: 'https://riftn.com' } });
   });
   it('takes FAQ answers from the translated visible content', () => {
     const localized = localizePageJsonLd({ '@type': 'FAQPage', mainEntity: [{ name: 'English question' }] }, '/docs/faq', 'es', page);

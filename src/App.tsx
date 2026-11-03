@@ -239,7 +239,7 @@ const CreatorLearningPage = React.lazy(() => import("./pages/app/CreatorLearning
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
 const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
 const MaboroshiPage = React.lazy(() => import("./pages/app/MaboroshiPage"));
-// Eager import — the referral lander is a new user's first touch of DeHub and
+// Eager import — the referral lander is a new user's first touch of Riftn and
 // must paint instantly; it renders outside WalletProviders (see App below) so
 // it never waits on the ~1.5 MB wallet chunk either.
 import ReferralLanding from "./pages/ReferralLanding";
@@ -1010,7 +1010,7 @@ const App = () => (
           <Routes>
             <Route path="/maintenance" element={<Suspense fallback={null}><MaintenancePage /></Suspense>} />
             {/*
-             * Referral lander — a new user's first touch of DeHub. Mounted
+             * Referral lander — a new user's first touch of Riftn. Mounted
              * OUTSIDE WalletProviders (it uses no auth/wallet state) so it
              * paints without waiting for the ~1.5 MB wallet chunk.
              */}

@@ -364,7 +364,7 @@ export function buildAss(cues: Cue[], clipSeconds: number, card: CardText): stri
     'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text',
   ];
   const events: string[] = [];
-  events.push(`Dialogue: 1,${assTime(0)},${assTime(clipSeconds)},Mark,,0,0,0,,DeHub`);
+  events.push(`Dialogue: 1,${assTime(0)},${assTime(clipSeconds)},Mark,,0,0,0,,Riftn`);
   if (card.host) events.push(`Dialogue: 1,${assTime(0)},${assTime(clipSeconds)},Host,,0,0,0,,${assEscape(card.host).slice(0, 40)}`);
 
   for (const cue of cues) {
@@ -383,7 +383,7 @@ export function buildAss(cues: Cue[], clipSeconds: number, card: CardText): stri
   // The card fades in over the frozen last frame.
   events.push(`Dialogue: 2,${assTime(clipSeconds)},${assTime(total)},Card,,0,0,0,,{\\fad(250,0)\\pos(${WIDTH / 2},${HEIGHT / 2 - 90})}${assEscape(card.title)}`);
   events.push(`Dialogue: 2,${assTime(clipSeconds)},${assTime(total)},CardUrl,,0,0,0,,{\\fad(250,0)\\pos(${WIDTH / 2},${HEIGHT / 2 + 30})}${assEscape(card.url)}`);
-  events.push(`Dialogue: 2,${assTime(clipSeconds)},${assTime(total)},Mark,,0,0,0,,{\\fad(250,0)\\an5\\pos(${WIDTH / 2},${HEIGHT / 2 + 150})\\fs44}DeHub`);
+  events.push(`Dialogue: 2,${assTime(clipSeconds)},${assTime(total)},Mark,,0,0,0,,{\\fad(250,0)\\an5\\pos(${WIDTH / 2},${HEIGHT / 2 + 150})\\fs44}Riftn`);
   return [...header, ...events, ''].join('\n');
 }
 

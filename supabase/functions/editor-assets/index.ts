@@ -1,7 +1,7 @@
 // Editor cloud media: the only door to `editor_assets` and the `editor-assets`
 // bucket. Both used to be reached from the browser under RLS that trusted an
 // `x-wallet-address` header, which anyone can set, so any wallet's media could
-// be listed or deleted. Here the wallet comes from the verified DeHub token and
+// be listed or deleted. Here the wallet comes from the verified Riftn token and
 // every read and write goes through the service role.
 import { handleCorsPreflight, jsonResponse, requireDeHubAuth, serviceClient, checkRateLimit } from '../_shared/auth.ts';
 

@@ -5,7 +5,7 @@
  * Uses a shared IntersectionObserver singleton for performance.
  *
  * These hooks do not check auth. Signed-out visitors count too — view-tracker
- * decides which backend a view goes to (the DeHub API when there is a session,
+ * decides which backend a view goes to (the Riftn API when there is a session,
  * the anon-views edge function when there is not).
  */
 

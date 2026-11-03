@@ -3,7 +3,7 @@
  *
  * Reads go to api.dehub.io /api/market. Writes are wallet actions: approve,
  * sign an order, fill or cancel on Seaport. Every wallet step goes through the
- * shared AA-aware helpers so the DeHub smart wallet and external wallets both
+ * shared AA-aware helpers so the Riftn smart wallet and external wallets both
  * work, on whichever chain the NFT lives on.
  */
 
@@ -132,7 +132,7 @@ export interface MarketCollection {
   isDehub: boolean;
   listed: number;
   floor: { amount: string; symbol: string; decimals: number } | null;
-  /** DeHub Posts: how many are minted (listed or not). */
+  /** Riftn Posts: how many are minted (listed or not). */
   minted?: number;
 }
 

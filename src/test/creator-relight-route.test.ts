@@ -27,7 +27,7 @@ it.each([undefined, 'data:image/png;base64,unused'])('keeps the original relight
   vi.stubGlobal('fetch', fetcher);
   const routePath = '../../supabase/functions/generate-image/index.ts';
   await import(routePath);
-  const prompt = 'Relight this DeHub poster photo with warm light from the left, preserving the printed logo.';
+  const prompt = 'Relight this Riftn poster photo with warm light from the left, preserving the printed logo.';
   const sourceImage = 'https://input.test/original-photo.png';
   const response = await handler(new Request('https://edge.test/generate-image', { method: 'POST', body: JSON.stringify({
     model: 'iclight-v2', prompt, sourceImage, logoImage,
@@ -50,7 +50,7 @@ it('never lets a template flag waive the required relighting source or bypass va
   const fetcher = vi.fn(); vi.stubGlobal('fetch', fetcher);
   const routePath = '../../supabase/functions/generate-image/index.ts'; await import(routePath);
   const response = await handler(new Request('https://edge.test/generate-image', { method: 'POST', body: JSON.stringify({
-    model: 'iclight-v2', prompt: 'Relight this DeHub poster photo', bannerRenderer: 'template',
+    model: 'iclight-v2', prompt: 'Relight this Riftn poster photo', bannerRenderer: 'template',
   }) }));
   expect(response.status).toBe(400); expect(fetcher).not.toHaveBeenCalled();
 });

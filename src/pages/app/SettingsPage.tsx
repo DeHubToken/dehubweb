@@ -340,7 +340,7 @@ export default function SettingsPage() {
   };
 
   // Signing out is a network round trip plus a session teardown, so the button
-  // holds the DeHub mark until it lands rather than looking like a missed tap.
+  // holds the Riftn mark until it lands rather than looking like a missed tap.
   const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
 
   // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
@@ -365,8 +365,8 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://riftn.com/app/settings" />
-      <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your Riftn experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://riftn.com/app/settings" />
+      <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "Riftn Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}
       <PageIsland
@@ -1812,7 +1812,7 @@ function PrivacySettings() {
             icon={EyeOff}
             anchor="private-balance"
             title={_copy("copy.e3043f1c05b3", { defaultValue: "Hide badge and balance" })}
-            description={_copy("copy.72bb78fb365d", { defaultValue: "Hides your badge, token balances, and tip history from public view. DeHub will also disable sends and tips to you." })}
+            description={_copy("copy.72bb78fb365d", { defaultValue: "Hides your badge, token balances, and tip history from public view. Riftn will also disable sends and tips to you." })}
             defaultChecked={hideBadgeAndBalance}
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
@@ -2743,7 +2743,7 @@ function DefaultFeedSetting() {
       icon={<HomeCutIcon />}
       anchor="default-feed"
       title={t('settings.defaultFeed', 'Default feed')}
-      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open DeHub')}
+      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open Riftn')}
       action={<SettingDrawerSelect
         value={tab}
         onValueChange={(value) => {
@@ -3119,7 +3119,7 @@ function KidsModeToggle() {
  *
  * Kept in the wallet's preference blob, so it follows the account to another
  * device; localStorage mirrors it for instant paint and for signed-out
- * readers. Not the DeHub account row — a named setting there has to be
+ * readers. Not the Riftn account row — a named setting there has to be
  * whitelisted server-side or the write is silently dropped.
  */
 function HideWatchedToggle() {

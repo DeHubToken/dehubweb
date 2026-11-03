@@ -96,7 +96,7 @@ export default function CommunityPage() {
   if (!community && isError) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4">
-        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('common.failedToLoad') })} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - Riftn Community", value1: t('common.failedToLoad') })} description={t('common.somethingWentWrong')} noindex />
         <AppState
           kind="error"
           title={t('common.failedToLoad')}
@@ -110,7 +110,7 @@ export default function CommunityPage() {
   if (!community) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-12 text-center">
-        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('communities.communityNotFound') })} description={t('communities.communityNotFound')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - Riftn Community", value1: t('communities.communityNotFound') })} description={t('communities.communityNotFound')} noindex />
         <p className="text-zinc-500">{t('communities.communityNotFound')}</p>
         <Button variant="outline" size="sm" className="mt-3 rounded-xl border-white/10 text-white" onClick={() => navigate('/app/communities')}>
           {t('communities.backButton')}
@@ -167,8 +167,8 @@ export default function CommunityPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <SEOHead
-        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: community.name })}
-        description={community.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on DeHub", value1: community.name })}
+        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - Riftn Community", value1: community.name })}
+        description={community.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on Riftn", value1: community.name })}
       />
 
       <button

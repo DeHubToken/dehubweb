@@ -165,7 +165,7 @@ export function ProfileFieldsEditor({
   const remove = (key: number) => onChange((prev) => prev.filter((row) => row.key !== key));
 
   const showHint = rows.some((r) => !r.verifiedAt && fieldLink(normalizeFieldValue(r.preset, r.value)));
-  const snippet = `<a rel="me" href="https://riftn.com/${username}">DeHub</a>`;
+  const snippet = `<a rel="me" href="https://riftn.com/${username}">Riftn</a>`;
 
   return (
     <div>

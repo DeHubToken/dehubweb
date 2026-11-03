@@ -324,7 +324,7 @@ export async function resolveAddress(address: string): Promise<ResolvedAsset | n
  */
 export async function resolveTicker(symbol: string): Promise<ResolvedAsset | null> {
   // $RIFT, $RIFTN and $DEHUB are all our token: resolve them as DHB and wear
-  // the DeHub coin, which no provider has a logo for.
+  // the Riftn coin, which no provider has a logo for.
   if (isDhbSymbol(symbol)) {
     const dhb = await resolveTickerFromProviders('DHB');
     return dhb ? { ...dhb, logo: dhb.logo ?? dehubCoin } : null;
@@ -417,7 +417,7 @@ export async function fetch24hSeries(asset: ResolvedAsset): Promise<PricePoint[]
  * edge search actions are deployed. Everything else arrives from the providers.
  */
 const MAJORS: Array<{ symbol: string; name: string; assetClass: AssetClass }> = [
-  { symbol: 'DHB', name: 'DeHub', assetClass: 'token' },
+  { symbol: 'DHB', name: 'Riftn', assetClass: 'token' },
   { symbol: 'BTC', name: 'Bitcoin', assetClass: 'token' },
   { symbol: 'ETH', name: 'Ethereum', assetClass: 'token' },
   { symbol: 'SOL', name: 'Solana', assetClass: 'token' },

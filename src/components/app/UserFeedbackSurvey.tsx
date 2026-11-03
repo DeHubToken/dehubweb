@@ -68,13 +68,13 @@ interface SurveyQuestion {
 const QUESTIONS: SurveyQuestion[] = [
   {
     key: 'join_reason',
-    get question() { return _translateCopy("copy.3fbc836e15fd", { defaultValue: "What made you join DeHub?" }); },
+    get question() { return _translateCopy("copy.3fbc836e15fd", { defaultValue: "What made you join Riftn?" }); },
     type: 'text',
     get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
   {
     key: 'favourite_thing',
-    get question() { return _translateCopy("copy.b31b23496638", { defaultValue: "What do you like most about DeHub?" }); },
+    get question() { return _translateCopy("copy.b31b23496638", { defaultValue: "What do you like most about Riftn?" }); },
     type: 'text',
     get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
@@ -89,7 +89,7 @@ const QUESTIONS: SurveyQuestion[] = [
   },
   {
     key: 'video_interview_interest',
-    get question() { return _translateCopy("copy.69f6ce417f90", { defaultValue: "Would you be open to a short video interview about why you joined / love DeHub, for us to share in promo videos?" }); },
+    get question() { return _translateCopy("copy.69f6ce417f90", { defaultValue: "Would you be open to a short video interview about why you joined / love Riftn, for us to share in promo videos?" }); },
     type: 'select',
     options: [
       { value: "Yes, I'm interested", get label() { return _translateCopy("copy.e1da388d3206", { defaultValue: "Yes, I'm interested" }); } },

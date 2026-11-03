@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
  * into nothing until the user expands it.
  *
  * The fade is a real alpha `mask-image`, not a gradient panel painted over the
- * content. A gradient would have to guess the page background, and DeHub's
+ * content. A gradient would have to guess the page background, and Riftn's
  * themes range from near-black to near-white glass — the same overlay that
  * disappears on one theme is an obvious grey smear on another. Masking fades
  * the pixels themselves, so it is correct on every theme by construction.

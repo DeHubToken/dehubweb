@@ -3,7 +3,7 @@
  * =====================================
  * The composer is a modal opened from a button, which is fine everywhere there
  * is a button and useless everywhere there is not. Trenchstar's desk frames
- * three real DeHub pages — the feed, your profile, and this — and "make a
+ * three real Riftn pages — the feed, your profile, and this — and "make a
  * post" had no address to frame.
  *
  * So this page renders nothing of its own and opens the real composer on

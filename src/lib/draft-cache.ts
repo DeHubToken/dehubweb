@@ -1,7 +1,7 @@
 /**
  * Draft Cache
  * ===========
- * One durable store for every half-typed message on DeHub — DMs, public chat,
+ * One durable store for every half-typed message on Riftn — DMs, public chat,
  * stage/TV chat, live-stream chat. Text survives closing the thread, navigating
  * away, a reload, and the tab being closed.
  *

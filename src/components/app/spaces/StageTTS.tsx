@@ -165,7 +165,7 @@ export function StageTTS() {
             'Content-Type': 'application/json',
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            // elevenlabs-tts authenticates on the DeHub token, not this one.
+            // elevenlabs-tts authenticates on the Riftn token, not this one.
             ...dehubAuthHeaders(),
           },
           body: JSON.stringify({ text: text.trim(), voiceId: selectedVoice }),

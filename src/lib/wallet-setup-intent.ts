@@ -1,6 +1,6 @@
 /**
  * What the person said they came to do BEFORE signing in, chosen on the login
- * sheet's main step: bring over an old (Web3Auth-era) DeHub account, or import
+ * sheet's main step: bring over an old (Web3Auth-era) Riftn account, or import
  * an external wallet. The wallet step can only run once a Supabase identity
  * exists, and reaching one may involve a full-page OAuth redirect, so the
  * choice lives in sessionStorage rather than component state.

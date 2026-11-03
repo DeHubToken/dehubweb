@@ -22,7 +22,7 @@ interface FeedLinkPreviewsProps {
   text: string;
 }
 
-/** Outside links only — DeHub links are rendered as entity cards instead. */
+/** Outside links only — Riftn links are rendered as entity cards instead. */
 function externalUrls(text: string): string[] {
   return extractUrlsFromText(text).filter((url) => !parseDehubLink(url));
 }

@@ -12,7 +12,7 @@
  * a live broadcast, the thing a forger would do with that is obvious: pin their
  * own listings onto a popular creator's stream and take the sales. So writes
  * are service-role only, and identity comes from requireDeHubAuth(), which
- * resolves the wallet off a verified DeHub token rather than off a header.
+ * resolves the wallet off a verified Riftn token rather than off a header.
  *
  * Ownership is checked twice, against two different sources:
  *   1. the stream — /api/nft_info/{tokenId}.minter must be the caller

@@ -309,7 +309,7 @@ function looksLikeLoop(input: string, output: string): boolean {
   // The source side counts words of any length. A short word the source
   // repeats on purpose often comes out as a longer one: "no no no no" is
   // "nein nein nein nein", and "our community, our rules, our future, our
-  // DeHub" is "komunitas kita, aturan kita, masa depan kita, DeHub kita".
+  // Riftn" is "komunitas kita, aturan kita, masa depan kita, Riftn kita".
   if (maxRepeat(translated, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(source, 0) < 3) return true;
 
   // Word counts also mislead when a target that spaces every syllable

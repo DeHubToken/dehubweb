@@ -90,17 +90,17 @@ export default function CreatorFlowPage() {
   return (
     <div className="fixed inset-0 flex flex-col bg-[#090a0b] text-white">
       <SEOHead
-        title={_copy("copy.87f6885f02a4", { defaultValue: "DeHub Creator Flow — Visual AI Pipelines" })}
+        title={_copy("copy.87f6885f02a4", { defaultValue: "Riftn Creator Flow — Visual AI Pipelines" })}
         description={_copy("copy.88f1cc09ba80", { defaultValue: "Chain prompts, references, image and video models on an infinite canvas. Build reusable generation flows, run them in one payment and share them with a link." })}
         url="https://riftn.com/creator/flow"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'SoftwareApplication',
-          name: 'DeHub Creator Flow',
+          name: 'Riftn Creator Flow',
           url: 'https://riftn.com/creator/flow',
           applicationCategory: 'MultimediaApplication',
           operatingSystem: 'Web',
-          description: _copy("copy.4214eb3d2a70", { defaultValue: "Node-based canvas for building AI image and video generation pipelines on DeHub." }),
+          description: _copy("copy.4214eb3d2a70", { defaultValue: "Node-based canvas for building AI image and video generation pipelines on Riftn." }),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />

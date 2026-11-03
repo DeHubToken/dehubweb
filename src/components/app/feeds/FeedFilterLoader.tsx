@@ -13,7 +13,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  *    globe plays once per session; this can fire a dozen times while somebody
  *    tries out sort options, so it has to stay cheap. Kept as-is — it is the
  *    war theme's own chrome, not a generic spinner.
- *  - Everything else: a single glass card carrying the animated DeHub mark,
+ *  - Everything else: a single glass card carrying the animated Riftn mark,
  *    the same wait the rest of the app shows for a whole view.
  *
  * The loader REPLACES the list rather than overlaying it. Unmounting ~30 feed
@@ -102,7 +102,7 @@ function WarFilterLoader({
       <span aria-hidden="true" data-war-mini-sweep />
 
       <div aria-hidden="true" data-war-mini-frame>
-        <p data-war-mini-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "DEHUB // TACTICAL NETWORK" })}</p>
+        <p data-war-mini-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "RIFTN // TACTICAL NETWORK" })}</p>
         <p data-war-mini-title>{_copy("copy.dbe84c320006", { defaultValue: "RETASKING SENSORS" })}</p>
 
         <div data-war-mini-bar>

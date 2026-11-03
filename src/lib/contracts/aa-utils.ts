@@ -52,7 +52,7 @@ type Hex = `0x${string}`;
  * wallet on the way in — for most of a normal session. Telling someone who is
  * demonstrably signed in to sign in is what turned this into support tickets.
  *
- * An external-wallet session with a live DeHub token is the same mistake one
+ * An external-wallet session with a live Riftn token is the same mistake one
  * layer over: the email-link login establishes the full session with no
  * wallet attached (completeLoginWithoutUnlock tags it 'wagmi'), so "sign in
  * first" is told to someone who is signed in, on a browser where nothing

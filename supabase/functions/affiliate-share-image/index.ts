@@ -1,4 +1,4 @@
-// Dynamic per-affiliate DeHub share image.
+// Dynamic per-affiliate Riftn share image.
 // Default: PNG (Facebook/Telegram/WhatsApp/LinkedIn/Discord reject SVG OG images).
 // Use ?format=svg for in-app lightweight preview.
 
@@ -271,7 +271,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
 
   const svg = buildInviteSvg({
     code: rawCode,
-    name: rawCode ? cleanName(displayName || username) : "DeHub",
+    name: rawCode ? cleanName(displayName || username) : "Riftn",
     username,
     avatarDataUri,
     bannerDataUri,

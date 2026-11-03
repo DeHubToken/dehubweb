@@ -77,7 +77,7 @@ const MANIFEST = `// https://app.example.com/.well-known/dehub.json
   }
 }`;
 
-const PAY = `// In your app. DeHub shows the amount, your app and your wallet;
+const PAY = `// In your app. Riftn shows the amount, your app and your wallet;
 // the DHB goes straight to the wallet that signed your dehub.json.
 const { txHash, receipt } = await dehub.actions.pay({ amount: 50, memo: 'Extra life' });
 
@@ -186,7 +186,7 @@ function StatsPanel({ slug }: { slug: string }) {
   );
 }
 
-/** A developer's own view of the webhooks DeHub sent their app, with a test button. */
+/** A developer's own view of the webhooks Riftn sent their app, with a test button. */
 function WebhookPanel({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const [testing, setTesting] = useState(false);
@@ -236,7 +236,7 @@ function WebhookPanel({ slug }: { slug: string }) {
   );
 }
 
-/** "Sign in with DeHub" keys for ordinary websites (OAuth, the same server Mastodon apps use). */
+/** "Sign in with Riftn" keys for ordinary websites (OAuth, the same server Mastodon apps use). */
 function SignInApps({ signedIn }: { signedIn: boolean }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -448,7 +448,7 @@ export default function AppsDevPage() {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'TechArticle',
-          headline: 'Build a DeHub mini app',
+          headline: 'Build a Riftn mini app',
           url: 'https://riftn.com/apps/dev',
         }}
       />

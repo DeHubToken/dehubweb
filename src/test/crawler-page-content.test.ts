@@ -159,9 +159,9 @@ describe('post facts', () => {
 });
 
 describe('placement', () => {
-  it('goes ahead of the "Open on DeHub" call to action on both page shapes', () => {
-    const proxied = '<body><h1>x</h1>\n    <p><a class="dh-cta" href="u">View on DeHub</a></p></body>';
-    const edge = '<body><h1>x</h1>\n<p style="margin-top:24px"><a class="dh-cta" href="u">Open x on DeHub</a></p></body>';
+  it('goes ahead of the "Open on Riftn" call to action on both page shapes', () => {
+    const proxied = '<body><h1>x</h1>\n    <p><a class="dh-cta" href="u">View on Riftn</a></p></body>';
+    const edge = '<body><h1>x</h1>\n<p style="margin-top:24px"><a class="dh-cta" href="u">Open x on Riftn</a></p></body>';
     for (const html of [proxied, edge]) {
       const out = api.injectBeforeCta(html, '<section>S</section>');
       expect(out.indexOf('<section>S</section>')).toBeLessThan(out.indexOf('class="dh-cta"'));

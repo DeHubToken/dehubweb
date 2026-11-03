@@ -13,10 +13,10 @@ import { z } from "npm:zod@4.6.7";
 var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
 function parseStreamableResponse(raw) {
   const trimmed = raw.trim();
-  if (!trimmed) throw new Error("DeHub MCP returned an empty response");
+  if (!trimmed) throw new Error("Riftn MCP returned an empty response");
   if (trimmed.startsWith("{")) return JSON.parse(trimmed);
   const dataLines = trimmed.split(/\r?\n/).filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).filter(Boolean);
-  if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
+  if (!dataLines.length) throw new Error("Riftn MCP returned no data frame");
   return JSON.parse(dataLines[dataLines.length - 1]);
 }
 async function callDeHubTool(name, args) {
@@ -34,16 +34,16 @@ async function callDeHubTool(name, args) {
     })
   });
   if (!response.ok) {
-    throw new Error(`DeHub MCP request failed with HTTP ${response.status}`);
+    throw new Error(`Riftn MCP request failed with HTTP ${response.status}`);
   }
   const payload = parseStreamableResponse(await response.text());
-  if (payload.error) throw new Error(payload.error.message ?? "DeHub MCP error");
+  if (payload.error) throw new Error(payload.error.message ?? "Riftn MCP error");
   const result = payload.result;
-  if (!result) throw new Error("DeHub MCP returned no result");
+  if (!result) throw new Error("Riftn MCP returned no result");
   const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
   if (result.isError) {
     const message = typeof body?.error === "string" ? body.error : void 0;
-    throw new Error(message ?? "DeHub tool call failed");
+    throw new Error(message ?? "Riftn tool call failed");
   }
   return body ?? {};
 }
@@ -60,8 +60,8 @@ function safeParse(text) {
 // src/lib/mcp/tools/feed.ts
 var feed_default = defineTool({
   name: "dehub_feed",
-  title: "Get DeHub feed",
-  description: "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries \u2014 token ID, author, body and engagement counts.",
+  title: "Get Riftn feed",
+  description: "Fetch posts from the Riftn decentralized social feed. Returns compact post summaries \u2014 token ID, author, body and engagement counts.",
   inputSchema: {
     sort: z.enum(["new", "hot", "trending", "discussed"]).optional().describe("new = latest, hot = most liked, trending = most viewed, discussed = most commented"),
     category: z.string().optional().describe("Optional category filter"),
@@ -81,8 +81,8 @@ import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z2 } from "npm:zod@4.6.7";
 var post_default = defineTool2({
   name: "dehub_post",
-  title: "Get DeHub post",
-  description: "Fetch a single DeHub post by its token ID, including author and engagement counts.",
+  title: "Get Riftn post",
+  description: "Fetch a single Riftn post by its token ID, including author and engagement counts.",
   inputSchema: {
     token_id: z2.string().min(1).describe("The post's token ID")
   },
@@ -99,7 +99,7 @@ import { z as z3 } from "npm:zod@4.6.7";
 var comments_default = defineTool3({
   name: "dehub_comments",
   title: "Read post comments",
-  description: "Read the comment thread on a DeHub post, with author, body and like count for each comment.",
+  description: "Read the comment thread on a Riftn post, with author, body and like count for each comment.",
   inputSchema: {
     token_id: z3.string().min(1).describe("The post's token ID"),
     limit: z3.number().int().min(1).max(50).optional().describe("Max comments (1-50)"),
@@ -117,8 +117,8 @@ import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z4 } from "npm:zod@4.6.7";
 var search_default = defineTool4({
   name: "dehub_search",
-  title: "Search DeHub",
-  description: "Search DeHub for posts (by title and description) and people (by username and display name).",
+  title: "Search Riftn",
+  description: "Search Riftn for posts (by title and description) and people (by username and display name).",
   inputSchema: {
     query: z4.string().min(1).describe("Search query"),
     type: z4.enum(["all", "posts", "users"]).optional().describe("Restrict results to posts or users"),
@@ -136,8 +136,8 @@ import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z5 } from "npm:zod@4.6.7";
 var profile_default = defineTool5({
   name: "dehub_profile",
-  title: "Get DeHub profile",
-  description: "Fetch a DeHub user profile by wallet address or username.",
+  title: "Get Riftn profile",
+  description: "Fetch a Riftn user profile by wallet address or username.",
   inputSchema: {
     user: z5.string().min(1).describe("Wallet address (0x...) or username to look up")
   },
@@ -151,9 +151,9 @@ var profile_default = defineTool5({
 // src/lib/mcp/index.ts
 var mcp_default = defineMcp({
   name: "dehub-mcp",
-  title: "DeHub",
+  title: "Riftn",
   version: "0.2.0",
-  instructions: "Read-only tools for DeHub \u2014 the decentralized social network. Browse the feed, fetch a post by token ID, read a post's comments, search posts and people, and look up profiles by wallet address or username. This connector cannot write. To let an agent post, vote, comment or follow, create an agent at https://riftn.com/app/agents and add its personal connector URL instead \u2014 it carries the agent's key in the URL and exposes the write tools as well.",
+  instructions: "Read-only tools for Riftn \u2014 the decentralized social network. Browse the feed, fetch a post by token ID, read a post's comments, search posts and people, and look up profiles by wallet address or username. This connector cannot write. To let an agent post, vote, comment or follow, create an agent at https://riftn.com/app/agents and add its personal connector URL instead \u2014 it carries the agent's key in the URL and exposes the write tools as well.",
   tools: [feed_default, post_default, comments_default, search_default, profile_default]
 });
 

@@ -23,38 +23,38 @@ const OG_IMAGE = "https://riftn.com" + ogImage;
 
 const steps = [
   {
-    get title() { return _translateCopy("copy.db582e44a2f9", { defaultValue: "Open the DeHub connector in ChatGPT" }); },
-    get body() { return _translateCopy("copy.a1be36bee94a", { defaultValue: "Click the button below. ChatGPT will jump straight to the DeHub connector inside your Settings → Connectors panel." }); },
+    get title() { return _translateCopy("copy.db582e44a2f9", { defaultValue: "Open the Riftn connector in ChatGPT" }); },
+    get body() { return _translateCopy("copy.a1be36bee94a", { defaultValue: "Click the button below. ChatGPT will jump straight to the Riftn connector inside your Settings → Connectors panel." }); },
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    get body() { return _translateCopy('accountConnect.step', { defaultValue: 'For account controls, add https://riftn.com/mcp as an OAuth connector, sign in to DeHub and review the permissions before allowing access.' }); },
+    get body() { return _translateCopy('accountConnect.step', { defaultValue: 'For account controls, add https://riftn.com/mcp as an OAuth connector, sign in to Riftn and review the permissions before allowing access.' }); },
   },
   {
     get title() { return _translateCopy("copy.1c353e8894fb", { defaultValue: "Start a new chat and use it" }); },
-    get body() { return _translateCopy("copy.fd931309f64c", { defaultValue: "Open a new chat, mention DeHub in your prompt (e.g. \"Summarise today's trending posts on DeHub\") and ChatGPT will call the connector automatically." }); },
+    get body() { return _translateCopy("copy.fd931309f64c", { defaultValue: "Open a new chat, mention Riftn in your prompt (e.g. \"Summarise today's trending posts on Riftn\") and ChatGPT will call the connector automatically." }); },
   },
 ];
 
 const examples = () => [
-  _translateCopy("copy.276b978fa5ec", { defaultValue: "Summarise the top 10 trending posts on DeHub right now." }),
-  _translateCopy("copy.cc498e0e6ed6", { defaultValue: "Find posts on DeHub about Bitcoin from the last 24 hours and give me a bullet-point digest." }),
-  _translateCopy("copy.3b2e4df4defd", { defaultValue: "Look up the DeHub profile @satoshi and tell me what they've posted this week." }),
-  _translateCopy("copy.82c5c975c9b2", { defaultValue: "Draft a reply to the top post on DeHub in my voice." }),
+  _translateCopy("copy.276b978fa5ec", { defaultValue: "Summarise the top 10 trending posts on Riftn right now." }),
+  _translateCopy("copy.cc498e0e6ed6", { defaultValue: "Find posts on Riftn about Bitcoin from the last 24 hours and give me a bullet-point digest." }),
+  _translateCopy("copy.3b2e4df4defd", { defaultValue: "Look up the Riftn profile @satoshi and tell me what they've posted this week." }),
+  _translateCopy("copy.82c5c975c9b2", { defaultValue: "Draft a reply to the top post on Riftn in my voice." }),
 ];
 
 const faqs: { q: string; a: string; aKey?: string }[] = [
   {
-    get q() { return _translateCopy("copy.ea334731f6e3", { defaultValue: "Is DeHub free to use inside ChatGPT?" }); },
-    get a() { return _translateCopy("copy.004256b0a4f4", { defaultValue: "Yes. The DeHub ChatGPT app is free. You only need an active ChatGPT account that supports connectors (available on ChatGPT Plus, Pro, Team and Enterprise)." }); },
+    get q() { return _translateCopy("copy.ea334731f6e3", { defaultValue: "Is Riftn free to use inside ChatGPT?" }); },
+    get a() { return _translateCopy("copy.004256b0a4f4", { defaultValue: "Yes. The Riftn ChatGPT app is free. You only need an active ChatGPT account that supports connectors (available on ChatGPT Plus, Pro, Team and Enterprise)." }); },
   },
   {
-    get q() { return _translateCopy("copy.75332791a900", { defaultValue: "What can the DeHub connector do?" }); },
-    get a() { return _translateCopy('accountConnect.what', { defaultValue: 'Browse public posts and profiles. With an OAuth account connection, manage your profile and privacy, publish posts and comments, follow people, read notifications, save bookmarks and generate images, video, audio and 3D assets. Generation uses DeHub\'s existing payment rules.' }); },
+    get q() { return _translateCopy("copy.75332791a900", { defaultValue: "What can the Riftn connector do?" }); },
+    get a() { return _translateCopy('accountConnect.what', { defaultValue: 'Browse public posts and profiles. With an OAuth account connection, manage your profile and privacy, publish posts and comments, follow people, read notifications, save bookmarks and generate images, video, audio and 3D assets. Generation uses Riftn\'s existing payment rules.' }); },
   },
   {
-    get q() { return _translateCopy("copy.40fc098cb988", { defaultValue: "Do I need a DeHub account?" }); },
-    get a() { return _translateCopy("copy.af1dcb0cb4da", { defaultValue: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold tokens." }); },
+    get q() { return _translateCopy("copy.40fc098cb988", { defaultValue: "Do I need a Riftn account?" }); },
+    get a() { return _translateCopy("copy.af1dcb0cb4da", { defaultValue: "No account is required to read public content through the connector. A Riftn account is only needed if you want to post, tip or hold tokens." }); },
     aKey: "accountConnect.account",
   },
   {
@@ -71,9 +71,9 @@ export default function ConnectChatGPTPage() {
     "@graph": [
       {
         "@type": "HowTo",
-        name: _copy("copy.8b0f0e2f8de1", { defaultValue: "How to use DeHub inside ChatGPT" }),
+        name: _copy("copy.8b0f0e2f8de1", { defaultValue: "How to use Riftn inside ChatGPT" }),
         description:
-          _copy("copy.23bc33eaf5bb", { defaultValue: "Add the DeHub connector to ChatGPT and let GPT browse posts, profiles and trends from the DeHub social network." }),
+          _copy("copy.23bc33eaf5bb", { defaultValue: "Add the Riftn connector to ChatGPT and let GPT browse posts, profiles and trends from the Riftn social network." }),
         image: OG_IMAGE,
         totalTime: "PT1M",
         step: steps.map((s, i) => ({
@@ -97,8 +97,8 @@ export default function ConnectChatGPTPage() {
   return (
     <div data-glass-page data-theme-page-surface className="relative z-[1] min-h-screen bg-black text-white">
       <SEOHead
-        title={_copy("copy.d4a69f6e6a86", { defaultValue: "DeHub for ChatGPT — Use DeHub inside ChatGPT (MCP Connector)" })}
-        description={_copy("copy.a68813805ba9", { defaultValue: "Add DeHub to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside ChatGPT." })}
+        title={_copy("copy.d4a69f6e6a86", { defaultValue: "Riftn for ChatGPT — Use Riftn inside ChatGPT (MCP Connector)" })}
+        description={_copy("copy.a68813805ba9", { defaultValue: "Add Riftn to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside ChatGPT." })}
         url={PAGE_URL}
         image={OG_IMAGE}
         type="article"
@@ -110,7 +110,7 @@ export default function ConnectChatGPTPage() {
           to="/app"
           className="mb-8 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"
         >
-          <ArrowLeft className="h-4 w-4" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to DeHub" })}</Link>
+          <ArrowLeft className="h-4 w-4" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to Riftn" })}</Link>
 
         <div
           className="mb-8 aspect-[1200/630] w-full overflow-hidden rounded-2xl border border-white/10"
@@ -123,13 +123,13 @@ export default function ConnectChatGPTPage() {
         />
 
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-1.5 backdrop-blur-[24px]">
-          <img src={dehubIcon} alt="DeHub" className="h-4 w-4 object-contain" />
+          <img src={dehubIcon} alt="Riftn" className="h-4 w-4 object-contain" />
           <span className="text-white/40">×</span>
           <img src={openaiLogo} alt="ChatGPT" className="h-4 w-4 object-contain" />
           <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">{_copy("copy.5b4569693eb1", { defaultValue: "MCP LIVE" })}</span>
         </div>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.81663fc4bc4b", { defaultValue: "Use DeHub inside ChatGPT" })}</h1>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.81663fc4bc4b", { defaultValue: "Use Riftn inside ChatGPT" })}</h1>
         <p className="mt-3 text-base text-white/60 md:text-lg">{t('accountConnect.intro')}</p>
 
         <a
@@ -138,7 +138,7 @@ export default function ConnectChatGPTPage() {
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5"
         >
-          <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.e102a35a7417", { defaultValue: "Open DeHub in ChatGPT" })}<ArrowUpRight className="h-4 w-4" />
+          <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.e102a35a7417", { defaultValue: "Open Riftn in ChatGPT" })}<ArrowUpRight className="h-4 w-4" />
         </a>
 
 
@@ -202,7 +202,7 @@ export default function ConnectChatGPTPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
-            <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.e102a35a7417", { defaultValue: "Open DeHub in ChatGPT" })}<ArrowUpRight className="h-4 w-4" />
+            <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.e102a35a7417", { defaultValue: "Open Riftn in ChatGPT" })}<ArrowUpRight className="h-4 w-4" />
           </a>
           <Link
             to="/connect/claude"

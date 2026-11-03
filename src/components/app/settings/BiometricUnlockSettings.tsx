@@ -132,7 +132,7 @@ function EnrollDialog({
           ) : (
             <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
               <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-              <p>{_copy("copy.cd8776f2c798", { defaultValue: "This wallet has no password, and no passkey that works in this browser. Open DeHub on a device where biometric unlock already works to add this one." })}</p>
+              <p>{_copy("copy.cd8776f2c798", { defaultValue: "This wallet has no password, and no passkey that works in this browser. Open Riftn on a device where biometric unlock already works to add this one." })}</p>
             </div>
           )}
         </div>
@@ -383,7 +383,7 @@ export function BiometricUnlockSettings() {
                 <p className="text-white text-sm font-medium">{_copy("copy.0c9566ffe94c", { defaultValue: "No password backup" })}</p>
                 <p className="text-zinc-400 text-xs">
                   {protection.seedIsPasskeyWrapped && !canUseBiometrics
-                    ? _copy("copy.382977a2fc76", { defaultValue: "Biometrics is the only way into this wallet, and it was set up in the DeHub mobile app — add a password from that app’s settings so a lost phone isn’t a lost wallet." })
+                    ? _copy("copy.382977a2fc76", { defaultValue: "Biometrics is the only way into this wallet, and it was set up in the Riftn mobile app — add a password from that app’s settings so a lost phone isn’t a lost wallet." })
                     : _copy("copy.0a9a5533eec5", { defaultValue: "Biometrics is the only way into this wallet. Add a password so a lost device isn’t a lost wallet." })}
                 </p>
               </div>

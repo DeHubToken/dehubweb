@@ -1,4 +1,4 @@
-// DeHub affiliate referral attribution.
+// Riftn affiliate referral attribution.
 //
 // First-touch wins: once a visitor lands with `?ref=CODE` (or hits /r/CODE),
 // we set a cookie for 90 days and never overwrite it on subsequent visits.

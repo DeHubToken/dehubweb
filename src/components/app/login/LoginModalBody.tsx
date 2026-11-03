@@ -470,7 +470,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     (connectorMatchesWallet(wagmiCurrentConnector, wallet) ||
       (isWalletInAppBrowser() && wagmiCurrentConnector?.id === 'injected'));
 
-  // Drop the wallet currently attached without touching the DeHub session —
+  // Drop the wallet currently attached without touching the Riftn session —
   // `disconnect()` from the auth context is a full sign-out, which is not what
   // someone standing at the login sheet is asking for. wagmi's disconnect also
   // revokes the site's permission where the wallet supports it, so the next
@@ -509,7 +509,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     // A connection kept alive from a previous session (expired token, still
     // connected) only needs the signature — the wagmiAuthIntentState change
     // re-fires handleWagmiConnect, which picks the connection up and completes
-    // DeHub auth. This used to fire for a connection to ANY wallet, so tapping
+    // Riftn auth. This used to fire for a connection to ANY wallet, so tapping
     // a second wallet re-signed with the first one: the popup the user had just
     // cancelled came straight back, from the wallet they were trying to leave.
     // Naming the wallet on the intent is the other half of that — the effect
@@ -606,7 +606,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
               : t('loginModal.googleInAppTitleUnnamed', "Google won't sign in inside this app")}
           </p>
           <p className="text-white/70">
-            {t('loginModal.googleInAppBody', 'Open DeHub in your browser to use Google, or sign in with email here.')}
+            {t('loginModal.googleInAppBody', 'Open Riftn in your browser to use Google, or sign in with email here.')}
           </p>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             {escape ? (
@@ -672,7 +672,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
             : <KeyRound className="w-4 h-4 mt-0.5 shrink-0" />}
           <p className="flex-1 min-w-0">
             {setupIntent === 'migrate'
-              ? t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.')
+              ? t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier Riftn account you will bring over its wallet, username and balance.')
               : t('loginModal.importIntentHint', 'Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.')}
           </p>
           <button
@@ -928,7 +928,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         <div className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           <ArrowDownToLine className="w-4 h-4 mt-0.5 shrink-0" />
           <p className="flex-1 min-w-0">
-            {t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.')}
+            {t('loginModal.migrateIntentHint', 'Sign in with any option below. If it matches an earlier Riftn account you will bring over its wallet, username and balance.')}
           </p>
           <button
             type="button"
@@ -1267,7 +1267,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {step === 'wallet-restore' && supabaseUserId && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <div className="space-y-4">
-            <p className="text-white/70 text-sm leading-relaxed">{t('loginModal.restoreOriginalWallet', 'Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined DeHub to bring that wallet back. Your profile and funds stay as they are.')}</p>
+            <p className="text-white/70 text-sm leading-relaxed">{t('loginModal.restoreOriginalWallet', 'Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined Riftn to bring that wallet back. Your profile and funds stay as they are.')}</p>
             <SwitchOldAccountPanel onDone={closeLoginModal} />
             <button
               type="button"

@@ -654,8 +654,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen" data-explore-page>
-      <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: HUB_ROUTE_META.explore.url, description: _copy("copy.68f66b1f5bba", { defaultValue: "Discover trending content, creators and topics on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' } }} />
-      <h1 className="sr-only">{_copy("copy.e556e95a6b25", { defaultValue: "Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore Riftn', url: HUB_ROUTE_META.explore.url, description: _copy("copy.68f66b1f5bba", { defaultValue: "Discover trending content, creators and topics on Riftn." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
+      <h1 className="sr-only">{_copy("copy.e556e95a6b25", { defaultValue: "Explore Riftn — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Search Header - Bento Style.
 
           `data-nav-hide="pin"` keeps this one on screen when the rest of the

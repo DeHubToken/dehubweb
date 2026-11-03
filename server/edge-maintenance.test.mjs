@@ -21,7 +21,7 @@ test('root and deep links serve the local page with temporary outage headers', a
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
     assert.equal(response.headers.get('X-Robots-Tag'), 'noindex, nofollow');
     const html = await response.text();
-    assert.ok(html.includes('A little work.<br>A better DeHub.'));
+    assert.ok(html.includes('A little work.<br>A better Riftn.'));
     assert.ok(html.includes('border-radius:12px'));
     assert.ok(!html.includes('/assets/'));
   }

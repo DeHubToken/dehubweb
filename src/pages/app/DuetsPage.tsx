@@ -40,7 +40,7 @@ export default function DuetsPage() {
   if (!valid || !source) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-white">
-        <SEOHead title={t('duet.notFoundTitle', 'Video not found — DeHub')} noindex noCanonical />
+        <SEOHead title={t('duet.notFoundTitle', 'Video not found — Riftn')} noindex noCanonical />
         <p className="text-sm text-zinc-400">{t('duet.notFound', 'This video is not available.')}</p>
         <Button asChild variant="secondary"><Link to="/shorts">{t('duet.browseShorts', 'Browse Shorts')}</Link></Button>
       </div>
@@ -52,13 +52,13 @@ export default function DuetsPage() {
   const title = creator
     ? t('duet.pageTitle', 'Duets of {{title}} by @{{creator}}', { title: name, creator })
     : t('duet.pageTitleNoCreator', 'Duets of {{title}}', { title: name });
-  const description = t('duet.pageDescription', 'Watch every duet of this video on DeHub, or record your own side by side.');
+  const description = t('duet.pageDescription', 'Watch every duet of this video on Riftn, or record your own side by side.');
   const items = duets.data?.pages.flatMap(page => page.items) ?? [];
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5 px-4 py-6 text-white">
       <SEOHead
-        title={`${title} — DeHub`}
+        title={`${title} — Riftn`}
         description={description}
         image={getTextPostShareImageUrl(postId)}
         url={`https://riftn.com${duetsPath(postId)}`}

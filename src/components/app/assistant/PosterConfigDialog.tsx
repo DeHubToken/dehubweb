@@ -5,9 +5,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * PosterConfigDialog
  * ==================
  * Pre-generation config drawer for DeHub-branded posters.
- * Lets users pick dimensions, style archetype, DeHub roadmap features to spotlight,
+ * Lets users pick dimensions, style archetype, Riftn roadmap features to spotlight,
  * link inclusions, and tagline — all auto-populated from their prompt where possible.
- * Keeps Exo typography + DeHub branding locked in on the backend prompt.
+ * Keeps Exo typography + Riftn branding locked in on the backend prompt.
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
@@ -47,7 +47,7 @@ const DIMENSIONS: { value: PosterConfig['dimension']; label: string; hint: strin
 
 // ─── Style archetypes (matches server templates, but user-facing labels) ───
 const STYLES: { value: string; label: string; desc: string; descLabel: string }[] = [
-  { value: 'dehub-template', get label() { return _translateCopy("copy.6bb795fea2b8", { defaultValue: "🎯 DeHub Banner" }); }, desc: 'On-brand chrome icon + silver headline (like our blog banners)', get descLabel() { return _translateCopy("copy.395a707bd6a3", { defaultValue: "On-brand chrome icon + silver headline (like our blog banners)" }); } },
+  { value: 'dehub-template', get label() { return _translateCopy("copy.6bb795fea2b8", { defaultValue: "🎯 Riftn Banner" }); }, desc: 'On-brand chrome icon + silver headline (like our blog banners)', get descLabel() { return _translateCopy("copy.395a707bd6a3", { defaultValue: "On-brand chrome icon + silver headline (like our blog banners)" }); } },
   { value: 'auto', get label() { return _translateCopy("copy.eb1bb7452892", { defaultValue: "🎲 Surprise me" }); }, desc: 'Random top-tier archetype', get descLabel() { return _translateCopy("copy.e71655704cae", { defaultValue: "Random top-tier archetype" }); } },
   { value: 'apple-keynote', get label() { return _translateCopy("copy.ca01201adaea", { defaultValue: "🍎 Apple Keynote" }); }, desc: 'Minimal product hero, dramatic lighting', get descLabel() { return _translateCopy("copy.37540e858a4b", { defaultValue: "Minimal product hero, dramatic lighting" }); } },
   { value: 'a24-film', get label() { return _translateCopy("copy.edd50297ca4a", { defaultValue: "🎞️ A24 Film Poster" }); }, desc: 'Cinematic, grainy, moody', get descLabel() { return _translateCopy("copy.681da2fcb37a", { defaultValue: "Cinematic, grainy, moody" }); } },
@@ -67,12 +67,12 @@ const STYLES: { value: string; label: string; desc: string; descLabel: string }[
 
 // ─── Logo variants ───
 const LOGO_VARIANTS: { value: LogoVariant; label: string; hint: string; hintLabel: string }[] = [
-  { value: 'primary', get label() { return _translateCopy("copy.d5fda981cc4a", { defaultValue: "Wordmark" }); }, hint: 'Long-form DeHub logo', get hintLabel() { return _translateCopy("copy.b68ce1077869", { defaultValue: "Long-form DeHub logo" }); } },
+  { value: 'primary', get label() { return _translateCopy("copy.d5fda981cc4a", { defaultValue: "Wordmark" }); }, hint: 'Long-form Riftn logo', get hintLabel() { return _translateCopy("copy.b68ce1077869", { defaultValue: "Long-form Riftn logo" }); } },
   { value: 'icon', get label() { return _translateCopy("copy.a35abcd6dac9", { defaultValue: "Icon" }); }, hint: 'Compact D-mark', get hintLabel() { return _translateCopy("copy.ce18d71f9095", { defaultValue: "Compact D-mark" }); } },
   { value: 'both', get label() { return _translateCopy("copy.b6c1d862f9f7", { defaultValue: "Both" }); }, hint: 'Wordmark + icon lockup', get hintLabel() { return _translateCopy("copy.5499817aec57", { defaultValue: "Wordmark + icon lockup" }); } },
 ];
 
-// ─── DeHub features (sourced from every dapp + docs page, not just roadmap) ───
+// ─── Riftn features (sourced from every dapp + docs page, not just roadmap) ───
 const FEATURE_GROUPS: { group: string; groupLabel: string; items: { value: string; label: string; blurb: string; blurbLabel: string }[] }[] = [
   {
     group: 'Social & Feed', get groupLabel() { return _translateCopy("copy.beb497b64cad", { defaultValue: "Social & Feed" }); },
@@ -90,7 +90,7 @@ const FEATURE_GROUPS: { group: string; groupLabel: string; items: { value: strin
       { value: 'livestream', get label() { return _translateCopy("copy.38fddb1a5217", { defaultValue: "📡 Livestreaming" }); }, blurb: 'Native + aggregated streams', get blurbLabel() { return _translateCopy("copy.882538ca4a86", { defaultValue: "Native + aggregated streams" }); } },
       { value: 'streaming-agg', get label() { return _translateCopy("copy.3098854985e6", { defaultValue: "🎬 Streaming Aggregation" }); }, blurb: 'All major platforms in one', get blurbLabel() { return _translateCopy("copy.067dd84ab978", { defaultValue: "All major platforms in one" }); } },
       { value: 'stages', get label() { return _translateCopy("copy.2da0741cd536", { defaultValue: "🎙️ Stages" }); }, blurb: 'Audio rooms with AI TTS hosts', get blurbLabel() { return _translateCopy("copy.3f46fc40ad09", { defaultValue: "Audio rooms with AI TTS hosts" }); } },
-      { value: 'radio', get label() { return _translateCopy("copy.a0b9c4ce5f29", { defaultValue: "📻 DeHub Radio" }); }, blurb: '24/7 crypto radio', get blurbLabel() { return _translateCopy("copy.c8881bd87d15", { defaultValue: "24/7 crypto radio" }); } },
+      { value: 'radio', get label() { return _translateCopy("copy.a0b9c4ce5f29", { defaultValue: "📻 Riftn Radio" }); }, blurb: '24/7 crypto radio', get blurbLabel() { return _translateCopy("copy.c8881bd87d15", { defaultValue: "24/7 crypto radio" }); } },
       { value: 'tv-console', get label() { return _translateCopy("copy.e169e0f5f7cd", { defaultValue: "📺 TV & Console Apps" }); }, blurb: 'Living room takeover', get blurbLabel() { return _translateCopy("copy.50575a8fbd04", { defaultValue: "Living room takeover" }); } },
       { value: 'editor', get label() { return _translateCopy("copy.03bbf31aa251", { defaultValue: "🎬 In-Browser Video Editor" }); }, blurb: 'Multi-track studio at /editor', get blurbLabel() { return _translateCopy("copy.de690b83607b", { defaultValue: "Multi-track studio at /editor" }); } },
     ],
@@ -121,11 +121,11 @@ const FEATURE_GROUPS: { group: string; groupLabel: string; items: { value: strin
   {
     group: 'Marketplace & Commerce', get groupLabel() { return _translateCopy("copy.92e31dc02897", { defaultValue: "Marketplace & Commerce" }); },
     items: [
-      { value: 'stores', get label() { return _translateCopy("copy.50d8d34a787b", { defaultValue: "🛍️ DeHub Stores" }); }, blurb: 'P2P commerce in tokens on Base', get blurbLabel() { return _translateCopy("copy.88bcb881a608", { defaultValue: "P2P commerce in tokens on Base" }); } },
+      { value: 'stores', get label() { return _translateCopy("copy.50d8d34a787b", { defaultValue: "🛍️ Riftn Stores" }); }, blurb: 'P2P commerce in tokens on Base', get blurbLabel() { return _translateCopy("copy.88bcb881a608", { defaultValue: "P2P commerce in tokens on Base" }); } },
       { value: 'fractions', get label() { return _translateCopy("copy.6ee5630c9dde", { defaultValue: "🧩 Fractions" }); }, blurb: 'Fractional NFT marketplace', get blurbLabel() { return _translateCopy("copy.515c1d5bac05", { defaultValue: "Fractional NFT marketplace" }); } },
-      { value: 'work', get label() { return _translateCopy("copy.fb673c9c986e", { defaultValue: "🧑‍💻 DeHub Bounties" }); }, blurb: 'Escrow bounties: social, clips, contracts', get blurbLabel() { return _translateCopy("copy.cb7691b210ac", { defaultValue: "Escrow bounties: social, clips, contracts" }); } },
+      { value: 'work', get label() { return _translateCopy("copy.fb673c9c986e", { defaultValue: "🧑‍💻 Riftn Bounties" }); }, blurb: 'Escrow bounties: social, clips, contracts', get blurbLabel() { return _translateCopy("copy.cb7691b210ac", { defaultValue: "Escrow bounties: social, clips, contracts" }); } },
       { value: 'tipping', get label() { return _translateCopy("copy.2b13f4c55720", { defaultValue: "💸 Tipping" }); }, blurb: 'Reward creators on any post', get blurbLabel() { return _translateCopy("copy.3c0a4db437c9", { defaultValue: "Reward creators on any post" }); } },
-      { value: 'premium', get label() { return _translateCopy("copy.1205929886b3", { defaultValue: "👑 DeHub Extra" }); }, blurb: 'Premium tiers with cashback', get blurbLabel() { return _translateCopy("copy.088dd2c25014", { defaultValue: "Premium tiers with cashback" }); } },
+      { value: 'premium', get label() { return _translateCopy("copy.1205929886b3", { defaultValue: "👑 Riftn Extra" }); }, blurb: 'Premium tiers with cashback', get blurbLabel() { return _translateCopy("copy.088dd2c25014", { defaultValue: "Premium tiers with cashback" }); } },
     ],
   },
   {
@@ -189,7 +189,7 @@ function detectStyle(prompt: string): string {
   if (/\bvaporwave|retro|80s|synthwave\b/.test(lower)) return 'vaporwave';
   if (/\bproduct|launch|teaser|reveal\b/.test(lower)) return 'product-teaser';
   if (/\bconcert|tour|stage\b/.test(lower)) return 'concert-tour';
-  // Default to the on-brand DeHub template banner unless the user explicitly asked
+  // Default to the on-brand Riftn template banner unless the user explicitly asked
   // for one of the cinematic scene archetypes above.
   return 'dehub-template';
 }
@@ -239,10 +239,10 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
 
   const logoNote =
     cfg.logoVariant === 'icon'
-      ? 'Reserve clear negative space for the DeHub icon mark (compact D-symbol) only — do not draw the wordmark.'
+      ? 'Reserve clear negative space for the Riftn icon mark (compact D-symbol) only — do not draw the wordmark.'
       : cfg.logoVariant === 'both'
-      ? 'Reserve clear negative space for a DeHub lockup combining the icon mark and the long-form wordmark side-by-side or stacked.'
-      : 'Reserve clear negative space for the DeHub long-form wordmark logo.';
+      ? 'Reserve clear negative space for a Riftn lockup combining the icon mark and the long-form wordmark side-by-side or stacked.'
+      : 'Reserve clear negative space for the Riftn long-form wordmark logo.';
   parts.push(logoNote);
 
   if (cfg.style && cfg.style !== 'auto' && cfg.style !== 'dehub-template') {
@@ -255,7 +255,7 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
       .map(f => FEATURES.find(x => x.value === f))
       .filter(Boolean)
       .map(f => `${f!.label.replace(/^[^\w]+/, '')} (${f!.blurb})`);
-    parts.push(`Spotlight DeHub feature(s): ${featureLabels.join('; ')}.`);
+    parts.push(`Spotlight Riftn feature(s): ${featureLabels.join('; ')}.`);
   }
 
   if (cfg.tagline) parts.push(`Reserve clean negative space above the bottom logo area for a short headline — do NOT render any headline text yourself; the real headline is composited afterward.`);
@@ -325,8 +325,8 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader className="border-b border-white/10 pb-3">
-          <DrawerTitle className="text-white flex items-center gap-2 text-base" style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.02em' }}>{_copy("copy.6decaedff6c1", { defaultValue: "🎨 DeHub Poster Studio" })}</DrawerTitle>
-          <p className="text-white/40 text-xs mt-1">{_copy("copy.297102fe982b", { defaultValue: "Customize dimensions, style & content — Exo typography and DeHub branding stay locked in." })}</p>
+          <DrawerTitle className="text-white flex items-center gap-2 text-base" style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.02em' }}>{_copy("copy.6decaedff6c1", { defaultValue: "🎨 Riftn Poster Studio" })}</DrawerTitle>
+          <p className="text-white/40 text-xs mt-1">{_copy("copy.297102fe982b", { defaultValue: "Customize dimensions, style & content — Exo typography and Riftn branding stay locked in." })}</p>
         </DrawerHeader>
 
         <div className="p-4 space-y-5 max-h-[70vh] overflow-y-auto">

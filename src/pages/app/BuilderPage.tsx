@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
- * DeHub Builder — the lander at dehub.io/builder.
+ * Riftn Builder — the lander at dehub.io/builder.
  *
  * Building happens in Messages now: @assistant takes the request in the user's
  * DM, builds the app with the builder-api function and posts the link back in
@@ -99,8 +99,8 @@ export default function BuilderPage() {
   return (
     <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface data-glass-page data-theme-page-surface>
       <SEOHead
-        title={_copy("copy.6da423db4ed2", { defaultValue: "Builder — Build Apps with AI on DeHub" })}
-        description={_copy("copy.001cab7d69a2", { defaultValue: "Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open." })}
+        title={_copy("copy.6da423db4ed2", { defaultValue: "Builder — Build Apps with AI on Riftn" })}
+        description={_copy("copy.001cab7d69a2", { defaultValue: "Tell @assistant what you want in your Riftn messages. It builds the app, hosts it and sends you a link anyone can open." })}
         url="https://riftn.com/builder"
         image="https://riftn.com/og/builder.jpg"
       />

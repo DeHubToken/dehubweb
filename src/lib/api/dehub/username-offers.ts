@@ -1,7 +1,7 @@
 /**
  * Username offers
  * ===============
- * Client for `/api/username_market/offers/*` on the DeHub API.
+ * Client for `/api/username_market/offers/*` on the Riftn API.
  *
  * The listings client next door covers handles whose owners put them up for
  * sale. This covers the other direction: naming a price for a handle somebody

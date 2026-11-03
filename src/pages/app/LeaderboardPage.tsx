@@ -3,7 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Leaderboard Page
  * ================
- * Displays top DHB token holders and tippers from the DeHub API.
+ * Displays top DHB token holders and tippers from the Riftn API.
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
@@ -369,12 +369,12 @@ export default function LeaderboardPage() {
     <div className="min-h-screen">
       <SEOHead
         title={_copy("copy.ae9fd67eae76", { defaultValue: "Leaderboard — Top Creators & Earners" })}
-        description={_copy("copy.476be3b6b085", { defaultValue: "See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." })}
+        description={_copy("copy.476be3b6b085", { defaultValue: "See who's leading on Riftn. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." })}
         url="https://riftn.com/app/leaderboard"
         image="https://riftn.com/og/leaderboard.jpg"
-        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://riftn.com/app/leaderboard', description: _copy("copy.a9868171ff61", { defaultValue: "Track top token holders, tippers and creators on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://riftn.com' } }}
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Riftn Leaderboard', url: 'https://riftn.com/app/leaderboard', description: _copy("copy.a9868171ff61", { defaultValue: "Track top token holders, tippers and creators on Riftn." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }}
       />
-      <h1 className="sr-only">{_copy("copy.f7a1332ec093", { defaultValue: "DeHub Leaderboard — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <h1 className="sr-only">{_copy("copy.f7a1332ec093", { defaultValue: "Riftn Leaderboard — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={trophyIcon} alt="" className="h-8 w-8 object-contain" />}
         title={t('leaderboard.title')}

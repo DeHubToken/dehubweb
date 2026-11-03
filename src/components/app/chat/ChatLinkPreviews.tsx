@@ -21,7 +21,7 @@ function extractFirstUrl(text: string): string | null {
   const match = URL_REGEX.exec(text);
   if (!match) return null;
   const url = match[0];
-  // Anything inside DeHub gets its own entity card — scraping our own OG tags
+  // Anything inside Riftn gets its own entity card — scraping our own OG tags
   // to draw a second, worse card under it is pure noise.
   if (parseDehubLink(url)) return null;
   return url.match(/^https?:\/\//i) ? url : `https://${url}`;

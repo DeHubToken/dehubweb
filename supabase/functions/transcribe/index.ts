@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 //
-// One transcriber for everything DeHub can transcribe.
+// One transcriber for everything Riftn can transcribe.
 //
 // This replaces `transcribe-video` and `transcribe-stage`, which were two
 // programs doing one job with two status vocabularies, two retry stories (one

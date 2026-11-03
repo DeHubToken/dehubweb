@@ -59,7 +59,7 @@ const BrandAssets = () => {
     {
       id: 'wordmark-white',
       name: t('brandAssets.logoWordmarkWhite'),
-      description: _copy("copy.febe4ba8ab01", { defaultValue: "Full DeHub wordmark for use on dark backgrounds." }),
+      description: _copy("copy.febe4ba8ab01", { defaultValue: "Full Riftn wordmark for use on dark backgrounds." }),
       url: wordmarkWhite.url,
       filename: 'dehub-wordmark-white.png',
       bg: 'dark',
@@ -67,7 +67,7 @@ const BrandAssets = () => {
     {
       id: 'wordmark-black',
       name: t('brandAssets.logoWordmarkBlack'),
-      description: _copy("copy.b3a0a6360ee6", { defaultValue: "Full DeHub wordmark for use on light backgrounds." }),
+      description: _copy("copy.b3a0a6360ee6", { defaultValue: "Full Riftn wordmark for use on light backgrounds." }),
       url: wordmarkBlack.url,
       filename: 'dehub-wordmark-black.png',
       bg: 'light',
@@ -75,7 +75,7 @@ const BrandAssets = () => {
     {
       id: 'mark-white',
       name: t('brandAssets.logoMarkWhite'),
-      description: _copy("copy.91387693b21c", { defaultValue: "DeHub icon mark for use on dark backgrounds." }),
+      description: _copy("copy.91387693b21c", { defaultValue: "Riftn icon mark for use on dark backgrounds." }),
       url: markWhite.url,
       filename: 'dehub-mark-white.png',
       bg: 'dark',
@@ -83,7 +83,7 @@ const BrandAssets = () => {
     {
       id: 'mark-black',
       name: t('brandAssets.logoMarkBlack'),
-      description: _copy("copy.eef94579ec7c", { defaultValue: "DeHub icon mark for use on light backgrounds." }),
+      description: _copy("copy.eef94579ec7c", { defaultValue: "Riftn icon mark for use on light backgrounds." }),
       url: markBlack.url,
       filename: 'dehub-mark-black.png',
       bg: 'light',
@@ -159,7 +159,7 @@ const BrandAssets = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Palette className="w-5 h-5" />{_copy("copy.c67ade5cbfe4", { defaultValue: "Monochrome Palette" })}</CardTitle>
-          <CardDescription>{_copy("copy.5a28721d3125", { defaultValue: "DeHub is strictly black, white and grey. No decorative colour." })}</CardDescription>
+          <CardDescription>{_copy("copy.5a28721d3125", { defaultValue: "Riftn is strictly black, white and grey. No decorative colour." })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -276,7 +276,7 @@ const BrandAssets = () => {
           </Dialog>
           <div className="w-full rounded-lg overflow-hidden border border-border bg-black">
             <iframe
-              title={_copy("copy.b86577a30956", { defaultValue: "DeHub Social Media Templates" })}
+              title={_copy("copy.b86577a30956", { defaultValue: "Riftn Social Media Templates" })}
               src="https://embed.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-?node-id=0-1&embed-host=share"
               className="w-full h-[600px] block"
               allowFullScreen

@@ -518,7 +518,7 @@ export default function ProfilePage() {
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
         <SEOHead
-          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on DeHub', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} — DeHub`}
+          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on Riftn', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} — Riftn`}
           description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
           noindex
           noCanonical
@@ -572,15 +572,15 @@ export default function ProfilePage() {
           and the worker's bot HTML both use it, and an @-prefixed canonical
           split the signal between two URLs for every profile. */}
       <SEOHead
-        title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on DeHub — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on DeHub" })}
-        description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
+        title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on Riftn — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on Riftn" })}
+        description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on Riftn", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
         url={`https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
         feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl(data.profile.handle) } : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',
-          name: data.profile?.name || data.profile?.handle || 'DeHub User',
+          name: data.profile?.name || data.profile?.handle || 'Riftn User',
           url: `https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
           ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),

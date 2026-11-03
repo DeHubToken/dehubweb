@@ -78,7 +78,7 @@ export function BalanceCard() {
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center gap-2 mt-1">
-          <img src={dehubCoin} alt="DeHub" className="w-8 h-8 sm:w-9 sm:h-9" />
+          <img src={dehubCoin} alt="Riftn" className="w-8 h-8 sm:w-9 sm:h-9" />
           {isLoading ? (
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           ) : (

@@ -257,7 +257,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     actions.setIsSubscribersOnly(false);
   };
 
-  // A banned account can read every post on DeHub and write none of them.
+  // A banned account can read every post on Riftn and write none of them.
   // The API refuses the mint either way; showing the composer first would
   // only mean losing whatever was typed into it.
   const modalContent = isBanned ? (

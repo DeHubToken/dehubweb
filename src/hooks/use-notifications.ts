@@ -141,7 +141,7 @@ export function useNotifications(
 
     if (arrived.length === 1 && newest) {
       showNotification(
-        newest.item.from || 'DeHub',
+        newest.item.from || 'Riftn',
         newest.item.text || '',
         newest.item.avatar,
         newest.id,
@@ -152,7 +152,7 @@ export function useNotifications(
         ? t('digest.andOthers', { names: digest.names.join(', '), count: digest.otherNames })
         : digest.names.join(', ') || t('digest.someone', 'Someone');
       showNotification(
-        'DeHub',
+        'Riftn',
         t('notifications.burstBody', '{{count}} new notifications from {{who}}', {
           count: arrived.length,
           who,

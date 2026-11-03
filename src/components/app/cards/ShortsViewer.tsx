@@ -1248,7 +1248,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     claimMediaSession(
       instanceId,
       {
-        title: currentShort.title?.trim() || currentShort.description?.split(String.fromCharCode(10))[0] || _copy("copy.ed4fa5bea3cd", { defaultValue: "DeHub short" }),
+        title: currentShort.title?.trim() || currentShort.description?.split(String.fromCharCode(10))[0] || _copy("copy.ed4fa5bea3cd", { defaultValue: "Riftn short" }),
         artist: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
         artwork: currentShort.thumbnail || null,
       },

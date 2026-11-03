@@ -1,13 +1,13 @@
-// DeHub Builder API — prompt → AI-generated static web app → hosted preview.
+// Riftn Builder API — prompt → AI-generated static web app → hosted preview.
 //
 // Ported from the open-source Rilable build pipeline (github.com/rbrown101010/rilable,
 // MIT): same strict ===FILE=== generation protocol and generate/edit/self-status loop,
-// re-hosted on DeHub's stack — fal's OpenRouter router for codegen (no Anthropic key
+// re-hosted on Riftn's stack — fal's OpenRouter router for codegen (no Anthropic key
 // needed), Postgres for projects/messages/files, and the builder-serve edge function
 // as the static host (no Daytona sandboxes).
 //
 // Auth: wallet-native (x-wallet-address + x-dehub-token, verified against
-// api.dehub.io), or the DeHub API building for someone who asked @assistant in
+// api.dehub.io), or the Riftn API building for someone who asked @assistant in
 // a DM (x-assistant-secret + x-wallet-address). Metering: each generation
 // is paid from the caller's USD credit balance (provider cost + 30%), on the
 // model they picked (builder_prefs) — the same price either way.
@@ -121,13 +121,13 @@ const DESIGN_RULES = `RULES:
 - Never embed API keys or secrets of any kind. Do not call external APIs that require keys.
 - Keep the whole app under ~700 lines total.`;
 
-const GENERATE_SYSTEM = `You are DeHub Builder, an elite web-app builder. You produce complete, beautiful, fully-working single-page web apps from a short request.
+const GENERATE_SYSTEM = `You are Riftn Builder, an elite web-app builder. You produce complete, beautiful, fully-working single-page web apps from a short request.
 
 ${OUTPUT_FORMAT}
 
 ${DESIGN_RULES}`;
 
-const EDIT_SYSTEM = `You are DeHub Builder, an elite web-app builder. You are updating an existing app. You receive the app's current files, recent conversation, and a change request. Re-output the ENTIRE app — every file in full, including unchanged files. Files you omit will be DELETED. Keep the existing APP_NAME and APP_EMOJI unless the user asks to change them; SUMMARY should describe what you changed.
+const EDIT_SYSTEM = `You are Riftn Builder, an elite web-app builder. You are updating an existing app. You receive the app's current files, recent conversation, and a change request. Re-output the ENTIRE app — every file in full, including unchanged files. Files you omit will be DELETED. Keep the existing APP_NAME and APP_EMOJI unless the user asks to change them; SUMMARY should describe what you changed.
 
 ${OUTPUT_FORMAT}
 
@@ -205,7 +205,7 @@ async function openAiKey(): Promise<string | null> {
   return data;
 }
 
-/** A creator's own key for this run. DeHub charges nothing when one is used. */
+/** A creator's own key for this run. Riftn charges nothing when one is used. */
 type OwnKey = { provider: "openai" | "openrouter"; key: string };
 
 /** The creator's OpenAI key for GPT models, else their OpenRouter key for any model. */
@@ -223,8 +223,8 @@ async function ownKeyError(wallet: string, own: OwnKey, res: Response): Promise<
   const status = await noteKeyResult(wallet, own.provider, res.status);
   await res.body?.cancel();
   const label = BYOK_PROVIDERS[own.provider].label;
-  if (status === "invalid") return new Error(`Your ${label} key was rejected. Replace it in Settings, or remove it to use DeHub credits.`);
-  if (status === "no_credit") return new Error(`Your ${label} account is out of credit. Top it up, or remove the key to use DeHub credits.`);
+  if (status === "invalid") return new Error(`Your ${label} key was rejected. Replace it in Settings, or remove it to use Riftn credits.`);
+  if (status === "no_credit") return new Error(`Your ${label} account is out of credit. Top it up, or remove the key to use Riftn credits.`);
   return new Error(`${label} could not run this on your key (${res.status}). Try again soon.`);
 }
 
@@ -649,7 +649,7 @@ function listingFields(project: OwnedProject) {
     home_url: `${origin}/`,
     name: project.name,
     icon_url: `${origin}/icon.svg`,
-    description: `${project.name} — built with DeHub Builder.`,
+    description: `${project.name} — built with Riftn Builder.`,
     manifest: { builderProjectId: project.id, name: project.name, homeUrl: `${origin}/` },
     updated_at: new Date().toISOString(),
   };
@@ -657,7 +657,7 @@ function listingFields(project: OwnedProject) {
 
 /**
  * List the app in the mini app store. A Builder app skips the dehub.json
- * ownership signature other apps need: the wallet that built it on DeHub is
+ * ownership signature other apps need: the wallet that built it on Riftn is
  * its owner by definition. Like any new submission it starts `unlisted`
  * (shareable, marked Unreviewed) until staff promote it.
  */
@@ -670,7 +670,7 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
       .eq("id", project.miniapp_app_id)
       .maybeSingle();
     if (existing) {
-      if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact DeHub support.");
+      if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact Riftn support.");
       const review = existing.tier === "unlisted"
         ? { review_state: "pending", submitted_at: new Date().toISOString() }
         : {};
@@ -731,7 +731,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "POST only" }, 405);
   }
 
-  // The DeHub API builds on a user's behalf when they ask @assistant in a DM.
+  // The Riftn API builds on a user's behalf when they ask @assistant in a DM.
   // It has already verified who sent that DM and holds no token of theirs, so
   // it vouches for the wallet with the shared assistant secret instead. Every
   // one of those calls leaves the API from the same address, so the per-IP

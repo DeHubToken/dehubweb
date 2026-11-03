@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
     return json(400, { error: 'Invalid email' })
   }
 
-  const subject = clamp(payload.subject, MAX_SUBJECT) || 'New activity on DeHub'
+  const subject = clamp(payload.subject, MAX_SUBJECT) || 'New activity on Riftn'
   const heading = clamp(payload.heading, MAX_SUBJECT) || subject
   const body = clamp(payload.body, MAX_BODY)
   if (!body) {

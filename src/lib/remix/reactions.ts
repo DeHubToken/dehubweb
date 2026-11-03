@@ -6,7 +6,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getRemixCounts, getRemixLinks } from '@/lib/remix-links';
 
-/** The post id at the end of a DeHub post URL, or null. */
+/** The post id at the end of a Riftn post URL, or null. */
 export function tokenIdFromPostUrl(url: string): number | null {
   const match = url.match(/^https:\/\/(?:(?:www\.|staging\.)?dehub\.io|(?:www\.)?riftn\.com)\/(?:app\/)?(?:post|video)\/(\d+)(?:[/?#]|$)/);
   const id = match ? Number(match[1]) : NaN;
@@ -69,7 +69,7 @@ export function forgetReactionSummary(tokenId: number | string) {
   cache.delete(Number(tokenId));
 }
 
-/** The DeHub video a live stream has on screen now, if any. Rows are public. */
+/** The Riftn video a live stream has on screen now, if any. Rows are public. */
 export async function currentLiveReaction(streamTokenId: number | string) {
   const { data } = await supabase
     .from('remix_links' as never)

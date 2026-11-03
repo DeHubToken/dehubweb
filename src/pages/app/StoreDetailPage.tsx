@@ -74,7 +74,7 @@ export default function StoreDetailPage() {
   if (!store && storeFailed) {
     return (
       <div className="min-h-screen">
-        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — Riftn Stores", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
         <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
         <PageBody>
         <div className="py-12">
@@ -94,7 +94,7 @@ export default function StoreDetailPage() {
   if (!store) {
     return (
       <div className="min-h-screen">
-        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: t('stores.storeNotFound') })} description={t('stores.storeNotFound')} noindex />
+        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — Riftn Stores", value1: t('stores.storeNotFound') })} description={t('stores.storeNotFound')} noindex />
         <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
         <PageBody>
           <PageEmpty
@@ -109,7 +109,7 @@ export default function StoreDetailPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: store.name })} description={(store.description || _copy("copy.6730e5a02d90", { defaultValue: "Shop {{value1}} on DeHub. Peer-to-peer commerce paid in tokens or USDC.", value1: store.name })).slice(0, 155)} url={`https://riftn.com/app/stores/${store.id}`} />
+      <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — Riftn Stores", value1: store.name })} description={(store.description || _copy("copy.6730e5a02d90", { defaultValue: "Shop {{value1}} on Riftn. Peer-to-peer commerce paid in tokens or USDC.", value1: store.name })).slice(0, 155)} url={`https://riftn.com/app/stores/${store.id}`} />
       <PageIsland
         back
         backFallback="/app/stores"

@@ -6,8 +6,8 @@
  * unfurled as the homepage while the same account at `/mal` rendered a proper
  * card. Measured against production before this changed:
  *
- *   GET /mal      as Googlebot  →  <title>@mal on DeHub …</title>
- *   GET /mal.eth  as Googlebot  →  <title>DeHub — Open Source …</title>
+ *   GET /mal      as Googlebot  →  <title>@mal on Riftn …</title>
+ *   GET /mal.eth  as Googlebot  →  <title>Riftn — Open Source …</title>
  *
  * The carve-out is deliberately narrow — `.eth` and nothing else — because the
  * dot test is load-bearing for every real static asset. These tests pin both

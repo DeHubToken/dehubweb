@@ -1,5 +1,5 @@
 /**
- * Live Studio's multistream destinations: go live once on DeHub and the
+ * Live Studio's multistream destinations: go live once on Riftn and the
  * broadcast is pushed to every platform switched on here — Twitch, YouTube,
  * Kick, X, Facebook, TikTok or any RTMP server.
  *

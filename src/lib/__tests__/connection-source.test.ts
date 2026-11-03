@@ -48,7 +48,7 @@ describe('isSmartWalletSession', () => {
 
   it('is true when the tag was lost but the session is still a smart-wallet one', () => {
     // The bug this module exists for: a failed connect attempt deleted the tag
-    // while the DeHub session stayed alive.
+    // while the Riftn session stayed alive.
     localStorage.setItem(UID, 'uid');
     expect(isSmartWalletSession()).toBe(true);
   });

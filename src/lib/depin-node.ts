@@ -2,7 +2,7 @@
  * DePin browser node
  * ===================
  * Turns the open `/depin` tab into a lightweight, best-effort storage node
- * that holds a second independent copy of a handful of DeHub media objects.
+ * that holds a second independent copy of a handful of Riftn media objects.
  * This is explicitly a "lightweight" tier: it contributes only while the tab
  * stays open, uses the Origin Private File System (OPFS) for storage, and
  * makes no promise of 24/7 uptime. There is no service worker and nothing

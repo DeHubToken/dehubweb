@@ -7,7 +7,7 @@
 //
 // The table has no INSERT/UPDATE/DELETE policy at all; this function writes as
 // the service role. That is the point: there is no RLS expression that can
-// authenticate a wallet, because Postgres has no way to check a DeHub token.
+// authenticate a wallet, because Postgres has no way to check a Riftn token.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import {

@@ -7,7 +7,7 @@
  *   { notificationId, title, body, targetUrl?, wallets? }
  *
  * The key identifies the app; the app never holds per-user tokens (the thing
- * Farcaster developers most complain about managing). Delivery is DeHub's own
+ * Farcaster developers most complain about managing). Delivery is Riftn's own
  * notification list, so it reaches web and the app alike.
  *
  * Only people who added the app and left its notifications on receive

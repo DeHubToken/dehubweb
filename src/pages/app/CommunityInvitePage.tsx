@@ -44,7 +44,7 @@ export default function CommunityInvitePage() {
   if (isError && !preview) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4">
-        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - Riftn Community", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
         <div role="alert" className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 text-center space-y-3">
           <p className="text-white font-medium text-sm">{t('common.somethingWentWrong')}</p>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -87,7 +87,7 @@ export default function CommunityInvitePage() {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4">
         <SEOHead
-          title={t('communities.invite.invalidTitle', { defaultValue: 'Invite link - DeHub Community' })}
+          title={t('communities.invite.invalidTitle', { defaultValue: 'Invite link - Riftn Community' })}
           description={message}
         />
         <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 text-center space-y-3">
@@ -133,8 +133,8 @@ export default function CommunityInvitePage() {
   return (
     <div className="max-w-2xl mx-auto px-3 py-4">
       <SEOHead
-        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: communityName })}
-        description={preview.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on DeHub", value1: communityName })}
+        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - Riftn Community", value1: communityName })}
+        description={preview.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on Riftn", value1: communityName })}
       />
 
       <div className="rounded-xl border border-white/10 bg-white/[0.04] overflow-hidden">

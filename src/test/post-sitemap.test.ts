@@ -22,7 +22,7 @@ const WORKER = readFileSync(resolve(__dirname, '../../CLOUDFLARE_WORKER_SEO.js')
 const locs = (xml: string) => Array.from(xml.matchAll(/<loc>([^<]+)<\/loc>/g)).map((m) => m[1]);
 
 /** A caption long enough to clear the bar on its own. */
-const REAL_CAPTION = 'Good morning, valued DeHub family, here is what shipped';
+const REAL_CAPTION = 'Good morning, valued Riftn family, here is what shipped';
 
 describe('postQualifiesForSitemap', () => {
   it('keeps a post whose title or body says something', () => {

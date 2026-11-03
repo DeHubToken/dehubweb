@@ -84,7 +84,7 @@ describe('public platform comparison', () => {
         expect(SOURCES[entry!.source!]?.url, `${platform.id}:${row.id}`).toMatch(/^https:\/\//);
       }
     }
-    expect(FEATURES.some(feature => feature.category === 'Features DeHub does not have yet')).toBe(false);
+    expect(FEATURES.some(feature => feature.category === 'Features Riftn does not have yet')).toBe(false);
   });
   it('retains competitor matches and explicit current limitations discovered by research', () => {
     const peer = (id: string, platform: typeof PLATFORMS[number]['id']) => entryFor(FEATURES.find(feature => feature.id === id)!, platform);

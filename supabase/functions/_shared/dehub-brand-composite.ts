@@ -1,5 +1,5 @@
-// Deterministic DeHub brand overlay.
-// Takes a generated scene (PNG data URL) and composites the REAL DeHub
+// Deterministic Riftn brand overlay.
+// Takes a generated scene (PNG data URL) and composites the REAL Riftn
 // wordmark PNG + optional headline text on top using SVG + resvg-wasm.
 // Mirrors the pattern used by affiliate-share-image / blog-share-image so
 // the logo is always pixel-perfect (never redrawn by a diffusion model).
@@ -41,7 +41,7 @@ async function loadFonts(): Promise<Uint8Array[]> {
   return out;
 }
 
-// Canonical DeHub white wordmark on CDN. Cached in-memory per worker.
+// Canonical Riftn white wordmark on CDN. Cached in-memory per worker.
 // Prefer the hardcoded base64 wordmark (guaranteed correct pixels — the
 // dehub.io CDN path returns HTML/SPA-fallback in production, which broke
 // the composite silently before). CDN fetch kept as a last-ditch fallback.
@@ -63,7 +63,7 @@ async function fetchLogoDataUri(): Promise<string | null> {
   }
 }
 
-// Native pixel size of the DeHub wordmark (width / height ratio).
+// Native pixel size of the Riftn wordmark (width / height ratio).
 const LOGO_ASPECT = 1752 / 417;
 
 function escapeXml(v: string): string {
@@ -108,7 +108,7 @@ export interface BrandCompositeOptions {
 }
 
 /**
- * Overlay the real DeHub wordmark (and optional crisp headline) onto a
+ * Overlay the real Riftn wordmark (and optional crisp headline) onto a
  * generated scene using SVG + resvg-wasm. Returns a PNG data URL on
  * success, or `null` on any failure — callers should fall back to the
  * original scene rather than throwing.

@@ -83,7 +83,7 @@ type V2Header = Argon2Header | HkdfHeader;
 
 // Domain separation for the HKDF expand step, so the same PRF output used for
 // any other purpose can never yield this wrap key.
-const HKDF_INFO = "DeHub wallet seed wrap v1";
+const HKDF_INFO = "Riftn wallet seed wrap v1";
 
 async function deriveKeyPbkdf2(
   password: string,
@@ -181,7 +181,7 @@ function parseCiphertext(ciphertext: string): { header: V2Header | null; body: s
   // Reporting it as corruption would send the user to a data-loss message for
   // an intact wallet, so keep the two distinguishable.
   if (parsed?.kdf !== "argon2id" && parsed?.kdf !== "hkdf") {
-    throw new Error(_translateCopy("copy.de9e2132fd4d", { defaultValue: "This wallet was saved by a newer version of DeHub. Please reload and try again." }));
+    throw new Error(_translateCopy("copy.de9e2132fd4d", { defaultValue: "This wallet was saved by a newer version of Riftn. Please reload and try again." }));
   }
   return { header: parsed, body };
 }

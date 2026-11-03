@@ -12,13 +12,13 @@ import { useSocialReach } from '@/hooks/use-social-reach';
 interface TotalReachPillProps {
   /** The profile's wallet; its connected social accounts are looked up by it. */
   wallet?: string | null;
-  /** DeHub followers as counted by DeHub. */
+  /** Riftn followers as counted by Riftn. */
   followers?: number | null;
   className?: string;
 }
 
 /**
- * "Total reach" beside the follower count: DeHub followers plus the verified
+ * "Total reach" beside the follower count: Riftn followers plus the verified
  * follower counts of the socials the creator has connected. Renders nothing
  * until at least one connected account carries a count. Hover opens the breakdown on a pointer device; a tap toggles it.
  */

@@ -687,7 +687,7 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
   const { t: _copy } = _useCopy();
   // Unify \r\n → \n only. Blank lines and spacing stay exactly as typed.
   const normalized = rawDescription.replace(/\r\n/g, '\n').trim();
-  // DeHub links render as cards below, so the URLs come out of the copy
+  // Riftn links render as cards below, so the URLs come out of the copy
   // (display-only — never sent back to the API).
   const { links: dehubLinks, displayText: linkFreeDescription } = useDehubLinks(normalized);
   const { refs: assetRefs, displayText: description } = useAssetRefsInText(linkFreeDescription, undefined, hideAssetCards);
@@ -1704,9 +1704,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     claimMediaSession(
       instanceId,
       {
-        title: video.title || _copy("copy.75a86ca428cf", { defaultValue: "DeHub video" }),
-        artist: video.channel || 'DeHub',
-        album: video.isAudio ? _copy("copy.a2caa0dc28fb", { defaultValue: "DeHub • Audio" }) : _copy("copy.4671ecba9812", { defaultValue: "DeHub • Video" }),
+        title: video.title || _copy("copy.75a86ca428cf", { defaultValue: "Riftn video" }),
+        artist: video.channel || 'Riftn',
+        album: video.isAudio ? _copy("copy.a2caa0dc28fb", { defaultValue: "Riftn • Audio" }) : _copy("copy.4671ecba9812", { defaultValue: "Riftn • Video" }),
         artwork: (video.isAudio ? video.channelAvatar : thumbnail) || null,
       },
       {

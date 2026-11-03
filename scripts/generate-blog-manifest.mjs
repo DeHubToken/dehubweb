@@ -204,7 +204,7 @@ const manifest = sorted.map((p) => ({
   seoTitle: p.seoTitle || undefined,
   seoDescription: p.seoDescription || undefined,
   excerpt: p.excerpt || '',
-  author: p.author?.name || 'DeHub Team',
+  author: p.author?.name || 'Riftn Team',
   publishedAt: p.publishedAt,
   updatedAt: p.updatedAt || undefined,
   bannerImage: p.bannerImage || undefined,
@@ -244,7 +244,7 @@ for (const p of sorted) {
     excerpt: p.excerpt ?? '',
     bannerImage: p.bannerImage ?? '',
     bannerImageAlt: p.bannerImageAlt ?? '',
-    author: p.author ?? { name: 'DeHub Team' },
+    author: p.author ?? { name: 'Riftn Team' },
     tags: Array.isArray(p.tags) ? p.tags : [],
     readingTime: p.readingTime ?? 0,
     featured: !!p.featured,
@@ -409,19 +409,19 @@ const items = sorted.slice(0, 20).map((p) => `    <item>
       <link>${APP_URL}/guides/${xmlEsc(encodeURIComponent(p.slug))}</link>
       <guid>${APP_URL}/guides/${xmlEsc(encodeURIComponent(p.slug))}</guid>
       <pubDate>${rfc822(p.publishedAt)}</pubDate>
-      <dc:creator>${xmlEsc(p.author?.name || 'DeHub Team')}</dc:creator>
+      <dc:creator>${xmlEsc(p.author?.name || 'Riftn Team')}</dc:creator>
     </item>`).join('\n');
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>DeHub Blog</title>
-    <description>News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.</description>
+    <title>Riftn Blog</title>
+    <description>News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.</description>
     <link>${APP_URL}/docs/blog</link>
     <atom:link href="${APP_URL}/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-US</language>
-    <copyright>Copyright ${new Date(sorted[0]?.publishedAt || Date.now()).getFullYear()} DeHub</copyright>
-    <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
-    <webMaster>team@dehub.io (DeHub Team)</webMaster>
+    <copyright>Copyright ${new Date(sorted[0]?.publishedAt || Date.now()).getFullYear()} Riftn</copyright>
+    <managingEditor>team@dehub.io (Riftn Team)</managingEditor>
+    <webMaster>team@dehub.io (Riftn Team)</webMaster>
     <lastBuildDate>${rfc822(sorted[0]?.publishedAt || Date.now())}</lastBuildDate>
 ${items}
   </channel>

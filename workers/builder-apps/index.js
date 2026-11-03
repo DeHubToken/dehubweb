@@ -1,4 +1,4 @@
-// dehub-builder-apps — serves every DeHub Builder app on its own origin,
+// dehub-builder-apps — serves every Riftn Builder app on its own origin,
 // https://<slug>.dhb.gg.
 //
 // The bytes come from the builder-serve edge function (builder_files is the
@@ -18,7 +18,7 @@ const APPS_DOMAIN = 'dhb.gg';
 const PASS_THROUGH = new Set(['www', 'docs']);
 
 function page(status, title, message) {
-  const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><body style="background:#0a0a0a;color:#e5e5e5;font-family:system-ui;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:24px"><div><p style="font-size:18px;margin:0 0 8px">${title}</p><p style="color:#949499;margin:0">${message}</p><p style="margin-top:20px"><a style="color:#e5e5e5" href="https://dehub.io/builder">Build your own on DeHub</a></p></div>`;
+  const html = `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><body style="background:#0a0a0a;color:#e5e5e5;font-family:system-ui;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:24px"><div><p style="font-size:18px;margin:0 0 8px">${title}</p><p style="color:#949499;margin:0">${message}</p><p style="margin-top:20px"><a style="color:#e5e5e5" href="https://dehub.io/builder">Build your own on Riftn</a></p></div>`;
   return new Response(html, {
     status,
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
@@ -63,7 +63,7 @@ export default {
     if (res.status === 404) {
       const reason = await res.text();
       if (/private/i.test(reason)) return page(404, 'This app is private', 'Only its creator can open it.');
-      if (path === '/' || path.endsWith('.html')) return page(404, 'App not found', 'There is no DeHub app at this address.');
+      if (path === '/' || path.endsWith('.html')) return page(404, 'App not found', 'There is no Riftn app at this address.');
       return new Response('Not found', { status: 404 });
     }
 

@@ -755,7 +755,7 @@ const Dapp = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-foreground font-exo">DeHub</td>
+                    <td className="border border-border p-3 font-semibold text-foreground font-exo">Riftn</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.dehubValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubRevenue')}</td>

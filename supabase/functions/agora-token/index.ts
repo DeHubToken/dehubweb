@@ -39,7 +39,7 @@ const corsHeaders = {
  * "remove speaker" — which updates a row that does not exist — could not evict
  * them.
  *
- * A publisher token now requires a verified DeHub token whose wallet is either
+ * A publisher token now requires a verified Riftn token whose wallet is either
  * the stage's host or holds an active host/speaker participant row. Every
  * legitimate path already writes that row BEFORE asking for a token (both
  * clients: create, start-scheduled and join all insert or upsert first), so
@@ -119,7 +119,7 @@ async function mayPublish(channelName: string, wallet: string, uid: number): Pro
    * means turning the gate on would have 403'd every voice and video call in
    * direct messages, on a code path whose whole point is to be switched from
    * report to enforce once the logs go quiet. The logs would have been quiet:
-   * the report branch is only reached for a caller with a verified DeHub
+   * the report branch is only reached for a caller with a verified Riftn
    * token, and this refusal would have shown up there as one more line to
    * scroll past rather than as anything obviously fatal.
    *
@@ -211,7 +211,7 @@ serve(async (req) => {
       try {
         const gateCheck = (async (): Promise<string | null> => {
           const auth = await requireDeHubAuth(req);
-          if (!auth.ok) return "no valid DeHub token";
+          if (!auth.ok) return "no valid Riftn token";
           if (!(await mayPublish(channelName, auth.wallet, Number(userUid)))) {
             return `wallet ${auth.wallet} is not a party to this channel`;
           }

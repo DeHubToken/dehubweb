@@ -1,5 +1,5 @@
 /**
- * Where DeHub Builder apps live, and what their owner can do with them.
+ * Where Riftn Builder apps live, and what their owner can do with them.
  *
  * Builds are started from Messages — @assistant calls the builder-api function
  * on the user's behalf. Each app is served from its own origin,

@@ -13,7 +13,7 @@
  *   /.well-known/oauth-authorization-server  -> /api/mastodon/oauth/metadata
  *
  * /oauth/authorize is not here: it is a page (src/pages/OAuthAuthorizePage),
- * because approving needs the person signed in to DeHub.
+ * because approving needs the person signed in to Riftn.
  *
  * Browser-based apps (Elk, Phanpy) call from their own origin, so every answer
  * allows any origin and the preflight is answered here.

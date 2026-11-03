@@ -27,7 +27,7 @@ const CHROME =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36';
 
 const SHELL =
-  '<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>DeHub — Open Source, User Owned Social Media</title><meta name="robots" content="index, follow"></head><body><div id="root"></div></body></html>';
+  '<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Riftn — Open Source, User Owned Social Media</title><meta name="robots" content="index, follow"></head><body><div id="root"></div></body></html>';
 
 /** The ssr-seo function's default page: every URL built from original_url. */
 function fnHomepage(originalUrl: string) {
@@ -35,15 +35,15 @@ function fnHomepage(originalUrl: string) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DeHub — Open Source, User Owned &amp; Censorship Resistant Media</title>
+<title>Riftn — Open Source, User Owned &amp; Censorship Resistant Media</title>
 <meta name="description" content="x">
 <link rel="canonical" href="${originalUrl}">
 <meta property="og:url" content="${originalUrl}">
-<meta property="og:title" content="DeHub">
+<meta property="og:title" content="Riftn">
 <meta name="twitter:url" content="${originalUrl}">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"DeHub","sameAs":["https://x.com/DeHubApp"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Riftn","sameAs":["https://x.com/DeHubApp"]}</script>
 </head>
-<body><h1>DeHub</h1><nav><a href="https://riftn.com/app/explore">Explore</a> <a href="https://riftn.com/app/stages">Stages</a> <a href="https://riftn.com/app/stake">Stake</a> <a href="https://riftn.com/guides">Blog</a></nav></body>
+<body><h1>Riftn</h1><nav><a href="https://riftn.com/app/explore">Explore</a> <a href="https://riftn.com/app/stages">Stages</a> <a href="https://riftn.com/app/stake">Stake</a> <a href="https://riftn.com/guides">Blog</a></nav></body>
 </html>`;
 }
 
@@ -60,8 +60,8 @@ const ASSET_FILES: Record<string, [string, string]> = {
     'application/json',
     JSON.stringify({
       '/': {
-        en: { title: 'DeHub — Open Source, User Owned Social Media', description: 'desc' },
-        es: { title: 'DeHub ES', description: 'desc es', h1: 'DeHub ES', body: '<p>cuerpo</p>' },
+        en: { title: 'Riftn — Open Source, User Owned Social Media', description: 'desc' },
+        es: { title: 'Riftn ES', description: 'desc es', h1: 'Riftn ES', body: '<p>cuerpo</p>' },
       },
     }),
   ],
@@ -297,7 +297,7 @@ describe('proxied render failures', () => {
     upstream = (u) => (u.pathname.endsWith('/ssr-seo') ? new Response('err', { status: 502 }) : undefined);
     const res = await get('/app/post/123', FACEBOOK);
     expect(res.status).toBe(200);
-    expect(res.body).toContain('Post #123 on DeHub');
+    expect(res.body).toContain('Post #123 on Riftn');
   });
 });
 
@@ -333,7 +333,7 @@ describe('files that are not there', () => {
   });
 
   it('sends the legacy whitepaper PDFs to the docs', async () => {
-    for (const path of ['/uploads/DeHub-English-Whitepaper.pdf', '/uploads/DeHub%20White%20Paper.pdf', '/uploads/dehub_litepaper_v2.pdf']) {
+    for (const path of ['/uploads/DeHub-English-Whitepaper.pdf', '/uploads/Riftn%20White%20Paper.pdf', '/uploads/dehub_litepaper_v2.pdf']) {
       const res = await get(path, CHROME);
       expect(res.status, path).toBe(301);
       expect(res.location).toBe('https://riftn.com/docs');
@@ -366,7 +366,7 @@ describe('URL-space redirects', () => {
       if (!u.pathname.endsWith('/ssr-seo')) return undefined;
       const user = (u.searchParams.get('path') || '').replace('/@', '');
       return new Response(
-        `<!DOCTYPE html><html><head><title>Join @${user} on DeHub today!</title><link rel="canonical" href="https://riftn.com/${user}"></head><body><p>hi</p></body></html>`,
+        `<!DOCTYPE html><html><head><title>Join @${user} on Riftn today!</title><link rel="canonical" href="https://riftn.com/${user}"></head><body><p>hi</p></body></html>`,
         { headers: { 'Content-Type': 'text/html' } },
       );
     };
@@ -434,7 +434,7 @@ describe('bounty indexability', () => {
 describe('site-wide crawler chrome', () => {
   it('links the canonical explore page and blog index', () => {
     const html = stylePrerendered('<html><head></head><body><p>x</p></body></html>');
-    expect(html).toContain('href="https://riftn.com/explore">Open DeHub');
+    expect(html).toContain('href="https://riftn.com/explore">Open Riftn');
     expect(html).toContain('href="https://riftn.com/docs/blog">Blog');
     expect(html).not.toContain('/app/explore');
     expect(html).not.toContain('dehub.io/guides"');

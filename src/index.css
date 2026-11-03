@@ -66,7 +66,7 @@
 
 /* 
 ================================================================================
-DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
+RIFTN DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
 ================================================================================
 
 1. BUTTONS: All buttons must match our existing liquid glass style:
@@ -3795,11 +3795,11 @@ html[data-system-tone="light"] [data-login-modal] .bg-black\/20 {
   border-color: var(--hairline) !important;
 }
 
-/* DeHub wordmark in the modal header is a white PNG — invert it on paper. */
-html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
+/* Riftn wordmark in the modal header is a white PNG — invert it on paper. */
+html[data-theme="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-login-modal] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
@@ -4322,10 +4322,10 @@ html[data-theme="light"] [data-prompt-landing] {
 html[data-system-tone="light"] [data-prompt-landing] {
   color: var(--ink) !important;
 }
-html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-theme="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 html[data-theme="light"] [data-prompt-landing] h1,
@@ -5769,7 +5769,7 @@ input[data-hue-slider]:focus-visible {
 
 /*
 ================================================================================
-DEHUB PRELOADER — the animated DeHub mark used for page-level waits.
+RIFTN PRELOADER — the animated Riftn mark used for page-level waits.
 ================================================================================
 See components/app/DeHubLoader.tsx. Two things the component can't express
 inline:

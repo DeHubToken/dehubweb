@@ -10,7 +10,7 @@
 // only after checking the caller actually holds a seat on the stage.
 //
 // The gate is deliberately the same shape as agora-token's publisher gate: a
-// verified DeHub token, then a host/speaker participant row on that stage. A
+// verified Riftn token, then a host/speaker participant row on that stage. A
 // listener has nothing to transcribe — their microphone is not in the room —
 // so refusing them costs no feature and closes the obvious "mint credentials
 // against someone else's Deepgram balance" hole.
@@ -25,7 +25,7 @@ const CREDENTIAL_TTL_SECONDS = 300;
  * Live-transcription settings, served from here rather than hard-coded in the
  * bundle, so the model or the endpointing can be retuned without a web deploy.
  *
- * `language=multi` is the deliberate default. DeHub stages routinely run
+ * `language=multi` is the deliberate default. Riftn stages routinely run
  * English and Turkish in the same sentence, and nova-3's multilingual mode
  * handles the code-switch where a pinned `en` would transcribe Turkish as
  * nonsense English. The client falls back to `en` on its own if a socket is

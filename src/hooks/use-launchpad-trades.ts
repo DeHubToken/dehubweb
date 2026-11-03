@@ -47,7 +47,7 @@ export function useLaunchpadTrades(tokenId?: string, limit = 50) {
   return query;
 }
 
-// The function records the trade against the wallet behind the DeHub token,
+// The function records the trade against the wallet behind the Riftn token,
 // so the call carries the auth headers rather than naming a trader.
 export async function mockTrade(args: { tokenId: string; side: 'buy' | 'sell'; amount: number }) {
   const { data, error } = await supabase.functions.invoke('launchpad-mock-trade', {

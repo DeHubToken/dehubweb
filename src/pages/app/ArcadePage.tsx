@@ -133,7 +133,7 @@ export default function ArcadePage() {
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'DeHub Arcade',
+          name: 'Riftn Arcade',
           url: 'https://riftn.com/arcade',
           hasPart: ARCADE_GAMES.map((game) => ({
             '@type': 'VideoGame',

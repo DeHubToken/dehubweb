@@ -94,7 +94,7 @@ describe('arcade registry', () => {
 
   it('grants same-origin to first-party games only, and names them', () => {
     // Trenchstar is ours, in this repo, and its desk monitors ARE the real
-    // DeHub pages — dehub.io answers SAMEORIGIN, which an opaque parent can
+    // Riftn pages — dehub.io answers SAMEORIGIN, which an opaque parent can
     // never satisfy. It gets the token; a game vendored from outside must
     // never appear on this list without that same argument being true.
     const sameOrigin = ARCADE_GAMES.filter((g) => (g.sandbox ?? '').includes('allow-same-origin'));
@@ -136,7 +136,7 @@ describe('arcade registry', () => {
         for (const token of value.split(/\s+/).filter(Boolean)) {
           expect(SANDBOX_FLAGS, `${where}: '${token}' is not a sandbox flag`).toContain(token);
         }
-        // The authenticated studio is served from a different, fixed DeHub
+        // The authenticated studio is served from a different, fixed Riftn
         // origin. Keeping that origin lets it call its own private API and
         // authenticate postMessage without granting access to the app DOM.
         if (file === repo('src/pages/app/MaboroshiPage.tsx')) {

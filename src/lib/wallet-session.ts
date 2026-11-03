@@ -4,13 +4,13 @@
  * Wallet-scoped RLS reads get_request_wallet_address(), which used to trust the
  * x-wallet-address header on its own. The database now also accepts
  * x-wallet-session, a short-lived signature minted by the `wallet-session`
- * edge function for the wallet the DeHub token proves.
+ * edge function for the wallet the Riftn token proves.
  *
  * Rather than touch every query that sets x-wallet-address (there are dozens,
  * plus walletScopedClient for storage), this patches fetch once: any REST or
  * storage request to our Supabase project that names a wallet gets that
  * wallet's session attached. Edge function calls are left alone — they verify
- * the DeHub token themselves.
+ * the Riftn token themselves.
  *
  * Wallet-scoped requests fail closed when their signature is unavailable.
  * Anonymous public reads remain available without a wallet header.
@@ -72,7 +72,7 @@ function fresh(wallet: string): Session | null {
 
 /**
  * A failed invoke as a reason and "status message", e.g. "403 Token does not
- * belong…". A 401 is the DeHub token itself being dead, so it counts as no
+ * belong…". A 401 is the Riftn token itself being dead, so it counts as no
  * token rather than a server fault.
  */
 async function invokeFailure(error: unknown): Promise<MintError> {
