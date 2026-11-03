@@ -435,6 +435,10 @@ export interface SearchAccount {
   followingCount?: number;
   isFollowing?: boolean;
   followsYou?: boolean;
+  /** The search API's own names for the follower count and bio. */
+  followers?: number;
+  aboutMe?: string | null;
+  coverImageUrl?: string | null;
 }
 
 export interface SearchLivestream {
