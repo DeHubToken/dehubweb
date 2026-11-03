@@ -1,6 +1,6 @@
 # Riftn
 
-> Riftn (riftn.com) is an open source, user-owned and censorship-resistant social network and mobile app, in development since 2021. Posts can be minted on-chain, creators keep their audience and up to 99% of their revenue, and the network runs on the DHB token (Base and BNB Chain) for tips, watch-to-earn rewards, staking and governance. Not to be confused with DePaul University's DeHUB portal or Rowan's DEHub.
+> Riftn (riftn.com), formerly DeHub (dehub.io), is an open source, user-owned and censorship-resistant social network and mobile app, in development since 2021. Posts can be minted on-chain, creators keep their audience and up to 99% of their revenue, and the network runs on the DHB token (Base and BNB Chain) for tips, watch-to-earn rewards, staking and governance. Not to be confused with DePaul University's DeHUB portal or Rowan's DEHub.
 
 Every link below is a public page that renders without an account. The app's signed-in screens (messages, wallet, notifications, settings) are private and not listed. Machine-readable API access for assistants is described in [skill.md](https://riftn.com/skill.md).
 
@@ -60,7 +60,6 @@ Every link below is a public page that renders without an account. The app's sig
 - [How monetization works on social media apps](https://riftn.com/guides/how-monetization-works-on-social-media-apps): Payout rules on Instagram, TikTok, YouTube, X and Twitch.
 - [DHB token explained and how to buy it in the UK](https://riftn.com/guides/how-to-buy-dhb-token-uk): Step-by-step for UK buyers.
 - [Open source end-to-end encryption on Riftn](https://riftn.com/guides/privacy-first-open-source-e2ee-dehub): How Riftn messaging is encrypted.
-- [Riftn vs DePaul DeHUB vs Rowan DEHub](https://riftn.com/guides/dehub-vs-depaul-dehub-vs-rowan-dehub): Telling the three apart.
 - [Riftn blog](https://riftn.com/docs/blog): All news, product updates and guides.
 
 ## About
