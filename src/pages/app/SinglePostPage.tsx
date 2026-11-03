@@ -179,6 +179,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
     mediaCaptions: nft.mediaCaptions,
+    comicBorder: nft.comicBorder,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
@@ -275,6 +276,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
     mediaCaptions: nft.mediaCaptions,
+    comicBorder: nft.comicBorder,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
@@ -362,6 +364,7 @@ function toTextPost(nft: DeHubNFT): TextPost {
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
     mediaCaptions: nft.mediaCaptions,
+    comicBorder: nft.comicBorder,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
@@ -486,6 +489,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
     mediaCaptions: nft.mediaCaptions,
+    comicBorder: nft.comicBorder,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
@@ -774,7 +778,7 @@ function SlugNotFound() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
-      <SEOHead title="Post not found — DeHub" noindex noCanonical />
+      <SEOHead title="Post not found — Riftn" noindex noCanonical />
       <p className="text-foreground font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
       <p className="text-muted-foreground text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
       <button
@@ -809,7 +813,7 @@ export default function SinglePostPage(props: SinglePostPageProps = {}) {
   if (slug && slugQuery.isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <SEOHead title="DeHub" noindex noCanonical />
+        <SEOHead title="Riftn" noindex noCanonical />
         <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
       </div>
     );
@@ -1461,7 +1465,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
     // This branch returns before the shared SEOHead below — without its own,
     // shared video links get the generic app title and no OG tags.
     const videoSeoTitle = post.title || post.name || _copy("copy.d534be829e32", { defaultValue: "Video" });
-    const videoSeoDesc = post.description || _copy("copy.6d9f96048ba4", { defaultValue: "Watch this video on DeHub" });
+    const videoSeoDesc = post.description || _copy("copy.6d9f96048ba4", { defaultValue: "Watch this video on Riftn" });
 
     return (
       <>
@@ -1479,7 +1483,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
             url: postSeoUrl(id, (post as any)?.articleSlug),
             ...(videoData.thumbnail && { thumbnailUrl: videoData.thumbnail }),
             ...(post.createdAt && { uploadDate: post.createdAt }),
-            publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+            publisher: { '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' },
             usageInfo: getAiScrapingPreference((post as any).minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
           }}
         />
@@ -1667,7 +1671,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
 
   // Build SEO title/description from post data
   const seoTitle = post?.title || post?.name || _copy("copy.a5554622c655", { defaultValue: "Post" });
-  const seoDesc = post?.description || _copy("copy.4fa459932407", { defaultValue: "View this post on DeHub" });
+  const seoDesc = post?.description || _copy("copy.4fa459932407", { defaultValue: "View this post on Riftn" });
 
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
@@ -1802,7 +1806,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
           url: postSeoUrl(id, (post as any)?.articleSlug),
           ...(post?.minterDisplayName && { author: { '@type': 'Person', name: post.minterDisplayName } }),
           ...(post?.createdAt && { datePublished: post.createdAt }),
-          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+          publisher: { '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' },
           usageInfo: getAiScrapingPreference((post as any)?.minterUser?.customs) === 'allow' ? 'ai-training-allowed' : 'ai-training-prohibited',
         }}
       />

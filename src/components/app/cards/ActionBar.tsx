@@ -1001,14 +1001,15 @@ export function ActionBar({
   // (plus a dislike before share where reactions are off)
   const engagementButtons = (
     <>
-      {/* A private-balance creator has no DeHub payment entry point. */}
+      {/* A private-balance creator has no Riftn payment entry point. */}
       {onTip ? (
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}
+          data-tipped={viewerTipped || tipBurst > 0 ? '' : undefined}
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
-          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} quiet />
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} />
           {/* Counts come off over a video: the icons are the controls, and a
               tally beside each one is three more numbers on someone's frame. */}
           {!compact && (

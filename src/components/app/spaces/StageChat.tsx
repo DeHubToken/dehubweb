@@ -11,7 +11,7 @@
  * ends. Only the labels change.
  *
  * Rendering is the shared RealtimeChatPanel, so a message here looks like a
- * message anywhere else on DeHub.
+ * message anywhere else on Riftn.
  *
  * @module components/app/spaces/StageChat
  */

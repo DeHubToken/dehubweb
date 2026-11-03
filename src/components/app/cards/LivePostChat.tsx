@@ -1,3 +1,4 @@
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -161,7 +162,7 @@ interface LivePostChatProps {
    * two never matched. Nobody noticed, because the backend discarded the room
    * id and put every message in the platform's global room — so host and
    * viewers were in the same conversation by accident, along with everyone
-   * else on DeHub. Now that rooms are real, both ends have to name the same
+   * else on Riftn. Now that rooms are real, both ends have to name the same
    * one, and the tokenId is the only id both callers have.
    */
   tokenId: string;
@@ -199,6 +200,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // A mention notification names the line that tagged the reader.
   useFocusChatMessage();
   const { t: _copy } = _useCopy();
+  // A tapped photo opens full screen, with Download.
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
   // this chat. They share the composer's row — see live-viewer-actions.
   const viewerActions = useLiveViewerActions();
@@ -644,7 +647,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                         <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
                       </div>
                     ) : msg.message_type === 'image' && msg.image_url ? (
-                      <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                      <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                     ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
                       <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
@@ -856,7 +859,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         ) : null}
         </div>
       </div>
-
+      <FullscreenImageViewerLazy
+        images={viewingImage ? [viewingImage] : []}
+        initialIndex={0}
+        isOpen={!!viewingImage}
+        onClose={() => setViewingImage(null)}
+        downloadable
+      />
     </div>
   );
 }

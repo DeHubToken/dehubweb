@@ -138,7 +138,7 @@ export async function authenticateWallet(
     ...deviceHeaders(),
   };
 
-  // DeHub API only exposes /api/web/auth (doc.md). /api/auth returns 404.
+  // Riftn API only exposes /api/web/auth (doc.md). /api/auth returns 404.
   const response = await requestSession('/api/web/auth', {
     method: "POST",
     headers,
@@ -268,7 +268,7 @@ export async function rotateWallet(
 }
 
 /**
- * Exchange a Supabase access token for a DeHub session, with no wallet
+ * Exchange a Supabase access token for a Riftn session, with no wallet
  * signature — so login can finish without unlocking the wallet.
  *
  * The wallet stays encrypted; anything that needs to sign triggers an unlock at
@@ -371,7 +371,7 @@ export async function getEmailLinkStatus(): Promise<EmailLinkStatusResponse> {
  * the answer.
  *
  * A Google or email signup proves an address to Supabase and nothing ever
- * wrote it onto the DeHub account, so `notifyEmail` came back null for almost
+ * wrote it onto the Riftn account, so `notifyEmail` came back null for almost
  * everyone — and the email notifications row told people to go and add the
  * address they had just signed in with. Logins record it now, but that only
  * helps the next time someone signs in, which is no help at all to a person

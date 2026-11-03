@@ -2,7 +2,7 @@
    WAR - brand mark and menu glyph treatment
    ==========================================================================
 
-   Phosphor-green holographic glow for the DeHub mark and the menu glyphs that
+   Phosphor-green holographic glow for the Riftn mark and the menu glyphs that
    sit beside it, across all three places the mark appears: the desktop sidebar
    (full wordmark and the collapsed compact mark), the mobile header, and the
    collapsed/fullscreen states that reuse those same nodes.
@@ -16,7 +16,7 @@
 
    WHY ATTRIBUTE SELECTORS INSTEAD OF data-* HOOKS:
    `alt="dehub"` (lowercase) is carried by exactly the three nav brand marks and
-   nothing else. The coin glyphs elsewhere use `alt="DeHub"` (capital H) and are
+   nothing else. The coin glyphs elsewhere use `alt="Riftn"` (capital H) and are
    deliberately NOT matched here, since a glowing currency icon would read as a
    status indicator. Attribute selectors are case-sensitive in the value, which
    is what makes that distinction hold.

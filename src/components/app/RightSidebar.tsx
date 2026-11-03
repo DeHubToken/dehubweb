@@ -1,15 +1,10 @@
-import { useTranslation as _useCopy } from 'react-i18next';
-import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useState, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { memo } from 'react';
 import { motion } from 'framer-motion';
-import Search from "@/components/ui/cut-icons/search";
 
-import { Input } from '@/components/ui/input';
+import { DesktopPeopleSearch } from './search/DesktopPeopleSearch';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
 import { GettingStartedBento } from './GettingStartedBento';
-import { useSearchHistory } from '@/hooks/use-search-history';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
@@ -17,39 +12,6 @@ import { rightRailVariants } from '@/lib/surface-motion';
 
 interface RightSidebarProps {
   showSearch?: boolean;
-}
-
-// Inner search component that uses router hooks (isolates re-renders)
-function SearchBar({ compact }: { compact?: boolean }) {
-  const { t: _copy } = _useCopy();
-  const [searchValue, setSearchValue] = useSurfaceDraft("components/app/RightSidebar.tsx:searchValue", '');
-  const navigate = useNavigate();
-  const { addToHistory } = useSearchHistory();
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchValue.trim()) {
-      addToHistory(searchValue.trim());
-      navigate(`/app/explore?q=${encodeURIComponent(searchValue.trim())}`);
-      setSearchValue.complete(searchValue, '');
-    }
-  };
-
-  return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-      <Input
-        data-search-surface
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={_copy("copy.7f55382219f0", { defaultValue: "Search..." })}
-        className={cn(
-          "w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
-          compact ? "h-[36px] text-sm" : "h-[36px]"
-        )}
-      />
-    </div>
-  );
 }
 
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
@@ -65,7 +27,7 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
     <motion.aside data-desktop-right-rail variants={rightRailVariants} className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto overscroll-contain scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[12px]" : "px-4 pt-[8px]")}>
       {showSearch && (
         <div data-side-panel data-search-bento data-search-surface className="rounded-xl">
-          <SearchBar compact={isCollapsed} />
+          <DesktopPeopleSearch compact={isCollapsed} />
         </div>
       )}
       <div className={cn("space-y-4", isCollapsed ? "mt-[8px]" : "mt-[11px]")}>

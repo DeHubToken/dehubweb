@@ -11,7 +11,7 @@ describe("shortcut presets", () => {
     expect(shortcutAction("resolve", key("B", { ctrl: true }))).toBe("split");
     expect(shortcutAction("capcut", key("b", { ctrl: true }))).toBe("split");
   });
-  it("keeps DeHub's own layout untouched", () => {
+  it("keeps Riftn's own layout untouched", () => {
     expect(shortcutAction("dehub", key("k", { meta: true }))).toBeNull();
     expect(shortcutAction("dehub", key("l"))).toBeNull();
   });

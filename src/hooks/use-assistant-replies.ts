@@ -150,7 +150,7 @@ export function useAssistantReplyEngine(messages: SupabaseLiveChatMessage[]) {
               {
                 role: 'system',
                 content:
-                  'You are @assistant, the official DeHub AI helper replying inside a public chat room. ' +
+                  'You are @assistant, the official Riftn AI helper replying inside a public chat room. ' +
                   'CRITICAL: Keep your reply to ONE short message under 400 characters. ' +
                   'No markdown, no link formatting like [text](url) — paste raw URLs only. ' +
                   'Be friendly, concise, and answer the most important question first. ' +

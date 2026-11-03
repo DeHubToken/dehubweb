@@ -15,7 +15,7 @@ import solanaLogo from '@/assets/icons/solana-logo.png';
  * "Solana wallet" — connect Phantom so you can be paid on Solana.
  *
  * **Why an account needs this at all.** A Solana tip or PPV unlock is a
- * transfer straight to a Solana address, and a DeHub account is keyed by an
+ * transfer straight to a Solana address, and a Riftn account is keyed by an
  * EVM address. Until this existed the API resolved a creator's Solana
  * recipient from `token.minter` alone, which is an `0x` address on every EVM
  * post — so a Solana payment to anyone who had not personally minted that post
@@ -28,7 +28,7 @@ import solanaLogo from '@/assets/icons/solana-logo.png';
  * sees a foreign wagmi address — never fires. A plain Connect button is safe
  * here in a way it would not be for an EVM wallet.
  *
- * The signature is the ordinary DeHub login message for this account's own EVM
+ * The signature is the ordinary Riftn login message for this account's own EVM
  * address. That binds the proof to this account (a captured signature cannot
  * be replayed onto another) and to this moment (the server refuses one older
  * than the login window).

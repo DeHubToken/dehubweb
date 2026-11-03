@@ -2,12 +2,12 @@
  * Anonymous views API
  * ===================
  * Client for the `anon-views` Supabase edge function — where views from
- * visitors with no DeHub session are recorded, since api.dehub.io requires a
+ * visitors with no Riftn session are recorded, since api.dehub.io requires a
  * JWT on its own view endpoints.
  *
  * Write path only. Reading these counts separately is what made a post's view
  * number paint low and then jump: the edge function forwards deduped views to
- * the DeHub API, so `totalViews` on the post already includes them and there is
+ * the Riftn API, so `totalViews` on the post already includes them and there is
  * nothing left to merge client-side.
  */
 

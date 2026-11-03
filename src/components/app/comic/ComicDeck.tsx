@@ -3,8 +3,9 @@
  *
  * Every page of a comic is a foil card: the art, its caption under it and the
  * page number on top. The card leans toward the finger (or the mouse) on a
- * spring, the holo layer follows the light, sideways swipes deal the next card
- * and a tap flips it over to the caption and alt text in full.
+ * spring, the holo layer follows the light, and a tap or sideways swipe deals
+ * the next card. Tapping a caption cut off with … (or the ALT tag) flips the
+ * card over to the caption and alt text in full; a tap on the back flips it back.
  *
  * The feed shows the top card with the next two fanned behind it; tapping
  * opens the post. The post page adds the hand of every page under the card
@@ -14,6 +15,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cdnImage } from '@/lib/media-url';
 import { cn } from '@/lib/utils';
+import { ANIMATED_COMIC_BORDERS, isComicBorder } from '@/lib/comic-borders';
 import '@/styles/comic.css';
 
 export interface ComicDeckProps {
@@ -26,17 +28,22 @@ export interface ComicDeckProps {
   /** Post page: the hand of pages and the full read. */
   full?: boolean;
   aboveFold?: boolean;
+  /** Border preset (src/lib/comic-borders); absent is the theme's foil. */
+  border?: string;
 }
 
 const K = 160;
 const C = 14;
 const MAX_TILT = 14;
 
+/** Cover URL to its clamped aspect ratio. */
+const coverRatios = new Map<string, number>();
+
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
 
-export const ComicDeck = memo(function ComicDeck({ images, captions, descriptions, title, onOpen, full = false, aboveFold = false }: ComicDeckProps) {
+export const ComicDeck = memo(function ComicDeck({ images, captions, descriptions, title, onOpen, full = false, aboveFold = false, border }: ComicDeckProps) {
   const { t } = useTranslation();
   const total = images.length;
   const [index, setIndex] = useState(0);
@@ -110,7 +117,30 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     setIndex(next);
   }, [total]);
 
-  // Pointer: lean toward the finger, swipe sideways for the next card, tap to open or flip.
+  // Is the caption cut off by its line clamp (showing …)? Only then is there
+  // more to read on the back, so only then does tapping it flip the card.
+  const capRef = useRef<HTMLDivElement>(null);
+  const [capClamped, setCapClamped] = useState(false);
+  useEffect(() => {
+    const el = capRef.current;
+    if (!el) return;
+    const measure = () => setCapClamped(el.scrollHeight > el.clientHeight + 1);
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [index, captions]);
+
+  /** A plain tap: back to the front if flipped, flip for more text, else the next page. */
+  const tap = (target: EventTarget | null) => {
+    if (flipped) { setFlipped(false); return; }
+    const hit = target instanceof Element ? target.closest('.comic-cap, .comic-alt') : null;
+    if (hit && (hit.classList.contains('comic-alt') || capClamped)) { setFlipped(true); return; }
+    if (index < total - 1) go(index + 1);
+  };
+
+  // Pointer: lean toward the finger, swipe sideways or tap for the next card.
   const drag = useRef<{ x: number; y: number; t: number; id: number; sideways: boolean } | null>(null);
   const lean = (clientX: number, clientY: number) => {
     const el = cardRef.current;
@@ -169,7 +199,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     }
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && performance.now() - d.t < 450) {
       if (onOpen) onOpen();
-      else setFlipped(f => !f);
+      else tap(e.target);
     }
     if (e.pointerType !== 'mouse') settle();
   };
@@ -180,7 +210,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
     else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (onOpen) onOpen(); else setFlipped(f => !f);
+      if (onOpen) onOpen(); else if (flipped || capClamped) setFlipped(f => !f); else go(index + 1);
     }
   };
 
@@ -188,13 +218,34 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
   const alt = descriptions?.[index]?.trim() || '';
   const pageLabel = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
   // The art box takes the cover's shape (kept between tall and wide), so a
-  // landscape strip is not letterboxed in a portrait card.
-  const [ratio, setRatio] = useState(0.75);
+  // landscape strip is not letterboxed in a portrait card. Remembered per
+  // cover, so the post page opens at the size the feed card already had
+  // instead of starting portrait and jumping.
+  const [ratio, setRatio] = useState(() => coverRatios.get(images[0]) ?? 0.75);
   useEffect(() => {
+    const known = coverRatios.get(images[0]);
+    if (known) { setRatio(known); return; }
     const img = new Image();
-    img.onload = () => { if (img.naturalWidth && img.naturalHeight) setRatio(Math.max(0.62, Math.min(1.5, img.naturalWidth / img.naturalHeight))); };
+    img.onload = () => {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      const next = Math.max(0.62, Math.min(1.5, img.naturalWidth / img.naturalHeight));
+      coverRatios.set(images[0], next);
+      setRatio(next);
+    };
     img.src = cdnImage(images[0], { width: 720 }) || '';
   }, [images]);
+
+  // Holographic and glitter strips only move while the card is on screen.
+  const preset = isComicBorder(border) ? border : undefined;
+  const animated = !!preset && ANIMATED_COMIC_BORDERS.has(preset);
+  const [live, setLive] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!animated || !el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => setLive(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, [animated, reading]);
 
   const behind = useMemo(() => [index + 1, index + 2].filter(i => i < total), [index, total]);
 
@@ -203,7 +254,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
       <div data-comic className="relative px-1 pb-2">
         <div className="flex items-center justify-between gap-2 py-2">
           <p className="min-w-0 truncate text-sm font-semibold">{title || t('comic.title', { defaultValue: 'Comic' })}</p>
-          <button type="button" className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium" onClick={() => setReading(false)}>
+          <button type="button" className="shrink-0 rounded-xl border border-border px-3 py-1.5 text-xs font-medium" onClick={() => setReading(false)}>
             {t('comic.cards', { defaultValue: 'Back to cards' })}
           </button>
         </div>
@@ -232,16 +283,20 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
     <div
       ref={rootRef}
       data-comic
+      data-comic-border={preset}
+      data-comic-live={animated && live ? '' : undefined}
       data-no-swipe={total > 1 ? '' : undefined}
-      className={cn('relative flex flex-col items-center select-none pt-11', full ? 'pb-3' : 'pb-5')}
+      className={cn('relative flex flex-col items-center select-none pt-3', full ? 'pb-3' : 'pb-5')}
       style={{ perspective: 1100 }}
     >
-      <div className="comic-chip top-2 left-2">
-        <span aria-hidden>✦</span>
-        {t('comic.chip', { defaultValue: 'Comic · {{count}} pages', count: total })}
-      </div>
-
-      <div className="relative" style={{ width: ratio > 1 ? 'min(88%, 420px)' : 'min(78%, 340px)' }}>
+      {/* The art takes at most ~60% of the screen height, so the card, its page
+          hand and the button stay on screen on a laptop. */}
+      <div
+        className="comic-stack relative"
+        data-wide={ratio > 1 ? '' : undefined}
+        data-full={full ? '' : undefined}
+        style={{ maxWidth: `calc(${ratio.toFixed(3)} * ${full ? 60 : 56}vh)` }}
+      >
         {/* The next cards in the deck, fanned behind. */}
         {behind.map((i, n) => (
           <div
@@ -266,7 +321,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
           tabIndex={0}
           aria-label={onOpen
             ? t('comic.open', { defaultValue: 'Open comic, page {{page}} of {{total}}', page: index + 1, total })
-            : t('comic.flip', { defaultValue: 'Page {{page}} of {{total}}. Tap to flip', page: index + 1, total })}
+            : t('comic.next', { defaultValue: 'Page {{page}} of {{total}}. Tap for the next page', page: index + 1, total })}
           className="comic-card cursor-pointer outline-none"
           style={{ touchAction: 'pan-y' }}
           onPointerDown={onPointerDown}
@@ -293,7 +348,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
                 />
                 {alt ? <span className="comic-alt">ALT</span> : null}
               </div>
-              <div className="comic-cap">{caption}</div>
+              <div ref={capRef} className={cn('comic-cap', capClamped && 'cursor-help')}>{caption}</div>
             </div>
             <div className="comic-holo" />
             <div className="comic-sheen" />
@@ -341,13 +396,13 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
         </div>
       ) : null}
 
-      {full ? (
+      {full && total > 1 ? (
         <button
           type="button"
-          className="mt-3 rounded-full border border-border px-4 py-1.5 text-xs font-medium"
+          className="mt-4 h-9 rounded-xl border border-border px-4 text-sm font-medium"
           onClick={() => setReading(true)}
         >
-          {t('comic.readAll', { defaultValue: 'Read all pages' })}
+          {t('comic.showAll', { defaultValue: 'Show all {{count}} pages', count: total })}
         </button>
       ) : null}
     </div>

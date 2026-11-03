@@ -20,6 +20,7 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
   const distance = useRef(0);
   const frame = useRef(0);
   const returning = useRef(false);
+  const suppressClickUntil = useRef(0);
   const animation = useRef<Animation | null>(null);
   const motion = useRef({ motionRef, onMotion });
   motion.current = { motionRef, onMotion };
@@ -74,7 +75,10 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
   useEffect(() => () => { cancelAnimationFrame(frame.current); animation.current?.cancel(); }, []);
   const begin = useCallback((x: number, y: number, target: EventTarget | null) => {
     if (!enabled || isRefreshing || returning.current || !(target instanceof Element)) return;
-    if (target.closest('button, a, input, textarea, select, [role="slider"], [data-no-pull], [data-feed-filter-panel]')) return;
+    // Big tappable art (a profile cover or photo) opts in with data-pull-through,
+    // so a pull can start on it; the click that follows a real pull is dropped.
+    const control = target.closest('button, a, input, textarea, select, [role="slider"], [data-no-pull], [data-feed-filter-panel]');
+    if (control && !control.closest('[data-pull-through]')) return;
     // Every scroll surface must be at its top; a pull inside a scrolled panel
     // belongs to that panel, rather than refreshing the feed behind it.
     if (window.scrollY > 0 || document.documentElement.scrollTop > 0 || document.body.scrollTop > 0) return;
@@ -95,6 +99,7 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
   }, [reset, publish]);
   const finish = useCallback(() => {
     if (!start.current) return;
+    if (distance.current > 8) suppressClickUntil.current = performance.now() + 450;
     const refresh = start.current !== null && distance.current >= pullThreshold;
     springBack(refresh ? PULL_RETURN_MS : PULL_CANCEL_MS);
     if (refresh && !isRefreshing) onRefresh();
@@ -113,8 +118,19 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
       if (Math.abs(dx) > Math.max(12, Math.abs(dy))) { reset(); return; }
       if (dy > 0 && dy > Math.abs(dx) && event.cancelable) event.preventDefault();
     };
+    // A pull that began on tappable art must not also open it on release.
+    const dropClick = (event: globalThis.MouseEvent) => {
+      if (performance.now() > suppressClickUntil.current) return;
+      suppressClickUntil.current = 0;
+      event.preventDefault();
+      event.stopPropagation();
+    };
     container.addEventListener('touchmove', claimPull, { passive: false, capture: true });
-    return () => container.removeEventListener('touchmove', claimPull, true);
+    container.addEventListener('click', dropClick, true);
+    return () => {
+      container.removeEventListener('touchmove', claimPull, true);
+      container.removeEventListener('click', dropClick, true);
+    };
   }, [enabled, containerRef, reset]);
   return {
     pullDistance,

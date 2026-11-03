@@ -13,7 +13,7 @@ const REINVESTMENT = {
 const BNB_SHARING = {
   id: 'bsc_holder_share', label: 'BNB sharing to holders and stakers', kind: 'revenue',
   group: 'tax', origin: 'chain', status: 'ok',
-  note: 'BNB paid to holders and stakers, valued in USD on each payment date. Included in the gross historical revenue view at the requested scope; this was distributed to participants, not retained by DeHub.',
+  note: 'BNB paid to holders and stakers, valued in USD on each payment date. Included in the gross historical revenue view at the requested scope; this was distributed to participants, not retained by Riftn.',
 };
 const COST_MONTHLY_ANCHORS = [
   ['2021-08', 12000], ['2021-09', 30000], ['2021-10', 65000], ['2021-11', 100000],
@@ -82,7 +82,7 @@ export function mergeFinanceSummary(upstream, history, sharing = { days: [] }) {
     days: reinvestOperatingFunds([...days.values()].sort((a, b) => a.date.localeCompare(b.date))),
     notes: [...(upstream.notes ?? []), ...history.notes.filter(note => !note.startsWith('The retained operating funds')), history.valuation, REINVESTMENT.note, BNB_SHARING.note],
     marketplaceHistory: history.verification,
-    provenance: { ...upstream.provenance, endpoint: 'https://dehub.io/api/finance-stats', marketplaceSnapshot: 'https://dehub.io/finance-history/marketplace.json', bnbSharingSnapshot: 'https://dehub.io/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note, liveCostsSince: LIVE_COSTS_SINCE },
+    provenance: { ...upstream.provenance, endpoint: 'https://riftn.com/api/finance-stats', marketplaceSnapshot: 'https://riftn.com/finance-history/marketplace.json', bnbSharingSnapshot: 'https://riftn.com/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note, liveCostsSince: LIVE_COSTS_SINCE },
   };
 }
 
@@ -147,7 +147,7 @@ export async function restoreCoreSources(upstream, view, fetcher) {
     }
     return { ...upstream, ...(view === 'ledger' ? { items } : { days: [...days.values()].sort((a, b) => a.date.localeCompare(b.date)) }),
       sources: upstream.sources.map(source => missing.has(source.id) && core.sources.includes(source.id) && !unpriced.has(source.id) ? { ...source, status: 'ok' } : source),
-      notes: [...(upstream.notes ?? []).filter(note => !note.startsWith("DeHub's core API could not be read")), 'Missing app payment sources were read directly from the public core API. Fiat conversion uses current ECB reference rates, as in the managed finance endpoint.'],
+      notes: [...(upstream.notes ?? []).filter(note => !note.startsWith("Riftn's core API could not be read")), 'Missing app payment sources were read directly from the public core API. Fiat conversion uses current ECB reference rates, as in the managed finance endpoint.'],
     };
   } catch { return upstream; }
 }

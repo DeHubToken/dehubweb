@@ -131,7 +131,7 @@ export default function Premium() {
       <SEOHead
         title={t('premium.seoTitle')}
         description={t('premium.seoDescription')}
-        url="https://dehub.io/premium"
+        url="https://riftn.com/premium"
       />
 
       <PaymentTestModeBanner />
@@ -145,7 +145,7 @@ export default function Premium() {
       {/* Top nav */}
       <header data-clear-top-bar className="sticky top-0 z-20 backdrop-blur-xl bg-black/40 border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <Link to="/" className="text-sm font-semibold tracking-tight text-white">DeHub</Link>
+          <Link to="/" className="text-sm font-semibold tracking-tight text-white">Riftn</Link>
           <Link
             to="/app"
             className="text-xs text-zinc-300 hover:text-white transition-colors"
@@ -198,7 +198,7 @@ export default function Premium() {
         <GlassCard>
           <div className="flex items-center gap-2 mb-2">
             <Crown className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">{_copy("copy.71320997a469", { defaultValue: "DeHub Extra" })}</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.71320997a469", { defaultValue: "Riftn Extra" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.extraTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">
@@ -223,7 +223,7 @@ export default function Premium() {
         <GlassCard highlight>
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">{_copy("copy.08f72fb72234", { defaultValue: "DeHub Family" })}</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.08f72fb72234", { defaultValue: "Riftn Family" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.familyTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">
@@ -253,7 +253,7 @@ export default function Premium() {
         <GlassCard>
           <div className="flex items-center gap-2 mb-2">
             <Rocket className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">{_copy("copy.a74a0480b56d", { defaultValue: "DeHub Extra Large" })}</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.a74a0480b56d", { defaultValue: "Riftn Extra Large" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.xlTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">

@@ -4,7 +4,7 @@
  *
  * `navigator.mediaSession` is a single global slot. Whatever writes to it last
  * owns the lock screen, the notification shade, the headphone button and the
- * keyboard media keys. DeHub can have several things making noise at once — a
+ * keyboard media keys. Riftn can have several things making noise at once — a
  * radio station, a stage recording, a video card, a TV channel — so writing to
  * it directly from each player means the last one to mount wins, and pressing
  * pause on your headphones stops whichever of them happened to render most
@@ -159,9 +159,9 @@ export function claimMediaSession(
   try {
     if (typeof MediaMetadata !== 'undefined') {
       ms.metadata = new MediaMetadata({
-        title: track.title || 'DeHub',
-        artist: track.artist || 'DeHub',
-        album: track.album || 'DeHub',
+        title: track.title || 'Riftn',
+        artist: track.artist || 'Riftn',
+        album: track.album || 'Riftn',
         // `sizes: 'any'` rather than a guessed pixel size: these are remote
         // images of unknown dimensions, and claiming a size the file does not
         // have makes some launchers skip the artwork altogether.

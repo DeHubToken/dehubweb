@@ -6,7 +6,7 @@
  *
  * 1. checkLegacyAccount() — asks the `legacy-account-check` edge function
  *    whether the verified email on the CURRENT Supabase session belongs to a
- *    pre-migration DeHub account (and which provider it signed up with).
+ *    pre-migration Riftn account (and which provider it signed up with).
  *    The email is taken from the session JWT server-side — it is never a
  *    caller-supplied parameter, so this is not an email-enumeration oracle.
  *    Degrades to { exists: null } (= unknown) if the function or its
@@ -15,7 +15,7 @@
  * 2. hasLegacyBrowserResidue() — the old Web3Auth stack persisted state on
  *    this same origin (openlogin/torus/tkey/auth_store keys). If any of it
  *    is still in storage, this browser almost certainly signed in to the old
- *    DeHub — even if the user is now trying a different email.
+ *    Riftn — even if the user is now trying a different email.
  */
 import { supabase } from '@/integrations/supabase/client';
 

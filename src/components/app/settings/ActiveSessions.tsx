@@ -46,7 +46,7 @@ function getSubtitle(session: Session): string {
   else if (session.platform === 'android') parts.push('Android');
   else parts.push('Web');
   if (session.osVersion) parts[0] += ` ${session.osVersion}`;
-  if (session.appVersion) parts.push(`DeHub ${session.appVersion}`);
+  if (session.appVersion) parts.push(`Riftn ${session.appVersion}`);
   return parts.join(' · ');
 }
 

@@ -2,7 +2,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Generation queue.
  * =================
- * Every generation started anywhere in DeHub lands here: the /creator studio,
+ * Every generation started anywhere in Riftn lands here: the /creator studio,
  * the /editor Generate panel, a preset tile. Jobs run in parallel and the
  * results form one library that both surfaces read, so a clip generated in the
  * studio is one click from the timeline.

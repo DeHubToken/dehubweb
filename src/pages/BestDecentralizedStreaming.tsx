@@ -19,7 +19,7 @@ import { SEOHead } from '@/components/SEOHead';
 
 const platforms = [
   {
-    name: 'DeHub',
+    name: 'Riftn',
     get network() { return _translateCopy("copy.9f5a55e28454", { defaultValue: "Base, BNB, Robinhood Chain + Solana" }); },
     launched: '2021',
     get model() { return _translateCopy("copy.1ff5c5a7dd89", { defaultValue: "User-owned media platform — video, live, audio, posts" }); },
@@ -162,10 +162,10 @@ const FAQ_ITEMS: { q: string; a: string }[] = [
   },
   {
     get q() { return _translateCopy("copy.1a7f6dcad752", { defaultValue: "How quickly do tips actually reach the creator?" }); },
-    get a() { return _translateCopy("copy.9bbf96f13cc8", { defaultValue: "On DeHub a tip settles on-chain to your own wallet as it is sent, during the stream. There is no payout threshold to clear, no monthly payout date and no holding period, so the balance is yours to spend, swap or cash out straight away. That is the practical difference from an ad-funded platform, where the same money reaches you weeks later and only once you have cleared a minimum." }); },
+    get a() { return _translateCopy("copy.9bbf96f13cc8", { defaultValue: "On Riftn a tip settles on-chain to your own wallet as it is sent, during the stream. There is no payout threshold to clear, no monthly payout date and no holding period, so the balance is yours to spend, swap or cash out straight away. That is the practical difference from an ad-funded platform, where the same money reaches you weeks later and only once you have cleared a minimum." }); },
   },
   {
-    get q() { return _translateCopy("copy.0342e0eaa827", { defaultValue: "Do I need crypto to start streaming on DeHub?" }); },
+    get q() { return _translateCopy("copy.0342e0eaa827", { defaultValue: "Do I need crypto to start streaming on Riftn?" }); },
     get a() { return _translateCopy("copy.f03fe31d8277", { defaultValue: "No. You can sign in with email or a social account, go live without a wallet, and publish off-chain if you prefer. Minting a stream on-chain is an option rather than a requirement, and there is no gas cost to the creator when you take that route." }); },
   },
 ];
@@ -190,7 +190,7 @@ function Figure({ src, alt }: { src: string; alt: string }) {
 
 export default function BestDecentralizedStreaming() {
   const { t: _copy } = _useCopy();
-  const url = 'https://dehub.io/guides/best-decentralized-streaming-apps';
+  const url = 'https://riftn.com/guides/best-decentralized-streaming-apps';
   const localized = usePublicPageLocale('/guides/best-decentralized-streaming-apps');
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -199,13 +199,13 @@ export default function BestDecentralizedStreaming() {
         '@type': 'Article',
         headline: 'Best Decentralized Streaming Apps in 2026',
         description:
-          _copy("copy.f8c11a767d2d", { defaultValue: "The decentralized and Web3 streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius — with monetization, audience size and who each is for." }),
+          _copy("copy.f8c11a767d2d", { defaultValue: "The decentralized and Web3 streaming apps you can actually watch on in 2026 — Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius — with monetization, audience size and who each is for." }),
         datePublished: '2026-09-13',
         dateModified: '2026-09-29',
-        author: { '@type': 'Organization', name: 'DeHub' },
+        author: { '@type': 'Organization', name: 'Riftn' },
         publisher: {
           '@type': 'Organization',
-          name: 'DeHub',
+          name: 'Riftn',
           logo: {
             '@type': 'ImageObject',
             url: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png',
@@ -227,7 +227,7 @@ export default function BestDecentralizedStreaming() {
   if (localized.localized) {
     return <>
       <SEOHead title={localized.data?.title} description={localized.data?.description} url={url} type="article"
-        jsonLd={{ '@context': 'https://schema.org', '@type': 'Article', headline: localized.data?.h1, description: localized.data?.description, mainEntityOfPage: url, datePublished: '2026-09-13', dateModified: '2026-09-29', author: { '@type': 'Organization', name: 'DeHub' } }} />
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'Article', headline: localized.data?.h1, description: localized.data?.description, mainEntityOfPage: url, datePublished: '2026-09-13', dateModified: '2026-09-29', author: { '@type': 'Organization', name: 'Riftn' } }} />
       <main data-glass-page className="min-h-screen bg-black text-white">
         {localized.data ? <article className="prose prose-invert max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(localized.data.body) }} />
           : <div className="max-w-3xl mx-auto p-12" role="status">{_copy('common.loading', { defaultValue: 'Loading...' })}</div>}
@@ -238,8 +238,8 @@ export default function BestDecentralizedStreaming() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.7405f4274c2f", { defaultValue: "Best Decentralized Streaming Apps 2026 — DeHub Guide" })}
-        description={_copy("copy.76440774d600", { defaultValue: "The decentralized streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared." })}
+        title={_copy("copy.7405f4274c2f", { defaultValue: "Best Decentralized Streaming Apps 2026 — Riftn Guide" })}
+        description={_copy("copy.76440774d600", { defaultValue: "The decentralized streaming apps you can actually watch on in 2026 — Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared." })}
         url={url}
         type="article"
         jsonLd={jsonLd}
@@ -247,7 +247,7 @@ export default function BestDecentralizedStreaming() {
       <main data-glass-page className="min-h-screen bg-black text-white">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <nav aria-label={_copy("copy.2bd873d6c734", { defaultValue: "Breadcrumb" })} className="text-xs text-zinc-500 mb-6">
-            <Link to="/" className="hover:text-white">DeHub</Link>
+            <Link to="/" className="hover:text-white">Riftn</Link>
             <span className="mx-2">/</span>
             <span>{_copy("copy.572cd72feb9a", { defaultValue: "Guides" })}</span>
             <span className="mx-2">/</span>
@@ -318,8 +318,8 @@ export default function BestDecentralizedStreaming() {
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3">{_copy("copy.d940c4929cb2", { defaultValue: "Which one should you pick?" })}</h2>
             <ul className="space-y-3 text-zinc-300">
-              <li><strong className="text-white">{_copy("copy.07153496026a", { defaultValue: "Want to get paid from your first viewer?" })}</strong>{_copy("copy.7b85326af042", { defaultValue: " DeHub — real-time tips, pay-per-view and subscriptions, no follower threshold." })}</li>
-              <li><strong className="text-white">{_copy("copy.208c9499d220", { defaultValue: "Want production tools without a plugin stack?" })}</strong>{_copy("copy.f4f8e59834fb", { defaultValue: " DeHub — voice changers, sound effects and camera looks in the browser." })}</li>
+              <li><strong className="text-white">{_copy("copy.07153496026a", { defaultValue: "Want to get paid from your first viewer?" })}</strong>{_copy("copy.7b85326af042", { defaultValue: " Riftn — real-time tips, pay-per-view and subscriptions, no follower threshold." })}</li>
+              <li><strong className="text-white">{_copy("copy.208c9499d220", { defaultValue: "Want production tools without a plugin stack?" })}</strong>{_copy("copy.f4f8e59834fb", { defaultValue: " Riftn — voice changers, sound effects and camera looks in the browser." })}</li>
               <li><strong className="text-white">{_copy("copy.7de271a284f6", { defaultValue: "Already have a Bluesky following?" })}</strong>{_copy("copy.e4b7d3b7b2b4", { defaultValue: " Streamplace — same identity, no new account." })}</li>
               <li><strong className="text-white">{_copy("copy.eacc9626be89", { defaultValue: "Want the biggest audience available?" })}</strong>{_copy("copy.29891741bc10", { defaultValue: " Odysee." })}</li>
               <li><strong className="text-white">{_copy("copy.553d74bdde54", { defaultValue: "Want rewards paid by the chain itself?" })}</strong>{_copy("copy.531595a185f5", { defaultValue: " 3Speak." })}</li>
@@ -335,7 +335,7 @@ export default function BestDecentralizedStreaming() {
 
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-3">{_copy("copy.8f14ee3a31f7", { defaultValue: "The production gap" })}</h2>
-            <p className="text-zinc-300 leading-relaxed mb-4">{_copy("copy.59bb491feda2", { defaultValue: "Comparisons in this category usually stop at protocols and payments, which skips the thing you actually feel on day one: every other app here hands you a video player and a chat box, and everything else is your problem. You bring OBS, you wire up your own audio chain, you find your own plugins. DeHub ships the production tools in the browser:" })}</p>
+            <p className="text-zinc-300 leading-relaxed mb-4">{_copy("copy.59bb491feda2", { defaultValue: "Comparisons in this category usually stop at protocols and payments, which skips the thing you actually feel on day one: every other app here hands you a video player and a chat box, and everything else is your problem. You bring OBS, you wire up your own audio chain, you find your own plugins. Riftn ships the production tools in the browser:" })}</p>
             <ul className="space-y-3 text-zinc-300 mb-4">
               <li><strong className="text-white">{_copy("copy.9901ebc8a96c", { defaultValue: "Voice changers" })}</strong>{_copy("copy.339d6d1648e2", { defaultValue: " — Anonymous, Robot, Chipmunk, Echo and Radio, applied to the audio you publish rather than just your own monitor. Anonymous is the one that matters if you are covering something that makes you a target." })}</li>
               <li><strong className="text-white">{_copy("copy.9f5c19108ad3", { defaultValue: "A sound-effects board" })}</strong>{_copy("copy.077d1ebc4189", { defaultValue: " — air horn, applause, drum roll, buzzer, crickets, boo, countdown and more, on pads you can hit mid-sentence." })}</li>
@@ -357,12 +357,12 @@ export default function BestDecentralizedStreaming() {
           </section>
 
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 mb-12">
-            <h2 className="text-xl font-semibold mb-2">{_copy("copy.23cc49836f60", { defaultValue: "Go live on DeHub" })}</h2>
+            <h2 className="text-xl font-semibold mb-2">{_copy("copy.23cc49836f60", { defaultValue: "Go live on Riftn" })}</h2>
             <p className="text-zinc-400 mb-4">{_copy("copy.ce39b97c0f94", { defaultValue: "Stream from your browser, your phone or OBS, with voice changers, sound effects and camera looks built in. Tips land in your wallet as they are sent — no follower threshold, no payout cycle, and no wallet required to start." })}</p>
             <Link
               to="/app"
               className="inline-flex items-center justify-center rounded-2xl bg-white text-black font-semibold px-5 py-2.5 hover:bg-zinc-200 transition"
-            >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}</Link>
+            >{_copy("copy.efc85ecfd402", { defaultValue: "Open Riftn" })}</Link>
           </section>
 
           <section className="mb-12">

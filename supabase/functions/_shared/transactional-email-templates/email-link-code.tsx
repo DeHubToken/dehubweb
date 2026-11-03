@@ -4,7 +4,7 @@ import type { TemplateEntry } from './registry.ts'
 
 export const template = {
   component: EmailLinkCodeEmail,
-  subject: 'Your DeHub sign-in code',
+  subject: 'Your Riftn sign-in code',
   displayName: 'Email sign-in code',
   previewData: { code: '123456' },
 } satisfies TemplateEntry

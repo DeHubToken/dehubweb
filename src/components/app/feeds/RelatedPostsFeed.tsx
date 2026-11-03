@@ -15,6 +15,8 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
+import { ProfileFormatFeed } from './ProfileFormatFeed';
+import { usePostProfileFeedOrigin } from '@/lib/profile-feed-origin';
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildVideoUrl, buildHlsUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
@@ -62,7 +64,14 @@ function adToVideoItem(nft: any): VideoItem {
   };
 }
 
-export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
+/** Opened from a profile tab: that creator's next posts instead. */
+export function RelatedPostsFeed(props: RelatedPostsFeedProps) {
+  const origin = usePostProfileFeedOrigin(props.currentPostId);
+  const related = <LatestPostsFeed {...props} />;
+  return origin ? <ProfileFormatFeed origin={origin} currentPostId={props.currentPostId} fallback={related} /> : related;
+}
+
+function LatestPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 

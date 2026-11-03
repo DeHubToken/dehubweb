@@ -3,7 +3,7 @@
 // Lets a signed-in wallet push its current on-chain DHB balance into the
 // cached holdings/all board without waiting for the nightly refresh.
 //
-// The wallet is the one the DeHub token verifies to — the address query
+// The wallet is the one the Riftn token verifies to — the address query
 // param this used to accept let anyone rewrite anyone's row.
 
 import {
@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ success: true, balance, added: false, reason: "Balance below minimum (10,000 DHB)" });
     }
 
-    // 2. Fetch profile from DeHub API
+    // 2. Fetch profile from Riftn API
     let profile: Record<string, unknown> = {};
     try {
       const profileRes = await fetch(

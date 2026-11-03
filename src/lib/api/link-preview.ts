@@ -142,7 +142,7 @@ export function extractUrlsFromText(text: string): string[] {
   return extractShareUrls(text);
 }
 
-/** The outside link whose card a post shows, if it shows one. DeHub links render as entity cards. */
+/** The outside link whose card a post shows, if it shows one. Riftn links render as entity cards. */
 export function previewedLinkUrl(text: string | null | undefined): string | undefined {
   return text ? extractUrlsFromText(text).find((url) => !parseDehubLink(url)) : undefined;
 }

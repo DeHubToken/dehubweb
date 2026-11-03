@@ -39,7 +39,7 @@ import {
  *
  * **Why there is no "connect wallet" button.** The signature has to come from
  * the wallet the name points at, which is usually NOT the wallet you browse
- * DeHub with. Connecting a second wallet here is not an option: AuthProvider
+ * Riftn with. Connecting a second wallet here is not an option: AuthProvider
  * watches wagmi and, on seeing an address that is not the session's, either
  * clears the session outright or silently disconnects the wallet again
  * (CASE B in that file). Either would be worse than the problem it solved.
@@ -268,7 +268,7 @@ function EnsHandleSettingsInner() {
                 <p className="text-sm text-amber-400">
                   {t(
                     'settings.ensHeld',
-                    'Another DeHub account already wears this name. If it has changed hands on-chain since, proving it now takes it back.',
+                    'Another Riftn account already wears this name. If it has changed hands on-chain since, proving it now takes it back.',
                   )}
                 </p>
               ) : null}

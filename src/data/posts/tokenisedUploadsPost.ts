@@ -29,7 +29,7 @@ export const tokenisedUploadsPost: BlogPostType = {
   bannerImage: '/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
   bannerImageAlt: 'A glowing DeHub token representing tokenized uploads.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-06-10T12:00:00.000Z',
   tags: ['Tokenomics', 'NFT', 'Feature', 'Update', 'ERC1155'],

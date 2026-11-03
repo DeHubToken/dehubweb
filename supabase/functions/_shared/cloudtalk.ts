@@ -34,7 +34,7 @@ export function maskPhone(phone: string): string {
  * unnoticed em dash doubles what every login costs. Keep this plain ASCII.
  */
 export function otpSmsMessage(code: string): string {
-  return `${code} is your DeHub verification code. It expires shortly. ` +
+  return `${code} is your Riftn verification code. It expires shortly. ` +
     `Don't share it with anyone.`;
 }
 

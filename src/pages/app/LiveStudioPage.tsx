@@ -16,13 +16,13 @@ export default function LiveStudioPage() {
     <SEOHead
       title={t('liveStudio.seoTitle')}
       description={t('liveStudio.seoDescription')}
-      url="https://dehub.io/live-studio"
-      image="https://dehub.io/og/live-studio.jpg"
+      url="https://riftn.com/live-studio"
+      image="https://riftn.com/og/live-studio.jpg"
       jsonLd={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
         name: t('liveStudio.title'),
-        url: 'https://dehub.io/live-studio',
+        url: 'https://riftn.com/live-studio',
         applicationCategory: 'MultimediaApplication',
         operatingSystem: 'Web, Android, iOS',
         description: t('liveStudio.seoDescription'),

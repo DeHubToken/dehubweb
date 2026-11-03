@@ -37,9 +37,9 @@ describe("editor agent", () => {
     useEditorUiStore.getState().setGeneratePrefill(other);
     const fetch = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("offline"));
     try {
-      const result = await askAgent([{ role: "user", content: 'Create a voiceover saying "Hello, DeHub."' }]);
+      const result = await askAgent([{ role: "user", content: 'Create a voiceover saying "Hello, Riftn."' }]);
       const report = await applyOps(result.ops);
-      expect(report).toMatchObject({ applied: 0, failed: 0, generate: { kind: "voice", prompt: "Hello, DeHub." } });
+      expect(report).toMatchObject({ applied: 0, failed: 0, generate: { kind: "voice", prompt: "Hello, Riftn." } });
       expect(fetch).not.toHaveBeenCalled();
       expect(useEditorStore.getState().toSnapshot()).toMatchObject({ ...snapshot, updatedAt: expect.any(Number) });
       expect(useEditorStore.getState().past).toBe(past);

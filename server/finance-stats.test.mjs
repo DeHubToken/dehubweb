@@ -118,14 +118,14 @@ test('missing app purchases are restored once and unavailable currencies remain 
 test('public route handles CORS and HEAD, rejects unavailable data without inventing zeroes', async () => {
   const env = { ASSETS: { fetch: async request => Response.json(request.url.endsWith('bnb-sharing.json') ? sharing : history) } };
   const fetcher = async () => Response.json(summary);
-  const response = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats'), env, fetcher, null);
+  const response = await handleFinanceRequest(new Request('https://riftn.com/api/finance-stats'), env, fetcher, null);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), '*');
   assert.equal(response.headers.get('Cache-Control'), 'no-store');
   assert.equal((await response.json()).marketplaceHistory.countedSales, 684);
-  const head = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats', { method: 'HEAD' }), env, fetcher, null);
+  const head = await handleFinanceRequest(new Request('https://riftn.com/api/finance-stats', { method: 'HEAD' }), env, fetcher, null);
   assert.equal(await head.text(), '');
-  const failed = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats'), env, async () => new Response('', { status: 503 }), null);
+  const failed = await handleFinanceRequest(new Request('https://riftn.com/api/finance-stats'), env, async () => new Response('', { status: 503 }), null);
   assert.equal(failed.status, 502);
   assert.equal(failed.headers.get('Cache-Control'), 'no-store');
   assert.equal((await failed.json()).ok, false);
@@ -146,7 +146,7 @@ test('five-minute internal caching never turns into a four-hour browser cache', 
   };
   const fetcher = async () => { reads++; return Response.json(summary); };
   for (const method of ['GET', 'GET', 'HEAD']) {
-    const response = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats', { method }), env, fetcher, cache);
+    const response = await handleFinanceRequest(new Request('https://riftn.com/api/finance-stats', { method }), env, fetcher, cache);
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
     assert.equal(response.headers.get('CDN-Cache-Control'), 'no-store');
     if (method === 'HEAD') assert.equal(await response.text(), '');

@@ -70,7 +70,7 @@ Deno.serve(async (req: Request) => {
     }
     // dehub's own origins never get a token: nothing on them runs as a mini
     // app, and an audience of dehub.io would read as a dehub session.
-    if (domain === "dehub.io" || domain.endsWith(".dehub.io")) {
+    if (domain === "dehub.io" || domain.endsWith(".dehub.io") || domain === "riftn.com" || domain.endsWith(".riftn.com")) {
       return jsonResponse({ error: "That domain cannot receive mini app tokens." }, 400);
     }
 

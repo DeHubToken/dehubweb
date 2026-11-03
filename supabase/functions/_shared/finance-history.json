@@ -3,19 +3,19 @@
  "sources": [
   {
    "id": "bsc_token_tax",
-   "label": "DeHub token tax (BSC)",
+   "label": "Riftn token tax (BSC)",
    "group": "tax",
    "chain": "bsc",
-   "note": "The share of the original DeHub token's 12% trading tax that went to DeHub operations as BNB: the 2% collateral and 2% distribution sales the tax router paid to the operations wallets, plus the collateral BNB the contract paid the owner wallet, less the BNB those operations wallets passed on to the holders' rewards contract \u2014 that part belonged to holders and stakers, so it is subtracted here and shown as shared instead. The 4% buyback (burned), 2% liquidity and 1% reflection are not counted.",
+   "note": "The share of the original Riftn token's 12% trading tax that went to Riftn operations as BNB: the 2% collateral and 2% distribution sales the tax router paid to the operations wallets, plus the collateral BNB the contract paid the owner wallet, less the BNB those operations wallets passed on to the holders' rewards contract \u2014 that part belonged to holders and stakers, so it is subtracted here and shown as shared instead. The 4% buyback (burned), 2% liquidity and 1% reflection are not counted.",
    "provenance": {
     "chain": "BNB Smart Chain",
     "addresses": [
      {
-      "label": "DeHub token (v1)",
+      "label": "Riftn token (v1)",
       "address": "0xFC206f429d55c71cb7294EfF40c6ADb20dC21508"
      },
      {
-      "label": "PancakeSwap DeHub/BNB pair",
+      "label": "PancakeSwap Riftn/BNB pair",
       "address": "0xE876eE0945CE80Ef821633f2C18950b33Fb85633"
      },
      {

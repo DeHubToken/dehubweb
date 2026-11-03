@@ -795,7 +795,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
     }
 
     // Some networks cannot reach the self-hosted ingest at all (its bare
-    // droplet IP is the one DeHub host not behind Cloudflare, and a few ISPs
+    // droplet IP is the one Riftn host not behind Cloudflare, and a few ISPs
     // null-route whole hosting ranges — every request from there just hangs).
     // Ask now, in parallel with the wallet module, and tell the mint so the
     // stream is created on Livepeer instead of on a server this browser will
@@ -1012,7 +1012,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
         throw new Error(t("copy.a0bc0ef4d39e", { defaultValue: "Stream key not available yet. The backend may still be provisioning your stream. Please try again in a moment." }));
       }
 
-      // Step 5: Activate stream in DeHub backend + get ingest URL
+      // Step 5: Activate stream in Riftn backend + get ingest URL
       // Uses PATCH /api/live/{streamId}/settings to mark as live, GET /ingesturl for RTMP URL.
       const LIVEPEER_RTMP_URL = 'rtmp://rtmp.livepeer.com/live';
       let ingestUrl = '';
@@ -1084,7 +1084,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
         playbackId,
         provider,
         ingestUrl,
-        playbackUrl: playbackUrl || `https://dehub.io/app/post/${tokenId}`,
+        playbackUrl: playbackUrl || `https://riftn.com/app/post/${tokenId}`,
         hlsUrl,
       };
 

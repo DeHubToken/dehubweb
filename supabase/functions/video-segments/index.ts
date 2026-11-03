@@ -7,8 +7,8 @@
 // token, never from the x-wallet-address header.
 //
 // Neither table has an INSERT/UPDATE/DELETE policy; this function writes as
-// the service role. There is no RLS expression that can authenticate a DeHub
-// wallet, because Postgres has no way to check a DeHub token.
+// the service role. There is no RLS expression that can authenticate a Riftn
+// wallet, because Postgres has no way to check a Riftn token.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import {

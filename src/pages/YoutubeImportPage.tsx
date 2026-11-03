@@ -1,7 +1,7 @@
 import { FeedbackLink } from '@/components/app/FeedbackLink';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
- * dehub.io/converter — import a video from another platform as a DeHub post.
+ * dehub.io/converter — import a video from another platform as a Riftn post.
  * ==========================================================================
  * Lives inside AppLayout (sidebar/nav chrome), same as wallet/profile/etc —
  * this is a signed-in action, not a marketing landing page. Pasting a URL
@@ -58,7 +58,7 @@ import {
 } from '@/lib/api/dehub/youtube-import';
 
 /** Two attempts at a theme-token color (`border-primary`, then
- * `border-foreground`) both went invisible on some DeHub theme — this app
+ * `border-foreground`) both went invisible on some Riftn theme — this app
  * remaps named colors per theme, so any semantic token can end up close to
  * its own background. Bracket syntax below is a literal, unthemed color:
  * black border, white fill, on every theme, full stop.
@@ -339,8 +339,8 @@ export default function YoutubeImportPage() {
       <SEOHead
         title={t('converter.seoTitle')}
         description={t('converter.seoDescription')}
-        url="https://dehub.io/converter"
-        image="https://dehub.io/og/converter.jpg"
+        url="https://riftn.com/converter"
+        image="https://riftn.com/og/converter.jpg"
       />
 
       <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">

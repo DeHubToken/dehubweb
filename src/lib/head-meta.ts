@@ -7,7 +7,7 @@
  * their writes through here so the two never fight over tag ownership.
  */
 
-const CANONICAL_HOSTS = ['dehub.io', 'localhost', '127.0.0.1'];
+const CANONICAL_HOSTS = ['riftn.com', 'localhost', '127.0.0.1'];
 
 export function upsertMeta(attr: 'name' | 'property', key: string, content: string): void {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`);

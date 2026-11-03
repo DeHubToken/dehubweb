@@ -105,6 +105,7 @@ import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 
 /**
  * Lazy, and only mounted while open.
@@ -198,6 +199,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const bodyNavigationRef = useRef<HTMLDivElement>(null);
   const { walletAddress, openLoginModal } = useAuth();
   // Deep Current is the one power spent on somebody ELSE's post, so it is
@@ -319,7 +321,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
     isTooShort: nothingToTranslate,
   } = useTranslation(post.content, true, viewRef, true);
 
-  // DeHub links in the body become cards, and the URLs that became cards come
+  // Riftn links in the body become cards, and the URLs that became cards come
   // out of the text. Run on the text actually being displayed so the strip
   // matches what is on screen — a translation that mangled a URL then keeps it
   // as visible text rather than dropping it for a card that never renders.
@@ -349,6 +351,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       const path = window.location.pathname;
       if (path === `/app/post/${post.id}` || path === postOwnPath(post) || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
       cacheTextPostForNavigation(queryClient, post);
+      noteProfileFeedOpen(profileFeed, post.id);
       navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
     },
   });
@@ -366,16 +369,18 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
 
     // Cache the post data before navigation for instant display
     cacheTextPostForNavigation(queryClient, post);
+    noteProfileFeedOpen(profileFeed, post.id);
     navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, post.id, queryClient, post]);
+  }, [navigate, post.id, queryClient, post, profileFeed]);
 
   // Articles open in place, like every other post. They used to reload the
   // whole site through window.location.
   const isPostPage = /\/app\/post\/|\/newpost\//.test(window.location.pathname);
   const openArticle = useCallback(() => {
     cacheTextPostForNavigation(queryClient, post);
+    noteProfileFeedOpen(profileFeed, post.id);
     navigate(postOwnPath(post), { state: { fromFeed: true } });
-  }, [navigate, queryClient, post]);
+  }, [navigate, queryClient, post, profileFeed]);
 
   const handleRepost = useCallback(async () => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -408,7 +413,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = viewerShareUrl(`https://dehub.io${postOwnPath(post)}`);
+      const postUrl = viewerShareUrl(`https://riftn.com${postOwnPath(post)}`);
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -814,7 +819,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
         )}
         {post.isQuotePost && post.quoteRevoked && <RemovedQuoteNotice className="mt-2" />}
 
-        {/* DeHub entity cards — post, profile, community, invite, store, item, event */}
+        {/* Riftn entity cards — post, profile, community, invite, store, item, event */}
         <DehubLinkEmbeds links={dehubLinks} />
 
         {/* Market cards — a contract address somebody pasted, or a $TICKER */}

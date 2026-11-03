@@ -35,7 +35,7 @@ What makes it a genuine alternative rather than another feed:
 
 The ecosystem token is **$DHB**, primarily on Base (an Ethereum Layer 2), with contracts also on BNB Chain and Polygon. It trades on DEXs and on Coinbase, and is listed on CoinGecko and CoinMarketCap.
 
-If that is what you were looking for, start with [DeHub, the decentralised social network](/guides/what-is-dehub), or jump straight into [the DeHub app](https://dehub.io/app). New to the token? Read [how to buy the DHB token in the UK](/guides/how-to-buy-dhb-token-uk). Curious about the earning side? Here is [what DeHub watch-to-earn actually is](/guides/what-is-watch-to-earn).
+If that is what you were looking for, start with [DeHub, the decentralised social network](/guides/what-is-dehub), or jump straight into [the DeHub app](https://riftn.com/app). New to the token? Read [how to buy the DHB token in the UK](/guides/how-to-buy-dhb-token-uk). Curious about the earning side? Here is [what DeHub watch-to-earn actually is](/guides/what-is-watch-to-earn).
 
 ## DePaul University DeHUB (dehub.depaul.edu)
 
@@ -81,10 +81,10 @@ DeHub is an independent DAO, founded as a project in 2021 and governed on-chain 
 
 ### Where do I sign up for the DeHub social network?
 
-Visit [the DeHub web app](https://dehub.io/app) or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). You join with a crypto wallet, no university credentials needed.`,
+Visit [the DeHub web app](https://riftn.com/app) or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). You join with a crypto wallet, no university credentials needed.`,
   bannerImage: '/media/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png',
   bannerImageAlt: 'DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-07-14T09:00:00.000Z',
   updatedAt: '2026-07-14T09:00:00.000Z',
   tags: ['DeHub', 'disambiguation', 'Web3 social network', 'DePaul', 'Rowan', 'decentralised social media', 'DHB token'],

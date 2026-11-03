@@ -309,7 +309,7 @@ function looksLikeLoop(input: string, output: string): boolean {
   // The source side counts words of any length. A short word the source
   // repeats on purpose often comes out as a longer one: "no no no no" is
   // "nein nein nein nein", and "our community, our rules, our future, our
-  // DeHub" is "komunitas kita, aturan kita, masa depan kita, DeHub kita".
+  // Riftn" is "komunitas kita, aturan kita, masa depan kita, Riftn kita".
   if (maxRepeat(translated, REPEAT_MIN_LETTERS) >= 4 && maxRepeat(source, 0) < 3) return true;
 
   // Word counts also mislead when a target that spaces every syllable
@@ -1018,7 +1018,7 @@ serve(async (req) => {
     // back looking like a translation of the caller's post.
     //
     // URLs, @mentions, #hashtags and $tags count as untranslatable too, even
-    // though they contain letters: a post that is only "https://dehub.io/…" got
+    // though they contain letters: a post that is only "https://riftn.com/…" got
     // past the letter check, and the model's reply — "I don't see any text to
     // translate in your message. You've only provided a URL link…" — was cached
     // and rendered in the feed as the post's translation. Tags are judged, not

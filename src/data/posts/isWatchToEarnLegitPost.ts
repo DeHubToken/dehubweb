@@ -83,7 +83,7 @@ The $DHB token that rewards flow in lives on Base, an Ethereum Layer 2, with con
 
 DeHub is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish and governed on-chain by its token holders. That is a named team and a public, checkable governance record, which is exactly what the checklist above asks you to look for. For a direct feature-by-feature comparison against the better-known names, read [DeHub vs Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
 
-Want to test the checklist against a real platform? Open [the DeHub app](https://dehub.io/app) and see how far you get before anyone asks you to spend anything. The answer is: all the way.
+Want to test the checklist against a real platform? Open [the DeHub app](https://riftn.com/app) and see how far you get before anyone asks you to spend anything. The answer is: all the way.
 
 ## The honest bottom line
 
@@ -113,7 +113,7 @@ Yes, and you should insist on it. Genuine watch to earn without buying anything 
 `,
   bannerImage: '/media/is-watch-to-earn-legit-banner.png',
   bannerImageAlt: 'A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-21T16:20:00.000Z',
   updatedAt: '2026-05-21T16:20:00.000Z',
   tags: ['watch-to-earn', 'is watch to earn legit', 'crypto rewards', 'watch2earn scam', 'DHB token', 'DeHub'],

@@ -1,16 +1,16 @@
 /**
  * ads-admin
  * =========
- * Review queue backend for the /admin/ads page. Auth = DeHub ADMIN bearer
+ * Review queue backend for the /admin/ads page. Auth = Riftn ADMIN bearer
  * token (the same email/password admin system as /admin/users), validated
- * against the DeHub API before any service-role write. Wallet-header RLS
+ * against the Riftn API before any service-role write. Wallet-header RLS
  * can't express "is admin" (headers are client-controlled), so moderation
  * lives here behind real admin auth.
  *
  * GET  ?action=queue                 → pending campaigns + creatives
  * POST {type:'campaign'|'creative', id, action:'approve'|'reject', note?}
  * POST {action:'refresh_audience', campaignId}
- *      → (re)materialize followers-of-creator audiences from the DeHub API
+ *      → (re)materialize followers-of-creator audiences from the Riftn API
  *
  * Approving a campaign whose targeting includes followedCreators triggers
  * audience materialization automatically.
@@ -27,7 +27,7 @@ const FOLLOWER_PAGE_SIZE = 100;
  * Approving an ad spends someone's budget and puts a stranger's creative in the
  * feed, so this asks for admin, not merely "some admin role".
  *
- * The probe is `GET /api/admin` — the admin roster — which the DeHub API
+ * The probe is `GET /api/admin` — the admin roster — which the Riftn API
  * restricts to SUPER_ADMIN and ADMIN. It used to probe `/api/admin/users`,
  * which moderators and (at the time) viewers could also reach, so anyone with a
  * moderation login could approve campaigns.

@@ -84,7 +84,7 @@ Two sessions. One mapping asset ownership and operational control for a real cre
 Yes — the platform is open source, and we are glad to support course material, guest sessions or student projects, including ones that argue against us. If you are building a creator economy programme and want a structural alternative to examine, get in touch.`,
   bannerImage: '/media/teaching-the-creator-economy-banner.png',
   bannerImageAlt: 'A creator economy syllabus examined for what survives a platform change',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T11:00:00.000Z',
   updatedAt: '2026-08-28T11:00:00.000Z',
   tags: ['creator economy education', 'higher education', 'media studies', 'platform economics', 'digital ownership', 'web3 curriculum', 'dehub'],

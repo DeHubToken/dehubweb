@@ -19,162 +19,162 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   // The docs index: the worker's crawler strings for /docs, which are also
   // en.json docs.seoTitle / docs.seoDescription (DocsSEO shows those, translated).
   "": {
-    title: "DeHub Documentation — Guides, Token, dApps & FAQ",
+    title: "Riftn Documentation — Guides, Token, dApps & FAQ",
     description:
-      "Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.",
-    keywords: "DeHub, docs, documentation, web3, decentralized social",
+      "Official Riftn documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.",
+    keywords: "Riftn, docs, documentation, web3, decentralized social",
   },
   overview: {
-    title: "Overview — DeHub Docs",
+    title: "Overview — Riftn Docs",
     description:
-      "High-level overview of DeHub: its mission, origins and the decentralized, user-owned social ecosystem.",
+      "High-level overview of Riftn: its mission, origins and the decentralized, user-owned social ecosystem.",
   },
   dapps: {
-    title: "The DeHub dApp — Complete Feature Guide",
+    title: "The Riftn dApp — Complete Feature Guide",
     description:
-      "Every DeHub feature in one guide: feeds, shorts, stories, the daily posting allowance, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
+      "Every Riftn feature in one guide: feeds, shorts, stories, the daily posting allowance, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
     keywords:
-      "DeHub dApp, web3 social app, decentralized social features, posting allowance, daily post limit, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DeHub token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
+      "Riftn dApp, web3 social app, decentralized social features, posting allowance, daily post limit, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, Riftn token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
   },
   games: {
-    title: "Games — DeHub Docs",
-    description: "Discover Web3 games and play-to-earn experiences on DeHub.",
+    title: "Games — Riftn Docs",
+    description: "Discover Web3 games and play-to-earn experiences on Riftn.",
   },
   token: {
-    title: "DeHub tokens — DeHub Docs",
+    title: "Riftn tokens — Riftn Docs",
     description:
-      "Everything about the DeHub token: utility, economics, governance, staking, bridging and security.",
+      "Everything about the Riftn token: utility, economics, governance, staking, bridging and security.",
   },
   "token/overview": {
-    title: "Currency Overview — DeHub Docs",
+    title: "Currency Overview — Riftn Docs",
     description:
-      "How DeHub tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.",
+      "How Riftn tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.",
     keywords:
-      "DeHub tokens, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, token peg",
+      "Riftn tokens, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, token peg",
   },
   "token/economics": {
-    title: "Token Economics — DeHub Docs",
+    title: "Token Economics — Riftn Docs",
     description:
-      "Token economics: supply, distribution, emissions and economic model that powers DeHub.",
+      "Token economics: supply, distribution, emissions and economic model that powers Riftn.",
   },
   "token/utility": {
-    title: "Token Utility — DeHub Docs",
+    title: "Token Utility — Riftn Docs",
     description:
-      "What holding tokens unlocks: governance, staking rewards, moderation power and marketplace perks across DeHub.",
+      "What holding tokens unlocks: governance, staking rewards, moderation power and marketplace perks across Riftn.",
   },
   "token/where-to-buy": {
-    title: "Where to Buy Tokens — DeHub Docs",
+    title: "Where to Buy Tokens — Riftn Docs",
     description:
-      "Official exchanges, DEXs and on-ramps where you can buy the DeHub token.",
+      "Official exchanges, DEXs and on-ramps where you can buy the Riftn token.",
   },
   "token/governance": {
-    title: "Token Governance — DeHub Docs",
+    title: "Token Governance — Riftn Docs",
     description:
-      "How token holders shape DeHub through proposals, voting and on-chain governance.",
+      "How token holders shape Riftn through proposals, voting and on-chain governance.",
   },
   "token/stake": {
-    title: "Stake tokens — DeHub Docs",
+    title: "Stake tokens — Riftn Docs",
     description:
-      "Stake tokens to earn rewards, unlock badges and access premium DeHub features.",
+      "Stake tokens to earn rewards, unlock badges and access premium Riftn features.",
   },
   "token/bridge": {
-    title: "Token Bridge — DeHub Docs",
+    title: "Token Bridge — Riftn Docs",
     description:
-      "How to move tokens between BNB Chain and Base with the manual DeHub bridge, and what to expect while it processes.",
+      "How to move tokens between BNB Chain and Base with the manual Riftn bridge, and what to expect while it processes.",
   },
   // depin / e2e-encryption / ai-toolkits now redirect into /docs/dapps, so their
   // metadata is folded into the dapps entry above rather than duplicated here.
   advertising: {
-    title: "Advertising — DeHub Docs",
+    title: "Advertising — Riftn Docs",
     description:
-      "DeHub's POVR ad tech explained: proof-of-view-and-rank, fraud-resistant campaigns and revenue sharing for creators.",
+      "Riftn's POVR ad tech explained: proof-of-view-and-rank, fraud-resistant campaigns and revenue sharing for creators.",
   },
   team: {
-    title: "Team — DeHub Docs",
-    description: "Meet the team building DeHub and the decentralized social future.",
+    title: "Team — Riftn Docs",
+    description: "Meet the team building Riftn and the decentralized social future.",
   },
   security: {
-    title: "Security — DeHub Docs",
+    title: "Security — Riftn Docs",
     description:
-      "DeHub contract security: the Certik audit and how to report vulnerabilities to the team.",
+      "Riftn contract security: the Certik audit and how to report vulnerabilities to the team.",
   },
   roadmap: {
-    title: "Roadmap — DeHub Docs",
+    title: "Roadmap — Riftn Docs",
     description:
-      "The DeHub product roadmap: shipped milestones and what is coming next across the platform.",
+      "The Riftn product roadmap: shipped milestones and what is coming next across the platform.",
   },
   contact: {
-    title: "Contact — DeHub Docs",
-    description: "Get in touch with the DeHub team for support, partnerships and press.",
+    title: "Contact — Riftn Docs",
+    description: "Get in touch with the Riftn team for support, partnerships and press.",
   },
   terms: {
-    title: "Legal Disclaimer — DeHub Docs",
-    description: "DeHub's legal disclaimer: risk notices and terms of use for the platform and the DeHub token.",
+    title: "Legal Disclaimer — Riftn Docs",
+    description: "Riftn's legal disclaimer: risk notices and terms of use for the platform and the Riftn token.",
   },
   "terms-of-service": {
-    title: "Terms of Service — DeHub Docs",
-    description: "Full Terms of Service for the DeHub platform.",
+    title: "Terms of Service — Riftn Docs",
+    description: "Full Terms of Service for the Riftn platform.",
   },
   privacy: {
-    title: "Privacy Policy — DeHub Docs",
-    description: "How DeHub collects, uses and protects user data across the platform.",
+    title: "Privacy Policy — Riftn Docs",
+    description: "How Riftn collects, uses and protects user data across the platform.",
   },
   "brand-assets": {
-    title: "Brand Assets — DeHub Docs",
+    title: "Brand Assets — Riftn Docs",
     description:
-      "Download the official DeHub logos, wordmarks and brand assets for press and partners.",
+      "Download the official Riftn logos, wordmarks and brand assets for press and partners.",
   },
   "brand-guidelines": {
-    title: "Brand Guidelines — DeHub Docs",
+    title: "Brand Guidelines — Riftn Docs",
     description:
-      "The official DeHub brand guidelines deck: identity, logo usage and design standards for partners and press.",
+      "The official Riftn brand guidelines deck: identity, logo usage and design standards for partners and press.",
   },
   "featured-in": {
-    title: "Featured In — DeHub Press Coverage",
+    title: "Featured In — Riftn Press Coverage",
     description:
-      "Press coverage of DeHub: US Weekly, Yahoo Finance, Entrepreneur and Investing.com on the user-owned social platform.",
+      "Press coverage of Riftn: US Weekly, Yahoo Finance, Entrepreneur and Investing.com on the user-owned social platform.",
   },
   // The worker serves quickstart noindex,follow until it gets a sitemap row.
   quickstart: {
-    title: "Quick Start — DeHub Docs",
+    title: "Quick Start — Riftn Docs",
     description:
-      "Developer quick start for the DeHub API: prerequisites, client setup and your first request. Full API docs are in progress.",
+      "Developer quick start for the Riftn API: prerequisites, client setup and your first request. Full API docs are in progress.",
   },
   blog: {
-    title: "Blog — DeHub Docs",
-    description: "Updates, deep dives and announcements from the DeHub team.",
+    title: "Blog — Riftn Docs",
+    description: "Updates, deep dives and announcements from the Riftn team.",
   },
   faq: {
-    title: "FAQ — DeHub Docs",
-    description: "Frequently asked questions about DeHub, the DeHub token and the platform.",
+    title: "FAQ — Riftn Docs",
+    description: "Frequently asked questions about Riftn, the Riftn token and the platform.",
   },
   donate: {
-    title: "Donate — DeHub Docs",
-    description: "Support DeHub development by donating directly to the team's EVM or BTC addresses.",
+    title: "Donate — Riftn Docs",
+    description: "Support Riftn development by donating directly to the team's EVM or BTC addresses.",
   },
   website: {
-    title: "Website Guide — DeHub Docs",
-    description: "Learn about the DeHub website features and how to navigate the platform.",
+    title: "Website Guide — Riftn Docs",
+    description: "Learn about the Riftn website features and how to navigate the platform.",
   },
   app: {
-    title: "App Guide — DeHub Docs",
-    description: "Guides for the DeHub mobile and desktop applications.",
+    title: "App Guide — Riftn Docs",
+    description: "Guides for the Riftn mobile and desktop applications.",
   },
   dehub: {
-    title: "DeHub Platform — DeHub Docs",
-    description: "Complete guide to using the DeHub decentralized social platform.",
+    title: "Riftn Platform — Riftn Docs",
+    description: "Complete guide to using the Riftn decentralized social platform.",
   },
   x: {
-    title: "X Integration — DeHub Docs",
-    description: "Connect your X account and cross-post content with DeHub.",
+    title: "X Integration — Riftn Docs",
+    description: "Connect your X account and cross-post content with Riftn.",
   },
   instagram: {
-    title: "Instagram Integration — DeHub Docs",
-    description: "Connect Instagram with DeHub for cross-platform content distribution.",
+    title: "Instagram Integration — Riftn Docs",
+    description: "Connect Instagram with Riftn for cross-platform content distribution.",
   },
   architecture: {
-    title: "Architecture — DeHub Docs",
-    description: "DeHub system architecture, services and on-chain infrastructure.",
+    title: "Architecture — Riftn Docs",
+    description: "Riftn system architecture, services and on-chain infrastructure.",
   },
 };
 
@@ -187,7 +187,7 @@ for (const page of developerDocs.pages) {
   DOCS_SEO[page.route] = { title: page.seoTitle, description: page.description };
 }
 
-const BASE_URL = "https://dehub.io";
+const BASE_URL = "https://riftn.com";
 
 /** The en.ts docsSeo key stem for a DOCS_SEO slug. */
 const docsSeoKey = (slug: string): string =>
@@ -228,8 +228,8 @@ export function getDocsSeoForPath(pathname: string): {
       slug: `blog/${slug}`,
       canonical: `${BASE_URL}/guides/${slug}`,
       entry: {
-        title: `${pretty} — DeHub Blog`,
-        description: `${pretty} — read the full post on the DeHub blog.`,
+        title: `${pretty} — Riftn Blog`,
+        description: `${pretty} — read the full post on the Riftn blog.`,
       },
     };
   }

@@ -45,7 +45,7 @@ function shortAmount(tip: { amount: number; symbol: string }): string {
   return !tip.symbol || tip.symbol.toUpperCase() === 'DHB' ? num : `${num} ${tip.symbol}`;
 }
 
-/** The gold coin: DeHub's mark struck into a gold disc. */
+/** The gold coin: Riftn's mark struck into a gold disc. */
 export function GoldCoin({ className }: { className?: string }) {
   return (
     <span className={cn('dh-gold-coin', className)} aria-hidden>

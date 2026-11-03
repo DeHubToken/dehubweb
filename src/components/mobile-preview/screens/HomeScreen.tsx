@@ -32,7 +32,7 @@ export function HomeScreen() {
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="DeHub" />
+      <MobileTopBar title="Riftn" />
 
       {/* Feed tabs */}
       <div className="flex gap-1 px-4 pb-2">

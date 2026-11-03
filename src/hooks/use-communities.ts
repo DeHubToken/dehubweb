@@ -39,7 +39,7 @@ export interface Community {
   holder_gate_decimals?: number | null;
   /** 'group' and 'channel' are started from the + in Messages. */
   kind?: 'community' | 'group' | 'channel' | null;
-  /** One-off entry price in whole DeHub tokens; null or 0 = free. */
+  /** One-off entry price in whole Riftn tokens; null or 0 = free. */
   entry_price?: number | string | null;
   created_at: string;
   updated_at: string;

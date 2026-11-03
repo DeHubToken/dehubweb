@@ -423,8 +423,8 @@ export default function MessagesPage() {
     }
   }, [isAuthenticated, conversations, isLoading, pendingDmTrigger]);
 
-  // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns DeHub data),
-  // upgrade selectedConversation so we use socket/DeHub instead of Supabase
+  // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns Riftn data),
+  // upgrade selectedConversation so we use socket/Riftn instead of Supabase
   useEffect(() => {
     if (!selectedConversation || !conversations?.length) return;
     const selId = selectedConversation.id;
@@ -440,7 +440,7 @@ export default function MessagesPage() {
     }
   }, [selectedConversation, conversations]);
 
-  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from DeHub sooner.
+  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from Riftn sooner.
   // Route-gated: this page stays mounted forever (PersistentPageCache), so
   // without the pathname check the interval would poll for the whole session
   // after the user navigates away mid-handshake.
@@ -610,8 +610,8 @@ export default function MessagesPage() {
 
   return (
     <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
-      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://dehub.io/app/messages" />
-      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on Riftn — your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
+      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "Riftn Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <div className="h-full lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
             no surface at all — see [data-bento-flat] in index.css. The

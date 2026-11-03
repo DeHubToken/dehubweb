@@ -47,7 +47,7 @@ export default function WorkPage() {
 
   return (
     <div data-work-surface className="min-h-screen">
-      <SEOHead title={_copy("copy.a88b006c29d6", { defaultValue: "Bounties — Post & Hunt Paid Tasks | DeHub" })} description={_copy("copy.835ec433c90c", { defaultValue: "Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC." })} url="https://dehub.io/work" />
+      <SEOHead title={_copy("copy.a88b006c29d6", { defaultValue: "Bounties — Post & Hunt Paid Tasks | Riftn" })} description={_copy("copy.835ec433c90c", { defaultValue: "Browse open bounties on Riftn: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC." })} url="https://riftn.com/work" />
       <PageIsland
         className="max-w-6xl mx-auto"
         icon="bounties"

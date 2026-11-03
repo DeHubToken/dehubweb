@@ -107,7 +107,7 @@ For British creators specifically, the pull is straightforward: keep ownership o
 
 ## Getting started with decentralised social media in the UK
 
-You do not need to understand blockchains to try one. The pragmatic path is to pick a platform whose economics and values suit you, create an account, and post as normal, learning the ownership mechanics as you go. If you want a hands-on start with a Web3 social network built for creators, open the [DeHub app](https://dehub.io/app) in your browser or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). It is free to sign up and free to post.
+You do not need to understand blockchains to try one. The pragmatic path is to pick a platform whose economics and values suit you, create an account, and post as normal, learning the ownership mechanics as you go. If you want a hands-on start with a Web3 social network built for creators, open the [DeHub app](https://riftn.com/app) in your browser or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). It is free to sign up and free to post.
 
 Whatever you choose, the direction of travel is clear. Social media is slowly moving from platforms you rent to networks you help own, and 2026 is a sensible moment for UK creators to plant a flag.
 
@@ -139,7 +139,7 @@ No. DeHub at dehub.io is a Web3 social network run as an independent DAO. It is 
 `,
   bannerImage: '/media/decentralised-social-media-explained-uk-banner.png',
   bannerImageAlt: 'Illustration of a decentralised social media network with user-owned nodes connected across an open protocol',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-03-16T09:30:00.000Z',
   updatedAt: '2026-03-16T09:30:00.000Z',
   tags: ['decentralised social media', 'web3 social media', 'user owned social media', 'decentralised social media uk', 'DeHub', 'creator economy', 'censorship resistance'],

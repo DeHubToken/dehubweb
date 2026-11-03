@@ -26,7 +26,7 @@ const JSON_LD = {
       name: STREAM_PAGE.title,
       description: STREAM_PAGE.description,
       url: PAGE_URL,
-      publisher: { "@type": "Organization", name: "DeHub", url: SITE_URL },
+      publisher: { "@type": "Organization", name: "Riftn", url: SITE_URL },
     },
     streamFaqLd(),
   ],
@@ -36,7 +36,7 @@ const CTA_SECONDARY =
   "inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-3.5 text-sm font-semibold transition-all duration-200 hover:border-white/40 hover:bg-white/10";
 
 /**
- * /stream — why live streamers should move to DeHub, and the three ways in.
+ * /stream — why live streamers should move to Riftn, and the three ways in.
  * The crawler HTML renders the English in src/lib/streamer-page.js; this page
  * renders the same copy from the locale files (en.json is held equal to the
  * module by src/test/landing-pages-i18n.test.ts).
@@ -81,11 +81,11 @@ export default function StreamPage() {
         className="absolute left-4 top-4 z-20 inline-flex items-center gap-2 text-xs text-white/50 transition-colors hover:text-white sm:left-6 sm:top-6 sm:text-sm"
       >
         <ArrowLeft className="h-4 w-4" />
-        DeHub
+        Riftn
       </Link>
 
       <main className="mx-auto flex max-w-3xl flex-col px-5 pb-20 pt-20 sm:pt-24">
-        <img src={dehubWordmark} alt="DeHub" className="h-7 w-auto self-start object-contain opacity-90" />
+        <img src={dehubWordmark} alt="Riftn" className="h-7 w-auto self-start object-contain opacity-90" />
 
         <div className="mt-8 inline-flex items-center gap-2 self-start rounded-full border border-white/15 bg-white/5 px-3 py-1.5">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red-500" />

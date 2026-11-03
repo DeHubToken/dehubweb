@@ -1,4 +1,4 @@
-// Supabase persistence for the DeHub self-custody wallet.
+// Supabase persistence for the Riftn self-custody wallet.
 //
 // The seed is encrypted CLIENT-SIDE (AES-256-GCM + Argon2id, see crypto.ts)
 // before it ever leaves the device. Rows are protected by RLS — a user can

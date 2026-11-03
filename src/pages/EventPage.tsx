@@ -69,9 +69,9 @@ export default function EventPage() {
     <>
       {event && (
         <SEOHead
-          title={_copy("copy.e8474fe0fb3e", { defaultValue: "{{value1}} — DeHub Events", value1: event.title })}
+          title={_copy("copy.e8474fe0fb3e", { defaultValue: "{{value1}} — Riftn Events", value1: event.title })}
           description={(event.description || t('events.defaultSeoDescription')).slice(0, 155)}
-          url={`https://dehub.io/app/events/${event.event_number}`}
+          url={`https://riftn.com/app/events/${event.event_number}`}
           type="article"
         />
       )}

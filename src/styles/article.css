@@ -110,6 +110,17 @@ html[data-system-tone="light"] [data-article] {
 .article-body li + li { margin-top: 0.35em; }
 .article-body li::marker { color: var(--art-accent); }
 .article-body img:not(.article-link-card *) { border-radius: calc(var(--art-radius) * 0.75); width: 100%; height: auto; }
+.article-body .article-figure { margin-left: 0; margin-right: 0; }
+.article-body .article-figure img { display: block; background: var(--art-wash); }
+.article-body .article-figure figcaption {
+  margin-top: 0.6em;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8em;
+  line-height: 1.45;
+  color: var(--art-ink-3);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
 .article-body .article-link-block > p + .article-link-card:not(:empty) { margin-top: 0.6em; }
 .article-body hr { border: 0; border-top: 1px solid var(--art-line); margin: 2em 0; }
 .article-body code {
@@ -242,6 +253,15 @@ html[data-theme="hacker"] .article-pill svg { color: var(--art-accent); filter: 
   height: 34px;
   border-radius: 10px;
   color: var(--art-ink-2);
+}
+.article-caption-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border: 1px solid var(--art-line);
+  border-radius: calc(var(--art-radius) * 0.75);
+  background: var(--art-wash);
 }
 .article-tool:hover { background: var(--art-wash); color: var(--art-ink); }
 .article-tool svg { width: 17px; height: 17px; }

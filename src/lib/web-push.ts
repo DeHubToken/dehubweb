@@ -4,7 +4,7 @@
  * Notifications on the web have always been in-tab only: `new Notification()`
  * needs the page open, so closing the tab meant silence. This subscribes the
  * browser itself, through the service worker, so a notification arrives with
- * DeHub closed — which is what "notifications" means everywhere else.
+ * Riftn closed — which is what "notifications" means everywhere else.
  *
  * Everything here degrades rather than throws. A browser with no push support,
  * a deployment with no VAPID keys, a reader who said no to the permission

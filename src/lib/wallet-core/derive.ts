@@ -1,6 +1,6 @@
 // Derives the ETH keypair from a BIP-39 mnemonic (or a raw private key).
 //
-// Ported from the Pixcellor wallet system, EVM-only: DeHub runs on
+// Ported from the Pixcellor wallet system, EVM-only: Riftn runs on
 // Base/BNB/ETH so Solana derivation was dropped. Uses ethers v6's built-in
 // HD wallet (no bip39/Buffer polyfill needed in the Vite bundle).
 import { HDNodeWallet, Mnemonic, Wallet, randomBytes } from "ethers";

@@ -23,7 +23,7 @@ interface LinkPreviewsProps {
 }
 
 /**
- * What the composer shows under the text box: a card per DeHub entity link, and
+ * What the composer shows under the text box: a card per Riftn entity link, and
  * OG previews for outside links.
  *
  * This used to keep one piece of dismissal state per entity KIND — a
@@ -91,7 +91,7 @@ export function LinkPreviews({ text: liveText, onRemoveCommunityLink, hideAssetC
   }, [assetCardsHidden, foundAssetRefs.length, setAssetCardsHidden]);
 
   useEffect(() => {
-    // Outside links only — DeHub links get their own cards above.
+    // Outside links only — Riftn links get their own cards above.
     const urls = extractUrlsFromText(text).filter((url) => !parseDehubLink(url));
 
     const newUrls = urls.filter(
@@ -132,7 +132,7 @@ export function LinkPreviews({ text: liveText, onRemoveCommunityLink, hideAssetC
     });
   };
 
-  // Get URLs that should be displayed (in text, not removed, not DeHub links)
+  // Get URLs that should be displayed (in text, not removed, not Riftn links)
   const currentUrls = useMemo(
     () => extractUrlsFromText(text).filter(url => !removedUrls.has(url) && !parseDehubLink(url)),
     [text, removedUrls],

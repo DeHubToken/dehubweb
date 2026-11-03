@@ -13,7 +13,7 @@ export function AboutDialog({ open, onOpenChange }: Props) {
       <DialogContent className="border-white/10 bg-black/80 text-white backdrop-blur-[24px] sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{_copy("copy.cf3ad1573bd1", { defaultValue: "About the editor" })}</DialogTitle>
-          <DialogDescription className="text-white/60">{_copy("copy.b883ccace14d", { defaultValue: "An in-browser, WebCodecs-powered video editor built into DeHub." })}</DialogDescription>
+          <DialogDescription className="text-white/60">{_copy("copy.8ffc61077997", { defaultValue: "An in-browser, WebCodecs-powered video editor built into Riftn." })}</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 text-sm text-white/80">
           <p>{_copy("copy.ba922b2dc556", { defaultValue: "Multi-track timeline, live preview, transitions, per-clip effects and audio, and direct MP4 / WebM export — all client-side. Nothing leaves your browser until you post." })}</p>

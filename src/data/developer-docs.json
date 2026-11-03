@@ -3,10 +3,10 @@
     {
       "route": "developers",
       "section": "DEVELOPERS",
-      "title": "Build on DeHub",
-      "seoTitle": "DeHub Developers — Build Apps on DeHub",
-      "description": "Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
-      "intro": "DeHub is an open platform. Ship a mini app to the DeHub app store, let people sign in with DeHub on your own site, take payments in DHB, or read and write DeHub from your server or your AI agent. Pick the path that fits what you are building.",
+      "title": "Build on Riftn",
+      "seoTitle": "Riftn Developers — Build Apps on Riftn",
+      "description": "Everything you need to build on Riftn: mini apps for the Riftn app store, Sign in with Riftn, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
+      "intro": "Riftn is an open platform. Ship a mini app to the Riftn app store, let people sign in with Riftn on your own site, take payments in DHB, or read and write Riftn from your server or your AI agent. Pick the path that fits what you are building.",
       "sections": [
         {
           "id": "paths",
@@ -14,12 +14,12 @@
           "blocks": [
             {
               "cards": [
-                { "title": "Mini apps", "to": "/docs/developers/mini-apps", "body": "A web app that runs inside DeHub on web and phone, listed in the DeHub app store. One script tag, no SDK install." },
-                { "title": "Sign in with DeHub", "to": "/docs/auth", "body": "Let people log in to your app or website with their DeHub account. Standard OAuth with PKCE." },
+                { "title": "Mini apps", "to": "/docs/developers/mini-apps", "body": "A web app that runs inside Riftn on web and phone, listed in the Riftn app store. One script tag, no SDK install." },
+                { "title": "Sign in with Riftn", "to": "/docs/auth", "body": "Let people log in to your app or website with their Riftn account. Standard OAuth with PKCE." },
                 { "title": "Webhooks and notifications", "to": "/docs/webhooks", "body": "Hear when someone adds your app, and send them notifications on web and phone." },
                 { "title": "API reference", "to": "/docs/endpoints", "body": "The REST API, the Mastodon-compatible API, rate limits and errors." },
                 { "title": "Examples", "to": "/docs/examples", "body": "Copy and paste code for the things most apps need first." },
-                { "title": "AI agents (MCP)", "to": "/connect", "body": "Connect ChatGPT, Claude or your own agent to DeHub with the MCP server." }
+                { "title": "AI agents (MCP)", "to": "/connect", "body": "Connect ChatGPT, Claude or your own agent to Riftn with the MCP server." }
               ]
             }
           ]
@@ -30,22 +30,22 @@
           "blocks": [
             { "list": [
               "Put any web page online over https.",
-              "Add `<script src=\"https://dehub.io/sdk/miniapp.js\"></script>` and call `dehub.ready()` once your first screen is on.",
-              "Open [dehub.io/apps/dev](/apps/dev), paste your link and press **Launch**. It runs inside the real DeHub host, localhost included.",
+              "Add `<script src=\"https://riftn.com/sdk/miniapp.js\"></script>` and call `dehub.ready()` once your first screen is on.",
+              "Open [dehub.io/apps/dev](/apps/dev), paste your link and press **Launch**. It runs inside the real Riftn host, localhost included.",
               "Add a `/.well-known/dehub.json` manifest. The developer page checks it field by field and signs the ownership block with your wallet.",
               "Press **Submit**. Your app gets a share link right away and goes into review for the store."
             ] },
-            { "p": "No account approval, no API key and no fee to get started. Farcaster mini apps run as they are: DeHub reads `farcaster.json` when there is no `dehub.json`." }
+            { "p": "No account approval, no API key and no fee to get started. Farcaster mini apps run as they are: Riftn reads `farcaster.json` when there is no `dehub.json`." }
           ]
         },
         {
           "id": "what-you-get",
-          "heading": "What DeHub gives your app",
+          "heading": "What Riftn gives your app",
           "blocks": [
             { "table": {
               "head": ["Feature", "What it does"],
               "rows": [
-                ["Distribution", "A listing in the DeHub app store on web and phone, rich link cards in the feed, and a share link for every app."],
+                ["Distribution", "A listing in the Riftn app store on web and phone, rich link cards in the feed, and a share link for every app."],
                 ["Identity", "A signed token that proves who the user is, checked on your server with public keys. No passwords to store."],
                 ["Payments", "Ask for DHB in one call. The money goes straight to your wallet. No fee on your first $10,000 a year."],
                 ["Notifications", "Reach people who added your app on web and phone, with one HTTP call from your server."],
@@ -59,7 +59,7 @@
           "heading": "Best practices",
           "blocks": [
             { "list": [
-              "Build mobile first. On wide screens DeHub runs your app in a phone-width column.",
+              "Build mobile first. On wide screens Riftn runs your app in a phone-width column.",
               "Call `dehub.ready()` as soon as your first screen paints. The splash screen waits up to 8 seconds, then steps aside anyway.",
               "Never trust the browser. Send the sign-in token and payment receipts to your server and verify them there.",
               "Use `dehub.getCapabilities()` before calling an action, so your app degrades well on older hosts.",
@@ -72,7 +72,7 @@
           "id": "help",
           "heading": "Getting help",
           "blocks": [
-            { "p": "Stuck? Read [Troubleshooting](/docs/troubleshooting) first. For anything else, ask in the DeHub app or [contact the team](/docs/contact)." }
+            { "p": "Stuck? Read [Troubleshooting](/docs/troubleshooting) first. For anything else, ask in the Riftn app or [contact the team](/docs/contact)." }
           ]
         }
       ]
@@ -81,16 +81,16 @@
       "route": "developers/mini-apps",
       "section": "DEVELOPERS",
       "title": "Mini apps",
-      "seoTitle": "Build a DeHub Mini App — SDK and Manifest",
-      "description": "Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
-      "intro": "A mini app is a normal website that runs inside DeHub. DeHub draws the header with your app's name and real domain, and your app talks to DeHub through a small SDK. The same app runs on dehub.io and in the DeHub phone app with no changes.",
+      "seoTitle": "Build a Riftn Mini App — SDK and Manifest",
+      "description": "Build a mini app for the Riftn app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
+      "intro": "A mini app is a normal website that runs inside Riftn. Riftn draws the header with your app's name and real domain, and your app talks to Riftn through a small SDK. The same app runs on dehub.io and in the Riftn phone app with no changes.",
       "sections": [
         {
           "id": "sdk",
           "heading": "Add the SDK",
           "blocks": [
-            { "code": "<script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n<script>\n  // Hide the splash screen once your first screen is on.\n  dehub.ready();\n\n  const { user, client } = await dehub.context;\n  if (user) console.log('Hi', user.handle);\n</script>", "lang": "html" },
-            { "p": "The SDK adds one global, `dehub`. Every call returns a promise. Outside DeHub, `dehub.isInDehub()` is false and calls reject, so you can run the same page on its own." }
+            { "code": "<script src=\"https://riftn.com/sdk/miniapp.js\"></script>\n<script>\n  // Hide the splash screen once your first screen is on.\n  dehub.ready();\n\n  const { user, client } = await dehub.context;\n  if (user) console.log('Hi', user.handle);\n</script>", "lang": "html" },
+            { "p": "The SDK adds one global, `dehub`. Every call returns a promise. Outside Riftn, `dehub.isInDehub()` is false and calls reject, so you can run the same page on its own." }
           ]
         },
         {
@@ -104,10 +104,10 @@
                 ["`dehub.close()`", "Closes your app."],
                 ["`dehub.context`", "Resolves to `{ user, location, client }`. `user` is `{ wallet, handle, displayName, avatarUrl }` or `null` when signed out. `client` has `platform` (`web` or `mobile`), `added`, `locale`, `theme` and `safeAreaInsets`."],
                 ["`dehub.getCapabilities()`", "The methods this host supports."],
-                ["`dehub.auth.getToken()`", "A signed token proving who the user is, for your server. The first call asks the user to share their identity. See [Sign in with DeHub](/docs/auth)."],
-                ["`dehub.actions.composePost({ text, embedUrl })`", "Opens the DeHub composer with your text and an optional link back into your app (up to 500 characters)."],
-                ["`dehub.actions.viewProfile({ handle })`", "Opens a DeHub profile."],
-                ["`dehub.actions.viewPost({ id })`", "Opens a DeHub post by its numeric id."],
+                ["`dehub.auth.getToken()`", "A signed token proving who the user is, for your server. The first call asks the user to share their identity. See [Sign in with Riftn](/docs/auth)."],
+                ["`dehub.actions.composePost({ text, embedUrl })`", "Opens the Riftn composer with your text and an optional link back into your app (up to 500 characters)."],
+                ["`dehub.actions.viewProfile({ handle })`", "Opens a Riftn profile."],
+                ["`dehub.actions.viewPost({ id })`", "Opens a Riftn post by its numeric id."],
                 ["`dehub.actions.openUrl(url)`", "Opens an https link outside your app."],
                 ["`dehub.actions.addApp()`", "Asks the user to add your app, which also allows notifications."],
                 ["`dehub.actions.pay({ amount, memo })`", "Asks the user to pay you in DHB. See [Payments](#payments)."],
@@ -115,7 +115,7 @@
                 ["`dehub.on(event, fn)`", "Listen for host events. Returns a function that stops listening."]
               ]
             } },
-            { "p": "When DeHub refuses a request the promise rejects with an error that has a `code`: `signin` (the user is signed out), `rejected` (the user said no), `invalid` (bad parameters), `rate_limited`, `busy` (another request is open), `unsupported` or `failed`." }
+            { "p": "When Riftn refuses a request the promise rejects with an error that has a `code`: `signin` (the user is signed out), `rejected` (the user said no), `invalid` (bad parameters), `rate_limited`, `busy` (another request is open), `unsupported` or `failed`." }
           ]
         },
         {
@@ -147,7 +147,7 @@
           "id": "ownership",
           "heading": "Prove you own the domain",
           "blocks": [
-            { "p": "The `ownership` block is your DeHub wallet's signature of this exact message, where the second line is your domain:" },
+            { "p": "The `ownership` block is your Riftn wallet's signature of this exact message, where the second line is your domain:" },
             { "code": "dehub mini app ownership\ntipjar.example.com", "lang": "text" },
             { "p": "You do not have to sign it by hand. On [dehub.io/apps/dev](/apps/dev), check your link and press **Sign** to get a ready-made block to paste. Payments go to the wallet that signed, and only that wallet can update the listing or create a notification key." }
           ]
@@ -156,7 +156,7 @@
           "id": "embed",
           "heading": "Rich cards in the feed",
           "blocks": [
-            { "p": "When someone posts your link, DeHub shows a card with a button that opens your app. Add this tag to the page's `<head>` (the `fc:miniapp` tag is read too):" },
+            { "p": "When someone posts your link, Riftn shows a card with a button that opens your app. Add this tag to the page's `<head>` (the `fc:miniapp` tag is read too):" },
             { "code": "<meta name=\"dehub:miniapp\" content='{\"version\":\"1\",\"imageUrl\":\"https://tipjar.example.com/card-3x2.png\",\"button\":{\"title\":\"Open Tip Jar\",\"action\":{\"url\":\"https://tipjar.example.com/\"}}}'>", "lang": "html" }
           ]
         },
@@ -165,8 +165,8 @@
           "heading": "Payments in DHB",
           "blocks": [
             { "code": "const { txHash, chainId, amount, receipt } = await dehub.actions.pay({\n  amount: 50,          // DHB, whole numbers, up to 1,000,000\n  memo: 'Order #1042', // optional, 140 characters\n});\n\n// Send `receipt` to your server and verify it there.\nawait fetch('/api/orders/1042/paid', { method: 'POST', body: receipt });", "lang": "js" },
-            { "p": "DeHub shows the amount, your app and your wallet, the user confirms in their wallet, and DeHub checks the transfer on chain (Base or BNB Chain) before answering. The `receipt` is a signed token with `typ: \"payment\"`, `sub` (the payer's wallet), `aud` (your domain), `amount`, `token`, `chainId`, `txHash` and `memo`. Verify it exactly like a sign-in token. Only registered apps with a signed manifest can take payments." },
-            { "p": "**Test mode.** When you open your own app on DeHub with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and `payment` webhook carry `test: true`, `chainId: 0` and a `txHash` starting with `test_`. Never deliver paid goods for a test receipt in production." }
+            { "p": "Riftn shows the amount, your app and your wallet, the user confirms in their wallet, and Riftn checks the transfer on chain (Base or BNB Chain) before answering. The `receipt` is a signed token with `typ: \"payment\"`, `sub` (the payer's wallet), `aud` (your domain), `amount`, `token`, `chainId`, `txHash` and `memo`. Verify it exactly like a sign-in token. Only registered apps with a signed manifest can take payments." },
+            { "p": "**Test mode.** When you open your own app on Riftn with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and `payment` webhook carry `test: true`, `chainId: 0` and a `txHash` starting with `test_`. Never deliver paid goods for a test receipt in production." }
           ]
         },
         {
@@ -175,17 +175,17 @@
           "blocks": [
             { "list": [
               "**Unlisted**: right after you submit. Your app has a share link (`dehub.io/apps/your-slug`) and runs for anyone who opens it, with an Unreviewed badge.",
-              "**Listed**: after review. Your app appears in the DeHub app store.",
+              "**Listed**: after review. Your app appears in the Riftn app store.",
               "**Verified**: trusted apps get a check mark and can be featured."
             ] },
-            { "p": "Reviewers check that the app loads, works on a phone, matches its listing and does not imitate DeHub. Updating your manifest and submitting again updates the listing." }
+            { "p": "Reviewers check that the app loads, works on a phone, matches its listing and does not imitate Riftn. Updating your manifest and submitting again updates the listing." }
           ]
         },
         {
           "id": "rewards",
           "heading": "Weekly rewards",
           "blocks": [
-            { "p": "Every night DeHub ranks listed apps by real use: signed-in people who come back (55%), weekly users (35%), plus a boost in an app's first 14 days. Every Monday the week's share of the monthly DHB reward pool is split by score. To qualify, an app needs a verified owner wallet and at least 3 returning users. The ranking and past rewards are on [dehub.io/apps/dev](/apps/dev)." }
+            { "p": "Every night Riftn ranks listed apps by real use: signed-in people who come back (55%), weekly users (35%), plus a boost in an app's first 14 days. Every Monday the week's share of the monthly DHB reward pool is split by score. To qualify, an app needs a verified owner wallet and at least 3 returning users. The ranking and past rewards are on [dehub.io/apps/dev](/apps/dev)." }
           ]
         }
       ]
@@ -193,34 +193,34 @@
     {
       "route": "auth",
       "section": "DEVELOPERS",
-      "title": "Sign in with DeHub",
-      "seoTitle": "Sign in with DeHub — OAuth and Mini App Tokens",
-      "description": "Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
-      "intro": "There are two ways to know who a DeHub user is. Inside a mini app, ask the SDK for a signed token. On any other website or app, use standard OAuth. Either way the user's id is their DeHub wallet address, the same id used everywhere on DeHub.",
+      "title": "Sign in with Riftn",
+      "seoTitle": "Sign in with Riftn — OAuth and Mini App Tokens",
+      "description": "Let people sign in to your app or website with Riftn: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
+      "intro": "There are two ways to know who a Riftn user is. Inside a mini app, ask the SDK for a signed token. On any other website or app, use standard OAuth. Either way the user's id is their Riftn wallet address, the same id used everywhere on Riftn.",
       "sections": [
         {
           "id": "mini-app-token",
           "heading": "Inside a mini app",
           "blocks": [
             { "code": "// In your mini app\nconst { token } = await dehub.auth.getToken();\nawait fetch('/api/session', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });", "lang": "js" },
-            { "code": "// On your server (Node, any JOSE library works)\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(\n  new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'),\n);\n\nconst { payload } = await jwtVerify(token, JWKS, {\n  issuer: 'https://dehub.io',\n  audience: 'tipjar.example.com', // your domain\n});\nconst wallet = payload.sub; // the user's DeHub wallet, lowercase", "lang": "js" },
-            { "p": "The token is an ES256 JWT that lasts one hour. DeHub addresses it to the domain it actually loaded, so a token made for one app can never be used on another. The SDK caches it and fetches a fresh one when it is close to expiring." }
+            { "code": "// On your server (Node, any JOSE library works)\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(\n  new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'),\n);\n\nconst { payload } = await jwtVerify(token, JWKS, {\n  issuer: 'https://riftn.com',\n  audience: 'tipjar.example.com', // your domain\n});\nconst wallet = payload.sub; // the user's Riftn wallet, lowercase", "lang": "js" },
+            { "p": "The token is an ES256 JWT that lasts one hour. Riftn addresses it to the domain it actually loaded, so a token made for one app can never be used on another. The SDK caches it and fetches a fresh one when it is close to expiring." }
           ]
         },
         {
           "id": "oauth",
           "heading": "On any website or app (OAuth)",
           "blocks": [
-            { "p": "DeHub speaks the Mastodon OAuth API, so any OAuth 2.0 library works, and so does every Mastodon client library. PKCE is supported and recommended." },
+            { "p": "Riftn speaks the Mastodon OAuth API, so any OAuth 2.0 library works, and so does every Mastodon client library. PKCE is supported and recommended." },
             { "p": "**1. Register your app once.**" },
-            { "code": "curl -X POST https://dehub.io/api/v1/apps \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"client_name\":\"Tip Jar\",\"redirect_uris\":\"https://tipjar.example.com/callback\",\"scopes\":\"profile\",\"website\":\"https://tipjar.example.com\"}'", "lang": "bash" },
+            { "code": "curl -X POST https://riftn.com/api/v1/apps \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"client_name\":\"Tip Jar\",\"redirect_uris\":\"https://tipjar.example.com/callback\",\"scopes\":\"profile\",\"website\":\"https://tipjar.example.com\"}'", "lang": "bash" },
             { "p": "Keep the `client_id` and `client_secret` it returns. They are shown once." },
-            { "p": "**2. Send the user to DeHub to approve.**" },
-            { "code": "https://dehub.io/oauth/authorize\n  ?response_type=code\n  &client_id=YOUR_CLIENT_ID\n  &redirect_uri=https://tipjar.example.com/callback\n  &scope=profile\n  &state=RANDOM_STATE\n  &code_challenge=PKCE_CHALLENGE\n  &code_challenge_method=S256", "lang": "text" },
+            { "p": "**2. Send the user to Riftn to approve.**" },
+            { "code": "https://riftn.com/oauth/authorize\n  ?response_type=code\n  &client_id=YOUR_CLIENT_ID\n  &redirect_uri=https://tipjar.example.com/callback\n  &scope=profile\n  &state=RANDOM_STATE\n  &code_challenge=PKCE_CHALLENGE\n  &code_challenge_method=S256", "lang": "text" },
             { "p": "**3. Swap the code for a token** on your server." },
-            { "code": "curl -X POST https://dehub.io/oauth/token \\\n  -d grant_type=authorization_code \\\n  -d code=CODE_FROM_REDIRECT \\\n  -d client_id=YOUR_CLIENT_ID \\\n  -d client_secret=YOUR_CLIENT_SECRET \\\n  -d redirect_uri=https://tipjar.example.com/callback \\\n  -d code_verifier=PKCE_VERIFIER", "lang": "bash" },
+            { "code": "curl -X POST https://riftn.com/oauth/token \\\n  -d grant_type=authorization_code \\\n  -d code=CODE_FROM_REDIRECT \\\n  -d client_id=YOUR_CLIENT_ID \\\n  -d client_secret=YOUR_CLIENT_SECRET \\\n  -d redirect_uri=https://tipjar.example.com/callback \\\n  -d code_verifier=PKCE_VERIFIER", "lang": "bash" },
             { "p": "**4. Read who signed in.**" },
-            { "code": "curl https://dehub.io/api/v1/accounts/verify_credentials \\\n  -H 'Authorization: Bearer ACCESS_TOKEN'", "lang": "bash" },
+            { "code": "curl https://riftn.com/api/v1/accounts/verify_credentials \\\n  -H 'Authorization: Bearer ACCESS_TOKEN'", "lang": "bash" },
             { "p": "The answer's `id` is the user's wallet address. `acct` is their handle, plus `display_name`, `avatar` and `url`." }
           ]
         },
@@ -238,14 +238,14 @@
                 ["`push`", "Web push subscriptions."]
               ]
             } },
-            { "p": "Ask only for what you need. People see the list on the approval screen and can revoke any app in their DeHub settings." }
+            { "p": "Ask only for what you need. People see the list on the approval screen and can revoke any app in their Riftn settings." }
           ]
         },
         {
           "id": "agents",
           "heading": "AI agents",
           "blocks": [
-            { "p": "AI assistants sign in through the DeHub MCP server at `https://dehub.io/mcp`, which runs its own OAuth flow with dynamic client registration. See [Connect](/connect)." }
+            { "p": "AI assistants sign in through the Riftn MCP server at `https://riftn.com/mcp`, which runs its own OAuth flow with dynamic client registration. See [Connect](/connect)." }
           ]
         }
       ]
@@ -254,15 +254,15 @@
       "route": "webhooks",
       "section": "DEVELOPERS",
       "title": "Webhooks and notifications",
-      "seoTitle": "DeHub Webhooks and Notifications API",
-      "description": "Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.",
-      "intro": "Your server and DeHub talk both ways. DeHub posts signed events to your webhook, and your server sends notifications to people who added your app.",
+      "seoTitle": "Riftn Webhooks and Notifications API",
+      "description": "Receive signed webhook events when people add or remove your Riftn mini app, and send notifications to your users on web and phone with one API call.",
+      "intro": "Your server and Riftn talk both ways. Riftn posts signed events to your webhook, and your server sends notifications to people who added your app.",
       "sections": [
         {
           "id": "events",
           "heading": "Receiving events",
           "blocks": [
-            { "p": "Set `webhookUrl` in your [manifest](/docs/developers/mini-apps#manifest). DeHub sends a `POST` with this body:" },
+            { "p": "Set `webhookUrl` in your [manifest](/docs/developers/mini-apps#manifest). Riftn sends a `POST` with this body:" },
             { "code": "{ \"event\": \"app_added\", \"token\": \"eyJhbGciOiJFUzI1NiIs…\" }", "lang": "json" },
             { "table": {
               "head": ["Event", "When"],
@@ -285,7 +285,7 @@
           "id": "notify",
           "heading": "Sending notifications",
           "blocks": [
-            { "p": "Create a notification key on [dehub.io/apps/dev](/apps/dev). It is shown once; DeHub keeps only a hash, so a lost key is replaced, not recovered." },
+            { "p": "Create a notification key on [dehub.io/apps/dev](/apps/dev). It is shown once; Riftn keeps only a hash, so a lost key is replaced, not recovered." },
             { "code": "curl -X POST https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-notify \\\n  -H 'Authorization: Bearer dhmk_YOUR_KEY' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"notificationId\": \"turn-42\",\n    \"title\": \"Your turn\",\n    \"body\": \"Sam played a move. Tap to answer.\",\n    \"targetUrl\": \"https://chess.example.com/game/42\",\n    \"wallets\": [\"0xabc…\"]\n  }'", "lang": "bash" },
             { "table": {
               "head": ["Field", "Rules"],
@@ -304,7 +304,7 @@
           "id": "payments",
           "heading": "Payment receipts",
           "blocks": [
-            { "p": "`dehub.actions.pay()` resolves only after DeHub has checked the transfer on chain, and hands your app a signed receipt to verify on your server. The `payment` webhook is a second copy for your server, sent in the background. See [Payments](/docs/developers/mini-apps#payments)." }
+            { "p": "`dehub.actions.pay()` resolves only after Riftn has checked the transfer on chain, and hands your app a signed receipt to verify on your server. The `payment` webhook is a second copy for your server, sent in the background. See [Payments](/docs/developers/mini-apps#payments)." }
           ]
         }
       ]
@@ -313,9 +313,9 @@
       "route": "endpoints",
       "section": "DEVELOPERS",
       "title": "API reference",
-      "seoTitle": "DeHub API Reference — REST and Mastodon APIs",
-      "description": "The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
-      "intro": "DeHub has two HTTP APIs. The Mastodon-compatible API is the stable one for third-party apps. The DeHub REST API powers dehub.io and the phone app and covers every feature.",
+      "seoTitle": "Riftn API Reference — REST and Mastodon APIs",
+      "description": "The Riftn REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
+      "intro": "Riftn has two HTTP APIs. The Mastodon-compatible API is the stable one for third-party apps. The Riftn REST API powers dehub.io and the phone app and covers every feature.",
       "sections": [
         {
           "id": "base-urls",
@@ -324,9 +324,9 @@
             { "table": {
               "head": ["API", "Base URL", "Best for"],
               "rows": [
-                ["Mastodon-compatible", "`https://dehub.io/api/v1`", "Apps that sign people in, read timelines and post. Works with every Mastodon library."],
-                ["DeHub REST", "`https://api.dehub.io/api`", "Everything DeHub does: feeds, videos, live, tips, search, leaderboards."],
-                ["MCP", "`https://dehub.io/mcp`", "AI agents and assistants. See [Connect](/connect)."]
+                ["Mastodon-compatible", "`https://riftn.com/api/v1`", "Apps that sign people in, read timelines and post. Works with every Mastodon library."],
+                ["Riftn REST", "`https://api.dehub.io/api`", "Everything Riftn does: feeds, videos, live, tips, search, leaderboards."],
+                ["MCP", "`https://riftn.com/mcp`", "AI agents and assistants. See [Connect](/connect)."]
               ]
             } },
             { "p": "The full REST reference, with every endpoint and a Try it button, is at [api.dehub.io/api/docxx](https://api.dehub.io/api/docxx). The machine-readable OpenAPI file is at [api.dehub.io/api/docxx-json](https://api.dehub.io/api/docxx-json), ready for code generators and API clients." }
@@ -337,7 +337,7 @@
           "heading": "Public endpoints to start with",
           "blocks": [
             { "p": "These need no sign-in:" },
-            { "code": "# A profile, by handle or wallet\ncurl https://api.dehub.io/api/account_info/dehub\n\n# The public feed\ncurl 'https://api.dehub.io/api/feed?limit=10'\n\n# Search people and posts\ncurl 'https://api.dehub.io/api/search?q=music'\n\n# The DHB leaderboard\ncurl https://api.dehub.io/api/leaderboard\n\n# Public timeline, Mastodon format\ncurl 'https://dehub.io/api/v1/timelines/public?limit=20'", "lang": "bash" }
+            { "code": "# A profile, by handle or wallet\ncurl https://api.dehub.io/api/account_info/dehub\n\n# The public feed\ncurl 'https://api.dehub.io/api/feed?limit=10'\n\n# Search people and posts\ncurl 'https://api.dehub.io/api/search?q=music'\n\n# The DHB leaderboard\ncurl https://api.dehub.io/api/leaderboard\n\n# Public timeline, Mastodon format\ncurl 'https://riftn.com/api/v1/timelines/public?limit=20'", "lang": "bash" }
           ]
         },
         {
@@ -378,22 +378,22 @@
       "route": "examples",
       "section": "DEVELOPERS",
       "title": "Examples",
-      "seoTitle": "DeHub Developer Examples — Copy and Paste Code",
-      "description": "Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.",
+      "seoTitle": "Riftn Developer Examples — Copy and Paste Code",
+      "description": "Copy and paste examples for Riftn apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with Riftn button.",
       "intro": "Small, complete examples for the things most apps need first. Each one works as it is.",
       "sections": [
         {
           "id": "hello",
           "heading": "A complete mini app page",
           "blocks": [
-            { "code": "<!doctype html>\n<html>\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n</head>\n<body>\n  <h1 id=\"hello\">Hello</h1>\n  <button id=\"share\">Share</button>\n  <script>\n    (async () => {\n      const { user } = await dehub.context;\n      if (user) document.getElementById('hello').textContent = `Hello, ${user.displayName || user.handle}`;\n      dehub.ready();\n\n      document.getElementById('share').onclick = () =>\n        dehub.actions.composePost({ text: 'I just tried this app', embedUrl: location.href });\n    })();\n  </script>\n</body>\n</html>", "lang": "html" }
+            { "code": "<!doctype html>\n<html>\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <script src=\"https://riftn.com/sdk/miniapp.js\"></script>\n</head>\n<body>\n  <h1 id=\"hello\">Hello</h1>\n  <button id=\"share\">Share</button>\n  <script>\n    (async () => {\n      const { user } = await dehub.context;\n      if (user) document.getElementById('hello').textContent = `Hello, ${user.displayName || user.handle}`;\n      dehub.ready();\n\n      document.getElementById('share').onclick = () =>\n        dehub.actions.composePost({ text: 'I just tried this app', embedUrl: location.href });\n    })();\n  </script>\n</body>\n</html>", "lang": "html" }
           ]
         },
         {
           "id": "server-session",
           "heading": "Sign the user in on your server",
           "blocks": [
-            { "code": "// Express + jose\nimport express from 'express';\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'));\nconst app = express();\n\napp.post('/api/session', async (req, res) => {\n  try {\n    const token = String(req.headers.authorization || '').replace(/^Bearer /, '');\n    const { payload } = await jwtVerify(token, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\n    res.json({ wallet: payload.sub });\n  } catch {\n    res.status(401).json({ error: 'Not signed in' });\n  }\n});", "lang": "js" }
+            { "code": "// Express + jose\nimport express from 'express';\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'));\nconst app = express();\n\napp.post('/api/session', async (req, res) => {\n  try {\n    const token = String(req.headers.authorization || '').replace(/^Bearer /, '');\n    const { payload } = await jwtVerify(token, JWKS, { issuer: 'https://riftn.com', audience: 'tipjar.example.com' });\n    res.json({ wallet: payload.sub });\n  } catch {\n    res.status(401).json({ error: 'Not signed in' });\n  }\n});", "lang": "js" }
           ]
         },
         {
@@ -401,7 +401,7 @@
           "heading": "A tip button paid in DHB",
           "blocks": [
             { "code": "document.getElementById('tip').onclick = async () => {\n  try {\n    const { receipt } = await dehub.actions.pay({ amount: 100, memo: 'Thanks!' });\n    await fetch('/api/tips', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: receipt });\n    dehub.haptics.impact('heavy');\n  } catch (error) {\n    if (error.code !== 'rejected') alert(error.message);\n  }\n};", "lang": "js" },
-            { "code": "// Server: verify the receipt before you record the tip\nconst { payload } = await jwtVerify(receipt, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\nif (payload.typ !== 'payment') throw new Error('Not a payment receipt');\n// payload.sub paid payload.amount DHB in payload.txHash on chain payload.chainId", "lang": "js" }
+            { "code": "// Server: verify the receipt before you record the tip\nconst { payload } = await jwtVerify(receipt, JWKS, { issuer: 'https://riftn.com', audience: 'tipjar.example.com' });\nif (payload.typ !== 'payment') throw new Error('Not a payment receipt');\n// payload.sub paid payload.amount DHB in payload.txHash on chain payload.chainId", "lang": "js" }
           ]
         },
         {
@@ -420,9 +420,9 @@
         },
         {
           "id": "oauth-button",
-          "heading": "A Sign in with DeHub button for any site",
+          "heading": "A Sign in with Riftn button for any site",
           "blocks": [
-            { "code": "// Node: start the login (register your app once first, see /docs/auth)\nimport crypto from 'node:crypto';\n\nconst verifier = crypto.randomBytes(32).toString('base64url');\nconst challenge = crypto.createHash('sha256').update(verifier).digest('base64url');\nconst state = crypto.randomBytes(16).toString('hex');\n// Save verifier and state in the user's session, then redirect:\nconst url = new URL('https://dehub.io/oauth/authorize');\nurl.search = new URLSearchParams({\n  response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,\n  scope: 'profile', state, code_challenge: challenge, code_challenge_method: 'S256',\n});\nres.redirect(url.toString());", "lang": "js" }
+            { "code": "// Node: start the login (register your app once first, see /docs/auth)\nimport crypto from 'node:crypto';\n\nconst verifier = crypto.randomBytes(32).toString('base64url');\nconst challenge = crypto.createHash('sha256').update(verifier).digest('base64url');\nconst state = crypto.randomBytes(16).toString('hex');\n// Save verifier and state in the user's session, then redirect:\nconst url = new URL('https://riftn.com/oauth/authorize');\nurl.search = new URLSearchParams({\n  response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,\n  scope: 'profile', state, code_challenge: challenge, code_challenge_method: 'S256',\n});\nres.redirect(url.toString());", "lang": "js" }
           ]
         }
       ]
@@ -431,8 +431,8 @@
       "route": "troubleshooting",
       "section": "DEVELOPERS",
       "title": "Troubleshooting",
-      "seoTitle": "DeHub Developer Troubleshooting",
-      "description": "Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
+      "seoTitle": "Riftn Developer Troubleshooting",
+      "description": "Fixes for the most common problems building Riftn mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
       "intro": "The most common problems, and how to fix them. The checker on dehub.io/apps/dev tells you which field is wrong in plain words, so start there.",
       "sections": [
         {
@@ -460,10 +460,10 @@
               "rows": [
                 ["The splash screen stays for 8 seconds", "Call `dehub.ready()` once your first screen is on."],
                 ["`Not running inside dehub`", "The page was opened on its own. Check `dehub.isInDehub()` and show a normal web version."],
-                ["`signin` error", "The person is signed out of DeHub. Ask them to sign in, or let them use your app as a guest."],
+                ["`signin` error", "The person is signed out of Riftn. Ask them to sign in, or let them use your app as a guest."],
                 ["`unsupported` on pay or addApp", "Developer previews cannot take payments or be added. Submit the app first."],
-                ["The app looks stretched on desktop", "It should not: DeHub runs mini apps in a phone-width column. Design for 375–430px wide."],
-                ["Links do nothing", "Use `dehub.actions.openUrl(url)` for external links; mini apps cannot navigate the DeHub tab."]
+                ["The app looks stretched on desktop", "It should not: Riftn runs mini apps in a phone-width column. Design for 375–430px wide."],
+                ["Links do nothing", "Use `dehub.actions.openUrl(url)` for external links; mini apps cannot navigate the Riftn tab."]
               ]
             } }
           ]

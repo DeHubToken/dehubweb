@@ -189,7 +189,7 @@ The quarter is not over, and neither is the list. Q4 continues exactly where thi
   bannerImage: '/media/q3-development-overview-banner.png',
   bannerImageAlt: 'Q3 Development Overview - DeHub rocket banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-08-22T12:00:00.000Z',
   updatedAt: '2026-08-24T12:00:00.000Z',

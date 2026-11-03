@@ -9,7 +9,7 @@ export const lastChadStandingPost: BlogPostType = {
   excerpt: 'Last Chad Standing is DeHub\'s flagship MMA play-to-earn game, a licensed-fighter battle royale where skill in the cage converts into $DHB rewards on Base.',
   content: `Last Chad Standing is an MMA play to earn game built by DeHub: a fighter battle royale featuring licensed mixed martial artists, where surviving the cage earns you on-chain rewards in the ecosystem token, **$DHB**. It sits at the centre of the DeHub arcade as the flagship title, and it occupies a niche almost nobody else has claimed properly, combat sports wired directly into a Web3 economy. If you have been looking for a genuine crypto MMA game rather than another reskinned card battler, this is the one to understand.
 
-Below we break down what the game actually is, how the play-to-earn model works, why the people behind it have the credibility to build it, and how you get involved through [the DeHub app](https://dehub.io/app).
+Below we break down what the game actually is, how the play-to-earn model works, why the people behind it have the credibility to build it, and how you get involved through [the DeHub app](https://riftn.com/app).
 
 ## What is Last Chad Standing?
 
@@ -53,7 +53,7 @@ It also means the game is not the only way to earn on the platform. If Last Chad
 
 Getting started is straightforward:
 
-1. **Get the DeHub app.** Head to [the DeHub app](https://dehub.io/app) on the web, or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). One account gives you the feed, the arcade and your wallet.
+1. **Get the DeHub app.** Head to [the DeHub app](https://riftn.com/app) on the web, or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). One account gives you the feed, the arcade and your wallet.
 2. **Set up your wallet and $DHB.** The arcade runs on the ecosystem token. If you are in Britain and new to buying it, our guide to acquiring the token walks through the process end to end.
 3. **Follow the official channels for the game.** Roster reveals, launch timing and event details are announced on DeHub's [X account](https://x.com/dehub_official) and [Telegram](https://t.me/dehub_dhb). We are not going to pre-empt those dates here, so the official feeds are where to watch.
 
@@ -65,7 +65,7 @@ When people search for the **best crypto battle royale games**, most of what tur
 
 That combination, real sport, real licensing, a real tradable token and a real company, is what gives this **mma play to earn game** a moat that a hastily assembled clone cannot copy. The niche is there for the taking, and DeHub is the one taking it.
 
-Ready to step into the cage? Start with [the DeHub app](https://dehub.io/app) and follow the ecosystem token across the whole platform.
+Ready to step into the cage? Start with [the DeHub app](https://riftn.com/app) and follow the ecosystem token across the whole platform.
 
 ## Frequently asked questions
 
@@ -75,7 +75,7 @@ Last Chad Standing is DeHub's flagship MMA play to earn game: a battle royale fe
 
 ### Is Last Chad Standing free to play?
 
-DeHub runs a play-to-earn arcade with free-to-play titles, and the platform itself is free to join, with uploads that can be free, pay-per-view or token-gated. Specific entry mechanics for individual matches or tournaments are announced through DeHub's official channels, so check [the DeHub app](https://dehub.io/app), X and Telegram for the current details rather than relying on figures quoted elsewhere.
+DeHub runs a play-to-earn arcade with free-to-play titles, and the platform itself is free to join, with uploads that can be free, pay-per-view or token-gated. Specific entry mechanics for individual matches or tournaments are announced through DeHub's official channels, so check [the DeHub app](https://riftn.com/app), X and Telegram for the current details rather than relying on figures quoted elsewhere.
 
 ### What blockchain does the game run on?
 
@@ -87,7 +87,7 @@ You earn by competing and performing well, outlasting the field in the battle ro
 `,
   bannerImage: '/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png',
   bannerImageAlt: 'Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-04-03T10:15:00.000Z',
   updatedAt: '2026-04-03T10:15:00.000Z',
   tags: ['mma play to earn game', 'last chad standing', 'crypto mma game', 'blockchain fighting game', 'play to earn', 'DeHub', 'DHB'],

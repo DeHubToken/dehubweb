@@ -112,7 +112,7 @@ Every DeHub account starts with **1,400 DHB free on day one** — the 1,000 star
   bannerImage: '/media/ai-creator-studio-banner.jpg',
   bannerImageAlt: 'DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-08-13T09:00:00.000Z',
   tags: ['AI', 'Creator Studio', 'Higgsfield', 'AI video', 'Veo 3.1', 'Seedance', 'DHB token', 'Pricing'],

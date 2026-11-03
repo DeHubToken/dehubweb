@@ -1,7 +1,7 @@
 /**
  * Mastodon apps API
  * =================
- * Mastodon apps (Ivory, Ice Cubes, Tusky, Elk…) sign in to DeHub with OAuth
+ * Mastodon apps (Ivory, Ice Cubes, Tusky, Elk…) sign in to Riftn with OAuth
  * (dehub-stream-backend src/mastodon). The approval step is our page,
  * /oauth/authorize; these are the calls it and Settings → Connected apps make.
  *
@@ -64,7 +64,7 @@ export async function removeConnectedApp(clientId: string): Promise<void> {
   unwrap(await apiCall(`/api/mastodon/authorizations/${encodeURIComponent(clientId)}`, { method: 'DELETE', requiresAuth: true }));
 }
 
-/** A "Sign in with DeHub" app a developer registered from their account (dehub.io/apps/dev). */
+/** A "Sign in with Riftn" app a developer registered from their account (dehub.io/apps/dev). */
 export interface DeveloperSignInApp {
   clientId: string;
   name: string;

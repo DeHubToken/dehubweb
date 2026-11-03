@@ -1,7 +1,7 @@
 /**
  * useAssetPicker
  * ==============
- * `$` typeahead for the composer: type `$DH` and pick DeHub, Apple or whichever
+ * `$` typeahead for the composer: type `$DH` and pick Riftn, Apple or whichever
  * of the four tokens sharing that ticker you actually meant.
  *
  * Deliberately shaped like `useMention` — same `handleInput` / `handleKeyDown` /

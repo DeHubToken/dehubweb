@@ -385,7 +385,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
 
   const title = t('dex.pool.seoTitle', { symbol, name: pool.name, chain: info.name });
   const description = t('dex.pool.seoDescription', { symbol, name: pool.name, chain: info.name });
-  const canonical = `https://dehub.io/dex/${pool.chain}/${pool.token_address}`;
+  const canonical = `https://riftn.com/dex/${pool.chain}/${pool.token_address}`;
 
   return <div className="dex-terminal">
     <SEOHead title={title} description={description} url={canonical} image={pool.image_url ?? stats?.imageUrl ?? undefined}

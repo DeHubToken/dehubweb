@@ -5,7 +5,7 @@
 // straight to PostgREST created a free proposal — and the RLS policy that
 // guarded it only compared the author address to the caller's own header.
 //
-// Both halves move here. The wallet comes from a verified DeHub token, the
+// Both halves move here. The wallet comes from a verified Riftn token, the
 // transfer is confirmed against the chain by `claimDhbPayment`, and the hash
 // is stored on the row: `governance_proposals.fee_tx_hash` is unique, so one
 // transfer buys exactly one proposal even inside the claim window.

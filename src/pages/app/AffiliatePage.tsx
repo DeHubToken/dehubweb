@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { PageBody } from "@/components/app/page-kit/PageKit";
 import { trackEvent } from "@/lib/analytics";
 
-const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
+const SITE = typeof window !== "undefined" ? window.location.origin : "https://riftn.com";
 
 function formatMoney(cents: number, currency = "USD") {
   try {
@@ -154,7 +154,7 @@ export default function AffiliatePage() {
   const nativeShare = () => {
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
     if (nav.share) {
-      nav.share({ title: "DeHub", text: _copy("copy.f224cf8441cc", { defaultValue: "Join me on DeHub." }), url: shareUrl })
+      nav.share({ title: "Riftn", text: _copy("copy.f224cf8441cc", { defaultValue: "Join me on Riftn." }), url: shareUrl })
         .then(() => trackEvent("invite_link_copied", { method: "native", deep_link: false }))
         .catch(() => undefined);
     } else {
@@ -185,11 +185,11 @@ export default function AffiliatePage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.661f23a8550b", { defaultValue: "DeHub Affiliate — Earn 20% + 5% Recurring" })}
-        description={_copy("copy.5a56acf53e8e", { defaultValue: "Invite anyone to DeHub and earn {{value1}}% of all revenue they generate, plus {{value2}}% from everyone they invite. Forever.", value1: AFFILIATE_L1_COMMISSION_PCT, value2: AFFILIATE_L2_COMMISSION_PCT })}
+        title={_copy("copy.661f23a8550b", { defaultValue: "Riftn Affiliate — Earn 20% + 5% Recurring" })}
+        description={_copy("copy.5a56acf53e8e", { defaultValue: "Invite anyone to Riftn and earn {{value1}}% of all revenue they generate, plus {{value2}}% from everyone they invite. Forever.", value1: AFFILIATE_L1_COMMISSION_PCT, value2: AFFILIATE_L2_COMMISSION_PCT })}
       />
       {!wallet ? (
-        <AuthGate description={_copy("copy.ac2b28aec04a", { defaultValue: "You need a DeHub account to access the affiliate programme." })} />
+        <AuthGate description={_copy("copy.ac2b28aec04a", { defaultValue: "You need a Riftn account to access the affiliate programme." })} />
       ) : (
         <PageBody className="mx-auto max-w-5xl pt-6 md:pt-10">
           {/* Custom per-user share image */}
@@ -197,7 +197,7 @@ export default function AffiliatePage() {
             {stats?.code ? (
               <img
                 src={shareImageUrl}
-                alt={_copy("copy.ef5523101c85", { defaultValue: "{{value1}} invited you to DeHub", value1: displayName || "" })}
+                alt={_copy("copy.ef5523101c85", { defaultValue: "{{value1}} invited you to Riftn", value1: displayName || "" })}
                 width={1200}
                 height={630}
                 loading="eager"
@@ -231,7 +231,7 @@ export default function AffiliatePage() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl md:text-4xl font-bold text-white">{_copy("copy.37bc605898f7", { defaultValue: "Earn " })}{AFFILIATE_L1_COMMISSION_PCT}{_copy("copy.077cc6af06f4", { defaultValue: "% from everyone you invite — and " })}{AFFILIATE_L2_COMMISSION_PCT}{_copy("copy.ffaa95c939fc", { defaultValue: "% from everyone " })}<em>{_copy("copy.151e58a83130", { defaultValue: "they" })}</em>{_copy("copy.d82b694585c4", { defaultValue: " invite." })}</h1>
-              <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">{_copy("copy.5d677d55b064", { defaultValue: "Every time someone uses any DeHub revenue-generating feature, you earn residually and perpetually." })}</p>
+              <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">{_copy("copy.5d677d55b064", { defaultValue: "Every time someone uses any Riftn revenue-generating feature, you earn residually and perpetually." })}</p>
             </div>
           </div>
 
@@ -382,7 +382,7 @@ export default function AffiliatePage() {
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
                   <h2 className="text-lg font-semibold text-white">{_copy("copy.1ed61b786730", { defaultValue: "Your invite link" })}</h2>
-                  <p className="text-sm text-white/60">{_copy("copy.c0ac0f73ce8d", { defaultValue: "Share anywhere. You earn " })}{AFFILIATE_L1_COMMISSION_PCT}{_copy("copy.29c0b3cf5ea2", { defaultValue: "% of every dollar your invites ever spend on DeHub, plus " })}{AFFILIATE_L2_COMMISSION_PCT}{_copy("copy.ffaa95c939fc", { defaultValue: "% from everyone " })}<em>{_copy("copy.151e58a83130", { defaultValue: "they" })}</em>{_copy("copy.d82b694585c4", { defaultValue: " invite." })}</p>
+                  <p className="text-sm text-white/60">{_copy("copy.c0ac0f73ce8d", { defaultValue: "Share anywhere. You earn " })}{AFFILIATE_L1_COMMISSION_PCT}{_copy("copy.29c0b3cf5ea2", { defaultValue: "% of every dollar your invites ever spend on Riftn, plus " })}{AFFILIATE_L2_COMMISSION_PCT}{_copy("copy.ffaa95c939fc", { defaultValue: "% from everyone " })}<em>{_copy("copy.151e58a83130", { defaultValue: "they" })}</em>{_copy("copy.d82b694585c4", { defaultValue: " invite." })}</p>
                 </div>
               </div>
 
@@ -395,7 +395,7 @@ export default function AffiliatePage() {
                       to={`/r/${stats.code}`}
                       className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono truncate hover:bg-white/15 inline-flex items-center gap-2"
                     >
-                      {`${typeof window !== "undefined" ? window.location.origin : "https://dehub.io"}/r/${stats.code}`}
+                      {`${typeof window !== "undefined" ? window.location.origin : "https://riftn.com"}/r/${stats.code}`}
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </Link>
                     <Button
@@ -434,8 +434,8 @@ export default function AffiliatePage() {
           <Card data-kit-section className="border-white/10 bg-white/[0.03]">
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
               <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body={_copy("copy.54f921da537d", { defaultValue: "Drop your invite link into Discord, X, YouTube, your stream — anywhere." })} />
-              <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join DeHub" })} body={_copy("copy.44255c58528d", { defaultValue: "Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." })} />
-              <Step n={3} title={_copy("copy.7e44b080227f", { defaultValue: "Earn {{value1}}% direct", value1: AFFILIATE_L1_COMMISSION_PCT })} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
+              <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join Riftn" })} body={_copy("copy.44255c58528d", { defaultValue: "Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." })} />
+              <Step n={3} title={_copy("copy.7e44b080227f", { defaultValue: "Earn {{value1}}% direct", value1: AFFILIATE_L1_COMMISSION_PCT })} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on Riftn.`} />
               <Step n={4} title={_copy("copy.2ed16d4204db", { defaultValue: "Earn {{value1}}% secondary", value1: AFFILIATE_L2_COMMISSION_PCT })} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
             </CardContent>
           </Card>
@@ -469,7 +469,7 @@ function LabeledField({ label, count, children }: { label: string; count?: strin
 }
 
 /**
- * Turns any DeHub page into a link that still pays the referrer.
+ * Turns any Riftn page into a link that still pays the referrer.
  *
  * `/r/<CODE>/<path>` sets attribution and then forwards to `<path>`, so a single
  * hyperlink can point at one docs section or app page instead of always dumping
@@ -487,7 +487,7 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
     <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
       <div>
         <h3 className="text-sm font-semibold text-white">{_copy("copy.fc036ea0e9f0", { defaultValue: "Link to a specific page" })}</h3>
-        <p className="text-xs text-white/60">{_copy("copy.ae4410aa9943", { defaultValue: "Paste any DeHub page — a docs section, a bounty, your profile. The link below still attributes the visit to you, then takes them straight there." })}</p>
+        <p className="text-xs text-white/60">{_copy("copy.ae4410aa9943", { defaultValue: "Paste any Riftn page — a docs section, a bounty, your profile. The link below still attributes the visit to you, then takes them straight there." })}</p>
       </div>
       <div className="flex flex-col sm:flex-row gap-2">
         <Input
@@ -519,13 +519,13 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
  */
 function StreamerInviteKit({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
   const { t: _copy } = _useCopy();
-  const message = _copy("copy.cc96aaa18cf2", { defaultValue: "Come stream on DeHub with me. Tips land on-chain straight in your wallet, you own your audience, and you can keep posting to TikTok and everywhere else in one step. Sign up here: {{link}}", link: streamerInviteLink(SITE, code) });
+  const message = _copy("copy.cc96aaa18cf2", { defaultValue: "Come stream on Riftn with me. Tips land on-chain straight in your wallet, you own your audience, and you can keep posting to TikTok and everywhere else in one step. Sign up here: {{link}}", link: streamerInviteLink(SITE, code) });
 
   return (
     <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
       <div>
         <h3 className="text-sm font-semibold text-white">{_copy("copy.b3412a3b86de", { defaultValue: "Invite streamers" })}</h3>
-        <p className="text-xs text-white/60">{_copy("copy.8c91325d901b", { defaultValue: "Send streamers to the DeHub streaming page with this message. Your link attributes them to you before they land." })}</p>
+        <p className="text-xs text-white/60">{_copy("copy.8c91325d901b", { defaultValue: "Send streamers to the Riftn streaming page with this message. Your link attributes them to you before they land." })}</p>
       </div>
       <p className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/80 whitespace-pre-line break-words">{message}</p>
       <Button variant="secondary" onClick={() => onCopy(message, _copy("copy.846d8244b7d8", { defaultValue: "Invite message copied" }))}>
@@ -618,7 +618,7 @@ function AffiliatesList({
           <div>
             <h2 className="text-lg font-semibold text-white inline-flex items-center gap-2">
               <Users className="w-4 h-4" />{_copy("copy.5887fc189c1b", { defaultValue: " Your affiliates" })}</h2>
-            <p className="text-sm text-white/60">{_copy("copy.efaf600adacf", { defaultValue: "The accounts you’ve referred to DeHub." })}</p>
+            <p className="text-sm text-white/60">{_copy("copy.efaf600adacf", { defaultValue: "The accounts you’ve referred to Riftn." })}</p>
           </div>
           {hasSecondary && (
             <div className="inline-flex rounded-full bg-white/[0.06] p-0.5 text-sm">

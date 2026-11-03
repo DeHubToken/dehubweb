@@ -36,7 +36,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   /**
-   * Pending state for whatever this button fires. Puts the DeHub mark in the
+   * Pending state for whatever this button fires. Puts the Riftn mark in the
    * leading icon slot and blocks re-entry, so a slow phone or a slow
    * connection still answers the click on the frame it happened rather than
    * looking like the tap was missed.

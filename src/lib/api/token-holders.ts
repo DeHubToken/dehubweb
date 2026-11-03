@@ -1,7 +1,7 @@
 /**
  * Token Holders Utility
  * =====================
- * Queries on-chain data to get fraction holders for DeHub NFTs.
+ * Queries on-chain data to get fraction holders for Riftn NFTs.
  * Each token has 1000 fractions that can be owned by different wallets.
  */
 
@@ -15,7 +15,7 @@ export interface TokenHolder {
   percentage: number;
 }
 
-// DeHub NFT Contract addresses per chain
+// Riftn NFT Contract addresses per chain
 export const DEHUB_CONTRACTS: Record<number, Address> = {
   8453: '0x9f8012074d27F8596C0E5038477ACB52057BC934', // Base
   56: '0x1065F5922a336C75623B55D22c4a0C760efCe947',   // BNB Chain

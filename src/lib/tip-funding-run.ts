@@ -30,8 +30,8 @@ export async function fundTipFromSource(
     approve: t('tip.stageApprove', 'Approving {{symbol}}…', vars),
     bridge: t('tip.stageBridge', 'Sending {{symbol}} from {{chain}}…', vars),
     arriving: t('tip.stageArriving', 'Arriving on Base, usually a few seconds…'),
-    pay: t('tip.stagePay', 'Paying DeHub Pay with {{symbol}}…', vars),
-    delivering: t('tip.stageDelivering', 'DeHub Pay is sending your DHB…'),
+    pay: t('tip.stagePay', 'Paying Riftn Pay with {{symbol}}…', vars),
+    delivering: t('tip.stageDelivering', 'Riftn Pay is sending your DHB…'),
     swap: t('tip.stageSwap', 'Buying DHB on Uniswap…'),
   };
   try {

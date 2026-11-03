@@ -1,7 +1,7 @@
 /**
  * Creator generation engine.
  * ==========================
- * One call path for every generation DeHub can run, shared by the /creator
+ * One call path for every generation Riftn can run, shared by the /creator
  * studio and the /editor Generate panel. Before this existed both surfaces
  * hand-rolled their own `functions.invoke` calls, which is how the editor
  * ended up shipping a video model id the edge function rejects.
@@ -722,7 +722,7 @@ async function functionHeaders(): Promise<Record<string, string>> {
   return {
     apikey: SUPABASE_ANON_KEY,
     Authorization: `Bearer ${token}`,
-    // The paid audio functions authenticate on the DeHub token rather than the
+    // The paid audio functions authenticate on the Riftn token rather than the
     // Supabase session, so it has to travel with these too.
     ...dehubAuthHeaders(),
   };

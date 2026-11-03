@@ -12,7 +12,7 @@ export const whatIsDehubPost: BlogPostType = {
   content: `
 DeHub is an **open source, user-owned and censorship-resistant social platform** for creators and communities — a decentralized alternative to legacy apps like X, YouTube, Facebook and Rumble. Post, stream, message and go live like on any modern social app, except your content can be minted on-chain to your wallet, when you upload it or later, your audience relationship belongs to you rather than an algorithm, and the platform's economics are shared with the people who actually create and consume the content.
 
-Our mission is simple: **give creators and their communities ownership of the platforms they build value on.** Not a promise on a roadmap — a working product you can use right now at [dehub.io](https://dehub.io) on the web or with the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). No wallet knowledge required to start; a wallet is created for you behind the scenes and gas is sponsored when you sign up with a social account, email or SMS.
+Our mission is simple: **give creators and their communities ownership of the platforms they build value on.** Not a promise on a roadmap — a working product you can use right now at [dehub.io](https://riftn.com) on the web or with the [DeHub app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). No wallet knowledge required to start; a wallet is created for you behind the scenes and gas is sponsored when you sign up with a social account, email or SMS.
 
 ## Who's behind DeHub
 
@@ -76,7 +76,7 @@ The name collides with a few unrelated things — worth clearing up:
 
 - **DePaul University's "DeHUB"** (dehub.depaul.edu) is a student engagement portal for DePaul students. If you're a DePaul student looking for club sign-ups, that's your link.
 - **Rowan University's "DEHub"** is a digital engineering hub at an engineering school.
-- **This DeHub** — the one you're reading about — is the decentralized social platform at [dehub.io](https://dehub.io).
+- **This DeHub** — the one you're reading about — is the decentralized social platform at [dehub.io](https://riftn.com).
 
 ## Frequently asked questions
 
@@ -99,12 +99,12 @@ Through on-chain community voting. Stakeholder weight is multiplied within cappe
 Yes — the code is public under the [DeHubToken organization on GitHub](https://github.com/DeHubToken), including the web app and the E2EE messaging implementation.
 
 ### Where can I follow DeHub?
-On DeHub itself at [dehub.io](https://dehub.io), on X at [@dehub_official](https://x.com/dehub_official), and on [Telegram](https://t.me/dehub_dhb).
+On DeHub itself at [dehub.io](https://riftn.com), on X at [@dehub_official](https://x.com/dehub_official), and on [Telegram](https://t.me/dehub_dhb).
   `,
   bannerImage: '/media/what-is-dehub-banner.png',
   bannerImageAlt: 'DeHub — the open source, user-owned social platform for creators and communities',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-06-23T10:30:00.000Z',
   tags: ['DeHub', 'Explainer', 'Web3', 'Social Media', 'DHB'],

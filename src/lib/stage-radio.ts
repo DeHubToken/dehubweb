@@ -25,7 +25,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  * **`crossOrigin = 'anonymous'` is mandatory.** Without it the element taints
  * the graph and the destination carries silence — the stream would play on the
  * host's machine and reach nobody. Stations that fail CORS fail to load at all,
- * which is the same set the DeHub Radio page already refuses, so this adds no
+ * which is the same set the Riftn Radio page already refuses, so this adds no
  * new failure mode.
  *
  * **The published track must be freshly built per broadcast.** Agora's

@@ -58,7 +58,7 @@ export interface DeHubDMMessage {
   duration?: number;
 }
 
-// ─── New types (DeHub DM API v2) ──────────────────────────────────────────────
+// ─── New types (Riftn DM API v2) ──────────────────────────────────────────────
 
 export type DmMsgType = 'msg' | 'media' | 'gif' | 'voice' | 'tip' | 'poll';
 
@@ -596,7 +596,7 @@ export async function deleteConversation(
     return { success: true };
   }
 
-  // For real DeHub conversations, call the API AND clean up Supabase
+  // For real Riftn conversations, call the API AND clean up Supabase
   try {
     await apiCall<any>('/api/dm/delete-messages', {
       method: 'POST',
@@ -604,7 +604,7 @@ export async function deleteConversation(
       requiresAuth: true,
     });
   } catch (err) {
-    console.error('[DM API] deleteConversation DeHub API failed:', err);
+    console.error('[DM API] deleteConversation Riftn API failed:', err);
     throw err;
   }
 
@@ -674,7 +674,7 @@ export async function getMessages(
 
 /**
  * Upload a media/voice file and create a DM message in one call.
- * Uses POST /dm/upload (DeHub CDN).
+ * Uses POST /dm/upload (Riftn CDN).
  */
 export async function uploadAndSendMedia(
   file: File,
@@ -768,7 +768,7 @@ export async function forwardDmMessage(
  * @deprecated For DM images, prefer uploadAndSendMedia instead.
  */
 export async function uploadChatImage(file: File): Promise<{ url: string }> {
-  // Goes through a Supabase edge function rather than the DeHub API, so it
+  // Goes through a Supabase edge function rather than the Riftn API, so it
   // cannot use authedUpload — but it still needs a live token rather than
   // whatever happens to be in localStorage.
   const token = await ensureFreshToken();
@@ -900,10 +900,10 @@ export async function unblockConversation(conversationId: string): Promise<{ suc
 }
 
 // ─── Group Chat ───────────────────────────────────────────────────────────────
-// Note: DeHub backend does not support group DMs (chat-system.md: "All DMs are 1:1 only").
+// Note: Riftn backend does not support group DMs (chat-system.md: "All DMs are 1:1 only").
 // These functions fail gracefully with a clear error.
 
-const groupNotSupported = () => _translateCopy("copy.6522198fff85", { defaultValue: "Group chat is not supported. DeHub DMs are 1:1 only." });
+const groupNotSupported = () => _translateCopy("copy.6522198fff85", { defaultValue: "Group chat is not supported. Riftn DMs are 1:1 only." });
 
 export async function createGroup(
   _name: string,

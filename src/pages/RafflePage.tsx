@@ -31,7 +31,7 @@ import { SEOHead } from '@/components/SEOHead';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 const pageDescription = () =>
-  _translateCopy("copy.4883563fdbe1", { defaultValue: "DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain." });
+  _translateCopy("copy.4883563fdbe1", { defaultValue: "Riftn prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain." });
 
 function Reveal({
   children,
@@ -77,7 +77,7 @@ const steps = [
   {
     icon: Ticket,
     get title() { return _translateCopy("copy.4421a7fc1a47", { defaultValue: "You collect entries" }); },
-    get body() { return _translateCopy("copy.15e724bd7efe", { defaultValue: "Entries are earned by doing things you already do on DeHub. The announcement lists which actions count for that draw and how many entries each is worth." }); },
+    get body() { return _translateCopy("copy.15e724bd7efe", { defaultValue: "Entries are earned by doing things you already do on Riftn. The announcement lists which actions count for that draw and how many entries each is worth." }); },
   },
   {
     icon: Dice5,
@@ -120,8 +120,8 @@ const fairness = [
 
 const faqItems = [
   {
-    get question() { return _translateCopy("copy.8a7dab8cbe5b", { defaultValue: "Do I have to buy anything to enter a DeHub prize draw?" }); },
-    get answer() { return _translateCopy("copy.62953bc91936", { defaultValue: "No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a token ticket, but a ticket is never the only way in." }); },
+    get question() { return _translateCopy("copy.8a7dab8cbe5b", { defaultValue: "Do I have to buy anything to enter a Riftn prize draw?" }); },
+    get answer() { return _translateCopy("copy.62953bc91936", { defaultValue: "No. Every draw carries at least one free entry route, earned by taking part on Riftn. Some draws additionally sell a token ticket, but a ticket is never the only way in." }); },
     answerKey: 'raffle.faqPurchaseAnswer',
   },
   {
@@ -130,15 +130,15 @@ const faqItems = [
   },
   {
     get question() { return _translateCopy("copy.d9998563e1f1", { defaultValue: "How are winners notified?" }); },
-    get answer() { return _translateCopy("copy.1fe16b6365aa", { defaultValue: "Winners are notified in the app and named in the result post. There is no email asking for a payment, a seed phrase or a wallet signature — DeHub will never ask for any of those to release a prize." }); },
+    get answer() { return _translateCopy("copy.1fe16b6365aa", { defaultValue: "Winners are notified in the app and named in the result post. There is no email asking for a payment, a seed phrase or a wallet signature — Riftn will never ask for any of those to release a prize." }); },
   },
   {
     get question() { return _translateCopy("copy.fd85ca1f018e", { defaultValue: "How long do I have to claim?" }); },
-    get answer() { return _translateCopy("copy.05467bd0cc71", { defaultValue: "Fourteen days from the result being published. Token prizes settle to the winner’s DeHub wallet on Base. Physical prizes are arranged directly with the team, and shipping is covered where we can legally ship." }); },
+    get answer() { return _translateCopy("copy.05467bd0cc71", { defaultValue: "Fourteen days from the result being published. Token prizes settle to the winner’s Riftn wallet on Base. Physical prizes are arranged directly with the team, and shipping is covered where we can legally ship." }); },
   },
   {
     get question() { return _translateCopy("copy.20a3cfd2ee63", { defaultValue: "Who is eligible?" }); },
-    get answer() { return _translateCopy("copy.a424d0cc4ec7", { defaultValue: "Anyone with a DeHub account who is over 18 and lives somewhere the draw is lawful. DeHub staff, contractors and their households are not eligible, and draws are void where local law prohibits them." }); },
+    get answer() { return _translateCopy("copy.a424d0cc4ec7", { defaultValue: "Anyone with a Riftn account who is over 18 and lives somewhere the draw is lawful. Riftn staff, contractors and their households are not eligible, and draws are void where local law prohibits them." }); },
   },
   {
     get question() { return _translateCopy("copy.b58e28adfd7f", { defaultValue: "How often do draws run?" }); },
@@ -154,22 +154,22 @@ export default function RafflePage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on DeHub" })}
+        title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on Riftn" })}
         description={pageDescription()}
-        image="https://dehub.io/og/raffle.jpg"
-        url="https://dehub.io/raffle"
+        image="https://riftn.com/og/raffle.jpg"
+        url="https://riftn.com/raffle"
         jsonLd={{
           '@context': 'https://schema.org',
           '@graph': [
             {
               '@type': 'WebPage',
-              name: _copy("copy.42478a42211c", { defaultValue: "DeHub Prize Draws" }),
-              url: 'https://dehub.io/raffle',
+              name: _copy("copy.42478a42211c", { defaultValue: "Riftn Prize Draws" }),
+              url: 'https://riftn.com/raffle',
               description: pageDescription(),
               isPartOf: {
                 '@type': 'WebSite',
-                name: 'DeHub',
-                url: 'https://dehub.io',
+                name: 'Riftn',
+                url: 'https://riftn.com',
               },
             },
             {
@@ -193,8 +193,8 @@ export default function RafflePage() {
             aria-label={_copy("copy.f956d69eeb1f", { defaultValue: "Prize draws navigation" })}
             className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
           >
-            <Link to="/" aria-label={_copy("copy.73d01ae84196", { defaultValue: "DeHub home" })} className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
-              <img src={dehubLogo} alt="DeHub" className="h-7 w-auto" />
+            <Link to="/" aria-label={_copy("copy.73d01ae84196", { defaultValue: "Riftn home" })} className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+              <img src={dehubLogo} alt="Riftn" className="h-7 w-auto" />
             </Link>
 
             <div className="hidden items-center gap-7 text-sm font-medium text-zinc-400 md:flex">
@@ -207,7 +207,7 @@ export default function RafflePage() {
             <Link
               to="/"
               className="whitespace-nowrap rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-            >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}</Link>
+            >{_copy("copy.efc85ecfd402", { defaultValue: "Open Riftn" })}</Link>
           </nav>
         </header>
 
@@ -300,7 +300,7 @@ export default function RafflePage() {
               <Reveal>
                 <SectionHeading
                   title={_copy("copy.05ed765615c5", { defaultValue: "Entries are earned, not bought" })}
-                  body={_copy("copy.e2c592b3cd95", { defaultValue: "Draws are weighted towards people who use DeHub. Each announcement names the routes that count for it — these are the ones draws are usually built from." })}
+                  body={_copy("copy.e2c592b3cd95", { defaultValue: "Draws are weighted towards people who use Riftn. Each announcement names the routes that count for it — these are the ones draws are usually built from." })}
                 />
               </Reveal>
               <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -349,8 +349,8 @@ export default function RafflePage() {
               </div>
               <Reveal delay={0.1}>
                 <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-                  <h3 className="text-lg font-semibold tracking-[-0.02em] text-white">{_copy("copy.8d0cd01995e2", { defaultValue: "DeHub will never ask you to pay to release a prize" })}</h3>
-                  <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">{_copy("copy.5ab00110ad6b", { defaultValue: "Winners are named in the app and in the public result post. Nobody from DeHub will contact you for a fee, a seed phrase, a private key or a wallet signature to hand over a prize. Any message that does is an impersonation — report it and delete it." })}</p>
+                  <h3 className="text-lg font-semibold tracking-[-0.02em] text-white">{_copy("copy.8d0cd01995e2", { defaultValue: "Riftn will never ask you to pay to release a prize" })}</h3>
+                  <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">{_copy("copy.5ab00110ad6b", { defaultValue: "Winners are named in the app and in the public result post. Nobody from Riftn will contact you for a fee, a seed phrase, a private key or a wallet signature to hand over a prize. Any message that does is an impersonation — report it and delete it." })}</p>
                 </div>
               </Reveal>
             </div>
@@ -383,7 +383,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title={_copy("copy.205af87306b5", { defaultValue: "Draws run inside DeHub" })}
+                  title={_copy("copy.205af87306b5", { defaultValue: "Draws run inside Riftn" })}
                   body={_copy("copy.3da323657e3c", { defaultValue: "Open the app to see whatever is live now, and turn on notifications so the next one does not pass you by." })}
                 />
               </Reveal>
@@ -392,7 +392,7 @@ export default function RafflePage() {
                   <Link
                     to="/"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                  >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}<ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+                  >{_copy("copy.efc85ecfd402", { defaultValue: "Open Riftn" })}<ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
                   </Link>
                   <Link
                     to="/docs/token/overview"
@@ -408,8 +408,8 @@ export default function RafflePage() {
 
         <footer className="border-t border-white/10 bg-zinc-950">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-zinc-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-            <img src={dehubLogo} alt="DeHub" className="h-6 w-auto self-start opacity-80" loading="lazy" />
-            <p className="max-w-2xl md:text-right">{_copy("copy.cbbe14a2e25e", { defaultValue: "Prize draws are promotional and open to DeHub account holders aged 18 or over, void where local law prohibits them. DeHub staff, contractors and their households are not eligible. Prizes are not exchangeable for cash unless stated, and each draw’s own announcement carries its full terms." })}</p>
+            <img src={dehubLogo} alt="Riftn" className="h-6 w-auto self-start opacity-80" loading="lazy" />
+            <p className="max-w-2xl md:text-right">{_copy("copy.cbbe14a2e25e", { defaultValue: "Prize draws are promotional and open to Riftn account holders aged 18 or over, void where local law prohibits them. Riftn staff, contractors and their households are not eligible. Prizes are not exchangeable for cash unless stated, and each draw’s own announcement carries its full terms." })}</p>
           </div>
         </footer>
       </div>

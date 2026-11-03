@@ -15,7 +15,7 @@ export const POST_EMBED_WIDTH = 550;
 
 export function postEmbedCode(tokenId: string | number, height = 480): string {
   const id = Number(tokenId);
-  return `<iframe src="https://dehub.io/app/post/${id}/embed" class="dehub-embed" style="max-width: 100%; border: 0" width="${POST_EMBED_WIDTH}" height="${height}" allowfullscreen="allowfullscreen" allow="fullscreen; picture-in-picture" loading="lazy"></iframe><script src="https://dehub.io/embed.js" async="async"></script>`;
+  return `<iframe src="https://riftn.com/app/post/${id}/embed" class="dehub-embed" style="max-width: 100%; border: 0" width="${POST_EMBED_WIDTH}" height="${height}" allowfullscreen="allowfullscreen" allow="fullscreen; picture-in-picture" loading="lazy"></iframe><script src="https://riftn.com/embed.js" async="async"></script>`;
 }
 
 /** Copies a post's embed code and says so. `t` is the caller's i18next t. */

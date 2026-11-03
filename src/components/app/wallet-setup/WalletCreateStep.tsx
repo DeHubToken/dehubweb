@@ -336,7 +336,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
     if (backendHint?.exists === false) {
       setError(t(
         'loginModal.migrateNoOldAccount',
-        'There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.',
+        'There is no earlier Riftn account on this login, so there is nothing to bring over. Set up a new account instead.',
       ));
       setMode('new');
       return;
@@ -459,7 +459,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       throw new Error(
         safeAddress
           ? _copy("copy.7231b14b03fd", { defaultValue: "This login recovered a different wallet from the profile you selected. Nothing was changed." })
-          : _copy("copy.4acc79823766", { defaultValue: "We could not verify this wallet against your DeHub profile. Try the recovery again before continuing." }),
+          : _copy("copy.4acc79823766", { defaultValue: "We could not verify this wallet against your Riftn profile. Try the recovery again before continuing." }),
       );
     }
   };
@@ -808,11 +808,11 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
         <div className="flex items-start gap-2 rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white">
           <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-          {/* Name the account. "your existing DeHub account" is true of everyone
+          {/* Name the account. "your existing Riftn account" is true of everyone
               and convinces nobody; the username, and the balance sitting on it,
               is what makes a returning user press Migrate instead of starting
               over on a new one. */}
-          {/* The username carries this, not the sentence. "Your existing DeHub
+          {/* The username carries this, not the sentence. "Your existing Riftn
               account" is true of everyone and convinces nobody; seeing the
               actual handle — and the balance sitting on it — is what makes a
               returning user press Migrate instead of starting over.
@@ -845,7 +845,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
       {!migratedKey && backendHint?.exists == null && residueDetected && (
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>{_copy("copy.6718e3e6e6a6", { defaultValue: "Looks like this browser has signed in to DeHub before. If that was you, sign in with your old login below so you keep your old wallet and balance." })}</p>
+          <p>{_copy("copy.6718e3e6e6a6", { defaultValue: "Looks like this browser has signed in to Riftn before. If that was you, sign in with your old login below so you keep your old wallet and balance." })}</p>
         </div>
       )}
 
@@ -860,12 +860,12 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
             <p>
               {t(
                 'loginModal.migrateNoOldAccount',
-                'There is no earlier DeHub account on this login, so there is nothing to bring over. Set up a new account instead.',
+                'There is no earlier Riftn account on this login, so there is nothing to bring over. Set up a new account instead.',
               )}
             </p>
           </div>
         ) : (
-          <p className="text-white/60 text-sm">{_copy("copy.07b6b72fb21a", { defaultValue: "Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile." })}</p>
+          <p className="text-white/60 text-sm">{_copy("copy.07b6b72fb21a", { defaultValue: "Had a Riftn account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile." })}</p>
         )
       ) : (
         <div className="space-y-1.5">
@@ -971,7 +971,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
 
       {mode === 'migrate' && migratedKey && !migratedKeyError && (!safeAddressChecked || backendHint === null) && (
         <p className="text-white/60 text-sm flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your DeHub profile..." })}</p>
+          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your Riftn profile..." })}</p>
       )}
 
       {mode === 'migrate' && migratedKey && safeAddressChecked && backendHint !== null && !addressConfirmed && migratedAddress && (() => {
@@ -999,9 +999,9 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
                   : looksLikeDuplicate
                     ? t(
                       'loginModal.migrateUnmatchedWarning',
-                      'This login has no DeHub account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
+                      'This login has no Riftn account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
                     )
-                    : _copy("copy.3f3cb527b96b", { defaultValue: "We matched this wallet to your DeHub profile. Confirm the username before continuing." })}
+                    : _copy("copy.3f3cb527b96b", { defaultValue: "We matched this wallet to your Riftn profile. Confirm the username before continuing." })}
               </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white space-y-2">
@@ -1015,7 +1015,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
                   </Avatar>
                   <div className="min-w-0">
                     <p className="truncate font-semibold">
-                      {matched.username ? `@${matched.username}` : _copy("copy.e42dc55613ae", { defaultValue: "Your old DeHub account" })}
+                      {matched.username ? `@${matched.username}` : _copy("copy.e42dc55613ae", { defaultValue: "Your old Riftn account" })}
                     </p>
                     <p className="text-xs text-white/50">
                       {matched.signupMethod && OLD_LOGIN_LABELS[matched.signupMethod]
@@ -1044,7 +1044,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
                     onClick={() => setShowMigratedAddress((v) => !v)}
                     className="text-[11px] text-white/40 hover:text-white/70 transition-colors"
                   >
-                    {showMigratedAddress ? _copy("copy.aeaabbc3753b", { defaultValue: "Hide DeHub wallet" }) : _copy("copy.9b93cfb9c8d2", { defaultValue: "Show DeHub wallet" })}
+                    {showMigratedAddress ? _copy("copy.aeaabbc3753b", { defaultValue: "Hide Riftn wallet" }) : _copy("copy.9b93cfb9c8d2", { defaultValue: "Show Riftn wallet" })}
                   </button>
                   {showMigratedAddress && (
                     <p className="break-all text-[11px] text-white/50">{recoveredProfileAddress}</p>
@@ -1103,7 +1103,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null, securing =
           <Fingerprint className="w-5 h-5 mt-0.5 text-white shrink-0" />
           <div className="space-y-1">
             <p className="text-white text-sm font-medium">{_copy("copy.cf3847db61fe", { defaultValue: "Unlock with your fingerprint or face" })}</p>
-            <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.8fd82319e2ef", { defaultValue: "Your device holds the key that unlocks this account. Nothing to type now or later — and DeHub never sees it." })}</p>
+            <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.8fd82319e2ef", { defaultValue: "Your device holds the key that unlocks this account. Nothing to type now or later — and Riftn never sees it." })}</p>
           </div>
         </div>
       )}

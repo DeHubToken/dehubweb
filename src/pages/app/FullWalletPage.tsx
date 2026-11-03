@@ -242,7 +242,7 @@ export default function FullWalletPage() {
    * two chains do not share an address space — so a dialog that shows only the
    * EVM address beside a list of Solana balances is an invitation to lose
    * money. The toggle only appears when there is a Solana address to switch to
-   * — DeHub's own derived one for a built-in wallet, a linked Phantom for the
+   * — Riftn's own derived one for a built-in wallet, a linked Phantom for the
    * rest (see hooks/use-wallet-addresses).
    */
   const [receiveNetwork, setReceiveNetwork] = useState<'evm' | 'solana'>('evm');
@@ -332,8 +332,8 @@ export default function FullWalletPage() {
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
     // attribute (portals escape this subtree).
     <div data-wallet-page className="min-h-screen">
-      <SEOHead title={_copy("copy.b98adf20f5f3", { defaultValue: "Wallet — Manage Your Crypto Assets" })} description={_copy("copy.00787feeb046", { defaultValue: "View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." })} url="https://dehub.io/app/wallet" />
-      <h1 className="sr-only">{_copy("copy.112e22b0fd15", { defaultValue: "DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.b98adf20f5f3", { defaultValue: "Wallet — Manage Your Crypto Assets" })} description={_copy("copy.00787feeb046", { defaultValue: "View balances, send and receive tokens, and manage your crypto assets across multiple chains on Riftn." })} url="https://riftn.com/app/wallet" />
+      <h1 className="sr-only">{_copy("copy.112e22b0fd15", { defaultValue: "Riftn Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Back square only when navigated from command centre */}
       <PageIsland
         title={t('wallet.title')}

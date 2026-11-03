@@ -10,7 +10,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * authenticated those writes against the caller's own `x-wallet-address`
  * header, so both the voter and the weight were whatever the request said they
  * were. Both now go through edge functions that resolve the wallet from a
- * verified DeHub token and derive the weight server-side from the badge
+ * verified Riftn token and derive the weight server-side from the badge
  * balance the API holds. What `getVoteWeight` returns here is a preview of
  * that answer, for the panel that tells someone what their vote is worth.
  */

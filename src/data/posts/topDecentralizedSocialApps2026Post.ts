@@ -28,9 +28,9 @@ Numbers were checked on 24 and 25 October 2026. User figures move fast, so treat
 
 DeHub is one of the early pioneers of decentralized streaming and social, first appearing on the scene in 2020. The audience is still small, but it is our top pick for the sheer development effort behind it, driven by a community using a first-of-its-kind prompt feature that lets anyone build the app in real time. It has almost every feature you will find on Twitter (X), Facebook, Twitch, Instagram and TikTok, and much more you will not, including hundreds of popular requested features that the likes of YouTube ignore, gathered from blogs all over the web.
 
-- **Users (4/10):** 5,932 accounts and 536 monthly active users. Small, but sticky: 58% of monthly users are active every week. Accounts grew 56% in the last 12 months. Live numbers: [dehub.io/stats](https://dehub.io/stats).
+- **Users (4/10):** 5,932 accounts and 536 monthly active users. Small, but sticky: 58% of monthly users are active every week. Accounts grew 56% in the last 12 months. Live numbers: [dehub.io/stats](https://riftn.com/stats).
 - **Features (10/10):** Video and shorts, Live streaming, Posts, stories and DMs, Build-the-app prompts, Paid DMs, Pay-per-view, Tradable subscription NFTs, Token-gated posts, Tips, Mint uploads on-chain, Up to 90% ad revenue share, Community moderation votes, Stores and listings, Games, AI creator studio, Open source.
-- **Dev activity (10/10):** 6,083 public commits in 90 days across the web and mobile apps, more than any other app on this list. Contributors: 4 code authors, plus every community member who has filed a request on [dehub.io/features](https://dehub.io/features). On DeHub, users shape the roadmap directly, so each one counts as a contributor.
+- **Dev activity (10/10):** 6,083 public commits in 90 days across the web and mobile apps, more than any other app on this list. Contributors: 4 code authors, plus every community member who has filed a request on [dehub.io/features](https://riftn.com/features). On DeHub, users shape the roadmap directly, so each one counts as a contributor.
 - **Future (10/10):** the only app here with top marks for features, dev activity and future at the same time.
 
 > Disclosure: DeHub publishes this index. Every number behind DeHub's score is public at dehub.io/stats and on GitHub.
@@ -745,7 +745,7 @@ The established apps here are real, working networks, many of them open source. 
 
 ## Sources
 
-- [DeHub live stats (dehub.io/stats)](https://dehub.io/stats)
+- [DeHub live stats (dehub.io/stats)](https://riftn.com/stats)
 - [Gigazine / Similarweb, Aug 2026](https://gigazine.net/gsc_news/en/20260812-blueskys-active-user/)
 - [Matrix.org Foundation annual report 2025](https://matrix.org/foundation/reports/2025%20Public%20Annual%20Report.pdf)
 - [Fediverse Observer / FediDB, Jun 2026](https://peachpie.theatl.social/c/fedilytics@piefed.zip/p/339792/growth-of-the-fediverse-20260621)
@@ -781,10 +781,10 @@ The established apps here are real, working networks, many of them open source. 
 
 ## Try the #1 pick
 
-Open [dehub.io](https://dehub.io), browse the feed, go live, or post a feature request on [dehub.io/features](https://dehub.io/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [dehub.io](https://riftn.com), browse the feed, go live, or post a feature request on [dehub.io/features](https://riftn.com/features) and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-decentralized-social-apps-2026-banner.png',
   bannerImageAlt: 'Top 50 decentralized social apps 2026, the DeSoc Index by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-25T20:00:00.000Z',
   tags: ['decentralized social media', 'top 50', 'web3 social', 'crypto social apps', 'SocialFi', 'Bluesky', 'Farcaster', 'Nostr', 'Lens Protocol', 'Mastodon', 'DeHub'],
   readingTime: 31,

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { AtSign, Handshake, UserMinus, Loader2, Award, Rss } from "lucide-react";
 import Copy from "@/components/ui/cut-icons/copy";
 import Wallet from "@/components/ui/cut-icons/wallet";
+import ImagesIcon from "@/components/ui/cut-icons/images";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Ban from "@/components/ui/cut-icons/blocked";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
@@ -34,6 +35,8 @@ interface ProfileOptionsDrawerProps {
   isBlocked?: boolean;
   isBlockLoading?: boolean;
   handleBlock?: () => void;
+  /** Own profile: opens the text-post background picker. */
+  onPostBackground?: () => void;
 }
 
 export function ProfileOptionsContent({
@@ -47,6 +50,7 @@ export function ProfileOptionsContent({
   isBlocked = false,
   isBlockLoading = false,
   handleBlock,
+  onPostBackground,
 }: ProfileOptionsDrawerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -55,7 +59,7 @@ export function ProfileOptionsContent({
   const [lendingBadge, setLendingBadge] = useState(false);
 
   const handleCopyProfileUrl = () => {
-    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.handle.replace('@', '')}`));
+    navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${profile.handle.replace('@', '')}`));
     trackShare('copy_link', { kind: 'profile' });
     toast.success(t('profileOptions.profileUrlCopied'));
     setShareSheetOpen(false);
@@ -138,6 +142,20 @@ export function ProfileOptionsContent({
             <Wallet className="w-4 h-4 text-white" />
           </div>
           <span className="text-white font-medium">{t('profileOptions.openWallet')}</span>
+        </button>
+      )}
+      {isViewingOwnProfile && onPostBackground && (
+        <button
+          onClick={() => {
+            setShareSheetOpen(false);
+            onPostBackground();
+          }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 active:scale-[0.98] transition-[background-color,transform] text-left"
+        >
+          <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <ImagesIcon className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-white font-medium">{t('postBg.menuRow', 'Post background')}</span>
         </button>
       )}
       {!isViewingOwnProfile && (

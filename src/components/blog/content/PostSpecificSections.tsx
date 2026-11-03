@@ -41,7 +41,7 @@ export const PostSpecificSections: React.FC<PostSpecificSectionsProps> = ({ cont
           </div>
 
           <div className="mb-6">
-            <p className="text-royal-blue/80 font-exo leading-relaxed mb-4">{_copy("copy.c4d28b37d9dd", { defaultValue: "In the rapidly evolving world of decentralized finance, transparency isn't just a buzzword—it's a fundamental requirement for building trust and fostering community growth. dhbscan.com represents our commitment to providing the DeHub community with complete visibility into token economics and network activity." })}</p>
+            <p className="text-royal-blue/80 font-exo leading-relaxed mb-4">{_copy("copy.c4d28b37d9dd", { defaultValue: "In the rapidly evolving world of decentralized finance, transparency isn't just a buzzword—it's a fundamental requirement for building trust and fostering community growth. dhbscan.com represents our commitment to providing the Riftn community with complete visibility into token economics and network activity." })}</p>
           </div>
 
           <h4 className="text-lg font-bold text-royal-blue mb-4 font-exo">{_copy("copy.db832651856c", { defaultValue: "Platform Highlights:" })}</h4>
@@ -53,7 +53,7 @@ export const PostSpecificSections: React.FC<PostSpecificSectionsProps> = ({ cont
           </ul>
 
           <div className="mb-6 p-4 bg-white/30 rounded-lg border-l-4 border-royal-blue">
-            <p className="text-royal-blue/90 font-exo italic text-sm">{_copy("copy.8bd791281158", { defaultValue: "This transparency initiative is part of our ongoing commitment to building trust and providing value to the DeHub community." })}</p>
+            <p className="text-royal-blue/90 font-exo italic text-sm">{_copy("copy.8bd791281158", { defaultValue: "This transparency initiative is part of our ongoing commitment to building trust and providing value to the Riftn community." })}</p>
           </div>
 
           <div className="pt-4 border-t border-sky-blue/30">

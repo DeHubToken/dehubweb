@@ -1,4 +1,4 @@
-// The one CORS allow-list for DeHub's edge functions.
+// The one CORS allow-list for Riftn's edge functions.
 //
 // Split out of _shared/auth.ts so a function can have the canonical headers
 // without also pulling in supabase-js and the api.dehub.io verifier — that

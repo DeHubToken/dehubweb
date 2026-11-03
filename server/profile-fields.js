@@ -3,7 +3,7 @@
  *
  * The account's label/value lines (dehub-stream-backend src/profile-fields)
  * that are https links get a <link rel="me"> in the page head. That is how
- * another site — a Mastodon profile, a personal page — proves this DeHub
+ * another site — a Mastodon profile, a personal page — proves this Riftn
  * profile links back to it: those checks fetch the HTML and run no script,
  * so the client-rendered profile alone would never pass them.
  */

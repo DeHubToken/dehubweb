@@ -283,7 +283,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
   };
 
   /**
-   * React live: a DeHub video fills the frame for viewers, with the creator's
+   * React live: a Riftn video fills the frame for viewers, with the creator's
    * camera in a bubble over it. The server checks the video may be reacted to
    * and marks the stream as reacting to it before anything goes on screen.
    */
@@ -291,7 +291,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
     const raw = (reactLink ?? '').trim();
     const tokenId = /^\d+$/.test(raw) ? Number(raw) : tokenIdFromPostUrl(raw);
     if (!tokenId) {
-      toast.error(t('studioDeck.sources.reactInvalid', 'Paste a link to a DeHub video.'));
+      toast.error(t('studioDeck.sources.reactInvalid', 'Paste a link to a Riftn video.'));
       return;
     }
     if (!streamTokenId) {
@@ -300,7 +300,7 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
     }
     setAdding(true);
     try {
-      await checkRemixSource(`https://dehub.io/app/post/${tokenId}`, 'react');
+      await checkRemixSource(`https://riftn.com/app/post/${tokenId}`, 'react');
       const post = await getNFTInfo(String(tokenId));
       // Marks the stream for the viewers' chip, the original's credit and its
       // tip share. A refusal (reactions off, gated) stops here; if the service
@@ -391,8 +391,8 @@ export function SourcesPanel({ sources, frameAspect, streamTokenId }: { sources:
               autoFocus
               value={reactLink}
               onChange={(e) => setReactLink(e.target.value)}
-              placeholder={t('studioDeck.sources.reactPlaceholder', 'Paste a DeHub video link')}
-              aria-label={t('studioDeck.sources.reactPlaceholder', 'Paste a DeHub video link')}
+              placeholder={t('studioDeck.sources.reactPlaceholder', 'Paste a Riftn video link')}
+              aria-label={t('studioDeck.sources.reactPlaceholder', 'Paste a Riftn video link')}
               className="min-w-0 flex-1 rounded-lg border border-white/15 bg-black/40 px-2.5 py-1.5 text-xs text-white placeholder:text-white/40"
             />
             <button type="submit" className={chip(true)}>{t('studioDeck.sources.reactAdd', 'Show')}</button>

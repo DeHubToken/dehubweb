@@ -37,6 +37,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Lock from "@/components/ui/cut-icons/privacy";
 import Pencil from "@/components/ui/cut-icons/edit";
+import BookOpen from "@/components/ui/cut-icons/docs";
 
 import Download from "@/components/ui/cut-icons/download";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -95,7 +96,7 @@ import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, editPost, type TokenVisibility } from '@/lib/api/dehub';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -103,6 +104,7 @@ import { HandoffImage } from './HandoffImage';
 import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
 import { warmPostPage } from '@/lib/preload-post-page';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { useRetainedPostPinned } from '@/lib/retained-post-surface';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
@@ -183,6 +185,7 @@ import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -712,7 +715,7 @@ function FeedDescription({
     return [title, description];
   }, [isTranslated, translatedText, title, description]);
   
-  // DeHub links become cards, so they come out of the text — and they come out
+  // Riftn links become cards, so they come out of the text — and they come out
   // BEFORE the truncation below, not after. Stripping afterwards meant a URL
   // could be cut in half by the 150-character clamp and then no longer match,
   // leaving half a link on screen next to its own card; it also spent a third
@@ -813,6 +816,9 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const isPhone = useIsMobile();
+  // The feed moves this very card onto the post page (RetainedPostSurface);
+  // while it sits there it is the post page's comic, not a feed teaser.
+  const dockedOnPostPage = useRetainedPostPinned(post.id);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -851,6 +857,11 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  // The author can switch a photo post between comic and carousel from the
+  // menu; this holds their pick until the feed refetches.
+  const [layoutOverride, setLayoutOverride] = useState<'comic' | null | undefined>(undefined);
+  const layout = layoutOverride !== undefined ? layoutOverride : post.layout;
+  const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const registerOptions = stage?.registerOptions;
   const openPostOptions = useCallback(() => {
@@ -981,8 +992,9 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     // (RetainedPostSurface) and the page shows it as it was, under the same
     // top bar, with Back in the pill.
     cacheImageForNavigation(queryClient, post);
+    noteProfileFeedOpen(profileFeed, post.id);
     navigate(`/app/post/${post.articleSlug || post.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer, profileFeed]);
 
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
@@ -1221,6 +1233,28 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   >
                     <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
+                  {/* Comic or carousel: same pages, only the layout changes. */}
+                  {(images.length > 1 || layout === 'comic') && postTokenId && (
+                    <button
+                      onClick={async () => {
+                        const next = layout === 'comic' ? null : 'comic';
+                        setShowOptionsDrawer(false);
+                        setLayoutOverride(next);
+                        try {
+                          await editPost(postTokenId, { layout: next ?? '' });
+                          queryClient.invalidateQueries({ queryKey: ['single-post', post.id] });
+                          toast.success(next ? _copy('comic.converted', { defaultValue: 'Now showing as a comic' }) : _copy('comic.unconverted', { defaultValue: 'Now showing as a carousel' }));
+                        } catch {
+                          setLayoutOverride(undefined);
+                          toast.error(_copy('comic.convertFailed', { defaultValue: "Couldn't change the layout" }));
+                        }
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <BookOpen className="w-5 h-5" />
+                      {layout === 'comic' ? _copy('comic.toCarousel', { defaultValue: 'Show as carousel' }) : _copy('comic.toComic', { defaultValue: 'Make it a comic' })}
+                    </button>
+                  )}
                   {/* Boost. Offered to every owner rather than only to badge holders:
                       the sheet explains what a badge buys and links to staking, which is
                       worth more than hiding the row from the people who have not staked. */}
@@ -1433,13 +1467,14 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             </div>
           </>
         ) : (() => {
-          if (post.layout === 'comic' && images.length > 0) {
-            const onPostPage = postPage || isImmersive;
+          if (layout === 'comic' && images.length > 0) {
+            const onPostPage = postPage || isImmersive || dockedOnPostPage;
             return (
               <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
                 <ComicDeckLazy
                   images={images}
                   captions={post.mediaCaptions}
+                  border={post.comicBorder}
                   descriptions={post.mediaDescriptions}
                   title={post.title}
                   aboveFold={aboveFold}

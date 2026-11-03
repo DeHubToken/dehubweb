@@ -31,10 +31,10 @@ export default function StoresPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.1cf3231bf634", { defaultValue: "Stores | DeHub" })}
-        description={_copy("copy.1b2b527551e9", { defaultValue: "Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens." })}
-        url="https://dehub.io/app/stores"
-        image="https://dehub.io/og/stores.jpg"
+        title={_copy("copy.1cf3231bf634", { defaultValue: "Stores | Riftn" })}
+        description={_copy("copy.1b2b527551e9", { defaultValue: "Browse and sell items on the Riftn peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens." })}
+        url="https://riftn.com/app/stores"
+        image="https://riftn.com/og/stores.jpg"
       />
       <PageIsland
         className="max-w-4xl mx-auto"

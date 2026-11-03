@@ -4,10 +4,10 @@
  * list of brand words: `twitter`, `linkedin`, `whatsapp`, `facebook`.
  *
  * Those words are in the user agent of the app's IN-APP BROWSER too, which
- * belongs to a person. So tapping a shared DeHub link inside X, LinkedIn or
+ * belongs to a person. So tapping a shared Riftn link inside X, LinkedIn or
  * WhatsApp landed on the crawler page — a static block of meta tags whose one
  * control is a link back to its own URL. That link was classified the same
- * way and answered with the same page, which is why "View on DeHub" appeared
+ * way and answered with the same page, which is why "View on Riftn" appeared
  * to do nothing. It applied to every shared post, profile, doc and referral
  * landing: exactly the traffic sharing exists to create.
  *
@@ -99,7 +99,7 @@ const CRAWLERS: Record<string, string> = {
   'node-fetch': 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)',
   PostmanRuntime: 'PostmanRuntime/7.36.0',
   // Link previewers and fetchers that name no bot. Each of these unfurled every
-  // DeHub link as the homepage card until it was listed.
+  // Riftn link as the homepage card until it was listed.
   'Bluesky Cardyb': 'Mozilla/5.0 (compatible; Bluesky Cardyb/1.1; +mailto:support@bsky.app)',
   'Mastodon < 4.2': 'http.rb/5.1.1 (Mastodon/4.1.0; +https://mastodon.social/)',
   // oEmbed discovery when a post link is pasted into the block editor.
@@ -148,12 +148,12 @@ describe('link-preview crawlers still get the prerendered HTML', () => {
 
 describe('appHref', () => {
   it('marks a bare URL', () => {
-    expect(appHref('https://dehub.io/r/ABC')).toBe('https://dehub.io/r/ABC?app=1');
+    expect(appHref('https://riftn.com/r/ABC')).toBe('https://riftn.com/r/ABC?app=1');
   });
 
   it('appends to a URL that already has a query', () => {
-    expect(appHref('https://dehub.io/app/post/7?ref=x')).toBe(
-      'https://dehub.io/app/post/7?ref=x&app=1',
+    expect(appHref('https://riftn.com/app/post/7?ref=x')).toBe(
+      'https://riftn.com/app/post/7?ref=x&app=1',
     );
   });
 
@@ -163,6 +163,6 @@ describe('appHref', () => {
    * whenever the two are in step.
    */
   it('leaves an already-marked URL alone', () => {
-    expect(appHref('https://dehub.io/r/ABC?app=1')).toBe('https://dehub.io/r/ABC?app=1');
+    expect(appHref('https://riftn.com/r/ABC?app=1')).toBe('https://riftn.com/r/ABC?app=1');
   });
 });

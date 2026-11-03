@@ -12,14 +12,14 @@ type Column = { id: PlatformId | 'dehub'; name: string; short: string };
 const SHORT: Partial<Record<PlatformId, string>> = { x: 'X', instagram: 'Insta', facebook: 'Facebook', farcaster: 'Farcaster', mastodon: 'Mastodon' };
 const ALL_TOTALS = featureTotals();
 type View = 'all' | 'social' | 'lacks';
-/** DeHub's built-in creator suite. Rivals ship these as separate apps or not at all, so Social only leaves them out. */
+/** Riftn's built-in creator suite. Rivals ship these as separate apps or not at all, so Social only leaves them out. */
 const EDITOR_CATEGORIES = new Set(['Video editing', 'Design and documents', 'Charts and data', 'Presentations and exports']);
 const inView = (feature: ComparisonFeature, view: View) =>
   view === 'all' || (view === 'social' ? !EDITOR_CATEGORIES.has(feature.category) : markFor(entryFor(feature, 'dehub')) !== 'yes');
 const percent = (part: number, whole: number) => `${whole ? Math.round((part / whole) * 100) : 0}%`;
-/** DeHub first, then everyone else from most features to fewest. */
+/** Riftn first, then everyone else from most features to fewest. */
 const COLUMNS: Column[] = [
-  { id: 'dehub', name: 'DeHub', short: 'DeHub' },
+  { id: 'dehub', name: 'Riftn', short: 'Riftn' },
   ...[...PLATFORMS].sort((a, b) => ALL_TOTALS[b.id].yes - ALL_TOTALS[a.id].yes).map(p => ({ id: p.id, name: p.name, short: SHORT[p.id] ?? p.name })),
 ];
 
@@ -39,7 +39,7 @@ function MarkGlyph({ mark }: { mark: Mark }) {
   return <span className="block h-1 w-1 rounded-full bg-current" aria-hidden="true" />;
 }
 
-/** Tints the DeHub column in the text colour, so it reads on dark and light themes alike. */
+/** Tints the Riftn column in the text colour, so it reads on dark and light themes alike. */
 const DEHUB_TINT = { backgroundImage: 'linear-gradient(color-mix(in srgb, currentColor 9%, transparent), color-mix(in srgb, currentColor 9%, transparent))' };
 const MARK_TONE: Record<Mark, string> = {
   yes: 'text-emerald-500',
@@ -94,31 +94,31 @@ export default function ComparePage() {
   const views: { id: View; label: string }[] = [
     { id: 'all', label: copy('viewAll', 'All features') },
     { id: 'social', label: copy('viewSocial', 'Social only') },
-    { id: 'lacks', label: copy('viewLacks', 'What DeHub lacks') },
+    { id: 'lacks', label: copy('viewLacks', 'What Riftn lacks') },
   ];
 
   return (
     <>
       <SEOHead
-        title={copy('seoTitle', 'DeHub vs YouTube, X, TikTok, Twitch and more: every feature compared')}
-        description={copy('seoDescription', `One chart of ${FEATURES.length} features across DeHub, YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. See who has the most.`)}
-        url="https://dehub.io/compare"
-        image="https://dehub.io/og/compare.jpg"
+        title={copy('seoTitle', 'Riftn vs YouTube, X, TikTok, Twitch and more: every feature compared')}
+        description={copy('seoDescription', `One chart of ${FEATURES.length} features across Riftn, YouTube, X, Kick, Twitch, Facebook, Instagram, TikTok, Rumble, Mastodon, Bluesky and Farcaster. See who has the most.`)}
+        url="https://riftn.com/compare"
+        image="https://riftn.com/og/compare.jpg"
       />
-      <PageIsland title={copy('title', 'Compare DeHub')} icon="glossary" back backFallback="/">
+      <PageIsland title={copy('title', 'Compare Riftn')} icon="glossary" back backFallback="/">
         <input type="search" aria-label={copy('search', 'Search features')} placeholder={copy('search', 'Search features')} value={query} onChange={event => setQuery(event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-white/30 focus:outline-none" />
       </PageIsland>
       <PageBody>
         <PageSection>
           <h2 className="text-2xl font-semibold tracking-tight text-white">{copy('matrixHeadline', 'Who has the most features?')}</h2>
           <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-            {copy('matrixIntroRival', '{{count}} features, gathered from every platform’s own help pages, not only from DeHub’s list. DeHub has {{dehub}} ({{dehubShare}}), and {{rival}} is next with {{rivalCount}} ({{rivalShare}}). DeHub still lacks {{lacking}} of them.', {
+            {copy('matrixIntroRival', '{{count}} features, gathered from every platform’s own help pages, not only from Riftn’s list. Riftn has {{dehub}} ({{dehubShare}}), and {{rival}} is next with {{rivalCount}} ({{rivalShare}}). Riftn still lacks {{lacking}} of them.', {
               count: FEATURES.length, dehub: ALL_TOTALS.dehub.yes, dehubShare: percent(ALL_TOTALS.dehub.yes, FEATURES.length),
               rival: runnerUp.name, rivalCount: ALL_TOTALS[runnerUp.id].yes, rivalShare: percent(ALL_TOTALS[runnerUp.id].yes, FEATURES.length), lacking,
             })}
           </p>
           <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-            {copy('matrixSocialNote', 'About {{editor}} rows are DeHub’s built-in editor, design, chart and presentation tools, which the others ship as separate apps or not at all. Leave them out and it is {{dehub}} of {{count}} for DeHub against {{rivalCount}} for {{rival}}.', {
+            {copy('matrixSocialNote', 'About {{editor}} rows are Riftn’s built-in editor, design, chart and presentation tools, which the others ship as separate apps or not at all. Leave them out and it is {{dehub}} of {{count}} for Riftn against {{rivalCount}} for {{rival}}.', {
               editor: FEATURES.length - socialCount, dehub: social.dehub.yes, count: socialCount, rival: socialRunnerUp.name, rivalCount: social[socialRunnerUp.id].yes,
             })}
           </p>
@@ -219,9 +219,9 @@ export default function ComparePage() {
           <details className="text-sm text-zinc-400">
             <summary className="cursor-pointer font-medium text-white">{copy('method', 'How to read this chart')}</summary>
             <div className="mt-3 space-y-3 leading-relaxed">
-              <p>{copy('rivalMethod', 'How the list was built: we went through each platform’s own help centre, creator, premium, ads and developer pages and listed what they offer, then ticked every platform, DeHub included, against the whole list. DeHub gets a cross wherever it lacks something. Rival rows link to the help page they came from.')}</p>
+              <p>{copy('rivalMethod', 'How the list was built: we went through each platform’s own help centre, creator, premium, ads and developer pages and listed what they offer, then ticked every platform, Riftn included, against the whole list. Riftn gets a cross wherever it lacks something. Rival rows link to the help page they came from.')}</p>
               <p>{copy('matrixMethod', 'A tick means the platform documents the feature, sometimes with conditions such as eligibility or region. A half circle means it is only available through a separate app or has been announced. A cross means their docs say it is not offered. A dot means we could not find it in their official docs, which is not proof it is missing. Tap any feature for the details and sources.')}</p>
-              <p>{copy('parity', 'DeHub web, Android and iOS capabilities differ. The iOS app does not offer crypto purchases or reward actions.')}</p>
+              <p>{copy('parity', 'Riftn web, Android and iOS capabilities differ. The iOS app does not offer crypto purchases or reward actions.')}</p>
               <p>{copy('peerReviewDate', 'Competitor documentation reviewed:')} {COMPETITOR_REVIEWED_ON}</p>
               <a href="/feedback" className="inline-block underline underline-offset-4">{copy('correction', 'Suggest a correction')}</a>
             </div>

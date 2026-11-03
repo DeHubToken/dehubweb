@@ -24,7 +24,7 @@ describe('Cut icons', () => {
     }
   });
 
-  it('uses vector DeHub artwork for monochrome coin controls', () => {
+  it('uses vector Riftn artwork for monochrome coin controls', () => {
     const { container } = render(<Coins color="white" />);
     expect(container.querySelector('image, img')).toBeNull();
     expect(container.querySelectorAll('path').length).toBeGreaterThan(1);

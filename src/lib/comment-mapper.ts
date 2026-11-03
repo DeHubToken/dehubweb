@@ -61,7 +61,7 @@ export interface Comment {
   badgeLock?: BadgeLock | null;
   /**
    * Who to look the badge up for when the row carries no balance — threads
-   * stored outside the DeHub API (the Requests board) have only a handle.
+   * stored outside the Riftn API (the Requests board) have only a handle.
    */
   badgeLookupId?: string;
   /**

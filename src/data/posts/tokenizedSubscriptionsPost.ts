@@ -75,7 +75,7 @@ DeHub runs on-chain tradable subscriptions as a first-class feature of the platf
 
 The ecosystem token is $DHB, which trades on DEXs and on Coinbase and underpins the on-chain economy across content, subscriptions and the play-to-earn arcade. If you want to participate, our [guide to buying the DHB token in the UK](/guides/how-to-buy-dhb-token-uk) walks through it step by step.
 
-Ready to see on-chain memberships in practice? Open [the DeHub web app](https://dehub.io/app) or grab the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and follow a creator whose content you would actually pay to own.
+Ready to see on-chain memberships in practice? Open [the DeHub web app](https://riftn.com/app) or grab the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and follow a creator whose content you would actually pay to own.
 
 ## A quick note on getting the model right
 
@@ -101,11 +101,11 @@ They can, but there is no guarantee. An early-supporter pass may appreciate if a
 
 ### Where can I use tokenised subscriptions?
 
-On DeHub, which runs on-chain tradable subscriptions and token-gated content as core features across its content, live streaming and creator tools. You can explore it at https://dehub.io.
+On DeHub, which runs on-chain tradable subscriptions and token-gated content as core features across its content, live streaming and creator tools. You can explore it at https://riftn.com.
 `,
   bannerImage: '/media/tokenized-subscriptions-explained-banner.png',
   bannerImageAlt: 'Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-02T13:15:00.000Z',
   updatedAt: '2026-05-02T13:15:00.000Z',
   tags: ['tokenised subscriptions', 'subscription nft', 'on-chain subscriptions', 'token-gated content', 'creator economy', 'web3 social', 'DeHub'],

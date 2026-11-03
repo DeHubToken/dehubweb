@@ -61,7 +61,7 @@ Judged this way, watch-to-earn and mature play-and-own tend to score best, becau
 
 Most x-to-earn apps do exactly one thing. DeHub is unusual in offering both **watch-to-earn** and **play-to-earn** inside a single platform, alongside creator tools, live streaming and on-chain tradable subscriptions. That matters for sustainability: the rewards are spread across multiple real revenue sources (advertising, tokenised uploads, subscriptions and games) rather than a single token faucet.
 
-It is built as [DeHub, the decentralised social network](/guides/what-is-dehub), so the "earn" sits on top of a product people use for its own sake, which is precisely the structure the healthiest x-to-earn models share. If you want to try it, the [DeHub app](https://dehub.io/app) is live on the web and on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+It is built as [DeHub, the decentralised social network](/guides/what-is-dehub), so the "earn" sits on top of a product people use for its own sake, which is precisely the structure the healthiest x-to-earn models share. If you want to try it, the [DeHub app](https://riftn.com/app) is live on the web and on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 
 ## Frequently asked questions
 
@@ -86,7 +86,7 @@ Move-to-earn can be worthwhile where the app treats fitness as the real product 
 Yes. DeHub offers watch-to-earn bounties and play-to-earn games (including Last Chad Standing) within one platform, funded from several real revenue streams. Spreading rewards across advertising, subscriptions and games is generally healthier than relying on a single token.`,
   bannerImage: '/media/watch-to-earn-vs-play-to-earn-vs-move-to-earn-banner.png',
   bannerImageAlt: 'Illustration comparing watch-to-earn, play-to-earn and move-to-earn as branches of x-to-earn',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-03-25T12:40:00.000Z',
   updatedAt: '2026-03-25T12:40:00.000Z',
   tags: ['x-to-earn', 'watch to earn', 'play to earn', 'move to earn', 'play-and-own', 'crypto rewards', 'DeHub'],

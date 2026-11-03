@@ -109,9 +109,9 @@ const DocsHome = () => {
     color: 'from-royal-blue to-sky-blue',
     external: true
   }, {
-    title: _copy("copy.2b9910127168", { defaultValue: "DeHub App" }),
+    title: _copy("copy.2b9910127168", { defaultValue: "Riftn App" }),
     icon: ExternalLink,
-    path: 'https://dehub.io',
+    path: 'https://riftn.com',
     color: 'from-middle-blue to-royal-blue',
     external: true
   }];

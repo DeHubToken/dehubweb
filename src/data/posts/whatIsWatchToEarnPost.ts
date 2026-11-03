@@ -87,7 +87,7 @@ That is the lens we apply across the market in our roundup of the [best watch-to
 
 ## Getting started with DeHub watch-to-earn
 
-If you want to try it rather than just read about it, the path is short. Create an account on the DeHub web app at **https://dehub.io/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on DeHub, watching to earn does not start with a purchase.
+If you want to try it rather than just read about it, the path is short. Create an account on the DeHub web app at **https://riftn.com/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on DeHub, watching to earn does not start with a purchase.
 
 ## Frequently asked questions
 
@@ -112,7 +112,7 @@ A funding source (advertising revenue or a creator's bounty) pays for the reward
 No. Watch-to-earn rewards attention, play-to-earn rewards gameplay and skill, and move-to-earn rewards physical activity. They belong to the same "X-to-earn" family but reward different behaviours. We map the whole family, with the trade-offs of each, in [watch-to-earn versus play-to-earn versus move-to-earn](/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn).`,
   bannerImage: '/media/what-is-watch-to-earn-banner.png',
   bannerImageAlt: 'DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-06-12T14:00:00.000Z',
   updatedAt: '2026-06-12T14:00:00.000Z',
   tags: ['watch-to-earn', 'watch2earn', 'earn crypto watching videos', 'DeHub', 'Web3 social', 'attention economy', 'DHB token'],

@@ -86,7 +86,7 @@ html:is([data-theme="war"], [data-theme="hacker"]) .dh-tip-rail { --tip-r: 4px; 
   opacity: 0.88;
 }
 
-/* The gold coin: a struck disc with DeHub's mark, used wherever a tip shows. */
+/* The gold coin: a struck disc with Riftn's mark, used wherever a tip shows. */
 .dh-gold-coin {
   position: relative; flex: none;
   display: inline-grid; place-items: center;

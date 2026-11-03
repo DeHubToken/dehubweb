@@ -1,6 +1,6 @@
 // Passkey-only sign-in — the passkey IS the account.
 //
-// Every other way into DeHub starts from an identity somebody else vouches
+// Every other way into Riftn starts from an identity somebody else vouches
 // for: Google, Apple, an email inbox, a phone number, a Telegram id. This one
 // starts from nothing but the authenticator in the user's hand. Signing up is
 // one fingerprint; signing in is one fingerprint; there is no address, no
@@ -52,7 +52,7 @@ import {
   checkRateLimit,
 } from "../_shared/auth.ts";
 
-const RP_NAME = "DeHub";
+const RP_NAME = "Riftn";
 const APEX = "dehub.io";
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;
 const PER_IP_LIMIT = { limit: 40, windowMs: 10 * 60 * 1000 };
@@ -119,6 +119,12 @@ function resolveRp(req: Request, body: Record<string, unknown>): Rp | null {
   const origin = `${url.protocol}//${url.host}`;
 
   if (host === APEX || host.endsWith(`.${APEX}`)) {
+    if (url.protocol !== "https:") return null;
+    return { rpId: APEX, origins: [origin] };
+  }
+  // riftn.com shares dehub.io's passkeys through WebAuthn related origins
+  // (dehub.io/.well-known/webauthn), so its ceremonies use the dehub.io RP.
+  if (host === "riftn.com" || host.endsWith(".riftn.com")) {
     if (url.protocol !== "https:") return null;
     return { rpId: APEX, origins: [origin] };
   }
@@ -307,7 +313,7 @@ serve(async (req) => {
         // says it must not be personal data. It is stored with the credential
         // and never shown.
         const userHandle = randomBase64Url(32);
-        const label = cleanLabel(body.deviceLabel) ?? "DeHub";
+        const label = cleanLabel(body.deviceLabel) ?? "Riftn";
 
         // Existing credentials on this account, so a second registration on
         // the same authenticator replaces rather than duplicates.
@@ -327,8 +333,8 @@ serve(async (req) => {
           rpName: RP_NAME,
           rpID: rp.rpId,
           userID: base64UrlToBytes(userHandle),
-          userName: `DeHub · ${label}`,
-          userDisplayName: "DeHub",
+          userName: `Riftn · ${label}`,
+          userDisplayName: "Riftn",
           attestationType: "none",
           // deno-lint-ignore no-explicit-any
           excludeCredentials: exclude as any,
@@ -480,7 +486,7 @@ serve(async (req) => {
           // wallet-unlock passkey made before passkey sign-in existed, or a
           // preview-host credential. The client turns this into "create an
           // account with this fingerprint instead".
-          return errorResponse("This passkey isn't linked to a DeHub account yet.", "UNKNOWN_CREDENTIAL");
+          return errorResponse("This passkey isn't linked to a Riftn account yet.", "UNKNOWN_CREDENTIAL");
         }
 
         let verification;

@@ -95,7 +95,7 @@ export type SiteStatsResponse = SiteStats | SiteStatsUnavailable;
  * body. Read the deployed endpoint instead when running locally; it answers
  * with `Access-Control-Allow-Origin: *` precisely so this works.
  */
-const STATS_ENDPOINT = import.meta.env.DEV ? 'https://dehub.io/api/stats' : '/api/stats';
+const STATS_ENDPOINT = import.meta.env.DEV ? 'https://riftn.com/api/stats' : '/api/stats';
 
 export const STATS_REFRESH_MS = 60_000;
 

@@ -1,7 +1,7 @@
 /**
  * Account marketplace
  * ===================
- * Client for `/api/account_market/*` on the DeHub API.
+ * Client for `/api/account_market/*` on the Riftn API.
  *
  * Where the username market trades the handle alone, this trades the whole
  * account — handle, posts, followers, tips history, badge entitlements. The

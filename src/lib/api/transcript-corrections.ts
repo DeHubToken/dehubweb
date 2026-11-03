@@ -2,7 +2,7 @@
  * Client for the `transcript-corrections` edge function.
  *
  * Reads are anonymous — a corrected caption is for everyone watching, signed
- * in or not. Writes carry the DeHub token and the function derives the author
+ * in or not. Writes carry the Riftn token and the function derives the author
  * from it. Every write is a POST, removal included: the shared CORS headers
  * allow GET, POST and OPTIONS only.
  */

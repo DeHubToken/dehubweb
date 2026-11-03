@@ -17,7 +17,7 @@ vi.mock('@/components/ui/drawer', () => {
   return { Drawer: Box, DrawerContent: Box, DrawerHeader: Box, DrawerTitle: Box, DrawerDescription: Box };
 });
 vi.mock('@/lib/page-bug-report', async importOriginal => ({ ...await importOriginal<object>(), captureBugScreenshot: mocks.capture, enrichPageBugContext: async (context: unknown) => context }));
-const context = { page: 'https://dehub.io/app/home', capturedAt: '2026-10-11T12:00:00Z', device: 'Android 16', viewport: '400 × 800', model: 'Pixel', userAgent: 'Browser' };
+const context = { page: 'https://riftn.com/app/home', capturedAt: '2026-10-11T12:00:00Z', device: 'Android 16', viewport: '400 × 800', model: 'Pixel', userAgent: 'Browser' };
 beforeEach(() => { mocks.submit.mockReset(); mocks.capture.mockReset().mockResolvedValue(null); mocks.login.mockReset(); mocks.authenticated = true; });
 afterEach(cleanup);
 

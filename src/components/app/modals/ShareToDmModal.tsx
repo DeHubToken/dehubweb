@@ -3,7 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Share To DM Modal
  * =================
- * Lets a user send anything in DeHub into a direct message — a post, a shop
+ * Lets a user send anything in Riftn into a direct message — a post, a shop
  * item, a store, a community, an event, a profile. Opened from that thing's
  * Share drawer ("Send in a message"). Lists existing conversations + user
  * search, and sends the link over the DM socket (emitSendMessage), which

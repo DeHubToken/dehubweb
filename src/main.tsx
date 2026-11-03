@@ -73,7 +73,7 @@ installTranslatorDomGuard();
 // only code guaranteed to ship everywhere, so repeat the guard here and
 // CREATE the meta if the host HTML lacks it.
 const dhHost = location.hostname;
-if (dhHost !== "dehub.io" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
+if (dhHost !== "riftn.com" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
   let dhRobots = document.querySelector('meta[name="robots"]');
   if (!dhRobots) {
     dhRobots = document.createElement("meta");

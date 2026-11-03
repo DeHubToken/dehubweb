@@ -4,7 +4,7 @@
  * Turns the @handles in a just-sent community chat message into notifications.
  *
  * Handles resolve to wallets here, in the client, because the account directory
- * lives in the DeHub API rather than in Supabase. The server is what decides who
+ * lives in the Riftn API rather than in Supabase. The server is what decides who
  * may actually be notified — it drops non-members, drops the sender, and expands
  * @here from the membership table itself — so a wallet invented here buys
  * nothing. See supabase/migrations/20260817140000_community_chat_mentions.sql.

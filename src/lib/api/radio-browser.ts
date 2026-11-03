@@ -273,7 +273,7 @@ async function fetchWithFallback<T>(endpoint: string): Promise<T> {
     try {
       const response = await fetch(`${getApiUrl()}${endpoint}`, {
         headers: {
-          'User-Agent': 'DeHub/1.0',
+          'User-Agent': 'Riftn/1.0',
         },
       });
       

@@ -43,12 +43,12 @@ describe('urls', () => {
   it('knows the embed page and every post URL shape', () => {
     expect(embedRoute('/app/post/12/embed')).toBe('12');
     expect(embedRoute('/app/post/12')).toBeNull();
-    expect(postIdFromUrl('https://dehub.io/app/post/12')).toBe('12');
-    expect(postIdFromUrl('https://dehub.io/app/post/12?ref=abc')).toBe('12');
+    expect(postIdFromUrl('https://riftn.com/app/post/12')).toBe('12');
+    expect(postIdFromUrl('https://riftn.com/app/post/12?ref=abc')).toBe('12');
     expect(postIdFromUrl('https://www.dehub.io/posts/12')).toBe('12');
     expect(postIdFromUrl('https://staging.dehub.io/post/12')).toBe('12');
     expect(postIdFromUrl('https://evil.example/app/post/12')).toBeNull();
-    expect(postIdFromUrl('https://dehub.io/maldoteth')).toBeNull();
+    expect(postIdFromUrl('https://riftn.com/maldoteth')).toBeNull();
     expect(postIdFromUrl('not a url')).toBeNull();
   });
 
@@ -63,8 +63,8 @@ describe('urls', () => {
   });
 
   it('writes the embed code sites paste', () => {
-    expect(embedSnippet('https://dehub.io', 12, { width: 550, height: 480 })).toBe(
-      '<iframe src="https://dehub.io/app/post/12/embed" class="dehub-embed" style="max-width: 100%; border: 0" width="550" height="480" allowfullscreen="allowfullscreen" allow="fullscreen; picture-in-picture" loading="lazy"></iframe><script src="https://dehub.io/embed.js" async="async"></script>',
+    expect(embedSnippet('https://riftn.com', 12, { width: 550, height: 480 })).toBe(
+      '<iframe src="https://riftn.com/app/post/12/embed" class="dehub-embed" style="max-width: 100%; border: 0" width="550" height="480" allowfullscreen="allowfullscreen" allow="fullscreen; picture-in-picture" loading="lazy"></iframe><script src="https://riftn.com/embed.js" async="async"></script>',
     );
   });
 });
@@ -72,7 +72,7 @@ describe('urls', () => {
 describe('embed page', () => {
   it('renders a public post, framable from anywhere', async () => {
     stubApi({ 12: videoPost });
-    const res = await get('https://dehub.io/app/post/12/embed');
+    const res = await get('https://riftn.com/app/post/12/embed');
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Security-Policy')).toBe('frame-ancestors *');
     expect(res.headers.get('X-Frame-Options')).toBeNull();
@@ -85,26 +85,26 @@ describe('embed page', () => {
     expect(html).toContain('<p>First line &lt;script&gt;x&lt;/script&gt;</p><p>Second paragraph</p>');
     expect(html).not.toContain('<script>x</script>');
     expect(html).toContain('<time datetime="2026-10-23T17:17:10.112Z">2026-10-23</time>');
-    expect(html).toContain('href="https://dehub.io/app/post/12"');
+    expect(html).toContain('href="https://riftn.com/app/post/12"');
   });
 
   it('folds a content-warned post behind its warning, and keeps it out of the title', async () => {
     stubApi({ 14: { ...videoPost, tokenId: 14, spoilerText: 'Flashing lights' } });
-    const html = await (await get('https://dehub.io/app/post/14/embed')).text();
+    const html = await (await get('https://riftn.com/app/post/14/embed')).text();
     expect(html).toContain('<details class="cw"><summary>Flashing lights</summary>');
-    expect(html).toContain('<title>Flashing lights — Akçil on DeHub</title>');
+    expect(html).toContain('<title>Flashing lights — Akçil on Riftn</title>');
   });
 
   it('shows nothing of a post that is not public, whatever else it says', async () => {
     stubApi({ 15: { ...videoPost, tokenId: 15, visibility: 'followers' } });
-    const html = await (await get('https://dehub.io/app/post/15/embed')).text();
+    const html = await (await get('https://riftn.com/app/post/15/embed')).text();
     expect(html).toContain('class="locked"');
     expect(html).not.toContain('First line');
   });
 
   it('shows a gated post as its author and a link, nothing more', async () => {
     stubApi({ 13: gated });
-    const html = await (await get('https://dehub.io/app/post/13/embed')).text();
+    const html = await (await get('https://riftn.com/app/post/13/embed')).text();
     expect(html).toContain('class="locked"');
     expect(html).not.toContain('videos/12.mp4');
     expect(html).not.toContain('First line');
@@ -112,47 +112,47 @@ describe('embed page', () => {
 
   it('404s a post that does not exist', async () => {
     stubApi({});
-    expect((await get('https://dehub.io/app/post/99/embed')).status).toBe(404);
+    expect((await get('https://riftn.com/app/post/99/embed')).status).toBe(404);
   });
 });
 
 describe('oEmbed', () => {
   it('answers for a public post', async () => {
     stubApi({ 12: videoPost });
-    const res = await get(`https://dehub.io/api/oembed?url=${encodeURIComponent('https://dehub.io/app/post/12')}&format=json&maxwidth=400`);
+    const res = await get(`https://riftn.com/api/oembed?url=${encodeURIComponent('https://riftn.com/app/post/12')}&format=json&maxwidth=400`);
     expect(res.status).toBe(200);
     expect(res.headers.get('Access-Control-Allow-Origin')).toBe('*');
     const body = await res.json();
     expect(body).toMatchObject({
       version: '1.0',
       type: 'video',
-      provider_name: 'DeHub',
-      provider_url: 'https://dehub.io',
+      provider_name: 'Riftn',
+      provider_url: 'https://riftn.com',
       title: 'Skate session',
       author_name: 'Akçil',
-      author_url: 'https://dehub.io/akcil',
+      author_url: 'https://riftn.com/akcil',
       width: 400,
     });
-    expect(body.html).toContain('src="https://dehub.io/app/post/12/embed"');
+    expect(body.html).toContain('src="https://riftn.com/app/post/12/embed"');
     expect(body.html).toContain('width="400"');
   });
 
   it('follows the spec for everything else', async () => {
     stubApi({ 12: videoPost, 13: gated });
-    const ask = (url: string, extra = '') => get(`https://dehub.io/api/oembed?url=${encodeURIComponent(url)}${extra}`);
-    expect((await ask('https://dehub.io/app/post/12', '&format=xml')).status).toBe(501);
+    const ask = (url: string, extra = '') => get(`https://riftn.com/api/oembed?url=${encodeURIComponent(url)}${extra}`);
+    expect((await ask('https://riftn.com/app/post/12', '&format=xml')).status).toBe(501);
     expect((await ask('https://example.com/app/post/12')).status).toBe(404);
-    expect((await ask('https://dehub.io/app/post/99')).status).toBe(404);
-    expect((await ask('https://dehub.io/app/post/13')).status).toBe(401);
+    expect((await ask('https://riftn.com/app/post/99')).status).toBe(404);
+    expect((await ask('https://riftn.com/app/post/13')).status).toBe(401);
   });
 });
 
 describe('discovery', () => {
   it('is advertised for a public post only', () => {
-    expect(oembedLinkTag('https://dehub.io', videoPost)).toBe(
-      '<link rel="alternate" type="application/json+oembed" href="https://dehub.io/api/oembed?url=https%3A%2F%2Fdehub.io%2Fapp%2Fpost%2F12&amp;format=json">',
+    expect(oembedLinkTag('https://riftn.com', videoPost)).toBe(
+      '<link rel="alternate" type="application/json+oembed" href="https://riftn.com/api/oembed?url=https%3A%2F%2Friftn.com%2Fapp%2Fpost%2F12&amp;format=json">',
     );
-    expect(oembedLinkTag('https://dehub.io', gated)).toBe('');
+    expect(oembedLinkTag('https://riftn.com', gated)).toBe('');
     expect(WORKER).toContain('const oembedTag = oembedLinkTag(APP_URL, record);');
   });
 });
@@ -160,7 +160,7 @@ describe('discovery', () => {
 describe('the client copy of the embed code', () => {
   it('matches what the worker would write', async () => {
     const { postEmbedCode } = await import('@/lib/post-embed-code');
-    expect(postEmbedCode(12)).toBe(embedSnippet('https://dehub.io', 12, { width: 550, height: 480 }));
-    expect(postEmbedCode('6888')).toBe(embedSnippet('https://dehub.io', 6888, { width: 550, height: 480 }));
+    expect(postEmbedCode(12)).toBe(embedSnippet('https://riftn.com', 12, { width: 550, height: 480 }));
+    expect(postEmbedCode('6888')).toBe(embedSnippet('https://riftn.com', 6888, { width: 550, height: 480 }));
   });
 });

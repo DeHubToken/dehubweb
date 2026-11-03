@@ -1,23 +1,23 @@
 /**
  * anon-views
  * ==========
- * Records and serves post views for visitors with no DeHub session.
+ * Records and serves post views for visitors with no Riftn session.
  *
  * Why this exists: api.dehub.io requires a valid JWT on /api/record-view and
  * /api/view/batch (no header → 400 "Invalid signature", bad token → 401), so a
  * signed-out visitor scrolling the feed records nothing. Signed-in views still
- * go to the DeHub API; only signed-out ones land here, so the two halves never
+ * go to the Riftn API; only signed-out ones land here, so the two halves never
  * double-count the same person.
  *
  * Dedup happens here, not there. A signed-out viewer is identified by a salted
  * SHA-256 of the client-supplied device id plus the request IP — the device id
  * alone is clearable, the IP alone is shared by everyone behind a NAT, and the
  * salt makes the hash useless to anyone who obtains the table. The raw IP is
- * never stored. That hash cannot go into the DeHub API's own dedup, which is a
+ * never stored. That hash cannot go into the Riftn API's own dedup, which is a
  * Redis set of wallet addresses, which is why this half is deduped separately.
  *
  * Dedup sorts the views, it no longer discards any. Everything is FORWARDED to
- * the DeHub API, which folds it into the post's `totalViews` — the number the
+ * the Riftn API, which folds it into the post's `totalViews` — the number the
  * apps render: first-of-the-day views as `tokenIds`, the rest as
  * `repeatTokenIds`, which count on every post once per viewer per 30 minutes —
  * the viewer hash rides along as `viewerKey` so the API can hold that
@@ -46,14 +46,14 @@ const corsHeaders = {
 // rather than rejecting outright so a genuine oversized batch still counts.
 const MAX_TOKENS_PER_REQUEST = 50;
 
-// Token ids are numeric strings in the DeHub API. Rejecting anything else keeps
+// Token ids are numeric strings in the Riftn API. Rejecting anything else keeps
 // junk out of the totals table, which is keyed by token_id.
 const TOKEN_ID_PATTERN = /^\d{1,20}$/;
 
 const DEHUB_API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io')
   .replace(/\/api\/?$/, '').replace(/\/$/, '');
 
-// The DeHub API refuses to count a view it cannot attribute, so the forward is
+// The Riftn API refuses to count a view it cannot attribute, so the forward is
 // abandoned rather than retried if it takes longer than this. The view is
 // already recorded here either way.
 const FORWARD_TIMEOUT_MS = 5000;
@@ -115,7 +115,7 @@ async function hashViewer(deviceId: string, ip: string): Promise<string> {
 }
 
 /**
- * Hand the newly-recorded views to the DeHub API, where they land in the post's
+ * Hand the newly-recorded views to the Riftn API, where they land in the post's
  * `totalViews` — the count the apps display.
  *
  * A successful ledger write is not a successful public view until this forward

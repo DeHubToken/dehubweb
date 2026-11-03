@@ -1,7 +1,7 @@
 /**
  * Local cache sweep
  * =================
- * Two of DeHub's localStorage caches write one key per *thing* and never delete
+ * Two of Riftn's localStorage caches write one key per *thing* and never delete
  * any of them:
  *
  *   dehub-profile-cache:<id>  — a full profile blob per person whose page you

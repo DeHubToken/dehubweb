@@ -49,7 +49,7 @@ export function RadioStage({ station, onNext }: { station: RadioStation; onNext?
 
   const share = async () => {
     const url = `${window.location.origin}/music`;
-    const title = _copy('music.shareStationTitle', { defaultValue: '{{name}} on DeHub Radio', name: station.name });
+    const title = _copy('music.shareStationTitle', { defaultValue: '{{name}} on Riftn Radio', name: station.name });
     try {
       if (navigator.share) {
         await navigator.share({ title, url });

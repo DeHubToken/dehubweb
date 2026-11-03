@@ -2,7 +2,7 @@ import { encodeFunctionData, encodePacked, getContractAddress, keccak256, parseA
 
 // Loaded on demand by smart-account-address.ts; see the note there.
 
-// DeHub's Safe 1.4.1 / EntryPoint 0.7 defaults, shared with web and mobile.
+// Riftn's Safe 1.4.1 / EntryPoint 0.7 defaults, shared with web and mobile.
 // Pin the factory's immutable proxyCreationCode so profile selection needs no RPC.
 const FACTORY = '0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67';
 const SINGLETON = '0x41675C099F32341bf84BFc5382aF534df5C7461a';

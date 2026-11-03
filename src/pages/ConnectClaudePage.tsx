@@ -17,43 +17,43 @@ const APP_URL =
   "https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f";
 // Canonical + OG must live on dehub.io — pointing them at a preview mirror
 // told Google the staging host was the real page.
-const PAGE_URL = "https://dehub.io/connect/claude";
-const OG_IMAGE = "https://dehub.io" + ogImage;
+const PAGE_URL = "https://riftn.com/connect/claude";
+const OG_IMAGE = "https://riftn.com" + ogImage;
 
 const steps = [
   {
-    get title() { return _translateCopy("copy.d2afb2d04c64", { defaultValue: "Open the DeHub connector in Claude" }); },
-    get body() { return _translateCopy("copy.5493c4b8b7ef", { defaultValue: "Click the button below. Claude will open directly on the DeHub connector inside Settings → Connectors." }); },
+    get title() { return _translateCopy("copy.d2afb2d04c64", { defaultValue: "Open the Riftn connector in Claude" }); },
+    get body() { return _translateCopy("copy.5493c4b8b7ef", { defaultValue: "Click the button below. Claude will open directly on the Riftn connector inside Settings → Connectors." }); },
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    get body() { return _translateCopy("copy.0c21500d882f", { defaultValue: "Turn DeHub on and approve access. Claude will now be able to browse public DeHub posts, look up profiles and read trending topics." }); },
+    get body() { return _translateCopy("copy.0c21500d882f", { defaultValue: "Turn Riftn on and approve access. Claude will now be able to browse public Riftn posts, look up profiles and read trending topics." }); },
   },
   {
     get title() { return _translateCopy("copy.2f5962c2d543", { defaultValue: "Start a chat and prompt it" }); },
-    get body() { return _translateCopy("copy.2b235e67df53", { defaultValue: "Open a new conversation and mention DeHub in your message — Claude will call the connector automatically whenever it needs live DeHub context." }); },
+    get body() { return _translateCopy("copy.2b235e67df53", { defaultValue: "Open a new conversation and mention Riftn in your message — Claude will call the connector automatically whenever it needs live Riftn context." }); },
   },
 ];
 
 const examples = () => [
-  _translateCopy("copy.3c8701908f73", { defaultValue: "Give me a briefing of the top posts on DeHub in the last 24 hours." }),
-  _translateCopy("copy.9b7200c0c085", { defaultValue: "Search DeHub for posts about Ethereum staking and summarise the sentiment." }),
-  _translateCopy("copy.b17c259bbce1", { defaultValue: "Pull the profile @satoshi from DeHub and describe their recent activity." }),
-  _translateCopy("copy.dc069b0cf511", { defaultValue: "Draft three reply options to the top DeHub post about AI, in a concise tone." }),
+  _translateCopy("copy.3c8701908f73", { defaultValue: "Give me a briefing of the top posts on Riftn in the last 24 hours." }),
+  _translateCopy("copy.9b7200c0c085", { defaultValue: "Search Riftn for posts about Ethereum staking and summarise the sentiment." }),
+  _translateCopy("copy.b17c259bbce1", { defaultValue: "Pull the profile @satoshi from Riftn and describe their recent activity." }),
+  _translateCopy("copy.dc069b0cf511", { defaultValue: "Draft three reply options to the top Riftn post about AI, in a concise tone." }),
 ];
 
 const faqs: { q: string; a: string; aKey?: string }[] = [
   {
-    get q() { return _translateCopy("copy.6ece694556c3", { defaultValue: "Is the DeHub Claude connector free?" }); },
+    get q() { return _translateCopy("copy.6ece694556c3", { defaultValue: "Is the Riftn Claude connector free?" }); },
     get a() { return _translateCopy("copy.ad2811b8e577", { defaultValue: "Yes. The connector itself is free to add. You need a Claude account on a plan that supports custom connectors (Claude Pro, Team or Enterprise)." }); },
   },
   {
-    get q() { return _translateCopy("copy.bf754664571e", { defaultValue: "What can Claude do with DeHub?" }); },
-    get a() { return _translateCopy("copy.b7e6642632f8", { defaultValue: "Through MCP, Claude can browse public DeHub posts, search topics and look up creator profiles. It does not post on your behalf." }); },
+    get q() { return _translateCopy("copy.bf754664571e", { defaultValue: "What can Claude do with Riftn?" }); },
+    get a() { return _translateCopy("copy.b7e6642632f8", { defaultValue: "Through MCP, Claude can browse public Riftn posts, search topics and look up creator profiles. It does not post on your behalf." }); },
   },
   {
-    get q() { return _translateCopy("copy.3d82c0d85307", { defaultValue: "Do I need a DeHub account to use it?" }); },
-    get a() { return _translateCopy("copy.fbc5cbf604e7", { defaultValue: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold tokens." }); },
+    get q() { return _translateCopy("copy.3d82c0d85307", { defaultValue: "Do I need a Riftn account to use it?" }); },
+    get a() { return _translateCopy("copy.fbc5cbf604e7", { defaultValue: "No. Reading public content works without an account. You only need a Riftn account to post, tip or hold tokens." }); },
     aKey: "connect.claudeFaqAccount",
   },
   {
@@ -70,9 +70,9 @@ export default function ConnectClaudePage() {
     "@graph": [
       {
         "@type": "HowTo",
-        name: _copy("copy.a394cce9c396", { defaultValue: "How to use DeHub inside Claude" }),
+        name: _copy("copy.a394cce9c396", { defaultValue: "How to use Riftn inside Claude" }),
         description:
-          _copy("copy.66d89fc56a4e", { defaultValue: "Add the DeHub connector to Claude and let it browse posts, profiles and trends from the DeHub decentralized social network." }),
+          _copy("copy.66d89fc56a4e", { defaultValue: "Add the Riftn connector to Claude and let it browse posts, profiles and trends from the Riftn decentralized social network." }),
         image: OG_IMAGE,
         totalTime: "PT1M",
         step: steps.map((s, i) => ({
@@ -96,8 +96,8 @@ export default function ConnectClaudePage() {
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
       <SEOHead
-        title={_copy("copy.31aa434fa5e5", { defaultValue: "DeHub for Claude — Use DeHub inside Claude (MCP Connector)" })}
-        description={_copy("copy.3a478f078658", { defaultValue: "Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude." })}
+        title={_copy("copy.31aa434fa5e5", { defaultValue: "Riftn for Claude — Use Riftn inside Claude (MCP Connector)" })}
+        description={_copy("copy.3a478f078658", { defaultValue: "Add Riftn to Claude in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside Claude." })}
         url={PAGE_URL}
         image={OG_IMAGE}
         type="article"
@@ -109,7 +109,7 @@ export default function ConnectClaudePage() {
           to="/app"
           className="mb-8 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"
         >
-          <ArrowLeft className="h-4 w-4" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to DeHub" })}</Link>
+          <ArrowLeft className="h-4 w-4" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to Riftn" })}</Link>
 
         <div
           className="mb-8 aspect-[1200/630] w-full overflow-hidden rounded-2xl border border-white/10"
@@ -122,14 +122,14 @@ export default function ConnectClaudePage() {
         />
 
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-1.5 backdrop-blur-[24px]">
-          <img src={dehubIcon} alt="DeHub" className="h-4 w-4 object-contain" />
+          <img src={dehubIcon} alt="Riftn" className="h-4 w-4 object-contain" />
           <span className="text-white/40">×</span>
           <img src={anthropicLogo} alt="Claude" className="h-4 w-4 object-contain" />
           <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">{_copy("copy.5b4569693eb1", { defaultValue: "MCP LIVE" })}</span>
         </div>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.88be8e79a171", { defaultValue: "Use DeHub inside Claude" })}</h1>
-        <p className="mt-3 text-base text-white/60 md:text-lg">{_copy("copy.2b005fde7045", { defaultValue: "DeHub is available as a native Claude connector. Turn it on once and Claude can browse DeHub posts, creators and trends live — right from your chat." })}</p>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.88be8e79a171", { defaultValue: "Use Riftn inside Claude" })}</h1>
+        <p className="mt-3 text-base text-white/60 md:text-lg">{_copy("copy.2b005fde7045", { defaultValue: "Riftn is available as a native Claude connector. Turn it on once and Claude can browse Riftn posts, creators and trends live — right from your chat." })}</p>
 
         <a
           href={APP_URL}
@@ -137,7 +137,7 @@ export default function ConnectClaudePage() {
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5"
         >
-          <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open DeHub in Claude" })}<ArrowUpRight className="h-4 w-4" />
+          <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open Riftn in Claude" })}<ArrowUpRight className="h-4 w-4" />
         </a>
 
 
@@ -200,7 +200,7 @@ export default function ConnectClaudePage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
-            <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open DeHub in Claude" })}<ArrowUpRight className="h-4 w-4" />
+            <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open Riftn in Claude" })}<ArrowUpRight className="h-4 w-4" />
           </a>
           <Link
             to="/connect/chatgpt"

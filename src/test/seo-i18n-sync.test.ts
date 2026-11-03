@@ -35,7 +35,7 @@ describe('seo-i18n.json', () => {
   }, 30000);
 
   it('covers every public sitemap route in every priority language', () => {
-    const routes = [...sitemap.matchAll(/<loc>https:\/\/dehub.io([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
+    const routes = [...sitemap.matchAll(/<loc>https:\/\/riftn\.com([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
     for (const route of routes) {
       const codes = Object.keys(committed[route]);
       expect(codes, route).toEqual(expect.arrayContaining(['en', ...SEO_I18N_LOCALES]));
@@ -87,7 +87,7 @@ describe('seo-i18n.json', () => {
   it('keeps the noindex hubs out of the sitemap', () => {
     for (const route of ['/events', '/launchpad']) {
       expect(Object.keys(committed[route]).sort()).toEqual(['ar', 'en', 'es', 'fr', 'nl', 'tr']);
-      expect(sitemap).not.toContain(`<loc>https://dehub.io${route}</loc>`);
+      expect(sitemap).not.toContain(`<loc>https://riftn.com${route}</loc>`);
     }
   });
 });
@@ -102,7 +102,7 @@ describe('sitemap-static.xml alternates', () => {
       if (route === '/events' || route === '/launchpad') continue;
       const served = Object.keys(langs).filter((l) => l !== 'en');
       if (!served.length) continue;
-      const bare = `https://dehub.io${route}`;
+      const bare = `https://riftn.com${route}`;
       for (const loc of [bare, ...served.map((l) => `${bare}?hl=${l}`)]) {
         const block = sitemap.match(new RegExp(`<url>\\s*<loc>${loc.replace(/[.?]/g, '\\$&')}</loc>[\\s\\S]*?</url>`));
         expect(block, loc).not.toBeNull();

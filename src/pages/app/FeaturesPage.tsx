@@ -980,8 +980,8 @@ export default function FeaturesPage() {
 
   return (
     <div data-requests-page className="min-h-screen">
-      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
+      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — Riftn" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features." })} url="https://riftn.com/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Riftn Feature Requests & Bug Reporting', url: 'https://riftn.com/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
+      <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "Riftn Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
           mobile; `data-nav-hide-desktop` opts this one into the same thing on
           desktop too. Because this header is a full bento — title, search,
@@ -995,7 +995,7 @@ export default function FeaturesPage() {
             <BrandIcon src={featuresLightbulb} alt={_copy("copy.5697d03daef4", { defaultValue: "Features" })} className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('features.promptPageTitle', 'Requests')}</h1>
-              <p className="text-zinc-500 text-sm">{t('features.promptSubtitle', 'Build DeHub with a prompt')}</p>
+              <p className="text-zinc-500 text-sm">{t('features.promptSubtitle', 'Build Riftn with a prompt')}</p>
             </div>
           </div>
           <Button

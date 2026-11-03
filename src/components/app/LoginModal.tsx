@@ -320,11 +320,27 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       i18nKey="copy.5d486dd87845"
       defaults="By continuing, you agree to our <terms>Terms</terms> and <privacy>Privacy Policy</privacy>"
       components={{
-        terms: <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
-        privacy: <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+        terms: <a href="https://riftn.com/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
+        privacy: <a href="https://riftn.com/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors" />,
       }}
     />
   );
+
+  // riftn.com took over from dehub.io. Anyone whose login still sits on
+  // dehub.io (opened riftn.com directly, skipping the forward) can carry it
+  // across: dehub.io's hand-off page reads it there and lands back here.
+  const onRiftn = typeof window !== 'undefined' && /(?:^|\.)riftn\.com$/.test(window.location.hostname);
+  const bringLoginOver = onRiftn && step === 'main' ? (
+    <p className="text-xs text-white/40 text-center mt-2">
+      <Trans
+        i18nKey="loginModal.bringLoginOver"
+        defaults="Used Riftn on dehub.io? <bring>Bring your login over</bring>"
+        components={{
+          bring: <a href={`https://dehub.io/_handoff-out?next=${encodeURIComponent(`${window.location.pathname}${window.location.search}`)}`} className="underline hover:text-white/60 transition-colors" />,
+        }}
+      />
+    </p>
+  ) : null;
 
   const sheetBody = stackLayout ? (
     <>
@@ -353,6 +369,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         ? "shrink-0 px-6 pt-2 pb-[calc(1rem+env(safe-area-inset-bottom))]"
         : "shrink-0 px-6 pt-6 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"}>
         <p className="text-xs text-white/40 text-center">{(step === 'main' || step === 'email' || step === 'email-waiting') && <>{t('loginStack.codeNote', 'We email you a code, no password needed.')} </>}{termsNotice}</p>
+        {bringLoginOver}
       </div>
     </>
   ) : (
@@ -369,7 +386,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
               <ChevronRight className="w-5 h-5 rotate-180" />
             </button>
           )}
-          <img src={dehubLogo} alt="DeHub" className="h-8" />
+          <img src={dehubLogo} alt="Riftn" className="h-8" />
         </div>
         {usesDesktopUnlockPanel ? (
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">
@@ -396,6 +413,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <p className="text-xs text-white/40 text-center">{termsNotice}</p>
+        {bringLoginOver}
       </div>
     </>
   );

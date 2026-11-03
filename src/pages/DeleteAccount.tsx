@@ -28,7 +28,7 @@ export default function DeleteAccount() {
     <main className="fixed inset-0 overflow-y-auto bg-background text-foreground">
       {/* A utility page: the worker already answers it noindex for every UA;
           without its own head the tab kept the previous route's title. */}
-      <SEOHead title={`${t('accountDeletion.title')} — DeHub`} description={t('accountDeletion.warning')} noindex />
+      <SEOHead title={`${t('accountDeletion.title')} — Riftn`} description={t('accountDeletion.warning')} noindex />
       <div className="mx-auto max-w-xl px-6 py-12 space-y-6">
         <Link to="/app/settings" className="text-sm underline">{t('accountDeletion.back')}</Link>
         <h1 className="text-2xl font-semibold">{t(accepted ? 'accountDeletion.accepted' : 'accountDeletion.title')}</h1>

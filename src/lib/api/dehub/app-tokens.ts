@@ -1,7 +1,7 @@
 import { apiCall } from './core';
 
 /**
- * App tokens: DHB held as a balance on DeHub instead of on a chain. Everyone
+ * App tokens: DHB held as a balance on Riftn instead of on a chain. Everyone
  * opened with the DHB they held and staked at launch; after that only in-app
  * moves change it. Sending one never touches a chain.
  */

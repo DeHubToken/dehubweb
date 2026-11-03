@@ -22,11 +22,11 @@ The token contract has been live for nearly a month. Anyone has been able to lis
 
 We expect to announce official exchange listings soon. Our current target is the end of October or early November 2026. We have also been in contact with CoinMarketCap and CoinGecko about continuing price tracking after those dates.
 
-[Explore token purchase options](https://dehub.io/buy) · [Read the original announcement on X](https://x.com/dehub_official/status/2101031547285746132)
+[Explore token purchase options](https://riftn.com/buy) · [Read the original announcement on X](https://x.com/dehub_official/status/2101031547285746132)
   `,
   bannerImage: '/media/dehub-token-exchange-listings-2026.jpg',
   bannerImageAlt: 'DeHub listing soon announcement banner',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-09-18T19:32:10.000Z',
   tags: ['DHB', 'Token', 'Exchange Listings', 'AI Credits', 'Staking'],
   readingTime: 3,

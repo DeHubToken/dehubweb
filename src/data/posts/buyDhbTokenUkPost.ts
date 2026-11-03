@@ -80,13 +80,13 @@ Connect your wallet to a decentralised exchange on Base, paste the **official DH
 
 ### Step 6 — Put it to use
 
-Head to [the DeHub app](https://dehub.io/app) or grab it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and connect the same wallet. From there your DHB can unlock content, back creators, join watch-to-earn bounties, or play the arcade, which is the whole reason the token exists.
+Head to [the DeHub app](https://riftn.com/app) or grab it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and connect the same wallet. From there your DHB can unlock content, back creators, join watch-to-earn bounties, or play the arcade, which is the whole reason the token exists.
 
 ## Staying safe and staying on the right side of tax
 
 Two practical reminders that catch people out:
 
-- **Security is on you.** Bookmark the real site, **https://dehub.io**, verify contract addresses independently, and be sceptical of anyone in your DMs offering "help", giveaways, or guaranteed returns. Those are scams, without exception.
+- **Security is on you.** Bookmark the real site, **https://riftn.com**, verify contract addresses independently, and be sceptical of anyone in your DMs offering "help", giveaways, or guaranteed returns. Those are scams, without exception.
 - **Tax may apply.** In the UK, HMRC generally treats disposals of cryptoassets, including swapping one token for another, as potentially subject to Capital Gains Tax, and some crypto income can fall under Income Tax. Rules and allowances change, so check current HMRC guidance or ask a qualified accountant about your own position.
 
 One more housekeeping note for anyone who arrived here by accident: the DeHub we are describing is the Web3 social network at dehub.io. It has nothing to do with DePaul University's "DeHUB" student portal or Rowan University's "DEHub" engineering hub. If you landed on the wrong one, our [DeHub name disambiguation guide](/guides/dehub-vs-depaul-dehub-vs-rowan-dehub) clears it up.
@@ -111,10 +111,10 @@ Yes. Buying, holding and trading cryptoassets is legal in the UK. Since 2023 the
 
 ---
 
-*This guide is for information only and is not financial advice. Cryptoassets are high-risk and unregulated in the UK. Do your own research and consider independent, FCA-authorised advice before making any decision. Learn more about the wider ecosystem at [DeHub, the decentralised social network](/guides/what-is-dehub) or explore how it all fits together on [the DeHub app](https://dehub.io/app).*`,
+*This guide is for information only and is not financial advice. Cryptoassets are high-risk and unregulated in the UK. Do your own research and consider independent, FCA-authorised advice before making any decision. Learn more about the wider ecosystem at [DeHub, the decentralised social network](/guides/what-is-dehub) or explore how it all fits together on [the DeHub app](https://riftn.com/app).*`,
   bannerImage: '/media/how-to-buy-dhb-token-uk-banner.png',
   bannerImageAlt: 'A guide to buying the DHB token in the UK on the Base network, with the DeHub logo',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-07-03T11:30:00.000Z',
   updatedAt: '2026-07-03T11:30:00.000Z',
   tags: ['DHB token', 'DeHub', 'how to buy DHB', 'crypto UK', 'Base', 'tokenomics', 'Web3'],

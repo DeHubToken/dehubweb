@@ -197,10 +197,10 @@ async function buildFeed(route, deps) {
     if (!rows) return null;
     const link = `${deps.appUrl}/app?category=${encodeURIComponent(route.tag)}`;
     return rssXml({
-      title: `#${route.tag} on DeHub`,
+      title: `#${route.tag} on Riftn`,
       link,
       self: `${deps.appUrl}/tags/${encodeURIComponent(route.tag)}.rss`,
-      description: `Public posts tagged #${route.tag} on DeHub.`,
+      description: `Public posts tagged #${route.tag} on Riftn.`,
       rows,
     }, deps);
   }
@@ -215,10 +215,10 @@ async function buildFeed(route, deps) {
   const name = String(account.displayName || '').trim() || handle;
   const about = String(account.aboutMe || '').replace(/\s+/g, ' ').trim();
   return rssXml({
-    title: name === handle ? `@${handle} on DeHub` : `${name} (@${handle}) on DeHub`,
+    title: name === handle ? `@${handle} on Riftn` : `${name} (@${handle}) on Riftn`,
     link: `${deps.appUrl}/${encodeURIComponent(handle)}`,
     self: profileFeedUrl(deps.appUrl, handle),
-    description: about || `Public posts from ${name} on DeHub.`,
+    description: about || `Public posts from ${name} on Riftn.`,
     image: account.avatarImageUrl ? deps.imageOf({ imageUrl: account.avatarImageUrl }) : '',
     rows,
   }, deps);

@@ -207,7 +207,7 @@ export function useUserStakingData() {
       if (dbStaked < 0) dbStaked = 0;
 
       // A pre-migration position may belong to the raw owner EOA while the
-      // current DeHub session uses its deterministic Safe (or vice versa).
+      // current Riftn session uses its deterministic Safe (or vice versa).
       // Both addresses are controlled by the same recovered wallet key.
       const legacyPosition = legacyPositions.reduce(
         (best, position) => position.amountRaw > best.amountRaw ? position : best,

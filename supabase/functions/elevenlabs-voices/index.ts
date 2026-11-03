@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
     const wallet = token ? await resolveDeHubAddress(token) : null;
 
     // Two sets, because a voice can be personal in two different ways. The
-    // registered ones are the clones DeHub knows the owner of; the category
+    // registered ones are the clones Riftn knows the owner of; the category
     // check catches the rest, including the orphans an older clone path made
     // and never recorded.
     const returned: string[] = (data.voices || [])

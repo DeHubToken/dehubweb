@@ -111,8 +111,8 @@ describe('article slug URLs', () => {
 
   it('parses a pasted article link as a post', async () => {
     const { parseDehubLink } = await import('@/lib/dehub-links');
-    const link = parseDehubLink('https://dehub.io/app/post/issues-with-publishing-comics-on-dehub?ref=ABC');
+    const link = parseDehubLink('https://riftn.com/app/post/issues-with-publishing-comics-on-dehub?ref=ABC');
     expect(link).toMatchObject({ kind: 'post', articleSlug: 'issues-with-publishing-comics-on-dehub' });
-    expect(parseDehubLink('https://dehub.io/app/post/7074')).toMatchObject({ kind: 'post', tokenId: '7074' });
+    expect(parseDehubLink('https://riftn.com/app/post/7074')).toMatchObject({ kind: 'post', tokenId: '7074' });
   });
 });

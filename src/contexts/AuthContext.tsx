@@ -62,7 +62,7 @@ export interface AuthContextType {
   /**
    * Passkey-only sign-in: the fingerprint/face passkey IS the account, with no
    * email, phone or OAuth identity behind it. 'signin' asserts an existing
-   * DeHub passkey; 'signup' creates one and a new account with it. Rejects
+   * Riftn passkey; 'signup' creates one and a new account with it. Rejects
    * with the message to show; a PasskeyLoginError with code
    * UNKNOWN_CREDENTIAL means the chosen passkey has no account yet.
    */
@@ -71,8 +71,8 @@ export interface AuthContextType {
   /**
    * Final step of the smart-wallet login: called by the login modal once the
    * wallet key is available (created, imported, or unlocked). Activates the
-   * key, derives the Safe smart account, signs the DeHub auth message, and
-   * establishes the DeHub session.
+   * key, derives the Safe smart account, signs the Riftn auth message, and
+   * establishes the Riftn session.
    */
   completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
   /** Decrypt the current wallet's backup: private key, plus its 12 words when it has them (Settings). */
@@ -103,7 +103,7 @@ export interface AuthContextType {
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;
   /**
-   * Re-establish a usable DeHub session. Pass `force` when reacting to a
+   * Re-establish a usable Riftn session. Pass `force` when reacting to a
    * request the server actually rejected — without it, a token that only looks
    * valid against the local clock short-circuits to `true` and the caller
    * reports a success that never happened.

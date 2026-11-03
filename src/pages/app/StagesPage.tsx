@@ -701,15 +701,15 @@ export default function StagesPage() {
     <div className="min-h-screen" data-stages-page>
       <SEOHead
         title={t('stages.seoTitle')}
-        description={_copy("copy.6cbd1288cf63", { defaultValue: "Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform." })}
-        url="https://dehub.io/stages"
+        description={_copy("copy.6cbd1288cf63", { defaultValue: "Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn — the decentralized, open source social platform." })}
+        url="https://riftn.com/stages"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'DeHub Stages',
-          url: 'https://dehub.io/stages',
-          description: _copy("copy.9670b2daa982", { defaultValue: "Live audio rooms and recorded conversations on DeHub." }),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          name: 'Riftn Stages',
+          url: 'https://riftn.com/stages',
+          description: _copy("copy.9670b2daa982", { defaultValue: "Live audio rooms and recorded conversations on Riftn." }),
+          isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' },
         }}
       />
       <h1 className="sr-only">{t('stages.seoHeading')}</h1>

@@ -29,7 +29,7 @@ mobile setting retains the outage default of enabled. Set it to `"true"` to
 close mobile again. Page and web proxy requests continue returning HTTP 503.
 
 The Intermission screen is shared across web and mobile. Preview it at
-https://dehub.io/maintenance without taking the platform offline.
+https://riftn.com/maintenance without taking the platform offline.
 
 `public/maintenance.json` is the activation switch. Set `enabled` to `true`
 through a PR and deploy production to show it; set it back to `false` and

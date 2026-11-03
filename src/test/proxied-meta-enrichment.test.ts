@@ -2,8 +2,8 @@
  * Crawler HTML for posts and profiles is proxied from the deployed `ssr-seo`
  * Supabase function and patched on the way out (proxied-meta-normalisation
  * .test.ts says why). This covers the newest patch: the fn describes a
- * bodyless post as `Post by <author> on DeHub — join the decentralized
- * creator network.` and a bio-less profile as `Connect with <name> on DeHub,
+ * bodyless post as `Post by <author> on Riftn — join the decentralized
+ * creator network.` and a bio-less profile as `Connect with <name> on Riftn,
  * the open source alternative to legacy media.`, so every such page by one
  * author carried the same description — 128 of 400 posts in the 2026-09-02
  * sitemap crawl, 33 of them one account's. The rewrite builds one from what
@@ -81,8 +81,8 @@ const { enrichPostMeta, enrichProfileMeta, DESCRIPTION_MAX, HOME_DESCRIPTION, PR
 /** Exactly the fn's attribute escaping: `"`, `<`, `>` and nothing else. */
 const attr = (s: string) => s.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const POST_TEMPLATE = (author: string) => `Post by ${author} on DeHub — join the decentralized creator network.`;
-const PROFILE_TEMPLATE = (name: string) => `Connect with ${name} on DeHub, the open source alternative to legacy media.`;
+const POST_TEMPLATE = (author: string) => `Post by ${author} on Riftn — join the decentralized creator network.`;
+const PROFILE_TEMPLATE = (name: string) => `Connect with ${name} on Riftn, the open source alternative to legacy media.`;
 
 /** The shape the deployed fn emits for a post, trimmed to the tags in play. */
 const postPage = (id: string, title: string, description: string, video = true, author = 'davyJones') => `<!DOCTYPE html>
@@ -90,7 +90,7 @@ const postPage = (id: string, title: string, description: string, video = true, 
 <head>
   <title>${attr(title)}</title>
   <meta name="description" content="${attr(description)}">
-  <link rel="canonical" href="https://dehub.io/app/post/${id}">
+  <link rel="canonical" href="https://riftn.com/app/post/${id}">
   <meta property="og:type" content="${video ? 'video.other' : 'article'}">
   <meta property="og:title" content="${attr(title)}">
   <meta property="og:description" content="${attr(description)}">
@@ -106,7 +106,7 @@ ${video ? `  <meta property="og:video" content="https://dehubcdn.ams3.cdn.digita
         '@type': 'Article',
         headline: title,
         description,
-        url: `https://dehub.io/app/post/${id}`,
+        url: `https://riftn.com/app/post/${id}`,
         author: { '@type': 'Person', name: author },
       },
       { '@type': 'VideoObject', name: title, description },
@@ -122,9 +122,9 @@ ${video ? `  <meta property="og:video" content="https://dehubcdn.ams3.cdn.digita
 const profilePage = (handle: string, description: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>@${handle} on DeHub — posts, videos &amp; profile</title>
+  <title>@${handle} on Riftn — posts, videos &amp; profile</title>
   <meta name="description" content="${attr(description)}">
-  <link rel="canonical" href="https://dehub.io/${handle}">
+  <link rel="canonical" href="https://riftn.com/${handle}">
   <meta property="og:description" content="${attr(description)}">
   <meta name="twitter:description" content="${attr(description)}">
 </head>
@@ -161,14 +161,14 @@ describe('post description enrichment', () => {
     expect(out).not.toContain('join the decentralized creator network');
     for (const tag of DESCRIPTION_TAGS) {
       const v = valueOf(out, tag);
-      expect(v).toContain('Watch &quot;Business&quot; — a video by LiberoArbitro on DeHub');
+      expect(v).toContain('Watch &quot;Business&quot; — a video by LiberoArbitro on Riftn');
       expect(v).toContain('Topics: business, entrepreneurship');
     }
     const ld = jsonLd(out);
-    expect(ld['@graph'][0].description).toContain('Watch "Business" — a video by LiberoArbitro on DeHub');
+    expect(ld['@graph'][0].description).toContain('Watch "Business" — a video by LiberoArbitro on Riftn');
     expect(ld['@graph'][1].description).toBe(ld['@graph'][0].description);
     expect(ld['@graph'][0].description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
-    const branded = 'Business — a video by LiberoArbitro on DeHub';
+    const branded = 'Business — a video by LiberoArbitro on Riftn';
     for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(attr(branded));
     expect(ld['@graph'][0].headline).toBe(branded);
   });
@@ -188,7 +188,7 @@ describe('post description enrichment', () => {
     expect(valueOf(video, 'description')).toContain('a video by LiberoArbitro');
     expect(valueOf(video, 'description')).not.toContain('Topics:');
     const text = enrichPostMeta(postPage('77', 'Hello', POST_TEMPLATE('X'), false), '77', null);
-    expect(valueOf(text, 'description')).toContain('Read &quot;Hello&quot; — a post by X on DeHub');
+    expect(valueOf(text, 'description')).toContain('Read &quot;Hello&quot; — a post by X on Riftn');
   });
 
   it('names the format from the record for audio and photo posts', () => {
@@ -204,12 +204,12 @@ describe('post description enrichment', () => {
       '3145',
       { postType: 'video', category: ['cars'] },
     );
-    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe('Video #3145 by A&K1618 on DeHub');
+    for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe('Video #3145 by A&K1618 on Riftn');
     const ld = jsonLd(out);
-    expect(ld['@graph'][0].headline).toBe('Video #3145 by A&K1618 on DeHub');
-    expect(ld['@graph'][1].name).toBe('Video #3145 by A&K1618 on DeHub');
+    expect(ld['@graph'][0].headline).toBe('Video #3145 by A&K1618 on Riftn');
+    expect(ld['@graph'][1].name).toBe('Video #3145 by A&K1618 on Riftn');
     expect(valueOf(out, 'description')).toBe(
-      'Watch video #3145 by A&K1618 on DeHub, the open source, user-owned social network. Topics: cars.',
+      'Watch video #3145 by A&K1618 on Riftn, the open source, user-owned social network. Topics: cars.',
     );
   });
 
@@ -222,7 +222,7 @@ describe('post description enrichment', () => {
     const ld = jsonLd(out);
     expect(ld['@graph'][0].description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
     expect(ld['@graph'][0].description).toContain('Watch "Price is $1 & "cheap" <now>');
-    expect(ld['@graph'][0].description).toContain('by Q "the" <Seller> on DeHub');
+    expect(ld['@graph'][0].description).toContain('by Q "the" <Seller> on Riftn');
     const v = valueOf(out, 'description');
     expect(v).toContain('&quot;cheap&quot; &lt;now&gt;');
     expect(v).not.toMatch(/[<>]/);
@@ -242,7 +242,7 @@ describe('post titles that say nothing', () => {
     ['a single letter', 'F'],
   ])('replaces %s with the id, format and author', (_label, junk) => {
     const out = enrichPostMeta(postPage('122', junk, 'thorrrr 🤔😂'), '122', AUTHORED);
-    const expected = 'Video #122 by davyJones on DeHub';
+    const expected = 'Video #122 by davyJones on Riftn';
     for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(expected);
     expect(out).toContain(`<h1>${expected}</h1>`);
     expect(out).toContain(`alt="${expected}"`);
@@ -263,13 +263,13 @@ describe('post titles that say nothing', () => {
   it('reads the author off the JSON-LD when there is no record and no template', () => {
     // The description is an emoji too, so there is no caption to fall back on.
     const out = enrichPostMeta(postPage('122', '😂', '🔥🔥', true, 'Mart Vader'), '122', null);
-    expect(valueOf(out, 'title')).toBe('Video #122 by Mart Vader on DeHub');
+    expect(valueOf(out, 'title')).toBe('Video #122 by Mart Vader on Riftn');
   });
 
   it('leaves a title that only looks filename-ish but reads as a sentence', () => {
     const title = 'How we shipped v2.0';
     const out = enrichPostMeta(postPage('900', title, 'a real caption'), '900', AUTHORED);
-    expect(valueOf(out, 'title')).toBe(attr(`${title} — a video by davyJones on DeHub`));
+    expect(valueOf(out, 'title')).toBe(attr(`${title} — a video by davyJones on Riftn`));
   });
 
   // Live /app/post/3419 on 2026-09-29: the fn titled it with its own
@@ -279,7 +279,7 @@ describe('post titles that say nothing', () => {
   const SULTAN: Nft = { postType: 'feed-images', minterDisplayName: 'Sultan', mintername: 'umerkhan', description: CAPTION };
 
   it("titles the fn's `Post #N by X` stand-in with the caption's opening words", () => {
-    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on DeHub', CAPTION, false, 'Sultan'), '3419', SULTAN);
+    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on Riftn', CAPTION, false, 'Sultan'), '3419', SULTAN);
     const expected = 'Exquisite watercolor of a Royal Haveli. A noble couple…';
     for (const tag of TITLE_TAGS) expect(valueOf(out, tag)).toBe(expected);
     expect(out).toContain(`<h1>${expected}</h1>`);
@@ -292,21 +292,21 @@ describe('post titles that say nothing', () => {
       ...SULTAN,
       description: 'Sunset at the pier',
     });
-    expect(valueOf(out, 'title')).toBe('Sunset at the pier — a photo post by Sultan on DeHub');
+    expect(valueOf(out, 'title')).toBe('Sunset at the pier — a photo post by Sultan on Riftn');
   });
 
   it('reads the caption off the meta description when there is no record', () => {
-    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on DeHub', CAPTION, false, 'Sultan'), '3419', null);
+    const out = enrichPostMeta(postPage('3419', 'Post #3419 by Sultan on Riftn', CAPTION, false, 'Sultan'), '3419', null);
     expect(valueOf(out, 'title')).toBe('Exquisite watercolor of a Royal Haveli. A noble couple…');
   });
 
   it("falls back to the format and id when the fn's stand-in has no caption behind it", () => {
     const out = enrichPostMeta(
-      postPage('5373', 'Post #5373 by akcil on DeHub', POST_TEMPLATE('akcil'), false, 'akcil'),
+      postPage('5373', 'Post #5373 by akcil on Riftn', POST_TEMPLATE('akcil'), false, 'akcil'),
       '5373',
       { postType: 'feed-audio', minterDisplayName: 'akcil', mintername: 'akcil', description: '' },
     );
-    expect(valueOf(out, 'title')).toBe('Audio post #5373 by akcil on DeHub');
+    expect(valueOf(out, 'title')).toBe('Audio post #5373 by akcil on Riftn');
     // …and the description no longer quotes the stand-in back at itself.
     expect(valueOf(out, 'description')).not.toContain('Post #5373 by akcil');
   });
@@ -322,8 +322,8 @@ describe('short post titles that collide', () => {
       postType: 'video',
       displayName: 'Mart Vader',
     });
-    expect(valueOf(a, 'title')).toBe(attr('stream — a video by davyJones on DeHub'));
-    expect(valueOf(b, 'title')).toBe(attr('stream — a video by Mart Vader on DeHub'));
+    expect(valueOf(a, 'title')).toBe(attr('stream — a video by davyJones on Riftn'));
+    expect(valueOf(b, 'title')).toBe(attr('stream — a video by Mart Vader on Riftn'));
     expect(valueOf(a, 'title')).not.toBe(valueOf(b, 'title'));
   });
 
@@ -334,7 +334,7 @@ describe('short post titles that collide', () => {
       displayName: 'Bartholomew',
     });
     const value = valueOf(out, 'title');
-    expect(value).toBe(attr(`${title} — Bartholomew on DeHub`));
+    expect(value).toBe(attr(`${title} — Bartholomew on Riftn`));
     expect(value.length).toBeLessThanOrEqual(70);
   });
 
@@ -344,8 +344,8 @@ describe('short post titles that collide', () => {
       displayName: 'davyJones',
     });
     const ld = jsonLd(out);
-    expect(ld['@graph'][0].headline).toBe('davyJones — a video by davyJones on DeHub');
-    expect(ld['@graph'][1].name).toBe('davyJones — a video by davyJones on DeHub');
+    expect(ld['@graph'][0].headline).toBe('davyJones — a video by davyJones on Riftn');
+    expect(ld['@graph'][1].name).toBe('davyJones — a video by davyJones on Riftn');
     expect(ld['@graph'][0].author.name).toBe('davyJones');
   });
 
@@ -359,7 +359,7 @@ describe('short post titles that collide', () => {
   it('titles an untitled post by id alone when nobody is named', () => {
     const anonymous = postPage('2376', '😂', '👍', false).replace(/,"author":\{[^}]*\}/, '');
     const out = enrichPostMeta(anonymous, '2376', null);
-    expect(valueOf(out, 'title')).toBe('Post #2376 on DeHub');
+    expect(valueOf(out, 'title')).toBe('Post #2376 on Riftn');
     expect(out).not.toContain('someone');
   });
 
@@ -368,7 +368,7 @@ describe('short post titles that collide', () => {
       postType: 'video',
       displayName: 'davyJones',
     });
-    expect(valueOf(out, 'title')).toBe(attr('Hello — a video by davyJones on DeHub'));
+    expect(valueOf(out, 'title')).toBe(attr('Hello — a video by davyJones on Riftn'));
   });
 
   it('leaves a title long enough that no suffix fits', () => {
@@ -377,16 +377,16 @@ describe('short post titles that collide', () => {
     expect(enrichPostMeta(html, '13', { postType: 'video', displayName: 'davyJones' })).toBe(html);
   });
 
-  it('disambiguates the fourteen posts that all said "Promote DeHub"', () => {
-    const out = enrichPostMeta(postPage('14', 'Promote DeHub', 'body', true, 'davyJones'), '14', {
+  it('disambiguates the fourteen posts that all said "Promote Riftn"', () => {
+    const out = enrichPostMeta(postPage('14', 'Promote Riftn', 'body', true, 'davyJones'), '14', {
       postType: 'video',
       displayName: 'davyJones',
     });
-    expect(valueOf(out, 'title')).toBe(attr('Promote DeHub — a video by davyJones on DeHub'));
+    expect(valueOf(out, 'title')).toBe(attr('Promote Riftn — a video by davyJones on Riftn'));
   });
 
   it('does not brand a title that already carries the brand', () => {
-    const html = postPage('15', 'Shipping day one on DeHub', 'body', true, 'davyJones');
+    const html = postPage('15', 'Shipping day one on Riftn', 'body', true, 'davyJones');
     expect(enrichPostMeta(html, '15', { postType: 'video', displayName: 'davyJones' })).toBe(html);
   });
 });
@@ -396,7 +396,7 @@ describe('profile description enrichment', () => {
     const a = enrichProfileMeta(profilePage('shubham223', PROFILE_TEMPLATE('shubham')), 'shubham223');
     const b = enrichProfileMeta(profilePage('shubham_new2', PROFILE_TEMPLATE('shubham')), 'shubham_new2');
     for (const tag of DESCRIPTION_TAGS) {
-      expect(valueOf(a, tag)).toContain('Connect with shubham (@shubham223) on DeHub');
+      expect(valueOf(a, tag)).toContain('Connect with shubham (@shubham223) on Riftn');
     }
     expect(valueOf(a, 'description')).not.toBe(valueOf(b, 'description'));
     expect(a).not.toContain('open source alternative to legacy media');
@@ -404,13 +404,13 @@ describe('profile description enrichment', () => {
 
   it('does not repeat a display name that is just the handle', () => {
     const out = enrichProfileMeta(profilePage('aaron', PROFILE_TEMPLATE('aaron')), 'aaron');
-    expect(valueOf(out, 'description')).toMatch(/^Connect with @aaron on DeHub/);
+    expect(valueOf(out, 'description')).toMatch(/^Connect with @aaron on Riftn/);
   });
 
   it('appends the handle to a bio too short to describe the page, and leaves a real bio alone', () => {
     const short = enrichProfileMeta(profilePage('lcfc', 'DHB ❤'), 'lcfc');
-    expect(valueOf(short, 'description')).toBe('DHB ❤ — @lcfc on DeHub, the open source, user-owned social network.');
-    const bio = 'Football, crypto and coffee. Building on DeHub since 2023, one clip at a time.';
+    expect(valueOf(short, 'description')).toBe('DHB ❤ — @lcfc on Riftn, the open source, user-owned social network.');
+    const bio = 'Football, crypto and coffee. Building on Riftn since 2023, one clip at a time.';
     expect(bio.length).toBeGreaterThanOrEqual(PROFILE_DESCRIPTION_MIN);
     const long = profilePage('fan', bio);
     expect(enrichProfileMeta(long, 'fan')).toBe(long);
@@ -420,26 +420,26 @@ describe('profile description enrichment', () => {
 describe('profile titles', () => {
   const withPerson = (handle: string, name: string) =>
     profilePage(handle, 'A bio long enough to be left exactly as it was written, thanks.')
-      .replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name, url: `https://dehub.io/${handle}` })}</script>\n</head>`)
-      .replace('</html>', `<body><h1>@${handle} on DeHub — posts, videos &amp; profile</h1></body></html>`);
+      .replace('</head>', `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Person', name, url: `https://riftn.com/${handle}` })}</script>\n</head>`)
+      .replace('</html>', `<body><h1>@${handle} on Riftn — posts, videos &amp; profile</h1></body></html>`);
 
   it('leads with the display name people search for, from the Person JSON-LD', () => {
     // /c0chraniz3r is Jesse Cochran; nothing in the title said so.
     const out = enrichProfileMeta(withPerson('c0chraniz3r', 'Jesse Cochran'), 'c0chraniz3r');
-    expect(valueOf(out, 'title')).toBe('Jesse Cochran (@c0chraniz3r) on DeHub');
-    expect(out).toContain('<h1>Jesse Cochran (@c0chraniz3r) on DeHub</h1>');
+    expect(valueOf(out, 'title')).toBe('Jesse Cochran (@c0chraniz3r) on Riftn');
+    expect(out).toContain('<h1>Jesse Cochran (@c0chraniz3r) on Riftn</h1>');
   });
 
   it('prefers the account record the caller passes', () => {
     const out = enrichProfileMeta(withPerson('almondbloom', 'x'), 'almondbloom', 'Ahmad Rasheed');
-    expect(valueOf(out, 'title')).toBe('Ahmad Rasheed (@almondbloom) on DeHub');
+    expect(valueOf(out, 'title')).toBe('Ahmad Rasheed (@almondbloom) on Riftn');
   });
 
   it('keeps the handle title when the name is just the handle, or missing', () => {
     expect(valueOf(enrichProfileMeta(withPerson('akcil', 'akcil'), 'akcil'), 'title'))
-      .toBe('@akcil on DeHub — posts, videos &amp; profile');
+      .toBe('@akcil on Riftn — posts, videos &amp; profile');
     expect(valueOf(enrichProfileMeta(profilePage('lcfc', 'DHB ❤'), 'lcfc'), 'title'))
-      .toBe('@lcfc on DeHub — posts, videos &amp; profile');
+      .toBe('@lcfc on Riftn — posts, videos &amp; profile');
   });
 
   it('keeps a very long name inside the title limit, cut at a word', () => {
@@ -451,7 +451,7 @@ describe('profile titles', () => {
 
   it('escapes a name the fn would have escaped', () => {
     const out = enrichProfileMeta(withPerson('q', 'Q "the" <Seller>'), 'q');
-    expect(valueOf(out, 'title')).toBe('Q &quot;the&quot; &lt;Seller&gt; (@q) on DeHub');
+    expect(valueOf(out, 'title')).toBe('Q &quot;the&quot; &lt;Seller&gt; (@q) on Riftn');
   });
 });
 
@@ -531,12 +531,12 @@ describe('the body paragraph, not just the head', () => {
 </head><body>
   <h1>${attr(title)}</h1>
   <p>${attr(description)}</p>
-  <p><a class="dh-cta" href="https://dehub.io/app/post/1?app=1">View on DeHub</a></p>
+  <p><a class="dh-cta" href="https://riftn.com/app/post/1?app=1">View on Riftn</a></p>
 </body></html>`;
 
   const bodyProfile = (handle: string, description: string) => `<!DOCTYPE html>
 <html lang="en"><head>
-  <title>@${handle} on DeHub</title>
+  <title>@${handle} on Riftn</title>
   <meta name="description" content="${attr(description)}">
 </head><body>
   <h1>@${handle}</h1>

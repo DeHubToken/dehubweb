@@ -26,8 +26,8 @@ export function BuilderModelPicker({ isLight }: { isLight: boolean }) {
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
-    if (pricing && !selected) setSelected(pricing.model);
-  }, [pricing, selected]);
+    if (pricing) setSelected(pricing.model);
+  }, [pricing]);
 
   const choose = async (id: string) => {
     setSelected(id);

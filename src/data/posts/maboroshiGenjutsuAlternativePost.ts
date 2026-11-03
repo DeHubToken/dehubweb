@@ -171,7 +171,7 @@ Higgsfield's figures in this guide come from its Genjutsu launch page as checked
   bannerImage: '/media/maboroshi-genjutsu-alternative-banner.jpg',
   bannerImageAlt: 'Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-10-24T03:00:00.000Z',
   tags: ['AI', 'AI video', 'Creator Studio', 'Higgsfield', 'Genjutsu', 'Maboroshi', 'Kling', 'Seedance', 'Pricing'],

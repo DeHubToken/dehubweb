@@ -312,7 +312,7 @@ Deno.test('daily likes and ordinary posts run without mint gas', async () => {
     call: async args => {
       assert(args.content === 'A music note', 'lost the post body');
       posted = true;
-      return { structuredContent: { success: true, post: { url: 'https://dehub.io/newpost/500' } } };
+      return { structuredContent: { success: true, post: { url: 'https://riftn.com/newpost/500' } } };
     } });
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url) => String(url).includes('/api/feed?')

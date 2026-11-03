@@ -47,8 +47,8 @@ export default function EventsPage() {
       <SEOHead
         title={t('events.seoTitle')}
         description={t('events.seoDescription')}
-        url="https://dehub.io/events"
-        image="https://dehub.io/og/events.jpg"
+        url="https://riftn.com/events"
+        image="https://riftn.com/og/events.jpg"
         noindex
       />
 

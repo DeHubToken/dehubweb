@@ -1,7 +1,7 @@
 /**
  * Get Stream Ingest URL for OBS
  * =============================
- * Fetches stream credentials from DeHub nft_info and returns OBS-ready
+ * Fetches stream credentials from Riftn nft_info and returns OBS-ready
  * ingest URL + stream key. Use when api.dehub.io /api/live/* endpoints fail.
  *
  * POST body: { tokenId: string }
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
     const result = {
       ingestUrl: LIVEPEER_RTMP_URL,
       streamKey: stream.streamKey,
-      playbackUrl: `https://dehub.io/app/post/${tokenId}`,
+      playbackUrl: `https://riftn.com/app/post/${tokenId}`,
       hlsUrl,
       streamId: stream._id || stream.id || stream.streamId || tokenId,
     };

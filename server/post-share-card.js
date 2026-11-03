@@ -1,6 +1,6 @@
 export const POST_CARD_VERSION = 'v5';
 export const POST_CARD_TTL = 300;
-const ORIGIN = 'https://dehub.io';
+const ORIGIN = 'https://riftn.com';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
 
 export function postShareImageUrl(tokenId) {
@@ -81,7 +81,7 @@ export function postCardData(post) {
   const title = plainPostText(post.title) || plainPostText(post.name);
   const body = plainPostText(post.description);
   if (!title && !body && !media) return null;
-  const author = plainPostText(post.minterDisplayName || post.minterUser?.displayName || post.mintername || post.minterUsername || 'DeHub');
+  const author = plainPostText(post.minterDisplayName || post.minterUser?.displayName || post.mintername || post.minterUsername || 'Riftn');
   const handle = plainPostText(post.mintername || post.minterUsername || post.minterUser?.username).replace(/^@/, '');
   const rawAvatar = post.minterAvatarUrl || post.minterUser?.avatarImageUrl || '';
   let avatar = '';
@@ -121,8 +121,8 @@ export function applyPostShareImage(html, post) {
   if (!post || !hasSafeRating(post)) {
     return setShareTags(html.replace(/<meta property="og:video(?::[a-z_:]+)?" content="[^"]*">\s*/g, ''), {
       'og:image': SHARE_IMAGE, 'og:image:secure_url': SHARE_IMAGE, 'og:image:type': 'image/png',
-      'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': 'DeHub',
-      'twitter:card': 'summary_large_image', 'twitter:image': SHARE_IMAGE, 'twitter:image:alt': 'DeHub',
+      'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': 'Riftn',
+      'twitter:card': 'summary_large_image', 'twitter:image': SHARE_IMAGE, 'twitter:image:alt': 'Riftn',
     });
   }
   const data = postCardData(post);
@@ -251,7 +251,7 @@ function renderPoll(poll) {
     const check = row.winner ? `<path d="m0 5 4 4 8-8" transform="translate(428 ${top + 12})" fill="none" stroke="#f1f1f4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>` : '';
     return `<g data-poll-option="${row.index}" data-winner="${row.winner}"><defs><clipPath id="poll-${index}"><rect x="415" y="${top}" width="698" height="${row.height}" rx="7"/></clipPath></defs><rect x="415" y="${top}" width="698" height="${row.height}" rx="7" fill="#15161a" stroke="#2a2b31"/>${barWidth ? `<rect x="415" y="${top}" width="${barWidth}" height="${row.height}" fill="${row.winner ? '#5f6066' : '#34353c'}" clip-path="url(#poll-${index})"/>` : ''}${check}${textLines(row.lines, row.winner ? 451 : 430, top + 24, 17, 21, '#e4e4e9')}${poll.ended ? `<text x="1099" y="${top + 24}" text-anchor="end" font-size="17" fill="#e4e4e9">${row.percent}%</text>` : ''}</g>`;
   }).join('');
-  const label = poll.ended ? `Closed · ${poll.totalVotes} ${poll.totalVotes === 1 ? 'vote' : 'votes'}` : 'Poll open · Vote on DeHub';
+  const label = poll.ended ? `Closed · ${poll.totalVotes} ${poll.totalVotes === 1 ? 'vote' : 'votes'}` : 'Poll open · Vote on Riftn';
   return `<g data-poll-state="${poll.ended ? 'closed' : 'open'}">${textLines(poll.question, 415, poll.top + 19, 19, 25, '#d9dae0')}${rows}<text x="415" y="${y + 17}" font-size="15" fill="#92959f">${escape(label)}</text></g>`;
 }
 
@@ -268,7 +268,7 @@ function renderMediaPanel(data, media) {
     <g font-family="Exo" font-weight="500">
       ${textLines(caption, 415, captionY, 28, 36, '#f4f4f6')}
       <text x="415" y="524" font-size="18" fill="#c5c6ce">dehub.io</text>
-      <text x="1064" y="524" text-anchor="end" font-size="18" fill="#f1f1f4">${data.media.video ? 'Watch on DeHub' : 'View the post'}</text>
+      <text x="1064" y="524" text-anchor="end" font-size="18" fill="#f1f1f4">${data.media.video ? 'Watch on Riftn' : 'View the post'}</text>
       <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#f1f1f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
   </g>`;
@@ -363,7 +363,7 @@ export function applyProfileShareImage(html, account) {
   const data = profileCardData(account);
   if (!data) return html;
   const image = profileShareImageUrl(data.handle);
-  const alt = `${data.name} (@${data.handle}) on DeHub`;
+  const alt = `${data.name} (@${data.handle}) on Riftn`;
   return setShareTags(html, {
     'og:image': image, 'og:image:secure_url': image, 'og:image:type': 'image/png',
     'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': alt,
@@ -397,7 +397,7 @@ export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
     <text x="380" y="${handleY}" font-size="28" fill="#9698a3">${escape(wrapPostText(`@${data.handle}`, 28, 640, 1)[0])}</text>
     ${facts ? `<text x="380" y="${handleY + 62}" font-size="26" fill="#d9dae0">${escape(facts)}</text>` : ''}
     <text x="110" y="508" font-size="18" fill="#9699a3">dehub.io</text>
-    <text x="1064" y="508" text-anchor="end" font-size="18" fill="#bfc1c9">Follow on DeHub</text>
+    <text x="1064" y="508" text-anchor="end" font-size="18" fill="#bfc1c9">Follow on Riftn</text>
     <path d="M1076 507l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   </svg>`;

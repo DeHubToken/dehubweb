@@ -4,7 +4,7 @@
 // server: who is voting, and how much their vote is worth.
 //
 //   · Identity comes from `requireDeHubAuth`, which resolves the wallet from a
-//     verified DeHub token. The old path wrote straight to PostgREST under an
+//     verified Riftn token. The old path wrote straight to PostgREST under an
 //     RLS policy that compared `wallet_address` to the caller's own
 //     `x-wallet-address` header — an unsigned string, so any address could be
 //     claimed and anyone's vote could be deleted.

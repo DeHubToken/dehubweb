@@ -13,7 +13,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * The profile (name, @, photo, language) is written in ONE request when the
  * photo step is left, as before. Interests and follows come after, against a
  * real account, and are skippable. `requiresUsername` is only cleared on the
- * last screen, so the flow stays up until "Enter DeHub".
+ * last screen, so the flow stays up until "Enter Riftn".
  *
  * Interests are saved as the `feedInterests` preference and put first in
  * every category bar (lib/feed-interests).
@@ -421,7 +421,7 @@ export function LoginProfileStep() {
         return;
       }
       if (age < MIN_AGE) {
-        setError(_copy('welcome.about.tooYoung', { defaultValue: 'You need to be {{age}} or older to use DeHub.', age: MIN_AGE }));
+        setError(_copy('welcome.about.tooYoung', { defaultValue: 'You need to be {{age}} or older to use Riftn.', age: MIN_AGE }));
         return;
       }
       setStep('name');
@@ -494,7 +494,7 @@ export function LoginProfileStep() {
   };
 
   const title = {
-    about: _copy('welcome.about.title', { defaultValue: 'Welcome to DeHub' }),
+    about: _copy('welcome.about.title', { defaultValue: 'Welcome to Riftn' }),
     name: _copy('welcome.name.title', { defaultValue: 'Your name' }),
     username: _copy('welcome.username.title', { defaultValue: 'Your @username' }),
     photo: _copy('welcome.photo.title', { defaultValue: 'Your photo' }),
@@ -514,7 +514,7 @@ export function LoginProfileStep() {
   }[step];
 
   const ctaLabel = step === 'done'
-    ? _copy('welcome.enter', { defaultValue: 'Enter DeHub' })
+    ? _copy('welcome.enter', { defaultValue: 'Enter Riftn' })
     : step === 'photo' && !avatarFile && !saved
     ? _copy('welcome.skipPhoto', { defaultValue: 'Skip for now' })
     : step === 'interests' && interests.length < MIN_INTERESTS

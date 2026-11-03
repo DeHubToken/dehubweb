@@ -138,7 +138,7 @@ That is why "getting monetized" is no longer one milestone. It is a stack of pro
   bannerImage: '/media/social-media-monetization-2026-banner.jpg',
   bannerImageAlt: 'Who pays and when: creator monetization rules across seven social platforms in 2026',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-09-03T09:00:00.000Z',
   tags: ['Creator Economy', 'Monetization', 'Instagram', 'TikTok', 'YouTube', 'Facebook', 'X', 'Snap', 'Twitch'],

@@ -45,7 +45,7 @@ We're proud of what the team and community have achieved to earn this attention,
   bannerImage: '/media/dehub-featured-in-press-banner.png',
   bannerImageAlt: 'DeHub featured in the press — US Weekly, Yahoo Finance, Entrepreneur and Investing.com',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2022-11-18T12:00:00.000Z',
   tags: ['Press', 'Media', 'Featured In', 'Milestones', '2022'],

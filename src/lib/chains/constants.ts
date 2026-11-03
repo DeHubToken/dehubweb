@@ -44,17 +44,17 @@ export interface SupportedLockToken {
 /** Production lock-content tokens (mirrors backend supportedTokensForLockContent) */
 export const SUPPORTED_LOCK_TOKENS: SupportedLockToken[] = [
   // Base
-  { symbol: 'DHB', name: 'DeHub', address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', chainId: 8453, decimals: 18 },
+  { symbol: 'DHB', name: 'Riftn', address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c', chainId: 8453, decimals: 18 },
   { symbol: 'USDC', name: 'USD Coin', address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', chainId: 8453, decimals: 6 },
   { symbol: 'USDT', name: 'Tether', address: '0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2', chainId: 8453, decimals: 6 },
   { symbol: 'WETH', name: 'Wrapped Ether', address: '0x4200000000000000000000000000000000000006', chainId: 8453, decimals: 18 },
   // BNB
-  { symbol: 'DHB', name: 'DeHub', address: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', chainId: 56, decimals: 18 },
+  { symbol: 'DHB', name: 'Riftn', address: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', chainId: 56, decimals: 18 },
   { symbol: 'USDT', name: 'Tether', address: '0x55d398326f99059fF775485246999027B3197955', chainId: 56, decimals: 18 },
   { symbol: 'USDC', name: 'USD Coin', address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', chainId: 56, decimals: 18 },
   { symbol: 'DOGE', name: 'Dogecoin', address: '0xbA2aE424d960c26247Dd6c32edC70B295c744C43', chainId: 56, decimals: 8 },
   // Ethereum mainnet
-  { symbol: 'DHB', name: 'DeHub', address: '0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0', chainId: 1, decimals: 18 },
+  { symbol: 'DHB', name: 'Riftn', address: '0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0', chainId: 1, decimals: 18 },
   { symbol: 'USDC', name: 'USD Coin', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', chainId: 1, decimals: 6 },
   { symbol: 'USDT', name: 'Tether', address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', chainId: 1, decimals: 6 },
   // Solana. DHB is listed only once its SPL mint actually exists — the same
@@ -66,7 +66,7 @@ export const SUPPORTED_LOCK_TOKENS: SupportedLockToken[] = [
   ...(dhbSolanaMint()
     ? ([{
         symbol: 'DHB',
-        name: 'DeHub',
+        name: 'Riftn',
         address: dhbSolanaMint()!,
         chainId: SOLANA_MAINNET_CHAIN_ID,
         decimals: 9,
@@ -85,7 +85,7 @@ export const SUPPORTED_LOCK_TOKENS: SupportedLockToken[] = [
         ...(IS_DHB_LIVE_ON_ROBINHOOD
           ? [{
               symbol: 'DHB',
-              name: 'DeHub',
+              name: 'Riftn',
               address: DHB_ROBINHOOD_PENDING_BRIDGE_ADDRESS,
               chainId: ROBINHOOD_CHAIN_ID,
               decimals: 18,

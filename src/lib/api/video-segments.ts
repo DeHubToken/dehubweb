@@ -2,7 +2,7 @@
  * Client for the `video-segments` edge function.
  *
  * Reads are anonymous — the player skips for signed-out viewers too. Writes
- * carry the DeHub token; the function derives the submitter from it and
+ * carry the Riftn token; the function derives the submitter from it and
  * ignores anything we send, so there is no address in the body.
  *
  * Every write is a POST, removal included: the shared CORS headers allow GET,

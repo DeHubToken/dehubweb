@@ -462,7 +462,7 @@ export function playStageRecording(space: StagePlayable, seekRatio?: number) {
   // gap where backgrounding the browser kills the audio outright.
   claimMediaSession(
     MEDIA_SESSION_OWNER,
-    { title: space.title || _translateCopy('copy.31d03cbfa55b', { defaultValue: 'Stage recording' }), artist: 'DeHub Stages' },
+    { title: space.title || _translateCopy('copy.31d03cbfa55b', { defaultValue: 'Stage recording' }), artist: 'Riftn Stages' },
     {
       play: resumeStageRecording,
       pause: pauseStageRecording,

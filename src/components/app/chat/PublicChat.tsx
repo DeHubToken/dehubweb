@@ -153,7 +153,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Determine moderation rights. Room moderators come from the room's list.
   // Room moderators only. There used to be a second path here: anyone holding a
-  // DeHub admin token in this browser got full moderation, routed through
+  // Riftn admin token in this browser got full moderation, routed through
   // /api/admin/livechat/*. That is why a token with god-mode over the whole
   // platform lived in localStorage on the public site, reachable by any XSS on
   // dehub.io — for a convenience that the admin panel already does better, and

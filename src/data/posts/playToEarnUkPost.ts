@@ -70,7 +70,7 @@ A clean, above-board setup takes about an evening. Here is the practical sequenc
 - **Log every reward as you earn it.** Date, token, quantity, and the sterling value that day. This one habit turns January's Self Assessment from a nightmare into a copy-and-paste job.
 - **Keep the FCA warning front of mind.** Only ever risk what you can afford to lose entirely.
 
-When you are ready, you can jump straight into the games and the feed at the [DeHub web app](https://dehub.io/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
+When you are ready, you can jump straight into the games and the feed at the [DeHub web app](https://riftn.com/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
 
 ## Why DeHub is a sensible UK starting point
 
@@ -103,7 +103,7 @@ The best fit is one with no forced upfront spend and a genuinely tradable token.
 Yes. Free-to-start games avoid the "pay to play to earn" trap entirely. DeHub's arcade and watch-to-earn bounties let you test the full earn-and-withdraw cycle at zero risk, and our guide to [free play-to-earn games with no investment](/guides/free-play-to-earn-games-no-investment-2026) lists more options for UK players.`,
   bannerImage: '/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png',
   bannerImageAlt: 'Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-02-19T10:00:00.000Z',
   updatedAt: '2026-02-19T10:00:00.000Z',
   tags: ['play to earn uk', 'play to earn tax', 'crypto gaming', 'HMRC crypto tax', 'play to earn games 2026', 'DeHub', 'watch to earn'],

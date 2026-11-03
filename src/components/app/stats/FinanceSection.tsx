@@ -1,7 +1,7 @@
 /**
  * Revenue and costs
  * =================
- * The money half of the Stats page: what DeHub takes in — things people buy in
+ * The money half of the Stats page: what Riftn takes in — things people buy in
  * the app, and the fee kept on payments between people — against what it
  * spends to run, in USD, over the same range as every other chart here.
  *

@@ -4,4 +4,4 @@ Disallow: /_api/
 Disallow: /_sb/
 Disallow: /api/
 
-Sitemap: https://dehub.io/sitemap.xml
+Sitemap: https://riftn.com/sitemap.xml

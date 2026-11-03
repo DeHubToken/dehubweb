@@ -128,17 +128,17 @@ export default function AppsPage() {
       <SEOHead
         title={t('miniApps.store.seoTitle')}
         description={t('miniApps.store.seoDescription')}
-        url="https://dehub.io/apps"
-        image="https://dehub.io/og/apps.jpg"
+        url="https://riftn.com/apps"
+        image="https://riftn.com/og/apps.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'DeHub Apps',
-          url: 'https://dehub.io/apps',
+          name: 'Riftn Apps',
+          url: 'https://riftn.com/apps',
           hasPart: (apps ?? []).map((app) => ({
             '@type': 'SoftwareApplication',
             name: app.name,
-            url: `https://dehub.io/apps/${app.slug}`,
+            url: `https://riftn.com/apps/${app.slug}`,
             applicationCategory: app.category ?? 'WebApplication',
           })),
         }}

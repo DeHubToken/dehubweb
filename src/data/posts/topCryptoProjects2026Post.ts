@@ -253,7 +253,7 @@ Market value and public code do not always match. Uniswap's public repos had 34 
 
 ## For scale: DeHub
 
-DeHub is a social and streaming app, so it is not ranked here. But for scale, its public web and mobile apps took 5,525 commits in the same 90 days. On commits alone that would place it #3 of all 270 crypto projects we measured, behind only ElizaOS and Ledger Live. On DeHub, anyone can request a feature on [dehub.io/features](https://dehub.io/features) and watch it get built, which is the community-plus-AI model this article is about.
+DeHub is a social and streaming app, so it is not ranked here. But for scale, its public web and mobile apps took 5,525 commits in the same 90 days. On commits alone that would place it #3 of all 270 crypto projects we measured, behind only ElizaOS and Ledger Live. On DeHub, anyone can request a feature on [dehub.io/features](https://riftn.com/features) and watch it get built, which is the community-plus-AI model this article is about.
 
 ![For scale: DeHub 5,525 commits in 90 days, ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704](/media/fig-crypto-dehub.jpg)
 
@@ -304,10 +304,10 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 
 ## Build with DeHub
 
-Open [dehub.io](https://dehub.io) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [dehub.io](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-100-crypto-projects-2026-banner.png',
   bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T23:30:00.000Z',
   tags: ['crypto', 'top 100', 'GitHub activity', 'crypto developers', 'AI', 'wallets', 'DeFi', 'Ethereum', 'Solana', 'Bitcoin', 'open source', 'DeHub'],
   readingTime: 15,

@@ -26,7 +26,7 @@ it('serves current translations to a client holding a retired version URL', asyn
     // Static hosting sometimes gives missing assets the SPA's 200 HTML fallback.
     return new Response('<html></html>', { headers: { 'Content-Type': 'text/html' } });
   });
-  const response = await serveLocaleAsset(new Request('https://dehub.io/locale-pages/aaaaaaaaaaaaaaaa/es/docs.json'), { ASSETS: { fetch } });
+  const response = await serveLocaleAsset(new Request('https://riftn.com/locale-pages/aaaaaaaaaaaaaaaa/es/docs.json'), { ASSETS: { fetch } });
   expect(await response.json()).toEqual({ title: 'Documentación' });
   expect(response.headers.get('Cache-Control')).not.toContain('immutable');
   expect(response.headers.get('X-Locale-Version')).toBe('bbbbbbbbbbbbbbbb');

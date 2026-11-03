@@ -146,6 +146,6 @@ export const removeFolderItems = (folderId: string, itemIds: string[]) =>
 
 /** Canonical share URL for a public flow. */
 export function flowShareUrl(id: string): string {
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://dehub.io';
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://riftn.com';
   return `${origin}/creator/flow/${id}`;
 }

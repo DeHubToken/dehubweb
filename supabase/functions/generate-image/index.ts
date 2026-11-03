@@ -48,7 +48,7 @@ interface GenerateImageRequest {
 }
 
 /**
- * DeHub banner requests are free — the SM Template 2.0 renderer is our own code
+ * Riftn banner requests are free — the SM Template 2.0 renderer is our own code
  * plus one small text call, not a generation anyone has to be billed for.
  *
  * The wrapper prices the job before the handler has picked a renderer, so both
@@ -262,7 +262,7 @@ async function generateWithKie(
   return await kieWaitForResult(key, taskId, { timeoutMs: 110_000 });
 }
 
-/** DeHub's aspect strings mapped onto fal's `image_size` enum. */
+/** Riftn's aspect strings mapped onto fal's `image_size` enum. */
 function toFalImageSize(aspect?: string, bannerFormat?: string): string {
   const a =
     aspect ??
@@ -410,10 +410,10 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
       contextualPrompt = `CONVERSATION CONTEXT (use this to understand references like "him", "it", "that", etc.):\n${contextSummary}\n\nCURRENT REQUEST: ${prompt}`;
     }
 
-    // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
+    // ── Riftn brand skill: auto-detect requests for DeHub-branded imagery and
     //    force logo-attached, brand-compliant generation. Also triggers when the
     //    Poster Studio passes an explicit `logoImage` (two-step composite path).
-    //    If the caller sent the DeHub logo in `sourceImage` (older client path
+    //    If the caller sent the Riftn logo in `sourceImage` (older client path
     //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
     //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
@@ -498,12 +498,12 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
         });
         // A free request stops here. Falling through would run a paid image
         // model on a job nobody was charged for, and would hand back a
-        // diffusion scene to someone who picked "DeHub Banner" — wrong on both
+        // diffusion scene to someone who picked "Riftn Banner" — wrong on both
         // counts. Charged requests keep the old degrade-to-scene behaviour.
         if (freeTemplate) {
           return new Response(
             JSON.stringify({
-              error: 'The DeHub banner renderer could not draw this one. Try again, or pick a cinematic style to use the image model instead.',
+              error: 'The Riftn banner renderer could not draw this one. Try again, or pick a cinematic style to use the image model instead.',
               code: 'TEMPLATE_RENDER_FAILED',
             }),
             { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -511,7 +511,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
         }
       }
 
-      // ── DeHub brand archetype library: all strictly monochrome, all material-first,
+      // ── Riftn brand archetype library: all strictly monochrome, all material-first,
       //    all built around a real physical LOGO HOST SURFACE the wordmark can be
       //    engraved / embossed / backlit / projected into. No cyberpunk/rave/vaporwave
       //    clichés — those produced colored, chaotic posters. One is picked per request
@@ -537,7 +537,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
       let enhancedUserRequest = prompt;
       if (lovableApiKey) {
         try {
-          const directorSystem = `You are a senior creative director writing the visual brief for a STUNNING promotional poster for DeHub (a decentralized creator platform). Output ONE dense paragraph, 120–180 words, no lists, no preamble, no quotes.
+          const directorSystem = `You are a senior creative director writing the visual brief for a STUNNING promotional poster for Riftn (a decentralized creator platform). Output ONE dense paragraph, 120–180 words, no lists, no preamble, no quotes.
 
 This is CAMPAIGN artwork — cinematic, editorial, premium (Apple keynote × A24 × Zaha Hadid × Blade Runner 2049 interiors). Never a "brand-guidelines diagram", never generic AI stock.
 
@@ -549,7 +549,7 @@ Rules (non-negotiable):
 - STRICT MONOCHROME: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white. NO color hues at all — no red, orange, yellow, magenta, purple, violet, green, blue, teal, pastel, neon glow. Any ambient light must be a cool near-white (saturation under 10%). The ONLY exception is if the user's brief literally names a color; if it does, honor it as a restrained accent while keeping the scene mostly monochrome. If in doubt, kill the color.
 - MATERIALS: liquid glass, frosted glass, polished chrome, brushed aluminum, obsidian, mercury, smoked crystal, wet volcanic stone. Real reflections, refractions, subsurface scattering, subtle caustics. Backgrounds must have texture/depth (mist, marble veining, brushed metal, silk drapery) — NEVER flat black.
 - LIGHTING: one cinematic key light with named direction (upper-left / upper-right / rim / backlight / god-ray), soft rim on subject edges, deep shadow falloff into negative space.
-- LOGO HOST SURFACE: describe it explicitly — its material, position, orientation, and that its face is CURRENTLY BLANK. This is where the real DeHub wordmark gets composited afterward. Do NOT draw the wordmark, letters, or the word "DeHub".
+- LOGO HOST SURFACE: describe it explicitly — its material, position, orientation, and that its face is CURRENTLY BLANK. This is where the real Riftn wordmark gets composited afterward. Do NOT draw the wordmark, letters, or the word "Riftn".
 - No emoji. No purple/indigo gradients. No rainbow. No lens flares. No cyberpunk neon. No "hero with arms up". No motion-blur action shots. No hooded figures unless the archetype names one.
 - If the user asked for a headline, name it in one short display phrase (max 5 words). If not, say "no headline".
 - End with: "Shot on Hasselblad, 85mm, f/2.8, gallery quality, campaign polish."`;
@@ -581,7 +581,7 @@ Rules (non-negotiable):
         }
       }
 
-      brandPromptOverride = `Create a STUNNING promotional marketing poster for DeHub (a decentralized social platform). This is campaign artwork — cinematic, editorial, premium.
+      brandPromptOverride = `Create a STUNNING promotional marketing poster for Riftn (a decentralized social platform). This is campaign artwork — cinematic, editorial, premium.
 
 Format: ${formatHint}. Compose for this aspect ratio.
 
@@ -589,7 +589,7 @@ Non-negotiable brand rules (violating these ruins the piece):
 - STRICT MONOCHROME PALETTE: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. ABSOLUTELY NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, indigo, cyan, pastel, neon glow. Any ambient light must be a cool near-white (saturation under 10%). If the ART DIRECTION below literally names a color, honor it as a restrained accent; otherwise, kill every hue.
 - BACKGROUND MUST HAVE DEPTH: silk drapery, brushed metal, black marble veining, volumetric mist, obsidian, mercury — never a flat #000 wall.
 - MATERIALS: liquid glass, frosted crystal, polished chrome, brushed aluminum, obsidian, smoked crystal, mercury. Real reflections, refractions, subsurface scattering, subtle caustics.
-- LOGO HOST SURFACE: the scene MUST include the specific physical surface named in the ART DIRECTION (e.g. an obsidian slab, brushed-aluminum plaque, backlit smoked-glass panel, chrome monolith face). That surface must be a real object in the scene, angled/lit to match, and its face must be perfectly BLANK — do NOT draw a logo, the word "DeHub", letters, glyphs, placeholder marks, icons, or any text on it. The real DeHub wordmark will be composited onto that exact blank surface afterward. Size the blank area for a wordmark lockup roughly 20-30% of canvas width with min 8% clear space on every side.
+- LOGO HOST SURFACE: the scene MUST include the specific physical surface named in the ART DIRECTION (e.g. an obsidian slab, brushed-aluminum plaque, backlit smoked-glass panel, chrome monolith face). That surface must be a real object in the scene, angled/lit to match, and its face must be perfectly BLANK — do NOT draw a logo, the word "Riftn", letters, glyphs, placeholder marks, icons, or any text on it. The real Riftn wordmark will be composited onto that exact blank surface afterward. Size the blank area for a wordmark lockup roughly 20-30% of canvas width with min 8% clear space on every side.
 - TYPOGRAPHY: only if the ART DIRECTION names a short display headline, render it in Exo / Exo 2 geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing, pure white. Never serifs, script, humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
 - NO emoji. NO purple/indigo gradients. NO rainbow. NO cyberpunk neon. NO glossy 3D blobs. NO generic AI clichés (hero-with-arms-up, purple gradient on white, floating chrome spheres in empty voids). NO motion-blur action shots.
 
@@ -600,7 +600,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
       // Client-supplied logo (from Chat / Poster Studio) takes precedence;
       // otherwise the deterministic composite function will fall back to
-      // its hardcoded canonical DeHub wordmark data URI. We no longer fetch
+      // its hardcoded canonical Riftn wordmark data URI. We no longer fetch
       // dehub.io/__l5e/... here because that path returns SPA HTML in
       // production and silently broke the composite step.
       // Reject non-image "logos" outright: the dehub.io /__l5e/assets-v1 paths
@@ -613,7 +613,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
       else console.log('[dehub-poster] No client logo — composite will use hardcoded canonical wordmark');
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
-      // for the DeHub wordmark and brand text. Falls through to Gemini path below on failure.
+      // for the Riftn wordmark and brand text. Falls through to Gemini path below on failure.
       if (lovableApiKey) {
         try {
 
@@ -640,7 +640,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
               const sceneDataUrl = `data:image/png;base64,${b64}`;
 
               // ── Step 2 (PRIMARY): deterministic SVG overlay of the real
-              //    DeHub wordmark via resvg-wasm — mirrors the pattern used
+              //    Riftn wordmark via resvg-wasm — mirrors the pattern used
               //    by affiliate-share-image / blog-share-image so the logo
               //    is ALWAYS pixel-perfect, correctly-typeset, and never
               //    hallucinated by a diffusion model. Also renders a
@@ -683,7 +683,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
               const geminiCompositeLogo = compositeLogo ?? DEHUB_LOGO_DATA_URI;
               if (geminiCompositeLogo) {
                 try {
-                  const compositePrompt = `Take the first image (a finished DeHub marketing scene) and place the second image (the official DeHub white wordmark, transparent PNG) onto it as a logo lockup.
+                  const compositePrompt = `Take the first image (a finished Riftn marketing scene) and place the second image (the official Riftn white wordmark, transparent PNG) onto it as a logo lockup.
 - Position the wordmark in the pre-reserved empty area of the scene. Do not cover the hero subject.
 - Size it so its width is roughly 18-26% of the canvas width. Keep min 8% clear space on every side.
 - Keep the wordmark PURE WHITE, crisp, sharp, perfectly horizontal, unaltered. Use the attached pixels as-is.
@@ -744,8 +744,8 @@ ART DIRECTION: ${enhancedUserRequest}`;
           sourceImage = logoDataUrl;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
-          contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
-- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas), integrated into the physical logo-host surface described in the ART DIRECTION (engraved / embossed / backlit / projected — not floating flat). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
+          contextualPrompt = `RIFTN BRAND SYSTEM (mandatory):
+- The attached image is the official Riftn wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas), integrated into the physical logo-host surface described in the ART DIRECTION (engraved / embossed / backlit / projected — not floating flat). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
 - STRICT MONOCHROME palette: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, cyan, indigo, pastel, neon glow. Any ambient light must be cool near-white (saturation under 10%). Only exception: if the ART DIRECTION literally names a color, honor it as a restrained accent.
 - Aesthetic: liquid glass, frosted blur, obsidian, mercury, brushed metal, cinematic, premium, Apple keynote × A24. Backgrounds must have texture/depth — never flat black.
 - Typography (only if the ART DIRECTION names a short display headline): Exo / Exo 2 geometric technical sans-serif, pure white, generous letter-spacing. No emoji. No generic AI clichés.
@@ -872,7 +872,7 @@ serve(async (req) => {
     body: peek as Record<string, unknown>,
     actionType: 'generate-image',
     rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
-    // DeHub banners cost nothing. Still authenticated and still rate-limited —
+    // Riftn banners cost nothing. Still authenticated and still rate-limited —
     // free is a price, not an open door.
     free: isFreeTemplateRequest(peek),
   });

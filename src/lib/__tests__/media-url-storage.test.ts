@@ -20,7 +20,7 @@ describe('storageImage', () => {
   it('leaves everything it cannot or should not resize untouched', () => {
     expect(storageImage(undefined, 96)).toBeUndefined();
     expect(storageImage(null, 96)).toBeUndefined();
-    expect(storageImage('blob:https://dehub.io/abc', 96)).toBe('blob:https://dehub.io/abc');
+    expect(storageImage('blob:https://riftn.com/abc', 96)).toBe('blob:https://riftn.com/abc');
     expect(storageImage('https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/1.jpg', 96)).toBe(
       'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/1.jpg',
     );

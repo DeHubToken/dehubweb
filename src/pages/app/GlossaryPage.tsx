@@ -201,7 +201,7 @@ export default function GlossaryPage() {
       id: 'fractions',
       title: t('glossary.sections.fractions', 'Fractions & Ownership'),
       entries: [
-        { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'A post minted on DeHub becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.') },
+        { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'A post minted on Riftn becomes an NFT split into 1,000 fractions, and the creator starts with all 1,000 — 100% ownership of the content. Minting is optional and can happen when you publish or later.') },
         { icon: <Users size={iconSize} />, title: t('glossary.holders', 'Holders'), description: t('glossary.holdersDesc', 'The list of wallet addresses that own fractions of a post. Shown on the Post Info page with each holder\'s balance and ownership percentage.') },
         { icon: <BarChart3 size={iconSize} />, title: t('glossary.ownershipBar', 'Ownership Bar'), description: t('glossary.ownershipBarDesc', 'A progress bar on the Post Info page showing how many of the 1,000 fractions the creator still holds vs. how many have been distributed or sold.') },
         { icon: <Tag size={iconSize} />, title: t('glossary.listFractions', 'List Fractions'), description: t('glossary.listFractionsDesc') },
@@ -307,8 +307,8 @@ export default function GlossaryPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.278632c72021", { defaultValue: "Glossary — Icons, Features & Web3 Terms" })} description={_copy("copy.f36d0d409464", { defaultValue: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." })} url="https://dehub.io/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'DeHub Glossary', url: 'https://dehub.io/app/glossary', description: _copy("copy.0e6ebb58c64c", { defaultValue: "Complete guide to DeHub icons, features and Web3 terms." }) }} />
-      <h1 className="sr-only">{_copy("copy.0af1e8b4951c", { defaultValue: "DeHub Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.278632c72021", { defaultValue: "Glossary — Icons, Features & Web3 Terms" })} description={_copy("copy.f36d0d409464", { defaultValue: "Learn what every icon, button and feature means on Riftn. A complete guide to the platform's UI, Web3 terms, staking badges and more." })} url="https://riftn.com/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'Riftn Glossary', url: 'https://riftn.com/app/glossary', description: _copy("copy.0e6ebb58c64c", { defaultValue: "Complete guide to Riftn icons, features and Web3 terms." }) }} />
+      <h1 className="sr-only">{_copy("copy.0af1e8b4951c", { defaultValue: "Riftn Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={glossaryIcon} alt={_copy("copy.4c4e436f9a45", { defaultValue: "Glossary" })} className="w-8 h-8 object-contain brightness-75" />}
         title={t('glossary.title', 'Glossary')}

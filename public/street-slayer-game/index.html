@@ -38,7 +38,7 @@
 			-ms-touch-action: none;
 		}
 
-		/* DeHub: the exit chip below. Top CENTRE, and that is not arbitrary —
+		/* Riftn: the exit chip below. Top CENTRE, and that is not arbitrary —
 		   every other edge of the 854x480 layout is spoken for. Top left is the
 		   portrait and life bar, bottom left the directional pad, bottom right
 		   the six action buttons, and top right the touch pause button. The band
@@ -75,7 +75,7 @@
 			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 		}
 
-		/* DeHub: boot screen. Construct 2's stock loader is a percentage in
+		/* Riftn: boot screen. Construct 2's stock loader is a percentage in
 		   plain text over `loading-logo.png` — which is the Construct 2 engine
 		   cog, not this game. That is the first thing a player sees, so it is
 		   covered with the game's own wordmark and a real bar driven by the
@@ -119,7 +119,7 @@
 			transition: width 180ms ease-out;
 		}
 
-		/* DeHub: portrait guard. The project is a fixed 854x480 landscape with
+		/* Riftn: portrait guard. The project is a fixed 854x480 landscape with
 		   its touch pad and action buttons placed for that shape, and letterbox
 		   scaling honours it — so in portrait the whole game shrinks to a strip
 		   across the middle with controls too small to hit. Orientation is set
@@ -188,7 +188,7 @@
 <body>
 	<div id="fb-root"></div>
 
-	<!-- DeHub: boot screen and portrait guard. Both are markup + CSS so they are
+	<!-- Riftn: boot screen and portrait guard. Both are markup + CSS so they are
 	     up before a single byte of the engine has parsed, which is exactly when
 	     they are needed. See the style block above for why each exists. -->
 	<div id="dehub-boot">
@@ -263,7 +263,7 @@
 		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
 		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
 
-		// DeHub: upstream registers a service worker here for offline play. That
+		// Riftn: upstream registers a service worker here for offline play. That
 		// cannot work in this frame and, worse, cannot fail quietly in it: the
 		// sandbox withholds allow-same-origin, so the frame has an opaque origin,
 		// and READING navigator.serviceWorker on an opaque origin THROWS a
@@ -278,7 +278,7 @@
     </script>
 
 	<!-- ===================================================================
-	     DeHub: the way out. Not upstream, and it is a PAGE change rather
+	     Riftn: the way out. Not upstream, and it is a PAGE change rather
 	     than a runtime patch, so re-exporting the game does not reproduce it.
 
 	     The arcade player draws no chrome of its own: a game gets the whole
@@ -292,7 +292,7 @@
 	     listener saw it, which breaks a control the game ships with.
 	     =================================================================== -->
 	<script>
-	// DeHub: drive the boot screen from the runtime's own progress, and retire
+	// Riftn: drive the boot screen from the runtime's own progress, and retire
 	// it when the runtime says it has finished loading.
 	//
 	// `cr_getC2Runtime` is a global the Construct 2 export already publishes, so
@@ -324,7 +324,7 @@
 		}());
 	}());
 
-	// DeHub: let someone who cannot rotate play anyway.
+	// Riftn: let someone who cannot rotate play anyway.
 	(function () {
 		var b = document.getElementById('dehub-rotate-dismiss');
 		b.addEventListener('click', function () {
@@ -332,7 +332,7 @@
 		});
 	}());
 
-	// DeHub: the run bridge. Not upstream, and a PAGE change like the exit chip
+	// Riftn: the run bridge. Not upstream, and a PAGE change like the exit chip
 	// below — re-exporting the game does not reproduce it.
 	//
 	// WHAT IT MEASURES, AND WHY NOT THE OBVIOUS THING

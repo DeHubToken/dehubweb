@@ -72,7 +72,7 @@ const FeaturedIn = () => {
     <div className="space-y-8">
       <div className="space-y-4">
         <h1 className="text-4xl font-bold text-foreground">{_copy("copy.dbc2def4603a", { defaultValue: "Featured In" })}</h1>
-        <p className="text-xl text-muted-foreground leading-relaxed">{_copy("copy.ee1c1eecf1b6", { defaultValue: "DeHub has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media." })}</p>
+        <p className="text-xl text-muted-foreground leading-relaxed">{_copy("copy.ee1c1eecf1b6", { defaultValue: "Riftn has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media." })}</p>
       </div>
 
       {/* PRESS FEATURES */}
@@ -115,7 +115,7 @@ const FeaturedIn = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Newspaper className="w-5 h-5" />{_copy("copy.6cd2ed68db06", { defaultValue: "Press & media enquiries" })}</CardTitle>
-          <CardDescription>{_copy("copy.1845043a09b8", { defaultValue: "Writing about DeHub or looking for assets, quotes or an interview? We'd love to help." })}</CardDescription>
+          <CardDescription>{_copy("copy.1845043a09b8", { defaultValue: "Writing about Riftn or looking for assets, quotes or an interview? We'd love to help." })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3 flex-wrap">

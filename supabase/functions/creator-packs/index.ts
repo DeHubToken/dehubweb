@@ -5,7 +5,7 @@
 // decided on the server and never taken from the request:
 //
 //   · Who is acting — `guardPaidEndpoint` resolves the wallet from a verified
-//     DeHub token.
+//     Riftn token.
 //   · What they may publish — `resolveVoteWeight` reads the badge the API holds
 //     for that wallet, and `packLimitsFor` turns the tier into pack and item
 //     caps. No badge means no packs.

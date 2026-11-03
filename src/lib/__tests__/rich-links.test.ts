@@ -36,7 +36,7 @@ describe('share link recognition', () => {
       'https://app.ens.domains/vitalik.eth', 'https://github.com/org/repo', 'https://ipfs.filebase.io/ipfs/' + cid,
     ]);
     expect(extractShareUrls('person@vitalik.eth vitalik.eth.attacker.com data.pdf 2.5x')).toEqual([]);
-    expect(extractShareUrls('dehub.io/work https://dehub.io/work')).toEqual(['https://dehub.io/work']);
+    expect(extractShareUrls('riftn.com/work https://riftn.com/work')).toEqual(['https://riftn.com/work']);
     expect(extractShareUrls('https://notgithub.com/org/repo')[0]).toBe('https://notgithub.com/org/repo');
   });
   it('previews explicit root links without requiring a trailing slash', () => {
@@ -70,7 +70,7 @@ describe('provider normalization', () => {
   it('only exposes playable public Audius tracks and never fabricates a stream for gated music', () => {
     const p = link('https://audius.co/artist/song');
     const fixture = { id: 'Track123', title: 'A song', user: { name: 'Artist' }, access: { stream: true }, is_streamable: true, is_stream_gated: false, duration: 120 };
-    expect(normalizeRichPreview(p, fixture)?.rich.audioUrl).toContain('/tracks/Track123/stream?app_name=DeHub');
+    expect(normalizeRichPreview(p, fixture)?.rich.audioUrl).toContain('/tracks/Track123/stream?app_name=Riftn');
     for (const patch of [{ is_stream_gated: true }, { access: { stream: false } }, { access_authorities: ['authority'] }, { stream_conditions: { usdc_purchase: {} } }]) {
       expect(normalizeRichPreview(p, { ...fixture, ...patch })?.rich.audioUrl).toBeUndefined();
     }

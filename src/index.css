@@ -66,7 +66,7 @@
 
 /* 
 ================================================================================
-DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
+RIFTN DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
 ================================================================================
 
 1. BUTTONS: All buttons must match our existing liquid glass style:
@@ -3795,11 +3795,11 @@ html[data-system-tone="light"] [data-login-modal] .bg-black\/20 {
   border-color: var(--hairline) !important;
 }
 
-/* DeHub wordmark in the modal header is a white PNG — invert it on paper. */
-html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
+/* Riftn wordmark in the modal header is a white PNG — invert it on paper. */
+html[data-theme="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-login-modal] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
@@ -4322,10 +4322,10 @@ html[data-theme="light"] [data-prompt-landing] {
 html[data-system-tone="light"] [data-prompt-landing] {
   color: var(--ink) !important;
 }
-html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-theme="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 html[data-theme="light"] [data-prompt-landing] h1,
@@ -5769,7 +5769,7 @@ input[data-hue-slider]:focus-visible {
 
 /*
 ================================================================================
-DEHUB PRELOADER — the animated DeHub mark used for page-level waits.
+RIFTN PRELOADER — the animated Riftn mark used for page-level waits.
 ================================================================================
 See components/app/DeHubLoader.tsx. Two things the component can't express
 inline:
@@ -6679,8 +6679,8 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     transform: translateX(-50%);
   }
   .dehub-intro .dehub-intro-top { margin-bottom: 0; align-items: center; }
-  .dehub-intro .dehub-intro-brand { padding: 6px 12px; border-radius: 10px; }
-  .dehub-intro .dehub-intro-brand img { height: 15px; }
+  .dehub-intro .dehub-intro-brand { padding: 2px 0; }
+  .dehub-intro .dehub-intro-brand img { height: 17px; }
   .dehub-intro .dehub-intro-pills { margin-top: 140px; margin-bottom: 14px; justify-content: center; }
   .dehub-intro .dehub-intro-pills > button { width: 36px; height: 4px; }
   .dehub-intro .dehub-intro-stage { padding-right: 0; text-align: center; }
@@ -6721,8 +6721,6 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     background: rgb(255 255 255 / 0.8);
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.09), 0 10px 30px rgb(0 0 0 / 0.08);
   }
-  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
-  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
   html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-head { background-image: linear-gradient(180deg, #111114 30%, #6b6b72 100%) !important; filter: none !important; }

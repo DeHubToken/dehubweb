@@ -87,7 +87,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
     setImgIdx(0);
     setFailedImage(null);
   }, [listingId]);
-  // Quoting needs a DeHub token, so a signed-out browser would only get a 401
+  // Quoting needs a Riftn token, so a signed-out browser would only get a 401
   // back. They see the USD price and Buy opens the login modal; the quote
   // fetches on its own once they are in, because this flips with it.
   // Print-on-demand listings are bought on the provider's site, never quoted here.

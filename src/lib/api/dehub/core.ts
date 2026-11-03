@@ -1,10 +1,10 @@
 import { isKidsModeLocked } from "@/lib/kids-mode-lock";
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
-// DeHub CDN base URL for media assets
+// Riftn CDN base URL for media assets
 export const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 
-// DeHub API base URL
+// Riftn API base URL
 export const DEHUB_API_BASE = "https://api.dehub.io";
 
 // Keep API access independent of the website's DNS-selected edge address.
@@ -13,7 +13,7 @@ export const DEHUB_API_REQUEST_BASE = DEHUB_API_BASE;
 
 function apiRelayBase(): string {
   return typeof window !== 'undefined' && window.location.hostname === 'staging.dehub.io'
-    ? 'https://staging.dehub.io/_api' : 'https://dehub.io/_api';
+    ? 'https://staging.dehub.io/_api' : 'https://riftn.com/_api';
 }
 
 function apiRequestUrl(endpoint: string): string {
@@ -31,7 +31,7 @@ const DEFAULT_API_TIMEOUT_MS = 20_000;
 
 /**
  * Convert relative media paths to absolute CDN URLs
- * The DeHub API returns relative paths like "images/xxx.jpg"
+ * The Riftn API returns relative paths like "images/xxx.jpg"
  */
 export function getMediaUrl(relativePath?: string): string | undefined {
   if (!relativePath) return undefined;
@@ -461,7 +461,7 @@ export async function ensureFreshToken(): Promise<string> {
   throw new AuthenticationError('Session expired. Please sign in again.');
 }
 
-// Base API call function - calls DeHub API directly.
+// Base API call function - calls Riftn API directly.
 //
 // `endpoint` resolves against the bare origin, so it must include the `/api`
 // prefix. Mobile's axios client sets a base URL ending in `/api` and therefore

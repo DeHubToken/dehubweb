@@ -28,7 +28,7 @@ export const dubaiEventPost: BlogPostType = {
   bannerImage: '/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png',
   bannerImageAlt: 'DeHub DeTour Dubai event banner',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-04-10T12:00:00.000Z',
   tags: ['DeHub Journey', 'Roadmap', 'Q22024', 'Events', 'Dubai'],

@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Images Feed Component
  * =====================
  * Displays image posts in collage or endless scroll view.
- * Fetches from DeHub API.
+ * Fetches from Riftn API.
  * 
  * @module components/app/feeds/ImagesFeed
  */
@@ -67,6 +67,7 @@ function useInfiniteLoaderRef(
   hasNextPage: boolean | undefined,
   fetchNextPage: () => Promise<unknown>,
   isFetchingRef: React.MutableRefObject<boolean>,
+  pageCount: number,
 ): React.RefCallback<HTMLDivElement> {
   // Read through refs so the callback identity never changes: a new identity
   // would detach and re-attach the observer on every render of the feed.
@@ -76,12 +77,26 @@ function useInfiniteLoaderRef(
   fetchNextPageRef.current = fetchNextPage;
 
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+
+  // The observer only reports changes. When a page lands and the grid is still
+  // too short to push the sentinel out of view (twelve tiles on a phone), it
+  // never leaves and so never "enters" again, and paging stops for good.
+  // Re-observing after each page makes it report where the sentinel is now.
+  useEffect(() => {
+    const observer = observerRef.current;
+    const node = nodeRef.current;
+    if (!observer || !node || !hasNextPage) return;
+    observer.unobserve(node);
+    observer.observe(node);
+  }, [pageCount, hasNextPage]);
 
   return useCallback((node: HTMLDivElement | null) => {
     if (observerRef.current) {
       observerRef.current.disconnect();
       observerRef.current = null;
     }
+    nodeRef.current = node;
     if (!node) return;
 
     observerRef.current = new IntersectionObserver(
@@ -483,7 +498,7 @@ export function ImagesFeed({
     resetContentFilters();
   }, [setSelectedSort, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
-  // Fetch from DeHub API (default - no content filters)
+  // Fetch from Riftn API (default - no content filters)
   const {
     data: apiData,
     fetchNextPage: fetchNextPageDefault,
@@ -559,8 +574,9 @@ export function ImagesFeed({
     onPostSelected?.(postId);
   };
 
-  const collageLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
-  const feedLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
+  const pageCount = (useUnifiedSource ? unifiedData?.pages.length : apiData?.pages.length) ?? 0;
+  const collageLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef, pageCount);
+  const feedLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef, pageCount);
 
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;

@@ -1,12 +1,12 @@
 {
- "note": "Where the original DeHub token's trading tax went, from launch in August 2021 to the last tax payout in March 2023. Traced once from BNB Smart Chain; every figure is valued in USD at that day's Binance BNBUSDT close and can be re-checked on BscScan.",
+ "note": "Where the original Riftn token's trading tax went, from launch in August 2021 to the last tax payout in March 2023. Traced once from BNB Smart Chain; every figure is valued in USD at that day's Binance BNBUSDT close and can be re-checked on BscScan.",
  "period": {
   "from": "2021-08-30",
   "to": "2023-03-18"
  },
  "addresses": [
   {
-   "label": "DeHub token (v1)",
+   "label": "Riftn token (v1)",
    "address": "0xFC206f429d55c71cb7294EfF40c6ADb20dC21508"
   },
   {
@@ -33,7 +33,7 @@
    "buybacks": 757,
    "firstDay": "2021-09-02",
    "lastDay": "2022-08-12",
-   "method": "Every BuybackDone event on the token: the BNB the contract spent buying DeHub from the PancakeSwap pair, and the tokens that pair sent to the burn address in the same transaction."
+   "method": "Every BuybackDone event on the token: the BNB the contract spent buying Riftn from the PancakeSwap pair, and the tokens that pair sent to the burn address in the same transaction."
   },
   "shared": {
    "bnb": 1813.1541,

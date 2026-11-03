@@ -19,7 +19,7 @@ function fixture(extra) {
   const calls = [], store = new Storage();
   const sessions = [];
   const fetcher = async (url, init = {}) => {
-    // The connector's own DeHub session is plumbing, kept out of `calls`.
+    // The connector's own Riftn session is plumbing, kept out of `calls`.
     if (String(url).endsWith('/auth/connector-session')) {
       const token = new Headers(init.headers).get('Authorization')?.slice(7);
       sessions.push({ kind: 'issue', token });
@@ -119,7 +119,7 @@ test('OAuth validates exact redirect, PKCE, resource, one-use code and returns n
   assert.match(JSON.parse(raw).access_token, /^dhm_[a-f0-9]{64}$/);
   assert.equal((await exchange(f, flow, code)).status, 400);
 });
-test('consent is tied to verified identity and the DeHub browser origin', async () => {
+test('consent is tied to verified identity and the Riftn browser origin', async () => {
   const f = fixture(), flow = await pending(f);
   const foreign = await f.service.fetch(req('/mcp/oauth/approve', 'POST', { request_id: flow.request_id, approve: true }, { Origin: 'https://evil.example', 'x-dehub-token': 'one' }));
   assert.equal(foreign.status, 403);
@@ -229,7 +229,7 @@ test('chat apps that send a client secret method or no resource can still connec
   const token = await f.service.fetch(req('/mcp/oauth/token', 'POST', body.toString()));
   assert.equal(token.status, 200);
 });
-test('a connection keeps working past the 15 minute DeHub token by rotating its own session once', async () => {
+test('a connection keeps working past the 15 minute Riftn token by rotating its own session once', async () => {
   const f = fixture();
   const c = await connect(f, { scope: 'dehub:read' });
   assert.deepEqual(f.sessions, [{ kind: 'issue', token: 'one' }]);

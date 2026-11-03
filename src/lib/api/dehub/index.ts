@@ -1,5 +1,5 @@
 /**
- * DeHub API - Barrel Re-export
+ * Riftn API - Barrel Re-export
  * ============================
  * All domain modules are re-exported here for backward compatibility.
  * Consumer files continue importing from '@/lib/api/dehub' unchanged.

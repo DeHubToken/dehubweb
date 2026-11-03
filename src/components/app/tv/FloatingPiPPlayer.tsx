@@ -172,7 +172,7 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
     }
     claimMediaSession(
       instanceId,
-      { title: channel.name, artist: 'DeHub TV', artwork: channel.logo || null },
+      { title: channel.name, artist: 'Riftn TV', artwork: channel.logo || null },
       {
         play: () => {
           videoRef.current?.play().catch(() => {});

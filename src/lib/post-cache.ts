@@ -128,6 +128,11 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
     description: soundtrack ? `${description}\n${soundtrack}` : description,
     imageUrl: post.image,
     imageUrls: post.imageUrls,
+    // Without these the post page paints a comic as a plain photo until its
+    // own fetch lands, then swaps to the cards.
+    layout: post.layout,
+    mediaCaptions: post.mediaCaptions,
+    mediaDescriptions: post.mediaDescriptions,
     minterDisplayName: post.username,
     mintername: post.creatorUsername,
     minterAvatarUrl: post.avatar,

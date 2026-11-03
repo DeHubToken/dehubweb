@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 // Additional SEO enhancements for blog pages
 export const BlogSEOHelper: React.FC = () => {
   const { t: _copy } = _useCopy();
-  const isCanonicalHost = ['dehub.io', 'localhost', '127.0.0.1'].includes(window.location.hostname);
+  const isCanonicalHost = ['riftn.com', 'localhost', '127.0.0.1'].includes(window.location.hostname);
   return (
     <Helmet>
       {/* Enhanced meta tags for blog indexing — never re-open indexing on mirror hosts */}
@@ -16,7 +16,7 @@ export const BlogSEOHelper: React.FC = () => {
       <meta name="bingbot" content={isCanonicalHost ? 'index, follow' : 'noindex, nofollow'} />
 
       {/* RSS/Feed discovery */}
-      <link rel="alternate" type="application/rss+xml" title={_copy("copy.f40c6616855d", { defaultValue: "DeHub Blog RSS Feed" })} href="/rss.xml" />
+      <link rel="alternate" type="application/rss+xml" title={_copy("copy.f40c6616855d", { defaultValue: "Riftn Blog RSS Feed" })} href="/rss.xml" />
 
       {/* Preconnect to external domains for faster loading */}
       <link rel="preconnect" href="https://images.unsplash.com" />
@@ -27,7 +27,7 @@ export const BlogSEOHelper: React.FC = () => {
       <meta name="msapplication-TileColor" content="#2563eb" />
 
       {/* Social media optimization */}
-      <meta name="twitter:domain" content="dehub.io" />
+      <meta name="twitter:domain" content="riftn.com" />
     </Helmet>
   );
 };

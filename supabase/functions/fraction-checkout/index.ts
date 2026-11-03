@@ -219,6 +219,33 @@ function words(data: string): string[] {
   return out;
 }
 
+/**
+ * When a block was mined, in ms. NaN when no node will say.
+ *
+ * Asks a few times, then once on the public RPC, before giving up: one null
+ * from one node behind a load balancer is not an answer.
+ */
+async function blockTimestampMs(chainId: number, blockNumber: string | undefined): Promise<number> {
+  if (!blockNumber) return NaN;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const block = await rpc<{ timestamp?: string }>(chainId, "eth_getBlockByNumber", [blockNumber, false]);
+    if (block?.timestamp) return Number(BigInt(block.timestamp)) * 1000;
+    await new Promise((r) => setTimeout(r, 750));
+  }
+  try {
+    const res = await fetch(CHAINS[chainId].fallbackRpc, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_getBlockByNumber", params: [blockNumber, false] }),
+    });
+    const json = res.ok ? await res.json() : null;
+    if (json?.result?.timestamp) return Number(BigInt(json.result.timestamp)) * 1000;
+  } catch (err) {
+    console.error("[fraction-checkout] fallback block lookup threw", err);
+  }
+  return NaN;
+}
+
 type ReceiptCheck =
   | { ok: true; receipt: TxReceipt }
   | { ok: false; error: string; status: number; retryable?: boolean };
@@ -226,7 +253,7 @@ type ReceiptCheck =
 /**
  * Fetch a receipt, assert it succeeded, and assert it is recent.
  *
- * Deliberately no check on `receipt.from`. A DeHub account is a smart wallet,
+ * Deliberately no check on `receipt.from`. A Riftn account is a smart wallet,
  * so `tx.from` is the bundler that relayed the userOp, not the person acting —
  * asserting on it rejects every sponsored transaction. Every caller below
  * follows this with `dhbPaid` or `fractionsDelivered`, which pin the acting
@@ -259,12 +286,14 @@ async function loadReceipt(
   //
   // A missing timestamp is treated as unclaimable rather than fresh, so a node
   // that stops answering fails closed.
-  const block = receipt.blockNumber
-    ? await rpc<{ timestamp?: string }>(chainId, "eth_getBlockByNumber", [receipt.blockNumber, false])
-    : null;
-  const minedAt = block?.timestamp ? Number(BigInt(block.timestamp)) * 1000 : NaN;
+  const minedAt = await blockTimestampMs(chainId, receipt.blockNumber);
   if (!Number.isFinite(minedAt)) {
-    return { ok: false, error: "Could not establish when that transaction was mined", status: 400 };
+    // A receipt can come back before the node will serve its block (Base hands
+    // out receipts from pre-confirmed flashblocks), so the block lookup returns
+    // null for a payment that really happened. Reporting that as final stranded
+    // real payments; it goes back to the client as "not found yet" and is asked
+    // again instead. Still fails closed: nothing settles without a timestamp.
+    return { ok: false, error: "Transaction not found yet", status: 202, retryable: true };
   }
   if (Date.now() - minedAt > RECEIPT_WINDOW_MS) {
     return { ok: false, error: "That transfer is too old to use. Send a new one.", status: 400 };

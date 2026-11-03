@@ -387,7 +387,7 @@ export const IMAGE_PRESETS: CreatorPreset[] = [
     group: 'Brand',
     template:
       '{subject}, brand signage mockup on a real storefront, dimensional letters with realistic lighting and reflections, correctly spelled name, street context, evening glow',
-    sample: 'a neon sign reading "DeHub Cafe"',
+    sample: 'a neon sign reading "Riftn Cafe"',
     hintKey: 'creator.presetStorefrontSignHint',
     model: 'gemini-3.1-flash-image',
     aspect: '4:5',

@@ -3,7 +3,7 @@
 The public finance endpoint stops its historical operations estimate on
 2026-04-01. Earlier days retain the existing estimate; later days contain
 recorded usage and configured subscriptions only. Both web and mobile read
-https://dehub.io/api/finance-stats.
+https://riftn.com/api/finance-stats.
 
 DigitalOcean invoices and month-to-date usage, metered generation and text
 usage, payment fees and the existing fixed subscription bills remain included.

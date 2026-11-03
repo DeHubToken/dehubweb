@@ -13,7 +13,7 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Tag, ImageIcon, HandCoins } from "lucide-react";
+import { Loader2, Tag, ImageIcon, HandCoins, ChevronDown } from "lucide-react";
 import Wallet from "@/components/ui/cut-icons/wallet";
 
 import X from "@/components/ui/cut-icons/close";
@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { FractionThumb } from './FractionThumb';
 import { useAuth } from '@/contexts/AuthContext';
-import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
+import { useFractionPortfolio, livePositions, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
 import {
   useMyListings,
   useMyOffers,
@@ -91,9 +91,10 @@ export function PortfolioTab() {
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [selling, setSelling] = useState<PortfolioPosition | null>(null);
+  const [showDeleted, setShowDeleted] = useState(false);
 
   const {
-    data: positions = [],
+    data: allPositions = [],
     isLoading,
     isError: positionsFailed,
     isFetching: positionsFetching,
@@ -104,6 +105,10 @@ export function PortfolioTab() {
   const cancelListing = useCancelListing();
   const cancelOffer = useCancelOffer();
 
+  // Fractions of a deleted post still exist on-chain and can still be sold, so
+  // they stay reachable, folded away under their own toggle.
+  const positions = livePositions(allPositions);
+  const deletedPositions = allPositions.filter(p => p.postDeleted);
   const activeListings = listings.filter(l => l.status === 'active');
   const totalHeld = positions.reduce((sum, p) => sum + p.balance, 0);
 
@@ -149,7 +154,7 @@ export function PortfolioTab() {
           <div className="flex justify-center py-12">
             <Loader2 className="w-6 h-6 text-white/30 animate-spin" />
           </div>
-        ) : positionsFailed && positions.length === 0 ? (
+        ) : positionsFailed && allPositions.length === 0 ? (
           <div className="rounded-xl border border-white/10 bg-white/5">
             <AppState
               kind="error"
@@ -158,7 +163,7 @@ export function PortfolioTab() {
               primaryAction={{ label: t('common.retry'), onClick: () => void refetchPositions(), loading: positionsFetching }}
             />
           </div>
-        ) : positions.length === 0 ? (
+        ) : allPositions.length === 0 ? (
           <div className="text-center py-12 rounded-xl border border-white/10 bg-white/5">
             <ImageIcon className="w-8 h-8 text-white/15 mx-auto mb-2" />
             <p className="text-white/40 text-sm">{t('fractions.noneHeldYet')}</p>
@@ -167,16 +172,45 @@ export function PortfolioTab() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {positions.map((position) => (
-              <PositionCard
-                key={`${position.chainId}-${position.tokenId}`}
-                position={position}
-                onSell={() => setSelling(position)}
-                onOpen={() => navigate(`/app/post/${position.tokenId}/info`)}
-              />
-            ))}
-          </div>
+          <>
+            {positions.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {positions.map((position) => (
+                  <PositionCard
+                    key={`${position.chainId}-${position.tokenId}`}
+                    position={position}
+                    onSell={() => setSelling(position)}
+                    onOpen={() => navigate(`/app/post/${position.tokenId}/info`)}
+                  />
+                ))}
+              </div>
+            )}
+            {deletedPositions.length > 0 && (
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setShowDeleted(v => !v)}
+                  aria-expanded={showDeleted}
+                  className="flex items-center gap-1 text-xs text-white/40 hover:text-white/60 transition-colors"
+                >
+                  {t('fractions.deletedPosts', { count: deletedPositions.length })}
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDeleted ? 'rotate-180' : ''}`} />
+                </button>
+                {showDeleted && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {deletedPositions.map((position) => (
+                      <PositionCard
+                        key={`${position.chainId}-${position.tokenId}`}
+                        position={position}
+                        onSell={() => setSelling(position)}
+                        onOpen={() => setSelling(position)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
       </section>
 

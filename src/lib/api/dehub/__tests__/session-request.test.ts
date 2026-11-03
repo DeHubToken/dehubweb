@@ -12,7 +12,7 @@ describe('session request recovery', () => {
     const init = { method: 'POST', body: JSON.stringify({ sig: 'proof', timestamp: 123 }) };
     await expect(requestSession('/api/web/auth', init)).resolves.toBe(response);
     expect(fetchMock.mock.calls[0][0]).toBe('https://api.dehub.io/api/web/auth');
-    expect(fetchMock.mock.calls[1][0]).toBe('https://dehub.io/_api/api/web/auth');
+    expect(fetchMock.mock.calls[1][0]).toBe('https://riftn.com/_api/api/web/auth');
     expect(fetchMock.mock.calls[0][1].body).toBe(fetchMock.mock.calls[1][1].body);
   });
   it('returns HTTP refusals directly and stops after two transport failures', async () => {

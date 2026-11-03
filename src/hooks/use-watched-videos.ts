@@ -15,7 +15,7 @@
  * The preference follows the account. localStorage holds it for instant paint
  * and for signed-out readers; `useSyncedPreference` mirrors it into the
  * wallet's preference blob, so switching it on here has it on when you open
- * DeHub on your phone. (The DeHub backend is not the store — a named account
+ * Riftn on your phone. (The Riftn backend is not the store — a named account
  * setting there has to be whitelisted server-side or the write is silently
  * dropped; the Supabase preference blob has no such gate.)
  *

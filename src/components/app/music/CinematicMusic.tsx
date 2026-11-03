@@ -94,7 +94,7 @@ function RadioHero({ station }: { station: RadioStation }) {
 
   const share = async () => {
     const url = viewerShareUrl(`${window.location.origin}/app`);
-    const text = _copy("copy.b12d153bb3ac", { defaultValue: "Listening to {{value1}} on DeHub", value1: station.name });
+    const text = _copy("copy.b12d153bb3ac", { defaultValue: "Listening to {{value1}} on Riftn", value1: station.name });
     try {
       if (navigator.share) {
         await navigator.share({ title: station.name, text, url });

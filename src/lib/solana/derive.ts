@@ -1,7 +1,7 @@
 /**
- * The DeHub wallet's own Solana address.
+ * The Riftn wallet's own Solana address.
  * =====================================
- * Every DeHub smart wallet has a Solana wallet, derived from the same private
+ * Every Riftn smart wallet has a Solana wallet, derived from the same private
  * key rather than generated. Same key in, same address out, on every device and
  * in both apps — so it inherits the EVM wallet's recovery story instead of
  * needing one of its own: the key is restored from the encrypted seed in
@@ -15,7 +15,7 @@
  * It is deliberately not the BIP44 `m/44'/501'/0'/0'` path Phantom uses: the
  * mnemonic is not held in memory, only the derived EVM private key is, so the
  * recovery phrase alone will not reproduce this address inside Phantom. The
- * wallet is reachable through DeHub sign-in, the same way the EVM wallet is.
+ * wallet is reachable through Riftn sign-in, the same way the EVM wallet is.
  *
  * @noble rather than @solana/web3.js on purpose. `Keypair.fromSeed` is standard
  * ed25519 — `ed25519.getPublicKey(seed)` returns the identical 32 bytes — and

@@ -38,7 +38,7 @@ Waiting around on markets or perfect products is no longer viable. With the rise
   bannerImage: '/media/dev-update-jan-2026-banner.png',
   bannerImageAlt: 'DeHub Development Update January 2026 - The DeHub Era Starts',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-02-02T14:22:00.000Z',
   tags: ['Development', 'Update', 'App Launch', 'Google Play', 'Apple', '2026'],

@@ -59,8 +59,8 @@ describe('assistant intent classification', () => {
   });
 
   it('still routes a genuine video request, and never as an image', () => {
-    expect(requiresVideoGeneration('make a video of the DeHub logo spinning')).toBe(true);
-    expect(requiresImageGeneration('make a video of the DeHub logo spinning', false)).toBe(false);
+    expect(requiresVideoGeneration('make a video of the Riftn logo spinning')).toBe(true);
+    expect(requiresImageGeneration('make a video of the Riftn logo spinning', false)).toBe(false);
     // Video wins over an attachment too, or "animate this" on an attached
     // photo is billed as an image edit.
     expect(requiresImageGeneration('animate this', true)).toBe(false);
@@ -78,7 +78,7 @@ describe('assistant intent classification', () => {
     expect(detectAiToolRequest('transcribe this support call', false)).toBe('speech-to-text');
   });
 
-  it('brands an image only when DeHub is named alongside an artefact', () => {
+  it('brands an image only when Riftn is named alongside an artefact', () => {
     expect(isDeHubBrandedImageRequest('make a DeHub banner for the launch')).toBe(true);
     expect(isDeHubBrandedImageRequest('my DHB withdrawal is already pending')).toBe(false);
   });

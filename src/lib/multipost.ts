@@ -90,7 +90,7 @@ async function uploadMedia(files: File[]): Promise<{ url: string; type: 'image' 
 
 function postLink(tokenId: string | number | undefined): string | undefined {
   if (tokenId === undefined || tokenId === null) return undefined;
-  const origin = /(^|\.)dehub\.io$/.test(window.location.hostname) ? window.location.origin : 'https://dehub.io';
+  const origin = /(^|\.)(dehub\.io|riftn\.com)$/.test(window.location.hostname) ? window.location.origin : 'https://riftn.com';
   return `${origin}/app/post/${tokenId}`;
 }
 

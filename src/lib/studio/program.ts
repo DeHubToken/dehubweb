@@ -9,9 +9,9 @@
  * overlay widgets.
  *
  * It is what makes OBS optional. The widgets matter most: drawn by each
- * DeHub viewer's app they never reach Twitch or YouTube, because the
+ * Riftn viewer's app they never reach Twitch or YouTube, because the
  * multistream relay forwards the video and nothing else. Burned in here, every
- * platform the stream is pushed to sees the same alerts DeHub viewers do.
+ * platform the stream is pushed to sees the same alerts Riftn viewers do.
  *
  * Shaped like the guest mixer next door and for the same reason: WHIP carries
  * one video track, so everything has to be one canvas by the time it reaches

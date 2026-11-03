@@ -12,7 +12,7 @@
  *   cooldown. A video counts the moment it plays; a feed item counts each time
  *   it comes into view.
  *
- * Signed-out visitors count too. The DeHub API requires a valid JWT on its view
+ * Signed-out visitors count too. The Riftn API requires a valid JWT on its view
  * endpoints, so views from visitors with no session go to the `anon-views`
  * Supabase edge function instead, which counts one viewer per (device id + IP)
  * per post per UTC day and repeats after the same 30-minute cooldown. Each
@@ -101,7 +101,7 @@ function markAsViewed(tokenIds: string[]): void {
 async function recordSingleView(tokenId: string): Promise<SingleViewResponse | null> {
   const token = getAuthToken();
 
-  // Signed out: the DeHub API rejects unauthenticated view calls outright, so
+  // Signed out: the Riftn API rejects unauthenticated view calls outright, so
   // route to the anonymous view backend instead of dropping the view.
   if (!token) {
     const result = await recordAnonViews([tokenId]);

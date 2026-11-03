@@ -6,5 +6,5 @@
  * src/test/rss-feeds.test.ts holds the two to the same output.
  */
 export function profileFeedUrl(handle: string): string {
-  return `https://dehub.io/${encodeURIComponent(String(handle).replace(/^@/, ''))}.rss`;
+  return `https://riftn.com/${encodeURIComponent(String(handle).replace(/^@/, ''))}.rss`;
 }

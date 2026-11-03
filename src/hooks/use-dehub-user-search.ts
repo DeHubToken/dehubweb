@@ -1,5 +1,5 @@
 /**
- * DeHub User Search Hook
+ * Riftn User Search Hook
  * =======================
  * Provides exact username lookup as a fallback for @username queries.
  * 
@@ -15,7 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
- * Map DeHub user to SearchCreator format
+ * Map Riftn user to SearchCreator format
  */
 export function mapUserToSearchCreator(user: DeHubUser): SearchCreator {
   const rawAvatarUrl = user.avatarImageUrl || user.avatarUrl || user.avatar_url;

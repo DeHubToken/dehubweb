@@ -57,7 +57,7 @@ export interface ArcadeGameCredit {
    * Upstream repository, where there is one.
    *
    * Absent for a game that was commissioned rather than found: Street Slayer
-   * was written for DeHub and delivered as a build, so there is no public
+   * was written for Riftn and delivered as a build, so there is no public
    * repository to point at and inventing a plausible one would be worse than
    * saying nothing. `src/test/arcade.test.ts` asserts the shape when it is set.
    */
@@ -159,7 +159,7 @@ export interface ArcadeGame {
    * untouched.
    */
   onlineHref?: string;
-  /** Host the opt-in DeHub community-presence bridge for this globe. */
+  /** Host the opt-in Riftn community-presence bridge for this globe. */
   socialPresence?: boolean;
   /**
    * This game's board, for the games that are a competition.
@@ -318,11 +318,11 @@ export const ARCADE_SANDBOX = 'allow-scripts allow-pointer-lock';
  * The baseline above exists because the arcade hosts third-party engines. That
  * is not what Trenchstar is: it is ours, it lives in `public/`, it is reviewed
  * in the same pull requests as the app, and the identical file already runs
- * with full same-origin powers at https://dehub.io/trenchstar-game/. Denying it
+ * with full same-origin powers at https://riftn.com/trenchstar-game/. Denying it
  * in the frame denies it nothing it cannot already do one URL along — it only
  * decides whether the desk works.
  *
- * And the desk needs it. Its three monitors are the real DeHub pages, framed:
+ * And the desk needs it. Its three monitors are the real Riftn pages, framed:
  * the feed, your profile, and the composer. `dehub.io` answers with
  * `X-Frame-Options: SAMEORIGIN`, which an opaque-origin parent can never
  * satisfy, so without this token all three refuse to load and the room is back
@@ -337,8 +337,8 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'gods-eye',
     get title() { return _translateCopy("copy.925917aad5b0", { defaultValue: "God's Eye" }); },
-    get tagline() { return _translateCopy("copy.d81e05376674", { defaultValue: "Find the DeHub community across a living 3D Earth." }); },
-    get description() { return _translateCopy("copy.9cc9f71c23f2", { defaultValue: "Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the DeHub community." }); },
+    get tagline() { return _translateCopy("copy.d81e05376674", { defaultValue: "Find the Riftn community across a living 3D Earth." }); },
+    get description() { return _translateCopy("copy.9cc9f71c23f2", { defaultValue: "Explore a live spatial-intelligence globe and, if you choose, place a deliberately approximate version of yourself among the Riftn community." }); },
     get action() { return _translateCopy("copy.c7dd40da23fc", { defaultValue: "Open the globe" }); },
     art: '/arcade/gods-eye.jpg',
     artVideo: '/arcade/gods-eye.mp4',
@@ -367,7 +367,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     get artAlt() { return _translateCopy("copy.0fa895900e3b", { defaultValue: "A curved wall of live candle charts and market panels around a dark trading floor in Chartopia" }); },
     credit: {
       name: 'Chartopia',
-      url: 'https://dehub.io',
+      url: 'https://riftn.com',
       licence: 'MIT',
       licenceFile: 'LICENSE-Trenchstar',
     },
@@ -395,7 +395,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // precisely what makes this cheap to miss.
     allow: 'fullscreen; autoplay; xr-spatial-tracking; microphone',
     // Ours, in this repo, and the only frame that gets same-origin — the desk
-    // monitors are the real DeHub pages and dehub.io answers SAMEORIGIN, which
+    // monitors are the real Riftn pages and dehub.io answers SAMEORIGIN, which
     // an opaque parent can never satisfy. See FIRST_PARTY_SANDBOX.
     sandbox: FIRST_PARTY_SANDBOX,
     // WebGL2: the post chain runs a multisampled half-float render target,
@@ -405,7 +405,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
   {
     slug: 'street-slayer',
     get title() { return _translateCopy("copy.71b386d38529", { defaultValue: "Street Slayer" }); },
-    get tagline() { return _translateCopy("copy.883791f091e3", { defaultValue: "A neon-street brawler, made for DeHub alone." }); },
+    get tagline() { return _translateCopy("copy.883791f091e3", { defaultValue: "A neon-street brawler, made for Riftn alone." }); },
     get description() { return _translateCopy("copy.7a56c707abec", { defaultValue: "A side-scrolling beat ’em up down a neon-lit street: pick one of three fighters, then punch, kick and throw your way through everything the block sends at you." }); },
     get action() { return _translateCopy("copy.1ef142c8213e", { defaultValue: "Fight" }); },
     art: '/arcade/street-slayer.webp',
@@ -599,7 +599,7 @@ export const UNLISTED_ARCADE_GAMES: ArcadeGame[] = [
     artAlt: 'A gilded bridge lined with lanterns and pink roses, heading into soft pink clouds in Love Lock Bridge',
     credit: {
       name: 'Love Lock Bridge',
-      author: 'DeHub',
+      author: 'Riftn',
       licence: 'Proprietary',
       licenceFile: 'LICENSE-LoveLockBridge',
     },

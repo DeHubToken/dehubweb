@@ -338,7 +338,7 @@ export function TipModal({
             <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
               {t(
                 'tip.privateBalanceNotice',
-                'This account has private balance mode on, so DeHub cannot send tokens or tips to it.',
+                'This account has private balance mode on, so Riftn cannot send tokens or tips to it.',
               )}
             </div>
           ) : null}

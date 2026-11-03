@@ -9,7 +9,7 @@ export const riftnRelaunchPost: BlogPost = {
     "bannerImage":  "/media/dehub-to-riftn-transition.png",
     "bannerImageAlt":  "DeHub to Riftn — the next chapter",
     "author":  {
-                   "name":  "DeHub Team"
+                   "name":  "Riftn Team"
                },
     "publishedAt":  "2026-10-22T18:00:00.000Z",
     "tags":  [

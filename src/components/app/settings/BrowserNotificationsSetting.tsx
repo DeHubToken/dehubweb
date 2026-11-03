@@ -129,7 +129,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
 
   const testBody = t(
     'settings.browserNotificationsTestBody',
-    "That's what a DeHub notification looks like.",
+    "That's what a Riftn notification looks like.",
   );
 
   /**
@@ -162,12 +162,12 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   /** Permission is in hand — store the flag and prove delivery works. */
   const finishEnable = useCallback(async () => {
     setStoredEnabled(true);
-    if (await showTestNotification('DeHub', testBody)) {
+    if (await showTestNotification('Riftn', testBody)) {
       toast.success(t('settings.browserNotificationsEnabled', 'Browser notifications enabled'));
       return;
     }
     // The switch stays on and the row explains: turning it off here would hide
-    // the one message that says what is wrong, and the fault is not DeHub's to
+    // the one message that says what is wrong, and the fault is not Riftn's to
     // own either way.
     reportProbeFailure();
   }, [reportProbeFailure, t, testBody]);
@@ -233,7 +233,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
   };
 
   const sendTest = async () => {
-    if (await showTestNotification('DeHub', testBody)) {
+    if (await showTestNotification('Riftn', testBody)) {
       toast.success(t('settings.browserNotificationsTestSent', 'Test notification sent'));
     } else {
       reportProbeFailure();
@@ -256,7 +256,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
     ? isIOS()
       ? t(
           'settings.browserNotificationsIosHint',
-          'iPhone and iPad only allow this once DeHub is on your Home Screen — tap Share, then “Add to Home Screen”.',
+          'iPhone and iPad only allow this once Riftn is on your Home Screen — tap Share, then “Add to Home Screen”.',
         )
       : t('settings.browserNotificationsUnsupported', 'Browser notifications are not supported')
     : blocked
@@ -278,7 +278,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
           'On, but this browser cannot display them',
         )
       : tabOnly
-        ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while DeHub is open in a tab')
+        ? t('settings.browserNotificationsTabOnlyDesc', 'On, but only while Riftn is open in a tab')
         : baseDescription;
 
   const Icon =
@@ -315,7 +315,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
                 )
               : t(
                   'settings.browserNotificationsBlockedNote',
-                  'Only your browser can undo this — DeHub can’t ask again once it’s blocked.',
+                  'Only your browser can undo this — Riftn can’t ask again once it’s blocked.',
                 )}
           </p>
         </div>
@@ -331,7 +331,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
           <p className="mt-1 text-xs text-zinc-400">
             {t(
               'settings.browserNotificationsTabOnlyHint',
-              'Notifications can only reach you while DeHub is open in a tab: your browser refused to register for background push. That is usually the operating system blocking notifications for the browser itself, so find your browser in your system notification settings and switch it off and back on.',
+              'Notifications can only reach you while Riftn is open in a tab: your browser refused to register for background push. That is usually the operating system blocking notifications for the browser itself, so find your browser in your system notification settings and switch it off and back on.',
             )}
           </p>
         </div>
@@ -363,7 +363,7 @@ export function BrowserNotificationsSetting({ variant = 'row' }: BrowserNotifica
           <p className="mt-1 text-xs text-zinc-400">
             {t(
               'settings.browserNotificationsDisplayFailedHint',
-              'Your system is allowing notifications and the subscription is live — the browser itself failed to show one, and it will keep failing until that clears. Nothing in DeHub or your system settings will change it.',
+              'Your system is allowing notifications and the subscription is live — the browser itself failed to show one, and it will keep failing until that clears. Nothing in Riftn or your system settings will change it.',
             )}
           </p>
           {/* Verbatim, and deliberately not translated: it is the browser's

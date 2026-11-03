@@ -21,7 +21,7 @@ export const coinbaseDHBPost: BlogPostType = {
   bannerImage: '/media/c238e114-80c3-42ac-9e7a-d4617111466c.png',
   bannerImageAlt: 'Coinbase logo on mobile device with trading charts in background',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2024-12-15T12:00:00.000Z',
   tags: ['DHB Token', 'Coinbase', 'Exchange', 'Trading', 'Cryptocurrency'],

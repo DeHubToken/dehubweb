@@ -142,7 +142,7 @@ export function SeedPhraseBackup({ phrase, variant, onFinished, busy = false, in
         <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
         <ul className="space-y-1">
           <li>{t('walletBackup.warnOwns', 'Anyone with these words owns your wallet.')}</li>
-          <li>{t('walletBackup.warnNeverAsk', 'DeHub will never ask for them.')}</li>
+          <li>{t('walletBackup.warnNeverAsk', 'Riftn will never ask for them.')}</li>
           <li>{t('walletBackup.warnPaper', 'Write them on paper, not in a screenshot or notes app.')}</li>
         </ul>
       </div>

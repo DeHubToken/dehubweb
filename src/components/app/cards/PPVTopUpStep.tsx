@@ -6,7 +6,7 @@
  * It keeps the viewer exactly where they are: they pick anything they hold —
  * USDC on Arc, ETH on Ethereum, USDT on BNB, anything on Base — and one tap
  * turns it into DHB and hands straight back to the unlock. The DHB comes from
- * DeHub Pay first and the Uniswap pool only if DPay cannot fill it (see
+ * Riftn Pay first and the Uniswap pool only if DPay cannot fill it (see
  * lib/tip-funding). No wallet page, no buy page, no second decision.
  *
  * Bundle note: this renders inside eager feed cards, so nothing here may

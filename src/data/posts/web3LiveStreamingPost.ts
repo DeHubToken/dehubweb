@@ -75,7 +75,7 @@ To see how this stacks up against other decentralised options, our roundup of th
 
 Getting live is deliberately close to what you already know from other platforms:
 
-1. **Get the app.** Open the [DeHub web app](https://dehub.io/app) or install it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+1. **Get the app.** Open the [DeHub web app](https://riftn.com/app) or install it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 2. **Connect a wallet.** This becomes your on-chain identity, the account that owns your channel, your following and your earnings.
 3. **Set up your stream.** Point your broadcasting software at the ingest endpoint, or go live directly from the app for a quick mobile stream.
 4. **Decide how you monetise.** Enable tips, set up tokenised subscriptions, and choose whether specific content is free, pay-per-view or token-gated.
@@ -89,7 +89,7 @@ Honestly, it depends on what you need. If your entire income runs through one ce
 
 What has genuinely changed is that the excuses are gone. The infrastructure scales to tens of thousands of concurrent viewers, latency is low enough for real interaction, payments settle directly to creators, and the tooling is close enough to what streamers already use that the switching cost is mostly habit. For creators tired of building a business on rented land, that is the whole point.
 
-Ready to try it? [Start streaming on the DeHub app](https://dehub.io/app) and keep what you earn.
+Ready to try it? [Start streaming on the DeHub app](https://riftn.com/app) and keep what you earn.
 
 ## Frequently asked questions
 
@@ -115,7 +115,7 @@ Open the DeHub app or install it from Google Play, connect a wallet to create yo
 `,
   bannerImage: '/media/web3-live-streaming-decentralised-twitch-alternative-banner.png',
   bannerImageAlt: 'DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-02-26T11:20:00.000Z',
   updatedAt: '2026-02-26T11:20:00.000Z',
   tags: ['web3 live streaming', 'decentralised twitch alternative', 'crypto live streaming', 'livepeer', 'stream to earn', 'DeHub', 'creator economy'],

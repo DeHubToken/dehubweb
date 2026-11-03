@@ -1,5 +1,5 @@
 /**
- * DeHub LiveChat Socket.IO client
+ * Riftn LiveChat Socket.IO client
  *
  * Connects to the `/livechat` namespace with polling transport, upgrading to
  * websocket. Uses non-prefixed event names (sendMessage, joinRoom, …) with

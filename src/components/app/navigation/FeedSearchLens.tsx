@@ -196,7 +196,7 @@ export function FeedSearchLens({ tab, hasActiveFilters, filtersOpen, onToggleFil
   const feed = FEED_TABS.find((t) => t.value === tab);
   const Icon = feed?.icon;
   const placeholder = {
-    home: _copy("copy.57e2faa5ec63", { defaultValue: "Search DeHub" }),
+    home: _copy("copy.57e2faa5ec63", { defaultValue: "Search Riftn" }),
     shorts: _copy("copy.e8756c6865a5", { defaultValue: "Search shorts" }),
     images: _copy("copy.9e13d826baaf", { defaultValue: "Search images" }),
     videos: _copy("copy.c7661da99c41", { defaultValue: "Search videos" }),

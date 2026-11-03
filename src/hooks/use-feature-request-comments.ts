@@ -7,7 +7,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * These threads follow the post comment section's model on Supabase's tables:
  * replies hang off `parent_id`, reactions ride the same nine-reaction ladder
  * posts use, and your own row can be edited. What this is NOT is the same
- * component — post comments live on the DeHub API behind a tokenId, and until
+ * component — post comments live on the Riftn API behind a tokenId, and until
  * feature requests move there this is a second implementation of one idea.
  * Keeping the vocabulary identical is what will make that move cheap.
  */
@@ -256,7 +256,7 @@ export function useSubmitComment() {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
 
       // Tagging @assistant here gets an answer from the assistant itself, in
-      // DeHub's own voice. This board is where the people who reported things
+      // Riftn's own voice. This board is where the people who reported things
       // come back to ask whether the fix landed, and a question that sits
       // unanswered until somebody scrolls past is the whole problem. Fire and
       // forget: the comment is already saved, so a failed reply must not toast

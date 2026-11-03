@@ -1,7 +1,7 @@
 /**
- * DeHub Search Hook
+ * Riftn Search Hook
  * ==================
- * Provides search functionality using the DeHub /api/search endpoint.
+ * Provides search functionality using the Riftn /api/search endpoint.
  * Includes debouncing, pagination, and content type filtering.
  * 
  * @module hooks/use-dehub-search
@@ -42,6 +42,10 @@ export interface SearchCreator {
   followerCount?: number;
   isFollowing?: boolean;
   followsYou?: boolean;
+  /** Raw avatar path from the API, for cards that size their own avatar. */
+  avatarPath?: string;
+  /** Profile banner path, for the profile-card people results. */
+  coverImageUrl?: string | null;
 }
 
 export interface UseDeHubSearchOptions {
@@ -126,10 +130,12 @@ export function mapAccountToCreator(account: SearchAccount): SearchCreator {
     badgeLock: account.hideBadgeAndBalance ? null : account.badgeLock,
     badgeUsername: account.username,
     verified: account.verified || false,
-    bio: account.bio,
-    followerCount: account.followerCount,
+    bio: account.bio ?? account.aboutMe ?? undefined,
+    followerCount: account.followerCount ?? account.followers,
     isFollowing: account.isFollowing,
     followsYou: account.followsYou,
+    avatarPath: rawAvatarPath || undefined,
+    coverImageUrl: account.coverImageUrl ?? null,
   };
 }
 
@@ -168,7 +174,7 @@ export function extractUniqueCreators(nfts: DeHubNFT[]): SearchCreator[] {
 }
 
 /**
- * Hook to search DeHub content with debouncing and pagination
+ * Hook to search Riftn content with debouncing and pagination
  */
 export function useDeHubSearch({
   query,

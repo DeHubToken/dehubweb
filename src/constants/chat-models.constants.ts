@@ -17,7 +17,7 @@ export const CHAT_MODEL_OPTIONS: ChatModelOption[] = [
   {
     id: 'auto',
     get name() { return _translateCopy("copy.0286249762f7", { defaultValue: "Auto" }); },
-    get description() { return _translateCopy("copy.4a9fd15a895c", { defaultValue: "DeHub trained model" }); },
+    get description() { return _translateCopy("copy.4a9fd15a895c", { defaultValue: "Riftn trained model" }); },
     emoji: '✨'
   },
   {

@@ -13,7 +13,7 @@ const DEEP_LINK_PARAM = "to";
 /**
  * Reduce arbitrary user input to a safe same-origin path, or null.
  *
- * Accepts a bare path (`docs/getting-started`, `/app/stores`) or a full DeHub
+ * Accepts a bare path (`docs/getting-started`, `/app/stores`) or a full Riftn
  * URL, and rejects anything that would leave the origin: other hosts,
  * protocol-relative `//evil.com`, `javascript:`, and backslash variants that
  * some browsers normalise into `//`.
@@ -23,12 +23,12 @@ export const sanitizeDeepLinkPath = (raw: string | null | undefined): string | n
   let value = String(raw).trim();
   if (!value) return null;
 
-  // Full URL form — keep it only if it points at DeHub itself.
+  // Full URL form — keep it only if it points at Riftn itself.
   if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
     try {
       const url = new URL(value);
       if (url.protocol !== "https:" && url.protocol !== "http:") return null;
-      if (!/(^|\.)dehub\.io$/i.test(url.hostname)) return null;
+      if (!/(^|\.)(dehub\.io|riftn\.com)$/i.test(url.hostname)) return null;
       value = `${url.pathname}${url.search}${url.hash}`;
     } catch {
       return null;

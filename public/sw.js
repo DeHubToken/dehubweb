@@ -1,5 +1,5 @@
 /*
- * DeHub service worker — offline app shell + immutable asset/media cache.
+ * Riftn service worker — offline app shell + immutable asset/media cache.
  * =====================================================================
  * Hand-written (no Workbox) to keep the build dependency-free.
  *
@@ -249,9 +249,9 @@ self.addEventListener('push', (event) => {
     payload = {};
   }
 
-  const title = payload.title || 'DeHub';
+  const title = payload.title || 'Riftn';
   const options = {
-    body: payload.body || 'Something happened on DeHub',
+    body: payload.body || 'Something happened on Riftn',
     icon: payload.icon || '/icon-192.png',
     badge: '/icon-192.png',
     // Same tag replaces rather than stacks, so ten likes on one post are one
@@ -278,7 +278,7 @@ self.addEventListener('push', (event) => {
 });
 
 // Focus an open tab rather than opening a second copy of the app — a reader
-// with DeHub already open does not want two of it, and the tab they have is
+// with Riftn already open does not want two of it, and the tab they have is
 // the one holding their scroll position and their session.
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();

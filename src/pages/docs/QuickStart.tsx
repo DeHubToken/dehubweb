@@ -4,7 +4,7 @@ import { CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
- * Getting started on DeHub as a user: account, profile, first post, earning,
+ * Getting started on Riftn as a user: account, profile, first post, earning,
  * badges and the wallet. Every step points at something that exists in the
  * app today; the deeper detail lives in the dApp guide it links to.
  */

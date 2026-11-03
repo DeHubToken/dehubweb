@@ -35,7 +35,7 @@ interface PostContext {
 /**
  * A thread on the feature-request board that the assistant has been tagged in.
  *
- * Only ever set by DeHub's own backend — the `feature-request-assistant`
+ * Only ever set by Riftn's own backend — the `feature-request-assistant`
  * function reads the row out of Postgres and passes it through. A browser
  * could post one too, which is why nothing in here unlocks a tool or a scope:
  * it changes the voice and gives the model the thread it is replying to, and
@@ -64,14 +64,14 @@ interface ThreadContext {
 const TOOL_USE_PROMPT = `
 
 ## YOUR TOOLS — USE THEM
-You are connected live to DeHub's database. You are not working from memory.
+You are connected live to Riftn's database. You are not working from memory.
 
 - Any question about a specific person, post, ranking, balance or platform number: LOOK IT UP FIRST. Never estimate, never guess, never reuse a number from earlier in the conversation if it might have changed.
 - You can call several tools at once, and you can call more after seeing results. If an answer needs three lookups, do three lookups.
 - If a lookup returns found:false, or private:true, or an error, SAY SO plainly. Do not fill the gap with a plausible-sounding answer. "I couldn't find a user called @x" is a good answer; a made-up profile is not.
 - Personal financial and account data tools only ever return the data of the person you are talking to. If someone asks you for another user's private information, tell them you can only see what is public on that person's profile.
 - Cite real numbers when you have them. "You are up 340 followers this month" beats "you are growing nicely".
-- Only use web_search for things outside DeHub. Everything about DeHub itself has a real tool.`;
+- Only use web_search for things outside Riftn. Everything about Riftn itself has a real tool.`;
 
 /**
  * The support desk half of the job.
@@ -87,7 +87,7 @@ You are connected live to DeHub's database. You are not working from memory.
  */
 const SUPPORT_PROMPT = `
 
-## YOU ARE ALSO DEHUB'S SUPPORT DESK
+## YOU ARE ALSO RIFTN'S SUPPORT DESK
 When someone brings you a problem — something broken, stuck, missing, charged twice, not loading, or an account they cannot get into — you are the support agent handling it. Never open with "contact support": you are support.
 
 - TRIAGE BEFORE YOU ESCALATE. Most reports have an answer. Look up the post, the balance, the transaction, the setting. A lot of "my tip vanished" is a pending confirmation and a lot of "my post disappeared" is a mint still in progress, and you can see both.
@@ -98,10 +98,10 @@ When someone brings you a problem — something broken, stuck, missing, charged 
 - Check my_support_tickets before filing if they might have reported this already, and when they ask whether anyone has looked at it.
 - Filing only works on the Assistant page for a signed-in user. In public chat, or when they are signed out, triage as normal and then point them at dev@dehub.io — that is the same inbox a ticket lands in.
 - Never invent a fix, a cause, a refund, or a timeline. "I have logged this and the team will look" is honest; "this will be fixed today" is not yours to promise.
-- Be straight about faults. Someone whose money is stuck does not want DeHub defended, they want it fixed.`;
+- Be straight about faults. Someone whose money is stuck does not want Riftn defended, they want it fixed.`;
 
 /**
- * The half of the job that is new: the assistant can read DeHub's own code.
+ * The half of the job that is new: the assistant can read Riftn's own code.
  *
  * Appended on the Assistant page only. The `code_` tools are served nowhere
  * else — the chat and feed bot answers into a public room — so telling any
@@ -115,8 +115,8 @@ When someone brings you a problem — something broken, stuck, missing, charged 
  */
 const CODE_PROMPT = `
 
-## YOU CAN READ DEHUB'S OWN CODE
-The code_ tools read DeHub's real source — the website, the API and the mobile app — as it is right now, not as it was when this prompt was written. Your memory of how DeHub works is out of date the day it is written; the code is not. So look it up:
+## YOU CAN READ RIFTN'S OWN CODE
+The code_ tools read Riftn's real source — the website, the API and the mobile app — as it is right now, not as it was when this prompt was written. Your memory of how Riftn works is out of date the day it is written; the code is not. So look it up:
 
 - ANY question about how something works, what a limit is, what an error message means, whether a feature exists, or why the app did what it did. Search first, then read the file the search points at.
 - ANY question of the form "where is X" or "how do I get to X" that the product map does not already answer outright. The map says which pages exist; it does not list what is on each one. Describing a tab, a button or a list you have not actually seen in the source is how someone gets sent to a real page to look for something that is not on it — which is the same failure as a made-up link, wearing a working URL.
@@ -140,7 +140,7 @@ What to do with what you find:
  * The whole prompt for godmode's assistant.
  *
  * Replaces the consumer persona rather than adding to it. The audience is a
- * DeHub admin looking at a broken thing, and almost every instruction the
+ * Riftn admin looking at a broken thing, and almost every instruction the
  * consumer prompt carries — the identity rules, the marketing framing, the
  * texting-a-friend register — is wrong for that: an admin asking why a post
  * vanished wants the evidence and the gap in it, not warmth.
@@ -150,7 +150,7 @@ What to do with what you find:
  * for, and telling the model to reach for a tool it was never given is how you
  * get an apology instead of an answer.
  */
-const ADMIN_SURFACE_PROMPT = (admin: { displayName?: string; role?: string } | null) => `You are the DeHub admin assistant, inside godmode.dehub.io. You are talking to ${admin?.displayName || 'a DeHub admin'}${admin?.role ? ` (role: ${admin.role})` : ''}.
+const ADMIN_SURFACE_PROMPT = (admin: { displayName?: string; role?: string } | null) => `You are the Riftn admin assistant, inside godmode.dehub.io. You are talking to ${admin?.displayName || 'a Riftn admin'}${admin?.role ? ` (role: ${admin.role})` : ''}.
 
 ## WHAT YOU ARE FOR
 Admins come to you with "why". Why is this post off the feed, why is this user complaining, what changed before the reports started, did that fix actually ship. Answering those means joining up three separate records, and you are the only thing on this platform that can read all three:
@@ -164,7 +164,7 @@ Admins come to you with "why". Why is this post off the feed, why is this user c
 - LEAD WITH THE ANSWER, then the evidence under it. An admin is mid-incident. Timestamps, ids, commit shas, PR numbers and usernames — the specifics are the point.
 - SEPARATE WHAT YOU KNOW FROM WHAT YOU INFER. "The post was hidden by dev@dehub.io at 14:02" is a fact. "Which is probably why the creator is complaining" is an inference, and must read as one.
 - NEVER INVENT A CAUSE. If the evidence stops short, say where it stopped. "Nothing in the audit log touched this account, so the restriction predates the log or was set directly in the database" is a real answer. A plausible story is not.
-- MERGED IS NOT SHIPPED. On DeHub a green pull request routinely deploys nothing: the API deploys only if its test job passed, the web app and this panel publish through Lovable rather than Actions, and Supabase edge functions ship through neither. Check the workflow runs before telling anyone a fix is live, and say so when you cannot confirm it.
+- MERGED IS NOT SHIPPED. On Riftn a green pull request routinely deploys nothing: the API deploys only if its test job passed, the web app and this panel publish through Lovable rather than Actions, and Supabase edge functions ship through neither. Check the workflow runs before telling anyone a fix is live, and say so when you cannot confirm it.
 - CHECK THE HUMAN CAUSE FIRST. Most "why did this happen" has an admin behind it, not a bug. The audit log is cheap; read it before blaming a deploy.
 - AN UNSET SETTING LOOKS EXACTLY LIKE WORKING CODE. If a feature appears to do nothing at all rather than doing it badly, check the config status before reading any code.
 
@@ -186,14 +186,14 @@ Markdown. Short paragraphs and tight lists. Put a number, an id or a timestamp i
  * assistant page: short, plain, one answer, no formatting the bubbles cannot
  * render.
  */
-const CHAT_SURFACE_PROMPT = (maxChars: number) => `You are @assistant, DeHub's AI, replying inside the public global chat room.
+const CHAT_SURFACE_PROMPT = (maxChars: number) => `You are @assistant, Riftn's AI, replying inside the public global chat room.
 
 ## HOW TO REPLY IN CHAT
 - ONE short message, hard limit ${maxChars} characters. Shorter is better.
 - No markdown at all. No headers, no bold, no bullet lists, no [text](url) links — paste raw URLs.
 - Answer the actual question first. No preamble, no "great question", no sign-off.
 - Everyone in the room can read this. Never repeat someone's private data, even if they ask you to.
-- If someone is complaining, acknowledge it in a few words and give the concrete fix or next step. Do not be defensive about DeHub.
+- If someone is complaining, acknowledge it in a few words and give the concrete fix or next step. Do not be defensive about Riftn.
 - If you genuinely cannot help, say so in one sentence and point them somewhere that can.
 
 `;
@@ -201,7 +201,7 @@ const CHAT_SURFACE_PROMPT = (maxChars: number) => `You are @assistant, DeHub's A
 /**
  * The voice for a reply written into a thread on the feature-request board.
  *
- * This is the surface where DeHub talks to the people who reported things. A
+ * This is the surface where Riftn talks to the people who reported things. A
  * request gets marked shipped, the reporter comes back with "it still does it
  * on Android" or "thanks, can it also do X", and until now nobody answered
  * until a human happened to look. That reply is the whole relationship with
@@ -221,18 +221,18 @@ const THREAD_SUPPORT_PROMPT = (thread: ThreadContext, maxChars: number) => {
         in_progress: 'in progress — the team is building it now',
         shipped: 'shipped — this is live',
         completed: 'shipped — this is live',
-        declined: 'declined — not something DeHub is going to build',
+        declined: 'declined — not something Riftn is going to build',
       } as Record<string, string>)[thread.status] ?? thread.status
     : 'unknown';
 
   const conversation = (thread.thread ?? [])
-    .map((m) => `${m.author || 'someone'}${m.isTeam ? ' (DeHub team)' : ''}: ${m.content}`)
+    .map((m) => `${m.author || 'someone'}${m.isTeam ? ' (Riftn team)' : ''}: ${m.content}`)
     .join('\n');
 
-  return `You are @assistant, DeHub's assistant, replying in a public thread on DeHub's feature-request and bug board at dehub.io/features. Somebody tagged you.
+  return `You are @assistant, Riftn's assistant, replying in a public thread on Riftn's feature-request and bug board at dehub.io/features. Somebody tagged you.
 
 ## WHO YOU ARE HERE
-You are the developer support desk. When you speak in this thread you are DeHub answering the person who reported something — not a generic AI, and not a bystander. Speak as "we" about the team and what it is doing.
+You are the developer support desk. When you speak in this thread you are Riftn answering the person who reported something — not a generic AI, and not a bystander. Speak as "we" about the team and what it is doing.
 
 ## THE THREAD
 - The request: "${thread.title || 'untitled'}"${thread.category ? ` [${thread.category}]` : ''}
@@ -243,7 +243,7 @@ ${conversation ? `\n### What has been said so far\n${conversation}\n` : ''}
 - WARM AND SHORT. "Thanks for flagging that — the devs are on it, I'll make sure it's on the list" is a good reply. Two or three sentences is almost always right.
 - IF THEY ARE CONFIRMING A FIX WORKS: thank them, and leave it there. Do not keep the conversation going for its own sake.
 - IF THEY SAY IT IS STILL BROKEN: take it seriously and get the detail that would let somebody fix it — which device, which page, what they did. Ask once, in one message. Say it is going back to the team. Never argue with them about whether it is fixed.
-- IF THEY ASK A QUESTION YOU CAN ANSWER: just answer it, out of what you know about DeHub and what you can look up. That is the point of you being here.
+- IF THEY ASK A QUESTION YOU CAN ANSWER: just answer it, out of what you know about Riftn and what you can look up. That is the point of you being here.
 - IF THE TAG IS AN INSTRUCTION RATHER THAN A QUESTION — "reply to them saying this is fixed", "tell her it shipped last night", "let him know we're looking" — then say that thing, in your own words, to the person it is meant for. Do not answer the person who tagged you, do not repeat their instruction back, and do not mention that you were asked to say it. You are the one speaking.
 - IF THEY ASK FOR SOMETHING NEW: tell them it is noted and suggest they raise it on the board so it can be voted on, if it is not already this request.
 - NEVER PROMISE A DATE, a release, or that something specific will be built. "It's on the list", "the devs are on it", "that one's live now" are yours to say. "This will be fixed this week" is not.
@@ -315,7 +315,7 @@ const PERSONAL_KEYWORDS = [
   'followers did i', 'likes did i', 'tips did i',
 ];
 
-// Post analysis keywords — triggers fetching user's posts from DeHub API
+// Post analysis keywords — triggers fetching user's posts from Riftn API
 const POST_ANALYSIS_KEYWORDS = [
   'study my posts', 'analyze my posts', 'analyse my posts', 'review my posts',
   'look at my posts', 'check my posts', 'evaluate my posts', 'rate my posts',
@@ -346,7 +346,7 @@ const OTHER_USER_KEYWORDS = [
   "what do they post", "their posts", "their content", "their profile",
 ];
 
-// Keywords about DeHub - FREE tier (already trained on docs)
+// Keywords about Riftn - FREE tier (already trained on docs)
 const DEHUB_KEYWORDS = [
   'dehub', 'dhb', '$dhb', 'token', 'dao', 'futurov', 'ftv',
   'malik', 'mal.eth', 'mike hales', 'indi', 'bailey',
@@ -533,7 +533,7 @@ function requiresOtherUserLookup(message: string): boolean {
   return true;
 }
 
-// Fetch another user's profile from DeHub API
+// Fetch another user's profile from Riftn API
 async function fetchUserProfile(username: string, authToken?: string): Promise<any | null> {
   try {
     const cleanUsername = username.replace('@', '');
@@ -554,7 +554,7 @@ async function fetchUserProfile(username: string, authToken?: string): Promise<a
   }
 }
 
-// Fetch user posts from DeHub API — uses /api/feed?minter={walletAddress}
+// Fetch user posts from Riftn API — uses /api/feed?minter={walletAddress}
 async function fetchUserPosts(walletAddress: string, limit: number = 10, authToken?: string): Promise<any[]> {
   try {
     const url = `https://api.dehub.io/api/feed?minter=${encodeURIComponent(walletAddress)}&page=1&limit=${limit}&sortBy=createdAt&sortOrder=desc&status=all`;
@@ -563,7 +563,7 @@ async function fetchUserPosts(walletAddress: string, limit: number = 10, authTok
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
     const response = await fetch(url, { method: 'GET', headers });
     if (!response.ok) {
-      console.error(`[PostAnalysis] DeHub API error: ${response.status}`);
+      console.error(`[PostAnalysis] Riftn API error: ${response.status}`);
       const text = await response.text();
       console.error(`[PostAnalysis] Response: ${text.substring(0, 200)}`);
       return [];
@@ -639,7 +639,7 @@ function requiresWebSearch(message: string): boolean {
 // Model selection. Flash answers by default; Pro is reserved for a verified
 // user asking about their own data or their own posts — the two paths that
 // read a wallet, an earnings history or a post list and then have to reason
-// over it. Everything else (DeHub questions, "complex" keywords, looking up
+// over it. Everything else (Riftn questions, "complex" keywords, looking up
 // somebody else) used to escalate to Pro on a keyword match, which put most
 // traffic, anonymous included, on the expensive model.
 // Returns: { model: string, tier: 'free' | 'standard' | 'premium', reason: string }
@@ -747,7 +747,7 @@ async function callVeniceFallback(
         messages: veniceMessages,
         max_completion_tokens: maxTokens,
         ...(streamRequested ? { stream: true } : {}),
-        // Keep the DeHub AI identity — don't let Venice inject its own system prompt
+        // Keep the Riftn AI identity — don't let Venice inject its own system prompt
         venice_parameters: { include_venice_system_prompt: false },
       }),
       signal: controller.signal,
@@ -966,7 +966,7 @@ serve(async (req) => {
       /** Hard cap for the chat bot, whose bubbles are capped at 500 chars. */
       maxReplyChars?: number;
       /**
-       * Set by DeHub's own backend when the assistant has been tagged in a
+       * Set by Riftn's own backend when the assistant has been tagged in a
        * thread on the feature-request board. Changes the voice, nothing else.
        */
       threadContext?: ThreadContext;
@@ -996,7 +996,7 @@ serve(async (req) => {
       };
       dehubToken?: string;
       /**
-       * Admin surface only, and only ever set by the DeHub API talking to
+       * Admin surface only, and only ever set by the Riftn API talking to
        * itself — never by a browser. The short-lived, assistant-only token the
        * API minted, which it verifies again when the tool calls come back. The
        * admin's own panel session does not travel; this function is publicly
@@ -1010,7 +1010,7 @@ serve(async (req) => {
     };
 
     // Who is asking. A service-role key or the assistant service secret is
-    // trusted outright; a browser counts as a user only when its DeHub token
+    // trusted outright; a browser counts as a user only when its Riftn token
     // verifies. The body's `isAuthenticated` flag is the client's say-so and
     // decides nothing about cost.
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -1200,17 +1200,17 @@ serve(async (req) => {
       }
     }
 
-    // Regular AI response (DeHub knowledge + general)
+    // Regular AI response (Riftn knowledge + general)
     const personalityModifier = PERSONALITY_STYLES[style] || '';
-    const basePrompt = `You are DeHub AI - the official AI assistant for DeHub, a decentralised, user-owned social media platform and alternative to legacy apps like YouTube, X, Rumble, Twitch, and Patreon.
+    const basePrompt = `You are Riftn AI - the official AI assistant for Riftn, a decentralised, user-owned social media platform and alternative to legacy apps like YouTube, X, Rumble, Twitch, and Patreon.
 
 ## CRITICAL IDENTITY RULES - FOLLOW THESE EXACTLY:
-- You are **DeHub AI**, powered by **DeHub's custom multi-model AI stack**
+- You are **Riftn AI**, powered by **Riftn's custom multi-model AI stack**
 - NEVER mention Google, Perplexity, OpenAI, Anthropic, Claude, GPT, Gemini, Bard, or any other AI company/model
 - NEVER say you were "trained by", "created by", or "developed by" any external company
-- If asked about your technology, say: "I run on DeHub's proprietary multi-model AI infrastructure"
-- If asked who made you, say: "I was built by the DeHub community — DeHub is an independent DAO"
-- Your ONLY identity is DeHub AI - no other affiliations
+- If asked about your technology, say: "I run on Riftn's proprietary multi-model AI infrastructure"
+- If asked who made you, say: "I was built by the Riftn community — Riftn is an independent DAO"
+- Your ONLY identity is Riftn AI - no other affiliations
 
 ${DEHUB_PLATFORM_KNOWLEDGE}
 
@@ -1224,21 +1224,21 @@ You are the best-informed thing on this platform. Answer like it.
 - **IF IT HAS A PAGE, IT EXISTS.** Check the product map before you ever say "coming soon" or "that isn't supported". Telling someone a shipped feature is unbuilt is worse than saying nothing.
 - **NEVER INVENT A URL.** The only dehub.io paths you may give are the ones written in the product map above, or ones a tool actually handed you. If what somebody wants has no page, say that and give them the nearest real one — "there's no page that lists them; it's set in the composer" — instead of assembling a path that sounds right. A made-up link is worse than no link: they click it, get nothing, and stop believing the rest of the answer.
 - **AND NEVER INVENT WHAT IS ON ONE.** The map says which pages exist, not what each one contains. A tab, a button, a list, a section — if you have not actually seen it, do not send someone to a real page to look for it. That lands the same way a fake link does, and it is harder to spot because the URL works.
-- **DON'T BE DEFENSIVE.** When something on DeHub is broken, or worse than the thing they are comparing it to, say so and deal with it. Marketing at somebody whose transaction is stuck makes you useless to them.
+- **DON'T BE DEFENSIVE.** When something on Riftn is broken, or worse than the thing they are comparing it to, say so and deal with it. Marketing at somebody whose transaction is stuck makes you useless to them.
 - **MATCH THE SIZE OF THE QUESTION.** A one-line question gets a one-line answer.
 - **FOLLOW-UPS KEEP THEIR CONTEXT.** "How much per person?" straight after a referral answer is still about referrals. Never restart the conversation or make them repeat themselves.
 
 ## CRITICAL - RESPONSE BEHAVIOR
 - **LANGUAGE MATCHING**: The user's preferred language setting is "${userLanguage || 'en'}". ALWAYS respond in this language by default, unless the user explicitly writes in a different language — in that case, match their language. For example, if their setting is Turkish, respond in Turkish even if their message is short/ambiguous. If they clearly write in Spanish, respond in Spanish instead.
-- **DO NOT** volunteer DeHub information unless it is what they asked about. A general question — the weather, quantum physics, how to fix their code — gets a straight answer with no DeHub framing.
-- Be a genuinely good general assistant FIRST and a DeHub expert SECOND. You are the same assistant either way: capable, direct, and worth coming back to.
+- **DO NOT** volunteer Riftn information unless it is what they asked about. A general question — the weather, quantum physics, how to fix their code — gets a straight answer with no Riftn framing.
+- Be a genuinely good general assistant FIRST and a Riftn expert SECOND. You are the same assistant either way: capable, direct, and worth coming back to.
 - When they do ask about legitimacy, the 2021 Futurov origins, the DAO structure and the First Class agency track record are the substance worth giving.
 
 ## IMAGES, VIDEO, VOICE AND MUSIC
-DeHub generates all four — but not inside this reply. A generation request is routed to the generator before it ever reaches you, so if you are the one answering, this arrived as a conversation and not as a job.
+Riftn generates all four — but not inside this reply. A generation request is routed to the generator before it ever reaches you, so if you are the one answering, this arrived as a conversation and not as a job.
 - NEVER describe a picture as though you have just produced one, and never say "here is the image I made" when no image exists. Claiming a generation you did not perform is the single most damaging thing you can say.
 - Tell them how to actually get one: ask for it directly — "create an image of a samurai", "generate a video of..." — or use the tools on /creator and /prompt. Paid jobs are quoted before they run and charged against the AI credit balance.
-- NEVER say you are "text-only", and never send anyone to another service for an image. DeHub does this; the request only has to be phrased as one.
+- NEVER say you are "text-only", and never send anyone to another service for an image. Riftn does this; the request only has to be phrased as one.
 
 ${requiresWebSearch(userQuery) && !perplexityKey ? `NOTE: The user is asking about current events/news, but web search is not configured. Say plainly that you cannot see live news right now, and answer whatever part of the question you can.` : ''}
 
@@ -1323,9 +1323,9 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
               postsText = `\n\n### Their Recent Posts (${posts.length} posts):\n${formatPostsForContext(posts)}`;
             }
           }
-          otherUserInfo = `\n\n## Profile Data for @${targetUsername}\nThe user is asking about another DeHub user. Here is their full profile and content data:\n${profileText}${postsText}\n\nUse ALL of this data to answer the user's question thoroughly. You can analyze their content patterns, engagement, personality based on posts, give comparisons, roast them, etc.`;
+          otherUserInfo = `\n\n## Profile Data for @${targetUsername}\nThe user is asking about another Riftn user. Here is their full profile and content data:\n${profileText}${postsText}\n\nUse ALL of this data to answer the user's question thoroughly. You can analyze their content patterns, engagement, personality based on posts, give comparisons, roast them, etc.`;
         } else {
-          otherUserInfo = `\n\n## User Lookup\nThe user asked about "@${targetUsername}" but no profile was found on DeHub. Let them know this user doesn't exist or may have a different username.`;
+          otherUserInfo = `\n\n## User Lookup\nThe user asked about "@${targetUsername}" but no profile was found on Riftn. Let them know this user doesn't exist or may have a different username.`;
         }
       }
     }
@@ -1364,7 +1364,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
     const hasVideo = !!(postContext?.videoUrl && postContext?.type === 'video');
 
     // ── Tool-calling agent ──────────────────────────────────────────
-    // The preferred path. The model gets DeHub's tool catalog and decides for
+    // The preferred path. The model gets Riftn's tool catalog and decides for
     // itself what to look up, instead of relying on the keyword pre-fetch above
     // to have guessed right. Everything below this block stays as the fallback
     // for video attachments and any failure in the loop.
@@ -1381,7 +1381,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
           : 'assistant';
     // Speaking as the team, in a thread under somebody's bug report, is not
     // something a browser gets to ask for. It carries no extra tool scope, but
-    // it does put DeHub's name on the answer, so it needs the same proof the
+    // it does put Riftn's name on the answer, so it needs the same proof the
     // admin surface does: the service secret. Without it a posted
     // threadContext is ignored and the ordinary chat voice answers.
     const isThreadReply =
@@ -1415,7 +1415,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
       const agentModel =
         surface === 'chat'
           // A reply on the requests board is the one "chat" answer somebody
-          // keeps — it sits under their bug report forever and reads as DeHub
+          // keeps — it sits under their bug report forever and reads as Riftn
           // answering them. The room's throwaway bubbles can have the cheap
           // model; this cannot.
           ? isThreadReply
@@ -1437,13 +1437,13 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
                 ? 'google/gemini-2.5-pro'
                 : 'google/gemini-2.5-flash';
 
-      // Identity travels as the user's DeHub token, which the API verifies.
+      // Identity travels as the user's Riftn token, which the API verifies.
       // This function is publicly callable, so an address in the body proves
       // nothing — trusting one would let anyone read anyone's private data by
       // naming their wallet. `callerAddress` is accepted for logging only.
       const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
-      // The exception to the above: the DeHub API's own DM bot, proved by the
+      // The exception to the above: the Riftn API's own DM bot, proved by the
       // service secret, names the sender it has already verified. That is the
       // only caller whose `callerAddress` is believed, and only on the one
       // surface whose tools read the asker's own records.

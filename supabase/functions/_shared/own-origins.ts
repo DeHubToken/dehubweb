@@ -1,4 +1,4 @@
-// Which browser origins count as DeHub's own web app.
+// Which browser origins count as Riftn's own web app.
 //
 // Used by client-logs to drop errors from other sites running a copy of the
 // web build. It is deliberately narrower than "anything on the preview zone":
@@ -13,7 +13,7 @@
 // get-rpc-endpoints keeps its own, stricter list on purpose: it guards a paid
 // RPC key, and widening it to previews and LAN hosts is a separate decision.
 
-const DEHUB_HOST = /(?:^|\.)dehub\.(?:io|net)$/;
+const DEHUB_HOST = /(?:^|\.)(?:dehub\.(?:io|net)|riftn\.com)$/;
 
 const PROJECT_PREVIEW_HOST =
   /^(?:(?:id-preview(?:-[a-z0-9]+)?|project)--)?7d59b29a-7055-4e27-94fd-0c2253be10ad(?:-dev)?\.(?:lovable\.app|lovableproject(?:-dev)?\.com)$/;
@@ -33,7 +33,7 @@ function isPrivateIPv4(host: string): boolean {
 }
 
 /**
- * True when a request's Origin header belongs to DeHub, or when there is no
+ * True when a request's Origin header belongs to Riftn, or when there is no
  * web origin to judge: a missing header, the opaque `null` origin, and
  * non-http(s) schemes all pass, since that is what native apps send.
  */

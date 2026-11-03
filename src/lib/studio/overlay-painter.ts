@@ -1,7 +1,7 @@
 /**
  * A creator's stream overlay, painted onto a canvas.
  *
- * Overlays reach the picture two ways today: every DeHub viewer's app draws
+ * Overlays reach the picture two ways today: every Riftn viewer's app draws
  * the widgets as DOM over the player (LiveOverlayLayer), and OBS burns them in
  * from a browser source (ObsOverlayPage). A creator who goes live from the
  * browser has neither OBS nor a DOM in the outgoing video, so viewers on the

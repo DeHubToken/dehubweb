@@ -77,7 +77,7 @@ function NotInTheArcade({ slug }: { slug: string | undefined }) {
   const { t: _copy } = _useCopy();
   return (
     <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
-      <SEOHead title={_copy("copy.034c667c0011", { defaultValue: "Arcade | DeHub" })} noindex />
+      <SEOHead title={_copy("copy.034c667c0011", { defaultValue: "Arcade | Riftn" })} noindex />
       <Gamepad2 className="h-8 w-8 text-zinc-600" />
       <p className="text-sm text-zinc-400">{_copy("copy.57960f216854", { defaultValue: "There is no game called " })}<span className="font-mono text-zinc-200">{slug}</span>{_copy("copy.939aece8b62c", { defaultValue: " in the arcade." })}</p>
       <Button asChild size="sm" className="rounded-full text-xs">
@@ -219,7 +219,7 @@ export default function ArcadeGamePage() {
   );
 
   // "Take me to this post", "give me the feed", "here is what I typed" —
-  // Trenchstar's desk monitors are DeHub, and neither the data nor the click
+  // Trenchstar's desk monitors are Riftn, and neither the data nor the click
   // can reach the app from inside the frame: no allow-same-origin means no
   // window.open, no top navigation, and an `Origin: null` the API will never
   // answer. Paths are allowlisted, every fetch goes out uncredentialed, and a
@@ -280,14 +280,14 @@ export default function ArcadeGamePage() {
   return (
     <div className="fixed inset-0 z-[100] bg-black">
       <SEOHead
-        title={`${game.title} | DeHub Arcade`}
+        title={`${game.title} | Riftn Arcade`}
         description={game.description}
         // The game's own share card, not `game.art`. Two reasons: the worker
         // serves this card to crawlers and declares it 1200x630, so the SPA
         // must not name a different image at that size; and `art` is a WebP,
         // which several scrapers (X among them) will not render as a preview.
         // The capture stays the JSON-LD image, where a real screenshot belongs.
-        image={`https://dehub.io/og/arcade-${game.slug}.jpg`}
+        image={`https://riftn.com/og/arcade-${game.slug}.jpg`}
         // Unlisted games are shared by link while they are tested, so they keep
         // the card but stay out of the index. The worker says the same.
         noindex={game.unlisted}
@@ -296,8 +296,8 @@ export default function ArcadeGamePage() {
           '@type': 'VideoGame',
           name: game.title,
           description: game.description,
-          url: `https://dehub.io/arcade/${game.slug}`,
-          image: `https://dehub.io${game.art}`,
+          url: `https://riftn.com/arcade/${game.slug}`,
+          image: `https://riftn.com${game.art}`,
           applicationCategory: 'Game',
           gamePlatform: 'Web browser',
           operatingSystem: 'Any',

@@ -7,7 +7,7 @@
 DeHub is a decentralized, wallet-native platform that blends social feeds, long-form
 video, shorts, live audio/video, communities, messaging, an on-chain creator economy,
 and an in-browser video editor — all in a single React application. It powers
-[dehub.io](https://dehub.io).
+[dehub.io](https://riftn.com).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 ![React](https://img.shields.io/badge/React-18-61dafb.svg)

@@ -41,7 +41,7 @@ The consideration for an **xcad network alternative** is structural. Because XCA
 
 ### No purchase to start earning
 
-You do not buy glasses, a headset or any entry NFT to begin. You can join [the DeHub app](https://dehub.io/app), watch content and take part in watch-to-earn bounties without an upfront spend. That removes the single biggest risk in the Cheelee model, where your earnings depend on how much you were willing to pay for better items. The DHB token ($DHB) is the ecosystem token if you choose to engage with it, but it is not a gate you must pay through to start.
+You do not buy glasses, a headset or any entry NFT to begin. You can join [the DeHub app](https://riftn.com/app), watch content and take part in watch-to-earn bounties without an upfront spend. That removes the single biggest risk in the Cheelee model, where your earnings depend on how much you were willing to pay for better items. The DHB token ($DHB) is the ecosystem token if you choose to engage with it, but it is not a gate you must pay through to start.
 
 ### On-chain-verifiable payouts
 
@@ -72,7 +72,7 @@ There is no single winner, so match the tool to your goal:
 - **Choose XCAD Network** if your viewing already lives on YouTube and you simply want a reward layer on top of creators who have opted in.
 - **Choose DeHub** if you want to start free, verify payouts on-chain, and earn inside a full social network with creator tools, streaming, games and tradable subscriptions rather than a single mechanic.
 
-If the goal is the **best watch to earn app** to actually live on rather than dabble with, DeHub's breadth and zero-cost entry make it the strongest all-round Cheelee alternative in 2026. Ready to test it yourself? Download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) or open [the DeHub app](https://dehub.io/app) in your browser, and judge the payouts on-chain rather than on our word.
+If the goal is the **best watch to earn app** to actually live on rather than dabble with, DeHub's breadth and zero-cost entry make it the strongest all-round Cheelee alternative in 2026. Ready to test it yourself? Download it on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) or open [the DeHub app](https://riftn.com/app) in your browser, and judge the payouts on-chain rather than on our word.
 
 ## Frequently asked questions
 
@@ -97,7 +97,7 @@ XCAD rewards you for watching participating creators on YouTube through an exten
 You can earn small, ongoing rewards, but treat any promise of large passive income with caution. Earnings depend on the platform's model, fees, token value and how much you engage. Platforms with on-chain-verifiable payouts and no purchase requirement, such as DeHub, let you check the mechanics yourself rather than trusting an in-app balance. Compare the field in our [best watch-to-earn platforms of 2026](/guides/best-watch-to-earn-platforms-2026) guide.`,
   bannerImage: '/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png',
   bannerImageAlt: 'DeHub compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-12T10:00:00.000Z',
   updatedAt: '2026-05-12T10:00:00.000Z',
   tags: ['cheelee alternative', 'watch-to-earn', 'DeHub', 'Theta', 'XCAD Network', 'crypto earning', 'decentralised social'],

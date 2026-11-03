@@ -1,6 +1,6 @@
 # Feature board: 9 October 2026
 
-Source: https://dehub.io/features. The board has five requests, two Shipping items and 196 Shipped items. This inventory includes bugs reported under New Feature and follow-up comments. Production is the verification target for web; mobile changes require the matching native implementation, cloud CI and OTA publication.
+Source: https://riftn.com/features. The board has five requests, two Shipping items and 196 Shipped items. This inventory includes bugs reported under New Feature and follow-up comments. Production is the verification target for web; mobile changes require the matching native implementation, cloud CI and OTA publication.
 
 ## Shipping
 

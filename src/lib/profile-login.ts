@@ -9,7 +9,7 @@ const log = createLogger('ProfileLogin');
 /**
  * This browser holds no live Supabase session for the profile, so there is
  * nothing to exchange. On a page-load restore that is expected once the
- * Supabase session lapses; the DeHub token carries the sign-in from there.
+ * Supabase session lapses; the Riftn token carries the sign-in from there.
  */
 export class SupabaseSessionMissingError extends Error {
   constructor() {
