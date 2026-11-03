@@ -6,7 +6,7 @@ export const socialMediaMonetizationPost: BlogPostType = {
   title: 'How monetization works on social media apps',
   excerpt: 'Follower minimums, activity tests, invitation walls and payout floors for Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, with the 2026 and 2027 rule changes that reset the numbers.',
   content: `
-**On DeHub, anyone can monetize from their first view, using permissionless smart contracts for subscriptions, PPVs or paid messages. There are no thresholds or requirements, and everything is peer to peer with minor platform fees. All profit is shared between stakeholders too!**
+**On Riftn, anyone can monetize from their first view, using permissionless smart contracts for subscriptions, PPVs or paid messages. There are no thresholds or requirements, and everything is peer to peer with minor platform fees. All profit is shared between stakeholders too!**
 
 Every major social platform now runs some version of a creator revenue program. The labels sound similar (rewards, partnerships, subscriptions, gifts) but the rules behind them are not. One platform pays on watch time. Another pays on verified impressions. A third pays on product sales. A fourth pays only if it invites you first.
 
@@ -145,6 +145,6 @@ That is why "getting monetized" is no longer one milestone. It is a stack of pro
   readingTime: 13,
   featured: true,
   status: 'published',
-  seoTitle: 'How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | DeHub',
+  seoTitle: 'How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | Riftn',
   seoDescription: 'Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers.',
 };

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Riftn Blog</title>
-    <description>News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.</description>
+    <description>News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.</description>
     <link>https://riftn.com/docs/blog</link>
     <atom:link href="https://riftn.com/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-US</language>
@@ -52,15 +52,15 @@
     </item>
     <item>
       <title>Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)</title>
-      <description>Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it.</description>
+      <description>Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs Riftn Maboroshi prices, plus the full pipeline behind it.</description>
       <link>https://riftn.com/guides/higgsfield-genjutsu-alternative</link>
       <guid>https://riftn.com/guides/higgsfield-genjutsu-alternative</guid>
       <pubDate>Sat, 24 Oct 2026 03:00:00 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
     <item>
-      <title>DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch</title>
-      <description>DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment.</description>
+      <title>Riftn’s next chapter: Riftn, BNB recovery and the road to relaunch</title>
+      <description>Riftn proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment.</description>
       <link>https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</link>
       <guid>https://riftn.com/guides/dehub-next-chapter-riftn-bnb-recovery-relaunch</guid>
       <pubDate>Thu, 22 Oct 2026 18:00:00 GMT</pubDate>
@@ -68,23 +68,23 @@
     </item>
     <item>
       <title>Q4 Development Overview</title>
-      <description>Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout.</description>
+      <description>Everything Riftn shipped since October across web, mobile, the streaming backend and admin, the video editor, Creator, AI agents, live, profiles, System Light and wallets, with pull request links throughout.</description>
       <link>https://riftn.com/guides/q4-development-overview</link>
       <guid>https://riftn.com/guides/q4-development-overview</guid>
       <pubDate>Sat, 17 Oct 2026 12:00:00 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
     <item>
-      <title>DeHub Token and Exchange Listings Update</title>
-      <description>DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings.</description>
+      <title>Riftn Token and Exchange Listings Update</title>
+      <description>Riftn shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings.</description>
       <link>https://riftn.com/guides/dehub-token-exchange-listings-update-2026</link>
       <guid>https://riftn.com/guides/dehub-token-exchange-listings-update-2026</guid>
       <pubDate>Fri, 18 Sep 2026 19:32:10 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
     <item>
-      <title>Ready to Debate Your Side? Bring It to DeHub.</title>
-      <description>A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage.</description>
+      <title>Ready to Debate Your Side? Bring It to Riftn.</title>
+      <description>A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues, with rewards that pay for the persuasive version, not the outrage.</description>
       <link>https://riftn.com/guides/ready-to-debate-your-side-bring-it-to-dehub</link>
       <guid>https://riftn.com/guides/ready-to-debate-your-side-bring-it-to-dehub</guid>
       <pubDate>Mon, 14 Sep 2026 10:00:00 GMT</pubDate>
@@ -124,7 +124,7 @@
     </item>
     <item>
       <title>The Athlete Is Becoming a Media Platform. Who Owns the Fan?</title>
-      <description>Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship — and the athlete now holds it.</description>
+      <description>Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship, and the athlete now holds it.</description>
       <link>https://riftn.com/guides/athlete-is-becoming-a-media-platform</link>
       <guid>https://riftn.com/guides/athlete-is-becoming-a-media-platform</guid>
       <pubDate>Fri, 28 Aug 2026 10:00:00 GMT</pubDate>
@@ -156,15 +156,15 @@
     </item>
     <item>
       <title>Q3 Development Overview</title>
-      <description>Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout.</description>
+      <description>Every distinct thing Riftn shipped in Q3 across web, mobile and the streaming backend, stages, AI, ten themes, the arcade, self-custody wallets and the economy, with commit links throughout.</description>
       <link>https://riftn.com/guides/q3-development-overview</link>
       <guid>https://riftn.com/guides/q3-development-overview</guid>
       <pubDate>Sat, 22 Aug 2026 12:00:00 GMT</pubDate>
       <dc:creator>Riftn Team</dc:creator>
     </item>
     <item>
-      <title>DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)</title>
-      <description>DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers.</description>
+      <title>Riftn Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)</title>
+      <description>Riftn Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers.</description>
       <link>https://riftn.com/guides/dehub-creator-vs-higgsfield-ai-credits</link>
       <guid>https://riftn.com/guides/dehub-creator-vs-higgsfield-ai-credits</guid>
       <pubDate>Thu, 13 Aug 2026 09:00:00 GMT</pubDate>

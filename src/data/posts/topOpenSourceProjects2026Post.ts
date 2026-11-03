@@ -4,7 +4,7 @@ export const topOpenSourceProjects2026Post: BlogPostType = {
   id: 'top-50-most-active-open-source-projects-2026',
   slug: 'top-50-most-active-open-source-projects-2026',
   title: 'Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity',
-  seoTitle: 'Top 50 Most Active Open Source Projects 2026 (GitHub Data) | DeHub',
+  seoTitle: 'Top 50 Most Active Open Source Projects 2026 (GitHub Data) | Riftn',
   seoDescription: 'The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.',
   excerpt: 'We measured the GitHub history of 205 of the biggest open source projects and ranked the 50 most active on commits and contributors over the last 90 days. Linux, Chromium and Nixpkgs lead, and AI projects take 12 of the 50 spots.',
   content: `Which open source projects are actually being built the hardest right now? We measured the public GitHub history of 205 of the world's biggest open source projects and ranked the top 50 on two things: **how much code they shipped and how many people shipped it**. Every number below comes straight from each project's own public repository, so anyone can check it.
@@ -108,15 +108,15 @@ Some of the busiest projects are companies building their main product in public
 
 - **Kubernetes** came 55th. It is still huge, but much of its work now happens in separate repositories around the main one.
 - **React** had only 138 commits from 46 contributors in 90 days. **Next.js**, **Go** and **TypeScript** were also outside the top 50. Mature projects change more slowly, and that is not a bad sign.
-- **Ladybird**, the new independent browser, shipped 8,961 commits, more than all but 11 projects, but from just 15 contributors.
+- **Ladybird**: the new independent browser, shipped 8,961 commits, more than all but 11 projects, but from just 15 contributors.
 
-## Where DeHub fits
+## Where Riftn fits
 
-![DeHub built in public: over 5,400 commits in 90 days from a small team](/media/fig-oss-dehub.jpg)
+![Riftn built in public: over 5,400 commits in 90 days from a small team](/media/fig-oss-dehub.jpg)
 
-We publish this index, so here is how our own open source code compares. DeHub's web and mobile apps landed **5,436 commits in the same 90 days**, more than PyTorch, TensorFlow or Kubernetes, and enough to place 22nd on commits alone. DeHub is not in the top 50 because the index also rewards the size of the crowd, and our core team is small. What makes up the difference is the community: anyone can file a request on [dehub.io/features](https://riftn.com/features) and watch it get built, often the same day.
+We publish this index, so here is how our own open source code compares. Riftn's web and mobile apps landed **5,436 commits in the same 90 days**, more than PyTorch, TensorFlow or Kubernetes, and enough to place 22nd on commits alone. Riftn is not in the top 50 because the index also rewards the size of the crowd, and our core team is small. What makes up the difference is the community: anyone can file a request on [riftn.com/features](https://riftn.com/features) and watch it get built, often the same day.
 
-> Disclosure: DeHub publishes this index. DeHub's own numbers come from its public repositories, measured in the same way as everyone else's.
+> Disclosure: Riftn publishes this index. Riftn's own numbers come from its public repositories, measured in the same way as everyone else's.
 
 ## Frequently asked questions
 
@@ -144,16 +144,16 @@ Yes. Every project on this list accepts contributions, and most label easy start
 
 - Public commit history on GitHub for all 205 projects measured, pulled on 26 October 2026. Each repository is linked in the list above.
 - [Open Source Initiative list of approved licenses](https://opensource.org/licenses)
-- [DeHub on GitHub](https://github.com/DeHubToken/dehubweb)
+- [Riftn on GitHub](https://github.com/DeHubToken/dehubweb)
 
 ## Build with us
 
-DeHub is a social and streaming app that is built in public, every day. Open [dehub.io](https://riftn.com), post a feature request on [dehub.io/features](https://riftn.com/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Riftn is a social and streaming app that is built in public, every day. Open [riftn.com](https://riftn.com), post a feature request on [riftn.com/features](https://riftn.com/features), and watch the community build it. You can also get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-most-active-open-source-projects-2026-banner.png',
-  bannerImageAlt: 'Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub',
+  bannerImageAlt: 'Top 50 most active open source projects 2026, ranked by GitHub activity, by Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',
-  tags: ['open source', 'top 50', 'GitHub', 'most active open source projects', 'Linux', 'Chromium', 'AI', 'vLLM', 'PyTorch', 'developer tools', 'DeHub'],
+  tags: ['open source', 'top 50', 'GitHub', 'most active open source projects', 'Linux', 'Chromium', 'AI', 'vLLM', 'PyTorch', 'developer tools', 'Riftn'],
   readingTime: 10,
   featured: true,
   status: 'published',

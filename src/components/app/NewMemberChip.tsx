@@ -44,7 +44,7 @@ export function NewMemberChip({ address, lookupId, className }: NewMemberChipPro
   return (
     <span
       data-new-member-chip
-      title={_copy("copy.48409768c73d", { defaultValue: "Joined {{value1}} — say hello", value1: joinedAgoLabel(joinedAt) })}
+      title={_copy("copy.48409768c73d", { defaultValue: "Joined {{value1}}: say hello", value1: joinedAgoLabel(joinedAt) })}
       className={cn(
         'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md',
         'bg-white/[0.12] text-white/75 border border-white/[0.12] text-[10px] font-semibold leading-none whitespace-nowrap flex-shrink-0',

@@ -19,7 +19,7 @@ export default function CreatorsPage() {
   const { t: _copy } = _useCopy();
   return (
     <>
-      <SEOHead title={_copy("copy.9ae6de224302", { defaultValue: "Become a Creator" })} description={_copy("copy.a39091f6acf5", { defaultValue: "Apply to become a creator on Riftn — the open source, censorship resistant media platform." })} url="https://riftn.com/creators" />
+      <SEOHead title={_copy("copy.9ae6de224302", { defaultValue: "Become a Creator" })} description={_copy("copy.a39091f6acf5", { defaultValue: "Apply to become a creator on Riftn, the open source, censorship resistant media platform." })} url="https://riftn.com/creators" />
       <CreatorsPageInner />
     </>
   );

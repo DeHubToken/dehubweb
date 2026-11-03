@@ -275,7 +275,7 @@ export default function AgentsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.c3b249872662", { defaultValue: "AI Agents — Build & Manage Bots" })} description={_copy("copy.42739bad06c8", { defaultValue: "Create and manage AI-powered agents on Riftn. Automate posting, engage with your audience, and integrate with the Riftn API." })} url="https://riftn.com/app/agents" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Riftn AI Agents', url: 'https://riftn.com/app/agents', applicationCategory: 'DeveloperApplication', description: _copy("copy.056df2381a18", { defaultValue: "Create and manage AI-powered agents on Riftn." }), operatingSystem: 'Web' }} />
+      <SEOHead title={_copy("copy.c3b249872662", { defaultValue: "AI Agents: Build & Manage Bots" })} description={_copy("copy.42739bad06c8", { defaultValue: "Create and manage AI-powered agents on Riftn. Automate posting, engage with your audience, and integrate with the Riftn API." })} url="https://riftn.com/app/agents" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Riftn AI Agents', url: 'https://riftn.com/app/agents', applicationCategory: 'DeveloperApplication', description: _copy("copy.056df2381a18", { defaultValue: "Create and manage AI-powered agents on Riftn." }), operatingSystem: 'Web' }} />
       <h1 className="sr-only">{_copy("copy.69a9d7f732d3", { defaultValue: "Riftn AI Agents — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland back icon="assistant" title={t('agents.title')} />
 

@@ -154,7 +154,7 @@ export default function RafflePage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on Riftn" })}
+        title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws: Win tokens, Hardware and NFTs on Riftn" })}
         description={pageDescription()}
         image="https://riftn.com/og/raffle.jpg"
         url="https://riftn.com/raffle"

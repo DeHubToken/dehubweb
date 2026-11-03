@@ -4,10 +4,10 @@ export const playToEarnUkPost: BlogPostType = {
   id: 'play-to-earn-uk-2026',
   slug: 'play-to-earn-uk-2026-earnings-hmrc-tax',
   title: 'Play-to-Earn in the UK 2026: Games, Real Earnings & HMRC Tax Explained',
-  seoTitle: 'Play to Earn UK 2026: Games, Earnings & HMRC Tax | DeHub',
-  seoDescription: 'Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from DeHub.',
+  seoTitle: 'Play to Earn UK 2026: Games, Earnings & HMRC Tax | Riftn',
+  seoDescription: 'Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from Riftn.',
   excerpt: 'Is play-to-earn legal in the UK, which games genuinely pay British players in 2026, and how does HMRC tax the rewards? A practical guide, not tax advice.',
-  content: `Play to earn in the UK is legal in 2026: there is no law against earning crypto tokens or NFTs from games, and British players do it openly. The catch is twofold. First, crypto rewards sit outside the FCA's consumer-protection perimeter, so the tokens you earn are high-risk and largely unregulated. Second, HMRC generally treats what you earn as taxable, usually as income when it lands in your wallet and again as a capital gain when you later sell it. This guide covers the legal position, the tax treatment in plain terms, and which games actually pay UK players, including DeHub's own arcade.
+  content: `Play to earn in the UK is legal in 2026: there is no law against earning crypto tokens or NFTs from games, and British players do it openly. The catch is twofold. First, crypto rewards sit outside the FCA's consumer-protection perimeter, so the tokens you earn are high-risk and largely unregulated. Second, HMRC generally treats what you earn as taxable, usually as income when it lands in your wallet and again as a capital gain when you later sell it. This guide covers the legal position, the tax treatment in plain terms, and which games actually pay UK players, including Riftn's own arcade.
 
 None of the below is financial or tax advice. Crypto's value can fall as well as rise, you may not get your money back, and your personal position depends on your circumstances. For anything that touches your return, check the current guidance on GOV.UK or speak to a qualified accountant.
 
@@ -40,7 +40,7 @@ Two extra points on crypto gaming tax HMRC watchers should note for 2026:
 
 You declare crypto through Self Assessment, with the online deadline on **31 January** following the tax year. Again, this is general information, not advice for your situation, so confirm the current thresholds and rates on GOV.UK or with an accountant before you file.
 
-For the token side of the equation, our [DeHub crypto buying guide](/guides/how-to-buy-dhb-token-uk) walks through acquiring and holding $DHB from the UK, which pairs naturally with tracking what your play earns.
+For the token side of the equation, our [Riftn crypto buying guide](/guides/how-to-buy-dhb-token-uk) walks through acquiring and holding $DHB from the UK, which pairs naturally with tracking what your play earns.
 
 ## Play-to-earn games UK players can actually use in 2026
 
@@ -48,15 +48,15 @@ Plenty of "earn" games are geo-blocked, pay in dead tokens, or demand a costly N
 
 ### Last Chad Standing
 
-DeHub's flagship game, [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn), is an MMA fighter battle royale built around licensed fighters. It runs inside the wider [DeHub, the decentralised social network](/guides/what-is-dehub) rather than as a standalone app, so your progress and rewards live alongside your feed, your uploads, and your wallet. Because it sits on the same on-chain rails as the rest of the platform, rewards settle in $DHB rather than in a throwaway in-game currency you can never cash out.
+Riftn's flagship game, [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn), is an MMA fighter battle royale built around licensed fighters. It runs inside the wider [Riftn, the decentralised social network](/guides/what-is-dehub) rather than as a standalone app, so your progress and rewards live alongside your feed, your uploads, and your wallet. Because it sits on the same on-chain rails as the rest of the platform, rewards settle in $DHB rather than in a throwaway in-game currency you can never cash out.
 
-### The DeHub play-to-earn arcade
+### The Riftn play-to-earn arcade
 
 Around Last Chad Standing sits a broader play-to-earn arcade, a set of lighter games that reward time and skill without an entry fee. This is the low-friction on-ramp: you can start earning without buying anything, which keeps you clear of the "pay to play to earn" trap that sinks so many projects. If you want a wider survey of no-cost options, our roundup of [free play-to-earn games with no investment](/guides/free-play-to-earn-games-no-investment-2026) covers the field.
 
 ### Watch-to-earn and the wider "X-to-earn" family
 
-Play-to-earn is one branch of a bigger tree. On DeHub, **watch-to-earn** bounties reward you for watching content, and the model extends into move-to-earn elsewhere. If you are weighing which fits your habits, [our comparison of watch-to-earn, play-to-earn and move-to-earn](/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn) breaks down the effort-to-reward trade-off of each. For most UK players, mixing a bit of watch to earn UK activity with arcade play spreads the effort out sensibly.
+Play-to-earn is one branch of a bigger tree. On Riftn, **watch-to-earn** bounties reward you for watching content, and the model extends into move-to-earn elsewhere. If you are weighing which fits your habits, [our comparison of watch-to-earn, play-to-earn and move-to-earn](/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn) breaks down the effort-to-reward trade-off of each. For most UK players, mixing a bit of watch to earn UK activity with arcade play spreads the effort out sensibly.
 
 Whichever branch you pick, the tax logic above is identical: value the reward in sterling on receipt, then account for any gain on disposal.
 
@@ -64,21 +64,19 @@ Whichever branch you pick, the tax logic above is identical: value the reward in
 
 A clean, above-board setup takes about an evening. Here is the practical sequence.
 
-- **Set up a wallet.** A self-custody wallet on Base (an Ethereum Layer 2) gives you control of your keys and low fees. Write your recovery phrase down offline and never share it. On DeHub, your rewards are paid on-chain and your content can be minted to your wallet, so the wallet is your hub.
+- **Set up a wallet.** A self-custody wallet on Base (an Ethereum Layer 2) gives you control of your keys and low fees. Write your recovery phrase down offline and never share it. On Riftn, your rewards are paid on-chain and your content can be minted to your wallet, so the wallet is your hub.
 - **Start with no-spend games first.** Prove the mechanics pay out before you commit a penny. The arcade and watch-to-earn bounties let you test the full earn-and-withdraw loop with zero risk.
 - **Understand the token before you hold it.** If you decide to acquire $DHB rather than only earn it, read up first. $DHB trades on DEXs and on Coinbase and is listed on CoinGecko and CoinMarketCap. Never treat a game token as a savings account.
 - **Log every reward as you earn it.** Date, token, quantity, and the sterling value that day. This one habit turns January's Self Assessment from a nightmare into a copy-and-paste job.
 - **Keep the FCA warning front of mind.** Only ever risk what you can afford to lose entirely.
 
-When you are ready, you can jump straight into the games and the feed at the [DeHub web app](https://riftn.com/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
+When you are ready, you can jump straight into the games and the feed at the [Riftn web app](https://riftn.com/app), or grab it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). Everything is open-source and user-owned, so you are not renting access to your own rewards.
 
-## Why DeHub is a sensible UK starting point
+## Why Riftn is a sensible UK starting point
 
-Two things make DeHub a practical home base for a British player. First, it was built in the UK: DeHub is an independent DAO whose co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency. That is a team that understands the UK creator economy from the inside, and the project sponsors the North Wales Crusaders rugby league club.
+Two things make Riftn a practical home base for a British player. First, it was built in the UK: Riftn is an independent DAO whose co-founders Mike Hales and Indi Jay Cammish also founded First Class Agency, the UK's number-one official TikTok LIVE partner agency. That is a team that understands the UK creator economy from the inside, and the project sponsors the North Wales Crusaders rugby league club.
 
 Second, play-to-earn here is not bolted onto a shell. It sits inside a full platform: a chronological, transparent feed with no opaque algorithm, tokenised uploads, on-chain tradable subscriptions with resale royalties, up to 90% ad-revenue share to the ecosystem, and live streaming on Livepeer that has scaled to 50,000-plus concurrent viewers. The games are one way to earn among several, which means your effort is not hostage to a single token's fortunes.
-
-One last disambiguation, because search engines conflate them: the DeHub covered here is the Web3 social network at dehub.io. It is unrelated to DePaul University's "DeHUB" student portal or Rowan University's "DEHub" digital engineering hub. If you landed here looking for a campus login, this is not it.
 
 ## Frequently asked questions
 
@@ -96,17 +94,17 @@ There is no dedicated gaming tax. HMRC applies its existing crypto-asset rules: 
 
 ### What is the best play-to-earn game for UK players?
 
-The best fit is one with no forced upfront spend and a genuinely tradable token. DeHub's [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn) MMA battle royale and its play-to-earn arcade meet both tests and, being built by a UK team, keep rewards on-chain in $DHB rather than in a locked in-game currency. Start with the no-cost options and prove the payout loop before spending anything.
+The best fit is one with no forced upfront spend and a genuinely tradable token. Riftn's [Last Chad Standing](/guides/last-chad-standing-mma-battle-royale-play-to-earn) MMA battle royale and its play-to-earn arcade meet both tests and, being built by a UK team, keep rewards on-chain in $DHB rather than in a locked in-game currency. Start with the no-cost options and prove the payout loop before spending anything.
 
 ### Can I play-to-earn without spending any money?
 
-Yes. Free-to-start games avoid the "pay to play to earn" trap entirely. DeHub's arcade and watch-to-earn bounties let you test the full earn-and-withdraw cycle at zero risk, and our guide to [free play-to-earn games with no investment](/guides/free-play-to-earn-games-no-investment-2026) lists more options for UK players.`,
+Yes. Free-to-start games avoid the "pay to play to earn" trap entirely. Riftn's arcade and watch-to-earn bounties let you test the full earn-and-withdraw cycle at zero risk, and our guide to [free play-to-earn games with no investment](/guides/free-play-to-earn-games-no-investment-2026) lists more options for UK players.`,
   bannerImage: '/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png',
-  bannerImageAlt: 'Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations',
+  bannerImageAlt: 'Play-to-earn gaming in the UK with Riftn, showing crypto rewards and HMRC tax considerations',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-02-19T10:00:00.000Z',
   updatedAt: '2026-02-19T10:00:00.000Z',
-  tags: ['play to earn uk', 'play to earn tax', 'crypto gaming', 'HMRC crypto tax', 'play to earn games 2026', 'DeHub', 'watch to earn'],
+  tags: ['play to earn uk', 'play to earn tax', 'crypto gaming', 'HMRC crypto tax', 'play to earn games 2026', 'Riftn', 'watch to earn'],
   readingTime: 9,
   featured: false,
   status: 'published',

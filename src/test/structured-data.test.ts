@@ -157,7 +157,7 @@ describe('edge-rendered pages', () => {
     expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg');
     expect(article.author).toMatchObject({ '@type': 'Organization', name: 'Riftn' });
     expectValidTrail(body, 'https://riftn.com/docs/overview');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs — Overview'.replace(/ — Riftn( Docs)?$/, '')]);
+    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs | Overview'.replace(/ (?:—|\|) Riftn( Docs)?$/, '')]);
   });
 
   it('gives a standalone guide an image, an author and a trail', async () => {
@@ -252,7 +252,7 @@ describe('edge-rendered pages', () => {
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     expect(types(body)).toEqual(expect.arrayContaining(['WebPage', 'Organization']));
     const faq = all.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
-    expect(faq.mainEntity.map((q) => q.name)).toContain('Is DeHub the DePaul University app?');
+    expect(faq.mainEntity.map((q) => q.name)).toContain('Is the Riftn app free?');
     for (const q of faq.mainEntity) expect(body).toContain(`<h3>${q.name}</h3>`);
     for (const href of [
       'https://play.google.com/store/apps/details?id=io.dehub.mobile',
@@ -275,7 +275,7 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/duets');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal — Riftn');
+    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal | Riftn');
     expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/duets">');
     expect(types(body)).toContain('CollectionPage');
@@ -285,7 +285,7 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/reactions');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal — Riftn');
+    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal | Riftn');
     expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/reactions">');
     expect(types(body)).toContain('CollectionPage');
@@ -369,7 +369,7 @@ describe('entity pages', () => {
     expect(res.status).toBe(200);
     expect(res.headers.get('X-Robots-Tag')).toContain('noindex');
     expect(body).toContain('<meta name="robots" content="noindex, follow">');
-    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co — Built with Riftn Builder');
+    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co: Built with Riftn Builder');
     expect(meta(body, 'og:description')).toBe('Collect tips.');
     expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg');
     expect(meta(body, 'og:image:width')).toBe('1200');
@@ -492,7 +492,7 @@ describe('proxied pages', () => {
     expect(types(body)).not.toContain('Organization');
     const page = jsonLd(body)[0];
     expect(page['@type']).toBe('CollectionPage');
-    expect(page.name).toBe('Riftn — community on Riftn');
+    expect(page.name).toBe('Riftn: community on Riftn');
     expect(meta(body, 'og:image')).toBe(
       'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://riftn.com/_og/storage/community-media/dehub/avatar.jpg',
     );

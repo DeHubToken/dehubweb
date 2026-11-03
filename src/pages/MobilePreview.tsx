@@ -117,7 +117,7 @@ export default function MobilePreview() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex">
-      <SEOHead title={_copy("copy.ffe5b9da27f5", { defaultValue: "Mobile Preview — Riftn" })} description={_copy("copy.0cf13d60db5f", { defaultValue: "Internal preview of Riftn mobile screens." })} noindex />
+      <SEOHead title={_copy("copy.ffe5b9da27f5", { defaultValue: "Mobile Preview | Riftn" })} description={_copy("copy.0cf13d60db5f", { defaultValue: "Internal preview of Riftn mobile screens." })} noindex />
       {/* Sidebar picker */}
       <aside className="w-64 flex-shrink-0 border-r border-white/10 bg-black/50 backdrop-blur-xl p-4 overflow-y-auto">
         <h1 className="text-white font-bold text-lg mb-1">{_copy("copy.4bc65a38f7bb", { defaultValue: "Mobile Preview" })}</h1>

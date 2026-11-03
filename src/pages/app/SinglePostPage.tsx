@@ -778,7 +778,7 @@ function SlugNotFound() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 p-8 text-center">
-      <SEOHead title="Post not found — Riftn" noindex noCanonical />
+      <SEOHead title="Post not found | Riftn" noindex noCanonical />
       <p className="text-foreground font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
       <p className="text-muted-foreground text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
       <button

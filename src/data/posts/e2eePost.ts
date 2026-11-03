@@ -2,20 +2,20 @@ import { BlogPost } from '@/types/blog';
 
 export const e2eePost: BlogPost = {
   id: 'privacy-first-e2ee-dehub',
-  title: 'Privacy First: Open Source End To End Encryption (E2EE) on DeHub',
+  title: 'Privacy First: Open Source End To End Encryption (E2EE) on Riftn',
   slug: 'privacy-first-open-source-e2ee-dehub',
-  excerpt: 'Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how DeHub protects your messages with battle-tested cryptography.',
-  content: `How DeHub's End-to-End Encryption Works
+  excerpt: 'Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how Riftn protects your messages with battle-tested cryptography.',
+  content: `How Riftn's End-to-End Encryption Works
 
 🔒 Military-Grade Privacy Protection
 
-At DeHub, we've implemented military-grade End-to-End Encryption (E2EE) to ensure your conversations remain completely private. When you send a message, only you and your recipient can read it—not even DeHub's servers have access to your decrypted messages.
+At Riftn, we've implemented military-grade End-to-End Encryption (E2EE) to ensure your conversations remain completely private. When you send a message, only you and your recipient can read it, not even Riftn's servers have access to your decrypted messages.
 
 🛡️ What Makes Our E2EE Secure?
 
 Zero-Trust Architecture
 
-We use audited, zero-dependency cryptographic libraries from the @noble suite—the same cryptographic foundation trusted by security experts worldwide:
+We use audited, zero-dependency cryptographic libraries from the @noble suite, the same cryptographic foundation trusted by security experts worldwide:
 
 • @noble/ciphers - For authenticated encryption
 • @noble/curves - For elliptic curve cryptography
@@ -32,7 +32,7 @@ XChaCha20-Poly1305 - Message Encryption
 X25519 ECDH - Key Exchange
 
 • Elliptic Curve Diffie-Hellman for secure key agreement
-• Provides Perfect Forward Secrecy—each conversation uses unique session keys
+• Provides Perfect Forward Secrecy, each conversation uses unique session keys
 • Based on Curve25519, offering 128-bit security level
 
 HKDF-SHA256 - Key Derivation
@@ -45,7 +45,7 @@ HKDF-SHA256 - Key Derivation
 
 Phase 1: One-Time Setup (Enable E2EE)
 
-When you enable E2EE in DeHub, here's what happens:
+When you enable E2EE in Riftn, here's what happens:
 
 1. Wallet Signature Request
    • You're asked to sign a message: "Enable E2EE for Holder Chat"
@@ -55,24 +55,24 @@ When you enable E2EE in DeHub, here's what happens:
 2. Private Key Generation
    Your Wallet Signature → [SHA-256 hash] → 32-byte seed → [HKDF derivation] → Your Private Key (32 bytes)
    • Your private key is derived from your wallet signature
-   • Never transmitted to DeHub servers
+   • Never transmitted to Riftn servers
    • Never stored anywhere except your device
 
 3. Public Key Creation
-   Private Key → [X25519 operation] → Public Key (32 bytes) → [Base64 encoding] → Uploaded to DeHub database
+   Private Key → [X25519 operation] → Public Key (32 bytes) → [Base64 encoding] → Uploaded to Riftn database
    • Your public key is mathematically linked to your private key
-   • Safe to share publicly—it's used by others to encrypt messages for you
-   • Stored in DeHub's database so others can find it
+   • Safe to share publicly, it's used by others to encrypt messages for you
+   • Stored in Riftn's database so others can find it
 
 What Gets Stored:
 • On Your Device (IndexedDB): Private key, session keys (24-hour cache)
-• On DeHub Servers: Public key, E2EE enabled status, key creation timestamp
+• On Riftn Servers: Public key, E2EE enabled status, key creation timestamp
 
 Phase 2: Starting a Conversation
 
 When you chat with someone who also has E2EE enabled:
 
-Your Private Key (from your device) + Their Public Key (from DeHub database) → [X25519 ECDH Magic] → Shared Secret (32 bytes) → [HKDF with conversation context] → Session Key (32 bytes)
+Your Private Key (from your device) + Their Public Key (from Riftn database) → [X25519 ECDH Magic] → Shared Secret (32 bytes) → [HKDF with conversation context] → Session Key (32 bytes)
 
 Key Features:
 • Perfect Forward Secrecy - Each conversation has a unique session key
@@ -87,23 +87,23 @@ When you type and send "Hello, world!":
    "Hello, world!" → [UTF-8 encoding] → Plaintext bytes: [72, 101, 108, 108, 111, ...]
 
 2. Encryption
-   Plaintext bytes + Session Key + Random Nonce (24 bytes, freshly generated) → [XChaCha20-Poly1305 encryption] → Ciphertext + Authentication Tag (16 bytes) → [Base64 encoding] → Ready for DeHub servers
+   Plaintext bytes + Session Key + Random Nonce (24 bytes, freshly generated) → [XChaCha20-Poly1305 encryption] → Ciphertext + Authentication Tag (16 bytes) → [Base64 encoding] → Ready for Riftn servers
 
-3. Storage - DeHub's database stores:
+3. Storage - Riftn's database stores:
    ✅ Who sent it (your address)
    ✅ Who receives it (recipient's address)
    ✅ When it was sent (timestamp)
    ✅ Encrypted gibberish (the ciphertext)
    ❌ What it says (completely unreadable)
 
-What DeHub Sees: We can see metadata (who, when, message count) but never the actual content—it's just encrypted gibberish to us!
+What Riftn Sees: We can see metadata (who, when, message count) but never the actual content, it's just encrypted gibberish to us!
 
 Phase 4: Receiving a Message
 
 When someone sends you an encrypted message:
 
 1. Fetch from Database
-   DeHub retrieves: encrypted_content + nonce + version
+   Riftn retrieves: encrypted_content + nonce + version
 
 2. Session Key Retrieval
    Check cache → If found, use it
@@ -128,14 +128,14 @@ Security Verification:
 • Forward Secrecy - Unique keys per conversation
 • Authenticity - Guaranteed sender identity
 
-⚠️ Metadata (Visible to DeHub)
+⚠️ Metadata (Visible to Riftn)
 
 Like all E2EE systems (Signal, WhatsApp, etc.), some metadata must be visible for the app to function:
 
 • Who you're messaging (sender/recipient addresses)
 • When messages are sent (timestamps)
 • How many messages exchanged (message count)
-• Message type (text/image/voice—but not the content)
+• Message type (text/image/voice, but not the content)
 
 Why? This metadata is necessary for message routing and delivery. Without it, we couldn't deliver your messages!
 
@@ -160,7 +160,7 @@ Why? This metadata is necessary for message routing and delivery. Without it, we
 
 💡 Why This Matters
 
-DeHub can never:
+Riftn can never:
 
 ❌ Read your messages
 ❌ Access your private keys
@@ -169,19 +169,19 @@ DeHub can never:
 
 Even if:
 
-🚨 DeHub's servers are hacked
+🚨 Riftn's servers are hacked
 🚨 We're served a government warrant
 🚨 A rogue employee tries to access data
 
 Your messages remain encrypted and unreadable. That's the power of true end-to-end encryption.
 
-🎯 DeHub's Commitment to Privacy
+🎯 Riftn's Commitment to Privacy
 
-At DeHub, we believe privacy is a fundamental right. Our E2EE implementation ensures that your conversations are truly private—protected by mathematics, not just policies. We've chosen industry-leading cryptographic libraries and algorithms to give you the same level of security used by Signal, WhatsApp, and other privacy-focused messaging platforms.
+At Riftn, we believe privacy is a fundamental right. Our E2EE implementation ensures that your conversations are truly private, protected by mathematics, not just policies. We've chosen industry-leading cryptographic libraries and algorithms to give you the same level of security used by Signal, WhatsApp, and other privacy-focused messaging platforms.
 
 Your messages. Your privacy. Always.`,
   bannerImage: '/media/e2ee-banner.png',
-  bannerImageAlt: 'DeHub End-to-End Encryption Banner - Privacy First Technology',
+  bannerImageAlt: 'Riftn End-to-End Encryption Banner - Privacy First Technology',
   author: {
     name: 'Riftn Team',
   },
@@ -190,6 +190,6 @@ Your messages. Your privacy. Always.`,
   readingTime: 14,
   featured: true,
   status: 'published',
-  seoTitle: 'Privacy First: Open Source End-to-End Encryption on DeHub | E2EE Explained',
-  seoDescription: 'Learn how DeHub protects your privacy with military-grade E2EE using XChaCha20-Poly1305, X25519 ECDH, and battle-tested cryptography. Your messages, truly private.',
+  seoTitle: 'Privacy First: Open Source End-to-End Encryption on Riftn | E2EE Explained',
+  seoDescription: 'Learn how Riftn protects your privacy with military-grade E2EE using XChaCha20-Poly1305, X25519 ECDH, and battle-tested cryptography. Your messages, truly private.',
 };

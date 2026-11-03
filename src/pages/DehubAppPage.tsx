@@ -120,9 +120,8 @@ export default function DehubAppPage() {
 
         <p className="mt-8 text-sm leading-relaxed text-white/60">
           <Trans
-            i18nKey="dehubAppPage.notSure"
+            i18nKey="dehubAppPage.learnMore"
             components={{
-              compare: <Link to="/guides/dehub-vs-depaul-dehub-vs-rowan-dehub" className="underline underline-offset-4 hover:text-white" />,
               guide: <Link to="/guides/what-is-dehub" className="underline underline-offset-4 hover:text-white" />,
             }}
           />

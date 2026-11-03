@@ -3,13 +3,13 @@ import { BlogPost as BlogPostType } from '@/types/blog';
 export const whatIsWatchToEarnPost: BlogPostType = {
   id: 'what-is-watch-to-earn',
   slug: 'what-is-watch-to-earn',
-  title: 'What Is Watch-to-Earn? How DeHub Actually Pays You to Watch (2026)',
-  seoTitle: 'What Is Watch-to-Earn? How It Works in 2026 | DeHub',
-  seoDescription: 'What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how DeHub pays you to watch on-chain.',
-  excerpt: 'Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how DeHub does it honestly.',
+  title: 'What Is Watch-to-Earn? How Riftn Actually Pays You to Watch (2026)',
+  seoTitle: 'What Is Watch-to-Earn? How It Works in 2026 | Riftn',
+  seoDescription: 'What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how Riftn pays you to watch on-chain.',
+  excerpt: 'Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how Riftn does it honestly.',
   content: `Watch-to-earn (often written as watch2earn) is a model where you receive a small crypto reward for watching video content, rather than handing all of that value to a platform and its advertisers for free. If you have ever wondered what watch to earn is in plain terms: it is the attention economy, inverted. Instead of your viewing time funding someone else's ad business, part of that value flows back to you as the viewer.
 
-That one-line answer is the honest version. The longer version matters, because "earn crypto watching videos" is also a phrase scammers love, and the gap between a real watch-to-earn platform and a gimmick is wide. This guide covers the watch to earn meaning, how the mechanics work, why the model exists at all, the caveats nobody selling you a token wants to mention, and how [DeHub, the decentralised social network](/guides/what-is-dehub) implements it without an NFT-glasses paywall or a browser extension.
+That one-line answer is the honest version. The longer version matters, because "earn crypto watching videos" is also a phrase scammers love, and the gap between a real watch-to-earn platform and a gimmick is wide. This guide covers the watch to earn meaning, how the mechanics work, why the model exists at all, the caveats nobody selling you a token wants to mention, and how [Riftn, the decentralised social network](/guides/what-is-dehub) implements it without an NFT-glasses paywall or a browser extension.
 
 ## What does watch-to-earn mean?
 
@@ -55,27 +55,27 @@ There are three caveats worth internalising before you start.
 
 We put the whole model under the microscope, including the red flags and the genuinely sustainable designs, in [is watch-to-earn legit](/guides/is-watch-to-earn-legit). If you are evaluating platforms, read that before you connect a wallet anywhere.
 
-## How DeHub does watch-to-earn
+## How Riftn does watch-to-earn
 
-DeHub is a decentralised, user-owned social network, and watch-to-earn is one native feature of that platform rather than the entire pitch. That framing matters: on DeHub the reward is a benefit layered on top of a working social product, not the only reason the product exists. Here is how [DeHub watch-to-earn](/guides/what-is-dehub) is built, and where it deliberately differs from the gimmick models.
+Riftn is a decentralised, user-owned social network, and watch-to-earn is one native feature of that platform rather than the entire pitch. That framing matters: on Riftn the reward is a benefit layered on top of a working social product, not the only reason the product exists. Here is how [Riftn watch-to-earn](/guides/what-is-dehub) is built, and where it deliberately differs from the gimmick models.
 
 ### Creator-funded bounties, not a token-printing scheme
 
-On DeHub, watch-to-earn is powered by creator-funded bounties. A creator can attach a bounty to a video to reward the people who watch it, drawing on a real, defined pool rather than freshly minted tokens sold to newcomers. That is a crucial structural difference. Because the reward is funded by someone with a genuine reason to want views, the incentive is honest: the creator is effectively buying attention directly from viewers instead of buying it from an ad network that keeps the margin.
+On Riftn, watch-to-earn is powered by creator-funded bounties. A creator can attach a bounty to a video to reward the people who watch it, drawing on a real, defined pool rather than freshly minted tokens sold to newcomers. That is a crucial structural difference. Because the reward is funded by someone with a genuine reason to want views, the incentive is honest: the creator is effectively buying attention directly from viewers instead of buying it from an ad network that keeps the margin.
 
-Rewards on DeHub are denominated in the ecosystem token, $DHB, which lives primarily on Base (an Ethereum Layer 2), with contracts also on BNB Chain and Polygon. $DHB is a real, tradable asset listed on CoinGecko and CoinMarketCap and available on DEXs and on Coinbase, so what you earn is not points trapped inside an app.
+Rewards on Riftn are denominated in the ecosystem token, $DHB, which lives primarily on Base (an Ethereum Layer 2), with contracts also on BNB Chain and Polygon. $DHB is a real, tradable asset listed on CoinGecko and CoinMarketCap and available on DEXs and on Coinbase, so what you earn is not points trapped inside an app.
 
 ### On-chain-verifiable payouts
 
-Every payout is verifiable on-chain. This is the part that separates a claim from a fact. Because DeHub records the relevant activity on a public blockchain, you do not have to take the platform's word that viewers are being paid; the transactions exist independently of any marketing page. Transparency of this kind is only meaningful when it is externally checkable, which is the whole point of doing it on-chain.
+Every payout is verifiable on-chain. This is the part that separates a claim from a fact. Because Riftn records the relevant activity on a public blockchain, you do not have to take the platform's word that viewers are being paid; the transactions exist independently of any marketing page. Transparency of this kind is only meaningful when it is externally checkable, which is the whole point of doing it on-chain.
 
 ### No NFT-glasses paywall, no browser extension
 
-Some of the best-known watch-to-earn projects require you to buy something before you can earn: a pair of NFT "glasses", a membership NFT, or similar. DeHub does not. There is no NFT you must purchase to start watching and earning, and there is no browser extension to install that watches what you do across the web. You watch inside the app, and eligible attention can be rewarded. We compare these approaches directly, including the buy-in-first models, in [DeHub versus Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
+Some of the best-known watch-to-earn projects require you to buy something before you can earn: a pair of NFT "glasses", a membership NFT, or similar. Riftn does not. There is no NFT you must purchase to start watching and earning, and there is no browser extension to install that watches what you do across the web. You watch inside the app, and eligible attention can be rewarded. We compare these approaches directly, including the buy-in-first models, in [Riftn versus Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
 
 ### Part of a real ecosystem
 
-Watch-to-earn on DeHub sits alongside the rest of the platform: content you can mint on-chain when you upload or later, a chronological and transparent feed with no opaque algorithm, tokenised uploads that can be free, pay-per-view or token-gated, on-chain tradable subscriptions with resale royalties for creators, live streaming on Livepeer that has scaled to 50,000+ concurrent viewers, open-source end-to-end encrypted messaging, and a play-to-earn arcade including the flagship MMA battle royale, Last Chad Standing. The watch-to-earn reward is one thread in that fabric, which is exactly why it does not need to overpromise.
+Watch-to-earn on Riftn sits alongside the rest of the platform: content you can mint on-chain when you upload or later, a chronological and transparent feed with no opaque algorithm, tokenised uploads that can be free, pay-per-view or token-gated, on-chain tradable subscriptions with resale royalties for creators, live streaming on Livepeer that has scaled to 50,000+ concurrent viewers, open-source end-to-end encrypted messaging, and a play-to-earn arcade including the flagship MMA battle royale, Last Chad Standing. The watch-to-earn reward is one thread in that fabric, which is exactly why it does not need to overpromise.
 
 ## Honest contrast with the gimmick models
 
@@ -85,9 +85,9 @@ Sustainable models look different. The reward is funded by real activity, such a
 
 That is the lens we apply across the market in our roundup of the [best watch-to-earn platforms of 2026](/guides/best-watch-to-earn-platforms-2026). If you read only one companion piece to this one, make it that, because it turns these principles into a side-by-side view of the actual options.
 
-## Getting started with DeHub watch-to-earn
+## Getting started with Riftn watch-to-earn
 
-If you want to try it rather than just read about it, the path is short. Create an account on the DeHub web app at **https://riftn.com/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on DeHub, watching to earn does not start with a purchase.
+If you want to try it rather than just read about it, the path is short. Create an account on the Riftn web app at **https://riftn.com/app**, or download the mobile app from Google Play at **https://play.google.com/store/apps/details?id=io.dehub.mobile**. From there you can browse the feed, watch content, and engage with bounties without buying anything first. That last point is the one to remember: on Riftn, watching to earn does not start with a purchase.
 
 ## Frequently asked questions
 
@@ -101,21 +101,21 @@ Modest amounts. Watch-to-earn recovers a share of the value your attention creat
 
 ### Do you need to buy anything to earn crypto watching videos?
 
-Not on DeHub. There is no NFT you must purchase and no browser extension to install before you can watch and earn; you create an account and start inside the app. This is different from several well-known watch-to-earn projects that require a buy-in first, which we compare in [DeHub versus Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
+Not on Riftn. There is no NFT you must purchase and no browser extension to install before you can watch and earn; you create an account and start inside the app. This is different from several well-known watch-to-earn projects that require a buy-in first, which we compare in [Riftn versus Cheelee, Theta and XCAD](/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn).
 
 ### How does watch-to-earn work mechanically?
 
-A funding source (advertising revenue or a creator's bounty) pays for the rewards, the platform verifies that you actually watched, and a small crypto reward is issued to your wallet, ideally recorded on-chain so it can be independently checked. Anti-abuse limits stop bots from draining the pool. On DeHub, payouts are creator-funded and on-chain-verifiable, and the reward is paid in the ecosystem token, $DHB.
+A funding source (advertising revenue or a creator's bounty) pays for the rewards, the platform verifies that you actually watched, and a small crypto reward is issued to your wallet, ideally recorded on-chain so it can be independently checked. Anti-abuse limits stop bots from draining the pool. On Riftn, payouts are creator-funded and on-chain-verifiable, and the reward is paid in the ecosystem token, $DHB.
 
 ### Is watch-to-earn the same as play-to-earn?
 
 No. Watch-to-earn rewards attention, play-to-earn rewards gameplay and skill, and move-to-earn rewards physical activity. They belong to the same "X-to-earn" family but reward different behaviours. We map the whole family, with the trade-offs of each, in [watch-to-earn versus play-to-earn versus move-to-earn](/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn).`,
   bannerImage: '/media/what-is-watch-to-earn-banner.png',
-  bannerImageAlt: 'DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network',
+  bannerImageAlt: 'Riftn watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-06-12T14:00:00.000Z',
   updatedAt: '2026-06-12T14:00:00.000Z',
-  tags: ['watch-to-earn', 'watch2earn', 'earn crypto watching videos', 'DeHub', 'Web3 social', 'attention economy', 'DHB token'],
+  tags: ['watch-to-earn', 'watch2earn', 'earn crypto watching videos', 'Riftn', 'Web3 social', 'attention economy', 'DHB token'],
   readingTime: 10,
   featured: false,
   status: 'published',

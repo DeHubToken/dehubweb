@@ -93,7 +93,7 @@ export default function SuperPowersPage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.f57d7f82c107", { defaultValue: "SuperPowers — Spend Your Riftn Badge on Reach" })}
+        title={_copy("copy.f57d7f82c107", { defaultValue: "SuperPowers: Spend Your Riftn Badge on Reach" })}
         description={_copy("copy.eb510e32623c", { defaultValue: "Use badge-powered boosts, or Team up with as many as seven others to unlock a higher shared badge." })}
         url="https://riftn.com/app/superpowers"
         image="https://riftn.com/og/superpowers.jpg"

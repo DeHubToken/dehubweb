@@ -701,7 +701,7 @@ export default function StagesPage() {
     <div className="min-h-screen" data-stages-page>
       <SEOHead
         title={t('stages.seoTitle')}
-        description={_copy("copy.6cbd1288cf63", { defaultValue: "Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn — the decentralized, open source social platform." })}
+        description={_copy("copy.6cbd1288cf63", { defaultValue: "Join live audio Stages, listen back to recorded conversations, and go live with your own room on Riftn, the decentralized, open source social platform." })}
         url="https://riftn.com/stages"
         jsonLd={{
           '@context': 'https://schema.org',

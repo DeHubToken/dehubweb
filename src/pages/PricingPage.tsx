@@ -13,7 +13,7 @@ export default function PricingPage() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.5d627221715e", { defaultValue: "Pricing — Riftn Creator Studio" })}
+        title={_copy("copy.5d627221715e", { defaultValue: "Pricing | Riftn Creator Studio" })}
         description={_copy("copy.cb8e92496287", { defaultValue: "Riftn Creator Studio pricing in USD. Creator, Ultra, Team and Scale plans with monthly tokens for AI image, video, music and poster generation." })}
         url="https://riftn.com/pricing"
         jsonLd={{
@@ -22,7 +22,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'Riftn Ultra',
-              description: `For creators building AI projects — ${monthlyTokens('ultra', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('ultra', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
+              description: `For creators building AI projects, ${monthlyTokens('ultra', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('ultra', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
               brand: { '@type': 'Brand', name: 'Riftn' },
               offers: {
                 '@type': 'Offer',
@@ -42,7 +42,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'Riftn Team',
-              description: `For agencies and small teams — ${monthlyTokens('team', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('team', 'monthly')} with monthly billing. 2–9 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
+              description: `For agencies and small teams, ${monthlyTokens('team', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('team', 'monthly')} with monthly billing. 2–9 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
               brand: { '@type': 'Brand', name: 'Riftn' },
               offers: {
                 '@type': 'Offer',
@@ -62,7 +62,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'Riftn Scale',
-              description: `Designed for growing creative teams — ${monthlyTokens('scale', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('scale', 'monthly')} with monthly billing. 5–15 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
+              description: `Designed for growing creative teams, ${monthlyTokens('scale', 'annual')} tokens per seat/mo with annual billing, or ${monthlyTokens('scale', 'monthly')} with monthly billing. 5–15 billed seats; the combined token allowance is delivered to the subscriber wallet.`,
               brand: { '@type': 'Brand', name: 'Riftn' },
               offers: {
                 '@type': 'Offer',
@@ -82,7 +82,7 @@ export default function PricingPage() {
             {
               '@type': 'Product',
               name: 'Riftn Creator',
-              description: `For getting started with AI creation — ${monthlyTokens('creator', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('creator', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
+              description: `For getting started with AI creation, ${monthlyTokens('creator', 'annual')} tokens/mo with annual billing, or ${monthlyTokens('creator', 'monthly')} tokens/mo with monthly billing. Tokens are delivered to the subscriber wallet for supported generation tasks.`,
               brand: { '@type': 'Brand', name: 'Riftn' },
               offers: {
                 '@type': 'Offer',

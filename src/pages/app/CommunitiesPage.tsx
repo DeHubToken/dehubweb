@@ -130,7 +130,7 @@ export default function CommunitiesPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.0db2b3bc48bc", { defaultValue: "Communities — Find Your People on Riftn" })}
+        title={_copy("copy.0db2b3bc48bc", { defaultValue: "Communities: Find Your People on Riftn" })}
         description={_copy("copy.26efe78a0c95", { defaultValue: "Discover Riftn communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform." })}
         url="https://riftn.com/communities"
         jsonLd={{

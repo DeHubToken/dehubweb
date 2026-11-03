@@ -4,7 +4,7 @@ export const q4DevelopmentOverviewPost: BlogPostType = {
   id: 'q4-development-overview',
   slug: 'q4-development-overview',
   title: 'Q4 Development Overview',
-  excerpt: 'Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub — the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.',
+  excerpt: 'Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub, the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.',
   content: `
 ## Q4 so far
 
@@ -97,7 +97,7 @@ The browser editor from Q3 is now a full production tool on web and in the app:
 - System Light is a new theme on web and in the app ([#2612](https://github.com/DeHubToken/dehubweb/pull/2612), [mobile #1994](https://github.com/DeHubToken/dehub-mobile/pull/1994)), with readable toasts, drawers and standalone pages ([#2647](https://github.com/DeHubToken/dehubweb/pull/2647), [#2654](https://github.com/DeHubToken/dehubweb/pull/2654), [#2657](https://github.com/DeHubToken/dehubweb/pull/2657), [mobile #2016](https://github.com/DeHubToken/dehub-mobile/pull/2016)).
 - The System theme went fully immersive with no boxes ([#2261](https://github.com/DeHubToken/dehubweb/pull/2261), [mobile #1631](https://github.com/DeHubToken/dehub-mobile/pull/1631)).
 - The theme picker shows Minimal and Minimal Light ([#2534](https://github.com/DeHubToken/dehubweb/pull/2534)).
-- The DeHub Cut icon family now covers every control ([cfd741c871](https://github.com/DeHubToken/dehubweb/commit/cfd741c871), [#2574](https://github.com/DeHubToken/dehubweb/pull/2574), [#2592](https://github.com/DeHubToken/dehubweb/pull/2592)).
+- The Riftn Cut icon family now covers every control ([cfd741c871](https://github.com/DeHubToken/dehubweb/commit/cfd741c871), [#2574](https://github.com/DeHubToken/dehubweb/pull/2574), [#2592](https://github.com/DeHubToken/dehubweb/pull/2592)).
 - Every desktop tooltip is liquid glass ([#2723](https://github.com/DeHubToken/dehubweb/pull/2723)), unread chips are solid in every theme ([#2597](https://github.com/DeHubToken/dehubweb/pull/2597)), and Island's lagoon got reflective water ([#2554](https://github.com/DeHubToken/dehubweb/pull/2554)).
 - A shared page kit put every remaining page on the home look ([#2186](https://github.com/DeHubToken/dehubweb/pull/2186), [mobile #1568](https://github.com/DeHubToken/dehub-mobile/pull/1568)).
 
@@ -109,7 +109,7 @@ The browser editor from Q3 is now a full production tool on web and in the app:
 - Bounties are reputation-backed with verified payouts ([#2191](https://github.com/DeHubToken/dehubweb/pull/2191), [mobile #1575](https://github.com/DeHubToken/dehub-mobile/pull/1575)), and sponsors can fund creator support ads ([#2185](https://github.com/DeHubToken/dehubweb/pull/2185), [mobile #1567](https://github.com/DeHubToken/dehub-mobile/pull/1567)).
 - Staking deposits can no longer be counted twice and every pool credit is backed by a verified receipt ([backend #498](https://github.com/DeHubToken/dehub-stream-backend/pull/498), [backend #499](https://github.com/DeHubToken/dehub-stream-backend/pull/499)).
 - Paid audio is protected and keeps permanent access ([backend #508](https://github.com/DeHubToken/dehub-stream-backend/pull/508)).
-- The DEX shows only the DeHub pool ([#2461](https://github.com/DeHubToken/dehubweb/pull/2461)), and a DHB listing-soon card takes email sign-ups ([#2278](https://github.com/DeHubToken/dehubweb/pull/2278)).
+- The DEX shows only the Riftn pool ([#2461](https://github.com/DeHubToken/dehubweb/pull/2461)), and a DHB listing-soon card takes email sign-ups ([#2278](https://github.com/DeHubToken/dehubweb/pull/2278)).
 - Subscription allowances are versioned and checkout prices verified ([#2245](https://github.com/DeHubToken/dehubweb/pull/2245)).
 
 ## Transparency, feedback and requests
@@ -133,7 +133,7 @@ The browser editor from Q3 is now a full production tool on web and in the app:
 October is only half done. The rest of Q4 continues from here, and this page will keep growing with it.
   `,
   bannerImage: '/media/q4-development-overview-banner.png',
-  bannerImageAlt: 'Q4 Development Overview - DeHub rocket banner',
+  bannerImageAlt: 'Q4 Development Overview - Riftn rocket banner',
   author: {
     name: 'Riftn Team',
   },
@@ -142,6 +142,6 @@ October is only half done. The rest of Q4 continues from here, and this page wil
   readingTime: 12,
   featured: true,
   status: 'published',
-  seoTitle: 'Q4 Development Overview | DeHub',
-  seoDescription: 'Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout.',
+  seoTitle: 'Q4 Development Overview | Riftn',
+  seoDescription: 'Everything Riftn shipped since October across web, mobile, the streaming backend and admin, the video editor, Creator, AI agents, live, profiles, System Light and wallets, with pull request links throughout.',
 };
