@@ -38,15 +38,15 @@ export const DEHUB_APP_PAGE = {
     },
     {
       q: 'Is the Riftn app free?',
-      a: 'Yes. Riftn is free to download from Google Play and the App Store, and free to use in the browser at dehub.io.',
+      a: 'Yes. Riftn is free to download from Google Play and the App Store, and free to use in the browser at riftn.com.',
     },
     {
       q: 'Which devices does Riftn run on?',
-      a: 'Android phones through Google Play or the direct APK download, iPhone through the App Store, and any modern desktop or mobile browser at dehub.io.',
+      a: 'Android phones through Google Play or the direct APK download, iPhone through the App Store, and any modern desktop or mobile browser at riftn.com.',
     },
     {
       q: 'Can I install Riftn on Android without Google Play?',
-      a: 'Yes. The latest Android build is published by Riftn as a direct APK download at dehub.io/apk, for Android 8 and up.',
+      a: 'Yes. The latest Android build is published by Riftn as a direct APK download at riftn.com/apk, for Android 8 and up.',
     },
     {
       q: 'What can I do in the Riftn app?',

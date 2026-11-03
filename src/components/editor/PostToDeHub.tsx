@@ -92,7 +92,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
     if (!isAuthenticated) {
       setPending(true);
       openLoginModal?.();
-      toast.message(_copy("copy.a8d29dcb8caa", { defaultValue: "Sign in to post to Riftn. Your video will render after sign-in." }));
+      toast.message(_copy("copy.ca1d8a063770", { defaultValue: "Sign in to post to Riftn. Your video will render after sign-in." }));
       return;
     }
     void startRender();

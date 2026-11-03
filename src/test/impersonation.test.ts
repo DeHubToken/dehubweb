@@ -11,7 +11,7 @@ import { foldName, looksLike, checkImpersonation } from '@/lib/impersonation';
 
 describe('foldName', () => {
   it('folds case, spacing and punctuation away', () => {
-    expect(foldName('De Hub.')).toBe(foldName('Riftn'));
+    expect(foldName('De Hub.')).toBe(foldName('DeHub'));
   });
 
   it('folds Cyrillic and Greek lookalikes to their Latin twin', () => {
@@ -25,7 +25,7 @@ describe('foldName', () => {
   });
 
   it('collapses repeated characters', () => {
-    expect(foldName('Riftnbb')).toBe('dehub');
+    expect(foldName('DeHubbb')).toBe('dehub');
   });
 
   it('drops zero-width characters', () => {
@@ -35,8 +35,8 @@ describe('foldName', () => {
 
 describe('looksLike', () => {
   it('matches the evasions', () => {
-    for (const spoof of ['DеHub', 'D3Hub', 'Riftnb', 'Riftn.', 'De Hub', 'De​Hub']) {
-      expect(looksLike(spoof, 'Riftn')).toBe(true);
+    for (const spoof of ['DеHub', 'D3Hub', 'DeHubb', 'DeHub.', 'De Hub', 'De​Hub']) {
+      expect(looksLike(spoof, 'DeHub')).toBe(true);
     }
   });
 
@@ -46,7 +46,7 @@ describe('looksLike', () => {
 
   it('does not flag a different name that happens to be close in length', () => {
     expect(looksLike('someoneelse', 'maldoteth')).toBe(false);
-    expect(looksLike('Riftn Official', 'Riftn')).toBe(false);
+    expect(looksLike('DeHub Official', 'DeHub')).toBe(false);
   });
 
   it('requires exact folding for very short names', () => {
@@ -55,7 +55,7 @@ describe('looksLike', () => {
 });
 
 describe('checkImpersonation', () => {
-  const creator = { address: '0xAAA', displayName: 'Riftn', username: 'dehub' };
+  const creator = { address: '0xAAA', displayName: 'DeHub', username: 'dehub' };
 
   it('marks the creator by address, not by name', () => {
     expect(checkImpersonation({ address: '0xaaa', displayName: 'anything' }, creator)).toEqual({
@@ -69,8 +69,8 @@ describe('checkImpersonation', () => {
   });
 
   it('says nothing when either address is missing', () => {
-    expect(checkImpersonation({ displayName: 'Riftn' }, creator).isImpersonating).toBe(false);
-    expect(checkImpersonation({ address: '0xBBB', displayName: 'Riftn' }, null).isImpersonating).toBe(false);
+    expect(checkImpersonation({ displayName: 'DeHub' }, creator).isImpersonating).toBe(false);
+    expect(checkImpersonation({ address: '0xBBB', displayName: 'DeHub' }, null).isImpersonating).toBe(false);
   });
 
   it('leaves an unrelated commenter alone', () => {

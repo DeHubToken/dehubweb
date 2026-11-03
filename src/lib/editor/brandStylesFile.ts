@@ -12,9 +12,9 @@ export function parseBrandStylesFile(text: string): BrandStylesFile {
   if (text.length > 32768) throw new EditorError("copy.70953e5fe9b4", "Choose a brand styles file smaller than 32 KB");
   let value: unknown;
   try { value = JSON.parse(text.replace(/^\uFEFF/, "")); } catch { throw new EditorError("copy.a79d3cbc2e27", "This file does not contain valid brand styles"); }
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new EditorError("copy.dd389333d443", "Choose an exported Riftn brand styles file");
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new EditorError("copy.136cc54b1888", "Choose an exported Riftn brand styles file");
   const file = value as Record<string, unknown>;
-  if (file.kind !== "dehub-brand-styles" || file.version !== 1 || typeof file.name !== "string" || !file.styles || !validBrandStyles(file.styles)) throw new EditorError("copy.84ce290a42a6", "Choose a supported Riftn brand styles file");
+  if (file.kind !== "dehub-brand-styles" || file.version !== 1 || typeof file.name !== "string" || !file.styles || !validBrandStyles(file.styles)) throw new EditorError("copy.395093175829", "Choose a supported Riftn brand styles file");
   const styles = normaliseBrandStyles(file.styles as BrandStyles);
   if (!styles.colors.length && !styles.headingFont && !styles.bodyFont) throw new EditorError("copy.255953aa6425", "This file contains no colours or fonts");
   return { name: cleanName(file.name), styles };

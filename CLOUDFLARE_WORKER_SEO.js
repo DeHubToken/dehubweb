@@ -340,7 +340,7 @@ const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investi
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
 <h2 style="font-size:16px">Welcome to Riftn — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>Riftn is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">Riftn press coverage</a></p>
 <nav aria-label="Learn more about Riftn"><ul style="list-style:none;padding:0;margin:0">${
@@ -1471,7 +1471,7 @@ ${STREAM_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li><a href="${DEHUB_APP_LINKS.apk}">Download the Riftn APK</a> for Android without Google Play</li></ul>
 <h2>Frequently asked questions</h2>
 ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
-<p>Still not sure which Riftn you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is Riftn?</a> covers the platform in depth.</p>`,
+<p>Still not sure which DeHub you need? <a href="${DEHUB_APP_LINKS.disambiguation}">DeHub vs DePaul DeHUB vs Rowan DEHub</a> sorts it out, and <a href="${DEHUB_APP_LINKS.whatIsDehub}">What is Riftn?</a> covers the platform in depth.</p>`,
   },
 
   // The moderation handbook, published. The page itself is an iframe around a
@@ -2096,7 +2096,7 @@ function clipAtWord(text, max) {
 }
 
 /** A closing ` | Riftn`, ` — Riftn Guide`, ` - Riftn Docs`, ` | Riftn 2025 Roadmap` clause. */
-const BRAND_SUFFIX = /\s+[|—–-]\s+[^|—–]*\bDeHub\b[^|—–]*$/;
+const BRAND_SUFFIX = /\s+[|—–-]\s+[^|—–]*\b(?:Riftn|DeHub)\b[^|—–]*$/;
 
 /**
  * Fit a <title> into `max` characters the way a person would shorten it.
