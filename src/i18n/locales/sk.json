@@ -5175,6 +5175,7 @@
     "yourFractions": "Vaše zlomky",
     "acrossPosts_one": "rozložené na {{count}} ponuke",
     "acrossPosts_other": "rozložené na {{count}} ponukách",
+    "deletedPosts": "Odstránené príspevky ({{count}})",
     "noneHeldYet": "Ešte nemáte žiadne zlomky",
     "noneHeldHint": "Vyrazte príspevok a držte všetkých jeho 1000 podielov, alebo si kúpte podiel v príspevku niekoho iného.",
     "listedForSale": "Predané na predaj",

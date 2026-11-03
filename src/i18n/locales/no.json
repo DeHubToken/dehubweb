@@ -5068,6 +5068,7 @@
     "yourFractions": "Dine andeler",
     "acrossPosts_one": "over {{count}} innlegg",
     "acrossPosts_other": "over {{count}} innlegg",
+    "deletedPosts": "Slettede innlegg ({{count}})",
     "noneHeldYet": "Du eier ingen andeler ennå",
     "noneHeldHint": "Preg et innlegg for å eie alle de 1000 fraksjonene, eller kjøp deg inn i noen andres.",
     "listedForSale": "Listet for salg",

@@ -5011,6 +5011,7 @@
     "yourFractions": "I ka faranfasiw",
     "acrossPosts_one": "{{count}} post bɛɛ kɔnɔ",
     "acrossPosts_other": "ddd {{count}} posts",
+    "deletedPosts": "Posts minnu bɔra ({{count}})",
     "noneHeldYet": "O tɛ se ka kɛ halibi.",
     "noneHeldHint": "Post dɔ minti walasa k'a tilaw 1000 bɛɛ ta, walima mɔgɔ wɛrɛ ka post tilaw dɔ san.",
     "listedForSale": "Fɛɛn minw be feere",

@@ -5090,6 +5090,7 @@
     "yourFractions": "Fraccionesniykikuna",
     "acrossPosts_one": "{{count}} qillqasqapa chimpanpi",
     "acrossPosts_other": "{{count}} qillqakuna chimpapi",
+    "deletedPosts": "Qullusqa willakuykuna ({{count}})",
     "noneHeldYet": "Manaraqmi ima fraccionkunatapas hapinkichu",
     "noneHeldHint": "Huk willakuyta mintiy llapan 1000 rakinkunata hap'inaykipaq, utaq huk runap willakuyninpi rantiy.",
     "listedForSale": "Ventapaq listasqa",

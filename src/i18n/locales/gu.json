@@ -5060,6 +5060,7 @@
     "yourFractions": "તમારા ફ્રેક્શન્સ",
     "acrossPosts_one": "{{count}} પોસ્ટ પર",
     "acrossPosts_other": "{{count}} પોસ્ટ્સ પર",
+    "deletedPosts": "કાઢી નાખેલી પોસ્ટ ({{count}})",
     "noneHeldYet": "તમે હજી કોઈ ફ્રેક્શન્સ ધરાવતી નથી",
     "noneHeldHint": "કોઈ પોસ્ટ મિન્ટ કરો અને તેના બધા 1000 હિસ્સા રાખો, અથવા બીજા કોઈની પોસ્ટમાં ખરીદો.",
     "listedForSale": "વેચાણમાં લિસ્ટેડ",

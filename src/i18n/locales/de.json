@@ -5088,6 +5088,7 @@
     "yourFractions": "Ihre Anteile",
     "acrossPosts_one": "über {{count}} Beitrag",
     "acrossPosts_other": "über {{count}} Beiträge",
+    "deletedPosts": "Gelöschte Beiträge ({{count}})",
     "noneHeldYet": "Sie halten noch keine Anteile",
     "noneHeldHint": "Präge einen Beitrag, um alle seine 1000 Bruchteile zu halten, oder kauf dich in den Beitrag eines anderen ein.",
     "listedForSale": "Zum Verkauf angeboten",

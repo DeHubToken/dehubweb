@@ -5213,6 +5213,7 @@
     "yourFractions": "Tus fracciones",
     "acrossPosts_one": "en {{count}} publicación",
     "acrossPosts_other": "en {{count}} publicaciones",
+    "deletedPosts": "Publicaciones eliminadas ({{count}})",
     "noneHeldYet": "Todavía no tienes ninguna fracción",
     "noneHeldHint": "Acuña una publicación para quedarte con sus 1000 fracciones, o compra parte de la de otra persona.",
     "listedForSale": "En venta",

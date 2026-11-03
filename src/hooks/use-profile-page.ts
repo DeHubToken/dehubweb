@@ -6,7 +6,7 @@ import { Film, Star, Pin, ListVideo, ThumbsDown } from "lucide-react";
 import Image from "@/components/ui/cut-icons/images";
 import Radio from "@/components/ui/cut-icons/live";
 import PieChart from "@/components/ui/cut-icons/fractions";
-import { useFractionPortfolio } from "@/hooks/use-fraction-portfolio";
+import { useFractionPortfolio, livePositions } from "@/hooks/use-fraction-portfolio";
 
 import Home from "@/components/ui/cut-icons/home";
 import ArticleIcon from "@/components/ui/cut-icons/blog";
@@ -492,7 +492,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // Fractions: the same portfolio read the tab itself lists (shared cache, so
   // opening the tab is instant). Blank until it answers, never a false 0.
   const fractionsQuery = useFractionPortfolio(apiProfile?.walletAddress, { enabled: secondaryEnabled });
-  const fractionsCount: number | null = fractionsQuery.data ? fractionsQuery.data.length : null;
+  const fractionsCount: number | null = fractionsQuery.data ? livePositions(fractionsQuery.data).length : null;
 
   const articleCount = tabCount('articles', activeTab === 'articles' ? PROFILE_POSTS.length : 0);
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number | null }[] = useMemo(() => {

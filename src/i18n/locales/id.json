@@ -5084,6 +5084,7 @@
     "yourFractions": "Fraksi Anda",
     "acrossPosts_one": "di {{count}} kiriman",
     "acrossPosts_other": "di {{count}} kiriman",
+    "deletedPosts": "Postingan yang dihapus ({{count}})",
     "noneHeldYet": "Anda belum memiliki fraksi apa pun",
     "noneHeldHint": "Cetak sebuah kiriman untuk memegang seluruh 1000 fraksinya, atau beli sebagian kiriman orang lain.",
     "listedForSale": "Dijual",

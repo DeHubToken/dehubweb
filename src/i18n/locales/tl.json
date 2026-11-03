@@ -5108,6 +5108,7 @@
     "yourFractions": "Ang iyong mga fraction",
     "acrossPosts_one": "sa buong {{count}} post",
     "acrossPosts_other": "sa buong {{count}} posts",
+    "deletedPosts": "Mga binurang post ({{count}})",
     "noneHeldYet": "Wala ka pang hawak na mga fraction",
     "noneHeldHint": "Mag-mint ng post para hawakan ang lahat ng 1000 fractions nito, o bumili ng bahagi sa post ng iba.",
     "listedForSale": "Inilista para sa benta",

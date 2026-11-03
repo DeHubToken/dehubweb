@@ -5217,6 +5217,7 @@
     "yourFractions": "Vos fractions",
     "acrossPosts_one": "sur {{count}} publication",
     "acrossPosts_other": "sur {{count}} publications",
+    "deletedPosts": "Publications supprimées ({{count}})",
     "noneHeldYet": "Vous ne détenez encore aucune fraction",
     "noneHeldHint": "Frappez une publication pour détenir ses 1000 fractions, ou investissez dans celle de quelqu'un d'autre.",
     "listedForSale": "Mise en vente",

@@ -5403,6 +5403,7 @@
     "yourFractions": "Jouw fracties",
     "acrossPosts_one": "over {{count}} bericht",
     "acrossPosts_other": "over {{count}} berichten",
+    "deletedPosts": "Verwijderde berichten ({{count}})",
     "noneHeldYet": "Je bezit nog geen fracties",
     "noneHeldHint": "Mint een bericht om alle 1000 fracties ervan te bezitten, of koop fracties van iemand anders.",
     "listedForSale": "Te koop aangeboden",

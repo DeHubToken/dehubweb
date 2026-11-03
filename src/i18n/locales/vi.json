@@ -5086,6 +5086,7 @@
     "yourFractions": "Các phân số của bạn",
     "acrossPosts_one": "trên {{count}} bài viết",
     "acrossPosts_other": "trên {{count}} bài viết",
+    "deletedPosts": "Bài đăng đã xóa ({{count}})",
     "noneHeldYet": "Bạn chưa nắm giữ bất kỳ phân số nào",
     "noneHeldHint": "Đúc một bài viết để nắm giữ toàn bộ 1000 phân số của nó, hoặc mua vào bài viết của người khác.",
     "listedForSale": "Được liệt kê để bán",

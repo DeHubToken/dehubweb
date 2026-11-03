@@ -5088,6 +5088,7 @@
     "yourFractions": "Izingxenyana zakho",
     "acrossPosts_one": "kuphosti ka- {{count}}",
     "acrossPosts_other": "kuwo wonke amaphosti e- {{count}}",
+    "deletedPosts": "Okuthunyelwe okususiwe ({{count}})",
     "noneHeldYet": "Awunazingxenyana okwamanje",
     "noneHeldHint": "Khanda okuthunyelwe ukuze ube nazo zonke izabelo zakhona eziyi-1000, noma uthenge kokuthunyelwe komunye umuntu.",
     "listedForSale": "Ifakiwe ukuze ithengiswe",

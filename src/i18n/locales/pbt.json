@@ -5021,6 +5021,7 @@
     "yourFractions": "تاسو د برخې",
     "acrossPosts_one": "د {{count}} بندېز په لاس",
     "acrossPosts_other": "په {{count}} پوسټونو کې",
+    "deletedPosts": "ړنګې شوې خپرونې ({{count}})",
     "noneHeldYet": "تاسو لا تر اوسه د هر ډول دوتنو نه لري",
     "noneHeldHint": "یو پوسټ mint کړئ چې د هغه ټولې 1000 ونډې ولرئ، یا د بل چا په پوسټ کې ونډه واخلئ.",
     "listedForSale": "د پلور لپاره لیست شوی",

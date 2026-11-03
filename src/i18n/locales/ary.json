@@ -5092,6 +5092,7 @@
     "yourFractions": "الكسور الخاصة بك",
     "acrossPosts_one": "عبر {{count}} منشور",
     "acrossPosts_other": "عبر {{count}} منشورات",
+    "deletedPosts": "منشورات محذوفة ({{count}})",
     "noneHeldYet": "لا تحتفظ بأي كسور حتى الآن",
     "noneHeldHint": "سك شي بوست باش تملك كاع الـ1000 جزء ديالو، ولا شري ف البوست ديال شي واحد آخر.",
     "listedForSale": "مدرجة للبيع",

@@ -5067,6 +5067,7 @@
     "yourFractions": "Omat osuuksesi",
     "acrossPosts_one": "{{count}} posteissa",
     "acrossPosts_other": "{{count}} postissa",
+    "deletedPosts": "Poistetut julkaisut ({{count}})",
     "noneHeldYet": "Sinulla ei ole vielä yhtään osuutta",
     "noneHeldHint": "Lyö julkaisu omistaaksesi kaikki sen 1000 osuutta, tai osta osuus jonkun toisen julkaisusta.",
     "listedForSale": "Myynnissä",

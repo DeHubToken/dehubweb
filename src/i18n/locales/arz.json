@@ -5061,6 +5061,7 @@
     "yourFractions": "أجزاءك",
     "acrossPosts_one": "عبر {{count}} المنشور",
     "acrossPosts_other": "عبر {{count}} المنشورات",
+    "deletedPosts": "منشورات محذوفة ({{count}})",
     "noneHeldYet": "لا تمتلك أي أجزاء بعد",
     "noneHeldHint": "اسك بوست عشان تمتلك الـ 1000 جزء بتوعه كلهم، أو اشتري في بوست حد تاني.",
     "listedForSale": "مُقْسَم للبيع",

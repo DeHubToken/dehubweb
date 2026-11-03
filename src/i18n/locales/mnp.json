@@ -4952,6 +4952,7 @@
     "yourFractions": "你的分",
     "acrossPosts_one": "跨 {{count}} 帖",
     "acrossPosts_other": "跨 {{count}} 帖子",
+    "deletedPosts": "已刪除的帖子（{{count}}）",
     "noneHeldYet": "你還沒有分呢",
     "noneHeldHint": "铸造一个帖子就能持有它全部 1000 份碎片，或者买入别人其帖子。",
     "listedForSale": "標售中",

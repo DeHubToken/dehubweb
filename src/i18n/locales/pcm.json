@@ -4704,6 +4704,7 @@
     "yourFractions": "Your fraction dem",
     "acrossPosts_one": "for {{count}} post",
     "acrossPosts_other": "for {{count}} post dem",
+    "deletedPosts": "Posts wey dem don delete ({{count}})",
     "noneHeldYet": "You never hold any fraction yet",
     "noneHeldHint": "Mint one post make you hold all im 1000 fraction, or buy enter another person own.",
     "listedForSale": "E dey for sale",

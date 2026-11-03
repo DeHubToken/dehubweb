@@ -24,7 +24,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { getMyPosts, searchNFTs } from '@/lib/api/dehub/feed';
 import { getFractionBalance, getFractionBalances } from '@/lib/api/token-holders';
 import { fractionImageFor } from '@/lib/fraction-thumb';
-import { getAuthToken } from '@/lib/api/dehub/core';
+import { getAuthToken, DEHUB_API_REQUEST_BASE } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 
 export interface PortfolioPosition {
@@ -38,6 +38,16 @@ export interface PortfolioPosition {
   postType: string | null;
   /** True when this is a post you uploaded, not one you bought into. */
   isCreator: boolean;
+  /**
+   * The post behind these fractions was deleted. The fractions still exist
+   * on-chain, so the position is kept, but every surface hides it by default.
+   */
+  postDeleted?: boolean;
+}
+
+/** Positions whose post still exists, which is what the portfolio shows by default. */
+export function livePositions(positions: PortfolioPosition[]): PortfolioPosition[] {
+  return positions.filter((p) => !p.postDeleted);
 }
 
 interface Candidate {
@@ -105,7 +115,30 @@ async function resolveBalances(
     throw new Error('Fraction balances could not be read');
   }
 
+  await markDeletedPosts(positions);
   return positions.sort((a, b) => b.balance - a.balance);
+}
+
+/**
+ * Flag positions whose post was deleted.
+ *
+ * Deleting a post does not burn its fractions, so the balance read above still
+ * finds them and they sat in the portfolio as cards that open nothing. The post
+ * API answers 404 for a deleted post and only that counts: any other failure
+ * leaves the position showing, so an outage never hides real holdings.
+ */
+async function markDeletedPosts(positions: PortfolioPosition[]): Promise<void> {
+  const STEP = 8;
+  for (let i = 0; i < positions.length; i += STEP) {
+    await Promise.all(positions.slice(i, i + STEP).map(async (position) => {
+      try {
+        const res = await fetch(`${DEHUB_API_REQUEST_BASE}/api/nft_info/${encodeURIComponent(position.tokenId)}`);
+        if (res.status === 404) position.postDeleted = true;
+      } catch {
+        // Unknown is not deleted.
+      }
+    }));
+  }
 }
 
 export function useFractionPortfolio(

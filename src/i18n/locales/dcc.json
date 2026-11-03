@@ -4934,6 +4934,7 @@
     "yourFractions": "آپ کے فریکشنز",
     "acrossPosts_one": "{{count}} پوسٹ پر",
     "acrossPosts_other": "{{count}} پوسٹس پر",
+    "deletedPosts": "हटाए गए पोस्ट ({{count}})",
     "noneHeldYet": "آپ ابھی تک کوئی فریکشن نہیں رکھتے",
     "noneHeldHint": "کوئی پوسٹ منٹ کرو تو اس کے سارے 1000 فریکشن تمہارے پاس رہتے، یا کسی اور کی پوسٹ میں خریدو۔",
     "listedForSale": "بیکسے",
