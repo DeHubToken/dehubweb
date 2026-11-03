@@ -22,6 +22,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { DefaultChainSync } from "@/components/app/DefaultChainSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
+import { AccountLanguageSync } from "@/components/app/AccountLanguageSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
 import { useAuth, useLoginSheet } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
@@ -491,6 +492,7 @@ function AppContent() {
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
+      <AccountLanguageSync />
       <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
