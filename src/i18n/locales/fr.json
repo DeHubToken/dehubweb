@@ -12656,6 +12656,8 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "3f9b2c71d0a4": "{{n}} résultats",
+    "8c4e1a6b2f57": "pour « {{query}} »",
     "1d7234ff1b79": "dans {{feed}}",
     "e122e5c2b563": "Glissez vers le haut pour fermer",
     "1aa9d734f2ee": "Choisir où chercher",
