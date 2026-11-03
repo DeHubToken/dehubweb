@@ -1,4 +1,6 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
+import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
 import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
@@ -150,6 +152,23 @@ function UsernameReserveGallery() {
           </div>
         ))}
       </div>
+    </section>
+  );
+}
+
+const OWN_KEY_ROWS: ProviderKeyRow[] = [
+  { id: 'openai', label: 'OpenAI', powers: 'Builder (GPT models)', keysUrl: '#', saved: { last4: '7f3a', status: 'working', checkedAt: '', lastUsedAt: null } },
+  { id: 'fal', label: 'fal', powers: 'Images, video, 3D and photo tools', keysUrl: '#', saved: null },
+  { id: 'elevenlabs', label: 'ElevenLabs', powers: 'Voice, dubbing, music and sound effects', keysUrl: '#', saved: { last4: '91bc', status: 'no_credit', checkedAt: '', lastUsedAt: null } },
+  { id: 'replicate', label: 'Replicate', powers: 'Images and video', keysUrl: '#', saved: { last4: 'x2Qd', status: 'invalid', checkedAt: '', lastUsedAt: null } },
+  { id: 'openrouter', label: 'OpenRouter', powers: 'Hundreds of chat and text models with one key', keysUrl: '#', saved: null },
+];
+
+function OwnKeysGallery() {
+  return (
+    <section data-own-keys-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
+      <OwnAiKeysSetting preview={OWN_KEY_ROWS.filter(row => row.saved)} />
+      <OwnAiKeysSetting preview={OWN_KEY_ROWS} previewEditing="fal" previewShowAll />
     </section>
   );
 }
@@ -1139,6 +1158,7 @@ export default function StateGalleryPage() {
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
 
+        <OwnKeysGallery />
         <ComicGallery />
         <UsernameReserveGallery />
 

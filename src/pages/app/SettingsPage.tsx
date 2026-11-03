@@ -274,6 +274,7 @@ import { NotificationFiltersSetting } from '@/components/app/settings/Notificati
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
 import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
+import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -1265,6 +1266,9 @@ function ProfileSettings() {
         <div data-setting-anchor="profiles">
           <ProfilesSection />
         </div>
+
+        {/* Creators' own provider keys: Creator tools run on their account. */}
+        <OwnAiKeysSetting />
 
         {/* The Creator studio's way in, now the Assistant header no longer
             carries a shortcut to it. Last on the tab Settings opens on. */}
