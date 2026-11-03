@@ -214,10 +214,10 @@ export function ProfileHeader({
             className="w-full h-full object-cover"
             fetchPriority="high"
           />
-          {/* Phone pull-to-refresh: a blurred copy smears up into the gap above
-              the cover and bleeds into its top edge (profile-pull.css). */}
-          <span data-profile-cover-smear aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
-          <span data-profile-cover-bleed aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
+          {/* Phone pull-to-refresh: the photo itself stretches up into the gap
+              and two blur panes deepen toward the top (profile-pull.css). */}
+          <span data-profile-cover-blur="soft" aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
+          <span data-profile-cover-blur="deep" aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
         </button>
       )}
       

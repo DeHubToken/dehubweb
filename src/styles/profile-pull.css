@@ -2,12 +2,11 @@
    use-profile-page writes --profile-pull (px), --profile-pull-p (0-1 of the
    threshold) and --profile-pull-sy (pull / cover height) on the root, so a
    drag only restyles these few layers and never re-renders the page.
-   Pull: the cover's top smears up into the gap, blurred and flared.
+   Pull: the cover photo stretches up into the gap, blurring more toward the top.
    Loading: a theme-accent ring runs round the profile photo.
    Done: the ring closes and the photo pops once. */
 
-[data-profile-cover-smear],
-[data-profile-cover-bleed],
+[data-profile-cover-blur],
 [data-profile-pull-ring] { display: none; }
 
 @media (max-width: 767px) {
@@ -17,51 +16,49 @@
   }
   [data-profile-pull-root][data-profile-pulling] [data-profile-header] { overflow: visible; }
 
-  /* Kept painted but invisible at rest, so the first frame of a pull already
-     has the blurred layer ready instead of rasterising it mid-drag. */
-  [data-profile-cover-smear],
-  [data-profile-cover-bleed] { display: block; opacity: 0; }
-  [data-profile-pulling] [data-profile-cover-smear] { opacity: 1; }
-  [data-profile-cover-smear],
-  [data-profile-cover-bleed] {
-    position: absolute;
-    left: 0;
-    right: 0;
-    pointer-events: none;
-    background-repeat: no-repeat;
-  }
-  /* The top band of the cover, stretched to fill the gap above it. */
-  /* Wider than the cover and tucked 32px under its top, so the blur's soft
-     edges never show as a seam or a dark halo. */
-  [data-profile-cover-smear] {
-    left: -32px;
-    right: -32px;
-    bottom: calc(100% - 32px);
-    height: 100%;
-    background-size: 100% 260%;
-    background-position: center top;
-    filter: blur(20px) saturate(1.6);
+  /* The cover photo itself stretches: anchored at its bottom edge and scaled
+     so its top stays pinned to where the page started. One element, so there
+     is never a seam between "stretched" and "sharp". */
+  [data-profile-pulling] [data-profile-cover] { overflow: visible; }
+  [data-profile-pulling] [data-profile-cover] > img {
     transform-origin: 50% 100%;
-    transform: perspective(320px) rotateX(calc(var(--profile-pull-p, 0) * -16deg)) scaleY(calc(var(--profile-pull-sy, 0) + .3));
-    -webkit-mask-image: linear-gradient(to top, #000 82%, transparent);
-    mask-image: linear-gradient(to top, #000 82%, transparent);
-    will-change: transform;
+    transform: scale(calc(1 + var(--profile-pull-sy, 0)));
   }
-  /* Blur bleeds down into the top of the sharp cover as the pull grows. */
-  [data-profile-cover-bleed] {
-    top: -24px;
-    left: -24px;
-    right: -24px;
-    height: calc(100% + 24px);
+  /* Progressive blur: two blurred copies of the photo over the stretched one,
+     each fading out further down, so the blur deepens smoothly toward the top
+     like a lens being pulled. They stay painted (invisible) at rest so the
+     first frame of a pull never waits on a blur. The deep copy is scaled 8%
+     past the photo so its soft blur edges sit off screen, not as a band. */
+  [data-profile-cover-blur] {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
     background-size: cover;
     background-position: center;
-    filter: blur(16px) saturate(1.5);
-    -webkit-mask-image: linear-gradient(to bottom, #000 25%, transparent 75%);
-    mask-image: linear-gradient(to bottom, #000 25%, transparent 75%);
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform-origin: 50% 100%;
+    will-change: transform, opacity;
   }
-  [data-profile-pulling] [data-profile-cover-bleed] {
-    opacity: min(1, calc(var(--profile-pull-p, 0) * 1.6));
-    will-change: opacity;
+  [data-profile-cover-blur="soft"] {
+    filter: blur(5px) saturate(1.2);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 30%, transparent 70%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 30%, transparent 70%);
+  }
+  [data-profile-cover-blur="deep"] {
+    filter: blur(20px) saturate(1.45);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 12%, rgba(0, 0, 0, .55) 30%, transparent 50%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, rgba(0, 0, 0, .55) 30%, transparent 50%);
+  }
+  [data-profile-pulling] [data-profile-cover-blur] {
+    opacity: min(1, calc(var(--profile-pull-p, 0) * 1.25));
+  }
+  [data-profile-pulling] [data-profile-cover-blur="soft"] {
+    transform: scale(calc(1 + var(--profile-pull-sy, 0)));
+  }
+  [data-profile-pulling] [data-profile-cover-blur="deep"] {
+    transform: scale(calc((1 + var(--profile-pull-sy, 0)) * 1.08));
   }
 
   [data-profile-pull-ring] {
