@@ -251,7 +251,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     e.stopPropagation();
     const short = isMobile && shortsEnabled ? quotedPostShort(quotedPost) : null;
     if (short) {
-      openBrainrotFeed(quotedPost.tokenId, short);
+      openBrainrotFeed(String(quotedPost.tokenId), short);
       return;
     }
     navigate(`/app/post/${quotedPost.tokenId}`, { state: { fromFeed: true } });

@@ -4,7 +4,7 @@ import { isShortsPhoto } from './shorts-photos';
 import { mapToShortVideo } from './short-video';
 
 /** Quote previews use the same player and restrictions as ordinary feed media. */
-export function quotedPostShort(post: DeHubNFT) {
+export function quotedPostShort(post: DeHubNFT & { isBlocked?: boolean; blockedYou?: boolean }) {
   const kind = post.postType as string;
   const video = ['video', 'feed-video', 'short'].includes(kind) ||
     (kind !== 'audio' && kind !== 'feed-audio' && kind !== 'live' &&
