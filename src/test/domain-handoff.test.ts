@@ -24,4 +24,13 @@ describe('riftn.com hand-off pages', () => {
     expect(res.headers.get('X-Robots-Tag')).toContain('noindex');
     expect(res.headers.get('Content-Security-Policy')).toContain("default-src 'none'");
   });
+
+  it('shows the uplink readout and waits for it before moving on', async () => {
+    for (const url of ['https://dehub.io/_handoff-out?next=/', 'https://riftn.com/_handoff']) {
+      const html = await handleDomainHandoff(new URL(url))!.text();
+      expect(html).toContain('RIFTN.COM');
+      expect(html).toContain('prefers-reduced-motion');
+      expect(html).toContain('await (window.__shown || 0)');
+    }
+  });
 });
