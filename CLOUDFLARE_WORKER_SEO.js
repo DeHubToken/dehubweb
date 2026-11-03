@@ -5386,6 +5386,15 @@ const DEHUB_IO_KEEP_PATHS = [
   /^\/api\//, /^\/_sb(?:\/|$)/, /^\/\.well-known\//, /^\/apple-app-site-association$/,
   /^\/assets\//, /^\/cdn-cgi\//, /^\/_handoff-out$/,
 ];
+// Installed app builds load arcade games, the mesh preview and other pages
+// from dehub.io inside a WebView, and send any load that leaves dehub.io out
+// to the system browser. Those keep being served on dehub.io. Android
+// WebViews carry "; wv)" in the UA; iOS WKWebViews omit the "Safari/" token.
+function isEmbeddedWebView(request) {
+  const ua = request.headers.get('User-Agent') || '';
+  if (/;\s*wv\)/.test(ua)) return true;
+  return /\b(?:iPhone|iPad|iPod)\b/.test(ua) && /AppleWebKit\//.test(ua) && !/Safari\//.test(ua);
+}
 const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io', 'riftn.com', 'www.riftn.com']);
 const HOP_BY_HOP_HEADERS = [
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
@@ -6037,7 +6046,7 @@ async function handleRequest(request, env, ctx) {
   // send no Sec-Fetch-Mode, get a plain path-preserving 301. Machine-facing
   // paths and in-page fetches keep answering here: installed apps, app-link
   // verifiers and tabs still open on dehub.io call them.
-  if (aliasHost === 'dehub.io' && (request.method === 'GET' || request.method === 'HEAD')) {
+  if (aliasHost === 'dehub.io' && (request.method === 'GET' || request.method === 'HEAD') && !isEmbeddedWebView(request)) {
     const fetchMode = request.headers.get('Sec-Fetch-Mode');
     const keep = DEHUB_IO_KEEP_PATHS.some((re) => re.test(url.pathname));
     if (!keep && fetchMode === 'navigate') {

@@ -41,6 +41,18 @@ describe('dehub.io forwards to riftn.com', () => {
     expect((await hit('https://dehub.io/mal', {}, 'POST')).status).not.toBe(301);
   });
 
+  it('keeps serving the app WebViews on dehub.io', async () => {
+    const android = 'Mozilla/5.0 (Linux; Android 14; SM-S926B Build/UP1A; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/130.0 Mobile Safari/537.36';
+    const ios = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148';
+    for (const ua of [android, ios]) {
+      const res = await hit('https://dehub.io/arcade/street-slayer', { 'Sec-Fetch-Mode': 'navigate', 'User-Agent': ua });
+      expect(res.status, ua).not.toBe(302);
+      expect(res.status, ua).not.toBe(301);
+    }
+    const safari = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
+    expect((await hit('https://dehub.io/mal', { 'Sec-Fetch-Mode': 'navigate', 'User-Agent': safari })).status).toBe(302);
+  });
+
   it('folds www into the apex on both domains', async () => {
     expect(await hit('https://www.riftn.com/mal?x=1')).toEqual({ status: 301, to: 'https://riftn.com/mal?x=1' });
     expect(await hit('https://www.dehub.io/mal')).toEqual({ status: 301, to: 'https://riftn.com/mal' });
