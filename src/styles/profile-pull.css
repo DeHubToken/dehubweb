@@ -1,0 +1,112 @@
+/* Phone pull-to-refresh on profiles (web <768px; desktop unchanged).
+   use-profile-page writes --profile-pull (px), --profile-pull-p (0-1 of the
+   threshold) and --profile-pull-sy (pull / cover height) on the root, so a
+   drag only restyles these few layers and never re-renders the page.
+   Pull: the cover's top smears up into the gap, blurred and flared.
+   Loading: a theme-accent ring runs round the profile photo.
+   Done: the ring closes and the photo pops once. */
+
+[data-profile-cover-smear],
+[data-profile-cover-bleed],
+[data-profile-pull-ring] { display: none; }
+
+@media (max-width: 767px) {
+  [data-profile-pull-root][data-profile-pulling] { overflow-x: clip; }
+  [data-profile-pull-root][data-profile-pulling] [data-profile-pull-body] {
+    transform: translate3d(0, var(--profile-pull, 0px), 0);
+  }
+  [data-profile-pull-root][data-profile-pulling] [data-profile-header] { overflow: visible; }
+
+  /* Kept painted but invisible at rest, so the first frame of a pull already
+     has the blurred layer ready instead of rasterising it mid-drag. */
+  [data-profile-cover-smear],
+  [data-profile-cover-bleed] { display: block; opacity: 0; }
+  [data-profile-pulling] [data-profile-cover-smear] { opacity: 1; }
+  [data-profile-cover-smear],
+  [data-profile-cover-bleed] {
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+  }
+  /* The top band of the cover, stretched to fill the gap above it. */
+  /* Wider than the cover and tucked 32px under its top, so the blur's soft
+     edges never show as a seam or a dark halo. */
+  [data-profile-cover-smear] {
+    left: -32px;
+    right: -32px;
+    bottom: calc(100% - 32px);
+    height: 100%;
+    background-size: 100% 260%;
+    background-position: center top;
+    filter: blur(20px) saturate(1.6);
+    transform-origin: 50% 100%;
+    transform: perspective(320px) rotateX(calc(var(--profile-pull-p, 0) * -16deg)) scaleY(calc(var(--profile-pull-sy, 0) + .3));
+    -webkit-mask-image: linear-gradient(to top, #000 82%, transparent);
+    mask-image: linear-gradient(to top, #000 82%, transparent);
+    will-change: transform;
+  }
+  /* Blur bleeds down into the top of the sharp cover as the pull grows. */
+  [data-profile-cover-bleed] {
+    top: -24px;
+    left: -24px;
+    right: -24px;
+    height: calc(100% + 24px);
+    background-size: cover;
+    background-position: center;
+    filter: blur(16px) saturate(1.5);
+    -webkit-mask-image: linear-gradient(to bottom, #000 25%, transparent 75%);
+    mask-image: linear-gradient(to bottom, #000 25%, transparent 75%);
+  }
+  [data-profile-pulling] [data-profile-cover-bleed] {
+    opacity: min(1, calc(var(--profile-pull-p, 0) * 1.6));
+    will-change: opacity;
+  }
+
+  [data-profile-pull-ring] {
+    position: absolute;
+    inset: -6px;
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    z-index: 2;
+    overflow: visible;
+    pointer-events: none;
+  }
+  [data-profile-pull-ring] rect {
+    fill: none;
+    stroke: var(--stage-accent, #fff);
+    stroke-width: 3;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 100px;
+    stroke-dashoffset: calc(100px - var(--profile-pull-p, 0) * 100px);
+  }
+  [data-profile-pulling] [data-profile-pull-ring],
+  [data-profile-refreshing] [data-profile-pull-ring],
+  [data-profile-refreshed] [data-profile-pull-ring] { display: block; }
+
+  [data-profile-refreshing] [data-profile-pull-ring] rect {
+    stroke-dasharray: 26px 74px;
+    animation: profile-ring-run .9s linear infinite;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-pull-ring] {
+    animation: profile-ring-close .7s ease-out forwards;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-pull-ring] rect {
+    stroke-dasharray: 100px;
+    stroke-dashoffset: 0;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-avatar] {
+    animation: profile-avatar-pop .55s cubic-bezier(.3, 1.6, .5, 1);
+  }
+}
+
+@keyframes profile-ring-run { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100px; } }
+@keyframes profile-ring-close { 0%, 55% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes profile-avatar-pop { 0% { transform: scale(.94); } 55% { transform: scale(1.07); } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-profile-refreshing] [data-profile-pull-ring] rect { animation: none; stroke-dasharray: 100px; stroke-dashoffset: 0; }
+  [data-profile-refreshed] [data-profile-avatar] { animation: none !important; }
+}
