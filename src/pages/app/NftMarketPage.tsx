@@ -303,6 +303,7 @@ export default function NftMarketPage() {
       icon="nfts"
       title={t('nftMarket.signInTitle', { defaultValue: 'Sign in to trade' })}
       body={t('nftMarket.signInBody', { defaultValue: 'Connect your wallet to sell what you hold and track your listings and offers.' })}
+      action={<KitButton onClick={() => auth?.openLoginModal?.()}>{t('nftMarket.signInToTradeCta', { defaultValue: 'Sign in to trade' })}</KitButton>}
     />
   );
 

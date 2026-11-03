@@ -6564,7 +6564,8 @@
     "buyFor": "Buy for {{price}}",
     "spotlight": "Spotlight",
     "spotlightBuyNote": "The NFT and the payment swap in one step.",
-    "spotlightOfferNote": "Not listed yet. Send an offer and the holder can accept it any time."
+    "spotlightOfferNote": "Not listed yet. Send an offer and the holder can accept it any time.",
+    "signInToTradeCta": "Sign in to trade"
   },
   "usernames": {
     "seoTitle": "Username Marketplace | DeHub",

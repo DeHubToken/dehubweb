@@ -15,9 +15,12 @@ export function formatPrice(amount: string, decimals: number): string {
   return n.toLocaleString(undefined, { maximumSignificantDigits: 3 });
 }
 
-export function NftArt({ src, alt, className }: { src: string | null; alt: string; className?: string }) {
-  const [broken, setBroken] = useState(false);
-  if (!src || broken) {
+export function NftArt({ src, fallback, alt, className }: { src: string | null; fallback?: string | null; alt: string; className?: string }) {
+  // Each source that fails to load is skipped; the icon shows once none is left.
+  const sources = [src, fallback].filter((s, i, all): s is string => !!s && all.indexOf(s) === i);
+  const [failed, setFailed] = useState(0);
+  const current = sources[failed];
+  if (!current) {
     return (
       <div className={`flex items-center justify-center bg-white/5 ${className ?? ''}`}>
         <ThemedIcon icon="nfts" alt="" className="h-1/3 w-1/3 object-contain opacity-60" />
@@ -26,11 +29,12 @@ export function NftArt({ src, alt, className }: { src: string | null; alt: strin
   }
   return (
     <img
-      src={src}
+      key={current}
+      src={current}
       alt={alt}
       loading="lazy"
       decoding="async"
-      onError={() => setBroken(true)}
+      onError={() => setFailed((n) => n + 1)}
       className={`object-cover ${className ?? ''}`}
     />
   );

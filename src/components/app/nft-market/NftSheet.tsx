@@ -331,7 +331,7 @@ export function NftSheet({
                 {bundle!.slice(0, 4).map((b) => <NftArt key={`${b.contract}:${b.tokenId}`} src={b.image ?? null} alt={b.name ?? ''} className="h-full w-full" />)}
               </div>
             ) : (
-              <NftArt src={image} alt={name} className="relative mx-auto aspect-square max-h-[42vh] w-full max-w-[22rem] !object-contain animate-in zoom-in-95 duration-500" />
+              <NftArt key={`${target?.contract}:${target?.tokenId}`} src={image} fallback={nft?.image ?? null} alt={name} className="relative mx-auto aspect-square max-h-[42vh] w-full max-w-[22rem] !object-contain animate-in zoom-in-95 duration-500" />
             )}
           </div>
           <div className="mt-3 flex min-w-0 flex-col gap-1">
@@ -398,7 +398,10 @@ export function NftSheet({
                 ) : null}
               </div> : null}
               {!isAuthenticated ? (
-                <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
+                <div className="flex flex-col gap-2">
+                  <KitButton onClick={() => auth?.openLoginModal?.()}>{t('nftMarket.signInToTradeCta', { defaultValue: 'Sign in to trade' })}</KitButton>
+                  <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
+                </div>
               ) : null}
 
               {offers.length ? (
