@@ -3551,6 +3551,8 @@
     "turn_on_desktop_notifications": "Bureaubladmeldingen aanzetten?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Krijg een seintje bij reacties, tips en DM's terwijl je op een ander tabblad zit.",
     "turn_on": "Aanzetten",
+    "turn_back_on_desktop_notifications": "Bureaubladmeldingen weer aanzetten?",
+    "notifications_moved_to_riftn": "We zijn verhuisd naar riftn.com, dus je browser heeft nog één keer je toestemming nodig om hier reacties, fooien en berichten te tonen.",
     "push_blocked_title": "Meldingen bereiken je niet",
     "push_blocked_body": "Uw systeem blokkeert meldingen voor deze browser, dus niets bereikt u terwijl Riftn is gesloten. Schakel ze weer in voor je browser in je systeemmeldingsinstellingen en schakel vervolgens Riftn-meldingen uit en weer in.",
     "push_display_failed_body": "Deze browser kan geen melding weergeven, dus geen van hen bereikt je. Uw systeeminstellingen zijn niet de oorzaak — de browser heeft de fout zelf gemeld.",

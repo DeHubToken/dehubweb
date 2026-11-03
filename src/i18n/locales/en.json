@@ -3361,6 +3361,8 @@
     "turn_on_desktop_notifications": "Turn on desktop notifications?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Get a heads-up about replies, tips and DMs while you're in another tab.",
     "turn_on": "Turn on",
+    "turn_back_on_desktop_notifications": "Turn desktop notifications back on?",
+    "notifications_moved_to_riftn": "We moved to riftn.com, so your browser needs your OK once more to show replies, tips and DMs here.",
     "push_blocked_title": "Notifications are not reaching you",
     "push_blocked_body": "Your system is blocking notifications for this browser, so nothing reaches you while Riftn is closed. Turn them back on for your browser in your system notification settings, then switch Riftn notifications off and on again.",
     "push_display_failed_body": "This browser could not display a notification, so none of them are reaching you. Your system settings are not the cause — the browser reported the failure itself.",
