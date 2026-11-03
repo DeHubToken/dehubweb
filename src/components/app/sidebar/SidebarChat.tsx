@@ -1,3 +1,4 @@
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import SmilePlus from "@/components/ui/cut-icons/packs";
 import CornerDownRight from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -165,6 +166,8 @@ interface SidebarChatProps {
 
 export function SidebarChat({ isActive }: SidebarChatProps) {
   const { t: _copy } = _useCopy();
+  // A tapped photo opens full screen, with Download.
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
   // Edits happen in the row itself rather than in the composer at the foot of
   // the rail — the composer is a 169-character single line shared with the
@@ -591,7 +594,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           </div>
                         </div>
                       ) : msg.message_type === 'image' && msg.image_url ? (
-                        <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                        <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                       ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
                         <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                       ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
@@ -817,6 +820,13 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           </div>
         </div>
       </div>
+      <FullscreenImageViewerLazy
+        images={viewingImage ? [viewingImage] : []}
+        initialIndex={0}
+        isOpen={!!viewingImage}
+        onClose={() => setViewingImage(null)}
+        downloadable
+      />
     </div>
   );
 }

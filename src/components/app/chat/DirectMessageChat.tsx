@@ -100,6 +100,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { downloadMedia, messageImageDownloadName } from '@/lib/download-media';
 import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
@@ -472,6 +473,34 @@ const MessageBubble = memo(function MessageBubble({
   // "can't be opened" line below stands in for it.
   const encMedia = message.encMedia;
   const isLockedMedia = !encMedia && !!primaryMedia?.encrypted;
+
+  // A plain photo, video or document can be saved from the hover actions.
+  // Paid and end-to-end encrypted attachments are left out: one is a blurred
+  // preview, the other downloads from its own tap.
+  const downloadTarget = useMemo(() => {
+    if (message.msgType !== 'media' || message.lock || encMedia || isLockedMedia || !primaryMediaUrl) return null;
+    const url = getMediaUrl(primaryMediaUrl) || primaryMediaUrl;
+    if (!/^(https?:|blob:)/.test(url)) return null;
+    const name = isFileMedia
+      ? (primaryMedia?.name || 'file')
+      : primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/')
+        ? `dehub-chat-${message._id}.mp4`
+        : messageImageDownloadName(url);
+    return { url, name };
+  }, [message.msgType, message.lock, message._id, encMedia, isLockedMedia, primaryMediaUrl, isFileMedia, primaryMedia?.name, primaryMedia?.type, primaryMedia?.mimeType]);
+  const handleDownloadMedia = useCallback(async () => {
+    if (!downloadTarget) return;
+    const toastId = `dm-download-${message._id}`;
+    toast.loading(_copy("copy.757726036c1c", { defaultValue: "Preparing download..." }), { id: toastId });
+    try {
+      await downloadMedia(downloadTarget.url, downloadTarget.name);
+      toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
+    } catch {
+      // A host that refuses the fetch still serves the file to a plain link.
+      window.open(downloadTarget.url, '_blank', 'noopener,noreferrer');
+      toast.dismiss(toastId);
+    }
+  }, [downloadTarget, message._id, _copy]);
 
   // A shared entity: a text message whose content contains a link to something
   // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
@@ -900,7 +929,7 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || (onEdit && canEdit)) && (
+          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || downloadTarget || (onEdit && canEdit)) && (
             <div
               className={`absolute top-1/2 -translate-y-1/2 ${isOwnMessage ? 'right-full mr-1' : 'left-full ml-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
             >
@@ -957,6 +986,17 @@ const MessageBubble = memo(function MessageBubble({
                   title={tr('messages.edit')}
                 >
                   <Pencil className="w-3 h-3" />
+                </button>
+              )}
+              {downloadTarget && (
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadMedia()}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                  aria-label={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                >
+                  <Download className="w-3 h-3" />
                 </button>
               )}
               {onForward && (
@@ -2698,6 +2738,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         initialIndex={0}
         isOpen={!!fullscreenImage}
         onClose={() => setFullscreenImage(null)}
+        downloadable
       />
 
       {/* Forward message picker */}

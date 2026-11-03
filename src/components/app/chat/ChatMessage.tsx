@@ -37,6 +37,7 @@ import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
 import { SendStatus } from './SendStatus';
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -221,6 +222,7 @@ export const ChatMessage = memo(function ChatMessage({
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useDraftState(`chat:edit:${message.id}`, message.content);
 
@@ -529,7 +531,15 @@ export const ChatMessage = memo(function ChatMessage({
             <img 
               src={message.imageUrl} 
               alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })} 
-              className="max-w-xs max-h-64 rounded-lg object-cover"
+              className="max-w-xs max-h-64 rounded-lg object-cover cursor-zoom-in"
+              onClick={() => setViewingImage(message.imageUrl!)}
+            />
+            <FullscreenImageViewerLazy
+              images={viewingImage ? [viewingImage] : []}
+              initialIndex={0}
+              isOpen={!!viewingImage}
+              onClose={() => setViewingImage(null)}
+              downloadable
             />
             {message.content && (
               <p className="text-zinc-300 text-sm mt-1 whitespace-pre-wrap">

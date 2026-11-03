@@ -20,3 +20,12 @@ export function imageDownloadName(source: string, postId: string, index: number)
     ?? 'jpg';
   return `dehub-${postId}-${index + 1}.${extension}`;
 }
+
+/** A file name for a photo saved out of a chat. */
+export function messageImageDownloadName(source: string): string {
+  const extension = source.split(/[?#]/)[0].match(/\.(jpe?g|png|gif|webp|avif|heic)$/i)?.[1]
+    ?? source.match(/^data:image\/(jpeg|png|gif|webp|avif)/i)?.[1]
+    ?? 'jpg';
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\..+$/, '').replace('T', '-');
+  return `dehub-chat-${stamp}.${extension.toLowerCase()}`;
+}
