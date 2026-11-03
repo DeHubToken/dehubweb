@@ -457,7 +457,10 @@ export function AudioVisualizer({
       if (!isHandoffAudioActive(handoffKey, claimRef.current)) return null;
     }
     const el = new Audio();
-    el.crossOrigin = 'anonymous';
+    // No crossOrigin: the media CDN sends no CORS headers, and requesting it
+    // here made the browser refuse to load the file at all (NotSupportedError).
+    // Playback works without it; only the live frequency analyser loses data,
+    // which decodeAudioWaveform() already degrades without.
     el.preload = 'metadata';
     el.muted = mutedRef.current;
     el.src = audioUrl;
