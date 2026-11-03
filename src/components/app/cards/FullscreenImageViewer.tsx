@@ -30,10 +30,13 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useMemo, useState, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import Languages from "@/components/ui/cut-icons/language";
 
 import X from "@/components/ui/cut-icons/close";
+import Download from "@/components/ui/cut-icons/download";
+import { toast } from 'sonner';
+import { downloadMedia, messageImageDownloadName } from '@/lib/download-media';
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import useEmblaCarousel from 'embla-carousel-react';
@@ -87,6 +90,8 @@ export interface FullscreenImageViewerProps {
   /** Engagement data + handlers; when set with `postId`, renders the bottom action bar. */
   actions?: FullscreenViewerActions;
   soundtrackControl?: ReactNode;
+  /** Show a Download button for the image on screen (chat attachments). */
+  downloadable?: boolean;
 }
 
 const SWIPE_DOWN_THRESHOLD = 100;
@@ -99,6 +104,7 @@ export function FullscreenImageViewer({
   postId,
   actions,
   soundtrackControl,
+  downloadable,
 }: FullscreenImageViewerProps) {
   const { t: _copy } = _useCopy();
   // Phones: one tap shows/hides the buttons, double tap zooms. Desktop keeps
@@ -141,6 +147,23 @@ export function FullscreenImageViewer({
     await translateImage(imageUrl);
   }, [images, currentIndex, translateImage]);
   
+  const [isDownloading, setIsDownloading] = useState(false);
+  const handleDownload = useCallback(async () => {
+    const source = images[currentIndex];
+    if (!source || isDownloading) return;
+    setIsDownloading(true);
+    const toastId = 'chat-image-download';
+    toast.loading(_copy("copy.757726036c1c", { defaultValue: "Preparing download..." }), { id: toastId });
+    try {
+      await downloadMedia(source, messageImageDownloadName(source));
+      toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
+    } catch {
+      toast.error(_copy("copy.d2bde7afd757", { defaultValue: "Download failed. Please try again." }), { id: toastId });
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [images, currentIndex, isDownloading, _copy]);
+
   const handleCloseTranslation = useCallback(() => {
     setShowTranslationSheet(false);
     clearResult();
@@ -306,6 +329,22 @@ export function FullscreenImageViewer({
                   variant="chip"
                 />
               </div>
+            )}
+
+            {downloadable && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void handleDownload();
+                }}
+                disabled={isDownloading}
+                className="w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                aria-label={_copy("copy.3ac575dcce24", { defaultValue: "Download image" })}
+                title={_copy("copy.3ac575dcce24", { defaultValue: "Download image" })}
+              >
+                {isDownloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+              </button>
             )}
 
             {/* Translate button */}
