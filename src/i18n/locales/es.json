@@ -2192,7 +2192,11 @@
     "checkingTokenBalance": "Verificando tu saldo de tokens...",
     "deleteConversationFailed": "No se ha podido eliminar la conversación",
     "message": "Mensaje",
-    "noConversationsYet": "Aún no hay conversaciones"
+    "noConversationsYet": "Aún no hay conversaciones",
+    "sending": "Enviando",
+    "notSent": "No enviado",
+    "retrySend": "Reintentar",
+    "discardSend": "Quitar"
   },
   "music": {
     "listeningCount_one": "{{count}} escuchando",

@@ -54,7 +54,8 @@ import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetR
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
-import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
+import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation, failedSendRetry, discardFailedSend } from '@/hooks/use-messages';
+import { SendStatus } from './SendStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useBannedAccount } from '@/hooks/use-banned-account';
@@ -365,6 +366,28 @@ function EncryptedMediaBody({
 // keystrokes, incoming messages) used to re-render EVERY bubble — each parsing
 // dates via formatDistanceToNow. Handler props are useCallback'd by the
 // parent, so only bubbles whose message/highlight actually changed re-render.
+/**
+ * An image that keeps showing what it has until the next source is ready.
+ *
+ * A photo you just sent is drawn from the local file; when the send lands its
+ * address becomes the uploaded copy. Swapping `src` straight away blanked the
+ * picture while the upload downloaded, so the photo seemed to vanish and come
+ * back. The new address is loaded off screen first and swapped in once decoded.
+ */
+function SettledImg({ src, ...rest }: React.ImgHTMLAttributes<HTMLImageElement> & { src: string }) {
+  const [shown, setShown] = useState(src);
+  useEffect(() => {
+    if (src === shown) return;
+    let live = true;
+    const next = new Image();
+    next.onload = () => { if (live) setShown(src); };
+    next.onerror = () => { if (live) setShown(src); };
+    next.src = src;
+    return () => { live = false; };
+  }, [src, shown]);
+  return <img src={shown} {...rest} />;
+}
+
 const MessageBubble = memo(function MessageBubble({
   message,
   isOwnMessage,
@@ -381,6 +404,8 @@ const MessageBubble = memo(function MessageBubble({
   currentUserAddress,
   onReact,
   onRemoveReaction,
+  onRetrySend,
+  onDiscardSend,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
@@ -399,6 +424,8 @@ const MessageBubble = memo(function MessageBubble({
   currentUserAddress?: string;
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
+  onRetrySend?: (clientKey: string) => void;
+  onDiscardSend?: (clientKey: string) => void;
 }) {
   const { t: _copy } = _useCopy();
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
@@ -468,7 +495,7 @@ const MessageBubble = memo(function MessageBubble({
    * id it could not resolve and died there without a word — the row is held
    * back until the send comes back with a real one.
    */
-  const isUnsent = message._id.startsWith('temp-');
+  const isUnsent = !!message.sendState || message._id.startsWith('temp-');
   const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
   const editPending = useRef(false);
   const saveEdit = async () => {
@@ -792,7 +819,7 @@ const MessageBubble = memo(function MessageBubble({
                         isPending={false}
                       />
                     ) : (
-                    <img
+                    <SettledImg
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
@@ -1011,9 +1038,20 @@ const MessageBubble = memo(function MessageBubble({
           {showPaymentPending && (
             <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
           )}
-          {isOwnMessage && !showPaymentPending && (
-            <span className={message.isRead ? "text-white" : "text-zinc-500"}>
-              {message.isRead ? "✓✓" : "✓"}
+          {isOwnMessage && !showPaymentPending && message.sendState === 'failed' && (
+            <SendStatus
+              state="failed"
+              onRetry={onRetrySend && (() => onRetrySend(message.clientKey ?? message._id))}
+              onDiscard={onDiscardSend && (() => onDiscardSend(message.clientKey ?? message._id))}
+            />
+          )}
+          {isOwnMessage && !showPaymentPending && message.sendState !== 'failed' && (
+            // One fixed slot: a spinning ring while the send is out, the tick
+            // once it lands. Same box either way, so nothing on the line moves.
+            <span className={`relative inline-flex items-center justify-end min-w-[14px] ${message.isRead ? "text-white" : "text-zinc-500"}`}>
+              {message.sendState === 'sending'
+                ? <SendStatus state="sending" />
+                : (message.isRead ? "✓✓" : "✓")}
             </span>
           )}
         </div>
@@ -1488,6 +1526,19 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
+
+  // A failed line stays where it was sent; Retry resends it in place (reusing
+  // any fee already paid for it), Remove drops it.
+  const retrySendRef = useRef(sendMessageMutation.mutateAsync);
+  retrySendRef.current = sendMessageMutation.mutateAsync;
+  const handleRetrySend = useCallback((clientKey: string) => {
+    const vars = failedSendRetry(clientKey);
+    if (!vars) return;
+    void retrySendRef.current(vars).catch(() => {});
+  }, []);
+  const handleDiscardSend = useCallback((clientKey: string) => {
+    discardFailedSend(queryClient, resolvedConversationId, clientKey);
+  }, [queryClient, resolvedConversationId]);
 
   // Register call message handler so call events appear as bubbles in this chat
   useEffect(() => {
@@ -2067,7 +2118,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     // mutateAsync, not mutate with per-call callbacks: those are dropped when
     // another send or a call event starts first, which left the composer
     // waiting forever with text that had already gone out.
-    return sendMessageMutation.mutateAsync(
+    const sending = sendMessageMutation.mutateAsync(
       {
         content,
         msgType: type,
@@ -2081,46 +2132,31 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         destruct,
         lockPrice,
       },
-    ).then(
+    );
+    // The line is on screen from this moment (drawn as it will look once
+    // delivered, with a small spinner), so the reply chip and the scroll go now
+    // rather than after the round trip.
+    paidTxHashRef.current = null;
+    setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
+    requestAnimationFrame(scrollToBottom);
+    return sending.then(
         (data) => {
-          // The held fee has now been spent on a message that went out.
-          paidTxHashRef.current = null;
-          setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
-          setTimeout(scrollToBottom, 100);
           return true;
         },
         (err) => {
           /*
-           * The composer cleared itself the moment Send was pressed, so a
-           * failure here used to destroy the message outright. Put the words
-           * back where they were typed instead — the draft store is already
-           * what the composer reads from, so this refills it in place.
-           * Attachments cannot be restored (a File does not survive), which is
-           * why the toast distinguishes the two cases.
+           * The line stays in the thread, marked "Not sent" with Retry and
+           * Remove on it. Retry resends exactly what was sent (attachment and
+           * any fee already paid included), so nothing goes back in the box
+           * and nothing is charged twice.
            */
-          const restored = content.trim();
-          if (feeTxHash && restored) {
-            // The fee is already on-chain. Hold it against this exact message
-            // so pressing Send again reuses that payment rather than charging
-            // for a second one.
-            paidTxHashRef.current = { hash: feeTxHash, content: restored };
-          }
           const reason = err instanceof Error && err.message ? err.message : '';
-          toast.error(
-            restored
-              ? reason
-                ? _copy("copy.be9f2a4ccc47", { defaultValue: "{{value1}} Your message is back in the box.", value1: reason })
-                : _copy("copy.bbed874d4125", { defaultValue: "Failed to send message. Your message is back in the box." })
-              : mediaFile || gifUrl
-                ? reason
-                  ? _copy("copy.4805a5986928", { defaultValue: "{{value1}} Please attach it again.", value1: reason })
-                  : _copy("copy.2b7dfba1fd62", { defaultValue: "Failed to send message. Please attach it again." })
-                : reason || _copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }),
-          );
-          return false;
+          toast.error(reason || _copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }), { id: 'dm-send-failed' });
+          // The composer already let go of the text; it lives on the bubble now.
+          return true;
         },
       );
   };
@@ -2486,7 +2522,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
               return (
               <MessageBubble
-                key={message._id}
+                key={message.clientKey ?? message._id}
                 message={message}
                 isOwnMessage={isOwnMessage}
                 highlightText={searchLower}
@@ -2505,6 +2541,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 currentUserAddress={walletAddress || undefined}
                 onReact={(messageId, emoji) => { void addReaction(messageId, emoji).catch(() => toast.error(_copy("copy.1344ec522f09", { defaultValue: "Could not add reaction." }))); }}
                 onRemoveReaction={(messageId, emoji) => { void removeReaction(messageId, emoji).catch(() => toast.error(_copy("copy.b5145e1c11a3", { defaultValue: "Could not remove reaction." }))); }}
+                onRetrySend={handleRetrySend}
+                onDiscardSend={handleDiscardSend}
               />
             )});
           })()}

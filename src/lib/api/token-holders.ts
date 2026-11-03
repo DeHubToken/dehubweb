@@ -322,6 +322,62 @@ export async function getFractionBalance(
   }
 }
 
+const BALANCE_OF_BATCH_ABI = [{
+  name: 'balanceOfBatch',
+  type: 'function',
+  stateMutability: 'view',
+  inputs: [
+    { type: 'address[]', name: 'accounts' },
+    { type: 'uint256[]', name: 'ids' }
+  ],
+  outputs: [{ type: 'uint256[]', name: '' }]
+}] as const;
+
+/**
+ * One wallet's balance of many token ids on one chain, in a single eth_call
+ * per 100 ids (ERC-1155 balanceOfBatch) instead of one call per id. Returns
+ * null when the read fails, so callers can tell an outage from "holds none".
+ */
+export async function getFractionBalances(
+  address: string,
+  tokenIds: string[],
+  chainId: number = 8453,
+): Promise<Map<string, number> | null> {
+  const contractAddress = DEHUB_CONTRACTS[chainId];
+  if (!address || !contractAddress) return null;
+  const out = new Map<string, number>();
+  if (tokenIds.length === 0) return out;
+
+  try {
+    const endpoints = await getRpcEndpoints();
+    const { createChainClient, encodeFunctionData, decodeFunctionResult } = await import('./token-holders-rpc');
+    const client = createChainClient(chainId, chainId === 8453 ? endpoints.base : endpoints.bsc);
+    const CHUNK = 100;
+    for (let i = 0; i < tokenIds.length; i += CHUNK) {
+      const ids = tokenIds.slice(i, i + CHUNK);
+      const result = await client.call({
+        to: contractAddress,
+        data: encodeFunctionData({
+          abi: BALANCE_OF_BATCH_ABI,
+          functionName: 'balanceOfBatch',
+          args: [ids.map(() => address as Address), ids.map((id) => BigInt(id))],
+        }),
+      });
+      if (!result.data) return null;
+      const balances = decodeFunctionResult({
+        abi: BALANCE_OF_BATCH_ABI,
+        functionName: 'balanceOfBatch',
+        data: result.data as Hex,
+      }) as readonly bigint[];
+      ids.forEach((id, k) => out.set(id, Number(balances[k] ?? 0n)));
+    }
+    return out;
+  } catch (error) {
+    console.warn('[TokenHolders] batch balance read failed', error);
+    return null;
+  }
+}
+
 /**
  * Truncate address for display
  */

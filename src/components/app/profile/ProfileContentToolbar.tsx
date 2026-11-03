@@ -23,6 +23,8 @@
 import Search from "@/components/ui/cut-icons/search";
 import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 import X from "@/components/ui/cut-icons/close";
+import Check from "@/components/ui/cut-icons/check";
+import { ChevronDown } from "lucide-react";
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
@@ -32,6 +34,8 @@ import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ProfileFilterPanel } from '@/components/app/profile/ProfileFilterPanel';
 import { getCategories } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import './profile-quiet-row.css';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Drawer,
@@ -95,6 +99,7 @@ export function ProfileContentToolbar({
   const { t } = useTranslation();
   const isMobile = useIsMobile();
   const [isSearchOpen, setIsSearchOpen] = useState(Boolean(search));
+  const [isSortOpen, setIsSortOpen] = useState(false);
   const closeSearch = () => {
     onSearchChange('');
     setIsSearchOpen(false);
@@ -124,6 +129,16 @@ export function ProfileContentToolbar({
     { key: 'likes', label: isMobile ? t('profile.sortLikes', 'Likes') : t('profile.sortMostLiked', 'Most liked') },
   ];
 
+  // Phones: the Quiet Row — one "Newest ⌄" word that opens a glass menu,
+  // with bare search and filter icons after it. No boxes.
+  const fullSortItems: { key: ProfileSortMode; label: string }[] = [
+    { key: 'newest', label: t('profile.sortNewest', 'Newest') },
+    { key: 'oldest', label: t('profile.sortOldest', 'Oldest') },
+    { key: 'views', label: t('profile.sortMostViewed', 'Most viewed') },
+    { key: 'likes', label: t('profile.sortMostLiked', 'Most liked') },
+  ];
+  const sortLabel = fullSortItems.find((item) => item.key === sort)?.label ?? fullSortItems[0].label;
+
   const categoryLabel = filters.category
     ? categories.find((cat) => cat.id === filters.category)?.name ?? filters.category
     : null;
@@ -143,6 +158,7 @@ export function ProfileContentToolbar({
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
             className="relative min-w-0"
+            data-profile-search-quiet={isMobile || undefined}
           >
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
             <input
@@ -174,6 +190,70 @@ export function ProfileContentToolbar({
             exit={{ opacity: 0, y: 4 }}
             transition={{ duration: 0.16, ease: 'easeOut' }}
           >
+            {isMobile ? (
+              <div data-profile-quiet-row className="flex h-9 items-center gap-1">
+                <Popover open={isSortOpen} onOpenChange={setIsSortOpen}>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      data-profile-sort-trigger
+                      aria-haspopup="menu"
+                      aria-expanded={isSortOpen}
+                      className="flex h-9 min-w-0 items-center gap-1 pl-1 pr-2 text-sm font-semibold"
+                    >
+                      <span className="truncate">{sortLabel}</span>
+                      <ChevronDown className={cn('h-4 w-4 shrink-0 transition-transform duration-200', isSortOpen && 'rotate-180')} aria-hidden />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent data-glass-menu data-profile-sort-menu align="start" sideOffset={6} collisionPadding={12} className="w-48 rounded-2xl p-1.5">
+                    <div role="menu" aria-label={t('profile.sortBy', 'Sort by')}>
+                      {fullSortItems.map((item) => {
+                        const active = item.key === sort;
+                        return (
+                          <button
+                            key={item.key}
+                            type="button"
+                            role="menuitemradio"
+                            aria-checked={active}
+                            data-active={active || undefined}
+                            onClick={() => { onSortChange(item.key); setIsSortOpen(false); }}
+                            className={cn('flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm transition-colors', active ? 'font-semibold' : 'font-normal opacity-80')}
+                          >
+                            <span>{item.label}</span>
+                            {active && <Check className="h-4 w-4" aria-hidden />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <span className="flex-1" />
+                <button
+                  type="button"
+                  data-profile-quiet-icon
+                  onClick={() => setIsSearchOpen(true)}
+                  aria-label={t('profile.searchThisChannel', 'Search this channel')}
+                  className="flex h-9 w-9 items-center justify-center"
+                >
+                  <Search className="h-[18px] w-[18px]" />
+                </button>
+                <button
+                  type="button"
+                  data-profile-quiet-icon
+                  onClick={() => onFiltersOpenChange(!filtersOpen)}
+                  aria-expanded={filtersOpen}
+                  aria-label={t('explorePage.filters', 'Filters')}
+                  className="relative flex h-9 w-9 items-center justify-center"
+                >
+                  <SlidersHorizontal className="h-[18px] w-[18px]" />
+                  {activeFilterCount > 0 && (
+                    <span data-profile-quiet-count className="absolute right-0.5 top-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] font-bold leading-none">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </button>
+              </div>
+            ) : (
             <GlassFilterRow
               items={sortItems}
               activeKey={sort}
@@ -214,6 +294,7 @@ export function ProfileContentToolbar({
                 </>
               )}
             />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

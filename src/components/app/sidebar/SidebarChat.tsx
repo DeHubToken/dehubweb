@@ -29,6 +29,7 @@ import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice, uploadChatImage } from '@/lib/api/dehub';
 import { PUBLIC_CHAT_IMAGE_TYPES, validatePublicChatMedia } from '@/lib/public-chat-media';
+import { SendStatus } from '@/components/app/chat/SendStatus';
 import { sendPublicChatImage } from '@/lib/public-chat-attachment';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -217,7 +218,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     }
   }, [newMessage]);
 
-  const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
+  const { messages, isLoading: messagesLoading, isSending, send, retrySend, discardSend, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
   // Buy alerts
@@ -341,6 +342,10 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
         await sendPublicChatImage(pendingImage, trimmed, replyToId, uploadChatImage, send);
         setImageFile(current => current === pendingImage ? null : current);
       } else {
+        // The line shows in the list at once (with a small ring until it
+        // lands, Retry if it fails), so the box lets go of it straight away.
+        setNewMessage(current => current === newMessage ? '' : current);
+        setReplyTo(current => current?.id === replyToId ? null : current);
         await send(trimmed, 'text', undefined, replyToId);
       }
       setReplyTo(current => current?.id === replyToId ? null : current);
@@ -516,7 +521,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                <div key={msg.client_key ?? msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   {/* Reply indicator – click to scroll to original */}
                   {msg.reply_to && (
                     <button
@@ -547,6 +552,14 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} badgeLock={msg.sender_badge_lock} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                        {msg.client_key && (
+                          <SendStatus
+                            state={msg.send_state}
+                            className="self-center text-zinc-500"
+                            onRetry={() => retrySend(msg.client_key!)}
+                            onDiscard={() => discardSend(msg.client_key!)}
+                          />
+                        )}
                       </span>
                       {editingId === msg.id ? (
                         <div className="mt-0.5">

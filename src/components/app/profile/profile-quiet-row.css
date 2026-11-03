@@ -1,0 +1,74 @@
+/* Profile Quiet Row (phones): sort word, bare search and filter icons, and a
+   search field drawn as a glowing Beam underline instead of a filled box. */
+[data-profile-quiet-row],
+[data-profile-search-quiet],
+[data-profile-sort-menu] {
+  --pqr-ink: #fff;
+  --pqr-sub: rgba(255, 255, 255, 0.55);
+  --pqr-solid: #fff;
+  --pqr-solid-ink: #000;
+}
+html:is([data-theme='light'], [data-system-tone='light']) :is([data-profile-quiet-row], [data-profile-search-quiet], [data-profile-sort-menu]) {
+  --pqr-ink: #0d0d12;
+  --pqr-sub: rgba(13, 13, 18, 0.5);
+  --pqr-solid: #0d0d12;
+  --pqr-solid-ink: #fff;
+}
+html[data-theme='osaka'] :is([data-profile-quiet-row], [data-profile-search-quiet]) {
+  --pqr-ink: #ece9f5;
+  --pqr-solid: #ff6fb5;
+  --pqr-solid-ink: #1a0c16;
+}
+
+html[data-theme] [data-profile-quiet-row] :is(button, svg):not(#_):not(#_) {
+  color: var(--pqr-ink);
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+html[data-theme] [data-profile-quiet-row] [data-profile-quiet-count]:not(#_):not(#_) {
+  background: var(--pqr-solid);
+  color: var(--pqr-solid-ink);
+}
+html[data-theme] [data-profile-sort-menu] button:not(#_):not(#_) {
+  color: var(--pqr-ink);
+  background: transparent;
+}
+html[data-theme] [data-profile-sort-menu] button[data-active]:not(#_):not(#_) {
+  background: color-mix(in srgb, var(--pqr-ink) 8%, transparent);
+}
+
+[data-profile-search-quiet] {
+  color: var(--pqr-ink);
+}
+[data-profile-search-quiet]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  box-shadow: 0 0 9px currentColor, 0 0 2px currentColor;
+  pointer-events: none;
+}
+/* Beats the site-wide search recess (search-fields.css): here the Beam line is the field. */
+html:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-profile-search-quiet] input[type='search']:not(#_) {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: var(--pqr-ink);
+  padding-left: 1.75rem;
+}
+html[data-theme] [data-profile-search-quiet] input::placeholder {
+  color: var(--pqr-sub);
+}
+html[data-theme] [data-profile-search-quiet] :is(svg, button):not(#_):not(#_) {
+  color: var(--pqr-ink);
+  background: transparent;
+}
+html[data-theme] [data-profile-search-quiet] > svg:not(#_):not(#_) {
+  left: 0.125rem;
+}
