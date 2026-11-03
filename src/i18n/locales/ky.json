@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Бардык {{count}} баракты көрсөтүү"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "App Store дүкөнүнөн жүктөө",

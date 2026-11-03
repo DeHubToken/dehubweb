@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Ɲɛ {{count}} bɛɛ jira"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ka tɛmɛ o kan, i ka kan ka tɛmɛ o kan.",

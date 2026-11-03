@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "{{count}} sayfanın tümünü göster"
+  },
   "duet": {
     "with": "@{{username}} ile düet",
     "withOriginal": "Düet · orijinali gör",

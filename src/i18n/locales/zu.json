@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Bonisa wonke amakhasi angu-{{count}}"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Dawuniloda ku-App Store",

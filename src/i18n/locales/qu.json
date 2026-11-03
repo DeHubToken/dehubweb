@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Llapan {{count}} rapikunata rikuchiy"
+  },
   "dehubAppPage": {
     "android": "Android nisqa",
     "appStore": "App Store nisqapi uraykachiy",

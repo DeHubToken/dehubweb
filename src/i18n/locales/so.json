@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Muuji dhammaan {{count}} bog"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ka soo dejiso App Store",

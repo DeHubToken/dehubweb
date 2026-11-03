@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Бүх {{count}} хуудсыг харуулах"
+  },
   "dehubAppPage": {
     "android": "Андройд",
     "appStore": "App Store-оос татах",

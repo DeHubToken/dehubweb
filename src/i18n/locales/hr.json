@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Prikaži svih {{count}} stranica"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Preuzmi na App Store",

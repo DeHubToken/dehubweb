@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ସମସ୍ତ {{count}} ପୃଷ୍ଠା ଦେଖାନ୍ତୁ"
+  },
   "dehubAppPage": {
     "android": "ଆଣ୍ଡ୍ରଏଡName",
     "appStore": "ଆପ ଷ୍ଟୋରରେ ଡାଉନଲୋଡ କରନ୍ତୁ",

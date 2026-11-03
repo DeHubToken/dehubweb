@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "စာမျက်နှာ {{count}} ခုလုံး ပြပါ"
+  },
   "dehubAppPage": {
     "android": "အန်ဒရွိုဒ်",
     "appStore": "App Store တွင် ဒေါင်းလုပ်ဆွဲပါ",

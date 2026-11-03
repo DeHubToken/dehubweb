@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Asehoy ny pejy {{count}} rehetra"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download ao amin'ny App Store",

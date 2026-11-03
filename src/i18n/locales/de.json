@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Alle {{count}} Seiten anzeigen"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Download im App Store",

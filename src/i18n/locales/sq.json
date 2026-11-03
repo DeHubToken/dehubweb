@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Shfaq të gjitha {{count}} faqet"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lëshimi në App Store",

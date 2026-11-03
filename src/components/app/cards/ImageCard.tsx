@@ -103,6 +103,7 @@ import { HandoffImage } from './HandoffImage';
 import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
 import { warmPostPage } from '@/lib/preload-post-page';
 import { cacheImageForNavigation } from '@/lib/post-cache';
+import { useRetainedPostPinned } from '@/lib/retained-post-surface';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
@@ -814,6 +815,9 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const isPhone = useIsMobile();
+  // The feed moves this very card onto the post page (RetainedPostSurface);
+  // while it sits there it is the post page's comic, not a feed teaser.
+  const dockedOnPostPage = useRetainedPostPinned(post.id);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -1437,7 +1441,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           </>
         ) : (() => {
           if (post.layout === 'comic' && images.length > 0) {
-            const onPostPage = postPage || isImmersive;
+            const onPostPage = postPage || isImmersive || dockedOnPostPage;
             return (
               <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
                 <ComicDeckLazy

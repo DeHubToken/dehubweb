@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "បង្ហាញទំព័រទាំង {{count}}"
+  },
   "dehubAppPage": {
     "android": "អន្តរដ្ឋអាន្តរដ្ឋ",
     "appStore": "ទាញយកនៅលើ App Store",

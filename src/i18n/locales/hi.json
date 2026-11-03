@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "सभी {{count}} पेज दिखाएं"
+  },
   "dehubAppPage": {
     "android": "एंड्रॉइड",
     "appStore": "ऐप स्टोर पर डाउनलोड करें",

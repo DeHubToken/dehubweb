@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Alli {{count}} Siite zeige"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Im App Store herunterladen",

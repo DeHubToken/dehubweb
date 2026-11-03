@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Wys al {{count}} bladsye"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Laai af by die App Store",

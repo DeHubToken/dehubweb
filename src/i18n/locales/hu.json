@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Mind a(z) {{count}} oldal megjelenítése"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Letöltés az App Store-ból",

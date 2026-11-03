@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Ցույց տալ բոլոր {{count}} էջերը"
+  },
   "dehubAppPage": {
     "android": "Անդրոիդ",
     "appStore": "Ներբեռնել App Store - ում",

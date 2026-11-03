@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Tampilake kabeh {{count}} kaca"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Unduh di App Store",

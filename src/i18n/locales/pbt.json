@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ټولې {{count}} پاڼې وښایاست"
+  },
   "dehubAppPage": {
     "android": "د Android په اړه",
     "appStore": "په اپیل پلورنځي کې ډاونلوډ کړئ",

@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Hiện tất cả {{count}} trang"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Tải trên App Store",

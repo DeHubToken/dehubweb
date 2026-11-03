@@ -32,6 +32,9 @@ const K = 160;
 const C = 14;
 const MAX_TILT = 14;
 
+/** Cover URL to its clamped aspect ratio. */
+const coverRatios = new Map<string, number>();
+
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
@@ -188,11 +191,20 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
   const alt = descriptions?.[index]?.trim() || '';
   const pageLabel = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
   // The art box takes the cover's shape (kept between tall and wide), so a
-  // landscape strip is not letterboxed in a portrait card.
-  const [ratio, setRatio] = useState(0.75);
+  // landscape strip is not letterboxed in a portrait card. Remembered per
+  // cover, so the post page opens at the size the feed card already had
+  // instead of starting portrait and jumping.
+  const [ratio, setRatio] = useState(() => coverRatios.get(images[0]) ?? 0.75);
   useEffect(() => {
+    const known = coverRatios.get(images[0]);
+    if (known) { setRatio(known); return; }
     const img = new Image();
-    img.onload = () => { if (img.naturalWidth && img.naturalHeight) setRatio(Math.max(0.62, Math.min(1.5, img.naturalWidth / img.naturalHeight))); };
+    img.onload = () => {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      const next = Math.max(0.62, Math.min(1.5, img.naturalWidth / img.naturalHeight));
+      coverRatios.set(images[0], next);
+      setRatio(next);
+    };
     img.src = cdnImage(images[0], { width: 720 }) || '';
   }, [images]);
 
@@ -203,7 +215,7 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
       <div data-comic className="relative px-1 pb-2">
         <div className="flex items-center justify-between gap-2 py-2">
           <p className="min-w-0 truncate text-sm font-semibold">{title || t('comic.title', { defaultValue: 'Comic' })}</p>
-          <button type="button" className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-medium" onClick={() => setReading(false)}>
+          <button type="button" className="shrink-0 rounded-xl border border-border px-3 py-1.5 text-xs font-medium" onClick={() => setReading(false)}>
             {t('comic.cards', { defaultValue: 'Back to cards' })}
           </button>
         </div>
@@ -233,15 +245,10 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
       ref={rootRef}
       data-comic
       data-no-swipe={total > 1 ? '' : undefined}
-      className={cn('relative flex flex-col items-center select-none pt-11', full ? 'pb-3' : 'pb-5')}
+      className={cn('relative flex flex-col items-center select-none pt-3', full ? 'pb-3' : 'pb-5')}
       style={{ perspective: 1100 }}
     >
-      <div className="comic-chip top-2 left-2">
-        <span aria-hidden>✦</span>
-        {t('comic.chip', { defaultValue: 'Comic · {{count}} pages', count: total })}
-      </div>
-
-      <div className="relative" style={{ width: ratio > 1 ? 'min(88%, 420px)' : 'min(78%, 340px)' }}>
+      <div className="comic-stack relative" data-wide={ratio > 1 ? '' : undefined} data-full={full ? '' : undefined}>
         {/* The next cards in the deck, fanned behind. */}
         {behind.map((i, n) => (
           <div
@@ -341,13 +348,13 @@ export const ComicDeck = memo(function ComicDeck({ images, captions, description
         </div>
       ) : null}
 
-      {full ? (
+      {full && total > 1 ? (
         <button
           type="button"
-          className="mt-3 rounded-full border border-border px-4 py-1.5 text-xs font-medium"
+          className="mt-4 h-9 rounded-xl border border-border px-4 text-sm font-medium"
           onClick={() => setReading(true)}
         >
-          {t('comic.readAll', { defaultValue: 'Read all pages' })}
+          {t('comic.showAll', { defaultValue: 'Show all {{count}} pages', count: total })}
         </button>
       ) : null}
     </div>

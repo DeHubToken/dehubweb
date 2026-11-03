@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Rādīt visas {{count}} lapas"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Lejupielādēt App Store",

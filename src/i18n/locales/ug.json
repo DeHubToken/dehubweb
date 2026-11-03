@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "ھەممە {{count}} بەتنى كۆرسەت"
+  },
   "dehubAppPage": {
     "android": "ئاندرويد",
     "appStore": "App Store دىن چۈشۈرۈڭ",

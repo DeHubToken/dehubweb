@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Ver todas as {{count}} páginas"
+  },
   "duet": {
     "with": "Dueto com @{{username}}",
     "withOriginal": "Dueto · ver original",

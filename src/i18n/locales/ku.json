@@ -1,4 +1,7 @@
 {
+  "comic": {
+    "showAll": "Hemû {{count}} rûpelan nîşan bide"
+  },
   "dehubAppPage": {
     "android": "Android",
     "appStore": "Ji App Store daxe",
