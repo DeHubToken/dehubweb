@@ -183,6 +183,7 @@ import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -851,6 +852,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const registerOptions = stage?.registerOptions;
   const openPostOptions = useCallback(() => {
@@ -981,8 +983,9 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
     // (RetainedPostSurface) and the page shows it as it was, under the same
     // top bar, with Back in the pill.
     cacheImageForNavigation(queryClient, post);
+    noteProfileFeedOpen(profileFeed, post.id);
     navigate(`/app/post/${post.articleSlug || post.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer, profileFeed]);
 
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;

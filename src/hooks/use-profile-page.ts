@@ -202,21 +202,23 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   }, [routeUsername, userId]);
 
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
+  // The tab's list exactly as asked for, so a post opened from it can carry on
+  // through the same pages (see lib/profile-feed-origin).
+  const contentQuery = useMemo(() => ({
+    userId: contentUserId,
+    viewerAddress: currentWalletAddress || undefined,
+    sortMode: contentSort,
+    search: debouncedContentSearch,
+    filters: appliedContentFilters,
+    includeOwnScheduled: isOwnContent,
+  }), [contentUserId, currentWalletAddress, contentSort, debouncedContentSearch, appliedContentFilters, isOwnContent]);
   const {
     data: userContentData,
     isLoading: isLoadingContent,
     fetchNextPage: fetchNextContentPage,
     hasNextPage: hasNextContentPage,
     isFetchingNextPage: isFetchingNextContentPage,
-  } = useDeHubUserContent({
-    userId: contentUserId,
-    viewerAddress: currentWalletAddress || undefined,
-    enabled: !!contentUserId,
-    sortMode: contentSort,
-    search: debouncedContentSearch,
-    filters: appliedContentFilters,
-    includeOwnScheduled: isOwnContent,
-  });
+  } = useDeHubUserContent({ ...contentQuery, enabled: !!contentUserId });
 
   // Prefetch ONLY page 2 in the background after first paint. The old
   // version cascaded through EVERY page (fetching a user's entire content
@@ -668,6 +670,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     setContentFiltersOpen,
     showPostTypeFilter,
     isContentFiltered,
+    contentQuery,
     // Subscriptions
     plans,
     isLoadingPlans,

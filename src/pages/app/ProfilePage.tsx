@@ -811,6 +811,7 @@ export default function ProfilePage() {
               isPending={data.isPending}
               isViewingOwnProfile={data.isViewingOwnProfile}
               isContentFiltered={data.isContentFiltered}
+              contentQuery={data.contentQuery}
               optimisticPosts={data.optimisticPosts}
               isLoadingPlans={data.isLoadingPlans}
               hasPlans={data.hasPlans}

@@ -360,7 +360,7 @@ export function countActiveProfileFilters(filters: ProfileContentFilters): numbe
   );
 }
 
-interface UseDeHubUserContentOptions {
+export interface UseDeHubUserContentOptions {
   userId?: string;
   /** @deprecated Viewer context is now extracted from JWT Bearer token */
   viewerAddress?: string;

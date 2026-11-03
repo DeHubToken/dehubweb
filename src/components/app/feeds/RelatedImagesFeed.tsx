@@ -18,6 +18,8 @@ import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, b
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
+import { ProfileFormatFeed } from './ProfileFormatFeed';
+import { usePostProfileFeedOrigin } from '@/lib/profile-feed-origin';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
@@ -69,7 +71,14 @@ function adToVideoItem(nft: any): VideoItem {
 }
 
 
-export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
+/** Opened from a profile tab: that creator's next posts instead. */
+export function RelatedImagesFeed(props: RelatedImagesFeedProps) {
+  const origin = usePostProfileFeedOrigin(props.currentPostId);
+  const related = <LatestImagesFeed {...props} />;
+  return origin ? <ProfileFormatFeed origin={origin} currentPostId={props.currentPostId} fallback={related} /> : related;
+}
+
+function LatestImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 

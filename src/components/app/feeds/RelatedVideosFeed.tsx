@@ -17,6 +17,8 @@ import { mapNFTToVideoItem } from '@/hooks/use-dehub-feed';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
+import { ProfileFormatFeed } from './ProfileFormatFeed';
+import { usePostProfileFeedOrigin } from '@/lib/profile-feed-origin';
 import { formatDuration, formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
@@ -66,7 +68,14 @@ function toVideoItem(nft: any): VideoItem {
 }
 
 
-export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: RelatedVideosFeedProps) {
+/** Opened from a profile tab: that creator's next posts instead. */
+export function RelatedVideosFeed(props: RelatedVideosFeedProps) {
+  const origin = usePostProfileFeedOrigin(props.currentVideoId);
+  const related = <LatestVideosFeed {...props} />;
+  return origin ? <ProfileFormatFeed origin={origin} currentPostId={props.currentVideoId} fallback={related} /> : related;
+}
+
+function LatestVideosFeed({ currentVideoId, scrollContainerRef }: RelatedVideosFeedProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 
