@@ -1644,7 +1644,7 @@ export const no = {
     q4_2025_items: ['App store re-listing ✅', 'Flerkontoilgang ✅', 'CRM-system', 'Open source ✅', 'LCS-utgivelse ✅'],
     y2026: '2026 - Nåværende år',
     q1q2_2026: 'Q1–Q2 2026',
-    q1q2_2026_items: ['LCS open beta', 'TGE LCS — mars 2026', 'Apple App Store-listing', 'Markedsføringskampanje', 'Ny webapp', 'LP farming', 'DHB staking Base', 'AI-verktøy', 'Annonsesystem'],
+    q1q2_2026_items: ['LCS open beta', 'TGE LCS — mars 2026', 'Apple App Store-listing', 'Markedsføringskampanje', 'Ny webapp', 'LP farming', '$RIFT staking Base', 'AI-verktøy', 'Annonsesystem'],
     q2q4_2026: 'Q2–Q4 2026 og videre',
     q3_2026_items: [
       'Nettarkivet ble offentliggjort under en MIT-lisens – hver linje i appen sendes offentlig ✅',
@@ -2277,7 +2277,7 @@ export const no = {
     useAiDesc: 'Betal for AI-generering på tvers av Creator Studio – bilde, video, lyd og 3D – i Riftn-tokens, til en pris som oppgis før hver jobb kjøres, i stedet for å ha et separat abonnement per verktøy.',
     title: 'Oversikt',
     subtitle: 'Valutaen som driver Riftn',
-    intro: 'Riftn-tokens er den innebygde valutaen til Riftn-nettverket; DHB er tickersymbolet deres. De er den eneste kontoenheten på tvers av hver d&#39;app – det du bruker som tips, låser opp innhold, tjener for å se på og lage, og bruker på AI-generering. Fordi de ligger i kjeden, er hver verdibevegelse i økosystemet offentlig verifiserbar i stedet for å ligge i en privat hovedbok du må stole på.',
+    intro: 'Riftn-tokens er den innebygde valutaen til Riftn-nettverket; $RIFT er tickersymbolet deres. De er den eneste kontoenheten på tvers av hver d&#39;app – det du bruker som tips, låser opp innhold, tjener for å se på og lage, og bruker på AI-generering. Fordi de ligger i kjeden, er hver verdibevegelse i økosystemet offentlig verifiserbar i stedet for å ligge i en privat hovedbok du må stole på.',
     howItWorksTitle: 'Slik fungerer valutaen i appen',
     howItWorksDesc1: 'Hver Riftn-konto har en innebygd lommebok. Du kan sette inn penger med et kort gjennom Stripe-gatewayen vår, motta penger fra en annen bruker, tjene penger fra plattformen eller sette inn penger fra en hvilken som helst selvforvaltende lommebok – det kreves ingen separat app, utvidelse eller startfrase for å komme i gang. Saldoer, tips, opplåsinger og belønninger gjøres opp i Riftn-tokens, slik at verdien flyttes direkte mellom brukere i stedet for å bli sendt gjennom en betalingsbehandler som tar en kutt og kan fryse en konto.',
     howItWorksDesc2: 'Holding og staking endrer også hvordan appen oppfører seg for deg. Jo flere Riftn-tokens du har, desto lavere blir plattformavgiftene dine og desto flere funksjoner låser du opp – merker, verifisering, trendboost, klubbnivåer og forbedrede rettigheter på tvers av nettverket. I praksis er ikke valutaen en tilleggsvaluta: den er tillatelseslaget, belønningsskinnen og kassen samtidig.',
