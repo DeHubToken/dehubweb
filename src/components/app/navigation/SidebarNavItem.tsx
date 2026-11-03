@@ -15,6 +15,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
 import { NotificationBell } from './NotificationBell';
+import { MessagesNavGlyph } from './MessagesNavGlyph';
 
 // Map nav item labels to i18n keys. Exported because the menu-search filter
 // (nav-search.ts) has to match on the same translated label a row renders.
@@ -141,8 +142,12 @@ export function SidebarNavItem({
 
   const showAvatar = avatarUrl !== undefined;
   const isNotifications = item.path === '/app/notifications' || item.path === '/notifications';
+  // Desktop Messages shows the red letter peeking out of the envelope instead of a count chip.
+  const isDesktopMessages = isDesktop && item.path === '/app/messages';
   const navIcon = (className: string) => isNotifications ? (
     <NotificationBell unread={notificationCount} size={isDesktop ? 20 : 22} />
+  ) : isDesktopMessages ? (
+    <MessagesNavGlyph unread={notificationCount ?? 0} always className={className} />
   ) : isDesktop && item.path === '/app/assistant' ? (
     <AssistantNavIcon className={className} />
   ) : !isDesktop && item.path !== '/app/messages' && item.themedIcon ? (
@@ -292,7 +297,7 @@ export function SidebarNavItem({
               : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
         )}>
           {navIcon(cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]"))}
-          {!isNotifications && notificationCount !== undefined && notificationCount > 0 && (
+          {!isNotifications && !isDesktopMessages && notificationCount !== undefined && notificationCount > 0 && (
             <span data-unread-chip className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-20 leading-none">
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>

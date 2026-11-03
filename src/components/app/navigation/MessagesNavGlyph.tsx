@@ -4,12 +4,12 @@ import MessageEnvelope from '@/components/ui/cut-icons/message-envelope';
 import './messages-nav-glyph.css';
 
 /**
- * Bottom bar Messages icon. Unread messages show as a small letter in the
- * theme's colour peeking out of the envelope, not a red count chip. On each
+ * Bottom bar Messages icon. Unread messages show as a small red letter
+ * peeking out of the envelope, not a red count chip. On each
  * wake-up (page load, coming back to the tab, a new message) the letter pops
  * out 3 times, then it holds still: one 3.9s CSS run, nothing loops.
  */
-export function MessagesNavGlyph({ unread, className, ...props }: LucideProps & { unread: number }) {
+export function MessagesNavGlyph({ unread, always = false, className, ...props }: LucideProps & { unread: number; always?: boolean }) {
   const clipId = `messages-letter-${useId().replace(/:/g, "")}`;
   const [run, setRun] = useState(0);
   const last = useRef(unread);
@@ -23,7 +23,7 @@ export function MessagesNavGlyph({ unread, className, ...props }: LucideProps & 
     return () => document.removeEventListener('visibilitychange', wake);
   }, []);
   return (
-    <span className="messages-nav-glyph" data-unread={unread > 0}>
+    <span className="messages-nav-glyph" data-unread={unread > 0} data-always={always}>
       {unread > 0 && (
         <svg key={run} className="messages-nav-glyph__letter" viewBox="0 0 32 32" aria-hidden="true">
           <clipPath id={clipId}><rect x="-4" y="-14" width="40" height="19.2" /></clipPath>
