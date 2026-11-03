@@ -19618,7 +19618,7 @@
     "imagesCount": "Images · {{count}}/{{max}}",
     "captionPlaceholder": "Add a caption",
     "captionLabel": "Caption for image {{n}}",
-    "removeImage": "Remove image {{n}}",
+    "removeInlineImage": "Remove image {{n}}",
     "backToWriting": "Back to writing",
     "readyTitle": "Ready to publish",
     "sharePreview": "How it looks when shared",

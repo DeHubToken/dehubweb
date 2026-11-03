@@ -335,7 +335,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
                         type="button"
                         onClick={() => setBody(removeArticleImage(bodyNow.current, img.index))}
                         className="article-tool shrink-0"
-                        aria-label={t('articles.removeImage', { n: img.index + 1, defaultValue: 'Remove image {{n}}' })}
+                        aria-label={t('articles.removeInlineImage', { n: img.index + 1, defaultValue: 'Remove image {{n}}' })}
                       >
                         <X />
                       </button>

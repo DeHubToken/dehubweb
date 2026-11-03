@@ -19731,7 +19731,17 @@
     "formatting": "Formato",
     "bodyPlaceholder": "Cuenta tu historia. Selecciona texto y utiliza la barra superior para encabezados, negritas, citas y listas.",
     "bodyLabel": "Cuerpo del artículo",
-    "wordCount": "{{count}} palabras"
+    "wordCount": "{{count}} palabras",
+    "imageLimit": "Los artículos pueden tener hasta {{count}} imágenes",
+    "imageLimitSome": "Solo caben {{count}} imágenes más en este artículo",
+    "imageFailed": "No se pudo añadir esa imagen. Prueba con otra.",
+    "imagesUploading": "Añadiendo imágenes ({{count}})…",
+    "bodyTooLong": "{{count}} caracteres por encima del límite",
+    "imagesLabel": "Imágenes",
+    "imagesCount": "Imágenes · {{count}}/{{max}}",
+    "captionPlaceholder": "Añade un pie de foto",
+    "captionLabel": "Pie de foto de la imagen {{n}}",
+    "removeInlineImage": "Quitar la imagen {{n}}"
   },
   "liveAudience": {
     "whosHere": "Quién está aquí",
