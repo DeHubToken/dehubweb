@@ -37,6 +37,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import Gift from "@/components/ui/cut-icons/gifts";
 import Lock from "@/components/ui/cut-icons/privacy";
 import Pencil from "@/components/ui/cut-icons/edit";
+import BookOpen from "@/components/ui/cut-icons/docs";
 
 import Download from "@/components/ui/cut-icons/download";
 import ChevronRight from "@/components/ui/cut-icons/next";
@@ -95,7 +96,7 @@ import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { updateTokenVisibility, repostPost, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, editPost, type TokenVisibility } from '@/lib/api/dehub';
 import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
@@ -856,6 +857,10 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  // The author can switch a photo post between comic and carousel from the
+  // menu; this holds their pick until the feed refetches.
+  const [layoutOverride, setLayoutOverride] = useState<'comic' | null | undefined>(undefined);
+  const layout = layoutOverride !== undefined ? layoutOverride : post.layout;
   const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const registerOptions = stage?.registerOptions;
@@ -1228,6 +1233,28 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
                   >
                     <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                   </button>
+                  {/* Comic or carousel: same pages, only the layout changes. */}
+                  {(images.length > 1 || layout === 'comic') && postTokenId && (
+                    <button
+                      onClick={async () => {
+                        const next = layout === 'comic' ? null : 'comic';
+                        setShowOptionsDrawer(false);
+                        setLayoutOverride(next);
+                        try {
+                          await editPost(postTokenId, { layout: next ?? '' });
+                          queryClient.invalidateQueries({ queryKey: ['single-post', post.id] });
+                          toast.success(next ? _copy('comic.converted', { defaultValue: 'Now showing as a comic' }) : _copy('comic.unconverted', { defaultValue: 'Now showing as a carousel' }));
+                        } catch {
+                          setLayoutOverride(undefined);
+                          toast.error(_copy('comic.convertFailed', { defaultValue: "Couldn't change the layout" }));
+                        }
+                      }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <BookOpen className="w-5 h-5" />
+                      {layout === 'comic' ? _copy('comic.toCarousel', { defaultValue: 'Show as carousel' }) : _copy('comic.toComic', { defaultValue: 'Make it a comic' })}
+                    </button>
+                  )}
                   {/* Boost. Offered to every owner rather than only to badge holders:
                       the sheet explains what a badge buys and links to staking, which is
                       worth more than hiding the row from the people who have not staked. */}
@@ -1440,7 +1467,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             </div>
           </>
         ) : (() => {
-          if (post.layout === 'comic' && images.length > 0) {
+          if (layout === 'comic' && images.length > 0) {
             const onPostPage = postPage || isImmersive || dockedOnPostPage;
             return (
               <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
