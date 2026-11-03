@@ -8495,6 +8495,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_provider_keys: {
+        Row: {
+          checked_at: string
+          created_at: string
+          last_used_at: string | null
+          last4: string
+          provider: string
+          secret_id: string
+          status: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          checked_at?: string
+          created_at?: string
+          last_used_at?: string | null
+          last4: string
+          provider: string
+          secret_id: string
+          status?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          checked_at?: string
+          created_at?: string
+          last_used_at?: string | null
+          last4?: string
+          provider?: string
+          secret_id?: string
+          status?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       user_skills: {
         Row: {
           asset_urls: string[]
@@ -9837,7 +9873,25 @@ export type Database = {
         Args: { p_code: string; p_sub_id?: string }
         Returns: undefined
       }
+      builder_openai_key: { Args: never; Returns: string }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
+      byok_delete: {
+        Args: { p_provider: string; p_wallet: string }
+        Returns: undefined
+      }
+      byok_get: {
+        Args: { p_provider: string; p_wallet: string }
+        Returns: string
+      }
+      byok_save: {
+        Args: {
+          p_key: string
+          p_provider: string
+          p_status?: string
+          p_wallet: string
+        }
+        Returns: undefined
+      }
       category_counts: {
         Args: { p_since?: string }
         Returns: {
