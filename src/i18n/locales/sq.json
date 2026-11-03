@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} të tjerë",
     "burstBody": "{{count}} njoftime të reja nga {{who}}",
     "community": {
+      "chatOne": "{{name}} dërgoi një mesazh",
+      "chatOneNamed": "{{name}} dërgoi një mesazh në “{{community}}”",
+      "chatMany": "{{name}} + {{others}} të tjerë dërguan mesazhe",
+      "chatTwo": "{{name}} dhe {{second}} dërguan mesazhe",
+      "chatTwoNamed": "{{name}} dhe {{second}} dërguan mesazhe në “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} të tjerë dërguan mesazhe në “{{community}}”",
       "joined": "{{name}} u bashkua me komunitetin tënd",
       "joinedNamed": "{{name}} u bashkua me “{{community}}”",
       "requested": "{{name}} të kërkuar për t 'u bashkuar me komunitetin tënd",

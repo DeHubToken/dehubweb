@@ -1754,6 +1754,12 @@
     "nOthers": "{{count}} اور",
     "burstBody": "{{count}} نئے نوٹیفیکیشن {{who}} سے",
     "community": {
+      "chatOne": "{{name}} نے ایک پیغام بھیجا",
+      "chatOneNamed": "{{name}} نے “{{community}}” میں ایک پیغام بھیجا",
+      "chatMany": "{{name}} + {{others}} دیگر نے پیغامات بھیجے",
+      "chatTwo": "{{name}} اور {{second}} نے پیغامات بھیجے",
+      "chatTwoNamed": "{{name}} اور {{second}} نے “{{community}}” میں پیغامات بھیجے",
+      "chatManyNamed": "{{name}} + {{others}} دیگر نے “{{community}}” میں پیغامات بھیجے",
       "joined": "{{name}} آپ کی کمیونٹی میں شامل ہوئے",
       "joinedNamed": "{{name}} نے \"{{community}}\" جوائن کیا",
       "requested": "{{name}} کو آپ کی کمیونٹی میں شامل ہونے کے لیے کہا گیا",

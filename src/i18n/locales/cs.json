@@ -1759,6 +1759,12 @@
     "nOthers": "{{count}} dalších",
     "burstBody": "{{count}} nových oznámení od {{who}}",
     "community": {
+      "chatOne": "{{name}} poslal(a) zprávu",
+      "chatOneNamed": "{{name}} poslal(a) zprávu v „{{community}}“",
+      "chatMany": "{{name}} + {{others}} dalších poslali zprávy",
+      "chatTwo": "{{name}} a {{second}} poslali zprávy",
+      "chatTwoNamed": "{{name}} a {{second}} poslali zprávy v „{{community}}“",
+      "chatManyNamed": "{{name}} + {{others}} dalších poslali zprávy v „{{community}}“",
       "joined": "{{name}} se připojil k vaší komunitě",
       "joinedNamed": "{{name}} se připojil/a k „{{community}}“",
       "requested": "Uživatel{{name}} požádal o připojení ke své komunitě",

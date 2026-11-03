@@ -1752,6 +1752,12 @@
     "nOthers": "{{count}} אחרים",
     "burstBody": "{{count}} התראות חדשות מ-{{who}}",
     "community": {
+      "chatOne": "{{name}} שלח/ה הודעה",
+      "chatOneNamed": "{{name}} שלח/ה הודעה ב“{{community}}”",
+      "chatMany": "{{name}} + {{others}} אחרים שלחו הודעות",
+      "chatTwo": "{{name}} ו{{second}} שלחו הודעות",
+      "chatTwoNamed": "{{name}} ו{{second}} שלחו הודעות ב“{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} אחרים שלחו הודעות ב“{{community}}”",
       "joined": "{{name}} הצטרפת לקהילה שלך",
       "joinedNamed": "{{name}} הצטרפו אל \"{{community}}\"",
       "requested": "{{name}} ביקשו להצטרף לקהילה שלכם",

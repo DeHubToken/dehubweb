@@ -1768,6 +1768,12 @@
     "nOthers": "{{count}} hafa",
     "burstBody": "{{count}}NEW filazana avy amin'ny {{who}}",
     "community": {
+      "chatOne": "{{name}} dia nandefa hafatra",
+      "chatOneNamed": "{{name}} dia nandefa hafatra tao amin'ny “{{community}}”",
+      "chatMany": "{{name}} + {{others}} hafa dia nandefa hafatra",
+      "chatTwo": "{{name}} sy {{second}} dia nandefa hafatra",
+      "chatTwoNamed": "{{name}} sy {{second}} dia nandefa hafatra tao amin'ny “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} hafa dia nandefa hafatra tao amin'ny “{{community}}”",
       "joined": "{{name}} manatevin-daharana ny vondrom-piarahamonina misy anao",
       "joinedNamed": "{{name}} nandray anjara {{community}} \"",
       "requested": "{{name}} Nangataka ny hiditra ao amin'ny vondrom-piarahamonina misy anao aho",

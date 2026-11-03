@@ -1690,6 +1690,12 @@
     "nOthers": "{{count}} تانيين",
     "burstBody": "{{count}} إشعارات جديدة من {{who}}",
     "community": {
+      "chatOne": "{{name}} بعت رسالة",
+      "chatOneNamed": "{{name}} بعت رسالة في “{{community}}”",
+      "chatMany": "{{name}} + {{others}} تانيين بعتوا رسايل",
+      "chatTwo": "{{name}} و{{second}} بعتوا رسايل",
+      "chatTwoNamed": "{{name}} و{{second}} بعتوا رسايل في “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} تانيين بعتوا رسايل في “{{community}}”",
       "joined": "{{name}} انضم لـ مجتمعك",
       "joinedNamed": "{{name}} انضم لـ \"{{community}}\"",
       "requested": "{{name}} طلب الانضمام لـ مجتمعك",
@@ -1704,6 +1710,9 @@
     "tipTokens": "{{amount}} توكنز",
     "tokenAmount": "{{amount}} توكنز",
     "custom": {
+      "repostedPosts": "{{name}} أعاد نشر {{count}} من البوستات بتاعتك",
+      "fractionOfferRejected": "{{name}} رفض عرضك على الكسرات",
+      "fractionOffer": "{{name}} قدّم عرض على كسراتك",
       "featureLikeNamed": "{{name}} أعجبك طلبك “{{title}}”",
       "featureLike": "{{name}} أهلا بتفاعلك مع طلبك",
       "featureCommentNamed": "{{name}} قام بالتعليق على طلبك \" {{title}} \"",

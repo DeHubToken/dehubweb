@@ -1751,6 +1751,12 @@
     "nOthers": "{{count}} នាក់ផ្សេងទៀត",
     "burstBody": "{{count}} ការជូនដំណឹងថ្មីពី {{who}}",
     "community": {
+      "chatOne": "{{name}} បានផ្ញើសារ",
+      "chatOneNamed": "{{name}} បានផ្ញើសារនៅក្នុង “{{community}}”",
+      "chatMany": "{{name}} + {{others}} នាក់ផ្សេងទៀតបានផ្ញើសារ",
+      "chatTwo": "{{name}} និង {{second}} បានផ្ញើសារ",
+      "chatTwoNamed": "{{name}} និង {{second}} បានផ្ញើសារនៅក្នុង “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} នាក់ផ្សេងទៀតបានផ្ញើសារនៅក្នុង “{{community}}”",
       "joined": "{{name}} @ បានចូលរួមសហគមន៍របស់អ្នក",
       "joinedNamed": "{{name}} បានចូលរួម \"{{community}}\"",
       "requested": "{{name}} បានស្នើសុំឱ្យចូលរួមសហគមន៍របស់អ្នក",

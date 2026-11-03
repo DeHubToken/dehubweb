@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} andre",
     "burstBody": "{{count}} nye notifikationer fra {{who}}",
     "community": {
+      "chatOne": "{{name}} sendte en besked",
+      "chatOneNamed": "{{name}} sendte en besked i “{{community}}”",
+      "chatMany": "{{name}} + {{others}} andre sendte beskeder",
+      "chatTwo": "{{name}} og {{second}} sendte beskeder",
+      "chatTwoNamed": "{{name}} og {{second}} sendte beskeder i “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} andre sendte beskeder i “{{community}}”",
       "joined": "{{name}} tilsluttede sig dit netværk",
       "joinedNamed": "{{name}} tilmeldte sig \"{{community}}\"",
       "requested": "{{name}} blev bedt om at tilmelde sig dit fællesskab",

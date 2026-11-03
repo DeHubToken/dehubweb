@@ -1745,6 +1745,12 @@
     "nOthers": "{{count}} anō",
     "burstBody": "{{count}} whakamōhiotanga hou nā {{who}}",
     "community": {
+      "chatOne": "I tukuna e {{name}} he karere",
+      "chatOneNamed": "I tukuna e {{name}} he karere ki “{{community}}”",
+      "chatMany": "I tukuna e {{name}} + {{others}} atu ētahi karere",
+      "chatTwo": "I tukuna e {{name}} rāua ko {{second}} ētahi karere",
+      "chatTwoNamed": "I tukuna e {{name}} rāua ko {{second}} ētahi karere ki “{{community}}”",
+      "chatManyNamed": "I tukuna e {{name}} + {{others}} atu ētahi karere ki “{{community}}”",
       "joined": "{{name}} hono atu ki to hapori",
       "joinedNamed": "{{name}} hono {{community}}",
       "requested": "{{name}} ka tono kia uru atu ki to hapori",

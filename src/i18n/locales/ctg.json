@@ -1772,6 +1772,12 @@
     "nOthers": "আরো {{count}} জন",
     "burstBody": "{{count}} নতুন নোটিফিকেশন {{who}} থেকে",
     "community": {
+      "chatOne": "{{name}} একখান মেসেজ পাডাইয়ে",
+      "chatOneNamed": "{{name}} “{{community}}”-ত একখান মেসেজ পাডাইয়ে",
+      "chatMany": "{{name}} + আরও {{others}} জন মেসেজ পাডাইয়ে",
+      "chatTwo": "{{name}} আর {{second}} মেসেজ পাডাইয়ে",
+      "chatTwoNamed": "{{name}} আর {{second}} “{{community}}”-ত মেসেজ পাডাইয়ে",
+      "chatManyNamed": "{{name}} + আরও {{others}} জন “{{community}}”-ত মেসেজ পাডাইয়ে",
       "joined": "{{name}} আপনার কমিউনিটিতে যোগ দিছে",
       "joinedNamed": "{{name}} “{{community}}” এ যোগ দিছে",
       "requested": "{{name}} আপনার কমিউনিটিতে যোগ দেওয়ার জন্য অনুরোধ করছে",

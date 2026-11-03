@@ -1785,6 +1785,12 @@
     "nOthers": "อีก {{count}} คน",
     "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}",
     "community": {
+      "chatOne": "{{name}} ส่งข้อความ",
+      "chatOneNamed": "{{name}} ส่งข้อความใน “{{community}}”",
+      "chatMany": "{{name}} + อีก {{others}} คนส่งข้อความ",
+      "chatTwo": "{{name}} และ {{second}} ส่งข้อความ",
+      "chatTwoNamed": "{{name}} และ {{second}} ส่งข้อความใน “{{community}}”",
+      "chatManyNamed": "{{name}} + อีก {{others}} คนส่งข้อความใน “{{community}}”",
       "joined": "{{name}} เข้าร่วมชุมชนของคุณ",
       "joinedNamed": "{{name}} เข้าร่วม “{{community}}”",
       "requested": "{{name}} ขอเข้าร่วมชุมชนของคุณ",

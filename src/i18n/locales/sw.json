@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} wengine",
     "burstBody": "{{count}} arifa mpya kutoka kwa {{who}}",
     "community": {
+      "chatOne": "{{name}} ametuma ujumbe",
+      "chatOneNamed": "{{name}} ametuma ujumbe katika “{{community}}”",
+      "chatMany": "{{name}} + wengine {{others}} wametuma jumbe",
+      "chatTwo": "{{name}} na {{second}} wametuma jumbe",
+      "chatTwoNamed": "{{name}} na {{second}} wametuma jumbe katika “{{community}}”",
+      "chatManyNamed": "{{name}} + wengine {{others}} wametuma jumbe katika “{{community}}”",
       "joined": "{{name}} alijiunga na jumuiya yako",
       "joinedNamed": "{{name}} amejiunga \"{{community}}\"",
       "requested": "{{name}} ameombwa kujiunga na jumuiya yako",

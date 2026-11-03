@@ -1742,6 +1742,12 @@
     "nOthers": "{{count}} dabam",
     "burstBody": "{{count}} sabbin sanarwa daga {{who}}",
     "community": {
+      "chatOne": "{{name}} ya aika saƙo",
+      "chatOneNamed": "{{name}} ya aika saƙo a “{{community}}”",
+      "chatMany": "{{name}} + wasu {{others}} sun aika saƙonni",
+      "chatTwo": "{{name}} da {{second}} sun aika saƙonni",
+      "chatTwoNamed": "{{name}} da {{second}} sun aika saƙonni a “{{community}}”",
+      "chatManyNamed": "{{name}} + wasu {{others}} sun aika saƙonni a “{{community}}”",
       "joined": "{{name}} shiga cikin al'ummar ku",
       "joinedNamed": "{{name}} shiga “{{community}}@”",
       "requested": "{{name}} an nemi shiga cikin al'ummar ku",

@@ -1733,6 +1733,12 @@
     "nOthers": "{{count}} अन्ये",
     "burstBody": "{{count}} से {{who}} के नए सूचनाएँ",
     "community": {
+      "chatOne": "{{name}} सन्देशम् अप्रेषयत्",
+      "chatOneNamed": "{{name}} “{{community}}” मध्ये सन्देशम् अप्रेषयत्",
+      "chatMany": "{{name}} + अन्ये {{others}} सन्देशान् अप्रेषयन्",
+      "chatTwo": "{{name}} {{second}} च सन्देशान् अप्रेषयताम्",
+      "chatTwoNamed": "{{name}} {{second}} च “{{community}}” मध्ये सन्देशान् अप्रेषयताम्",
+      "chatManyNamed": "{{name}} + अन्ये {{others}} “{{community}}” मध्ये सन्देशान् अप्रेषयन्",
       "joined": "{{name}} ने आपका समुदाय शामिल किया",
       "joinedNamed": "{{name}} ने “{{community}}” को शामिल किया",
       "requested": "{{name}} ने आपकी समुदाय में शामिल होने का अनुरोध किया",
@@ -1747,6 +1753,9 @@
     "tipTokens": "{{amount}} टोकन",
     "tokenAmount": "{{amount}} टोकन",
     "custom": {
+      "publicChatMention": "{{name}} सार्वजनिकसंवादे भवतः उल्लेखम् अकरोत्",
+      "liveChatMention": "{{name}} सजीवसंवादे भवतः उल्लेखम् अकरोत्",
+      "postMention": "{{name}} प्रकाशने भवतः उल्लेखम् अकरोत्",
       "featureLikeNamed": "{{name}} ने आपकी फीचर अनुरोध “{{title}}” को पसंद किया",
       "featureLike": "{{name}} ने आपकी फीचर अनुरोध को पसंद किया",
       "featureCommentNamed": "{{name}} ने आपकी फीचर अनुरोध “{{title}}” पर टिप्पणी की",

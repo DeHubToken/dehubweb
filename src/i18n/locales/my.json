@@ -1755,6 +1755,12 @@
     "oneOther": "အခြား ၁ ဦး",
     "nOthers": "အခြား {{count}} ဦး",
     "community": {
+      "chatOne": "{{name}} က မက်ဆေ့ချ် ပို့ခဲ့သည်",
+      "chatOneNamed": "{{name}} က “{{community}}” တွင် မက်ဆေ့ချ် ပို့ခဲ့သည်",
+      "chatMany": "{{name}} + အခြား {{others}} ဦး မက်ဆေ့ချ်များ ပို့ခဲ့သည်",
+      "chatTwo": "{{name}} နှင့် {{second}} တို့ မက်ဆေ့ချ်များ ပို့ခဲ့သည်",
+      "chatTwoNamed": "{{name}} နှင့် {{second}} တို့ “{{community}}” တွင် မက်ဆေ့ချ်များ ပို့ခဲ့သည်",
+      "chatManyNamed": "{{name}} + အခြား {{others}} ဦး “{{community}}” တွင် မက်ဆေ့ချ်များ ပို့ခဲ့သည်",
       "joined": "{{name}} သင် ၏ အသိုင်းအဝိုင်းတွင် ပါဝင်ပါ",
       "joinedNamed": "{{name}}@ ပူးပေါင်းခဲ့သည် “{{community}}@”",
       "requested": "{{name}} သင် ၏ အသိုင်းအဝိုင်းထဲသို့ ၀ င်ရန်တောင်းဆိုခဲ့သည်",

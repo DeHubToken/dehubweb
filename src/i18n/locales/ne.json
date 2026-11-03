@@ -1767,6 +1767,12 @@
     "nOthers": "{{count}} अन्य",
     "burstBody": "{{count}} नयाँ सूचनाहरू {{who}} बाट",
     "community": {
+      "chatOne": "{{name}} ले सन्देश पठाउनुभयो",
+      "chatOneNamed": "{{name}} ले “{{community}}” मा सन्देश पठाउनुभयो",
+      "chatMany": "{{name}} + अरू {{others}} जनाले सन्देशहरू पठाउनुभयो",
+      "chatTwo": "{{name}} र {{second}} ले सन्देशहरू पठाउनुभयो",
+      "chatTwoNamed": "{{name}} र {{second}} ले “{{community}}” मा सन्देशहरू पठाउनुभयो",
+      "chatManyNamed": "{{name}} + अरू {{others}} जनाले “{{community}}” मा सन्देशहरू पठाउनुभयो",
       "joined": "{{name}} तपाईंको समुदायमा सामेल भए",
       "joinedNamed": "{{name}} सामेल भए \"{{community}}\"",
       "requested": "{{name}} तपाईंको समुदायमा सामेल हुन आग्रह गरियो",

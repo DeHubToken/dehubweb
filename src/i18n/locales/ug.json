@@ -1744,6 +1744,12 @@
     "nOthers": "{{count}} باشقا",
     "burstBody": "{{count}} يېڭى ئاگاھلاندۇرۇش {{who}} دىن",
     "community": {
+      "chatOne": "{{name}} ئۇچۇر ئەۋەتتى",
+      "chatOneNamed": "{{name}} «{{community}}» دا ئۇچۇر ئەۋەتتى",
+      "chatMany": "{{name}} + يەنە {{others}} كىشى ئۇچۇرلار ئەۋەتتى",
+      "chatTwo": "{{name}} ۋە {{second}} ئۇچۇرلار ئەۋەتتى",
+      "chatTwoNamed": "{{name}} ۋە {{second}} «{{community}}» دا ئۇچۇرلار ئەۋەتتى",
+      "chatManyNamed": "{{name}} + يەنە {{others}} كىشى «{{community}}» دا ئۇچۇرلار ئەۋەتتى",
       "joined": "{{name}} جەمئىيىتىڭىزگە قوشۇلدى",
       "joinedNamed": "{{name}} قوشۇلدى \"{{community}}\"",
       "requested": "{{name}} جەمئىيىتىڭىزگە قوشۇلۇشنى تەلەپ قىلدى",

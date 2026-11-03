@@ -1768,6 +1768,12 @@
     "nOthers": "{{count}} ander",
     "burstBody": "{{count}} nuwe kennisgewings van {{who}}",
     "community": {
+      "chatOne": "{{name}} het 'n boodskap gestuur",
+      "chatOneNamed": "{{name}} het 'n boodskap in “{{community}}” gestuur",
+      "chatMany": "{{name}} + {{others}} ander het boodskappe gestuur",
+      "chatTwo": "{{name}} en {{second}} het boodskappe gestuur",
+      "chatTwoNamed": "{{name}} en {{second}} het boodskappe in “{{community}}” gestuur",
+      "chatManyNamed": "{{name}} + {{others}} ander het boodskappe in “{{community}}” gestuur",
       "joined": "{{name}} Sluit aan by jou gemeenskap",
       "joinedNamed": "{{name}} het by “{{community}}” aangesluit",
       "requested": "{{name}} gevra om by jou gemeenskap aan te sluit",

@@ -1657,6 +1657,12 @@
     "oneOther": "1 oda person",
     "nOthers": "{{count}} oda people",
     "community": {
+      "chatOne": "{{name}} send message",
+      "chatOneNamed": "{{name}} send message for “{{community}}”",
+      "chatMany": "{{name}} + {{others}} others send messages",
+      "chatTwo": "{{name}} and {{second}} send messages",
+      "chatTwoNamed": "{{name}} and {{second}} send messages for “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} others send messages for “{{community}}”",
       "joined": "{{name}} don join your community",
       "joinedNamed": "{{name}} join “{{community}}”",
       "requested": "{{name}} wan join your community",
@@ -1671,6 +1677,9 @@
     "tipTokens": "{{amount}} tokens",
     "tokenAmount": "{{amount}} tokens",
     "custom": {
+      "publicChatMention": "{{name}} mention you for public chat",
+      "liveChatMention": "{{name}} mention you for live chat",
+      "postMention": "{{name}} mention you for post",
       "featureComment": "{{name}} don talk am for your request",
       "featureReplyNamed": "{{name}} reply you for “{{title}}”",
       "featureReply": "{{name}} reply your comment",

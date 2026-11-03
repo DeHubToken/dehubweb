@@ -1745,6 +1745,12 @@
     "nOthers": "{{count}} kale",
     "burstBody": "{{count}} ogeysiis cusub oo ka yimid {{who}}",
     "community": {
+      "chatOne": "{{name}} ayaa fariin soo diray",
+      "chatOneNamed": "{{name}} ayaa fariin ku soo diray “{{community}}”",
+      "chatMany": "{{name}} + {{others}} kale ayaa fariimo soo diray",
+      "chatTwo": "{{name}} iyo {{second}} ayaa fariimo soo diray",
+      "chatTwoNamed": "{{name}} iyo {{second}} ayaa fariimo ku soo diray “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} kale ayaa fariimo ku soo diray “{{community}}”",
       "joined": "{{name}} ku biiray bulshadaada",
       "joinedNamed": "{{name}} ku biiray “{{community}}@”",
       "requested": "{{name}} waxaa laga codsaday inuu ku biiro bulshadaada",

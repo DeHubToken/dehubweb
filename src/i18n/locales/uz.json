@@ -1767,6 +1767,12 @@
     "nOthers": "{{count}} boshqa",
     "burstBody": "{{count}} ta yangi bildirishnomalar {{who}} dan",
     "community": {
+      "chatOne": "{{name}} xabar yubordi",
+      "chatOneNamed": "{{name}} “{{community}}” hamjamiyatida xabar yubordi",
+      "chatMany": "{{name}} + yana {{others}} kishi xabarlar yuborishdi",
+      "chatTwo": "{{name}} va {{second}} xabarlar yuborishdi",
+      "chatTwoNamed": "{{name}} va {{second}} “{{community}}” hamjamiyatida xabarlar yuborishdi",
+      "chatManyNamed": "{{name}} + yana {{others}} kishi “{{community}}” hamjamiyatida xabarlar yuborishdi",
       "joined": "{{name}} sizning hamjamiyatingizga qo'shildi",
       "joinedNamed": "{{name}} “{{community}}” ga qo'shildi",
       "requested": "{{name}} hamjamiyatingizga qo'shilish so'raldi",

@@ -1754,6 +1754,12 @@
     "nOthers": "{{count}} ακόμα",
     "burstBody": "{{count}} νέες ειδοποιήσεις από {{who}}",
     "community": {
+      "chatOne": "Ο/Η {{name}} έστειλε μήνυμα",
+      "chatOneNamed": "Ο/Η {{name}} έστειλε μήνυμα στο «{{community}}»",
+      "chatMany": "{{name}} + {{others}} ακόμα έστειλαν μηνύματα",
+      "chatTwo": "{{name}} και {{second}} έστειλαν μηνύματα",
+      "chatTwoNamed": "{{name}} και {{second}} έστειλαν μηνύματα στο «{{community}}»",
+      "chatManyNamed": "{{name}} + {{others}} ακόμα έστειλαν μηνύματα στο «{{community}}»",
       "joined": "{{name}} έγινε μέλος της κοινότητάς σας",
       "joinedNamed": "Ο/Η {{name}} έγινε μέλος στο “{{community}}”",
       "requested": "Ο χρήστης{{name}} ζήτησε να γίνει μέλος της κοινότητάς σας",

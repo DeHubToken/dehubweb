@@ -1758,6 +1758,12 @@
     "nOthers": "{{count}} drugih",
     "burstBody": "{{count}} nove obavijesti od {{who}}",
     "community": {
+      "chatOne": "{{name}} je poslao/la poruku",
+      "chatOneNamed": "{{name}} je poslao/la poruku u „{{community}}”",
+      "chatMany": "{{name}} + još {{others}} poslali su poruke",
+      "chatTwo": "{{name}} i {{second}} poslali su poruke",
+      "chatTwoNamed": "{{name}} i {{second}} poslali su poruke u „{{community}}”",
+      "chatManyNamed": "{{name}} + još {{others}} poslali su poruke u „{{community}}”",
       "joined": "Korisnik{{name}} pridružio se vašoj zajednici",
       "joinedNamed": "{{name}} se pridružio/la “{{community}}”",
       "requested": "Korisnik{{name}} zatražio je da se pridruži vašoj zajednici",

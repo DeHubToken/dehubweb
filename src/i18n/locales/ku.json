@@ -1751,6 +1751,12 @@
     "nOthers": "{{count}} yên din",
     "burstBody": "{{count}} agahdariyên nû ji {{who}}",
     "community": {
+      "chatOne": "{{name}} peyamek şand",
+      "chatOneNamed": "{{name}} di “{{community}}” de peyamek şand",
+      "chatMany": "{{name}} + {{others}} yên din peyam şandin",
+      "chatTwo": "{{name}} û {{second}} peyam şandin",
+      "chatTwoNamed": "{{name}} û {{second}} di “{{community}}” de peyam şandin",
+      "chatManyNamed": "{{name}} + {{others}} yên din di “{{community}}” de peyam şandin",
       "joined": "{{name}} tevlî civaka te bû",
       "joinedNamed": "{{name}} tevlî “{{community}}” bû",
       "requested": "{{name}} xwest tevlî civaka te bibe",
@@ -1765,6 +1771,9 @@
     "tipTokens": "{{amount}} token",
     "tokenAmount": "{{amount}} token",
     "custom": {
+      "publicChatMention": "{{name}} di sohbeta giştî de behsa te kir",
+      "liveChatMention": "{{name}} di sohbeta zindî de behsa te kir",
+      "postMention": "{{name}} di şandiyekê de behsa te kir",
       "featureLikeNamed": "{{name}} daxwaza te ya taybetmendiyê “{{title}}” eciband",
       "featureLike": "{{name}} daxwaza te ya taybetmendiyê eciband",
       "featureCommentNamed": "{{name}} li ser daxwaza te ya taybetmendiyê “{{title}}” şîrove kir",

@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} muuta",
     "burstBody": "{{count}} uutta ilmoitusta {{who}}:ltä",
     "community": {
+      "chatOne": "{{name}} lähetti viestin",
+      "chatOneNamed": "{{name}} lähetti viestin yhteisöön ”{{community}}”",
+      "chatMany": "{{name}} + {{others}} muuta lähettivät viestejä",
+      "chatTwo": "{{name}} ja {{second}} lähettivät viestejä",
+      "chatTwoNamed": "{{name}} ja {{second}} lähettivät viestejä yhteisöön ”{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} muuta lähettivät viestejä yhteisöön ”{{community}}”",
       "joined": "{{name}} liittyi yhteisöösi",
       "joinedNamed": "{{name}} liittyi \"{{community}}\"",
       "requested": "{{name}} pyysi saada liittyä yhteisöösi",

@@ -1707,6 +1707,12 @@
     "nOthers": "{{count}} اور",
     "burstBody": "{{count}} नवे सूचना {{who}} मधून",
     "community": {
+      "chatOne": "{{name}} ne ek mesej bheja",
+      "chatOneNamed": "{{name}} ne “{{community}}” mein ek mesej bheja",
+      "chatMany": "{{name}} + {{others}} aur logaan ne mesej bheje",
+      "chatTwo": "{{name}} aur {{second}} ne mesej bheje",
+      "chatTwoNamed": "{{name}} aur {{second}} ne “{{community}}” mein mesej bheje",
+      "chatManyNamed": "{{name}} + {{others}} aur logaan ne “{{community}}” mein mesej bheje",
       "joined": "{{name}} آپ کی کمیونٹی میں شامل ہوئے",
       "joinedNamed": "{{name}} जोडली गेली “{{community}}”",
       "requested": "{{name}} ने आपल्या समुदायात सामील होण्याची विनंती केली",

@@ -1750,6 +1750,12 @@
     "nOthers": "{{count}} மற்றவர்கள்",
     "burstBody": "{{count}} புதிய அறிவிப்புகள் {{who}} இலிருந்து",
     "community": {
+      "chatOne": "{{name}} ஒரு செய்தி அனுப்பினார்",
+      "chatOneNamed": "{{name}} “{{community}}” இல் ஒரு செய்தி அனுப்பினார்",
+      "chatMany": "{{name}} + மேலும் {{others}} பேர் செய்திகள் அனுப்பினர்",
+      "chatTwo": "{{name}} மற்றும் {{second}} செய்திகள் அனுப்பினர்",
+      "chatTwoNamed": "{{name}} மற்றும் {{second}} “{{community}}” இல் செய்திகள் அனுப்பினர்",
+      "chatManyNamed": "{{name}} + மேலும் {{others}} பேர் “{{community}}” இல் செய்திகள் அனுப்பினர்",
       "joined": "{{name}}@ உங்கள் சமூகத்தில் சேர்ந்தார்",
       "joinedNamed": "{{name}} இணைந்தது “@ {{community}}”",
       "requested": "{{name}} உங்கள் சமூகத்தில் சேரச் சொன்னார்",

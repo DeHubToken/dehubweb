@@ -1748,6 +1748,12 @@
     "nOthers": "{{count}} башка",
     "burstBody": "{{count}} жаңы эскертүүлөр {{who}} дан",
     "community": {
+      "chatOne": "{{name}} билдирүү жөнөттү",
+      "chatOneNamed": "{{name}} «{{community}}» коомчулугунда билдирүү жөнөттү",
+      "chatMany": "{{name}} + дагы {{others}} киши билдирүүлөрдү жөнөтүштү",
+      "chatTwo": "{{name}} жана {{second}} билдирүүлөрдү жөнөтүштү",
+      "chatTwoNamed": "{{name}} жана {{second}} «{{community}}» коомчулугунда билдирүүлөрдү жөнөтүштү",
+      "chatManyNamed": "{{name}} + дагы {{others}} киши «{{community}}» коомчулугунда билдирүүлөрдү жөнөтүштү",
       "joined": "{{name}} Сиздин жамаатка кошулду",
       "joinedNamed": "{{name}} кошулду “{{community}}”",
       "requested": "{{name}} Сиздин жамаатка кошулууну суранды",

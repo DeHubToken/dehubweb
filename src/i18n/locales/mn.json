@@ -1755,6 +1755,12 @@
     "nOthers": "{{count}} бусад",
     "burstBody": "{{count}} шинэ мэдэгдэл {{who}}-аас",
     "community": {
+      "chatOne": "{{name}} мессеж илгээлээ",
+      "chatOneNamed": "{{name}} «{{community}}» дээр мессеж илгээлээ",
+      "chatMany": "{{name}} + өөр {{others}} хүн мессеж илгээлээ",
+      "chatTwo": "{{name}} болон {{second}} мессеж илгээлээ",
+      "chatTwoNamed": "{{name}} болон {{second}} «{{community}}» дээр мессеж илгээлээ",
+      "chatManyNamed": "{{name}} + өөр {{others}} хүн «{{community}}» дээр мессеж илгээлээ",
       "joined": "{{name}} танай нийгэмд нэгдэв",
       "joinedNamed": "{{name}} нь “{{community}}” -д элссэн",
       "requested": "{{name}} танай нийгэмд нэгдэхийг хүссэн",

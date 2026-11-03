@@ -2012,6 +2012,12 @@
     "nOthers": "{{count}} yang lain",
     "burstBody": "{{count}} pemberitahuan baharu daripada {{who}}",
     "community": {
+      "chatOne": "{{name}} menghantar mesej",
+      "chatOneNamed": "{{name}} menghantar mesej dalam “{{community}}”",
+      "chatMany": "{{name}} + {{others}} lagi menghantar mesej",
+      "chatTwo": "{{name}} dan {{second}} menghantar mesej",
+      "chatTwoNamed": "{{name}} dan {{second}} menghantar mesej dalam “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} lagi menghantar mesej dalam “{{community}}”",
       "joined": "{{name}} menyertai komuniti anda",
       "joinedNamed": "{{name}} menyertai “{{community}}”",
       "requested": "{{name}} meminta untuk menyertai komuniti anda",

@@ -1729,6 +1729,12 @@
     "oneOther": "1 ካልእ",
     "nOthers": "{{count}} ካልኦት",
     "community": {
+      "chatOne": "{{name}} መልእኽቲ ሰዲዱ",
+      "chatOneNamed": "{{name}} ኣብ “{{community}}” መልእኽቲ ሰዲዱ",
+      "chatMany": "{{name}} + {{others}} ካልኦት መልእኽቲታት ሰዲዶም",
+      "chatTwo": "{{name}} ን {{second}} ን መልእኽቲታት ሰዲዶም",
+      "chatTwoNamed": "{{name}} ን {{second}} ን ኣብ “{{community}}” መልእኽቲታት ሰዲዶም",
+      "chatManyNamed": "{{name}} + {{others}} ካልኦት ኣብ “{{community}}” መልእኽቲታት ሰዲዶም",
       "joined": "{{name}} ምስ ማሕበረሰብካ ተጸምቢርካ",
       "joinedNamed": "{{name}} ኣብ “{{community}}” ተጸንቢሩ",
       "requested": "{{name}} ሓቲቱ ናብ ሓባርካ ንኽትኣቱ",
@@ -1743,6 +1749,7 @@
     "tipTokens": "{{amount}} ቶክን",
     "tokenAmount": "{{amount}} ቶክን",
     "custom": {
+      "postMention": "{{name}} ኣብ ጽሑፍ ጠቒሱካ",
       "featureLike": "{{name}} ነቲ ናይ ባህሪ ሕቶኻ ኣፍቂሩ",
       "featureComment": "{{name}} ኣብቲ ዝሓተትካዮ ባህሪ ርኢቶ ሂቡ",
       "featureReplyNamed": "{{name}} ኣብ “{{title}}” መሊሱልካ",

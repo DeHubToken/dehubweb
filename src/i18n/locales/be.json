@@ -1769,6 +1769,12 @@
     "nOthers": "яшчэ {{count}}",
     "burstBody": "{{count}} новых апавяшчэнняў ад {{who}}",
     "community": {
+      "chatOne": "{{name}} адправіў паведамленне",
+      "chatOneNamed": "{{name}} адправіў паведамленне ў «{{community}}»",
+      "chatMany": "{{name}} + {{others}} іншых адправілі паведамленні",
+      "chatTwo": "{{name}} і {{second}} адправілі паведамленні",
+      "chatTwoNamed": "{{name}} і {{second}} адправілі паведамленні ў «{{community}}»",
+      "chatManyNamed": "{{name}} + {{others}} іншых адправілі паведамленні ў «{{community}}»",
       "joined": "{{name}} далучыўся да вашай суполкі",
       "joinedNamed": "{{name}} далучана “{{community}}”",
       "requested": "{{name}} папрасілі далучыцца да вашай суполкі",

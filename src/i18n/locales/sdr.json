@@ -1738,6 +1738,12 @@
     "nOthers": "{{count}} اور",
     "burstBody": "{{count}} نوي نوٽيفڪيشن {{who}} کان",
     "community": {
+      "chatOne": "{{name}} एगो मैसेज भेजलक",
+      "chatOneNamed": "{{name}} “{{community}}” में एगो मैसेज भेजलक",
+      "chatMany": "{{name}} + {{others}} आउर लोग मैसेज भेजलैं",
+      "chatTwo": "{{name}} आउर {{second}} मैसेज भेजलैं",
+      "chatTwoNamed": "{{name}} आउर {{second}} “{{community}}” में मैसेज भेजलैं",
+      "chatManyNamed": "{{name}} + {{others}} आउर लोग “{{community}}” में मैसेज भेजलैं",
       "joined": "{{name}} به انجمن شما پیوست",
       "joinedNamed": "{{name}} به “{{community}}” پیوست",
       "requested": "{{name}} درخواست پیوستن به انجمن شما را داد",
@@ -1752,6 +1758,9 @@
     "tipTokens": "{{amount}} دراو",
     "tokenAmount": "{{amount}} دراو",
     "custom": {
+      "publicChatMention": "{{name}} पब्लिक चैट में तोर जिकर करलक",
+      "liveChatMention": "{{name}} लाइव चैट में तोर जिकर करलक",
+      "postMention": "{{name}} एगो पोस्ट में तोर जिकर करलक",
       "featureLikeNamed": "{{name}}, “{{title}}” adlı özellik talebinize beğendi",
       "featureLike": "{{name}}, özellik talebinize beğendi",
       "featureCommentNamed": "{{name}}, “{{title}}” adlı özellik talebinize yorum yaptı",

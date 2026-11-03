@@ -1727,6 +1727,12 @@
     "nOthers": "{{count}} ثانيين",
     "burstBody": "{{count}} إشعار جديد من {{who}}",
     "community": {
+      "chatOne": "{{name}} أرسل رسالة",
+      "chatOneNamed": "{{name}} أرسل رسالة في “{{community}}”",
+      "chatMany": "{{name}} + {{others}} آخرين أرسلوا رسائل",
+      "chatTwo": "{{name}} و{{second}} أرسلوا رسائل",
+      "chatTwoNamed": "{{name}} و{{second}} أرسلوا رسائل في “{{community}}”",
+      "chatManyNamed": "{{name}} + {{others}} آخرين أرسلوا رسائل في “{{community}}”",
       "joined": "{{name}} انضم لمجتمعك",
       "joinedNamed": "{{name}} انضم لـ “{{community}}”",
       "requested": "{{name}} طلب الانضمام لمجتمعك",

@@ -1757,6 +1757,12 @@
     "nOthers": "{{count}} andre",
     "burstBody": "{{count}} nye varsler fra {{who}}",
     "community": {
+      "chatOne": "{{name}} sendte en melding",
+      "chatOneNamed": "{{name}} sendte en melding i «{{community}}»",
+      "chatMany": "{{name}} + {{others}} andre sendte meldinger",
+      "chatTwo": "{{name}} og {{second}} sendte meldinger",
+      "chatTwoNamed": "{{name}} og {{second}} sendte meldinger i «{{community}}»",
+      "chatManyNamed": "{{name}} + {{others}} andre sendte meldinger i «{{community}}»",
       "joined": "{{name}} ble med i fellesskapet ditt",
       "joinedNamed": "{{name}} ble med i «{{community}}»",
       "requested": "{{name}} spurte om å bli med i fellesskapet ditt",

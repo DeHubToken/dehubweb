@@ -1735,6 +1735,12 @@
     "nOthers": "{{count}} ଅନ୍ୟ",
     "burstBody": "{{count}} ନୂତନ ବିଜ୍ଞପ୍ତି {{who}} ଠାରୁ",
     "community": {
+      "chatOne": "{{name}} ଏକ ମେସେଜ୍ ପଠାଇଛନ୍ତି",
+      "chatOneNamed": "{{name}} “{{community}}”ରେ ଏକ ମେସେଜ୍ ପଠାଇଛନ୍ତି",
+      "chatMany": "{{name}} + ଆଉ {{others}} ଜଣ ମେସେଜ୍ ପଠାଇଛନ୍ତି",
+      "chatTwo": "{{name}} ଏବଂ {{second}} ମେସେଜ୍ ପଠାଇଛନ୍ତି",
+      "chatTwoNamed": "{{name}} ଏବଂ {{second}} “{{community}}”ରେ ମେସେଜ୍ ପଠାଇଛନ୍ତି",
+      "chatManyNamed": "{{name}} + ଆଉ {{others}} ଜଣ “{{community}}”ରେ ମେସେଜ୍ ପଠାଇଛନ୍ତି",
       "joined": "{{name}}ରେ ତୁମାର ସମ୍ମାନ୍ତରେ ସମାଇଲେ",
       "joinedNamed": "{{name}} ଯୋଡିହେଲା “{{community}}”",
       "requested": "{{name}}ରେ ତୁମାର ସମ୍ମାନ୍ତରେ ସମାଇବାକୁ ପ୍ରଶାସ କରିଛି",
@@ -1749,6 +1755,7 @@
     "tipTokens": "{{amount}} ଟୋକେନ୍",
     "tokenAmount": "{{amount}} ଟୋକେନ୍",
     "custom": {
+      "postMention": "{{name}} ଏକ ପୋଷ୍ଟରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରିଛନ୍ତି",
       "featureCommentNamed": "{{name}} ଏମାକ ଫେଚେର୍ ଅନୁମାନ୍ଦରେ “{{title}}” ପ୍ରତିକ୍ରିୟାର୍ଥିକାରୁ କମିନ୍ତି କିରିଲା।",
       "featureReply": "{{name}} ଆପଣଙ୍କ ମନ୍ତବ୍ୟରେ ଉତ୍ତର ଦେଲେ",
       "featureMention": "{{name}} ଏକ ବୈଶିଷ୍ଟ୍ୟ ଅନୁରୋଧରେ ଆପଣଙ୍କୁ ଉଲ୍ଲେଖ କରାଯାଇଛି",

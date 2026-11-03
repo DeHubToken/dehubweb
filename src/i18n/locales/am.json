@@ -1755,6 +1755,12 @@
     "nOthers": "{{count}} ሌሎች",
     "burstBody": "{{count}} አዲስ ማሳወቂያዎች ከ {{who}}",
     "community": {
+      "chatOne": "{{name}} መልእክት ልኳል",
+      "chatOneNamed": "{{name}} በ“{{community}}” ውስጥ መልእክት ልኳል",
+      "chatMany": "{{name}} + {{others}} ሌሎች መልእክቶችን ልከዋል",
+      "chatTwo": "{{name}} እና {{second}} መልእክቶችን ልከዋል",
+      "chatTwoNamed": "{{name}} እና {{second}} በ“{{community}}” ውስጥ መልእክቶችን ልከዋል",
+      "chatManyNamed": "{{name}} + {{others}} ሌሎች በ“{{community}}” ውስጥ መልእክቶችን ልከዋል",
       "joined": "{{name}} ማህበረሰብዎን ተቀላቀሉ",
       "joinedNamed": "{{name}} ተቀላቀል “{{community}}@”",
       "requested": "{{name}} ማህበረሰብዎን እንዲቀላቀሉ ጠይቀዋል",

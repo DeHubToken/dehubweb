@@ -1771,6 +1771,12 @@
     "nOthers": "{{count}} სხვა",
     "burstBody": "{{count}} ახალი შეტყობინება {{who}}-ისგან",
     "community": {
+      "chatOne": "{{name}}-მ შეტყობინება გაგზავნა",
+      "chatOneNamed": "{{name}}-მ შეტყობინება გაგზავნა „{{community}}“-ში",
+      "chatMany": "{{name}} + {{others}} სხვამ შეტყობინებები გაგზავნა",
+      "chatTwo": "{{name}}-მ და {{second}}-მ შეტყობინებები გაგზავნეს",
+      "chatTwoNamed": "{{name}}-მ და {{second}}-მ შეტყობინებები გაგზავნეს „{{community}}“-ში",
+      "chatManyNamed": "{{name}} + {{others}} სხვამ შეტყობინებები გაგზავნა „{{community}}“-ში",
       "joined": "{{name}} შეუერთდა თქვენს გაერთიანებას",
       "joinedNamed": "{{name}} შეუერთდა „{{community}}“",
       "requested": "{{name}} ითხოვს გაერთიანებაში გაწევრიანებას",

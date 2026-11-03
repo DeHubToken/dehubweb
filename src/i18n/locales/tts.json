@@ -1717,6 +1717,12 @@
     "nOthers": "{{count}} คนอื่น",
     "burstBody": "{{count}} การแจ้งเตือนใหม่จาก {{who}}",
     "community": {
+      "chatOne": "{{name}} ส่งข้อความมา",
+      "chatOneNamed": "{{name}} ส่งข้อความมาใน “{{community}}”",
+      "chatMany": "{{name}} + อีก {{others}} คนส่งข้อความมา",
+      "chatTwo": "{{name}} กับ {{second}} ส่งข้อความมา",
+      "chatTwoNamed": "{{name}} กับ {{second}} ส่งข้อความมาใน “{{community}}”",
+      "chatManyNamed": "{{name}} + อีก {{others}} คนส่งข้อความมาใน “{{community}}”",
       "joined": "{{name}} เข้าร่วมชุมชนของคุณ",
       "joinedNamed": "{{name}} เข้าร่วม “{{community}}”",
       "requested": "{{name}} ขอเข้าร่วมชุมชนของคุณ",
@@ -1731,6 +1737,8 @@
     "tipTokens": "{{amount}} เหรียญ",
     "tokenAmount": "{{amount}} เหรียญ",
     "custom": {
+      "fractionOffer": "{{name}} ยื่นข้อเสนอส่วนแบ่งของเจ้า",
+      "commentMention": "{{name}} เอิ้นถึงเจ้าในคอมเมนต์",
       "featureLikeNamed": "{{name}}ชอบฟีเจอร์ขอความช่วยเหลือ “{{title}}”",
       "featureLike": "{{name}} เลยชอบคำขอฟีเจอร์ของคุณ",
       "featureReplyNamed": "{{name}} ตอบคุณใน “{{title}}”",
