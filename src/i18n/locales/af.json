@@ -2049,7 +2049,11 @@
     "checkingTokenBalance": "Kontroleer jou tokenbalans...",
     "deleteConversationFailed": "Kon nie die gesprek uitvee nie",
     "message": "Boodskap",
-    "noConversationsYet": "Nog geen gesprek"
+    "noConversationsYet": "Nog geen gesprek",
+    "sending": "Stuur",
+    "notSent": "Nie gestuur nie",
+    "retrySend": "Probeer weer",
+    "discardSend": "Verwyder"
   },
   "music": {
     "listeningCount_one": "{{count}} luister",

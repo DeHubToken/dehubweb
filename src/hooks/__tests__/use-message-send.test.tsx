@@ -50,6 +50,24 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); });
 
 describe('reply persistence through refresh and failure', () => {
+  it('settles the pending line in place under the same client key', async () => {
+    let confirm!: (message: any) => void;
+    mocks.send.mockImplementation(() => new Promise(resolve => { confirm = resolve; }));
+    const { client, hook, items } = setup();
+    let pending!: Promise<any>;
+    act(() => { pending = hook.result.current.send.mutateAsync({ content: 'new reply' }); });
+    await waitFor(() => expect(mocks.send).toHaveBeenCalledOnce());
+    const draft = items()[0];
+    expect(draft.sendState).toBe('sending');
+    expect(draft.clientKey).toBe(draft._id);
+    await act(async () => { confirm(saved); await pending; });
+    expect(items().map((message: any) => message._id)).toEqual(['saved', 'old']);
+    expect(items()[0].clientKey).toBe(draft.clientKey);
+    expect(items()[0].sendState).toBeUndefined();
+    hook.unmount();
+    client.clear();
+  });
+
   it('shows a pending send before the conversation history has loaded', async () => {
     let confirm!: (message: any) => void;
     mocks.send.mockImplementation(() => new Promise(resolve => { confirm = resolve; }));
@@ -83,7 +101,7 @@ describe('reply persistence through refresh and failure', () => {
     client.clear();
   });
 
-  it('removes only the rejected reply while retaining messages received in the meantime', async () => {
+  it('keeps the rejected reply in place, marked failed, alongside messages received in the meantime', async () => {
     let reject!: (error: Error) => void;
     mocks.send.mockImplementation(() => new Promise((_resolve, fail) => { reject = fail; }));
     const { client, hook, items } = setup();
@@ -95,7 +113,9 @@ describe('reply persistence through refresh and failure', () => {
       ...old, pages: [{ ...old.pages[0], items: [received, ...old.pages[0].items] }],
     }));
     await act(async () => { reject(new Error('Server rejected the reply')); await pending; });
-    expect(items().map((message: any) => message._id)).toEqual(['incoming', 'old']);
+    expect(items().map((message: any) => message.content)).toEqual(['incoming reply', 'new reply', 'old reply']);
+    expect(items()[1].sendState).toBe('failed');
+    expect(items()[1]._id).toMatch(/^temp-/);
     hook.unmount();
     client.clear();
   });

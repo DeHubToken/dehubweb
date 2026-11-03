@@ -37,15 +37,18 @@ import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } fro
 type BuilderModel = { id: string; label: string; inUsdPerM: number; outUsdPerM: number };
 
 const BUILDER_MODELS: BuilderModel[] = [
-  { id: "openai/gpt-5", label: "GPT-5", inUsdPerM: 1.25, outUsdPerM: 10 },
-  { id: "anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5", inUsdPerM: 3, outUsdPerM: 15 },
-  { id: "google/gemini-2.5-pro", label: "Gemini 2.5 Pro", inUsdPerM: 1.25, outUsdPerM: 10 },
-  { id: "anthropic/claude-haiku-4.5", label: "Claude Haiku 4.5", inUsdPerM: 1, outUsdPerM: 5 },
-  { id: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash", inUsdPerM: 0.3, outUsdPerM: 2.5 },
+  { id: "anthropic/claude-opus-5.5", label: "Claude Opus 5.5", inUsdPerM: 4, outUsdPerM: 20 },
+  { id: "openai/gpt-5.5", label: "GPT-5.5", inUsdPerM: 5, outUsdPerM: 30 },
+  { id: "anthropic/claude-sonnet-5.5", label: "Claude Sonnet 5.5", inUsdPerM: 2, outUsdPerM: 10 },
+  { id: "google/gemini-4-argon", label: "Gemini 4 Argon", inUsdPerM: 2, outUsdPerM: 10 },
+  { id: "openai/gpt-5.4", label: "GPT-5.4", inUsdPerM: 2.5, outUsdPerM: 15 },
+  { id: "openai/gpt-5.4-mini", label: "GPT-5.4 mini", inUsdPerM: 0.75, outUsdPerM: 4.5 },
+  { id: "google/gemini-3.8-flash", label: "Gemini 3.8 Flash", inUsdPerM: 0.83, outUsdPerM: 4.12 },
+  { id: "anthropic/claude-haiku-5.5", label: "Claude Haiku 5.5", inUsdPerM: 0.1, outUsdPerM: 0.5 },
 ];
 const DEFAULT_MODEL = BUILDER_MODELS[0].id;
 // Legacy picker keys the @assistant bridge may still send.
-const MODEL_ALIASES: Record<string, string> = { best: DEFAULT_MODEL, fast: "google/gemini-2.5-flash" };
+const MODEL_ALIASES: Record<string, string> = { best: DEFAULT_MODEL, fast: "anthropic/claude-haiku-5.5" };
 
 const MARKUP = 1.3;
 const MAX_OUTPUT_TOKENS = 32000;

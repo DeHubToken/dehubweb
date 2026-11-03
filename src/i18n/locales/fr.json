@@ -2192,7 +2192,11 @@
     "checkingTokenBalance": "Vérification de votre solde de jetons...",
     "deleteConversationFailed": "Impossible de supprimer la conversation",
     "message": "Message",
-    "noConversationsYet": "Aucune conversation pour l'instant"
+    "noConversationsYet": "Aucune conversation pour l'instant",
+    "sending": "Envoi",
+    "notSent": "Non envoyé",
+    "retrySend": "Réessayer",
+    "discardSend": "Supprimer"
   },
   "music": {
     "listeningCount_one": "{{count}} écoute",

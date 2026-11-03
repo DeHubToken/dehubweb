@@ -2035,7 +2035,11 @@
     "checkingTokenBalance": "Überprüfe dein Token-Guthaben...",
     "deleteConversationFailed": "Konversation konnte nicht gelöscht werden",
     "message": "Nachricht",
-    "noConversationsYet": "Noch keine Unterhaltungen"
+    "noConversationsYet": "Noch keine Unterhaltungen",
+    "sending": "Wird gesendet",
+    "notSent": "Nicht gesendet",
+    "retrySend": "Erneut versuchen",
+    "discardSend": "Entfernen"
   },
   "music": {
     "listeningCount_one": "{{count}} zuhören",

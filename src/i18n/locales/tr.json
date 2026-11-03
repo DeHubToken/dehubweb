@@ -2192,7 +2192,11 @@
     "checkingTokenBalance": "Jeton bakiyeniz kontrol ediliyor...",
     "deleteConversationFailed": "Konuşma silinemedi",
     "message": "Mesaj",
-    "noConversationsYet": "Henüz sohbet yok"
+    "noConversationsYet": "Henüz sohbet yok",
+    "sending": "Gönderiliyor",
+    "notSent": "Gönderilmedi",
+    "retrySend": "Tekrar dene",
+    "discardSend": "Kaldır"
   },
   "music": {
     "listeningCount_one": "{{count}} dinleme",

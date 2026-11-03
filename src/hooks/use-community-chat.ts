@@ -6,7 +6,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Uses community_chat_messages table with realtime subscriptions.
  */
 
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -42,7 +42,17 @@ export interface CommunityChatMessage {
     content: string;
     sender_name: string;
   };
+  /** Local only: the id your own line was first drawn under (kept as the React key). */
+  client_key?: string;
+  /** Local only: your line is still going out, or failed to. */
+  send_state?: 'sending' | 'failed';
 }
+
+/**
+ * Server id -> the client key its line was first drawn under. Module level so
+ * the key survives the history refetch that follows every send.
+ */
+const communityClientKeys = new Map<string, string>();
 
 
 async function readCommunityPage({ communityId, walletAddress, cursor, anchorId, signal }: {
@@ -72,6 +82,12 @@ export function useCommunityChat(
     communityId, walletAddress: walletAddress ?? null, isPrivate, readPage: readCommunityPage,
   });
   const { rawMessages, referenceMessages, messagesKey, isLoading } = history;
+
+  // Your lines that are still going out (or failed). Drawn at once, exactly as
+  // they will look once stored, and kept outside the query cache so a history
+  // refetch can never drop one mid-send.
+  const [pending, setPending] = useState<CommunityChatMessage[]>([]);
+  const pendingArgsRef = useRef(new Map<string, Parameters<typeof sendMessage>>());
 
   // Latest profile fields for the current user — used to overlay onto their own
   // messages so display name / username / avatar updates reflect immediately
@@ -120,7 +136,22 @@ export function useCommunityChat(
   // Memoized: this double map (plus reply resolution below) used to rebuild
   // message objects on every render — including each composer keystroke.
   const messages: CommunityChatMessage[] = useMemo(() => {
-    const overlaid = rawMessages.map(msg => {
+    // A stored line takes over the key of the pending line it confirms (by the
+    // send's own result, or here when realtime delivered it first), so React
+    // keeps the same element and only the status mark changes.
+    const claimed = new Set<string>();
+    const keyedRows = rawMessages.map(msg => {
+      const known = communityClientKeys.get(msg.id);
+      if (known) { claimed.add(known); return { ...msg, client_key: known }; }
+      const match = myAddress && msg.wallet_address?.toLowerCase() === myAddress
+        ? pending.find(p => p.send_state === 'sending' && !claimed.has(p.client_key!) && p.content === msg.content && p.message_type === msg.message_type)
+        : undefined;
+      if (!match) return msg;
+      claimed.add(match.client_key!);
+      return { ...msg, client_key: match.client_key };
+    });
+    const source = [...keyedRows, ...pending.filter(p => !claimed.has(p.client_key!))];
+    const overlaid = source.map(msg => {
       const addr = msg.wallet_address?.toLowerCase();
       if (myAddress && addr === myAddress) {
         return {
@@ -160,7 +191,7 @@ export function useCommunityChat(
         },
       };
     });
-  }, [rawMessages, referenceMessages, senderProfileMap, myAddress, myDisplayName, myUsername, myAvatarUrl]);
+  }, [rawMessages, pending, referenceMessages, senderProfileMap, myAddress, myDisplayName, myUsername, myAvatarUrl]);
 
   // Realtime subscription
   useEffect(() => {
@@ -218,9 +249,39 @@ export function useCommunityChat(
     messageType: string = 'text',
     imageUrl?: string,
     replyToId?: string,
-    userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
+    userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number },
+    /** Resend a failed line where it is: its client key. */
+    retryKey?: string,
   ) => {
     if (!communityId || !walletAddress) throw new Error(_translateCopy("copy.bc30560b2f21", { defaultValue: "Sign in to send a message" }));
+
+    const clientKey = retryKey ?? `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    pendingArgsRef.current.set(clientKey, [content, messageType, imageUrl, replyToId, userProfile]);
+    if (retryKey) {
+      setPending(list => list.map(p => (p.client_key === retryKey ? { ...p, send_state: 'sending' } : p)));
+    } else {
+      const now = new Date().toISOString();
+      setPending(list => [...list, {
+        id: clientKey,
+        client_key: clientKey,
+        send_state: 'sending',
+        community_id: communityId,
+        wallet_address: walletAddress.toLowerCase(),
+        username: userProfile?.username || null,
+        display_name: userProfile?.displayName || null,
+        avatar_url: userProfile?.avatarUrl || null,
+        badge_balance: userProfile?.badgeBalance || null,
+        content,
+        message_type: messageType,
+        image_url: imageUrl || null,
+        reply_to_id: replyToId || null,
+        reactions: {},
+        created_at: now,
+        pinned_at: null,
+        pinned_by: null,
+        edited_at: null,
+      }]);
+    }
 
     const msg = {
       community_id: communityId,
@@ -236,16 +297,24 @@ export function useCommunityChat(
       reactions: {},
     };
 
-    const { data: inserted, error } = await withWalletHeader(
-      supabase
-        .from('community_chat_messages')
-        .insert(msg as any)
-        .select('*')
-        .single(),
-      walletAddress
-    );
+    let inserted: unknown = null;
+    let error: any = null;
+    try {
+      ({ data: inserted, error } = await withWalletHeader(
+        supabase
+          .from('community_chat_messages')
+          .insert(msg as any)
+          .select('*')
+          .single(),
+        walletAddress
+      ));
+    } catch (thrown) {
+      error = thrown;
+    }
 
     if (error) {
+      // The line stays where it was sent, marked "Not sent" with Retry.
+      setPending(list => list.map(p => (p.client_key === clientKey ? { ...p, send_state: 'failed' } : p)));
       console.error('[CommunityChat] Send error:', error);
       // Slow mode, mute and revoked send rights all land here as raised
       // conditions -- say which one rather than a generic failure.
@@ -253,11 +322,16 @@ export function useCommunityChat(
       throw error;
     }
 
+    const insertedId = (inserted as { id?: string } | null)?.id;
+    if (insertedId) communityClientKeys.set(insertedId, clientKey);
+    pendingArgsRef.current.delete(clientKey);
     if (inserted && !history.isHistoryWindow) {
       updateCommunityChatCache<CommunityChatMessage>(queryClient, messagesKey,
         old => old.some(row => row.id === (inserted as CommunityChatMessage).id)
           ? old : [...old, inserted as CommunityChatMessage]);
     }
+    // Same render as the stored copy landing, under the same key.
+    setPending(list => list.filter(p => p.client_key !== clientKey));
     void queryClient.invalidateQueries({ queryKey: messagesKey });
     if (history.isHistoryWindow) void history.showLatest().catch(() => {});
 
@@ -418,12 +492,28 @@ export function useCommunityChat(
     [messages, history.pinned],
   );
 
+  /** Send a failed line again, in place. */
+  const retrySend = useCallback((clientKey: string) => {
+    const args = pendingArgsRef.current.get(clientKey);
+    if (!args) return;
+    const [content, type, imageUrl, replyToId, profile] = args;
+    void sendMessage(content, type, imageUrl, replyToId, profile, clientKey).catch(() => {});
+  }, [sendMessage]);
+
+  /** Drop a failed line the sender no longer wants. */
+  const discardSend = useCallback((clientKey: string) => {
+    pendingArgsRef.current.delete(clientKey);
+    setPending(list => list.filter(p => p.client_key !== clientKey));
+  }, []);
+
   return {
     ...history,
     messages,
     pinnedMessage,
     isLoading,
     sendMessage,
+    retrySend,
+    discardSend,
     editMessage,
     deleteMessage,
     setPinned,
