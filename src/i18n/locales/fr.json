@@ -3365,6 +3365,8 @@
     "turn_on_desktop_notifications": "Activer les notifications du bureau ?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Soyez prévenu des réponses, pourboires et messages pendant que vous êtes dans un autre onglet.",
     "turn_on": "Activer",
+    "turn_back_on_desktop_notifications": "Réactiver les notifications sur ordinateur ?",
+    "notifications_moved_to_riftn": "Nous avons déménagé sur riftn.com : votre navigateur a besoin de votre accord une fois de plus pour afficher ici les réponses, pourboires et messages.",
     "push_blocked_title": "Les notifications ne vous parviennent pas",
     "push_blocked_body": "Votre système bloque les notifications pour ce navigateur, de sorte que rien ne vous parvient pendant la fermeture de Riftn. Activez-les à nouveau pour votre navigateur dans les paramètres de notification de votre système, puis désactivez et rallumez les notifications Riftn.",
     "push_display_failed_body": "Ce navigateur n'a pas pu afficher de notification, donc aucun d'entre eux ne vous atteint. Vos paramètres système ne sont pas la cause — le navigateur a signalé l'échec lui-même.",

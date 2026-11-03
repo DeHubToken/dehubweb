@@ -3361,6 +3361,8 @@
     "turn_on_desktop_notifications": "Masaüstü bildirimleri açılsın mı?",
     "get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab": "Başka bir sekmedeyken yanıtlardan, bahşişlerden ve mesajlardan haberdar olun.",
     "turn_on": "Aç",
+    "turn_back_on_desktop_notifications": "Masaüstü bildirimleri yeniden açılsın mı?",
+    "notifications_moved_to_riftn": "riftn.com'a taşındık, bu yüzden tarayıcının yanıtları, bahşişleri ve mesajları burada göstermesi için bir kez daha onayın gerekiyor.",
     "push_blocked_title": "Bildirimler size ulaşmıyor",
     "push_blocked_body": "Sisteminiz bu tarayıcı için bildirimleri engelliyor, bu nedenle Riftn kapalıyken size hiçbir şey ulaşmıyor. Sistem bildirim ayarlarınızda tarayıcınız için bunları tekrar açın, ardından Riftn bildirimlerini kapatıp tekrar açın.",
     "push_display_failed_body": "Bu tarayıcı bir bildirim görüntüleyemedi, bu nedenle hiçbiri size ulaşmıyor. Sistem ayarlarınız bunun nedeni değildir — tarayıcı hatanın kendisini bildirmiştir.",
