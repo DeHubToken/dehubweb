@@ -557,27 +557,16 @@ export function ImagesFeed({
     }
   }, [refreshKey, refetch]);
 
-  // Map API data to ImagePost array. Pages from search_nfts overlap (a later
-  // page repeats the tail of the one before), so each post is kept once:
-  // a repeated id would draw the same photo twice and collide as a React key.
+  // Map API data to ImagePost array
   const imagePosts = useMemo(() => {
-    let mapped: ImagePost[];
     if (useUnifiedSource) {
       if (!unifiedData?.pages) return [];
       const allItems = unifiedData.pages.flatMap(page => page.items || []);
-      mapped = allItems.map((item, index) => mapToImagePost(item, index));
-    } else {
-      if (!apiData?.pages) return [];
-      const allNFTs = apiData.pages.flatMap(page => page.data || []);
-      mapped = allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
+      return allItems.map((item, index) => mapToImagePost(item, index));
     }
-    const seen = new Set<string>();
-    return mapped.filter((post) => {
-      const id = String(post.id);
-      if (seen.has(id)) return false;
-      seen.add(id);
-      return true;
-    });
+    if (!apiData?.pages) return [];
+    const allNFTs = apiData.pages.flatMap(page => page.data || []);
+    return allNFTs.map((nft, index) => mapNFTToImagePost(nft, index));
   }, [apiData, unifiedData, useUnifiedSource]);
 
   // Handle image click in collage - switch to feed view
