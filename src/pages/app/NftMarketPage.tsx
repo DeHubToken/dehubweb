@@ -15,8 +15,6 @@ import { Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { KitButton, PageBody, PageEmpty, PageIsland, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { AuthContext } from '@/contexts/AuthContext';
-import { canManageAgents } from '@/lib/agent-access';
-import NotFound from '@/pages/NotFound';
 import { NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
 import { CollectionsRow } from '@/components/app/nft-market/CollectionsRow';
@@ -242,9 +240,6 @@ export default function NftMarketPage() {
       body={t('nftMarket.signInBody', { defaultValue: 'Connect your wallet to sell what you hold and track your listings and offers.' })}
     />
   );
-
-  // Owner preview: everyone else gets the normal not-found page until launch.
-  if (!canManageAgents(me)) return <NotFound />;
 
   return (
     <div className="min-h-screen">
@@ -515,12 +510,6 @@ export default function NftMarketPage() {
               )}
             </>
           ) : null}
-
-          <p className="px-1 pt-2 text-[11.5px] leading-relaxed text-zinc-500">
-            {t('nftMarket.footer', {
-              defaultValue: 'Trades settle on Seaport, the open NFT swap contract. DeHub never holds your NFTs or money. Fees: 2%, or 1% when paying in DHB, plus any creator royalty. Trades are final.',
-            })}
-          </p>
         </div>
       </PageBody>
 
