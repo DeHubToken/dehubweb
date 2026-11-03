@@ -21,7 +21,7 @@ import bs58 from 'bs58';
 import { signSolanaLoginProof } from '@/lib/solana/wallet';
 
 const LOGIN_MESSAGE =
-  'Welcome to Riftn!\n\nClick to sign in for authentication.\n' +
+  'Welcome to DeHub!\n\nClick to sign in for authentication.\n' +
   'Signatures are valid for 24 hours.\n' +
   'Your wallet address is 0x6fe89b2ac9c8dda4b2ea3e8d786dfe249422c3e0.\n' +
   'It is Sat, 30 Aug 2026 18:02:00 GMT.';
