@@ -63,3 +63,32 @@ export async function listConnectedApps(): Promise<ConnectedApp[]> {
 export async function removeConnectedApp(clientId: string): Promise<void> {
   unwrap(await apiCall(`/api/mastodon/authorizations/${encodeURIComponent(clientId)}`, { method: 'DELETE', requiresAuth: true }));
 }
+
+/** A "Sign in with DeHub" app a developer registered from their account (dehub.io/apps/dev). */
+export interface DeveloperSignInApp {
+  clientId: string;
+  name: string;
+  website: string | null;
+  redirectUris: string[];
+  scopes: string[];
+  users: number;
+  createdAt: string | null;
+  /** Only on create and on rotate: shown once, never stored in the clear. */
+  clientSecret?: string;
+}
+
+export async function listDeveloperApps(): Promise<DeveloperSignInApp[]> {
+  return unwrap<DeveloperSignInApp[]>(await apiCall('/api/mastodon/developer-apps', { requiresAuth: true }));
+}
+
+export async function createDeveloperApp(input: { name: string; website?: string; redirectUris: string[] }): Promise<DeveloperSignInApp> {
+  return unwrap<DeveloperSignInApp>(await apiCall('/api/mastodon/developer-apps', { method: 'POST', body: input, requiresAuth: true }));
+}
+
+export async function rotateDeveloperSecret(clientId: string): Promise<{ clientId: string; clientSecret: string }> {
+  return unwrap(await apiCall(`/api/mastodon/developer-apps/${encodeURIComponent(clientId)}/secret`, { method: 'POST', requiresAuth: true }));
+}
+
+export async function deleteDeveloperApp(clientId: string): Promise<void> {
+  unwrap(await apiCall(`/api/mastodon/developer-apps/${encodeURIComponent(clientId)}`, { method: 'DELETE', requiresAuth: true }));
+}

@@ -22,6 +22,12 @@ const FADE_DELAY_MS = 160;
 /** Back is history.go(): its page change lands a task or two after the click. */
 const BACK_WAIT_MS = 400;
 const MOVE_CANCEL_PX = 10;
+/**
+ * Menu tiles and bar icons lift for rearranging after a 380 ms hold
+ * (hooks/use-drag-reorder), which takes the logo down. Wait past that on a
+ * touch so a hold never flashes it; a slow page after a tap still shows it.
+ */
+const REORDER_FADE_DELAY_MS = 450;
 
 let el: HTMLDivElement | null = null;
 let armed = false;
@@ -85,6 +91,9 @@ function onPointerDown(e: PointerEvent): void {
   startY = e.clientY;
   window.clearTimeout(clearTimer);
   const node = element();
+  const holdable = e.pointerType !== 'mouse' && e.target instanceof Element && !!e.target.closest('[data-reorder-item]');
+  const mark = node.firstElementChild as HTMLElement | null;
+  if (mark) mark.style.animationDelay = `${holdable ? REORDER_FADE_DELAY_MS : FADE_DELAY_MS}ms`;
   // display none -> flex restarts the fade, so each press waits its full delay.
   node.style.display = 'flex';
   armed = true;

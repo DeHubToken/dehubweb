@@ -162,7 +162,20 @@
     "saved": "个人资料字段已保存",
     "failed": "保存失败，请重试。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码添加到该页面，然后再保存一次：{{snippet}}",
+    "descriptionPresets": "添加网站、代词或其他内容。社交媒体链接会显示在我的社交平台上。",
+    "type": "字段类型",
+    "placeholderPronouns": "他们/她们",
+    "placeholderLocation": "城市，国家",
+    "presets": {
+      "website": "网站",
+      "blog": "博客",
+      "shop": "商店",
+      "podcast": "播客",
+      "location": "地点",
+      "custom": "自定义",
+      "customOption": "自定义标签"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",
@@ -10684,8 +10697,12 @@
       "restore": "恢复",
       "restored": "还原版本{{version}}"
     },
-    "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度",
     "buildInChat": "在私信中与 @assistant 一起搭建",
+    "modelLabel": "模型",
+    "creditsLeft": "{{amount}} 积分",
+    "perPrompt": "≈ 每次提问 {{price}}",
+    "pricingNote": "每次提问从你的积分中扣除，按模型成本加 30% 计费。运行期间会冻结该提问可能产生的最高费用，未用完的部分将退回。",
+    "topUpCredits": "充值积分",
     "landerTitle": "只需询问即可构建应用程序",
     "landerSubtitle": "告诉@ assistant您想要的消息内容。它构建应用程序，托管应用程序，并向您发送任何人都可以打开的链接。回复以更改任何内容。",
     "promptPlaceholder": "描述您想要的应用……",
@@ -18688,5 +18705,34 @@
     "title": "万圣节快乐",
     "otherThemes": "不想要惊悚风？换个主题吧：",
     "enter": "进入地牢"
+  },
+  "tokenLaunch": {
+    "eyebrow": "即将开放，敬请期待",
+    "title": "代币即将推出",
+    "body": "在新代币准备就绪时，购买已关闭。上线后立即收到电子邮件。",
+    "notifyMe": "_李白就象一个浪子一团糟",
+    "sendTo": "我们将发送电子邮件至{{email}}",
+    "emailLabel": "电子邮箱",
+    "emailPlaceholder": "您的邮箱地址",
+    "invalidEmail": "輸入有效 Email!",
+    "joinedTitle": "您已上榜",
+    "joinedBody": "我们将在令牌启动时向{{email}}发送电子邮件。",
+    "joinedBodyNoEmail": "我们将在令牌启动时向您发送电子邮件。",
+    "failed": "无法保存。请重试。",
+    "privacy": "仅用于告诉您有关发布的信息。",
+    "seoTitle": "代币即将推出| DeHub",
+    "seoDescription": "新的DeHub代币即将推出。加入列表，在上线时收到一封电子邮件，然后直接从DeHub钱包购买。"
+  },
+  "githubLink": {
+    "hint": "登录 GitHub 以证明该账户是您的。DeHub 只能看到您的公开 GitHub 资料。",
+    "verified": "已验证",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 已断开连接",
+    "taken": "该 GitHub 账户已在另一个 DeHub 资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
   }
 }

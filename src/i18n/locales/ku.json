@@ -162,7 +162,23 @@
     "saved": "Qadên profîlê hatin tomarkirin",
     "failed": "Ew nehat tomarkirin. Dîsa biceribîne.",
     "verified": "Girêdana piştrastkirî",
-    "verifyHint": "Ji bo piştrastkirina girêdanekê, vê li wê rûpelê zêde bike, paşê dîsa tomar bike: {{snippet}}"
+    "verifyHint": "Ji bo piştrastkirina girêdanekê, vê li wê rûpelê zêde bike, paşê dîsa tomar bike: {{snippet}}",
+    "type": "Field type",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} bişopîne",
@@ -409,6 +425,8 @@
   },
   "nav": {
     "reorderHint": "Hildin û derêjin herîkoka ku we li serê xwe de ye bo ku bi rêza xwe re bi kar bînin.",
+    "reorderReset": "Vegerîne",
+    "reorderResetLong": "Rêza menuyê vegerîne",
     "home": "Destpêk",
     "explore": "Keşf bike",
     "prompt": "Prompt",
@@ -452,9 +470,7 @@
     "getTheApp": "Sepanê bistîne",
     "connectAi": "AI girêde",
     "converter": "Veguherîner",
-    "affiliate": "Hevkarî",
-    "reorderReset": "Vegerîne",
-    "reorderResetLong": "Rêza menuyê vegerîne"
+    "affiliate": "Hevkarî"
   },
   "feed": {
     "viewProfile": "Profîla {{name}} bibîne",
@@ -10982,8 +10998,12 @@
       "restore": "Nûvdekirin",
       "restored": "Guhertoya vegerandî {{version}}"
     },
-    "stakeForAllowance": "Tokenên DeHub stake bike da ku destûra xwe ya avakirinê ya rojane zêde bikî",
     "buildInChat": "Di peyamên xwe yên taybet de bi @assistant re ava bike",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredî",
+    "perPrompt": "≈ ji bo her daxwazê {{price}}",
+    "pricingNote": "Her daxwaz ji krediyên te bi lêçûna modelê û 30% zêdetir tê dayîn. Herî zêde lêçûna ku daxwazek dikare bike dema ku dixebite tê girtin, û beşa nehatî bikaranîn tê vegerandin.",
+    "topUpCredits": "Kredî zêde bike",
     "landerTitle": "Tenê bi pirsînê sepanekê ava bike",
     "landerSubtitle": "Di peyamên xwe de ji @assistant re bêje tu çi dixwazî. Ew sepanê ava dike, mazûvaniya wê dike û girêdanekê ji te re dişîne ku her kes dikare veke. Ji bo guhertina her tiştî bersiv bide.",
     "promptPlaceholder": "Sepana ku tu dixwazî rave bike…",
@@ -18758,12 +18778,25 @@
     }
   },
   "tokenLaunch": {
+    "eyebrow": "Coming soon",
     "title": "Tokenê diyar e ku bi ser destpêkirin e.",
+    "notifyMe": "Notify me",
     "sendTo": "We werin {{email}} bi emailê.",
+    "emailLabel": "Email",
     "emailPlaceholder": "Têkiliyên tîpêjî yên te",
     "joinedTitle": "Tê li ser lîsteyê.",
     "joinedBody": "We {{email}} biyêjin ku tokenê destpê dike.",
     "failed": "Nêzêk kirina nekir. Bêhn re bi kar bîne.",
+    "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Nû tokenê DeHubê li ser xwe ye. Bi destxistina listê re, bi dest bixî û yekî emailê di şûna ku li ser xwe bike, paşê bi karî bi xwezîna DeHubê xwe bixerike."
+  },
+  "githubLink": {
+    "verified": "Tasdîq kirî ye",
+    "verifiedAria": "Accounta GitHubê ya wekandî ye.",
+    "disconnected": "GitHub dereng bûye.",
+    "taken": "Evîfa GitHubê li ser profilek din ê DeHubê ye.",
+    "failed": "Nekare GitHubê ve. Lêgerîn bikin.",
+    "unavailable": "GitHubê diyarkirina bi ser dibe.",
+    "disconnect": "Hevqetandin"
   }
 }

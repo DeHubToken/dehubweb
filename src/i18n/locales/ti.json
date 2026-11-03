@@ -162,7 +162,24 @@
     "saved": "መዳያታት መግለጺ ተዓቂቦም",
     "failed": "ኣይተዓቀበን። እንደገና ፈትኑ።",
     "verified": "ዝተረጋገጸ ኣገናኝ",
-    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}"
+    "verifyHint": "ኣገናኝ ንምርግጋጽ እዚ ናብቲ ገጽ ወስኹ፣ ድሕሪኡ እንደገና ዓቅቡ፦ {{snippet}}",
+    "descriptionPresets": "ድረ ገጽ ፡ ኣቃውማ ወይ ካልእ ነገር ኣክሊልካ ። ምስ ማሕበራዊ መራኸቢታትካ ምትእስሳር የርኢ ።",
+    "type": "ዓይነት ሜዳ",
+    "needsLabel": "ንነፍሲ ወከፍ እተለምደ ሜዳ ምልክት ሃቦ",
+    "placeholderPronouns": "ንሳቶም/ንሳቶም",
+    "placeholderLocation": "ከተማ ፡ ሃገር",
+    "presets": {
+      "website": "ወብ ሳይት",
+      "blog": "ብሎግ",
+      "portfolio": "ፖርትፎሊዮ",
+      "shop": "ድኳን",
+      "podcast": "ፖድካስት",
+      "newsletter": "ጋዜጣ",
+      "pronouns": "ክብርታት",
+      "location": "ቦታ",
+      "custom": "እተለምደ",
+      "customOption": "እተለምደ መርትዖ"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} ተኸተል",
@@ -10573,8 +10590,12 @@
       "restore": "መሊስካ",
       "restored": "ዳግም ዝተዳለወ ስሪት {{version}}"
     },
-    "stakeForAllowance": "ናይ DeHub ምልክታት ዕለታዊ ናይ ህንጸት ድጎማኻ ንምዕባይ",
     "buildInChat": "ኣብ ብሕታዊ መልእኽትታትካ ምስ @assistant ስራሕ",
+    "modelLabel": "ሞዴል",
+    "creditsLeft": "{{amount}} ክሬዲት",
+    "perPrompt": "≈ ንነፍሲ ወከፍ ሕቶ {{price}}",
+    "pricingNote": "ነፍሲ ወከፍ ሕቶ ካብ ክሬዲትካ ብዋጋ እቲ ሞዴል ምስ 30% ወሰኽ ይኽፈል። እቲ ሕቶ ክሰርሕ ከሎ ዝለዓለ ክኸፍሎ ዝኽእል መጠን ይተሓዝ፣ ዘይተጠቐመሉ ክፋል ድማ ይምለስ።",
+    "topUpCredits": "ክሬዲት ምላእ",
     "landerTitle": "ነቲ መተግበሪ ብምሕታት ጥራይ ምህናጽ",
     "landerSubtitle": "@ሓጋዚ ኣብ መልእኽትታትካ እንታይ ከም እትደሊ ንገሮ ። ነቲ መተግበሪ ትሃንጽ ፡ ትቕበል ፡ ዝኾነ ሰብ ክኸፍተልካ ዝኽእል ሊንክ ትልእኽ ። ዝኾነ ነገር ንምቕያር መልሲ ሃበኒ ።",
     "promptPlaceholder": "ነቲ እትደልዮ ኣፕሊኬሽን ግለጽ...",
@@ -18602,5 +18623,34 @@
     "fingerprint": "አጻብዕቲ (Fingerprint)",
     "exploreFirst": "ቅድም ቀዳድም ተዓዘብ",
     "codeNote": "ኮድ ናብ ኢሜይልካ ንሰደልካ፣ ፓስዎርድ ኣየድልየካን።"
+  },
+  "tokenLaunch": {
+    "eyebrow": "ብቍርበት ይመጣል",
+    "title": "ቶክን ብቍርበት ይወጣል",
+    "body": "ግዛት ተዝጊሙ ነው ሓድሽ ቶክን ምስ ዝተዳለወ። ኢሜይል ብሓንጺጹ ክትቀበል ትኽእል።",
+    "notifyMe": "ንዐውተኒ",
+    "sendTo": "ኢሜይል {{email}} ክንልክ",
+    "emailLabel": "ኢሜይል",
+    "emailPlaceholder": "ኢሜይልካ",
+    "invalidEmail": "ሓቅ ዘለዎ ኢሜይል ኣእቱ",
+    "joinedTitle": "ኣብ ዝርዝር ውሕት ኣለካ",
+    "joinedBody": "ኢሜይል {{email}} ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "joinedBodyNoEmail": "ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክንልክ።",
+    "failed": "ሓደ ነገር ክሕዝን ኣይከኣለን። ድሕሪ ሕጂ ሞክር።",
+    "privacy": "ብቶክን ምውጣት ንምፍላጥ ጥራይ ይጠቀም።",
+    "seoTitle": "ቶክን ብቍርበት ይወጣል | DeHub",
+    "seoDescription": "ሓድሽ DeHub ቶክን ብቍርበት ይወጣል። ብዝርዝር ተሳተፍ ወይ ሓንጺጹ ኢሜይል ብሓንጺጹ ቶክን ምስ ወጠ ክትቀበል፣ ድሕሪኡ ካብ DeHub ዋሌትካ ብቀጥታ ግዛት።"
+  },
+  "githubLink": {
+    "hint": "ናብ GitHub ተመልሰ ሎግ ኢን ንምክልኻል ሂወትካ ምክልኻል። DeHub ብሉጽ GitHub ገጽ ብቐንዱ ይርኢ።",
+    "verified": "ተረጋገጠ",
+    "verifiedAria": "ተረጋገጠ GitHub ሂወት",
+    "connected": "GitHub ተራኢ",
+    "disconnected": "GitHub ተቋረጠ",
+    "taken": "ዚ GitHub ሂወት ናብ ካልእ DeHub ገጽ ተወሲዱ ኣሎ።",
+    "failed": "GitHub ተራኢ ክኸውን ኣይከኣለን። ድሕሪ ሓንቲ ግዜ ሞክር።",
+    "unavailable": "GitHub ምክልኻል ብቐርቦ ክመጽእ ኣሎ።",
+    "connect": "GitHub ተገናኺ",
+    "disconnect": "ተላላይ"
   }
 }

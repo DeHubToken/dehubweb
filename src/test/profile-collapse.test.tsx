@@ -1,66 +1,27 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 
 vi.mock('@/components/app/PageHeader', () => ({ PageHeader: () => <button>Back</button> }));
-vi.mock('@/hooks/use-feed-swallow-clip', () => ({ useFeedSwallowClip: vi.fn() }));
 let theme = 'system';
 vi.mock('@/contexts/ThemeContext', () => ({ useAppTheme: () => ({ theme }) }));
-let frame: FrameRequestCallback | undefined;
-const rect = (bottom: number) => ({ bottom } as DOMRect);
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); theme = 'system'; });
+afterEach(() => { cleanup(); theme = 'system'; });
 
-it('keeps only Back visible until the original actions leave view, then reverses', () => {
-  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
-  vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { frame = cb; return 1; });
-  vi.stubGlobal('cancelAnimationFrame', vi.fn());
-  const header = document.createElement('div');
-  header.innerHTML = '<div data-profile-cover></div><div data-profile-actions></div><h2 data-profile-identity></h2>';
-  const ref = { current: header };
-  let coverBottom = 140, actionBottom = 180, nameBottom = 230;
-  header.children[0].getBoundingClientRect = () => rect(coverBottom);
-  header.children[1].getBoundingClientRect = () => rect(actionBottom);
-  header.children[2].getBoundingClientRect = () => rect(nameBottom);
-  const { container, rerender } = render(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
-  const bar = container.querySelector<HTMLElement>('[data-profile-collapse]')!;
-  bar.getBoundingClientRect = () => ({ top: 4, bottom: 56 } as DOMRect);
-  const scroll = () => act(() => { fireEvent.scroll(window); frame?.(0); });
-  scroll();
+it('shows only a floating Back until the tabs row pins, with no compact bar in between', () => {
+  const { container, rerender } = render(<CollapsingProfileHeader />);
   expect(screen.getByText('Back')).toBeVisible();
-  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
-  expect(screen.queryByText('Follow')).toBeNull();
-  coverBottom = 56;
-  actionBottom = 55;
-  scroll();
-  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
-  expect(screen.queryByText('Follow')).toBeNull();
-  actionBottom = 0;
-  scroll();
-  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
-  expect(container.querySelector('.profile-collapse-gap-guard')).toBeVisible();
-  expect(screen.getByText('Follow')).toBeVisible();
-  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
-  rerender(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" tabsPinned tabsHeight={56} followAction={<button>Follow</button>} />);
+  expect(container.querySelector('.profile-collapse-surface')).toBeNull();
+  expect(container.querySelector('.profile-collapse-identity')).toBeNull();
+  rerender(<CollapsingProfileHeader tabsPinned />);
+  const bar = container.querySelector<HTMLElement>('[data-profile-collapse]')!;
   expect(bar).toHaveAttribute('data-tabs-pinned', 'true');
   expect(bar).toHaveAttribute('aria-hidden', 'true');
   expect(screen.queryByText('Back')).toBeNull();
-  expect(screen.queryByText('Follow')).toBeNull();
-  expect(container.querySelector('.profile-collapse-surface')).toBeNull();
-  rerender(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
-  nameBottom = 55;
-  scroll();
-  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
-  coverBottom = 140; actionBottom = 180; nameBottom = 230;
-  scroll();
-  expect(screen.queryByText('Follow')).toBeNull();
-  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
-  expect(container.querySelector('.profile-collapse-gap-guard')).not.toBeVisible();
 });
 
-it.each(['hazy', 'cosmic', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'minimal', 'light'])('uses the shared navigation glass without cover artwork on %s', (nextTheme) => {
+it.each(['hazy', 'cosmic', 'osaka', 'jungle', 'light'])('never paints a bar surface on %s', (nextTheme) => {
   theme = nextTheme;
-  const { container } = render(<CollapsingProfileHeader headerRef={{ current: null }} name="Creator" handle="@creator" coverUrl="/cover.jpg" />);
-  expect(container.querySelector('.profile-collapse-gap-guard')).toBeNull();
-  expect(container.querySelectorAll('.profile-collapse-cover')).toHaveLength(0);
-  expect(container.querySelector('.profile-collapse-surface[data-feed-nav] > [data-nav-glass-backdrop]')).not.toBeNull();
+  const { container } = render(<CollapsingProfileHeader />);
+  expect(container.querySelector('[data-feed-nav]')).toBeNull();
+  expect(container.querySelector('.profile-collapse-cover')).toBeNull();
 });

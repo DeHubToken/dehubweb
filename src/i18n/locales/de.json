@@ -162,7 +162,25 @@
     "saved": "Profilfelder gespeichert",
     "failed": "Das wurde nicht gespeichert. Versuch es noch einmal.",
     "verified": "Bestätigter Link",
-    "verifyHint": "Um einen Link zu bestätigen, füge das auf der Seite ein und speichere erneut: {{snippet}}"
+    "verifyHint": "Um einen Link zu bestätigen, füge das auf der Seite ein und speichere erneut: {{snippet}}",
+    "descriptionPresets": "Fügen Sie eine Website, Pronomen oder etwas anderes hinzu. Links werden in Ihren sozialen Netzwerken angezeigt.",
+    "type": "Feldtyp",
+    "needsLabel": "Geben Sie jedem benutzerdefinierten Feld eine Bezeichnung",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "sie/sie",
+    "placeholderLocation": "Stadt, Land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomen",
+      "location": "Standort",
+      "custom": "Benutzerdefiniert",
+      "customOption": "Benutzerdefiniertes Etikett"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} folgen",
@@ -2017,7 +2035,11 @@
     "checkingTokenBalance": "Überprüfe dein Token-Guthaben...",
     "deleteConversationFailed": "Konversation konnte nicht gelöscht werden",
     "message": "Nachricht",
-    "noConversationsYet": "Noch keine Unterhaltungen"
+    "noConversationsYet": "Noch keine Unterhaltungen",
+    "sending": "Wird gesendet",
+    "notSent": "Nicht gesendet",
+    "retrySend": "Erneut versuchen",
+    "discardSend": "Entfernen"
   },
   "music": {
     "listeningCount_one": "{{count}} zuhören",
@@ -10679,8 +10701,12 @@
       "restore": "Wiederherstellen",
       "restored": "Wiederhergestellte Version {{version}}"
     },
-    "stakeForAllowance": "Setzen Sie DeHub-Token ein, um Ihr tägliches Erstellungsguthaben zu erhöhen",
     "buildInChat": "In deinen DMs mit @assistant bauen",
+    "modelLabel": "Modell",
+    "creditsLeft": "{{amount}} an Guthaben",
+    "perPrompt": "≈ {{price}} pro Prompt",
+    "pricingNote": "Jeder Prompt wird aus deinem Guthaben zu den Kosten des Modells plus 30 % bezahlt. Der Höchstbetrag, den ein Prompt kosten kann, wird während der Ausführung reserviert, und der nicht genutzte Teil wird zurückerstattet.",
+    "topUpCredits": "Guthaben aufladen",
     "landerTitle": "Erstellen Sie eine App, indem Sie einfach fragen",
     "landerSubtitle": "Sagen Sie @assistant, was Sie in Ihren Nachrichten wollen. Es erstellt die App, hostet sie und sendet dir einen Link, den jeder öffnen kann. Antworte, um etwas zu ändern.",
     "promptPlaceholder": "Beschreiben Sie die gewünschte App...",
@@ -18829,5 +18855,17 @@
     "privacy": "Nur um dich über den Launch zu informieren.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Der neue DeHub-Token startet bald. Tritt der Liste bei und erhalte eine E-Mail, sobald er online geht, dann kaufe direkt aus deinem DeHub-Wallet."
+  },
+  "githubLink": {
+    "hint": "Melden Sie sich bei GitHub an, um zu beweisen, dass das Konto Ihnen gehört. DeHub sieht nur Ihr öffentliches GitHub-Profil.",
+    "verified": "Verifiziert",
+    "verifiedAria": "Verifiziertes GitHub-Konto",
+    "connected": "GitHub verbunden",
+    "disconnected": "GitHub getrennt",
+    "taken": "Dieses GitHub-Konto befindet sich bereits in einem anderen DeHub-Profil.",
+    "failed": "GitHub konnte nicht verbunden werden. Versuchen Sie es erneut.",
+    "unavailable": "Die GitHub-Verifizierung kommt bald.",
+    "connect": "GitHub verbinden",
+    "disconnect": "Trennen"
   }
 }

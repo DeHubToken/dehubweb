@@ -162,7 +162,24 @@
     "saved": "个人资料字段已保存",
     "failed": "没有保存成功，请再试一次。",
     "verified": "已验证的链接",
-    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}"
+    "verifyHint": "要验证链接，请把这段代码加到那个页面，然后再保存一次：{{snippet}}",
+    "descriptionPresets": "添加网站、代词或其他任何内容。链接显示你的社交媒体。",
+    "type": "字段类型",
+    "needsLabel": "为每个自定义字段设置标签",
+    "placeholderPronouns": "他们/他们的",
+    "placeholderLocation": "城市，国家",
+    "presets": {
+      "website": "网站",
+      "blog": "博客",
+      "portfolio": "作品集",
+      "shop": "商店",
+      "podcast": "播客",
+      "newsletter": "通讯",
+      "pronouns": "代词",
+      "location": "位置",
+      "custom": "自定义",
+      "customOption": "自定义标签"
+    }
   },
   "followedTags": {
     "follow": "关注 #{{tag}}",
@@ -10631,8 +10648,12 @@
       "restore": "恢复",
       "restored": "恢复版本 {{version}}"
     },
-    "stakeForAllowance": "质押 DeHub 代币以提高您的每日构建额度",
     "buildInChat": "在私信里跟 @assistant 一起搭建",
+    "modelLabel": "模型",
+    "creditsLeft": "{{amount}} 积分",
+    "perPrompt": "≈ 每次提问 {{price}}",
+    "pricingNote": "每次提问从你的积分里扣，按模型成本加 30% 算。运行期间先冻结最高可能的费用，没用完的部分退回来。",
+    "topUpCredits": "充值积分",
     "landerTitle": "只需提问就能建 App",
     "landerSubtitle": "在你的消息里告诉 @assistant 你想要什么。它会建 App、托管并发给你一个任何人都能打开的链接。回复即可修改任何内容。",
     "promptPlaceholder": "描述你想要的 App…",
@@ -18514,6 +18535,18 @@
     "failed": "无法保存。请重试。",
     "privacy": "仅用于通知您发布的信息。",
     "seoDescription": "新的 DeHub 代币即将上线。加入名单，一旦上线即可收到一封邮件，然后直接从您的 DeHub 钱包购买。"
+  },
+  "githubLink": {
+    "hint": "请登录 GitHub 以证明账户归属。DeHub 仅能看到您的公开 GitHub 个人资料。",
+    "verified": "验证通过",
+    "verifiedAria": "已验证的 GitHub 账户",
+    "connected": "GitHub 已连接",
+    "disconnected": "GitHub 断开连接",
+    "taken": "这个 GitHub 账户已经绑定在另一个 DeHub 个人资料上。",
+    "failed": "无法连接 GitHub。请重试。",
+    "unavailable": "GitHub 验证功能即将推出。",
+    "connect": "连接 GitHub",
+    "disconnect": "断开连接"
   },
   "post": {
     "like": "喜欢",

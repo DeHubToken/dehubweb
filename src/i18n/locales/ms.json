@@ -162,7 +162,25 @@
     "saved": "Medan profil disimpan",
     "failed": "Tidak disimpan. Cuba lagi.",
     "verified": "Pautan disahkan",
-    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}"
+    "verifyHint": "Untuk mengesahkan pautan, tambah ini pada halaman itu, kemudian simpan semula: {{snippet}}",
+    "descriptionPresets": "Tambah laman web, kata ganti nama atau apa-apa lagi. Pautan ditunjukkan dengan media sosial anda.",
+    "type": "Jenis medan",
+    "needsLabel": "Berikan setiap medan tersuai label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "mereka/mereka",
+    "placeholderLocation": "Bandar, negara",
+    "presets": {
+      "website": "Laman web",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Beli",
+      "podcast": "Podcast",
+      "newsletter": "Surat Berita",
+      "pronouns": "Kata ganti nama",
+      "location": "Lokasi",
+      "custom": "Tersuai",
+      "customOption": "Label tersuai"
+    }
   },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",
@@ -10918,8 +10936,12 @@
       "restore": "Pulihkan",
       "restored": "Versi dipulihkan {{version}}"
     },
-    "stakeForAllowance": "Pertaruhkan token DeHub untuk meningkatkan elaun binaan harian anda",
     "buildInChat": "Bina dalam DM anda bersama @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} dalam kredit",
+    "perPrompt": "≈ {{price}} setiap gesaan",
+    "pricingNote": "Setiap gesaan dibayar daripada kredit anda pada kos model ditambah 30%. Kos maksimum sesuatu gesaan ditahan semasa ia berjalan dan bahagian yang tidak digunakan dipulangkan.",
+    "topUpCredits": "Tambah nilai kredit",
     "landerTitle": "Bina aplikasi hanya dengan bertanya",
     "landerSubtitle": "Beritahu @assistant apa yang anda mahu dalam mesej anda. Ia membina aplikasi, menjadi hos dan menghantar pautan kepada anda yang boleh dibuka oleh sesiapa sahaja. Jawab untuk mengubah apa-apa.",
     "promptPlaceholder": "Terangkan aplikasi yang anda mahu...",
@@ -19047,5 +19069,32 @@
     "fingerprint": "Cap jari",
     "exploreFirst": "Teroka dahulu",
     "codeNote": "Kami e-melkan kod kepada anda, tanpa kata laluan."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Segera akan datang",
+    "title": "Token pelancaran akan segera",
+    "body": "Belanjaan ditutup sementara token baru sedang disediakan. Dapatkan e-mel segera apabila ia dilancarkan.",
+    "notifyMe": "Beritahu saya",
+    "sendTo": "Kami akan menghantar e-mel kepada {{email}}.",
+    "invalidEmail": "Masukkan email yang sah.",
+    "joinedTitle": "Anda ada dalam senarai.",
+    "joinedBody": "Kami akan menghantar email kepada {{email}} apabila token dilancarkan.",
+    "joinedBodyNoEmail": "Kami akan menghantar email kepada anda apabila token dilancarkan.",
+    "failed": "Tidak dapat menyimpan itu. Coba lagi.",
+    "privacy": "Hanya digunakan untuk memberitahu tentang pelancaran.",
+    "seoTitle": "Token pelancaran akan segera | DeHub",
+    "seoDescription": "Token DeHub baru akan dilancarkan segera. Sertai senarai dan dapatkan satu borang e-mel segera apabila ia dilancarkan, kemudian beli terus dari dompet DeHub anda."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub untuk membuktikan akaun itu milik anda. DeHub hanya melihat profil GitHub awam anda.",
+    "verified": "Sah",
+    "verifiedAria": "Akaun GitHub yang sah",
+    "connected": "GitHub disambungkan",
+    "disconnected": "GitHub tidak disambungkan",
+    "taken": "Akaun GitHub itu sudah ada pada profil DeHub lain.",
+    "failed": "Tidak dapat menyambungkan GitHub. Cuba lagi.",
+    "unavailable": "Pengesahan GitHub akan datang tidak lama lagi.",
+    "connect": "Sambungkan GitHub",
+    "disconnect": "Putuskan sambungan"
   }
 }

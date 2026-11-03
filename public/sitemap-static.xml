@@ -1789,6 +1789,84 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/dao"/>
   </url>
   <url>
+    <loc>https://dehub.io/nfts</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=ar</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=es</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=fr</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=nl</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/nfts?hl=tr</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/nfts?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/nfts"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/nfts?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/nfts?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/nfts?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/nfts?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/nfts"/>
+  </url>
+  <url>
     <loc>https://dehub.io/usernames</loc>
     <lastmod>2026-08-25</lastmod>
     <changefreq>daily</changefreq>
@@ -18779,5 +18857,551 @@
     <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/donate?hl=nl"/>
     <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/donate?hl=tr"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/donate"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/developers/mini-apps?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/developers/mini-apps?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/developers/mini-apps"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/developers/mini-apps?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/developers/mini-apps?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/developers/mini-apps?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/developers/mini-apps?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/developers/mini-apps"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/auth?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/auth?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/auth"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/auth?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/auth?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/auth?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/auth?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/auth"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/webhooks?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/webhooks?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/webhooks"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/webhooks?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/webhooks?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/webhooks?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/webhooks?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/webhooks"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/endpoints?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/endpoints?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/endpoints"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/endpoints?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/endpoints?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/endpoints?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/endpoints?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/endpoints"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/examples?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/examples?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/examples"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/examples?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/examples?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/examples?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/examples?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/examples"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting?hl=ar</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting?hl=es</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting?hl=fr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting?hl=nl</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/troubleshooting?hl=tr</loc>
+    <lastmod>2026-11-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://dehub.io/docs/troubleshooting?hl=ar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dehub.io/docs/troubleshooting"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://dehub.io/docs/troubleshooting?hl=es"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dehub.io/docs/troubleshooting?hl=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://dehub.io/docs/troubleshooting?hl=nl"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://dehub.io/docs/troubleshooting?hl=tr"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/docs/troubleshooting"/>
   </url>
 </urlset>

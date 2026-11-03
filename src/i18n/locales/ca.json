@@ -162,7 +162,25 @@
     "saved": "S'han desat els camps del perfil",
     "failed": "No s'ha desat. Torna-ho a provar.",
     "verified": "Enllaç verificat",
-    "verifyHint": "Per verificar un enllaç, afegeix això a aquella pàgina i desa de nou: {{snippet}}"
+    "verifyHint": "Per verificar un enllaç, afegeix això a aquella pàgina i desa de nou: {{snippet}}",
+    "descriptionPresets": "Afegeix un lloc web, pronoms o qualsevol altra cosa. Els enllaços es mostren amb les teves xarxes socials.",
+    "type": "Tipus de camp",
+    "needsLabel": "Dona una etiqueta a cada camp personalitzat",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ells/elles",
+    "placeholderLocation": "Ciutat, país",
+    "presets": {
+      "website": "Lloc web",
+      "blog": "Bloc",
+      "portfolio": "Cartera",
+      "shop": "Botiga",
+      "podcast": "Podcast",
+      "newsletter": "Butlletí",
+      "pronouns": "Pronombres",
+      "location": "Ubicació",
+      "custom": "Personalitzat",
+      "customOption": "Etiqueta personalitzada"
+    }
   },
   "followedTags": {
     "follow": "Segueix #{{tag}}",
@@ -10664,8 +10682,12 @@
       "restore": "Restaura",
       "restored": "Versió restaurada {{version}}"
     },
-    "stakeForAllowance": "Aposta tokens DeHub per augmentar la teva assignació diària de creació",
     "buildInChat": "Crea als teus missatges directes amb @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} en crèdits",
+    "perPrompt": "≈ {{price}} per sol·licitud",
+    "pricingNote": "Cada sol·licitud es paga amb els teus crèdits al cost del model més un 30%. L'import màxim que pot costar una sol·licitud es reté mentre s'executa i la part no utilitzada es retorna.",
+    "topUpCredits": "Recarrega crèdits",
     "landerTitle": "Crea una aplicació només demanant-ho",
     "landerSubtitle": "Explica a @assistant el que vols en els teus missatges. Crea l'aplicació, l'allotja i t'envia un enllaç que tothom pot obrir. Respon si vols canviar alguna cosa.",
     "promptPlaceholder": "Descriu l'aplicació que vols...",
@@ -18813,5 +18835,17 @@
     "privacy": "Només s'utilitza per informar-vos del llançament.",
     "seoTitle": "Llançament de token pròximament | DeHub",
     "seoDescription": "El nou token de DeHub es llança pròximament. Uniteu a la llista i rebereu un correu electrònic en el moment que es posi en línia, després compreu directament des del vostre butxaca DeHub."
+  },
+  "githubLink": {
+    "hint": "Inicia sessió a GitHub per comprovar que el compte és teu. DeHub només veu el teu perfil públic de GitHub.",
+    "verified": "Verificat",
+    "verifiedAria": "Compte de GitHub verificat",
+    "connected": "GitHub connectat",
+    "disconnected": "GitHub desconnectat",
+    "taken": "Aquest compte de GitHub ja està en un altre perfil de DeHub.",
+    "failed": "No s'ha pogut connectar a GitHub. Torna-ho a provar.",
+    "unavailable": "Aviat arribarà la verificació de GitHub.",
+    "connect": "Connecta el GitHub",
+    "disconnect": "Desconnecta"
   }
 }

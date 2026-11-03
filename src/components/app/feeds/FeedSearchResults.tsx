@@ -23,6 +23,7 @@ import { useDeHubSearch, mapAccountToCreator } from '@/hooks/use-dehub-search';
 import { feedSearchParams, type FeedSearchTab } from '@/lib/feed-search';
 import { FEED_TABS } from '@/constants/app.constants';
 import { mapToShortVideo } from '@/lib/short-video';
+import { MusicSearchShelves, useMusicSearchShelves } from '@/components/app/feeds/MusicSearchShelves';
 
 const ShortsViewer = lazy(() =>
   import('@/components/app/cards/ShortsViewer').then(m => ({ default: m.ShortsViewer })),
@@ -130,7 +131,19 @@ export function FeedSearchResults(props: { tab: FeedSearchTab; query: string }) 
   );
 }
 
-function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: string }) {
+function FeedSearchResultsBody(props: { tab: FeedSearchTab; query: string }) {
+  // Music also searches stages and radio, which need the stage and radio providers.
+  return props.tab === 'music' ? <MusicFeedSearchResultsBody {...props} /> : <FeedSearchResultsGrid {...props} />;
+}
+
+function MusicFeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: string }) {
+  const extras = useMusicSearchShelves(useDebounced(query, 250));
+  return <FeedSearchResultsGrid tab={tab} query={query} extras={extras} />;
+}
+
+type MusicExtras = ReturnType<typeof useMusicSearchShelves>;
+
+function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; query: string; extras?: MusicExtras }) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { walletAddress } = useAuth();
@@ -171,7 +184,8 @@ function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: stri
   const feedLabel = FEED_TABS.find((t) => t.value === tab)?.label ?? '';
   // Loading means "nothing to show yet for these words": while the next words
   // are on their way the previous results stay up, dimmed.
-  const loading = feed.isLoading || (typing && items.length === 0);
+  const extraCount = (extras?.stages.length ?? 0) + (extras?.stations.length ?? 0);
+  const loading = (feed.isLoading && extraCount === 0) || (typing && items.length === 0 && extraCount === 0);
   const stale = typing || (feed.isFetching && !feed.isFetchingNextPage);
 
   if (loading) {
@@ -183,7 +197,7 @@ function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: stri
     );
   }
 
-  if (feed.isError && items.length === 0) {
+  if (feed.isError && items.length === 0 && extraCount === 0) {
     return (
       <AppState
         icon="search"
@@ -196,7 +210,16 @@ function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: stri
     );
   }
 
-  if (items.length === 0 && accounts.length === 0) {
+  if (extras?.isLoading && items.length === 0 && extraCount === 0) {
+    return (
+      <div data-feed-search-results className="px-0.5 pt-1">
+        <p className="px-1 pb-2 text-xs text-zinc-400">{_copy("copy.90f1afe66801", { defaultValue: "Searching for “{{query}}”…", query })}</p>
+        <ShimmerGrid tab={layout} />
+      </div>
+    );
+  }
+
+  if (items.length === 0 && accounts.length === 0 && extraCount === 0) {
     return (
       <AppState
         icon="search"
@@ -230,6 +253,8 @@ function FeedSearchResultsBody({ tab, query }: { tab: FeedSearchTab; query: stri
           </div>
         </div>
       )}
+
+      {extras && <MusicSearchShelves stages={extras.stages} stations={extras.stations} showMusicTitle={extraCount > 0 && items.length > 0} />}
 
       {tab === 'home' && items.length > 0 && (
         <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">{_copy("copy.a80811cf6889", { defaultValue: "Posts" })}</p>

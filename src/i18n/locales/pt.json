@@ -223,7 +223,25 @@
     "saved": "Campos do perfil salvos",
     "failed": "Não foi salvo. Tente de novo.",
     "verified": "Link verificado",
-    "verifyHint": "Para verificar um link, adicione isto àquela página e salve de novo: {{snippet}}"
+    "verifyHint": "Para verificar um link, adicione isto àquela página e salve de novo: {{snippet}}",
+    "descriptionPresets": "Adicione um site, pronomes ou qualquer outra coisa. Os links são exibidos nas suas redes sociais.",
+    "type": "Tipo de campo",
+    "needsLabel": "Dê uma etiqueta a cada campo personalizado",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "Cidade, país",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Carteira",
+      "shop": "Loja",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomes",
+      "location": "Localização",
+      "custom": "Personalizado",
+      "customOption": "Etiqueta personalizada"
+    }
   },
   "followedTags": {
     "follow": "Seguir #{{tag}}",
@@ -1227,7 +1245,10 @@
     "messageWallNote": "Mostra na parede de dicas uma vez que a dica passa.",
     "sendWithMessage": "Enviar mensagem",
     "messageFailed": "Sua mensagem não pôde ser adicionada. Nenhum dica foi enviada.",
-    "wallLabel": "Mensagens de gratificação"
+    "wallLabel": "Mensagens de gratificação",
+    "railTitle": "Gorjetas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Agora você segue {{name}}. Você receberá uma notificação quando a transmissão ao vivo começar.",
@@ -11454,8 +11475,12 @@
       "restore": "Restaurar",
       "restored": "Versão restaurada {{version}}"
     },
-    "stakeForAllowance": "Faça staking de tokens DeHub para aumentar sua permissão diária de criação",
     "buildInChat": "Crie nas suas mensagens diretas com @assistant",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} em créditos",
+    "perPrompt": "≈ {{price}} por prompt",
+    "pricingNote": "Cada prompt é pago com seus créditos pelo custo do modelo mais 30%. O valor máximo que um prompt pode custar fica retido enquanto ele é executado, e a parte não utilizada é devolvida.",
+    "topUpCredits": "Recarregar créditos",
     "landerTitle": "Crie uma aplicação apenas perguntando",
     "landerSubtitle": "Diga à @assistant o que deseja nas suas mensagens. Ele cria o aplicativo, o hospeda e envia um link que qualquer pessoa pode abrir. Responda para alterar qualquer coisa.",
     "promptPlaceholder": "Descreva a aplicação que pretende...",
@@ -20008,5 +20033,33 @@
     "title": "Feliz Halloween",
     "otherThemes": "Sem clima de terror? Encontre outros temas:",
     "enter": "Entrar na masmorra"
+  },
+  "tokenLaunch": {
+    "eyebrow": "Chegando em breve",
+    "title": "Lançamento de token em breve",
+    "body": "Compras estão fechadas enquanto o novo token é preparado. Receba um email assim que for lançado.",
+    "notifyMe": "Avise-me",
+    "sendTo": "Vamos enviar um email para {{email}}.",
+    "emailLabel": "Email",
+    "invalidEmail": "Entre com um e-mail válido",
+    "joinedTitle": "Você está na lista.",
+    "joinedBody": "Vamos enviar um email para {{email}} quando o token for lançado.",
+    "joinedBodyNoEmail": "Vamos te enviar um email quando o token for lançado.",
+    "failed": "Não foi possível salvar isso. Tente novamente.",
+    "privacy": "Apenas para te contar sobre o lançamento.",
+    "seoTitle": "Lançamento de token em breve | DeHub",
+    "seoDescription": "O novo token DeHub está prestes a ser lançado. Junte-se à lista e receba um e-mail assim que for lançado, então compre diretamente da sua carteira DeHub."
+  },
+  "githubLink": {
+    "hint": "Faça login no GitHub para comprovar que a conta é sua. O DeHub só vê seu perfil público do GitHub.",
+    "verified": "Verificado",
+    "verifiedAria": "Conta GitHub verificada",
+    "connected": "GitHub conectado",
+    "disconnected": "GitHub desconectado",
+    "taken": "Essa conta do GitHub já está em outro perfil DeHub.",
+    "failed": "Não foi possível conectar ao GitHub. Tente novamente.",
+    "unavailable": "A verificação do GitHub em breve.",
+    "connect": "Conecte-se ao GitHub",
+    "disconnect": "Desconectar"
   }
 }

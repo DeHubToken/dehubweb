@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{APP_NAME}}</title>
+  <!-- The card people see when your link is posted on DeHub (3:2 image). -->
+  <meta name="dehub:miniapp" content='{"version":"1","imageUrl":"https://YOUR-DOMAIN/card-3x2.png","button":{"title":"Open {{APP_NAME}}","action":{"url":"https://YOUR-DOMAIN/"}}}'>
+  <script src="https://dehub.io/sdk/miniapp.js"></script>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #0b0b0b; color: #fff; display: grid; place-items: center; min-height: 100vh; }
+    main { width: min(360px, 90vw); text-align: center; }
+    button { width: 100%; margin-top: 12px; padding: 14px; border: 0; border-radius: 14px; font-size: 16px; font-weight: 600; background: #fff; color: #000; }
+    button.secondary { background: #222; color: #fff; }
+    p { color: #aaa; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="hello">{{APP_NAME}}</h1>
+    <p id="status">Open this page inside DeHub to try it.</p>
+    <button id="share">Share to DeHub</button>
+    <button id="tip" class="secondary">Tip 10 DHB</button>
+  </main>
+  <script>
+    (async () => {
+      const status = document.getElementById('status');
+      if (!dehub.isInDehub()) return;
+      const { user } = await dehub.context;
+      document.getElementById('hello').textContent = user ? `Hi ${user.displayName || user.handle}` : 'Hi there';
+      status.textContent = user ? 'You are signed in with DeHub.' : 'Sign in on DeHub to tip.';
+      dehub.ready();
+
+      document.getElementById('share').onclick = () =>
+        dehub.actions.composePost({ text: 'Trying {{APP_NAME}} on DeHub', embedUrl: location.href }).catch(() => {});
+
+      document.getElementById('tip').onclick = async () => {
+        try {
+          const { amount } = await dehub.actions.pay({ amount: 10, memo: 'Tip from {{APP_NAME}}' });
+          status.textContent = `Thanks for the ${amount} DHB!`;
+          dehub.haptics.impact('light');
+        } catch (e) {
+          status.textContent = e.message;
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

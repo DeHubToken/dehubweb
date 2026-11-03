@@ -2,7 +2,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Repeat2 from "@/components/ui/cut-icons/repost";
 import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
@@ -35,6 +35,8 @@ import { PlanCard } from '@/components/app/subscriptions';
 import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { AppState } from '@/components/app/AppState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
+import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
@@ -51,6 +53,7 @@ import { isPlanPublished } from '@/lib/api/dehub';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
+import { ProfileFeedOriginContext, isContinuableProfileTab, type ProfileFeedOrigin, type ProfileFeedQuery, type ProfileFeedSource } from '@/lib/profile-feed-origin';
 import type { UserCommentItem, UserCommentParent } from '@/lib/api/dehub/users';
 import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { QuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
@@ -179,6 +182,8 @@ interface ProfileTabContentProps {
   isViewingOwnProfile: boolean | undefined;
   /** A sort or search from the channel toolbar is narrowing what's shown. */
   isContentFiltered?: boolean;
+  /** The content query behind the tab lists, so an opened post can continue it. */
+  contentQuery?: ProfileFeedQuery;
   // Optimistic
   optimisticPosts: OptimisticPost[];
   // Subscriptions
@@ -210,6 +215,7 @@ export function ProfileTabContent({
   isPending,
   isViewingOwnProfile,
   isContentFiltered = false,
+  contentQuery,
   optimisticPosts,
   isLoadingPlans,
   hasPlans,
@@ -246,6 +252,14 @@ export function ProfileTabContent({
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
+  // A post opened from this tab carries on through the same list.
+  const feedOrigin = useMemo<ProfileFeedOrigin | null>(
+    () => (contentQuery?.userId && isContinuableProfileTab(activeTab) ? { tab: activeTab, query: contentQuery } : null),
+    [activeTab, contentQuery],
+  );
+  const feedSource = useRef<ProfileFeedSource>({ current: null });
+  feedSource.current.current = feedOrigin;
+
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -265,6 +279,7 @@ export function ProfileTabContent({
   const showLoading = isLoadingContent && !hasData;
 
   return (
+    <ProfileFeedOriginContext.Provider value={feedSource.current}>
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
       {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
@@ -439,6 +454,7 @@ export function ProfileTabContent({
         />
       )}
     </div>
+    </ProfileFeedOriginContext.Provider>
   );
 }
 
@@ -460,6 +476,7 @@ function HomeTabPanel({
   isContentFiltered?: boolean;
 }) {
   const { t: _copy } = _useCopy();
+  const isMobile = useIsMobile();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
@@ -475,7 +492,16 @@ function HomeTabPanel({
         return !ALL_CONTENT.some((apiItem) => apiItem.data.id === op.id);
       })
     : [];
-  
+
+  // Phones get every post type in one grid; desktop keeps the feed cards.
+  if (isMobile) {
+    const entries: MixedGridEntry[] = [
+      ...filteredOptimisticPosts.map((op) => ({ key: `op-${op.id}`, type: op.type, data: op.data, isOptimistic: true }) as MixedGridEntry),
+      ...ALL_CONTENT.map((item) => ({ key: `${item.isRepost ? 'rp-' : ''}${item.data.id}`, type: item.type, data: item.data, isPinned: item.isPinned, isRepost: item.isRepost }) as MixedGridEntry),
+    ];
+    return <ProfileMixedGrid entries={entries} />;
+  }
+
   return (
     <div className="space-y-3">
       {filteredOptimisticPosts.map((op) => {
@@ -507,6 +533,12 @@ function HomeTabPanel({
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={offscreenCardStyle(item.type, index)}
           >
+            {item.isPinned && (
+              <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
+                <Pin className="w-3.5 h-3.5 fill-current" />
+                <span className="font-medium">{_copy("copy.79175cb0f6da", { defaultValue: "Pinned post" })}</span>
+              </div>
+            )}
             {item.isRepost && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Repeat2 className="w-3.5 h-3.5" />

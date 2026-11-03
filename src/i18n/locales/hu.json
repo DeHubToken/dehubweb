@@ -162,7 +162,25 @@
     "saved": "Profilmezők mentve",
     "failed": "Nem sikerült menteni. Próbáld újra.",
     "verified": "Ellenőrzött hivatkozás",
-    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}"
+    "verifyHint": "Egy hivatkozás ellenőrzéséhez add hozzá ezt az oldalhoz, majd ments újra: {{snippet}}",
+    "descriptionPresets": "Webhely, névmások vagy bármi más hozzáadása. A linkek megjelennek a közösségi oldalakon.",
+    "type": "Mező típusa",
+    "needsLabel": "Adj minden egyéni mezőnek egy címkét",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ők/ők",
+    "placeholderLocation": "Város, ország",
+    "presets": {
+      "website": "Webhely",
+      "blog": "Blog",
+      "portfolio": "Portfólió",
+      "shop": "Vásárlás",
+      "podcast": "Podcasting",
+      "newsletter": "Hírlevél",
+      "pronouns": "Névmások",
+      "location": "Hely",
+      "custom": "Egyedi",
+      "customOption": "Egyedi címke"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} követése",
@@ -10662,8 +10680,12 @@
       "restore": "Visszaállítás",
       "restored": "Visszaállított verzió {{version}}"
     },
-    "stakeForAllowance": "Stakel DeHub tokeneket a napi építési kereted növeléséhez",
     "buildInChat": "Építs a privát üzeneteidben az @assistant segítségével",
+    "modelLabel": "Modell",
+    "creditsLeft": "{{amount}} kreditben",
+    "perPrompt": "≈ {{price}} / kérés",
+    "pricingNote": "Minden kérést a kreditjeidből fizetsz a modell költsége plusz 30% áron. A kérés lehetséges legnagyobb költségét futás közben zároljuk, a fel nem használt részt pedig visszaadjuk.",
+    "topUpCredits": "Kredit feltöltése",
     "landerTitle": "Hozzon létre egy alkalmazást csupán egy kéréssel",
     "landerSubtitle": "Üzeneteiben közölje @ assistantrel, hogy mit szeretne. Megépíti az alkalmazást, házigazdává teszi, és elküldi neked azt a linket, amelyet bárki megnyithat. Válaszolj, ha bármit megváltoztatsz.",
     "promptPlaceholder": "Írd le a kívánt alkalmazást…",
@@ -18807,5 +18829,17 @@
     "privacy": "Csak azért használjuk, hogy a token indításáról értesítsünk.",
     "seoTitle": "Token indítása közeledik | DeHub",
     "seoDescription": "Az új DeHub token hamarosan indítódik. Csatlakozz a listához, és kapj egy emailt, amikor online lesz, majd vásárolhat közvetlenül a DeHub péntekéből."
+  },
+  "githubLink": {
+    "hint": "Jelentkezzen be a GitHubra, és igazolja, hogy a fiók az Öné. A DeHub csak a nyilvános GitHub-profilodat látja.",
+    "verified": "Igazolt",
+    "verifiedAria": "Igazolt GitHub-fiók",
+    "connected": "GitHub csatlakoztatva",
+    "disconnected": "GitHub leválasztva",
+    "taken": "Ez a GitHub-fiók már egy másik DeHub-profilban van.",
+    "failed": "Nem sikerült csatlakozni a GitHubhoz. Próbálkozz újra.",
+    "unavailable": "Hamarosan jön a GitHub-hitelesítés.",
+    "connect": "GitHub csatlakoztatása",
+    "disconnect": "Leválasztás"
   }
 }

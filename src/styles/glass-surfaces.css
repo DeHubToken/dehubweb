@@ -497,3 +497,6 @@ html[data-theme] [data-glass-menu]:not(html[data-theme='osaka'] [data-inline-pop
 [data-glass-stack] [class*="backdrop-blur"] {
   backdrop-filter: none !important;
 }
+
+/* Top builders score bars: light themes draw "Shipped" in ink, not grey. */
+html[data-theme='light'] { --top-builders-shipped: rgb(24 24 27); }

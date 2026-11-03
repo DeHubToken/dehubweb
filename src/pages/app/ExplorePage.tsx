@@ -6,10 +6,10 @@ import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, mem
 import { getDocumentScrollTop } from '@/lib/document-scroll';
 import { SEOHead } from '@/components/SEOHead';
 import { HUB_ROUTE_META } from '@/lib/seo/route-meta';
-import { BadgedName } from '@/components/app/BadgedName';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { WhatsHappening } from '@/components/app/WhatsHappening';
 import { NewMembersBento } from '@/components/app/NewMembersBento';
+import { SearchPeopleCards } from '@/components/app/search/SearchPeopleCards';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -28,7 +28,6 @@ import X from "@/components/ui/cut-icons/close";
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { EXPLORE_TABS } from '@/constants/app.constants';
 import {
   SearchFilterPanel,
@@ -56,8 +55,6 @@ import {
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
-import { useFollow } from '@/hooks/use-follow';
-import { useFollowStatus } from '@/hooks/use-follow-status';
 
 // content-visibility for below-fold result cards — browser skips their
 // layout/paint until they approach the viewport (matches HomeFeed's pattern).
@@ -67,7 +64,6 @@ const OFFSCREEN_RESULT_STYLE: CSSProperties = {
 };
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
-import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
@@ -88,105 +84,6 @@ import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // Brand-related search terms where @d should be pinned first
 const BRAND_QUERIES = ['d', 'de', 'deh', 'dehu', 'dehub'];
-
-// User result card
-const UserResultCard = ({ 
-  user, 
-  onProfileClick 
-}: { 
-  user: SearchCreator; 
-  onProfileClick?: (handle: string) => void;
-}) => {
-  const { t: _copy } = _useCopy();
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { walletAddress } = useAuth();
-  // Shared optimistic override wins so this card agrees with every other surface
-  const { isFollowing: followOverride, toggleFollow, isPending } = useFollow(user.id);
-
-  // Search and public roster data are not authoritative for relationships.
-  // Share an authenticated wallet lookup with every Explore follow button.
-  const { data: resolvedFollowStatus } = useFollowStatus(user.id);
-  const isFollowing = followOverride ?? resolvedFollowStatus?.isFollowing ?? user.isFollowing ?? false;
-  const isRequested = followOverride === undefined && !!resolvedFollowStatus?.isFollowRequestPending;
-  const followDisabled = isFollowing || isRequested || isPending || !walletAddress || !resolvedFollowStatus;
-  
-  // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
-  const avatarUrl = user.avatar;
-  
-  const handleClick = () => {
-    const cleanHandle = user.handle.replace('@', '');
-    onProfileClick?.(cleanHandle);
-    navigate(`/${cleanHandle}`);
-  };
-
-  const handleFollow = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (!walletAddress) {
-      // Could show login modal here
-      return;
-    }
-    if (!user.id || followDisabled) return;
-
-    // Optimistic: the button flips instantly; rollback + toast on failure.
-    toggleFollow(isFollowing, { name: user.name });
-  };
-  
-  return (
-    <div 
-      className="flex items-center justify-between cursor-pointer hover:bg-zinc-800/50 rounded-lg p-2 -mx-2 transition-colors"
-      onClick={handleClick}
-    >
-      <div className="flex items-center gap-3 min-w-0 flex-1">
-        <Avatar className="w-10 h-10 rounded-xl flex-shrink-0">
-          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover rounded-xl" />}
-          <AvatarFallback className="bg-zinc-700 rounded-xl">{user.name[0]}</AvatarFallback>
-        </Avatar>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <p className="text-white font-medium flex items-center gap-1.5 truncate">
-              <BadgedName
-                badgeBalance={user.badgeBalance}
-                badgeLock={user.badgeLock}
-                username={user.badgeUsername}
-                className="truncate"
-              >
-                {user.name}
-              </BadgedName>
-              {user.verified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
-            </p>
-            <span className="text-zinc-500 font-normal text-sm truncate">
-              {user.handle.replace('@', '').startsWith('0x') && user.handle.length > 14
-                ? `@${user.handle.replace('@', '').slice(0, 6)}...${user.handle.replace('@', '').slice(-4)}`
-                : user.handle}
-            </span>
-          </div>
-          {user.bio && (
-            <p className="text-zinc-400 text-xs line-clamp-1 mt-0.5 hidden md:block">{user.bio}</p>
-          )}
-        </div>
-      </div>
-      {walletAddress?.toLowerCase() !== user.id?.toLowerCase() && (
-        <button
-          onClick={handleFollow}
-          disabled={followDisabled}
-          className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ml-2 ${
-            isFollowing
-              ? 'bg-white/10 text-white/40 cursor-default'
-              : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
-          }`}
-        >
-          {isRequested ? t('follow.requested') : isFollowing ? (
-            _copy("copy.344b4271ca01", { defaultValue: "Following" })
-          ) : (
-            user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow')
-          )}
-        </button>
-      )}
-    </div>
-  );
-};
 
 /**
  * Search input isolated from the page: it owns the text locally so each
@@ -234,7 +131,7 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
         placeholder={placeholder}
         aria-label={placeholder}
         className={cn(
-          'w-full pl-12 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
+          'w-full pl-12 h-[48px] text-ellipsis bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base',
           trailing ? 'pr-12' : 'pr-4',
         )}
       />
@@ -681,6 +578,8 @@ export default function ExplorePage() {
     };
   }, [searchData, allTabAccountData, exactUser, brandUser, isShortSearch, effectiveQuery, filters]);
 
+  const handlePeopleCardClick = useCallback((handle: string) => addToHistory(`@${handle}`, 'user'), [addToHistory]);
+
   const activeFilterCount = countActiveSearchFilters(filters);
 
   const resetFilters = () => setFilters(DEFAULT_SEARCH_FILTERS);
@@ -968,16 +867,12 @@ export default function ExplorePage() {
                     <h3 className="text-sm text-zinc-400 uppercase tracking-wider mb-3">
                       {t('explorePage.people')} ({searchResults.users.length})
                     </h3>
-                    <div className="space-y-1">
-                      {searchResults.users.slice(0, activeTab === 'people' ? undefined : 5).map((user, idx) => (
-                        <UserResultCard 
-                          key={user.id || `user-${idx}`} 
-                          user={user} 
-                          onProfileClick={(handle) => addToHistory(`@${handle}`, 'user')}
-                        />
-                      ))}
-                    </div>
-                    {activeTab === 'all' && searchResults.users.length > 5 && (
+                    <SearchPeopleCards
+                      users={activeTab === 'people' ? searchResults.users : searchResults.users.slice(0, 10)}
+                      layout={activeTab === 'people' ? 'grid' : 'row'}
+                      onProfileClick={handlePeopleCardClick}
+                    />
+                    {activeTab === 'all' && searchResults.users.length > 10 && (
                       <button
                         onClick={() => setActiveTab('people')}
                         className="text-white text-sm mt-3 hover:underline"

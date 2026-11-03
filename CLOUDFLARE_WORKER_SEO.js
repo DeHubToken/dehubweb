@@ -8,7 +8,8 @@ import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
 import { handleRssFeed, profileFeedUrl, rssFeedRoute } from './server/rss-feeds.js';
-import { profileFieldLinks } from './server/profile-fields.js';
+import { handleDomainHandoff } from './server/domain-handoff.js';
+import { profileFieldLinks, verifiedGithubUrl } from './server/profile-fields.js';
 import { apRelayTarget, handleApRelay } from './server/activitypub-relay.js';
 import { handleMastodonRelay, mastodonRelayTarget } from './server/mastodon-relay.js';
 import { embedRoute, handleEmbedPage, handleOembed, oembedLinkTag } from './server/post-embed.js';
@@ -165,6 +166,7 @@ const OG_CARD_ROUTES = new Set([
   'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
   'docs/token/governance', 'docs/token/bridge', 'docs/roadmap', 'docs/faq',
   'docs/team', 'docs/contact', 'docs/privacy', 'docs/terms',
+  'docs/developers',
   'docs/terms-of-service', 'docs/advertising', 'docs/security', 'docs/featured-in',
   'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
   'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
@@ -176,7 +178,7 @@ const OG_CARD_ROUTES = new Set([
   'top-100', 'music', 'tv', 'cinema',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs', 'apk', 'admin-manual',
-  'raffle', 'stake', 'usernames',
+  'raffle', 'stake', 'usernames', 'nfts',
   'arcade', 'arcade/kings-gambit', 'arcade/claude-of-duty', 'arcade/jungle-trail',
   'arcade/street-slayer',
   'arcade/trenchstar', 'arcade/love-lock-bridge',
@@ -426,6 +428,15 @@ const DOCS_PAGES = {
   // here, so every crawler following that link got a 404. No card of its own
   // in public/og yet, so it borrows the docs section's.
   'guidelines': { title: 'Community Guidelines — DeHub', description: 'What is and is not allowed on DeHub, how to report content, what happens after a report and how to appeal a moderation decision.', og: 'docs' },
+  // Developer docs. Bodies come from src/data/developer-docs.json via
+  // scripts/build-developer-docs-content.mjs; all share one card.
+  'developers': { title: 'DeHub Developers — Build Apps on DeHub', description: 'Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.', og: 'docs/developers' },
+  'developers/mini-apps': { title: 'Build a DeHub Mini App — SDK and Manifest', description: 'Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.', og: 'docs/developers' },
+  'auth': { title: 'Sign in with DeHub — OAuth and Mini App Tokens', description: 'Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.', og: 'docs/developers' },
+  'webhooks': { title: 'DeHub Webhooks and Notifications API', description: 'Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.', og: 'docs/developers' },
+  'endpoints': { title: 'DeHub API Reference — REST and Mastodon APIs', description: 'The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.', og: 'docs/developers' },
+  'examples': { title: 'DeHub Developer Examples — Copy and Paste Code', description: 'Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.', og: 'docs/developers' },
+  'troubleshooting': { title: 'DeHub Developer Troubleshooting', description: 'Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.', og: 'docs/developers' },
 };
 
 /** Legacy and typo'd /docs slugs Google still holds. `quick-start` (the real
@@ -441,11 +452,10 @@ const DOCS_PAGES = {
  *  answer: the page really does exist, it just has nothing to rank.
  *
  *  quickstart sits here too until it gets a DOCS_PAGES entry and a sitemap
- *  row. installation and endpoints were template pages for a made-up API and
- *  now redirect to the real pages (DOCS_REDIRECTS). */
+ *  row. installation was a template page for a made-up API and
+ *  now redirects to the real page (DOCS_REDIRECTS). */
 const DOCS_COMING_SOON = new Set([
-  'website', 'app', 'dehub', 'x', 'instagram', 'architecture', 'configuration',
-  'data-models', 'auth', 'webhooks', 'best-practices', 'troubleshooting', 'examples',
+  'website', 'app', 'dehub', 'x', 'instagram', 'architecture',
   'quickstart',
 ]);
 
@@ -456,7 +466,10 @@ const DOCS_REDIRECTS = {
   'ai-toolkits': '/docs/dapps#ai-suite',
   'token': '/docs/token/overview',
   'installation': '/dehub-app',
-  'endpoints': '/connect',
+  // Folded into the developer docs (src/data/developer-docs.json).
+  'best-practices': '/docs/developers#best-practices',
+  'configuration': '/docs/developers/mini-apps#manifest',
+  'data-models': '/docs/endpoints',
 };
 
 const _docsContentCache = new Map();
@@ -1552,6 +1565,16 @@ ${DEHUB_APP_PAGE.faq.map(({ q, a }) => `<h3>${q}</h3>\n<p>${a}</p>`).join('\n')}
 <li><strong>Social tasks</strong> — pay for high-quality engagement across posts.</li>
 <li><strong>Fixed-price contracts</strong> — hire creators for logos, video, translation and community work.</li>
 </ul>`,
+  },
+  'nfts': {
+    title: 'NFT Market: Buy & Sell NFTs on BNB Chain and Base',
+    description: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step, so nobody waits on the other side.',
+    heading: 'DeHub NFT Market',
+    bodyHtml: `<p>The DeHub NFT market is where any NFT on BNB Chain or Base changes hands: DeHub posts minted as NFTs, and any other collection in your wallet. List one at a fixed price, buy a listing, or make an offer in DHB that the holder can accept.</p>
+<h2>How a trade works</h2>
+<p>Trades settle on Seaport, the open NFT swap contract. The NFT and the payment move in the same transaction, so a buyer never pays without receiving and a seller never sends without being paid. DeHub never holds your NFTs or your money.</p>
+<h2>Fees</h2>
+<p>DeHub takes 2% of a sale paid in BNB or ETH, and 1% when paid in DHB. Creators receive the royalty their collection sets, capped at 10%. The seller receives the rest the moment the trade settles.</p>`,
   },
   'usernames': {
     title: 'Username Marketplace — Buy & Sell DeHub Handles for tokens',
@@ -3041,10 +3064,10 @@ function rewriteJsonLd(html, edit) {
  * which tells a consumer nothing; that link is dropped and any real external
  * one kept. The @handle rides as alternateName, the site-unique identifier.
  */
-function profilePageLd(value, handle) {
+function profilePageLd(value, handle, verified = []) {
   if (value['@type'] !== 'Person') return null;
   const { '@context': _context, '@type': _type, sameAs, ...person } = value;
-  const external = [].concat(sameAs || []).filter(
+  const external = [...new Set([].concat(sameAs || [], verified))].filter(
     (u) => typeof u === 'string' && u !== person.url && !u.startsWith(`${APP_URL}/`),
   );
   return {
@@ -4263,7 +4286,7 @@ const APP_ESCAPE_PARAM = 'app';
  * which looked nothing at all like the product it was advertising.
  *
  * This is the app's own design system (the rule block at the top of
- * src/index.css: black / white / zinc only, Exo, liquid glass, no coloured
+ * src/index.css: black / white / zinc only, Manrope, liquid glass, no coloured
  * accents) reduced to one inline stylesheet. Inline on purpose — a crawler
  * fetches one document and the page has to render from it alone, so a
  * stylesheet request is a request that may never be made.
@@ -4272,10 +4295,10 @@ const APP_ESCAPE_PARAM = 'app';
  * proxied from the ssr-seo function: that function deploys on its own track
  * and cannot be relied on to change, so its markup is restyled here instead.
  */
-const PRERENDER_STYLE = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"><style>
+const PRERENDER_STYLE = `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"><style>
 :root{--dh-bg:#000;--dh-panel:#131316;--dh-line:rgba(255,255,255,.12);--dh-fg:#fff;--dh-muted:#a1a1aa;--dh-dim:#71717a}
 *{box-sizing:border-box}
-body{margin:0;background:var(--dh-bg);color:var(--dh-fg);font-family:'Exo','Apple Color Emoji','Noto Color Emoji','Segoe UI Emoji',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+body{margin:0;background:var(--dh-bg);color:var(--dh-fg);font-family:'Manrope','Apple Color Emoji','Noto Color Emoji','Segoe UI Emoji',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
 .dh-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 20px;border-bottom:1px solid var(--dh-line);background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
 .dh-head img{height:26px;width:auto;display:block;border:0;border-radius:0;margin:0}
 .dh-head a{border:0}
@@ -4396,6 +4419,8 @@ const SSR_STATIC_ROUTES = new Set([
   // page, and without this the /app twin self-canonicalizes and indexes as a
   // duplicate. Rendered from MARKETING_PAGES, never proxied to the fn.
   'usernames',
+  // The NFT market, same arrangement as usernames.
+  'nfts',
   // Listed for canonicalizePath, not for the Supabase fn: /app/arcade is a
   // real SPA route and without this it self-canonicalizes, indexing as a
   // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
@@ -4479,6 +4504,29 @@ const NOT_FOUND_TITLES = [
 async function resolveNewPostTokenId(n) {
   try {
     const res = await fetch(`https://api.dehub.io/api/newpost/${encodeURIComponent(n)}`, {
+      signal: AbortSignal.timeout(6000),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const id = data?.tokenId ?? data?.result?.tokenId;
+    return Number.isFinite(Number(id)) ? String(Number(id)) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** An article's readable address, /app/post/<first-ten-words-of-title>. Never
+ *  digits only (that is a tokenId) and never a 24-hex stream ObjectId. */
+function articleSlugOf(pathname) {
+  const m = pathname.match(/^\/(?:app\/)?post\/([a-z0-9][a-z0-9-]{0,120})\/?$/i);
+  if (!m || !/[a-z]/i.test(m[1]) || /^[a-f\d]{24}$/i.test(m[1])) return null;
+  return m[1].toLowerCase();
+}
+
+/** Resolve an article slug to its tokenId through the API that owns it. */
+async function resolveArticleSlugTokenId(slug) {
+  try {
+    const res = await fetch(`https://api.dehub.io/api/article/${encodeURIComponent(slug)}`, {
       signal: AbortSignal.timeout(6000),
     });
     if (!res.ok) return null;
@@ -5331,7 +5379,7 @@ const SUPABASE_RELAY_PREFIX = '/_sb';
 const SUPABASE_RELAY_ORIGIN = 'https://aigxuutjaqsywioxjefr.supabase.co';
 // Hosts that serve the web app. The client picks its own origin as the relay
 // base on these, so each has to answer /_sb itself.
-const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io']);
+const SUPABASE_RELAY_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'origin.dehub.io', 'riftn.com', 'www.riftn.com']);
 const HOP_BY_HOP_HEADERS = [
   'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
   'proxy-connection', 'te', 'trailer', 'transfer-encoding', 'upgrade',
@@ -5815,6 +5863,8 @@ async function handleRequest(request, env, ctx) {
   request = canonicalOriginRequest(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
+  const handoff = handleDomainHandoff(url);
+  if (handoff) return handoff;
   if (pathname.startsWith('/locale-pages/')) {
     const asset = await serveLocaleAsset(request, env);
     if (asset) return asset;
@@ -6189,6 +6239,9 @@ async function handleRequest(request, env, ctx) {
     '/app/radio': '/music',
     '/mcp': '/connect',
     '/app/mcp': '/connect',
+    // Short address for the developer hub (App.tsx redirects it the same way).
+    '/developers': '/docs/developers',
+    '/developer': '/docs/developers',
     // The sidebar calls the board 'Requests'; the SPA redirects both to the
     // board (dehubweb#1427) and 'requests' is a reserved username, but without
     // this crawlers still read it as a username and served Not Found.
@@ -6348,6 +6401,8 @@ async function handleRequest(request, env, ctx) {
     '/.well-known/assetlinks.json',
     '/.well-known/apple-app-site-association',
     '/apple-app-site-association',
+    // WebAuthn related origins: lets riftn.com use passkeys made for dehub.io.
+    '/.well-known/webauthn',
   ]);
   // Profiles (/mal, /mal.eth) open in the iOS app too, but a one-segment
   // catch-all can only be said to iOS as "everything else": exclude each
@@ -7221,7 +7276,12 @@ async function handleRequest(request, env, ctx) {
   // fn's own system-route list has no `communities` entry, so it read the
   // segment as a username, missed, and 404'd every share of that shape.
   const bareCommunity = pathname.match(/^\/communities\/([^/]+)\/?$/);
-  if (newPostSlug) {
+  const articleSlug = articleSlugOf(pathname);
+  if (articleSlug) {
+    const tokenId = await resolveArticleSlugTokenId(articleSlug);
+    // Unresolvable: the fn's miss on the slug lands on the 404 below.
+    if (tokenId) ssrPath = `/app/post/${tokenId}`;
+  } else if (newPostSlug) {
     const tokenId = await resolveNewPostTokenId(newPostSlug[1]);
     // Unresolvable slug: leave the path alone so the fn's miss lands on the
     // 404 below rather than a 200 carrying the homepage card.
@@ -7409,6 +7469,17 @@ async function handleRequest(request, env, ctx) {
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
       postShareRecord = record;
+      // An article lives at its readable slug. Asked for by number (or any
+      // other shape), it moves there for good, keeping ?ref and the rest of
+      // the query; asked for by slug, every self-link on the page says so.
+      const recordSlug = record && typeof record.articleSlug === 'string' ? record.articleSlug : '';
+      if (recordSlug && /^[a-z0-9-]+$/.test(recordSlug)) {
+        if (articleSlug !== recordSlug && (articleSlug || /^\/(?:app\/)?(?:post|newpost)\/\d+\/?$/.test(pathname))) {
+          const search = new URL(request.url).search;
+          return guard(new Response(null, { status: 301, headers: { Location: `${APP_URL}/app/post/${recordSlug}${search}` } }));
+        }
+        html = html.split(`${APP_URL}/app/post/${proxiedPostId}"`).join(`${APP_URL}/app/post/${recordSlug}"`);
+      }
       aiReserved = aiTrainingReserved(record && record.minterUser && record.minterUser.customs);
       html = enrichPostMeta(html, proxiedPostId, record);
       // oEmbed discovery: WordPress, Ghost, Iframely, Embedly and Mastodon's
@@ -7453,7 +7524,8 @@ async function handleRequest(request, env, ctx) {
       // rel="me" for each link in the profile fields, so another site — a
       // Mastodon profile, a personal page — can prove this DeHub profile
       // links back to it. Those checks read the HTML and run no script.
-      const relMe = profileFieldLinks(account).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
+      // A verified GitHub joins them; it is proven, so it is also a sameAs below.
+      const relMe = [...profileFieldLinks(account), verifiedGithubUrl(account)].filter(Boolean).map((href) => `<link rel="me" href="${escHtml(href)}">`).join('');
       if (relMe) html = html.replace('</head>', () => `${relMe}</head>`);
       const address = String((account && account.address) || '').toLowerCase() || profileAddressOf(html);
       const rows = address ? await fetchFeedRowsOrNull(`minter=${address}`) : null;
@@ -7504,7 +7576,8 @@ async function handleRequest(request, env, ctx) {
     if (proxiedPostId) {
       html = applyPostShareImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
-      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
+      const verifiedLinks = [verifiedGithubUrl(profileShareAccount)].filter(Boolean);
+      html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle, verifiedLinks));
     } else if (proxiedCommunity) {
       html = cardProxiedImage(rewriteJsonLd(html, communityPageLd));
     }

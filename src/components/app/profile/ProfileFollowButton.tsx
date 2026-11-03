@@ -55,7 +55,9 @@ export function ProfileFollowButton({ profile, apiProfile, isViewingOwnProfile, 
                       {isFollowLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                       ) : (
-                        <Check className="w-4 h-4" />
+                        // The tick is drawn inset in its box, so pull it out to
+                        // match the label's edge and keep both sides even.
+                        <Check className="w-4 h-4 -ml-[1.4px]" />
                       )}
                       {t('profile.following')}
                     </Button>

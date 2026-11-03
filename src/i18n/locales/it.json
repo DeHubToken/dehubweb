@@ -162,7 +162,25 @@
     "saved": "Campi del profilo salvati",
     "failed": "Non è stato salvato. Riprova.",
     "verified": "Link verificato",
-    "verifyHint": "Per verificare un link, aggiungi questo a quella pagina e salva di nuovo: {{snippet}}"
+    "verifyHint": "Per verificare un link, aggiungi questo a quella pagina e salva di nuovo: {{snippet}}",
+    "descriptionPresets": "Aggiungi un sito web, pronomi o qualsiasi altra cosa. I link vengono mostrati con i tuoi social.",
+    "type": "Tipo di campo",
+    "needsLabel": "Assegna un'etichetta a ciascun campo personalizzato",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "loro/loro",
+    "placeholderLocation": "Città, paese",
+    "presets": {
+      "website": "Sito web",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomi",
+      "location": "Posizione",
+      "custom": "Personalizzato",
+      "customOption": "Etichetta personalizzata"
+    }
   },
   "followedTags": {
     "follow": "Segui #{{tag}}",
@@ -408,6 +426,7 @@
   },
   "nav": {
     "reorderHint": "Tieni premuto e trascina qualsiasi icona per riorganizzare",
+    "reorderReset": "Ripristina",
     "reorderResetLong": "Ripristina l'ordine del menu",
     "home": "Casa",
     "explore": "Esplora",
@@ -452,8 +471,7 @@
     "getTheApp": "Scarica l'app",
     "connectAi": "Collega l'IA",
     "converter": "Convertitore",
-    "affiliate": "Affiliazione",
-    "reorderReset": "Ripristina"
+    "affiliate": "Affiliazione"
   },
   "feed": {
     "viewProfile": "Visualizza il profilo di {{name}}",
@@ -10678,8 +10696,12 @@
       "restore": "Ripristina",
       "restored": "Versione ripristinata {{version}}"
     },
-    "stakeForAllowance": "Metti in staking i token DeHub per aumentare la tua quota di creazione giornaliera",
     "buildInChat": "Crea nei tuoi messaggi diretti con @assistant",
+    "modelLabel": "Modello",
+    "creditsLeft": "{{amount}} in crediti",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Ogni prompt viene pagato con i tuoi crediti al costo del modello più il 30%. L'importo massimo che un prompt può costare viene trattenuto durante l'esecuzione e la parte non utilizzata viene restituita.",
+    "topUpCredits": "Ricarica crediti",
     "landerTitle": "Crea un'app semplicemente chiedendo",
     "landerSubtitle": "Di 'all' @assistente cosa vuoi nei tuoi messaggi. Crea l'app, la ospita e ti invia un link che chiunque può aprire. Rispondi per cambiare qualcosa.",
     "promptPlaceholder": "Descrivi l'app che desideri...",
@@ -18832,5 +18854,17 @@
     "privacy": "Utilizzato solo per informarti del lancio.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Il nuovo token DeHub sarà lanciato presto. Iscriviti alla lista e ricevi un'email nel momento in cui sarà disponibile, quindi acquista direttamente dal tuo portafoglio DeHub."
+  },
+  "githubLink": {
+    "hint": "Accedi a GitHub per dimostrare che l'account è tuo. DeHub vede solo il tuo profilo GitHub pubblico.",
+    "verified": "Verificato",
+    "verifiedAria": "Account GitHub verificato",
+    "connected": "GitHub connesso",
+    "disconnected": "GitHub disconnesso",
+    "taken": "Quell' account GitHub è già su un altro profilo DeHub.",
+    "failed": "Impossibile collegare GitHub. Riprova.",
+    "unavailable": "La verifica di GitHub è in arrivo.",
+    "connect": "Connetti GitHub",
+    "disconnect": "Disconnetti"
   }
 }

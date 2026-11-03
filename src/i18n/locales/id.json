@@ -162,7 +162,25 @@
     "saved": "Kolom profil tersimpan",
     "failed": "Tidak tersimpan. Coba lagi.",
     "verified": "Tautan terverifikasi",
-    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}"
+    "verifyHint": "Untuk memverifikasi tautan, tambahkan ini ke halaman itu, lalu simpan lagi: {{snippet}}",
+    "descriptionPresets": "Tambahkan situs web, kata ganti, atau apa pun. Tautan ditampilkan dengan media sosial Anda.",
+    "type": "Jenis bidang",
+    "needsLabel": "Beri label pada setiap bidang kustom",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "mereka/mereka",
+    "placeholderLocation": "Kota, negara",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portofolio",
+      "shop": "Toko",
+      "podcast": "Podcast",
+      "newsletter": "Buletin",
+      "pronouns": "Kata ganti",
+      "location": "Lokasi",
+      "custom": "Kustom",
+      "customOption": "Label kustom"
+    }
   },
   "followedTags": {
     "follow": "Ikuti #{{tag}}",
@@ -10681,8 +10699,12 @@
       "restore": "Pulihkan",
       "restored": "Versi yang dipulihkan {{version}}"
     },
-    "stakeForAllowance": "Pertaruhkan token DeHub untuk menaikkan kuota pembuatan harian Anda",
     "buildInChat": "Bangun di DM kamu bersama @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} dalam kredit",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Setiap prompt dibayar dari kredit Anda sebesar biaya model ditambah 30%. Biaya maksimum sebuah prompt ditahan selama prompt berjalan, dan bagian yang tidak terpakai dikembalikan.",
+    "topUpCredits": "Isi ulang kredit",
     "landerTitle": "Buat aplikasi hanya dengan bertanya",
     "landerSubtitle": "Beri tahu @assistant apa yang Anda inginkan di pesan Anda. Ini membangun aplikasi, menghostingnya, dan mengirimi Anda tautan yang bisa dibuka siapa saja. Balas untuk mengubah apa pun.",
     "promptPlaceholder": "Jelaskan aplikasi yang Anda inginkan…",
@@ -18834,5 +18856,17 @@
     "privacy": "Hanya digunakan untuk memberitahumu tentang peluncuran.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Token baru DeHub akan segera diluncurkan. Bergabunglah dengan daftar dan dapatkan satu email saatnya diluncurkan, kemudian beli langsung dari dompet DeHub Anda."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub untuk membuktikan bahwa akun itu milik Anda. DeHub hanya melihat profil GitHub publik Anda.",
+    "verified": "Terverifikasi",
+    "verifiedAria": "Akun GitHub terverifikasi",
+    "connected": "GitHub terhubung",
+    "disconnected": "GitHub terputus",
+    "taken": "Akun GitHub itu sudah ada di profil DeHub lain.",
+    "failed": "Tidak dapat menghubungkan GitHub. Coba lagi.",
+    "unavailable": "Verifikasi GitHub akan segera hadir.",
+    "connect": "Hubungkan GitHub",
+    "disconnect": "Putuskan"
   }
 }

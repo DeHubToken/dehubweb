@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Profil alanları",
-    "description": "Profiline dört satıra kadar ek bilgi ekle; örneğin bir web sitesi ya da zamirlerin.",
+    "description": "İsteğe bağlı özel profil alanları",
     "label": "Etiket",
     "content": "İçerik",
+    "add": "Alan ekle",
+    "remove": "Alanı kaldır",
     "save": "Alanları kaydet",
     "saved": "Profil alanları kaydedildi",
     "failed": "Kaydedilmedi. Tekrar dene.",
     "verified": "Doğrulanmış bağlantı",
-    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}"
+    "verifyHint": "Bir bağlantıyı doğrulamak için bunu o sayfaya ekle, sonra yeniden kaydet: {{snippet}}",
+    "descriptionPresets": "Bir web sitesi, zamir veya başka bir şey ekleyin. Sosyal medya hesaplarınızla bağlantılar gösterilir.",
+    "type": "Alan türü",
+    "needsLabel": "Her özel alana bir etiket verin",
+    "placeholderLink": "siteniz.com",
+    "placeholderPronouns": "onlar/onlar",
+    "placeholderLocation": "Şehir, ülke",
+    "presets": {
+      "website": "Web sitesi",
+      "blog": "Blog",
+      "portfolio": "Portföy",
+      "shop": "Mağaza",
+      "podcast": "Podcast",
+      "newsletter": "Bülten",
+      "pronouns": "Zamirler",
+      "location": "Konum",
+      "custom": "Özel",
+      "customOption": "Özel etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} takip et",
@@ -1306,7 +1326,10 @@
     "messageWallNote": "Bahşiş onaylanınca bahşiş duvarında görünür.",
     "sendWithMessage": "Mesajla gönder",
     "messageFailed": "Mesajın eklenemedi. Bahşiş gönderilmedi.",
-    "wallLabel": "Bahşiş mesajları"
+    "wallLabel": "Bahşiş mesajları",
+    "railTitle": "Bahşişler",
+    "railTotal": "{{amount}} token",
+    "tokensUnit": "token"
   },
   "postOptions": {
     "liveAlertsOn": "Artık {{name}} kullanıcısını takip ediyorsunuz. Canlı yayına geçtiğinde bildirim alacaksınız.",
@@ -2169,7 +2192,11 @@
     "checkingTokenBalance": "Jeton bakiyeniz kontrol ediliyor...",
     "deleteConversationFailed": "Konuşma silinemedi",
     "message": "Mesaj",
-    "noConversationsYet": "Henüz sohbet yok"
+    "noConversationsYet": "Henüz sohbet yok",
+    "sending": "Gönderiliyor",
+    "notSent": "Gönderilmedi",
+    "retrySend": "Tekrar dene",
+    "discardSend": "Kaldır"
   },
   "music": {
     "listeningCount_one": "{{count}} dinleme",
@@ -2224,6 +2251,24 @@
     "mutualsOne": "{{count}} ortak:",
     "mutualsMany": "{{count}} ortak:",
     "back": "Geri",
+    "reserve": {
+      "available": "Kullanıcı adı müsait",
+      "held": "Senin için ayrıldı",
+      "ended": "Ayırma süresi doldu",
+      "busy": "Ayrılıyor",
+      "availableBody": "dehub.io/{{name}} şu anda boşta. Ayır, kaydolurken bir dakika boyunca senin için tutalım.",
+      "heldBody": "Süre bitene kadar @{{name}} adını başka kimse alamaz. Korumak için kaydı tamamla.",
+      "endedBody": "Bir dakikan doldu, @{{name}} yeniden herkese açık. Hâlâ boşta.",
+      "busyBody": "Şu anda biri @{{name}} olarak kaydoluyor. Tamamlamazsa süre bitince boşa çıkar.",
+      "finish": "Kaydı tamamla",
+      "again": "Yeniden ayır",
+      "cta": "Şimdi ayır",
+      "letGo": "Bırak",
+      "haveAccount": "Hesabın var mı?",
+      "signIn": "Giriş yap",
+      "seoTitle": "@{{name}} DeHub'da müsait",
+      "seoDescription": "dehub.io/{{name}} henüz kimsenin değil. Ayır ve kaydolarak senin olsun."
+    },
     "usernameAvailable": "Kullanıcı adı mevcut!",
     "signUpToClaim": "Almak için bugün kaydolun",
     "signUp": "Kaydol",
@@ -6440,6 +6485,26 @@
     "docsSeoDescription": "DeHub yapay zekâ asistanı skills'i ve istem kitaplığı için başvuru belgeleri.",
     "docsLoadFailed": "# Hata\nSkill belgeleri yüklenemedi.",
     "raw": "Ham hâli"
+  },
+  "nftMarket": {
+    "shortTitle": "NFT'ler",
+    "filters": "Filtreler",
+    "forSale": "Satışta",
+    "openToOffers": "Tekliflere açık",
+    "freshMints": "DeHub yaratıcılarından yeni",
+    "makeOffer": "Teklif ver",
+    "offersOpen": "Tekliflere açık",
+    "mintedCount": "{{n}} basıldı",
+    "trending": "Popüler koleksiyonlar",
+    "floor": "Taban fiyat",
+    "listedCount": "{{n}} satışta",
+    "thisCollection": "Bu koleksiyon",
+    "collectionOffer": "Herhangi birine teklif ver",
+    "showAll": "Tümünü göster",
+    "title": "NFT Pazarı",
+    "subtitle": "BNB ve Base üzerinde al, sat ve teklif ver",
+    "seoTitle": "NFT Pazarı: BNB ve Base üzerinde NFT al ve sat | DeHub",
+    "seoDescription": "BNB Chain ve Base üzerinde NFT al, sat ve teklif ver. BNB, ETH veya DHB ile öde. Her işlem NFT’yi ve ödemeyi tek adımda takas eder."
   },
   "usernames": {
     "seoTitle": "Kullanıcı Adı Pazarı | DeHub",
@@ -11452,8 +11517,12 @@
       "restore": "Geri Yükle",
       "restored": "Geri yüklenen sürüm {{version}}"
     },
-    "stakeForAllowance": "Günlük oluşturma limitinizi artırmak için DeHub jetonlarını stake edin",
     "buildInChat": "@assistant ile özel mesajlarında oluştur",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredi",
+    "perPrompt": "≈ istem başına {{price}}",
+    "pricingNote": "Her istem, modelin maliyeti artı %30 üzerinden kredilerinden ödenir. Bir istemin tutabileceği en yüksek tutar çalıştığı sürece bloke edilir ve kullanılmayan kısım iade edilir.",
+    "topUpCredits": "Kredi yükle",
     "landerTitle": "Sadece sorarak bir uygulama oluşturun",
     "landerSubtitle": "@ASSISTANT'a mesajlarınızda ne istediğinizi söyleyin. Uygulamayı oluşturur, barındırır ve size herkesin açabileceği bir bağlantı gönderir. Herhangi bir şeyi değiştirmek için yanıt verin.",
     "promptPlaceholder": "İstediğiniz uygulamayı tanımlayın…",
@@ -12385,6 +12454,7 @@
       "stateUnlisted": "Bağlantıya göre yaşa · mağaza için incelemede",
       "stateListed": "Mağazada",
       "stateSuspended": "Askıya alındı",
+      "stateRejected": "Bağlantıyla yayında · mağaza için onaylanmadı",
       "copyLink": "Bağlantıyı kopyala",
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
@@ -12398,7 +12468,44 @@
       "rewardsWeek": "{{date}} haftası",
       "rewardPaid": "Ödendi",
       "rewardPending": "Bekleyen",
-      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor."
+      "rewardsNone": "Henüz hiçbir ödül hesaplanmadı. İlk hafta pazartesi günü kapanıyor.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "DeHub'ın webhookUrl adresinize gönderdiği olaylar. Test, bir ping olayı gönderir.",
+        "test": "Test gönder",
+        "ok": "Webhook {{status}} ile yanıt verdi",
+        "failed": "Webhook başarısız: {{reason}}",
+        "none": "Henüz webhook gönderilmedi."
+      },
+      "stats": {
+        "button": "İstatistikler",
+        "chartTitle": "Uygulamanızı açan kişiler, son 30 gün",
+        "peak_one": "Günde en çok {{count}}",
+        "peak_other": "Günde en çok {{count}}",
+        "people30": "Kişi, 30 gün",
+        "people7": "Kişi, 7 gün",
+        "added": "Ekleyen",
+        "dhb30": "Ödenen DHB, 30 gün",
+        "notified30": "Gönderilen bildirim, 30 gün",
+        "rewards": "Kazanılan DHB ödülleri"
+      },
+      "signin": {
+        "title": "DeHub ile giriş yap",
+        "body": "İnsanların web sitenize veya uygulamanıza DeHub hesaplarıyla giriş yapmasını sağlayın. Burada bir anahtar oluşturun, sonra kılavuzu izleyin.",
+        "guide": "Kılavuzu oku",
+        "users_one": "{{count}} kullanıcı",
+        "users_other": "{{count}} kullanıcı",
+        "copyId": "İstemci kimliğini kopyala",
+        "rotate": "Yeni gizli anahtar",
+        "delete": "Sil",
+        "rotateConfirm": "{{name}} için yeni gizli anahtar oluşturulsun mu? Eskisi hemen çalışmayı bırakır.",
+        "deleteConfirm": "{{name}} silinsin mi? Onunla giriş yapan herkesin oturumu kapanır.",
+        "secretOnce": "{{name}} için gizli anahtar. Şimdi kopyalayın: yalnızca bir kez gösterilir.",
+        "name": "Uygulama adı",
+        "website": "Web sitesi (isteğe bağlı)",
+        "redirects": "Yönlendirme URL'leri, her satıra bir tane (https://siteniz.com/callback)",
+        "create": "Anahtar oluştur"
+      }
     },
     "card": {
       "open": "Açık"
@@ -12424,7 +12531,10 @@
       "confirm": "Pay {{amount}} jeton",
       "sending": "Ödeme gönderiliyor...",
       "sent": "Ödenmiş {{amount}} jeton'yi {{name}}.",
-      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
+      "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok.",
+      "testBadge": "Test modu",
+      "testBody": "Bu uygulama sizin, bu yüzden bu bir test: token hareket etmez ve makbuz test olarak işaretlenir.",
+      "testSent": "{{amount}} token test ödemesi. Hiçbir şey gönderilmedi."
     },
     "add": {
       "title": "{{name}}?",
@@ -19621,7 +19731,17 @@
     "formatting": "Biçimlendirme",
     "bodyPlaceholder": "Hikayenizi anlatın. Metni seçin ve üstteki çubuğu kullanın: başlıklar, kalın, alıntılar ve liste.",
     "bodyLabel": "Makale metni",
-    "wordCount": "{{count}} kelime"
+    "wordCount": "{{count}} kelime",
+    "imageLimit": "Makaleler en fazla {{count}} görsel içerebilir",
+    "imageLimitSome": "Bu makaleye yalnızca {{count}} görsel daha eklenebilir",
+    "imageFailed": "Bu görsel eklenemedi. Başka bir tane deneyin.",
+    "imagesUploading": "Görseller ekleniyor ({{count}})…",
+    "bodyTooLong": "Sınırın {{count}} karakter üzerinde",
+    "imagesLabel": "Görseller",
+    "imagesCount": "Görseller · {{count}}/{{max}}",
+    "captionPlaceholder": "Açıklama ekle",
+    "captionLabel": "{{n}}. görselin açıklaması",
+    "removeInlineImage": "{{n}}. görseli kaldır"
   },
   "liveAudience": {
     "whosHere": "Kimler burada",
@@ -20055,5 +20175,17 @@
     "privacy": "Sadece bu lansman hakkında söylemek için kullanılıyor.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "Yeni DeHub tokenı çok yakında çıkıyor. Listeye katılın, yayına girdiği anda tek bir e-posta alın ve doğrudan DeHub cüzdanınızdan satın alın."
+  },
+  "githubLink": {
+    "hint": "GitHub'a giriş yapın hesabınızın sizin olduğunuzu kanıtlamak için. DeHub sadece sizin GitHub profilinizi görür.",
+    "verified": "Doğrulanmış",
+    "verifiedAria": "Doğrulanmış GitHub hesabı",
+    "connected": "GitHub bağlantılı",
+    "disconnected": "GitHub bağlantısı kesildi",
+    "taken": "O DeHub profilinde zaten bu GitHub hesabı var.",
+    "failed": "GitHub'a bağlanamadı. Lütfen tekrar deneyin.",
+    "unavailable": "GitHub doğrulaması yakında gelecek.",
+    "connect": "Bağlan GitHub'a",
+    "disconnect": "Bağlantıyı kes"
   }
 }

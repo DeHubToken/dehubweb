@@ -58,6 +58,8 @@ const landing = { path: location.pathname, search: location.search, referrer: do
 void import("./lib/first-touch").then((m) => m.captureFirstTouch(landing)).catch(() => undefined);
 // Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
 installWalletSessionFetch();
+// Marks dehub.io browsers holding a login or unsecured wallet for the riftn.com hand-off.
+void import("./lib/domain-handoff").then((m) => m.watchLocalState()).catch(() => undefined);
 
 // Chrome/Edge/Safari's own "translate this page" rewrites the text nodes React
 // is holding, and React's next update then throws NotFoundError and unmounts

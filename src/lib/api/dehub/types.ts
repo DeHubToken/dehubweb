@@ -319,6 +319,10 @@ export interface DeHubNFT {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** 'comic' shows the gallery as collector cards. */
+  layout?: 'comic';
+  /** Comic captions, one per page in display order. */
+  mediaCaptions?: string[];
   /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
   hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
@@ -431,6 +435,10 @@ export interface SearchAccount {
   followingCount?: number;
   isFollowing?: boolean;
   followsYou?: boolean;
+  /** The search API's own names for the follower count and bio. */
+  followers?: number;
+  aboutMe?: string | null;
+  coverImageUrl?: string | null;
 }
 
 export interface SearchLivestream {

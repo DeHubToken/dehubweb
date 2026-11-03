@@ -162,7 +162,25 @@
     "saved": "Profielvelde gestoor",
     "failed": "Dit is nie gestoor nie. Probeer weer.",
     "verified": "Geverifieerde skakel",
-    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}"
+    "verifyHint": "Om 'n skakel te verifieer, voeg dit by daardie bladsy en stoor weer: {{snippet}}",
+    "descriptionPresets": "Voeg 'n webwerf, voornaamwoorde of iets anders by. Maak kontak met jou sosiale netwerke.",
+    "type": "Veldtipe",
+    "needsLabel": "Gee elke pasgemaakte veld 'n etiket",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "hulle/hulle",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Webwerf",
+      "blog": "Blog",
+      "portfolio": "Portefeulje",
+      "shop": "Winkel",
+      "podcast": "Podsending",
+      "newsletter": "Nuusbrief",
+      "pronouns": "Voornaamwoorde",
+      "location": "Ligging",
+      "custom": "Pasmaak",
+      "customOption": "Pasmaak etiket"
+    }
   },
   "followedTags": {
     "follow": "Volg #{{tag}}",
@@ -408,6 +426,7 @@
   },
   "nav": {
     "reorderHint": "Hou en sleep enige ikoon vas om dit te herskik",
+    "reorderReset": "Herstel",
     "reorderResetLong": "Stel kieslysbestelling terug",
     "home": "Tuis",
     "explore": "Verken",
@@ -452,8 +471,7 @@
     "getTheApp": "Kry die app",
     "connectAi": "Koppel KI",
     "converter": "Converter",
-    "affiliate": "Vennoot",
-    "reorderReset": "Herstel"
+    "affiliate": "Vennoot"
   },
   "feed": {
     "viewProfile": "Bekyk {{name}} se profiel",
@@ -2031,7 +2049,11 @@
     "checkingTokenBalance": "Kontroleer jou tokenbalans...",
     "deleteConversationFailed": "Kon nie die gesprek uitvee nie",
     "message": "Boodskap",
-    "noConversationsYet": "Nog geen gesprek"
+    "noConversationsYet": "Nog geen gesprek",
+    "sending": "Stuur",
+    "notSent": "Nie gestuur nie",
+    "retrySend": "Probeer weer",
+    "discardSend": "Verwyder"
   },
   "music": {
     "listeningCount_one": "{{count}} luister",
@@ -10747,8 +10769,12 @@
       "restore": "Herstel",
       "restored": "Herstelde weergawe {{version}}"
     },
-    "stakeForAllowance": "Stel DeHub-tokens in om jou daaglikse bou-toelae te verhoog",
     "buildInChat": "Bou in jou DM's met @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} in krediete",
+    "perPrompt": "≈ {{price}} per opdrag",
+    "pricingNote": "Elke opdrag word uit jou krediete betaal teen die model se koste plus 30%. Die meeste wat 'n opdrag kan kos, word gehou terwyl dit loop, en die ongebruikte deel word teruggegee.",
+    "topUpCredits": "Laai krediete aan",
     "landerTitle": "Bou 'n app net deur te vra",
     "landerSubtitle": "Vertel @assistent wat jy in jou boodskappe wil hê. Dit bou die app, huisves dit en stuur jou 'n skakel wat enigiemand kan oopmaak. Antwoord om iets te veranderen.",
     "promptPlaceholder": "Beskryf die app wat jy wil hê...",
@@ -18900,6 +18926,18 @@
     "privacy": "Slegs gebruik om jou van die bekendstelling in te lig.",
     "seoTitle": "Token word binnekort geloods | DeHub",
     "seoDescription": "Die nuwe DeHub-token word binnekort geloods. Sluit aan by die lys en ontvang 'n e-pos die oomblik dit lewendig gaan, dan koop direk vanaf jou DeHub-beursie."
+  },
+  "githubLink": {
+    "hint": "Teken in op GitHub om te bewys dat die rekening joune is. DeHub sien slegs jou publieke GitHub-profiel.",
+    "verified": "Geverifieer",
+    "verifiedAria": "Geverifieerde GitHub-rekening",
+    "connected": "GitHub verbind",
+    "disconnected": "GitHub ontkoppel",
+    "taken": "Die GitHub-rekening is reeds op 'n ander DeHub-profiel.",
+    "failed": "Kon nie GitHub koppel nie. Probeer weer.",
+    "unavailable": "GitHub is soon.",
+    "connect": "Verbind met GitHub",
+    "disconnect": "Ontkoppel"
   },
   "footer": {
     "company": "Maatskappy",

@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Profielvelden",
-    "description": "Tot vier extra regels op je profiel, zoals een website of je voornaamwoorden.",
+    "description": "Optionele aangepaste profielvelden",
     "label": "Label",
     "content": "Inhoud",
+    "add": "Veld toevoegen",
+    "remove": "Veld verwijderen",
     "save": "Velden opslaan",
     "saved": "Profielvelden opgeslagen",
     "failed": "Dat is niet opgeslagen. Probeer het opnieuw.",
     "verified": "Geverifieerde link",
-    "verifyHint": "Om een link te verifiëren, voeg je dit toe aan die pagina en sla je opnieuw op: {{snippet}}"
+    "verifyHint": "Om een link te verifiëren, voeg je dit toe aan die pagina en sla je opnieuw op: {{snippet}}",
+    "descriptionPresets": "Voeg een website, voornaamwoorden of iets anders toe. Links tonen met je socials.",
+    "type": "Veldtype",
+    "needsLabel": "Geef elk aangepast veld een label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "zij/zij",
+    "placeholderLocation": "Stad, land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Winkel",
+      "podcast": "Podcast",
+      "newsletter": "Nieuwsbrief",
+      "pronouns": "Voornaamwoorden",
+      "location": "Locatie",
+      "custom": "Aangepast",
+      "customOption": "Aangepast label"
+    }
   },
   "followedTags": {
     "follow": "Volg #{{tag}}",
@@ -1496,7 +1516,10 @@
     "messageWallNote": "Verschijnt op de fooienmuur zodra de fooi rond is.",
     "sendWithMessage": "Versturen met bericht",
     "messageFailed": "Je bericht kon niet worden toegevoegd. Er is geen fooi verstuurd.",
-    "wallLabel": "Fooiberichten"
+    "wallLabel": "Fooiberichten",
+    "railTitle": "Fooien",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Je volgt nu {{name}}. Je krijgt een melding wanneer ze live gaan.",
@@ -2359,7 +2382,11 @@
     "checkingTokenBalance": "Je tokenbalans controleren...",
     "deleteConversationFailed": "Kon het gesprek niet verwijderen",
     "message": "Bericht",
-    "noConversationsYet": "Nog geen gesprekken"
+    "noConversationsYet": "Nog geen gesprekken",
+    "sending": "Verzenden",
+    "notSent": "Niet verzonden",
+    "retrySend": "Opnieuw",
+    "discardSend": "Verwijderen"
   },
   "music": {
     "listeningCount_one": "{{count}} luisteren",
@@ -2414,6 +2441,24 @@
     "mutualsOne": "{{count}} gemeenschappelijk:",
     "mutualsMany": "{{count}} gemeenschappelijk:",
     "back": "Terug",
+    "reserve": {
+      "available": "Gebruikersnaam beschikbaar",
+      "held": "Voor jou vastgehouden",
+      "ended": "Reservering verlopen",
+      "busy": "Wordt gereserveerd",
+      "availableBody": "dehub.io/{{name}} is nu vrij. Reserveer hem en we houden hem een minuut voor je vast terwijl je je aanmeldt.",
+      "heldBody": "Niemand anders kan @{{name}} nemen tot de timer afloopt. Rond je aanmelding af om hem te houden.",
+      "endedBody": "Je minuut is om, dus @{{name}} is weer voor iedereen beschikbaar. Hij is nog steeds vrij.",
+      "busyBody": "Iemand meldt zich nu aan als @{{name}}. Als diegene niet afrondt, komt hij vrij wanneer de timer afloopt.",
+      "finish": "Aanmelding afronden",
+      "again": "Opnieuw reserveren",
+      "cta": "Nu reserveren",
+      "letGo": "Laat maar gaan",
+      "haveAccount": "Heb je al een account?",
+      "signIn": "Inloggen",
+      "seoTitle": "@{{name}} is beschikbaar op DeHub",
+      "seoDescription": "Niemand heeft dehub.io/{{name}} nog. Reserveer hem en meld je aan om hem van jou te maken."
+    },
     "usernameAvailable": "Gebruikersnaam beschikbaar!",
     "signUpToClaim": "Meld je vandaag aan om te claimen",
     "signUp": "Aanmelden",
@@ -6630,6 +6675,26 @@
     "docsSeoDescription": "Referentiedocumentatie voor DeHub's AI-assistentvaardigheden en promptbibliotheek.",
     "docsLoadFailed": "# Fout\nKon vaardigheidsdocumentatie niet laden.",
     "raw": "Ruw"
+  },
+  "nftMarket": {
+    "shortTitle": "NFT's",
+    "filters": "Filters",
+    "forSale": "Te koop",
+    "openToOffers": "Open voor biedingen",
+    "freshMints": "Vers van DeHub-makers",
+    "makeOffer": "Bod doen",
+    "offersOpen": "Open voor biedingen",
+    "mintedCount": "{{n}} gemint",
+    "trending": "Populaire collecties",
+    "floor": "Bodemprijs",
+    "listedCount": "{{n}} te koop",
+    "thisCollection": "Deze collectie",
+    "collectionOffer": "Bied op een willekeurige",
+    "showAll": "Alles tonen",
+    "title": "NFT-markt",
+    "subtitle": "Kopen, verkopen en bieden op BNB en Base",
+    "seoTitle": "NFT-markt: koop en verkoop NFT’s op BNB en Base | DeHub",
+    "seoDescription": "Koop, verkoop en doe biedingen op NFT’s op BNB Chain en Base. Betaal in BNB, ETH of DHB. Elke transactie ruilt de NFT en de betaling in één stap."
   },
   "usernames": {
     "seoTitle": "Gebruikersnaammarktplaats | DeHub",
@@ -11701,8 +11766,12 @@
       "restore": "Herstellen",
       "restored": "Herstelde versie {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub-tokens om je dagelijkse build-toelage te verhogen",
     "buildInChat": "Bouw in je DM's met @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} aan tegoed",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Elke prompt wordt betaald uit je tegoed tegen de kosten van het model plus 30%. Het maximale bedrag dat een prompt kan kosten wordt vastgehouden zolang hij loopt, en het ongebruikte deel wordt teruggegeven.",
+    "topUpCredits": "Tegoed opwaarderen",
     "landerTitle": "Bouw een app door te vragen",
     "landerSubtitle": "Vertel @assistent wat je wilt in je berichten. Het bouwt de app, host deze en stuurt je een link die iedereen kan openen. Reageer om iets te wijzigen.",
     "promptPlaceholder": "Beschrijf de app die je wilt...",
@@ -12634,6 +12703,7 @@
       "stateUnlisted": "Live via link · in beoordeling voor de winkel",
       "stateListed": "In de winkel",
       "stateSuspended": "Opgeschort",
+      "stateRejected": "Live via link · niet goedgekeurd voor de winkel",
       "copyLink": "Link kopiëren",
       "notifyKey": "Meldingssleutel",
       "notifyKeyOnce": "Nieuwe meldingssleutel voor {{name}}. Kopieer hem nu: hij wordt één keer getoond, en een nieuwe vervangt hem.",
@@ -12647,7 +12717,44 @@
       "rewardsWeek": "Week van {{date}}",
       "rewardPaid": "Uitbetaalde",
       "rewardPending": "Openstaand",
-      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag."
+      "rewardsNone": "Er zijn nog geen beloningen berekend. De eerste week sluit op maandag.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Gebeurtenissen die DeHub naar je webhookUrl stuurde. Testen stuurt een ping-gebeurtenis.",
+        "test": "Test sturen",
+        "ok": "Webhook antwoordde {{status}}",
+        "failed": "Webhook mislukt: {{reason}}",
+        "none": "Nog geen webhooks verstuurd."
+      },
+      "stats": {
+        "button": "Statistieken",
+        "chartTitle": "Mensen die je app openden, laatste 30 dagen",
+        "peak_one": "Piek {{count}} per dag",
+        "peak_other": "Piek {{count}} per dag",
+        "people30": "Mensen, 30 dagen",
+        "people7": "Mensen, 7 dagen",
+        "added": "Toegevoegd",
+        "dhb30": "DHB betaald, 30 dagen",
+        "notified30": "Meldingen verstuurd, 30 dagen",
+        "rewards": "Verdiende DHB-beloningen"
+      },
+      "signin": {
+        "title": "Inloggen met DeHub",
+        "body": "Laat mensen inloggen op je website of app met hun DeHub-account. Maak hier een sleutel en volg de handleiding.",
+        "guide": "Lees de handleiding",
+        "users_one": "{{count}} gebruiker",
+        "users_other": "{{count}} gebruikers",
+        "copyId": "Client-ID kopiëren",
+        "rotate": "Nieuw geheim",
+        "delete": "Verwijderen",
+        "rotateConfirm": "Nieuw geheim maken voor {{name}}? Het oude geheim werkt meteen niet meer.",
+        "deleteConfirm": "{{name}} verwijderen? Iedereen die ermee is ingelogd wordt uitgelogd.",
+        "secretOnce": "Geheim voor {{name}}. Kopieer het nu: het wordt maar één keer getoond.",
+        "name": "Naam van de app",
+        "website": "Website (optioneel)",
+        "redirects": "Redirect-URL's, één per regel (https://jouwsite.com/callback)",
+        "create": "Sleutel maken"
+      }
     },
     "card": {
       "open": "Open"
@@ -12673,7 +12780,10 @@
       "confirm": "Betaal {{amount}} tokens",
       "sending": "Stuur je betaling op…",
       "sent": "Betaald {{amount}} tokens aan {{name}}.",
-      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen."
+      "noOwner": "Deze app heeft nog geen bevestigde wallet om mee te betalen.",
+      "testBadge": "Testmodus",
+      "testBody": "Deze app is van jou, dus dit is een test: er gaan geen tokens over en het bewijs is gemarkeerd als test.",
+      "testSent": "Testbetaling van {{amount}} tokens. Er is niets verstuurd."
     },
     "add": {
       "title": "Vul {{name}} toe?",
@@ -19870,7 +19980,17 @@
     "formatting": "Opmaak",
     "bodyPlaceholder": "Vertel je verhaal. Selecteer tekst en gebruik de balk hierboven voor koppen, vet, aanhalingstekens en lijsten.",
     "bodyLabel": "Artikel body",
-    "wordCount": "{{count}} woorden"
+    "wordCount": "{{count}} woorden",
+    "imageLimit": "Artikelen kunnen maximaal {{count}} afbeeldingen bevatten",
+    "imageLimitSome": "Er passen nog maar {{count}} afbeeldingen in dit artikel",
+    "imageFailed": "Die afbeelding kon niet worden toegevoegd. Probeer een andere.",
+    "imagesUploading": "Afbeeldingen toevoegen ({{count}})…",
+    "bodyTooLong": "{{count}} tekens boven de limiet",
+    "imagesLabel": "Afbeeldingen",
+    "imagesCount": "Afbeeldingen · {{count}}/{{max}}",
+    "captionPlaceholder": "Voeg een bijschrift toe",
+    "captionLabel": "Bijschrift voor afbeelding {{n}}",
+    "removeInlineImage": "Afbeelding {{n}} verwijderen"
   },
   "liveAudience": {
     "whosHere": "Wie is hier",
@@ -20304,5 +20424,17 @@
     "privacy": "Alleen gebruikt om je op de hoogte te houden van de lancering.",
     "seoTitle": "Token gaat spoedig live | DeHub",
     "seoDescription": "Het nieuwe DeHub-token gaat spoedig live. Voeg je toe aan de lijst en ontvang één e-mail zodra het live gaat, en koop direct vanuit je DeHub-wallet."
+  },
+  "githubLink": {
+    "hint": "Meld je aan bij GitHub om aan te tonen dat de account van jou is. DeHub ziet alleen je openbare GitHub-profiel.",
+    "verified": "Gecontroleerd",
+    "verifiedAria": "Gecontroleerde GitHub-account",
+    "connected": "GitHub verbonden",
+    "disconnected": "GitHub losgekoppeld",
+    "taken": "Die GitHub-account is al gekoppeld aan een andere DeHub-profiel.",
+    "failed": "Kon GitHub niet verbinden. Probeer het opnieuw.",
+    "unavailable": "GitHub-verificatie komt binnenkort.",
+    "connect": "GitHub verbinden",
+    "disconnect": "Ontkoppelen"
   }
 }

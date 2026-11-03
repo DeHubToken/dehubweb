@@ -162,7 +162,25 @@
     "saved": "Echekwala mpaghara profaịlụ",
     "failed": "Edebeghị ya. Nwaa ọzọ.",
     "verified": "Njikọ akwadoro",
-    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}"
+    "verifyHint": "Iji kwado njikọ, tinye nke a na ibe ahụ, wee chekwaa ọzọ: {{snippet}}",
+    "descriptionPresets": "Tinye a website, pronouns ma ọ bụ ihe ọ bụla ọzọ. Njikọ na-egosi na gị socials.",
+    "type": "Ụdị Ubi",
+    "needsLabel": "Nye mpaghara emeredịkachọrọ ọ bụla akara ngosi",
+    "placeholderLink": "gịsite.com",
+    "placeholderPronouns": "ha/ha",
+    "placeholderLocation": "Obodo, obodo",
+    "presets": {
+      "website": "Weebụsaịtị",
+      "blog": "Blog",
+      "portfolio": "Pọtụfoliyo",
+      "shop": "Ụlọ ahịa",
+      "podcast": "Podcast",
+      "newsletter": "Akwụkwọ akụkọ",
+      "pronouns": "Kpọtụrụ anyị",
+      "location": "Ebe",
+      "custom": "Omenala",
+      "customOption": "Akara emeredịkachọrọ"
+    }
   },
   "followedTags": {
     "follow": "Soro #{{tag}}",
@@ -10611,8 +10629,12 @@
       "restore": "Weghachi",
       "restored": "E weghachitere ụdị {{version}}"
     },
-    "stakeForAllowance": "Tinye token DeHub iji welie ikike iwulite kwa ụbọchị gị",
     "buildInChat": "Wuo n'ozi nzuzo gị na @assistant",
+    "modelLabel": "Ụdị",
+    "creditsLeft": "{{amount}} na kredit",
+    "perPrompt": "≈ {{price}} kwa ajụjụ",
+    "pricingNote": "A na-akwụ ụgwọ ajụjụ ọ bụla site na kredit gị na ọnụahịa ụdị ahụ gbakwunyere 30%. A na-ejide ego kachasị nke ajụjụ nwere ike ịfụ mgbe ọ na-arụ ọrụ, a na-eweghachikwa akụkụ a na-ejighị.",
+    "topUpCredits": "Tinye kredit",
     "landerTitle": "Mepụta ngwa naanị site n 'ịjụ",
     "landerSubtitle": "Gwa @nnyemaaka ihe ị chọrọ na ozi gị. Ọ na-ewu ngwa ahụ, na-akwado ya ma na-ezitere gị njikọ onye ọ bụla nwere ike imeghe. Zaghachi ịgbanwe ihe ọ bụla.",
     "promptPlaceholder": "Ihe ọzọ bụ na, you can reach all these destinations by train…",
@@ -18707,13 +18729,32 @@
     "codeNote": "Anyị na-ezitere gị koodu, ọ dịghị paswọọdụ achọrọ."
   },
   "tokenLaunch": {
+    "eyebrow": "Na-abịa n 'oge na-adịghị anya",
+    "title": "Token launching adịghị anya",
     "body": "Ịzụ ahịa emechaala ka token ọhụrụ na-akwadebe. Nata imeyl ngwa ngwa mgbe ọ na-amalite.",
+    "notifyMe": "Gwa m",
     "sendTo": "Anyị ga-ezipụ {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Email gị",
+    "invalidEmail": "Tinye a nti email",
     "joinedTitle": "Ndè mma nke ụlọ ụlọ.",
+    "joinedBody": "Anyị ga-eziga email {{email}} mgbe akara ngosi ahụ malitere.",
     "joinedBodyNoEmail": "Aga m ezipụta gị ozi mgbe token ahụ na-amalite.",
     "failed": "Ndèrè n'egwèrè nke àlà. Nkèrè n'egwèrè.",
     "privacy": "Naanị ejiri ya ịkwu gị ihe banyere mmalite ahụ.",
     "seoTitle": "Token na-amalite n'oge na-adịghị anya | DeHub",
     "seoDescription": "Ọhụụ token DeHub ọhụụ na-abịa n'oge na-adịghị anya. Sonye na ndepụta ma nata imeyl otu mgbe ọ na-amalite, mgbe ahụ zụta ozugbo site na akpa ego DeHub gị."
+  },
+  "githubLink": {
+    "hint": "Banye na GitHub iji gosi na akaụntụ ahụ bụ nke gị. DeHub na-ahụ naanị profaịlụ GitHub gị.",
+    "verified": "Nyochaa",
+    "verifiedAria": "Gosiri GitHub akaụntụ",
+    "connected": "GitHub ejikọrọ",
+    "disconnected": "E kewapụla GitHub",
+    "taken": "Akaụntụ GitHub ahụ adịworị na profaịlụ DeHub ọzọ.",
+    "failed": "Enweghị m ike ijikọ GitHub. Gbalịa ọzọ.",
+    "unavailable": "Nyocha GitHub na-abịa n 'oge na-adịghị anya.",
+    "connect": "Jikọọ GitHub",
+    "disconnect": "Kwụpụ"
   }
 }

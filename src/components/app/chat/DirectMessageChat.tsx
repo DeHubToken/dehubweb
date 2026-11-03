@@ -44,13 +44,18 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput, type ChatInputSendArgs } from './ChatInput';
+import { DmVideoBubble } from './DmVideo';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestruct, DmDestructChoice } from '@/lib/dm-destruct';
+import { markDmMessageViewed } from '@/lib/api/dehub/dm';
 import { DmLockedState, DmUndecryptableRun } from './DmLockedState';
 import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
-import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
+import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation, failedSendRetry, discardFailedSend } from '@/hooks/use-messages';
+import { SendStatus } from './SendStatus';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useBannedAccount } from '@/hooks/use-banned-account';
@@ -68,6 +73,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
+import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
@@ -94,6 +100,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { downloadMedia, messageImageDownloadName } from '@/lib/download-media';
 import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
@@ -220,8 +227,12 @@ function EncryptedMediaBody({
   mediaUrl,
   voiceDuration,
   onOpenImage,
+  isOwn,
+  destruct,
 }: {
   messageId: string;
+  isOwn?: boolean;
+  destruct?: DmDestruct | null;
   media: MediaDescriptor;
   mediaUrl?: string;
   voiceDuration?: number | null;
@@ -232,6 +243,8 @@ function EncryptedMediaBody({
   const { url, status, load, retry } = useDecryptedMedia(mediaUrl, media, { messageId, enabled: eager });
   const [fileBusy, setFileBusy] = useState(false);
   const [fileFailed, setFileFailed] = useState(false);
+  // A video only starts by itself once the viewer has tapped it.
+  const [requested, setRequested] = useState(false);
   const uploading = !mediaUrl && !url;
 
   if (media.kind === 'audio') {
@@ -297,10 +310,27 @@ function EncryptedMediaBody({
     );
   }
 
+  if (media.kind === 'video' && status !== 'error') {
+    return (
+      <DmVideoBubble
+        messageId={messageId}
+        src={status === 'ready' ? url : undefined}
+        poster={media.thumb}
+        width={media.w}
+        height={media.h}
+        duration={media.dur}
+        options={media.opts}
+        mine={!!isOwn}
+        destruct={destruct}
+        onViewed={() => { void markDmMessageViewed(messageId).catch(() => undefined); }}
+        autoPlay={requested}
+        loading={uploading || status === 'loading'}
+        onNeedSource={() => { if (uploading) return; setRequested(true); load(); }}
+      />
+    );
+  }
+
   if (media.kind === 'video') {
-    if (status === 'ready' && url) {
-      return <video src={url} controls autoPlay={!!mediaUrl} playsInline className="max-w-full max-h-64 rounded-lg bg-black" />;
-    }
     return (
       <EncryptedMediaPlaceholder media={media} status={uploading ? 'loading' : status} onRetry={retry}>
         <button
@@ -337,6 +367,28 @@ function EncryptedMediaBody({
 // keystrokes, incoming messages) used to re-render EVERY bubble — each parsing
 // dates via formatDistanceToNow. Handler props are useCallback'd by the
 // parent, so only bubbles whose message/highlight actually changed re-render.
+/**
+ * An image that keeps showing what it has until the next source is ready.
+ *
+ * A photo you just sent is drawn from the local file; when the send lands its
+ * address becomes the uploaded copy. Swapping `src` straight away blanked the
+ * picture while the upload downloaded, so the photo seemed to vanish and come
+ * back. The new address is loaded off screen first and swapped in once decoded.
+ */
+function SettledImg({ src, ...rest }: React.ImgHTMLAttributes<HTMLImageElement> & { src: string }) {
+  const [shown, setShown] = useState(src);
+  useEffect(() => {
+    if (src === shown) return;
+    let live = true;
+    const next = new Image();
+    next.onload = () => { if (live) setShown(src); };
+    next.onerror = () => { if (live) setShown(src); };
+    next.src = src;
+    return () => { live = false; };
+  }, [src, shown]);
+  return <img src={shown} {...rest} />;
+}
+
 const MessageBubble = memo(function MessageBubble({
   message,
   isOwnMessage,
@@ -353,6 +405,8 @@ const MessageBubble = memo(function MessageBubble({
   currentUserAddress,
   onReact,
   onRemoveReaction,
+  onRetrySend,
+  onDiscardSend,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
@@ -371,6 +425,8 @@ const MessageBubble = memo(function MessageBubble({
   currentUserAddress?: string;
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
+  onRetrySend?: (clientKey: string) => void;
+  onDiscardSend?: (clientKey: string) => void;
 }) {
   const { t: _copy } = _useCopy();
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
@@ -418,6 +474,34 @@ const MessageBubble = memo(function MessageBubble({
   const encMedia = message.encMedia;
   const isLockedMedia = !encMedia && !!primaryMedia?.encrypted;
 
+  // A plain photo, video or document can be saved from the hover actions.
+  // Paid and end-to-end encrypted attachments are left out: one is a blurred
+  // preview, the other downloads from its own tap.
+  const downloadTarget = useMemo(() => {
+    if (message.msgType !== 'media' || message.lock || encMedia || isLockedMedia || !primaryMediaUrl) return null;
+    const url = getMediaUrl(primaryMediaUrl) || primaryMediaUrl;
+    if (!/^(https?:|blob:)/.test(url)) return null;
+    const name = isFileMedia
+      ? (primaryMedia?.name || 'file')
+      : primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/')
+        ? `dehub-chat-${message._id}.mp4`
+        : messageImageDownloadName(url);
+    return { url, name };
+  }, [message.msgType, message.lock, message._id, encMedia, isLockedMedia, primaryMediaUrl, isFileMedia, primaryMedia?.name, primaryMedia?.type, primaryMedia?.mimeType]);
+  const handleDownloadMedia = useCallback(async () => {
+    if (!downloadTarget) return;
+    const toastId = `dm-download-${message._id}`;
+    toast.loading(_copy("copy.757726036c1c", { defaultValue: "Preparing download..." }), { id: toastId });
+    try {
+      await downloadMedia(downloadTarget.url, downloadTarget.name);
+      toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
+    } catch {
+      // A host that refuses the fetch still serves the file to a plain link.
+      window.open(downloadTarget.url, '_blank', 'noopener,noreferrer');
+      toast.dismiss(toastId);
+    }
+  }, [downloadTarget, message._id, _copy]);
+
   // A shared entity: a text message whose content contains a link to something
   // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
   //
@@ -440,7 +524,7 @@ const MessageBubble = memo(function MessageBubble({
    * id it could not resolve and died there without a word — the row is held
    * back until the send comes back with a real one.
    */
-  const isUnsent = message._id.startsWith('temp-');
+  const isUnsent = !!message.sendState || message._id.startsWith('temp-');
   const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
   const editPending = useRef(false);
   const saveEdit = async () => {
@@ -698,6 +782,8 @@ const MessageBubble = memo(function MessageBubble({
               <div>
                 <EncryptedMediaBody
                   messageId={message._id}
+                  isOwn={isOwnMessage}
+                  destruct={message.destruct}
                   media={encMedia}
                   mediaUrl={primaryMediaUrl}
                   onOpenImage={onOpenImage}
@@ -709,7 +795,11 @@ const MessageBubble = memo(function MessageBubble({
                 )}
               </div>
             )}
-            {message.msgType === 'media' && !encMedia && !isLockedMedia && (
+            {/* Pay-to-unlock photo or video: its own card, never the plain media path. */}
+            {message.msgType === 'media' && message.lock && (
+              <LockedMediaBubble message={message} onOpenImage={onOpenImage} />
+            )}
+            {message.msgType === 'media' && !message.lock && !encMedia && !isLockedMedia && (
               <div>
                 {primaryMediaUrl && isFileMedia ? (
                   <>
@@ -743,13 +833,13 @@ const MessageBubble = memo(function MessageBubble({
                 ) : primaryMediaUrl ? (
                   <>
                     {primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/') ? (
-                      <video
+                      <DmVideoBubble
+                        messageId={message._id}
                         src={getMediaUrl(primaryMediaUrl) || primaryMediaUrl}
-                        controls
-                        playsInline
-                        preload="metadata"
-                        data-dm-video
-                        className="max-w-full max-h-64 rounded-lg bg-black"
+                        options={message.mediaOptions}
+                        mine={isOwnMessage}
+                        destruct={message.destruct}
+                        onViewed={() => { void markDmMessageViewed(message._id).catch(() => undefined); }}
                       />
                     ) : primaryMedia?.type === 'audio' || primaryMedia?.mimeType?.startsWith('audio/') ? (
                       <VoiceMessagePlayer
@@ -758,7 +848,7 @@ const MessageBubble = memo(function MessageBubble({
                         isPending={false}
                       />
                     ) : (
-                    <img
+                    <SettledImg
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
@@ -839,7 +929,7 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || (onEdit && canEdit)) && (
+          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || downloadTarget || (onEdit && canEdit)) && (
             <div
               className={`absolute top-1/2 -translate-y-1/2 ${isOwnMessage ? 'right-full mr-1' : 'left-full ml-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
             >
@@ -896,6 +986,17 @@ const MessageBubble = memo(function MessageBubble({
                   title={tr('messages.edit')}
                 >
                   <Pencil className="w-3 h-3" />
+                </button>
+              )}
+              {downloadTarget && (
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadMedia()}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                  aria-label={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                >
+                  <Download className="w-3 h-3" />
                 </button>
               )}
               {onForward && (
@@ -977,9 +1078,20 @@ const MessageBubble = memo(function MessageBubble({
           {showPaymentPending && (
             <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
           )}
-          {isOwnMessage && !showPaymentPending && (
-            <span className={message.isRead ? "text-white" : "text-zinc-500"}>
-              {message.isRead ? "✓✓" : "✓"}
+          {isOwnMessage && !showPaymentPending && message.sendState === 'failed' && (
+            <SendStatus
+              state="failed"
+              onRetry={onRetrySend && (() => onRetrySend(message.clientKey ?? message._id))}
+              onDiscard={onDiscardSend && (() => onDiscardSend(message.clientKey ?? message._id))}
+            />
+          )}
+          {isOwnMessage && !showPaymentPending && message.sendState !== 'failed' && (
+            // One fixed slot: a spinning ring while the send is out, the tick
+            // once it lands. Same box either way, so nothing on the line moves.
+            <span className={`relative inline-flex items-center justify-end min-w-[14px] ${message.isRead ? "text-white" : "text-zinc-500"}`}>
+              {message.sendState === 'sending'
+                ? <SendStatus state="sending" />
+                : (message.isRead ? "✓✓" : "✓")}
             </span>
           )}
         </div>
@@ -1455,6 +1567,19 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
 
+  // A failed line stays where it was sent; Retry resends it in place (reusing
+  // any fee already paid for it), Remove drops it.
+  const retrySendRef = useRef(sendMessageMutation.mutateAsync);
+  retrySendRef.current = sendMessageMutation.mutateAsync;
+  const handleRetrySend = useCallback((clientKey: string) => {
+    const vars = failedSendRetry(clientKey);
+    if (!vars) return;
+    void retrySendRef.current(vars).catch(() => {});
+  }, []);
+  const handleDiscardSend = useCallback((clientKey: string) => {
+    discardFailedSend(queryClient, resolvedConversationId, clientKey);
+  }, [queryClient, resolvedConversationId]);
+
   // Register call message handler so call events appear as bubbles in this chat
   useEffect(() => {
     setCallMessageHandler((content) => {
@@ -1831,12 +1956,18 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     mediaFile,
     gifUrl,
     duration,
+    mediaOptions,
+    destruct,
+    lockPrice,
   }: {
     content: string;
     type: 'msg' | 'media' | 'gif' | 'voice';
     mediaFile?: File;
     gifUrl?: string;
     duration?: number;
+    mediaOptions?: DmVideoOptions;
+    destruct?: DmDestructChoice;
+    lockPrice?: number;
   }) => {
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
@@ -2027,7 +2158,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     // mutateAsync, not mutate with per-call callbacks: those are dropped when
     // another send or a call event starts first, which left the composer
     // waiting forever with text that had already gone out.
-    return sendMessageMutation.mutateAsync(
+    const sending = sendMessageMutation.mutateAsync(
       {
         content,
         msgType: type,
@@ -2037,47 +2168,35 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         txHash: feeTxHash,
         replyTo: replyingTo?._id,
         replyPreview,
+        mediaOptions,
+        destruct,
+        lockPrice,
       },
-    ).then(
+    );
+    // The line is on screen from this moment (drawn as it will look once
+    // delivered, with a small spinner), so the reply chip and the scroll go now
+    // rather than after the round trip.
+    paidTxHashRef.current = null;
+    setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
+    requestAnimationFrame(scrollToBottom);
+    return sending.then(
         (data) => {
-          // The held fee has now been spent on a message that went out.
-          paidTxHashRef.current = null;
-          setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
-          setTimeout(scrollToBottom, 100);
           return true;
         },
         (err) => {
           /*
-           * The composer cleared itself the moment Send was pressed, so a
-           * failure here used to destroy the message outright. Put the words
-           * back where they were typed instead — the draft store is already
-           * what the composer reads from, so this refills it in place.
-           * Attachments cannot be restored (a File does not survive), which is
-           * why the toast distinguishes the two cases.
+           * The line stays in the thread, marked "Not sent" with Retry and
+           * Remove on it. Retry resends exactly what was sent (attachment and
+           * any fee already paid included), so nothing goes back in the box
+           * and nothing is charged twice.
            */
-          const restored = content.trim();
-          if (feeTxHash && restored) {
-            // The fee is already on-chain. Hold it against this exact message
-            // so pressing Send again reuses that payment rather than charging
-            // for a second one.
-            paidTxHashRef.current = { hash: feeTxHash, content: restored };
-          }
           const reason = err instanceof Error && err.message ? err.message : '';
-          toast.error(
-            restored
-              ? reason
-                ? _copy("copy.be9f2a4ccc47", { defaultValue: "{{value1}} Your message is back in the box.", value1: reason })
-                : _copy("copy.bbed874d4125", { defaultValue: "Failed to send message. Your message is back in the box." })
-              : mediaFile || gifUrl
-                ? reason
-                  ? _copy("copy.4805a5986928", { defaultValue: "{{value1}} Please attach it again.", value1: reason })
-                  : _copy("copy.2b7dfba1fd62", { defaultValue: "Failed to send message. Please attach it again." })
-                : reason || _copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }),
-          );
-          return false;
+          toast.error(reason || _copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }), { id: 'dm-send-failed' });
+          // The composer already let go of the text; it lives on the bubble now.
+          return true;
         },
       );
   };
@@ -2443,7 +2562,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
               return (
               <MessageBubble
-                key={message._id}
+                key={message.clientKey ?? message._id}
                 message={message}
                 isOwnMessage={isOwnMessage}
                 highlightText={searchLower}
@@ -2462,6 +2581,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 currentUserAddress={walletAddress || undefined}
                 onReact={(messageId, emoji) => { void addReaction(messageId, emoji).catch(() => toast.error(_copy("copy.1344ec522f09", { defaultValue: "Could not add reaction." }))); }}
                 onRemoveReaction={(messageId, emoji) => { void removeReaction(messageId, emoji).catch(() => toast.error(_copy("copy.b5145e1c11a3", { defaultValue: "Could not remove reaction." }))); }}
+                onRetrySend={handleRetrySend}
+                onDiscardSend={handleDiscardSend}
               />
             )});
           })()}
@@ -2516,6 +2637,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         thread={smartReplyThread}
         peerName={displayName}
         onSendMessage={handleSendMessage}
+        allowLock
         replyTo={composerReplyTo}
         onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}
@@ -2616,6 +2738,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         initialIndex={0}
         isOpen={!!fullscreenImage}
         onClose={() => setFullscreenImage(null)}
+        downloadable
       />
 
       {/* Forward message picker */}

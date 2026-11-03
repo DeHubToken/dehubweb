@@ -162,7 +162,25 @@
     "saved": "Майдонҳои профил захира шуданд",
     "failed": "Захира нашуд. Боз кӯшиш кунед.",
     "verified": "Пайванди тасдиқшуда",
-    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}"
+    "verifyHint": "Барои тасдиқи пайванд инро ба он саҳифа илова кунед ва боз захира кунед: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o iba pang iba. Ang mga link ay ipinapakita sa iyong mga social.",
+    "type": "Навъи майдон",
+    "needsLabel": "Ба ҳар як майдони фармоишӣ барчасп диҳед",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "онҳо/онҳо",
+    "placeholderLocation": "Шаҳр, кишвар",
+    "presets": {
+      "website": "Сомона",
+      "blog": "Блог",
+      "portfolio": "Портфолио",
+      "shop": "Мағоза",
+      "podcast": "Podcast",
+      "newsletter": "Бюллетен",
+      "pronouns": "Тахаллусҳо",
+      "location": "Ҷойгиршавӣ",
+      "custom": "Оддӣ",
+      "customOption": "ТамғаиМатн"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}}-ро пайгирӣ кардан",
@@ -10623,8 +10641,12 @@
       "restore": "Барқарор кардан",
       "restored": "Версияи барқароршуда {{version}}"
     },
-    "stakeForAllowance": "Токенҳои DeHub-ро барои зиёд кардани кӯмаки ҳаррӯзаи худ барои эҷод кардан истифода баред",
     "buildInChat": "Дар паёмҳои шахсӣ бо @assistant созед",
+    "modelLabel": "Модел",
+    "creditsLeft": "{{amount}} кредит",
+    "perPrompt": "≈ {{price}} барои ҳар дархост",
+    "pricingNote": "Ҳар дархост аз кредитҳои шумо бо нархи модел ва иловаи 30% пардохт мешавад. Ҳадди аксар нархи имконпазири дархост ҳангоми иҷро нигоҳ дошта мешавад ва қисми истифоданашуда баргардонида мешавад.",
+    "topUpCredits": "Пур кардани кредит",
     "landerTitle": "Lumikha ng isang application lamang sa pamamag",
     "landerSubtitle": "@ action: inmenu Ito ay nagbuo ng app, host ito at nagpapadala sa iyo ng isang link na maaaring buksan Ҷавоб додан барои тағйир додани ягон чиз.",
     "promptPlaceholder": "Тасвир кардани барномае, ки шумо мехоҳед...",
@@ -18721,5 +18743,30 @@
     "fingerprint": "Ангушт",
     "exploreFirst": "Мехнумайишгоҳ",
     "codeNote": "Мо ба шумо рамзро мефиристем, парол лозим нест."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Ба зудӣ",
+    "title": "Токен дар ҳоли барпоиш",
+    "body": "Харидҳо дар ҳоли таъйин аст, то токени нав омода шавад. Ҳангоми фаъолшавии он, почтаи электронӣ гиред.",
+    "notifyMe": "Манро огоҳ кунед",
+    "sendTo": "Мо ба {{email}} почтаи электронӣ мефиристем",
+    "emailLabel": "Почтаи электронӣ",
+    "emailPlaceholder": "Почтаи электронии шумо",
+    "invalidEmail": "Почтаи электронии дуруст ворид кунед",
+    "joinedTitle": "Шумо дар рӯйхат ҳастед",
+    "joinedBody": "Мо ба {{email}} почтаи электронӣ мефиристем, вақте ки токен оғоз мешавад.",
+    "joinedBodyNoEmail": "Мо ба шумо почтаи электронӣ мефиристем, вақте ки токен оғоз мешавад.",
+    "failed": "Сабт карда нашуд. Аз нав кӯшиш кунед.",
+    "privacy": "Танҳо барои огоҳ кардани шумо дар бораи оғоз истифода мешавад.",
+    "seoTitle": "Токен дар ҳоли барпоиш | DeHub",
+    "seoDescription": "Токени нави DeHub дар ҳоли барпоиш аст. Ба рӯйхат ҳамроҳ шавед ва ҳангоми фаъолшавии он, як почтаи электронӣ гиред, сипас бевосита аз ҳамёни DeHub худ харид кунед."
+  },
+  "githubLink": {
+    "hint": "Roʻyxatdan oʻtish uchun GitHubga kirishingiz kerak, shuning uchun hisobingiz siznikiga aylandi. DeHub faqat sizning umumiy GitHub profilingizni koʻrishadi.",
+    "verified": "Tasdiq etilgan",
+    "connected": "GitHub roʻyxatdan etilgan",
+    "taken": "Inshakhs, hesob GitHubi dar profili DeHubi baʼziy roʻy berde ast.",
+    "failed": "Qayd rosh qilib boʿd GitHub. Yana urinish konid.",
+    "disconnect": "Парокандашавондан."
   }
 }

@@ -5,6 +5,8 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
+import type { DmVideoOptions } from '@/lib/dm-video-options';
+import { destructFromChoice, type DmDestructChoice } from '@/lib/dm-destruct';
 import { useEffect, useRef, useReducer, useCallback, useSyncExternalStore } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
@@ -58,6 +60,7 @@ import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange,
 import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
 import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { lockDhbForUsd } from '@/lib/dm-lock-price';
 
 /**
  * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
@@ -554,7 +557,8 @@ export function useMessages(conversationId: string | null) {
             // Reconcile optimistic temp message (same sender + type + content within short window)
             // so we don't briefly render duplicates (temp + server copy).
             const optimisticIdx = firstItems.findIndex((candidate) => {
-              if (!candidate._id?.startsWith('temp-')) return false;
+              // A failed send is waiting on the user's Retry, not on this echo.
+              if (!candidate._id?.startsWith('temp-') || candidate.sendState === 'failed') return false;
 
               const sameType = (candidate.msgType ?? 'msg') === (normalizedMsg.msgType ?? 'msg');
               if (!sameType) return false;
@@ -606,6 +610,9 @@ export function useMessages(conversationId: string | null) {
                 // one the pending bubble was already showing.
                 replyTo: normalizedMsg.replyTo?.sender ? normalizedMsg.replyTo : (optimistic.replyTo ?? normalizedMsg.replyTo),
                 ...(keepIsReadFalse ? { isRead: false } : {}),
+                // Same bubble, same element: only the status mark changes.
+                clientKey: optimistic.clientKey ?? optimistic._id,
+                sendState: undefined,
               };
             } else {
               newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
@@ -657,7 +664,7 @@ export function useMessages(conversationId: string | null) {
           const pages = old.pages.map((page: any) => ({
             ...page,
             items: page.items.map((m: DmMessage) =>
-              m._id === data._id ? { ...m, isDeleted: true, content: '' } : m
+              m._id === (data._id ?? data.messageId) ? { ...m, isDeleted: true, content: '' } : m
             ),
           }));
           return { ...old, pages };
@@ -859,11 +866,142 @@ export function useCreateAndStart() {
 
 // ─── Send Message ─────────────────────────────────────────────────────────────
 
+type SendVariables = {
+  content: string;
+  msgType?: DmMsgType;
+  gifUrl?: string;
+  mediaFile?: File;
+  voiceDuration?: number;
+  replyTo?: string;
+  /** The quoted message as it should show on the pending bubble — the id alone renders nothing until the echo. */
+  replyPreview?: DmMessage['replyTo'];
+  txHash?: string;
+  forwardedFrom?: { messageId: string };
+  mediaOptions?: DmVideoOptions;
+  destruct?: DmDestructChoice;
+  /** Pay-to-unlock price for a photo or video. */
+  lockPrice?: number;
+  /** The clientKey of the line already on screen (a retry, or drawn before the mutation). */
+  retryKey?: string;
+};
+
+/** What each pending send asked for, so a failed one can be retried as it was. */
+const pendingSends = new Map<string, SendVariables>();
+
+function patchByClientKey(old: any, key: string, patch: Partial<DmMessage>) {
+  if (!old?.pages) return old;
+  return {
+    ...old,
+    pages: old.pages.map((page: any) => ({
+      ...page,
+      items: page.items.map((m: DmMessage) => (m.clientKey === key || m._id === key) ? { ...m, ...patch } : m),
+    })),
+  };
+}
+
+/** The original send behind a failed bubble, ready to go again with `retryKey`. */
+export function failedSendRetry(key: string): SendVariables | null {
+  const vars = pendingSends.get(key);
+  return vars ? { ...vars, retryKey: key } : null;
+}
+
+/** Drop a failed bubble the user no longer wants to send. */
+export function discardFailedSend(queryClient: ReturnType<typeof useQueryClient>, conversationId: string, key: string): void {
+  pendingSends.delete(key);
+  queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => old?.pages ? {
+    ...old,
+    pages: old.pages.map((page: any) => ({
+      ...page, items: page.items.filter((m: DmMessage) => m.clientKey !== key && m._id !== key),
+    })),
+  } : old);
+}
+
 export function useSendMessage(conversationId: string) {
   const queryClient = useQueryClient();
   const { user, walletAddress } = useAuth();
 
-  return useMutation({
+  /*
+   * Put the line on screen in the same task as the key press. Going through
+   * the mutation's onMutate first cost several scheduler hops (an awaited
+   * cancel, notify batching), and on a busy main thread — an animated theme,
+   * a long thread — that was a second or two of the box being empty with no
+   * line in the thread yet.
+   */
+  const insertOptimistic = (variables: SendVariables): string => {
+    const { content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview, mediaOptions, destruct, lockPrice } = variables;
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    pendingSends.set(tempId, variables);
+    // Optimistic: prepend temp message, drawn exactly as it will look delivered.
+    const optimisticMessage: DmMessage = {
+      _id: tempId,
+      clientKey: tempId,
+      sendState: 'sending',
+      conversation: conversationId,
+      sender: {
+        _id: user?._id || '',
+        username: user?.username || '',
+        address: walletAddress || '',
+        displayName: user?.displayName || user?.display_name || '',
+        avatarImageUrl: user?.avatarImageUrl || '',
+      },
+      content,
+      msgType: msgType || 'msg',
+      mediaUrls: mediaFile
+        ? [{
+            url: createTransientBlobUrl(mediaFile),
+            // A document has no renderable preview, so it must not be typed
+            // 'image' — the bubble would try to <img> a blob URL for a PDF.
+            type: msgType === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file'
+              : mediaFile.type.startsWith('video/') ? 'video' : 'image',
+            mimeType: mediaFile.type,
+            name: mediaFile.name,
+            size: mediaFile.size,
+          }]
+        : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
+      voiceDuration: voiceDuration ?? null,
+      ...(mediaOptions ? { mediaOptions } : {}),
+      ...(destruct ? { destruct: destructFromChoice(destruct) } : {}),
+      isRead: false,
+      isEdited: false,
+      editedAt: null,
+      isForwarded: false,
+      replyTo: replyPreview ?? null,
+      paymentStatus: null,
+      paymentTxHash: null,
+      tipAmount: null,
+      tipSymbol: null,
+      isDeleted: false,
+      author: 'me',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    // A locked send shows the sender their own photo, tagged with its price.
+    if (lockPrice && lockPrice > 0 && mediaFile && msgType === 'media') {
+      optimisticMessage.lock = {
+        price: lockDhbForUsd(lockPrice),
+        priceUsd: lockPrice,
+        symbol: 'DHB',
+        kind: mediaFile.type.startsWith('video/') ? 'video' : 'image',
+        previewUrl: null,
+        unlocked: true,
+        mine: true,
+        ready: false,
+        mediaUrl: optimisticMessage.mediaUrls[0]?.url,
+      };
+    }
+
+    queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
+      const newPages = old?.pages?.length ? [...old.pages] : [{ items: [], totalCount: 0, hasMore: false }];
+      if (newPages[0]) {
+        newPages[0] = { ...newPages[0], items: [optimisticMessage, ...newPages[0].items] };
+      }
+      return { ...old, pageParams: old?.pageParams ?? [0], pages: newPages };
+    });
+
+    return tempId;
+  };
+
+  const mutation = useMutation({
     mutationFn: async ({
       content,
       msgType = 'msg',
@@ -874,6 +1012,9 @@ export function useSendMessage(conversationId: string) {
       replyPreview,
       txHash,
       forwardedFrom,
+      mediaOptions,
+      destruct,
+      lockPrice,
     }: {
       content: string;
       msgType?: DmMsgType;
@@ -885,6 +1026,12 @@ export function useSendMessage(conversationId: string) {
       replyPreview?: DmMessage['replyTo'];
       txHash?: string;
       forwardedFrom?: { messageId: string };
+      mediaOptions?: DmVideoOptions;
+      destruct?: DmDestructChoice;
+      /** Pay-to-unlock price for a photo or video. */
+      lockPrice?: number;
+      /** Resend a failed line in place: the clientKey of the bubble already on screen. */
+      retryKey?: string;
     }): Promise<DmMessage> => {
       // Virtual conversations need createAndStart first to get real ID (applies to all message types)
       const isVirtual = conversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(conversationId);
@@ -929,6 +1076,9 @@ export function useSendMessage(conversationId: string) {
           voiceDuration,
           replyTo,
           txHash,
+          mediaOptions,
+          destruct,
+          lockPrice,
         });
         if (plain) seedSentMedia(sent._id, plain);
         return sent;
@@ -970,78 +1120,44 @@ export function useSendMessage(conversationId: string) {
       };
     },
 
-    onMutate: async ({ content, msgType, gifUrl, mediaFile, voiceDuration, replyPreview }) => {
+    onMutate: async (variables) => {
+      const { retryKey } = variables;
       await queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
-      // Optimistic: prepend temp message
-      const optimisticMessage: DmMessage = {
-        _id: `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-        conversation: conversationId,
-        sender: {
-          _id: user?._id || '',
-          username: user?.username || '',
-          address: walletAddress || '',
-          displayName: user?.displayName || user?.display_name || '',
-          avatarImageUrl: user?.avatarImageUrl || '',
-        },
-        content,
-        msgType: msgType || 'msg',
-        mediaUrls: mediaFile
-          ? [{
-              url: createTransientBlobUrl(mediaFile),
-              // A document has no renderable preview, so it must not be typed
-              // 'image' — the bubble would try to <img> a blob URL for a PDF.
-              type: msgType === 'voice' ? 'audio' : isAllowedAttachment(mediaFile.name) ? 'file' : 'image',
-              mimeType: mediaFile.type,
-              name: mediaFile.name,
-              size: mediaFile.size,
-            }]
-          : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
-        voiceDuration: voiceDuration ?? null,
-        isRead: false,
-        isEdited: false,
-        editedAt: null,
-        isForwarded: false,
-        replyTo: replyPreview ?? null,
-        paymentStatus: null,
-        paymentTxHash: null,
-        tipAmount: null,
-        tipSymbol: null,
-        isDeleted: false,
-        author: 'me',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
-        const newPages = old?.pages?.length ? [...old.pages] : [{ items: [], totalCount: 0, hasMore: false }];
-        if (newPages[0]) {
-          newPages[0] = { ...newPages[0], items: [optimisticMessage, ...newPages[0].items] };
-        }
-        return { ...old, pageParams: old?.pageParams ?? [0], pages: newPages };
-      });
-
-      return { optimisticId: optimisticMessage._id };
+      if (retryKey) {
+        // The failed bubble is still on screen; put it back to "sending" where it is.
+        queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => patchByClientKey(old, retryKey, { sendState: 'sending' }));
+        return { optimisticId: retryKey };
+      }
+      return { optimisticId: insertOptimistic(variables) };
     },
 
     onError: (_err, _vars, context) => {
-      // Remove only this failed send; preserve incoming messages and other sends.
-      queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => old?.pages ? {
-        ...old,
-        pages: old.pages.map((page: any) => ({
-          ...page, items: page.items.filter((m: DmMessage) => m._id !== context?.optimisticId),
-        })),
-      } : old);
+      // Keep the line where it is and offer Retry on it; preserve everything else.
+      if (!context?.optimisticId) return;
+      queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) =>
+        patchByClientKey(old, context.optimisticId, { sendState: 'failed' }));
     },
 
     onSuccess: (sent, _variables, context) => {
+      const key = context?.optimisticId;
+      if (key) pendingSends.delete(key);
       const replacePending = (old: any) => {
         const pages = old?.pages ?? [{ items: [], totalCount: 0, hasMore: false }];
-        const cleaned = pages.map((page: any) => ({
+        // Update the pending line in place (it may already carry the server id
+        // if the socket echo got there first), so its element is never swapped.
+        let placed = false;
+        const updated = pages.map((page: any) => ({
           ...page,
-          items: page.items.filter((m: DmMessage) => m._id !== context?.optimisticId && m._id !== sent._id),
+          items: page.items.flatMap((m: DmMessage) => {
+            const mine = (!!key && (m._id === key || m.clientKey === key)) || m._id === sent._id;
+            if (!mine) return [m];
+            if (placed) return [];
+            placed = true;
+            return [{ ...m, ...sent, clientKey: key ?? m.clientKey, sendState: undefined }];
+          }),
         }));
-        cleaned[0] = { ...cleaned[0], items: [sent, ...cleaned[0].items] };
-        return { ...old, pageParams: old?.pageParams ?? [0], pages: cleaned };
+        if (!placed) updated[0] = { ...updated[0], items: [{ ...sent, clientKey: key }, ...updated[0].items] };
+        return { ...old, pageParams: old?.pageParams ?? [0], pages: updated };
       };
       queryClient.setQueryData(messagesKeys.messages(conversationId), replacePending);
       const resolvedId = typeof sent.conversation === 'string' ? sent.conversation : conversationId;
@@ -1051,6 +1167,19 @@ export function useSendMessage(conversationId: string) {
       queryClient.invalidateQueries({ queryKey: messagesKeys.conversations() });
     },
   });
+
+  // Every send goes through here, so the line is drawn before the mutation
+  // even starts; the mutation then only settles (or fails) that same line.
+  const withLine = (variables: SendVariables): SendVariables => {
+    if (variables.retryKey) return variables;
+    void queryClient.cancelQueries({ queryKey: messagesKeys.messages(conversationId) });
+    return { ...variables, retryKey: insertOptimistic(variables) };
+  };
+  return {
+    ...mutation,
+    mutate: (variables: SendVariables, options?: Parameters<typeof mutation.mutate>[1]) => mutation.mutate(withLine(variables), options),
+    mutateAsync: (variables: SendVariables) => mutation.mutateAsync(withLine(variables)),
+  };
 }
 
 // ─── Create Conversation (virtual, for new DM flow) ───────────────────────────

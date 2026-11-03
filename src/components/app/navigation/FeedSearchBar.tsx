@@ -13,7 +13,7 @@
  *
  * @module components/app/navigation/FeedSearchBar
  */
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
 import Settings2 from '@/components/ui/cut-icons/settings';
 import X from '@/components/ui/cut-icons/close';
@@ -23,6 +23,9 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { FEED_SEARCH_TABS, closeFeedSearch, setFeedSearchQuery, useFeedSearch, type FeedSearchTab } from '@/lib/feed-search';
 
 const CLOSE_MS = 220;
+/** Drag the bar up this far on a phone (or flick it up) and the search closes. */
+const DRAG_CLOSE_PX = 32;
+const FLICK_CLOSE = 0.5;
 
 /** Glass bubble: the same look as the lit tab and the filters-on state. */
 const GLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30';
@@ -83,6 +86,49 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
     setTimeout(closeFeedSearch, CLOSE_MS);
   };
 
+  // Drag the bar up to close it, as in the app. Touch only: a mouse keeps
+  // selecting text in the box. Sideways moves are left to the browser.
+  const [drag, setDrag] = useState(0);
+  const dragStart = useRef<{ x: number; y: number; id: number; t: number; active: boolean } | null>(null);
+  const dragged = useRef(false);
+  const dragHandlers = {
+    onPointerDown: (e: ReactPointerEvent<HTMLElement>) => {
+      if (e.pointerType === 'mouse') return;
+      dragStart.current = { x: e.clientX, y: e.clientY, id: e.pointerId, t: performance.now(), active: false };
+      dragged.current = false;
+    },
+    onPointerMove: (e: ReactPointerEvent<HTMLElement>) => {
+      const d = dragStart.current;
+      if (!d || d.id !== e.pointerId) return;
+      const dy = e.clientY - d.y;
+      if (!d.active) {
+        if (Math.abs(e.clientX - d.x) > 20) { dragStart.current = null; return; }
+        if (Math.abs(dy) < 8) return;
+        d.active = true;
+        dragged.current = true;
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* pointer already gone */ }
+      }
+      setDrag(Math.max(-40, Math.min(0, dy * 0.6)));
+    },
+    onPointerUp: (e: ReactPointerEvent<HTMLElement>) => {
+      const d = dragStart.current;
+      if (!d || d.id !== e.pointerId) return;
+      dragStart.current = null;
+      if (!d.active) return;
+      const dy = e.clientY - d.y;
+      const speed = dy / Math.max(1, performance.now() - d.t);
+      if (dy < -DRAG_CLOSE_PX || (dy < -12 && speed < -FLICK_CLOSE)) close();
+      else setDrag(0);
+    },
+    onPointerCancel: () => { dragStart.current = null; setDrag(0); },
+    onClickCapture: (e: ReactMouseEvent<HTMLElement>) => {
+      if (!dragged.current) return;
+      dragged.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+  };
+
   const { shortsEnabled } = useShortsEnabled();
   const Icon = FEED_TABS.find((t) => t.value === tab)?.icon;
   const placeholder = {
@@ -100,8 +146,14 @@ export function FeedSearchBar({ tab, hasActiveFilters, filtersOpen, onToggleFilt
       data-feed-search-bar
       data-closing={closing ? '' : undefined}
       data-no-swipe
-      className="absolute inset-0 z-50 flex items-center gap-1 px-1"
-      style={melt}
+      className="absolute inset-0 z-50 flex touch-pan-x items-center gap-1 px-1"
+      style={{
+        ...melt,
+        transform: drag ? `translateY(${drag}px)` : undefined,
+        opacity: drag ? 1 + drag / 80 : undefined,
+        transition: dragStart.current?.active ? 'none' : 'transform 200ms ease-out, opacity 200ms ease-out',
+      }}
+      {...dragHandlers}
     >
       <button
         type="button"

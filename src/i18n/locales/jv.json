@@ -162,7 +162,25 @@
     "saved": "Kolom profil kesimpen",
     "failed": "Ora kesimpen. Coba maneh.",
     "verified": "Pranala sing diverifikasi",
-    "verifyHint": "Kanggo verifikasi pranala, tambahake iki ing kaca kasebut, banjur simpen maneh: {{snippet}}"
+    "verifyHint": "Kanggo verifikasi pranala, tambahake iki ing kaca kasebut, banjur simpen maneh: {{snippet}}",
+    "descriptionPresets": "Kanggo tambah website, pronomina, atawa cangge ngarani lain, link social media kanggo ditampilin.",
+    "type": "Tipe lapur",
+    "needsLabel": "Ganti tiap-tiap field khusus ngarani labelnya.",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ngoko/ngoko gini",
+    "placeholderLocation": "Kota, negara",
+    "presets": {
+      "website": "Situs web",
+      "blog": "Buku Buku",
+      "portfolio": "Panggonan Karya",
+      "shop": "Toko",
+      "podcast": "Pandhawa Swara",
+      "newsletter": "Buletin Newsletter",
+      "pronouns": "Kata Ganti",
+      "location": "Lokasi",
+      "custom": "Custom",
+      "customOption": "Siji label khusus"
+    }
   },
   "followedTags": {
     "follow": "Tut #{{tag}}",
@@ -398,6 +416,7 @@
     "gasSponsorshipFailed": "Transaksi iki ora bisa disponsori. Coba maneh sedhela."
   },
   "nav": {
+    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang",
     "reorderReset": "Reset",
     "reorderResetLong": "Kembalikan urutan menu",
     "home": "Beranda",
@@ -443,8 +462,7 @@
     "getTheApp": "Njupuk aplikasi",
     "connectAi": "Nyambungake AI",
     "converter": "Converter",
-    "affiliate": "Afiliasi",
-    "reorderHint": "Tahan lan seret lambang apa wae kanggo nata ulang"
+    "affiliate": "Afiliasi"
   },
   "feed": {
     "viewProfile": "Deleng profil {{name}}",
@@ -10581,8 +10599,12 @@
       "restore": "Kembalikan",
       "restored": "Versi yang direstorasi {{version}}"
     },
-    "stakeForAllowance": "Stake token DeHub kanggo nambah tunjangan mbangun saben dina",
     "buildInChat": "Gawe ing DM-mu bareng @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} ing kredit",
+    "perPrompt": "≈ {{price}} saben prompt",
+    "pricingNote": "Saben prompt dibayar saka kreditmu miturut biaya model ditambah 30%. Biaya paling dhuwur sing bisa dientekake prompt ditahan nalika mlaku, lan bagean sing ora kanggo dibalekake.",
+    "topUpCredits": "Isi kredit",
     "landerTitle": "Gawe aplikasi mung kanthi takon",
     "landerSubtitle": "Ngomong marang @assistant apa sing dikarepake ing pesenmu. Iku nggawe aplikasi, nyimpen, lan ngirim link sing bisa dibukak sapa wae. Wangsulana kanggo ngganti apa wae.",
     "promptPlaceholder": "Jelasake aplikasi sing dikarepake...",
@@ -18554,5 +18576,14 @@
     "joinedBodyNoEmail": "Kami bakal ngirim email ke gwe kanggo ngaweni token lanjar.",
     "failed": "Saya nggih ora bisa ngerti apa inggung.",
     "privacy": "Gampang aja ngomongin tentang peluncuran."
+  },
+  "githubLink": {
+    "hint": "Masuk ke GitHub ngawasih kanggo ngerti akun kanggo kanggo. DeHub cuma nglihat profil GitHub kanggo kanggo.",
+    "disconnected": "GitHub nganggo",
+    "taken": "Github account keneh udah dadi di profil DeHub lanang.",
+    "failed": "Gak bisa koneksi ke GitHub. Coba lagi.",
+    "unavailable": "GitHub verification kanggo dadi dekat.",
+    "connect": "Hubungin GitHub",
+    "disconnect": "Ngapus hubungan"
   }
 }

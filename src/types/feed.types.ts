@@ -48,6 +48,10 @@ export interface BaseFeedItem {
   contentRating?: ContentRating;
   /** Alt text, one per piece of media in display order (gallery images by position, a video first). */
   mediaDescriptions?: string[];
+  /** 'comic' shows the gallery as collector cards. */
+  layout?: 'comic';
+  /** Comic captions, one per page in display order. */
+  mediaCaptions?: string[];
   /** The poster closed the market card for the $TICKER / address in the text, so no surface draws one. */
   hideAssetCards?: boolean;
   /** Content warning: the post opens collapsed behind this one line. */
@@ -96,6 +100,8 @@ export interface BaseFeedItem {
  */
 export interface TextPost extends BaseFeedItem {
   articleBody?: string;
+  /** An article's readable URL: /app/post/<articleSlug> (first ten words of its title). */
+  articleSlug?: string;
   articleImageUrl?: string;
   type: 'post';
   author: User;
@@ -191,6 +197,8 @@ export interface VideoItem extends BaseFeedItem {
   storedAspect?: number;
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
+  /** Readable URL: /app/post/<articleSlug> (first ten words of title or description). */
+  articleSlug?: string;
   /** Creator's user ID for navigation */
   creatorId?: string;
   /** Creator's username for URL-based navigation */
@@ -316,6 +324,8 @@ export interface ImagePost extends BaseFeedItem {
   status?: 'minted' | 'signed' | string;
   /** Off-chain slug — the post presents as /newpost/<newPostId> until minted. */
   newPostId?: number;
+  /** Readable URL: /app/post/<articleSlug> (first ten words of title or description). */
+  articleSlug?: string;
   /** Formatted view count string (e.g., "1.2K") */
   views: string;
   timeAgo: string;
@@ -485,6 +495,8 @@ export interface ShortVideo extends BaseFeedItem {
   soundtrackUrl?: string;
   soundtrackTitle?: string;
   soundtrackCreator?: string;
+  /** Readable URL: /app/post/<articleSlug>. */
+  articleSlug?: string;
   type: 'short';
   username: string;
   verified: boolean;

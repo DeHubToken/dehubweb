@@ -80,6 +80,14 @@ export interface MintPostParams {
    */
   draftVideoId?: string;
   /**
+   * feed-images only: photos already uploaded through /api/draft_image, in
+   * display order. A null slot is filled by the next file in `files`.
+   */
+  draftImageIds?: (string | null)[];
+  /** With draftVideoId: post only this part of the clip (seconds). */
+  trimStart?: number;
+  trimEnd?: number;
+  /**
    * 'mature' marks the post adult or graphic. It then reaches the creator's
    * followers, their profile and anyone with the link, but stays off the
    * public home, shorts, search and suggestion feeds — unless a viewer has
@@ -114,6 +122,14 @@ export interface MintPostParams {
   shopListingCount?: number;
   /** Alt text, one per uploaded image or video in file order. */
   mediaDescriptions?: string[];
+  /** Draft video edits the server bakes in (mirror, turn, colour matrix, vignette). */
+  videoEdits?: { mirror?: boolean; rotate?: number; matrix?: number[]; vignette?: number };
+  /** Seconds until the post deletes itself (1h, 12h, 1d, 7d or 30d). */
+  destruct?: number;
+  /** 'comic' lays the photos out as a comic (collector cards). */
+  layout?: 'comic';
+  /** Comic captions, one per page in file order. */
+  mediaCaptions?: string[];
   /** The poster closed the market card for the $TICKER / address in the text. Only sent when true. */
   hideAssetCards?: boolean;
   /** Content warning: one line shown in place of the post until a viewer opens it. */
@@ -239,6 +255,19 @@ export async function mintPost(
 
   if (params.draftVideoId && !params.quotedTokenId) {
     formData.append('draftVideoId', params.draftVideoId);
+    if (typeof params.trimStart === 'number' && typeof params.trimEnd === 'number') {
+      formData.append('trimStart', String(params.trimStart));
+      formData.append('trimEnd', String(params.trimEnd));
+    }
+    if (params.videoEdits) formData.append('videoEdits', JSON.stringify(params.videoEdits));
+  }
+
+  if (params.destruct) {
+    formData.append('destruct', String(params.destruct));
+  }
+
+  if (params.draftImageIds?.length && params.postType === 'feed-images' && !params.quotedTokenId) {
+    formData.append('draftImageIds', JSON.stringify(params.draftImageIds));
   }
 
   if (params.scheduledAt) {
@@ -266,6 +295,13 @@ export async function mintPost(
 
   if (params.hideAssetCards) {
     formData.append('hideAssetCards', 'true');
+  }
+
+  if (params.layout === 'comic') {
+    formData.append('layout', 'comic');
+    if (params.mediaCaptions?.some(Boolean)) {
+      formData.append('mediaCaptions', JSON.stringify(params.mediaCaptions));
+    }
   }
 
   if (params.spoilerText?.trim()) {
@@ -382,6 +418,21 @@ export interface NewPostResolution {
  * keep working forever. Null on unknown slugs and on transport failure alike —
  * the caller shows not-found either way.
  */
+export interface ArticleSlugResolution {
+  tokenId: number;
+  articleSlug: string;
+}
+
+/** Resolve an article's readable URL (/app/post/<slug>) to its tokenId. */
+export async function resolveArticleSlug(slug: string): Promise<ArticleSlugResolution | null> {
+  try {
+    const res = await apiCall<any>(`/api/article/${encodeURIComponent(slug)}`);
+    return res && typeof res.tokenId === 'number' ? (res as ArticleSlugResolution) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function resolveNewPost(n: number | string): Promise<NewPostResolution | null> {
   try {
     const res = await apiCall<any>(`/api/newpost/${encodeURIComponent(String(n))}`);
@@ -467,6 +518,8 @@ export interface EditPostParams {
   shopListingCount?: number;
   /** Replace the post's alt text, one per piece of media in display order. `[]` clears it. */
   mediaDescriptions?: string[];
+  /** Comic captions, one per page. `[]` clears them. */
+  mediaCaptions?: string[];
   /** Replace the content warning. `''` takes it off. */
   spoilerText?: string;
   /** Who may quote it from now on. Quotes already made stay. */

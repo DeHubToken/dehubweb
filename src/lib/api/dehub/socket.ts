@@ -22,6 +22,7 @@
  * registered per room too, so a live chat never sees the platform's messages.
  */
 
+import type { ChatRefusalPayload } from '@/lib/chat-refusal';
 import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import { reviveOnReturn } from '@/lib/socket-revive';
@@ -304,9 +305,9 @@ export function onStreamModeration(
  * Edits and deletes are fire-and-forget emits, so a refusal (not your message,
  * message already gone) arrives here or nowhere.
  */
-export function onLiveChatError(roomId: string | undefined, cb: (data: { message?: string; code?: string }) => void): () => void {
+export function onLiveChatError(roomId: string | undefined, cb: (data: ChatRefusalPayload) => void): () => void {
   return subscribe(roomId, ['error', 'livechat:error'], (data: unknown) =>
-    cb((data || {}) as { message?: string; code?: string }),
+    cb((data || {}) as ChatRefusalPayload),
   );
 }
 

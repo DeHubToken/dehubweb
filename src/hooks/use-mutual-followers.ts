@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getFollowList, type FollowListItem } from '@/lib/api/dehub';
+import { getFollowList, getMutualFollowers, type FollowListItem } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface UseMutualFollowersOptions {
@@ -8,8 +8,9 @@ interface UseMutualFollowersOptions {
 }
 
 /**
- * Computes mutual followers: people you follow who also follow the visited profile.
- * Fetches up to 300 from each list and intersects by address.
+ * Mutual followers: people you follow who also follow the visited profile.
+ * The server intersects the full lists; the old first-50-of-each check is
+ * only a fallback while an older API is still live.
  */
 export function useMutualFollowers({ profileAddress, enabled = true }: UseMutualFollowersOptions) {
   const { walletAddress, isAuthenticated } = useAuth();
@@ -22,32 +23,28 @@ export function useMutualFollowers({ profileAddress, enabled = true }: UseMutual
 
   const shouldFetch = enabled && isAuthenticated && !!walletAddress && !!profileAddress && !isOwnProfile;
 
-  const { data: mutuals = [], isLoading } = useQuery({
-    queryKey: ['mutual-followers', walletAddress?.toLowerCase(), profileAddress?.toLowerCase()],
-    queryFn: async (): Promise<FollowListItem[]> => {
-      if (!walletAddress || !profileAddress) return [];
-
-      // Fetch both lists in parallel (best-effort, first 50 each — this only
-      // feeds a "Followed by X, Y and N others" line, 300 rows was overkill)
-      const [myFollowing, theirFollowers] = await Promise.all([
-        getFollowList(walletAddress, 'following', { limit: 50 }),
-        getFollowList(profileAddress, 'followers', { limit: 50 }),
-      ]);
-
-      // Build a set of addresses I follow
-      const myFollowingSet = new Set(
-        myFollowing.items.map((item) => item.address.toLowerCase())
-      );
-
-      // Intersection: people I follow who also follow this profile
-      return theirFollowers.items.filter(
-        (item) => myFollowingSet.has(item.address.toLowerCase())
-      );
+  const { data, isLoading } = useQuery({
+    queryKey: ['mutual-followers-v2', walletAddress?.toLowerCase(), profileAddress?.toLowerCase()],
+    queryFn: async (): Promise<{ items: FollowListItem[]; totalCount: number }> => {
+      if (!walletAddress || !profileAddress) return { items: [], totalCount: 0 };
+      try {
+        return await getMutualFollowers(profileAddress, 5);
+      } catch {
+        const [myFollowing, theirFollowers] = await Promise.all([
+          getFollowList(walletAddress, 'following', { limit: 100 }),
+          getFollowList(profileAddress, 'followers', { limit: 100 }),
+        ]);
+        const myFollowingSet = new Set(myFollowing.items.map((item) => item.address.toLowerCase()));
+        const items = theirFollowers.items.filter((item) => myFollowingSet.has(item.address.toLowerCase()));
+        return { items, totalCount: items.length };
+      }
     },
     enabled: shouldFetch,
     staleTime: 5 * 60 * 1000, // 5 min cache
     gcTime: 10 * 60 * 1000,
   });
 
-  return { mutuals, isLoading: shouldFetch ? isLoading : false };
+  const mutuals = data?.items ?? [];
+  const totalCount = data?.totalCount ?? 0;
+  return { mutuals, totalCount, isLoading: shouldFetch ? isLoading : false };
 }

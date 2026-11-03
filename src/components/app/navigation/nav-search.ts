@@ -293,7 +293,11 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   // the same thing, so both have to land here.
   Fractions: [
     'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
-    'tokenised', 'nft', 'erc1155', 'trade', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
+    'tokenised', 'erc1155', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
+  ],
+  'NFT Market': [
+    'nft', 'nfts', 'nft market', 'nft marketplace', 'buy nft', 'sell nft', 'list nft', 'collectibles',
+    'opensea', 'make an offer', 'trade', 'erc721', 'art',
   ],
   // Nobody hunting a handle types "usernames" — they type the thing they want
   // to change, which is their @name, or the thing they want to do with it.
@@ -416,6 +420,19 @@ interface Ranked {
  * untouched and by identity, so the resting menu is not re-created on every
  * render of a surface that is not searching.
  */
+const OWNER_ONLY_PATHS = new Set(['/app/agents', '/nfts']);
+// One filtered copy per source list, so an empty query keeps returning the same
+// array and the rail does not remount its rows on every render.
+const withoutOwnerOnly = new WeakMap<NavItem[], NavItem[]>();
+function publicItems(items: NavItem[]): NavItem[] {
+  let out = withoutOwnerOnly.get(items);
+  if (!out) {
+    out = items.some(item => OWNER_ONLY_PATHS.has(item.path)) ? items.filter(item => !OWNER_ONLY_PATHS.has(item.path)) : items;
+    withoutOwnerOnly.set(items, out);
+  }
+  return out;
+}
+
 export function filterNavItems(items: NavItem[], query: string, t: TranslateFn, agentsAllowed = false): NavItem[] {
   // Kids Mode first, before the search does anything at all.
   //
@@ -423,7 +440,9 @@ export function filterNavItems(items: NavItem[], query: string, t: TranslateFn, 
   // — and doing it before the query is applied means the hidden destinations
   // below (SEARCH_ONLY_ITEMS) cannot be typed back into view either, which is
   // exactly the hole a filter applied afterwards would leave.
-  const rolloutItems = agentsAllowed || !items.some(item => item.path === '/app/agents') ? items : items.filter(item => item.path !== '/app/agents');
+  // Owner-only rollouts (agents, the NFT market while it is checked) stay out
+  // of everyone else's menu and search.
+  const rolloutItems = agentsAllowed ? items : publicItems(items);
   const allowed = isKidsModeLocked() ? rolloutItems.filter(item => isKidsModePath(item.path)) : rolloutItems;
 
   const folded = fold(query);

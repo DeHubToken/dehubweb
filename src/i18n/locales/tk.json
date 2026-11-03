@@ -162,7 +162,25 @@
     "saved": "Profil meýdanlary ýatda saklandy",
     "failed": "Ýatda saklanmady. Gaýtadan synanyşyň.",
     "verified": "Tassyklanan baglanyşyk",
-    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}"
+    "verifyHint": "Baglanyşygy tassyklamak üçin muny şol sahypa goşuň, soň gaýtadan ýatda saklaň: {{snippet}}",
+    "descriptionPresets": "Web-sayt, sözbaşy ýa-da başga bir zat goş. Çepler öz içi syrlary bilen görkezilýär.",
+    "type": "Meýdanyň Türü",
+    "needsLabel": "Her bir meýdança üçin bir etiket goýuň",
+    "placeholderLink": "scanoir.com",
+    "placeholderPronouns": "olar",
+    "placeholderLocation": "Şäheri, ýurdy",
+    "presets": {
+      "website": "Web-sayt",
+      "blog": "Blog",
+      "portfolio": "Portfeli",
+      "shop": "Dükan",
+      "podcast": "Podkastlar",
+      "newsletter": "Bülleten",
+      "pronouns": "Çykyşlar",
+      "location": "Ýer",
+      "custom": "Adat",
+      "customOption": "Özgür etiket"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} yzarla",
@@ -10593,8 +10611,12 @@
       "restore": "Gaýd Et",
       "restored": "Täzeleşdirilen görnüşi {{version}}"
     },
-    "stakeForAllowance": "Gündelik gurluşyk tölegini artdyrmak üçin DeHub tokenlerini goýuň",
     "buildInChat": "@assistant bilen şahsy habarlaryňyzda dörediň",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} kredit",
+    "perPrompt": "≈ her sorag üçin {{price}}",
+    "pricingNote": "Her sorag kreditleriňizden modeliň bahasy üstüne 30% goşulyp tölenýär. Soragyň iň ýokary mümkin bahasy işleýän wagtynda saklanýar we ulanylmadyk bölegi yzyna gaýtarylýar.",
+    "topUpCredits": "Kredit doldur",
     "landerTitle": "Bir soragyň jogabyny tapmak",
     "landerSubtitle": "@Helpant-a habarlaryňyzda näme isleýändigiňizi aýt. Bu programy gurýar, ony gurýar we size her kes açyp biljek bir baglanyşygy iberýär. Ähli zady üýtgetmek üçin jogap beriň.",
     "promptPlaceholder": "Siz islän ulagyňyzy ýazyň...",
@@ -18681,5 +18703,26 @@
     "fingerprint": "Döşeme",
     "exploreFirst": "Öňürti barlaň",
     "codeNote": "Biz size kody iberýäris, hiç hili parol gerek däl."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Tezden çykyş",
+    "title": "Token tezden çykyş",
+    "body": "Satyn almak täze token taýynlanýan wagtynda ýapyk. Onuň işe girende e-poçta alyň.",
+    "notifyMe": "Meni habar et",
+    "sendTo": "Biz {{email}} adresine e-poçta ibereris",
+    "emailLabel": "E-poçta",
+    "emailPlaceholder": "Siziň e-poçtaňyz",
+    "invalidEmail": "Dogry e-poçta adresi giriziň",
+    "joinedTitle": "Siz sanawyda barsyňyz",
+    "joinedBody": "Biz {{email}} adresine token çykyşy wagtynda e-poçta ibereris.",
+    "joinedBodyNoEmail": "Biz size token çykyşy wagtynda e-poçta ibereris.",
+    "failed": "Muny saklamak mümkin bolmady. Gaýtadan synanyp görüň.",
+    "privacy": "Diňe çykyş barada size habar bermek üçin ulanylýar.",
+    "seoTitle": "Token tezden çykyş | DeHub",
+    "seoDescription": "Täze DeHub tokeni tezden çykyş edýär. Sanawynyza goşulyň we onuň işe girende bir e-poçta alyň, soňra DeHub şkiliňizden gönüden-göni satyn alyň."
+  },
+  "githubLink": {
+    "verified": "Tasdiqlanmýş",
+    "disconnect": "Baglan"
   }
 }

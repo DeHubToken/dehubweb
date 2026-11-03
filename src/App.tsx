@@ -619,6 +619,8 @@ function AppContent() {
           <Route path="/connect/chatgpt" element={<Suspense fallback={<PageLoader />}><ConnectChatGPTPage /></Suspense>} />
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
+          <Route path="/developers" element={<Navigate to="/docs/developers" replace />} />
+          <Route path="/developer" element={<Navigate to="/docs/developers" replace />} />
           {/* The sidebar calls this board "Requests" but it has always lived at
               /features, so the URL people actually type went to the username
               catch-all and bounced them to the homepage. */}
@@ -753,6 +755,7 @@ function AppContent() {
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="usernames" element={null} />
+              <Route path="nfts" element={null} />
               <Route path="accounts" element={null} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />
@@ -802,6 +805,7 @@ function AppContent() {
             {/* /usernames alias — the canonical form the worker links and
                 sitemaps, so the SPA has to answer it too. */}
             <Route path="/usernames" element={null} />
+            <Route path="/nfts" element={null} />
 
             {/* /accounts alias — same shape as /usernames above. */}
             <Route path="/accounts" element={null} />

@@ -289,14 +289,14 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Always-used origins (every route, incl. light landing pages like /prompt):
-         Supabase (edge fns / i18n / storage) and Google Fonts (the Exo file + its
+         Supabase (edge fns / i18n / storage) and Google Fonts (the Manrope file + its
          CSS). These stay as static <link>s so the preload scanner finds them at
          the earliest possible moment. -->
     <link rel="preconnect" href="https://aigxuutjaqsywioxjefr.supabase.co" crossorigin>
-    <!-- fonts.gstatic.com serves the actual Exo font file (preloaded below) —
+    <!-- fonts.gstatic.com serves the actual Manrope font file (preloaded below) —
          a full preconnect here shaves a DNS+TLS round-trip off heading paint -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- fonts.googleapis.com serves the Exo @font-face CSS (preloaded below) -->
+    <!-- fonts.googleapis.com serves the Manrope @font-face CSS (preloaded below) -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <!-- Route-aware boot warming + feed prefetch.
@@ -388,15 +388,15 @@
     <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
     <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">
 
-    <!-- Exo font: non-blocking load (avoids @import in index.css blocking Tailwind parse / main thread) -->
+    <!-- Manrope font: non-blocking load (avoids @import in index.css blocking Tailwind parse / main thread) -->
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
       onload="this.onload=null;this.rel='stylesheet'"
     />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" />
     </noscript>
 
     <!-- Noto Color Emoji: fills the gaps in the platform emoji font (Windows has
@@ -404,7 +404,7 @@
          serves it as ~10 unicode-range subsets, so a browser downloads only the
          chunk for an emoji it can't already draw — and nothing at all on
          Android/macOS, where the system font wins earlier in the stack.
-         Deferred to idle-after-load rather than preloaded alongside Exo. On
+         Deferred to idle-after-load rather than preloaded alongside Manrope. On
          Windows the subsets it actually picks are big — a real load of
          dehub.io in Aug 2026 pulled 693 KB + 135 KB of woff2 — and spending
          that during the load window costs bandwidth for glyphs that are, by

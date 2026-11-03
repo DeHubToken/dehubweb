@@ -130,12 +130,16 @@ export function PollCard({ tokenId }: PollCardProps) {
     removeVoteMutation.mutate(tokenId);
   };
 
+  const endedByTime = !!poll.expiresAt && new Date(poll.expiresAt).getTime() <= Date.now();
+
   return (
     <div data-poll-card className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-3 mt-2" data-no-navigate onClick={e => e.stopPropagation()}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-white font-medium text-sm leading-snug">
           {poll.question}
-          {isEnded && <span className="ml-2 text-zinc-500 text-xs font-normal">{_copy("copy.813c8951972c", { defaultValue: "(Closed)" })}</span>}
+          {/* Phones: the footer already says "Ended 1 day ago", so the title
+              does not say it twice. Kept when the poll was closed early. */}
+          {isEnded && <span className={cn('ml-2 text-zinc-500 text-xs font-normal', endedByTime && 'max-md:hidden')}>{_copy("copy.813c8951972c", { defaultValue: "(Closed)" })}</span>}
         </p>
         {isOwner && isOpen && (
           <button

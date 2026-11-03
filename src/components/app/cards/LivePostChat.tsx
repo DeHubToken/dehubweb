@@ -1,3 +1,4 @@
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -40,6 +41,7 @@ import { useStreamAudience } from '@/hooks/use-stream-audience';
 import { useLiveAudience } from '@/hooks/use-live-audience';
 import { LiveAudienceSheet } from '@/components/app/live/LiveAudienceSheet';
 import { useAuth } from '@/contexts/AuthContext';
+import { SendStatus } from '@/components/app/chat/SendStatus';
 import '@/styles/tip-wall.css';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
@@ -198,6 +200,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // A mention notification names the line that tagged the reader.
   useFocusChatMessage();
   const { t: _copy } = _useCopy();
+  // A tapped photo opens full screen, with Download.
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
   // this chat. They share the composer's row — see live-viewer-actions.
   const viewerActions = useLiveViewerActions();
@@ -234,7 +238,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages: chatMessages, isLoading, isSending, send, editMessage, deleteMessage, isModerator, isBanned: bannedHere, mutedUntil } = useLiveChatMessages(streamId);
+  const { messages: chatMessages, isLoading, isSending, send, retrySend, discardSend, editMessage, deleteMessage, isModerator, isBanned: bannedHere, mutedUntil } = useLiveChatMessages(streamId);
   // The stream's creator and the moderators they appointed act on other people's lines.
   const canModerate = isHost || isModerator;
   // A stream timeout quiets this viewer here until it runs out, then lets go.
@@ -439,9 +443,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     try {
       await send(sent.trim());
     } catch {
-      // Hand the words back, unless something new has been typed since.
-      setNewMessage(current => (current.trim() ? current : sent));
-      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
+      // The line stays in the chat marked "Not sent" with Retry on it, and the
+      // send has already said why — nothing goes back in the box.
     }
   };
 
@@ -596,7 +599,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
             return (
               <div
-                key={msg.id}
+                key={msg.client_key ?? msg.id}
                 id={chatMessageDomId(msg.id)}
                 ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
                 data-live-msg={msg.id}
@@ -644,14 +647,21 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                         <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />
                       </div>
                     ) : msg.message_type === 'image' && msg.image_url ? (
-                      <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                      <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                     ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
                       <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                     ) : (
                       <TranslatableChatMsg content={msg.content} onHandle={translateHandleFor(msg.id)} />
                     )}
-                    <span className="text-[10px] text-zinc-600 mt-0.5 block">
+                    <span className="text-[10px] text-zinc-600 mt-0.5 flex items-center gap-1.5">
                       {format(new Date(msg.created_at), 'HH:mm')}
+                      {msg.client_key && (
+                        <SendStatus
+                          state={msg.send_state}
+                          onRetry={() => retrySend(msg.client_key!)}
+                          onDiscard={() => discardSend(msg.client_key!)}
+                        />
+                      )}
                     </span>
                   </div>
                   {/* Your own line — edit and remove, on hover like the host's pin */}
@@ -849,7 +859,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         ) : null}
         </div>
       </div>
-
+      <FullscreenImageViewerLazy
+        images={viewingImage ? [viewingImage] : []}
+        initialIndex={0}
+        isOpen={!!viewingImage}
+        onClose={() => setViewingImage(null)}
+        downloadable
+      />
     </div>
   );
 }

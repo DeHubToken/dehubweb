@@ -5,7 +5,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Header with banner/avatar, member-filtered feed, members tab, about tab, chat tab.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Users from "@/components/ui/cut-icons/communities";
 
@@ -16,6 +16,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
 import { useCommunityAbilities, isEffectivelyActive, isActivelyBanned } from '@/hooks/use-community-admin';
 import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
+import { holderGateOf, holderGateMessage, runHolderCheck } from '@/hooks/use-holder-gate';
+import { communityKindOf, entryPriceOf, payCommunityEntry } from '@/lib/community-kinds';
+import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { AddExistingPost } from '@/components/app/communities/AddExistingPost';
@@ -56,6 +59,7 @@ export default function CommunityPage() {
   const { data: members = [] } = useCommunityMembers(community?.id);
   const { data: membership } = useIsCommunityMember(community?.id);
   const joinMutation = useJoinCommunity();
+  const [checkingHolder, setCheckingHolder] = useState(false);
   const leaveMutation = useLeaveCommunity();
 
   // Membership resolves through the same helper the permission mirror uses, so
@@ -69,6 +73,15 @@ export default function CommunityPage() {
   // subset of the panel the server would let them use.
   const abilities = useCommunityAbilities(community, membership);
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
+
+  // Groups and channels open on their chat, unless a link asked for a tab.
+  const kind = communityKindOf(community);
+  const askedTab = searchParams.get('tab');
+  useEffect(() => {
+    if (kind !== 'community' && !askedTab) activateTab('chat');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kind, askedTab, community?.id]);
+  const autoInvite = searchParams.get('invite') === '1';
 
   if (isLoading) {
     return (
@@ -121,7 +134,33 @@ export default function CommunityPage() {
         onSuccess: () => { toast.success(t('communities.requestCancelled')); },
       });
     } else {
-      joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+      const gate = holderGateOf(community);
+      const price = abilities.isOwner ? 0 : entryPriceOf(community);
+      const join = () => joinMutation.mutate({ communityId: community.id, isPrivate: community.is_private });
+      // Holder groups: the database reads the wallet's balance first, and only
+      // a passing read lets the membership row in.
+      const holderThenJoin = async () => {
+        if (!gate || abilities.isOwner) { join(); return; }
+        const result = await runHolderCheck(community.id, walletAddress)
+          .catch(() => ({ status: 'failed' as const }));
+        if (result.status === 'open' || ('eligible' in result && result.eligible)) join();
+        else toast.error(holderGateMessage(result, gate));
+      };
+      setCheckingHolder(true);
+      (async () => {
+        // Paid entry: tokens go straight to the owner, and the database reads
+        // the transfer off the chain before it lets the member in.
+        if (price > 0) {
+          const paid = await payCommunityEntry(community, walletAddress);
+          if (paid.status !== 'paid' && paid.status !== 'free') {
+            toast.error(t('communities.entry.failed', { defaultValue: "We couldn't confirm your payment yet. If tokens left your wallet, tap Join again in a minute." }));
+            return;
+          }
+        }
+        await holderThenJoin();
+      })()
+        .catch((e: any) => toast.error(adminErrorMessage(e, e?.message || t('common.somethingWentWrong'))))
+        .finally(() => setCheckingHolder(false));
     }
   };
 
@@ -149,8 +188,9 @@ export default function CommunityPage() {
         canManage={abilities.canManage}
         canInvite={!isMember || abilities.can('add_members')}
         onManage={() => setManageOpen(true)}
-        isPending={joinMutation.isPending || leaveMutation.isPending}
+        isPending={checkingHolder || joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
+        autoInvite={autoInvite}
       />
 
       {abilities.canManage && (

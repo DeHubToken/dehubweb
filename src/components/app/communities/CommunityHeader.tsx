@@ -1,4 +1,9 @@
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
+import { holderGateOf } from '@/hooks/use-holder-gate';
+import { HolderGateChip } from './HolderGateChip';
+import { CommunityKindChip } from './CommunityKindChip';
+import { entryPriceOf } from '@/lib/community-kinds';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { useRef, useState, useCallback } from 'react';
 import { LogIn, Crown, Pin, PinOff, TrendingUp, FileText, Clock } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
@@ -52,6 +57,8 @@ interface CommunityHeaderProps {
   onManage: () => void;
   isPending: boolean;
   onJoinLeave: () => void;
+  /** Open the invite picker on arrival (a group or channel that was just made). */
+  autoInvite?: boolean;
 }
 
 function formatRelativeTime(dateString: string): string {
@@ -69,12 +76,13 @@ function formatRelativeTime(dateString: string): string {
   return `${years}y`;
 }
 
-export function CommunityHeader({ community, isMember, isPendingMember, isOwner, canEdit, canManage, canInvite, onManage, isPending, onJoinLeave }: CommunityHeaderProps) {
+export function CommunityHeader({ community, isMember, isPendingMember, isOwner, canEdit, canManage, canInvite, onManage, isPending, onJoinLeave, autoInvite }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
   const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateMutation = useUpdateCommunity();
+  const holderGate = holderGateOf(community);
   const [uploading, setUploading] = useState<'avatar' | 'banner' | null>(null);
   const [showTickerInput, setShowTickerInput] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -82,7 +90,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [nameInput, setNameInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:nameInput", community.name, community.id);
   const [descInput, setDescInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:descInput", community.description || '', community.id);
   const [inviteOpen, setInviteOpen] = useState(false);
-  const [followersOpen, setFollowersOpen] = useState(false);
+  const [followersOpen, setFollowersOpen] = useState(!!autoInvite);
+  const entryPrice = isOwner ? 0 : entryPriceOf(community);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -290,7 +299,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             ) : isPendingMember ? (
               <><X className="w-3.5 h-3.5" /> {t('communities.requested')}</>
             ) : (
-              <><LogIn className="w-3.5 h-3.5" /> {t('communities.join')}</>
+              <><LogIn className="w-3.5 h-3.5" /> {t('communities.join')}{entryPrice > 0 && <span className="inline-flex items-center gap-1 tabular-nums">· <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />{entryPrice.toLocaleString()}</span>}</>
             )}
           </Button>
         </div>
@@ -328,6 +337,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           </div>
         )}
         <p className="text-white text-sm">{community.member_count.toLocaleString()} {t('communities.members')}</p>
+        {holderGate && <HolderGateChip gate={holderGate} />}
+        <CommunityKindChip community={community} />
       </div>
 
       {/* Ticker */}

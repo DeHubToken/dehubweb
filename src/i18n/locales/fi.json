@@ -162,7 +162,25 @@
     "saved": "Profiilikentät tallennettu",
     "failed": "Tallennus ei onnistunut. Yritä uudelleen.",
     "verified": "Vahvistettu linkki",
-    "verifyHint": "Vahvista linkki lisäämällä tämä sille sivulle ja tallentamalla uudelleen: {{snippet}}"
+    "verifyHint": "Vahvista linkki lisäämällä tämä sille sivulle ja tallentamalla uudelleen: {{snippet}}",
+    "descriptionPresets": "Lisää verkkosivusto, pronominit tai jotain muuta. Linkit näkyvät sosiaalisessa mediassa.",
+    "type": "Kentän tyyppi",
+    "needsLabel": "Anna kullekin mukautetulle kentälle tunniste",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "he/heidät",
+    "placeholderLocation": "Kaupunki, maa",
+    "presets": {
+      "website": "Verkkosivusto",
+      "blog": "Blogi",
+      "portfolio": "Portfolio",
+      "shop": "Osta",
+      "podcast": "Podcast",
+      "newsletter": "Uutiskirje",
+      "pronouns": "Pronominit",
+      "location": "Sijainti",
+      "custom": "Mukautettu",
+      "customOption": "Mukautettu tunniste"
+    }
   },
   "followedTags": {
     "follow": "Seuraa #{{tag}}",
@@ -10663,8 +10681,12 @@
       "restore": "Palauta",
       "restored": "Palautettu versio {{version}}"
     },
-    "stakeForAllowance": "Stakaa DeHub-tokeneita kasvattaaksesi päivittäistä rakennuslupaa",
     "buildInChat": "Rakenna yksityisviesteissä @assistantin kanssa",
+    "modelLabel": "Malli",
+    "creditsLeft": "{{amount}} krediitteinä",
+    "perPrompt": "≈ {{price}} / kehote",
+    "pricingNote": "Jokainen kehote maksetaan krediiteistäsi mallin hinnalla plus 30 %. Kehotteen suurin mahdollinen hinta varataan sen ajon ajaksi, ja käyttämätön osa palautetaan.",
+    "topUpCredits": "Lisää krediittejä",
     "landerTitle": "Rakenna sovellus kysymällä",
     "landerSubtitle": "Kerro avustajalle @Assistant, mitä haluat viesteistäsi. Se rakentaa sovelluksen, isännöi sitä ja lähettää sinulle linkin, jonka kuka tahansa voi avata. Vastaa muuttaaksesi jotain.",
     "promptPlaceholder": "Kuvaile haluamaasi sovellusta…",
@@ -18806,5 +18828,17 @@
     "failed": "Ei voinut tallentaa sitä. Yritä uudelleen.",
     "privacy": "Ainoastaan kerron sinulle uuden julkaisun tiedoista.",
     "seoDescription": "Uusi DeHub-token lähtee pian markkinoille. Liity listalle ja saat yhden sähköpostiviestin heti, kun se tulee liveksi, ja osta suoraan DeHub-lompakostasi."
+  },
+  "githubLink": {
+    "hint": "Kirjaudu GitHubiin todistaaksesi, että tili on sinun. DeHub näkee vain julkisen GitHub-profiilisi.",
+    "verified": "Vahvistettu",
+    "verifiedAria": "Vahvistettu GitHub-tili",
+    "connected": "GitHub yhdistetty",
+    "disconnected": "GitHub-yhteys katkaistu",
+    "taken": "Kyseinen GitHub-tili on jo toisessa DeHub-profiilissa.",
+    "failed": "GitHubia ei voitu yhdistää. Yritä uudelleen.",
+    "unavailable": "GitHub-vahvistus on tulossa pian.",
+    "connect": "Yhdistä GitHub",
+    "disconnect": "Katkaise yhteys"
   }
 }

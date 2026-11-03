@@ -162,7 +162,25 @@
     "saved": "Profilio laukai išsaugoti",
     "failed": "Neišsaugota. Bandykite dar kartą.",
     "verified": "Patvirtinta nuoroda",
-    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}"
+    "verifyHint": "Norėdami patvirtinti nuorodą, pridėkite tai tame puslapyje ir išsaugokite dar kartą: {{snippet}}",
+    "descriptionPresets": "Pridėkite svetainę, įvardžius ar dar ką nors. Rodomos nuorodos su tavo socialiniais tinklais.",
+    "type": "Lauko tipas",
+    "needsLabel": "Kiekvienam pasirinktiniam laukeliui suteikite etiketę",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "jie/jie",
+    "placeholderLocation": "Miestas, šalis",
+    "presets": {
+      "website": "Interneto svetainė",
+      "blog": "Tinklaraštis",
+      "portfolio": "Portfelis",
+      "shop": "Parduotuvė",
+      "podcast": "Tinklalaidė",
+      "newsletter": "Naujienlaiškis",
+      "pronouns": "Įvardžiai",
+      "location": "Vieta",
+      "custom": "Pasirinktinis",
+      "customOption": "Pasirinktinė etiketė"
+    }
   },
   "followedTags": {
     "follow": "Sekti #{{tag}}",
@@ -10664,8 +10682,12 @@
       "restore": "Atkurti",
       "restored": "Atkurta versija {{version}}"
     },
-    "stakeForAllowance": "Statykite „DeHub“ žetonus, kad padidintumėte savo kasdienį kūrimo limitą",
     "buildInChat": "Kurkite asmeninėse žinutėse su @assistant",
+    "modelLabel": "Modelis",
+    "creditsLeft": "{{amount}} kreditais",
+    "perPrompt": "≈ {{price}} už užklausą",
+    "pricingNote": "Kiekviena užklausa apmokama iš jūsų kreditų pagal modelio kainą plius 30 %. Didžiausia galima užklausos kaina rezervuojama jai vykstant, o nepanaudota dalis grąžinama.",
+    "topUpCredits": "Papildyti kreditus",
     "landerTitle": "Susikurkite programėlę tiesiog paklausdami",
     "landerSubtitle": "Papasakokite @assistant, ko norite savo žinutėse. Ji sukuria programėlę, priima svečius ir siunčia jums nuorodą, kurią bet kas gali atidaryti. Atsakykite, jei norite ką nors pakeisti.",
     "promptPlaceholder": "Aprašykite norimą programėlę...",
@@ -18809,5 +18831,17 @@
     "privacy": "Naudojamas tik pranešti apie išleidimą.",
     "seoTitle": "Tokenas pasirodys greitai | DeHub",
     "seoDescription": "Naujas DeHub tokenas pasirodys greitai. Prisijunkite prie sąrašo ir gaukite vieną el. laišką, kai jis bus prieinamas, tada nusipirkti tiesiog iš savo DeHub portfelio."
+  },
+  "githubLink": {
+    "hint": "Prisijunkite prie „GitHub“ ir įrodykite, kad paskyra priklauso jums. DeHub mato tik jūsų viešą „GitHub“ profilį.",
+    "verified": "Patvirtinta",
+    "verifiedAria": "Patvirtinta „GitHub“ paskyra",
+    "connected": "„GitHub“ prijungtas",
+    "disconnected": "„GitHub“ atjungtas",
+    "taken": "Ta „GitHub“ paskyra jau yra kitame „DeHub“ profilyje.",
+    "failed": "Nepavyko prisijungti prie „GitHub“. Bandykite dar kartą.",
+    "unavailable": "Netrukus bus patvirtintas „GitHub“.",
+    "connect": "Prijungti GitHub",
+    "disconnect": "Atjungti"
   }
 }

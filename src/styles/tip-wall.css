@@ -1,62 +1,137 @@
-/* Tip wall + the landing glow every new comment gets.
+/* Coin rail (tipped comments) + the landing glow every new comment gets.
 
-   Colours come from currentColor, so the cards read on every theme without a
-   per-theme sheet: white text on dark themes tints them light, dark text on
-   System Light tints them dark. */
+   Glass colours come from currentColor, so the chips read on every theme
+   without a per-theme sheet; the gold stays gold everywhere. */
 
-.dh-tip-wall {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  padding: 10px 16px 6px;
-  scrollbar-width: none;
-}
-.dh-tip-wall::-webkit-scrollbar { display: none; }
-
-.dh-tip-card {
-  flex: 0 0 auto;
-  width: 148px;
-  min-height: 104px;
-  scroll-snap-align: start;
+/* Coin rail. One radius per theme: the gold tag sits inside the chip, so its
+   corner is the chip's corner minus the chip's padding, never rounder. */
+.dh-tip-rail {
+  --tip-r: 12px;
+  --tip-pad: 4px;
+  --tip-gold-hi: #fff2b3;
+  --tip-gold: #f5c542;
+  --tip-gold-lo: #c98b14;
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  padding: 10px 0 8px;
+}
+html:is([data-theme="war"], [data-theme="hacker"]) .dh-tip-rail { --tip-r: 4px; }
+
+.dh-tip-rail-head {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+}
+.dh-tip-rail-total {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.7;
+}
+
+.dh-tip-rail-row {
+  display: flex;
   gap: 6px;
-  padding: 9px 10px;
-  border-radius: 16px;
-  text-align: left;
-  color: inherit;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  /* Lines up with the comment rows below; chips scroll under the edge. */
+  padding: 2px 0;
+  scrollbar-width: none;
+}
+.dh-tip-rail-row::-webkit-scrollbar { display: none; }
+
+.dh-tip-pill {
+  position: relative;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  display: flex; align-items: center; gap: 7px;
+  max-width: 240px;
+  padding: var(--tip-pad) 10px var(--tip-pad) var(--tip-pad);
+  border-radius: var(--tip-r);
+  color: inherit; text-align: left;
   background: color-mix(in srgb, currentColor 7%, transparent);
-  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 13%, transparent);
   backdrop-filter: blur(18px) saturate(150%);
   -webkit-backdrop-filter: blur(18px) saturate(150%);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.dh-tip-card:first-child {
-  background: linear-gradient(150deg, color-mix(in srgb, currentColor 13%, transparent), color-mix(in srgb, currentColor 4%, transparent));
+.dh-tip-pill.is-top { border-color: color-mix(in srgb, var(--tip-gold) 55%, transparent); }
+.dh-tip-pill.is-open {
+  background: color-mix(in srgb, var(--tip-gold) 14%, transparent);
+  border-color: color-mix(in srgb, var(--tip-gold) 80%, transparent);
 }
-.dh-tip-card.is-open { border-color: color-mix(in srgb, currentColor 45%, transparent); }
-.dh-tip-card:focus-visible { outline: 2px solid color-mix(in srgb, currentColor 60%, transparent); outline-offset: 2px; }
+.dh-tip-pill:focus-visible { outline: 2px solid color-mix(in srgb, currentColor 60%, transparent); outline-offset: 2px; }
 
-.dh-tip-card-who { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; min-width: 0; }
-.dh-tip-card-avatar {
-  width: 18px; height: 18px; border-radius: 6px; flex: none; object-fit: cover;
-  display: grid; place-items: center; font-size: 9px;
+.dh-tip-pill-avatar {
+  width: 26px; height: 26px; flex: none; object-fit: cover;
+  border-radius: max(0px, calc(var(--tip-r) - var(--tip-pad)));
+  display: grid; place-items: center; font-size: 11px; font-weight: 700;
   background: color-mix(in srgb, currentColor 14%, transparent);
 }
-.dh-tip-card-text {
-  font-size: 13px; line-height: 1.3;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  overflow-wrap: anywhere;
+.dh-tip-pill-tag {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 4px; flex: none;
+  height: 26px; padding: 0 7px 0 5px;
+  border-radius: max(0px, calc(var(--tip-r) - var(--tip-pad)));
+  font-size: 12px; font-weight: 800; line-height: 1; white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: #2a1a00;
+  background: linear-gradient(180deg, var(--tip-gold-hi), var(--tip-gold) 55%, var(--tip-gold-lo));
+  box-shadow: inset 0 -1px 0 rgba(122, 76, 10, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.dh-tip-pill-coin { width: 15px; height: 15px; }
+.dh-tip-pill-text {
+  min-width: 0;
+  font-size: 13px; line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0.88;
 }
 
+/* The gold coin: a struck disc with DeHub's mark, used wherever a tip shows. */
+.dh-gold-coin {
+  position: relative; flex: none;
+  display: inline-grid; place-items: center;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6c8 0, #f7cf55 38%, #d39a22 70%, #9a600c 100%);
+  box-shadow: inset 0 0 0 1px rgba(122, 76, 10, 0.55), 0 1px 1px rgba(0, 0, 0, 0.25);
+  color: #8a560a;
+}
+.dh-gold-coin-mark { width: 100%; height: 100%; }
+
+/* The amount next to a tipped comment's name. A small box on its own, so
+   the same small corner as the other badges in that row (Pinned). */
 .dh-tip-chip {
   display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;
-  padding: 2px 7px 2px 5px; border-radius: 999px;
+  padding: 2px 6px 2px 3px; border-radius: 6px;
   font-size: 11px; font-weight: 700; line-height: 1.2; white-space: nowrap;
-  background: color-mix(in srgb, currentColor 12%, transparent);
-  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  background: color-mix(in srgb, #f5c542 18%, transparent);
+  border: 1px solid color-mix(in srgb, #f5c542 40%, transparent);
   font-variant-numeric: tabular-nums;
+}
+html:is([data-theme="war"], [data-theme="hacker"]) .dh-tip-chip { border-radius: 2px; }
+
+/* ---- Shine. A light runs across the gold tags in turn,
+   every few seconds; the top coin turns over as the light passes. ---- */
+.dh-tip-rail[data-motion="shine"] .dh-tip-pill-tag::after {
+  content: ""; position: absolute; inset: -2px auto -2px -60%; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  transform: skewX(-18deg);
+  animation: dh-tip-shine 4.2s cubic-bezier(.4, 0, .2, 1) infinite;
+  animation-delay: calc(var(--i, 0) * 0.18s + 0.6s);
+}
+@keyframes dh-tip-shine {
+  0% { left: -60%; }
+  28%, 100% { left: 130%; }
+}
+.dh-tip-rail[data-motion="shine"] .dh-tip-pill.is-top .dh-tip-pill-coin {
+  animation: dh-tip-coin-turn 4.2s ease-in-out 0.6s infinite;
+}
+@keyframes dh-tip-coin-turn {
+  0%, 8% { transform: rotateY(0); }
+  22%, 100% { transform: rotateY(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dh-tip-rail *, .dh-tip-rail *::before, .dh-tip-rail *::after { animation: none !important; }
 }
 
 /* The landing: one soft glow that rises and settles. Used by tip cards and by

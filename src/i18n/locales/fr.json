@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Champs du profil",
-    "description": "Jusqu'à quatre lignes en plus sur votre profil, comme un site web ou vos pronoms.",
+    "description": "Champs de profil personnalisés facultatifs",
     "label": "Libellé",
     "content": "Contenu",
+    "add": "Ajouter un champ",
+    "remove": "Retirer le champ",
     "save": "Enregistrer les champs",
     "saved": "Champs du profil enregistrés",
     "failed": "Ça n'a pas été enregistré. Réessayez.",
     "verified": "Lien vérifié",
-    "verifyHint": "Pour vérifier un lien, ajoutez ceci à cette page, puis enregistrez à nouveau : {{snippet}}"
+    "verifyHint": "Pour vérifier un lien, ajoutez ceci à cette page, puis enregistrez à nouveau : {{snippet}}",
+    "descriptionPresets": "Ajoutez un site Web, des pronoms ou quoi que ce soit d'autre. Les liens s'affichent avec vos réseaux sociaux.",
+    "type": "Type de champ",
+    "needsLabel": "Donnez une étiquette à chaque champ personnalisé",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ils/elles",
+    "placeholderLocation": "Ville, pays",
+    "presets": {
+      "website": "Site Web",
+      "blog": "Blog",
+      "portfolio": "Portefeuille",
+      "shop": "Boutique",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronoms",
+      "location": "Emplacement",
+      "custom": "Personnalisé",
+      "customOption": "Étiquette personnalisée"
+    }
   },
   "followedTags": {
     "follow": "Suivre #{{tag}}",
@@ -1306,7 +1326,10 @@
     "messageWallNote": "Apparaît sur le mur des pourboires une fois le pourboire confirmé.",
     "sendWithMessage": "Envoyer avec un message",
     "messageFailed": "Votre message n'a pas pu être ajouté. Aucun pourboire n'a été envoyé.",
-    "wallLabel": "Messages de pourboire"
+    "wallLabel": "Messages de pourboire",
+    "railTitle": "Pourboires",
+    "railTotal": "{{amount}} jetons",
+    "tokensUnit": "jetons"
   },
   "postOptions": {
     "liveAlertsOn": "Vous suivez désormais {{name}}. Vous recevrez une notification dès le début du direct.",
@@ -2169,7 +2192,11 @@
     "checkingTokenBalance": "Vérification de votre solde de jetons...",
     "deleteConversationFailed": "Impossible de supprimer la conversation",
     "message": "Message",
-    "noConversationsYet": "Aucune conversation pour l'instant"
+    "noConversationsYet": "Aucune conversation pour l'instant",
+    "sending": "Envoi",
+    "notSent": "Non envoyé",
+    "retrySend": "Réessayer",
+    "discardSend": "Supprimer"
   },
   "music": {
     "listeningCount_one": "{{count}} écoute",
@@ -2224,6 +2251,24 @@
     "mutualsOne": "{{count}} en commun :",
     "mutualsMany": "{{count}} en commun :",
     "back": "Retour",
+    "reserve": {
+      "available": "Nom d'utilisateur disponible",
+      "held": "Réservé pour vous",
+      "ended": "Réservation terminée",
+      "busy": "En cours de réservation",
+      "availableBody": "dehub.io/{{name}} est libre en ce moment. Réservez-le et nous le gardons une minute pendant votre inscription.",
+      "heldBody": "Personne d'autre ne peut prendre @{{name}} avant la fin du minuteur. Terminez l'inscription pour le garder.",
+      "endedBody": "Votre minute est écoulée, @{{name}} est de nouveau ouvert à tous. Il est toujours libre.",
+      "busyBody": "Quelqu'un s'inscrit en tant que @{{name}} en ce moment. S'il ne termine pas, il se libère à la fin du minuteur.",
+      "finish": "Terminer l'inscription",
+      "again": "Réserver à nouveau",
+      "cta": "Réserver maintenant",
+      "letGo": "Le libérer",
+      "haveAccount": "Vous avez un compte ?",
+      "signIn": "Se connecter",
+      "seoTitle": "@{{name}} est disponible sur DeHub",
+      "seoDescription": "Personne n'a encore dehub.io/{{name}}. Réservez-le et inscrivez-vous pour qu'il soit à vous."
+    },
     "usernameAvailable": "Nom d'utilisateur disponible !",
     "signUpToClaim": "Inscrivez-vous pour le réclamer",
     "signUp": "S'inscrire",
@@ -6444,6 +6489,26 @@
     "docsSeoDescription": "Documentation de référence pour les compétences d'assistant d'IA et la bibliothèque d'invites de DeHub.",
     "docsLoadFailed": "# Erreur\nÉchec du chargement de la documentation de la compétence.",
     "raw": "Matières"
+  },
+  "nftMarket": {
+    "shortTitle": "NFT",
+    "filters": "Filtres",
+    "forSale": "En vente",
+    "openToOffers": "Ouvert aux offres",
+    "freshMints": "Tout juste créés sur DeHub",
+    "makeOffer": "Faire une offre",
+    "offersOpen": "Ouvert aux offres",
+    "mintedCount": "{{n}} créés",
+    "trending": "Collections tendance",
+    "floor": "Prix plancher",
+    "listedCount": "{{n}} en vente",
+    "thisCollection": "Cette collection",
+    "collectionOffer": "Offre sur n'importe lequel",
+    "showAll": "Tout afficher",
+    "title": "Marché NFT",
+    "subtitle": "Achetez, vendez et faites des offres sur BNB et Base",
+    "seoTitle": "Marché NFT : achetez et vendez des NFT sur BNB et Base | DeHub",
+    "seoDescription": "Achetez, vendez et faites des offres sur des NFT sur BNB Chain et Base. Payez en BNB, ETH ou DHB. Chaque échange transfère le NFT et le paiement en une seule étape."
   },
   "usernames": {
     "seoTitle": "Nom d'utilisateur Marketplace | DeHub",
@@ -11456,8 +11521,12 @@
       "restore": "Restaurer",
       "restored": "Version restaurée {{version}}"
     },
-    "stakeForAllowance": "Staker des tokens DeHub pour augmenter votre allocation de création quotidienne",
     "buildInChat": "Créez dans vos messages privés avec @assistant",
+    "modelLabel": "Modèle",
+    "creditsLeft": "{{amount}} en crédits",
+    "perPrompt": "≈ {{price}} par requête",
+    "pricingNote": "Chaque requête est payée avec vos crédits au coût du modèle plus 30 %. Le montant maximal qu'une requête peut coûter est bloqué pendant son exécution, et la partie non utilisée est restituée.",
+    "topUpCredits": "Recharger des crédits",
     "landerTitle": "Créez une application en demandant simplement",
     "landerSubtitle": "Dites à @assistant ce que vous voulez dans vos messages. Il crée l'application, l'héberge et vous envoie un lien que tout le monde peut ouvrir. Répondez pour changer quoi que ce soit.",
     "promptPlaceholder": "Décrivez l'application que vous voulez…",
@@ -12389,6 +12458,7 @@
       "stateUnlisted": "En ligne par lien · en attente de la boutique",
       "stateListed": "Dans la boutique",
       "stateSuspended": "Suspendue",
+      "stateRejected": "En ligne par lien · non approuvée pour la boutique",
       "copyLink": "Copier le lien",
       "notifyKey": "Notifier la touche",
       "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",
@@ -12402,7 +12472,44 @@
       "rewardsWeek": "Semaine du {{date}}",
       "rewardPaid": "Payant",
       "rewardPending": "En attente",
-      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi."
+      "rewardsNone": "Aucune récompense n'a encore été calculée. La première semaine se termine le lundi.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Événements envoyés par DeHub à votre webhookUrl. Le test envoie un événement ping.",
+        "test": "Envoyer un test",
+        "ok": "Le webhook a répondu {{status}}",
+        "failed": "Échec du webhook : {{reason}}",
+        "none": "Aucun webhook envoyé pour l'instant."
+      },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "Personnes ayant ouvert votre app, 30 derniers jours",
+        "peak_one": "Pic de {{count}} par jour",
+        "peak_other": "Pic de {{count}} par jour",
+        "people30": "Personnes, 30 jours",
+        "people7": "Personnes, 7 jours",
+        "added": "L'ont ajoutée",
+        "dhb30": "DHB payés, 30 jours",
+        "notified30": "Notifications envoyées, 30 jours",
+        "rewards": "Récompenses en DHB"
+      },
+      "signin": {
+        "title": "Se connecter avec DeHub",
+        "body": "Permettez aux gens de se connecter à votre site ou app avec leur compte DeHub. Créez une clé ici, puis suivez le guide.",
+        "guide": "Lire le guide",
+        "users_one": "{{count}} utilisateur",
+        "users_other": "{{count}} utilisateurs",
+        "copyId": "Copier l'ID client",
+        "rotate": "Nouveau secret",
+        "delete": "Supprimer",
+        "rotateConfirm": "Créer un nouveau secret pour {{name}} ? L'ancien secret cesse de fonctionner immédiatement.",
+        "deleteConfirm": "Supprimer {{name}} ? Toutes les personnes connectées avec seront déconnectées.",
+        "secretOnce": "Secret de {{name}}. Copiez-le maintenant : il n'est affiché qu'une fois.",
+        "name": "Nom de l'app",
+        "website": "Site web (facultatif)",
+        "redirects": "URL de redirection, une par ligne (https://votresite.com/callback)",
+        "create": "Créer une clé"
+      }
     },
     "card": {
       "open": "Ouvrir"
@@ -12428,7 +12535,10 @@
       "confirm": "Payez {{amount}} jetons",
       "sending": "Envoyez votre paiement…",
       "sent": "Paiement {{amount}} jetons à {{name}}.",
-      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer."
+      "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer.",
+      "testBadge": "Mode test",
+      "testBody": "Cette app est à vous, c'est donc un test : aucun jeton ne bouge et le reçu est marqué test.",
+      "testSent": "Paiement test de {{amount}} jetons. Rien n'a été envoyé."
     },
     "add": {
       "title": "Ajouter {{name}} ?",
@@ -19625,7 +19735,17 @@
     "formatting": "Formatage",
     "bodyPlaceholder": "Racontez votre histoire. Sélectionnez du texte et utilisez la barre ci-dessus pour les titres, les italiques, les citations et les listes.",
     "bodyLabel": "Corps de l'article",
-    "wordCount": "{{count}} mots"
+    "wordCount": "{{count}} mots",
+    "imageLimit": "Un article peut contenir jusqu'à {{count}} images",
+    "imageLimitSome": "Seulement {{count}} images de plus peuvent être ajoutées",
+    "imageFailed": "Impossible d'ajouter cette image. Essayez-en une autre.",
+    "imagesUploading": "Ajout des images ({{count}})…",
+    "bodyTooLong": "{{count}} caractères au-delà de la limite",
+    "imagesLabel": "Images",
+    "imagesCount": "Images · {{count}}/{{max}}",
+    "captionPlaceholder": "Ajouter une légende",
+    "captionLabel": "Légende de l'image {{n}}",
+    "removeInlineImage": "Retirer l'image {{n}}"
   },
   "liveAudience": {
     "whosHere": "Qui est là",
@@ -20059,5 +20179,17 @@
     "privacy": "Seulement utilisé pour vous informer du lancement.",
     "seoTitle": "Lancement de jeton imminent | DeHub",
     "seoDescription": "Le nouveau jeton DeHub va bientôt être lancé. Inscris-toi à la liste et reçois un email dès qu'il sera en ligne, puis achète directement depuis ton portefeuille DeHub."
+  },
+  "githubLink": {
+    "hint": "Connectez-vous à GitHub pour prouver que le compte vous appartient. DeHub ne voit que votre profil GitHub public.",
+    "verified": "Vérifié",
+    "verifiedAria": "Compte GitHub vérifié",
+    "connected": "GitHub connecté",
+    "disconnected": "GitHub déconnecté",
+    "taken": "Ce compte GitHub est déjà sur un autre profil DeHub.",
+    "failed": "Impossible de connecter GitHub. Réessayez.",
+    "unavailable": "La vérification GitHub arrive bientôt.",
+    "connect": "Connecter GitHub",
+    "disconnect": "Déconnecter"
   }
 }

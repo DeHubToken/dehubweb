@@ -1,5 +1,5 @@
 {
-  "version": "5b538b60b21ec3e3",
+  "version": "b274ead371ef7020",
   "routes": {
     "/": [
       "ar",
@@ -260,6 +260,13 @@
       "nl",
       "tr"
     ],
+    "/docs/auth": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/docs/blog": [
       "ar",
       "es",
@@ -295,7 +302,35 @@
       "nl",
       "tr"
     ],
+    "/docs/developers": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/docs/developers/mini-apps": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
     "/docs/donate": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/docs/endpoints": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/docs/examples": [
       "ar",
       "es",
       "fr",
@@ -422,6 +457,20 @@
       "tr"
     ],
     "/docs/token/where-to-buy": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/docs/troubleshooting": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/docs/webhooks": [
       "ar",
       "es",
       "fr",
@@ -1479,6 +1528,13 @@
       "tr"
     ],
     "/music": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/nfts": [
       "ar",
       "es",
       "fr",

@@ -100,10 +100,12 @@ import {
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
+import { FeedCaptionExpander } from './FeedCaptionExpander';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 
 /**
  * Lazy, and only mounted while open.
@@ -155,6 +157,17 @@ interface PostCardProps {
   threadSlot?: ReactNode;
 }
 
+/**
+ * The address a text post presents at: an article at its readable
+ * /app/post/<title-slug>, an off-chain post at /newpost/<n>, anything else at
+ * /app/post/<tokenId>. Every one of them resolves on web and in the app.
+ */
+function postOwnPath(post: { id: string; articleSlug?: string; newPostId?: number }): string {
+  if (post.articleSlug) return `/app/post/${post.articleSlug}`;
+  if (post.newPostId) return `/newpost/${post.newPostId}`;
+  return `/app/post/${post.id}`;
+}
+
 const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
   const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
@@ -186,6 +199,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const bodyNavigationRef = useRef<HTMLDivElement>(null);
   const { walletAddress, openLoginModal } = useAuth();
   // Deep Current is the one power spent on somebody ELSE's post, so it is
@@ -335,16 +349,17 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       if (excluded && excluded !== bodyNavigationRef.current) return;
       // Already on this post's own page: another push only adds a Back step.
       const path = window.location.pathname;
-      if (path === `/app/post/${post.id}` || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
+      if (path === `/app/post/${post.id}` || path === postOwnPath(post) || (post.newPostId && path === `/newpost/${post.newPostId}`)) return;
       cacheTextPostForNavigation(queryClient, post);
-      navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
+      noteProfileFeedOpen(profileFeed, post.id);
+      navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
     },
   });
 
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     // Swallow the ghost click left behind when a bottom sheet was just dismissed
     // by tapping the scrim — otherwise that tap navigates into the post.
-    if (wasDrawerJustDismissed() || window.location.pathname === `/app/post/${post.id}`) return;
+    if (wasDrawerJustDismissed() || window.location.pathname === `/app/post/${post.id}` || window.location.pathname === postOwnPath(post)) return;
     const target = e.target as HTMLElement;
     const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
@@ -354,16 +369,18 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
 
     // Cache the post data before navigation for instant display
     cacheTextPostForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, post.id, queryClient, post]);
+    noteProfileFeedOpen(profileFeed, post.id);
+    navigate(post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`, { state: { fromFeed: true } });
+  }, [navigate, post.id, queryClient, post, profileFeed]);
 
   // Articles open in place, like every other post. They used to reload the
   // whole site through window.location.
   const isPostPage = /\/app\/post\/|\/newpost\//.test(window.location.pathname);
   const openArticle = useCallback(() => {
     cacheTextPostForNavigation(queryClient, post);
-    navigate(post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, post]);
+    noteProfileFeedOpen(profileFeed, post.id);
+    navigate(postOwnPath(post), { state: { fromFeed: true } });
+  }, [navigate, queryClient, post, profileFeed]);
 
   const handleRepost = useCallback(async () => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -396,7 +413,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = viewerShareUrl(`https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`);
+      const postUrl = viewerShareUrl(`https://dehub.io${postOwnPath(post)}`);
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -527,7 +544,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
               </button>
               <button
                 onClick={() => {
-                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
+                  const url = viewerShareUrl(`${window.location.origin}${post.articleSlug ? postOwnPath(post) : `/app/post/${post.id}`}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);
@@ -758,7 +775,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
               body={post.articleBody}
               coverUrl={post.articleImageUrl}
               createdAt={post.createdAt}
-              shareUrl={`${window.location.origin}${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`}
+              shareUrl={`${window.location.origin}${postOwnPath(post)}`}
               onComment={() => {
                 if (onOpenComments) { onOpenComments(); return; }
                 setCommentsInitialTab(undefined);
@@ -785,7 +802,13 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
             ran a second translation of the same body — and once the first one
             landed, a third of the translated text. */}
         {displayBody?.trim() ? (
-          <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          !stage && !threadSlot ? (
+            <FeedCaptionExpander lines={6} textKey={displayBody}>
+              <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+            </FeedCaptionExpander>
+          ) : (
+            <TranslatableText publicContent text={displayBody} className="text-white/90 text-[15.25px] leading-[22.5px]" as="p" auto={false} flagged={post.communityAlertPending} />
+          )
         ) : null}
         </>
         )}
@@ -835,6 +858,7 @@ const PostCardBody = memo(function PostCard({ post, threadSlot, onOpenComments }
           <ActionBar
             postId={post.id}
             newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
+            articleSlug={post.articleSlug}
             tokenId={parseInt(post.id, 10) || undefined}
             isOwnPost={!!isOwnPost}
             quotePolicy={post.quotePolicy}

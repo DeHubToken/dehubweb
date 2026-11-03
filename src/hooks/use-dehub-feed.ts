@@ -437,6 +437,8 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     subscriberPlans: (nft as any).plansDetails,
     contentRating: nft.contentRating,
     mediaDescriptions: nft.mediaDescriptions,
+    layout: nft.layout,
+    mediaCaptions: nft.mediaCaptions,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,

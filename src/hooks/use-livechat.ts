@@ -22,6 +22,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import type { ReactionData, ReplyToData } from '@/components/app/chat/ChatMessage';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { chatRefusalText, ShownChatError, wasShownToUser } from '@/lib/chat-refusal';
 import { parseChatBadges, type ChatCreatorBadge } from '@/lib/live/chat-badges';
 import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
 
@@ -56,6 +57,13 @@ export interface SupabaseLiveChatMessage {
   };
   audio_url?: string | null;
   audio_duration?: number | null;
+  /**
+   * Local only. The id a line of your own was first drawn under. It is carried
+   * onto the server's copy so the row keeps its element when the send lands.
+   */
+  client_key?: string;
+  /** Local only. Set while your send is in flight, or after it failed. */
+  send_state?: 'sending' | 'failed';
 }
 
 export function useLiveChatRooms() {
@@ -223,7 +231,37 @@ const DISCONNECTED_GAP_CHECK_MS = 5_000;
  * different messages collide.
  */
 function senderContentKey(m: SupabaseLiveChatMessage): string {
-  return `${m.sender_address.length}:${m.sender_address}${m.content}`;
+  // Lower-cased: our own row holds the address lower-case, the gateway's copy
+  // may be checksummed, and a miss left the pending line next to its twin.
+  const address = (m.sender_address || '').toLowerCase();
+  return `${address.length}:${address}${m.content}`;
+}
+
+/**
+ * Pair each confirmed copy with the pending line it confirms, carrying that
+ * line's client key over so the row keeps its element. Returns the confirmed
+ * copies (keyed) and the ids of the pending lines they replace.
+ */
+function claimPending(
+  prev: SupabaseLiveChatMessage[],
+  confirmed: SupabaseLiveChatMessage[],
+): { rows: SupabaseLiveChatMessage[]; claimed: Set<string> } {
+  const waiting = new Map<string, SupabaseLiveChatMessage[]>();
+  for (const m of prev) {
+    if (!m.id.startsWith('temp-') || m.send_state === 'failed') continue;
+    const key = senderContentKey(m);
+    waiting.set(key, [...(waiting.get(key) ?? []), m]);
+  }
+  const claimed = new Set<string>();
+  if (waiting.size === 0) return { rows: confirmed, claimed };
+  const rows = confirmed.map((m) => {
+    const queue = waiting.get(senderContentKey(m));
+    const pending = queue?.shift();
+    if (!pending) return m;
+    claimed.add(pending.id);
+    return { ...m, client_key: pending.client_key ?? pending.id };
+  });
+  return { rows, claimed };
 }
 function capMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
   if (msgs.length <= MAX_LIVECHAT_MESSAGES) return msgs;
@@ -256,16 +294,21 @@ export function mergeIncoming(
 
   const incomingIds = new Set(batch.map((m) => m.id));
   // An optimistic row is confirmed by content and sender, not by id: the
-  // gateway assigns the real id and never sees ours.
-  const confirmed = new Set(batch.map(senderContentKey));
+  // gateway assigns the real id and never sees ours. The confirmed copy takes
+  // over the pending row's client key, so React keeps the same element.
+  const fresh = batch.filter((m) => !prev.some((p) => p.id === m.id));
+  const { rows, claimed } = claimPending(prev, fresh);
+  const keyed = new Map(rows.map((m) => [m.id, m]));
+  const incoming = batch.map((m) => keyed.get(m.id) ?? m);
 
-  const kept = prev.filter((m) => {
-    if (incomingIds.has(m.id)) return false;
-    if (m.id.startsWith('temp-') && confirmed.has(senderContentKey(m))) return false;
-    return true;
+  const kept = prev.filter((m) => !incomingIds.has(m.id) && !claimed.has(m.id));
+  // A row that already existed keeps its client key through an update.
+  const carried = incoming.map((m) => {
+    const before = prev.find((p) => p.id === m.id);
+    return before?.client_key && !m.client_key ? { ...m, client_key: before.client_key } : m;
   });
 
-  const merged = [...kept, ...batch];
+  const merged = [...kept, ...carried];
 
   // Only pay for a sort if something actually landed out of order.
   let ordered = true;
@@ -362,6 +405,8 @@ export function useLiveChatMessages(roomId: string | null) {
   const messagesRef = useRef<SupabaseLiveChatMessage[]>([]);
   messagesRef.current = messages;
   const sweepRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** What each pending line asked for, so a failed one can go again as it was. */
+  const pendingSendsRef = useRef(new Map<string, [string, 'text' | 'image' | 'gif' | 'audio', string | undefined, string | undefined, string | undefined, number | undefined]>());
 
   const fetchMessages = useCallback(async (showLoading = false) => {
     if (!roomId) return;
@@ -370,15 +415,13 @@ export function useLiveChatMessages(roomId: string | null) {
       const apiMessages = await fetchApiMessages(roomId, { limit: 200 });
       const mapped = apiMessages.map((m) => apiMsgToLocal(m, roomId));
       setMessages((prev) => {
-        const optimistic = prev.filter((m) => m.id.startsWith('temp-'));
-        const keepOptimistic = optimistic.filter(
-          (temp) =>
-            !mapped.some(
-              (real) =>
-                real.content === temp.content && real.sender_address === temp.sender_address
-            )
-        );
-        const next = capMessages(deduplicateMessages([...mapped, ...keepOptimistic]));
+        // Confirmed copies take over their pending line's client key; lines
+        // still pending (or failed, waiting on Retry) stay as they are.
+        const { rows, claimed } = claimPending(prev, mapped);
+        const known = new Map(prev.filter((m) => m.client_key).map((m) => [m.id, m.client_key!]));
+        const keyedRows = rows.map((m) => (!m.client_key && known.has(m.id) ? { ...m, client_key: known.get(m.id) } : m));
+        const keepOptimistic = prev.filter((m) => m.id.startsWith('temp-') && !claimed.has(m.id));
+        const next = capMessages(deduplicateMessages([...keyedRows, ...keepOptimistic]));
         cacheRoomMessages(roomId, next);
         return next;
       });
@@ -593,13 +636,11 @@ export function useLiveChatMessages(roomId: string | null) {
     // message simply disappear. Say what happened and drop the row that will
     // never be confirmed.
     const unsubError = onLiveChatError(roomId, (data) => {
-      const message = data?.message || _translateCopy("copy.4e957da5c208", { defaultValue: "Message was not sent" });
-      toast.error(message);
-      setMessages((prev) => {
-        const next = prev.filter((m) => !m.id.startsWith('temp-'));
-        if (roomId) cacheRoomMessages(roomId, next);
-        return next;
-      });
+      const message = chatRefusalText(data);
+      // One toast per refusal even if several sends come back refused at once.
+      toast.error(message, { id: data?.code === 'SLOW_DOWN' ? 'chat-slow-down' : undefined });
+      // The refused line itself is marked by its own send (below), which is
+      // waiting on exactly this event; other lines still in flight are left be.
       if (/edit|delete|not authorised|not authorized|own messages/i.test(message)) {
         fetchMessages(false);
       }
@@ -670,7 +711,9 @@ export function useLiveChatMessages(roomId: string | null) {
       imageUrl?: string,
       replyToId?: string,
       audioUrl?: string,
-      audioDuration?: number
+      audioDuration?: number,
+      /** Resend a failed line where it is: its client key. */
+      retryKey?: string,
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) throw new Error(_translateCopy("copy.bc30560b2f21", { defaultValue: "Sign in to send a message" }));
       if (isBanned) {
@@ -692,9 +735,12 @@ export function useLiveChatMessages(roomId: string | null) {
         }
       }
 
-      const optimisticId = `temp-${Date.now()}`;
+      const optimisticId = retryKey ?? `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      pendingSendsRef.current.set(optimisticId, [content, type, imageUrl, replyToId, audioUrl, audioDuration]);
       const optimisticMsg: SupabaseLiveChatMessage = {
         id: optimisticId,
+        client_key: optimisticId,
+        send_state: 'sending',
         room_id: roomId,
         sender_address: walletAddress.toLowerCase(),
         sender_username: user?.username || null,
@@ -709,8 +755,12 @@ export function useLiveChatMessages(roomId: string | null) {
         created_at: new Date().toISOString(),
         reply_to: replyToData,
       };
+      // Drawn exactly as it will look once delivered; only a small ring says
+      // it is still going. A retry flips the failed row back where it stands.
       setMessages((prev) => {
-        const next = [...prev, optimisticMsg];
+        const next = retryKey && prev.some((m) => m.id === retryKey)
+          ? prev.map((m) => (m.id === retryKey ? { ...m, send_state: 'sending' as const } : m))
+          : [...prev, optimisticMsg];
         if (roomId) cacheRoomMessages(roomId, next);
         return next;
       });
@@ -726,10 +776,14 @@ export function useLiveChatMessages(roomId: string | null) {
         }
 
         const apiType = type === 'image' ? 'media' : type;
+        // A refusal is already toasted by the room's error listener with the
+        // server's reason (slow down, blocked link, ...); remember it so the
+        // send does not add a second, vaguer toast on top.
+        let refused = false;
         const confirmed = await confirmChatDelivery({
           listen: (event, handler) => {
             if (event === 'message') return onLiveChatMessage(roomId, handler);
-            if (event === 'error') return onLiveChatError(roomId, handler);
+            if (event === 'error') return onLiveChatError(roomId, (data) => { refused = true; handler(data); });
             socket.on(event, handler); return () => { socket.off(event, handler); };
           },
           emit: () => { emitSendMessage({
@@ -744,6 +798,7 @@ export function useLiveChatMessages(roomId: string | null) {
           messageEvent: 'message', errorEvent: 'error',
           matches: message => roomMessageMatches(message, { account: walletAddress, content, room: roomId, attachment: imageUrl || audioUrl }),
         });
+        if (!confirmed && refused) throw new ShownChatError('refused');
         if (!confirmed) throw new Error(_translateCopy("copy.b13c7f1738c8", { defaultValue: "Message was not confirmed. Your draft has been kept." }));
 
         /*
@@ -764,14 +819,18 @@ export function useLiveChatMessages(roomId: string | null) {
          * row. The only case left is a send that is silently lost, and the
          * sweep below covers it without a request per message.
          */
+        pendingSendsRef.current.delete(optimisticId);
         scheduleOptimisticSweep();
       } catch (err: any) {
+        // The line stays where it was sent, marked "Not sent" with Retry.
         setMessages((prev) => {
-          const next = prev.filter((m) => m.id !== optimisticId);
+          const next = prev.map((m) => (m.id === optimisticId ? { ...m, send_state: 'failed' as const } : m));
           if (roomId) cacheRoomMessages(roomId, next);
           return next;
         });
-        toast.error(_translateCopy("copy.9b9ec2e38a00", { defaultValue: "Failed to send: {{value1}}", value1: err?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }));
+        if (!wasShownToUser(err)) {
+          toast.error(_translateCopy("copy.9b9ec2e38a00", { defaultValue: "Failed to send: {{value1}}", value1: err?.message || _translateCopy("copy.27c2ccd962c2", { defaultValue: "Unknown error" }) }));
+        }
         console.error('[LiveChat] Failed to send message:', err);
         throw err;
       } finally {
@@ -882,9 +941,26 @@ export function useLiveChatMessages(roomId: string | null) {
     emitRemoveReaction(roomId, messageId, emoji);
   }, [roomId, walletAddress]);
 
+  /** Send a failed line again, in place. */
+  const retrySend = useCallback((clientKey: string) => {
+    const args = pendingSendsRef.current.get(clientKey);
+    if (!args) return;
+    void send(...args, clientKey).catch(() => {});
+  }, [send]);
+
+  /** Drop a failed line the sender no longer wants. */
+  const discardSend = useCallback((clientKey: string) => {
+    pendingSendsRef.current.delete(clientKey);
+    setMessages((prev) => {
+      const next = prev.filter((m) => m.id !== clientKey);
+      if (roomId) cacheRoomMessages(roomId, next);
+      return next;
+    });
+  }, [roomId]);
+
   return {
     messages, isLoading, isSending, isConnected, isBanned, isModerator, mutedUntil,
-    send, addReaction, removeReaction, editMessage, deleteMessage,
+    send, retrySend, discardSend, addReaction, removeReaction, editMessage, deleteMessage,
     refetch: () => fetchMessages(false),
   };
 }

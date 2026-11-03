@@ -8,7 +8,10 @@
  * is funded, so the viewer never has to find their way back to the post.
  */
 
-import { Ticket, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Ticket, Loader2, Check } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
@@ -45,6 +48,9 @@ export function PPVDrawerContent({
   formatCompact,
 }: PPVDrawerContentProps) {
   const { t } = useTranslation();
+  // Phones: a short tick in the sheet, then it closes itself and the post plays its reveal.
+  const isMobile = useIsMobile();
+  const [done, setDone] = useState(false);
   const { pay, isPaying, shortfall, clearShortfall } = usePPVPayment({
     tokenId,
     creatorAddress,
@@ -54,8 +60,17 @@ export function PPVDrawerContent({
     // routes those to the SOL/SPL transfer path.
     chainId,
     onSuccess: () => {
-      onUnlocked?.();
-      onClose();
+      if (!isMobile) {
+        onUnlocked?.();
+        onClose();
+        return;
+      }
+      toast.dismiss('ppv-payment');
+      setDone(true);
+      setTimeout(() => {
+        onClose();
+        setTimeout(() => onUnlocked?.(), 250);
+      }, 800);
     },
   });
 
@@ -66,6 +81,7 @@ export function PPVDrawerContent({
       scrollable
       className="max-h-[85dvh] px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
     >
+      {!done && (
       <DrawerHeader className="pb-3 relative">
         <DrawerTitle className="text-white text-lg flex items-center gap-2">
           <Ticket className="w-5 h-5 text-white" />
@@ -77,7 +93,16 @@ export function PPVDrawerContent({
           <X className="w-4 h-4 text-zinc-400" />
         </button>
       </DrawerHeader>
-      {shortfall ? (
+      )}
+      {done ? (
+        <div className="flex flex-col items-center gap-2 py-8 text-white" data-unlock-sheet="done">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-current text-white animate-in zoom-in-50 duration-300">
+            <Check className="h-7 w-7" strokeWidth={2.6} />
+          </span>
+          <p className="text-lg font-semibold">{t('dmPaidLock.sheetUnlocked', 'Unlocked')}</p>
+          <p className="text-sm text-white/65">{t('drawers.ppvOpening', 'Opening the post…')}</p>
+        </div>
+      ) : shortfall ? (
         <PPVTopUpStep
           shortfall={shortfall}
           formatCompact={formatCompact}

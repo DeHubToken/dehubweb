@@ -162,7 +162,25 @@
     "saved": "Riqsichikuy t'aqakuna waqaychasqa",
     "failed": "Manam waqaychakurqanchu. Watiqmanta ruray.",
     "verified": "Chiqaqchasqa t'inki",
-    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}"
+    "verifyHint": "T'inkita chiqaqchanaykipaq, kayta chay p'anqaman yapay, hinaspa watiqmanta waqaychay: {{snippet}}",
+    "descriptionPresets": "Web kitita, sutirantikunata utaq imatapas yapay. Enlaces rikuchinku socialesniykiwan.",
+    "type": "Chakra laya",
+    "needsLabel": "Sapa costumbre chakraman huk etiquetata quy",
+    "placeholderLink": "sitioyki.com nisqapi",
+    "placeholderPronouns": "paykuna/paykuna",
+    "placeholderLocation": "Llaqta, suyu",
+    "presets": {
+      "website": "Web nisqapi",
+      "blog": "Blog nisqamanta",
+      "portfolio": "Cartera nisqa",
+      "shop": "Rantiy",
+      "podcast": "Podcast",
+      "newsletter": "Willakuy qillqa",
+      "pronouns": "Suti rantikuna",
+      "location": "Tarikusqan",
+      "custom": "Chullachasqa",
+      "customOption": "Etiqueta personalizada nisqa"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} qatiy",
@@ -10688,8 +10706,12 @@
       "restore": "Kawsarichiy",
       "restored": "Kutichisqa laya {{version}}"
     },
-    "stakeForAllowance": "DeHub tokenskuna stakeyta atikanki urqu build allowance urqu punchawta",
     "buildInChat": "Sapaq willakuyniykikunapi @assistant-wan ruray",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} creditokunapi",
+    "perPrompt": "≈ sapa mañakuypaq {{price}}",
+    "pricingNote": "Sapa mañakuyqa creditoykikunamanta pagakun modelopa chaninwan 30% yapasqawan. Mañakuy aswan chaninniyuq kayninqa llamk'achkaptin hap'isqa kan, mana llamk'achisqa partitaq kutichisqa kan.",
+    "topUpCredits": "Creditota yapay",
     "landerTitle": "Tapuspalla huk appta ruway",
     "landerSubtitle": "@assistant nisqaman willay ima munasqaykita willakuyniykikunapi. Chayqa app ruwan, host ruwan chaymanta huk linkta apachisunki pipas kichayta atin. Imatapas tikranaykipaq kutichiy.",
     "promptPlaceholder": "Willay ima app munasqaykita...",
@@ -18813,5 +18835,30 @@
     "fingerprint": "Dedo ch'iqay",
     "exploreFirst": "Ñawpaqta maskay",
     "codeNote": "Ch'iqichisqayki kodigota apachimusayki, manam pasword necesitakunchu."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Chayamuchkanña",
+    "title": "Token nisqayki chaskiytaqa",
+    "body": "Rantikuy pichqa kaylla, musuq token allinakuytaq. Emailta apakuway chayqa kawsaq kaykunaqa.",
+    "notifyMe": "Ama hina kaychu",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Su correo electrónico",
+    "invalidEmail": "Kamaykamaykuna p'unchaykuna q'illaykamaykuna.",
+    "joinedTitle": "Kamuykuna q'umirichisqa",
+    "joinedBodyNoEmail": "Kamaykunapaq k'uskiyki qillqamanta qillqa k'uskiyki.",
+    "failed": "Kamuykuna qhaway, mana kaptinapaq.",
+    "privacy": "Kamuykuna qhawaykunawan k'ancha k'aspiy.",
+    "seoTitle": "K'antu q'illayta k'aspiyki. | DeHub"
+  },
+  "githubLink": {
+    "hint": "Sinqi kamarq'akuna GitHub kamarq'akuna. DeHub mana kamarq'akuna qhawaykuna kamarq'akuna qhawaykuna.",
+    "verified": "Wakichasqa",
+    "verifiedAria": "Kamachiyuwan GitHub qillqaynin",
+    "connected": "Qhaway GitHub q'illay",
+    "disconnected": "Kamaykuna GitHub q'illaykamaykuna.",
+    "taken": "Kay GitHub q'illaykamanaqa DeHub q'illqaykampana q'illqamanta aswan.",
+    "failed": "Mana ch'aspaq GitHub. Kunti chaspaq.",
+    "connect": "Kamuykuna GitHubnin ch'antaspa.",
+    "disconnect": "T’aqanakuy"
   }
 }

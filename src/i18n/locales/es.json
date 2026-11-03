@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Campos del perfil",
-    "description": "Hasta cuatro líneas extra en tu perfil, como un sitio web o tus pronombres.",
+    "description": "Campos de perfil personalizados opcionales",
     "label": "Etiqueta",
     "content": "Contenido",
+    "add": "Añadir campo",
+    "remove": "Quitar campo",
     "save": "Guardar campos",
     "saved": "Campos del perfil guardados",
     "failed": "No se guardó. Inténtalo de nuevo.",
     "verified": "Enlace verificado",
-    "verifyHint": "Para verificar un enlace, añade esto a esa página y vuelve a guardar: {{snippet}}"
+    "verifyHint": "Para verificar un enlace, añade esto a esa página y vuelve a guardar: {{snippet}}",
+    "descriptionPresets": "Añade un sitio web, pronombres o cualquier otra cosa. Los enlaces se muestran con tus redes sociales.",
+    "type": "Tipo de campo",
+    "needsLabel": "Dar a cada campo personalizado una etiqueta",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "ellos/ellas",
+    "placeholderLocation": "Ciudad, país",
+    "presets": {
+      "website": "Sitio web",
+      "blog": "Blog",
+      "portfolio": "Cartera",
+      "shop": "Comprar",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronombres",
+      "location": "Ubicación",
+      "custom": "Personalizado",
+      "customOption": "Etiqueta personalizada"
+    }
   },
   "followedTags": {
     "follow": "Seguir #{{tag}}",
@@ -1306,7 +1326,10 @@
     "messageWallNote": "Aparece en el muro de propinas cuando la propina se confirma.",
     "sendWithMessage": "Enviar con mensaje",
     "messageFailed": "No se pudo añadir tu mensaje. No se envió ninguna propina.",
-    "wallLabel": "Mensajes de propinas"
+    "wallLabel": "Mensajes de propinas",
+    "railTitle": "Propinas",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Ahora sigues a {{name}}. Recibirás una notificación cuando transmita en vivo.",
@@ -2169,7 +2192,11 @@
     "checkingTokenBalance": "Verificando tu saldo de tokens...",
     "deleteConversationFailed": "No se ha podido eliminar la conversación",
     "message": "Mensaje",
-    "noConversationsYet": "Aún no hay conversaciones"
+    "noConversationsYet": "Aún no hay conversaciones",
+    "sending": "Enviando",
+    "notSent": "No enviado",
+    "retrySend": "Reintentar",
+    "discardSend": "Quitar"
   },
   "music": {
     "listeningCount_one": "{{count}} escuchando",
@@ -2224,6 +2251,24 @@
     "mutualsOne": "{{count}} en común:",
     "mutualsMany": "{{count}} en común:",
     "back": "Volver",
+    "reserve": {
+      "available": "Nombre de usuario disponible",
+      "held": "Reservado para ti",
+      "ended": "Reserva terminada",
+      "busy": "Reservándose",
+      "availableBody": "dehub.io/{{name}} está libre ahora mismo. Resérvalo y te lo guardamos un minuto mientras te registras.",
+      "heldBody": "Nadie más puede quedarse con @{{name}} hasta que acabe el temporizador. Termina el registro para conservarlo.",
+      "endedBody": "Se acabó tu minuto, así que @{{name}} vuelve a estar disponible para todos. Sigue libre.",
+      "busyBody": "Alguien se está registrando como @{{name}} ahora mismo. Si no termina, quedará libre cuando acabe el temporizador.",
+      "finish": "Terminar registro",
+      "again": "Reservar de nuevo",
+      "cta": "Reservar ahora",
+      "letGo": "Liberarlo",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "signIn": "Inicia sesión",
+      "seoTitle": "@{{name}} está disponible en DeHub",
+      "seoDescription": "Nadie tiene dehub.io/{{name}} todavía. Resérvalo y regístrate para que sea tuyo."
+    },
     "usernameAvailable": "¡Nombre de usuario disponible!",
     "signUpToClaim": "Regístrate hoy para reclamar",
     "signUp": "Registrarse",
@@ -6440,6 +6485,26 @@
     "docsSeoDescription": "Documentación de referencia de las skills del asistente de IA de DeHub y su biblioteca de prompts.",
     "docsLoadFailed": "# Error\nNo se pudo cargar la documentación de las skills.",
     "raw": "Original"
+  },
+  "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filtros",
+    "forSale": "En venta",
+    "openToOffers": "Abierto a ofertas",
+    "freshMints": "Recién creados en DeHub",
+    "makeOffer": "Hacer oferta",
+    "offersOpen": "Abierto a ofertas",
+    "mintedCount": "{{n}} acuñados",
+    "trending": "Colecciones en tendencia",
+    "floor": "Precio mínimo",
+    "listedCount": "{{n}} en venta",
+    "thisCollection": "Esta colección",
+    "collectionOffer": "Ofertar por cualquiera",
+    "showAll": "Ver todo",
+    "title": "Mercado NFT",
+    "subtitle": "Compra, vende y oferta en BNB y Base",
+    "seoTitle": "Mercado NFT: compra y vende NFTs en BNB y Base | DeHub",
+    "seoDescription": "Compra, vende y haz ofertas por NFTs en BNB Chain y Base. Paga en BNB, ETH o DHB. Cada operación intercambia el NFT y el pago en un solo paso."
   },
   "usernames": {
     "seoTitle": "Mercado de nombres de usuario | DeHub",
@@ -11452,8 +11517,12 @@
       "restore": "Restaurar",
       "restored": "Versión restaurada {{version}}"
     },
-    "stakeForAllowance": "Haz staking de tokens de DeHub para aumentar tu asignación de construcción diaria",
     "buildInChat": "Crea en tus mensajes directos con @assistant",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} en créditos",
+    "perPrompt": "≈ {{price}} por solicitud",
+    "pricingNote": "Cada solicitud se paga con tus créditos al costo del modelo más un 30 %. Lo máximo que puede costar una solicitud se retiene mientras se ejecuta y la parte no utilizada se devuelve.",
+    "topUpCredits": "Recargar créditos",
     "landerTitle": "Crea una aplicación con solo preguntar",
     "landerSubtitle": "Dile a @Assistant lo que quieres en tus mensajes. Crea la aplicación, la aloja y te envía un enlace que cualquiera puede abrir. Responde para cambiar cualquier cosa.",
     "promptPlaceholder": "Describe la aplicación que quieres...",
@@ -12385,6 +12454,7 @@
       "stateUnlisted": "Vive por enlace · en revisión para la tienda",
       "stateListed": "En la tienda",
       "stateSuspended": "Suspendido",
+      "stateRejected": "Vive por enlace · no aprobada para la tienda",
       "copyLink": "Copiar enlace",
       "notifyKey": "Notificar clave",
       "notifyKeyOnce": "Nueva clave de notificación para {{name}}. Copiala ahora: se muestra una sola vez, y hacer otra la reemplaza.",
@@ -12398,7 +12468,44 @@
       "rewardsWeek": "Semana de {{date}}",
       "rewardPaid": "Pagado",
       "rewardPending": "Pendiente",
-      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes."
+      "rewardsNone": "Aún no se han calculado las recompensas. La primera semana cierra el lunes.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Eventos que DeHub envió a tu webhookUrl. Probar envía un evento ping.",
+        "test": "Enviar prueba",
+        "ok": "El webhook respondió {{status}}",
+        "failed": "El webhook falló: {{reason}}",
+        "none": "Aún no se ha enviado ningún webhook."
+      },
+      "stats": {
+        "button": "Estadísticas",
+        "chartTitle": "Personas que abrieron tu app, últimos 30 días",
+        "peak_one": "Máximo {{count}} al día",
+        "peak_other": "Máximo {{count}} al día",
+        "people30": "Personas, 30 días",
+        "people7": "Personas, 7 días",
+        "added": "La añadieron",
+        "dhb30": "DHB pagados, 30 días",
+        "notified30": "Notificaciones enviadas, 30 días",
+        "rewards": "Recompensas en DHB"
+      },
+      "signin": {
+        "title": "Iniciar sesión con DeHub",
+        "body": "Permite que la gente inicie sesión en tu web o app con su cuenta de DeHub. Crea una clave aquí y sigue la guía.",
+        "guide": "Leer la guía",
+        "users_one": "{{count}} usuario",
+        "users_other": "{{count}} usuarios",
+        "copyId": "Copiar ID de cliente",
+        "rotate": "Nuevo secreto",
+        "delete": "Eliminar",
+        "rotateConfirm": "¿Crear un nuevo secreto para {{name}}? El secreto anterior deja de funcionar al instante.",
+        "deleteConfirm": "¿Eliminar {{name}}? Todos los que iniciaron sesión con ella cerrarán sesión.",
+        "secretOnce": "Secreto de {{name}}. Cópialo ahora: solo se muestra una vez.",
+        "name": "Nombre de la app",
+        "website": "Sitio web (opcional)",
+        "redirects": "URL de redirección, una por línea (https://tusitio.com/callback)",
+        "create": "Crear clave"
+      }
     },
     "card": {
       "open": "Abierto"
@@ -12424,7 +12531,10 @@
       "confirm": "Paga {{amount}} tokens",
       "sending": "Enviando tu pago…",
       "sent": "Pagado {{amount}} tokens a {{name}}.",
-      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos."
+      "noOwner": "Esta app aún no tiene una billetera verificada para realizar pagos.",
+      "testBadge": "Modo de prueba",
+      "testBody": "Esta app es tuya, así que es una prueba: no se mueven tokens y el recibo queda marcado como prueba.",
+      "testSent": "Pago de prueba de {{amount}} tokens. No se envió nada."
     },
     "add": {
       "title": "¿Añadir {{name}}?",
@@ -19621,7 +19731,17 @@
     "formatting": "Formato",
     "bodyPlaceholder": "Cuenta tu historia. Selecciona texto y utiliza la barra superior para encabezados, negritas, citas y listas.",
     "bodyLabel": "Cuerpo del artículo",
-    "wordCount": "{{count}} palabras"
+    "wordCount": "{{count}} palabras",
+    "imageLimit": "Los artículos pueden tener hasta {{count}} imágenes",
+    "imageLimitSome": "Solo caben {{count}} imágenes más en este artículo",
+    "imageFailed": "No se pudo añadir esa imagen. Prueba con otra.",
+    "imagesUploading": "Añadiendo imágenes ({{count}})…",
+    "bodyTooLong": "{{count}} caracteres por encima del límite",
+    "imagesLabel": "Imágenes",
+    "imagesCount": "Imágenes · {{count}}/{{max}}",
+    "captionPlaceholder": "Añade un pie de foto",
+    "captionLabel": "Pie de foto de la imagen {{n}}",
+    "removeInlineImage": "Quitar la imagen {{n}}"
   },
   "liveAudience": {
     "whosHere": "Quién está aquí",
@@ -20055,5 +20175,17 @@
     "privacy": "Solo se usa para avisarte sobre el lanzamiento.",
     "seoTitle": "Lanzamiento de tokens pronto | DeHub",
     "seoDescription": "El nuevo token de DeHub se lanzará pronto. Únete a la lista y recibe un correo electrónico en el momento en que se lance, luego compra directamente desde tu billetera DeHub."
+  },
+  "githubLink": {
+    "hint": "Inicia sesión en GitHub para comprobar que la cuenta es tuya. DeHub solo ve tu perfil público de GitHub.",
+    "verified": "Verificado",
+    "verifiedAria": "Cuenta de GitHub verificada",
+    "connected": "GitHub conectado",
+    "disconnected": "GitHub desconectado",
+    "taken": "Esa cuenta de GitHub ya está en otro perfil de DeHub.",
+    "failed": "No se ha podido conectar con GitHub. Inténtalo de nuevo.",
+    "unavailable": "La verificación de GitHub llegará pronto.",
+    "connect": "Conectar GitHub",
+    "disconnect": "Desconectar"
   }
 }

@@ -41,13 +41,13 @@ export const ROUTE_SEGMENTS = [
   // --- SPA top-level routes (src/App.tsx) ---
   'admin', 'admin-manual', 'affiliate', 'agents', 'apk', 'app', 'apps', 'arcade', 'assistant',
   'auth', 'bounty', 'bridge', 'builder', 'cinema', 'clip', 'communities', 'compare', 'connect', 'converter', 'creator', 'creators',
-  'dehub-app', 'delete-account', 'depin', 'desktop-logo-preview', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
+  'dehub-app', 'delete-account', 'depin', 'desktop-logo-preview', 'developer', 'developers', 'dex', 'docs', 'editor', 'events', 'explore', 'features', 'feedback',
   'governance', 'dao', 'guide', 'guides', 'jobs', 'launchpad', 'leaderboard', 'live-studio',
   'maintenance', 'mcp', 'mobile-preview', 'music', 'newpost', 'overlay', 'packs', 'posts', 'premium', 'pricing',
   'prompt', 'r',
   'radio', 'raffle', 'requests', 'shorts', 'stage', 'stages', 'stake', 'stats', 'stream', 'top-100',
   'tv',
-  'accounts', 'usernames', 'videos', 'work', 'yt-dlp',
+  'accounts', 'usernames', 'nfts', 'videos', 'work', 'yt-dlp',
 
   // --- /app children. Not top-level routes, but the worker canonicalises
   // /app/<x> onto /<x>, so they resolve into the same space. Several were

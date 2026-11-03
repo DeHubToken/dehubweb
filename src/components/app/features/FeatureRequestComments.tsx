@@ -9,7 +9,7 @@
  * @module components/app/features/FeatureRequestComments
  */
 
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { ThreadedComments, type ThreadedCommentsLabels } from '@/components/app/comments/ThreadedComments';
 import {
@@ -18,8 +18,11 @@ import {
   useEditComment,
   useDeleteComment,
   useReactToComment,
+  uploadFeatureCommentMedia,
+  getFeatureCommentLikers,
   type FeatureRequestComment,
 } from '@/hooks/use-feature-request-comments';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface FeatureRequestCommentsProps {
   featureRequestId: string;
@@ -36,6 +39,7 @@ export function FeatureRequestComments({
   focusCommentId,
 }: FeatureRequestCommentsProps) {
   const { t } = useI18n();
+  const { walletAddress } = useAuth();
 
   const { data: threads, isLoading, isError, isFetching, refetch } = useFeatureRequestComments(featureRequestId);
   const submitComment = useSubmitComment();
@@ -54,6 +58,20 @@ export function FeatureRequestComments({
     authorChip: t('features.requestAuthorChip'),
   }), [t]);
 
+  // Same paperclip, GIFs and voice notes a post comment has; files land in
+  // the board's own bucket.
+  const media = useMemo(() => ({
+    upload: (file: File) => {
+      if (!walletAddress) return Promise.reject(new Error('Not signed in'));
+      return uploadFeatureCommentMedia(file, walletAddress);
+    },
+  }), [walletAddress]);
+
+  const permalink = useCallback(
+    (commentId: string) => `${window.location.origin}/features?request=${featureRequestId}&comment=${commentId}`,
+    [featureRequestId],
+  );
+
   return (
     <ThreadedComments<FeatureRequestComment>
       draftScope={`thread:featureRequestId:${featureRequestId}`}
@@ -67,10 +85,14 @@ export function FeatureRequestComments({
       labels={labels}
       busy={reactToComment.isPending}
       submitting={submitComment.isPending}
-      onSubmit={({ content, parent }) =>
+      media={media}
+      permalink={permalink}
+      loadLikers={getFeatureCommentLikers}
+      onSubmit={({ content, parent, media: attached }) =>
         submitComment.mutateAsync({
           featureRequestId,
           content,
+          media: attached,
           parentId: parent?.id ?? null,
           featureTitle,
           featureAuthorAddress,

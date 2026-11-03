@@ -22,6 +22,7 @@ import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
 import { TotalReachPill } from '@/components/app/profile/TotalReachPill';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
@@ -125,6 +126,10 @@ export function ProfileHeader({
   const navigate = useNavigate();
 
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
+  // Phone only: the links pill joins the Following/Followers line. Desktop
+  // keeps it in the mutuals corner.
+  const linksOnCountsRow = isMobile && (!hideFollowerCounts || isViewingOwnProfile);
   const messageSettings = (apiProfile as (ProfileData & {
     dmSettings?: { disables?: string[] } | Array<{ disables?: string[] }>;
     dmSetting?: { disables?: string[] } | Array<{ disables?: string[] }>;
@@ -503,6 +508,11 @@ export function ProfileHeader({
               {/* DeHub followers plus the verified counts of the creator's
                   connected socials. Absent until one carries a count. */}
               <TotalReachPill wallet={apiProfile?.walletAddress ?? profile.walletAddress} followers={profile.followers} />
+              {/* On a phone the links ride at the end of the counts line and
+                  only wrap below when the line is genuinely full. */}
+              {linksOnCountsRow && (
+                <ProfileLinksPill customs={profile.customs} githubLogin={profile.githubLogin} fields={profile.profileFields} className="ml-auto shrink-0" />
+              )}
             </div>
           ) : null}
 
@@ -516,7 +526,9 @@ export function ProfileHeader({
                 <MutualFollowers profileAddress={apiProfile?.walletAddress} />
               )}
             </div>
-            <ProfileLinksPill customs={profile.customs} className="shrink-0 mt-2" />
+            {!linksOnCountsRow && (
+              <ProfileLinksPill customs={profile.customs} githubLogin={profile.githubLogin} fields={profile.profileFields} className="shrink-0 mt-2" />
+            )}
           </div>
 
           {/* The streamer ladder. Renders nothing for a profile that has

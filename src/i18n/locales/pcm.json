@@ -162,7 +162,23 @@
     "saved": "Profile fields don save",
     "failed": "E no save. Try again.",
     "verified": "Verified link",
-    "verifyHint": "To verify link, add dis one for dat page, then save again: {{snippet}}"
+    "verifyHint": "To verify link, add dis one for dat page, then save again: {{snippet}}",
+    "type": "Field type",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Follow #{{tag}}",
@@ -373,6 +389,7 @@
   },
   "nav": {
     "reorderHint": "Hold and drag any icon wey you like so you can rearrange dem.",
+    "reorderReset": "Reset",
     "reorderResetLong": "Reset menu order",
     "home": "Home",
     "explore": "Waka Look",
@@ -417,8 +434,7 @@
     "getTheApp": "Get di App",
     "connectAi": "Connect AI",
     "converter": "Converter",
-    "affiliate": "Affiliate",
-    "reorderReset": "Reset"
+    "affiliate": "Affiliate"
   },
   "feed": {
     "viewProfile": "View {{name}}'s profile",
@@ -9750,8 +9766,12 @@
       "restore": "Restore",
       "restored": "Restored version {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub token make your daily build allowance go up",
     "buildInChat": "Build for your DM wit @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} for credit",
+    "perPrompt": "≈ {{price}} for each prompt",
+    "pricingNote": "Every prompt dey pay from your credit for di model cost plus 30%. Di highest wey one prompt fit cost, we go hold am while e dey run, and di part wey you no use go come back to you.",
+    "topUpCredits": "Add credit",
     "landerTitle": "Build app just by asking",
     "landerSubtitle": "Tell @assistant wetin you want for your messages. E go build the app, host am, come send you link wey anybody fit open. Reply make you change anything.",
     "promptPlaceholder": "Talk the kain app wey you want…",
@@ -16198,5 +16218,27 @@
     "fingerprint": "Fingerprint",
     "exploreFirst": "Explore first",
     "codeNote": "We go email you code, you no need password."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Coming soon",
+    "title": "Token launching soon",
+    "notifyMe": "Notify me",
+    "sendTo": "We go send email to {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "joinedBody": "We go send email to {{email}} when token dey launch.",
+    "failed": "No go save dat. Try again.",
+    "privacy": "Wahala na me go tell you about the launch.",
+    "seoTitle": "Token launching soon | DeHub"
+  },
+  "githubLink": {
+    "hint": "Sign in to GitHub wey go prove account be yours. DeHub no dey see any other thing like your private profile, only your public GitHub profile dey.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

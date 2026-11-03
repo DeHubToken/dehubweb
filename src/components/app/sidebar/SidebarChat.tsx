@@ -1,3 +1,4 @@
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import SmilePlus from "@/components/ui/cut-icons/packs";
 import CornerDownRight from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -29,6 +30,7 @@ import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice, uploadChatImage } from '@/lib/api/dehub';
 import { PUBLIC_CHAT_IMAGE_TYPES, validatePublicChatMedia } from '@/lib/public-chat-media';
+import { SendStatus } from '@/components/app/chat/SendStatus';
 import { sendPublicChatImage } from '@/lib/public-chat-attachment';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -42,6 +44,7 @@ import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import type { BadgeLock } from '@/lib/staking-badges';
 import { toast } from 'sonner';
+import { wasShownToUser } from '@/lib/chat-refusal';
 import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
@@ -163,6 +166,8 @@ interface SidebarChatProps {
 
 export function SidebarChat({ isActive }: SidebarChatProps) {
   const { t: _copy } = _useCopy();
+  // A tapped photo opens full screen, with Download.
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
   // Edits happen in the row itself rather than in the composer at the foot of
   // the rail — the composer is a 169-character single line shared with the
@@ -216,7 +221,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     }
   }, [newMessage]);
 
-  const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
+  const { messages, isLoading: messagesLoading, isSending, send, retrySend, discardSend, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
   // Buy alerts
@@ -322,7 +327,8 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[SidebarChat] Voice upload failed:', err);
-      toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
+      if (wasShownToUser(err)) toast.dismiss(toastId);
+      else toast.error(err?.message || _copy("copy.615d555f779c", { defaultValue: "Failed to send voice note" }), { id: toastId });
     }
   }, [isAuthenticated, openLoginModal, send, replyTo, _copy]);
 
@@ -339,13 +345,17 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
         await sendPublicChatImage(pendingImage, trimmed, replyToId, uploadChatImage, send);
         setImageFile(current => current === pendingImage ? null : current);
       } else {
+        // The line shows in the list at once (with a small ring until it
+        // lands, Retry if it fails), so the box lets go of it straight away.
+        setNewMessage(current => current === newMessage ? '' : current);
+        setReplyTo(current => current?.id === replyToId ? null : current);
         await send(trimmed, 'text', undefined, replyToId);
       }
       setReplyTo(current => current?.id === replyToId ? null : current);
       setNewMessage(current => current === newMessage ? '' : current);
     } catch (err) {
       console.error('[SidebarChat] Send failed:', err);
-      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
+      if (!wasShownToUser(err)) toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
     } finally {
       mediaSendInFlight.current = false;
       setUploadingImage(false);
@@ -368,7 +378,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       await send('', 'gif', gifUrl, replyToId);
     } catch (err) {
       console.error('[SidebarChat] GIF send failed:', err);
-      toast.error(_copy("copy.f59dcbd274a8", { defaultValue: "Failed to send GIF" }));
+      if (!wasShownToUser(err)) toast.error(_copy("copy.f59dcbd274a8", { defaultValue: "Failed to send GIF" }));
     }
   };
 
@@ -514,7 +524,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                <div key={msg.client_key ?? msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   {/* Reply indicator – click to scroll to original */}
                   {msg.reply_to && (
                     <button
@@ -545,6 +555,14 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} badgeLock={msg.sender_badge_lock} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                        {msg.client_key && (
+                          <SendStatus
+                            state={msg.send_state}
+                            className="self-center text-zinc-500"
+                            onRetry={() => retrySend(msg.client_key!)}
+                            onDiscard={() => discardSend(msg.client_key!)}
+                          />
+                        )}
                       </span>
                       {editingId === msg.id ? (
                         <div className="mt-0.5">
@@ -576,7 +594,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           </div>
                         </div>
                       ) : msg.message_type === 'image' && msg.image_url ? (
-                        <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5" />
+                        <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                       ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
                         <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                       ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
@@ -802,6 +820,13 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           </div>
         </div>
       </div>
+      <FullscreenImageViewerLazy
+        images={viewingImage ? [viewingImage] : []}
+        initialIndex={0}
+        isOpen={!!viewingImage}
+        onClose={() => setViewingImage(null)}
+        downloadable
+      />
     </div>
   );
 }

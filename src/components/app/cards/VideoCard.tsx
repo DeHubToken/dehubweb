@@ -107,6 +107,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -213,6 +214,7 @@ import { viewerShareUrl } from '@/lib/share-url';
 import { KeywordFilterGate } from './KeywordFilterGate';
 import { useTabletPortraitFeed } from '@/hooks/use-tablet-portrait-feed';
 import { tabletPortraitTitleSize } from '@/lib/tablet-portrait-feed';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -707,6 +709,25 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
   // auto={false} throughout: VideoCard translates title+description itself and
   // passes the result in. Left on, each of these re-translated text that had
   // already been translated — three requests per video instead of one.
+  // Feed: three lines, then "Show more" opens a capped scroll box. Post pages
+  // (clampLines < 4) keep their short inline "more".
+  if (clampLines === 4) {
+    return (
+      <div className="mb-2">
+        {description ? (
+          <FeedCaptionExpander
+            textKey={description}
+            preview={<TranslatableText publicContent text={squeezeBlankLines(description)} className="text-zinc-400 text-[14px]" as="p" auto={false} />}
+          >
+            <TranslatableText publicContent text={description} className="text-zinc-400 text-[14px]" as="p" auto={false} />
+          </FeedCaptionExpander>
+        ) : null}
+        <DehubLinkEmbeds links={dehubLinks} />
+        <FeedLinkPreviews text={normalized} />
+        <AssetRefCards refs={assetRefs} />
+      </div>
+    );
+  }
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation
     return (
@@ -842,6 +863,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const { selfReaction, sendLiveReaction } = useLiveReaction(video.liveStreamId, !!video.isLivePost && !!video.isLiveNow);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
@@ -919,6 +941,31 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
   const [dubAvailable, setDubAvailable] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
+  // Hover volume: close on a short delay so the pointer can travel from the
+  // speaker icon to the slider, and never while the slider is being dragged.
+  const volumeCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const volumeDragging = useRef(false);
+  const openVolume = useCallback(() => {
+    if (volumeCloseTimer.current) { clearTimeout(volumeCloseTimer.current); volumeCloseTimer.current = null; }
+    setVolumeOpen(true);
+  }, []);
+  const closeVolumeSoon = useCallback(() => {
+    if (volumeDragging.current) return;
+    if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current);
+    volumeCloseTimer.current = setTimeout(() => { volumeCloseTimer.current = null; setVolumeOpen(false); }, 350);
+  }, []);
+  const startVolumeDrag = useCallback(() => {
+    volumeDragging.current = true;
+    const end = () => {
+      volumeDragging.current = false;
+      window.removeEventListener('pointerup', end);
+      window.removeEventListener('pointercancel', end);
+      if (!document.querySelector('[data-volume-hover]:hover')) closeVolumeSoon();
+    };
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+  }, [closeVolumeSoon]);
+  useEffect(() => () => { if (volumeCloseTimer.current) clearTimeout(volumeCloseTimer.current); }, []);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   // This creator's own rate if they have one, otherwise the global default.
@@ -1541,8 +1588,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const openPreviewInShorts = useCallback(() => {
     pauseVideo();
     videoPlaybackManager.stop(instanceId);
+    noteProfileFeedOpen(profileFeed, video.id);
     openBrainrotFeed(video.id, videoItemToShort(video));
-  }, [pauseVideo, instanceId, video]);
+  }, [pauseVideo, instanceId, video, profileFeed]);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -2036,8 +2084,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       }
     }
     cacheVideoForNavigation(queryClient, video);
-    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, video, mediaAspect, isPPVLocked]);
+    noteProfileFeedOpen(profileFeed, video.id);
+    navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, video, mediaAspect, isPPVLocked, profileFeed]);
   const openPost = useVideoCardOpen({
     mediaRef: containerRef,
     shorts: feedShortsTarget,
@@ -2892,8 +2941,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
@@ -2914,8 +2964,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
@@ -2975,8 +3028,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               </Suspense>
             ) : <div
               className="relative"
-              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
-              onPointerLeave={() => setVolumeOpen(false)}
+              data-volume-hover
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') openVolume(); }}
+              onPointerLeave={(e) => { if (e.pointerType === 'mouse') closeVolumeSoon(); }}
               onTouchStart={() => setVolumeOpen(false)}
             >
               <button
@@ -2999,8 +3053,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       value={volumePct}
                       onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
                       onClick={(e) => e.stopPropagation()}
+                      onPointerDown={startVolumeDrag}
                       aria-label={t('videoPlayer.volume')}
-                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                      className="h-8 w-[84px] shrink-0 -rotate-90 appearance-none cursor-pointer bg-transparent
+                        [&::-webkit-slider-runnable-track]:h-1
+                        [&::-webkit-slider-thumb]:-mt-1
                         [&::-webkit-slider-thumb]:appearance-none
                         [&::-webkit-slider-thumb]:w-3
                         [&::-webkit-slider-thumb]:h-3
@@ -3038,7 +3095,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               data-on-media
               data-video-speed
               className="h-8 w-[44px] text-white flex items-center justify-center tabular-nums"
-              style={{ fontFamily: 'Exo, sans-serif', touchAction: 'manipulation' }}
+              style={{ fontFamily: 'Manrope, sans-serif', touchAction: 'manipulation' }}
               onClick={cyclePlaybackRate}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
@@ -3367,6 +3424,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             <ActionBar
               onLiveReaction={video.isLivePost && video.isLiveNow ? sendLiveReaction : undefined}
               postId={video.id}
+              articleSlug={video.articleSlug}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
               isOwnPost={!!isOwnPost}
@@ -3566,7 +3624,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             )}
             <button 
               onClick={() => {
-                const url = viewerShareUrl(`${window.location.origin}/app/post/${video.id}`);
+                const url = viewerShareUrl(`${window.location.origin}/app/post/${video.articleSlug || video.id}`);
                 navigator.clipboard.writeText(url);
                 toast.success(t('postOptions.linkCopied'));
                 trackLinkCopy(video.id, walletAddress, linkCopyCount);
@@ -3783,7 +3841,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                   onClick={() => {
                     setShowBountyDrawer(false);
                     cacheVideoForNavigation(queryClient, video);
-                    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
+                    navigate(`/app/post/${video.articleSlug || video.id}`, { state: { fromFeed: true } });
                   }}
                 >
                   <span className="block text-center text-white text-sm font-medium">

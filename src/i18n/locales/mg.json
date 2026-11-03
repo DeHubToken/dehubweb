@@ -162,7 +162,25 @@
     "saved": "Voatahiry ny sahan'ny mombamomba",
     "failed": "Tsy voatahiry. Andramo indray.",
     "verified": "Rohy voamarina",
-    "verifyHint": "Mba hanamarinana rohy, ampio ity amin'io pejy io, dia tehirizo indray: {{snippet}}"
+    "verifyHint": "Mba hanamarinana rohy, ampio ity amin'io pejy io, dia tehirizo indray: {{snippet}}",
+    "descriptionPresets": "Mamorona tranokala, mpisoloky na zavatra hafa. Arovy ny faritra manodidina anao amin'ny alalan'ny tambajotra sosialy.",
+    "type": "Karazan'ilay sehatra",
+    "needsLabel": "Omeo mari-tsoratra manokana ny saha tsirairay",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "izy ireo/izy ireo",
+    "placeholderLocation": "Tanàna, firenena",
+    "presets": {
+      "website": "Tranonkala",
+      "blog": "Fa-facebook",
+      "portfolio": "Fa-facebook",
+      "shop": "Fa-facebook",
+      "podcast": "Rakipeo",
+      "newsletter": "Fa-instagram",
+      "pronouns": "Définition malgache",
+      "location": "Toerana",
+      "custom": "Safidy:",
+      "customOption": "Mari-tsoratra safidy"
+    }
   },
   "followedTags": {
     "follow": "Araho #{{tag}}",
@@ -10661,8 +10679,12 @@
       "restore": "Avereno",
       "restored": "Nohavaozina taminy {{version}}"
     },
-    "stakeForAllowance": "Apetraho ny tapaka DeHub mba hampitomboana ny fahazoan-dalana isan'andro",
     "buildInChat": "Manamboara ao amin'ny hafatra manokana miaraka amin'i @assistant",
+    "modelLabel": "Modely",
+    "creditsLeft": "{{amount}} amin'ny crédit",
+    "perPrompt": "≈ {{price}} isaky ny fangatahana",
+    "pricingNote": "Ny fangatahana tsirairay dia aloa amin'ny crédit-nao araka ny vidin'ny modely miampy 30%. Ny vola ambony indrindra mety ho lanin'ny fangatahana dia tazonina mandritra ny fandehanany, ary averina ny ampahany tsy niasa.",
+    "topUpCredits": "Ampio crédit",
     "landerTitle": "Manorena fampiharana fotsiny amin'ny fanontaniana",
     "landerSubtitle": "Lazao amin'nympanampy anao izay tianao hapetraka amin'ny hafatrao. Manorina ilay app izy, mampiantrano azy io ary mandefa rohy ho anao izay mety hisokatra. Atsaharo ny miezaka manova izany.",
     "promptPlaceholder": "Farito ny fampiharana tianao...",
@@ -18783,6 +18805,33 @@
     "fingerprint": "Rantsantanana",
     "exploreFirst": "Mikaroha aloha",
     "codeNote": "Handefa kaody amin'ny mailaka izahay, tsy mila tenimiafina."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Misy manokana",
+    "title": "Mampitohy ny fanampiana ny token ka hatramin'ny aloha.",
+    "body": "Mampiasa tsy misy fa tsy misy ny fampiasana ny token vao aloha. Misy email ho anao fa tsy misy ny fampiasana ny token vao aloha.",
+    "notifyMe": "Hafahatra ahoana izay matetika",
+    "emailLabel": "Mailaka",
+    "invalidEmail": "Misy email valido",
+    "joinedTitle": "Misy anatin'ny lisitry ny aminao.",
+    "joinedBody": "Misaotra email a {{email}} nandray ny tokeneo.",
+    "joinedBodyNoEmail": "Misy email amin'ny fomba fampianarana amin'ny tokana.",
+    "failed": "Tsy afaka nandraikitra izany. Andramo indray.",
+    "privacy": "Misy tsy voasambatra amin'ny fampahatsiarovana.",
+    "seoTitle": "Tokony amin'ny fahafito | DeHub",
+    "seoDescription": "Ireo DeHub token any amin'ny fahafito. Hita amin'ny lisitry ny amin'ny fahafito, ary hiverina ny email amin'ny fahafito amin'ny fahafito, ka tsy ho atao amin'ny DeHub wallet."
+  },
+  "githubLink": {
+    "hint": "Midira ao amin'ny GitHub mba hanaporofoana fa anao ny kaonty. DeHub dia mahita ny mombamomba ny GitHub.",
+    "verified": "Voamarina",
+    "verifiedAria": "Kaonty GitHub voamarina",
+    "connected": "Mampifandray ny GitHub",
+    "disconnected": "Nitsahatra ny GitHub",
+    "taken": "Fa ny kaonty GitHub dia efa ao amin'ny profil DeHub hafa.",
+    "failed": "Tsy afaka nampifandray ny GitHub. Andramo indray.",
+    "unavailable": "Ho avy tsy ho ela ny GitHub.",
+    "connect": "Mampiasa GitHub",
+    "disconnect": "Atsaharo"
   },
   "createPost": {
     "title": "Mamorona",

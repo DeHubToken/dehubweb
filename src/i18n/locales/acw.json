@@ -162,7 +162,23 @@
     "saved": "انحفظت حقول الملف",
     "failed": "ما انحفظ. جرب مرة ثانية.",
     "verified": "رابط موثّق",
-    "verifyHint": "عشان توثّق رابط، أضف هذا في الصفحة وبعدين احفظ مرة ثانية: {{snippet}}"
+    "verifyHint": "عشان توثّق رابط، أضف هذا في الصفحة وبعدين احفظ مرة ثانية: {{snippet}}",
+    "descriptionPresets": "أضف موقع إلكتروني، ضمائر أو أي شيء ثاني. الروابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "عطِ كل حقل مخصص تسمية",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "موقع إلكتروني",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -380,6 +396,8 @@
   },
   "nav": {
     "reorderHint": "احفظ و اسحب أي أيكون ليغير ترتيبها",
+    "reorderReset": "إعادة تعيين",
+    "reorderResetLong": "إعادة ترتيب القائمة الأصلي",
     "home": "البيت",
     "explore": "استكشف",
     "prompt": "تجهيز",
@@ -423,9 +441,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderReset": "إعادة تعيين",
-    "reorderResetLong": "إعادة ترتيب القائمة الأصلي"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -10432,8 +10448,12 @@
       "restore": "استعادة",
       "restored": "تم استعادة النسخة {{version}}"
     },
-    "stakeForAllowance": "قم بتخزين توكنات DeHub لزيادة مخصص البناء اليومي الخاص بك",
     "buildInChat": "ابنِ في رسائلك الخاصة مع @assistant",
+    "modelLabel": "الموديل",
+    "creditsLeft": "{{amount}} رصيد",
+    "perPrompt": "≈ {{price}} لكل طلب",
+    "pricingNote": "كل طلب يندفع من رصيدك بتكلفة الموديل زائد 30%. أعلى تكلفة ممكنة للطلب تنحجز وهو شغّال، واللي ما انصرف يرجع لك.",
+    "topUpCredits": "اشحن الرصيد",
     "landerTitle": "ابني تطبيق بس إنك تسأل",
     "landerSubtitle": "قل @assistant إيش تبي في رسائلك. هو يبني التطبيق، يستضيفه ويرسل لك رابط يقدر أي أحد يفتحه. رد عشان تغير أي شيء.",
     "promptPlaceholder": "وصف التطبيق اللي تبيه…",
@@ -18165,5 +18185,17 @@
     "privacy": "بس عشان نخبرك عن الإطلاق.",
     "seoTitle": "الرمز بيطلق قريبًا | DeHub",
     "seoDescription": "رمز DeHub الجديد بيطلق قريبًا. انضم للقائمة واستلم إيميل أول ما يطلع، بعدين اشترِ مباشرة من محفظة DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول ل GitHub ليُثبتوا إن الحساب لك. DeHub بتشوفك فقط من خلال ملفك العام على GitHub.",
+    "verified": "مصادقة",
+    "verifiedAria": "حساب GitHub مصادق",
+    "connected": "GitHub متصّل",
+    "disconnected": "GitHub منقطّع",
+    "taken": "الحساب ده على حساب GitHub تاني على DeHub",
+    "failed": "ما بيسوّد GitHub. حاول تاني.",
+    "unavailable": "GitHub verification (التحقق من GitHub) بتجي قريب.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "انقطّع"
   }
 }

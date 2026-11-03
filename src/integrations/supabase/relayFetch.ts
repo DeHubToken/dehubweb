@@ -31,7 +31,7 @@ export const RELAY_STICKY_MS = 10 * 60 * 1000;
 export const DIRECT_ATTEMPT_TIMEOUT_MS = 20_000;
 const STICKY_STORAGE_KEY = 'dehub.sbRelayUntil';
 
-const RELAY_OWN_ORIGIN_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io']);
+const RELAY_OWN_ORIGIN_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'riftn.com', 'www.riftn.com']);
 
 /**
  * Where to send relayed requests, or null to disable the relay. Local and

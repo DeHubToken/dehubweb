@@ -162,7 +162,25 @@
     "saved": "Profila lauki saglabāti",
     "failed": "Netika saglabāts. Mēģini vēlreiz.",
     "verified": "Apstiprināta saite",
-    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}"
+    "verifyHint": "Lai apstiprinātu saiti, pievieno šo tajā lapā un saglabā vēlreiz: {{snippet}}",
+    "descriptionPresets": "Pievienojiet vietni, vietniekvārdus vai jebko citu. Saites tiek rādītas jūsu sociālajos tīklos.",
+    "type": "Lauka veids",
+    "needsLabel": "Piešķiriet katram pielāgotajam laukam etiķeti",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "viņi/viņiem",
+    "placeholderLocation": "Pilsēta, valsts",
+    "presets": {
+      "website": "Vietne",
+      "blog": "Emuārs",
+      "portfolio": "Portfelis",
+      "shop": "Iepirkties",
+      "podcast": "Aplāde",
+      "newsletter": "Biļetens",
+      "pronouns": "Vietniekvārdi",
+      "location": "Atrašanās vieta",
+      "custom": "Pielāgots",
+      "customOption": "Pielāgota etiķete"
+    }
   },
   "followedTags": {
     "follow": "Sekot #{{tag}}",
@@ -10664,8 +10682,12 @@
       "restore": "Atjaunot",
       "restored": "Atjaunotā versija {{version}}"
     },
-    "stakeForAllowance": "Iemaksājiet DeHub žetonus, lai palielinātu savu ikdienas izveides atļauju",
     "buildInChat": "Veido savās privātajās ziņās ar @assistant",
+    "modelLabel": "Modelis",
+    "creditsLeft": "{{amount}} kredītos",
+    "perPrompt": "≈ {{price}} par pieprasījumu",
+    "pricingNote": "Katrs pieprasījums tiek apmaksāts no jūsu kredītiem par modeļa cenu plus 30%. Pieprasījuma lielākā iespējamā cena tiek rezervēta tā izpildes laikā, un neizmantotā daļa tiek atgriezta.",
+    "topUpCredits": "Papildināt kredītus",
     "landerTitle": "Izveidojiet aplikāciju, vienkārši pajautājot",
     "landerSubtitle": "Pastāstiet @assistant, ko vēlaties savos ziņojumos. Tā izveido aplikāciju, uzņem viesus un nosūta jums saiti, ko ikviens var atvērt. Atbildiet, lai kaut ko mainītu.",
     "promptPlaceholder": "Apraksti vēlamo lietotni...",
@@ -18815,5 +18837,17 @@
     "failed": "Nevarēja to saglabāt. Mēģiniet vēlreiz.",
     "privacy": "Tikai lai tevi informētu par izlaidi.",
     "seoTitle": "Token launchēsies brīdinā | DeHub"
+  },
+  "githubLink": {
+    "hint": "Pierakstieties GitHub, lai pierādītu, ka konts ir jūsu. DeHub redz tikai jūsu publisko GitHub profilu.",
+    "verified": "Pārbaudīts",
+    "verifiedAria": "Pārbaudīts GitHub konts",
+    "connected": "GitHub savienots",
+    "disconnected": "GitHub atvienots",
+    "taken": "Šis GitHub konts jau ir citā DeHub profilā.",
+    "failed": "Nevarēja izveidot savienojumu ar GitHub. Mēģiniet vēlreiz.",
+    "unavailable": "Drīzumā gaidāma GitHub pārbaude.",
+    "connect": "Sajaukties ar GitHub.",
+    "disconnect": "Atvienot"
   }
 }

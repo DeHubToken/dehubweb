@@ -1,3 +1,4 @@
+import { holdFieldFor } from '@/lib/username-hold';
 import { predictSafeAddress } from '@/lib/smart-account-address';
 import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRefreshToken, getAuthToken, refreshTokenShared, refreshTokenSharedDetailed } from './core';
 import type { TokenRefreshOutcome } from './core';
@@ -59,8 +60,10 @@ export interface RefreshTokenResponse {
 
 export async function checkUsernameAvailability(username: string): Promise<UsernameCheckResponse> {
   const { apiCall } = await import('./core');
+  // A name this browser reserved reads as available to it, taken to others.
+  const holdToken = holdFieldFor(username);
   return apiCall<UsernameCheckResponse>("/api/username/check", {
-    params: { username },
+    params: holdToken ? { username, holdToken } : { username },
     requiresAuth: false,
   });
 }

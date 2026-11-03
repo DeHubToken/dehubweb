@@ -1,0 +1,48 @@
+/* Paid unlock reveal: plays over freshly unlocked media, then removes itself.
+   Only transform, opacity and masks move. The cover is the already-blurred
+   preview, so no blur is ever animated. */
+@property --ur-r { syntax: '<percentage>'; inherits: true; initial-value: 0%; }
+@property --ur-p { syntax: '<percentage>'; inherits: true; initial-value: 100%; }
+
+.ur { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; border-radius: inherit; --ur-r: 0%; --ur-p: 100%; }
+.ur > * { position: absolute; inset: 0; }
+.ur-cover { overflow: hidden; }
+.ur-cover > img, .ur-cover > * { width: 100%; height: 100%; object-fit: cover; }
+.ur-shade { background: linear-gradient(to bottom, rgb(0 0 0 / .1), rgb(0 0 0 / .3) 50%, rgb(0 0 0 / .6)); }
+
+/* Coin drop: a DHB coin falls into the lock, the lock opens, the picture opens out in a circle. */
+.ur-coin .ur-hole { -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--ur-r), #000 calc(var(--ur-r) + 0.5%)); mask-image: radial-gradient(circle at 50% 50%, transparent var(--ur-r), #000 calc(var(--ur-r) + 0.5%)); animation: ur-iris .75s .95s cubic-bezier(.6,0,.25,1) forwards; }
+.ur-lock { inset: auto; left: calc(50% - 30px); top: calc(50% - 30px); width: 60px; height: 60px; }
+.ur-lock svg { position: absolute; left: 15px; top: 12px; width: 30px; height: 36px; overflow: visible; animation: ur-lock-go .35s 1.12s ease-in forwards; }
+.ur-shk { transform-box: fill-box; transform-origin: 100% 100%; animation: ur-shk .34s .76s cubic-bezier(.3,1.8,.5,1) forwards; }
+.ur-coinface { position: absolute; left: 18px; top: 2px; width: 24px; height: 24px; opacity: 0; animation: ur-drop .5s .12s cubic-bezier(.55,0,.8,.3) forwards, ur-in .16s .62s ease-in forwards; }
+.ur-coinface i { display: grid; place-items: center; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff6c7, #ffd36b 35%, #d79a1e 70%, #8a5a0b); box-shadow: inset 0 0 0 2px rgb(255 255 255 / .2), 0 2px 6px rgb(0 0 0 / .5); font: 800 12px/1 Manrope, sans-serif; font-style: normal; color: #7a4a00; animation: ur-spin .2s .12s linear 3; }
+.ur-ring { position: absolute; inset: 12px; border-radius: 50%; border: 2px solid #ffd36b; opacity: 0; animation: ur-ring .6s .76s ease-out; }
+.ur-spark { position: absolute; left: 28px; top: 28px; width: 4px; height: 4px; border-radius: 50%; background: #ffe9a6; box-shadow: 0 0 6px #ffd36b; opacity: 0; animation: ur-spark .55s .78s ease-out; }
+@keyframes ur-iris { to { --ur-r: 150%; } }
+@keyframes ur-drop { 0% { opacity: 0; transform: translateY(-120px); } 20% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+@keyframes ur-in { from { opacity: 1; } to { opacity: 1; transform: translateY(8px) scaleY(0); } }
+@keyframes ur-spin { 50% { transform: scaleX(.15); } }
+@keyframes ur-shk { to { transform: translateY(-6px) rotate(28deg); } }
+@keyframes ur-ring { 0% { opacity: .9; transform: scale(.4); } 100% { opacity: 0; transform: scale(2.6); } }
+@keyframes ur-spark { 0% { opacity: 1; transform: rotate(var(--a)) translateX(6px); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(34px); } }
+@keyframes ur-lock-go { to { opacity: 0; transform: scale(1.3); } }
+
+/* Confetti: the cover lifts, the picture settles, confetti comes from a canvas outside. */
+.ur-confetti .ur-cover, .ur-confetti .ur-shade { animation: ur-fade .45s .1s ease-out forwards; }
+.ur-flash { background: radial-gradient(circle at 50% 50%, #fff, transparent 60%); opacity: 0; animation: ur-flash .4s .06s ease-out; }
+@keyframes ur-fade { to { opacity: 0; } }
+@keyframes ur-flash { 30% { opacity: .9; } 100% { opacity: 0; } }
+
+/* Foil peel: a holo foil sheet peels off from the bottom-right corner, then a shine sweeps the picture. */
+.ur-foil .ur-peel { -webkit-mask-image: linear-gradient(to bottom right, #000 var(--ur-p), transparent var(--ur-p)); mask-image: linear-gradient(to bottom right, #000 var(--ur-p), transparent var(--ur-p)); }
+.ur-foil { animation: ur-peel 1s .12s cubic-bezier(.5,.05,.3,1) forwards; }
+.ur-holo { mix-blend-mode: color-dodge; opacity: .5; background: linear-gradient(115deg, transparent 20%, #ff7ad955 32%, #7af0ff55 40%, #fff27a55 48%, #b48cff55 56%, transparent 70%) 0 0 / 300% 100%; animation: ur-holo 1.2s linear infinite; }
+.ur-curl { background: linear-gradient(to bottom right, transparent var(--ur-p), #6b6b78 var(--ur-p), #f6f6ff calc(var(--ur-p) + 4%), #cfd2e0 calc(var(--ur-p) + 8%), #8e8a9e calc(var(--ur-p) + 12%), rgb(0 0 0 / .35) calc(var(--ur-p) + 12.2%), transparent calc(var(--ur-p) + 20%)); }
+.ur-sheen { mix-blend-mode: overlay; opacity: 0; background: linear-gradient(105deg, transparent 35%, #fff 45%, #ffd6f5 50%, #c8fbff 55%, transparent 65%) 120% 0 / 250% 100% no-repeat; animation: ur-sheen .8s 1.05s ease-in-out; }
+@keyframes ur-peel { to { --ur-p: -25%; } }
+@keyframes ur-holo { to { background-position: -300% 0; } }
+@keyframes ur-sheen { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 1; background-position: -60% 0; } }
+
+/* Less motion: a plain fade. */
+.ur-fade { animation: ur-fade .3s ease-out forwards; }

@@ -162,7 +162,25 @@
     "saved": "Porofili yɔrɔw marala",
     "failed": "A ma mara. A lajɛ tugun.",
     "verified": "Siri lajɛlen",
-    "verifyHint": "Ka siri lajɛ, nin fara o siti kan, o kɔ a mara tugun: {{snippet}}"
+    "verifyHint": "Ka siri lajɛ, nin fara o siti kan, o kɔ a mara tugun: {{snippet}}",
+    "descriptionPresets": "I be se ka site web dɔ fara a kan, ka kumacogo dɔ fara a kan, ka kumacogo dɔ fara a kan. N'a sɔrɔ i be se k'a fɔ ko i ye mɔgɔ dɔ ye min be se ka kɛ i ka",
+    "type": "Fanga min be sɔrɔ o la",
+    "needsLabel": "O yɔrɔ kelen kelen bɛɛ la, a ka kan ka kɛ yɔrɔ dɔ ye min be weele",
+    "placeholderLink": "lequipe.fr ka koo",
+    "placeholderPronouns": "u, u",
+    "placeholderLocation": "Jamana, dugu",
+    "presets": {
+      "website": "Site web kan",
+      "blog": "Blog a voir",
+      "portfolio": "Fanga min be sɔrɔ o la",
+      "shop": "Dɔnkiliw",
+      "podcast": "A be se ka kɛ podcast ye tugun",
+      "newsletter": "Kunnafoniw",
+      "pronouns": "O kɔrɔ ko:",
+      "location": "Yɔrɔ",
+      "custom": "Fɛɛn minw ka teli ka kɛ",
+      "customOption": "Tɔgɔdafɛ tagamasiɲɛ"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} tugu",
@@ -10562,8 +10580,12 @@
       "current": "Bi, mɔgɔ caaman be se k'a",
       "restore": "Ka segi ka na"
     },
-    "stakeForAllowance": "Stake DeHub ka tagamasiɲɛw ka caya i ka loon o loon lɔli nafa la",
     "buildInChat": "I ka DM kɔnɔ dilanni kɛ ni @assistant ye",
+    "modelLabel": "Modɛli",
+    "creditsLeft": "{{amount}} kredi la",
+    "perPrompt": "≈ {{price}} ɲininkali kelen o kelen",
+    "pricingNote": "Ɲininkali kelen o kelen sara bɛ bɔ i ka krediw la ni modɛli songɔ ye ani 30% fara a kan. Ɲininkali bɛ se ka songɔ min bɛɛ la ka bon, o bɛ mara a baara waati la, ani min ma baara, o bɛ segin i ma.",
+    "topUpCredits": "Kredi fara a kan",
     "landerTitle": "I ka kan ka min fɔ, o ye tiɲɛ ye.",
     "landerSubtitle": "I b'a fɛ ka min kɛ i ka lɛtɛrɛw kɔnɔ, i k'o fɔ @ assistant ye. A be baara kɛ n'o ye, k'a ka baara kɛ n'o ye ani k'a ka link ci mɔgɔ o mɔgɔ ma min be se k'a yɛlɛ. O bɛɛ n'a ta, a ka ɲi ka yɛlɛmani don.",
     "promptPlaceholder": "I b'a fɛ ka min fɔ, o ye tiɲɛ ye.",
@@ -18574,5 +18596,17 @@
     "failed": "A man tɛ se ka sɛbɛn. Segin fɔ.",
     "privacy": "A ka se fɛ ka kɔ ni i ma ka sɛbɛn.",
     "seoDescription": "DeHub jatɔ koura ye sɔrɔ kɔnɔ. Lisiw la cɛ ka, o ye imɛyili kelen fɛ sɔrɔ na a bɛ kɔ, seko DeHub walɛ la cɛ ka sɔn."
+  },
+  "githubLink": {
+    "hint": "I ka kan ka don GitHub la walisa k'a yira ko i ka ladɛrɛsi ye i ta ye. DeHub be i ka GitHub kunnafoniw dɔrɔn lo ye.",
+    "verified": "Ka tugu a kɔ",
+    "verifiedAria": "GitHub ka baara kɛcogo",
+    "connected": "GitHub ka koo",
+    "disconnected": "GitHub ka baara dabila",
+    "taken": "GitHub ka kunnafoniw be sɔrɔ yɔrɔ wɛrɛ la.",
+    "failed": "Ne tɛ se ka GitHub bila ɲɔgɔn na.",
+    "unavailable": "GitHub ka sɛgɛsɛgɛri bena kɛ yanni dɔɔni.",
+    "connect": "GitHub ka baara kɛcogo",
+    "disconnect": "Ka bɔ ɲɔgɔn na"
   }
 }

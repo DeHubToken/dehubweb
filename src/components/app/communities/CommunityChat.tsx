@@ -14,6 +14,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { holderGateOf, runHolderCheck } from '@/hooks/use-holder-gate';
 import { useQueryClient } from '@tanstack/react-query';
 import { markCommunityChatSeen, COMMUNITY_CHAT_SEEN_INTERVAL_MS } from '@/lib/community-chat-notify';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
@@ -23,6 +24,8 @@ import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import MicOff from "@/components/ui/cut-icons/mic-off";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import { communityKindOf } from "@/lib/community-kinds";
 import Ban from "@/components/ui/cut-icons/blocked";
 
 import Send from "@/components/ui/cut-icons/send";
@@ -116,6 +119,7 @@ function formatCountdown(seconds: number): string {
 import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { formatUnreadCount } from '@/lib/unread-count';
+import { SendStatus } from '@/components/app/chat/SendStatus';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
@@ -234,6 +238,13 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
+  // Holder groups: re-read this member's balance when the chat opens, so a
+  // top-up lets them talk again and a sale is caught before they type.
+  useEffect(() => {
+    if (!active || !isMember || !walletAddress || !holderGateOf(community)) return;
+    if (membership?.role === 'owner' || membership?.role === 'admin') return;
+    runHolderCheck(communityId, walletAddress).catch(() => { /* the send guard still decides */ });
+  }, [active, isMember, walletAddress, communityId, community, membership?.role]);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
@@ -282,6 +293,8 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
     isLoading,
     hasOlderMessages, isLoadingOlder, loadOlder, showMessage, showLatest, isHistoryWindow, error: historyError, refreshHistory,
     sendMessage,
+    retrySend,
+    discardSend,
     editMessage,
     deleteMessage,
     setPinned,
@@ -366,7 +379,10 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
     });
   }, [abilities.mutedUntil, t]);
 
-  const composerNotice: { icon: React.ReactNode; text: React.ReactNode } | null = abilities.isMuted
+  const readOnlyChannel = communityKindOf(community) === 'channel' && !abilities.isOwner && !abilities.isAdmin;
+  const composerNotice: { icon: React.ReactNode; text: React.ReactNode } | null = readOnlyChannel
+    ? { icon: <Megaphone className="w-4 h-4" />, text: t('communities.newChat.adminsOnly', { defaultValue: 'Only admins post in this channel.' }) }
+    : abilities.isMuted
     ? { icon: <MicOff className="w-4 h-4" />, text: mutedNotice }
     : !canSendMessages
       ? {
@@ -569,6 +585,9 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
     const adminMatch = trimmed.match(/^\/admin\b\s*(.*)$/i);
 
     let sent = false;
+    // The line shows in the chat at once (a small ring until it is stored,
+    // Retry on it if it fails), so the box lets go of it straight away.
+    if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
     try {
       await sendMessage(trimmed, 'text', undefined, replyToId, {
         username: profileData?.handle || undefined,
@@ -576,7 +595,6 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
       sent = true;
     } catch {
       // Error handled in hook
@@ -890,7 +908,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
 
                 return (
                   <div
-                    key={msg.id}
+                    key={msg.client_key ?? msg.id}
                     ref={(node) => { messageRefs.current[msg.id] = node; }}
                     className={`group relative px-3 py-0.5 rounded-xl transition-shadow duration-300 ${isHighlighted ? 'ring-1 ring-white/30' : ''}`}
                   >
@@ -919,6 +937,14 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
                             <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[1em] h-[1em]" />
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                          {isMine && msg.client_key && (
+                            <SendStatus
+                              state={msg.send_state}
+                              className="self-center text-zinc-500"
+                              onRetry={() => retrySend(msg.client_key!)}
+                              onDiscard={() => discardSend(msg.client_key!)}
+                            />
+                          )}
                           {isPinned && (
                             <span
                               className="inline-flex items-center text-zinc-500"

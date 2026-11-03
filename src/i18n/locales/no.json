@@ -162,7 +162,25 @@
     "saved": "Profilfelt lagret",
     "failed": "Det ble ikke lagret. Prøv igjen.",
     "verified": "Bekreftet lenke",
-    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}"
+    "verifyHint": "For å bekrefte en lenke, legg dette til på den siden og lagre igjen: {{snippet}}",
+    "descriptionPresets": "Legg til en nettside, pronomen eller noe annet. Lenker vises på sosiale medier.",
+    "type": "Felttype",
+    "needsLabel": "Gi hvert egendefinerte felt en etikett",
+    "placeholderLink": "dittnettsted.com",
+    "placeholderPronouns": "de/dem",
+    "placeholderLocation": "By, land",
+    "presets": {
+      "website": "Nettsted",
+      "blog": "Blogg",
+      "portfolio": "Portefølje",
+      "shop": "Butikk",
+      "podcast": "Podkast",
+      "newsletter": "Nyhetsbrev",
+      "pronouns": "Pronomen",
+      "location": "Sted",
+      "custom": "Skikk",
+      "customOption": "Tilpasset etikett"
+    }
   },
   "followedTags": {
     "follow": "Følg #{{tag}}",
@@ -10666,8 +10684,12 @@
       "restore": "Restaurere",
       "restored": "Gjenopprettet versjon {{version}}"
     },
-    "stakeForAllowance": "Sett inn DeHub-tokens for å øke den daglige byggekvoten din",
     "buildInChat": "Bygg i direktemeldingene dine med @assistant",
+    "modelLabel": "Modell",
+    "creditsLeft": "{{amount}} i kreditter",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Hver prompt betales med kredittene dine til modellens pris pluss 30 %. Det meste en prompt kan koste, holdes av mens den kjører, og den ubrukte delen blir tilbakeført.",
+    "topUpCredits": "Fyll på kreditter",
     "landerTitle": "Bygg en app bare ved å spørre",
     "landerSubtitle": "Fortell @assistent hva du vil ha i meldingene dine. Den bygger appen, er vert for den og sender deg en lenke som alle kan åpne. Svar for å endre noe.",
     "promptPlaceholder": "Beskriv appen du ønsker …",
@@ -18801,5 +18823,30 @@
     "fingerprint": "Fingeravtrykk",
     "exploreFirst": "Utforsk først",
     "codeNote": "Vi sender deg en kode på e-post, uten passord."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kommer snart",
+    "body": "Kjøp er midlertidig stengt mens den nye tokenen blir forberedt. Meld deg på for å få en e-post når den går live.",
+    "notifyMe": "Bekrefte meg når du er ferdig.",
+    "sendTo": "Vi vil sende en epost til {{email}}.",
+    "emailLabel": "E-post",
+    "invalidEmail": "Legg inn en gyldig e-postadresse.",
+    "joinedTitle": "Du er på listen.",
+    "joinedBody": "Vi vil sende en epost til {{email}} når tokenet går i salg.",
+    "joinedBodyNoEmail": "Vi vil sende deg en e-post når tokenet går på markedet.",
+    "failed": "Kunne ikke lagre det. Prøv igjen.",
+    "privacy": "Bare for å fortelle deg om lanseringen.",
+    "seoDescription": "Den nye DeHub-tokenen lanserer snart. Meld deg på listen og få en e-post øyeblikket den går live, så kjøp direkte fra din DeHub-lommebok."
+  },
+  "githubLink": {
+    "hint": "Logg inn på GitHub for å bekrefte at kontoen er din. DeHub ser kun din offentlige GitHub-profil.",
+    "verified": "Verifisert",
+    "verifiedAria": "Verifisert GitHub-konto",
+    "connected": "GitHub koblet sammen",
+    "disconnected": "GitHub ble avkoblet",
+    "taken": "Den GitHub-kontoen er allerede knyttet til et annet DeHub-profil.",
+    "failed": "Kunne ikke koble til GitHub. Prøv på nytt.",
+    "unavailable": "GitHub-verifisering kommer snart.",
+    "connect": "Koble til GitHub"
   }
 }

@@ -56,6 +56,7 @@ import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { FeedCaptionExpander, squeezeBlankLines } from './FeedCaptionExpander';
 import { PostHeaderBoostButton, PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { useBoostedPost } from './boosted-post';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
@@ -108,6 +109,8 @@ import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
 
+/** Lazy: only comic posts load the collector cards. */
+const ComicDeckLazy = lazy(() => import('@/components/app/comic/ComicDeck').then(m => ({ default: m.ComicDeck })));
 /** Lazy: PlanCard reaches the subscription contracts, and this card boots. */
 const SubscriberGateDrawer = lazy(() =>
   import('./SubscriberGateDrawer').then((m) => ({ default: m.SubscriberGateDrawer }))
@@ -180,6 +183,7 @@ import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 import { viewerShareUrl } from '@/lib/share-url';
 import { AltTextBadge } from './AltTextBadge';
 import { KeywordFilterGate } from './KeywordFilterGate';
+import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 const imageAspectRatioCache = createMediaAspectCache(
   () => localStorage.getItem('media-aspects-v1'), value => localStorage.setItem('media-aspects-v1', value),
 );
@@ -277,6 +281,16 @@ function ImageSlide({
           if (releaseTimer) clearTimeout(releaseTimer);
           releaseTimer = undefined;
           setRetainBitmap(true);
+          return;
+        }
+
+        // A feed kept alive on a hidden page has no box at all. That is not
+        // "scrolled far away", and releasing there leaves blank photos when
+        // the page comes back, so only release a slide that is laid out.
+        const box = entry.boundingClientRect;
+        if (box && box.width === 0 && box.height === 0) {
+          if (releaseTimer) clearTimeout(releaseTimer);
+          releaseTimer = undefined;
           return;
         }
 
@@ -756,7 +770,14 @@ function FeedDescription({
           {renderTextWithLinks(linkFreeTitle)}
         </h3>
       )}
-      {shownDescription && (
+      {!stage && dedupedDescription ? (
+        <FeedCaptionExpander
+          textKey={dedupedDescription}
+          preview={<p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(squeezeBlankLines(dedupedDescription))}</p>}
+        >
+          <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">{renderTextWithLinks(dedupedDescription)}</p>
+        </FeedCaptionExpander>
+      ) : shownDescription && (
         <div>
           <p className="text-zinc-300 text-[14px] leading-relaxed whitespace-pre-wrap break-words">
             {renderTextWithLinks(shownDescription)}
@@ -831,6 +852,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const navigate = useNavigate();
   const boosted = useBoostedPost();
   const queryClient = useQueryClient();
+  const profileFeed = useProfileFeedContext();
   const { walletAddress, openLoginModal } = useAuth();
   const registerOptions = stage?.registerOptions;
   const openPostOptions = useCallback(() => {
@@ -956,20 +978,21 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
-    if (window.location.pathname === `/app/post/${post.id}`) return;
+    if (window.location.pathname === `/app/post/${post.id}` || (post.articleSlug && window.location.pathname === `/app/post/${post.articleSlug}`)) return;
     // Opens its own post page like a text post: the feed keeps this very card
     // (RetainedPostSurface) and the page shows it as it was, under the same
     // top bar, with Back in the pill.
     cacheImageForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
-  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
+    noteProfileFeedOpen(profileFeed, post.id);
+    navigate(`/app/post/${post.articleSlug || post.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer, profileFeed]);
 
   const handleImageClick = (index: number, onPicture = true) => {
     if (wasDrawerJustDismissed()) return;
     const gated = isPPV || isLocked || isSubGated || isW2E || matureGate.isGated;
     // A post opened from the feed keeps this feed card on its page, so being
     // on the post's own URL counts as the post page: the photo opens full screen.
-    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}`;
+    const onPostPage = postPage || window.location.pathname === `/app/post/${post.id}` || (!!post.articleSlug && window.location.pathname === `/app/post/${post.articleSlug}`);
     // The picture itself opens full screen; the bento around it (here, the
     // space beside a narrow photo) opens the post page.
     if (!onPicture && !onPostPage && !imagesFeedScrollView && !gated) {
@@ -1159,7 +1182,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
               </button>
               <button
                 onClick={() => {
-                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.id}`);
+                  const url = viewerShareUrl(`${window.location.origin}/app/post/${post.articleSlug || post.id}`);
                   navigator.clipboard.writeText(url);
                   toast.success(t('postOptions.postUrlCopied'));
                   trackLinkCopy(post.id, walletAddress, linkCopyCount);
@@ -1413,6 +1436,22 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             </div>
           </>
         ) : (() => {
+          if (post.layout === 'comic' && images.length > 0) {
+            const onPostPage = postPage || isImmersive;
+            return (
+              <Suspense fallback={<div style={{ aspectRatio: '4 / 5' }} />}>
+                <ComicDeckLazy
+                  images={images}
+                  captions={post.mediaCaptions}
+                  descriptions={post.mediaDescriptions}
+                  title={post.title}
+                  aboveFold={aboveFold}
+                  full={onPostPage}
+                  onOpen={onPostPage ? undefined : openPost}
+                />
+              </Suspense>
+            );
+          }
           const carousel = (
             <ImageCarousel
               images={images}
@@ -1501,6 +1540,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
 
         <ActionBar
           postId={post.id}
+          articleSlug={post.articleSlug}
           newPostSlug={post.status === 'signed' ? post.newPostId ?? null : null}
           tokenId={parseInt(post.id, 10) || undefined}
           isOwnPost={!!isOwnPost}

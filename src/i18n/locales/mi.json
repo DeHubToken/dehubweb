@@ -162,7 +162,25 @@
     "saved": "Kua tiakina ngā āpure kōtaha",
     "failed": "Kāore i tiakina. Whakamātauria anō.",
     "verified": "Hono kua manatokona",
-    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}"
+    "verifyHint": "Hei manatoko i tētahi hono, tāpirihia tēnei ki taua whārangi, ka tiaki anō: {{snippet}}",
+    "descriptionPresets": "Tāpirihia he paetukutuku, he whakahua, he aha atu rānei. Ko nga hononga hono e whakaatu ana ki o raatau hapori.",
+    "type": "Momo mara",
+    "needsLabel": "Homai he tohu ki ia mara ritenga",
+    "placeholderLink": "koutouite.com",
+    "placeholderPronouns": "ratou/ratou",
+    "placeholderLocation": "Taone, whenua",
+    "presets": {
+      "website": "Paetukutuku",
+      "blog": "Blog",
+      "portfolio": "Pūtea",
+      "shop": "Hokona",
+      "podcast": "Podcast",
+      "newsletter": "Pūrongo",
+      "pronouns": "Ngā tohutohu",
+      "location": "Te waahi",
+      "custom": "Ritenga",
+      "customOption": "Tohu ritenga"
+    }
   },
   "followedTags": {
     "follow": "Whai i #{{tag}}",
@@ -10639,8 +10657,12 @@
       "restore": "Whakahoutia",
       "restored": "Whakahoutia te putanga {{version}}"
     },
-    "stakeForAllowance": "Tāwhiria ngā tohu DeHub hei whakanui ake i tō whakaaetanga hanga ia rā",
     "buildInChat": "Hangaia i ō karere tōtika me @assistant",
+    "modelLabel": "Tauira",
+    "creditsLeft": "{{amount}} i ngā whiwhinga",
+    "perPrompt": "≈ {{price}} mō ia tono",
+    "pricingNote": "Ka utua ia tono i ō whiwhinga ki te utu o te tauira me te 30% atu. Ka puritia te utu nui rawa ka taea e tētahi tono i a ia e rere ana, ā, ka whakahokia te wāhanga kāore i whakamahia.",
+    "topUpCredits": "Tāpiri whiwhinga",
     "landerTitle": "Hangaia he taupānga ma te tono noa",
     "landerSubtitle": "Korero @ assistanthe aha e hiahia ana koe i roto i to koutou karere. Ka hanga e ia te taupānga, ka manaaki i a ia, ka tuku i tetahi hononga ki a koe ka taea e tetahi te whakatuwhera. Whakautu ki te huri i tetahi mea.",
     "promptPlaceholder": "Whakaahuahia te taupānga e hiahia ana koe...",
@@ -18731,5 +18753,34 @@
     "fingerprint": "Tapumati",
     "exploreFirst": "Tūhura i te tuatahi",
     "codeNote": "Ka īmēra mātou i tētahi waehere ki a koe, kāore he kupuhipa e hiahiatia ana."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Kei te tae mai",
+    "title": "Kei te tae mai te token",
+    "body": "Kua katia te whakapaipai i te wa e whakarite ana te token hou. Tīkina he īmēra i te wā e whakatupu ai.",
+    "notifyMe": "Whakamōhiotia mai",
+    "sendTo": "Ka īmēra kami ki {{email}}",
+    "emailLabel": "Īmēra",
+    "emailPlaceholder": "Tō īmēra",
+    "invalidEmail": "Whakauru i te īmēra tika",
+    "joinedTitle": "Kei te rārangi koe",
+    "joinedBody": "Ka īmēra kami ki {{email}} i te wā e whakatupu ai te token.",
+    "joinedBodyNoEmail": "Ka īmēra kami ki a koe i te wā e whakatupu ai te token.",
+    "failed": "Kaore i taea te tiaki i tēnā. Ngana anō.",
+    "privacy": "Anake hei whakamōhio ki a koe mō te whakatupuranga.",
+    "seoTitle": "Token launching soon | DeHub",
+    "seoDescription": "Kei te tae mai te token DeHub hou. Tomo ki te rārangi me te tīkina he īmēra kotahi i te wā e whakatupu ai, katahi ka hoko tika mai i tō pūkoro DeHub."
+  },
+  "githubLink": {
+    "hint": "Hokona ki GitHub ki te whakamatau i te pūkete ko koutou. DeHub anake kite i to koutou pūkete GitHub tūmatanui.",
+    "verified": "Whakamātauria",
+    "verifiedAria": "Ko te kaute GitHub kua whakamanahia",
+    "connected": "GitHub hono",
+    "disconnected": "Ko te GitHub kua whakakorehia",
+    "taken": "Ko te pūkete GitHub kei runga i tētahi atu pūkete DeHub.",
+    "failed": "Kaore e taea te hono atu ki a GitHub. Whakamātauria ano.",
+    "unavailable": "Ka hohoro te haere mai o te tirotiro GitHub.",
+    "connect": "Tūhono ki te GitHub",
+    "disconnect": "Tūhuratia"
   }
 }

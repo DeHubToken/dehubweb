@@ -162,7 +162,25 @@
     "saved": "Fushat e profilit u ruajtën",
     "failed": "Nuk u ruajt. Provo përsëri.",
     "verified": "Lidhje e verifikuar",
-    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}"
+    "verifyHint": "Për të verifikuar një lidhje, shto këtë në atë faqe, pastaj ruaje përsëri: {{snippet}}",
+    "descriptionPresets": "Shto një faqe interneti, përemra ose ndonjë gjë tjetër. Lidhjet shfaqen me rrjetet e tua sociale.",
+    "type": "Lloji i fushës",
+    "needsLabel": "Jepi çdo fushe të personalizuar një etiketë",
+    "placeholderLink": "yourite.com",
+    "placeholderPronouns": "ata/ato",
+    "placeholderLocation": "Qyteti, shteti",
+    "presets": {
+      "website": "Faqja e internetit",
+      "blog": "Blog",
+      "portfolio": "Portofoli",
+      "shop": "Dyqan",
+      "podcast": "Podcast",
+      "newsletter": "Buletini informativ",
+      "pronouns": "Përemrat",
+      "location": "Vendndodhja",
+      "custom": "I personalizuar",
+      "customOption": "Etiketa e personalizuar"
+    }
   },
   "followedTags": {
     "follow": "Ndiq #{{tag}}",
@@ -10658,8 +10676,12 @@
       "restore": "Rikthe",
       "restored": "Versioni i rivendosur {{version}}"
     },
-    "stakeForAllowance": "Vendosni tokena DeHub për të rritur lejen tuaj ditore të ndërtimit",
     "buildInChat": "Ndërto në mesazhet private me @assistant",
+    "modelLabel": "Modeli",
+    "creditsLeft": "{{amount}} në kredite",
+    "perPrompt": "≈ {{price}} për kërkesë",
+    "pricingNote": "Çdo kërkesë paguhet nga kreditet e tua me koston e modelit plus 30%. Shuma maksimale që mund të kushtojë një kërkesë mbahet ndërsa ajo ekzekutohet dhe pjesa e papërdorur kthehet.",
+    "topUpCredits": "Rimbush kreditet",
     "landerTitle": "Ndërto një aplikacion vetëm duke pyetur",
     "landerSubtitle": "Thuaji @assistant çfarë dëshiron në mesazhet e tua. Ndërton aplikacionin, e pret dhe të dërgon një link që kushdo mund ta hapë. Përgjigju për të ndryshuar ndonjë gjë.",
     "promptPlaceholder": "Përshkruaj aplikacionin që dëshiron...",
@@ -18792,5 +18814,34 @@
     "fingerprint": "Shënim i unazës",
     "exploreFirst": "Eksploroni para",
     "codeNote": "Ne ju derdhim një kod, pa kërkim për fjalë kalim."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Së shpejti",
+    "title": "Tokeni po niset së shpejti",
+    "body": "Blerja është e mbyllur ndërkohë që tokeni i ri po përgatitet. Merrni një email në momentin kur të jetë i drejtpërdrejtë.",
+    "notifyMe": "Njoftomëni",
+    "sendTo": "Ne do t'ju dërgojmë email në {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Emaili juaj",
+    "invalidEmail": "Futni një email të vlefshëm",
+    "joinedTitle": "Jeni në listë",
+    "joinedBody": "Ne do t'ju dërgojmë email në {{email}} kur tokeni të niset.",
+    "joinedBodyNoEmail": "Ne do t'ju dërgojmë email kur tokeni të niset.",
+    "failed": "Nuk mundi të ruhet. Provoni përsëri.",
+    "privacy": "Përdoret vetëm për t'ju informuar për lançimin.",
+    "seoTitle": "Tokeni po niset së shpejti | DeHub",
+    "seoDescription": "Tokeni i ri DeHub po niset së shpejti. Bashkohuni në listë dhe merrni një email në momentin kur të jetë i drejtpërdrejtë, pastaj blini drejtpërdrejt nga portofoli juaj DeHub."
+  },
+  "githubLink": {
+    "hint": "Hyrni në GitHub për të provuar se llogaria është juaja. DeHub sheh vetëm profilin tuaj publik në GitHub.",
+    "verified": "Verified",
+    "verifiedAria": "Llogaria e Verifikuar në GitHub",
+    "connected": "GitHub është i lidhur",
+    "disconnected": "GitHub është i ndarë",
+    "taken": "Llogaria GitHub është e regjistruar në një profili tjetër DeHub.",
+    "failed": "Nuk mund të lidhesh me GitHub. Pritni edhe një herë.",
+    "unavailable": "Verifikimi i GitHub-it është në rrugën e pritjes.",
+    "connect": "Kërkoni lidhjen me GitHub",
+    "disconnect": "Ndalo lidhjen me GitHub"
   }
 }

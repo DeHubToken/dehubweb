@@ -6,6 +6,7 @@ import { Film, Star, Pin, ListVideo, ThumbsDown } from "lucide-react";
 import Image from "@/components/ui/cut-icons/images";
 import Radio from "@/components/ui/cut-icons/live";
 import PieChart from "@/components/ui/cut-icons/fractions";
+import { useFractionPortfolio } from "@/hooks/use-fraction-portfolio";
 
 import Home from "@/components/ui/cut-icons/home";
 import ArticleIcon from "@/components/ui/cut-icons/blog";
@@ -31,7 +32,8 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { getBadgeName, getBadgeUrl } from '@/lib/staking-badges';
 import { useSelfBadge, preferLiveBalance } from '@/hooks/use-self-badge-balance';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
-import { useUserPins } from '@/hooks/use-pins';
+import { useUserPins, usePinnedPostIds } from '@/hooks/use-pins';
+import type { UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { usePublicPlaylists } from '@/hooks/use-bookmark-folders';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { getUserComments, blockUser, unblockUser, getUserReposts, getUserProposalReposts, getNFTInfo } from '@/lib/api/dehub';
@@ -59,8 +61,8 @@ export interface ProfileProposalItem {
 }
 
 export type ProfileContentItem =
-  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }
-  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string };
+  | { type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean }
+  | { type: 'proposal'; data: ProfileProposalItem; createdAt: string; isRepost?: boolean; repostedAt?: string; isPinned?: boolean };
 
 const PULL_THRESHOLD = 80;
 
@@ -99,6 +101,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     data: apiProfile,
     isLoading: isLoadingProfile,
     isError: isProfileError,
+    error: profileError,
     isFetchingProfile,
     setFollowStatus,
     refetch: refetchProfile,
@@ -186,29 +189,36 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // Reset the toolbar when the visitor moves to another profile — a query
   // typed on one channel has no meaning on the next, and neither does a
   // category the next creator never posts in.
+  // Only the profile changing resets it. Reading the query through a ref keeps
+  // each keystroke from re-running this and wiping what was just typed.
+  const contentSearchRef = useRef(contentSearch);
+  contentSearchRef.current = contentSearch;
   useEffect(() => {
     setContentSort('newest');
-    setContentSearch.complete(contentSearch, '');
+    setContentSearch.complete(contentSearchRef.current, '');
     setContentFilters(EMPTY_PROFILE_FILTERS);
     setContentFiltersOpen(false);
-  }, [routeUsername, userId, contentSearch, setContentSearch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeUsername, userId]);
 
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
+  // The tab's list exactly as asked for, so a post opened from it can carry on
+  // through the same pages (see lib/profile-feed-origin).
+  const contentQuery = useMemo(() => ({
+    userId: contentUserId,
+    viewerAddress: currentWalletAddress || undefined,
+    sortMode: contentSort,
+    search: debouncedContentSearch,
+    filters: appliedContentFilters,
+    includeOwnScheduled: isOwnContent,
+  }), [contentUserId, currentWalletAddress, contentSort, debouncedContentSearch, appliedContentFilters, isOwnContent]);
   const {
     data: userContentData,
     isLoading: isLoadingContent,
     fetchNextPage: fetchNextContentPage,
     hasNextPage: hasNextContentPage,
     isFetchingNextPage: isFetchingNextContentPage,
-  } = useDeHubUserContent({
-    userId: contentUserId,
-    viewerAddress: currentWalletAddress || undefined,
-    enabled: !!contentUserId,
-    sortMode: contentSort,
-    search: debouncedContentSearch,
-    filters: appliedContentFilters,
-    includeOwnScheduled: isOwnContent,
-  });
+  } = useDeHubUserContent({ ...contentQuery, enabled: !!contentUserId });
 
   // Prefetch ONLY page 2 in the background after first paint. The old
   // version cascaded through EVERY page (fetching a user's entire content
@@ -301,6 +311,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // and the balance is what it prints under the threshold.
   const badgeTier = getBadgeName(badgeBalance, badgeUsername, badgeContext);
 
+  // Pinned posts lead the All tab. On your own profile the pinned ids come
+  // from the list a pin flips instantly, so a post you pin jumps to the top
+  // (and an unpinned one drops back) before the server answers.
+  const { data: pinsData } = useUserPins(contentUserId || '');
+  const { data: myPinnedIds } = usePinnedPostIds();
+  const pinnedIds = useMemo(() => {
+    if (isViewingOwnProfile && myPinnedIds) return myPinnedIds;
+    return (pinsData?.items ?? []).map((pin) => String(pin.tokenId));
+  }, [isViewingOwnProfile, myPinnedIds, pinsData]);
+
   // Content separation
   const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, PROFILE_LIVE, ALL_CONTENT } = useMemo(() => {
     if (!userContentData?.pages) {
@@ -375,6 +395,35 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
 
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+    // Pinned posts first, newest pin on top, each shown once. A post pinned a
+    // moment ago that the pins list has not caught up with yet is lifted out
+    // of the feed itself.
+    if (pinnedIds.length) {
+      const wanted = new Set(pinnedIds);
+      const fromPins = separateUserContent((pinsData?.items ?? []).map((pin) => ((pin as { post?: unknown }).post || pin) as unknown as UnifiedFeedItem));
+      const pinListed: ProfileContentItem[] = [
+        ...fromPins.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+        ...fromPins.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
+        ...fromPins.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+        ...fromPins.lives.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+      ];
+      const byId = new Map<string, ProfileContentItem>();
+      for (const item of [...pinListed, ...unified]) {
+        if (item.type !== 'proposal' && wanted.has(item.data.id) && !byId.has(item.data.id)) byId.set(item.data.id, item);
+      }
+      const serverOrder = (pinsData?.items ?? []).map((pin) => String(pin.tokenId));
+      const order = [...pinnedIds.filter((id) => !serverOrder.includes(id)).reverse(), ...serverOrder.filter((id) => wanted.has(id))];
+      const pinned: ProfileContentItem[] = [];
+      for (const id of order) {
+        const item = byId.get(id);
+        if (item && !pinned.some((p) => p.data.id === id)) pinned.push({ ...item, isRepost: false, isPinned: true } as ProfileContentItem);
+      }
+      const pinnedSet = new Set(pinned.map((p) => p.data.id));
+      const rest = unified.filter((item) => item.type === 'proposal' || !pinnedSet.has(item.data.id));
+      unified.length = 0;
+      unified.push(...pinned, ...rest);
+    }
+
     return {
       PROFILE_POSTS: separated.posts,
       PROFILE_IMAGES: separated.images,
@@ -382,7 +431,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered]);
+  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered, pinnedIds, pinsData]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
@@ -400,8 +449,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
-  const { data: pinsData } = useUserPins(contentUserId || '');
-  const pinnedCount = pinsData?.items?.length ?? 0;
+  const pinnedCount = isViewingOwnProfile && myPinnedIds ? myPinnedIds.length : pinsData?.items?.length ?? 0;
 
   // Public bookmark folders. The same query feeds the Playlists panel, so the
   // tab's badge and its content can never disagree; the tab only exists while
@@ -441,8 +489,13 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const dislikesQuery = useProfileDislikes(apiProfile?.walletAddress, showDislikesTab && secondaryEnabled);
   const dislikesCount = dislikesQuery.data?.pages?.[0]?.totalCount ?? 0;
 
+  // Fractions: the same portfolio read the tab itself lists (shared cache, so
+  // opening the tab is instant). Blank until it answers, never a false 0.
+  const fractionsQuery = useFractionPortfolio(apiProfile?.walletAddress, { enabled: secondaryEnabled });
+  const fractionsCount: number | null = fractionsQuery.data ? fractionsQuery.data.length : null;
+
   const articleCount = tabCount('articles', activeTab === 'articles' ? PROFILE_POSTS.length : 0);
-  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number | null }[] = useMemo(() => {
     // All also merges in reposts the server total leaves out.
     const homeCount = Math.max(tabCount('home', 0), activeTab === 'home' && !isContentFiltered ? ALL_CONTENT.length : 0);
     const homeTab = { icon: Home, label: _copy("copy.a52ace420f21", { defaultValue: "All" }), value: 'home' as TabValue, count: homeCount };
@@ -453,7 +506,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       { icon: Star, label: _copy("copy.17371507e9f7", { defaultValue: "Subs" }), value: 'subscribers' as TabValue, count: plans.length },
       { icon: Play, label: _copy("copy.bc1b88907d3b", { defaultValue: "Audio" }), value: 'songs' as TabValue, count: tabCount('songs', ALL_PROFILE_VIDEOS.length) },
       { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: tabCount('live', PROFILE_LIVE.length) },
-      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
+      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: fractionsCount },
       { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
       // Only once the profile has an article; kept while open so a search
       // with no matches does not pull the tab out from under the visitor.
@@ -463,7 +516,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       ...(playlistCount > 0
         ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
         : []),
-    ].sort((a, b) => b.count - a.count);
+    ].sort((a, b) => (b.count ?? 0) - (a.count ?? 0));
     // Last, not sorted in: it is about what you turned away, not what you made.
     const dislikesTab = showDislikesTab
       ? [{ icon: ThumbsDown as unknown as typeof Home, label: _copy("profile.tabs.dislikes", { defaultValue: "Dislikes" }), value: 'dislikes' as TabValue, count: dislikesCount }]
@@ -471,7 +524,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     return [homeTab, ...restTabs, ...dislikesTab];
     // tabCount reads only the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, showDislikesTab, dislikesCount, _copy]);
+  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, fractionsCount, showDislikesTab, dislikesCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled
@@ -579,6 +632,12 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     isLoadingProfile,
     isFetchingProfile,
     isProfileError,
+    // Nobody has this handle (the API answers 404, or an empty shell). Not a
+    // load failure: the page offers the free name instead of "try again".
+    isProfileNotFound:
+      isProfileError &&
+      ((profileError as (Error & { httpStatus?: number }) | null)?.httpStatus === 404 ||
+        (profileError as Error | null)?.message === 'Profile not found'),
     refetchProfile,
     isOwnProfile,
     isViewingOwnProfile,
@@ -611,6 +670,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     setContentFiltersOpen,
     showPostTypeFilter,
     isContentFiltered,
+    contentQuery,
     // Subscriptions
     plans,
     isLoadingPlans,

@@ -48,8 +48,11 @@ export interface EditedMessage {
 }
 
 export interface DeletedMessage {
-  _id: string;
+  /** Older events carry `_id`, the server now sends `messageId`. */
+  _id?: string;
+  messageId?: string;
   dmId: string;
+  reason?: 'destruct';
 }
 
 export interface DmReactionUpdate {
@@ -509,6 +512,19 @@ export function onConversationDeleted(cb: (data: ConversationDeletedData) => voi
 
 export function onFeeConfirmed(cb: (data: FeeConfirmedData) => void): () => void {
   return addPersistentListener('feeConfirmed', cb as AnyFn);
+}
+
+/** A locked photo or video in one of my chats was paid for. */
+export interface DmMediaUnlockedData {
+  messageId: string;
+  dmId: string;
+  buyerAddress: string;
+  amount: number;
+  symbol: string;
+}
+
+export function onDmMediaUnlocked(cb: (data: DmMediaUnlockedData) => void): () => void {
+  return addPersistentListener('dmMediaUnlocked', cb as AnyFn);
 }
 
 /** Revalidated message (e.g. after media upload completes). */

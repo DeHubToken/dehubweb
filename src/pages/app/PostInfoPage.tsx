@@ -71,8 +71,7 @@ const VISIBILITY_OPTIONS: { value: TokenVisibility; icon: React.ReactNode }[] = 
 // /app/fractions renders. It used to be ~440 lines inlined here, which is how
 // it ended up being the only place fractions could be traded at all.
 import { FractionMarketPanel } from '@/components/app/fractions/FractionMarketPanel';
-import { buildImageUrl } from '@/lib/media-url';
-import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { fractionImageFor } from '@/lib/fraction-thumb';
 import { resolveViewCount } from '@/lib/engagement';
 
 
@@ -309,10 +308,27 @@ export default function PostInfoPage() {
   }
   
   // Loading state
-  if (isLoading) {
+  if (isLoading && !nftInfo) {
+    // Cold open from a link: the page's shape right away, not a loader.
     return (
-      <div data-glass-page className="min-h-screen bg-black flex items-center justify-center">
-        <DeHubPageLoader minHeight="0" />
+      <div data-glass-page className="min-h-screen bg-black">
+        <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
+          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] backdrop-saturate-[180%] px-3 py-2">
+            <button
+              data-swipe-back onClick={() => navigate(-1)}
+              className="p-2 rounded-xl hover:bg-white/10 transition-colors"
+              aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
+            >
+              <ArrowLeft className="w-5 h-5 text-white" />
+            </button>
+            <h1 className="font-bold text-white flex-1 truncate">{t('postInfo.title')}</h1>
+          </div>
+        </div>
+        <div className="p-4 space-y-6" aria-busy="true">
+          {[112, 80, 160, 96].map((h, i) => (
+            <Skeleton key={i} className="w-full rounded-xl bg-white/5" style={{ height: h }} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -356,8 +372,11 @@ export default function PostInfoPage() {
   const chainInfo = getChainInfo(chainId);
   
   // Get stats with fallbacks
-  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? 0;
-  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
+  // A feed copy painted first names these likes/dislikes, so read those too
+  // rather than flashing 0 until the full post lands.
+  const feedCounts = nftInfo as { likes?: number; dislikes?: number };
+  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? feedCounts.likes ?? 0;
+  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? feedCounts.dislikes ?? 0;
   const views = resolveViewCount(nftInfo);
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
   const totalTips = nftInfo.minterUser?.receivedTips ?? 0;
@@ -397,7 +416,7 @@ export default function PostInfoPage() {
         <div className="p-4 space-y-6">
           {isOwner && postId ? (
             <Suspense fallback={null}>
-              <PostStatsPanel tokenId={postId} />
+              <PostStatsPanel tokenId={postId} views={views} />
             </Suspense>
           ) : null}
           {/* Transaction & Mint Info — or, for a post published off-chain, a
@@ -610,7 +629,7 @@ export default function PostInfoPage() {
             chainId={nftInfo.chainId || 8453}
             post={{
               title: nftInfo.name || nftInfo.title,
-              imageUrl: buildImageUrl(nftInfo.tokenId, nftInfo.imageUrl, 400) || undefined,
+              imageUrl: fractionImageFor(nftInfo, 400) || undefined,
               type: nftInfo.postType,
               creatorAddress: nftInfo.minter,
               creatorUsername: nftInfo.minterUsername || nftInfo.mintername,
@@ -630,7 +649,7 @@ export default function PostInfoPage() {
                 <span className="text-xs text-white/60">{t('postInfo.distribution')}</span>
                 <span className="text-xs font-medium text-white">
                   {isLoadingHolders 
-                    ? t('postInfo.loading')
+                    ? <Loader2 className="w-3.5 h-3.5 animate-spin text-white/60" aria-label={t('postInfo.loading')} />
                     : holders.length > 0 
                       ? t('postInfo.owner', { count: holders.length })
                       : t('postInfo.unavailable')

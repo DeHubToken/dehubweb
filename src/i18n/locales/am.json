@@ -162,7 +162,24 @@
     "saved": "የመገለጫ መስኮች ተቀምጠዋል",
     "failed": "አልተቀመጠም። እንደገና ይሞክሩ።",
     "verified": "የተረጋገጠ አገናኝ",
-    "verifyHint": "አገናኝን ለማረጋገጥ ይህን በዚያ ገጽ ላይ ያክሉ፣ ከዚያ እንደገና ያስቀምጡ፦ {{snippet}}"
+    "verifyHint": "አገናኝን ለማረጋገጥ ይህን በዚያ ገጽ ላይ ያክሉ፣ ከዚያ እንደገና ያስቀምጡ፦ {{snippet}}",
+    "descriptionPresets": "ድር ጣቢያ ፣ አጠራሮች ወይም ሌላ ማንኛውንም ነገር ያክሉ ። አገናኞች ከማህበራዊ አውታረ መረቦችዎ ጋር ያሳያሉ ።",
+    "type": "የመስክ አይነት",
+    "needsLabel": "ለእያንዳንዱ ብጁ መስክ መለያ ይስጡ",
+    "placeholderPronouns": "እነሱ/እነሱ",
+    "placeholderLocation": "ከተማ, አገር",
+    "presets": {
+      "website": "ድረ-ገጽ",
+      "blog": "ብሎግ",
+      "portfolio": "ፖርትፎሊዮ",
+      "shop": "ሱቅ",
+      "podcast": "ፖድካስት",
+      "newsletter": "ጋዜጣ",
+      "pronouns": "ስሞችን ሙሉ ገለጻ ያግኙ Pronouns",
+      "location": "አካባቢ",
+      "custom": "ብጁ",
+      "customOption": "ብጁ መለያ"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}}ን ተከተል",
@@ -407,6 +424,7 @@
   },
   "nav": {
     "reorderHint": "የተሰጠው አይኮን ይጠየቀው እና ይምረጡ",
+    "reorderReset": "ዳግም አስጀምር",
     "reorderResetLong": "ምናሌ ትዕዛዝ ዳግም አስጀምር",
     "home": "መነሻ",
     "explore": "አስስ",
@@ -451,8 +469,7 @@
     "getTheApp": "መተግበሪያውን አግኝ",
     "connectAi": "AI አገናኝ",
     "converter": "ቀይር",
-    "affiliate": "አጋር",
-    "reorderReset": "ዳግም አስጀምር"
+    "affiliate": "አጋር"
   },
   "feed": {
     "viewProfile": "የ {{name}} መገለጫ ይመልከቱ",
@@ -10669,8 +10686,12 @@
       "restore": "ዳግም አስጀምር",
       "restored": "የተሃድሶ ስሪት {{version}}"
     },
-    "stakeForAllowance": "ዕለታዊ የግንባታ አበልዎን ለመጨመር የDeHub ቶከኖችን ይንከባከቡ",
     "buildInChat": "በቀጥታ መልዕክቶችዎ ከ@assistant ጋር ይገንቡ",
+    "modelLabel": "ሞዴል",
+    "creditsLeft": "{{amount}} ክሬዲት",
+    "perPrompt": "≈ {{price}} በአንድ ጥያቄ",
+    "pricingNote": "እያንዳንዱ ጥያቄ ከክሬዲትዎ በሞዴሉ ወጪ ላይ 30% ተጨምሮ ይከፈላል። አንድ ጥያቄ ሊያስከፍል የሚችለው ከፍተኛ መጠን በሚሰራበት ጊዜ ይያዛል፣ ጥቅም ላይ ያልዋለው ክፍል ይመለሳል።",
+    "topUpCredits": "ክሬዲት ይሙሉ",
     "landerTitle": "በመጠየቅ ብቻ አንድ መተግበሪያ ይገንቡ",
     "landerSubtitle": "በመልዕክቶችዎ ውስጥ የሚፈልጉትን @ረዳት ይንገሩ ። መተግበሪያውን ይገነባል ፣ ያስተናግዳል እና ማንም ሊከፍት የሚችል አገናኝ ይልክልዎታል ። ማንኛውንም ነገር ለመለወጥ መልስ ይስጡ ።",
     "promptPlaceholder": "የሚፈልጉትን መተግበሪያ ይግለጹ…",
@@ -18778,5 +18799,17 @@
     "privacy": "በተጨማሪ ለማስታወቂያ ብቻ ይጠቀሙ።",
     "seoTitle": "ቶኬን በቅርቡ ይተራ | DeHub",
     "seoDescription": "አዲሱ የ DeHub ቶኬን በቅርቡ ይተራ። ዝርዝሩ ይቀላቀሉ እና ወቅቱ በተለቀ አድርጉ ኢሜል ይተላለፋል፣ ከዚያም በ DeHub ወለት ውስጥ በቀጥታ ይገዙ።"
+  },
+  "githubLink": {
+    "hint": "መለያው የእናንተ መሆኑን ለማረጋገጥ ወደ GitHub ይግቡ ። DeHub የእርስዎን የህዝብ GitHub መገለጫ ብቻ ያያል.",
+    "verified": "ተረጋግጧል",
+    "verifiedAria": "የተረጋገጠ የ GitHub መለያ",
+    "connected": "GitHub ተገናኝቷል",
+    "disconnected": "GitHub ተሰናክሏል",
+    "taken": "ያ የ GitHub መለያ ቀድሞውኑ በሌላ የ DeHub መገለጫ ላይ ነው ።",
+    "failed": "GitHub ን ማገናኘት አልተቻለም. እንደገና ይሞክሩ.",
+    "unavailable": "GitHub ማረጋገጫ በቅርቡ ይመጣል ።",
+    "connect": "GitHub ን ያገናኙ",
+    "disconnect": "አገናኝን ያቋርጡ"
   }
 }

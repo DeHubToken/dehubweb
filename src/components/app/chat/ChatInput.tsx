@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, MessageCircleQuestion, FileText } from "lucide-react";
+import { Loader2, Wand2, MessageCircleQuestion, FileText, Play, Lock, EyeOff, Timer, Plus } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Reply from "@/components/ui/cut-icons/reply";
 import Paperclip from "@/components/ui/cut-icons/attach";
@@ -36,6 +36,9 @@ import {
   validateAttachment,
 } from '@/lib/attachments';
 import { dragHasFiles } from '@/lib/comment-attachments';
+import { cleanVideoOptions, type DmVideoOptions } from '@/lib/dm-video-options';
+import type { DmDestructChoice } from '@/lib/dm-destruct';
+import { DmMediaStudio, type DmStudioItem } from './DmVideoStudio';
 
 /** Per-kind caps, matching the backend's DM limits. */
 const DM_MEDIA_LIMITS = { image: 10 * 1024 * 1024, video: 50 * 1024 * 1024, audio: 20 * 1024 * 1024 } as const;
@@ -46,6 +49,12 @@ export interface ChatInputSendArgs {
   mediaFile?: File;
   gifUrl?: string;
   duration?: number;
+  /** Trim, cover, mirror, rotation and hide choices for a video. */
+  mediaOptions?: DmVideoOptions;
+  /** Self-destruct: gone after one view or a set time. */
+  destruct?: DmDestructChoice;
+  /** Pay-to-unlock price for a photo or video (DHB). */
+  lockPrice?: number;
 }
 
 interface ChatInputProps {
@@ -107,9 +116,11 @@ interface ChatInputProps {
    */
   allowDocuments?: boolean;
   voiceMaxDuration?: number;
+  /** Offer "Lock photo" (pay to unlock) on a picked photo or video. 1:1 DMs only. */
+  allowLock?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59, allowLock = false }: ChatInputProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
@@ -123,8 +134,17 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-  // imageFile holds whatever photo, clip or audio file the paperclip picked.
-  const [mediaKind, setMediaKind] = useState<'image' | 'video' | 'audio'>('image');
+  // imageFile holds a picked audio file; photos and videos go to the edit screen.
+  // Photos and videos picked for the edit screen; it is open while any are here.
+  const [studioItems, setStudioItems] = useState<DmStudioItem[]>([]);
+  const [studioActive, setStudioActive] = useState(0);
+  const studioUrls = useRef<string[]>([]);
+  // The edit screen opens on a pick; Confirm brings the picks back here as a
+  // row above the box. X drops only what was picked since it opened.
+  const [studioOpen, setStudioOpen] = useState(false);
+  const studioOpenRef = useRef(false);
+  studioOpenRef.current = studioOpen;
+  const studioBase = useRef(0);
   const [dropHover, setDropHover] = useState(false);
   const [docFile, setDocFile] = useState<File | null>(null);
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
@@ -264,7 +284,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const sendInFlight = useRef(false);
   const handleSend = async () => {
     if (sendDisabled || isSendingFee || sendInFlight.current) return;
-    const pendingFile = imageFile || docFile || undefined;
+    const pendingFile = studioItems[0]?.file || imageFile || docFile || undefined;
     const pendingType: ChatInputSendArgs['type'] = audioPreview ? 'voice' : pendingFile ? 'media' : 'msg';
     if (pendingType === 'msg' && !message.trim()) return;
     if (canSend && !canSend({ type: pendingType, mediaFile: audioPreview ? audioPreview.file : pendingFile })) return;
@@ -286,6 +306,40 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       setAudioPreview(null);
       setMessage.complete(message, '');
       resetComposerHeight();
+      return;
+    }
+
+    if (studioItems.length) {
+      // One file per message: send them in order, the caption riding on the
+      // first. Whatever fails stays in the edit screen to try again.
+      const queue = [...studioItems];
+      const caption = message;
+      // Back to the chat at once; the uploads show there as they go.
+      setStudioOpen(false);
+      setStudioItems([]);
+      setStudioActive(0);
+      setMessage.complete(caption, '');
+      resetComposerHeight();
+      for (let i = 0; i < queue.length; i++) {
+        const it = queue[i];
+        const sent = await onSendMessage({
+          content: i === 0 ? caption.trim() : '',
+          type: 'media',
+          mediaFile: it.file,
+          ...(it.kind === 'video' ? { mediaOptions: cleanVideoOptions(it.options, it.duration) } : {}),
+          ...(it.destruct && allowDocuments ? { destruct: it.destruct } : {}),
+          ...(allowLock && it.lockPrice ? { lockPrice: it.lockPrice } : {}),
+        });
+        if (!sent) {
+          // Bring back what did not go out, and the caption if it never left.
+          setStudioItems(queue.slice(i));
+          setStudioActive(0);
+          if (i === 0 && caption.trim()) setMessage(caption);
+          return;
+        }
+        URL.revokeObjectURL(it.url);
+        studioUrls.current = studioUrls.current.filter((u) => u !== it.url);
+      }
       return;
     }
 
@@ -375,8 +429,14 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
           : _copy("dm.attachTooLarge", { defaultValue: "\"{{name}}\" is over the {{size}} MB limit.", name: file.name, size: DM_MEDIA_LIMITS[kind] / 1024 / 1024 }));
         return;
       }
+      if (kind === 'image' || kind === 'video') {
+        addToStudio(file, kind);
+        setAudioPreview(null);
+        clearImage();
+        clearDoc();
+        return;
+      }
       if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
-      setMediaKind(kind);
       setImageFile(file);
       setImagePreviewUrl(URL.createObjectURL(file));
       setAudioPreview(null);
@@ -396,13 +456,83 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     setDocFile(file);
     setAudioPreview(null);
     clearImage();
+    clearStudio();
+  };
+
+  const addToStudio = (file: File, kind: 'image' | 'video') => {
+    const url = URL.createObjectURL(file);
+    studioUrls.current.push(url);
+    const item: DmStudioItem = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      file, url, kind, options: {}, destruct: null, lockPrice: null,
+    };
+    setStudioItems((prev) => {
+      if (!studioOpenRef.current) { studioBase.current = prev.length; studioOpenRef.current = true; }
+      setStudioActive(prev.length);
+      return [...prev, item];
+    });
+    setStudioOpen(true);
+  };
+
+  const openStudioAt = (i: number) => {
+    studioBase.current = studioItems.length;
+    setStudioActive(i);
+    setStudioOpen(true);
+  };
+
+  // X in the edit screen: forget what this visit added, keep what was confirmed.
+  const cancelStudio = () => {
+    setStudioOpen(false);
+    setStudioItems((prev) => {
+      prev.slice(studioBase.current).forEach((it) => {
+        URL.revokeObjectURL(it.url);
+        studioUrls.current = studioUrls.current.filter((u) => u !== it.url);
+      });
+      return prev.slice(0, studioBase.current);
+    });
+    setStudioActive(0);
+  };
+
+  const clearStudio = () => {
+    studioUrls.current.forEach((u) => URL.revokeObjectURL(u));
+    studioUrls.current = [];
+    setStudioItems([]);
+    setStudioActive(0);
+    setStudioOpen(false);
+  };
+
+  const removeStudioItem = (i: number) => {
+    setStudioItems((prev) => {
+      const gone = prev[i];
+      if (gone) {
+        URL.revokeObjectURL(gone.url);
+        studioUrls.current = studioUrls.current.filter((u) => u !== gone.url);
+      }
+      const next = prev.filter((_, j) => j !== i);
+      if (i < studioBase.current) studioBase.current -= 1;
+      if (!next.length) setStudioOpen(false);
+      setStudioActive((a) => Math.max(0, Math.min(a >= i ? a - 1 : a, next.length - 1)));
+      return next;
+    });
+  };
+
+  const attachFiles = (files: FileList | File[] | null | undefined) => {
+    const list = Array.from(files ?? []);
+    const media = list.filter((f) => /^(image|video)\//.test(f.type || ''));
+    // Several photos/videos at once all join the edit screen; anything else
+    // goes one at a time as before.
+    if (media.length > 1 || (media.length === 1 && list.length > 1)) {
+      media.forEach((f) => attachFile(f));
+      return;
+    }
+    if (list[0]) attachFile(list[0]);
   };
 
   const handleAttachPick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files ?? []);
     // Reset immediately so picking the same file twice in a row still fires.
     e.target.value = '';
-    if (file) attachFile(file);
+    attachFiles(files);
   };
 
   // Pasting a screenshot (or a copied file) into the composer attaches it, the
@@ -435,8 +565,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       if (!dragHasFiles(e)) return;
       e.preventDefault();
       setDropHover(false);
-      const file = e.dataTransfer.files[0];
-      if (file) attachFile(file);
+      attachFiles(e.dataTransfer.files);
       requestAnimationFrame(() => textareaRef.current?.focus());
     },
   } as const;
@@ -445,6 +574,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     const file = voiceRecordingFile(blob);
     setAudioPreview({ file, blob, duration });
     clearImage();
+    clearStudio();
     toast.success(_copy("copy.4951131f6346", { defaultValue: "Recording saved ({{value1}}s)", value1: duration }));
   };
 
@@ -587,22 +717,65 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       )}
 
       {/* Photo / video / audio preview */}
+      {/* Photos and videos open straight into the edit screen. */}
+      <DmMediaStudio
+        items={studioItems}
+        active={studioActive}
+        onActiveChange={setStudioActive}
+        onItemChange={(i, patch) => setStudioItems((prev) => prev.map((it, j) => (j === i ? { ...it, ...patch } : it)))}
+        onRemoveItem={removeStudioItem}
+        onAddMore={() => fileInputRef.current?.click()}
+        onClose={cancelStudio}
+        open={studioOpen}
+        onConfirm={() => { setStudioOpen(false); requestAnimationFrame(() => textareaRef.current?.focus()); }}
+        allowLock={allowLock}
+        allowTimer={allowDocuments}
+        onDropFiles={attachFiles}
+      />
+      {studioItems.length > 0 && (
+        <div data-attach-preview="media" className="mb-2 flex items-center gap-2 overflow-x-auto pt-1.5 [scrollbar-width:none]">
+          {studioItems.map((it, i) => (
+            <div key={it.id} className="relative shrink-0">
+              <button
+                type="button"
+                onClick={() => openStudioAt(i)}
+                aria-label={_copy('dmVideo.editItem', { defaultValue: 'Edit item {{value1}}', value1: i + 1 })}
+                className="relative block h-16 w-16 overflow-hidden rounded-lg bg-zinc-900"
+              >
+                {it.kind === 'video'
+                  ? <video src={it.url} muted playsInline preload="metadata" className={cn('h-full w-full object-cover', (it.lockPrice != null || it.options.hidden === 'reveal') && 'blur-sm')} />
+                  : <img src={it.url} alt="" className={cn('h-full w-full object-cover', it.lockPrice != null && 'blur-sm')} />}
+                <span className="absolute bottom-1 left-1 flex items-center gap-0.5">
+                  {it.kind === 'video' && <Play className="h-3 w-3 fill-white text-white drop-shadow" />}
+                  {it.lockPrice != null && <Lock className="h-3 w-3 text-white drop-shadow" />}
+                  {it.options.hidden === 'reveal' && <EyeOff className="h-3 w-3 text-white drop-shadow" />}
+                  {it.destruct && <Timer className="h-3 w-3 text-white drop-shadow" />}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => removeStudioItem(i)}
+                className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-md border border-white/20 bg-zinc-800 hover:bg-zinc-700"
+                aria-label={_copy('copy.595b066a8838', { defaultValue: 'Remove attachment' })}
+              >
+                <X className="h-3 w-3 text-white" />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            aria-label={_copy('dmVideo.addMore', { defaultValue: 'Add photos or videos' })}
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg border border-dashed border-white/25 text-zinc-300 hover:bg-white/5"
+          >
+            <Plus className="h-5 w-5" />
+          </button>
+        </div>
+      )}
       {imagePreviewUrl && (
-        <div data-attach-preview={mediaKind} className={cn("mb-2 relative", mediaKind === 'audio' ? "flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[320px]" : "inline-block")}>
-          {mediaKind === 'video' ? (
-            <video src={imagePreviewUrl} muted playsInline controls preload="metadata" className="h-24 max-w-[220px] rounded-lg bg-black" />
-          ) : mediaKind === 'audio' ? (
-            <>
-              <audio src={imagePreviewUrl} controls preload="metadata" className="h-8 max-w-[200px]" />
-              <span className="min-w-0 text-xs text-zinc-400 truncate" title={imageFile?.name}>{imageFile?.name}</span>
-            </>
-          ) : (
-          <img
-            src={imagePreviewUrl}
-            alt={_copy("copy.324b134f57c7", { defaultValue: "Preview" })}
-            className="h-20 rounded-lg object-cover"
-          />
-          )}
+        <div data-attach-preview="audio" className="mb-2 relative flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[320px]">
+          <audio src={imagePreviewUrl} controls preload="metadata" className="h-8 max-w-[200px]" />
+          <span className="min-w-0 text-xs text-zinc-400 truncate" title={imageFile?.name}>{imageFile?.name}</span>
           <button
             onClick={clearImage}
             className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
@@ -611,7 +784,6 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
           </button>
         </div>
       )}
-
       {/* Document Preview */}
       {docFile && (
         <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg max-w-[260px]">
@@ -758,6 +930,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             type="file"
             accept={allowDocuments ? `image/*,video/*,audio/*,${ATTACHMENT_ACCEPT}` : 'image/*'}
             onChange={handleAttachPick}
+            multiple
             className="hidden"
           />
 
@@ -832,7 +1005,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
             // keyboard open across sends instead of collapsing every tap.
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
-            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview)}
+            disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !docFile && !audioPreview && !studioItems.length)}
             title={sendDisabled ? sendDisabledReason : feeAmount ? t('messages.feePerMessage', { amount: feeAmount.toLocaleString() }) : undefined}
           >
             {isSendingFee ? (

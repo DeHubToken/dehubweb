@@ -162,7 +162,24 @@
     "saved": "انحفظت حقول الملف",
     "failed": "ما انحفظ. جرب مرة ثانية.",
     "verified": "رابط موثّق",
-    "verifyHint": "عشان توثّق رابط، أضف هذا للصفحة وبعدين احفظ مرة ثانية: {{snippet}}"
+    "verifyHint": "عشان توثّق رابط، أضف هذا للصفحة وبعدين احفظ مرة ثانية: {{snippet}}",
+    "descriptionPresets": "أضف موقع ويب، ضمائر أو أي شيء آخر. روابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "أعطِ كل حقل مخصص تسمية",
+    "placeholderPronouns": "هم",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "موقع ويب",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -379,6 +396,7 @@
     "gasSponsorshipFailed": "تعذّر تغطية هذه المعاملة. حاول بعد قليل."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
     "reorderReset": "إعادة ضبط",
     "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "البيت",
@@ -424,8 +442,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "وصّل AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -10474,8 +10491,12 @@
       "restore": "استعادة",
       "restored": "تم استعادة النسخة {{version}}"
     },
-    "stakeForAllowance": "قم بتخزين توكنات ديهوب لزيادة بدل البناء اليومي الخاص بك",
     "buildInChat": "ابنِ في رسائلك الخاصة مع @assistant",
+    "modelLabel": "الموديل",
+    "creditsLeft": "{{amount}} رصيد",
+    "perPrompt": "≈ {{price}} لكل طلب",
+    "pricingNote": "كل طلب يندفع من رصيدك بتكلفة الموديل زائد 30%. أعلى تكلفة ممكنة للطلب تنحجز وهو شغّال، والباقي اللي ما انصرف يرجع لك.",
+    "topUpCredits": "اشحن الرصيد",
     "landerTitle": "ابني تطبيق بس بسؤال",
     "landerSubtitle": "قل @assistant وش تبغى في رسائلك. هو بيبني التطبيق، يضيفه ويبعث لك رابط يفتح أي واحد. رد عشان تغير أي شيء.",
     "promptPlaceholder": "صف التطبيق اللي تبغى...",
@@ -18247,5 +18268,13 @@
     "failed": "قشيت حفظها. حاول مرة تانية.",
     "privacy": "بِسْتِخْدِمُوْشْ لِلْخَبَرِ عَنِ التَّشْغِيلِ.",
     "seoDescription": "الطوق الجديد ديهاوب بتشوف قريب. انضم للليست وخذ بريد واحد لما يطلع، بعدين تشتري مباشرة من محفظتك ديهاوب."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبتوا أن الحساب لك. DeHub تطلع على ملفك العام في GitHub بس.",
+    "verifiedAria": "حساب GitHub مصدّق",
+    "taken": "الحساب ده على GitHub مش موجود في أي ملف على DeHub.",
+    "failed": "مشيتش وصلت ل GitHub. حاول مرة تانية.",
+    "unavailable": "GitHub verification (التحقق من GitHub) بتجي قريب.",
+    "disconnect": "تقطع"
   }
 }

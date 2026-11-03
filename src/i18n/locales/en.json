@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "Profile fields",
-    "description": "Up to four extra lines on your profile, such as a website or your pronouns.",
+    "description": "Optional custom profile fields",
     "label": "Label",
     "content": "Content",
+    "add": "Add field",
+    "remove": "Remove field",
     "save": "Save fields",
     "saved": "Profile fields saved",
     "failed": "That didn't save. Try again.",
     "verified": "Verified link",
-    "verifyHint": "To verify a link, add this to that page, then save again: {{snippet}}"
+    "verifyHint": "To verify a link, add this to that page, then save again: {{snippet}}",
+    "descriptionPresets": "Add a website, pronouns or anything else. Links show with your socials.",
+    "type": "Field type",
+    "needsLabel": "Give each custom field a label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "they/them",
+    "placeholderLocation": "City, country",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Location",
+      "custom": "Custom",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "Follow #{{tag}}",
@@ -1306,7 +1326,10 @@
     "messageWallNote": "Shows on the tip wall once the tip goes through.",
     "sendWithMessage": "Send with message",
     "messageFailed": "Your message could not be added. No tip was sent.",
-    "wallLabel": "Tip messages"
+    "wallLabel": "Tip messages",
+    "railTitle": "Tips",
+    "railTotal": "{{amount}} tokens",
+    "tokensUnit": "tokens"
   },
   "postOptions": {
     "liveAlertsOn": "Following {{name}}. You'll get a notification when they go live.",
@@ -2169,7 +2192,11 @@
     "checkingTokenBalance": "Checking your token balance...",
     "deleteConversationFailed": "Couldn't delete the conversation",
     "message": "Message",
-    "noConversationsYet": "No conversations yet"
+    "noConversationsYet": "No conversations yet",
+    "sending": "Sending",
+    "notSent": "Not sent",
+    "retrySend": "Retry",
+    "discardSend": "Remove"
   },
   "music": {
     "listeningCount_one": "{{count}} listening",
@@ -2224,6 +2251,24 @@
     "mutualsOne": "{{count}} Mutual:",
     "mutualsMany": "{{count}} Mutuals:",
     "back": "Back",
+    "reserve": {
+      "available": "Username available",
+      "held": "Held for you",
+      "ended": "Hold ended",
+      "busy": "Being reserved",
+      "availableBody": "dehub.io/{{name}} is free right now. Reserve it and we hold it for one minute while you sign up.",
+      "heldBody": "Nobody else can take @{{name}} until the timer runs out. Finish sign up to keep it.",
+      "endedBody": "Your minute ran out, so @{{name}} is open to everyone again. It is still free.",
+      "busyBody": "Someone is signing up as @{{name}} right now. If they do not finish, it frees up when the timer ends.",
+      "finish": "Finish sign up",
+      "again": "Reserve again",
+      "cta": "Reserve now",
+      "letGo": "Let it go",
+      "haveAccount": "Have an account?",
+      "signIn": "Sign in",
+      "seoTitle": "@{{name}} is available on DeHub",
+      "seoDescription": "Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours."
+    },
     "usernameAvailable": "Username available!",
     "signUpToClaim": "Sign up today to claim",
     "signUp": "Sign Up",
@@ -6393,6 +6438,26 @@
     "docsSeoDescription": "Reference documentation for DeHub's AI assistant skills and prompt library.",
     "docsLoadFailed": "# Error\nFailed to load skill documentation.",
     "raw": "Raw"
+  },
+  "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "Filters",
+    "forSale": "For sale",
+    "openToOffers": "Open to offers",
+    "freshMints": "Fresh from DeHub creators",
+    "makeOffer": "Make offer",
+    "offersOpen": "Open to offers",
+    "mintedCount": "{{n}} minted",
+    "title": "NFT Market",
+    "trending": "Trending collections",
+    "floor": "Floor",
+    "listedCount": "{{n}} for sale",
+    "thisCollection": "This collection",
+    "collectionOffer": "Offer on any",
+    "showAll": "Show all",
+    "subtitle": "Buy, sell and offer on BNB, Base, Ethereum and Robinhood",
+    "seoTitle": "NFT Market: buy and sell NFTs on BNB and Base | DeHub",
+    "seoDescription": "Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step."
   },
   "usernames": {
     "seoTitle": "Username Marketplace | DeHub",
@@ -11377,8 +11442,12 @@
       "restore": "Restore",
       "restored": "Restored version {{version}}"
     },
-    "stakeForAllowance": "Stake DeHub tokens to raise your daily build allowance",
     "buildInChat": "Build in your DMs with @assistant",
+    "modelLabel": "Model",
+    "creditsLeft": "{{amount}} in credits",
+    "perPrompt": "≈ {{price}} per prompt",
+    "pricingNote": "Each prompt is paid from your credits at the model's cost plus 30%. The most a prompt can cost is held while it runs and the unused part is returned.",
+    "topUpCredits": "Top up credits",
     "landerTitle": "Build an app just by asking",
     "landerSubtitle": "Tell @assistant what you want in your messages. It builds the app, hosts it and sends you a link anyone can open. Reply to change anything.",
     "promptPlaceholder": "Describe the app you want…",
@@ -12310,6 +12379,7 @@
       "stateUnlisted": "Live by link · in review for the store",
       "stateListed": "In the store",
       "stateSuspended": "Suspended",
+      "stateRejected": "Live by link · not approved for the store",
       "copyLink": "Copy link",
       "notifyKey": "Notify key",
       "notifyKeyOnce": "New notify key for {{name}}. Copy it now: it is shown once, and making another replaces it.",
@@ -12323,7 +12393,44 @@
       "rewardsWeek": "Week of {{date}}",
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
-      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday."
+      "rewardsNone": "No rewards have been calculated yet. The first week closes on Monday.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "Events DeHub sent your webhookUrl. Test sends a ping event.",
+        "test": "Send test",
+        "ok": "Webhook answered {{status}}",
+        "failed": "Webhook failed: {{reason}}",
+        "none": "No webhooks sent yet."
+      },
+      "stats": {
+        "button": "Stats",
+        "chartTitle": "People who opened your app, last 30 days",
+        "peak_one": "Peak {{count}} a day",
+        "peak_other": "Peak {{count}} a day",
+        "people30": "People, 30 days",
+        "people7": "People, 7 days",
+        "added": "Added it",
+        "dhb30": "DHB paid, 30 days",
+        "notified30": "Notifications sent, 30 days",
+        "rewards": "DHB rewards earned"
+      },
+      "signin": {
+        "title": "Sign in with DeHub",
+        "body": "Let people sign in to your website or app with their DeHub account. Create a key here, then follow the guide.",
+        "guide": "Read the guide",
+        "users_one": "{{count}} user",
+        "users_other": "{{count}} users",
+        "copyId": "Copy client ID",
+        "rotate": "New secret",
+        "delete": "Delete",
+        "rotateConfirm": "Make a new secret for {{name}}? The old secret stops working right away.",
+        "deleteConfirm": "Delete {{name}}? Everyone signed in with it is signed out.",
+        "secretOnce": "Secret for {{name}}. Copy it now: it is shown only once.",
+        "name": "App name",
+        "website": "Website (optional)",
+        "redirects": "Redirect URLs, one per line (https://yoursite.com/callback)",
+        "create": "Create key"
+      }
     },
     "card": {
       "open": "Open"
@@ -12349,7 +12456,10 @@
       "confirm": "Pay {{amount}} tokens",
       "sending": "Sending your payment…",
       "sent": "Paid {{amount}} tokens to {{name}}.",
-      "noOwner": "This app has no verified wallet to pay yet."
+      "noOwner": "This app has no verified wallet to pay yet.",
+      "testBadge": "Test mode",
+      "testBody": "You own this app, so this is a test: no tokens move and the receipt is marked test.",
+      "testSent": "Test payment of {{amount}} tokens. Nothing was sent."
     },
     "add": {
       "title": "Add {{name}}?",
@@ -19499,6 +19609,16 @@
     "backToTop": "Back to top",
     "needTitle": "Add a title to continue",
     "needBody": "{{count}} more characters to go",
+    "imageLimit": "Articles can hold up to {{count}} images",
+    "imageLimitSome": "Only {{count}} more images fit in this article",
+    "imageFailed": "That image could not be added. Try another one.",
+    "imagesUploading": "Adding images ({{count}})…",
+    "bodyTooLong": "{{count}} characters over the limit",
+    "imagesLabel": "Images",
+    "imagesCount": "Images · {{count}}/{{max}}",
+    "captionPlaceholder": "Add a caption",
+    "captionLabel": "Caption for image {{n}}",
+    "removeInlineImage": "Remove image {{n}}",
     "backToWriting": "Back to writing",
     "readyTitle": "Ready to publish",
     "sharePreview": "How it looks when shared",
@@ -19950,5 +20070,17 @@
     "privacy": "Only used to tell you about the launch.",
     "seoTitle": "Token launching soon | DeHub",
     "seoDescription": "The new DeHub token is launching soon. Join the list and get one email the moment it goes live, then buy straight from your DeHub wallet."
+  },
+  "githubLink": {
+    "hint": "Sign in to GitHub to prove the account is yours. DeHub only sees your public GitHub profile.",
+    "verified": "Verified",
+    "verifiedAria": "Verified GitHub account",
+    "connected": "GitHub connected",
+    "disconnected": "GitHub disconnected",
+    "taken": "That GitHub account is already on another DeHub profile.",
+    "failed": "Couldn't connect GitHub. Try again.",
+    "unavailable": "GitHub verification is coming soon.",
+    "connect": "Connect GitHub",
+    "disconnect": "Disconnect"
   }
 }

@@ -162,7 +162,23 @@
     "saved": "An ajiye filayen bayanan martaba",
     "failed": "Ba a ajiye ba. Sake gwadawa.",
     "verified": "Hanyar haɗi da aka tabbatar",
-    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}"
+    "verifyHint": "Don tabbatar da hanyar haɗi, ƙara wannan a wannan shafin, sannan ka sake ajiyewa: {{snippet}}",
+    "descriptionPresets": "Ƙara shafin yanar gizo, pronouns ko wani abu. Hanyoyin haɗi suna nunawa tare da zamantakewar ku.",
+    "type": "Nau'in filin",
+    "needsLabel": "Ka ba kowane filin al'ada lakabi",
+    "placeholderLink": "nakuite.com",
+    "placeholderPronouns": "sun/sun",
+    "placeholderLocation": "City, kasar",
+    "presets": {
+      "website": "Yanar Gizo",
+      "blog": "Blog",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronouns",
+      "location": "Wuri",
+      "custom": "Musamman",
+      "customOption": "Alamar al'ada"
+    }
   },
   "followedTags": {
     "follow": "Bi #{{tag}}",
@@ -10602,8 +10618,12 @@
       "restore": "Mayar da",
       "restored": "Sake dawo da sigar {{version}}"
     },
-    "stakeForAllowance": "Saka token na DeHub don ƙara izinin ginawa na yau da kullun",
     "buildInChat": "Gina a cikin saƙonninka na sirri tare da @assistant",
+    "modelLabel": "Samfuri",
+    "creditsLeft": "{{amount}} a kiredit",
+    "perPrompt": "≈ {{price}} kowace buƙata",
+    "pricingNote": "Ana biyan kowace buƙata daga kiredit ɗinka bisa kuɗin samfurin tare da ƙarin 30%. Ana riƙe mafi yawan kuɗin da buƙata za ta iya ci yayin da take aiki, kuma a mayar da sashin da ba a yi amfani da shi ba.",
+    "topUpCredits": "Ƙara kiredit",
     "landerTitle": "Gina aikace-aikacen kawai ta hanyar tambaya",
     "landerSubtitle": "Faɗa wa @mataimaki abin da kuke so a cikin saƙonninku. Yana gina aikace-aikacen, yana karɓar bakuncin sa kuma yana aiko muku da hanyar haɗi wanda kowa zai iya buɗewa. Amsa don canza komai.",
     "promptPlaceholder": "Bayyana aikace-aikacen da kuke so...",
@@ -18627,6 +18647,12 @@
   },
   "tokenLaunch": {
     "eyebrow": "Sannu da zuwa",
+    "title": "Token ƙaddamarwa ba da daɗewa ba",
+    "body": "Ana rufe siye yayin da sabon alamar ya shirya. Samu imel lokacin da yake rayuwa.",
+    "notifyMe": "Sanar da ni",
+    "sendTo": "Za mu yi email {{email}}",
+    "emailLabel": "Imel",
+    "emailPlaceholder": "Imel naka",
     "invalidEmail": "Sai anai rubuta abin da aka shirya a cikin wannan shafin.",
     "joinedTitle": "Ka a cika jerinmu.",
     "joinedBody": "Muna kiranin {{email}} lokacin da ake kirkire token.",
@@ -18635,5 +18661,17 @@
     "privacy": "Kawai ake magana da ku da shirin da aka kaddamar a cikin wannan wata.",
     "seoTitle": "Kamfanin Token ya zo zuwa kasa | DeHub",
     "seoDescription": "Tashin DeHub token ya zo daidai. Ci gaba a cikin jerin da kuma samu abinci mai lamba a wani lokaci, kuma kada ku shiga a cikin DeHub wallet ku kada."
+  },
+  "githubLink": {
+    "hint": "Shiga cikin GitHub don tabbatar da asusun naku ne. DeHub kawai yana ganin bayanan ku na GitHub na jama'a.",
+    "verified": "Tabbatacce",
+    "verifiedAria": "Tabbatar da asusun GitHub",
+    "connected": "GitHub da aka haɗa",
+    "disconnected": "GitHub ya katse",
+    "taken": "Cewa asusun GitHub ya riga ya kasance a kan wani bayanin martaba na DeHub.",
+    "failed": "Ba za a iya haɗa GitHub ba. sake gwadawa.",
+    "unavailable": "Tabbatar da GitHub yana zuwa ba da daɗewa ba.",
+    "connect": "Haɗa GitHub",
+    "disconnect": "Kashe haɗin kai"
   }
 }

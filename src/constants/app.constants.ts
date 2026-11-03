@@ -5,6 +5,7 @@ import Film from "@/components/ui/cut-icons/editor";
 import Wand2 from "@/components/ui/cut-icons/prompt";
 import Zap from "@/components/ui/cut-icons/superpowers";
 import AtSign from "@/components/ui/cut-icons/usernames";
+import Gem from "@/components/ui/cut-icons/diamond";
 import Tv from "@/components/ui/cut-icons/live-tv";
 import ArrowDownToLine from "@/components/ui/cut-icons/converter";
 import FolderInput from "@/components/ui/cut-icons/migrate";
@@ -87,6 +88,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: PieChart, label: 'Fractions', path: '/app/fractions' },
+  { icon: Gem, label: 'NFT Market', path: '/nfts' },
   { icon: AtSign, label: 'Usernames', path: '/usernames' },
   { icon: Users, label: 'Accounts', path: '/accounts' },
   { icon: Megaphone, label: 'Advertising', path: '/app/ads' },

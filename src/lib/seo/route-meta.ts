@@ -26,7 +26,7 @@ export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
   'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100', 'dao',
   'music', 'radio', 'tv', 'bridge', 'agents', 'assistant', 'creators', 'jobs',
-  'usernames', 'arcade', 'accounts', 'converter', 'events', 'launchpad', 'stats',
+  'usernames', 'nfts', 'arcade', 'accounts', 'converter', 'events', 'launchpad', 'stats',
   'migrate-youtube', 'stores', 'fractions', 'superpowers', 'glossary', 'ads', 'buy',
   // MARKETING_PAGES not already listed
   'dex', 'builder', 'connect', 'connect/chatgpt', 'connect/claude', 'communities',

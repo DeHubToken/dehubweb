@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
+import { fitIconInk } from '@/lib/optical-icon';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
@@ -9,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 
 import { Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import { isReservedUsername } from '@/lib/reserved-usernames';
+import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -46,7 +49,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/PageSkeletons';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
-import { getDefaultBanner, parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
@@ -291,16 +294,6 @@ export default function ProfilePage() {
     observer.observe(actions);
     return () => observer.disconnect();
   }, [!!data.profile, profileKey]);
-  const [profileTabsHeight, setProfileTabsHeight] = useState(56);
-  useEffect(() => {
-    const tabs = profileTabsRef.current;
-    if (!tabs) return;
-    const measure = () => setProfileTabsHeight(tabs.getBoundingClientRect().height);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(tabs);
-    return () => observer.disconnect();
-  }, [!!data.profile]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -346,6 +339,19 @@ export default function ProfilePage() {
     if (buttonRect.left < railRect.left) rail.scrollLeft += buttonRect.left - railRect.left;
     else if (buttonRect.right > railRect.right) rail.scrollLeft += buttonRect.right - railRect.right;
   }, [activeTab, isTabsStuck, tabsFadeRef]);
+  // Even out the tab glyphs: each icon set draws its shape at a different share
+  // of the box, so the film strip stood a head taller than the speech bubble.
+  // Re-fit on resize too, which also catches a cached page being shown again.
+  const profileTabKeys = data.PROFILE_TABS.map((tab) => tab.value).join();
+  useEffect(() => {
+    const rail = tabsFadeRef.current;
+    if (!rail) return;
+    const fit = () => rail.querySelectorAll<SVGSVGElement>('svg[data-tab-glyph]').forEach(fitIconInk);
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [profileTabKeys, isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -483,18 +489,27 @@ export default function ProfilePage() {
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
     // The loaded page's own top bar, so the back arrow is already where it
     // stays instead of a lone arrow that jumps when the profile arrives.
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><ProfileSkeleton /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
   if (!data.profile) {
     const isUsernameRoute = !!data.routeUsername;
     const displayUsername = data.routeUsername || '';
+    // A free, takeable name seen by a signed-out visitor offers "Reserve now".
+    // Signed in (or still finding out) gets the plain not-found page.
+    const showReserve =
+      isUsernameRoute &&
+      (!data.isProfileError || data.isProfileNotFound) &&
+      !data.isAuthenticated &&
+      !data.isAuthLoading &&
+      /^[a-z0-9_-]{1,30}$/i.test(displayUsername) &&
+      !isReservedUsername(displayUsername);
     
     const notFoundContent = (
       <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
@@ -502,38 +517,27 @@ export default function ProfilePage() {
         {/* Any unknown top-level path lands here (/:username is the catch-all),
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
-        <SEOHead title={`${t('notFound.title')} — DeHub`} description={t('profile.notFound')} noindex noCanonical />
-        {isUsernameRoute && !data.isProfileError ? (
-          <>
-            <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain" />
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-white">{t('profile.usernameAvailable')}</h2>
-              <p className="text-zinc-400 max-w-md">
-                {t('profile.signUpToClaim')} <span className="text-white font-medium">dehub.io/{displayUsername}</span>
-              </p>
-            </div>
-            <Button
-              onClick={() => setLoginModalOpen(true)}
-              data-primary-cta
-                    className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-            >
-              {t('profile.signUp')}
-            </Button>
-            <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
-          </>
+        <SEOHead
+          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on DeHub', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} — DeHub`}
+          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
+          noindex
+          noCanonical
+        />
+        {showReserve ? (
+          <UsernameReserve username={displayUsername} onTaken={() => data.refetchProfile?.()} />
         ) : (
           <>
             <ThemedIcon icon="profile" alt="" className="w-20 h-20 object-contain opacity-80" />
             <h2 className="text-xl font-bold text-white">{t('profile.notFound')}</h2>
             <p className="text-zinc-400 max-w-md">
-              {data.isProfileError
+              {data.isProfileError && !data.isProfileNotFound
                 ? t('profile.unableToLoad')
                 : t('profile.doesNotExist')}
             </p>
             {/* A load error (e.g. a transient API hiccup while flicking tabs)
                 used to stick until a full page refresh — offer an in-place
                 retry that refetches the profile instead. */}
-            {data.isProfileError && (
+            {data.isProfileError && !data.isProfileNotFound && (
               <Button
                 onClick={() => data.refetchProfile?.()}
                 disabled={data.isFetchingProfile}
@@ -606,15 +610,7 @@ export default function ProfilePage() {
           </div>
         </> : undefined} />
       </div>
-      <CollapsingProfileHeader
-        headerRef={profileHeaderRef}
-        tabsPinned={isTabsStuck}
-        tabsHeight={profileTabsHeight}
-        name={data.profile.name}
-        handle={data.profile.handle}
-        coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
-        followAction={<ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />}
-      />
+      <CollapsingProfileHeader tabsPinned={isTabsStuck} />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
         <div 
@@ -756,8 +752,8 @@ export default function ProfilePage() {
                       isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
                     )}
                   >
-                    <tab.icon className="w-[18px] h-[18px] relative z-10" />
-                    <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count}</span>
+                    <tab.icon data-tab-glyph className="w-[18px] h-[18px] relative z-10" />
+                    <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count ?? '\u00a0'}</span>
                   </button>
                 );
               })}
@@ -815,6 +811,7 @@ export default function ProfilePage() {
               isPending={data.isPending}
               isViewingOwnProfile={data.isViewingOwnProfile}
               isContentFiltered={data.isContentFiltered}
+              contentQuery={data.contentQuery}
               optimisticPosts={data.optimisticPosts}
               isLoadingPlans={data.isLoadingPlans}
               hasPlans={data.hasPlans}

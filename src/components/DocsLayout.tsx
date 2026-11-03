@@ -176,6 +176,39 @@ const getMenuItems = (t: (key: string) => string) => [{
       path: '/docs/dapps#more'
     }]
   }, {
+    get title() { return _translateCopy("copy.fc799da2088d", { defaultValue: "Developers" }); },
+    path: '/docs/developers',
+    iconComponent: Code,
+    hasSubmenu: true,
+    submenuItems: [{
+      get title() { return _translateCopy("copy.d4b1ea5708dd", { defaultValue: "Overview" }); },
+      path: '/docs/developers'
+    },
+    {
+      get title() { return _translateCopy("copy.ea27d388035a", { defaultValue: "Mini apps" }); },
+      path: '/docs/developers/mini-apps'
+    },
+    {
+      get title() { return _translateCopy("copy.ce5655253a4c", { defaultValue: "Sign in with DeHub" }); },
+      path: '/docs/auth'
+    },
+    {
+      get title() { return _translateCopy("copy.304bba32776a", { defaultValue: "Webhooks and notifications" }); },
+      path: '/docs/webhooks'
+    },
+    {
+      get title() { return _translateCopy("copy.484ee9bb6e51", { defaultValue: "API reference" }); },
+      path: '/docs/endpoints'
+    },
+    {
+      get title() { return _translateCopy("copy.e68ee04dff59", { defaultValue: "Examples" }); },
+      path: '/docs/examples'
+    },
+    {
+      get title() { return _translateCopy("copy.c3af076f92c5", { defaultValue: "Troubleshooting" }); },
+      path: '/docs/troubleshooting'
+    }]
+  }, {
     title: t('nav.games'),
     path: '/docs/games',
     iconComponent: Gamepad2

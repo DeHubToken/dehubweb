@@ -1,9 +1,12 @@
+import type { DmDestruct, DmDestructChoice } from '@/lib/dm-destruct';
+import type { DmVideoOptions } from '@/lib/dm-video-options';
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountSummaries, type AccountSummary } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { MediaDescriptor, MediaKind } from '@/lib/dm-e2ee/media';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { DHB_PRELISTING_USD } from '@/lib/dm-lock-price';
 
 // ─── Legacy types (kept for backward compat with GroupSettingsDrawer etc.) ────
 
@@ -87,6 +90,40 @@ export interface ReplyPreview {
   sender: DmSender;
 }
 
+/**
+ * A photo or video the sender put behind a price (pay to unlock). The real
+ * file is only ever in `mediaUrl`, and only for the sender or a buyer;
+ * `mediaUrls[0]` is always the blurred preview.
+ */
+export interface DmLock {
+  /** DHB to pay right now for `priceUsd` (live rate on reads, send-time quote on sockets). */
+  price: number;
+  /** What the buyer pays, in USD. */
+  priceUsd?: number;
+  /** DHB rate the server used for `price`. */
+  dhbPriceUsd?: number;
+  symbol: string;
+  kind: 'image' | 'video';
+  previewUrl: string | null;
+  unlocked: boolean;
+  mine?: boolean;
+  /** False while the upload is still being processed. */
+  ready?: boolean;
+  unlockCount?: number;
+  /** Signed URL of the real file (sender or buyer only). */
+  mediaUrl?: string;
+  mediaUrlExpiresAt?: string;
+}
+
+export interface DmLockStatus {
+  messageId: string;
+  conversationId: string;
+  /** The sender's address: who the unlock payment goes to. */
+  payTo: string;
+  lock: DmLock;
+  pendingTxHash?: string;
+}
+
 export interface DmMessage {
   _id: string;
   conversation: string;
@@ -111,16 +148,29 @@ export interface DmMessage {
   isForwarded: boolean;
   replyTo: ReplyPreview | null;
   reactions?: Record<string, string[]>;
+  /** How a plain video plays (trim, cover, mirror, rotate, hide until tapped). */
+  mediaOptions?: DmVideoOptions | null;
+  /** Self-destruct: gone after a set time, or once the other person watched it. */
+  destruct?: DmDestruct | null;
   paymentStatus: null | 'pending' | 'confirmed';
   paymentTxHash: string | null;
   tipAmount: number | null;
   tipSymbol: string | null;
   /** Only set when msgType === 'poll'; votes are read from the poll itself. */
   poll?: { tokenId: number; question: string } | null;
+  /** Set for a locked (pay-to-unlock) photo or video. */
+  lock?: DmLock | null;
   isDeleted: boolean;
   author: 'me' | 'other';
   createdAt: string;
   updatedAt: string;
+  /**
+   * Local only. The id the line was first drawn under while it was being sent.
+   * It survives the swap to the server id so the bubble keeps its element.
+   */
+  clientKey?: string;
+  /** Local only. Set while a send of your own is in flight, or after it failed. */
+  sendState?: 'sending' | 'failed';
 }
 
 export interface DmFee {
@@ -257,6 +307,27 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
   };
 }
 
+type RawLock = Partial<DmLock> & { price?: number | string; priceUsd?: number | string; dhbPriceUsd?: number | string; unlockCount?: number | string };
+
+export function parseDmLock(input: unknown, mine: boolean): DmLock | null {
+  if (!input || typeof input !== 'object') return null;
+  const raw = input as RawLock;
+  if (!(Number(raw.price) > 0)) return null;
+  return {
+    price: Number(raw.price),
+    ...(Number(raw.priceUsd) > 0 && { priceUsd: Number(raw.priceUsd) }),
+    ...(Number(raw.dhbPriceUsd) > 0 && { dhbPriceUsd: Number(raw.dhbPriceUsd) }),
+    symbol: raw.symbol || 'DHB',
+    kind: raw.kind === 'video' ? 'video' : 'image',
+    previewUrl: raw.previewUrl ?? null,
+    unlocked: !!raw.unlocked || mine,
+    mine: raw.mine ?? mine,
+    ready: raw.ready ?? !!raw.previewUrl,
+    ...(raw.unlockCount != null && { unlockCount: Number(raw.unlockCount) }),
+    ...(raw.mediaUrl && { mediaUrl: raw.mediaUrl, mediaUrlExpiresAt: raw.mediaUrlExpiresAt }),
+  };
+}
+
 function parseDmMessage(raw: any, myAddress: string): DmMessage {
   const msgType: DmMsgType =
     raw.msgType === 'text' ? 'msg' :
@@ -289,11 +360,14 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     reactions: raw.reactions && typeof raw.reactions === 'object' ? raw.reactions : {},
     // Populated preview only — a bare id has nothing to render.
     replyTo: raw.replyTo && typeof raw.replyTo === 'object' ? raw.replyTo : null,
+    mediaOptions: raw.mediaOptions && typeof raw.mediaOptions === 'object' ? raw.mediaOptions : null,
+    destruct: raw.destruct && typeof raw.destruct === 'object' && raw.destruct.mode ? raw.destruct : null,
     paymentStatus: raw.paymentStatus ?? null,
     paymentTxHash: raw.paymentTxHash ?? null,
     tipAmount: raw.tipAmount ?? null,
     tipSymbol: raw.tipSymbol ?? null,
     poll: raw.poll && typeof raw.poll.tokenId === 'number' ? { tokenId: raw.poll.tokenId, question: raw.poll.question || '' } : null,
+    lock: parseDmLock(raw.lock, author === 'me'),
     isDeleted: raw.isDeleted ?? false,
     author,
     createdAt: raw.createdAt || new Date().toISOString(),
@@ -617,6 +691,12 @@ export async function uploadAndSendMedia(
      * stores it untouched and requires `content` to be an encrypted envelope.
      */
     encryptedKind?: MediaKind;
+    /** Video trim/cover/mirror/rotate/hide, for an attachment sent in the clear. */
+    mediaOptions?: DmVideoOptions;
+    /** Self-destruct choice; works for encrypted files too (only the timer is in the clear). */
+    destruct?: DmDestructChoice;
+    /** Put the photo or video behind this price, in USD. Never combined with encryptedKind. */
+    lockPrice?: number;
   }
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
@@ -631,12 +711,34 @@ export async function uploadAndSendMedia(
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
   if (opts?.encryptedKind) formData.append('encryptedKind', opts.encryptedKind);
+  if (opts?.mediaOptions) formData.append('mediaOptions', JSON.stringify(opts.mediaOptions));
+  if (opts?.destruct) formData.append('destruct', String(opts.destruct));
+  if (opts?.lockPrice && opts.lockPrice > 0 && !opts.encryptedKind) {
+    formData.append('lockPriceUsd', String(opts.lockPrice));
+    // The DHB figure too, for a server that predates dollar prices.
+    formData.append('lockPrice', String(Math.max(1, Math.ceil(opts.lockPrice / DHB_PRELISTING_USD))));
+  }
 
   const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
     unwrapResult: true,
   });
   const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
   return parseDmMessage(raw, myAddress);
+}
+
+/** Price, who to pay, and (for the sender or a buyer) the real file. */
+export async function getLockedMedia(messageId: string): Promise<DmLockStatus> {
+  const res = await apiCall<DmLockStatus>(`/api/dm/locked/${messageId}`, { method: 'GET', requiresAuth: true });
+  return { ...res, lock: parseDmLock(res?.lock, !!res?.lock?.mine) as DmLock };
+}
+
+/**
+ * Hand in the tip that pays for a locked photo. `pending` means the payment
+ * has not been indexed yet; a `dmMediaUnlocked` socket event follows.
+ */
+export async function unlockLockedMedia(messageId: string, txHash: string): Promise<DmLockStatus & { status: 'unlocked' | 'pending' }> {
+  const res = await apiCall<DmLockStatus & { status: 'unlocked' | 'pending' }>(`/api/dm/locked/${messageId}/unlock`, { method: 'POST', body: { txHash }, requiresAuth: true });
+  return { ...res, lock: parseDmLock(res?.lock, false) as DmLock };
 }
 
 /**
@@ -1018,4 +1120,9 @@ export async function getFreeDmAccessList(): Promise<FreeAccessUser[]> {
     console.error('[DM API] getFreeDmAccessList failed:', error);
     return [];
   }
+}
+
+/** The recipient has watched a view-once attachment; the server removes it for both. */
+export async function markDmMessageViewed(messageId: string): Promise<void> {
+  await apiCall<unknown>(`/api/dm/message/${encodeURIComponent(messageId)}/viewed`, { method: 'POST', requiresAuth: true });
 }

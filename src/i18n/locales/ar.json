@@ -293,14 +293,34 @@
   },
   "profileFields": {
     "title": "حقول الملف الشخصي",
-    "description": "حتى أربعة أسطر إضافية في ملفك، مثل موقع ويب أو ضمائرك.",
+    "description": "حقول ملف شخصي مخصصة اختيارية",
     "label": "التسمية",
     "content": "المحتوى",
+    "add": "إضافة حقل",
+    "remove": "إزالة الحقل",
     "save": "حفظ الحقول",
     "saved": "تم حفظ حقول الملف الشخصي",
     "failed": "لم يتم الحفظ. حاول مرة أخرى.",
     "verified": "رابط موثّق",
-    "verifyHint": "لتوثيق رابط، أضف هذا إلى تلك الصفحة ثم احفظ مرة أخرى: {{snippet}}"
+    "verifyHint": "لتوثيق رابط، أضف هذا إلى تلك الصفحة ثم احفظ مرة أخرى: {{snippet}}",
+    "descriptionPresets": "أضف موقع ويب أو ضمائر أو أي شيء آخر. تظهر الروابط مع وسائل التواصل الاجتماعي الخاصة بك.",
+    "type": "نوع الحقل",
+    "needsLabel": "امنح كل حقل مخصص تسمية",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "هم/هم",
+    "placeholderLocation": "المدينة، البلد",
+    "presets": {
+      "website": "الموقع الإلكتروني",
+      "blog": "المدونة",
+      "portfolio": "المحفظة الاستثمارية",
+      "shop": "المتجر",
+      "podcast": "بودكاست",
+      "newsletter": "النشرة الإخبارية",
+      "pronouns": "الضمائر",
+      "location": "الموقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "متابعة #{{tag}}",
@@ -547,6 +567,7 @@
   },
   "nav": {
     "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة تعيين طلب القائمة",
     "home": "الرئيسية",
     "explore": "استكشاف",
@@ -591,8 +612,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط الذكاء الاصطناعي",
     "converter": "المحول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "عرض ملف {{name}} الشخصي",
@@ -1306,7 +1326,10 @@
     "messageWallNote": "تظهر على جدار الإكراميات بعد إتمام الإكرامية.",
     "sendWithMessage": "إرسال مع رسالة",
     "messageFailed": "تعذّر إضافة رسالتك. لم تُرسل أي إكرامية.",
-    "wallLabel": "رسائل الإكراميات"
+    "wallLabel": "رسائل الإكراميات",
+    "railTitle": "الإكراميات",
+    "railTotal": "{{amount}} توكن",
+    "tokensUnit": "توكن"
   },
   "postOptions": {
     "liveAlertsOn": "أنت الآن تتابع {{name}}. سيصلك إشعار عندما يبدأ البث المباشر.",
@@ -2170,6 +2193,10 @@
     "deleteConversationFailed": "تعذّر حذف المحادثة",
     "message": "رسالة",
     "noConversationsYet": "لا توجد محادثات بعد",
+    "sending": "جارٍ الإرسال",
+    "notSent": "لم يُرسل",
+    "retrySend": "إعادة المحاولة",
+    "discardSend": "إزالة",
     "undecryptableRun_zero": "لا يمكن فتح {{count}} رسائل على هذا الجهاز",
     "undecryptableRun_two": "لا يمكن فتح {{count}} رسائل على هذا الجهاز",
     "undecryptableRun_few": "لا يمكن فتح {{count}} رسائل على هذا الجهاز",
@@ -2228,6 +2255,24 @@
     "mutualsOne": "{{count}} متابع مشترك:",
     "mutualsMany": "{{count}} متابعين مشتركين:",
     "back": "رجوع",
+    "reserve": {
+      "available": "اسم المستخدم متاح",
+      "held": "محجوز لك",
+      "ended": "انتهى الحجز",
+      "busy": "قيد الحجز",
+      "availableBody": "dehub.io/{{name}} متاح الآن. احجزه وسنحتفظ به لك لمدة دقيقة واحدة أثناء التسجيل.",
+      "heldBody": "لا يمكن لأحد آخر أخذ @{{name}} حتى ينتهي المؤقت. أكمل التسجيل للاحتفاظ به.",
+      "endedBody": "انتهت دقيقتك، لذا أصبح @{{name}} متاحًا للجميع مرة أخرى. لا يزال متاحًا.",
+      "busyBody": "شخص ما يسجّل باسم @{{name}} الآن. إذا لم يُكمل، سيصبح متاحًا عند انتهاء المؤقت.",
+      "finish": "أكمل التسجيل",
+      "again": "احجز مرة أخرى",
+      "cta": "احجز الآن",
+      "letGo": "اتركه",
+      "haveAccount": "لديك حساب؟",
+      "signIn": "تسجيل الدخول",
+      "seoTitle": "@{{name}} متاح على DeHub",
+      "seoDescription": "لا أحد يملك dehub.io/{{name}} بعد. احجزه وسجّل ليصبح لك."
+    },
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل للحصول عليه",
     "signUp": "تسجيل",
@@ -6448,6 +6493,26 @@
     "docsSeoDescription": "وثائق مرجعية لمهارات مساعد DeHub الذكي ومكتبة التوجيهات.",
     "docsLoadFailed": "# خطأ\nتعذّر تحميل وثائق المهارات.",
     "raw": "النص الخام"
+  },
+  "nftMarket": {
+    "shortTitle": "NFTs",
+    "filters": "الفلاتر",
+    "forSale": "للبيع",
+    "openToOffers": "مفتوح للعروض",
+    "freshMints": "جديد من صنّاع DeHub",
+    "makeOffer": "قدّم عرضًا",
+    "offersOpen": "مفتوح للعروض",
+    "mintedCount": "تم سكّ {{n}}",
+    "trending": "مجموعات رائجة",
+    "floor": "أدنى سعر",
+    "listedCount": "{{n}} للبيع",
+    "thisCollection": "هذه المجموعة",
+    "collectionOffer": "قدّم عرضًا على أي منها",
+    "showAll": "عرض الكل",
+    "title": "سوق NFT",
+    "subtitle": "اشترِ وبِع وقدّم عروضًا على BNB وBase",
+    "seoTitle": "سوق NFT: اشترِ وبِع رموز NFT على BNB وBase | DeHub",
+    "seoDescription": "اشترِ وبِع وقدّم عروضًا على رموز NFT على BNB Chain وBase. ادفع بـ BNB أو ETH أو DHB. كل صفقة تبادل الرمز والدفعة في خطوة واحدة."
   },
   "usernames": {
     "seoTitle": "سوق أسماء المستخدمين | DeHub",
@@ -11460,8 +11525,12 @@
       "restore": "استعادة",
       "restored": "الإصدار المستعاد {{version}}"
     },
-    "stakeForAllowance": "قم بتخزين رموز DeHub لزيادة بدل البناء اليومي الخاص بك",
     "buildInChat": "ابنِ في رسائلك الخاصة مع @assistant",
+    "modelLabel": "النموذج",
+    "creditsLeft": "{{amount}} من الرصيد",
+    "perPrompt": "≈ {{price}} لكل طلب",
+    "pricingNote": "يُدفع كل طلب من رصيدك بتكلفة النموذج مضافًا إليها 30%. يُحجز أقصى مبلغ قد يكلّفه الطلب أثناء تنفيذه، ويُعاد الجزء غير المستخدم.",
+    "topUpCredits": "اشحن الرصيد",
     "landerTitle": "أنشئ تطبيقًا فقط عن طريق السؤال",
     "landerSubtitle": "أخبر @assistant بما تريده في رسائلك. يبني التطبيق ويستضيفه ويرسل لك رابطًا يمكن لأي شخص فتحه. قم بالرد لتغيير أي شيء.",
     "promptPlaceholder": "صف التطبيق الذي تريده...",
@@ -12393,6 +12462,7 @@
       "stateUnlisted": "موجودة عبر الرابط · في المراجعة للمتجر",
       "stateListed": "في المتجر",
       "stateSuspended": "موقوفة",
+      "stateRejected": "متاح عبر الرابط · لم تتم الموافقة عليه للمتجر",
       "copyLink": "نسخ الرابط",
       "notifyKey": "مفتاح الإشعار",
       "notifyKeyOnce": "مفتاح إشعار جديد لـ {{name}}. نسخه الآن: يظهر مرة واحدة، وتغييره مرة أخرى سيحل محله.",
@@ -12406,7 +12476,52 @@
       "rewardsWeek": "أسبوع {{date}}",
       "rewardPaid": "مدفوع",
       "rewardPending": "معلق",
-      "rewardsNone": "لم يتم احتساب أي مكافآت حتى الآن. يغلق الأسبوع الأول يوم الاثنين."
+      "rewardsNone": "لم يتم احتساب أي مكافآت حتى الآن. يغلق الأسبوع الأول يوم الاثنين.",
+      "webhook": {
+        "button": "Webhook",
+        "body": "الأحداث التي أرسلتها DeHub إلى webhookUrl الخاص بك. يرسل الاختبار حدث ping.",
+        "test": "إرسال اختبار",
+        "ok": "استجاب الـ webhook بـ {{status}}",
+        "failed": "فشل الـ webhook: {{reason}}",
+        "none": "لم يتم إرسال أي webhook بعد."
+      },
+      "stats": {
+        "button": "الإحصاءات",
+        "chartTitle": "الأشخاص الذين فتحوا تطبيقك، آخر 30 يومًا",
+        "peak_zero": "الذروة {{count}} في اليوم",
+        "peak_one": "الذروة {{count}} في اليوم",
+        "peak_two": "الذروة {{count}} في اليوم",
+        "peak_few": "الذروة {{count}} في اليوم",
+        "peak_many": "الذروة {{count}} في اليوم",
+        "peak_other": "الذروة {{count}} في اليوم",
+        "people30": "الأشخاص، 30 يومًا",
+        "people7": "الأشخاص، 7 أيام",
+        "added": "أضافوه",
+        "dhb30": "DHB المدفوعة، 30 يومًا",
+        "notified30": "الإشعارات المرسلة، 30 يومًا",
+        "rewards": "مكافآت DHB المكتسبة"
+      },
+      "signin": {
+        "title": "تسجيل الدخول باستخدام DeHub",
+        "body": "دع الناس يسجلون الدخول إلى موقعك أو تطبيقك بحساب DeHub. أنشئ مفتاحًا هنا ثم اتبع الدليل.",
+        "guide": "اقرأ الدليل",
+        "users_zero": "{{count}} مستخدم",
+        "users_one": "{{count}} مستخدم",
+        "users_two": "{{count}} مستخدمان",
+        "users_few": "{{count}} مستخدمين",
+        "users_many": "{{count}} مستخدمًا",
+        "users_other": "{{count}} مستخدم",
+        "copyId": "نسخ معرّف العميل",
+        "rotate": "سر جديد",
+        "delete": "حذف",
+        "rotateConfirm": "إنشاء سر جديد لـ {{name}}؟ يتوقف السر القديم عن العمل فورًا.",
+        "deleteConfirm": "حذف {{name}}؟ سيتم تسجيل خروج كل من سجّل الدخول به.",
+        "secretOnce": "السر الخاص بـ {{name}}. انسخه الآن: يظهر مرة واحدة فقط.",
+        "name": "اسم التطبيق",
+        "website": "الموقع (اختياري)",
+        "redirects": "روابط إعادة التوجيه، رابط في كل سطر (https://yoursite.com/callback)",
+        "create": "إنشاء مفتاح"
+      }
     },
     "card": {
       "open": "فتح"
@@ -12432,7 +12547,10 @@
       "confirm": "دفع {{amount}} عملات",
       "sending": "جاري إرسال دفعك…",
       "sent": "تم الدفع بـ {{amount}} عملات إلى {{name}}.",
-      "noOwner": "لا يوجد محفظة مصدقة لتقبل الدفعات في هذا التطبيق بعد."
+      "noOwner": "لا يوجد محفظة مصدقة لتقبل الدفعات في هذا التطبيق بعد.",
+      "testBadge": "وضع الاختبار",
+      "testBody": "هذا التطبيق ملكك، لذا هذه تجربة: لا تتحرك أي رموز ويُعلَّم الإيصال كاختبار.",
+      "testSent": "دفعة اختبار بقيمة {{amount}} رمز. لم يُرسل شيء."
     },
     "add": {
       "title": "إضافة {{name}}؟",
@@ -19629,7 +19747,17 @@
     "formatting": "التنسيق",
     "bodyPlaceholder": "أخبرنا قصةك. اختر النص واستخدم القائمة أعلاه لإنشاء رؤوس الفقرات والخطوط البولندية والاقتباسات والقوائم.",
     "bodyLabel": "نص المقال",
-    "wordCount": "{{count}} كلمات"
+    "wordCount": "{{count}} كلمات",
+    "imageLimit": "يمكن أن يحتوي المقال على {{count}} صورة كحد أقصى",
+    "imageLimitSome": "يتسع هذا المقال لـ {{count}} صور إضافية فقط",
+    "imageFailed": "تعذّرت إضافة هذه الصورة. جرّب صورة أخرى.",
+    "imagesUploading": "جارٍ إضافة الصور ({{count}})…",
+    "bodyTooLong": "{{count}} حرفًا فوق الحد",
+    "imagesLabel": "الصور",
+    "imagesCount": "الصور · {{count}}/{{max}}",
+    "captionPlaceholder": "أضف تعليقًا للصورة",
+    "captionLabel": "تعليق الصورة {{n}}",
+    "removeInlineImage": "إزالة الصورة {{n}}"
   },
   "liveAudience": {
     "whosHere": "من هنا",
@@ -20063,5 +20191,17 @@
     "privacy": "يُستخدم فقط لإخبارك عن الإطلاق.",
     "seoTitle": "إطلاق الرمز قريبًا | DeHub",
     "seoDescription": "سيُطلق رمز DeHub الجديد قريبًا. انضم إلى القائمة واحصل على بريد إلكتروني في اللحظة التي يصبح فيها مباشرًا، ثم اشترِ مباشرة من محفظتك DeHub."
+  },
+  "githubLink": {
+    "hint": "سجّل الدخول إلى GitHub لإثبات أن الحساب لك. يرى DeHub ملفك الشخصي العام على GitHub فقط.",
+    "verified": "تم التحقق",
+    "verifiedAria": "تم التحقق من حساب GitHub",
+    "connected": "GitHub متصل",
+    "disconnected": "GitHub غير متصل",
+    "taken": "حساب GitHub هذا موجود بالفعل في ملف تعريف DeHub آخر.",
+    "failed": "تعذر الاتصال بـ GitHub. حاول مرة أخرى.",
+    "unavailable": "التحقق من GitHub قريبًا.",
+    "connect": "اتصل بـ GitHub",
+    "disconnect": "قطع الاتصال"
   }
 }

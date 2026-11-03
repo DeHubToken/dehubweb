@@ -21,6 +21,7 @@
 import { verifyMessage } from "https://esm.sh/ethers@6.13.4";
 import { handleCorsPreflight } from "../_shared/cors.ts";
 import { checkRateLimit, jsonResponse, rateLimitByIp, requireDeHubAuth, serviceClient } from "../_shared/auth.ts";
+import { ACCOUNT_EVENTS, deliverWebhook } from "../_shared/miniapp-webhook.ts";
 
 const FETCH_TIMEOUT_MS = 8000;
 const MAX_BYTES = 512_000;
@@ -134,6 +135,7 @@ function normalise(json: Record<string, unknown>, source: "dehub" | "farcaster")
     screenshotUrls: strList(a.screenshotUrls, 6),
     ogImageUrl: str(a.ogImageUrl),
     webhookUrl: str(a.webhookUrl),
+    webhookEvents: strList(a.webhookEvents, 10),
     permissions: strList(a.permissions, 10),
     requiredChains: strList(a.requiredChains, 10),
     requiredCapabilities: strList(a.requiredCapabilities, 30),
@@ -188,6 +190,10 @@ function check(m: Manifest, domain: string): { errors: Problem[]; warnings: Prob
     if (!PERMISSIONS.includes(p)) err("permissions", `Unknown permission "${p}". One of: ${PERMISSIONS.join(", ")}.`);
   }
   if (m.webhookUrl && !isHttps(m.webhookUrl)) err("webhookUrl", "Must be an https:// URL.");
+  for (const e of m.webhookEvents) {
+    if (!(ACCOUNT_EVENTS as readonly string[]).includes(e)) err("webhookEvents", `Unknown event "${e}". One of: ${ACCOUNT_EVENTS.join(", ")}.`);
+  }
+  if (m.webhookEvents.length && !m.webhookUrl) err("webhookEvents", "Set webhookUrl to receive these events.");
   return { errors, warnings };
 }
 
@@ -325,7 +331,13 @@ async function inspect(raw: string): Promise<Inspection> {
 // `listed`; `status = 'suspended'` is the kill switch. Both are staff writes.
 
 const APP_COLUMNS =
-  "slug, domain, home_url, name, subtitle, icon_url, tier, status, source, owner_wallet, review_note, updated_at";
+  "slug, domain, home_url, name, subtitle, icon_url, tier, status, source, owner_wallet, review_note, review_state, submitted_at, reviewed_at, updated_at";
+
+/** Unlisted apps go (back) into the review queue on every submit. Listed apps stay listed. */
+function reviewFields(tier: string | null | undefined): Record<string, unknown> {
+  if (tier && tier !== "unlisted") return {};
+  return { review_state: "pending", submitted_at: new Date().toISOString(), review_note: null };
+}
 
 function slugify(name: string): string {
   const base = name
@@ -381,7 +393,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
     updated_at: new Date().toISOString(),
   };
 
-  const { data: existing } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by, status").eq("domain", domain).maybeSingle();
+  const { data: existing } = await db.from("miniapp_apps").select("id, owner_wallet, submitted_by, status, tier").eq("domain", domain).maybeSingle();
   if (existing) {
     // The domain's verified owner may always update it; so may whoever first
     // submitted an app nobody has claimed. A verified owner arriving later
@@ -395,7 +407,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
     if (existing.status === "suspended") return jsonResponse({ error: "This app is suspended. Contact DeHub support." }, 403);
     const { data, error } = await db
       .from("miniapp_apps")
-      .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), status: "live" })
+      .update({ ...fields, ...(owner ? { owner_wallet: owner } : {}), ...reviewFields(existing.tier), status: "live" })
       .eq("id", existing.id)
       .select(APP_COLUMNS)
       .single();
@@ -413,6 +425,7 @@ async function submit(req: Request, raw: string): Promise<Response> {
       submitted_by: auth.wallet,
       tier: "unlisted",
       status: "live",
+      ...reviewFields("unlisted"),
     })
     .select(APP_COLUMNS)
     .single();
@@ -443,6 +456,57 @@ async function notifyKey(req: Request, slug: unknown): Promise<Response> {
   const { error } = await db.from("miniapp_apps").update({ notify_key_hash: hash }).eq("id", app.id);
   if (error) throw error;
   return jsonResponse({ key });
+}
+
+/** The caller's own app, for the developer tools below. */
+async function ownApp(req: Request, slug: unknown) {
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return { response: auth.response };
+  if (typeof slug !== "string") return { response: jsonResponse({ error: "slug is required." }, 400) };
+  const db = serviceClient();
+  const { data: app } = await db
+    .from("miniapp_apps")
+    .select("id, slug, domain, manifest, owner_wallet, submitted_by")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (!app) return { response: jsonResponse({ error: "No such app." }, 404) };
+  if (app.owner_wallet !== auth.wallet && app.submitted_by !== auth.wallet) {
+    return { response: jsonResponse({ error: "Only the app's owner can do that." }, 403) };
+  }
+  return { db, app, wallet: auth.wallet };
+}
+
+/** Send a `ping` event to the app's webhook now, and say what came back. */
+async function webhookTest(req: Request, slug: unknown): Promise<Response> {
+  const own = await ownApp(req, slug);
+  if ("response" in own) return own.response!;
+  const rl = await checkRateLimit(own.db, own.wallet, "miniapp-webhook-test", { limit: 20, windowMs: 3600_000 });
+  if (!rl.allowed) return jsonResponse({ error: "Too many tests. Try again in an hour." }, 429);
+  const result = await deliverWebhook(own.db, own.app, own.wallet, "ping");
+  return jsonResponse(result);
+}
+
+/** The last 20 webhook deliveries to the app. */
+async function deliveries(req: Request, slug: unknown): Promise<Response> {
+  const own = await ownApp(req, slug);
+  if ("response" in own) return own.response!;
+  const { data, error } = await own.db
+    .from("miniapp_webhook_deliveries")
+    .select("event, status, ok, error, created_at")
+    .eq("app_id", own.app.id)
+    .order("created_at", { ascending: false })
+    .limit(20);
+  if (error) throw error;
+  return jsonResponse({ deliveries: data ?? [] });
+}
+
+/** Opens, adds, payments and notifications for the last 30 days. */
+async function stats(req: Request, slug: unknown): Promise<Response> {
+  const own = await ownApp(req, slug);
+  if ("response" in own) return own.response!;
+  const { data, error } = await own.db.rpc("miniapp_app_stats", { p_app: own.app.id });
+  if (error) throw error;
+  return jsonResponse({ stats: data });
 }
 
 async function mine(req: Request): Promise<Response> {
@@ -476,6 +540,9 @@ Deno.serve(async (req: Request) => {
     if (body?.action === "submit" && url) return await submit(req, url);
     if (body?.action === "mine") return await mine(req);
     if (body?.action === "notifyKey") return await notifyKey(req, body.slug);
+    if (body?.action === "webhookTest") return await webhookTest(req, body.slug);
+    if (body?.action === "deliveries") return await deliveries(req, body.slug);
+    if (body?.action === "stats") return await stats(req, body.slug);
     return jsonResponse({ error: "Unknown action." }, 400);
   } catch (error) {
     console.error("[miniapp-registry]", error);

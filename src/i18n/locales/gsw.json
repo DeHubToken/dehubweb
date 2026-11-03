@@ -162,7 +162,24 @@
     "saved": "Profilfälder gspeicheret",
     "failed": "Das isch nöd gspeicheret worde. Probier's nomal.",
     "verified": "Bestätigte Link",
-    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}"
+    "verifyHint": "Zum en Link bestätige, füeg das uf dere Siite ii und speicher nomal: {{snippet}}",
+    "type": "Feldtyp",
+    "needsLabel": "Gebt jedem benutzerdefinierten Feld einen Label",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "sie/ihm",
+    "placeholderLocation": "Stadt, Land",
+    "presets": {
+      "website": "Website",
+      "blog": "Blog",
+      "portfolio": "Portfolio",
+      "shop": "Shop",
+      "podcast": "Podcast",
+      "newsletter": "Newsletter",
+      "pronouns": "Pronomen",
+      "location": "Ort",
+      "custom": "Benutzerdefiniert",
+      "customOption": "Benutzerdefinierter Label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} folge",
@@ -404,6 +421,7 @@
   },
   "nav": {
     "reorderHint": "Halb und zieh jede Ikon, um neu anzuordnen.",
+    "reorderReset": "Zrüggsetze",
     "reorderResetLong": "Reset Menü-Reihenfolge",
     "home": "Hei",
     "explore": "Entdecke",
@@ -448,8 +466,7 @@
     "getTheApp": "App lade",
     "connectAi": "KI verbinde",
     "converter": "Converter",
-    "affiliate": "Partnerprogramm",
-    "reorderReset": "Zrüggsetze"
+    "affiliate": "Partnerprogramm"
   },
   "feed": {
     "viewProfile": "Lueg {{name}}'s Profil aa",
@@ -10631,8 +10648,12 @@
       "restore": "Wiederherstellen",
       "restored": "Wiederhergestellte Version {{version}}"
     },
-    "stakeForAllowance": "DeHub Token stäke, zum din tägliche Build-Allowance erhöhe",
     "buildInChat": "I dine DMs mit @assistant baue",
+    "modelLabel": "Modäll",
+    "creditsLeft": "{{amount}} Guethabe",
+    "perPrompt": "≈ {{price}} pro Prompt",
+    "pricingNote": "Jede Prompt wird us dim Guethabe zu de Chöschte vom Modäll plus 30 % zahlt. De Höchschtbetrag, wo e Prompt chan choschte, wird reserviert, solang er lauft, und de Rescht wo nöd brucht wird, chunnsch zrugg.",
+    "topUpCredits": "Guethabe ufladä",
     "landerTitle": "Build e App nume mit em Frag",
     "landerSubtitle": "Sag @assistant, was du wotsch i dine Nachrichtä. Es baut d App, hostt sie und schickt dir e Link, wo jedi öppis öppne cha. Antwort i de Chat, wenn du öppis ändere wotsch.",
     "promptPlaceholder": "Beschriibe d App, wo du wotsch…",
@@ -18711,5 +18732,17 @@
     "privacy": "Nur für die Info über die Lancierung.",
     "seoTitle": "Token wird bald lanciert | DeHub",
     "seoDescription": "Der neue DeHub-Token wird bald lanciert. Schreib dich auf die Liste und bekomm eine E-Mail, sobald er live geht, dann kannst du direkt aus deinem DeHub-Wallet kaufen."
+  },
+  "githubLink": {
+    "hint": "Logg dich bei GitHub ein, um zu beweisen, dass das Konto deinig ist. DeHub sieht nur dein öffentliches GitHub-Profil.",
+    "verified": "Bestätigt",
+    "verifiedAria": "Verifiziert",
+    "connected": "Verifiziertes GitHub-Konto",
+    "disconnected": "GitHub verbunden",
+    "taken": "GitHub getrennt",
+    "failed": "Dieses GitHub-Konto ist bereits mit einem anderen DeHub-Profil verbunden.",
+    "unavailable": "GitHub-Verifizierung ist bald verfügbar. Konnte GitHub nicht verbinden. Versuche es erneut.",
+    "connect": "Verifiziertes GitHub-Konto",
+    "disconnect": "GitHub verbinden"
   }
 }

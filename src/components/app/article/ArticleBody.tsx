@@ -1,7 +1,7 @@
 import '@/styles/article.css';
 import { lazy, Suspense, useMemo, type ReactNode } from 'react';
 import type { Components } from 'react-markdown';
-import { articleHeadings, articleLinkBlocks, articleSlug } from '@/lib/article';
+import { articleHeadings, articleImageSize, articleLinkBlocks, articleSlug } from '@/lib/article';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { parseDehubLink } from '@/lib/dehub-links';
 
@@ -9,7 +9,36 @@ import { parseDehubLink } from '@/lib/dehub-links';
 // the startup bundle.
 const ReactMarkdown = lazy(() => import('react-markdown'));
 
-type HastNode = { type: string; tagName?: string; value?: string; properties?: { href?: unknown }; children?: HastNode[] };
+type HastNode = { type: string; tagName?: string; value?: string; properties?: { href?: unknown; src?: unknown; alt?: unknown; title?: unknown }; children?: HastNode[] };
+
+/** The picture a paragraph holds when the paragraph is only that picture. */
+function solePicture(node: HastNode | undefined): { src: string; caption: string } | null {
+  const kids = (node?.children ?? []).filter(k => !(k.type === 'text' && !k.value?.trim()));
+  const only = kids.length === 1 ? kids[0] : null;
+  if (only?.tagName !== 'img' || typeof only.properties?.src !== 'string') return null;
+  const caption = String(only.properties?.title || only.properties?.alt || '').trim();
+  return { src: only.properties.src, caption };
+}
+
+/**
+ * A picture set for reading. Its address carries its size when the writer's
+ * app knew it, so the page holds the space before it loads and 40 pictures
+ * never shove the text about while scrolling. Off-screen ones wait to load.
+ */
+function ArticlePicture({ src, alt }: { src?: string; alt?: string }) {
+  const size = articleImageSize(src);
+  return (
+    <img
+      src={src}
+      alt={alt || ''}
+      loading="lazy"
+      decoding="async"
+      width={size?.w}
+      height={size?.h}
+      style={size ? { aspectRatio: `${size.w} / ${size.h}` } : undefined}
+    />
+  );
+}
 
 /** The outside address a paragraph holds when the paragraph is only that link. */
 function soleOutsideLink(node: HastNode | undefined): string | null {
@@ -51,6 +80,15 @@ export function ArticleBody({ body, className }: ArticleBodyProps) {
       ),
       // A link on its own line gets the same preview card a post shows.
       p: ({ node, children }) => {
+        const picture = solePicture(node as HastNode | undefined);
+        if (picture) {
+          return (
+            <figure className="article-figure">
+              <ArticlePicture src={picture.src} alt={picture.caption} />
+              {picture.caption && <figcaption>{picture.caption}</figcaption>}
+            </figure>
+          );
+        }
         const href = soleOutsideLink(node as HastNode | undefined);
         if (!href) return <p>{children}</p>;
         return (
@@ -60,7 +98,7 @@ export function ArticleBody({ body, className }: ArticleBodyProps) {
           </div>
         );
       },
-      img: ({ src, alt }) => <img src={typeof src === 'string' ? src : undefined} alt={alt || ''} loading="lazy" />,
+      img: ({ src, alt }) => <ArticlePicture src={typeof src === 'string' ? src : undefined} alt={alt} />,
     };
   }, [source]);
 

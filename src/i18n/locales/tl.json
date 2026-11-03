@@ -162,7 +162,24 @@
     "saved": "Na-save ang mga field ng profile",
     "failed": "Hindi na-save. Subukan ulit.",
     "verified": "Na-verify na link",
-    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}"
+    "verifyHint": "Para ma-verify ang link, idagdag ito sa page na iyon, saka i-save ulit: {{snippet}}",
+    "descriptionPresets": "Magdagdag ng isang website, pronouns o anumang iba pa. Ipakita ang mga link sa iyong mga social.",
+    "type": "Uri ng field",
+    "needsLabel": "Bigyan ng label ang bawat iniangkop na field",
+    "placeholderPronouns": "sila/sila",
+    "placeholderLocation": "Lungsod, bansa",
+    "presets": {
+      "website": "Website",
+      "blog": "Facebook",
+      "portfolio": "Username or email address *",
+      "shop": "Magasin",
+      "podcast": "Podcast",
+      "newsletter": "Username or email address *",
+      "pronouns": "Mga Panghalip",
+      "location": "Lokasyon",
+      "custom": "Custom",
+      "customOption": "Iniangkop na label"
+    }
   },
   "followedTags": {
     "follow": "I-follow ang #{{tag}}",
@@ -10780,8 +10797,12 @@
       "restore": "Ibalik",
       "restored": "Naibalik na bersyon {{version}}"
     },
-    "stakeForAllowance": "Mag-stake ng DeHub token para mapataas ang iyong daily build allowance",
     "buildInChat": "Gumawa sa iyong mga DM kasama si @assistant",
+    "modelLabel": "Modelo",
+    "creditsLeft": "{{amount}} na credits",
+    "perPrompt": "≈ {{price}} bawat prompt",
+    "pricingNote": "Bawat prompt ay binabayaran mula sa iyong credits sa halaga ng modelo at dagdag na 30%. Ang pinakamataas na posibleng halaga ng prompt ay hinahawakan habang tumatakbo ito, at ibinabalik ang hindi nagamit na bahagi.",
+    "topUpCredits": "Mag-top up ng credits",
     "landerTitle": "Bumuo ng app sa pamamagitan lamang ng pagtatanong",
     "landerSubtitle": "Sabihin sa @assist kung ano ang gusto mo sa iyong mga mensahe. Ito ay bumubuo ng app, nagho - host ito at nagpapadala sa iyo ng isang link kahit sino ay maaaring buksan. Tumugon upang baguhin ang anumang bagay.",
     "promptPlaceholder": "Ilarawan ang app na gusto mo...",
@@ -18885,6 +18906,35 @@
     "fingerprint": "Fingerprint",
     "exploreFirst": "Mag-explore muna",
     "codeNote": "Magpapadala kami ng code sa email, walang password."
+  },
+  "tokenLaunch": {
+    "eyebrow": "Maglalabas na",
+    "title": "Maglalabas na ang token",
+    "body": "Ang pagbibili ay nasara habang naghahanda ang bagong token. Magkaroon ka ng email sa sandali na ito ay maglulabas.",
+    "notifyMe": "Ibaba ang email mo",
+    "sendTo": "Ibibigay namin email sa {{email}}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Ito ang iyong email",
+    "invalidEmail": "Ipasok ang isang valid na email",
+    "joinedTitle": "Nasa listahan ka na",
+    "joinedBody": "Ibibigay namin email sa {{email}} kapag maglulabas ang token.",
+    "joinedBodyNoEmail": "Ibibigay namin email sa iyo kapag maglulabas ang token.",
+    "failed": "Hindi natin maipasa ito. Subukan muli.",
+    "privacy": "Gagamitin lamang ito upang ipaalam sa iyo tungkol sa paglulabas.",
+    "seoTitle": "Maglalabas na ang token | DeHub",
+    "seoDescription": "Maglalabas na ang bagong token ng DeHub. Maging bahagi ng listahan at magkaroon ka ng isang email sa sandali na ito ay maglulabas, pagkatapos ay bumili ka direktang mula sa iyong wallet ng DeHub."
+  },
+  "githubLink": {
+    "hint": "Mag-log in sa GitHub upang ipatunayang ang account ay iyong sarili. Ang DeHub ay lamang nakikita sa iyong profile sa GitHub na maipapamahagi.",
+    "verified": "Verified",
+    "verifiedAria": "Tinatanggap na GitHub account",
+    "connected": "GitHub ay konektado",
+    "disconnected": "Naghihinto ang GitHub.",
+    "taken": "Ang GitHub account na iyon ay nasa ibang profile ng DeHub na.",
+    "failed": "Hindi makapag-ugnay sa GitHub. Subukan mo ulit.",
+    "unavailable": "Ang pagpapatunay ng GitHub ay dumating na.",
+    "connect": "Kumonek sa GitHub",
+    "disconnect": "Huwag magkabit"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

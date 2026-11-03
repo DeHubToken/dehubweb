@@ -15,21 +15,16 @@ import { useDraftState } from '@/hooks/use-draft-state';
  * @module components/app/comments/ThreadedComments
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Loader2 } from "lucide-react";
-import Check from "@/components/ui/cut-icons/check";
-import Pencil from "@/components/ui/cut-icons/edit";
-import Trash2 from "@/components/ui/cut-icons/delete";
-
-import MessageSquare from "@/components/ui/cut-icons/messages";
+import { Loader2, Square } from "lucide-react";
 import Send from "@/components/ui/cut-icons/send";
 import X from "@/components/ui/cut-icons/close";
+import Paperclip from '@/components/ui/cut-icons/attach';
+import Mic from "@/components/ui/cut-icons/mic";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   AlertDialog,
@@ -41,31 +36,28 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { BadgedName } from '@/components/app/BadgedName';
-import { NewMemberChip } from '@/components/app/NewMemberChip';
-import { TranslatableText } from '@/components/app/TranslatableText';
-import { ReactionPicker } from '@/components/app/cards/ReactionPicker';
 import { UserMentionDropdown } from '@/components/app/mentions';
+import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
+import { PostCommentRow, CommentCreatorContext } from '@/components/app/cards/CommentsSection';
+import { CommentLikersDrawer } from '@/components/app/cards/CommentLikersDrawer';
+import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { useMention } from '@/hooks/use-mention';
-import { useReactionTray } from '@/hooks/use-reaction-tray';
-import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
-import { ThumbIcon } from '@/components/app/cards/ThumbIcon';
-import {
-  reactionForThumbTap,
-  reactionMeta,
-  resolveThumbReaction,
-  resolveThumbCount,
-  dislikesOutnumberLikes,
-  type PostReaction,
-} from '@/lib/reactions';
+import { isPositiveReaction, reactionForThumbTap, type PostReaction } from '@/lib/reactions';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { countThreadComments, type CommentThread, type ThreadedComment } from '@/lib/comment-threads';
-
-/** Grows an icon's tap target without moving it — the post section's constant. */
-const ACTION_HIT = '-m-2 p-2';
+import { toast } from 'sonner';
+import type { Comment } from '@/lib/comment-mapper';
+import type { CommentLikersResponse } from '@/lib/api/dehub';
+import { COMMENT_ATTACH_ACCEPT, COMMENT_ATTACH_LIMITS, commentAttachmentKind, dragHasFiles, firstAttachableFile } from '@/lib/comment-attachments';
+import { createVoiceRecorder, voiceRecordingBlob, voiceRecordingFile, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
+import {
+  countThreadComments,
+  type CommentMediaInput,
+  type CommentThread,
+  type ThreadedComment,
+} from '@/lib/comment-threads';
 
 /** Replies shown before the thread collapses behind "Show N more". */
 const VISIBLE_REPLIES = 1;
@@ -93,237 +85,63 @@ export interface ThreadedCommentsLabels {
   deleteDescription?: string;
 }
 
-interface RowProps<C extends ThreadedComment> {
-  draftScope: string;
-  comment: C;
-  isOwn: boolean;
-  isEntityAuthor: boolean;
-  labels: ThreadedCommentsLabels;
-  threadLineAbove?: boolean;
-  threadLineBelow?: boolean;
-  highlighted?: boolean;
-  busy: boolean;
-  onReply: (comment: C) => void;
-  onReact: (comment: C, reaction: PostReaction) => void;
-  onEdit: (comment: C, content: string) => Promise<unknown>;
-  onDelete: (comment: C) => void;
-}
-
-function CommentRow<C extends ThreadedComment>({
-  draftScope,
-  comment,
-  isOwn,
-  isEntityAuthor,
-  labels,
-  threadLineAbove,
-  threadLineBelow,
-  highlighted,
-  busy,
-  onReply,
-  onReact,
-  onEdit,
-  onDelete,
-}: RowProps<C>) {
-  const { t } = useI18n();
-  const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useDraftState(`${draftScope}:edit:${comment.id}`, comment.content);
-  const [saving, setSaving] = useState(false);
-  const saveEdit = async () => {
-    if (saving || !editText.trim()) return;
-    setSaving(true);
-    try {
-      await onEdit(comment, editText);
-      if (setEditText.complete(editText, editText)) setIsEditing(false);
-    } catch { /* The mutation reports failure; keep the unfinished edit. */ }
-    finally { setSaving(false); }
+/**
+ * A Supabase row in the post thread's `Comment` shape, so the post section's
+ * own row draws it — same avatar, badge, menu, link cards, media and tray.
+ */
+function toPostComment(comment: ThreadedComment): Comment {
+  const address = comment.wallet_address.toLowerCase();
+  const handle = comment.username || address;
+  const mediaUrl = comment.media_url || undefined;
+  const type = comment.media_type;
+  return {
+    id: comment.id,
+    username: handle,
+    avatar: comment.avatar ? buildAvatarUrl(address, comment.avatar) || undefined : undefined,
+    text: comment.content,
+    imageUrl: mediaUrl && (type === 'image' || type === 'gif') ? mediaUrl : undefined,
+    videoUrl: mediaUrl && type === 'video' ? mediaUrl : undefined,
+    voiceNote: mediaUrl && (type === 'audio' || type === 'voice')
+      ? { url: mediaUrl, duration: comment.media_duration ?? 0 }
+      : undefined,
+    likes: comment.likes,
+    dislikes: comment.dislikes,
+    views: 0,
+    timeAgo: formatTimeAgo(comment.created_at),
+    createdAt: new Date(comment.created_at),
+    isLiked: !!comment.myReaction && isPositiveReaction(comment.myReaction),
+    isDisliked: comment.myReaction === 'dislike',
+    myReaction: comment.myReaction,
+    reactionCounts: comment.reactionCounts,
+    replyToId: comment.parent_id ?? undefined,
+    address,
+    badgeLookupId: handle,
   };
-  const cancelEdit = () => { setEditText.clear(); setEditText.initialize(comment.content); setIsEditing(false); };
-
-  // No tray on your own comment: every reaction it could cast is one you are
-  // not allowed to cast on yourself, so the button would open onto refusals.
-  // On anyone else's, the one tray holds every reaction with 👎 last — there
-  // is no separate thumbs-down.
-  const likeTray = useReactionTray(!isOwn);
-
-  const leadReaction = isOwn
-    ? (dislikesOutnumberLikes(comment.reactionCounts) ? 'dislike' : null)
-    : resolveThumbReaction(comment.reactionCounts, comment.myReaction);
-  const thumbCount = resolveThumbCount(comment.likes, comment.dislikes, leadReaction);
-  const held = isOwn ? null : comment.myReaction ?? null;
-  /** A 👍 or 👎 stays the plain thumb icon; your own fills and nods. */
-  const thumbDown = leadReaction === 'dislike';
-  const thumbMine = thumbDown ? held === 'dislike' : held === 'like';
-
-  const avatarUrl = comment.avatar ? buildAvatarUrl(comment.wallet_address, comment.avatar) : null;
-  const handle = comment.username || `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
-  const openProfile = () => navigate(`/${comment.username || comment.wallet_address}`);
-
-  return (
-    <div
-      className="relative flex gap-3 py-2"
-      // The row is the reply target, not just the 16px icon in it. Anything
-      // interactive inside keeps its own behaviour, and a drag that selected
-      // text is not a tap — both the same rules the post section applies.
-      onClick={(e) => {
-        if (isEditing) return;
-        const target = e.target as HTMLElement;
-        if (target.closest('button, a, input, textarea, select, [role="button"], [contenteditable="true"]')) return;
-        const selection = window.getSelection();
-        if (selection && selection.toString().length > 0) return;
-        onReply(comment);
-      }}
-    >
-      {/* Thread line. Replies sit at the same left edge as their parent and the
-          line through the avatars is what says they belong together. Both
-          segments are positioned against the ROW, not the avatar, so
-          neighbouring rows meet exactly however tall their text runs. */}
-      {threadLineAbove && <span aria-hidden className="absolute left-4 -ml-px top-0 h-7 w-px bg-white/20" />}
-      {threadLineBelow && <span aria-hidden className="absolute left-4 -ml-px top-7 bottom-0 w-px bg-white/20" />}
-
-      <button type="button" onClick={openProfile} className="relative flex-shrink-0">
-        <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
-          {avatarUrl && <AvatarImage src={avatarUrl} className="object-cover" />}
-          <AvatarFallback className="bg-zinc-700">{(comment.username || comment.wallet_address)[0]?.toUpperCase()}</AvatarFallback>
-        </Avatar>
-      </button>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 mb-1">
-          <button type="button" onClick={openProfile} className="inline-flex items-center gap-1 hover:underline">
-            <BadgedName
-              lookupId={comment.username || comment.wallet_address}
-              username={comment.username}
-              className="font-semibold text-white text-sm max-w-[140px] leading-tight"
-            >
-              {handle}
-            </BadgedName>
-          </button>
-          {isEntityAuthor && labels.authorChip && (
-            <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              {labels.authorChip}
-            </span>
-          )}
-          {!isEntityAuthor && <NewMemberChip address={comment.wallet_address} />}
-          <span data-war-readout className="text-zinc-500 text-xs">{formatTimeAgo(comment.created_at)}</span>
-          {comment.updated_at && (
-            <span data-war-readout className="text-zinc-600 text-[10px]">{labels.edited}</span>
-          )}
-        </div>
-
-        {isEditing ? (
-          <div className="flex items-center gap-2 mt-1">
-            <Input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              maxLength={500}
-              autoFocus
-              className="flex-1 bg-zinc-800 text-white text-sm rounded-lg h-8 border-zinc-700"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  void saveEdit();
-                } else if (e.key === 'Escape') {
-                  cancelEdit();
-                }
-              }}
-            />
-            <button
-              type="button"
-              disabled={saving}
-              onClick={() => void saveEdit()}
-              className="text-white/80 hover:text-white transition-colors"
-              aria-label={t('common.save')}
-            >
-              <Check className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={cancelEdit}
-              className="text-zinc-400 hover:text-white transition-colors"
-              aria-label={t('common.cancel')}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ) : (
-          <TranslatableText publicContent text={comment.content} className={cn("text-zinc-300 text-sm leading-relaxed break-words", highlighted && "reply-text-glow")} as="p" />
-        )}
-
-        {!isEditing && (
-          <div className="flex items-center gap-4 mt-1.5">
-            <span className="relative flex items-center gap-1" {...likeTray.areaProps}>
-              <ReactionPicker
-                open={likeTray.open}
-                current={comment.myReaction}
-                counts={comment.reactionCounts}
-                onSelect={(reaction) => { likeTray.close(); onReact(comment, reaction); }}
-                onClose={likeTray.close}
-                align="left"
-              />
-              <button
-                type="button"
-                disabled={isOwn || busy}
-                onClick={() => {
-                  if (likeTray.consumePress()) return;
-                  onReact(comment, reactionForThumbTap(comment.myReaction, comment.reactionCounts));
-                }}
-                {...likeTray.buttonProps}
-                className={cn(
-                  ACTION_HIT,
-                  'flex items-center gap-1 transition-colors select-none touch-none disabled:opacity-60',
-                  held ? 'text-white' : 'text-white/70 hover:text-white',
-                )}
-                aria-label={reactionMeta(reactionForThumbTap(held, comment.reactionCounts)).label}
-                aria-haspopup={isOwn ? undefined : 'menu'}
-                aria-expanded={isOwn ? undefined : likeTray.open}
-              >
-                {leadReaction && !thumbDown ? (
-                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
-                    <ReactionEmoji reaction={leadReaction} animate={leadReaction === held} />
-                  </span>
-                ) : (
-                  <ThumbIcon down={thumbDown} nod={thumbMine} className={cn('w-4 h-4', thumbMine && 'fill-current')} />
-                )}
-                {thumbCount > 0 && <span className="text-xs">{thumbCount}</span>}
-              </button>
-            </span>
-
-            <button
-              type="button"
-              onClick={() => onReply(comment)}
-              className={cn(ACTION_HIT, 'text-white hover:text-zinc-400 transition-colors')}
-              aria-label={labels.reply}
-            >
-              <MessageSquare className="w-4 h-4" />
-            </button>
-
-            {isOwn && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(true)}
-                  className={cn(ACTION_HIT, 'text-white hover:text-zinc-400 transition-colors')}
-                  aria-label={t('common.edit')}
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onDelete(comment)}
-                  className={cn(ACTION_HIT, 'text-white hover:text-red-400 transition-colors')}
-                  aria-label={t('common.delete')}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
 }
 
+/** How long a picked audio file plays, for the strip player's label. */
+function audioDuration(file: File): Promise<number> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const audio = new Audio();
+    const done = (seconds: number) => { URL.revokeObjectURL(url); resolve(Math.round(seconds) || 0); };
+    audio.preload = 'metadata';
+    audio.onloadedmetadata = () => done(Number.isFinite(audio.duration) ? audio.duration : 0);
+    audio.onerror = () => done(0);
+    audio.src = url;
+  });
+}
+
+interface PendingMedia extends CommentMediaInput {
+  /** Local preview while it is attached. */
+  preview: string;
+}
+
+/** The attachment side of a surface: where files go, and who liked what. */
+export interface ThreadedCommentsMedia {
+  /** Store one picked or recorded file and hand back its public URL. */
+  upload: (file: File) => Promise<string>;
+}
 export interface ThreadedCommentsProps<C extends ThreadedComment> {
   draftScope: string;
   threads: CommentThread<C>[] | undefined;
@@ -331,7 +149,7 @@ export interface ThreadedCommentsProps<C extends ThreadedComment> {
   isError: boolean;
   isFetching: boolean;
   onRetry: () => void;
-  /** Whose thing this thread hangs off — their rows get the author chip. */
+  /** Whose thing this thread hangs off — their rows get the creator chip. */
   entityAuthorAddress: string;
   /** A comment a notification pointed at — ringed and forced into view. */
   focusCommentId?: string | null;
@@ -344,13 +162,21 @@ export interface ThreadedCommentsProps<C extends ThreadedComment> {
    * and opens the thread the reply landed in. A rejection leaves the draft
    * in place — the hook has already said why.
    */
-  onSubmit: (input: { content: string; parent: C | null }) => Promise<unknown>;
+  onSubmit: (input: { content: string; parent: C | null; media?: CommentMediaInput | null }) => Promise<unknown>;
   onEdit: (comment: C, content: string) => Promise<unknown>;
   onDelete: (comment: C) => void;
   onReact: (comment: C, reaction: PostReaction) => void;
+  /** Turns on the paperclip, GIFs and voice notes — tables with media columns only. */
+  media?: ThreadedCommentsMedia;
+  /** "Copy link" on a row. */
+  permalink?: (commentId: string) => string;
+  /** Who liked your own comment, for the likers sheet its thumb opens. */
+  loadLikers?: (commentId: string | number, page?: number, limit?: number) => Promise<CommentLikersResponse>;
   /** Tailwind cap on the list before it scrolls; the card variant is shorter. */
   listMaxHeightClass?: string;
 }
+
+const NOOP = () => {};
 
 export function ThreadedComments<C extends ThreadedComment>({
   draftScope,
@@ -368,9 +194,13 @@ export function ThreadedComments<C extends ThreadedComment>({
   onEdit,
   onDelete,
   onReact,
+  media,
+  permalink,
+  loadLikers,
   listMaxHeightClass = 'max-h-96',
 }: ThreadedCommentsProps<C>) {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const viewer = walletAddress?.toLowerCase() ?? null;
   const entityAuthor = entityAuthorAddress.toLowerCase();
@@ -379,6 +209,17 @@ export function ThreadedComments<C extends ThreadedComment>({
   const [replyTo, setReplyTo] = useDraftState<C | null>(`${draftScope}:reply`, null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<C | null>(null);
+  const [likersFor, setLikersFor] = useState<string | null>(null);
+  const [attachment, setAttachment] = useState<PendingMedia | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [recordSeconds, setRecordSeconds] = useState(0);
+  const [dragOver, setDragOver] = useState(false);
+  const recordSecondsRef = useRef(0);
+  recordSecondsRef.current = recordSeconds;
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const input = inputRef.current;
@@ -392,6 +233,25 @@ export function ThreadedComments<C extends ThreadedComment>({
     onMentionInsert: (_user, newText) => setText(newText.slice(0, 500)),
   });
 
+  // Every row id to its own comment, so the post row's id-based callbacks
+  // find the record they were tapped on.
+  const byId = useMemo(() => {
+    const map = new Map<string, C>();
+    for (const thread of threads ?? []) {
+      map.set(thread.comment.id, thread.comment);
+      for (const reply of thread.replies) map.set(reply.id, reply);
+    }
+    return map;
+  }, [threads]);
+  const byIdRef = useRef(byId);
+  byIdRef.current = byId;
+
+  const shaped = useMemo(() => {
+    const map = new Map<string, Comment>();
+    for (const [id, comment] of byId) map.set(id, toPostComment(comment));
+    return map;
+  }, [byId]);
+
   // A thread holding the linked comment opens itself, or the row the
   // notification was about would sit behind "Show N more replies".
   useEffect(() => {
@@ -402,7 +262,16 @@ export function ThreadedComments<C extends ThreadedComment>({
     if (owner) setExpanded((prev) => new Set(prev).add(owner.comment.id));
   }, [focusCommentId, threads]);
 
-  const handleReply = useCallback((comment: C) => {
+  useEffect(() => () => {
+    recorderRef.current?.stream.getTracks().forEach((track) => track.stop());
+  }, []);
+  useEffect(() => () => {
+    if (attachment?.preview.startsWith('blob:')) URL.revokeObjectURL(attachment.preview);
+  }, [attachment]);
+
+  const handleReply = useCallback((id: string) => {
+    const comment = byIdRef.current.get(id);
+    if (!comment) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     setReplyTo(comment);
     // Every reply that threads on this platform carries the "@name " prefix,
@@ -412,26 +281,128 @@ export function ThreadedComments<C extends ThreadedComment>({
     requestAnimationFrame(() => inputRef.current?.focus());
   }, [isAuthenticated, openLoginModal, setReplyTo, setText]);
 
-  const handleReact = useCallback((comment: C, reaction: PostReaction) => {
+  const handleReact = useCallback((id: string, reaction: PostReaction) => {
+    const comment = byIdRef.current.get(id);
+    if (!comment) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     onReact(comment, reaction);
   }, [isAuthenticated, openLoginModal, onReact]);
 
+  const handleLike = useCallback((id: string) => {
+    const comment = byIdRef.current.get(id);
+    if (!comment) return;
+    handleReact(id, reactionForThumbTap(comment.myReaction, comment.reactionCounts));
+  }, [handleReact]);
+
+  const handleEdit = useCallback(async (id: string, content: string) => {
+    const comment = byIdRef.current.get(id);
+    if (!comment || !content.trim()) return false;
+    try { await onEdit(comment, content); return true; } catch { return false; }
+  }, [onEdit]);
+
   const askDelete = labels.deleteTitle && labels.deleteDescription;
-  const handleDelete = useCallback((comment: C) => {
+  const handleDelete = useCallback((id: string) => {
+    const comment = byIdRef.current.get(id);
+    if (!comment) return;
     if (askDelete) setPendingDelete(comment);
     else onDelete(comment);
   }, [askDelete, onDelete]);
 
+  const handleUserPress = useCallback((username: string) => {
+    navigate(`/${username.replace(/^@/, '')}`);
+  }, [navigate]);
+
+  const handleShowLikers = useCallback((id: string) => {
+    if (loadLikers) setLikersFor(id);
+  }, [loadLikers]);
+
+  // ── Attachments ───────────────────────────────────────────────────────────
+
+  const attachFile = useCallback(async (file: File, voice = false) => {
+    if (!media) return;
+    if (!isAuthenticated) { openLoginModal(); return; }
+    const kind = commentAttachmentKind(file);
+    if (!kind) { toast.error(t('comments.attachUnsupported')); return; }
+    if (file.size > COMMENT_ATTACH_LIMITS[kind]) {
+      toast.error(t('comments.attachTooLarge', { size: Math.round(COMMENT_ATTACH_LIMITS[kind] / (1024 * 1024)) }));
+      return;
+    }
+    setUploading(true);
+    try {
+      const [url, duration] = await Promise.all([
+        media.upload(file),
+        kind === 'audio' ? audioDuration(file) : Promise.resolve(null),
+      ]);
+      setAttachment({
+        url,
+        type: voice ? 'voice' : kind,
+        duration,
+        preview: URL.createObjectURL(file),
+      });
+    } catch {
+      toast.error(t('governance.uploadFailed'));
+    } finally {
+      setUploading(false);
+    }
+  }, [media, isAuthenticated, openLoginModal, t]);
+
+  const stopRecording = useCallback(() => {
+    const recorder = recorderRef.current;
+    if (recorder && recorder.state !== 'inactive') recorder.stop();
+  }, []);
+
+  useEffect(() => {
+    if (!recording) return;
+    const started = Date.now();
+    const timer = window.setInterval(() => {
+      const elapsed = Math.floor((Date.now() - started) / 1000);
+      setRecordSeconds(elapsed);
+      if (elapsed >= VOICE_RECORDING_SECONDS) stopRecording();
+    }, 250);
+    return () => window.clearInterval(timer);
+  }, [recording, stopRecording]);
+
+  const startRecording = useCallback(async () => {
+    if (!media) return;
+    if (!isAuthenticated) { openLoginModal(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = createVoiceRecorder(stream);
+      chunksRef.current = [];
+      recorder.ondataavailable = (event) => { if (event.data.size > 0) chunksRef.current.push(event.data); };
+      recorder.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        setRecording(false);
+        const blob = voiceRecordingBlob(chunksRef.current, recorder.mimeType);
+        if (blob.size === 0) return;
+        const seconds = Math.max(1, recordSecondsRef.current);
+        void attachFile(voiceRecordingFile(blob), true).then(() => {
+          setAttachment((current) => (current && current.type === 'voice' ? { ...current, duration: seconds } : current));
+        });
+      };
+      recorderRef.current = recorder;
+      setRecordSeconds(0);
+      recorder.start();
+      setRecording(true);
+    } catch {
+      toast.error(t('stages.micUnreachable'));
+    }
+  }, [media, isAuthenticated, openLoginModal, attachFile, t]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) { openLoginModal(); return; }
-    if (!text.trim()) return;
+    if (!text.trim() && !attachment) return;
     const parent = replyTo;
-    onSubmit({ content: text, parent })
+    const sent = attachment;
+    onSubmit({
+      content: text,
+      parent,
+      media: sent ? { url: sent.url, type: sent.type, duration: sent.duration ?? null } : null,
+    })
       .then(() => {
         if (parent) setExpanded((prev) => new Set(prev).add(parent.parent_id ?? parent.id));
         if (setText.complete(text, '')) setReplyTo.complete(parent, null);
+        setAttachment(null);
       })
       .catch(() => {
         // The hook toasts; the draft stays so nothing typed is lost.
@@ -439,27 +410,48 @@ export function ThreadedComments<C extends ThreadedComment>({
   };
 
   const totalComments = countThreadComments(threads);
+  const canSend = (!!text.trim() || !!attachment) && !submitting && !uploading && !recording;
 
-  const rowFor = (comment: C, extra: Partial<RowProps<C>>) => (
-    <CommentRow
-      key={comment.id}
-      draftScope={draftScope}
-      comment={comment}
-      isOwn={comment.wallet_address.toLowerCase() === viewer}
-      isEntityAuthor={comment.wallet_address.toLowerCase() === entityAuthor}
-      labels={labels}
-      highlighted={comment.id === focusCommentId}
-      busy={busy}
-      onReply={handleReply}
-      onReact={handleReact}
-      onEdit={onEdit}
-      onDelete={handleDelete}
-      {...extra}
-    />
-  );
+  const rowFor = (comment: C, extra: { isReply?: boolean; threadLineAbove?: boolean; threadLineBelow?: boolean }) => {
+    const row = shaped.get(comment.id);
+    if (!row) return null;
+    return (
+      <PostCommentRow
+        key={comment.id}
+        comment={row}
+        tokenId={draftScope}
+        isOwnComment={comment.wallet_address.toLowerCase() === viewer}
+        highlighted={comment.id === focusCommentId}
+        onLike={busy ? NOOP : handleLike}
+        onShowLikers={handleShowLikers}
+        onReact={busy ? NOOP : handleReact}
+        onReply={handleReply}
+        onShare={NOOP}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onUserPress={handleUserPress}
+        permalink={permalink}
+        {...extra}
+      />
+    );
+  };
 
   return (
-    <div className="border-t border-white/5 pt-2 mt-1">
+    <CommentCreatorContext.Provider value={creatorValue(entityAuthor)}>
+    <div
+      className={cn('border-t border-white/5 pt-2 mt-1', dragOver && 'ring-1 ring-white/30 rounded-xl')}
+      data-drop-attach={media ? '' : undefined}
+      onDragOver={media ? (e) => { if (dragHasFiles(e)) { e.preventDefault(); setDragOver(true); } } : undefined}
+      onDragLeave={media ? () => setDragOver(false) : undefined}
+      onDrop={media ? (e) => {
+        if (!dragHasFiles(e)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        setDragOver(false);
+        const file = firstAttachableFile(e.dataTransfer.files);
+        if (file) void attachFile(file);
+      } : undefined}
+    >
       {isError && (
         <div role="alert" className="flex items-center justify-center gap-3 py-2 text-xs text-zinc-400">
           <span>{t('comments.loadFailed')}</span>
@@ -484,6 +476,7 @@ export function ThreadedComments<C extends ThreadedComment>({
                 {rowFor(thread.comment, { threadLineBelow: shown.length > 0 })}
                 {shown.map((reply, i) =>
                   rowFor(reply, {
+                    isReply: true,
                     threadLineAbove: true,
                     // The line has to reach the "show more" row too, or it stops
                     // dead above a control that belongs to the thread.
@@ -534,6 +527,37 @@ export function ThreadedComments<C extends ThreadedComment>({
         )}
       </AnimatePresence>
 
+      {(attachment || uploading || recording) && (
+        <div className="relative mb-2 inline-flex max-w-full items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-1.5" data-comment-attachment>
+          {uploading ? (
+            <span className="flex items-center gap-2 px-2 py-1 text-xs text-zinc-400">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />{t('toasts.uploading')}
+            </span>
+          ) : recording ? (
+            <span className="flex items-center gap-2 px-2 py-1 text-xs text-white" role="status">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" aria-hidden />
+              {`0:${String(recordSeconds).padStart(2, '0')} / 0:${VOICE_RECORDING_SECONDS}`}
+            </span>
+          ) : attachment && (attachment.type === 'image' || attachment.type === 'gif') ? (
+            <img src={attachment.type === 'gif' ? attachment.url : attachment.preview} alt="" className="h-16 max-w-[160px] rounded-lg object-cover" />
+          ) : attachment && attachment.type === 'video' ? (
+            <video src={attachment.preview} muted playsInline className="h-16 max-w-[160px] rounded-lg bg-black object-cover" />
+          ) : attachment ? (
+            <div className="w-56 max-w-full"><VoiceStripPlayer src={attachment.preview} duration={attachment.duration ?? 0} /></div>
+          ) : null}
+          {attachment && !uploading && (
+            <button
+              type="button"
+              onClick={() => setAttachment(null)}
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black/60 text-white"
+              aria-label={t('common.remove')}
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
+      )}
+
       {!isAuthenticated && labels.signInToComment ? (
         <button
           type="button"
@@ -544,6 +568,30 @@ export function ThreadedComments<C extends ThreadedComment>({
         </button>
       ) : (
         <form onSubmit={handleSubmit} className="relative flex items-end gap-2">
+          {media && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={COMMENT_ATTACH_ACCEPT}
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = '';
+                  if (file) void attachFile(file);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => { if (!isAuthenticated) { openLoginModal(); return; } fileInputRef.current?.click(); }}
+                disabled={uploading || recording || !!attachment}
+                className="w-8 h-8 shrink-0 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white disabled:opacity-30 transition-opacity"
+                aria-label={t('comments.attachMedia')}
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
+            </>
+          )}
           <Textarea
             ref={inputRef}
             value={text}
@@ -552,6 +600,10 @@ export function ThreadedComments<C extends ThreadedComment>({
               setText(val);
               mention.handleInput(val, e.target.selectionStart ?? val.length);
             }}
+            onPaste={media ? (e) => {
+              const file = firstAttachableFile(e.clipboardData?.files);
+              if (file && !attachment) { e.preventDefault(); void attachFile(file); }
+            } : undefined}
             onKeyDown={(e) => {
               if (mention.isOpen) {
                 const handled = mention.handleKeyDown(e);
@@ -582,14 +634,51 @@ export function ThreadedComments<C extends ThreadedComment>({
             onSelect={mention.handleSelect}
             onClose={mention.handleClose}
           />
-          <button
-            type="submit"
-            disabled={!text.trim() || submitting}
-            className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
-          >
-            {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-          </button>
+          {media && (
+            <EmojiGifPicker
+              onEmojiSelect={(emoji) => setText((current) => (current + emoji).slice(0, 500))}
+              onGifSelect={(gifUrl) => {
+                if (!isAuthenticated) { openLoginModal(); return; }
+                setAttachment({ url: gifUrl, type: 'gif', preview: gifUrl });
+              }}
+              triggerClassName="w-8 h-8 shrink-0 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white"
+              iconClassName="w-4 h-4"
+            />
+          )}
+          {media && !text.trim() && !attachment ? (
+            <button
+              type="button"
+              onClick={() => { if (recording) stopRecording(); else void startRecording(); }}
+              disabled={uploading}
+              className={cn(
+                'w-8 h-8 shrink-0 flex items-center justify-center rounded-xl border text-white disabled:opacity-30 transition-colors',
+                recording ? 'bg-red-500/80 border-red-400/60' : 'bg-white/5 border-white/10',
+              )}
+              aria-label={recording ? t('comments.stopRecording') : t('comments.recordVoiceNote')}
+            >
+              {recording ? <Square className="w-3.5 h-3.5 fill-current" /> : <Mic className="w-4 h-4" />}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={!canSend}
+              className="w-8 h-8 shrink-0 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
+              aria-label={t('comments.post')}
+            >
+              {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+            </button>
+          )}
         </form>
+      )}
+
+      {loadLikers && (
+        <CommentLikersDrawer
+          open={!!likersFor}
+          onOpenChange={(open) => { if (!open) setLikersFor(null); }}
+          commentId={likersFor}
+          loadPage={loadLikers}
+          cacheScope={draftScope}
+        />
       )}
 
       {askDelete && (
@@ -617,5 +706,14 @@ export function ThreadedComments<C extends ThreadedComment>({
         </AlertDialog>
       )}
     </div>
+    </CommentCreatorContext.Provider>
   );
+}
+
+/** One stable context value per author, so rows are not re-rendered for it. */
+const creatorValues = new Map<string, { address: string }>();
+function creatorValue(address: string) {
+  let value = creatorValues.get(address);
+  if (!value) { value = { address }; creatorValues.set(address, value); }
+  return value;
 }

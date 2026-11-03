@@ -12,6 +12,9 @@ import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { ArticleComposer } from './components/ArticleComposer';
+import { ComicPagesEditor } from './components/ComicPagesEditor';
+import { getComicImageLimitForBadge } from '@/lib/post-image-allowance';
+import { useAuth } from '@/contexts/AuthContext';
 import { CrossPostPicker } from './components/CrossPostPicker';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
@@ -22,6 +25,8 @@ import { useBannedAccount } from '@/hooks/use-banned-account';
 import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 import { toast } from 'sonner';
+
+const PostPreviewSheet = lazy(() => import('./components/PostPreviewSheet').then((m) => ({ default: m.PostPreviewSheet })));
 
 /** Closing with more words than this saves the post to Drafts. */
 const AUTO_DRAFT_MIN_WORDS = 3;
@@ -66,9 +71,11 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
   const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
+  const { user: authUser } = useAuth();
   const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost, onPosted);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
@@ -206,18 +213,41 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     handleClose();
   };
 
+  const comicMode = !articleMode && state.liveMode === null && state.postLayout === 'comic';
+  const comicLimit = getComicImageLimitForBadge(authUser?.badgeBalance, authUser?.username, authUser?.badgeLock);
+
   const selectPostMode = () => {
     setArticleMode(false);
     actions.setLiveMode(null);
+    // Comic is a post option now (the ... menu), so Post keeps it on.
+    if (!comicMode) actions.setShowTitle(false);
+  };
+
+  // A comic is a photo post shown as collector cards: a title, then pages
+  // with a caption and alt text each. Paywalls keep the normal carousel, so
+  // they are switched off here.
+  const selectComicMode = () => {
+    setArticleMode(false);
+    actions.setLiveMode(null);
+    actions.setShowTitle(true);
+    actions.setPostLayout('comic');
+    actions.setIsPPV(false);
+    actions.setIsTokenGated(false);
+  };
+
+  const exitComicMode = () => {
+    actions.setPostLayout(null);
     actions.setShowTitle(false);
   };
 
   const selectLiveMode = (mode: 'video' | 'townhall') => {
     setArticleMode(false);
+    actions.setPostLayout(null);
     actions.setLiveMode(mode);
   };
 
   const selectArticleMode = () => {
+    actions.setPostLayout(null);
     setArticleMode(true);
     actions.setShowTitle(true);
     actions.setLiveMode(null);
@@ -286,6 +316,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onApplyCrop={actions.applyCropToMedia}
         onClearCrop={actions.clearCropFromMedia}
         onApplyTrim={actions.applyTrimToMedia}
+        onReplaceVideo={actions.replaceVideoFile}
+        onUpdateMedia={actions.updateMediaItem}
         onReplaceImage={actions.replaceImageFile}
         onSetMediaDescription={actions.setMediaDescription}
         contentWarning={state.contentWarning}
@@ -343,6 +375,17 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onMediaFullscreenChange={setMediaFullscreenOpen}
         draftVideo={state.draftVideo}
         hideScheduleAndDrafts={isQuoting}
+        mediaSlot={comicMode ? (
+          <ComicPagesEditor
+            media={state.media}
+            limit={comicLimit}
+            onAddPages={actions.addComicPages}
+            onRemove={actions.removeMedia}
+            onMove={actions.moveMedia}
+            onCaption={actions.setMediaCaption}
+            onAlt={actions.setMediaDescription}
+          />
+        ) : undefined}
       />
       {quotedPost && (
         // Shown as it will appear under the quote. Not a link from here —
@@ -384,7 +427,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         setSelectedCategory={actions.setSelectedCategory}
         markCategorySaved={actions.markCategorySaved}
         showTitle={state.showTitle}
-        setShowTitle={actions.setShowTitle}
+        setShowTitle={actions.setShowTitlePref}
         isMature={state.isMature}
         setIsMature={actions.setIsMature}
         quotePolicy={state.quotePolicy}
@@ -435,6 +478,8 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           const soundtrackTag = attachedSound ? buildSoundtrackTag(attachedSound) : undefined;
           actions.handlePost({ ...(soundtrackTag ? { soundtrackTag } : {}) });
         }}
+        // Photos, a video or plain text: what the feed card can show as it will post.
+        onPreview={articleMode || computed.hasAudio || state.poll ? undefined : () => setPreviewOpen(true)}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
         isPosting={state.isPosting}
@@ -453,9 +498,22 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onCloseModal={closeKeepingDraft}
         onTogglePoll={handleTogglePoll}
         hasPoll={!!state.poll}
+        onToggleComic={isQuoting ? undefined : () => (comicMode ? exitComicMode() : selectComicMode())}
+        isComic={comicMode}
         onToggleContentWarning={() => actions.setContentWarning(state.contentWarning === null ? '' : null)}
         hasContentWarning={state.contentWarning !== null}
       />
+      {previewOpen && (
+      <Suspense fallback={null}>
+      <PostPreviewSheet
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        text={state.text}
+        title={state.titleText}
+        media={state.media}
+      />
+      </Suspense>
+      )}
       </>
       )}
     </>

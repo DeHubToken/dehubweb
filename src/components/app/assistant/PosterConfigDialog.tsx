@@ -325,7 +325,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader className="border-b border-white/10 pb-3">
-          <DrawerTitle className="text-white flex items-center gap-2 text-base" style={{ fontFamily: 'Exo, Exo 2, sans-serif', letterSpacing: '0.02em' }}>{_copy("copy.6decaedff6c1", { defaultValue: "🎨 DeHub Poster Studio" })}</DrawerTitle>
+          <DrawerTitle className="text-white flex items-center gap-2 text-base" style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.02em' }}>{_copy("copy.6decaedff6c1", { defaultValue: "🎨 DeHub Poster Studio" })}</DrawerTitle>
           <p className="text-white/40 text-xs mt-1">{_copy("copy.297102fe982b", { defaultValue: "Customize dimensions, style & content — Exo typography and DeHub branding stay locked in." })}</p>
         </DrawerHeader>
 
@@ -359,7 +359,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
             <Select value={style} onValueChange={setStyle}>
               <SelectTrigger
                 className="w-full h-auto px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white hover:bg-white/[0.07] focus:ring-0 focus:ring-offset-0 focus:border-white/25 transition-colors [&>svg]:opacity-70 [&>svg]:ml-2"
-                style={{ fontFamily: 'Exo, Exo 2, sans-serif' }}
+                style={{ fontFamily: 'Manrope, sans-serif' }}
               >
                 <SelectValue placeholder={_copy("copy.cba3a8fc4421", { defaultValue: "Select style…" })} />
               </SelectTrigger>
@@ -450,7 +450,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
               placeholder={_copy("copy.e61b27acb2aa", { defaultValue: "e.g. Own your feed. Own your future." })}
               maxLength={60}
               className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
-              style={{ fontFamily: 'Exo, Exo 2, sans-serif', letterSpacing: '0.02em' }}
+              style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.02em' }}
             />
           </div>
 

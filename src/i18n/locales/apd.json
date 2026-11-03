@@ -162,7 +162,23 @@
     "saved": "اتحفظت حقول الملف",
     "failed": "ما اتحفظ. جرب تاني.",
     "verified": "رابط موثّق",
-    "verifyHint": "عشان توثّق رابط، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}"
+    "verifyHint": "عشان توثّق رابط، ضيف ده في الصفحة وبعدين احفظ تاني: {{snippet}}",
+    "descriptionPresets": "أضف موقع ويب، ضمائر أو أي شيء آخر. الروابط تظهر مع حساباتك الاجتماعية.",
+    "type": "نوع الحقل",
+    "needsLabel": "أعطِ كل حقل مخصص تسمية",
+    "placeholderLocation": "المدينة، الدولة",
+    "presets": {
+      "website": "موقع ويب",
+      "blog": "مدونة",
+      "portfolio": "محفظة",
+      "shop": "متجر",
+      "podcast": "بودكاست",
+      "newsletter": "نشرة إخبارية",
+      "pronouns": "ضمائر",
+      "location": "موقع",
+      "custom": "مخصص",
+      "customOption": "تسمية مخصصة"
+    }
   },
   "followedTags": {
     "follow": "تابع #{{tag}}",
@@ -382,6 +398,8 @@
     "gasSponsorshipFailed": "ما قدرنا نغطي المعاملة دي. حاول تاني بعد شوية."
   },
   "nav": {
+    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
+    "reorderReset": "إعادة تعيين",
     "reorderResetLong": "إعادة ترتيب القائمة",
     "home": "الرئيسية",
     "explore": "تصفّح",
@@ -426,9 +444,7 @@
     "getTheApp": "حمّل التطبيق",
     "connectAi": "ربط AI",
     "converter": "محول",
-    "affiliate": "التسويق بالعمولة",
-    "reorderHint": "أمسك واسحب أي أيكونة لإعادة ترتيبها",
-    "reorderReset": "إعادة تعيين"
+    "affiliate": "التسويق بالعمولة"
   },
   "feed": {
     "viewProfile": "شوف بروفايل {{name}}",
@@ -10345,8 +10361,12 @@
       "restore": "استعادة",
       "restored": "تم استعادة الإصدار {{version}}"
     },
-    "stakeForAllowance": "قم بتخزين توكنات DeHub لزيادة مخصص البناء اليومي الخاص بك",
     "buildInChat": "ابنِ في رسايلك الخاصة مع @assistant",
+    "modelLabel": "الموديل",
+    "creditsLeft": "{{amount}} رصيد",
+    "perPrompt": "≈ {{price}} لكل طلب",
+    "pricingNote": "كل طلب بندفع من رصيدك بتكلفة الموديل زائد 30%. أعلى تكلفة ممكنة للطلب بتتحجز وهو شغّال، والباقي البي ما اتصرف برجع ليك.",
+    "topUpCredits": "اشحن الرصيد",
     "landerTitle": "ابني تطبيق بس بطلب",
     "landerSubtitle": "قل لـ @assistant عايز شنو في رسائلك. هو بيبني التطبيق، بيستضيفه وبيرسل ليك رابط أي زول يقدر يفتحو. رد عشان تغير أي حاجة.",
     "promptPlaceholder": "وصف التطبيق العايزو…",
@@ -18062,5 +18082,16 @@
     "privacy": "مستخدم بس عشان نخبرك باللانش.",
     "seoTitle": "إطلاق التوكن قريب | DeHub",
     "seoDescription": "التوكن الجديد DeHub بيطلق قريب. انضم لللستة وخد إيميل فور ما يطلق، بعدين اشتري مباشرة من محفظتك DeHub."
+  },
+  "githubLink": {
+    "hint": "تسجيل دخول إلى GitHub ليُثبت أن الحساب لك. DeHub تراه فقط ملفك العام على GitHub.",
+    "verified": "مُصادَق عليه",
+    "verifiedAria": "حساب GitHub مُصادَق عليه",
+    "connected": "GitHub مُرتبط",
+    "disconnected": "GitHub مُفصَل",
+    "taken": "الحساب ده على جيت هاب موجود في بروفيل ديهوب تانيه.",
+    "failed": "مفشل اتصل GitHub. حاول تاني.",
+    "unavailable": "التحقق من GitHub جاي قريب.",
+    "disconnect": "افصل"
   }
 }

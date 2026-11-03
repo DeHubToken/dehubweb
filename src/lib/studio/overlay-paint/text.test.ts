@@ -55,7 +55,7 @@ describe('wrapLines', () => {
 describe('fontOf', () => {
   it('rounds to half pixels so resizing does not mint fonts', () => {
     expect(fontOf(700, 12.26)).toBe(fontOf(700, 12.4));
-    expect(fontOf(700, 12.26)).toMatch(/^700 12\.5px Exo/);
+    expect(fontOf(700, 12.26)).toMatch(/^700 12\.5px Manrope/);
   });
 });
 

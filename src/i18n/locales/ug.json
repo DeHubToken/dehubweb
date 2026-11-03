@@ -162,7 +162,23 @@
     "saved": "ئارخىپ بۆلەكلىرى ساقلاندى",
     "failed": "ساقلانمىدى. قايتا سىناڭ.",
     "verified": "دەلىللەنگەن ئۇلانما",
-    "verifyHint": "ئۇلانمىنى دەلىللەش ئۈچۈن بۇنى شۇ بەتكە قوشۇپ، قايتا ساقلاڭ: {{snippet}}"
+    "verifyHint": "ئۇلانمىنى دەلىللەش ئۈچۈن بۇنى شۇ بەتكە قوشۇپ، قايتا ساقلاڭ: {{snippet}}",
+    "descriptionPresets": "Men menlik qonuniyatlarni qo'llash orqali, biz sizni qo'llab-quvvatlashimiz mumkin.",
+    "type": "مەيدان تىپى",
+    "placeholderLink": "yoursite.com",
+    "placeholderPronouns": "Uyghurcha: ul/ul",
+    "placeholderLocation": "شەھەر, مۇستەقىل دۆلەت",
+    "presets": {
+      "website": "Veb-sayt",
+      "blog": "Blog",
+      "portfolio": "مەدەنىيەت ساھەسىدىكى مۇھەندىس",
+      "shop": "Dukon",
+      "newsletter": "Xəbər xəbərləri",
+      "pronouns": "Pronouns",
+      "location": "جايى",
+      "custom": "ئىختىيارىي",
+      "customOption": "Custom label"
+    }
   },
   "followedTags": {
     "follow": "#{{tag}} گە ئەگىشىش",
@@ -10599,8 +10615,12 @@
       "restore": "ئەسلىگە كەلتۈرۈش",
       "restored": "ئەسلىگە كەلتۈرۈلگەن نۇسخىسى {{version}}"
     },
-    "stakeForAllowance": "كۈندىلىك قۇرۇلۇش سالماقىڭىزنى ئاشۇرۇش ئۈچۈن DeHub توكېنلىرىنى قىستۇرۇڭ",
     "buildInChat": "@assistant بىلەن شەخسىي ئۇچۇرلىرىڭىزدا قۇرۇڭ",
+    "modelLabel": "مودېل",
+    "creditsLeft": "{{amount}} كرېدىت",
+    "perPrompt": "≈ ھەر بىر ئەسكەرتىشكە {{price}}",
+    "pricingNote": "ھەر بىر ئەسكەرتىش كرېدىتىڭىزدىن مودېلنىڭ تەننەرخىغا 30% قوشۇلۇپ تۆلىنىدۇ. ئەسكەرتىش ئىجرا بولۇۋاتقاندا ئۇنىڭ ئەڭ يۇقىرى چىقىمى توختىتىپ تۇرۇلىدۇ، ئىشلىتىلمىگەن قىسمى قايتۇرۇلىدۇ.",
+    "topUpCredits": "كرېدىت تولۇقلاش",
     "landerTitle": "پەقەت سوراپلا بىر ئەپ ياساش",
     "landerSubtitle": "@ ياردەمچىگە ئۇچۇرلىرىڭىزدا نېمىنى خالايدىغانلىقىڭىزنى ئېيتىڭ. ئۇ ئەپنى ياساپ، ئۇنى ئۆز ئىچىگە ئالىدۇ ۋە ھەرقانداق ئادەم ئېچىلىدىغان ئۇلىنىشنى ئەۋەتىدۇ. ھەرقانداق نەرسىنى ئۆزگەرتىشكە جاۋاب بېرىڭ.",
     "promptPlaceholder": "ئۆزىڭىز خالىغان ئەپنى تەسۋىرلەڭ...",
@@ -18701,5 +18721,30 @@
     "fingerprint": "Oynash izi",
     "exploreFirst": "Birinchi eshittiring",
     "codeNote": "Men sizga kod yuboraman, parol kerak emas."
+  },
+  "tokenLaunch": {
+    "eyebrow": "پات يېقىندا كېلىدۇ",
+    "body": "Sotuv qayta ajar bo'lishidan oldin yopildi. Yangi token tayyor bo'lganda sizga email yuboriladi.",
+    "notifyMe": "Men sizni xabar qilishimni xohlayman.",
+    "emailLabel": "ئېلېكترونلۇق پوچتا",
+    "emailPlaceholder": "Xabar",
+    "joinedTitle": "سىزىكىڭىز سىزىكىڭىز",
+    "joinedBody": "Men token chiqqanda {{email}} ga elektron ma'lumot yuboramiz.",
+    "joinedBodyNoEmail": "Men sizga tokenning chiqqanida xabar yuboramiz.",
+    "failed": "بۇنى ساقلاپ بولالمىدى. قايتا سىناپ بېقىڭ.",
+    "privacy": "Men sizni laqiqatni xabar qilish uchun faqat foydalanish uchun ishlatiladi.",
+    "seoDescription": "Yeni DeHub token yengä qeling. Ro'yhatga kirip, token yengä qilingincha bir email alip, so'ngra DeHub waletinizdan to'g'ri buyurip aling."
+  },
+  "githubLink": {
+    "hint": "GitHubغا كىرىپ ھېساباتنىڭ سىزگە تەۋە ئىكەنلىكىنى دەلىللەڭ. DeHub پەقەت سىزنىڭ ئاممىۋى GitHub پروفېلىڭىزنى كۆرەلەيدۇ.",
+    "verified": "Tasdiqlanmighan",
+    "verifiedAria": "دەلىللەنگەن GitHub ھېساباتى",
+    "connected": "GitHub باغلانغان",
+    "disconnected": "GitHub toqtalashdi.",
+    "taken": "بۇ GitHub ھېساباتى ئاللىقاچان باشقا DeHub پروفېلىدە بار.",
+    "failed": "GitHubنى باغلاپ بولمىدى. قايتا سىناپ بېقىڭ.",
+    "unavailable": "GitHub tasdiqlash kelish kelayaq.",
+    "connect": "GitHub نى باغلا",
+    "disconnect": "قۇرالۇش"
   }
 }

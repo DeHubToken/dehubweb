@@ -1,0 +1,490 @@
+{
+  "pages": [
+    {
+      "route": "developers",
+      "section": "DEVELOPERS",
+      "title": "Build on DeHub",
+      "seoTitle": "DeHub Developers — Build Apps on DeHub",
+      "description": "Everything you need to build on DeHub: mini apps for the DeHub app store, Sign in with DeHub, payments in DHB, notifications, the REST and Mastodon APIs, and MCP for AI agents.",
+      "intro": "DeHub is an open platform. Ship a mini app to the DeHub app store, let people sign in with DeHub on your own site, take payments in DHB, or read and write DeHub from your server or your AI agent. Pick the path that fits what you are building.",
+      "sections": [
+        {
+          "id": "paths",
+          "heading": "Pick your path",
+          "blocks": [
+            {
+              "cards": [
+                { "title": "Mini apps", "to": "/docs/developers/mini-apps", "body": "A web app that runs inside DeHub on web and phone, listed in the DeHub app store. One script tag, no SDK install." },
+                { "title": "Sign in with DeHub", "to": "/docs/auth", "body": "Let people log in to your app or website with their DeHub account. Standard OAuth with PKCE." },
+                { "title": "Webhooks and notifications", "to": "/docs/webhooks", "body": "Hear when someone adds your app, and send them notifications on web and phone." },
+                { "title": "API reference", "to": "/docs/endpoints", "body": "The REST API, the Mastodon-compatible API, rate limits and errors." },
+                { "title": "Examples", "to": "/docs/examples", "body": "Copy and paste code for the things most apps need first." },
+                { "title": "AI agents (MCP)", "to": "/connect", "body": "Connect ChatGPT, Claude or your own agent to DeHub with the MCP server." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "five-minutes",
+          "heading": "Your first mini app in five minutes",
+          "blocks": [
+            { "list": [
+              "Put any web page online over https.",
+              "Add `<script src=\"https://dehub.io/sdk/miniapp.js\"></script>` and call `dehub.ready()` once your first screen is on.",
+              "Open [dehub.io/apps/dev](/apps/dev), paste your link and press **Launch**. It runs inside the real DeHub host, localhost included.",
+              "Add a `/.well-known/dehub.json` manifest. The developer page checks it field by field and signs the ownership block with your wallet.",
+              "Press **Submit**. Your app gets a share link right away and goes into review for the store."
+            ] },
+            { "p": "No account approval, no API key and no fee to get started. Farcaster mini apps run as they are: DeHub reads `farcaster.json` when there is no `dehub.json`." }
+          ]
+        },
+        {
+          "id": "what-you-get",
+          "heading": "What DeHub gives your app",
+          "blocks": [
+            { "table": {
+              "head": ["Feature", "What it does"],
+              "rows": [
+                ["Distribution", "A listing in the DeHub app store on web and phone, rich link cards in the feed, and a share link for every app."],
+                ["Identity", "A signed token that proves who the user is, checked on your server with public keys. No passwords to store."],
+                ["Payments", "Ask for DHB in one call. The money goes straight to your wallet. No fee on your first $10,000 a year."],
+                ["Notifications", "Reach people who added your app on web and phone, with one HTTP call from your server."],
+                ["Rewards", "The top apps each week share a monthly DHB pool, ranked by real use."]
+              ]
+            } }
+          ]
+        },
+        {
+          "id": "best-practices",
+          "heading": "Best practices",
+          "blocks": [
+            { "list": [
+              "Build mobile first. On wide screens DeHub runs your app in a phone-width column.",
+              "Call `dehub.ready()` as soon as your first screen paints. The splash screen waits up to 8 seconds, then steps aside anyway.",
+              "Never trust the browser. Send the sign-in token and payment receipts to your server and verify them there.",
+              "Use `dehub.getCapabilities()` before calling an action, so your app degrades well on older hosts.",
+              "Keep notifications rare and useful. Each person gets at most one every 30 seconds and ten a day from your app.",
+              "Use `notificationId` values that describe the event (for example `turn-42`), so a retry never sends the same thing twice."
+            ] }
+          ]
+        },
+        {
+          "id": "help",
+          "heading": "Getting help",
+          "blocks": [
+            { "p": "Stuck? Read [Troubleshooting](/docs/troubleshooting) first. For anything else, ask in the DeHub app or [contact the team](/docs/contact)." }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "developers/mini-apps",
+      "section": "DEVELOPERS",
+      "title": "Mini apps",
+      "seoTitle": "Build a DeHub Mini App — SDK and Manifest",
+      "description": "Build a mini app for the DeHub app store: the one-line SDK, every SDK method, the dehub.json manifest, ownership signing, payments in DHB and how review works.",
+      "intro": "A mini app is a normal website that runs inside DeHub. DeHub draws the header with your app's name and real domain, and your app talks to DeHub through a small SDK. The same app runs on dehub.io and in the DeHub phone app with no changes.",
+      "sections": [
+        {
+          "id": "sdk",
+          "heading": "Add the SDK",
+          "blocks": [
+            { "code": "<script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n<script>\n  // Hide the splash screen once your first screen is on.\n  dehub.ready();\n\n  const { user, client } = await dehub.context;\n  if (user) console.log('Hi', user.handle);\n</script>", "lang": "html" },
+            { "p": "The SDK adds one global, `dehub`. Every call returns a promise. Outside DeHub, `dehub.isInDehub()` is false and calls reject, so you can run the same page on its own." }
+          ]
+        },
+        {
+          "id": "methods",
+          "heading": "SDK methods",
+          "blocks": [
+            { "table": {
+              "head": ["Method", "What it does"],
+              "rows": [
+                ["`dehub.ready()`", "Hides the splash screen."],
+                ["`dehub.close()`", "Closes your app."],
+                ["`dehub.context`", "Resolves to `{ user, location, client }`. `user` is `{ wallet, handle, displayName, avatarUrl }` or `null` when signed out. `client` has `platform` (`web` or `mobile`), `added`, `locale`, `theme` and `safeAreaInsets`."],
+                ["`dehub.getCapabilities()`", "The methods this host supports."],
+                ["`dehub.auth.getToken()`", "A signed token proving who the user is, for your server. The first call asks the user to share their identity. See [Sign in with DeHub](/docs/auth)."],
+                ["`dehub.actions.composePost({ text, embedUrl })`", "Opens the DeHub composer with your text and an optional link back into your app (up to 500 characters)."],
+                ["`dehub.actions.viewProfile({ handle })`", "Opens a DeHub profile."],
+                ["`dehub.actions.viewPost({ id })`", "Opens a DeHub post by its numeric id."],
+                ["`dehub.actions.openUrl(url)`", "Opens an https link outside your app."],
+                ["`dehub.actions.addApp()`", "Asks the user to add your app, which also allows notifications."],
+                ["`dehub.actions.pay({ amount, memo })`", "Asks the user to pay you in DHB. See [Payments](#payments)."],
+                ["`dehub.haptics.impact(style)`", "A short vibration on phones: `light`, `medium` or `heavy`."],
+                ["`dehub.on(event, fn)`", "Listen for host events. Returns a function that stops listening."]
+              ]
+            } },
+            { "p": "When DeHub refuses a request the promise rejects with an error that has a `code`: `signin` (the user is signed out), `rejected` (the user said no), `invalid` (bad parameters), `rate_limited`, `busy` (another request is open), `unsupported` or `failed`." }
+          ]
+        },
+        {
+          "id": "manifest",
+          "heading": "The manifest: dehub.json",
+          "blocks": [
+            { "p": "Serve this file at `https://your-domain/.well-known/dehub.json`. It tells the store what your app is called, which icon to show and who owns it." },
+            { "code": "{\n  \"app\": {\n    \"name\": \"Tip Jar\",\n    \"homeUrl\": \"https://tipjar.example.com/\",\n    \"iconUrl\": \"https://tipjar.example.com/icon-1024.png\",\n    \"subtitle\": \"Say thanks in DHB\",\n    \"description\": \"A tip jar for creators. One tap, paid straight to the creator's wallet.\",\n    \"category\": \"finance\",\n    \"tags\": [\"tips\", \"creators\"],\n    \"splashBackgroundColor\": \"#0B0B0B\",\n    \"screenshotUrls\": [\"https://tipjar.example.com/shot-1.png\"],\n    \"webhookUrl\": \"https://tipjar.example.com/api/dehub-webhook\",\n    \"permissions\": [\"wallet\", \"notifications\"]\n  },\n  \"ownership\": {\n    \"address\": \"0xYourDehubWallet\",\n    \"domain\": \"tipjar.example.com\",\n    \"signature\": \"0x…\"\n  }\n}", "lang": "json" },
+            { "table": {
+              "head": ["Field", "Rules"],
+              "rows": [
+                ["`name`", "Required. 32 characters or fewer."],
+                ["`homeUrl`", "Required. https, on the same domain as the manifest."],
+                ["`iconUrl`", "Required. https. A 1024×1024 PNG with no transparency."],
+                ["`subtitle`", "30 characters or fewer."],
+                ["`description`", "Recommended. 170 characters or fewer."],
+                ["`category`", "Recommended. One of: games, social, finance, utility, productivity, health-fitness, news-media, music, shopping, education, developer-tools, entertainment, art-creativity."],
+                ["`tags`", "Up to 5. Lowercase letters, digits or dashes, 20 characters each."],
+                ["`screenshotUrls`", "Up to 3 https images."],
+                ["`splashBackgroundColor`", "A hex colour like `#0B0B0B`."],
+                ["`webhookUrl`", "https. Receives [webhook events](/docs/webhooks)."],
+                ["`webhookEvents`", "Optional. Any of: tip, follow, mention. Account events for the owner wallet, sent to `webhookUrl`."],
+                ["`permissions`", "Any of: wallet, compose, notifications, camera."]
+              ]
+            } }
+          ]
+        },
+        {
+          "id": "ownership",
+          "heading": "Prove you own the domain",
+          "blocks": [
+            { "p": "The `ownership` block is your DeHub wallet's signature of this exact message, where the second line is your domain:" },
+            { "code": "dehub mini app ownership\ntipjar.example.com", "lang": "text" },
+            { "p": "You do not have to sign it by hand. On [dehub.io/apps/dev](/apps/dev), check your link and press **Sign** to get a ready-made block to paste. Payments go to the wallet that signed, and only that wallet can update the listing or create a notification key." }
+          ]
+        },
+        {
+          "id": "embed",
+          "heading": "Rich cards in the feed",
+          "blocks": [
+            { "p": "When someone posts your link, DeHub shows a card with a button that opens your app. Add this tag to the page's `<head>` (the `fc:miniapp` tag is read too):" },
+            { "code": "<meta name=\"dehub:miniapp\" content='{\"version\":\"1\",\"imageUrl\":\"https://tipjar.example.com/card-3x2.png\",\"button\":{\"title\":\"Open Tip Jar\",\"action\":{\"url\":\"https://tipjar.example.com/\"}}}'>", "lang": "html" }
+          ]
+        },
+        {
+          "id": "payments",
+          "heading": "Payments in DHB",
+          "blocks": [
+            { "code": "const { txHash, chainId, amount, receipt } = await dehub.actions.pay({\n  amount: 50,          // DHB, whole numbers, up to 1,000,000\n  memo: 'Order #1042', // optional, 140 characters\n});\n\n// Send `receipt` to your server and verify it there.\nawait fetch('/api/orders/1042/paid', { method: 'POST', body: receipt });", "lang": "js" },
+            { "p": "DeHub shows the amount, your app and your wallet, the user confirms in their wallet, and DeHub checks the transfer on chain (Base or BNB Chain) before answering. The `receipt` is a signed token with `typ: \"payment\"`, `sub` (the payer's wallet), `aud` (your domain), `amount`, `token`, `chainId`, `txHash` and `memo`. Verify it exactly like a sign-in token. Only registered apps with a signed manifest can take payments." },
+            { "p": "**Test mode.** When you open your own app on DeHub with the wallet that owns it, payments are simulated: nothing moves on chain, and the receipt and `payment` webhook carry `test: true`, `chainId: 0` and a `txHash` starting with `test_`. Never deliver paid goods for a test receipt in production." }
+          ]
+        },
+        {
+          "id": "review",
+          "heading": "Submitting and review",
+          "blocks": [
+            { "list": [
+              "**Unlisted**: right after you submit. Your app has a share link (`dehub.io/apps/your-slug`) and runs for anyone who opens it, with an Unreviewed badge.",
+              "**Listed**: after review. Your app appears in the DeHub app store.",
+              "**Verified**: trusted apps get a check mark and can be featured."
+            ] },
+            { "p": "Reviewers check that the app loads, works on a phone, matches its listing and does not imitate DeHub. Updating your manifest and submitting again updates the listing." }
+          ]
+        },
+        {
+          "id": "rewards",
+          "heading": "Weekly rewards",
+          "blocks": [
+            { "p": "Every night DeHub ranks listed apps by real use: signed-in people who come back (55%), weekly users (35%), plus a boost in an app's first 14 days. Every Monday the week's share of the monthly DHB reward pool is split by score. To qualify, an app needs a verified owner wallet and at least 3 returning users. The ranking and past rewards are on [dehub.io/apps/dev](/apps/dev)." }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "auth",
+      "section": "DEVELOPERS",
+      "title": "Sign in with DeHub",
+      "seoTitle": "Sign in with DeHub — OAuth and Mini App Tokens",
+      "description": "Let people sign in to your app or website with DeHub: OAuth 2.0 with PKCE for any website, and signed identity tokens for mini apps, verified with public keys.",
+      "intro": "There are two ways to know who a DeHub user is. Inside a mini app, ask the SDK for a signed token. On any other website or app, use standard OAuth. Either way the user's id is their DeHub wallet address, the same id used everywhere on DeHub.",
+      "sections": [
+        {
+          "id": "mini-app-token",
+          "heading": "Inside a mini app",
+          "blocks": [
+            { "code": "// In your mini app\nconst { token } = await dehub.auth.getToken();\nawait fetch('/api/session', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });", "lang": "js" },
+            { "code": "// On your server (Node, any JOSE library works)\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(\n  new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'),\n);\n\nconst { payload } = await jwtVerify(token, JWKS, {\n  issuer: 'https://dehub.io',\n  audience: 'tipjar.example.com', // your domain\n});\nconst wallet = payload.sub; // the user's DeHub wallet, lowercase", "lang": "js" },
+            { "p": "The token is an ES256 JWT that lasts one hour. DeHub addresses it to the domain it actually loaded, so a token made for one app can never be used on another. The SDK caches it and fetches a fresh one when it is close to expiring." }
+          ]
+        },
+        {
+          "id": "oauth",
+          "heading": "On any website or app (OAuth)",
+          "blocks": [
+            { "p": "DeHub speaks the Mastodon OAuth API, so any OAuth 2.0 library works, and so does every Mastodon client library. PKCE is supported and recommended." },
+            { "p": "**1. Register your app once.**" },
+            { "code": "curl -X POST https://dehub.io/api/v1/apps \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"client_name\":\"Tip Jar\",\"redirect_uris\":\"https://tipjar.example.com/callback\",\"scopes\":\"profile\",\"website\":\"https://tipjar.example.com\"}'", "lang": "bash" },
+            { "p": "Keep the `client_id` and `client_secret` it returns. They are shown once." },
+            { "p": "**2. Send the user to DeHub to approve.**" },
+            { "code": "https://dehub.io/oauth/authorize\n  ?response_type=code\n  &client_id=YOUR_CLIENT_ID\n  &redirect_uri=https://tipjar.example.com/callback\n  &scope=profile\n  &state=RANDOM_STATE\n  &code_challenge=PKCE_CHALLENGE\n  &code_challenge_method=S256", "lang": "text" },
+            { "p": "**3. Swap the code for a token** on your server." },
+            { "code": "curl -X POST https://dehub.io/oauth/token \\\n  -d grant_type=authorization_code \\\n  -d code=CODE_FROM_REDIRECT \\\n  -d client_id=YOUR_CLIENT_ID \\\n  -d client_secret=YOUR_CLIENT_SECRET \\\n  -d redirect_uri=https://tipjar.example.com/callback \\\n  -d code_verifier=PKCE_VERIFIER", "lang": "bash" },
+            { "p": "**4. Read who signed in.**" },
+            { "code": "curl https://dehub.io/api/v1/accounts/verify_credentials \\\n  -H 'Authorization: Bearer ACCESS_TOKEN'", "lang": "bash" },
+            { "p": "The answer's `id` is the user's wallet address. `acct` is their handle, plus `display_name`, `avatar` and `url`." }
+          ]
+        },
+        {
+          "id": "scopes",
+          "heading": "Scopes",
+          "blocks": [
+            { "table": {
+              "head": ["Scope", "Allows"],
+              "rows": [
+                ["`profile`", "Only reading who signed in. Use this for login."],
+                ["`read`", "Reading the user's timeline, follows and notifications. Narrow it with sub-scopes like `read:accounts`."],
+                ["`write`", "Posting, replying, liking and uploading on the user's behalf, for example `write:statuses` or `write:media`."],
+                ["`follow`", "Following, muting and blocking."],
+                ["`push`", "Web push subscriptions."]
+              ]
+            } },
+            { "p": "Ask only for what you need. People see the list on the approval screen and can revoke any app in their DeHub settings." }
+          ]
+        },
+        {
+          "id": "agents",
+          "heading": "AI agents",
+          "blocks": [
+            { "p": "AI assistants sign in through the DeHub MCP server at `https://dehub.io/mcp`, which runs its own OAuth flow with dynamic client registration. See [Connect](/connect)." }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "webhooks",
+      "section": "DEVELOPERS",
+      "title": "Webhooks and notifications",
+      "seoTitle": "DeHub Webhooks and Notifications API",
+      "description": "Receive signed webhook events when people add or remove your DeHub mini app, and send notifications to your users on web and phone with one API call.",
+      "intro": "Your server and DeHub talk both ways. DeHub posts signed events to your webhook, and your server sends notifications to people who added your app.",
+      "sections": [
+        {
+          "id": "events",
+          "heading": "Receiving events",
+          "blocks": [
+            { "p": "Set `webhookUrl` in your [manifest](/docs/developers/mini-apps#manifest). DeHub sends a `POST` with this body:" },
+            { "code": "{ \"event\": \"app_added\", \"token\": \"eyJhbGciOiJFUzI1NiIs…\" }", "lang": "json" },
+            { "table": {
+              "head": ["Event", "When"],
+              "rows": [
+                ["`app_added`", "Someone added your app. They can now receive your notifications."],
+                ["`app_removed`", "Someone removed your app. Stop notifying them."],
+                ["`payment`", "Someone paid your app with `dehub.actions.pay()`. The token adds `amount`, `chainId`, `txHash` and `memo`."],
+                ["`tip`", "Opt-in. The owner wallet was tipped. Adds `actor`, `amount`, `currency` and `postId` when the tip was on a post."],
+                ["`follow`", "Opt-in. Someone followed the owner wallet. Adds `actor`."],
+                ["`mention`", "Opt-in. Someone mentioned the owner wallet. Adds `actor` and `postId`."],
+                ["`ping`", "A test sent from the Webhook button on [dehub.io/apps/dev](/apps/dev)."]
+              ]
+            } },
+            { "p": "`tip`, `follow` and `mention` are about the wallet that owns your app, so `sub` is that wallet. List the ones you want in your manifest, then submit it again:" },
+            { "code": "\"webhookUrl\": \"https://tipjar.example.com/api/dehub-webhook\",\n\"webhookEvents\": [\"tip\", \"follow\", \"mention\"]", "lang": "json" },
+            { "p": "`token` is a signed JWT with `typ: \"event\"`, the `event` name, `sub` (the user's wallet) and `aud` (your domain). Verify it with the same public keys as [sign-in tokens](/docs/auth#mini-app-token), and ignore any body whose token does not verify. Answer within 5 seconds with a 2xx. A network error or 5xx is retried once after 3 seconds. Every attempt is listed under Webhook on [dehub.io/apps/dev](/apps/dev). Still treat `dehub.context`'s `client.added` as the source of truth when someone opens your app." }
+          ]
+        },
+        {
+          "id": "notify",
+          "heading": "Sending notifications",
+          "blocks": [
+            { "p": "Create a notification key on [dehub.io/apps/dev](/apps/dev). It is shown once; DeHub keeps only a hash, so a lost key is replaced, not recovered." },
+            { "code": "curl -X POST https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-notify \\\n  -H 'Authorization: Bearer dhmk_YOUR_KEY' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"notificationId\": \"turn-42\",\n    \"title\": \"Your turn\",\n    \"body\": \"Sam played a move. Tap to answer.\",\n    \"targetUrl\": \"https://chess.example.com/game/42\",\n    \"wallets\": [\"0xabc…\"]\n  }'", "lang": "bash" },
+            { "table": {
+              "head": ["Field", "Rules"],
+              "rows": [
+                ["`notificationId`", "Required. Up to 128 characters. The same id reaches a person at most once in 24 hours."],
+                ["`title`", "Required. Up to 32 characters."],
+                ["`body`", "Up to 128 characters."],
+                ["`targetUrl`", "An https link on your app's domain, opened when the notification is tapped."],
+                ["`wallets`", "Who to notify. Leave it out to notify everyone who added your app (up to 1,000 a call)."]
+              ]
+            } },
+            { "p": "The answer says who was sent to and why anyone was skipped: `{ sent, sentTo, skipped: { duplicate, rateLimited, notAdded } }`. Each person gets at most one notification every 30 seconds and ten a day from your app, and only if they added it and left its notifications on." }
+          ]
+        },
+        {
+          "id": "payments",
+          "heading": "Payment receipts",
+          "blocks": [
+            { "p": "`dehub.actions.pay()` resolves only after DeHub has checked the transfer on chain, and hands your app a signed receipt to verify on your server. The `payment` webhook is a second copy for your server, sent in the background. See [Payments](/docs/developers/mini-apps#payments)." }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "endpoints",
+      "section": "DEVELOPERS",
+      "title": "API reference",
+      "seoTitle": "DeHub API Reference — REST and Mastodon APIs",
+      "description": "The DeHub REST API and Mastodon-compatible API: base URLs, the interactive reference, authentication, rate limits, errors and the public endpoints most apps start with.",
+      "intro": "DeHub has two HTTP APIs. The Mastodon-compatible API is the stable one for third-party apps. The DeHub REST API powers dehub.io and the phone app and covers every feature.",
+      "sections": [
+        {
+          "id": "base-urls",
+          "heading": "Base URLs",
+          "blocks": [
+            { "table": {
+              "head": ["API", "Base URL", "Best for"],
+              "rows": [
+                ["Mastodon-compatible", "`https://dehub.io/api/v1`", "Apps that sign people in, read timelines and post. Works with every Mastodon library."],
+                ["DeHub REST", "`https://api.dehub.io/api`", "Everything DeHub does: feeds, videos, live, tips, search, leaderboards."],
+                ["MCP", "`https://dehub.io/mcp`", "AI agents and assistants. See [Connect](/connect)."]
+              ]
+            } },
+            { "p": "The full REST reference, with every endpoint and a Try it button, is at [api.dehub.io/api/docxx](https://api.dehub.io/api/docxx). The machine-readable OpenAPI file is at [api.dehub.io/api/docxx-json](https://api.dehub.io/api/docxx-json), ready for code generators and API clients." }
+          ]
+        },
+        {
+          "id": "public",
+          "heading": "Public endpoints to start with",
+          "blocks": [
+            { "p": "These need no sign-in:" },
+            { "code": "# A profile, by handle or wallet\ncurl https://api.dehub.io/api/account_info/dehub\n\n# The public feed\ncurl 'https://api.dehub.io/api/feed?limit=10'\n\n# Search people and posts\ncurl 'https://api.dehub.io/api/search?q=music'\n\n# The DHB leaderboard\ncurl https://api.dehub.io/api/leaderboard\n\n# Public timeline, Mastodon format\ncurl 'https://dehub.io/api/v1/timelines/public?limit=20'", "lang": "bash" }
+          ]
+        },
+        {
+          "id": "auth",
+          "heading": "Authentication",
+          "blocks": [
+            { "p": "For the Mastodon-compatible API, get a user token with [OAuth](/docs/auth#oauth) and send it as `Authorization: Bearer TOKEN`. The REST API uses the short-lived session tokens that dehub.io and the phone app get when someone signs in; third-party apps should act for users through the Mastodon-compatible API." }
+          ]
+        },
+        {
+          "id": "rate-limits",
+          "heading": "Rate limits",
+          "blocks": [
+            { "p": "Every REST answer carries your current limits:" },
+            { "code": "x-ratelimit-limit-short: 20      # per 10 seconds\nx-ratelimit-remaining-short: 19\nx-ratelimit-limit-medium: 100    # per minute\nx-ratelimit-limit-long: 500      # per 15 minutes\nx-ratelimit-reset-long: 900", "lang": "text" },
+            { "p": "Limits count per IP address and per endpoint. Over a limit you get `429 Too Many Requests`; wait for the matching `reset` seconds. Some endpoints have their own, tighter limits, and batch endpoints exist for bulk actions such as following many people." }
+          ]
+        },
+        {
+          "id": "errors",
+          "heading": "Errors",
+          "blocks": [
+            { "p": "Check the HTTP status first. Errors come back as JSON in one of these shapes:" },
+            { "code": "{ \"error\": \"Not Found: Account not found\", \"result\": false }\n{ \"statusCode\": 400, \"message\": \"limit must be a number\", \"error\": \"Bad Request\" }", "lang": "json" },
+            { "p": "The Mastodon-compatible API always answers errors as `{ \"error\": \"…\" }`, as Mastodon clients expect." }
+          ]
+        },
+        {
+          "id": "ids",
+          "heading": "Ids",
+          "blocks": [
+            { "p": "People are identified by their wallet address in lowercase (`0x…`), and also by their handle. Posts have a numeric id, shown in their link: `dehub.io/app/post/7180`." }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "examples",
+      "section": "DEVELOPERS",
+      "title": "Examples",
+      "seoTitle": "DeHub Developer Examples — Copy and Paste Code",
+      "description": "Copy and paste examples for DeHub apps: a complete mini app page, server-side sign-in, a tip button paid in DHB, sharing to the feed, notifications and a Sign in with DeHub button.",
+      "intro": "Small, complete examples for the things most apps need first. Each one works as it is.",
+      "sections": [
+        {
+          "id": "hello",
+          "heading": "A complete mini app page",
+          "blocks": [
+            { "code": "<!doctype html>\n<html>\n<head>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <script src=\"https://dehub.io/sdk/miniapp.js\"></script>\n</head>\n<body>\n  <h1 id=\"hello\">Hello</h1>\n  <button id=\"share\">Share</button>\n  <script>\n    (async () => {\n      const { user } = await dehub.context;\n      if (user) document.getElementById('hello').textContent = `Hello, ${user.displayName || user.handle}`;\n      dehub.ready();\n\n      document.getElementById('share').onclick = () =>\n        dehub.actions.composePost({ text: 'I just tried this app', embedUrl: location.href });\n    })();\n  </script>\n</body>\n</html>", "lang": "html" }
+          ]
+        },
+        {
+          "id": "server-session",
+          "heading": "Sign the user in on your server",
+          "blocks": [
+            { "code": "// Express + jose\nimport express from 'express';\nimport { createRemoteJWKSet, jwtVerify } from 'jose';\n\nconst JWKS = createRemoteJWKSet(new URL('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-auth'));\nconst app = express();\n\napp.post('/api/session', async (req, res) => {\n  try {\n    const token = String(req.headers.authorization || '').replace(/^Bearer /, '');\n    const { payload } = await jwtVerify(token, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\n    res.json({ wallet: payload.sub });\n  } catch {\n    res.status(401).json({ error: 'Not signed in' });\n  }\n});", "lang": "js" }
+          ]
+        },
+        {
+          "id": "tip",
+          "heading": "A tip button paid in DHB",
+          "blocks": [
+            { "code": "document.getElementById('tip').onclick = async () => {\n  try {\n    const { receipt } = await dehub.actions.pay({ amount: 100, memo: 'Thanks!' });\n    await fetch('/api/tips', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: receipt });\n    dehub.haptics.impact('heavy');\n  } catch (error) {\n    if (error.code !== 'rejected') alert(error.message);\n  }\n};", "lang": "js" },
+            { "code": "// Server: verify the receipt before you record the tip\nconst { payload } = await jwtVerify(receipt, JWKS, { issuer: 'https://dehub.io', audience: 'tipjar.example.com' });\nif (payload.typ !== 'payment') throw new Error('Not a payment receipt');\n// payload.sub paid payload.amount DHB in payload.txHash on chain payload.chainId", "lang": "js" }
+          ]
+        },
+        {
+          "id": "notify",
+          "heading": "Notify a player",
+          "blocks": [
+            { "code": "await fetch('https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/miniapp-notify', {\n  method: 'POST',\n  headers: { Authorization: `Bearer ${process.env.DEHUB_NOTIFY_KEY}`, 'Content-Type': 'application/json' },\n  body: JSON.stringify({\n    notificationId: `turn-${game.id}-${game.turn}`,\n    title: 'Your turn',\n    body: `${opponent} made a move.`,\n    targetUrl: `https://chess.example.com/game/${game.id}`,\n    wallets: [player.wallet],\n  }),\n});", "lang": "js" }
+          ]
+        },
+        {
+          "id": "add-app",
+          "heading": "Ask people to add your app",
+          "blocks": [
+            { "code": "const { client } = await dehub.context;\nif (!client.added) {\n  showBanner('Get a ping when it is your turn', async () => {\n    try { await dehub.actions.addApp(); hideBanner(); } catch {}\n  });\n}", "lang": "js" }
+          ]
+        },
+        {
+          "id": "oauth-button",
+          "heading": "A Sign in with DeHub button for any site",
+          "blocks": [
+            { "code": "// Node: start the login (register your app once first, see /docs/auth)\nimport crypto from 'node:crypto';\n\nconst verifier = crypto.randomBytes(32).toString('base64url');\nconst challenge = crypto.createHash('sha256').update(verifier).digest('base64url');\nconst state = crypto.randomBytes(16).toString('hex');\n// Save verifier and state in the user's session, then redirect:\nconst url = new URL('https://dehub.io/oauth/authorize');\nurl.search = new URLSearchParams({\n  response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,\n  scope: 'profile', state, code_challenge: challenge, code_challenge_method: 'S256',\n});\nres.redirect(url.toString());", "lang": "js" }
+          ]
+        }
+      ]
+    },
+    {
+      "route": "troubleshooting",
+      "section": "DEVELOPERS",
+      "title": "Troubleshooting",
+      "seoTitle": "DeHub Developer Troubleshooting",
+      "description": "Fixes for the most common problems building DeHub mini apps: manifest not found, ownership errors, a splash screen that never hides, sign-in and payment errors.",
+      "intro": "The most common problems, and how to fix them. The checker on dehub.io/apps/dev tells you which field is wrong in plain words, so start there.",
+      "sections": [
+        {
+          "id": "manifest",
+          "heading": "Manifest problems",
+          "blocks": [
+            { "table": {
+              "head": ["Message", "Fix"],
+              "rows": [
+                ["Not found at /.well-known/dehub.json", "Serve the file at exactly that path over https. Many hosts hide folders that start with a dot; allow `.well-known`."],
+                ["Found, but it is not valid JSON", "Paste the file into a JSON checker. Trailing commas are the usual cause."],
+                ["homeUrl must be on your domain", "`homeUrl` has to be on the same domain that serves the manifest."],
+                ["ownership.signature: Signed by 0x…, not 0x…", "Sign with the same wallet you put in `ownership.address`, or use the Sign button on /apps/dev."],
+                ["The app must be served over https", "Localhost and http work only in developer preview (Launch on /apps/dev), not for submitting."]
+              ]
+            } }
+          ]
+        },
+        {
+          "id": "runtime",
+          "heading": "When the app runs",
+          "blocks": [
+            { "table": {
+              "head": ["Problem", "Fix"],
+              "rows": [
+                ["The splash screen stays for 8 seconds", "Call `dehub.ready()` once your first screen is on."],
+                ["`Not running inside dehub`", "The page was opened on its own. Check `dehub.isInDehub()` and show a normal web version."],
+                ["`signin` error", "The person is signed out of DeHub. Ask them to sign in, or let them use your app as a guest."],
+                ["`unsupported` on pay or addApp", "Developer previews cannot take payments or be added. Submit the app first."],
+                ["The app looks stretched on desktop", "It should not: DeHub runs mini apps in a phone-width column. Design for 375–430px wide."],
+                ["Links do nothing", "Use `dehub.actions.openUrl(url)` for external links; mini apps cannot navigate the DeHub tab."]
+              ]
+            } }
+          ]
+        },
+        {
+          "id": "server",
+          "heading": "On your server",
+          "blocks": [
+            { "table": {
+              "head": ["Problem", "Fix"],
+              "rows": [
+                ["Token fails with an audience error", "Set `audience` to your app's domain exactly, with no `https://` and no path."],
+                ["Token fails with an expiry error", "Tokens last one hour. Call `dehub.auth.getToken()` again; the SDK refreshes it."],
+                ["Notifications are skipped as `notAdded`", "Only people who added your app get notifications. Ask with `dehub.actions.addApp()`."],
+                ["Notifications are skipped as `rateLimited`", "One every 30 seconds and ten a day per person. Combine updates into one notification."],
+                ["429 from the REST API", "Wait for the `x-ratelimit-reset-*` seconds before retrying."]
+              ]
+            } }
+          ]
+        }
+      ]
+    }
+  ]
+}
