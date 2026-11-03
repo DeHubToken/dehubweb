@@ -13,6 +13,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { revokeQuote } from '@/lib/api/dehub';
 import { usePoll } from '@/hooks/use-polls';
 import { useNavigate } from 'react-router-dom';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { openBrainrotFeed } from '@/lib/brainrot-feed';
+import { quotedPostShort } from '@/lib/quoted-post-short';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Ticket, BarChart2 } from "lucide-react";
 import Images from "@/components/ui/cut-icons/images";
@@ -185,6 +189,8 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const { shortsEnabled } = useShortsEnabled();
   const { walletAddress } = useAuth();
   const [removed, setRemoved] = useState(false);
   const [removing, setRemoving] = useState(false);
@@ -243,6 +249,11 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const short = isMobile && shortsEnabled ? quotedPostShort(quotedPost) : null;
+    if (short) {
+      openBrainrotFeed(quotedPost.tokenId, short);
+      return;
+    }
     navigate(`/app/post/${quotedPost.tokenId}`, { state: { fromFeed: true } });
   };
 
