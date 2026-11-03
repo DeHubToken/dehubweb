@@ -2195,6 +2195,7 @@ export type Database = {
           creator_wallet_address: string
           default_permissions: Json
           description: string | null
+          entry_price: number | null
           holder_gate_chain_id: number | null
           holder_gate_decimals: number
           holder_gate_min: number | null
@@ -2202,6 +2203,7 @@ export type Database = {
           holder_gate_token: string | null
           id: string
           is_private: boolean
+          kind: string
           member_count: number
           name: string
           rules: Json | null
@@ -2220,6 +2222,7 @@ export type Database = {
           creator_wallet_address: string
           default_permissions?: Json
           description?: string | null
+          entry_price?: number | null
           holder_gate_chain_id?: number | null
           holder_gate_decimals?: number
           holder_gate_min?: number | null
@@ -2227,6 +2230,7 @@ export type Database = {
           holder_gate_token?: string | null
           id?: string
           is_private?: boolean
+          kind?: string
           member_count?: number
           name: string
           rules?: Json | null
@@ -2245,6 +2249,7 @@ export type Database = {
           creator_wallet_address?: string
           default_permissions?: Json
           description?: string | null
+          entry_price?: number | null
           holder_gate_chain_id?: number | null
           holder_gate_decimals?: number
           holder_gate_min?: number | null
@@ -2252,6 +2257,7 @@ export type Database = {
           holder_gate_token?: string | null
           id?: string
           is_private?: boolean
+          kind?: string
           member_count?: number
           name?: string
           rules?: Json | null
@@ -2374,6 +2380,50 @@ export type Database = {
             columns: ["reply_to_id"]
             isOneToOne: false
             referencedRelation: "community_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_entry_payments: {
+        Row: {
+          amount: number | null
+          chain_id: number
+          community_id: string
+          created_at: string
+          id: number
+          net_request_id: number | null
+          status: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Insert: {
+          amount?: number | null
+          chain_id: number
+          community_id: string
+          created_at?: string
+          id?: number
+          net_request_id?: number | null
+          status?: string
+          tx_hash: string
+          wallet_address: string
+        }
+        Update: {
+          amount?: number | null
+          chain_id?: number
+          community_id?: string
+          created_at?: string
+          id?: number
+          net_request_id?: number | null
+          status?: string
+          tx_hash?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_entry_payments_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
             referencedColumns: ["id"]
           },
         ]
@@ -9896,6 +9946,16 @@ export type Database = {
         Args: { _message_id: string }
         Returns: undefined
       }
+      community_entry_check: { Args: { _community_id: string }; Returns: Json }
+      community_entry_paid: {
+        Args: { _community_id: string; _wallet: string }
+        Returns: boolean
+      }
+      community_entry_submit: {
+        Args: { _chain_id: number; _community_id: string; _tx_hash: string }
+        Returns: Json
+      }
+      community_entry_token: { Args: { _chain_id: number }; Returns: string }
       community_holder_check_result: {
         Args: { _community_id: string }
         Returns: Json
@@ -9992,6 +10052,7 @@ export type Database = {
           creator_wallet_address: string
           default_permissions: Json
           description: string | null
+          entry_price: number | null
           holder_gate_chain_id: number | null
           holder_gate_decimals: number
           holder_gate_min: number | null
@@ -9999,6 +10060,7 @@ export type Database = {
           holder_gate_token: string | null
           id: string
           is_private: boolean
+          kind: string
           member_count: number
           name: string
           rules: Json | null
@@ -10077,6 +10139,7 @@ export type Database = {
           creator_wallet_address: string
           default_permissions: Json
           description: string | null
+          entry_price: number | null
           holder_gate_chain_id: number | null
           holder_gate_decimals: number
           holder_gate_min: number | null
@@ -10084,6 +10147,7 @@ export type Database = {
           holder_gate_token: string | null
           id: string
           is_private: boolean
+          kind: string
           member_count: number
           name: string
           rules: Json | null
