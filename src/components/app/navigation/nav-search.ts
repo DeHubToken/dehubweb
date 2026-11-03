@@ -420,7 +420,7 @@ interface Ranked {
  * untouched and by identity, so the resting menu is not re-created on every
  * render of a surface that is not searching.
  */
-const OWNER_ONLY_PATHS = new Set(['/app/agents', '/nfts']);
+const OWNER_ONLY_PATHS = new Set(['/app/agents']);
 // One filtered copy per source list, so an empty query keeps returning the same
 // array and the rail does not remount its rows on every render.
 const withoutOwnerOnly = new WeakMap<NavItem[], NavItem[]>();
@@ -440,8 +440,7 @@ export function filterNavItems(items: NavItem[], query: string, t: TranslateFn, 
   // — and doing it before the query is applied means the hidden destinations
   // below (SEARCH_ONLY_ITEMS) cannot be typed back into view either, which is
   // exactly the hole a filter applied afterwards would leave.
-  // Owner-only rollouts (agents, the NFT market while it is checked) stay out
-  // of everyone else's menu and search.
+  // Owner-only rollouts (agents) stay out of everyone else's menu and search.
   const rolloutItems = agentsAllowed ? items : publicItems(items);
   const allowed = isKidsModeLocked() ? rolloutItems.filter(item => isKidsModePath(item.path)) : rolloutItems;
 

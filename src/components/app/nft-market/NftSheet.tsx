@@ -212,8 +212,9 @@ export function NftSheet({
   const nft = detail.data?.nft;
   const name = isBundle
     ? t('nftMarket.bundleOf', { defaultValue: 'Bundle of {{n}}', n: bundle!.length })
-    : nft?.name || target?.name || `#${target?.tokenId ?? ''}`;
-  const image = nft?.image ?? target?.image ?? null;
+    : nft?.name?.trim() || target?.name?.trim() || `#${target?.tokenId ?? ''}`;
+  // The grid's CDN art first: it is already loaded, and the API's copy can be slower.
+  const image = target?.image ?? nft?.image ?? null;
   const collection = nft?.collectionName ?? target?.collectionName ?? null;
   const listings = detail.data?.listings ?? [];
   const offers = detail.data?.offers ?? [];
@@ -320,23 +321,30 @@ export function NftSheet({
           <DrawerTitle>{name}</DrawerTitle>
         </DrawerHeader>
         <div className="mx-auto w-full max-w-xl overflow-y-auto px-4 pb-8">
-          <div className="flex gap-3 pt-1">
+          {/* The art leads, big, with its own colours glowing behind it. */}
+          <div className="relative mt-1 overflow-hidden rounded-2xl" style={{ background: '#09090b' }}>
+            {!isBundle && image ? (
+              <img src={image} alt="" aria-hidden className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover opacity-50 blur-2xl" />
+            ) : null}
             {isBundle ? (
-              <div className="grid h-24 w-24 shrink-0 grid-cols-2 gap-0.5 overflow-hidden rounded-xl">
+              <div className="relative mx-auto grid aspect-square w-full max-w-[22rem] grid-cols-2 gap-0.5 overflow-hidden">
                 {bundle!.slice(0, 4).map((b) => <NftArt key={`${b.contract}:${b.tokenId}`} src={b.image ?? null} alt={b.name ?? ''} className="h-full w-full" />)}
               </div>
             ) : (
-              <NftArt src={image} alt={name} className="h-24 w-24 shrink-0 rounded-xl" />
+              <NftArt key={`${target?.contract}:${target?.tokenId}`} src={image} fallback={nft?.image ?? null} alt={name} className="relative mx-auto aspect-square max-h-[42vh] w-full max-w-[22rem] !object-contain animate-in zoom-in-95 duration-500" />
             )}
-            <div className="flex min-w-0 flex-col justify-center gap-0.5">
-              {collection ? <p className="truncate text-[12px] text-zinc-500">{collection}</p> : null}
-              <p className="truncate text-[17px] font-bold text-white">{name}</p>
-              <p className="text-[12px] text-zinc-500">
-                {CHAIN_LABEL[target?.chainId ?? 0]} · #{target?.tokenId && target.tokenId.length > 12 ? `${target.tokenId.slice(0, 10)}…` : target?.tokenId}
-                {held > 0n ? ` · ${t('nftMarket.youHold', { defaultValue: 'You hold {{n}}', n: held.toString() })}` : ''}
-              </p>
+          </div>
+          <div className="mt-3 flex min-w-0 flex-col gap-1">
+            <p className="line-clamp-2 text-[20px] font-extrabold leading-tight text-white">{name}</p>
+            <div className="flex flex-wrap items-center gap-1.5 text-[12px] text-zinc-500">
+              <span data-kit-chip data-size="sm" data-static><span>{CHAIN_LABEL[target?.chainId ?? 0]}</span></span>
               {detail.data?.isDehub ? (
-                <p className="text-[12px] text-zinc-400">{t('nftMarket.dehubPost', { defaultValue: 'DeHub post' })}</p>
+                <span data-kit-chip data-size="sm" data-static><span>{t('nftMarket.dehubPost', { defaultValue: 'DeHub post' })}</span></span>
+              ) : collection ? (
+                <span data-kit-chip data-size="sm" data-static><span className="max-w-[12rem] truncate">{collection}</span></span>
+              ) : null}
+              {held > 0n ? (
+                <span data-kit-chip data-size="sm" data-active="true" data-static><span>{t('nftMarket.youHold', { defaultValue: 'You hold {{n}}', n: held.toString() })}</span></span>
               ) : null}
             </div>
           </div>
@@ -390,7 +398,10 @@ export function NftSheet({
                 ) : null}
               </div> : null}
               {!isAuthenticated ? (
-                <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
+                <div className="flex flex-col gap-2">
+                  <KitButton onClick={() => auth?.openLoginModal?.()}>{t('nftMarket.signInToTradeCta', { defaultValue: 'Sign in to trade' })}</KitButton>
+                  <p className="text-[12.5px] text-zinc-500">{t('nftMarket.signInToTrade', { defaultValue: 'Sign in with your wallet to buy, sell or make offers.' })}</p>
+                </div>
               ) : null}
 
               {offers.length ? (

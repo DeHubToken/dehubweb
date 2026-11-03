@@ -15,18 +15,21 @@ import { Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { KitButton, PageBody, PageEmpty, PageIsland, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { AuthContext } from '@/contexts/AuthContext';
-import { canManageAgents } from '@/lib/agent-access';
-import NotFound from '@/pages/NotFound';
 import { NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
 import { CollectionsRow } from '@/components/app/nft-market/CollectionsRow';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { NftSpotlight, type SpotlightItem } from '@/components/app/nft-market/NftSpotlight';
 import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fetchCollections, fetchOrders, fetchShowcase, fetchWalletNfts, type MarketCollection, type MarketOrder, type ShowcaseNft } from '@/lib/market/market';
 import SlidersHorizontal from '@/components/ui/cut-icons/settings';
 import { currentPrice } from '@/lib/market/seaport';
 
 type Tab = 'browse' | 'sell' | 'mine' | 'sales';
 type Sort = 'new' | 'price_asc' | 'price_desc';
+
+/** The one card that stands for DeHub Posts on every chain. */
+const DEHUB_ALL = 'dehub:all';
+
+const compactNumber = (n: number) => n.toLocaleString(undefined, { notation: 'compact', maximumFractionDigits: 1 });
 
 const JSON_LD = {
   '@context': 'https://schema.org',
@@ -57,7 +60,6 @@ export default function NftMarketPage() {
   const [sort, setSort] = useState<Sort>('new');
   const [dehubOnly, setDehubOnly] = useState(false);
   const [open, setOpen] = useState<NftSheetTarget | null>(null);
-  const isMobile = useIsMobile();
   // Collections first: pick a collection from the trending row to see only its items.
   const [coll, setColl] = useState<MarketCollection | null>(null);
   const [collOffer, setCollOffer] = useState<NftSheetTarget | null>(null);
@@ -115,8 +117,8 @@ export default function NftMarketPage() {
   });
 
   const collections = useQuery({
-    queryKey: ['nft-market', 'collections', chain, dehubOnly],
-    queryFn: () => fetchCollections({ chainId: chain === 'all' ? undefined : chain, dehub: dehubOnly ? 'true' : undefined, limit: 12 }),
+    queryKey: ['nft-market', 'collections', chain],
+    queryFn: () => fetchCollections({ chainId: chain === 'all' ? undefined : chain, limit: 12 }),
     enabled: tab === 'browse',
     staleTime: 30_000,
   });
@@ -163,15 +165,46 @@ export default function NftMarketPage() {
 
   const listings = useMemo(() => browse.data?.pages.flatMap((p) => p.items) ?? [], [browse.data]);
 
-  // Collections for sale first, then DeHub Posts per chain (open to offers) when not already there.
+  // DeHub Posts live on every chain as one contract each; show them as one
+  // collection, not one card per chain. Other collections keep their own card.
+  const dehubTotals = useMemo(() => {
+    const per = showcase.data?.collections ?? [];
+    const listedDehub = (collections.data?.items ?? []).filter((c) => c.isDehub);
+    return {
+      minted: per.reduce((s, c) => s + (c.minted ?? 0), 0),
+      listed: listedDehub.reduce((s, c) => s + c.listed, 0),
+      image: per[0]?.image ?? listedDehub[0]?.image ?? null,
+      any: per.length > 0 || listedDehub.length > 0,
+    };
+  }, [collections.data, showcase.data]);
+
   const allCollections = useMemo<MarketCollection[]>(() => {
-    const listed = collections.data?.items ?? [];
-    const seen = new Set(listed.map((c) => `${c.chainId}:${c.contract}`));
-    const dehub = (showcase.data?.collections ?? [])
-      .filter((c) => !seen.has(`${c.chainId}:${c.contract}`))
-      .map((c) => ({ ...c, isDehub: true, listed: 0, floor: null }));
-    return [...listed, ...dehub];
-  }, [collections.data, showcase.data, dehubOnly]);
+    const others = (collections.data?.items ?? []).filter((c) => !c.isDehub);
+    if (!dehubTotals.any) return others;
+    const dehub: MarketCollection = {
+      chainId: 0,
+      contract: DEHUB_ALL,
+      name: t('nftMarket.dehubPostsName', { defaultValue: 'DeHub Posts' }),
+      image: dehubTotals.image,
+      isDehub: true,
+      listed: dehubTotals.listed,
+      floor: null,
+      minted: dehubTotals.minted,
+    };
+    return [dehub, ...others];
+  }, [collections.data, dehubTotals, t]);
+
+  const pickCollection = (c: MarketCollection | null) => {
+    if (c?.contract === DEHUB_ALL) {
+      setColl(null);
+      setDehubOnly((v) => !v);
+      return;
+    }
+    setDehubOnly(false);
+    setColl(c);
+  };
+  const pickedCollection = dehubOnly ? { chainId: 0, contract: DEHUB_ALL } : coll;
+  const forSaleTotal = useMemo(() => (collections.data?.items ?? []).reduce((s, c) => s + c.listed, 0), [collections.data]);
 
   const showcaseItems = useMemo<ShowcaseNft[]>(() => {
     const items = showcase.data?.items ?? [];
@@ -185,8 +218,38 @@ export default function NftMarketPage() {
     standard: 'erc1155',
     name: n.name,
     image: n.image,
-    collectionName: 'DeHub Posts',
+    collectionName: t('nftMarket.dehubPostsName', { defaultValue: 'DeHub Posts' }),
   });
+  const titleOf = (name: string | null | undefined, tokenId: string) => name?.trim() || `#${tokenId}`;
+
+  // The spotlight: newest listings when there are any, newest mints otherwise.
+  // Whatever it shows is left out of the grid below, so nothing appears twice.
+  const spotlightFromListings = !coll && listings.length > 0;
+  const spotlight = useMemo<SpotlightItem[]>(() => {
+    if (coll) return [];
+    if (listings.length) {
+      return listings.slice(0, 5).map((o) => ({
+        key: o.orderHash,
+        name: titleOf(o.nftName, o.tokenId),
+        image: o.nftImage,
+        chainId: o.chainId,
+        price: { amount: o.endPrice && o.endPrice !== o.price ? currentPrice(o.components).toString() : o.price, decimals: o.currencyDecimals, symbol: o.currencySymbol },
+        onOpen: () => setOpen(targetOf(o)),
+      }));
+    }
+    return showcaseItems.filter((n) => n.image).slice(0, 5).map((n) => ({
+      key: `${n.chainId}:${n.contract}:${n.tokenId}`,
+      name: titleOf(n.name, n.tokenId),
+      image: n.image,
+      chainId: n.chainId,
+      onOpen: () => setOpen(showcaseTarget(n)),
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coll, listings, showcaseItems]);
+  const inSpotlight = useMemo(() => new Set(spotlight.map((s) => s.key)), [spotlight]);
+  const gridListings = spotlightFromListings ? listings.filter((o) => !inSpotlight.has(o.orderHash)) : listings;
+  const gridMints = spotlightFromListings ? showcaseItems : showcaseItems.filter((n) => !inSpotlight.has(`${n.chainId}:${n.contract}:${n.tokenId}`));
+  const gridClass = 'grid grid-cols-3 gap-1.5 sm:gap-2.5 lg:grid-cols-4 xl:grid-cols-5';
 
   const chainChips = (
     <PageTabs
@@ -240,11 +303,9 @@ export default function NftMarketPage() {
       icon="nfts"
       title={t('nftMarket.signInTitle', { defaultValue: 'Sign in to trade' })}
       body={t('nftMarket.signInBody', { defaultValue: 'Connect your wallet to sell what you hold and track your listings and offers.' })}
+      action={<KitButton onClick={() => auth?.openLoginModal?.()}>{t('nftMarket.signInToTradeCta', { defaultValue: 'Sign in to trade' })}</KitButton>}
     />
   );
-
-  // Owner preview: everyone else gets the normal not-found page until launch.
-  if (!canManageAgents(me)) return <NotFound />;
 
   return (
     <div className="min-h-screen">
@@ -297,51 +358,84 @@ export default function NftMarketPage() {
         <div className="flex flex-col gap-3">
           {tab === 'browse' ? (
             <>
-              <CollectionsRow items={allCollections} selected={coll} onSelect={setColl} />
-              {coll ? (
-                <div className="flex items-center justify-between gap-2 px-1">
-                  <p className="min-w-0 truncate text-[13px] font-semibold text-white">
-                    {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
-                    <span className="font-normal text-zinc-500">
-                      {' · '}
-                      {coll.listed
-                        ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: coll.listed })
-                        : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: coll.minted ?? 0 })}
-                    </span>
-                  </p>
-                  <div className="flex shrink-0 items-center gap-1.5">
-                    {listings[0] || showcaseItems[0] ? (
-                      <button
-                        type="button"
-                        data-kit-chip
-                        data-size="sm"
-                        onClick={() => setCollOffer(listings[0] ? targetOf(listings[0]) : showcaseTarget(showcaseItems[0]))}
-                      >
-                        <span>{t('nftMarket.collectionOffer', { defaultValue: 'Offer on any' })}</span>
-                      </button>
-                    ) : null}
-                    <button type="button" data-kit-chip data-size="sm" onClick={() => setColl(null)}>
-                      <span>{t('nftMarket.showAll', { defaultValue: 'Show all' })}</span>
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-
               {browse.isLoading && showcase.isLoading ? (
-                <div className="flex justify-center py-16"><Loader2 className="h-5 w-5 animate-spin text-zinc-500" /></div>
+                <>
+                  <div className="aspect-[4/3] w-full animate-pulse rounded-2xl bg-white/5 sm:aspect-[21/9]" />
+                  <div className={gridClass}>
+                    {Array.from({ length: 10 }).map((_, i) => <div key={i} className="aspect-square animate-pulse rounded-xl bg-white/5" />)}
+                  </div>
+                </>
               ) : (
                 <>
-                  {listings.length ? (
+                  <NftSpotlight items={spotlight} />
+
+                  {!coll ? (
+                    <div data-nft-stats className="grid grid-cols-3 gap-1.5 sm:gap-2.5">
+                      <div data-page-bento className="flex flex-col justify-center rounded-xl bg-zinc-900 px-3 py-2.5">
+                        <span className="text-[19px] font-extrabold tabular-nums leading-none text-white sm:text-[24px]">{compactNumber(dehubTotals.minted)}</span>
+                        <span className="mt-1 text-[11px] text-zinc-500">{t('nftMarket.statMinted', { defaultValue: 'Minted' })}</span>
+                      </div>
+                      <div data-page-bento className="flex flex-col justify-center rounded-xl bg-zinc-900 px-3 py-2.5">
+                        <span className="text-[19px] font-extrabold tabular-nums leading-none text-white sm:text-[24px]">{compactNumber(forSaleTotal)}</span>
+                        <span className="mt-1 text-[11px] text-zinc-500">{t('nftMarket.statForSale', { defaultValue: 'For sale' })}</span>
+                      </div>
+                      <button
+                        type="button"
+                        data-page-bento
+                        onClick={() => setTab('sell')}
+                        className="flex flex-col justify-center rounded-xl bg-zinc-900 px-3 py-2.5 text-left transition-transform active:scale-[0.98]"
+                      >
+                        <span className="text-[14px] font-bold leading-tight text-white sm:text-[16px]">{t('nftMarket.sellYours', { defaultValue: 'Sell yours' })} →</span>
+                        <span className="mt-1 text-[11px] text-zinc-500">{t('nftMarket.sellYoursHint', { defaultValue: 'List from your wallet' })}</span>
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {allCollections.length > 1 ? (
+                    <CollectionsRow items={allCollections} selected={pickedCollection} onSelect={pickCollection} />
+                  ) : null}
+
+                  {coll ? (
+                    <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
+                      <p className="min-w-0 truncate text-[15px] font-bold text-white">
+                        {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
+                        <span className="text-[13px] font-normal text-zinc-500">
+                          {' · '}
+                          {coll.listed
+                            ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: coll.listed })
+                            : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: coll.minted ?? 0 })}
+                        </span>
+                      </p>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        {listings[0] || showcaseItems[0] ? (
+                          <button
+                            type="button"
+                            data-kit-chip
+                            data-size="sm"
+                            onClick={() => setCollOffer(listings[0] ? targetOf(listings[0]) : showcaseTarget(showcaseItems[0]))}
+                          >
+                            <span>{t('nftMarket.collectionOffer', { defaultValue: 'Offer on any' })}</span>
+                          </button>
+                        ) : null}
+                        <button type="button" data-kit-chip data-size="sm" onClick={() => setColl(null)}>
+                          <span>{t('nftMarket.showAll', { defaultValue: 'Show all' })}</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {gridListings.length ? (
                     <section className="flex flex-col gap-2">
                       {!coll ? (
-                        <h2 className="px-1 text-[13px] font-semibold text-white">{t('nftMarket.forSale', { defaultValue: 'For sale' })}</h2>
+                        <h2 data-page-bento className="rounded-xl bg-zinc-900 px-3 py-2 text-[15px] font-bold text-white">{t('nftMarket.forSale', { defaultValue: 'For sale' })}</h2>
                       ) : null}
-                      <div data-nft-grid className={isMobile ? 'grid grid-cols-3 gap-1.5' : 'grid grid-cols-3 gap-2.5 lg:grid-cols-4 xl:grid-cols-5'}>
-                        {listings.map((o) => (
+                      <div data-nft-grid className={gridClass}>
+                        {gridListings.map((o, i) => (
                           <NftCard
                             key={o.orderHash}
                             compact
-                            name={o.nftName || `#${o.tokenId}`}
+                            index={i}
+                            name={titleOf(o.nftName, o.tokenId)}
                             collection={o.collectionName}
                             image={o.nftImage}
                             chainId={o.chainId}
@@ -371,20 +465,23 @@ export default function NftMarketPage() {
                     </section>
                   ) : null}
 
-                  {showcaseItems.length && (!coll || !listings.length) ? (
+                  {gridMints.length && (!coll || !listings.length) ? (
                     <section className="flex flex-col gap-2">
-                      <h2 className="px-1 text-[13px] font-semibold text-white">
-                        {coll ? t('nftMarket.openToOffers', { defaultValue: 'Open to offers' }) : t('nftMarket.freshMints', { defaultValue: 'Fresh from DeHub creators' })}
-                      </h2>
-                      <div data-nft-grid className={isMobile ? 'grid grid-cols-3 gap-1.5' : 'grid grid-cols-3 gap-2.5 lg:grid-cols-4 xl:grid-cols-5'}>
-                        {showcaseItems.map((n) => (
+                      <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
+                        <h2 className="text-[15px] font-bold text-white">
+                          {coll ? t('nftMarket.openToOffers', { defaultValue: 'Open to offers' }) : t('nftMarket.latestMints', { defaultValue: 'Latest mints' })}
+                        </h2>
+                        <span className="text-[11.5px] text-zinc-500">{t('nftMarket.tapToOffer', { defaultValue: 'Tap one to make an offer' })}</span>
+                      </div>
+                      <div data-nft-grid className={gridClass}>
+                        {gridMints.map((n, i) => (
                           <NftCard
-                            key={`${n.chainId}:${n.tokenId}`}
+                            key={`${n.chainId}:${n.contract}:${n.tokenId}`}
                             compact
-                            name={n.name}
+                            index={i}
+                            name={titleOf(n.name, n.tokenId)}
                             image={n.image}
                             chainId={n.chainId}
-                            priceLabel={t('nftMarket.makeOffer', { defaultValue: 'Make offer' })}
                             onClick={() => setOpen(showcaseTarget(n))}
                           />
                         ))}
@@ -515,12 +612,6 @@ export default function NftMarketPage() {
               )}
             </>
           ) : null}
-
-          <p className="px-1 pt-2 text-[11.5px] leading-relaxed text-zinc-500">
-            {t('nftMarket.footer', {
-              defaultValue: 'Trades settle on Seaport, the open NFT swap contract. DeHub never holds your NFTs or money. Fees: 2%, or 1% when paying in DHB, plus any creator royalty. Trades are final.',
-            })}
-          </p>
         </div>
       </PageBody>
 
