@@ -765,7 +765,7 @@ function relatedPostsHtml(manifest, currentSlug, limit = 4) {
  * named "Riftn Team" as a made-up author. A real name, when a post has one,
  * stays a Person.
  */
-const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team']);
+const BRAND_BYLINES = new Set(['', 'dehub', 'dehub team', 'riftn', 'riftn team']);
 function blogAuthorLd(author) {
   const name = String(author || '').replace(/\s+/g, ' ').trim();
   return BRAND_BYLINES.has(name.toLowerCase())
