@@ -7916,7 +7916,25 @@
     "followBackAllFailed": "Hindi masubaybayan ang sinuman pabalik",
     "followingBackProgress": "Sumusunod sa {{completed}} ng {{total}}",
     "findingFollowers": "Paghahanap ng mga tagasunod...",
-    "followBackAll": "Subaybayan ang lahat"
+    "followBackAll": "Subaybayan ang lahat",
+    "nonFollowers": {
+      "title": "Linisin ang mga sinusundan mo?",
+      "body": "{{count}} account na sinusundan mo ang hindi ka sinusundan pabalik.",
+      "cta": "I-unfollow lahat ng {{count}}",
+      "notNow": "Hindi ngayon",
+      "confirmTitle": "I-unfollow ang {{count}} account?",
+      "confirmBody": "Hindi sila aabisuhan. Puwede mo silang sundan ulit mamaya.",
+      "confirm": "Oo, i-unfollow ang {{count}}",
+      "cancel": "Kanselahin",
+      "working": "Ina-unfollow ang {{done}} sa {{total}}...",
+      "background": "Ituloy sa background",
+      "failed": "Hindi makapagsimula. Subukan ulit pagkalipas ng isang minuto.",
+      "close": "Isara",
+      "doneTitle": "Malinis na lahat",
+      "doneAll": "Na-unfollow ang {{done}} account na hindi ka sinusundan pabalik.",
+      "doneSome": "Na-unfollow ang {{done}} account. {{failed}} ang hindi na-unfollow.",
+      "doneToast": "Na-unfollow ang {{done}} account na hindi ka sinusundan pabalik"
+    }
   },
   "reactionInfo": {
     "title": "Mga Reaksyon",
