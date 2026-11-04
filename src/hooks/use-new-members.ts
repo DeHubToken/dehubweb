@@ -23,7 +23,7 @@
  * @module hooks/use-new-members
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -295,9 +295,16 @@ export function useRegisterNewMember() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  // Read through a ref: `t` changes identity when a translation pack lands,
+  // which happens right as sign-in settles for non-English readers. With it in
+  // the deps every pack load cancelled the call in flight and fired a new one
+  // (nine identical requests per Turkish sign-in).
+  const live = useRef({ queryClient, navigate, t });
+  live.current = { queryClient, navigate, t };
 
   useEffect(() => {
     if (!isAuthenticated || !walletAddress) return;
+    const { queryClient, navigate, t } = live.current;
     if (sessionStorage.getItem(REGISTERED_KEY) === walletAddress.toLowerCase()) return;
 
     const token = getAuthToken();
@@ -364,5 +371,5 @@ export function useRegisterNewMember() {
       cancelled = true;
       if (noticeTimer) clearTimeout(noticeTimer);
     };
-  }, [isAuthenticated, walletAddress, queryClient, navigate, t]);
+  }, [isAuthenticated, walletAddress]);
 }
