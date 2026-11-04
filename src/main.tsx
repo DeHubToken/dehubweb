@@ -40,6 +40,7 @@ import "./styles/system-light.css";
 import "./styles/light-desktop-panels.css";
 import "./styles/text-readability.css";
 import "./styles/light-contrast.css";
+import "./styles/select-menus.css";
 import "./styles/post-meta-grey.css";
 import "./styles/pinned-community-stage.css";
 import "./styles/grid-hover.css";
