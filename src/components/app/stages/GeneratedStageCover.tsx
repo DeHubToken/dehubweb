@@ -159,7 +159,7 @@ export function GeneratedStageCover({
         className="absolute"
         style={{ left: '4.4cqw', bottom: '4.2cqw', padding: '0.6cqw 1.4cqw', border: '0.12cqw solid rgba(255,255,255,0.3)', borderRadius: '0.5cqw', background: 'rgba(0,0,0,0.35)', fontFamily: MONO, fontSize: '1.5cqw', color: 'rgba(255,255,255,0.85)' }}
       >
-        {'// dehub.io/stages'}
+        {'// riftn.com/stages'}
       </span>
     </div>
   );

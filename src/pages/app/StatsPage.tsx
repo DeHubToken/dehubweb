@@ -858,14 +858,14 @@ export default function StatsPage() {
     <div className="min-h-screen">
       <SEOHead
         title={_copy("copy.1340eb7a333e", { defaultValue: "Live Site Stats: Riftn Visitors and Members in Real Time" })}
-        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction." })}
+        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for riftn.com: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction." })}
         url="https://riftn.com/stats"
         image="https://riftn.com/og/stats.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Dataset',
           name: 'Riftn live site statistics',
-          description: _copy("copy.67ae514e929e", { defaultValue: "Edge-measured visitor statistics for dehub.io alongside the platform’s own community figures — members, active users, signups and growth — published live." }),
+          description: _copy("copy.67ae514e929e", { defaultValue: "Edge-measured visitor statistics for riftn.com alongside the platform’s own community figures — members, active users, signups and growth — published live." }),
           url: 'https://riftn.com/stats',
           creator: { '@type': 'Organization', name: 'Riftn' },
           isAccessibleForFree: true,

@@ -10,7 +10,7 @@
 import { buildStageCover, stageCoverTitleScale } from '../src/lib/stage-cover.ts';
 import { wrapPostText } from './post-share-card.js';
 
-export const STAGE_CARD_VERSION = 'v2';
+export const STAGE_CARD_VERSION = 'v3';
 const ORIGIN = 'https://riftn.com';
 
 export function stageShareImageUrl(id) {
@@ -120,6 +120,6 @@ export function renderStageCardSvg(stage, images = {}) {
   ${kv ? `<text x="${n(left)}" y="${kvY}" font-family="Consolas" font-size="${kvSize}" fill="#fff" fill-opacity=".6">${escape(wrapPostText(kv, kvSize, 56 * U, 1)[0] || '')}</text>` : ''}
 
   <rect x="${n(left)}" y="${n(H - 4.2 * U - 3.1 * U)}" width="${n(18.4 * U)}" height="${n(3.1 * U)}" rx="${n(0.5 * U)}" fill="#000" fill-opacity=".35" stroke="#fff" stroke-opacity=".3" stroke-width="1.5"/>
-  <text x="${n(left + 1.4 * U)}" y="${n(H - 4.2 * U - 1.05 * U)}" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".85">// dehub.io/stages</text>
+  <text x="${n(left + 1.4 * U)}" y="${n(H - 4.2 * U - 1.05 * U)}" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".85">// riftn.com/stages</text>
 </svg>`;
 }

@@ -204,10 +204,10 @@ function EnsHandleSettingsInner() {
         title={t('settings.ensHandle', 'ENS name')}
         description={
           link
-            ? t('settings.ensLinkedDesc', 'You are also at dehub.io/{{name}}', { name: link.name })
+            ? t('settings.ensLinkedDesc', 'You are also at riftn.com/{{name}}', { name: link.name })
             : t(
                 'settings.ensHandleDesc',
-                'Prove you hold a .eth name to also be reachable at dehub.io/yourname.eth. Your username does not change.',
+                'Prove you hold a .eth name to also be reachable at riftn.com/yourname.eth. Your username does not change.',
               )
         }
         action={

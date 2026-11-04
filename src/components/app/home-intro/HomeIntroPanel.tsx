@@ -486,7 +486,7 @@ export function HomeIntroPanel({
             <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>{_copy("copy.ca7842e53ac8", { defaultValue: "riftn.com" })}</span>
           <img
             src="/brand-kit/brand/qr-dehub-io.png"
-            alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to dehub.io" })}
+            alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to riftn.com" })}
             width={56}
             height={56}
             loading="lazy"

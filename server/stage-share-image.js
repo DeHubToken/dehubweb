@@ -38,7 +38,7 @@ function loadFonts(env) {
 }
 
 /**
- * /_og/stage/v2/<id>.png — the generated Chrome Mic banner for a stage with no cover.
+ * /_og/stage/v3/<id>.png — the generated Chrome Mic banner for a stage with no cover.
  * Rendered from the live row, so a stage going live or ending changes its
  * card; cached under a fingerprint of the fields the card reads.
  */

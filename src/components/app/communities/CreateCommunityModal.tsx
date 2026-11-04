@@ -132,7 +132,7 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
                 className="w-full h-10 px-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
               {baseSlug && (
-                <p className="text-zinc-600 text-xs mt-1 pl-1">dehub.io/app/communities/{baseSlug}</p>
+                <p className="text-zinc-600 text-xs mt-1 pl-1">riftn.com/app/communities/{baseSlug}</p>
               )}
             </div>
           </div>
