@@ -55,6 +55,10 @@ export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: Volu
           paintNote(ctx, n.x, n.y, n.size, n.rotation, n.opacity * fade, ink, i % 4 === 0);
         }
         ctx.restore();
+        ctx.restore();
+        // The rare traveller can leave the tube even at full volume.
+        ctx.save(); ctx.translate(0, cy);
+        ctx.beginPath(); ctx.rect(thumbRadius, -trackHeight / 2, width + 36, trackHeight); ctx.clip();
         const p = escapePose(clock, thumb, radius, trackHeight);
         if (canEscapeMusicNote()) {
           if (!p.ready) paintNote(ctx, p.x, p.y, .48 * trackHeight / 8, -.18, p.opacity * fade * .9, p.x > thumb + radius ? '#dae9ef' : ink);
