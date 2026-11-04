@@ -116,6 +116,9 @@ import followAvatarRio from '@/assets/avatars/riooo.png';
 import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import { ConversationItem } from '@/pages/app/MessagesPage';
+import type { DeHubDMMessage } from '@/lib/api/dehub/dm';
+import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
@@ -223,6 +226,35 @@ function ComicGallery() {
  * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
  * theme's own card surface (or none, in System) is what shows.
  */
+/** Name badges in the Messages list: badge on the name's baseline, then the dot. */
+function NameBadgesGallery() {
+  const now = new Date(Date.now() - 2 * 3600_000).toISOString();
+  const people: Array<Partial<DeHubUser> & { address: string }> = [
+    { address: '0x6666666666666666666666666666666666666661', username: 'ellaverse', displayName: 'Ella Verse', badgeBalance: 2_000_000 },
+    { address: '0x6666666666666666666666666666666666666662', username: 'xluna', displayName: 'Luna', badgeBalance: 600_000 },
+    { address: '0x6666666666666666666666666666666666666663', username: 'deepwater', displayName: 'Deep Water', badgeBalance: 120_000_000 },
+    { address: '0x6666666666666666666666666666666666666664', username: 'heldtier', displayName: 'Held Tier', badgeBalance: 60_000, badgeLock: { tier: 'Great White Shark', requirement: 50_000 } },
+  ];
+  const rows = people.map((user, i) => ({
+    id: `gallery-dm-${i}`,
+    participants: [user as DeHubUser],
+    otherUser: user as DeHubUser,
+    unreadCount: i === 0 ? 2 : 0,
+    createdAt: now,
+    updatedAt: now,
+    lastMessage: { id: `gallery-dm-msg-${i}`, conversationId: `gallery-dm-${i}`, sender: user as DeHubUser, content: 'See you on the stream tonight', createdAt: now } as DeHubDMMessage,
+  }));
+  const noop = () => {};
+  return (
+    <section data-page-bento data-name-badges-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-white/[0.04]">
+      <h2 className="px-4 pt-4 text-sm font-semibold">Messages: name badges</h2>
+      {rows.map((c) => (
+        <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={false} onDelete={noop} onBlock={noop} />
+      ))}
+    </section>
+  );
+}
+
 function FollowCardsGallery() {
   const { t: _copy } = _useCopy();
   const abs = (src: string) => new URL(src, window.location.origin).href;
@@ -1223,6 +1255,7 @@ export default function StateGalleryPage() {
         <ComicGallery />
         <UsernameReserveGallery />
 
+        <NameBadgesGallery />
         <FollowCardsGallery />
 
         <StreamerArtworkGallery />

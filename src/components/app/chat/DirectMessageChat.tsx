@@ -2330,7 +2330,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               <h2 className={`font-semibold text-white flex items-center gap-1.5 truncate ${dock ? 'text-sm' : ''}`}>
                 <BadgedName
                   badgeBalance={(otherUser as any)?.badgeBalance}
+                  badgeLock={(otherUser as any)?.badgeLock}
                   username={otherUser?.username}
+                  lookupId={otherUser?.username || otherUser?.address}
                 >
                   {displayName}
                 </BadgedName>

@@ -107,6 +107,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
       <div data-fc-body>
         <BadgedName
           badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+          badgeLock={user.hideBadgeAndBalance ? null : user.badgeLock}
           username={user.username}
           className="truncate"
           wrapperClassName="max-w-full"
