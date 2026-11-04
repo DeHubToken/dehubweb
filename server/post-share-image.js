@@ -14,7 +14,7 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png'].map(async (path) => {
+  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png'].map(async (path) => {
     const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
@@ -84,7 +84,7 @@ async function brandCard(request, env, headers, reason) {
 }
 
 function renderPng(svg, font) {
-  const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Exo' } });
+  const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Manrope' } });
   let rendered;
   try { rendered = renderer.render(); return rendered.asPng(); }
   finally { rendered?.free(); renderer.free(); }

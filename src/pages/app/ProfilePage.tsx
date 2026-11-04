@@ -569,7 +569,7 @@ export default function ProfilePage() {
             home title, index,follow and a self canonical. */}
         <SEOHead
           title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on Riftn', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} | Riftn`}
-          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
+          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has riftn.com/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
           noindex
           noCanonical
         />

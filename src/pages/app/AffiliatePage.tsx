@@ -507,7 +507,7 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
           <Copy className="w-4 h-4 mr-2" />{_copy("copy.085cd98e8e2e", { defaultValue: " Copy link" })}</Button>
       </div>
       <p className={`text-xs font-mono break-all ${invalid ? "text-red-400" : "text-white/50"}`}>
-        {invalid ? _copy("copy.c184b8c9592f", { defaultValue: "That has to be a page on dehub.io." }) : link}
+        {invalid ? _copy("copy.c184b8c9592f", { defaultValue: "That has to be a page on riftn.com." }) : link}
       </p>
     </div>
   );

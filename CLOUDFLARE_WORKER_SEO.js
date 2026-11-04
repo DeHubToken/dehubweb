@@ -660,9 +660,9 @@ function buildBlogShareImage(post) {
     const w = Number(post.bannerWidth), h = Number(post.bannerHeight);
     const ratio = w > 0 && h > 0 ? w / h : 1200 / 630;
     const fit = ratio >= 1.75 && ratio <= 2.05 ? CARD_COVER : BLOG_CARD_PAD;
-    return `${IMAGE_TRANSFORM_BASE}${fit}/${banner}`;
+    return `${IMAGE_TRANSFORM_BASE}${fit}/${TRANSFORM_SOURCE_ORIGIN}${banner.slice(APP_URL.length)}`;
   }
-  return `${IMAGE_TRANSFORM_BASE}${CARD_COVER}/${APP_URL}${OG_SOURCE_PREFIX}blog/${encodeURIComponent(post.slug)}`;
+  return `${IMAGE_TRANSFORM_BASE}${CARD_COVER}/${TRANSFORM_SOURCE_ORIGIN}${OG_SOURCE_PREFIX}blog/${encodeURIComponent(post.slug)}`;
 }
 
 /**
@@ -2977,6 +2977,9 @@ async function fetchPostRecord(tokenId) {
 const CDN_ORIGIN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
 // Image transforms are enabled on the dehub.io zone, which stays ours.
 const IMAGE_TRANSFORM_BASE = 'https://dehub.io/cdn-cgi/image/';
+// The dehub.io transform refuses a riftn.com source (403, another zone), so
+// our own pictures are named on dehub.io; it follows the 301 to riftn.com.
+const TRANSFORM_SOURCE_ORIGIN = 'https://dehub.io';
 
 function transformedImageUrl(url) {
   if (!url.startsWith(`${CDN_ORIGIN}/`)) return url;
@@ -3021,7 +3024,7 @@ function shareCardImage(url) {
   let source = null;
   if (src.startsWith(`${CDN_ORIGIN}/`)) source = src;
   else if (src.startsWith(`${SUPABASE_STORAGE_PUBLIC}/`)) {
-    source = `${APP_URL}${OG_SOURCE_PREFIX}storage/${src.slice(SUPABASE_STORAGE_PUBLIC.length + 1)}`;
+    source = `${TRANSFORM_SOURCE_ORIGIN}${OG_SOURCE_PREFIX}storage/${src.slice(SUPABASE_STORAGE_PUBLIC.length + 1)}`;
   }
   if (!source) return null;
   const options = /\/avatars?[/_.-]/i.test(src) ? CARD_PAD : CARD_COVER;
@@ -6719,7 +6722,7 @@ async function handleRequest(request, env, ctx) {
   // Share-card sources for the image transform (see shareCardImage). Ahead of
   // the `/_` static-asset skip below, which would hand these to ASSETS.
   // Older installed apps and already-shared URLs continue to receive the current card.
-  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2|3|4|5)\/([1-9]\d{0,14})\.png$/);
+  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2|3|4|5|6)\/([1-9]\d{0,14})\.png$/);
   if (textPostCard) {
     const { handlePostShareImage } = await import('./server/post-share-image.js');
     return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord, {
@@ -6727,12 +6730,12 @@ async function handleRequest(request, env, ctx) {
       price: fetchShareBadgePrice,
     });
   }
-  const profileCard = pathname.match(/^\/_og\/profile\/v1\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
+  const profileCard = pathname.match(/^\/_og\/profile\/v(?:1|2)\/([A-Za-z0-9_][A-Za-z0-9_.-]{0,63})\.png$/);
   if (profileCard) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
-  const stageCard = pathname.match(/^\/_og\/stage\/v[12]\/([0-9a-fA-F-]{16,64})\.png$/);
+  const stageCard = pathname.match(/^\/_og\/stage\/v[123]\/([0-9a-fA-F-]{16,64})\.png$/);
   if (stageCard) {
     const { handleStageShareImage } = await import('./server/stage-share-image.js');
     return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);

@@ -186,7 +186,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
               <div className="space-y-1 p-3">
                 <p className="article-ink line-clamp-1 text-sm font-semibold">{title.trim()}</p>
                 <p className="article-meta line-clamp-2 text-xs">{summary.trim() || t('articles.summaryPlaceholder', 'A sentence or two about your article')}</p>
-                <p className="article-meta text-[11px]">{_copy("copy.bf640b85d499", { defaultValue: "dehub.io · " })}{t('articles.minRead', { count: minutes, defaultValue: '{{count}} min read' })}</p>
+                <p className="article-meta text-[11px]">{_copy("copy.bf640b85d499", { defaultValue: "riftn.com · " })}{t('articles.minRead', { count: minutes, defaultValue: '{{count}} min read' })}</p>
               </div>
             </div>
           </section>

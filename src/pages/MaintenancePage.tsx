@@ -40,7 +40,7 @@ export function MaintenanceScreen({ checking = false, failed = false, onRetry }:
         </div>
         <img className="maintenance-clock" src="/brand-kit/icons/clock.png" alt="" aria-hidden="true" width="480" height="504" />
       </main>
-      <footer className="maintenance-bottomline"><span>{t('maintenance.ownership')}</span><span>dehub.io</span></footer>
+      <footer className="maintenance-bottomline"><span>{t('maintenance.ownership')}</span><span>riftn.com</span></footer>
     </div>
   </div></ThemePreviewProvider>;
 }

@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v5';
+export const POST_CARD_VERSION = 'v6';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://riftn.com';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -265,9 +265,9 @@ function renderMediaPanel(data, media) {
     <rect x="390" y="${caption.length ? 324 : 414}" width="742" height="${caption.length ? 220 : 130}" fill="url(#foot)" clip-path="url(#panel)"/>
     <rect x="390" y="84" width="742" height="460" rx="22" fill="none" stroke="#22242a"/>
     ${play}
-    <g font-family="Exo" font-weight="500">
+    <g font-family="Manrope" font-weight="500">
       ${textLines(caption, 415, captionY, 28, 36, '#f4f4f6')}
-      <text x="415" y="524" font-size="18" fill="#c5c6ce">dehub.io</text>
+      <text x="415" y="524" font-size="18" fill="#c5c6ce">riftn.com</text>
       <text x="1064" y="524" text-anchor="end" font-size="18" fill="#f1f1f4">${data.media.video ? 'Watch on Riftn' : 'View the post'}</text>
       <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#f1f1f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
@@ -312,27 +312,27 @@ export function renderPostCardSvg(data, { logo, avatar = '', badges = [], media 
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
-  ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="23">${escape(initials)}</text>`}
-  <g font-family="Exo" font-weight="500">
+  ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="23">${escape(initials)}</text>`}
+  <g font-family="Manrope" font-weight="500">
     ${identity.svg}
     <text x="143" y="${identity.handleY}" font-size="17" fill="#9698a3">${escape(wrapPostText(data.handle ? `@${data.handle}` : '', 17, 184, 1)[0] || '')}</text>
     ${stats}
     <text x="60" y="520" font-size="17" fill="#8b8e99">${escape(dateText)}</text>
   </g>
-  ${showMedia ? renderMediaPanel(data, media) : `<g font-family="Exo" font-weight="500">
+  ${showMedia ? renderMediaPanel(data, media) : `<g font-family="Manrope" font-weight="500">
     <g clip-path="url(#copy)">
       ${textLines(title.lines, 415, title.y, title.size, title.step, '#f4f4f6')}
       ${textLines(body.lines, 415, body.y, body.size, body.step, '#c5c6ce')}
       ${renderPoll(poll)}
     </g>
-    <text x="415" y="524" font-size="18" fill="#9699a3">dehub.io</text>
+    <text x="415" y="524" font-size="18" fill="#9699a3">riftn.com</text>
     <text x="1064" y="524" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
     <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>`}
   </svg>`;
 }
 
-export const PROFILE_CARD_VERSION = 'v1';
+export const PROFILE_CARD_VERSION = 'v2';
 const PROFILE_HANDLE = /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$/;
 
 export function profileShareImageUrl(handle) {
@@ -391,12 +391,12 @@ export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
   <rect x="68" y="84" width="1064" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="110" y="190" width="220" height="220" rx="56" fill="#25262c" stroke="#5d5f69"/>
-  ${avatar ? `<image x="110" y="190" width="220" height="220" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="220" y="325" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="76">${escape(initials)}</text>`}
-  <g font-family="Exo" font-weight="500">
+  ${avatar ? `<image x="110" y="190" width="220" height="220" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="220" y="325" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="76">${escape(initials)}</text>`}
+  <g font-family="Manrope" font-weight="500">
     ${textLines(name, 380, nameY, 56, 66, '#f4f4f6')}
     <text x="380" y="${handleY}" font-size="28" fill="#9698a3">${escape(wrapPostText(`@${data.handle}`, 28, 640, 1)[0])}</text>
     ${facts ? `<text x="380" y="${handleY + 62}" font-size="26" fill="#d9dae0">${escape(facts)}</text>` : ''}
-    <text x="110" y="508" font-size="18" fill="#9699a3">dehub.io</text>
+    <text x="110" y="508" font-size="18" fill="#9699a3">riftn.com</text>
     <text x="1064" y="508" text-anchor="end" font-size="18" fill="#bfc1c9">Follow on Riftn</text>
     <path d="M1076 507l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
