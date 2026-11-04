@@ -39,7 +39,9 @@ function draw(now: number) {
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
   }
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-  const ink = getComputedStyle(document.body).color;
+  // System's page ink is applied to surfaces, not the body's inherited colour.
+  const html = document.documentElement;
+  const ink = html.dataset.theme === 'light' || html.dataset.systemTone === 'light' ? '#203944' : '#e5f2f7';
   for (const note of notes) {
     const p = floatingNote(clock - note.born, note.seed, note.x, note.y, width, height);
     paintNote(ctx, p.x, p.y, p.size, p.rotation, p.opacity, ink, false, true);
