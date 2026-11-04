@@ -98,8 +98,10 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
-  // Enlarge the artwork above the baseline by 10% using the adjacent font's cap height.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.1cap' : '0.8052em';
+  // Artwork height above the baseline: 1.21x the adjacent font's cap height
+  // (cap height, then +10%, then +10% again on 2026-11-04). Every tier's
+  // measured bounds scale from this one number, so per-badge alignment holds.
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.21cap' : '0.8857em';
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
     height: cap,

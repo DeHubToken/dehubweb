@@ -30,6 +30,7 @@ export function toSuggestedAccount(user: SearchCreator): SuggestedAccount {
     aboutMe: user.bio ?? null,
     followers: user.followerCount ?? 0,
     badgeBalance: user.badgeBalance,
+    badgeLock: user.badgeLock ?? null,
     isFollowing: user.isFollowing,
     followsYou: user.followsYou,
   };
