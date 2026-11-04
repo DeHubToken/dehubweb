@@ -51,10 +51,10 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
+  const { data: limitedCategories = [], isPending: limitedPending } = useTrendingCategories(topicPeriod);
   
   // Fetch ALL categories for the "all" period (unlimited)
-  const { data: allCategories = [] } = useAllTrendingCategories();
+  const { data: allCategories = [], isPending: allPending } = useAllTrendingCategories();
 
   // Use unlimited data for "all" period, limited for others
   const categories: CategoryCount[] = topicPeriod === 'all' ? allCategories : limitedCategories;
@@ -191,6 +191,14 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                   <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
                 </div>
               )}
+            </div>
+          ) : (topicPeriod === 'all' ? allPending : limitedPending) ? (
+            // Still loading: keep the space quiet instead of flashing
+            // "no categories yet" for a moment on every page change.
+            <div className="flex flex-col gap-1" aria-hidden="true">
+              {Array.from({ length: 5 }, (_, i) => (
+                <div key={i} className="h-9 rounded-xl bg-zinc-800/30" />
+              ))}
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-6 text-center">
