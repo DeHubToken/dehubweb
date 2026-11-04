@@ -97,6 +97,7 @@ import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import { DmDockMount } from '@/components/app/chat/DmDockMount';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
+import { useOwnProfileUrl } from '@/hooks/use-own-profile-url';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { useRetainedPost, type RetainedPostEntry } from '@/lib/retained-post-surface';
@@ -234,6 +235,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     if (isPostModalOpen) setPostModalMounted(true);
   }, [isPostModalOpen]);
   const { isCollapsed } = useSidebarCollapse();
+  // Before any route matching below: /<your username> is your cached profile.
+  useOwnProfileUrl();
   const location = useLocation();
   const mainRef = useRef<HTMLElement | null>(null);
   // Gate for the corner player's chunk — see its lazy import above.

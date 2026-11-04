@@ -57,6 +57,7 @@ const PostModal = React.lazy(() =>
 );
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { isOwnProfilePath } from '@/lib/own-profile-path';
 import { openStageModal } from '@/contexts/StageContext';
 import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
@@ -383,7 +384,9 @@ export function MobileBottomNav() {
               const drag = barDragProps(id);
               const isActive = item.path === '/app'
                 ? isHomePath(location.pathname)
-                : location.pathname.startsWith(item.path);
+                : item.path === '/app/profile'
+                  ? isOwnProfilePath(location.pathname)
+                  : location.pathname.startsWith(item.path);
               const badge = item.label === 'Messages'
                 ? messagesUnread
                 : item.label === 'Notifications'
