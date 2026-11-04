@@ -179,7 +179,7 @@ describe('edge-rendered pages', () => {
     expect(trail['@type']).toBe('BreadcrumbList');
     const image = meta(body, 'og:image')!.replace(/&amp;/g, '&');
     // The post's own banner, read straight from /media and made 1200x630.
-    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://riftn.com${post.bannerImage}`);
+    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io${post.bannerImage}`);
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
@@ -313,7 +313,7 @@ describe('entity pages', () => {
     expect(types(body)).toContain('OnlineStore');
     expect(types(body)).not.toContain('Store');
     expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://riftn.com/_og/storage/store-media/abc/banner.png',
+      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io/_og/storage/store-media/abc/banner.png',
     );
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
@@ -494,7 +494,7 @@ describe('proxied pages', () => {
     expect(page['@type']).toBe('CollectionPage');
     expect(page.name).toBe('Riftn: community on Riftn');
     expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://riftn.com/_og/storage/community-media/dehub/avatar.jpg',
+      'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://dehub.io/_og/storage/community-media/dehub/avatar.jpg',
     );
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
