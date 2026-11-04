@@ -1172,6 +1172,7 @@ export default function FeaturesPage() {
       {/* Feature List (Requests Tab) */}
       {activeTab === 'requests' && (
         <>
+          {!isFiltering && <TopBuildersCard compact />}
           {isLoading ? (
             <FeatureSkeletons />
           ) : isError ? (
