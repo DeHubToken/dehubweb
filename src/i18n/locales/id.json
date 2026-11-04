@@ -7890,7 +7890,25 @@
     "followBackAllFailed": "Tidak dapat mengikuti siapa pun kembali",
     "followingBackProgress": "Mengikuti balik {{completed}} dari {{total}}",
     "findingFollowers": "Mencari pengikut...",
-    "followBackAll": "Mengikuti balik semua"
+    "followBackAll": "Mengikuti balik semua",
+    "nonFollowers": {
+      "title": "Bersihkan siapa yang kamu ikuti?",
+      "body": "{{count}} akun yang kamu ikuti tidak mengikutimu kembali.",
+      "cta": "Berhenti mengikuti semua {{count}}",
+      "notNow": "Tidak sekarang",
+      "confirmTitle": "Berhenti mengikuti {{count}} akun?",
+      "confirmBody": "Mereka tidak akan diberitahu. Kamu bisa mengikuti siapa saja lagi nanti.",
+      "confirm": "Ya, berhenti mengikuti {{count}}",
+      "cancel": "Batal",
+      "working": "Berhenti mengikuti {{done}} dari {{total}}...",
+      "background": "Terus berjalan di latar belakang",
+      "failed": "Tidak dapat memulai. Coba lagi dalam satu menit.",
+      "close": "Tutup",
+      "doneTitle": "Semua dibersihkan",
+      "doneAll": "Berhenti mengikuti {{done}} akun yang tidak mengikutimu kembali.",
+      "doneSome": "Berhenti mengikuti {{done}} akun. {{failed}} tidak dapat dihentikan.",
+      "doneToast": "Berhenti mengikuti {{done}} akun yang tidak mengikutimu kembali"
+    }
   },
   "reactionInfo": {
     "title": "Reaksi",

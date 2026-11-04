@@ -7848,7 +7848,25 @@
     "followBackAllFailed": "无法跟随任何人",
     "followingBackProgress": "跟随 {{completed}} 的回复，查看 {{total}}",
     "findingFollowers": "找寻关注者中...",
-    "followBackAll": "全回关"
+    "followBackAll": "全回关",
+    "nonFollowers": {
+      "title": "清理你关注的人？",
+      "body": "{{count}} 你关注的账户没有关注你。",
+      "cta": "取消关注所有 {{count}}",
+      "notNow": "现在不行",
+      "confirmTitle": "取消关注 {{count}} 账户？",
+      "confirmBody": "他们不会被通知。你可以稍后再次关注任何人。",
+      "confirm": "是的，取消关注 {{count}}",
+      "cancel": "取消",
+      "working": "正在取消关注 {{done}} / {{total}}...",
+      "background": "在后台继续进行",
+      "failed": "无法启动。请稍后再试。",
+      "close": "关闭",
+      "doneTitle": "全部已清除",
+      "doneAll": "已取消关注 {{done}} 个未关注你的账户。",
+      "doneSome": "已取消关注 {{done}} 个账户。{{failed}} 无法取消关注。",
+      "doneToast": "已取消关注 {{done}} 个未关注你的账户"
+    }
   },
   "reactionInfo": {
     "title": "反应",

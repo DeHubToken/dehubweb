@@ -8479,7 +8479,25 @@
     "followBackAllFailed": "Impossible de suivre qui que ce soit en retour",
     "followingBackProgress": "Suivi en retour de {{completed}} sur {{total}}",
     "findingFollowers": "Recherche des abonnés...",
-    "followBackAll": "Suivre en retour tout le monde"
+    "followBackAll": "Suivre en retour tout le monde",
+    "nonFollowers": {
+      "title": "Faire le tri dans vos abonnements ?",
+      "body": "{{count}} comptes que vous suivez ne vous suivent pas.",
+      "cta": "Ne plus suivre les {{count}}",
+      "notNow": "Plus tard",
+      "confirmTitle": "Ne plus suivre {{count}} comptes ?",
+      "confirmBody": "Ils ne seront pas prévenus. Vous pourrez les suivre à nouveau plus tard.",
+      "confirm": "Oui, ne plus suivre {{count}}",
+      "cancel": "Annuler",
+      "working": "Désabonnement {{done}} sur {{total}}...",
+      "background": "Continuer en arrière-plan",
+      "failed": "Impossible de démarrer. Réessayez dans une minute.",
+      "close": "Fermer",
+      "doneTitle": "C'est fait",
+      "doneAll": "Vous ne suivez plus {{done}} comptes qui ne vous suivaient pas.",
+      "doneSome": "Vous ne suivez plus {{done}} comptes. {{failed}} n'ont pas pu être retirés.",
+      "doneToast": "Vous ne suivez plus {{done}} comptes qui ne vous suivaient pas"
+    }
   },
   "reactionInfo": {
     "title": "Réactions",

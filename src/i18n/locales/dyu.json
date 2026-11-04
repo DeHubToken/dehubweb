@@ -7775,7 +7775,19 @@
     "followBackAllFailed": "Mɔgɔ si tɛ se ka tugu a kɔ",
     "followingBackProgress": "{{completed}} ye {{total}} kɔnɔ ka sisan",
     "findingFollowers": "Ka tugu mɔgɔ kɔ...",
-    "followBackAll": "O kɔ, a ye koo bɛɛ kɛ"
+    "followBackAll": "O kɔ, a ye koo bɛɛ kɛ",
+    "nonFollowers": {
+      "title": "I be tugu ne kɔ wa?",
+      "cta": "Add all {{count}}",
+      "notNow": "O ma kɛ halibi.",
+      "confirmBody": "O loon na, mɔgɔ si ma deli ka taga n'a ye. O kɔ, i be se ka tugu mɔgɔ wɛrɛ kɔ.",
+      "cancel": "Kanali",
+      "background": "Aw ye to ka miiri o la.",
+      "failed": "I be se ka o kɛ tugu miniti damanin kɔnɔ.",
+      "close": "O kɔ, a ye dɔ fara",
+      "doneTitle": "A bɛɛ saniyanin lo",
+      "doneSome": "{{done}}accounts. {{failed}} tun tɛ se ka tugu."
+    }
   },
   "reactionInfo": {
     "title": "O kama, a ka ɲi ka kɛ ni",

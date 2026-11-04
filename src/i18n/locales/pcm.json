@@ -7065,7 +7065,20 @@
     "new": "New",
     "everyoneFollowedBack": "M chọrọ follow back everybodi.",
     "followedBackAll": "Follow am back everybody",
-    "findingFollowers": "Finding followers..."
+    "findingFollowers": "Finding followers...",
+    "nonFollowers": {
+      "notNow": "Not now",
+      "confirmTitle": "Unfollow {{count}} accounts?",
+      "confirmBody": "Dem no go tell dem. You fit follow anybody again later.",
+      "confirm": "Yes, unfollow {{count}}",
+      "cancel": "Cancel",
+      "background": "Keep goin for background",
+      "failed": "No fit start. Try again for one minute.",
+      "close": "Close",
+      "doneTitle": "All cleared",
+      "doneAll": "Unfollowed {{done}} accounts wey no dey follow you back.",
+      "doneToast": "Unfollowed {{done}} accounts wey no dey follow you back"
+    }
   },
   "reactionInfo": {
     "title": "Reactions",

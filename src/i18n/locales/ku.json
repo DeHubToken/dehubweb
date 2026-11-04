@@ -8142,7 +8142,25 @@
     "followBackAllFailed": "Kes di bersivê de nehat şopandin",
     "followingBackProgress": "{{completed}} ji {{total}} di bersivê de tên şopandin",
     "findingFollowers": "Şopîner tên dîtin...",
-    "followBackAll": "Hemûyan di bersivê de bişopîne"
+    "followBackAll": "Hemûyan di bersivê de bişopîne",
+    "nonFollowers": {
+      "title": "Çêke ku tu têkiliyê dikin?",
+      "body": "{{count}} hesabên ku tu têkiliyê dikin tu ne têkiliyê dikin.",
+      "cta": "Hemû {{count}} jêbirin",
+      "notNow": "Nêzîkî",
+      "confirmTitle": "Jêbirin {{count}} hesabên?",
+      "confirmBody": "Ew nayê gotin. Tu dikarî her kesê din herî dawî têkiliyê bikî.",
+      "confirm": "Erê, jêbirin {{count}}",
+      "cancel": "Betal",
+      "working": "Jêbirin {{done}} ji {{total}}...",
+      "background": "Bêyî destpêkê di binpêş de bidomîne",
+      "failed": "Destpêk nikaribû. Dîsa di dema kêm de biceribîne.",
+      "close": "Girt",
+      "doneTitle": "Hemû hatin paqij kirin",
+      "doneAll": "Jêbirî {{done}} hesabên ku ne têkiliyê dikin.",
+      "doneSome": "Jêbirî {{done}} hesabên. {{failed}} nikaribû jêbirin.",
+      "doneToast": "Jêbirî {{done}} hesabên ne têkiliyê dikin."
+    }
   },
   "reactionInfo": {
     "title": "Bertek",

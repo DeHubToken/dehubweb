@@ -67,6 +67,7 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
+import { NonFollowerOfferSheet, type NonFollowerOfferStage } from '@/components/app/NonFollowerOfferSheet';
 import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
 import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
 import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
@@ -1113,6 +1114,40 @@ function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   );
 }
 
+/** "Unfollow all N not following you back": every stage, nothing is unfollowed. */
+function NonFollowerOfferGallery({ initialStage }: { initialStage: NonFollowerOfferStage | null }) {
+  const [open, setOpen] = useState(!!initialStage);
+  const [stage, setStage] = useState<NonFollowerOfferStage>(initialStage ?? 'offer');
+  const [done, setDone] = useState(stage === 'done' ? 47 : stage === 'working' ? 18 : 0);
+  const confirm = () => {
+    setStage('working');
+    setDone(0);
+    let n = 0;
+    const tick = window.setInterval(() => {
+      n = Math.min(47, n + 6);
+      setDone(n);
+      if (n >= 47) { window.clearInterval(tick); setStage('done'); }
+    }, 400);
+  };
+  return (
+    <section data-non-follower-gallery className="mb-5">
+      <Button onClick={() => { setStage('offer'); setDone(0); setOpen(true); }}>Unfollow non-followers prompt</Button>
+      <NonFollowerOfferSheet
+        open={open}
+        onOpenChange={setOpen}
+        stage={stage}
+        count={47}
+        done={done}
+        failed={0}
+        onAsk={() => setStage('confirm')}
+        onConfirm={confirm}
+        onBack={() => setStage('offer')}
+        onNotNow={() => setOpen(false)}
+      />
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -1173,6 +1208,12 @@ export default function StateGalleryPage() {
         {params.get('predictions') === '1' && <PredictionGallery />}
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
+
+        <NonFollowerOfferGallery
+          initialStage={params.get('sheet') === 'non-followers'
+            ? ((['offer', 'confirm', 'working', 'done', 'error'] as const).find((s) => s === params.get('stage')) ?? 'offer')
+            : null}
+        />
 
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}

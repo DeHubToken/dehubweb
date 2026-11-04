@@ -7880,7 +7880,25 @@
     "followBackAllFailed": "Kunne ikke følge nogen tilbage",
     "followingBackProgress": "Følger tilbage til {{completed}} af {{total}}",
     "findingFollowers": "Finder følgere...",
-    "followBackAll": "Følg alle tilbage"
+    "followBackAll": "Følg alle tilbage",
+    "nonFollowers": {
+      "title": "Ryd op i, hvem du følger?",
+      "body": "{{count}}-konti, du følger, følger dig ikke tilbage.",
+      "cta": "Følg ikke længere alle {{count}}",
+      "notNow": "Ikke nu",
+      "confirmTitle": "Vil du ophøre med at følge {{count}}-konti?",
+      "confirmBody": "De vil ikke blive fortalt det. Du kan følge med igen senere.",
+      "confirm": "Ja, følg ikke længere {{count}}",
+      "cancel": "Annuller",
+      "working": "Affølger {{done}} af {{total}}...",
+      "background": "Fortsæt i baggrunden",
+      "failed": "Kunne ikke starte. Prøv igen om et minut.",
+      "close": "Luk",
+      "doneTitle": "Alle ryddet",
+      "doneAll": "Har ikke fulgt {{done}}-konti, der ikke fulgte dig tilbage.",
+      "doneSome": "Affølgede {{done}}-konti. {{failed}} kunne ikke affølges.",
+      "doneToast": "Ikke-følgede {{done}}-konti følger dig ikke tilbage"
+    }
   },
   "reactionInfo": {
     "title": "Reaktioner",

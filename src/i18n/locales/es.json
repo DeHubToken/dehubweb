@@ -8475,7 +8475,25 @@
     "followBackAllFailed": "No se pudo seguir a nadie de vuelta",
     "followingBackProgress": "Siguiendo a {{completed}} de {{total}}",
     "findingFollowers": "Buscando seguidores...",
-    "followBackAll": "Seguir a todos"
+    "followBackAll": "Seguir a todos",
+    "nonFollowers": {
+      "title": "¿Limpiar a quién sigues?",
+      "body": "{{count}} cuentas que sigues no te siguen.",
+      "cta": "Dejar de seguir a las {{count}}",
+      "notNow": "Ahora no",
+      "confirmTitle": "¿Dejar de seguir {{count}} cuentas?",
+      "confirmBody": "No se les avisará. Puedes volver a seguir a quien quieras más tarde.",
+      "confirm": "Sí, dejar de seguir {{count}}",
+      "cancel": "Cancelar",
+      "working": "Dejando de seguir {{done}} de {{total}}...",
+      "background": "Seguir en segundo plano",
+      "failed": "No se pudo iniciar. Inténtalo en un minuto.",
+      "close": "Cerrar",
+      "doneTitle": "Todo listo",
+      "doneAll": "Dejaste de seguir {{done}} cuentas que no te seguían.",
+      "doneSome": "Dejaste de seguir {{done}} cuentas. {{failed}} no se pudieron dejar de seguir.",
+      "doneToast": "Dejaste de seguir {{done}} cuentas que no te seguían"
+    }
   },
   "reactionInfo": {
     "title": "Reacciones",

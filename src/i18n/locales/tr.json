@@ -8475,7 +8475,25 @@
     "followBackAllFailed": "Kimseyi geri takip edemedi",
     "followingBackProgress": "{{completed}}/{{total}} takip ediliyor",
     "findingFollowers": "Takipçiler bulunuyor...",
-    "followBackAll": "Tümünü geri takip et"
+    "followBackAll": "Tümünü geri takip et",
+    "nonFollowers": {
+      "title": "Takip ettiklerini temizlemek ister misin?",
+      "body": "Takip ettiğin {{count}} hesap seni geri takip etmiyor.",
+      "cta": "{{count}} hesabın hepsini takipten çık",
+      "notNow": "Şimdi değil",
+      "confirmTitle": "{{count}} hesabı takipten çıkarsın mı?",
+      "confirmBody": "Onlara haber verilmez. İstediğini daha sonra yeniden takip edebilirsin.",
+      "confirm": "Evet, {{count}} hesabı takipten çık",
+      "cancel": "İptal",
+      "working": "{{total}} hesaptan {{done}} tanesi takipten çıkarılıyor...",
+      "background": "Arka planda devam et",
+      "failed": "Başlatılamadı. Bir dakika sonra tekrar dene.",
+      "close": "Kapat",
+      "doneTitle": "Hepsi temizlendi",
+      "doneAll": "Seni geri takip etmeyen {{done}} hesabı takipten çıktın.",
+      "doneSome": "{{done}} hesabı takipten çıktın. {{failed}} hesap çıkarılamadı.",
+      "doneToast": "Seni geri takip etmeyen {{done}} hesabı takipten çıktın"
+    }
   },
   "reactionInfo": {
     "title": "Tepkiler",

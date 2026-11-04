@@ -7876,7 +7876,25 @@
     "followBackAllFailed": "Kunde inte följa tillbaka någon",
     "followingBackProgress": "Följer tillbaka {{completed}} av {{total}}",
     "findingFollowers": "Letar efter följare...",
-    "followBackAll": "Följ tillbaka alla"
+    "followBackAll": "Följ tillbaka alla",
+    "nonFollowers": {
+      "title": "Rensa upp vem du följer?",
+      "body": "{{count}} konton du följer följer inte tillbaka.",
+      "cta": "Avfölja alla {{count}}",
+      "notNow": "Inte nu",
+      "confirmTitle": "Avfölja {{count}} konton?",
+      "confirmBody": "De kommer inte att bli informerade. Du kan följa någon igen senare.",
+      "confirm": "Ja, avfölja {{count}}",
+      "cancel": "Avbryt",
+      "working": "Avföljer {{done}} av {{total}}...",
+      "background": "Fortsätt i bakgrunden",
+      "failed": "Kunde inte starta. Försök igen om en minut.",
+      "close": "Stäng",
+      "doneTitle": "Allt rensat",
+      "doneAll": "Avföljade {{done}} konton som inte följde dig tillbaka.",
+      "doneSome": "Avföljade {{done}} konton. {{failed}} kunde inte avföljas.",
+      "doneToast": "Avföljade {{done}} konton som inte följde dig tillbaka"
+    }
   },
   "reactionInfo": {
     "title": "Reaktioner",
