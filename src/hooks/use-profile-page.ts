@@ -15,6 +15,7 @@ import Play from "@/components/ui/cut-icons/play";
 
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
+import { isOwnHandle } from '@/lib/own-profile-path';
 import {
   useDeHubProfile,
   useDeHubUserContent,
@@ -77,7 +78,10 @@ interface UseProfilePageOptions {
 export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {}) {
   const { t: _copy } = _useCopy();
   const [searchParams] = useSearchParams();
-  const { username: routeUsername } = useParams<{ username: string }>();
+  const { username: routeParam } = useParams<{ username: string }>();
+  // /<your username> is your own profile, exactly as /profile: same lookup,
+  // same owner view (see lib/own-profile-path).
+  const routeUsername = isOwnHandle(routeParam) ? undefined : routeParam;
   const navigate = useNavigate();
   const userId = searchParams.get('id');
   const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();

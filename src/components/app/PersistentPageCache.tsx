@@ -20,6 +20,7 @@ import { RetainedPostActivityContext } from '@/lib/retained-post-surface';
 import HomePage from '@/pages/app/HomePage';
 import { pauseMediaIn, pauseOffDocumentMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { handoffVideoFor } from '@/lib/video-handoff';
+import { isOwnHandlePath } from '@/lib/own-profile-path';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -138,6 +139,9 @@ function matchesPath(config: CachedPageConfig, pathname: string): boolean {
   // route, but a strict === here would miss it and render a blank outlet.
   const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   const paths = Array.isArray(config.path) ? config.path : [config.path];
+  // Your own profile is also /<your username> (see lib/own-profile-path), and
+  // it stays this one cached page so swapping the address reloads nothing.
+  if (config.key === 'profile' && isOwnHandlePath(normalized)) return true;
   return paths.some(p => normalized === p);
 }
 

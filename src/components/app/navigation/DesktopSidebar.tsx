@@ -32,6 +32,7 @@ import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { isOwnProfilePath } from '@/lib/own-profile-path';
 import { openStageModal } from '@/contexts/StageContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
@@ -749,7 +750,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isActive = !item.external && !item.action && (
               isHomeItem
                 ? isHomePath(location.pathname)
-                : location.pathname.startsWith(item.path)
+                : item.path === '/app/profile'
+                  ? isOwnProfilePath(location.pathname)
+                  : location.pathname.startsWith(item.path)
             );
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
