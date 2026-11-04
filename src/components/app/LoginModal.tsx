@@ -34,6 +34,7 @@ import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
 import { type LoginStep, resumingStep, isInlineLoginStep } from '@/components/app/login/steps';
 import { getWalletSetupIntent, setWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import riftnWordmark from '@/assets/riftn-wordmark-flat-white.png';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { beginAuthTrace, readAuthTrace } from '@/lib/auth-trace';
 import { createLogger } from '@/lib/logger';
@@ -386,7 +387,8 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
               <ChevronRight className="w-5 h-5 rotate-180" />
             </button>
           )}
-          <img src={dehubLogo} alt="Riftn" className="h-8" />
+          {/* Desktop shows the Riftn mark; phones keep their current header. */}
+          <img src={isMobile ? dehubLogo : riftnWordmark} alt="Riftn" className={isMobile ? "h-8" : "h-7"} />
         </div>
         {usesDesktopUnlockPanel ? (
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">
