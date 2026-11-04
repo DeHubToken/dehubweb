@@ -527,16 +527,36 @@ const MessageBubble = memo(function MessageBubble({
   const isUnsent = !!message.sendState || message._id.startsWith('temp-');
   const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
   const editPending = useRef(false);
+  // Drives the Save button's spinner/disabled state. A confirmed edit can take
+  // up to 15s (confirmChatDelivery's socket round-trip) and the ref above never
+  // triggers a re-render, so with nothing else watching it the button used to
+  // sit there looking inert the whole time — indistinguishable from broken.
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const saveEdit = async () => {
     if (editPending.current || !onSaveEdit) return;
     editPending.current = true;
+    setIsSavingEdit(true);
     try { if (await onSaveEdit(message._id, draftText) && setDraftText.complete(draftText, '')) onCancelEdit?.(); }
-    finally { editPending.current = false; }
+    finally { editPending.current = false; setIsSavingEdit(false); }
   };
   const [reactionPickerOpen, setReactionPickerOpen] = useState(false);
   useEffect(() => {
     if (isEditing) setDraftText.initialize(message.content || '');
   }, [isEditing, message.content, setDraftText]);
+  // Grows the edit box to fit the actual wrapped content instead of guessing
+  // rows from newline count (a long single-paragraph message has none, so that
+  // guess never got past its 2-row floor and clipped most of the text). Capped
+  // at 40% of the viewport; past that it scrolls rather than pushing Save off-screen.
+  const editTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    const el = editTextareaRef.current;
+    if (!el || !isEditing) return;
+    el.style.height = 'auto';
+    const full = el.scrollHeight + (el.offsetHeight - el.clientHeight);
+    const max = Math.round(window.innerHeight * 0.4);
+    el.style.height = `${Math.min(full, max)}px`;
+    el.style.overflowY = full > max ? 'auto' : 'hidden';
+  }, [isEditing, draftText]);
 
   // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
@@ -666,7 +686,7 @@ const MessageBubble = memo(function MessageBubble({
                glass stack: a filled block with no border for own messages, a
                hairline block with no fill for theirs. Geometry matches the
                mobile app — 12px with the tail corner squared to 2px. */
-            className={`inline-block rounded-xl ${
+            className={`inline-block rounded-xl ${isEditing ? 'max-w-full ' : ''}${
               message.msgType === 'media' || message.msgType === 'gif' || isPostShare
                 ? 'text-white'
                 : `px-4 py-2 ${
@@ -679,8 +699,9 @@ const MessageBubble = memo(function MessageBubble({
             {/* Text message — or a shared post rendered as a rich card */}
             {message.msgType === 'msg' && (
               isEditing ? (
-                <div className="flex flex-col gap-1.5 items-stretch min-w-[200px]">
+                <div className="flex flex-col gap-1.5 items-stretch">
                   <textarea
+                    ref={editTextareaRef}
                     autoFocus
                     dir="auto"
                     value={draftText}
@@ -694,14 +715,16 @@ const MessageBubble = memo(function MessageBubble({
                       }
                     }}
                     maxLength={5000}
-                    rows={Math.min(6, Math.max(2, draftText.split('\n').length))}
-                    className="w-full text-sm text-white bg-white/[0.08] border border-white/20 rounded-lg px-3 py-1.5 outline-none focus:border-white/40 resize-none"
+                    rows={1}
+                    disabled={isSavingEdit}
+                    className="w-[28rem] max-w-full text-sm text-white bg-white/[0.08] border border-white/20 rounded-lg px-3 py-1.5 outline-none focus:border-white/40 resize-none disabled:opacity-60"
                   />
                   <div className="flex items-center gap-2 justify-end">
                     <button
                       type="button"
                       onClick={() => onCancelEdit?.()}
-                      className="p-1 text-zinc-400 hover:text-white"
+                      disabled={isSavingEdit}
+                      className="p-1 text-zinc-400 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
                       title={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}
                     >
                       <X className="w-3.5 h-3.5" />
@@ -709,10 +732,11 @@ const MessageBubble = memo(function MessageBubble({
                     <button
                       type="button"
                       onClick={() => void saveEdit()}
-                      className="p-1 text-white hover:text-zinc-300"
+                      disabled={isSavingEdit}
+                      className="p-1 text-white hover:text-zinc-300 disabled:opacity-60 disabled:pointer-events-none"
                       title={_copy("copy.1509f561f241", { defaultValue: "Save" })}
                     >
-                      <Check className="w-3.5 h-3.5" />
+                      {isSavingEdit ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </div>
