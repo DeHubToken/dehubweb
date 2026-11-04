@@ -105,8 +105,14 @@ function BuilderRow({ b, rank, max, open, onToggle, mine }: { b: TopBuilder; ran
   );
 }
 
-export function TopBuildersCard() {
+/**
+ * compact: the version on the main Prompts tab. Top 3 rows with a
+ * "Show all" toggle, and the "You" row sits inside the card instead of
+ * floating over the prompt list.
+ */
+export function TopBuildersCard({ compact = false }: { compact?: boolean } = {}) {
   const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
   const { walletAddress } = useAuth();
   const [period, setPeriod] = useState<BuilderPeriod>('month');
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -114,14 +120,15 @@ export function TopBuildersCard() {
 
   const me = walletAddress?.toLowerCase() ?? null;
   const myIndex = me ? builders.findIndex((b) => b.wallet === me) : -1;
-  const shown = builders.slice(0, SHOWN);
+  const limit = compact && !expanded ? 3 : SHOWN;
+  const shown = builders.slice(0, limit);
   const max = builders[0]?.points ?? 1;
 
   // Signed in but not in the shown rows: pin "You" with the gap to the next place.
   const pin = useMemo(() => {
-    if (!me || (myIndex >= 0 && myIndex < SHOWN)) return null;
+    if (!me || (myIndex >= 0 && myIndex < limit)) return null;
     const mine = myIndex >= 0 ? builders[myIndex] : null;
-    const target = myIndex > 0 ? builders[myIndex - 1] : builders[Math.min(SHOWN, builders.length) - 1];
+    const target = myIndex > 0 ? builders[myIndex - 1] : builders[Math.min(limit, builders.length) - 1];
     const points = mine?.points ?? 0;
     return {
       rank: myIndex >= 0 ? myIndex + 1 : null,
@@ -129,7 +136,7 @@ export function TopBuildersCard() {
       gap: target ? Math.max(1, target.points - points + 1) : null,
       target,
     };
-  }, [me, myIndex, builders]);
+  }, [me, myIndex, builders, limit]);
 
   if (!isLoading && builders.length === 0) return null;
 
@@ -199,13 +206,25 @@ export function TopBuildersCard() {
                 onToggle={() => setOpenKey((k) => (k === b.wallet ? null : b.wallet))}
               />
             ))}
-          {pin && !isLoading && <div className="mt-1 hidden rounded-xl bg-white/[0.06] p-2 ring-1 ring-white/10 md:block">{pinBody}</div>}
+          {pin && !isLoading && <div className={cn('mt-1 rounded-xl bg-white/[0.06] p-2 ring-1 ring-white/10', compact ? 'block' : 'hidden md:block')}>{pinBody}</div>}
+          {compact && !isLoading && builders.length > 3 && (
+            <button
+              type="button"
+              data-top-builders-more
+              onClick={() => setExpanded((v) => !v)}
+              className="mt-1.5 self-center rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
+            >
+              {expanded
+                ? t('features.topBuilders.showLess', 'Show less')
+                : t('features.topBuilders.showAll', 'Show top {{n}}', { n: Math.min(SHOWN, builders.length) })}
+            </button>
+          )}
         </div>
         <p className="mt-2 text-[11px] text-zinc-500">
           {t('features.topBuilders.rule', '10 pts per shipped request, 1 per upvote, 2 per comment on someone else\'s request.')}
         </p>
       </section>
-      {pin && !isLoading && (
+      {pin && !isLoading && !compact && (
         <div
           data-top-builders-pin
           className="fixed inset-x-3 z-30 rounded-2xl border border-white/10 bg-zinc-900/80 p-2.5 backdrop-blur-xl md:hidden"
