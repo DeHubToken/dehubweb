@@ -1,161 +1,93 @@
 import { useEffect, useRef, useState } from 'react';
+import { escapePose, knobCutoff, tubeNote } from './bubbleLift';
+import { paintNote } from './bubbleLiftCanvas';
+import { canEscapeMusicNote, escapeMusicNote } from './escapedMusicNotes';
 
-/**
- * While a track is audible, notes drift inside the volume tube,
- * and a thin arc slides out of the handle
- * on each beat. Drawn over the slider with touches passing through; still and
- * empty when paused, muted or with reduced motion on.
- *
- * The app draws the same thing (dehub-mobile components/Home/VolumeSoundCue.tsx);
- * keep the numbers in step.
- */
-const CUE_BPM = 112;
-const ECHO_LIFE = 1.15;
-// ♪ and ♫ on a 12px box, one shape per part so overlaps never cut holes.
-const NOTE_PARTS = [
-  ['M1 9.4a2.6 2 0 1 0 5.2 0a2.6 2 0 1 0-5.2 0z', 'M5.4 1h1v8.4h-1z', 'M6.4 1c1.6.8 3.2 2 2.8 4.8c-.4-1.4-1.4-2.2-2.8-2.4z'],
-  ['M.6 9.8a2.2 1.7 0 1 0 4.4 0a2.2 1.7 0 1 0-4.4 0z', 'M6.6 8.6a2.2 1.7 0 1 0 4.4 0a2.2 1.7 0 1 0-4.4 0z', 'M4.2 2.4h.8v7.4h-.8z', 'M10.2 1.2h.8v7.4h-.8z', 'M4.2 2.4L11 1.2V3L4.2 4.2z'],
-];
-
-const NOTE_SLOTS = 9;
-const rand = (n: number) => { const v = Math.sin(n * 12.9898) * 43758.5453; return v - Math.floor(v); };
-
-/** Where note slot `i` is at time `t`: every cycle it reappears at a new random spot. */
-function noteAt(i: number, t: number, level: number, fillEnd: number, cy: number, trackHeight: number) {
-  const duration = (1.8 + 1.6 * rand(i + 0.13)) / (0.75 + 0.5 * level);
-  const phase = t / duration + rand(i + 0.71);
-  const cycle = Math.floor(phase);
-  const p = phase - cycle;
-  const r = (j: number) => rand(i * 31.7 + cycle * 7.3 + j);
-  const x = r(1) * fillEnd * 0.85 + p * (18 + 30 * r(2));
-  const y = cy + Math.sin(p * Math.PI * 2 * (0.6 + r(5)) + r(6) * Math.PI * 2) * trackHeight * 0.08;
-  const alpha = Math.pow(Math.sin(Math.PI * p), 0.8) * Math.max(0, Math.min(1, (fillEnd + 14 - x) / 10));
-  return { x, y, alpha, scale: 0.8 + 0.2 * r(7), rot: (r(8) - 0.5) * 0.3, glyph: i % 2 };
-}
-
-interface VolumeSoundCueProps {
-  /** 0..1, the slider's value. */
-  level: number;
-  /** Sound is actually coming out: playing and not muted. */
-  active: boolean;
-  /** Track thickness and handle radius of the slider underneath, in px. */
-  trackHeight: number;
-  thumbRadius: number;
-}
+interface VolumeSoundCueProps { level: number; active: boolean; trackHeight: number; thumbRadius: number; }
 
 export function VolumeSoundCue({ level, active, trackHeight, thumbRadius }: VolumeSoundCueProps) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const live = useRef({ level, active });
-  live.current = { level, active };
-  const [reduced, setReduced] = useState(false);
+  const live = useRef({ level, active }); live.current = { level, active };
+  const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const kickRef = useRef<() => void>();
-
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sync = () => setReduced(query.matches);
-    sync();
     query.addEventListener('change', sync);
     return () => query.removeEventListener('change', sync);
   }, []);
-
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas || reduced) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const reach = thumbRadius + 18;
-    const height = Math.max(trackHeight, (thumbRadius + 16) * 2, (trackHeight / 8) * 30 + 24);
-    let width = 0;
-    let frame = 0;
-    let fade = 0;
-    let last = performance.now();
+    const canvas = ref.current, ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx || reduced) return;
+    const input = canvas.parentElement?.querySelector('input');
+    const height = Math.max(64, trackHeight * 5);
+    let width = 0, frame = 0, fade = 0, clock = 0, last = 0, escapedCycle = -1;
+    let inView = true;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const shapes = NOTE_PARTS.map(parts => parts.map(d => new Path2D(d)));
-
     const size = () => {
-      width = canvas.parentElement?.clientWidth ?? 0;
-      canvas.style.width = `${width + reach}px`;
-      canvas.style.height = `${height}px`;
-      canvas.width = Math.round((width + reach) * dpr);
-      canvas.height = Math.round(height * dpr);
+      width = input?.clientWidth ?? canvas.parentElement?.clientWidth ?? 0;
+      canvas.style.left = `${input?.offsetLeft ?? 0}px`;
+      canvas.style.width = `${width + 36}px`; canvas.style.height = `${height}px`;
+      canvas.width = Math.round((width + 36) * dpr); canvas.height = height * dpr;
     };
     size();
     const observer = new ResizeObserver(size);
-    if (canvas.parentElement) observer.observe(canvas.parentElement);
-
+    if (input) observer.observe(input);
+    const visible = () => !document.hidden && inView;
     const draw = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-      const { level: value, active: on } = live.current;
+      frame = 0;
+      if (!visible()) return;
+      const dt = Math.min(.05, (now - last) / 1000); last = now;
+      const on = live.current.active && live.current.level > 0;
+      if (on) clock += dt;
       fade += ((on ? 1 : 0) - fade) * Math.min(1, dt * 5);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, width + reach, height);
-      if (fade > 0.01 && width > 0) {
-        const t = now / 1000;
-        const cy = height / 2;
-        const thumbX = thumbRadius + value * (width - thumbRadius * 2);
-        const fillEnd = thumbX - thumbRadius;
-
-        // Notes stay behind the rounded tube walls, even while drifting.
-        const note = trackHeight * 0.65;
-        const lift = trackHeight / 8;
-        const count = Math.max(2, Math.min(NOTE_SLOTS, Math.round(fillEnd / 18)));
-        if (fillEnd > note) {
-          ctx.save();
-          ctx.beginPath();
-          ctx.roundRect(thumbRadius, cy - trackHeight / 2, Math.max(0, width - thumbRadius * 2), trackHeight, trackHeight / 2);
-          ctx.clip();
-          ctx.lineJoin = 'round';
-          for (let i = 0; i < count; i++) {
-            const n = noteAt(i, t, value, fillEnd, cy, trackHeight);
-            const alpha = 0.75 * fade * n.alpha;
-            if (alpha <= 0.01) continue;
-            const scale = (note * n.scale) / 12;
-            ctx.globalAlpha = alpha;
-            ctx.setTransform(dpr * scale * Math.cos(n.rot), dpr * scale * Math.sin(n.rot), -dpr * scale * Math.sin(n.rot), dpr * scale * Math.cos(n.rot), dpr * n.x, dpr * (n.y - (note * n.scale) / 2));
-            ctx.fillStyle = '#f4fbfc';
-            ctx.strokeStyle = 'rgba(10,20,26,.5)';
-            ctx.lineWidth = 1 / Math.max(lift, .75);
-            shapes[n.glyph].forEach(part => { ctx.stroke(part); ctx.fill(part); });
-          }
-          ctx.restore();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width + 36, height);
+      if (fade > .01 && width > 0) {
+        const radius = input?.hasAttribute('data-glass-held') ? 15 : thumbRadius;
+        const value = Math.max(0, Math.min(1, live.current.level));
+        const cy = height / 2, thumb = radius + value * (width - radius * 2);
+        const ink = canvas.closest('[data-material="light"]') ? '#eff9fc' : '#203944';
+        ctx.save(); ctx.translate(0, cy);
+        ctx.beginPath(); ctx.roundRect(thumbRadius, -trackHeight / 2, Math.max(0, width - thumbRadius * 2), trackHeight, trackHeight / 2); ctx.clip();
+        ctx.save(); ctx.clip(new Path2D(knobCutoff(thumb, radius, trackHeight / 2)));
+        for (let i = 0; i < Math.min(64, Math.ceil(width / 9)); i++) {
+          const n = tubeNote(i, clock, width, trackHeight);
+          paintNote(ctx, n.x, n.y, n.size, n.rotation, n.opacity * fade, ink, i % 4 === 0);
         }
-
-        // One thin arc out of the handle per beat.
-        const beats = (t * CUE_BPM) / 60;
-        ctx.strokeStyle = '#f0f8fa';
-        ctx.lineCap = 'round';
+        ctx.restore();
+        const p = escapePose(clock, thumb, radius, trackHeight);
+        if (canEscapeMusicNote()) {
+          if (!p.ready) paintNote(ctx, p.x, p.y, .48 * trackHeight / 8, -.18, p.opacity * fade * .9, p.x > thumb + radius ? '#dae9ef' : ink);
+          else if (on && escapedCycle !== p.cycle) {
+            escapedCycle = p.cycle;
+            const bounds = canvas.getBoundingClientRect();
+            escapeMusicNote(bounds.left + p.x, bounds.top + cy + p.y);
+          }
+        }
+        ctx.restore();
+        const beats = clock * 112 / 60;
+        ctx.strokeStyle = '#f0f8fa'; ctx.lineCap = 'round';
         for (let j = 0; j < 2; j++) {
-          const age = ((((beats + j) / 2) % 1) * 2) / ECHO_LIFE;
+          const age = (((beats + j) / 2) % 1) * 2 / 1.15;
           if (age >= 1) continue;
-          ctx.globalAlpha = 0.55 * fade * (0.55 + 0.45 * value) * Math.pow(1 - age, 1.6);
-          ctx.lineWidth = 1.3 * (1 - age * 0.5);
-          ctx.beginPath();
-          ctx.arc(thumbX, cy, thumbRadius + 2 + age * 12, -0.62, 0.62);
-          ctx.stroke();
+          ctx.globalAlpha = .55 * fade * (.55 + .45 * value) * Math.pow(1 - age, 1.6);
+          ctx.lineWidth = 1.3 * (1 - age * .5); ctx.beginPath();
+          ctx.arc(thumb, cy, radius + 2 + age * 12, -.62, .62); ctx.stroke();
         }
         ctx.globalAlpha = 1;
       }
-      frame = on || fade > 0.01 ? requestAnimationFrame(draw) : 0;
+      if (on || fade > .01) frame = requestAnimationFrame(draw);
     };
-    const kick = () => { if (!frame) { last = performance.now(); frame = requestAnimationFrame(draw); } };
-    kickRef.current = kick;
-    kick();
-    return () => { cancelAnimationFrame(frame); observer.disconnect(); kickRef.current = undefined; };
+    const kick = () => { if (!frame && visible()) { last = performance.now(); frame = requestAnimationFrame(draw); } };
+    const visibility = () => { if (!visible()) { cancelAnimationFrame(frame); frame = 0; } else kick(); };
+    const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; visibility(); });
+    if (canvas.parentElement) intersection.observe(canvas.parentElement);
+    document.addEventListener('visibilitychange', visibility);
+    kickRef.current = kick; kick();
+    return () => { cancelAnimationFrame(frame); observer.disconnect(); intersection.disconnect(); document.removeEventListener('visibilitychange', visibility); kickRef.current = undefined; };
   }, [reduced, thumbRadius, trackHeight]);
-
-  // Restart the loop when sound comes back after it went still.
-  useEffect(() => {
-    if (active) kickRef.current?.();
-  }, [active]);
-
+  useEffect(() => { kickRef.current?.(); }, [active, level]);
   if (reduced) return null;
-  return (
-    <canvas
-      ref={ref}
-      aria-hidden="true"
-      data-volume-sound-cue
-      style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
-    />
-  );
+  return <canvas ref={ref} aria-hidden="true" data-volume-sound-cue="bubble-lift"
+    style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />;
 }
