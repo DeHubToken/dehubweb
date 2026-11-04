@@ -2577,6 +2577,37 @@ export function usePostForm(
             thumbnail: media[0].thumbnail || undefined,
           });
         }
+      } else if (postType === 'feed-audio' && media.some(m => m.type === 'audio')) {
+        // Music post: it used to fall through to the text card below, which
+        // showed only the name and "Just now" until a reload.
+        const track = media.find(m => m.type === 'audio')!;
+        const seconds = track.duration || 0;
+        const audioPost: VideoItem = {
+          id: optimisticId,
+          type: 'video',
+          thumbnail: track.thumbnail || '',
+          audioUrl: track.preview,
+          audioDuration: seconds,
+          isAudio: true,
+          duration: `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`,
+          title: submittedTitle.trim(),
+          description: submittedDescription,
+          channel: username,
+          channelAvatar: avatar || '',
+          verified: false,
+          views: '0',
+          uploadedAgo: _copy("copy.66f53417d3b7", { defaultValue: "Just now" }),
+          creatorId: user?.address,
+          creatorUsername: username,
+          creatorBadgeBalance: user?.badgeBalance,
+          createdAt: new Date().toISOString(),
+          isLiked: false,
+          likeCount: 0,
+          dislikeCount: 0,
+          commentCount: 0,
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'video', data: audioPost, createdAt: new Date() });
       } else if (hasImage && media[0]) {
         // Image post
         const imagePost: ImagePost = {
