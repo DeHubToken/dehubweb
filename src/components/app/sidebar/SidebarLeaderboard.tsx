@@ -199,72 +199,22 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<PeriodLabel>('All');
-  const [isAutoRotating, setIsAutoRotating] = useState(true);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  // Rotate only while actually on screen (the panel can sit in a hidden tab
-  // of the side rail, and instances live inside CSS-hidden cached pages).
-  const [isOnScreen, setIsOnScreen] = useState(false);
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') {
-      setIsOnScreen(true);
-      return;
-    }
-    const io = new IntersectionObserver(([entry]) => setIsOnScreen(entry.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  // Any interaction (a click, a swipe, hovering the widget) holds the strip
-  // still for 30s from the last one — one timer, restarted, not one per event.
-  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const pauseRotation = useCallback(() => {
-    setIsAutoRotating(false);
-    if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    resumeTimer.current = setTimeout(() => setIsAutoRotating(true), 30000);
-  }, []);
-  useEffect(() => () => { if (resumeTimer.current) clearTimeout(resumeTimer.current); }, []);
-
   useImperativeHandle(ref, () => ({
     swipePeriod(direction: 1 | -1): boolean {
       const idx = PERIODS.indexOf(activePeriod);
       const newIdx = idx + direction;
       if (newIdx < 0 || newIdx >= PERIODS.length) return false;
       setActivePeriod(PERIODS[newIdx]);
-      pauseRotation();
       return true;
     },
-  }), [activePeriod, pauseRotation]);
-
-  // Auto-rotate every 5 seconds — but only across periods that are already
-  // in the query cache. Rotating used to fetch every period in turn from a
-  // widget mounted on every page; now the rotation shows what has been
-  // loaded and a period is only fetched when the user picks it. Ticks while
-  // the browser tab is hidden are skipped.
-  useEffect(() => {
-    if (!isAutoRotating || !isOnScreen) return;
-    const interval = setInterval(() => {
-      if (document.hidden) return;
-      setActivePeriod(prev => {
-        const start = PERIODS.indexOf(prev);
-        for (let step = 1; step < PERIODS.length; step++) {
-          const candidate = PERIODS[(start + step) % PERIODS.length];
-          if (queryClient.getQueryData(holdingsKey(PERIOD_MAP[candidate])) !== undefined) return candidate;
-        }
-        return prev;
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isAutoRotating, isOnScreen, queryClient]);
+  }), [activePeriod]);
 
   const handlePeriodClick = useCallback((period: PeriodLabel) => {
     setActivePeriod(period);
-    pauseRotation();
-  }, [pauseRotation]);
+  }, []);
 
   return (
-    <div ref={rootRef} className="flex flex-col h-full" onPointerEnter={pauseRotation} onFocusCapture={pauseRotation}>
+    <div className="flex flex-col h-full">
       {/* Period filter row */}
       <div className="flex px-4 pt-3 pb-1" role="tablist" aria-label={t('nav.leaderboard')}>
         {PERIODS.map((period) => (
