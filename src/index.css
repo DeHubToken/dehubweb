@@ -7105,3 +7105,11 @@ html[data-theme='minimal'] [data-comment-composer-pin] {
   color: currentColor;
   text-shadow: 0.35px 0 0 currentColor, -0.35px 0 0 currentColor;
 }
+
+/* "Unfollow all" confirm: the destructive glass reads pale on light canvases. */
+html[data-theme="light"] [data-non-follower-confirm],
+html[data-system-tone="light"] [data-non-follower-confirm] {
+  background: rgb(220 38 38);
+  border-color: rgb(185 28 28);
+  color: #fff;
+}

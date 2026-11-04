@@ -7884,7 +7884,25 @@
     "followBackAllFailed": "誰もフォローバックできませんでした",
     "followingBackProgress": "{{total}}の{{completed}}をフォローしています",
     "findingFollowers": "フォロワーを探しています...",
-    "followBackAll": "すべてフォローバック"
+    "followBackAll": "すべてフォローバック",
+    "nonFollowers": {
+      "title": "あなたがフォローしている相手を片付けますか？",
+      "body": "フォローしている{{count}}アカウントはフォローバックしていません。",
+      "cta": "すべての{{count}}のフォローを外す",
+      "notNow": "あとで",
+      "confirmTitle": "{{count}}アカウントのフォローを外しますか？",
+      "confirmBody": "彼らには知らされません。 後で誰かをフォローすることができます。",
+      "confirm": "はい、{{count}}さんのフォローを外します",
+      "cancel": "キャンセル",
+      "working": "{{total}}の{{done}}のフォローを外しています...",
+      "background": "バックグラウンドで続けてください",
+      "failed": "開始できませんでした。しばらくしてからもう一度お試しください。",
+      "close": "閉じる",
+      "doneTitle": "すべてクリア済み",
+      "doneAll": "フォローしていない{{done}}アカウントのフォローを外しました。",
+      "doneSome": "{{done}}アカウントのフォローを解除しました。{{failed}}はフォローを解除できませんでした。",
+      "doneToast": "フォローバックしていない{{done}}アカウントのフォローを外しました"
+    }
   },
   "reactionInfo": {
     "title": "リアクション",

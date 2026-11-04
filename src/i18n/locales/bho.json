@@ -7755,7 +7755,17 @@
     "followedBackAll": "पीछे पीछे चले सब के सब",
     "followBackAllFailed": "किसीको पछि ना कर पाया",
     "findingFollowers": "अनुयायी ढूँढ रहा हु...",
-    "followBackAll": "सबको पछि कर"
+    "followBackAll": "सबको पछि कर",
+    "nonFollowers": {
+      "title": "आप कौनसे & nbspक्लासिस&nbspले",
+      "notNow": "अब ना हवे मुझसे इंतजार -- (2",
+      "confirmBody": "उ पचे ओकरे बारे मँ नाहीं कहिहीं । 7 तउ उ पचे दूसर रास्ट्रन स बदला लेइ सकइँ",
+      "cancel": "रद्द करे",
+      "background": "पीछे रहे ना, पहुंचे चांद पे",
+      "failed": "कृपया उ के सक्षम करीं आ फिर से कोशिश करीं ',",
+      "close": "पास रहे ना रहे",
+      "doneTitle": "सब कुछ साफ साफ"
+    }
   },
   "reactionInfo": {
     "title": "प्रतिक्रिया देवे वाला",

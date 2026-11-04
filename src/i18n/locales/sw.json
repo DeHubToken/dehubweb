@@ -7867,7 +7867,25 @@
     "followBackAllFailed": "Haikuweza kumfuata mtu yeyote nyuma",
     "followingBackProgress": "Kufuatia nyuma {{completed}} ya {{total}}",
     "findingFollowers": "Inatafuta wafuasi...",
-    "followBackAll": "Fuatilia yote"
+    "followBackAll": "Fuatilia yote",
+    "nonFollowers": {
+      "title": "Weka safi niambie unayofuata?",
+      "body": "{{count}} akaunti unayofuata hazikutafuta unayofuata.",
+      "cta": "Ondoa kila {{count}}",
+      "notNow": "Sio sasa",
+      "confirmTitle": "Ondoa akaunti za {{count}}?",
+      "confirmBody": "Hatawaambiwa. Unaweza kufuata mtu yeyote tena baadaye.",
+      "confirm": "Ndio, toa akaunti za {{count}}",
+      "cancel": "Futa",
+      "working": "Kutoa akaunti za {{done}} kati ya {{total}}...",
+      "background": "Endelea katika nyuma",
+      "failed": "Haikuweza kuanza. Jaribu tena baada ya dakika.",
+      "close": "Funga",
+      "doneTitle": "Kila kimefutwa",
+      "doneAll": "Akaunti za {{done}} ambazo hazikutafuta zimefutwa.",
+      "doneSome": "Akaunti za {{done}} zimefutwa. {{failed}} haikuweza kufutwa.",
+      "doneToast": "Akaunti za {{done}} ambazo hazikutafuta zimefutwa"
+    }
   },
   "reactionInfo": {
     "title": "Miitikio",

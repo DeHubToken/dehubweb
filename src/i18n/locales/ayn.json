@@ -7700,7 +7700,25 @@
     "followBackAllFailed": "لا استطيع اتباع أحد",
     "followingBackProgress": "التالي {{completed}} من {{total}}",
     "findingFollowers": "تلاقي المتابعين...",
-    "followBackAll": "التالي كل"
+    "followBackAll": "التالي كل",
+    "nonFollowers": {
+      "title": "نظّف اللي تتابعه؟",
+      "body": "{{count}} حسابات انت تتابعها ما تتابعك.",
+      "cta": "إلغاء متابعة كل {{count}}",
+      "notNow": "مش الآن",
+      "confirmTitle": "إلغاء متابعة {{count}} حساب؟",
+      "confirmBody": "ما بيخبروا. تقدر تتابع أي واحد مرة ثانية لاحقاً.",
+      "confirm": "أيوه، إلغاء متابعة {{count}}",
+      "cancel": "إلغاء",
+      "working": "قاعد ألغي متابعة {{done}} من {{total}}...",
+      "background": "خليها تمشي في الخلفية",
+      "failed": "ما قدرنا نبدأ. جرّب مرة ثانية بعد دقيقة.",
+      "close": "قفل",
+      "doneTitle": "كل شيء انمسح",
+      "doneAll": "ألغيت متابعة {{done}} حساب ما كانوا يردوا عليك.",
+      "doneSome": "ألغيت متابعة {{done}} حساب. ما قدرنا نلغي متابعة {{failed}}.",
+      "doneToast": "ألغيت متابعة {{done}} حساب ما يردوا عليك"
+    }
   },
   "reactionInfo": {
     "title": "التفاعلات",

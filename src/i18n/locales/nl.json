@@ -8665,7 +8665,25 @@
     "followBackAllFailed": "Kon niemand terugvolgen",
     "followingBackProgress": "Volgt {{completed}} van {{total}} terug",
     "findingFollowers": "Zoekt volgers...",
-    "followBackAll": "Volg iedereen terug"
+    "followBackAll": "Volg iedereen terug",
+    "nonFollowers": {
+      "title": "Opruimen wie je volgt?",
+      "body": "{{count}} accounts die je volgt, volgen jou niet terug.",
+      "cta": "Alle {{count}} ontvolgen",
+      "notNow": "Niet nu",
+      "confirmTitle": "{{count}} accounts ontvolgen?",
+      "confirmBody": "Ze krijgen geen melding. Je kunt iedereen later weer volgen.",
+      "confirm": "Ja, {{count}} ontvolgen",
+      "cancel": "Annuleren",
+      "working": "{{done}} van {{total}} ontvolgen...",
+      "background": "Op de achtergrond doorgaan",
+      "failed": "Kon niet starten. Probeer het over een minuut opnieuw.",
+      "close": "Sluiten",
+      "doneTitle": "Helemaal opgeruimd",
+      "doneAll": "{{done}} accounts ontvolgd die jou niet terugvolgden.",
+      "doneSome": "{{done}} accounts ontvolgd. {{failed}} konden niet worden ontvolgd.",
+      "doneToast": "{{done}} accounts ontvolgd die jou niet terugvolgden"
+    }
   },
   "reactionInfo": {
     "title": "Reacties",

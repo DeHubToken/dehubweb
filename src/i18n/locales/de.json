@@ -7892,7 +7892,25 @@
     "followBackAllFailed": "Konnte niemandem zurück folgen",
     "followingBackProgress": "{{completed}} von {{total}} zurückverfolgen",
     "findingFollowers": "Follower werden gesucht...",
-    "followBackAll": "Alles zurückverfolgen"
+    "followBackAll": "Alles zurückverfolgen",
+    "nonFollowers": {
+      "title": "Aufräumen, wem du folgst?",
+      "body": "{{count}} Konten, denen du folgst, folgen dir nicht zurück.",
+      "cta": "Allen {{count}} entfolgen",
+      "notNow": "Nicht jetzt",
+      "confirmTitle": "{{count}} Konten entfolgen?",
+      "confirmBody": "Sie werden nicht benachrichtigt. Du kannst später jedem wieder folgen.",
+      "confirm": "Ja, {{count}} entfolgen",
+      "cancel": "Abbrechen",
+      "working": "Entfolge {{done}} von {{total}}...",
+      "background": "Im Hintergrund weitermachen",
+      "failed": "Konnte nicht starten. Versuch es in einer Minute erneut.",
+      "close": "Schließen",
+      "doneTitle": "Alles aufgeräumt",
+      "doneAll": "Du folgst {{done}} Konten nicht mehr, die dir nicht gefolgt sind.",
+      "doneSome": "{{done}} Konten entfolgt. {{failed}} konnten nicht entfolgt werden.",
+      "doneToast": "{{done}} Konten entfolgt, die dir nicht zurückfolgen"
+    }
   },
   "reactionInfo": {
     "title": "Reaktionen",

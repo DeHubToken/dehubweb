@@ -7858,7 +7858,25 @@
     "followBackAllFailed": "Hä nöd zruckfolgä",
     "followingBackProgress": "Folge nach {{completed}} von {{total}}",
     "findingFollowers": "Folgendi Follower sammle...",
-    "followBackAll": "Folge mir zurück"
+    "followBackAll": "Folge mir zurück",
+    "nonFollowers": {
+      "title": "Wäri du folge säuberä?",
+      "body": "{{count}} Accounts, wo du folgsch, folge dir nöd zrugg.",
+      "cta": "Alli {{count}} entfolge",
+      "notNow": "Jetzt nöd",
+      "confirmTitle": "{{count}} Accounts entfolge?",
+      "confirmBody": "Sie wärde nöd informiert. Du chasch jeder wieder spöter folge.",
+      "confirm": "Ja, {{count}} entfolge",
+      "cancel": "Abbräche",
+      "working": "Entfolge {{done}} vo {{total}}…",
+      "background": "Im Hintergrund witergo",
+      "failed": "Cha nöd starte. Versuech es inere Minute nomau.",
+      "close": "Schliesse",
+      "doneTitle": "Alli glöscht",
+      "doneAll": "{{done}} Accounts, wo nöd zrugg gfolgt händ, sind entfolgt.",
+      "doneSome": "{{done}} Accounts entfolgt. {{failed}} chond nöd entfolgt werde.",
+      "doneToast": "{{done}} Accounts, wo nöd zrugg gfolgt händ, sind entfolgt."
+    }
   },
   "reactionInfo": {
     "title": "Reaktione",

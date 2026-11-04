@@ -7875,7 +7875,25 @@
     "followBackAllFailed": "Nuk mund të ndiqja askënd prapa",
     "followingBackProgress": "Në vijim {{completed}} të {{total}}",
     "findingFollowers": "Gjetja e ndjekësve...",
-    "followBackAll": "Ndiqi të gjitha"
+    "followBackAll": "Ndiqi të gjitha",
+    "nonFollowers": {
+      "title": "Pastroje këto që ndjek?",
+      "body": "{{count}} llogaritë që ndjek nuk të ndjekin në kthim.",
+      "cta": "Ndërprer të gjitha {{count}}",
+      "notNow": "Jo tani",
+      "confirmTitle": "Ndërprer llogaritë {{count}}?",
+      "confirmBody": "Nuk do t’i informohen. Mund të ndjekësh dikë përsëri më vonë.",
+      "confirm": "Po, ndërprer {{count}}",
+      "cancel": "Anulo",
+      "working": "Duke ndërprerë {{done}} nga {{total}}...",
+      "background": "Vazhdo në sfond",
+      "failed": "Nuk u arrit të fillosh. Provo përsëri pas një minutë.",
+      "close": "Mbyll",
+      "doneTitle": "Të gjitha e pastër",
+      "doneAll": "Ndërprerëra {{done}} llogaritë që nuk të ndjekin në kthim.",
+      "doneSome": "Ndërprerëra {{done}} llogaritë. {{failed}} nuk u arrit të ndërprerë.",
+      "doneToast": "Ndërprerëra {{done}} llogaritë që nuk të ndjekin në kthim"
+    }
   },
   "reactionInfo": {
     "title": "Reagimet",

@@ -7916,7 +7916,25 @@
     "followBackAllFailed": "Kon niemand terug volg nie",
     "followingBackProgress": "Volg terug {{completed}} van {{total}}",
     "findingFollowers": "Vind navolgers...",
-    "followBackAll": "Volg almal terug"
+    "followBackAll": "Volg almal terug",
+    "nonFollowers": {
+      "title": "Skoonmaak van wie jy volg?",
+      "body": "{{count}} rekeninge wat jy volg, volg jou nie terug nie.",
+      "cta": "Ontvolg almal {{count}}",
+      "notNow": "Nie nou nie",
+      "confirmTitle": "Ontfout {{count}} rekeninge?",
+      "confirmBody": "Hulle sal nie vertel word nie. Jy kan almal later weer volg.",
+      "confirm": "Ja, volg ons {{count}}",
+      "cancel": "Kanselleer",
+      "working": "Ontvolg {{done}} van {{total}}...",
+      "background": "Gaan voort in die agtergrond",
+      "failed": "Kon nie begin nie. Probeer weer oor 'n minuut.",
+      "close": "Sluit",
+      "doneTitle": "Alles skoongemaak",
+      "doneAll": "Ongevolg {{done}} rekeninge wat jou nie teruggevolg het nie.",
+      "doneSome": "Ongevolg {{done}} rekeninge. {{failed}} kon nie gevolg word nie.",
+      "doneToast": "Ongevolg {{done}} rekeninge volg jou nie terug nie"
+    }
   },
   "reactionInfo": {
     "title": "Reaksies",

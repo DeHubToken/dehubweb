@@ -7884,7 +7884,24 @@
     "followBackAllFailed": "ማንንም ተከትል ሊሆን አልቻለም",
     "followingBackProgress": "{{completed}} ከ {{total}} ተከትሎ ነው",
     "findingFollowers": "ተከታዮችን ማግኘት...",
-    "followBackAll": "ሁሉንም ተከትል"
+    "followBackAll": "ሁሉንም ተከትል",
+    "nonFollowers": {
+      "title": "ማንን ትከተላለህ?",
+      "cta": "ሁሉንም ይከተሉ {{count}}",
+      "notNow": "አሁን አይደለም",
+      "confirmTitle": "Unfollow {{count}} መለያዎች?",
+      "confirmBody": "አይነገራቸውም ። በኋላ ላይ ማንንም እንደገና መከተል ይችላሉ.",
+      "confirm": "አዎ ፣ ያልተከተለ {{count}}",
+      "cancel": "ሰርዝ",
+      "working": "ያልተከተለ {{done}} of {{total}}...",
+      "background": "በጀርባው ውስጥ ይቀጥሉ",
+      "failed": "መጀመር አልተቻለም. በአንድ ደቂቃ ውስጥ እንደገና ይሞክሩ.",
+      "close": "ዝጋ",
+      "doneTitle": "ሁሉም ተብራርቷል",
+      "doneAll": "ያልተከተለ {{done}} ወደኋላ የማይከተሉ መለያዎች ።",
+      "doneSome": "ያልተከተለ {{done}} መለያዎች {{failed}} መከተል አልተቻለም ።",
+      "doneToast": "ያልተከተለ {{done}} መለያዎች ወደኋላ አይከተሉዎትም"
+    }
   },
   "reactionInfo": {
     "title": "ምላሾች",

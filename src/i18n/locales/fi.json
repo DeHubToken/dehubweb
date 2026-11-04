@@ -7878,7 +7878,24 @@
     "followBackAllFailed": "Ei voitu seurata ketään takaisin",
     "followingBackProgress": "Seurasit takaisin {{completed}} {{total}}",
     "findingFollowers": "Etsi seuraajia...",
-    "followBackAll": "Seuraa kaikkia takaisin"
+    "followBackAll": "Seuraa kaikkia takaisin",
+    "nonFollowers": {
+      "title": "Siivoatko, ketä seuraat?",
+      "body": "{{count}} seuraamasi tilit eivät seuraa sinua takaisin.",
+      "cta": "Lopeta kaikkien {{count}} seuraaminen",
+      "notNow": "Ei nyt",
+      "confirmTitle": "Lopetetaanko {{count}} -tilien seuraaminen?",
+      "confirmBody": "Heille ei kerrota. Voit seurata ketä tahansa myöhemmin.",
+      "confirm": "Kyllä, peru seuraaminen {{count}}",
+      "cancel": "Peruuta",
+      "background": "Jatka matkaa taustalla",
+      "failed": "Ei voitu käynnistää. Yritä uudelleen minuutin kuluttua.",
+      "close": "Sulje",
+      "doneTitle": "Kaikki tyhjennetty",
+      "doneAll": "{{done}} tiliä, jotka eivät seuranneet sinua takaisin, ei seurattu.",
+      "doneSome": "{{done}} -tilien seuraamista ei voitu lopettaa. {{failed}} -tilien seuraamista ei voitu lopettaa.",
+      "doneToast": "Ei seurattu {{done}} tiliä, jotka eivät seuraa sinua takaisin"
+    }
   },
   "reactionInfo": {
     "title": "Reaktiot",

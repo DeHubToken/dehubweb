@@ -7802,7 +7802,25 @@
     "followBackAllFailed": "Suurtagal ma noqon in qof dib loo raaco",
     "followingBackProgress": "Waxaan dib u raacayaa {{completed}} ka mid ah {{total}}",
     "findingFollowers": "Raadinta dadka ku raacaya...",
-    "followBackAll": "Dhammaan dib u raac"
+    "followBackAll": "Dhammaan dib u raac",
+    "nonFollowers": {
+      "title": "Nadiifi cidda aad raacdo?",
+      "body": "{{count}} akoonnada aad raacdo ma kuu raacaan.",
+      "cta": "Ka tag dhammaan {{count}}",
+      "notNow": "Maya hadda",
+      "confirmTitle": "Ka tag {{count}} akoonnada?",
+      "confirmBody": "Ma la sheegi doonaa. Waxaad mar kale qof kasta ku raaci kartaa dambe.",
+      "confirm": "Haa, ka tag {{count}}",
+      "cancel": "Jooji",
+      "working": "Ka tagaya {{done}} ee {{total}}...",
+      "background": "Ku sii wad asaga asaga",
+      "failed": "Ma bilaabi karo. Mar kale isku day hal daqiiqad.",
+      "close": "Xir",
+      "doneTitle": "Dhammaan la nadiifiyey",
+      "doneAll": "Ka tagay {{done}} akoonnada aan kuu raacin.",
+      "doneSome": "Ka tagay {{done}} akoonnada. {{failed}} ma la tagi karo.",
+      "doneToast": "Ka tagay {{done}} akoonnada aan kuu raacin."
+    }
   },
   "reactionInfo": {
     "title": "Falcelinta",

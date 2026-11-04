@@ -7880,7 +7880,25 @@
     "followBackAllFailed": "Nije mogao slijediti nikoga natrag",
     "followingBackProgress": "Slijedi natrag {{completed}} od {{total}}",
     "findingFollowers": "Traži slijedbenike...",
-    "followBackAll": "Slijedi sve natrag"
+    "followBackAll": "Slijedi sve natrag",
+    "nonFollowers": {
+      "title": "Očisti tko ti prati?",
+      "body": "{{count}} računa koje pratiš ne prati te nazad.",
+      "cta": "Prestani pratiti sve {{count}}",
+      "notNow": "Ne sada",
+      "confirmTitle": "Prestati pratiti {{count}} računa?",
+      "confirmBody": "Neće im biti rečeno. Kasnije možeš ponovno pratiti bilo koga.",
+      "confirm": "Da, prestani pratiti {{count}}",
+      "cancel": "Otkaži",
+      "working": "Prestajem pratiti {{done}} od {{total}}...",
+      "background": "Nastavi u pozadini",
+      "failed": "Nije moguće pokrenuti. Pokušaj ponovno za minutu.",
+      "close": "Zatvori",
+      "doneTitle": "Sve očišćeno",
+      "doneAll": "Prestao/la pratiti {{done}} računa koji te nisu pratili nazad.",
+      "doneSome": "Prestao/la pratiti {{done}} računa. {{failed}} nije se mogao/la prestati pratiti.",
+      "doneToast": "Prestao/la pratiti {{done}} računa koji te ne prate nazad"
+    }
   },
   "reactionInfo": {
     "title": "Reakcije",
