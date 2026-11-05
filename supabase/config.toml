@@ -440,6 +440,8 @@ project_id = "aigxuutjaqsywioxjefr"
   # Called by the DeHub API with x-internal-secret (tip/follow/mention webhooks).
   [functions.miniapp-events]
     verify_jwt = false
+  [functions.notification-relay]
+    verify_jwt = false
   # Signed-in callers send x-dehub-token; signed-out exports are journalled by IP.
   [functions.editor-export-log]
     verify_jwt = false
