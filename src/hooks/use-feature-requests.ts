@@ -481,6 +481,27 @@ export function useMarkShippedNotified() {
 }
 
 /**
+ * Put a request's attachments in the `feature-media` bucket and hand back
+ * their public URLs, in order.
+ */
+async function uploadFeatureFiles(files: File[], walletAddress: string): Promise<string[]> {
+  const urls: string[] = [];
+  // Sequential rather than parallel: the filename is stamped with Date.now(),
+  // and concurrent uploads of same-extension files collide on it.
+  for (const [index, file] of files.entries()) {
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
+    const filePath = `${walletAddress.toLowerCase()}/${Date.now()}-${index}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from('feature-media')
+      .upload(filePath, file, { contentType: file.type, upsert: false });
+    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+    const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
+    urls.push(urlData.publicUrl);
+  }
+  return urls;
+}
+
+/**
  * Sends the device snapshot for a just-posted request. Fire and forget: a
  * failure here must never cost the user their post. Board owners read it back
  * with useFeatureDeviceInfo.
@@ -510,20 +531,7 @@ export function useSubmitFeatureRequest() {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const files = (mediaFiles ?? []).slice(0, MAX_FEATURE_ATTACHMENTS);
-      const imageUrls: string[] = [];
-
-      // Sequential rather than parallel: the filename is stamped with Date.now(),
-      // and concurrent uploads of same-extension files collide on it.
-      for (const [index, file] of files.entries()) {
-        const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
-        const filePath = `${walletAddress.toLowerCase()}/${Date.now()}-${index}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from('feature-media')
-          .upload(filePath, file, { contentType: file.type, upsert: false });
-        if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
-        const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
-        imageUrls.push(urlData.publicUrl);
-      }
+      const imageUrls = await uploadFeatureFiles(files, walletAddress);
 
       const imageUrl = imageUrls[0] ?? null;
 
@@ -719,11 +727,27 @@ export function useEditFeatureRequest() {
   const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ id, title, description, category }: { id: string; title: string; description: string; category: FeatureCategory }) => {
+    mutationFn: async ({ id, title, description, category, keepUrls, newFiles }: {
+      id: string; title: string; description: string; category: FeatureCategory;
+      /** The attachments to keep, in order. Leave out to keep them untouched. */
+      keepUrls?: string[];
+      /** New photos or videos added while editing. */
+      newFiles?: File[];
+    }) => {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
+      const patch: { title: string; description: string; category: FeatureCategory; image_url?: string | null; image_urls?: string[] | null } = {
+        title: title.trim(), description: description.trim(), category,
+      };
+      if (keepUrls || newFiles?.length) {
+        const room = Math.max(0, MAX_FEATURE_ATTACHMENTS - (keepUrls?.length ?? 0));
+        const added = await uploadFeatureFiles((newFiles ?? []).slice(0, room), walletAddress);
+        const urls = [...(keepUrls ?? []), ...added].slice(0, MAX_FEATURE_ATTACHMENTS);
+        patch.image_url = urls[0] ?? null;
+        patch.image_urls = urls.length ? urls : null;
+      }
       const { data, error } = await supabase
         .from('feature_requests')
-        .update({ title: title.trim(), description: description.trim(), category })
+        .update(patch as never)
         .eq('id', id)
         .select()
         .single()

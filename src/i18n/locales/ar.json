@@ -2104,6 +2104,9 @@
   },
   "features": {
     "prompts": "المقترحات",
+    "editMedia": "الصور والفيديوهات",
+    "editAddMedia": "إضافة صورة أو فيديو",
+    "removeAttachment": "إزالة المرفق",
     "queued": "في الانتظار",
     "promptPageTitle": "الطلبات",
     "promptSubtitle": "ساهم في بناء Riftn بمقترح",
@@ -5160,6 +5163,12 @@
   },
   "fractions": {
     "seoTitle": "الأجزاء | Riftn",
+    "buyersTab": "المشترون",
+    "soldOfListing": "بيع {{sold}} من {{total}}",
+    "noBuyersYet": "لم يشترِ أحد أجزاء من هذا المنشور بعد",
+    "fromYou": "منك",
+    "statusInProgress": "قيد التنفيذ",
+    "statusOverdue": "متأخر",
     "seoDescription": "اشترِ وبِع أجزاءً من منشورات Riftn. المنشور المسكوك هو 1000 جزء على السلسلة, امتلك حصة من فيديو أو مقطع صوتي أو صورة وتداولها بـ عملات.",
     "title": "الأجزاء",
     "perUpload": "1000 لكل رفع",

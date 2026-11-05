@@ -2104,6 +2104,9 @@
   },
   "features": {
     "prompts": "İstemler",
+    "editMedia": "Fotoğraflar ve videolar",
+    "editAddMedia": "Fotoğraf veya video ekle",
+    "removeAttachment": "Eki kaldır",
     "queued": "Sırada",
     "promptPageTitle": "İstekler",
     "promptSubtitle": "Bir istemle Riftn’ı birlikte geliştirelim",
@@ -5152,6 +5155,12 @@
   },
   "fractions": {
     "seoTitle": "Paylar | Riftn",
+    "buyersTab": "Alıcılar",
+    "soldOfListing": "{{total}} parçadan {{sold}} satıldı",
+    "noBuyersYet": "Bu gönderinin parçalarını henüz kimse satın almadı",
+    "fromYou": "senden",
+    "statusInProgress": "Devam ediyor",
+    "statusOverdue": "Gecikmiş",
     "seoDescription": "Riftn gönderilerinin paylarını alıp satın. Basılmış bir gönderi 1000 zincir üstü paydır, bir videonun, parçanın ya da görselin bir dilimine sahip olun ve jeton ile takas edin.",
     "title": "Paylar",
     "perUpload": "Yükleme başına 1000",

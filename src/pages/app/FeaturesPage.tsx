@@ -259,6 +259,12 @@ function FeatureCard({
   const [editTitle, setEditTitle] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editTitle", feature.title, feature.id);
   const [editDescription, setEditDescription] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editDescription", feature.description, feature.id);
   const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
+  // Attachments while editing: the ones already on the request that stay, and
+  // new photos or videos picked from the phone or computer.
+  const [editKeep, setEditKeep] = useState<string[]>([]);
+  const [editNew, setEditNew] = useState<{ file: File; preview: string }[]>([]);
+  const [editMediaError, setEditMediaError] = useState('');
+  const editFileRef = useRef<HTMLInputElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
@@ -323,15 +329,45 @@ function FeatureCard({
     setEditTitle(feature.title);
     setEditDescription(feature.description);
     setEditCategory(feature.category);
+    setEditKeep(featureAttachments(feature));
+    clearEditNew();
+    setEditMediaError('');
     setIsEditing(true);
     setShowMenu(false);
   };
 
+  const clearEditNew = () => setEditNew(prev => {
+    prev.forEach(a => URL.revokeObjectURL(a.preview));
+    return [];
+  });
+
+  const addEditFiles = (picked: File[]) => {
+    const valid = picked.filter(file => /^(image|video)\//.test(file.type) && file.size <= MAX_FEATURE_ATTACHMENT_BYTES);
+    const room = Math.max(0, MAX_FEATURE_ATTACHMENTS - editKeep.length - editNew.length);
+    const accepted = valid.slice(0, room);
+    setEditNew(prev => [...prev, ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) }))]);
+    setEditMediaError(valid.length < picked.length
+      ? t('features.promptMediaError', 'Choose images or videos under 50MB each.')
+      : accepted.length < picked.length
+        ? t('features.promptMediaLimit', 'Up to {{max}} attachments.', { max: MAX_FEATURE_ATTACHMENTS }) : '');
+  };
+
+  const removeEditNew = (index: number) => setEditNew(prev => {
+    const gone = prev[index];
+    if (gone) URL.revokeObjectURL(gone.preview);
+    return prev.filter((_, i) => i !== index);
+  });
+
   const handleSaveEdit = () => {
     if (!editTitle.trim() || !editDescription.trim()) return;
+    const before = featureAttachments(feature);
+    const mediaChanged = editNew.length > 0 || editKeep.length !== before.length || editKeep.some((u, i) => u !== before[i]);
     editMutation.mutate(
-      { id: feature.id, title: editTitle, description: editDescription, category: editCategory },
-      { onSuccess: () => setIsEditing(false) }
+      {
+        id: feature.id, title: editTitle, description: editDescription, category: editCategory,
+        ...(mediaChanged ? { keepUrls: editKeep, newFiles: editNew.map(a => a.file) } : {}),
+      },
+      { onSuccess: () => { setIsEditing(false); clearEditNew(); } }
     );
   };
 
@@ -525,6 +561,40 @@ function FeatureCard({
                 ))}
               </select>
             </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">{t('features.editMedia', 'Photos and videos')}</label>
+              {(editKeep.length > 0 || editNew.length > 0) && (
+                <div className="flex flex-wrap gap-2 mb-2" data-edit-attachments>
+                  {[...editKeep.map((url, i) => ({ key: url, src: url, video: isVideoAttachment(url), remove: () => setEditKeep(prev => prev.filter((_, j) => j !== i)) })),
+                    ...editNew.map((a, i) => ({ key: a.preview, src: a.preview, video: a.file.type.startsWith('video/'), remove: () => removeEditNew(i) }))].map(item => (
+                    <div key={item.key} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10 bg-black">
+                      {item.video
+                        ? <video src={item.src} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+                        : <img src={item.src} alt="" className="w-full h-full object-cover" />}
+                      <button
+                        type="button"
+                        onClick={item.remove}
+                        disabled={editMutation.isPending}
+                        aria-label={t('features.removeAttachment', 'Remove attachment')}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/70 text-white text-xs leading-none flex items-center justify-center"
+                      >×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <input ref={editFileRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={e => { addEditFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }} />
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="rounded-lg px-2 text-xs"
+                disabled={editMutation.isPending || editKeep.length + editNew.length >= MAX_FEATURE_ATTACHMENTS}
+                onClick={() => editFileRef.current?.click()}
+              >
+                <ImagePlus className="w-4 h-4" />{t('features.editAddMedia', 'Add photo or video')}
+              </Button>
+              {editMediaError && <p role="alert" className="text-xs text-red-400 mt-1">{editMediaError}</p>}
+            </div>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -538,7 +608,7 @@ function FeatureCard({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => setIsEditing(false)}
+                onClick={() => { setIsEditing(false); clearEditNew(); }}
                 className="rounded-lg text-xs text-zinc-400"
               >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>
