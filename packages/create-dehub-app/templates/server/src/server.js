@@ -1,9 +1,9 @@
 import express from 'express';
 import { verifyDehubToken, verifyDehubPayment, verifyDehubWebhook, sendDehubNotification } from 'dehub-sdk/server';
 
-// Your app's domain exactly as registered on dehub.io/apps/dev.
+// Your app's domain exactly as registered on riftn.com/apps/dev.
 const DOMAIN = process.env.DEHUB_APP_DOMAIN || 'YOUR-DOMAIN';
-// Created on dehub.io/apps/dev. Keep it secret.
+// Created on riftn.com/apps/dev. Keep it secret.
 const NOTIFY_KEY = process.env.DEHUB_NOTIFY_KEY;
 
 const app = express();

@@ -13,4 +13,4 @@ DEHUB_APP_DOMAIN=yourdomain.com DEHUB_NOTIFY_KEY=dhmk_... npm run dev
 | `POST /api/payments` | `{ receipt }` from `dehub.actions.pay()` |
 | `POST /api/dehub-webhook` | set as `webhookUrl` in your dehub.json |
 
-Docs: https://dehub.io/docs/webhooks
+Docs: https://riftn.com/docs/webhooks

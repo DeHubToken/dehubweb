@@ -1,15 +1,21 @@
 # dehub-sdk
 
-Build mini apps for [DeHub](https://dehub.io): sign people in, take DHB payments, post to the feed and send notifications. Your app runs inside DeHub on the web and in the DeHub app.
+Build mini apps for [DeHub](https://riftn.com): sign people in, take DHB payments, post to the feed and send notifications. Your app runs inside DeHub on the web and in the DeHub app.
 
 ```bash
-npm i dehub-sdk
+npm i https://riftn.com/sdk/dehub-sdk.tgz
+```
+
+In the browser with no build step:
+
+```js
+import { dehub } from 'https://riftn.com/sdk/dehub-sdk.mjs';
 ```
 
 Or start from a template:
 
 ```bash
-npx create-dehub-app my-app
+npx https://riftn.com/sdk/create-dehub-app.tgz my-app
 ```
 
 ## In your app
@@ -56,6 +62,6 @@ Server helpers need `jose` (`npm i jose`).
 ## Ship it
 
 1. Put a `dehub.json` at `https://yourdomain/.well-known/dehub.json`.
-2. Check and submit it on [dehub.io/apps/dev](https://dehub.io/apps/dev). It works by link straight away and joins the store after review.
+2. Check and submit it on [riftn.com/apps/dev](https://riftn.com/apps/dev). It works by link straight away and joins the store after review.
 
-Docs: [dehub.io/docs/developers](https://dehub.io/docs/developers)
+Docs: [riftn.com/docs/developers](https://riftn.com/docs/developers)
