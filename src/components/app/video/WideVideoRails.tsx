@@ -5,14 +5,15 @@
  * panel beside it. The post header above already shows who posted it and the
  * action bar below already has like, comment, tip and share, so the panel
  * holds only what is new: the title and description, a Follow button, then
- * the top comments and a way in to comment. Comments load only for a video
+ * the top comments and a comment box. Comments load only for a video
  * that has some; follow state loads only for a signed-in viewer.
  */
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getNFTCommentPage } from '@/lib/api/dehub/comments';
+import { getNFTCommentPage, postComment } from '@/lib/api/dehub/comments';
 import { isFollowing as checkIsFollowing } from '@/lib/api/dehub';
 import { useFollow } from '@/hooks/use-follow';
 import type { VideoItem } from '@/types/feed.types';
@@ -48,6 +49,78 @@ function RailFollowButton({ video, walletAddress, onLogin }: { video: VideoItem;
   );
 }
 
+
+/**
+ * The same comment box as the comments section, text only: it grows as you
+ * type, Enter posts and Shift+Enter adds a line. Posting refreshes the
+ * panel's comments and the full comments list.
+ */
+function RailCommentBox({ tokenId, walletAddress, onLogin, onPosted }: { tokenId: string; walletAddress?: string | null; onLogin: () => void; onPosted: () => void }) {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const [text, setText] = useState('');
+  const [sending, setSending] = useState(false);
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const fit = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
+  };
+  const send = async () => {
+    const body = text.trim();
+    if (!body || sending) return;
+    if (!walletAddress) { onLogin(); return; }
+    setSending(true);
+    try {
+      await postComment(tokenId, body);
+      setText('');
+      requestAnimationFrame(fit);
+      onPosted();
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['wide-rail-comments', tokenId] }),
+        queryClient.invalidateQueries({ queryKey: ['comments', tokenId] }),
+      ]);
+    } catch (error) {
+      toast.error(error instanceof Error && error.message ? error.message : t('toasts.failed_to_post_comment', 'Could not post your comment'));
+    } finally {
+      setSending(false);
+    }
+  };
+  const ready = !!text.trim() && !sending;
+  return (
+    <div
+      className="flex items-end gap-1.5 rounded-xl border border-white/[0.12] bg-white/[0.08] py-1.5 pl-3 pr-1.5 backdrop-blur-xl"
+      onClick={(event) => event.stopPropagation()}
+    >
+      <textarea
+        ref={ref}
+        rows={1}
+        value={text}
+        disabled={sending}
+        placeholder={t('comments.composerPlaceholder', 'Add a comment...')}
+        onFocus={() => { if (!walletAddress) { ref.current?.blur(); onLogin(); } }}
+        onChange={(event) => { setText(event.target.value); fit(); }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+            event.preventDefault();
+            void send();
+          }
+        }}
+        className="max-h-[140px] min-h-[28px] w-full min-w-0 resize-none bg-transparent py-1 text-sm leading-5 text-white placeholder:text-zinc-500 focus:outline-none"
+      />
+      <button
+        type="button"
+        disabled={!ready}
+        onClick={() => void send()}
+        className="h-7 shrink-0 rounded-lg bg-white px-3 text-[12.5px] font-bold text-zinc-900 transition-opacity disabled:opacity-30"
+      >
+        {t('comments.post', 'Post')}
+      </button>
+    </div>
+  );
+}
+
 export function WideVideoPanel({ video, onOpenComments, walletAddress, onLogin, isOwnPost, hideCaption }: {
   video: VideoItem;
   onOpenComments: () => void;
@@ -60,7 +133,8 @@ export function WideVideoPanel({ video, onOpenComments, walletAddress, onLogin, 
   const { t } = useTranslation();
   const description = (video.description ?? '').trim();
   const tokenId = video.id;
-  const count = Number(video.commentCount ?? 0) || 0;
+  const [posted, setPosted] = useState(0);
+  const count = (Number(video.commentCount ?? 0) || 0) + posted;
   const { data } = useQuery({
     queryKey: ['wide-rail-comments', tokenId],
     queryFn: () => getNFTCommentPage(tokenId, 0, 4),
@@ -86,10 +160,14 @@ export function WideVideoPanel({ video, onOpenComments, walletAddress, onLogin, 
       <div className="mx-4 h-px bg-white/[0.08]" />
 
       <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-4">
-        <div className="flex items-baseline justify-between gap-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">{t('wideVideo.comments', 'Comments')}</span>
-          {count > 0 && <span className="text-[12px] tabular-nums text-white/60">{count}</span>}
-        </div>
+        <button
+          type="button"
+          onClick={(event) => { event.stopPropagation(); onOpenComments(); }}
+          className="flex items-baseline justify-between gap-2 text-left text-white/60 transition-colors hover:text-white"
+        >
+          <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">{t('wideVideo.comments', 'Comments')}</span>
+          {count > 0 && <span className="text-[12px] tabular-nums">{count}</span>}
+        </button>
         {rows.map((row) => {
           const name = row.writor?.displayName || row.writor?.username || '';
           return (
@@ -106,13 +184,7 @@ export function WideVideoPanel({ video, onOpenComments, walletAddress, onLogin, 
       </div>
 
       <div className="p-4 pt-0">
-        <button
-          type="button"
-          onClick={(event) => { event.stopPropagation(); onOpenComments(); }}
-          className="w-full rounded-xl border border-white/[0.1] bg-white/[0.06] px-3 py-2.5 text-left text-[13px] text-white/70 transition-colors hover:bg-white/[0.1] hover:text-white"
-        >
-          {t('wideVideo.addComment', 'Add a comment')}
-        </button>
+        <RailCommentBox tokenId={tokenId} walletAddress={walletAddress} onLogin={onLogin} onPosted={() => setPosted((n) => n + 1)} />
       </div>
     </aside>
   );
