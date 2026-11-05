@@ -7128,3 +7128,8 @@ html[data-system-tone="light"] [data-non-follower-confirm] {
   border-color: rgb(185 28 28);
   color: #fff;
 }
+
+/* Audio deck placeholder sizes its card the way the loaded deck does. */
+html[data-theme] [data-audio-frame]:has([data-audio-studio-placeholder]):not([data-video-fullscreen]):not(#_):not(#_) { height: auto !important; min-height: 0; max-height: none !important; aspect-ratio: auto !important; width: 100% !important; }
+html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(#_):not(#_) { border: 0; border-radius: 28px; }
+[data-audio-backdrop]:has([data-audio-studio-placeholder]) > .absolute { position: relative; }

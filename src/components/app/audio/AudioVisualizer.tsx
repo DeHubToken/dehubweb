@@ -5,6 +5,8 @@ import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
 import './audio-studio.css';
 import './glass-hold.css';
+import { audioStudioShapeKey } from '@/components/app/audio/audio-studio-shape';
+import { writeShape } from '@/lib/remembered-shape';
 import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
@@ -254,6 +256,13 @@ const formatTime = (seconds: number) => {
 
 const clamp01 = (n: number) => (Number.isFinite(n) ? Math.max(0, Math.min(1, n)) : 0);
 
+
+/** Records the studio deck's height so its loading placeholder can match it. */
+function rememberStudioHeight(el: HTMLDivElement | null) {
+  if (!el || typeof window === 'undefined') return;
+  requestAnimationFrame(() => { if (el.isConnected && el.offsetHeight > 120 && !el.hasAttribute('data-audio-studio-fullscreen')) writeShape(audioStudioShapeKey(), el.offsetHeight); });
+}
+
 export function AudioVisualizer({
   audioUrl,
   isPlaying: isPlayingProp,
@@ -345,6 +354,9 @@ export function AudioVisualizer({
   const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const studioLayout = isCanvasTheme(theme) || theme === 'system' || isLightTheme;
   const visualizerLight = isLightTheme && !studioLayout;
+  // Themes without the studio deck keep the card's own shape, so the loading
+  // placeholder must not reserve the deck's height for them.
+  useEffect(() => { if (!studioLayout) writeShape(audioStudioShapeKey(), 0); }, [studioLayout]);
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   // The presets do not fit a narrow card. Mask whichever edge is actually
@@ -1114,7 +1126,7 @@ export function AudioVisualizer({
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
   if (studioLayout) return (
-    <div data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={isLightTheme ? 'light' : theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
+    <div ref={rememberStudioHeight} data-no-swipe data-video-controls data-audio-player data-audio-studio data-material={isLightTheme ? 'light' : theme} data-audio-studio-fullscreen={isFullscreen || undefined} className={className} onClick={stopBubble}>
       <div data-audio-studio-title>
         {artworkUrl && !artworkUrl.split('?')[0].endsWith('/placeholder.svg') && <img data-audio-studio-cover src={artworkUrl} alt="" loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
         <div><strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>

@@ -21,6 +21,7 @@ import { isVideoInPictureInPicture } from '@/lib/picture-in-picture';
  * ```
  */
 
+import { audioStudioPlaceholderHeight } from '@/components/app/audio/audio-studio-shape';
 import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
@@ -2729,7 +2730,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               <div data-audio-backdrop className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
-                  <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
+                  <Suspense fallback={<AudioStudioPlaceholder />}>
                     <AudioVisualizer
                       tokenId={video.id}
                       viewerKey={walletAddress}
@@ -4003,6 +4004,19 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 });
 
 /** Every post passes the viewer's keyword filters first — see KeywordFilterGate. */
+
+/**
+ * Stands in for the audio deck while its code loads. Once the deck has been
+ * seen it takes the deck's height (the deck sizes its card), so the card and
+ * everything under it stay put when the deck arrives.
+ */
+function AudioStudioPlaceholder() {
+  const [height] = useState(audioStudioPlaceholderHeight);
+  return height
+    ? <div data-audio-studio-placeholder className="relative w-full rounded-xl bg-black/40" style={{ height }} />
+    : <div className="w-full h-full rounded-xl bg-black/40" />;
+}
+
 export const VideoCard = memo(function FilteredVideoCard(props: VideoCardProps) {
   const { video } = props;
   return (

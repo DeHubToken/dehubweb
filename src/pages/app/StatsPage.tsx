@@ -17,7 +17,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * plainly what that does and does not prove. See ProvenancePanel below.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,
@@ -29,7 +29,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Activity, ChevronDown, Globe, Loader2 } from "lucide-react";
+import { Activity, ChevronDown, Globe } from "lucide-react";
 import BarChart3 from "@/components/ui/cut-icons/stats";
 import Check from "@/components/ui/cut-icons/check";
 import Copy from "@/components/ui/cut-icons/copy";
@@ -49,7 +49,9 @@ import {
 } from '@/hooks/use-site-stats';
 import { FinanceSection } from '@/components/app/stats/FinanceSection';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
+import { Skeleton } from '@/components/ui/skeleton';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
+import { useFinanceStats } from '@/hooks/use-finance-stats';
 import { cn } from '@/lib/utils';
 import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
@@ -780,6 +782,8 @@ function CommunitySection({ range }: { range: Range }) {
 // Page
 // ---------------------------------------------------------------------------
 
+const LOWER_REVEAL_CAP_MS = 2500;
+
 export default function StatsPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -787,6 +791,20 @@ export default function StatsPage() {
 
   const { data, isLoading, isError, isFetching } = useSiteStats();
   const stats: SiteStats | null = data && data.ok ? data : null;
+
+  // The community, money and audience halves come from three endpoints that
+  // answer at different moments. Showing each as it lands slid the ones
+  // under it down the page, so they appear together under the chart once all
+  // three have answered (or after a short cap, so one slow read never hides
+  // the rest).
+  const { isLoading: communityLoading } = useUserStats();
+  const { isLoading: financeLoading } = useFinanceStats();
+  const [lowerCapPassed, setLowerCapPassed] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLowerCapPassed(true), LOWER_REVEAL_CAP_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
+  const showLower = lowerCapPassed || (!isLoading && !communityLoading && !financeLoading);
   const unavailable: SiteStatsUnavailable | null = isUnavailable(data) ? data : null;
 
   /**
@@ -903,9 +921,22 @@ export default function StatsPage() {
       />
 
       <PageBody>
+        {/* Same tiles and chart box as the loaded view, values blank, so the
+            community half below never jumps when the traffic read lands. */}
         {isLoading && (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+          <div aria-hidden className="contents">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+              {[
+                t('stats.tile.visitorsToday', 'Visitors today'),
+                t('stats.tile.peakDay', 'Busiest day'),
+                t('stats.tile.pageViews', 'Page views'),
+                t('stats.tile.served', 'Served'),
+              ].map((label) => <StatTile key={label} label={label} value={'\u00a0'} hint={'\u00a0'} />)}
+            </div>
+            <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
+              <div className="mb-3 h-5" />
+              <Skeleton className="h-[180px] w-full rounded-xl" />
+            </div>
           </div>
         )}
 
@@ -1047,12 +1078,12 @@ export default function StatsPage() {
         {/* Independent of the traffic half: a Cloudflare outage takes the
             charts above with it, and there is no reason for it to take the
             community numbers too. */}
-        <CommunitySection range={range} />
+        {showLower && <CommunitySection range={range} />}
 
         {/* Its own endpoint and its own failure, for the same reason. */}
-        <FinanceSection range={range} />
+        {showLower && <FinanceSection range={range} />}
 
-        {stats && view && (
+        {showLower && stats && view && (
           <>
             {/* Where people are, and what they browse with */}
             <div data-kit-flat-skip className="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-3">
