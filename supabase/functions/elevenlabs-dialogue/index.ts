@@ -14,8 +14,7 @@ import {
   errorResponse,
   getApiKey,
   num,
-  readProviderError,
-} from '../_shared/elevenlabs.ts';
+  readProviderError, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 
@@ -35,6 +34,7 @@ Deno.serve(async (req) => {
   // allows — and it allowed it to anyone, unauthenticated and unlimited.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-dialogue',
     actionType: 'elevenlabs-dialogue',
     rateLimit: { limit: 40, windowMs: 60 * 60 * 1000 },
@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
     const foreign = await refuseForeignVoice(lines.map((l) => l.voice_id), charged.wallet);
     if (foreign) return foreign;
 
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     const format = outputFormat === 'pcm_44100' ? 'pcm_44100' : 'mp3_44100_128';
@@ -97,6 +97,8 @@ Deno.serve(async (req) => {
     );
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs dialogue error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Dialogue generation failed'), 502);

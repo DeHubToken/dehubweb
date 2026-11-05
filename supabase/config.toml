@@ -98,6 +98,9 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.provider-keys]
     verify_jwt = false
+  # Admin hub Own keys card; callers are checked against api.dehub.io /api/admin/me.
+  [functions.admin-provider-keys]
+    verify_jwt = false
   [functions.builder-serve]
     verify_jwt = false
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.

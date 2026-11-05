@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
@@ -1156,7 +1157,8 @@ export function usePostForm(
     
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
-        body: { text: text.trim(), mode, style }
+        body: { text: text.trim(), mode, style },
+        headers: ownKeyHeaders(),
       });
 
       if (error) {

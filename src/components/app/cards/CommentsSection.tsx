@@ -81,6 +81,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
@@ -1192,7 +1193,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     setAiMenu('closed');
     setAiRewriting(true);
     try {
-      const { data, error } = await supabase.functions.invoke('enhance-text', { body: { text, mode, style } });
+      const { data, error } = await supabase.functions.invoke('enhance-text', { body: { text, mode, style }, headers: ownKeyHeaders() });
       if (error || !data?.enhancedText) throw error ?? new Error(data?.error);
       setNewComment(data.enhancedText);
     } catch {

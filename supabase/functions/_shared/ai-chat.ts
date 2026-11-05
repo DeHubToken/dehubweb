@@ -95,6 +95,12 @@ export interface AiChatOptions {
   noFree?: boolean;
   /** Preserve a caller's existing gateway credential when routing shared rounds. */
   gatewayKey?: string;
+  /**
+   * The signed-in creator's wallet. When they saved their own chat key
+   * (OpenAI, Gemini, xAI, OpenRouter, Groq, Mistral or Venice) the request
+   * runs on that key only, with no free tier and no Riftn fallback.
+   */
+  ownKeyWallet?: string | null;
 }
 
 /** Rebuilds a JSON response after the body has been read for inspection. */
@@ -211,6 +217,12 @@ export async function aiChat(
   body: Record<string, unknown>,
   opts: AiChatOptions = {},
 ): Promise<Response> {
+  if (opts.ownKeyWallet) {
+    // Loaded only for signed-in callers, so plain text jobs keep a small import graph.
+    const { ownChatFetch, ownChatRoute } = await import('./byok.ts');
+    const route = await ownChatRoute(opts.ownKeyWallet, typeof body.model === 'string' ? body.model : '');
+    if (route) return ownChatFetch(opts.ownKeyWallet, route, body, opts.signal);
+  }
   const meter = createUsageMeter(opts.label, body.model);
   try {
     // Free tiers first for the cheap jobs. Pro is asked for by name and is never

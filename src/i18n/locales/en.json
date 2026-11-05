@@ -6260,6 +6260,7 @@
     "create": "Create",
     "createFreeLeft": "Free · {{count}} left",
     "priceFree": "Free",
+    "priceOwnKey": "Your key",
     "priceRetry": "Price unavailable, tap to retry",
     "priceDhbShort": "{{amount}} tokens",
     "heroKicker": "Now with {{model}}",

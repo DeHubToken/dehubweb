@@ -14,6 +14,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import { toast } from 'sonner';
 
 export interface MusicParams {
@@ -89,6 +90,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
     setIsGeneratingLyrics(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-lyrics', {
+        headers: ownKeyHeaders(),
         body: {
           title,
           style,

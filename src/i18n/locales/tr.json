@@ -6307,6 +6307,7 @@
     "create": "Oluştur",
     "createFreeLeft": "Ücretsiz · {{count}} kaldı",
     "priceFree": "Ücretsiz",
+    "priceOwnKey": "Kendi anahtarın",
     "priceRetry": "Fiyat alınamadı, yeniden denemek için dokunun",
     "priceDhbShort": "{{amount}} jeton",
     "heroKicker": "Artık {{model}} ile",

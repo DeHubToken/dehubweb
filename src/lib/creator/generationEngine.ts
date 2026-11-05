@@ -11,6 +11,7 @@
  * functions only after the transfer confirms.
  */
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { forgetPayment } from '@/lib/ai-payment';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
@@ -1132,6 +1133,7 @@ export async function enhancePrompt(
   // spellcheck and lose the assist entirely.
   const { data, error } = await supabase.functions.invoke('enhance-text', {
     body: { text: trimmed, mode: kind === 'video' ? 'prompt-video' : 'prompt-image' },
+    headers: ownKeyHeaders(),
   });
 
   if (error) throw new Error(await describeInvokeError(error, _translateCopy("copy.f76e490a2382", { defaultValue: "Could not enhance that prompt" })));

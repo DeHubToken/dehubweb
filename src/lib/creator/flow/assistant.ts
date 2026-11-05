@@ -5,6 +5,7 @@
  * Works signed out; the function is IP-limited rather than wallet-gated.
  */
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/creator-prompt-assistant`;
 const ANON_KEY =
@@ -50,6 +51,7 @@ export async function streamAssistant({ messages, prompt, persona = 'craft', mod
       'Content-Type': 'application/json',
       apikey: ANON_KEY,
       Authorization: `Bearer ${ANON_KEY}`,
+      ...ownKeyHeaders(),
     },
     body: JSON.stringify({ messages, prompt, persona, model, stream: true }),
     signal,

@@ -16,8 +16,7 @@ import {
   getApiKey,
   num,
   readProviderError,
-  readUpload,
-} from '../_shared/elevenlabs.ts';
+  readUpload, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
 
@@ -38,6 +37,7 @@ Deno.serve(async (req) => {
   // server-measured `quantity`.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-voice-changer',
     actionType: 'elevenlabs-voice-changer',
     rateLimit: { limit: 15, windowMs: 60 * 60 * 1000 },
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
   if (!charged.ok) return charged.response;
 
   try {
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     const upload = await readUpload(req);
@@ -96,6 +96,8 @@ Deno.serve(async (req) => {
     );
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs voice-changer error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Voice conversion failed'), 502);
