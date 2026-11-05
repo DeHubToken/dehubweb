@@ -140,7 +140,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
   // than the summary cap, which would block publishing, so swap it out too.
   useEffect(() => {
     if (step !== 'publish' || summaryTouched.current) return;
-    if (!summary.trim() || summary.length > ARTICLE_SUMMARY_MAX) setSummary(articleSummaryFromBody(body));
+    if (!summary.trim() || summary.length > ARTICLE_SUMMARY_MAX) setSummary(articleSummaryFromBody(body) || summary.slice(0, ARTICLE_SUMMARY_MAX));
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const format = (tool: Tool) => {
