@@ -8,8 +8,8 @@
  *   picture shows the playing video itself, blurred and dimmed.
  * - rails:   two panels side by side: the picture at its real shape with
  *   curved corners, and one glass panel beside it with who posted it, what it
- *   is and the top comments. Every shape gets the panel, landscape too: the
- *   picture shrinks to leave the panel its room.
+ *   is and the top comments. Wide videos already fill the column and show as
+ *   normal.
  *
  * Theatre was a choice for a day and was dropped; a stored 'theatre' is not a
  * valid mode any more, so it reads as the default.
@@ -23,12 +23,8 @@ export type WideVideoMode = 'standard' | 'ambient' | 'rails';
 export const WIDE_VIDEO_MODES: readonly WideVideoMode[] = ['standard', 'ambient', 'rails'];
 export const DEFAULT_WIDE_VIDEO_MODE: WideVideoMode = 'ambient';
 
-/**
- * Ambient needs space around the picture to show the glow. A landscape video
- * already fills the column, so its frame is held to 4:3 at most and the blurred
- * picture fills the bands above and below it. Tall and square frames are untouched.
- */
-export const WIDE_AMBIENT_MAX_FRAME_ASPECT = 4 / 3;
+/** Rails need room beside the picture: anything wider than this shows as normal. */
+export const WIDE_RAILS_MAX_ASPECT = 1.25;
 
 const STORAGE_KEY = 'dehub.wideVideoMode';
 const CHANGE_EVENT = 'dehub:wide-video-mode';
