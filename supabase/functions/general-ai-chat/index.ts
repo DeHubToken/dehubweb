@@ -3,6 +3,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp, resolveDeHubAddress } from "../_shared/auth.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
+import { ownChatFetch, ownChatRoute, userProviderKey } from "../_shared/byok.ts";
 import { agentConfigured, postCompletion, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
 import { meteredCompletionFetch } from "../_shared/ai-usage.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
@@ -1029,7 +1030,11 @@ serve(async (req) => {
     }
 
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
-    const perplexityKey = Deno.env.get('PERPLEXITY_API_KEY');
+    // A signed-in creator who saved their own keys runs on them: chat on their
+    // chat key, web search on their Perplexity key. Riftn's keys otherwise.
+    const ownKeyWallet = verifiedWallet ? verifiedWallet.toLowerCase() : null;
+    const ownPerplexityKey = ownKeyWallet ? await userProviderKey(ownKeyWallet, 'perplexity') : null;
+    const perplexityKey = ownPerplexityKey ?? Deno.env.get('PERPLEXITY_API_KEY');
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
     console.log('Chat request:', { model, hasXaiKey: !!xaiApiKey, hasPerplexityKey: !!perplexityKey, hasVeniceKey: !!Deno.env.get('VENICE_API_KEY'), isAuthenticated });
@@ -1510,6 +1515,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,
+          ownKeyWallet,
         });
 
         const withMemory = caller
@@ -1546,6 +1552,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,
+          ownKeyWallet,
         });
 
         if (agentResult.text) {
@@ -1652,6 +1659,7 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
     let fallbackReason: string | undefined = fallbackUsed ? 'XAI_API_KEY not configured' : undefined;
 
     let response: Response;
+    let ownRoute: Awaited<ReturnType<typeof ownChatRoute>> = null;
     try {
       console.log(`[AI Request] model=${modelName} endpoint=${apiEndpoint} msgCount=${apiMessages.length}`);
       const requestBody = {
@@ -1660,7 +1668,13 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
         max_completion_tokens: maxTokens,
         ...(streamRequested ? { stream: true } : {}),
       };
-      response = useGrokApi
+      ownRoute = await ownChatRoute(ownKeyWallet, modelName);
+      if (ownRoute && ownKeyWallet) {
+        response = await ownChatFetch(ownKeyWallet, ownRoute, requestBody, controller.signal);
+        modelName = `${ownRoute.model} (your ${ownRoute.provider} key)`;
+        // A failing own key stops here with its own message. No Riftn fallback.
+        if (response.headers.get('x-own-key-error')) return response;
+      } else response = useGrokApi
         ? await meteredCompletionFetch(apiEndpoint, {
             method: 'POST',
             headers: {
@@ -1675,6 +1689,12 @@ ${requestedSurface === 'chat' ? `- The chat rules at the top of this prompt win:
       clearTimeout(timeoutId);
       const timedOut = fetchError instanceof DOMException && fetchError.name === 'AbortError';
       console.error(timedOut ? 'AI API request timed out after 45s' : 'AI fetch error:', fetchError);
+      if (ownRoute) {
+        return new Response(
+          JSON.stringify({ error: `Your ${ownRoute.provider} key took too long to answer. Try again.`, errorCode: 'OWN_KEY_TIMEOUT', ownKey: true, canUseCredits: true }),
+          { status: 504, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
       const venice = await callVeniceFallback(apiMessages, maxTokens, streamRequested);
       if (venice) {

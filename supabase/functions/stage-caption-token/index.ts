@@ -15,6 +15,7 @@
 // so refusing them costs no feature and closes the obvious "mint credentials
 // against someone else's Deepgram balance" hole.
 import { corsHeaders, handleCorsPreflight, jsonResponse, guardPaidEndpoint, serviceClient } from "../_shared/auth.ts";
+import { byokErrorResponse, userProviderKey } from "../_shared/byok.ts";
 
 const DEEPGRAM_API_KEY = Deno.env.get("DEEPGRAM_API_KEY") ?? "";
 
@@ -86,12 +87,12 @@ async function maySpeak(stageId: string, wallet: string): Promise<boolean> {
  * different subprotocols — `bearer` vs `token` — so the scheme travels back to
  * the client with the credential rather than being assumed.
  */
-async function mintCredential(): Promise<{ token: string; scheme: "bearer" | "token"; expiresIn: number }> {
+async function mintCredential(apiKey: string): Promise<{ token: string; scheme: "bearer" | "token"; expiresIn: number }> {
   try {
     const grant = await fetch("https://api.deepgram.com/v1/auth/grant", {
       method: "POST",
       headers: {
-        Authorization: `Token ${DEEPGRAM_API_KEY}`,
+        Authorization: `Token ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ ttl_seconds: CREDENTIAL_TTL_SECONDS }),
@@ -113,7 +114,7 @@ async function mintCredential(): Promise<{ token: string; scheme: "bearer" | "to
   }
 
   const projectsRes = await fetch("https://api.deepgram.com/v1/projects", {
-    headers: { Authorization: `Token ${DEEPGRAM_API_KEY}` },
+    headers: { Authorization: `Token ${apiKey}` },
   });
   if (!projectsRes.ok) throw new Error(`deepgram projects ${projectsRes.status}`);
   const projectId = (await projectsRes.json())?.projects?.[0]?.project_id;
@@ -122,7 +123,7 @@ async function mintCredential(): Promise<{ token: string; scheme: "bearer" | "to
   const keyRes = await fetch(`https://api.deepgram.com/v1/projects/${projectId}/keys`, {
     method: "POST",
     headers: {
-      Authorization: `Token ${DEEPGRAM_API_KEY}`,
+      Authorization: `Token ${apiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -143,11 +144,6 @@ Deno.serve(async (req) => {
   if (preflight) return preflight;
 
   try {
-    if (!DEEPGRAM_API_KEY) {
-      console.error("[stage-caption-token] DEEPGRAM_API_KEY is not set");
-      return jsonResponse({ error: "Live captions are not configured." }, 500);
-    }
-
     const { spaceId } = await req.json().catch(() => ({ spaceId: null }));
     if (!spaceId || typeof spaceId !== "string") {
       return jsonResponse({ error: "spaceId is required" }, 400);
@@ -166,7 +162,22 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Not entitled to caption this stage." }, 403);
     }
 
-    const { token, scheme, expiresIn } = await mintCredential();
+    // A speaker who saved their own Deepgram key captions on their account.
+    // If that key can't start captions, say so; never switch to Riftn's quietly.
+    const ownKey = await userProviderKey(guard.wallet, "deepgram");
+    if (!ownKey && !DEEPGRAM_API_KEY) {
+      console.error("[stage-caption-token] DEEPGRAM_API_KEY is not set");
+      return jsonResponse({ error: "Live captions are not configured." }, 500);
+    }
+    let minted: Awaited<ReturnType<typeof mintCredential>>;
+    try {
+      minted = await mintCredential(ownKey ?? DEEPGRAM_API_KEY);
+    } catch (e) {
+      if (!ownKey) throw e;
+      console.warn("[stage-caption-token] own key could not mint", e instanceof Error ? e.message.slice(0, 60) : "");
+      return byokErrorResponse("deepgram", 401);
+    }
+    const { token, scheme, expiresIn } = minted;
 
     return new Response(
       JSON.stringify({ token, scheme, expiresIn, params: listenParams() }),

@@ -64,6 +64,13 @@ Deno.serve(async (req) => {
   const guard = await guardPaidEndpoint(req, 'provider-keys-check', CHECK_LIMIT);
   if (!guard.ok) return guard.response;
 
+  // A key Riftn turned off stays off until an admin turns it back on.
+  const { data: existing } = await serviceClient().from('user_provider_keys')
+    .select('status').eq('wallet_address', guard.wallet).eq('provider', provider.id).maybeSingle();
+  if (existing?.status === 'disabled') {
+    return jsonResponse({ error: `Your ${provider.label} key was turned off by Riftn. Contact support to turn it back on.`, code: 'DISABLED' }, 403);
+  }
+
   let key: string | null;
   if (body.action === 'save') {
     const raw = typeof body.key === 'string' ? body.key.trim() : body.key;

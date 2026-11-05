@@ -10,8 +10,7 @@ import {
   errorResponse,
   getApiKey,
   num,
-  readProviderError,
-} from '../_shared/elevenlabs.ts';
+  readProviderError, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_PROMPT_CHARS = 1000;
@@ -27,6 +26,7 @@ Deno.serve(async (req) => {
   // the URL: this ran for unauthenticated callers with no ceiling at all.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-sound-effects',
     actionType: 'elevenlabs-sound-effects',
     rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       return errorResponse(`Describe the sound in 1-${MAX_PROMPT_CHARS} characters`);
     }
 
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     const payload: Record<string, unknown> = {
@@ -73,6 +73,8 @@ Deno.serve(async (req) => {
     );
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs sound-generation error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Sound effect generation failed'), 502);

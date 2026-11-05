@@ -36,11 +36,12 @@ export function postCompletion(
   body: Record<string, unknown>,
   lovableApiKey: string,
   signal: AbortSignal,
+  ownKeyWallet?: string | null,
 ): Promise<Response> {
   // Assistant conversations may use the training free tier (owner's call);
   // DMs, suggested replies and the coach stay private.
   return aiChat(body, {
-    signal, label: 'assistant', publicContent: body.model === DEFAULT_MODEL, gatewayKey: lovableApiKey,
+    signal, label: 'assistant', publicContent: body.model === DEFAULT_MODEL, gatewayKey: lovableApiKey, ownKeyWallet,
   });
 }
 
@@ -115,6 +116,8 @@ export interface AgentOptions {
   model: string;
   lovableApiKey: string;
   perplexityKey?: string;
+  /** The signed-in creator's wallet: rounds run on their own chat key when they saved one. */
+  ownKeyWallet?: string | null;
   maxRounds?: number;
   maxTokens?: number;
   /** Abort the whole loop after this long. Chat needs a tighter budget. */
@@ -255,6 +258,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     model,
     lovableApiKey,
     perplexityKey,
+    ownKeyWallet,
     // An admin question is a chain, not a lookup: reports spiked, so what
     // shipped, so what does that commit do, so what is the log saying. Five
     // rounds runs out halfway through that and the answer arrives half-derived.
@@ -324,6 +328,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
         },
         lovableApiKey,
         controller.signal,
+        ownKeyWallet,
       );
       if (!res.ok) throw new Error(`Gateway ${res.status}: ${(await res.text()).slice(0, 300)}`);
       data = await res.json();
@@ -407,6 +412,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
       },
       lovableApiKey,
       salvage.signal,
+      ownKeyWallet,
     );
     if (!finalRes.ok) throw new Error(`Gateway ${finalRes.status} on final turn`);
     const finalData = await finalRes.json();
