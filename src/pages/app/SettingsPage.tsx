@@ -3300,7 +3300,7 @@ function WideVideoModeRow() {
         title={title}
         options={[
           { value: 'ambient', label: t('settings.wideVideoAmbient', 'Ambient'), description: t('settings.wideVideoAmbientDesc', 'The video fills the width, with a soft blurred glow of itself on each side') },
-          { value: 'rails', label: t('settings.wideVideoRails', 'Glass rails'), description: t('settings.wideVideoRailsDesc', 'The video beside one glass panel with who posted it, what it is and the top comments') },
+          { value: 'rails', label: t('settings.wideVideoRails', 'Glass rails'), description: t('settings.wideVideoRailsDesc', 'The video beside one glass panel with what it is, a Follow button and the top comments') },
           { value: 'standard', label: t('settings.wideVideoStandard', 'Standard'), description: t('settings.wideVideoStandardDesc', 'The video on its own, as before') },
         ]}
       />}

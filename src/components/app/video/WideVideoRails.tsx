@@ -2,26 +2,63 @@
  * Glass rails for long videos on wide screens (lib/wide-video-mode).
  *
  * Two panels side by side: the picture at its real shape, and this one glass
- * panel beside it. The panel reads top to bottom like the post itself: who
- * posted it, what it is, then the top comments and a way in to comment. No
- * fill behind either panel. Comments load only for a video that has some.
+ * panel beside it. The post header above already shows who posted it and the
+ * action bar below already has like, comment, tip and share, so the panel
+ * holds only what is new: the title and description, a Follow button, then
+ * the top comments and a way in to comment. Comments load only for a video
+ * that has some; follow state loads only for a signed-in viewer.
  */
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getNFTCommentPage } from '@/lib/api/dehub/comments';
+import { isFollowing as checkIsFollowing } from '@/lib/api/dehub';
+import { useFollow } from '@/hooks/use-follow';
 import type { VideoItem } from '@/types/feed.types';
 
-export function WideVideoPanel({ video, onOpenComments }: { video: VideoItem; onOpenComments: () => void }) {
+function RailFollowButton({ video, walletAddress, onLogin }: { video: VideoItem; walletAddress?: string | null; onLogin: () => void }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const handle = video.creatorUsername?.replace(/^@/, '');
-  const openProfile = () => {
-    if (handle) navigate(`/${handle}`);
-    else if (video.creatorId) navigate(`/app/profile?id=${video.creatorId}`);
-  };
-  const stats = [video.views, video.uploadedAgo, video.duration].filter(Boolean).join(' · ');
+  const address = video.creatorId;
+  const { isFollowing: override, toggleFollow, isPending } = useFollow(address);
+  const [checked, setChecked] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!walletAddress || !address || override !== undefined) return;
+    let cancelled = false;
+    checkIsFollowing(address).then((res) => { if (!cancelled) setChecked(!!res); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [walletAddress, address, override]);
+  const following = !!(override ?? checked);
+  if (!address) return null;
+  return (
+    <button
+      type="button"
+      disabled={isPending}
+      onClick={(event) => {
+        event.stopPropagation();
+        if (!walletAddress) { onLogin(); return; }
+        toggleFollow(following, { name: video.channel || video.creatorUsername || undefined });
+      }}
+      className={following
+        ? 'h-10 w-full rounded-xl border border-white/[0.14] bg-white/[0.06] text-[13.5px] font-bold text-white/85 transition-colors hover:bg-white/[0.1]'
+        : 'h-10 w-full rounded-xl bg-gradient-to-b from-white to-[#c9cbd0] text-[13.5px] font-bold text-zinc-900 shadow-[inset_0_1px_0_#fff,0_1px_2px_rgba(0,0,0,0.4)] transition-[filter] hover:brightness-105'}
+    >
+      {following ? t('wideVideo.following', 'Following') : t('wideVideo.follow', 'Follow')}
+    </button>
+  );
+}
+
+export function WideVideoPanel({ video, onOpenComments, walletAddress, onLogin, isOwnPost, hideCaption }: {
+  video: VideoItem;
+  onOpenComments: () => void;
+  walletAddress?: string | null;
+  onLogin: () => void;
+  isOwnPost?: boolean;
+  /** Behind a content warning the caption stays closed, same as under the card. */
+  hideCaption?: boolean;
+}) {
+  const { t } = useTranslation();
+  const description = (video.description ?? '').trim();
   const tokenId = video.id;
   const count = Number(video.commentCount ?? 0) || 0;
   const { data } = useQuery({
@@ -39,18 +76,11 @@ export function WideVideoPanel({ video, onOpenComments }: { video: VideoItem; on
       className="flex min-w-[260px] flex-1 basis-0 flex-col overflow-hidden rounded-2xl border border-white/[0.12] bg-black/40 text-white backdrop-blur-[24px] backdrop-saturate-[160%] shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
     >
       <div className="flex flex-col gap-3 p-4">
-        <button type="button" onClick={openProfile} className="flex min-w-0 items-center gap-3 text-left">
-          <Avatar className="h-10 w-10 shrink-0 rounded-full">
-            {video.channelAvatar && <AvatarImage src={video.channelAvatar} className="rounded-full" />}
-            <AvatarFallback className="rounded-full bg-zinc-700 text-xs font-medium text-white">{video.channel?.[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <span className="min-w-0">
-            <span className="block truncate text-[15px] font-bold">{video.channel}</span>
-            {handle && <span className="block truncate text-[12.5px] text-white/60">@{handle}</span>}
-          </span>
-        </button>
-        {video.title && <h3 className="line-clamp-3 break-words text-[17px] font-bold leading-snug">{video.title}</h3>}
-        {stats && <p className="text-[12.5px] text-white/60">{stats}</p>}
+        {!hideCaption && video.title && <h3 className="line-clamp-3 break-words text-[17px] font-bold leading-snug">{video.title}</h3>}
+        {!hideCaption && description && description !== video.title && (
+          <p className="line-clamp-4 whitespace-pre-line break-words text-[13.5px] leading-relaxed text-white/80">{description}</p>
+        )}
+        {!isOwnPost && <RailFollowButton video={video} walletAddress={walletAddress} onLogin={onLogin} />}
       </div>
 
       <div className="mx-4 h-px bg-white/[0.08]" />
