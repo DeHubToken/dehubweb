@@ -184,8 +184,11 @@ export function CardHeader({
       {/* Only the name and the @handle open the profile. The blank space
           around them is not a button, so a tap there falls through to the
           card and opens the post like the rest of it. */}
+      {/* Lifted so the name's top meets the avatar's top and the @handle's
+          bottom meets the avatar's bottom (measured: the text ink sat ~4px
+          low against the 36px avatar). */}
       <div className="flex flex-1 flex-col items-start min-w-0">
-        <div className="flex items-center gap-1.5 min-w-0 max-w-full">
+        <div className="flex items-center gap-1.5 min-w-0 max-w-full -translate-y-1">
           <button
             type="button"
             onClick={handleProfileClick}
@@ -203,7 +206,7 @@ export function CardHeader({
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
         </div>
         {(formattedHandle || timestamp || visibilityLabel) && (
-          <div className="flex items-center gap-1 min-w-0 max-w-full">
+          <div className="flex items-center gap-1 min-w-0 max-w-full -translate-y-px">
             {formattedHandle && (
               <button
                 type="button"
