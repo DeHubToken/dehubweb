@@ -17,18 +17,20 @@ import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Loader2, Tag, HandCoins } from "lucide-react";
+import { Loader2, Tag, HandCoins, Users, Clock } from "lucide-react";
 import Plus from "@/components/ui/cut-icons/add";
 
 import {
   useFractionListings,
   useFractionOffers,
+  useFractionTrades,
   useCancelListing,
   useCancelOffer,
   useSellerStatsBatch,
   TOTAL_FRACTIONS,
   type FractionListing,
   type FractionOffer,
+  type FractionTrade,
 } from '@/hooks/use-fraction-marketplace';
 import { useOfferResponse, type PostSnapshot } from '@/hooks/use-fraction-checkout';
 import { useFractionBalance } from '@/hooks/use-fraction-balance';
@@ -58,6 +60,9 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
 
   const { data: listings = [], isLoading: loadingListings } = useFractionListings(tokenId);
   const { data: offers = [], isLoading: loadingOffers } = useFractionOffers(tokenId);
+  const { data: trades = [], isLoading: loadingTrades } = useFractionTrades(tokenId);
+  // Who bought into this post: every paid or settled trade, newest first.
+  const buys = trades;
   const { data: balance } = useFractionBalance(tokenId, chainId);
   const { data: sellerStats = {} } = useSellerStatsBatch(listings.map(l => l.seller_address));
   const cancelListing = useCancelListing();
@@ -118,18 +123,26 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
             <TabsTrigger
               value="listings"
               data-keep-square
-              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 px-1 text-xs sm:text-sm text-white/60 data-[state=active]:text-white"
             >
-              <Tag className="w-4 h-4 mr-2" />
-              {t('fractions.forSaleTab')} {listings.length > 0 && `()`}
+              <Tag className="w-4 h-4 mr-1.5 shrink-0" />
+              {t('fractions.forSaleTab')} {listings.length > 0 && `(${listings.length})`}
             </TabsTrigger>
             <TabsTrigger
               value="offers"
               data-keep-square
-              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 px-1 text-xs sm:text-sm text-white/60 data-[state=active]:text-white"
             >
-              <HandCoins className="w-4 h-4 mr-2" />
-              {t('fractions.offersTab')} {offers.length > 0 && `()`}
+              <HandCoins className="w-4 h-4 mr-1.5 shrink-0" />
+              {t('fractions.offersTab')} {offers.length > 0 && `(${offers.length})`}
+            </TabsTrigger>
+            <TabsTrigger
+              value="buyers"
+              data-keep-square
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 px-1 text-xs sm:text-sm text-white/60 data-[state=active]:text-white"
+            >
+              <Users className="w-4 h-4 mr-1.5 shrink-0" />
+              {t('fractions.buyersTab', 'Buyers')} {buys.length > 0 && `(${buys.length})`}
             </TabsTrigger>
           </TabsList>
 
@@ -172,6 +185,11 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                             {listing.price_per_fraction} <DhbCoin /> {t('fractions.eachDot')}{' '}
                             {t('fractions.pctOfPost', { pct: ((available / TOTAL_FRACTIONS) * 100).toFixed(1) })}
                           </p>
+                          {isMine && (
+                            <p className="text-[11px] text-emerald-300/80 mt-0.5">
+                              {t('fractions.soldOfListing', 'Sold {{sold}} of {{total}}', { sold: listing.filled_quantity, total: listing.quantity })}
+                            </p>
+                          )}
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-white font-bold">
@@ -347,8 +365,64 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
               )}
             </div>
           </TabsContent>
+
+          {/* Who bought: one row per trade on this post */}
+          <TabsContent value="buyers" className="p-4 mt-0">
+            {loadingTrades ? (
+              <div className="flex justify-center py-6">
+                <Loader2 className="w-5 h-5 text-white/40 animate-spin" />
+              </div>
+            ) : buys.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="w-8 h-8 text-white/20 mx-auto mb-2" />
+                <p className="text-white/40 text-sm">{t('fractions.noBuyersYet', 'No one has bought fractions of this post yet')}</p>
+              </div>
+            ) : (
+              <div className="space-y-2" data-fraction-buyers>
+                {buys.map(trade => (
+                  <BuyerRow key={trade.id} trade={trade} me={walletAddress} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
       </section>
+    </div>
+  );
+}
+
+function BuyerRow({ trade, me }: { trade: FractionTrade; me?: string | null }) {
+  const { t } = useTranslation();
+  const mine = me?.toLowerCase();
+  const soldByMe = !!mine && trade.seller_address.toLowerCase() === mine;
+  const boughtByMe = !!mine && trade.buyer_address.toLowerCase() === mine;
+  const settled = trade.status === 'settled';
+  const when = new Date(trade.settled_at || trade.created_at);
+  return (
+    <div className="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-xs font-mono text-white/70 truncate">
+          {truncateAddress(trade.buyer_address)}
+          {boughtByMe && <span className="text-primary ml-1">{t('fractions.you')}</span>}
+        </p>
+        <p className="text-white text-sm font-medium">
+          {t('fractions.fractionCount', { count: trade.quantity })}
+          {soldByMe && <span className="text-white/40 text-[11px] font-normal ml-1">{t('fractions.fromYou', 'from you')}</span>}
+        </p>
+        <p className="text-[10px] text-white/30 flex items-center gap-1">
+          <Clock className="w-3 h-3" />
+          {when.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+        </p>
+      </div>
+      <div className="text-right shrink-0">
+        <p className="text-white font-semibold text-sm flex items-center gap-1 justify-end">
+          <img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5" />
+          {(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+        </p>
+        <p className={settled ? 'text-[10px] text-emerald-300/80' : trade.status === 'overdue' ? 'text-[10px] text-red-300/80' : 'text-[10px] text-amber-300/80'}>
+          {settled ? t('fractions.statusSettled') : trade.status === 'overdue' ? t('fractions.statusOverdue', 'Late') : t('fractions.statusInProgress', 'In progress')}
+        </p>
+      </div>
     </div>
   );
 }
