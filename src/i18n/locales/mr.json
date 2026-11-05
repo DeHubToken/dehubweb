@@ -2090,6 +2090,9 @@
     "returnHome": "मुख्यपृष्ठावर परत जा"
   },
   "profile": {
+    "viewGrid": "ग्रीड दृश्य",
+    "viewList": "सूची दृश्य",
+    "viewMode": "पहा",
     "back": "मागे",
     "usernameAvailable": "वापरकर्तानाव उपलब्ध आहे!",
     "signUpToClaim": "मिळवण्यासाठी साइन अप करा",

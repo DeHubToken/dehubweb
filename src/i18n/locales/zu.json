@@ -2090,6 +2090,9 @@
     "returnHome": "Buyela Ekhaya"
   },
   "profile": {
+    "viewGrid": "Ukubuka igridi",
+    "viewList": "Ukubukwa kohlu",
+    "viewMode": "Buka",
     "back": "Emuva",
     "usernameAvailable": "Igama lomsebenzisi liyatholakala!",
     "signUpToClaim": "Bhalisa namhlanje ukufuna",

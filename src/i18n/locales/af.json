@@ -2124,6 +2124,9 @@
     "returnHome": "Keer terug huis toe"
   },
   "profile": {
+    "viewGrid": "Roosteraansig",
+    "viewList": "Lysaansig",
+    "viewMode": "Besigtig",
     "back": "Terug",
     "usernameAvailable": "Gebruikersnaam beskikbaar!",
     "signUpToClaim": "Teken vandag in om te eis",

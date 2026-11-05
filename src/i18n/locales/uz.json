@@ -2101,6 +2101,9 @@
     "returnHome": "Bosh sahifaga qaytish"
   },
   "profile": {
+    "viewGrid": "Panjara ko'rinishi",
+    "viewList": "Ro'yxat ko'rinishi",
+    "viewMode": "Ko'rish",
     "back": "Orqaga",
     "usernameAvailable": "Foydalanuvchi nomi boʻsh!",
     "signUpToClaim": "Olish uchun roʻyxatdan oʻting",

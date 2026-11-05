@@ -2078,6 +2078,9 @@
     "returnHome": "Бозгашт ба асосӣ"
   },
   "profile": {
+    "viewGrid": "Намуди шабака",
+    "viewList": "Рӯйхат",
+    "viewMode": "Намоиш",
     "back": "Бозгашт",
     "usernameAvailable": "Номи корбар озод аст!",
     "signUpToClaim": "Сабтином кунед то гиред",

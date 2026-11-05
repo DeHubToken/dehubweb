@@ -2098,6 +2098,9 @@
     "returnHome": "Вернуться на главную"
   },
   "profile": {
+    "viewGrid": "Вид сетки",
+    "viewList": "Вид списка",
+    "viewMode": "Посмотреть",
     "back": "Назад",
     "usernameAvailable": "Имя доступно!",
     "signUpToClaim": "Зарегистрируйтесь, чтобы получить",

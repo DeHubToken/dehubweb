@@ -2085,6 +2085,9 @@
     "returnHome": "Vegere destpêkê"
   },
   "profile": {
+    "viewGrid": "Dîtina torê",
+    "viewList": "Dîtina lîsteyê",
+    "viewMode": "View",
     "back": "Vegere",
     "usernameAvailable": "Navê bikarhêner peyda ye!",
     "signUpToClaim": "Îro tomar bibe da ku wê bistînî",

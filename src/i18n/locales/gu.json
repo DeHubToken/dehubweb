@@ -2092,6 +2092,9 @@
     "returnHome": "હોમ પર પાછા જાઓ"
   },
   "profile": {
+    "viewGrid": "જાળી દૃશ્ય",
+    "viewList": "સૂચિ દૃશ્ય",
+    "viewMode": "જુઓ",
     "back": "પાછા",
     "usernameAvailable": "યુઝરનેમ ઉપલબ્ધ છે!",
     "signUpToClaim": "ક્લેમ કરવા સાઇન અપ કરો",

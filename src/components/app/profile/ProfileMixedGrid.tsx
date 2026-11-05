@@ -125,6 +125,9 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
    */
   const openReel = (entry: MixedGridEntry, id: string): boolean => {
     if (entry.isRepost || entry.isOptimistic || !profileFeed?.current) return false;
+    // A pinned post that is not also in the loaded list is usually an old one:
+    // the reel would have to page back through the whole history to find it.
+    if (entry.isPinned && !entries.some((other) => !other.isPinned && !other.isRepost && other.data.id === entry.data.id)) return false;
     noteProfileFeedOpen(profileFeed, id);
     openBrainrotFeed(id, undefined, { bgId: postBg?.id ?? null });
     return true;

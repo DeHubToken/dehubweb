@@ -2096,6 +2096,9 @@
     "returnHome": "Rudi Nyumbani"
   },
   "profile": {
+    "viewGrid": "Mwonekano wa gridi",
+    "viewList": "Mwonekano wa tangazo",
+    "viewMode": "Mvuto",
     "back": "Rudi",
     "usernameAvailable": "Jina la mtumiaji linapatikana!",
     "signUpToClaim": "Jisajili leo kudai",

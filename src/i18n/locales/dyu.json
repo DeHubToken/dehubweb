@@ -2078,6 +2078,9 @@
     "returnHome": "Kɛnɛ kɔ"
   },
   "profile": {
+    "viewGrid": "Fanga be mɔgɔ minw na, olu ka kan ka kɛ",
+    "viewList": "A filɛ, a be se ka kɛ cogo",
+    "viewMode": "O ye ɲɛyirali ye",
     "back": "Kɔrɔbɔ",
     "usernameAvailable": "Kɔrɔbɔ",
     "signUpToClaim": "Sɔgɔma kɛ",

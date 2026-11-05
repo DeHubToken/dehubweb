@@ -2084,6 +2084,9 @@
     "returnHome": "返回主頁"
   },
   "profile": {
+    "viewGrid": "網格視圖",
+    "viewList": "清單檢視",
+    "viewMode": "風景",
     "back": "返回",
     "usernameAvailable": "用戶名可用！",
     "signUpToClaim": "註冊嚟攞",

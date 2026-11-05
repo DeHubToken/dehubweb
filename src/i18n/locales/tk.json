@@ -2071,6 +2071,9 @@
     "returnHome": "Baş sahypa gaýdyp barmak"
   },
   "profile": {
+    "viewGrid": "Şekil Görnüşi",
+    "viewList": "Sarygyň görünüşi",
+    "viewMode": "Görnüş",
     "back": "Yza",
     "usernameAvailable": "Ulanyjy ady boş!",
     "signUpToClaim": "Hasaba duruň we alyň",

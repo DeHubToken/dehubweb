@@ -2116,6 +2116,9 @@
     "returnHome": "হোমে ফিরো"
   },
   "profile": {
+    "viewGrid": "গ্রিড ভিউ",
+    "viewList": "লিস্ট ভিউ",
+    "viewMode": "দেখা",
     "back": "পিছে",
     "usernameAvailable": "ইউজারনেম খালি আছে!",
     "signUpToClaim": "লইতো আজিয়াই সাইন আপ গরো",

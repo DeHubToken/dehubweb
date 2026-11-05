@@ -2093,6 +2093,9 @@
     "returnHome": "Veradardel glkhavaorej"
   },
   "profile": {
+    "viewGrid": "Ցանցային տեսարան",
+    "viewList": "Ցուցակի դիտում",
+    "viewMode": "Դիտել",
     "back": "Hed",
     "usernameAvailable": "Ogtvoroghi anouneh hasaneli e!",
     "signUpToClaim": "Grantsvek ayso stahalyalou hamar",

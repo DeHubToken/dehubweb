@@ -2090,6 +2090,9 @@
     "returnHome": "ہوم پر واپس جائیں"
   },
   "profile": {
+    "viewGrid": "گرڈ کا منظر",
+    "viewList": "فہرست کا منظر",
+    "viewMode": "دیکھیں",
     "back": "واپس",
     "usernameAvailable": "صارف نام دستیاب ہے!",
     "signUpToClaim": "حاصل کرنے کے لیے سائن اپ کریں",

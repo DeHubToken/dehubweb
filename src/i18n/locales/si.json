@@ -2073,6 +2073,9 @@
     "returnHome": "මුල් පිටුවට ආපසු"
   },
   "profile": {
+    "viewGrid": "ජාල දසුන",
+    "viewList": "ලැයිස්තු දසුන",
+    "viewMode": "බලන්න",
     "back": "ආපසු",
     "usernameAvailable": "පරිශීලක නාමය ලබා ගත හැකිය!",
     "signUpToClaim": "අද ලියාපදිංචි වී මෙම පරිශීලක නාමය ගන්න",

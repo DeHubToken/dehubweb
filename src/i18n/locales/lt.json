@@ -2096,6 +2096,9 @@
     "returnHome": "Grįžti į pradžią"
   },
   "profile": {
+    "viewGrid": "Tinklelio vaizdas",
+    "viewList": "Sąrašo rodinys",
+    "viewMode": "Peržiūrėti",
     "back": "Atgal",
     "usernameAvailable": "Naudotojo vardas laisvas!",
     "signUpToClaim": "Užsiregistruokite šiandien, kad užsitikrintumėte",

@@ -2096,6 +2096,9 @@
     "returnHome": "Tornar a l'inici"
   },
   "profile": {
+    "viewGrid": "Vista de graella",
+    "viewList": "Visualització de la llista",
+    "viewMode": "Visualitza",
     "back": "Enrere",
     "usernameAvailable": "Nom d'usuari disponible!",
     "signUpToClaim": "Registra't avui per reclamar",

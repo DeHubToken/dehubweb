@@ -2095,6 +2095,9 @@
     "returnHome": "Atgriezties sākumā"
   },
   "profile": {
+    "viewGrid": "Režģa skats",
+    "viewList": "Saraksta skats",
+    "viewMode": "Skatīt",
     "back": "Atpakaļ",
     "usernameAvailable": "Lietotājvārds ir pieejams!",
     "signUpToClaim": "Reģistrējieties šodien, lai to iegūtu",

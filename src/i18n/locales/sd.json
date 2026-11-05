@@ -2069,6 +2069,9 @@
     "returnHome": "گھر واپس وڃو"
   },
   "profile": {
+    "viewGrid": "گرڊ ڏيک",
+    "viewList": "لسٽ ڏيک",
+    "viewMode": "ڏيک",
     "back": "واپس",
     "usernameAvailable": "يوزرنيم دستياب آهي!",
     "signUpToClaim": "حاصل ڪرڻ لاءِ سائن اپ ڪريو",

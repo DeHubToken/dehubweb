@@ -2067,6 +2067,9 @@
     "returnHome": "घर वापस जाओ"
   },
   "profile": {
+    "viewGrid": "रेडियल दृश्य",
+    "viewList": "कैलक्यूलेटर",
+    "viewMode": "देख रहलूँ हल ।",
     "back": "वापस",
     "usernameAvailable": "यूजरनेम उपलब्ध बा!",
     "signUpToClaim": "आज साइन अप करके लो",

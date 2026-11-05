@@ -2093,6 +2093,9 @@
     "returnHome": "ወደ መነሻ ተመለስ"
   },
   "profile": {
+    "viewGrid": "የፍርግርግ እይታ",
+    "viewList": "የዝርዝር እይታ",
+    "viewMode": "ይመልከቱ",
     "back": "ተመለስ",
     "usernameAvailable": "የተጠቃሚ ስም ይገኛል!",
     "signUpToClaim": "ለመያዝ ዛሬ ተመዝገብ",

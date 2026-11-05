@@ -2092,6 +2092,9 @@
     "returnHome": "ပင်မသို့ပြန်ရန်"
   },
   "profile": {
+    "viewGrid": "Grid မြင်ကွင်း",
+    "viewList": "စာရင်းမြင်ကွင်း",
+    "viewMode": "ကြည့်ရန်",
     "back": "နောက်သို့",
     "usernameAvailable": "ဤအသုံးပြုသူအမည် ရနိုင်ပါသည်!",
     "signUpToClaim": "ရယူရန် ယနေ့ပင် စာရင်းသွင်းပါ",

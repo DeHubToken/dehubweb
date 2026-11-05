@@ -2350,6 +2350,9 @@
     "returnHome": "Kembali ke Laman Utama"
   },
   "profile": {
+    "viewGrid": "Paparan grid",
+    "viewList": "Paparan senarai",
+    "viewMode": "Lihat",
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk menuntut",

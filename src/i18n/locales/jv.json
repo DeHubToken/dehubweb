@@ -2065,6 +2065,9 @@
     "returnHome": "Bali menyang Beranda"
   },
   "profile": {
+    "viewGrid": "Tampilan kisi",
+    "viewList": "Tampilan dhaptar",
+    "viewMode": "Kelihatan",
     "back": "Bali",
     "usernameAvailable": "Jeneng pangguna kasedhiya!",
     "signUpToClaim": "Daftar kanggo njupuk",

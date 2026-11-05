@@ -2095,6 +2095,9 @@
     "returnHome": "Gå tilbake til hjem"
   },
   "profile": {
+    "viewGrid": "Rutenettvisning",
+    "viewList": "Listevisning",
+    "viewMode": "Utsikt",
     "back": "Tilbake",
     "usernameAvailable": "Brukernavn tilgjengelig!",
     "signUpToClaim": "Registrer deg i dag for å sikre det",

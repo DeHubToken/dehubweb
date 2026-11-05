@@ -13,6 +13,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import X from "@/components/ui/cut-icons/close";
@@ -290,10 +291,16 @@ function ProfileReelFeed({ session, origin }: { session: BrainrotSession; origin
     if (hasNextPage && !isFetchingNextPage) fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // The tapped post is not in the list after all (an old pinned post, a post
+  // with nothing to draw as a slide): open its own page instead of closing to
+  // nothing, which read as "the tap did nothing".
+  const navigate = useNavigate();
   const lost = isError || (!!data && index < 0 && !stillSearching && !isFetchingNextPage);
   useEffect(() => {
-    if (lost) closeBrainrotFeed();
-  }, [lost]);
+    if (!lost) return;
+    closeBrainrotFeed();
+    navigate(`/app/post/${fromId}`, { state: { fromFeed: true } });
+  }, [lost, navigate, fromId]);
 
   return (
     <AnimatePresence>
@@ -329,6 +336,7 @@ function BrainrotPlaceholder({ label, closeLabel }: { label?: string; closeLabel
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      data-shorts-placeholder
       role="dialog"
       aria-modal="true"
       aria-busy={!label}

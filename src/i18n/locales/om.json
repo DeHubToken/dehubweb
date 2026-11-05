@@ -2093,6 +2093,9 @@
     "returnHome": "Manatti deebi'i"
   },
   "profile": {
+    "viewGrid": "Mul'ata giiridii",
+    "viewList": "Mul'ata tarree",
+    "viewMode": "Ilaaluu",
     "back": "Duuba",
     "usernameAvailable": "Maqaan fayyadamaa argamuu danda’eera!",
     "signUpToClaim": "Har'a galmaa'aa himachuuf",

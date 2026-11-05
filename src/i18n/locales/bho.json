@@ -2044,6 +2044,9 @@
     "returnHome": "घरे लौटीं"
   },
   "profile": {
+    "viewGrid": "लाल देखने वाला",
+    "viewList": "सूची देखने के बिंदु",
+    "viewMode": "देखने वाला",
     "back": "वापस",
     "usernameAvailable": "यूजरनेम उपलब्ध बा!",
     "signUpToClaim": "पावे खातिर साइन अप करीं",
