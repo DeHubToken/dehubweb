@@ -229,18 +229,9 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     refetch: refetchContent,
   } = useDeHubUserContent({ ...contentQuery, enabled: !!contentUserId });
 
-  // Prefetch ONLY page 2 in the background after first paint. The old
-  // version cascaded through EVERY page (fetching a user's entire content
-  // history on profile open) — remaining pages now load on scroll via the
-  // sentinel in ProfileTabContent.
-  useEffect(() => {
-    if (userContentData?.pages?.length === 1 && hasNextContentPage && !isFetchingNextContentPage) {
-      const timer = setTimeout(() => {
-        fetchNextContentPage();
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [userContentData?.pages?.length, hasNextContentPage, isFetchingNextContentPage, fetchNextContentPage]);
+  // Only the first 10 load with the page. Every later page is asked for by
+  // the scroll sentinel in ProfileTabContent as the visitor nears the end.
+
 
   // Defer reposts slightly so the user's own first content page wins the wire
   // on slow connections — reposts merge into the "All" tab a beat later instead
