@@ -90,6 +90,9 @@ export const SEAPORT_IFACE = new Interface([
   `function fulfillOrder((${PARAMS} parameters, bytes signature) order, bytes32 fulfillerConduitKey) payable returns (bool)`,
   `function fulfillAdvancedOrder((${PARAMS} parameters, uint120 numerator, uint120 denominator, bytes signature, bytes extraData) advancedOrder, ${RESOLVER}[] criteriaResolvers, bytes32 fulfillerConduitKey, address recipient) payable returns (bool)`,
   `function cancel(${COMPONENTS}[] orders) returns (bool)`,
+  // Bulk buy: several listings in one transaction. Orders someone else filled
+  // first are skipped and their payment refunded, so the rest still go through.
+  `function fulfillAvailableOrders((${PARAMS} parameters, bytes signature)[] orders, (uint256 orderIndex,uint256 itemIndex)[][] offerFulfillments, (uint256 orderIndex,uint256 itemIndex)[][] considerationFulfillments, bytes32 fulfillerConduitKey, uint256 maximumFulfilled) payable returns (bool[] availableOrders, ((uint8 itemType,address token,uint256 identifier,uint256 amount,address recipient) item, address offerer, bytes32 conduitKey)[] executions)`,
   'function getCounter(address offerer) view returns (uint256)',
 ]);
 

@@ -60,9 +60,9 @@ describe('menu search — the query someone actually types', () => {
     expect(filterNavItems(NAV_ITEMS, '   ', t, true)).toBe(NAV_ITEMS);
     expect(filterNavItems(NAV_ITEMS, '', t)).toBe(filterNavItems(NAV_ITEMS, '', t));
   });
-  it('shows the NFT market to everyone', () => {
-    expect(filterNavItems(NAV_ITEMS, '', t).some(item => item.path === '/nfts')).toBe(true);
-    expect(filterNavItems(NAV_ITEMS, 'nft', t).some(item => item.path === '/nfts')).toBe(true);
+  it('finds the NFT market, now the Fractions page NFTs tab, from "nft"', () => {
+    expect(filterNavItems(NAV_ITEMS, '', t).some(item => item.path === '/nfts')).toBe(false);
+    expect(filterNavItems(NAV_ITEMS, 'nft', t).some(item => item.path === '/app/fractions')).toBe(true);
   });
 
   it('finds the Arcade from "games", which is the word the row does not use', () => {

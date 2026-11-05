@@ -294,8 +294,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   Fractions: [
     'fraction', 'shares', 'ownership', 'own a post', 'invest', 'stake in a post',
     'tokenised', 'erc1155', 'sell fractions', 'buy fractions', 'holdings', 'portfolio',
-  ],
-  'NFT Market': [
+    // The NFT market is the Fractions page's NFTs tab.
     'nft', 'nfts', 'nft market', 'nft marketplace', 'buy nft', 'sell nft', 'list nft', 'collectibles',
     'opensea', 'make an offer', 'trade', 'erc721', 'art',
   ],
