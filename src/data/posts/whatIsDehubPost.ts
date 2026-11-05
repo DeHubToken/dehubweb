@@ -53,8 +53,9 @@ Any video, stream or post can be minted as an on-chain asset, when you upload or
 ### Subscriptions you actually own
 Creator subscriptions on Riftn are on-chain and tradable. If a creator you backed early gets big, your early-supporter pass has real market value, you can sell it on. Creators earn a royalty on every resale. Contracts are live on Base, BNB Chain and Polygon.
 
-### The DHB token
-$DHB is Riftn's ecosystem token, live on [Base](https://basescan.org/token/0xd20ab1015f6a2de4a6fddebab270113f689c2f7c). It powers staking, subscriptions, tips, pay-per-view unlocks, governance voting and gaming rewards. You'll find it listed on [CoinGecko](https://www.coingecko.com/en/coins/dehub) and [CoinMarketCap](https://coinmarketcap.com/currencies/dehub/), and available directly on Coinbase. Governance uses a fair voting model where stake weight is capped to prevent whale manipulation, and each vote burns DHB to keep participation meaningful.
+### The Riftn token
+
+The new Riftn token is coming soon and is not trading yet. There is no contract address or exchange listing yet.
 
 ### Gaming
 Riftn's gaming arm has shipped a play-and-earn arcade sustained entirely by fee generation, no dilution or inflation needed to reward engagement, and is building **Last Chad Standing**, a fighter battle royale featuring licensed fighters from top fight leagues.

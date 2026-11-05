@@ -680,12 +680,8 @@ const basePoolPost: BlogPostType = {
     <p class="mb-4 text-lg text-royal-blue/80">Get ready, Riftners! The moment many of you have been waiting for is almost here. We are thrilled to announce that Riftn will be deploying on Uniswap on the Base network imminently.</p>
     <p class="mb-4 text-royal-blue/80">This strategic move marks a significant milestone for our project, opening up a world of possibilities within Base's fast, low-cost, and developer-friendly Ethereum L2 ecosystem. We're excited to bring more liquidity, accessibility, and utility to the Riftn token and our community.</p>
     
-    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Official Base Contract</h3>
-    <p class="mb-4 text-royal-blue/80">For everyone wanting to get prepared, here is the official Riftn token contract address on the Base network:</p>
-    <div class="bg-sky-blue/10 p-4 rounded-lg my-4 overflow-x-auto border border-sky-blue/20">
-      <a href="https://basescan.org/token/0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c" target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-middle-blue break-all hover:underline">0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c</a>
-    </div>
-    <p class="mb-4 text-royal-blue/80">We encourage you to add this to your wallet and verify it on <a href="https://basescan.org/token/0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c" target="_blank" rel="noopener noreferrer" class="text-middle-blue hover:underline font-semibold">Basescan</a>.</p>
+    <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Token update</h3>
+    <p class="mb-4 text-royal-blue/80">The new Riftn token is coming soon and is not trading yet. There is no contract address or exchange listing yet.</p>
     
     <h3 class="text-xl font-bold mt-8 mb-4 font-exo">Bridge to Base for FREE!</h3>
     <p class="mb-4 text-royal-blue/80">To celebrate our launch and make your transition seamless, we've established a simple and free bridging mechanism. You can migrate your tokens from other networks to Base effortlessly.</p>

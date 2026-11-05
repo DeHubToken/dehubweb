@@ -1,5 +1,4 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { tokenLabel } from '@/lib/token-label';
 /**
  * $DHB listing-soon card
  * ======================
@@ -89,17 +88,17 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
       className="bg-zinc-800/60 border border-zinc-700/50 rounded-2xl p-4 sm:p-5 mb-4"
     >
       <div className="flex items-center gap-3">
-        <img src={dhbCoinIcon} alt={tokenLabel()} className="w-11 h-11 rounded-full flex-shrink-0" />
+        <img src={dhbCoinIcon} alt="Riftn" className="w-11 h-11 rounded-full flex-shrink-0" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white font-semibold">{tokenLabel()}</span>
+            <span className="text-white font-semibold">$RIFT</span>
             <span className="text-zinc-400 text-sm">Riftn</span>
             <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
               {t('hero.comingSoon', 'Coming Soon')}
             </span>
           </div>
           <h3 className="text-lg sm:text-xl font-bold text-white mt-0.5">
-            {t('dhbListing.title', 'Token listing soon!')}
+            {t('tokenLaunch.title', 'Token launching soon')}
           </h3>
         </div>
       </div>

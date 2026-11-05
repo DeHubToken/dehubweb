@@ -8,7 +8,6 @@ import type { StockQuote } from '@/hooks/use-stock-quote';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { AnimatePresence, motion } from 'framer-motion';
-import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { isDhbSymbol } from '@/lib/market/dhb-market-cap';
 
 interface CashtagResultSwitcherProps {
@@ -35,33 +34,8 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Special case: $DHB / $DEHUB — always show as Dehub token, never as a stock
   const upperSym = symbol.toUpperCase().replace(/^\$/, '');
   const isDhb = isDhbSymbol(upperSym);
-  const hasDhbDexPair = dexPairs.some(p => p.baseToken?.symbol?.toUpperCase() === 'DHB');
-  if (isDhb && !hasDhbDexPair && cmcData) {
-    const syntheticPrice = cmcData.price ?? 0.001;
-    dexPairs = [
-      {
-        chainId: 'base',
-        dexId: 'dehub',
-        url: 'https://riftn.com',
-        pairAddress: '',
-        baseToken: {
-          address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
-          name: cmcData.name || 'Riftn',
-          symbol: 'DHB',
-        },
-        quoteToken: { address: '', name: 'USD', symbol: 'USD' },
-        priceNative: String(syntheticPrice),
-        priceUsd: String(syntheticPrice),
-        priceChange: { h24: cmcData.percentChange24h ?? 0 },
-        volume: { h24: cmcData.volume24h ?? 0 },
-        liquidity: null,
-        fdv: cmcData.marketCap ?? null,
-        marketCap: cmcData.marketCap ?? null,
-        info: { imageUrl: dhbCoinIcon },
-      },
-      ...dexPairs,
-    ];
-  }
+  // No synthetic market for our own token: it is not trading yet, and explore
+  // shows the launch card for it instead of this switcher.
 
   // Build options list
   const options: ResultOption[] = [];

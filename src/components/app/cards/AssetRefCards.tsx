@@ -35,6 +35,9 @@ import type { ResolvedAsset } from '@/lib/api/market';
 import type { PricePoint } from '@/hooks/use-token-chart';
 import { useAsset24hSeries, useResolvedAsset } from '@/hooks/use-asset-ref';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
+import { isDhbSymbol } from '@/lib/market/dhb-market-cap';
+import { isDhbListingQuery } from '@/lib/market/dhb-listing';
+import riftnCoin from '@/assets/dehub-coin.png';
 
 const CARD_HEIGHT = 'min-h-[92px]';
 const OWN_TOKEN = /^(?:DHB|DEHUB|RIFT)$/i;
@@ -257,10 +260,69 @@ function AssetCard({ asset }: { asset: ResolvedAsset }) {
   );
 }
 
+// ── Our own token ───────────────────────────────────────────────────────────
+
+/**
+ * $RIFT, $RIFTN, $DHB, $DEHUB and the old contract addresses all mean our
+ * token, and the new one is not trading yet. So there is no lookup, no price
+ * and no contract: the card says it is coming soon, and a tap opens the
+ * launch list on explore.
+ */
+function isOwnTokenRef(ref: AssetRef): boolean {
+  return ref.kind === 'ticker' ? isDhbSymbol(ref.value) : isDhbListingQuery(ref.value);
+}
+
+function OwnTokenComingSoonCard() {
+  const { t } = _useCopy();
+  const navigate = useNavigate();
+  const open = () => {
+    recordTickerSearch('RIFT');
+    navigate(`/app/explore?q=${encodeURIComponent('$RIFT')}`);
+  };
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      data-own-token-card
+      onClick={(e) => {
+        e.stopPropagation();
+        open();
+      }}
+      onKeyDown={(e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.stopPropagation();
+        open();
+      }}
+      className={cn(
+        'flex w-full items-center gap-3 text-left rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/[0.08] cursor-pointer',
+        CARD_HEIGHT,
+      )}
+    >
+      <img src={riftnCoin} alt="" className="w-9 h-9 rounded-full bg-white/10 object-cover shrink-0" />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-white font-bold text-sm">$RIFT</span>
+          <span className="text-white/50 text-xs">Riftn</span>
+          <span className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-white/10 text-white/70">
+            {t('tokenLaunch.eyebrow', 'Coming soon')}
+          </span>
+        </div>
+        <p className="text-white text-[13px] font-semibold mt-1">{t('tokenLaunch.title', 'Token launching soon')}</p>
+        <p className="text-white/50 text-xs mt-0.5">
+          {t('dhbListing.body', "Riftn tokens aren't trading yet. Get an email when trading opens.")}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // Named `assetRef`, not `ref`: React treats a `ref` prop on a function component
 // as a ref forward and strips it out of props, so the card would render blank.
 function AssetRefCard({ assetRef }: { assetRef: AssetRef }) {
-  const { data: asset, isLoading } = useResolvedAsset(assetRef);
+  const ownToken = isOwnTokenRef(assetRef);
+  const { data: asset, isLoading } = useResolvedAsset(assetRef, !ownToken);
+
+  if (ownToken) return <OwnTokenComingSoonCard />;
 
   if (isLoading) {
     return (
