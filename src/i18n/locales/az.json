@@ -2094,6 +2094,9 @@
     "returnHome": "Ana Səhifəyə Qayıt"
   },
   "profile": {
+    "viewGrid": "Şəbəkə mənzərəli",
+    "viewList": "Siyahı görünüşü",
+    "viewMode": "Bax",
     "back": "Geri",
     "usernameAvailable": "İstifadəçi adı mövcuddur!",
     "signUpToClaim": "İddia etmək üçün bu gün qeydiyyatdan keçin",

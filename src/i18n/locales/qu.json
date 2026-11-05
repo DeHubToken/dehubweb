@@ -2088,6 +2088,9 @@
     "returnHome": "Qallariyman kutiy"
   },
   "profile": {
+    "viewGrid": "Rejilla qhaway",
+    "viewList": "Lista qhaway",
+    "viewMode": "Qaway",
     "back": "Kutiy",
     "usernameAvailable": "Runa suti tarikun!",
     "signUpToClaim": "Kunan qillqakuy chaskimunaykipaq",

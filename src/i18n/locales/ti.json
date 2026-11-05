@@ -2061,6 +2061,9 @@
     "returnHome": "ናብ ገዛ ተመለስ"
   },
   "profile": {
+    "viewGrid": "ናይ ምስሊ መግለጺ",
+    "viewList": "ናይ ምርኣይ ዝርዝር",
+    "viewMode": "ርኣዮ",
     "back": "ተመለስ",
     "usernameAvailable": "ስም ተጠቃሚ ኣሎ!",
     "signUpToClaim": "ንምሓዝ ሎሚ ተመዝገብ",

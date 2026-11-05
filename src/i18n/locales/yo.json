@@ -2077,6 +2077,9 @@
     "returnHome": "Padà sí Ilé"
   },
   "profile": {
+    "viewGrid": "Iwoye grid",
+    "viewList": "Wo àtòjọ",
+    "viewMode": "Wo",
     "back": "Padà",
     "usernameAvailable": "Orúkọ oníṣàmúlò wà!",
     "signUpToClaim": "Forúkọsílẹ̀ lónìí láti gba",

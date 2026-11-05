@@ -2090,6 +2090,9 @@
     "returnHome": "ਹੋਮ ਤੇ ਵਾਪਸ ਜਾਓ"
   },
   "profile": {
+    "viewGrid": "ਗਰਿੱਡ ਝਲਕ",
+    "viewList": "ਸੂਚੀ ਦ੍ਰਿਸ਼",
+    "viewMode": "ਦ੍ਰਿਸ਼",
     "back": "ਵਾਪਸ",
     "usernameAvailable": "ਯੂਜ਼ਰ ਨਾਮ ਉਪਲਬਧ ਹੈ!",
     "signUpToClaim": "ਹਾਸਲ ਕਰਨ ਲਈ ਸਾਈਨ ਅੱਪ ਕਰੋ",

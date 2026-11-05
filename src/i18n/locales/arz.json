@@ -2092,6 +2092,9 @@
     "returnHome": "ارجع للرئيسية"
   },
   "profile": {
+    "viewGrid": "طريقة عرض الشبكة",
+    "viewList": "عرض القائمة",
+    "viewMode": "عرض",
     "back": "رجوع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل النهاردة عشان تاخده",

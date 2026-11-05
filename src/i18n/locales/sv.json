@@ -2094,6 +2094,9 @@
     "returnHome": "Tillbaka till startsidan"
   },
   "profile": {
+    "viewGrid": "Rutnätsvy",
+    "viewList": "Listvy",
+    "viewMode": "Visa",
     "back": "Tillbaka",
     "usernameAvailable": "Användarnamnet är tillgängligt!",
     "signUpToClaim": "Registrera dig för att ta det",

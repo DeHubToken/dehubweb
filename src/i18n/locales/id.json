@@ -2100,6 +2100,9 @@
     "returnHome": "Kembali ke Beranda"
   },
   "profile": {
+    "viewGrid": "Tampilan kisi",
+    "viewList": "Tampilan daftar",
+    "viewMode": "Lihat",
     "back": "Kembali",
     "usernameAvailable": "Nama pengguna tersedia!",
     "signUpToClaim": "Daftar hari ini untuk mengklaim",

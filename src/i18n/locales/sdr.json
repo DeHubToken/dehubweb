@@ -2069,6 +2069,9 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "viewGrid": "ग्रिड व्यू",
+    "viewList": "सूची दृश्य",
+    "viewMode": "بینید",
     "back": "واپس",
     "usernameAvailable": "یوزرنیم دستیاب ہے!",
     "signUpToClaim": "لینے کے لیے سائن اپ کرو",

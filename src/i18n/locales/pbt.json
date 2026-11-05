@@ -2068,6 +2068,9 @@
     "returnHome": "کور ته بیرته لاړ شئ"
   },
   "profile": {
+    "viewGrid": "منظره سرخ منظره",
+    "viewList": "منظره منظره",
+    "viewMode": "منظره",
     "back": "بیرته",
     "usernameAvailable": "کارن نوم شتون لري!",
     "signUpToClaim": "نن ثبت نام وکړئ ترلاسه یې کړئ",

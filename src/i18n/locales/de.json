@@ -2104,6 +2104,9 @@
     "returnHome": "Zur Startseite"
   },
   "profile": {
+    "viewGrid": "Rasteransicht",
+    "viewList": "Listenansicht",
+    "viewMode": "Anzeigen",
     "back": "Zurück",
     "usernameAvailable": "Benutzername verfügbar!",
     "signUpToClaim": "Registriere dich, um ihn zu beanspruchen",

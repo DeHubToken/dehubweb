@@ -2096,6 +2096,9 @@
     "returnHome": "Tilbage til forsiden"
   },
   "profile": {
+    "viewGrid": "Gittervisning",
+    "viewList": "Listevisning",
+    "viewMode": "Vis",
     "back": "Tilbage",
     "usernameAvailable": "Brugernavn er ledigt!",
     "signUpToClaim": "Tilmeld dig og gør krav på det",

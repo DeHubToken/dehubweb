@@ -2167,6 +2167,9 @@
     "goHome": "ঘরে যাও"
   },
   "profile": {
+    "viewGrid": "গ্রিড ভিউ",
+    "viewList": "লিস্ট ভিউ",
+    "viewMode": "দেখা",
     "back": "পিছনে",
     "usernameAvailable": "ইউজারনেম খালি আসে!",
     "signUpToClaim": "দাবি করতে আইজই সাইন আপ করো",

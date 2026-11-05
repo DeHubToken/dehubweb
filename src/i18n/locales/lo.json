@@ -2074,6 +2074,9 @@
     "returnHome": "ກັບໜ້າຫຼັກ"
   },
   "profile": {
+    "viewGrid": "ການເບິ່ງຕາຕະລາງ",
+    "viewList": "ເບິ່ງລາຍການ",
+    "viewMode": "ເບິ່ງ",
     "back": "ກັບຄືນ",
     "usernameAvailable": "ຊື່ຜູ້ໃຊ້ວ່າງ!",
     "signUpToClaim": "ສະໝັກມື້ນີ້ເພື່ອຈອງ",

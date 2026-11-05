@@ -2095,6 +2095,9 @@
     "returnHome": "Întoarce-te acasă"
   },
   "profile": {
+    "viewGrid": "Vizualizare grilă",
+    "viewList": "Vizualizare listă",
+    "viewMode": "Afișează",
     "back": "Înapoi",
     "usernameAvailable": "Nume de utilizator disponibil!",
     "signUpToClaim": "Înscrie-te astăzi pentru a revendica",

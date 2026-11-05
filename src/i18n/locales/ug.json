@@ -2077,6 +2077,9 @@
     "returnHome": "باش بەتكە قايتىش"
   },
   "profile": {
+    "viewGrid": "تور كۆرگۈ",
+    "viewList": "تىزىملىك كۆرۈنۈشى",
+    "viewMode": "كۆرۈنۈش",
     "back": "قايتىش",
     "usernameAvailable": "ئىشلەتكۈچى ئىسمى بوش!",
     "signUpToClaim": "تىزىملىتىپ ئېلىڭ",

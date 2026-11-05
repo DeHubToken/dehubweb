@@ -1986,6 +1986,8 @@
     "returnHome": "Go back Home"
   },
   "profile": {
+    "viewGrid": "Grid view",
+    "viewList": "List view",
     "back": "Go back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today make you claim am",

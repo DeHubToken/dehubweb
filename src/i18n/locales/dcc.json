@@ -2033,6 +2033,9 @@
     "returnHome": "گھر واپس جاؤ"
   },
   "profile": {
+    "viewGrid": "گرڈ ویو",
+    "viewList": "فہرست کا منظر",
+    "viewMode": "دیکھو",
     "back": "واپس",
     "usernameAvailable": "یوزرنیم دستیاب ہے!",
     "signUpToClaim": "آج سائن اپ کر کے لو",

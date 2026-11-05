@@ -2095,6 +2095,9 @@
     "returnHome": "Tagasi avalehele"
   },
   "profile": {
+    "viewGrid": "Ruudustiku vaade",
+    "viewList": "Loendivaade",
+    "viewMode": "Kuva",
     "back": "Tagasi",
     "usernameAvailable": "Kasutajanimi on saadaval!",
     "signUpToClaim": "Registreeru täna, et see endale saada",

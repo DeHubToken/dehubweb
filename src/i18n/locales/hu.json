@@ -2096,6 +2096,9 @@
     "returnHome": "Vissza a kezdőlapra"
   },
   "profile": {
+    "viewGrid": "Rácsnézet",
+    "viewList": "Lista nézet",
+    "viewMode": "Megtekintés",
     "back": "Vissza",
     "usernameAvailable": "Felhasználónév elérhető!",
     "signUpToClaim": "Regisztráljon és foglalja le",

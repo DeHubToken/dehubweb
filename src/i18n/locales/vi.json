@@ -2108,6 +2108,9 @@
     "returnHome": "Trở về Trang chủ"
   },
   "profile": {
+    "viewGrid": "Chế độ xem lưới",
+    "viewList": "Chế độ xem danh sách",
+    "viewMode": "Xem",
     "back": "Quay lại",
     "usernameAvailable": "Tên người dùng còn trống!",
     "signUpToClaim": "Đăng ký hôm nay để nhận",

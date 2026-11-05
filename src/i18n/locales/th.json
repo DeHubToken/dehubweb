@@ -2122,6 +2122,9 @@
     "returnHome": "กลับบ้าน"
   },
   "profile": {
+    "viewGrid": "มุมมองตาราง",
+    "viewList": "มุมมองรายการ",
+    "viewMode": "ดู",
     "back": "ย้อนกลับ",
     "usernameAvailable": "มีชื่อผู้ใช้งานแล้ว!",
     "signUpToClaim": "ลงทะเบียนวันนี้เพื่อรับสิทธิ์",

@@ -2046,6 +2046,9 @@
     "returnHome": "ارجع للبيت"
   },
   "profile": {
+    "viewGrid": "عرض الشبكة",
+    "viewList": "عرض القائمة",
+    "viewMode": "شوف",
     "back": "رجوع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل اليوم عشان تاخده",

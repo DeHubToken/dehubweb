@@ -2094,6 +2094,9 @@
     "returnHome": "Palaa etusivulle"
   },
   "profile": {
+    "viewGrid": "Ruudukkonäkymä",
+    "viewList": "Listanäkymä",
+    "viewMode": "Näytä",
     "back": "Takaisin",
     "usernameAvailable": "Käyttäjätunnus on saatavilla!",
     "signUpToClaim": "Rekisteröidy tänään varataksesi",

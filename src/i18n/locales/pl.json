@@ -2099,6 +2099,9 @@
     "returnHome": "Wróć na stronę główną"
   },
   "profile": {
+    "viewGrid": "Widok siatki",
+    "viewList": "Widok listy",
+    "viewMode": "Zobacz",
     "back": "Wróć",
     "usernameAvailable": "Nazwa użytkownika dostępna!",
     "signUpToClaim": "Zarejestruj się dzisiaj, aby ją zarezerwować",

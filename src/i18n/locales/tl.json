@@ -2139,6 +2139,9 @@
     "returnHome": "Bumalik sa Bahay"
   },
   "profile": {
+    "viewGrid": "Tanaw ng grid",
+    "viewList": "View ng listahan",
+    "viewMode": "Tingnan",
     "back": "Bumalik",
     "usernameAvailable": "Magagamit ang username!",
     "signUpToClaim": "Mag-sign up ngayon upang i-claim",

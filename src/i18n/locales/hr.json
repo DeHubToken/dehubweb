@@ -2096,6 +2096,9 @@
     "returnHome": "Povratak na početnu"
   },
   "profile": {
+    "viewGrid": "Prikaz rešetke",
+    "viewList": "Prikaz popisa",
+    "viewMode": "Prikaži",
     "back": "Natrag",
     "usernameAvailable": "Korisničko ime dostupno!",
     "signUpToClaim": "Prijavite se danas da biste preuzeli",

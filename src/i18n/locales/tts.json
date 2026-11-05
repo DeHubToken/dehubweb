@@ -2041,6 +2041,9 @@
     "returnHome": "กลับหน้าหลัก"
   },
   "profile": {
+    "viewGrid": "มุมมองกริด",
+    "viewList": "รายการมุมมอง",
+    "viewMode": "มอง",
     "back": "กลับ",
     "usernameAvailable": "ชื่อผู้ใช้ว่างอยู่!",
     "signUpToClaim": "สมัครวันนี้เพื่อจอง",

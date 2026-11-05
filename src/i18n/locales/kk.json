@@ -2103,6 +2103,9 @@
     "returnHome": "Басты бетке қайту"
   },
   "profile": {
+    "viewGrid": "Тор көрінісі",
+    "viewList": "Тізім көрінісі",
+    "viewMode": "Көру",
     "back": "Артқа",
     "usernameAvailable": "Пайдаланушы аты бос!",
     "signUpToClaim": "Алу үшін тіркеліңіз",

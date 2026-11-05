@@ -2096,6 +2096,9 @@
     "returnHome": "Kthehu në Kryefaqe"
   },
   "profile": {
+    "viewGrid": "Pamja e rrjetit",
+    "viewList": "Pamja e listës",
+    "viewMode": "Shfaq",
     "back": "Kthehu",
     "usernameAvailable": "Emri i përdoruesit është i disponueshëm!",
     "signUpToClaim": "Regjistrohu sot për ta marrë",

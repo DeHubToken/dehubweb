@@ -2095,6 +2095,9 @@
     "returnHome": "Назад на почетну"
   },
   "profile": {
+    "viewGrid": "Приказ мреже",
+    "viewList": "Приказ листе",
+    "viewMode": "Прикажи",
     "back": "Назад",
     "usernameAvailable": "Корисничко име је доступно!",
     "signUpToClaim": "Региструјте се и преузмите га",

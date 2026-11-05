@@ -2093,6 +2093,9 @@
     "returnHome": "رجع للصفحة الرئيسية"
   },
   "profile": {
+    "viewGrid": "طريقة عرض الشبكة",
+    "viewList": "عرض القائمة",
+    "viewMode": "عرض",
     "back": "رجع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجل اليوم باش تاخدو",
