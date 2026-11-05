@@ -6497,6 +6497,7 @@
     "create": "Maken",
     "createFreeLeft": "Gratis · nog {{count}}",
     "priceFree": "Gratis",
+    "priceOwnKey": "Jouw sleutel",
     "priceRetry": "Prijs niet beschikbaar, tik om opnieuw te proberen",
     "priceDhbShort": "{{amount}} tokens",
     "heroKicker": "Nu met {{model}}",

@@ -6311,6 +6311,7 @@
     "create": "Créer",
     "createFreeLeft": "Gratuit · encore {{count}}",
     "priceFree": "Gratuit",
+    "priceOwnKey": "Ta clé",
     "priceRetry": "Prix indisponible, touchez pour réessayer",
     "priceDhbShort": "{{amount}} jetons",
     "heroKicker": "Désormais avec {{model}}",

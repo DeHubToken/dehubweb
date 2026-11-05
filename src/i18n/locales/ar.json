@@ -6315,6 +6315,7 @@
     "create": "إنشاء",
     "createFreeLeft": "مجاني · متبقٍ {{count}}",
     "priceFree": "مجاني",
+    "priceOwnKey": "مفتاحك",
     "priceRetry": "السعر غير متاح، اضغط لإعادة المحاولة",
     "priceDhbShort": "{{amount}} عملات",
     "heroKicker": "الآن مع {{model}}",
