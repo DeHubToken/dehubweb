@@ -565,7 +565,15 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
           badgeBalance: (pinnedPost as any).minterUser?.hideBadgeAndBalance ? 0 : (pinnedPost as any).minterUser?.badgeBalance,
           paymentsDisabled: (pinnedPost as any).minterUser?.hideBadgeAndBalance === true,
         },
-        content: pinnedPost.description || pinnedPost.name || '',
+        content: pinnedPost.articleBody
+          ? (pinnedPost.description || '').trim()
+          : pinnedPost.description || pinnedPost.name || '',
+        // A boosted or pinned article is still an article: without these it
+        // drew as a plain text post with no title, cover or Read button.
+        title: pinnedPost.articleBody ? (pinnedPost.name || '').trim() || undefined : undefined,
+        articleBody: pinnedPost.articleBody || undefined,
+        articleSlug: pinnedPost.articleSlug,
+        articleImageUrl: pinnedPost.articleImageUrl ? buildFeedImageUrls([pinnedPost.articleImageUrl])?.[0] : undefined,
         createdAt: timeAgo,
         views: formatViews(views),
         stats: {

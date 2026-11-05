@@ -163,6 +163,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     id,
     type: 'post',
     articleBody: nft.articleBody,
+    title: nft.articleBody ? (nft.name || '').trim() || undefined : undefined,
     articleSlug: (nft as any).articleSlug,
     articleImageUrl: nft.articleImageUrl ? buildFeedImageUrls([nft.articleImageUrl])?.[0] : undefined,
     contentRating: nft.contentRating,
@@ -185,7 +186,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
       avatarSeed: avatarUrl,
       verified: false,
     },
-    content: nft.description || nft.name || '',
+    content: nft.articleBody ? (nft.description || '').trim() : nft.description || nft.name || '',
     createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
     views: formatViews(resolveViewCount(nft)).replace(' views', ''),
     stats: {
