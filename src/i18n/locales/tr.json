@@ -2672,7 +2672,7 @@
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
   },
   "loginModal": {
-    "bringLoginOver": "Riftn'ı riftn.com'da mı kullandın? <bring>Oturumunu buraya taşı</bring>",
+    "bringLoginOver": "Riftn'ı dehub.io'da mı kullandın? <bring>Oturumunu buraya taşı</bring>",
     "restoreWalletTitle": "Cüzdanını geri getir",
     "restoreOriginalWallet": "Profilin, bu giriş için kaydedilen cüzdanda değil, ilk girişindeki cüzdanda. O cüzdanı geri getirmek için Riftn'a ilk katıldığın şekilde giriş yap. Profilin ve bakiyen olduğu gibi kalır.",
     "useAnotherLogin": "Başka bir giriş kullan",

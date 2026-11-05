@@ -2676,7 +2676,7 @@
     "email": "Email"
   },
   "loginModal": {
-    "bringLoginOver": "Vous utilisiez Riftn sur riftn.com ? <bring>Récupérez votre connexion</bring>",
+    "bringLoginOver": "Vous utilisiez Riftn sur dehub.io ? <bring>Récupérez votre connexion</bring>",
     "restoreWalletTitle": "Récupérez votre portefeuille",
     "restoreOriginalWallet": "Votre profil se trouve sur le portefeuille de votre connexion d'origine, pas sur celui enregistré pour cette connexion. Connectez-vous comme lors de votre première inscription sur Riftn pour récupérer ce portefeuille. Votre profil et vos fonds restent intacts.",
     "useAnotherLogin": "Utiliser une autre connexion",
