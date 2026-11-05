@@ -54,12 +54,12 @@ export function NftSpotlight({ items }: { items: SpotlightItem[] }) {
           <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 sm:hidden" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0))' }} />
         </button>
         <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-4 sm:static sm:justify-center sm:gap-3 sm:p-7">
-          <span className="w-fit rounded-full px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.08em]" style={{ background: 'rgba(255,255,255,0.14)', ...ON_ART, backdropFilter: 'blur(8px)' }}>
+          <span className="w-fit rounded-full px-2.5 py-1 text-[10.5px] font-semibold uppercase tracking-[0.08em]" style={{ background: 'rgba(0,0,0,0.62)', border: '1px solid rgba(255,255,255,0.22)', ...ON_ART, backdropFilter: 'blur(8px)' }}>
             {item.price ? t('nftMarket.spotlightForSale', { defaultValue: 'For sale now' }) : t('nftMarket.spotlightNew', { defaultValue: 'Just minted' })}
             {' · '}
             {CHAIN_LABEL[item.chainId] ?? item.chainId}
           </span>
-          <h2 key={`name-${item.key}`} className="line-clamp-2 text-[22px] font-extrabold leading-tight tracking-tight animate-in slide-in-from-bottom-2 duration-500 sm:text-[30px]" style={ON_ART}>
+          <h2 key={`name-${item.key}`} className="line-clamp-2 text-[22px] font-extrabold leading-tight tracking-tight animate-in slide-in-from-bottom-2 duration-500 sm:text-[30px]" style={{ ...ON_ART, textShadow: '0 1px 6px rgba(0,0,0,0.55)' }}>
             {item.name}
           </h2>
           <div className="flex items-center gap-3">
