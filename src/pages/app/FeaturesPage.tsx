@@ -1120,7 +1120,7 @@ export default function FeaturesPage() {
           >
             {t('features.prompts', 'Prompts')}
             {remainingCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
               </span>
             )}
@@ -1137,7 +1137,7 @@ export default function FeaturesPage() {
             <Loader2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {inProgressCount}
               </span>
             )}
@@ -1154,7 +1154,7 @@ export default function FeaturesPage() {
             <CheckCircle2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.shipped')}
             {shippedCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
               </span>
             )}
@@ -1226,7 +1226,7 @@ export default function FeaturesPage() {
                     >
                       <span className="relative z-10">{_copy("copy.2ab63e6ced90", { defaultValue: "Not feasible" })}</span>
                       {notFeasibleCount > 0 && (
-                        <span className="relative z-10 text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                        <span className="relative z-10 text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                           {notFeasibleCount}
                         </span>
                       )}
