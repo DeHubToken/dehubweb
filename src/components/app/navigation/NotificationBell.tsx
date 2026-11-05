@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Bell from '@/components/ui/cut-icons/alerts';
 import { BELL_SIDE_RIPPLE_PATHS, notificationBellMotion } from '@/lib/notification-bell-motion';
+import { formatNotificationCount, useShowNotificationCount } from '@/lib/notification-count-pref';
 import './notification-bell.css';
 
 export function NotificationBell({ unread = 0, size = 26, active = true }: {
@@ -9,6 +10,7 @@ export function NotificationBell({ unread = 0, size = 26, active = true }: {
   active?: boolean;
 }) {
   const profile = notificationBellMotion(unread);
+  const showCount = useShowNotificationCount();
   const ref = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
   const [foreground, setForeground] = useState(() => !document.hidden);
@@ -47,6 +49,11 @@ export function NotificationBell({ unread = 0, size = 26, active = true }: {
           </span>
         )))}
       </span>
+      {showCount && profile.unread > 0 && (
+        <span className="notification-bell__count" data-testid="notification-bell-count">
+          {formatNotificationCount(profile.unread)}
+        </span>
+      )}
     </span>
   );
 }

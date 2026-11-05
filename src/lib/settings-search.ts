@@ -82,6 +82,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   // Notifications
   { tab: 'notifications', anchor: 'email-notifications', label: 'Email Notifications', labelKey: 'settings.emailNotifications', keywords: 'email inbox' },
   { tab: 'notifications', anchor: 'browser-notifications', label: 'Browser Notifications', labelKey: 'settings.browserNotifications', keywords: 'push desktop permission alerts' },
+  { tab: 'notifications', anchor: 'notify-show-count', label: 'Show the number on the bell', labelKey: 'settings.notificationShowCount', keywords: 'badge count unread number bell red dot' },
   { tab: 'notifications', anchor: 'notification-filters', label: 'Filter notifications', labelKey: 'notificationFilters.title', keywords: 'filter strangers new accounts spam followers people you follow mute' },
   { tab: 'notifications', anchor: 'notify-likes', label: 'Likes', labelKey: 'settings.likes', keywords: 'reactions hearts' },
   { tab: 'notifications', anchor: 'notify-comments', label: 'Comments', labelKey: 'settings.comments' },

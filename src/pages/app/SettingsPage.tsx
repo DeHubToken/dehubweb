@@ -47,6 +47,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import SettingsIcon from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
 import Bell from "@/components/ui/cut-icons/alerts";
+import { setShowNotificationCount, useShowNotificationCount } from "@/lib/notification-count-pref";
 import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import MessageCircle from "@/components/ui/cut-icons/messages";
@@ -1432,6 +1433,8 @@ function NotificationSettings() {
           <div data-setting-anchor="browser-notifications">
             <BrowserNotificationsSetting />
           </div>
+          {/* Off by default: the bell's glow is the standard look. */}
+          <NotificationCountRow />
         </div>
       </div>
 
@@ -3152,6 +3155,21 @@ function HideWatchedToggle() {
  * here. The map rides the wallet's preference blob (ViewingPreferencesSync),
  * so the channels tuned on one device are tuned on the next.
  */
+function NotificationCountRow() {
+  const { t } = useTranslation();
+  const on = useShowNotificationCount();
+  return (
+    <SettingToggle
+      icon={Bell}
+      anchor="notify-show-count"
+      title={t('settings.notificationShowCount', 'Show the number on the bell')}
+      description={t('settings.notificationShowCountDesc', 'See how many notifications are unread instead of just the glow')}
+      defaultChecked={on}
+      onCheckedChange={setShowNotificationCount}
+    />
+  );
+}
+
 function ChannelSpeedRow() {
   const { t } = useTranslation();
   const [count, setCount] = useState(() => getCreatorPlaybackRateCount());
