@@ -312,6 +312,8 @@ export default function ProfilePage() {
     : parsePostBg(data.apiProfile?.customs);
   const openPostBg = useCallback(() => setPostBgOpen(true), []);
   const postBgHold = usePostBgHold(!!data.isViewingOwnProfile, openPostBg);
+  // Holding (or right-clicking) one of your own text posts opens it too.
+  const postBgPostHold = usePostBgHold(!!data.isViewingOwnProfile, openPostBg, '[data-pbg-text]');
   const postBgSample = useMemo(
     () => data.PROFILE_POSTS.find((p) => !p.articleBody && p.content?.trim())?.content,
     [data.PROFILE_POSTS],
@@ -842,6 +844,8 @@ export default function ProfilePage() {
           />
         )}
         <ProfilePostBgContext.Provider value={postBg}>
+        <div ref={postBgPostHold.hostRef} className="relative" {...postBgPostHold.handlers}>
+        {postBgPostHold.ringEl}
         <StableHeightContainer activeTab={activeTab}>
             <ProfileTabContent
               activeTab={activeTab}
@@ -873,6 +877,7 @@ export default function ProfilePage() {
             />
 
         </StableHeightContainer>
+        </div>
         </ProfilePostBgContext.Provider>
         </div>
       </div>

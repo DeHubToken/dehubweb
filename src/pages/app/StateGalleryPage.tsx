@@ -1659,6 +1659,7 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
   const [open, setOpen] = useState(initiallyOpen);
   const bg = postBgById(bgId);
   const hold = usePostBgHold(true, () => setOpen(true));
+  const postHold = usePostBgHold(true, () => setOpen(true), '[data-pbg-text]');
   const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
   return (
     <section data-page-bento data-post-bg-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -1675,11 +1676,12 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
           <div><p className="font-bold text-white">Marco V</p><p className="text-xs text-zinc-400">Hold here to choose a background</p></div>
         </div>
         <ProfilePostBgContext.Provider value={bg}>
-          <div className="grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+          <div ref={postHold.hostRef} {...postHold.handlers} className="relative grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+            {postHold.ringEl}
             <div data-post-bg-phone-grid><ProfileMixedGrid entries={entries} /></div>
             <div data-post-bg-desktop className="space-y-3">
               {GALLERY_TEXT_POSTS.slice(0, 2).map((post) => (
-                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
+                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg-text="" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
                   {bg && <span aria-hidden className={`pbg pbg-${bg.id}`} />}
                   <GalleryPostCard post={post} />
                 </div>
