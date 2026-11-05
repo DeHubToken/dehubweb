@@ -94,6 +94,8 @@ export interface SiteStats {
   provenance: SiteStatsProvenance;
   /** Set when any day was estimated: the first such day and the ratio used. */
   estimate?: { since: string; ratio: number; baselineDays: number } | null;
+  /** Set while riftn.com can't be read: days since the move filled with the pre-move average. */
+  gapFill?: { since: string; baselineDays: number; visitors: number; pageViews: number } | null;
 }
 
 export interface SiteStatsUnavailable {
@@ -238,8 +240,78 @@ export function estimateRelayedVisitors(stats: SiteStats): SiteStats {
   return { ...stats, daily, hourly, estimate: first };
 }
 
+/** The day browsing moved from dehub.io to riftn.com. */
+export const RIFTN_MOVE_DATE = '2026-11-03';
+const GAP_BASELINE_DAYS = 14;
+
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  if (!sorted.length) return 0;
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+/**
+ * Until riftn.com's own numbers can be read, days since the move only hold the
+ * dehub.io leftovers (hand-offs, apps), which reads as a cliff. Those days are
+ * filled with the median of the two weeks before the move and flagged as
+ * estimated; a day that measured more than the average keeps its real count.
+ * As soon as riftn.com is readable this does nothing and real rows show.
+ */
+export function fillMoveGap(stats: SiteStats, now: number = Date.now()): SiteStats {
+  const riftn = stats.zones?.find((z) => z.name === 'riftn.com');
+  if (!riftn || riftn.ok) return { ...stats, gapFill: null };
+
+  const before = stats.daily.filter((d) => d.date < RIFTN_MOVE_DATE).slice(-GAP_BASELINE_DAYS);
+  if (!before.length || !stats.daily.some((d) => d.date >= RIFTN_MOVE_DATE)) return { ...stats, gapFill: null };
+  const base = {
+    visitors: Math.round(median(before.map((d) => d.visitors))),
+    pageViews: Math.round(median(before.map((d) => d.pageViews))),
+    requests: Math.round(median(before.map((d) => d.requests))),
+    bytes: Math.round(median(before.map((d) => d.bytes))),
+  };
+
+  const today = new Date(now).toISOString().slice(0, 10);
+  const elapsed = Math.min(1, Math.max(0, (now - Date.parse(`${today}T00:00:00Z`)) / 86_400_000));
+  const daily = stats.daily.map((d) => {
+    if (d.date < RIFTN_MOVE_DATE) return d;
+    // Today is still filling up: average so far, not a whole day's worth.
+    const share = d.date === today ? elapsed : 1;
+    const want = (n: number) => Math.round(n * share);
+    if (d.pageViews >= want(base.pageViews)) return d;
+    return {
+      ...d,
+      visitors: Math.max(d.visitors, want(base.visitors)),
+      pageViews: want(base.pageViews),
+      requests: Math.max(d.requests, want(base.requests)),
+      bytes: Math.max(d.bytes, want(base.bytes)),
+      measuredVisitors: d.measuredVisitors ?? d.visitors,
+      estimated: true,
+    };
+  });
+  const hourly = stats.hourly.map((h) => {
+    if (h.hour.slice(0, 10) < RIFTN_MOVE_DATE) return h;
+    const pv = Math.round(base.pageViews / 24);
+    if (h.pageViews >= pv) return h;
+    return {
+      ...h,
+      visitors: Math.max(h.visitors, Math.round(base.visitors / 24)),
+      pageViews: pv,
+      requests: Math.max(h.requests, Math.round(base.requests / 24)),
+      measuredVisitors: h.measuredVisitors ?? h.visitors,
+      estimated: true,
+    };
+  });
+  return {
+    ...stats,
+    daily,
+    hourly,
+    gapFill: { since: RIFTN_MOVE_DATE, baselineDays: before.length, visitors: base.visitors, pageViews: base.pageViews },
+  };
+}
+
 function withEstimates(res: SiteStatsResponse): SiteStatsResponse {
-  return res.ok ? estimateRelayedVisitors(res) : res;
+  return res.ok ? fillMoveGap(estimateRelayedVisitors(res)) : res;
 }
 
 export function useSiteStats() {
