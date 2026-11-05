@@ -387,7 +387,7 @@ export default function ProfilePage() {
       desktop.removeEventListener('change', observe);
       observer?.disconnect();
     };
-  }, [!!data.profile]);
+  }, [!!data.profile, holdForReveal]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
   const { ref: tabsFadeRef, style: tabsFadeStyle } = useScrollFadeMask<HTMLDivElement>();
@@ -413,6 +413,20 @@ export default function ProfilePage() {
     observer.observe(rail);
     return () => observer.disconnect();
   }, [profileTabKeys, isTabsStuck, tabsFadeRef]);
+// Let a mouse wheel scroll the tab bar sideways when the tabs overflow.
+useEffect(() => {
+const rail = tabsFadeRef.current;
+if (!rail) return;
+const onWheel = (e: WheelEvent) => {
+if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || rail.scrollWidth <= rail.clientWidth) return;
+const max = rail.scrollWidth - rail.clientWidth;
+if ((e.deltaY < 0 && rail.scrollLeft <= 0) || (e.deltaY > 0 && rail.scrollLeft >= max)) return;
+e.preventDefault();
+rail.scrollLeft = Math.max(0, Math.min(max, rail.scrollLeft + e.deltaY));
+};
+rail.addEventListener('wheel', onWheel, { passive: false });
+return () => rail.removeEventListener('wheel', onWheel);
+}, [isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -713,9 +727,9 @@ export default function ProfilePage() {
           <div data-nav-glass-backdrop aria-hidden />
           {isTabsStuck && <>
             <div className="relative shrink-0 w-9 h-11">
-              <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
+              <PageHeader overlay plainBack className="!top-1/2 !-translate-y-1/2 !left-0 !right-auto" />
             </div>
-<span aria-hidden data-profile-back-divider className="h-6 w-px shrink-0 bg-white/15" />
+<span aria-hidden data-profile-back-divider className="mx-1 h-6 w-px shrink-0 bg-white/20" />
             {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
               <div className="hidden min-w-0 max-w-24 md:block">
