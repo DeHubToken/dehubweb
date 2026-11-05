@@ -26,6 +26,8 @@ interface ChatHoldSheetProps {
   /** Emoji the viewer already used on this message, drawn as selected. */
   mine?: readonly string[];
   onReact?: (emoji: string) => void;
+  /** Show the "+" for the full emoji panel. Off where only a fixed set exists (comment reactions). */
+  allowMore?: boolean;
   actions: ChatHoldAction[];
 }
 
@@ -52,7 +54,7 @@ const GAP = 12;
  * the actions. Nothing is copied — the old menus drew a second card of the
  * message over the real one, which read as the message twice.
  */
-export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine = [], onReact, actions }: ChatHoldSheetProps) {
+export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine = [], onReact, allowMore = true, actions }: ChatHoldSheetProps) {
   const { t } = useTranslation();
   const sheetRef = useRef<HTMLDivElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -65,9 +67,13 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
   // first, and when the list is already at the bottom slide it up instead.
   useEffect(() => {
     if (!open || !anchor) return;
-    const scroller = scrollParent(anchor);
+    // A list in its own scroller (chat, the comments drawer), or the page
+    // itself (comments under a post on the post page).
+    const own = scrollParent(anchor);
+    const scroller = own ?? (document.scrollingElement as HTMLElement | null);
+    const holder = own ?? document.body;
     anchor.setAttribute('data-chat-held', '');
-    scroller?.setAttribute('data-chat-holding', '');
+    holder.setAttribute('data-chat-holding', '');
     const raf = requestAnimationFrame(() => {
       // vaul animates the sheet in from below; measure where it will rest.
       const sheet = sheetRef.current;
@@ -79,15 +85,15 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
       const room = scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop;
       const scrolled = Math.max(0, Math.min(overlap, room));
       if (scrolled) scroller.scrollTop += scrolled;
-      const top = scroller.getBoundingClientRect().top;
+      const top = own ? own.getBoundingClientRect().top : 0;
       const rest = Math.min(overlap - scrolled, row.top - scrolled - top - GAP);
-      if (rest > 0) scroller.style.setProperty('--chat-hold-lift', `${-rest}px`);
+      if (rest > 0) holder.style.setProperty('--chat-hold-lift', `${-rest}px`);
     });
     return () => {
       cancelAnimationFrame(raf);
       anchor.removeAttribute('data-chat-held');
-      scroller?.removeAttribute('data-chat-holding');
-      scroller?.style.removeProperty('--chat-hold-lift');
+      holder.removeAttribute('data-chat-holding');
+      holder.style.removeProperty('--chat-hold-lift');
     };
   }, [open, anchor]);
 
@@ -128,7 +134,7 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
                   {emoji}
                 </button>
               ))}
-              <button
+              {allowMore && <button
                 type="button"
                 onClick={() => setMoreOpen(true)}
                 aria-label={t('emojiPicker.moreReactions')}
@@ -136,7 +142,7 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
                 data-chat-hold-chip
               >
                 <Plus className="h-5 w-5" />
-              </button>
+              </button>}
             </div>
           )
         )}

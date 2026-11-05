@@ -35,6 +35,8 @@ import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Check from "@/components/ui/cut-icons/check";
 import { useHoldMenu } from '@/hooks/use-hold-menu';
+import { ChatHoldSheet, isTouchHold, type ChatHoldAction } from '@/components/app/chat/ChatHoldSheet';
+import { reactionMeta as holdReactionMeta, type PostReaction as HoldReaction } from '@/lib/reactions';
 import Languages from "@/components/ui/cut-icons/language";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Flag from "@/components/ui/cut-icons/report";
@@ -408,6 +410,9 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
+/** The reactions a held comment offers on a phone: the common faces, then 👎. */
+const HOLD_REACTIONS: HoldReaction[] = ['like', 'love', 'hot', 'lol', 'hundred', 'sad', 'dislike'];
+
 const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, onShowLikers, onReact, onReply, onShare, onEdit, onDelete, onTip, permalink, tipTotal, viewerTipped, onUserPress, isReply, threadLineAbove, threadLineBelow, isOwnComment, isThreadEntry, onAnchor, onPin, highlighted, onReport }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   // Bumps each time this viewer tips this comment, replaying the gem swirl.
@@ -476,10 +481,57 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
   // a phone, or right-clicking it on desktop, opens that same menu.
   const canTranslate = !!comment.text && !translation.isTooShort;
   const [menuOpen, setMenuOpen] = useState(false);
-  const hold = useHoldMenu(() => setMenuOpen(true), !isEditing && !isPending);
+  // On a phone the hold opens the same glass sheet as live chat: the comment
+  // stays put and glows, the rest dims, reactions and actions in one sheet.
+  // A mouse right-click keeps the row's dropdown.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [holdOpen, setHoldOpen] = useState(false);
+  const hold = useHoldMenu(() => {
+    if (isTouchHold()) setHoldOpen(true);
+    else setMenuOpen(true);
+  }, !isEditing && !isPending);
+  const commentUrl = () => viewerShareUrl(permalink
+    ? permalink(comment.id)
+    : isThreadEntry
+    ? dehubLinkFor.threadEntry(tokenId, comment.id)
+    : `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`);
+  const holdActions: ChatHoldAction[] = [
+    { key: 'reply', prime: true, icon: <Reply />, label: i18n.t('liveChat.reply', 'Reply'), onSelect: () => onReply(comment.id) },
+  ];
+  if (comment.text) holdActions.push({ key: 'copy', icon: <Quote />, label: i18n.t('chatHold.copy', 'Copy'), onSelect: () => { void navigator.clipboard?.writeText(comment.text); toast.success(i18n.t('comments.textCopied')); } });
+  if (canTranslate) holdActions.push(translation.isTranslated
+    ? { key: 'original', icon: <RotateCcw />, label: i18n.t('chatHold.showOriginal', 'Original'), onSelect: () => { void translation.handleShowOriginal(); } }
+    : { key: 'translate', icon: <Languages />, label: i18n.t('chatHold.translate', 'Translate'), onSelect: () => { void translation.handleTranslate(); } });
+  holdActions.push({ key: 'link', icon: <Link />, label: i18n.t('chatHold.link', 'Link'), onSelect: () => { void navigator.clipboard?.writeText(commentUrl()); trackShare('copy_link', { kind: 'comment' }); toast.success(i18n.t('comments.linkCopied')); } });
+  if (onPin) holdActions.push({ key: 'pin', icon: comment.isPinned ? <PinOff /> : <Pin />, label: comment.isPinned ? i18n.t('chatHold.unpin', 'Unpin') : i18n.t('chatHold.pin', 'Pin'), onSelect: () => onPin(comment.id) });
+  if (isOwnComment) {
+    holdActions.push({ key: 'edit', icon: <Pencil />, label: i18n.t('common.edit'), onSelect: () => setIsEditing(true) });
+    holdActions.push({ key: 'delete', destructive: true, icon: <Trash2 />, label: i18n.t('common.delete'), onSelect: () => onDelete(comment.id) });
+  } else if (onReport) {
+    holdActions.push({ key: 'report', icon: <Flag />, label: i18n.t('chatHold.report', 'Report'), onSelect: () => onReport(comment.id) });
+  }
+  const holdEmoji = HOLD_REACTIONS.map((r) => holdReactionMeta(r).emoji);
+  const mineEmoji = comment.myReaction ? [holdReactionMeta(comment.myReaction as HoldReaction).emoji] : [];
 
   return (
+    <>
+    <ChatHoldSheet
+      open={holdOpen}
+      onOpenChange={setHoldOpen}
+      anchor={holdOpen ? rowRef.current : null}
+      // Your own comment takes no reactions (the server refuses them).
+      quickReactions={isOwnComment ? null : holdEmoji}
+      mine={mineEmoji}
+      allowMore={false}
+      onReact={(emoji) => {
+        const reaction = HOLD_REACTIONS.find((r) => holdReactionMeta(r).emoji === emoji);
+        if (reaction) onReact(comment.id, reaction);
+      }}
+      actions={holdActions}
+    />
     <motion.div
+      ref={rowRef}
+      data-chat-row="comment"
       // A comment you just sent is already on screen under its placeholder id;
       // when the real id swaps in, the row remounts and must not fade in twice.
       initial={delivery?.status === 'posted' ? false : isPending ? { opacity: 0, y: 28, scale: 0.97 } : { opacity: 0, y: 10 }}
@@ -956,6 +1008,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
         </div>
       </div>
     </motion.div>
+    </>
   );
 });
 

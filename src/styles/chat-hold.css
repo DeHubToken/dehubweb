@@ -21,11 +21,13 @@
   [data-chat-hover-actions] { display: none !important; }
 }
 
+/* !important: comment rows are framer-motion elements that write their own
+   inline transform, which would otherwise pin them in place. */
 [data-chat-holding] [data-chat-row] {
-  transform: translateY(var(--chat-hold-lift, 0px));
+  transform: translateY(var(--chat-hold-lift, 0px)) !important;
   transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
 }
-[data-chat-holding] [data-chat-row]:not([data-chat-held]) { opacity: 0.35; }
+[data-chat-holding] [data-chat-row]:not([data-chat-held]) { opacity: 0.35 !important; }
 [data-chat-row][data-chat-held] {
   /* Inset from the screen edges without moving the words: the margin comes
      out of the row's own side padding. */
@@ -43,6 +45,13 @@
 html .chat-hold-overlay.chat-hold-overlay[data-vaul-overlay] {
   background: transparent !important;
   backdrop-filter: none !important;
+}
+
+/* Comment rows have no side padding of their own (the sheet pads them), so
+   the glow reaches out past the words instead of pushing them in. */
+[data-chat-row='comment'][data-chat-held] {
+  margin-inline: -10px;
+  padding-inline: 10px;
 }
 
 [data-chat-hold-sheet][data-chat-hold-sheet] {
