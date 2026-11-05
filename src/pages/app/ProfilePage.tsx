@@ -35,6 +35,7 @@ import {
 import dehubCoin from '@/assets/dehub-coin.png';
 
 import { useProfilePage } from '@/hooks/use-profile-page';
+import { usePinnedCommunities } from '@/hooks/use-communities';
 import { useProfileFollow } from '@/hooks/use-profile-follow';
 import { useUserPins } from '@/hooks/use-pins';
 import { Pin } from 'lucide-react';
@@ -235,6 +236,10 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
   );
 }
 
+
+/** Longest the profile skeleton waits for tab counts and pins after the profile itself. */
+const PROFILE_REVEAL_CAP_MS = 900;
+
 export default function ProfilePage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -259,6 +264,23 @@ export default function ProfilePage() {
   // All data fetching + derived state. activeTab goes in because the filter
   // panel's post-type row only applies on the All tab.
   const data = useProfilePage({ activeTab });
+
+  // One reveal, not four. A fresh profile used to land in steps: header with
+  // "0" tab counts, then counts (re-sorting the tabs), then the pinned
+  // community row pushing everything down. Hold the skeleton until the counts
+  // and pins answer too, capped so a slow side request never holds the page.
+  // A profile painted from cache shows at once, as before.
+  const revealAddress = data.apiProfile?.walletAddress;
+  const { isFetched: pinsFetched } = usePinnedCommunities(revealAddress);
+  const [revealCapPassed, setRevealCapPassed] = useState(false);
+  useEffect(() => {
+    setRevealCapPassed(false);
+    if (!revealAddress) return;
+    const timer = setTimeout(() => setRevealCapPassed(true), PROFILE_REVEAL_CAP_MS);
+    return () => clearTimeout(timer);
+  }, [revealAddress]);
+  const holdForReveal = !!data.profile && !!revealAddress && !data.isProfileFromCache
+    && !revealCapPassed && !(data.isCountsSettled && pinsFetched);
   // A pull refresh keeps what is on screen; only a first load shows skeletons.
   const headerFetching = data.isFetchingProfile && !data.isRefreshing;
   // One short "done" beat after a pull refresh: the avatar ring closes and the photo pops.
@@ -536,7 +558,7 @@ export default function ProfilePage() {
   // skeleton the route shows while its code loads, so there is one loader.
   // Also wait if auth is still loading or the profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
-  if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
+  if (holdForReveal || (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile))) {
     // The loaded page's own top bar, so the back arrow is already where it
     // stays instead of a lone arrow that jumps when the profile arrives.
     return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton /></div>;
