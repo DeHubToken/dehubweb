@@ -2476,9 +2476,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
-        data-wide-rails-frame={wideRails || undefined}
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
+        data-wide-rails-frame={wideRails || undefined}
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Inline footage fills the width and crops within its height budget.
            The transport stays below it; fullscreen retains the full picture. */
