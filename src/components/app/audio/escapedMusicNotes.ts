@@ -1,7 +1,9 @@
-import { floatingNote, MAX_ESCAPED_NOTES, noteRandom } from './bubbleLift';
-import { paintNote } from './bubbleLiftCanvas';
+import { floatingNote, MAX_ESCAPED_NOTES, noteRandom, notePop } from './bubbleLift';
+import { paintNote, paintPop } from './bubbleLiftCanvas';
 // Session-only: cards and routes can unmount without losing their escaped notes.
+// Each bubble floats for NOTE_LIFETIME seconds, then pops and is removed.
 const notes: { x: number; y: number; born: number; seed: number }[] = [];
+let births = 0;
 let canvas: HTMLCanvasElement | undefined;
 let frame = 0, clock = 0, last = 0, lastBirth = -Infinity;
 let reduced: MediaQueryList | undefined;
@@ -12,7 +14,7 @@ export function escapeMusicNote(x: number, y: number) {
   if (!canEscapeMusicNote() || performance.now() - lastBirth < 6500 || document.hidden || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (x < 0 || y < 0 || x > window.innerWidth || y > window.innerHeight) return;
   lastBirth = performance.now();
-  notes.push({ x, y, born: clock, seed: noteRandom(notes.length * 17 + 3) });
+  notes.push({ x, y, born: clock, seed: noteRandom(births++ * 17 + 3) });
   if (!canvas) {
     canvas = document.createElement('canvas'); canvas.dataset.escapedMusicNotes = 'bubble-lift';
     canvas.setAttribute('aria-hidden', 'true');
@@ -42,9 +44,13 @@ function draw(now: number) {
   // System's page ink is applied to surfaces, not the body's inherited colour.
   const html = document.documentElement;
   const ink = html.dataset.theme === 'light' || html.dataset.systemTone === 'light' ? '#203944' : '#e5f2f7';
-  for (const note of notes) {
-    const p = floatingNote(clock - note.born, note.seed, note.x, note.y, width, height);
-    paintNote(ctx, p.x, p.y, p.size, p.rotation, p.opacity, ink, false, true);
+  for (let i = notes.length - 1; i >= 0; i--) {
+    const note = notes[i], age = clock - note.born, pop = notePop(age);
+    if (pop >= 1) { notes.splice(i, 1); continue; }
+    const p = floatingNote(age, note.seed, note.x, note.y, width, height);
+    if (pop > 0) paintPop(ctx, p.x, p.y, p.size, p.rotation, p.opacity, ink, pop, note.seed);
+    else paintNote(ctx, p.x, p.y, p.size, p.rotation, p.opacity, ink, false, true);
   }
-  frame = requestAnimationFrame(draw);
+  // Nothing left floating: stop drawing until the next note escapes.
+  frame = notes.length ? requestAnimationFrame(draw) : 0;
 }
