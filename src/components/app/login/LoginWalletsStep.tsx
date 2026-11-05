@@ -62,16 +62,8 @@ export interface DiscoveredWallet {
 interface LoginWalletsStepProps {
   isConnecting: boolean;
   activeProvider: string | null;
-  /** The wallet wagmi is holding right now, if any — shown so it can be dropped. */
-  connectedAddress?: string | null;
-  connectedWalletName?: string | null;
-  /** Which button that live connection belongs to, so the chip sits under it. */
-  connectedWalletId?: string | null;
   /** Everything else installed here, discovered rather than hardcoded. */
   discoveredWallets?: DiscoveredWallet[];
-  onUseDifferentWallet?: () => void;
-  onSwitchAccount?: () => void;
-  onContinueConnectedWallet?: () => void;
   onWalletConnect: (wallet: WalletId, connect: () => void) => void;
   onDiscoveredWalletConnect?: (connectorId: string) => void;
   onWalletConnectConnect: (connect: () => void) => void;
@@ -79,19 +71,10 @@ interface LoginWalletsStepProps {
   onImportWallet?: () => void;
 }
 
-const shortenAddress = (address: string) =>
-  `${address.slice(0, 6)}…${address.slice(-4)}`;
-
 export function LoginWalletsStep({
   isConnecting,
   activeProvider,
-  connectedAddress,
-  connectedWalletName,
-  connectedWalletId,
   discoveredWallets = [],
-  onUseDifferentWallet,
-  onSwitchAccount,
-  onContinueConnectedWallet,
   onWalletConnect,
   onDiscoveredWalletConnect,
   onWalletConnectConnect,
@@ -119,70 +102,6 @@ export function LoginWalletsStep({
       alive = false;
     };
   }, [connectorAttempt]);
-
-  /*
-    Reaching this step with a wallet already attached is normal — a previous
-    session, or an attempt whose signature went unanswered. The buttons below
-    then sign with THAT wallet, which is invisible unless we say so.
-
-    It used to sit above the list, where it read as a header rather than as
-    something belonging to one of the wallets. Rendered under the button it
-    actually belongs to, "MetaMask · 0x12…ab" is obviously the state of the
-    MetaMask row, and the two ways out sit with it:
-
-      Switch account          opens the wallet's own account picker. The wallet
-                              is the only thing that can change which account it
-                              offers — a site cannot enumerate the others, let
-                              alone choose one — so this is the whole of what
-                              "use my other address" can mean. It is also the
-                              escape from the dead end where the extension
-                              refuses to sign for the address we remembered.
-      Use a different wallet  drops the connection, so the next tap starts clean.
-  */
-  const connectedChip = connectedAddress ? (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 space-y-2">
-      <p className="text-white text-xs truncate">
-        {connectedWalletName ? `${connectedWalletName} · ` : ''}
-        <span className="text-white/60">{shortenAddress(connectedAddress)}</span>
-      </p>
-      {onContinueConnectedWallet && (
-        <Button
-          type="button"
-          onClick={onContinueConnectedWallet}
-          disabled={isConnecting}
-          className="w-full"
-        >
-          {isConnecting ? t('common.loading', 'Loading...') : t('common.continue', 'Continue')}
-        </Button>
-      )}
-      <div className="flex items-center gap-4">
-        {onSwitchAccount && (
-          <button
-            type="button"
-            onClick={onSwitchAccount}
-            disabled={isConnecting}
-            className="text-xs text-white/70 hover:text-white underline underline-offset-2 disabled:opacity-40"
-          >
-            {t('loginModal.switchWalletAccount', 'Switch account')}
-          </button>
-        )}
-        {onUseDifferentWallet && (
-          <button
-            type="button"
-            onClick={onUseDifferentWallet}
-            disabled={isConnecting}
-            className="text-xs text-white/50 hover:text-white underline underline-offset-2 disabled:opacity-40"
-          >
-            {t('loginModal.useDifferentWallet', 'Use a different wallet')}
-          </button>
-        )}
-      </div>
-    </div>
-  ) : null;
-
-  /** The chip belongs under whichever row owns the live connection. */
-  const chipFor = (walletId: string) =>
-    connectedChip && connectedWalletId === walletId ? connectedChip : null;
 
   if (connectorError) {
     return (
@@ -227,7 +146,6 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
-        {chipFor('metamask')}
 
         <WalletButton.Custom wallet="phantom">
           {({ mounted, connect }) => (
@@ -246,7 +164,6 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
-        {chipFor('phantom')}
 
         <WalletButton.Custom wallet={isMobileDevice() && !isWalletInAppBrowser() ? "walletconnect" : "trust"}>
           {({ mounted, connect }) => (
@@ -265,7 +182,6 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
-        {chipFor('trust')}
 
         {/*
           Everything else this browser announced over EIP-6963. wagmi has been
@@ -297,7 +213,6 @@ export function LoginWalletsStep({
               <span className="flex-1 text-left truncate">{wallet.name}</span>
               <ChevronRight className="w-4 h-4 text-white/40" />
             </Button>
-            {chipFor(wallet.id)}
           </div>
         ))}
 
@@ -318,7 +233,6 @@ export function LoginWalletsStep({
             </Button>
           )}
         </WalletButton.Custom>
-        {chipFor('walletconnect')}
 
         {onImportWallet && (
           <Button
@@ -331,11 +245,6 @@ export function LoginWalletsStep({
             <ChevronRight className="w-4 h-4 text-white/40" />
           </Button>
         )}
-
-        {/* A connection through something not listed above — a wallet's own
-            in-app browser reaches us as the generic injected connector — still
-            has to be visible and still has to be escapable. */}
-        {connectedChip && !connectedWalletId && connectedChip}
 
         <p className="text-white/40 text-[10px] text-center mt-2 px-2">
           {isMobileDevice()

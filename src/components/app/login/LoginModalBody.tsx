@@ -27,7 +27,6 @@ import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 import { clearWagmiStorage } from '@/lib/wagmi';
 import { WagmiScope } from '@/components/app/WagmiScope';
 import { connectorMatchesWallet } from '@/lib/wallet-connectors';
-import { requestAccountPicker } from '@/lib/wallet-accounts';
 import { PasskeyCancelledError, PasskeyLoginError, PasskeyUnsupportedError } from '@/lib/passkey-login';
 import { loginProbesSnapshot, resolveLoginProbes, type LoginProbes } from '@/lib/login-probes';
 import { LoginSavedProfiles } from './LoginSavedProfiles';
@@ -133,7 +132,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   const {
     isConnected: isWagmiAlreadyConnected,
     address: wagmiCurrentAddress,
-    connector: wagmiCurrentConnector,
   } = useAccount();
   const { disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
   const { connectAsync } = useConnect();
@@ -177,21 +175,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
         icon: connector.icon,
       }));
   }, [allConnectors]);
-
-  /**
-   * Which row in the list owns the live connection, so its address chip can be
-   * rendered under that row rather than floating above the whole list.
-   */
-  const connectedWalletId = useMemo<string | null>(() => {
-    if (!isWagmiAlreadyConnected || !wagmiCurrentConnector) return null;
-    for (const wallet of NAMED_WALLETS) {
-      if (connectorMatchesWallet(wagmiCurrentConnector, wallet)) return wallet;
-    }
-    if (wagmiCurrentConnector.id === 'walletConnect') return 'walletconnect';
-    return discoveredWallets.some(w => w.id === wagmiCurrentConnector.id)
-      ? wagmiCurrentConnector.id
-      : null;
-  }, [isWagmiAlreadyConnected, wagmiCurrentConnector, discoveredWallets]);
 
   const [email, setEmail] = useSurfaceDraft("src/components/app/login/LoginModalBody.tsx:email", '');
   const [emailCode, setEmailCode] = useState('');
@@ -460,16 +443,6 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     }
   };
 
-  // A live connection is worth reusing only when it belongs to the wallet that
-  // was tapped. In a wallet's own in-app browser there is exactly one provider
-  // and every button reaches it through the generic injected connector, so that
-  // counts as a match too.
-  const liveConnectionIsWallet = (wallet: WalletId) =>
-    isWagmiAlreadyConnected &&
-    !!wagmiCurrentAddress &&
-    (connectorMatchesWallet(wagmiCurrentConnector, wallet) ||
-      (isWalletInAppBrowser() && wagmiCurrentConnector?.id === 'injected'));
-
   // Drop the wallet currently attached without touching the Riftn session —
   // `disconnect()` from the auth context is a full sign-out, which is not what
   // someone standing at the login sheet is asking for. wagmi's disconnect also
@@ -502,22 +475,18 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setStep]);
 
-  const handleWalletConnect = (wallet: WalletId, _connect: () => void) => {
+  const handleWalletConnect = async (wallet: WalletId, _connect: () => void) => {
     setActiveProvider(wallet);
-    setWagmiAuthIntent(true, wallet);
 
-    // A connection kept alive from a previous session (expired token, still
-    // connected) only needs the signature — the wagmiAuthIntentState change
-    // re-fires handleWagmiConnect, which picks the connection up and completes
-    // Riftn auth. This used to fire for a connection to ANY wallet, so tapping
-    // a second wallet re-signed with the first one: the popup the user had just
-    // cancelled came straight back, from the wallet they were trying to leave.
-    // Naming the wallet on the intent is the other half of that — the effect
-    // fires on every tap, so it has to be able to tell that the connection it
-    // finds is not the one being asked for.
-    if (liveConnectionIsWallet(wallet)) {
-      return;
+    // Tapping a wallet always starts clean: whatever wallet is attached from
+    // an earlier visit is dropped first, then the tapped one is connected and
+    // asked to sign. There is no "continue with 0x…" step — the wallet's own
+    // prompt is where the account gets picked.
+    if (isWagmiAlreadyConnected) {
+      await handleUseDifferentWallet();
+      setActiveProvider(wallet);
     }
+    setWagmiAuthIntent(true, wallet);
 
     // Mobile: Use deep link to open wallet app and load dapp in its in-app browser.
     if (isMobileDevice() && !isWalletInAppBrowser()) {
@@ -549,39 +518,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   const handleDiscoveredWalletConnect = (connectorId: string) => {
     // Same path as the named buttons — connectWithWallet resolves a connector
     // id it doesn't recognise as a wallet name by matching the id directly.
-    handleWalletConnect(connectorId as WalletId, () => {});
-  };
-
-  /**
-   * Ask the connected wallet to re-offer its account picker.
-   *
-   * This is the way out of the dead end that made people delete the site from
-   * inside MetaMask: the extension holds account B, the sheet asks it to sign
-   * as account A, and it refuses with an error that is neither a rejection nor
-   * a timeout. Nothing a site can do picks an account on someone's behalf —
-   * `wallet_requestPermissions` opening the wallet's own picker is the entire
-   * available surface.
-   *
-   * Once an account comes back the connection is already the right wallet, so
-   * this only has to raise the auth intent: AuthProvider's wagmi effect signs,
-   * and it reads the wallet's live account first, so it uses the account just
-   * chosen even before `accountsChanged` has reached wagmi.
-   */
-  // WalletConnect has no account picker to open — the accounts come from a
-  // remote wallet over a relay, and nothing in the protocol re-opens its
-  // chooser. Offering the control there would only ever produce a no-op.
-  const canSwitchAccount =
-    !!connectedWalletId && wagmiCurrentConnector?.id !== 'walletConnect';
-
-  const handleSwitchAccount = async () => {
-    if (!wagmiCurrentConnector || !connectedWalletId) return;
-    setActiveProvider(connectedWalletId);
-    const chosen = await requestAccountPicker(wagmiCurrentConnector);
-    if (!chosen) {
-      setActiveProvider(null);
-      return;
-    }
-    handleWalletConnect(connectedWalletId as WalletId, () => {});
+    void handleWalletConnect(connectorId as WalletId, () => {});
   };
 
   // Google answers "Access blocked" inside Instagram, TikTok, Facebook and
@@ -884,13 +821,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
           <LoginWalletsStep
             isConnecting={isConnecting}
             activeProvider={activeProvider}
-            connectedAddress={isWagmiAlreadyConnected ? wagmiCurrentAddress ?? null : null}
-            connectedWalletName={wagmiCurrentConnector?.name ?? null}
-            connectedWalletId={connectedWalletId}
-            onContinueConnectedWallet={isWagmiAlreadyConnected && wagmiCurrentConnector ? () => handleWalletConnect((connectedWalletId ?? wagmiCurrentConnector.id) as WalletId, () => {}) : undefined}
             discoveredWallets={discoveredWallets}
-            onUseDifferentWallet={handleUseDifferentWallet}
-            onSwitchAccount={canSwitchAccount ? handleSwitchAccount : undefined}
             onWalletConnect={handleWalletConnect}
             onDiscoveredWalletConnect={handleDiscoveredWalletConnect}
             onWalletConnectConnect={handleWalletConnectConnect}
