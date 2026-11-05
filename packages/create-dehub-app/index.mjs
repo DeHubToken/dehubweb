@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * npx create-dehub-app my-app [--template html|react|server]
+ * npx https://riftn.com/sdk/create-dehub-app.tgz my-app [--template html|react|server]
  * Copies a starter and fills in the app name. No dependencies.
  */
 import fs from 'node:fs';
@@ -52,4 +52,4 @@ console.log('Next:');
 console.log(`  cd ${name}`);
 if (template === 'html') console.log('  open index.html, then host the folder on https (any static host)');
 else console.log('  npm install\n  npm run dev');
-console.log('  edit public/.well-known/dehub.json (or .well-known/dehub.json), then submit it at https://dehub.io/apps/dev\n');
+console.log('  edit public/.well-known/dehub.json (or .well-known/dehub.json), then submit it at https://riftn.com/apps/dev\n');

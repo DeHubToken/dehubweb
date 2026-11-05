@@ -5,7 +5,7 @@
  *   dehub.ready();
  *   const { user } = await dehub.context;
  *
- * Same protocol as https://dehub.io/sdk/miniapp.js: it talks to the DeHub host
+ * Same protocol as https://riftn.com/sdk/miniapp.js: it talks to the DeHub host
  * over postMessage (web) or the React Native WebView bridge (the DeHub app),
  * and never sees the person's session. Safe to import during server rendering:
  * nothing runs until a method is called in a browser.

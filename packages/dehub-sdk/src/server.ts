@@ -79,7 +79,7 @@ export async function verifyDehubWebhook(body: unknown, options: VerifyOptions):
 }
 
 export interface NotifyOptions {
-  /** Your notification key from dehub.io/apps/dev (dhmk_...). Keep it on the server. */
+  /** Your notification key from riftn.com/apps/dev (dhmk_...). Keep it on the server. */
   key: string;
   notificationId: string;
   title: string;
