@@ -1255,6 +1255,7 @@ export default function FeaturesPage() {
 <FeedSwallowMotion>
       <div hidden={activeTab !== 'requests' || showNotFeasible}>
         <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
+        {!isFiltering && <TopBuildersCard compact />}
       </div>
       {/* The request a notification pointed at, above whichever tab is open. */}
       {focusedRequest && (
@@ -1306,7 +1307,6 @@ export default function FeaturesPage() {
 
       {activeTab === 'requests' && !showNotFeasible && (
         <>
-          {!isFiltering && <TopBuildersCard compact />}
           {isLoading ? (
             <FeatureSkeletons />
           ) : isError ? (
@@ -1396,7 +1396,6 @@ export default function FeaturesPage() {
       {/* Shipped Features Tab */}
       {activeTab === 'shipped' && (
         <>
-          {!isFiltering && <TopBuildersCard />}
           {isLoadingShipped ? (
             <FeatureSkeletons />
           ) : visibleShipped.length > 0 ? (
