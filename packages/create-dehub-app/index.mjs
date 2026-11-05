@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * npx create-dehub-app my-app [--template html|react|server]
+ * npx https://github.com/DeHubToken/dehubweb/releases/download/packages/create-dehub-app.tgz my-app [--template html|react|server]
  * Copies a starter and fills in the app name. No dependencies.
  */
 import fs from 'node:fs';

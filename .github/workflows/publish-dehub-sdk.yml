@@ -1,39 +1,59 @@
 name: Publish developer packages
 
-# Publishes dehub-sdk and create-dehub-app to npm from packages/.
-# Needs the NPM_TOKEN repository secret (an npm "Automation" token).
+# Builds dehub-sdk and create-dehub-app and attaches them to the "packages"
+# GitHub release, so they install straight from a URL with no npm account:
+#   npm i https://github.com/DeHubToken/dehubweb/releases/download/packages/dehub-sdk.tgz
+#   npx https://github.com/DeHubToken/dehubweb/releases/download/packages/create-dehub-app.tgz my-app
+# If an NPM_TOKEN secret is ever added, the same run also publishes to npm.
 on:
+  push:
+    branches: [main]
+    paths: ['packages/**', '.github/workflows/publish-dehub-sdk.yml']
   workflow_dispatch:
-    inputs:
-      package:
-        description: Which package to publish
-        type: choice
-        options: [both, dehub-sdk, create-dehub-app]
-        default: both
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: publish-dehub-packages
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-      - name: dehub-sdk
-        if: inputs.package != 'create-dehub-app'
-        working-directory: packages/dehub-sdk
+      - name: Pack
         run: |
+          mkdir -p out
+          cd packages/dehub-sdk
           npm install --no-save --no-package-lock jose@5.9.6 typescript@5.6.3
-          npm publish --access public
+          npm run build
+          npm pack --pack-destination ../../out
+          cd ../create-dehub-app
+          npm pack --pack-destination ../../out
+          cd ../../out
+          cp dehub-sdk-*.tgz dehub-sdk.tgz
+          cp create-dehub-app-*.tgz create-dehub-app.tgz
+          ls -l
+      - name: Release
+        run: |
+          base="https://github.com/${{ github.repository }}/releases/download/packages"
+          gh release view packages >/dev/null 2>&1 || gh release create packages \
+            --title "Developer packages" --latest=false \
+            --notes "Install the SDK: \`npm i $base/dehub-sdk.tgz\`. Start an app: \`npx $base/create-dehub-app.tgz my-app\`."
+          gh release upload packages out/*.tgz --clobber
+      - name: npm (optional)
+        if: env.NPM_TOKEN != ''
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: create-dehub-app
-        if: inputs.package != 'dehub-sdk'
-        working-directory: packages/create-dehub-app
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          (cd packages/dehub-sdk && npm publish --access public) || true
+          (cd packages/create-dehub-app && npm publish --access public) || true

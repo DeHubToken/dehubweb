@@ -3,13 +3,13 @@
 Build mini apps for [DeHub](https://dehub.io): sign people in, take DHB payments, post to the feed and send notifications. Your app runs inside DeHub on the web and in the DeHub app.
 
 ```bash
-npm i dehub-sdk
+npm i https://github.com/DeHubToken/dehubweb/releases/download/packages/dehub-sdk.tgz
 ```
 
 Or start from a template:
 
 ```bash
-npx create-dehub-app my-app
+npx https://github.com/DeHubToken/dehubweb/releases/download/packages/create-dehub-app.tgz my-app
 ```
 
 ## In your app
