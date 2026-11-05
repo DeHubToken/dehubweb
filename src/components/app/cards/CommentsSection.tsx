@@ -2302,9 +2302,24 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       flushSync(() => {
         if (stage) setStageComposerOpen(true);
         setReplyTo(found);
-        setNewComment(current => current.length ? current : `@${found.username} `);
+        // An empty box gets the @name. Switching who you answer swaps the old
+        // @name at the front for the new one and keeps the rest of the text.
+        const previous = replyTo?.username;
+        setNewComment(current => {
+          if (!current.length) return `@${found.username} `;
+          if (previous && previous !== found.username && current.startsWith(`@${previous}`)) {
+            return `@${found.username}${current.slice(previous.length + 1)}`;
+          }
+          return current;
+        });
       });
       inputRef.current?.focus({ preventScroll: true });
+      // Keep the comment being answered in sight once the keyboard is up and
+      // the sheet has grown to the space above it.
+      const reveal = () => document.querySelector<HTMLElement>(`[data-chat-row="comment"][data-comment-id="${CSS.escape(found.id)}"]`)
+        ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      window.setTimeout(reveal, 120);
+      window.setTimeout(reveal, 450);
     }
   });
 
