@@ -54,6 +54,8 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { ShortsBricks, ShortTile } from '@/components/app/feeds/ShortsBricks';
 import { brickShape, packBricks } from '@/lib/shorts-bricks';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { FILL_LAST_ROW_2, FILL_LAST_ROW_3 } from '@/components/app/feeds/ShortsBricks';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
@@ -73,8 +75,6 @@ const DURATION_FILTERS = [
 
 // Upload date filters - imported from feed-utils for consistency
 
-// Phone shape chips: every video, only tall shorts, or only wide videos.
-const SHAPE_FILTERS = ['all', 'tall', 'wide'] as const;
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
@@ -307,9 +307,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0], DURATION_FILTERS);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('shorts', 'category', null);
-  // Phones mix tall and wide videos in brick rows and can narrow to one shape.
+  // Phones mix tall and wide videos in brick rows.
   const isPhone = useIsMobile();
-  const [selectedShape, setSelectedShape] = usePersistedFeedFilter<'all' | 'tall' | 'wide'>('shorts', 'shape', 'all', SHAPE_FILTERS);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -494,15 +493,23 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
         return short.durationSeconds >= selectedDuration.min && short.durationSeconds < selectedDuration.max;
       });
     }
-    // Shape filter (phones): only shorts, or only wide videos.
-    if (isPhone && selectedShape !== 'all') {
-      list = list.filter(short => brickShape(short.storedAspect) === selectedShape);
-    }
     return list;
-  }, [allShorts, selectedDuration, isPhone, selectedShape]);
+  }, [allShorts, selectedDuration]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || (isPhone && selectedShape !== 'all');
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+
+  // Desktop grid: two columns, three when the sidebar is collapsed on a wide
+  // screen. While more pages can still arrive, a part-filled last row waits
+  // for them; the final last row spreads to fill the width (FILL_LAST_ROW_*).
+  const isLarge = useMediaQuery('(min-width: 1024px)');
+  const gridCols = isCollapsed && isLarge ? 3 : 2;
+  const gridShorts = useMemo(() => {
+    if (isPhone || !hasNextPage) return shorts;
+    const liveCount = hasActiveFilters ? 0 : liveShorts.length;
+    const extra = (liveCount + shorts.length) % gridCols;
+    return extra && shorts.length > extra ? shorts.slice(0, shorts.length - extra) : shorts;
+  }, [isPhone, hasNextPage, shorts, hasActiveFilters, liveShorts, gridCols]);
 
   // Phone brick rows. The tail waits for the next page so rows on screen never reshuffle.
   const brickRows = useMemo(
@@ -535,7 +542,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Reset client-side filters
   const clearFilters = () => {
-    setSelectedShape('all');
     selectDuration(DURATION_FILTERS[0]);
     selectUploadDate(DATE_FILTER_OPTIONS[0]);
   };
@@ -639,41 +645,6 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           )}
         </AnimatePresence>
 
-        {/* Phone shape chips: All / Shorts / Wide */}
-        {isPhone && !searchQuery && (
-          <div data-no-swipe data-shorts-shape-chips className="mb-2 flex gap-1.5" role="tablist">
-            {SHAPE_FILTERS.map((shape) => {
-              const on = selectedShape === shape;
-              const label = shape === 'all'
-                ? _copy("copy.a52ace420f21", { defaultValue: "All" })
-                : shape === 'tall'
-                  ? _copy("copy.3c784a16cf27", { defaultValue: "Shorts" })
-                  : _copy("copy.147170e793c6", { defaultValue: "Wide" });
-              return (
-                <button
-                  key={shape}
-                  type="button"
-                  role="tab"
-                  aria-selected={on}
-                  data-active={on ? 'true' : undefined}
-                  onClick={() => setSelectedShape(shape)}
-                  className={cn(
-                    "flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
-                    on ? "border-transparent bg-white text-black" : "border-white/[0.14] bg-white/[0.06] text-zinc-200",
-                  )}
-                >
-                  {shape !== 'all' && (
-                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.4} aria-hidden="true">
-                      {shape === 'tall' ? <rect x="7" y="2" width="10" height="20" rx="2" /> : <rect x="2" y="6" width="20" height="12" rx="2" />}
-                    </svg>
-                  )}
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
         {/* Shorts Grid, filter loader or Empty State. The loader sits BELOW the
             filter panel, not in place of the whole feed, so the chips the user
             is working with stay on screen and clickable while the request runs. */}
@@ -700,7 +671,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               />
             ) : (
             /* Shorts Grid - TikTok Style (desktop and tablets) */
-            <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
+            <div className={cn("grid gap-2 sm:gap-3", gridCols === 3 ? "grid-cols-3" : "grid-cols-2", gridCols === 3 ? FILL_LAST_ROW_3 : FILL_LAST_ROW_2)}>
               {!hasActiveFilters && liveShorts.map((stream) => (
                 <LiveShortTile
                   key={`live-${stream.id}`}
@@ -709,7 +680,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   onOpen={() => openViewerAt(`live-${stream.id}`)}
                 />
               ))}
-              {shorts.map((short, index) => (
+              {gridShorts.map((short, index) => (
                 <ShortTile key={short.id} short={short} viewerOpen={viewerOpen} onOpen={() => handleShortClick(index)} />
               ))}
             </div>
