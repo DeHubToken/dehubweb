@@ -22,6 +22,7 @@ import { PostBgLayer, postBgHostProps } from '@/components/app/profile/PostBackg
 import { postBgById } from '@/lib/post-backgrounds';
 import { closeBrainrotFeed } from '@/lib/brainrot-feed';
 import { cn } from '@/lib/utils';
+import { PollCard } from './PollCard';
 import { VIEWER_CONTROL, VIEWER_PILL } from '@/lib/viewer-chrome';
 
 const ShortsPhotoPager = lazy(() => import('./ShortsPhotoPager').then((m) => ({ default: m.ShortsPhotoPager })));
@@ -104,6 +105,11 @@ function TextPoster({ short }: { short: ShortVideo }) {
             {expanded ? t('copy.4fdd3b6201a2', { defaultValue: 'less' }) : t('copy.187897ce0afc', { defaultValue: 'more' })}
           </button>
         )}
+{parseInt(short.id, 10) > 0 && (
+<div data-no-swipe className="mt-4 w-full max-w-[420px]">
+<PollCard tokenId={parseInt(short.id, 10)} />
+</div>
+)}
       </div>
     </div>
   );
