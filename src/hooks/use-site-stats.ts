@@ -66,6 +66,16 @@ export interface SiteStatsWindow {
   breakdownMaxDays: number;
 }
 
+/** One Cloudflare zone's own rows (dehub.io, riftn.com). */
+export interface SiteStatsZone {
+  name: string;
+  ok: boolean;
+  zoneTag?: string;
+  error?: string;
+  daily?: SiteStatsDay[];
+  hourly?: SiteStatsHour[];
+}
+
 export interface SiteStats {
   ok: true;
   fetchedAt: string;
@@ -75,6 +85,12 @@ export interface SiteStats {
   /** Up to 72 hourly buckets — Cloudflare's hard limit for this resolution. */
   hourly: SiteStatsHour[];
   breakdown: SiteStatsBreakdownDay[];
+  /**
+   * Per-zone rows. The site moved from dehub.io to riftn.com on 2026-11-03, so
+   * `daily`/`hourly` above are both zones added together; these let each zone
+   * be corrected on its own before adding (unique counts are per zone).
+   */
+  zones?: SiteStatsZone[];
   provenance: SiteStatsProvenance;
   /** Set when any day was estimated: the first such day and the ratio used. */
   estimate?: { since: string; ratio: number; baselineDays: number } | null;
@@ -139,7 +155,7 @@ const BASELINE_DAYS = 28;
  * is by ratio rather than a date, so it stops by itself once the apex is back
  * behind Cloudflare.
  */
-export function estimateRelayedVisitors(stats: SiteStats): SiteStats {
+function estimateOneZone(stats: SiteStats): SiteStats {
   const ratioOf = (d: SiteStatsDay) => (d.pageViews > 0 ? d.visitors / d.pageViews : null);
   const relayed = (d: SiteStatsDay) => {
     const r = ratioOf(d);
@@ -174,6 +190,52 @@ export function estimateRelayedVisitors(stats: SiteStats): SiteStats {
     hourly,
     estimate: since ? { since, ratio, baselineDays: clean.length } : null,
   };
+}
+
+function sumRows<T extends object>(lists: T[][], key: keyof T & string): T[] {
+  const byKey = new Map<string, Record<string, unknown>[]>();
+  for (const list of lists) {
+    for (const item of list) {
+      const row = item as Record<string, unknown>;
+      const k = String(row[key]);
+      byKey.set(k, [...(byKey.get(k) ?? []), row]);
+    }
+  }
+  return [...byKey.keys()].sort().map((k) => {
+    const rows = byKey.get(k)!;
+    const out: Record<string, unknown> = { [key]: k };
+    const estimated = rows.some((r) => r.estimated);
+    for (const r of rows) {
+      for (const [f, v] of Object.entries(r)) {
+        if (f === key || f === 'estimated' || f === 'measuredVisitors' || typeof v !== 'number') continue;
+        out[f] = ((out[f] as number) ?? 0) + v;
+      }
+    }
+    if (estimated) {
+      out.estimated = true;
+      out.measuredVisitors = rows.reduce((n, r) => n + ((r.measuredVisitors as number) ?? (r.visitors as number) ?? 0), 0);
+    }
+    return out as unknown as T;
+  });
+}
+
+/**
+ * Corrects each zone on its own, then adds the zones together. The site moved
+ * from dehub.io to riftn.com on 2026-11-03: riftn.com is reached straight
+ * through Cloudflare (real unique counts) while dehub.io is still relayed, so
+ * the relay correction has to be judged per zone, against that zone's own
+ * clean days. Older payloads without `zones` are corrected as one series.
+ */
+export function estimateRelayedVisitors(stats: SiteStats): SiteStats {
+  const zones = (stats.zones ?? []).filter((z) => z.ok && z.daily);
+  if (zones.length < 2) return estimateOneZone(stats);
+
+  const corrected = zones.map((z) => estimateOneZone({ ...stats, daily: z.daily!, hourly: z.hourly ?? [] }));
+  const daily = sumRows(corrected.map((c) => c.daily), 'date');
+  const hourly = sumRows(corrected.map((c) => c.hourly), 'hour');
+  const estimates = corrected.map((c) => c.estimate).filter((e): e is NonNullable<SiteStats['estimate']> => !!e);
+  const first = estimates.sort((a, b) => a.since.localeCompare(b.since))[0] ?? null;
+  return { ...stats, daily, hourly, estimate: first };
 }
 
 function withEstimates(res: SiteStatsResponse): SiteStatsResponse {

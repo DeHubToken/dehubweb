@@ -39,3 +39,40 @@ describe('estimateRelayedVisitors', () => {
     expect(out.hourly[0]).toMatchObject({ visitors: 100, measuredVisitors: 3, estimated: true });
   });
 });
+
+describe('estimateRelayedVisitors across the dehub.io -> riftn.com move', () => {
+  it('corrects each zone on its own, then adds them so the move leaves no cliff', () => {
+    const dehub = [
+      day('2026-10-20', 3000, 10000),
+      day('2026-10-21', 2000, 10000),
+      day('2026-10-22', 2500, 10000),
+      day('2026-10-26', 200, 16000), // relayed
+      day('2026-11-04', 100, 400), // after the move: hand-offs and apps
+    ];
+    const riftn = [day('2026-11-04', 3000, 15000)];
+    const merged = [...dehub.slice(0, 4), day('2026-11-04', 3100, 15400)];
+    const input = {
+      ...stats(merged),
+      zones: [
+        { name: 'dehub.io', ok: true, daily: dehub, hourly: [] },
+        { name: 'riftn.com', ok: true, daily: riftn, hourly: [] },
+      ],
+    } as SiteStats;
+    const out = estimateRelayedVisitors(input);
+    expect(out.daily.map((d) => d.date)).toEqual(['2026-10-20', '2026-10-21', '2026-10-22', '2026-10-26', '2026-11-04']);
+    // Relayed dehub.io day rebuilt from its own clean ratio (0.25).
+    expect(out.daily[3]).toMatchObject({ visitors: 4000, measuredVisitors: 200, estimated: true });
+    // Move day: both zones' measured visitors added, nothing estimated.
+    expect(out.daily[4]).toMatchObject({ visitors: 3100, pageViews: 15400 });
+    expect(out.daily[4].estimated).toBeUndefined();
+    expect(out.estimate?.since).toBe('2026-10-26');
+  });
+
+  it('falls back to one series when only one zone is readable', () => {
+    const input = {
+      ...stats([day('2026-09-10', 2000, 10000), day('2026-09-11', 2500, 10000)]),
+      zones: [{ name: 'dehub.io', ok: true, daily: [] }, { name: 'riftn.com', ok: false, error: 'denied' }],
+    } as SiteStats;
+    expect(estimateRelayedVisitors(input).daily).toEqual(input.daily);
+  });
+});
