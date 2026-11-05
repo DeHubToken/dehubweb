@@ -106,7 +106,8 @@ function PointsInfo() {
         onPointerEnter={(e) => { if (e.pointerType === 'mouse') cancelClose(); }}
         onPointerLeave={hoverClose}
         onOpenAutoFocus={(e) => e.preventDefault()}
-        className="w-64 rounded-xl border border-white/10 bg-zinc-950/95 p-3"
+        collisionPadding={{ top: 12, bottom: 96, left: 12, right: 12 }}
+        className="w-64 rounded-xl border border-white/10 p-3"
       >
         <p className="text-[12px] font-semibold text-white">{t('features.topBuilders.infoTitle', 'How points work')}</p>
         <ul className="mt-2 flex flex-col gap-1.5">
