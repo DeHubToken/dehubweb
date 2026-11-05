@@ -7133,3 +7133,14 @@ html[data-system-tone="light"] [data-non-follower-confirm] {
 html[data-theme] [data-audio-frame]:has([data-audio-studio-placeholder]):not([data-video-fullscreen]):not(#_):not(#_) { height: auto !important; min-height: 0; max-height: none !important; aspect-ratio: auto !important; width: 100% !important; }
 html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(#_):not(#_) { border: 0; border-radius: 28px; }
 [data-audio-backdrop]:has([data-audio-studio-placeholder]) > .absolute { position: relative; }
+
+/* One-line names and @handles: clip only sideways. `truncate` used
+   overflow:hidden, which also cut the tails of g, j, p and y wherever the
+   line height is tighter than Manrope (a 14px @handle on a 16px line).
+   overflow-x:clip keeps the ellipsis and lets the tails hang below. */
+@supports (overflow: clip) {
+  .truncate {
+    overflow: visible;
+    overflow-x: clip;
+  }
+}
