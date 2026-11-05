@@ -23,7 +23,9 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   const pullDismiss = useCommentsPullDismiss(onClose);
   // While typing, sit on the keyboard instead of under it.
   const typing = useKeyboardOpen(true);
-  const viewport = useVisualViewportBox(typing);
+  // The page under the sheet keeps its place: on the feed it is the card
+  // this sheet belongs to.
+  const viewport = useVisualViewportBox(typing, { keepPageScroll: true });
 
   useEffect(() => {
     setCommentsSplitCloser(onClose);
@@ -41,7 +43,10 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   // the pan offset plus the visible height. On Android (resizes-content) that
   // is the same spot as bottom 0.
   const keyboardBox = typing && viewport.height !== null ? (() => {
-    const height = Math.max(220, Math.min(window.innerHeight / 2, viewport.height - 96));
+    // Typing takes the whole visible area above the keys (less the top bar),
+    // so the comment being answered stays in sight above the box, as in the
+    // app. Half height left it under the keyboard.
+    const height = Math.max(220, viewport.height - 56);
     return { top: viewport.offsetTop + viewport.height - height, bottom: 'auto', height };
   })() : undefined;
   // Portalled: the post page's rise-in animation leaves a transform on an
