@@ -652,11 +652,11 @@ const MessageBubble = memo(function MessageBubble({
                 el.classList.add('ring-2', 'ring-white/40', 'bg-white/10');
                 setTimeout(() => el.classList.remove('ring-2', 'ring-white/40', 'bg-white/10'), 2000);
               }}
-              className="mb-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/60 hover:bg-zinc-700/60 text-xs text-zinc-400 max-w-full transition-colors"
+              className="mb-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/60 hover:bg-zinc-700/60 text-xs text-zinc-400 max-w-full overflow-hidden transition-colors"
             >
               <Reply className="w-3 h-3 flex-shrink-0" />
               <span className="text-zinc-300 font-medium flex-shrink-0">{message.replyTo.sender?.displayName || message.replyTo.sender?.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}</span>
-              <span className="truncate">{message.replyTo.content || (message.replyTo.encMedia ? encryptedMediaLabel(message.replyTo.encMedia, _copy) : _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" }))}</span>
+              <span className="min-w-0 truncate">{message.replyTo.content || (message.replyTo.encMedia ? encryptedMediaLabel(message.replyTo.encMedia, _copy) : _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" }))}</span>
             </button>
           </div>
         )}
