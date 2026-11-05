@@ -5168,6 +5168,7 @@
     "seoDescription": "Achetez et vendez des fractions de publications Riftn. Une publication frappée représente 1000 fractions on-chain, possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en jetons.",
     "title": "Fractions",
     "perUpload": "1000 par téléchargement",
+    "nftsSubtitle": "N'importe quel NFT, échange en une étape",
     "tabBrowse": "Parcourir",
     "tabPortfolio": "Portefeuille",
     "tabPortfolioCount": "Portefeuille ({{count}})",

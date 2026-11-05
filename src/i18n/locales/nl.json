@@ -5354,6 +5354,7 @@
     "seoDescription": "Koop en verkoop fracties van Riftn-berichten. Een gemint bericht is 1000 on-chain fracties, bezit een deel van een video, nummer of afbeelding en handel het in tokens.",
     "title": "Fracties",
     "perUpload": "1000 per upload",
+    "nftsSubtitle": "Elke NFT, ruilen in één stap",
     "tabBrowse": "Bladeren",
     "tabPortfolio": "Portefeuille",
     "tabPortfolioCount": "Portefeuille ({{count}})",

@@ -5164,6 +5164,7 @@
     "seoDescription": "Riftn gönderilerinin paylarını alıp satın. Basılmış bir gönderi 1000 zincir üstü paydır, bir videonun, parçanın ya da görselin bir dilimine sahip olun ve jeton ile takas edin.",
     "title": "Paylar",
     "perUpload": "Yükleme başına 1000",
+    "nftsSubtitle": "Her NFT, tek adımda takas",
     "tabBrowse": "Keşfet",
     "tabPortfolio": "Portföy",
     "tabPortfolioCount": "Portföy ({{count}})",
