@@ -295,6 +295,22 @@ const PageLoader = () => {
  * CLOUDFLARE_WORKER_SEO.js); this covers in-app navigation and every
  * already-shared /app/builder/preview/<id> link that lands client-side.
  */
+/**
+ * The NFT market moved into the Fractions page as its NFTs tab. Old links
+ * keep their filters and an opened NFT (?chain=&contract=&token=); the old
+ * market's own ?tab= becomes ?view= so it does not clash with the page's.
+ * Direct hits are 301'd the same way at the edge (CLOUDFLARE_WORKER_SEO.js).
+ */
+function NftsRedirect() {
+  const { search, hash } = useLocation();
+  const p = new URLSearchParams(search);
+  const view = p.get('tab');
+  p.delete('tab');
+  if (view && view !== 'browse') p.set('view', view);
+  const rest = p.toString();
+  return <Navigate to={`/fractions?tab=nfts${rest ? `&${rest}` : ''}${hash}`} replace />;
+}
+
 function LegacyBuilderRedirect() {
   const { pathname, search, hash } = useLocation();
   return <Navigate to={`${pathname.replace('/app/builder', '/builder')}${search}${hash}`} replace />;
@@ -761,7 +777,7 @@ function AppContent() {
               <Route path="stores" element={null} />
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="usernames" element={null} />
-              <Route path="nfts" element={null} />
+              <Route path="nfts" element={<NftsRedirect />} />
               <Route path="accounts" element={null} />
               <Route path="ads" element={null} />
               <Route path="work" element={null} />
@@ -811,7 +827,8 @@ function AppContent() {
             {/* /usernames alias — the canonical form the worker links and
                 sitemaps, so the SPA has to answer it too. */}
             <Route path="/usernames" element={null} />
-            <Route path="/nfts" element={null} />
+            {/* The NFT market moved into the Fractions page as its NFTs tab. */}
+            <Route path="/nfts" element={<NftsRedirect />} />
 
             {/* /accounts alias — same shape as /usernames above. */}
             <Route path="/accounts" element={null} />

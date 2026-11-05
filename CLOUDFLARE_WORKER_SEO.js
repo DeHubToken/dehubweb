@@ -6464,6 +6464,18 @@ async function handleRequest(request, env, ctx) {
   const spaTarget = SPA_REDIRECTS[trimmedPath.toLowerCase()];
   if (spaTarget) return redirect301(`${APP_URL}${spaTarget}`);
 
+  // The NFT market moved into the Fractions page as its NFTs tab (App.tsx
+  // NftsRedirect does the same in the SPA). Keep the query: shared NFT links
+  // carry ?chain=&contract=&token=, and the old ?tab= becomes ?view=.
+  if (/^\/(?:app\/)?nfts$/i.test(trimmedPath)) {
+    const q = new URLSearchParams(url.search);
+    const view = q.get('tab');
+    q.delete('tab');
+    if (view && view !== 'browse') q.set('view', view);
+    const rest = q.toString();
+    return redirect301(`${APP_URL}/fractions?tab=nfts${rest ? `&${rest}` : ''}`);
+  }
+
   // /radio is `<Navigate to="/music" replace />` in the SPA, but crawlers were
   // handed a standalone "Riftn Radio" page by the Supabase fn — a URL that only
   // exists for bots, describing a page no human can land on. Match the router.

@@ -7,7 +7,8 @@
  *
  * Built on the page kit like the other marketplaces.
  */
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -39,19 +40,36 @@ const JSON_LD = {
   url: 'https://riftn.com/nfts',
 };
 
+const EmbeddedBody = ({ children }: { children: ReactNode }) => <>{children}</>;
+
 function targetOf(o: MarketOrder): NftSheetTarget {
   return { chainId: o.chainId, contract: o.contract, tokenId: o.tokenId, standard: o.standard, name: o.nftName, image: o.nftImage, collectionName: o.collectionName };
 }
 
-export default function NftMarketPage() {
+/**
+ * `embedded`: rendered as the NFTs tab of the Fractions page. The Fractions
+ * page owns the SEO tags and the island; this market's own tabs and filters
+ * are portalled into `islandSlot` so they still sit on the island's glass.
+ * Its sub tab rides in `?view=` because `?tab=` is the Fractions page's.
+ */
+export default function NftMarketPage({ embedded = false, islandSlot = null }: { embedded?: boolean; islandSlot?: HTMLElement | null } = {}) {
   const { t } = useTranslation();
   const auth = useContext(AuthContext);
   const me = String(auth?.walletAddress ?? '').toLowerCase();
   const [params, setParams] = useSearchParams();
-  const [tab, setTab] = useState<Tab>(() => {
-    const asked = params.get('tab');
+  const tabParam = embedded ? 'view' : 'tab';
+  const [tab, setTabState] = useState<Tab>(() => {
+    const asked = params.get(tabParam);
     return asked === 'sell' || asked === 'mine' || asked === 'sales' ? asked : 'browse';
   });
+  const setTab = (next: Tab) => {
+    setTabState(next);
+    if (!embedded) return;
+    const p = new URLSearchParams(window.location.search);
+    if (next === 'browse') p.delete('view');
+    else p.set('view', next);
+    setParams(p, { replace: true });
+  };
   const [chain, setChain] = useState<number | 'all'>(() => {
     const c = Number(params.get('chain'));
     return (MARKET_CHAINS as readonly number[]).includes(c) ? c : 'all';
@@ -307,54 +325,69 @@ export default function NftMarketPage() {
     />
   );
 
-  return (
-    <div className="min-h-screen">
-      <SEOHead
-        title={t('nftMarket.seoTitle', { defaultValue: 'NFT Market: buy and sell NFTs on BNB and Base | Riftn' })}
-        description={t('nftMarket.seoDescription', {
-          defaultValue: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step.',
-        })}
-        image="https://riftn.com/og/nfts.jpg"
-        url="https://riftn.com/nfts"
-        jsonLd={JSON_LD}
-      />
-
-      <PageIsland
-        icon="nfts"
-        title={t('nftMarket.shortTitle', { defaultValue: 'NFTs' })}
-        actions={
-          tab === 'browse' ? (
-            <button
-              type="button"
-              data-kit-square
-              data-active={showFilters || chain !== 'all' || sort !== 'new' || dehubOnly ? 'true' : undefined}
-              onClick={() => setShowFilters((v) => !v)}
-              aria-pressed={showFilters}
-              aria-label={t('nftMarket.filters', { defaultValue: 'Filters' })}
-              title={t('nftMarket.filters', { defaultValue: 'Filters' })}
-            >
-              <SlidersHorizontal className="h-[18px] w-[18px]" />
-            </button>
-          ) : null
-        }
-        tabs={
-          <PageTabs
-            size="sm"
-            value={tab}
-            onChange={setTab}
-            tabs={[
-              { id: 'browse', label: t('nftMarket.tabBrowse', { defaultValue: 'Browse' }) },
-              { id: 'sell', label: t('nftMarket.tabSell', { defaultValue: 'Sell' }) },
-              { id: 'mine', label: t('nftMarket.tabMine', { defaultValue: 'My orders' }) },
-              { id: 'sales', label: t('nftMarket.tabSales', { defaultValue: 'Sales' }) },
-            ]}
-          />
-        }
+  const filterButton =
+    tab === 'browse' ? (
+      <button
+        type="button"
+        data-kit-square
+        data-active={showFilters || chain !== 'all' || sort !== 'new' || dehubOnly ? 'true' : undefined}
+        onClick={() => setShowFilters((v) => !v)}
+        aria-pressed={showFilters}
+        aria-label={t('nftMarket.filters', { defaultValue: 'Filters' })}
+        title={t('nftMarket.filters', { defaultValue: 'Filters' })}
       >
-        {filters}
-      </PageIsland>
+        <SlidersHorizontal className="h-[18px] w-[18px]" />
+      </button>
+    ) : null;
 
-      <PageBody>
+  const subTabs = (
+    <PageTabs
+      size="sm"
+      value={tab}
+      onChange={setTab}
+      tabs={[
+        { id: 'browse', label: t('nftMarket.tabBrowse', { defaultValue: 'Browse' }) },
+        { id: 'sell', label: t('nftMarket.tabSell', { defaultValue: 'Sell' }) },
+        { id: 'mine', label: t('nftMarket.tabMine', { defaultValue: 'My orders' }) },
+        { id: 'sales', label: t('nftMarket.tabSales', { defaultValue: 'Sales' }) },
+      ]}
+    />
+  );
+
+  const embeddedControls = (
+    <>
+      <div data-nft-subtabs className="flex items-center gap-2">
+        <div className="min-w-0 flex-1">{subTabs}</div>
+        {filterButton}
+      </div>
+      {filters}
+    </>
+  );
+
+  // Embedded: the Fractions page already wraps us in its PageBody.
+  const Body = embedded ? EmbeddedBody : PageBody;
+  return (
+    <div className={embedded ? undefined : 'min-h-screen'}>
+      {embedded ? (
+        islandSlot ? createPortal(embeddedControls, islandSlot) : null
+      ) : (
+        <>
+          <SEOHead
+            title={t('nftMarket.seoTitle', { defaultValue: 'NFT Market: buy and sell NFTs on BNB and Base | Riftn' })}
+            description={t('nftMarket.seoDescription', {
+              defaultValue: 'Buy, sell and make offers on NFTs on BNB Chain and Base. Pay in BNB, ETH or DHB. Every trade swaps the NFT and the payment in one step.',
+            })}
+            image="https://riftn.com/og/nfts.jpg"
+            url="https://riftn.com/nfts"
+            jsonLd={JSON_LD}
+          />
+          <PageIsland icon="nfts" title={t('nftMarket.shortTitle', { defaultValue: 'NFTs' })} actions={filterButton} tabs={subTabs}>
+            {filters}
+          </PageIsland>
+        </>
+      )}
+
+      <Body>
         <div className="flex flex-col gap-3">
           {tab === 'browse' ? (
             <>
@@ -613,7 +646,7 @@ export default function NftMarketPage() {
             </>
           ) : null}
         </div>
-      </PageBody>
+      </Body>
 
       <NftSheet target={open} onClose={closeSheet} />
       <NftSheet target={collOffer} collectionOffer onClose={() => setCollOffer(null)} />
