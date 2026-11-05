@@ -4,6 +4,7 @@
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// @ts-ignore esm.sh serves @types/qrcode typings, which expose no default export at runtime interop
 import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
