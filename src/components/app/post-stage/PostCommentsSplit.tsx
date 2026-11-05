@@ -1,9 +1,10 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { useCommentsPullDismiss } from '@/hooks/use-comments-pull-dismiss';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { CommentsSplitContext, setCommentsSplitCloser } from '@/lib/comments-split';
+import { HOLD_EVENT } from '@/components/app/chat/ChatHoldSheet';
 
 // Same tween as the Shorts comments sheet, so both open the same way.
 const SLIDE = { type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] } as const;
@@ -27,6 +28,25 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   // this sheet belongs to.
   const viewport = useVisualViewportBox(typing, { keepPageScroll: true });
 
+  // Holding a comment while typing drops the keyboard. Stay tall until the
+  // hold sheet closes: snapping to half height under the finger moved the
+  // held comment behind the sheet, and Reply then grew it straight back.
+  const [holdTall, setHoldTall] = useState(false);
+  // The press itself can blur the field a moment before the sheet opens, so
+  // "typing" counts for a second after the keyboard went.
+  const typedAt = useRef(0);
+  if (typing) typedAt.current = Date.now();
+  useEffect(() => { if (!typing && typedAt.current) typedAt.current = Date.now(); }, [typing]);
+  useEffect(() => {
+    const onHold = (event: Event) => {
+      const open = (event as CustomEvent<boolean>).detail;
+      const recent = Date.now() - typedAt.current < 1200;
+      setHoldTall((was) => (open ? was || recent : false));
+    };
+    window.addEventListener(HOLD_EVENT, onHold);
+    return () => window.removeEventListener(HOLD_EVENT, onHold);
+  }, []);
+
   useEffect(() => {
     setCommentsSplitCloser(onClose);
     const root = document.documentElement;
@@ -47,8 +67,15 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
     // so the comment being answered stays in sight above the box, as in the
     // app. Half height left it under the keyboard.
     const height = Math.max(220, viewport.height - 56);
-    return { top: viewport.offsetTop + viewport.height - height, bottom: 'auto', height };
-  })() : undefined;
+    // Android shrinks the page for the keyboard, so the sheet keeps its
+    // bottom on the keyboard edge and only its top moves, which the
+    // stylesheet eases. Safari draws the keyboard over the page and pans:
+    // place it from the visible area instead.
+    const overlaid = window.innerHeight - viewport.height > 80 || viewport.offsetTop > 0;
+    return overlaid
+      ? { top: viewport.offsetTop + viewport.height - height, bottom: 'auto', height }
+      : { top: 56 };
+  })() : holdTall ? { top: 56 } : undefined;
   // Portalled: the post page's rise-in animation leaves a transform on an
   // ancestor, which would pin a fixed sheet to the page instead of the screen.
   return createPortal(

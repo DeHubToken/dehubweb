@@ -422,8 +422,10 @@ html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] [dat
 [data-comments-split] {
   position: fixed;
   inset-inline: 0;
+  /* Top and bottom, not a height: while typing only the top moves (eased
+     below) and the bottom rides the keyboard edge, so the two never fight. */
+  top: 50dvh;
   bottom: 0;
-  height: 50dvh;
   z-index: 30;
   display: flex;
   flex-direction: column;
@@ -434,6 +436,9 @@ html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] [dat
   background: var(--float-glass);
   backdrop-filter: var(--float-glass-blur);
   will-change: transform;
+  /* Growing to the space above the keyboard (and back) glides instead of
+     snapping the whole thread up in one frame. */
+  transition: top 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
 html[data-theme='light'] [data-comments-split],
 html[data-system-tone='light'] [data-comments-split] {
@@ -470,6 +475,16 @@ html[data-system-tone='light'] [data-comments-split-handle] i {
   margin: 0 !important;
   display: flex;
   flex-direction: column;
+}
+/* The light themes paint the comments panel as a solid card (index.css); in
+   the sheet that drew a square-cornered patch inside the rounded glass. */
+html [data-comments-split] [data-comments-wrapper],
+html[data-theme] [data-comments-split] [data-comments-wrapper],
+html[data-system-tone] [data-comments-split] [data-comments-wrapper] {
+  background: transparent !important;
+  border-color: transparent !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
 }
 [data-comments-split] [data-comments-section] {
   flex: 1;
