@@ -51,7 +51,7 @@ export default function ClipPage() {
   if (!clip) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-white">
-        <SEOHead title={t('liveClips.notFoundTitle', 'Clip not found — Riftn')} noindex noCanonical />
+        <SEOHead title={t('liveClips.notFoundTitle', 'Clip not found | Riftn')} noindex noCanonical />
         <p className="text-sm text-zinc-400">{t('liveClips.notFound', 'This clip is not available.')}</p>
         <Button asChild variant="secondary"><Link to="/shorts">{t('liveClips.browseShorts', 'Browse Shorts')}</Link></Button>
       </div>
@@ -67,7 +67,7 @@ export default function ClipPage() {
   return (
     <div className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6 text-white">
       <SEOHead
-        title={`${title} — ${t('liveClips.seoSuffix', 'Clip on Riftn')}`}
+        title={`${title}: ${t('liveClips.seoSuffix', 'Clip on Riftn')}`}
         description={description}
         image={clip.card_url ?? undefined}
         url={`https://riftn.com/clip/${clip.short_id}`}

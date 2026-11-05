@@ -204,7 +204,7 @@ export default function PackPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${pack.name} — ${kindLabel} — Riftn`}
+        title={`${pack.name}: ${kindLabel} | Riftn`}
         description={description}
         image={pack.cover_url ?? undefined}
         url={shareUrl}

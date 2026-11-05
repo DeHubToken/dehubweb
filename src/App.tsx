@@ -4,6 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { AvatarPrompt } from "@/components/app/AvatarPrompt";
+import { NonFollowerOffer } from "@/components/app/NonFollowerOffer";
 import { HalloweenGhostPrompt } from "@/components/app/halloween/HalloweenGhostPrompt";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -48,6 +49,8 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
+// DM unread total for the nav badges; keeps the messaging stack out of the boot file.
+const DmUnreadBridge = lazyWithRetry(() => import("@/components/app/chat/DmUnreadBridge"));
 const DesktopWordmarkPreview = React.lazy(() => import("@/pages/DesktopWordmarkPreview"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -497,6 +500,7 @@ function AppContent() {
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       <LoginSheetHost />
+      {isAuthenticated && <Suspense fallback={null}><DmUnreadBridge /></Suspense>}
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
@@ -1064,6 +1068,7 @@ const App = () => (
                           {/* Asks accounts with no profile picture to add one,
                               a few times at most. Same provider requirement. */}
                           <AvatarPrompt />
+                          <NonFollowerOffer />
 
                           {/* Halloween 2026 only: once per device while Horror is on. */}
                           <HalloweenGhostPrompt />

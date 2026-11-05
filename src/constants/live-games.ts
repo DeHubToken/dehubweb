@@ -11,7 +11,7 @@ import gtaCategory from '@/assets/gta-category.png';
 import valorantCategory from '@/assets/valorant-category.png';
 import leagueCategory from '@/assets/league-category.png';
 import minecraftCategory from '@/assets/minecraft-category.png';
-import lcsCategory from '@/assets/lcs-category.png';
+import lcsCategory from '@/assets/lcs-category.webp';
 
 export interface LiveGame {
   id: string;

@@ -21,7 +21,7 @@ export function bountyUrl(job: Pick<WorkJob, 'job_number'>): string {
 }
 
 export function bountyTitle(job: Pick<WorkJob, 'title'>): string {
-  return `${job.title} — Riftn Bounties`;
+  return `${job.title} | Riftn Bounties`;
 }
 
 /**

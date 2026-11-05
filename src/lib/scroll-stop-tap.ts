@@ -31,9 +31,21 @@ function scrollTopOf(target: EventTarget | null): [object, number] | null {
     const root = document.scrollingElement || document.documentElement;
     return [document, root.scrollTop];
   }
-  if (target instanceof Element) return [target, target.scrollTop];
+  if (target instanceof Element) {
+    // A strip that only scrolls sideways never moves its scrollTop. Ask once
+    // per element: reading scrollTop on every one of its scroll events forced
+    // a layout of the whole page each time, while the page was still loading.
+    let vertical = verticalScrollers.get(target);
+    if (vertical === undefined) {
+      vertical = target.scrollHeight > target.clientHeight + 1;
+      verticalScrollers.set(target, vertical);
+    }
+    return vertical ? [target, target.scrollTop] : null;
+  }
   return null;
 }
+
+const verticalScrollers = new WeakMap<Element, boolean>();
 
 function onScroll(e: Event): void {
   const entry = scrollTopOf(e.target);

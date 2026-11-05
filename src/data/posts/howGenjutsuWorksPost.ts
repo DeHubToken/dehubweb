@@ -8,11 +8,11 @@ export const howGenjutsuWorksPost: BlogPostType = {
   content: `
 Higgsfield Genjutsu takes a real video and swaps one thing in it: a person, a pet, a product, an outfit. The camera move, the timing and the background stay exactly as filmed. Higgsfield does not say how it works, so most people assume it is one secret model.
 
-It isn't. Once you take it apart, Genjutsu-style editing is a chain of eight steps, and almost every link is a well-known open model. We rebuilt that chain as [Maboroshi](/creator/maboroshi), inside [DeHub Creator](/creator). Running it ourselves showed us where the cost actually goes, and that is why we can charge less.
+It isn't. Once you take it apart, Genjutsu-style editing is a chain of eight steps, and almost every link is a well-known open model. We rebuilt that chain as [Maboroshi](/creator/maboroshi), inside [Riftn Creator](/creator). Running it ourselves showed us where the cost actually goes, and that is why we can charge less.
 
 This guide walks through every step with a real frame from each one. Then it covers changing a whole scene, what each option costs, and what happens to your clip once it is made.
 
-![How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less|/creator-hero/hero-16x9-poster.jpg](/creator-hero/hero-16x9.mp4)
+![How Higgsfield Genjutsu works, and how Riftn Maboroshi does the same job for less|/creator-hero/hero-16x9-poster.jpg](/creator-hero/hero-16x9.mp4)
 
 ## What Higgsfield Genjutsu does
 
@@ -92,12 +92,12 @@ Both routes finish by laying the **complete original audio track** back on, copi
 
 On October 12, 2026, Higgsfield launched **[Katana](https://higgsfield.ai/blog/higgsfield-katana)**, an editing skill that runs inside an AI chat. You give it a reference video, or a preset from its library, plus up to five photos of people, products or clothing. It rebuilds the whole edit around them, keeping the reference's shot structure and pacing, and only re-renders the shots you correct. It needs an active Higgsfield plan and spends that plan's credits.
 
-![Any scene, any thing: rebuild a reference edit shot by shot on DeHub](/media/maboroshi/how/fig-katana.jpg)
+![Any scene, any thing: rebuild a reference edit shot by shot on Riftn](/media/maboroshi/how/fig-katana.jpg)
 
-DeHub covers the same job with three tools, all priced per clip:
+Riftn covers the same job with three tools, all priced per clip:
 
 - **Remake, for multi-shot edits.** Upload a clip with cuts. Maboroshi finds the cut points itself, or you mark them (up to seven), and splits the clip into up to eight shots. Each shot gets its own direction, and you can redo any single shot up to five times without touching the rest. When you are happy, the shots are stitched back in order with the original audio, and the stitching costs nothing extra. Each shot is priced like a normal Kling swap.
-- **Kling O3 Character Swap, for anything in the frame.** In [DeHub Creator](/creator), this model swaps characters, **products or scenery** into your clip from up to four images. Use it to change the car, the drink in someone's hand, the jacket, or the street behind them.
+- **Kling O3 Character Swap, for anything in the frame.** In [Riftn Creator](/creator), this model swaps characters, **products or scenery** into your clip from up to four images. Use it to change the car, the drink in someone's hand, the jacket, or the street behind them.
 - **Seedance 2.0 restyle, for the whole scene.** Also in Creator, upload a video and describe a new look, such as night-time, claymation or a snowstorm. The motion stays and the whole world around it changes.
 
 The image below shows Remake's cut detection on our own promo video. It found three cuts automatically and split the clip into four shots.
@@ -111,16 +111,16 @@ Every step above except the render is cheap to run. Normalising, the audio split
 - **Bill by the second.** A 5-second clip isn't charged like a 15-second one.
 - **Skip the paid step when it isn't needed.** The Kling route has no preparation charge and no separate HD charge.
 - **Make you check first.** You approve the mask before paying, so fewer paid renders get thrown away.
-- **Charge no subscription.** You pay for the clip in front of you, and credit topped up on DeHub [never expires](/guides/dehub-creator-vs-higgsfield-ai-credits).
+- **Charge no subscription.** You pay for the clip in front of you, and credit topped up on Riftn [never expires](/guides/dehub-creator-vs-higgsfield-ai-credits).
 
-![Cost of a 15-second swap: Higgsfield $7.20 at 1080p, $5.20 at 720p and $2.00 at 480p, against DeHub Maboroshi at $4.55 and DeHub Creator's Kling O3 swap at $3.02](/media/maboroshi/how/cost-chart.jpg)
+![Cost of a 15-second swap: Higgsfield $7.20 at 1080p, $5.20 at 720p and $2.00 at 480p, against Riftn Maboroshi at $4.55 and Riftn Creator's Kling O3 swap at $3.02](/media/maboroshi/how/cost-chart.jpg)
 
 **A 15-second clip, side by side:**
 
 - Higgsfield Genjutsu, 1080p: 144 credits, about **$7.20**, plan required
 - Higgsfield Genjutsu, 720p: 104 credits, about **$5.20**, plan required
-- DeHub Maboroshi, Kling route, with mask review and original audio: **$4.55**
-- DeHub Creator, Kling O3 Character Swap at 1080p: **$3.02**
+- Riftn Maboroshi, Kling route, with mask review and original audio: **$4.55**
+- Riftn Creator, Kling O3 Character Swap at 1080p: **$3.02**
 - Higgsfield Genjutsu, 480p: 40 credits, about **$2.00**, plan required
 
 **Shorter clips, where per-second billing wins:**
@@ -129,17 +129,17 @@ Every step above except the render is cheap to run. Normalising, the audio split
 - 10 seconds: Maboroshi **$3.15**, Creator swap **$2.02**
 - 15 seconds: Maboroshi **$4.55**, Creator swap **$3.02**
 
-![Per-length prices on DeHub: $1.75, $3.15 and $4.55 on Maboroshi, and $1.01, $2.02 and $3.02 on Creator's Kling O3 swap, under Higgsfield's 15-second lines](/media/maboroshi/how/cost-per-second.jpg)
+![Per-length prices on Riftn: $1.75, $3.15 and $4.55 on Maboroshi, and $1.01, $2.02 and $3.02 on Creator's Kling O3 swap, under Higgsfield's 15-second lines](/media/maboroshi/how/cost-per-second.jpg)
 
 Two honest caveats. If all you need is a 480p clip and you already pay for a Higgsfield plan, its $2.00 is cheaper. And our Seedance Premium route at full 1080p costs much more than Higgsfield, at about $31 for 15 seconds, because it bills every input and output second at close to what the model costs us. We break that down in our [Higgsfield Genjutsu alternative guide](/guides/higgsfield-genjutsu-alternative).
 
 ## Edit it, post it, earn from it
 
-Higgsfield stops at the download button. On DeHub the clip is a starting point, not the end of the job.
+Higgsfield stops at the download button. On Riftn the clip is a starting point, not the end of the job.
 
-![Edit, post, earn: the DeHub video editor and feed](/media/maboroshi/how/fig-edit-post-earn.jpg)
+![Edit, post, earn: the Riftn video editor and feed](/media/maboroshi/how/fig-edit-post-earn.jpg)
 
-**The built-in video editor.** DeHub's [video editor](/editor) runs in your browser and in the DeHub app. It is a real multi-track timeline, not a trim slider. Drop your Maboroshi clip in next to your other footage, then:
+**The built-in video editor.** Riftn's [video editor](/editor) runs in your browser and in the Riftn app. It is a real multi-track timeline, not a trim slider. Drop your Maboroshi clip in next to your other footage, then:
 
 - Cut on scene changes and music beats.
 - Add captions, and translate a whole caption track into another language.
@@ -149,13 +149,13 @@ Higgsfield stops at the download button. On DeHub the clip is a starting point, 
 
 Projects save to the cloud with version history, and you can share a cut for timestamped review comments.
 
-**The social app around it.** DeHub is a [social network](/guides/what-is-dehub) as well as a studio, so a finished edit goes straight from the editor into a post or a Short. There, viewers can tip you, and your views count toward [watch-to-earn rewards](/guides/what-is-watch-to-earn). Foreign-language viewers can opt in to an automatic dub. DeHub keeps adding to the feed, Shorts, live streaming and AI agents that can post on a schedule.
+**The social app around it.** Riftn is a [social network](/guides/what-is-dehub) as well as a studio, so a finished edit goes straight from the editor into a post or a Short. There, viewers can tip you, and your views count toward [watch-to-earn rewards](/guides/what-is-watch-to-earn). Foreign-language viewers can opt in to an automatic dub. Riftn keeps adding to the feed, Shorts, live streaming and AI agents that can post on a schedule.
 
 One account covers the full loop: make the swap, cut it into an edit, post it and get paid for it.
 
 ## Try it
 
-1. Open [dehub.io/creator/maboroshi](/creator/maboroshi) for a subject swap, or choose Kling O3 Character Swap in [DeHub Creator](/creator) to change anything in the frame.
+1. Open [riftn.com/creator/maboroshi](/creator/maboroshi) for a subject swap, or choose Kling O3 Character Swap in [Riftn Creator](/creator) to change anything in the frame.
 2. Upload a short clip with sound and one or two clear reference images.
 3. Check the mask, approve, and render. The price is shown in dollars before you pay.
 4. Open the result in the [video editor](/editor), finish your cut, and post it to your feed.
@@ -174,15 +174,15 @@ In Maboroshi: Demucs for audio, Video Depth Anything for depth, SAM 3 Video for 
 
 ### Is Maboroshi cheaper than Higgsfield Genjutsu?
 
-At 720p and 1080p, yes. A 15-second clip costs $4.55 on Maboroshi's Kling route and $3.02 with Creator's Kling O3 Character Swap, against about $5.20 and $7.20 on Higgsfield. Neither DeHub option needs a subscription. Higgsfield's 480p option, at about $2.00, is cheaper if you already have a plan.
+At 720p and 1080p, yes. A 15-second clip costs $4.55 on Maboroshi's Kling route and $3.02 with Creator's Kling O3 Character Swap, against about $5.20 and $7.20 on Higgsfield. Neither Riftn option needs a subscription. Higgsfield's 480p option, at about $2.00, is cheaper if you already have a plan.
 
-### What is Higgsfield Katana, and does DeHub have something like it?
+### What is Higgsfield Katana, and does Riftn have something like it?
 
-Katana is Higgsfield's chat-based skill for rebuilding a reference edit with your own people, products or clothing. On DeHub, Remake rebuilds multi-shot clips shot by shot, Kling O3 Character Swap changes characters, products or scenery, and Seedance 2.0 restyles a whole scene. All three are priced per clip.
+Katana is Higgsfield's chat-based skill for rebuilding a reference edit with your own people, products or clothing. On Riftn, Remake rebuilds multi-shot clips shot by shot, Kling O3 Character Swap changes characters, products or scenery, and Seedance 2.0 restyles a whole scene. All three are priced per clip.
 
 ### Can I change the background or objects, not just the person?
 
-Yes. Use Kling O3 Character Swap in DeHub Creator to swap products or scenery from reference images, or Seedance 2.0 to restyle the whole clip with a prompt. Maboroshi itself keeps the background exactly as filmed, which is what you want for a clean subject swap.
+Yes. Use Kling O3 Character Swap in Riftn Creator to swap products or scenery from reference images, or Seedance 2.0 to restyle the whole clip with a prompt. Maboroshi itself keeps the background exactly as filmed, which is what you want for a clean subject swap.
 
 ### Does the original audio survive?
 
@@ -190,10 +190,10 @@ Yes. On both Maboroshi routes the complete original track is copied back onto th
 
 ## The fine print
 
-Higgsfield's Genjutsu figures come from its Genjutsu page as checked in September 2026. Katana details come from Higgsfield's Katana article of October 12, 2026. Higgsfield prices in credits and changes its plans often, so check its live pricing before you compare. DeHub prices are retail rates at the time of writing, and the price shown before each step is always the price you pay. The depth image in step 3 was made with a single-frame depth model for illustration. Maboroshi itself uses Video Depth Anything.
+Higgsfield's Genjutsu figures come from its Genjutsu page as checked in September 2026. Katana details come from Higgsfield's Katana article of October 12, 2026. Higgsfield prices in credits and changes its plans often, so check its live pricing before you compare. Riftn prices are retail rates at the time of writing, and the price shown before each step is always the price you pay. The depth image in step 3 was made with a single-frame depth model for illustration. Maboroshi itself uses Video Depth Anything.
   `,
   bannerImage: '/media/maboroshi-how-genjutsu-works-banner.jpg',
-  bannerImageAlt: 'How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less',
+  bannerImageAlt: 'How Higgsfield Genjutsu works, and how Riftn Maboroshi does the same job for less',
   author: {
     name: 'Riftn Team',
   },
@@ -202,6 +202,6 @@ Higgsfield's Genjutsu figures come from its Genjutsu page as checked in Septembe
   readingTime: 11,
   featured: true,
   status: 'published',
-  seoTitle: 'How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | DeHub',
+  seoTitle: 'How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | Riftn',
   seoDescription: 'Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it.',
 };

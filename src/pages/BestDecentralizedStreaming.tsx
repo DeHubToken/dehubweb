@@ -238,8 +238,8 @@ export default function BestDecentralizedStreaming() {
   return (
     <>
       <SEOHead
-        title={_copy("copy.7405f4274c2f", { defaultValue: "Best Decentralized Streaming Apps 2026 — Riftn Guide" })}
-        description={_copy("copy.76440774d600", { defaultValue: "The decentralized streaming apps you can actually watch on in 2026 — Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared." })}
+        title={_copy("copy.7405f4274c2f", { defaultValue: "Best Decentralized Streaming Apps 2026 | Riftn Guide" })}
+        description={_copy("copy.76440774d600", { defaultValue: "The decentralized streaming apps you can actually watch on in 2026, Riftn, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared." })}
         url={url}
         type="article"
         jsonLd={jsonLd}

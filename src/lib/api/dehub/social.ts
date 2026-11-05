@@ -1,4 +1,5 @@
 import { apiCall, getAuthToken } from './core';
+import { noteUnfollow } from '@/lib/non-follower-streak';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 import { normalizeCategoryList } from '@/lib/category-names';
@@ -109,12 +110,39 @@ export async function followUsersBatch(walletAddresses: string[]): Promise<Follo
   return response.results ?? [];
 }
 
-export async function unfollowUser(walletAddress: string): Promise<{ result: boolean }> {
-  return apiCall<{ result: boolean }>("/api/request_follow", {
+export async function unfollowUser(walletAddress: string): Promise<{ result: boolean; followsYou?: boolean }> {
+  const response = await apiCall<{ result: boolean; wasPending?: boolean; followsYou?: boolean }>("/api/request_follow", {
     method: "POST",
     body: { following: walletAddress.toLowerCase(), unFollowing: true },
     requiresAuth: true,
   });
+  // Cancelling a pending request is not unfollowing someone.
+  if (!response?.wasPending) noteUnfollow(typeof response?.followsYou === 'boolean' ? response.followsYou : undefined);
+  return response;
+}
+
+export interface NonFollowerJob {
+  running: boolean;
+  total: number;
+  done: number;
+  failed: number;
+}
+
+/** How many people you follow who do not follow you back (accepted follows only). */
+export async function getNonFollowerCount(): Promise<{ count: number; job: NonFollowerJob | null }> {
+  const response = await apiCall<{ result: boolean; count: number; job: NonFollowerJob | null }>("/api/non_followers/count", { requiresAuth: true });
+  return { count: Number(response?.count) || 0, job: response?.job ?? null };
+}
+
+/** Starts the server-side job that unfollows all of them, in the background. */
+export async function unfollowAllNonFollowers(): Promise<NonFollowerJob> {
+  const response = await apiCall<{ result: boolean; job: NonFollowerJob }>("/api/non_followers/unfollow", { method: "POST", body: {}, requiresAuth: true });
+  return response.job;
+}
+
+export async function getUnfollowNonFollowersStatus(): Promise<NonFollowerJob | null> {
+  const response = await apiCall<{ result: boolean; job: NonFollowerJob | null }>("/api/non_followers/unfollow/status", { requiresAuth: true });
+  return response?.job ?? null;
 }
 
 export async function getFollowRequests(): Promise<FollowRequestItem[]> {

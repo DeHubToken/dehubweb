@@ -17,7 +17,7 @@ import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } fr
 import { SHOWCASE_CSS } from './showcase-ui';
 import { playAscension, type AscensionHandle } from './ascension';
 import type { BadgeMotion } from '@/lib/badge-motion';
-import { useAppTheme } from '@/contexts/ThemeContext';
+import { SYSTEM_LIGHT, useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { MetalStage } from './metal-stage';
 import { acquireMetalStage } from './metal-warmup';
@@ -109,7 +109,10 @@ export function ShowcaseShell({
   intro,
 }: ShowcaseShellProps) {
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
+  // Light themes recolour dialogs for a white page; the showcase is a dark
+  // stage in every theme, so it opts out (see SHOWCASE_CSS).
+  const keepDark = themeChoice === 'light' || themeChoice === SYSTEM_LIGHT ? true : undefined;
   const [metallic] = useState(() => badgeAnimationStyle(theme) === 'metallic');
   const [world] = useState(() => badgeWorld(theme));
   const cinematic = metallic || !!world;
@@ -616,6 +619,7 @@ export function ShowcaseShell({
       ref={rootRef}
       role="dialog"
       aria-modal="true"
+      data-keep-dark={keepDark}
       data-badge-world={world ?? undefined}
       data-badge-phase={phase}
       aria-label={dialogLabel(index)}
@@ -640,6 +644,7 @@ export function ShowcaseShell({
       {/* The page falls away behind the badge. */}
       <div
         aria-hidden
+        data-keep-dark={keepDark}
         onClick={requestClose}
         className="absolute inset-0 bg-black/85 backdrop-blur-md transition-opacity duration-500 ease-out"
         style={{ opacity: open ? 1 : 0 }}

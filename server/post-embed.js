@@ -192,7 +192,7 @@ export function renderEmbedPage(record, deps) {
   const date = Number.isNaN(created.getTime())
     ? ''
     : `<a href="${esc(postUrl)}" target="_blank" rel="noopener"><time datetime="${created.toISOString()}">${created.toISOString().slice(0, 10)}</time></a>`;
-  const foot = `<footer class="foot">${date}<a href="${esc(deps.appUrl)}" target="_blank" rel="noopener">dehub.io</a></footer>`;
+  const foot = `<footer class="foot">${date}<a href="${esc(deps.appUrl)}" target="_blank" rel="noopener">riftn.com</a></footer>`;
 
   const lang = /^[a-z]{2,3}$/.test(String(record.detectedLanguage || '')) && record.detectedLanguage !== 'und'
     ? record.detectedLanguage

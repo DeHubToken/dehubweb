@@ -1643,7 +1643,7 @@ export const lv = {
     q4_2025_items: ['App store atkārtoti listings ✅', 'Multi-account piekļuve ✅', 'CRM sistēma', 'Open source ✅', 'LCS release ✅'],
     y2026: '2026 - Pašreizējais gads',
     q1q2_2026: 'Q1–Q2 2026',
-    q1q2_2026_items: ['LCS open beta', 'TGE LCS — marts 2026', 'Apple App Store listings', 'Marketing kampaņas', 'Jauna web lietotne', 'LP farming', 'DHB staking Base', 'AI rīki', 'Reklāmas sistēma'],
+    q1q2_2026_items: ['LCS open beta', 'TGE LCS — marts 2026', 'Apple App Store listings', 'Marketing kampaņas', 'Jauna web lietotne', 'LP farming', '$RIFT staking Base', 'AI rīki', 'Reklāmas sistēma'],
     q2q4_2026: 'Q2–Q4 2026 un tālāk',
     inProgress: 'Darbs joprojām notiek',
     q3_2026_items: [
@@ -2277,7 +2277,7 @@ export const lv = {
     useAiDesc: 'Maksājiet par MI ģenerēšanu Creator Studio — attēlu, video, audio un 3D — Riftn žetonos par cenu, kas norādīta pirms katra darba izpildes, nevis turiet atsevišķu abonementu katram rīkam.',
     title: 'Pārskats',
     subtitle: 'Valūta, kas nodrošina Riftn darbību',
-    intro: 'Riftn žetoni ir Riftn tīkla vietējā lietderības valūta; DHB ir to simbols. Viņi ir vienīgā norēķinu vienība katrā d\'app — tas ir tas, ar ko jūs pievienojat dzeramnaudu, atbloķējat saturu, nopelnāt par skatīšanos un radīšanu, kā arī tērējat mākslīgā intelekta radīšanai. Tā kā tie dzīvo ķēdē, katra vērtību kustība ekosistēmā ir publiski pārbaudāma, nevis sēžot privātā virsgrāmatā, jums ir jāuzņemas mūsu vārds.',
+    intro: 'Riftn žetoni ir Riftn tīkla vietējā lietderības valūta; $RIFT ir to simbols. Viņi ir vienīgā norēķinu vienība katrā d\'app — tas ir tas, ar ko jūs pievienojat dzeramnaudu, atbloķējat saturu, nopelnāt par skatīšanos un radīšanu, kā arī tērējat mākslīgā intelekta radīšanai. Tā kā tie dzīvo ķēdē, katra vērtību kustība ekosistēmā ir publiski pārbaudāma, nevis sēžot privātā virsgrāmatā, jums ir jāuzņemas mūsu vārds.',
     howItWorksTitle: 'Kā darbojas valūta lietotnē',
     howItWorksDesc1: 'Katrā Riftn kontā ir iebūvēts maks. Jūs varat to papildināt ar karti, izmantojot mūsu Stripe vārteju, saņemt to no cita lietotāja, nopelnīt to no platformas vai iemaksāt no jebkura pašpārvaldes maka — lai sāktu, nav nepieciešama atsevišķa lietotne, paplašinājums vai sākotnējā frāze. Atlikumi, dzeramnauda, atbloķēšana un atlīdzība tiek ieskaitīti Riftn žetonos, tāpēc vērtība pārvietojas starp lietotājiem tieši, nevis tiek novirzīta caur maksājumu procesoru, kas veic samazinājumu un var iesaldēt kontu.',
     howItWorksDesc2: 'Turēšana un likšana maina arī to, kā lietotne darbojas tavā vietā. Jo vairāk Riftn žetonu jūs turat, jo zemākas ir jūsu platformas maksas un jo vairāk iespēju jūs atbloķējat — nozīmītes, verifikāciju, tendenču paaugstināšanu, klubu līmeņus un uzlabotās tiesības visā tīklā. Praksē valūta nav uzskrūvējama: tas ir atļauju slānis, atlīdzības sliede un norēķināšanās vienlaikus.',

@@ -4,6 +4,7 @@ import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface'
 import { useTranslation as _useCopy } from 'react-i18next';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { useFirstInteraction } from '@/hooks/use-boot-settled';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
@@ -25,6 +26,7 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
+import { usePrefetchLinkPreviews } from '@/hooks/use-prefetch-link-previews';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { shortsBatchCount } from '@/lib/shorts-rotation';
 import { homeReelBatchIndex, homeSuggestedAfter } from '@/lib/feed-carousel-layout';
@@ -1324,6 +1326,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // INTERLEAVED ITEMS (from three separate feeds)
   // ============================================================================
 
+  // Text and photo posts carry link previews; warm them as their pages land.
+  const linkPreviewRows = useMemo(() => [
+    ...flattenFeedPages(textsFeed.data?.pages),
+    ...flattenFeedPages(imagesFeed.data?.pages),
+    ...flattenFeedPages(singleFeed.data?.pages),
+  ], [textsFeed.data, imagesFeed.data, singleFeed.data]);
+  usePrefetchLinkPreviews(linkPreviewRows);
+
   const interleavedItems = useMemo((): FeedItemType[] => {
     if (!useInterleavedFeed) return [];
     
@@ -1528,11 +1538,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching) void scrollPhotosFeed.fetchNextPage();
   }, [scrollFeed.hasNextPage, scrollFeed.isFetching, scrollFeed.fetchNextPage,
     scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching, scrollPhotosFeed.fetchNextPage]);
+  // Rows further down the feed need more clips, but nobody sees them before
+  // scrolling: fetch the extra pages (50 videos each) after the first touch.
+  const interacted = useFirstInteraction();
   useEffect(() => {
-    if (!isHomeActive || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
+    if (!isHomeActive || !interacted || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
     if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
     if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching && !scrollPhotosFeed.isError) void scrollPhotosFeed.fetchNextPage();
-  }, [isHomeActive, shortsCount, shortsRotation.batches.length, scrollFeed.hasNextPage, scrollFeed.isFetching,
+  }, [isHomeActive, interacted, shortsCount, shortsRotation.batches.length, scrollFeed.hasNextPage, scrollFeed.isFetching,
     scrollFeed.isError, scrollFeed.fetchNextPage, scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching,
     scrollPhotosFeed.isError, scrollPhotosFeed.fetchNextPage]);
 
@@ -2046,7 +2059,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           if (phoneShowsTagBar || filterLineItems.length === 0) return null;
           const line = (
             <Suspense fallback={null}><FeedFilterLine
-              className={chipsTarget ? 'mt-2' : 'mb-3'}
+              className={chipsTarget ? 'mt-3' : 'mb-3'}
               items={filterLineItems}
               presetName={activePresetName}
               onClearAll={clearAllFilters}
@@ -2061,9 +2074,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         const chipsBar = (
           <div className={cn(
             "flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2",
-            // Below the pill rather than in it, so the row needs its own breathing
-            // space above and none below — the sticky wrapper already pads there.
-            chipsTarget && "pt-2 pb-0",
+            // Below the pill: 12px above to match the 12px the sticky wrapper pads
+            // below, so the gap either side of the row is even.
+            chipsTarget && "pt-3 pb-0",
           )}>
             {optimisticSort.value !== 'latest' && (
               <button
@@ -2237,7 +2250,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           {selectedCategories.length === 1 && (!isPhone || phoneShowsTagBar) && (
             chipsTarget
               ? createPortal(
-                  <FollowTagBar className="mt-2" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
+                  <FollowTagBar className="mt-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
                   chipsTarget,
                 )
               : <FollowTagBar className="mb-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />

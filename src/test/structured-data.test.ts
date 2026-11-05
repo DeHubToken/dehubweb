@@ -154,17 +154,17 @@ describe('edge-rendered pages', () => {
     network({});
     const { body } = await crawl('/docs/overview');
     const article = jsonLd(body).find((b) => b['@type'] === 'TechArticle')!;
-    expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg');
+    expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg?v=3');
     expect(article.author).toMatchObject({ '@type': 'Organization', name: 'Riftn' });
     expectValidTrail(body, 'https://riftn.com/docs/overview');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs — Overview'.replace(/ — Riftn( Docs)?$/, '')]);
+    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs | Overview'.replace(/ (?:—|\|) Riftn( Docs)?$/, '')]);
   });
 
   it('gives a standalone guide an image, an author and a trail', async () => {
     network({});
     const { body } = await crawl('/guides/best-decentralized-streaming-apps');
     const article = jsonLd(body).find((b) => b['@type'] === 'Article')!;
-    expect(article.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg');
+    expect(article.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=3');
     expect(article.author).toMatchObject({ '@type': 'Organization' });
     expectValidTrail(body, 'https://riftn.com/guides/best-decentralized-streaming-apps');
   });
@@ -179,7 +179,7 @@ describe('edge-rendered pages', () => {
     expect(trail['@type']).toBe('BreadcrumbList');
     const image = meta(body, 'og:image')!.replace(/&amp;/g, '&');
     // The post's own banner, read straight from /media and made 1200x630.
-    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://riftn.com${post.bannerImage}`);
+    expect(image).toBe(`https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io${post.bannerImage}`);
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
@@ -190,7 +190,7 @@ describe('edge-rendered pages', () => {
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/stream">');
     expect(meta(body, 'og:title')).toContain('Stream on Riftn');
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/creators.jpg');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/creators.jpg?v=3');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     const faq = nodes(jsonLd(body)).find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
@@ -246,13 +246,13 @@ describe('edge-rendered pages', () => {
     expect(meta(body, 'og:title')).toContain('Riftn App');
     expect(meta(body, 'og:description')).toBeTruthy();
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/dehub-social-share.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/riftn-share.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     const all = nodes(jsonLd(body));
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     expect(types(body)).toEqual(expect.arrayContaining(['WebPage', 'Organization']));
     const faq = all.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
-    expect(faq.mainEntity.map((q) => q.name)).toContain('Is DeHub the DePaul University app?');
+    expect(faq.mainEntity.map((q) => q.name)).toContain('Is the Riftn app free?');
     for (const q of faq.mainEntity) expect(body).toContain(`<h3>${q.name}</h3>`);
     for (const href of [
       'https://play.google.com/store/apps/details?id=io.dehub.mobile',
@@ -275,8 +275,8 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/duets');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal — Riftn');
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
+    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal | Riftn');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/duets">');
     expect(types(body)).toContain('CollectionPage');
   });
@@ -285,8 +285,8 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/reactions');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal — Riftn');
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
+    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal | Riftn');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
     expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/reactions">');
     expect(types(body)).toContain('CollectionPage');
   });
@@ -313,7 +313,7 @@ describe('entity pages', () => {
     expect(types(body)).toContain('OnlineStore');
     expect(types(body)).not.toContain('Store');
     expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://riftn.com/_og/storage/store-media/abc/banner.png',
+      'https://dehub.io/cdn-cgi/image/fit=cover,width=1200,height=630,format=jpeg,quality=80/https://dehub.io/_og/storage/store-media/abc/banner.png',
     );
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
@@ -369,9 +369,9 @@ describe('entity pages', () => {
     expect(res.status).toBe(200);
     expect(res.headers.get('X-Robots-Tag')).toContain('noindex');
     expect(body).toContain('<meta name="robots" content="noindex, follow">');
-    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co — Built with Riftn Builder');
+    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co: Built with Riftn Builder');
     expect(meta(body, 'og:description')).toBe('Collect tips.');
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg?v=3');
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
@@ -461,16 +461,16 @@ describe('proxied pages', () => {
     const record = { tokenId: 6127, mintername: 'jesse', description: 'Clip night', postType: 'video', videoUrl: 'videos/6127.mp4', thumbnail_url: 'images/6127.jpg' };
     network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: record }) });
     let { body } = await crawl('/app/post/6127');
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
-    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/_og/post/v5/6127.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
+    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
 
     network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: { ...record, contentRating: 'mature' } }) });
     ({ body } = await crawl('/app/post/6127'));
-    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/dehub-social-share.png');
-    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/og/dehub-social-share.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/riftn-share.png');
+    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/og/riftn-share.png');
     expect(body).not.toContain('og:video');
     expect(body).not.toMatch(/<meta [^>]*6127\.jpg/);
   });
@@ -492,9 +492,9 @@ describe('proxied pages', () => {
     expect(types(body)).not.toContain('Organization');
     const page = jsonLd(body)[0];
     expect(page['@type']).toBe('CollectionPage');
-    expect(page.name).toBe('Riftn — community on Riftn');
+    expect(page.name).toBe('Riftn: community on Riftn');
     expect(meta(body, 'og:image')).toBe(
-      'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://riftn.com/_og/storage/community-media/dehub/avatar.jpg',
+      'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://dehub.io/_og/storage/community-media/dehub/avatar.jpg',
     );
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');

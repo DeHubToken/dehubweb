@@ -113,7 +113,7 @@ export function collectPublicSources(root) {
       meta = docs[slug];
       if (meta) {
         body = readJson(path.join(root, `public/docs-content/${slug.replaceAll('/', '-')}.json`)).html;
-        meta = { ...meta, heading: meta.title.replace(/ — Riftn( Docs)?$/, '') };
+        meta = { ...meta, heading: meta.title.replace(/ (?:—|\|) Riftn( Docs)?$/, '') };
       }
     } else {
       meta = marketing[route.slice(1)] || sections[route.slice(1)];
@@ -121,9 +121,9 @@ export function collectPublicSources(root) {
     }
     if (meta) out[route] = { title: meta.title, description: meta.description, h1: meta.heading || meta.title, body, ...(md ? { md } : {}), ...(meta.intro ? { lede: meta.intro } : {}) };
   }
-  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'Riftn — Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "riftn.com is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
-  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'Riftn Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ — Riftn( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
-  out['/docs/blog'] = { title: 'Riftn Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.', h1: 'Riftn Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
+  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'Riftn | Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "riftn.com is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
+  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'Riftn Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
+  out['/docs/blog'] = { title: 'Riftn Blog | News, Guides & Product Updates', description: 'News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.', h1: 'Riftn Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
   for (const route of routes) if (!out[route]?.body) throw new Error(`Public route has no source body: ${route}`);
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }
@@ -161,6 +161,31 @@ export function validatePageTranslation(source, translated) {
 // give the translation the same name the source uses.
 const toRiftn = text => text.replace(/\bDeHubbers\b/g, 'Riftners').replace(/(?<![A-Za-z0-9_])De[Hh]ub(?![A-Z0-9_])/g, 'Riftn').replace(/(?<![A-Za-z0-9_])DEHUB(?![A-Za-z0-9_])/g, 'RIFTN').replace(/(?<![\w.@-])dehub\.io\b/g, 'riftn.com');
 const toDeHub = text => text.replace(/\bRiftners\b/g, 'DeHubbers').replace(/(?<![A-Za-z0-9_])Riftn(?![A-Z0-9_])/g, 'DeHub').replace(/(?<![\w.@-])riftn\.com\b/g, 'dehub.io');
+// Long dashes were later swapped for plain punctuation (" | " in titles,
+// ", " or ": " in prose). Stored lines may still carry them, so a line also
+// matches on its words alone, and the translation gets the same swap.
+const looseKey = text => toRiftn(text).replace(/&mdash;/g, '—').replace(/\s*(?:[—–|,:])\s*/g, ' ').replace(/\s+/g, ' ').trim();
+export const plainDashes = text => text
+  .replace(/&mdash;/g, '—')
+  .replace(/[ \t]+—[ \t]+(?=Riftn(?:[ \t]+[A-Z][\w&]*){0,3}[ \t]*$)/g, ' | ')
+  .replace(/^Riftn([ \t]+(?:App|Blog|Docs|Guide))?[ \t]+—[ \t]+/, (_, word = '') => `Riftn${word} | `)
+  .replace(/[ \t]+[—–][ \t]+/g, ', ')
+  .replace(/(?<=\d)—(?=\d)/g, '-')
+  .replace(/(?<=\S)—(?=\S)/g, ', ')
+  .replace(/[ \t]*—[ \t]*/g, ', ')
+  .replace(/,\s*,/g, ',')
+  .replace(/,(?=[.!?;:])/g, '');
+const looseIndex = new WeakMap();
+function lookupLoose(dictionary, key) {
+  let index = looseIndex.get(dictionary);
+  if (!index) {
+    index = new Map();
+    for (const stored of Object.keys(dictionary)) if (!index.has(looseKey(stored))) index.set(looseKey(stored), stored);
+    looseIndex.set(dictionary, index);
+  }
+  const stored = index.get(looseKey(key));
+  return stored === undefined ? undefined : plainDashes(toRiftn(dictionary[stored]));
+}
 function lookupBranded(dictionary, key) {
   for (const variant of [key, toRiftn(key), toDeHub(key)]) {
     const found = dictionary[variant];
@@ -168,7 +193,7 @@ function lookupBranded(dictionary, key) {
     if (variant === key) return found;
     return /\bRiftn\b|riftn\.com/.test(key) ? toRiftn(found) : toDeHub(found);
   }
-  return undefined;
+  return lookupLoose(dictionary, key);
 }
 const brandedDictionary = entries => new Proxy(entries, { get: (target, key) => typeof key === 'string' && !(key in Object.prototype) ? lookupBranded(target, key) : target[key] });
 

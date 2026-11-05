@@ -64,6 +64,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     model,
     lovableApiKey,
     perplexityKey,
+    ownKeyWallet,
     // Godmode asks chains rather than lookups — what shipped, what did it
     // change, what has the log said since — so it gets more rounds and longer
     // to spend them. It is also streaming, so the wait is visible rather than
@@ -148,6 +149,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
               },
               lovableApiKey,
               abort.signal,
+              ownKeyWallet,
             );
           } finally {
             clearTimeout(timer);

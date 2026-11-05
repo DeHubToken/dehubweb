@@ -37,6 +37,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { UserMentionDropdown } from '@/components/app/mentions';
+import { bringIntoViewAndFlash } from '@/lib/focus-scroll';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import { PostCommentRow, CommentCreatorContext } from '@/components/app/cards/CommentsSection';
 import { CommentLikersDrawer } from '@/components/app/cards/CommentLikersDrawer';
@@ -262,6 +263,19 @@ export function ThreadedComments<C extends ThreadedComment>({
     if (owner) setExpanded((prev) => new Set(prev).add(owner.comment.id));
   }, [focusCommentId, threads]);
 
+  // Then bring that row on screen and light it, once, as soon as it exists.
+  // The list scrolls inside itself, so the glow alone left a reply that sat
+  // below the fold of the box unseen.
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrolledToRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!focusCommentId || scrolledToRef.current === focusCommentId) return;
+    const row = listRef.current?.querySelector(`[data-comment-id="${CSS.escape(focusCommentId)}"]`);
+    if (!row) return;
+    scrolledToRef.current = focusCommentId;
+    bringIntoViewAndFlash(row);
+  }, [focusCommentId, threads, expanded]);
+
   useEffect(() => () => {
     recorderRef.current?.stream.getTracks().forEach((track) => track.stop());
   }, []);
@@ -466,7 +480,7 @@ export function ThreadedComments<C extends ThreadedComment>({
           <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
         </div>
       ) : totalComments > 0 ? (
-        <div className={cn('mb-2 overflow-y-auto scrollbar-invisible', listMaxHeightClass)}>
+        <div ref={listRef} className={cn('mb-2 overflow-y-auto scrollbar-invisible', listMaxHeightClass)}>
           {(threads ?? []).map((thread) => {
             const isExpanded = expanded.has(thread.comment.id);
             const shown = isExpanded ? thread.replies : thread.replies.slice(0, VISIBLE_REPLIES);

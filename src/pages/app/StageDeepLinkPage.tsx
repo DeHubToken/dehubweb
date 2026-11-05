@@ -250,7 +250,7 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.11dfcc380023", { defaultValue: "{{value1}} — Upcoming Stage on Riftn", value1: stage.title })}
+          title={_copy("copy.11dfcc380023", { defaultValue: "{{value1}}: Upcoming Stage on Riftn", value1: stage.title })}
           description={
             stage.description ||
             _copy("copy.ca52fb25484b", { defaultValue: "An upcoming live audio Stage on Riftn — the decentralized, open source social platform." })
@@ -411,7 +411,7 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.52b73dabadb9", { defaultValue: "{{value1}} — Stage on Riftn", value1: stage.title })}
+          title={_copy("copy.52b73dabadb9", { defaultValue: "{{value1}}: Stage on Riftn", value1: stage.title })}
           description={
             stage.description ||
             _copy("copy.470e681ef727", { defaultValue: "A past live audio Stage on Riftn — listen back to the recording." })
@@ -606,7 +606,7 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.82d0da87f78c", { defaultValue: "{{value1}} — Live on Riftn", value1: stage.title })}
+          title={_copy("copy.82d0da87f78c", { defaultValue: "{{value1}}: Live on Riftn", value1: stage.title })}
           description={
             stage.description ||
             _copy("copy.b7276aae76db", { defaultValue: "A live audio Stage on Riftn — listen in now, no account needed." })

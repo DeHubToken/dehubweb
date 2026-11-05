@@ -97,7 +97,7 @@ export default function ConnectChatGPTPage() {
   return (
     <div data-glass-page data-theme-page-surface className="relative z-[1] min-h-screen bg-black text-white">
       <SEOHead
-        title={_copy("copy.d4a69f6e6a86", { defaultValue: "Riftn for ChatGPT — Use Riftn inside ChatGPT (MCP Connector)" })}
+        title={_copy("copy.d4a69f6e6a86", { defaultValue: "Riftn for ChatGPT: Use Riftn inside ChatGPT (MCP Connector)" })}
         description={_copy("copy.a68813805ba9", { defaultValue: "Add Riftn to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the Riftn decentralized social network directly inside ChatGPT." })}
         url={PAGE_URL}
         image={OG_IMAGE}

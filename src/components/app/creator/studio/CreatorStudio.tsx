@@ -1250,11 +1250,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
    * `priceLabel` the whole sentence for screen readers and the parked pill's
    * tooltip. `priceLoading` draws a shimmer in place of the number.
    */
-  const priceIsFree = freeImageEligible || (mode === 'audio' && !activeAudioTask.paid);
+  // Music on the creator's own ElevenLabs key: Riftn charges nothing, so no paywall.
+  const ownKeyAudio = mode === 'audio' && activeAudioTask.paid && !!generationQuote.ownKey;
+  const priceIsFree = freeImageEligible || (mode === 'audio' && !activeAudioTask.paid) || ownKeyAudio;
   const priceLoading = !priceIsFree && generationQuote.isLoading;
   const priceFailed = !priceIsFree && !priceLoading && !!generationQuote.error;
   const usdText = usd < 0.1 ? usd.toFixed(3) : usd.toFixed(2);
   const priceMain = freeImageEligible ? t('creator.createFreeLeft', { count: freeImages.remaining })
+    : ownKeyAudio ? t('creator.priceOwnKey', { defaultValue: 'Your key' })
     : priceIsFree ? t('creator.priceFree')
     : priceFailed ? t('creator.priceRetry')
     // Whole tokens with separators up to 100K ("2,150 DHB"), the short form above.
@@ -1453,7 +1456,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
         return;
       }
       // Music is paid; the other audio endpoints are free with rate limits.
-      if (activeAudioTask.paid) setAudioPaywallOpen(true);
+      if (activeAudioTask.paid && !ownKeyAudio) setAudioPaywallOpen(true);
       else runAudio();
       return;
     }
@@ -1488,6 +1491,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     setReferenceFor,
     audioTask,
     activeAudioTask,
+    ownKeyAudio,
     runAudio,
     freeImageEligible,
     currentAssets,

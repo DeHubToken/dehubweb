@@ -67,6 +67,7 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
+import { NonFollowerOfferSheet, type NonFollowerOfferStage } from '@/components/app/NonFollowerOfferSheet';
 import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
 import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
 import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
@@ -115,6 +116,9 @@ import followAvatarRio from '@/assets/avatars/riooo.png';
 import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import { ConversationItem } from '@/pages/app/MessagesPage';
+import type { DeHubDMMessage } from '@/lib/api/dehub/dm';
+import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
@@ -222,6 +226,35 @@ function ComicGallery() {
  * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
  * theme's own card surface (or none, in System) is what shows.
  */
+/** Name badges in the Messages list: badge on the name's baseline, then the dot. */
+function NameBadgesGallery() {
+  const now = new Date(Date.now() - 2 * 3600_000).toISOString();
+  const people: Array<Partial<DeHubUser> & { address: string }> = [
+    { address: '0x6666666666666666666666666666666666666661', username: 'ellaverse', displayName: 'Ella Verse', badgeBalance: 2_000_000 },
+    { address: '0x6666666666666666666666666666666666666662', username: 'xluna', displayName: 'Luna', badgeBalance: 600_000 },
+    { address: '0x6666666666666666666666666666666666666663', username: 'deepwater', displayName: 'Deep Water', badgeBalance: 120_000_000 },
+    { address: '0x6666666666666666666666666666666666666664', username: 'heldtier', displayName: 'Held Tier', badgeBalance: 60_000, badgeLock: { tier: 'Great White Shark', requirement: 50_000 } },
+  ];
+  const rows = people.map((user, i) => ({
+    id: `gallery-dm-${i}`,
+    participants: [user as DeHubUser],
+    otherUser: user as DeHubUser,
+    unreadCount: i === 0 ? 2 : 0,
+    createdAt: now,
+    updatedAt: now,
+    lastMessage: { id: `gallery-dm-msg-${i}`, conversationId: `gallery-dm-${i}`, sender: user as DeHubUser, content: 'See you on the stream tonight', createdAt: now } as DeHubDMMessage,
+  }));
+  const noop = () => {};
+  return (
+    <section data-page-bento data-name-badges-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-white/[0.04]">
+      <h2 className="px-4 pt-4 text-sm font-semibold">Messages: name badges</h2>
+      {rows.map((c) => (
+        <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={false} onDelete={noop} onBlock={noop} />
+      ))}
+    </section>
+  );
+}
+
 function FollowCardsGallery() {
   const { t: _copy } = _useCopy();
   const abs = (src: string) => new URL(src, window.location.origin).href;
@@ -1113,6 +1146,40 @@ function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   );
 }
 
+/** "Unfollow all N not following you back": every stage, nothing is unfollowed. */
+function NonFollowerOfferGallery({ initialStage }: { initialStage: NonFollowerOfferStage | null }) {
+  const [open, setOpen] = useState(!!initialStage);
+  const [stage, setStage] = useState<NonFollowerOfferStage>(initialStage ?? 'offer');
+  const [done, setDone] = useState(stage === 'done' ? 47 : stage === 'working' ? 18 : 0);
+  const confirm = () => {
+    setStage('working');
+    setDone(0);
+    let n = 0;
+    const tick = window.setInterval(() => {
+      n = Math.min(47, n + 6);
+      setDone(n);
+      if (n >= 47) { window.clearInterval(tick); setStage('done'); }
+    }, 400);
+  };
+  return (
+    <section data-non-follower-gallery className="mb-5">
+      <Button onClick={() => { setStage('offer'); setDone(0); setOpen(true); }}>Unfollow non-followers prompt</Button>
+      <NonFollowerOfferSheet
+        open={open}
+        onOpenChange={setOpen}
+        stage={stage}
+        count={47}
+        done={done}
+        failed={0}
+        onAsk={() => setStage('confirm')}
+        onConfirm={confirm}
+        onBack={() => setStage('offer')}
+        onNotNow={() => setOpen(false)}
+      />
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -1174,6 +1241,12 @@ export default function StateGalleryPage() {
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 
+        <NonFollowerOfferGallery
+          initialStage={params.get('sheet') === 'non-followers'
+            ? ((['offer', 'confirm', 'working', 'done', 'error'] as const).find((s) => s === params.get('stage')) ?? 'offer')
+            : null}
+        />
+
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
@@ -1182,6 +1255,7 @@ export default function StateGalleryPage() {
         <ComicGallery />
         <UsernameReserveGallery />
 
+        <NameBadgesGallery />
         <FollowCardsGallery />
 
         <StreamerArtworkGallery />
@@ -1585,6 +1659,7 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
   const [open, setOpen] = useState(initiallyOpen);
   const bg = postBgById(bgId);
   const hold = usePostBgHold(true, () => setOpen(true));
+  const postHold = usePostBgHold(true, () => setOpen(true), '[data-pbg-text]');
   const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
   return (
     <section data-page-bento data-post-bg-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -1601,11 +1676,12 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
           <div><p className="font-bold text-white">Marco V</p><p className="text-xs text-zinc-400">Hold here to choose a background</p></div>
         </div>
         <ProfilePostBgContext.Provider value={bg}>
-          <div className="grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+          <div ref={postHold.hostRef} {...postHold.handlers} className="relative grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+            {postHold.ringEl}
             <div data-post-bg-phone-grid><ProfileMixedGrid entries={entries} /></div>
             <div data-post-bg-desktop className="space-y-3">
               {GALLERY_TEXT_POSTS.slice(0, 2).map((post) => (
-                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
+                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg-text="" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
                   {bg && <span aria-hidden className={`pbg pbg-${bg.id}`} />}
                   <GalleryPostCard post={post} />
                 </div>

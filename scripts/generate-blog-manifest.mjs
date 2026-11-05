@@ -79,7 +79,7 @@ function applyManifestDisplayOverrides(posts) {
   // in the manifest consistent with what users see in the SPA.
   return posts.map((p) => {
     if (p.title === 'Entrepreneurial Spirit: Co-Founders Launch TikTok Agency') return { ...p, publishedAt: '2024-01-09T12:00:00.000Z' };
-    if (p.title === 'Back in Action: DeHub V2 Trading Resumes on Gate.io') return { ...p, publishedAt: '2023-02-16T12:00:00.000Z' };
+    if (p.title === 'Back in Action: Riftn V2 Trading Resumes on Gate.io') return { ...p, publishedAt: '2023-02-16T12:00:00.000Z' };
     if (p.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
       return { ...p, title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost', publishedAt: '2024-10-28T12:00:00.000Z' };
     }
@@ -415,7 +415,7 @@ const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Riftn Blog</title>
-    <description>News, product updates and Web3 guides from Riftn — the open source, user-owned social platform.</description>
+    <description>News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.</description>
     <link>${APP_URL}/docs/blog</link>
     <atom:link href="${APP_URL}/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-US</language>

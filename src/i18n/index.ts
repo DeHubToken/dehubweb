@@ -218,6 +218,24 @@ async function loadPack(lang: string, group: string, trigger = 'language-selecti
   pendingPacks.set(key, pending);
   return pending;
 }
+/**
+ * Copy packs a render asked for that have not landed yet. A page rendered
+ * before its pack arrives shows stand-in text ("Bdm Title", "Hero Title") and
+ * then reflows when the real copy lands; PersistentPageCache's CopyGate reads
+ * this to hold a freshly mounted page behind its skeleton for that moment.
+ */
+const pendingCopy = new Set<Promise<boolean>>();
+export function takePendingCopy(): Promise<unknown> | null {
+  if (!pendingCopy.size) return null;
+  return Promise.all([...pendingCopy]);
+}
+const trackCopy = (lang: string, group: string, trigger: string) => {
+  if (loadedPacks.has(`${manifest.version}:${lang}:${group}`)) return;
+  const pending = loadPack(lang, group, trigger);
+  if (pendingCopy.has(pending)) return;
+  pendingCopy.add(pending);
+  void pending.finally(() => pendingCopy.delete(pending));
+};
 const requestedGroups = new Set<string>(['core']);
 const groupForKey = (key: string) => (manifest.groups as Record<string, string>)[key.split('.')[0]];
 i18n.use({
@@ -230,8 +248,8 @@ i18n.use({
       // Inline English is already the fallback. Fetching its entire optional
       // dictionary duplicates that copy and interrupts the first feed render.
       const inlineEnglish = typeof options.defaultValue === 'string' && options.defaultValue.length > 0;
-      if (lang !== 'en' || !inlineEnglish) void loadPack(lang, group, keys[0]);
-      if (lang !== 'en' && !inlineEnglish) void loadPack('en', group, keys[0]);
+      if (lang !== 'en' || !inlineEnglish) trackCopy(lang, group, keys[0]);
+      if (lang !== 'en' && !inlineEnglish) trackCopy('en', group, keys[0]);
     }
     return value;
   },

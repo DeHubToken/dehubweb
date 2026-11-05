@@ -4,6 +4,9 @@
  * it only exists while a showcase is open.
  */
 
+/* In light themes the showcase root carries data-keep-dark, so it stays a
+   dark stage. That rule paints every child plain white, so the showcase's
+   own greys, greens and keys are put back here (scoped to keep-dark). */
 export const SHOWCASE_CSS = `@keyframes badge-showcase-fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes badge-showcase-float{0%,100%{translate:0 0}50%{translate:0 -6px}}
 .bs-chrome,.bs-chrome-dark{position:relative;overflow:hidden;isolation:isolate;transition:transform .15s ease,filter .2s ease}
@@ -16,7 +19,19 @@ export const SHOWCASE_CSS = `@keyframes badge-showcase-fill{from{transform:scale
 .bs-chrome:active,.bs-chrome-dark:active{transform:translateY(1px)}
 .bs-chrome:disabled,.bs-chrome-dark:disabled{cursor:default;filter:saturate(.4) brightness(.8)}
 .bs-chrome:disabled::before,.bs-chrome-dark:disabled::before{display:none}
-.bs-chrome:focus-visible,.bs-chrome-dark:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:2px}`;
+.bs-chrome:focus-visible,.bs-chrome-dark:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:2px}
+html [data-badge-phase][data-keep-dark] :is(.bs-chrome,.bs-chrome *):not(#_):not(#_):not(#_){color:#0b0c0e!important}
+html [data-badge-phase][data-keep-dark] [data-theme-control-label].text-black:not(#_):not(#_):not(#_){color:#000!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/35:not(#_):not(#_):not(#_){color:rgba(255,255,255,.35)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/40:not(#_):not(#_):not(#_){color:rgba(255,255,255,.40)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/45:not(#_):not(#_):not(#_){color:rgba(255,255,255,.45)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/50:not(#_):not(#_):not(#_){color:rgba(255,255,255,.50)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/55:not(#_):not(#_):not(#_){color:rgba(255,255,255,.55)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/60:not(#_):not(#_):not(#_){color:rgba(255,255,255,.60)!important}
+html [data-badge-phase][data-keep-dark] .text-white\\/70:not(#_):not(#_):not(#_){color:rgba(255,255,255,.70)!important}
+html [data-badge-phase][data-keep-dark] .text-emerald-300:not(#_):not(#_):not(#_){color:#6ee7b7!important}
+html [data-badge-phase][data-keep-dark] .text-emerald-400:not(#_):not(#_):not(#_){color:#34d399!important}
+html [data-badge-phase][data-keep-dark] [data-theme-control-surface]:not([data-theme-control-active] > *):not(#_):not(#_):not(#_):not(#_):not(#_){background:linear-gradient(to bottom right,rgba(255,255,255,.14),rgba(255,255,255,.05))!important}`;
 
 /** Every panel in a details column shares one shape, so the edges line up. */
 export const BENTO = 'rounded-2xl border p-3 transition-colors duration-300';

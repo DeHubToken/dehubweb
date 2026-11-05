@@ -158,7 +158,7 @@ describe('the streaming guide', () => {
     const html = await (await crawl('https://riftn.com/guides/best-decentralized-streaming-apps')).text();
     const ld = ldOf(html);
     expect(ld['@type']).toBe('Article');
-    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg');
+    expect(ld.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=3');
     expect(ld.datePublished).toBe('2026-09-13');
     expect(ld.dateModified).toBe('2026-09-29');
     expect(ld.author).toEqual({ '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' });
@@ -365,7 +365,7 @@ describe('video post', () => {
     const html = await (await crawl('https://riftn.com/app/post/3419')).text();
     expect(html).not.toContain('<video');
     // The caption, with the author — the longer suffix would pass 70 characters.
-    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. — Sultan on Riftn');
+    expect(titleOf(html)).toBe('Exquisite watercolor of a Royal Haveli. | Sultan on Riftn');
     expect(html).toContain('<a href="https://riftn.com/umerkhan">Sultan (@umerkhan)</a>');
   });
 
@@ -430,9 +430,10 @@ describe('profiles', () => {
     expect(robotsOf(await serve('flaky', 'Flaky', { address: '0x00000000000000000000000000000000000000cc', uploads: 4 }, null))).toBe('');
   });
 
-  it('declares the logo fallback at its real 1200x630 as a large card', async () => {
+  it('swaps the old DeHub logo fallback for the Riftn card, as a large card', async () => {
     const html = await serve('ghost', 'Ghost', null, null);
-    expect(html).toContain(`<meta property="og:image" content="${LOGO}">`);
+    expect(html).toContain(`<meta property="og:image" content="https://riftn.com/og/riftn-share.png">`);
+    expect(html).not.toContain("new_logo_Dehub");
     expect(html).toContain('<meta property="og:image:width" content="1200">');
     expect(html).toContain('<meta property="og:image:height" content="630">');
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
@@ -519,7 +520,7 @@ describe('thin and test entities', () => {
 describe('/arcade', () => {
   it('has a title that says what the page is', async () => {
     const html = await (await crawl('https://riftn.com/arcade')).text();
-    expect(titleOf(html)).toBe('Riftn Arcade — Free Browser Games, No Download');
+    expect(titleOf(html)).toBe('Riftn Arcade: Free Browser Games, No Download');
     const description = html.match(/<meta name="description" content="([^"]*)">/)![1];
     expect(description.length).toBeLessThanOrEqual(160);
   });

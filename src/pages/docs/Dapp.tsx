@@ -865,7 +865,7 @@ const Dapp = () => {
               <div className="space-y-6">
                 <a href="https://riftn.com/dpay" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
                   <div>
-                    <h4 className="font-semibold text-foreground font-exo">dehub.io/dpay</h4>
+                    <h4 className="font-semibold text-foreground font-exo">riftn.com/dpay</h4>
                     <p className="text-muted-foreground font-exo">{t('dapp.dpayDesc')}</p>
                   </div>
                   <ExternalLink className="w-5 h-5 text-muted-foreground" />

@@ -27,7 +27,7 @@ export function StreamerBadge({ address, canSelect = false, className }: Streame
   const warmShowcase = () => { preloadStreamerShowcase().catch(() => {}); };
   const bounds = streamerBadgeBounds(equipped.id, theme);
   const height = bounds.bottom - bounds.top;
-  const cap = typeof CSS !== 'undefined' && CSS.supports?.('height', '1cap') ? '1.1cap' : '0.8052em';
+  const cap = typeof CSS !== 'undefined' && CSS.supports?.('height', '1cap') ? '1.27cap' : '0.93em';
 
   return (
     <button

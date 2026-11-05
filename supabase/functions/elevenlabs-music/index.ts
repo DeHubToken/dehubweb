@@ -12,8 +12,7 @@ import {
   corsHeaders,
   errorResponse,
   getApiKey,
-  readProviderError,
-} from '../_shared/elevenlabs.ts';
+  readProviderError, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_PROMPT_CHARS = 2000;
@@ -33,8 +32,7 @@ Deno.serve(async (req) => {
       return errorResponse(`Describe the track in 1-${MAX_PROMPT_CHARS} characters`);
     }
 
-    const apiKey = getApiKey();
-    if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
+    const riftnKey = getApiKey();
 
     const seconds = Number(lengthSeconds);
     const lengthMs = Math.min(
@@ -47,6 +45,7 @@ Deno.serve(async (req) => {
     // once the body is consumed.
     const charged = await chargeForJob(req, {
       kind: 'tool',
+      ownKeyProvider: 'elevenlabs',
       modelId: 'elevenlabs-music',
       quantity: Math.ceil(lengthMs / BILLING_BLOCK_MS),
       body,
@@ -54,6 +53,11 @@ Deno.serve(async (req) => {
       rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
     });
     if (!charged.ok) return charged.response;
+    const apiKey = charged.ownKey ?? riftnKey;
+    if (!apiKey) {
+      await charged.refund();
+      return errorResponse('ElevenLabs API key not configured', 500);
+    }
 
     const format = outputFormat === 'pcm_44100' ? 'pcm_44100' : 'mp3_44100_128';
 
@@ -72,6 +76,8 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs music error:', response.status, errText);
       // The transfer pays for a track, not for an attempt. Put the price back

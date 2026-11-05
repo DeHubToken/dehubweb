@@ -92,7 +92,7 @@ export default function WorkPostPage() {
 
   return (
     <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
-      <SEOHead title={_copy("copy.c7be7197af61", { defaultValue: "Post a Bounty — Riftn Bounties" })} description={_copy("copy.69cdce44d541", { defaultValue: "Post a bounty on Riftn: social media tasks, clipping bounties, or fixed-price contracts paid in tokens or USDC." })} url="https://riftn.com/work/post" />
+      <SEOHead title={_copy("copy.c7be7197af61", { defaultValue: "Post a Bounty | Riftn Bounties" })} description={_copy("copy.69cdce44d541", { defaultValue: "Post a bounty on Riftn: social media tasks, clipping bounties, or fixed-price contracts paid in tokens or USDC." })} url="https://riftn.com/work/post" />
       <button
         onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"

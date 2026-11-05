@@ -215,3 +215,11 @@ html:is([data-theme='light'], [data-system-tone='light']) .pbg-picker-btn--done 
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
   mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px));
 }
+
+/* Owner holds a text post to pick a backdrop: no iOS callout or text
+   selection fighting the hold. */
+[data-pbg-hold] [data-pbg-text] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

@@ -17,7 +17,7 @@ vi.mock('@/contexts/ThemeContext', () => ({ useAppTheme: () => ({ theme: 'dark' 
 vi.mock('@/hooks/use-self-badge-balance', () => ({ useSelfBadge: () => ({ balance: 0 }) }));
 vi.mock('@/hooks/use-notifications', () => ({ useUnreadNotificationCount: () => ({ data: undefined }) }));
 vi.mock('@/hooks/use-custom-notifications', () => ({ useCustomUnreadCount: () => ({ data: undefined }) }));
-vi.mock('@/hooks/use-messages', () => ({ useTotalUnreadCount: () => counts.dm }));
+vi.mock('@/lib/dm-unread-store', () => ({ useDmUnreadCount: () => counts.dm }));
 vi.mock('@/hooks/use-public-chat-unread', () => ({ usePublicChatUnreadCount: () => counts.publicChat }));
 vi.mock('@/hooks/use-is-desktop', () => ({ useIsDesktopViewport: () => false }));
 vi.mock('@/hooks/use-search-history', () => ({ useSearchHistory: () => ({ addToHistory: vi.fn() }) }));

@@ -19,8 +19,7 @@ import {
   errorResponse,
   getApiKey,
   jsonResponse,
-  readProviderError,
-} from '../_shared/elevenlabs.ts';
+  readProviderError, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_DESCRIPTION_CHARS = 1000;
@@ -42,6 +41,7 @@ Deno.serve(async (req) => {
     // outright, which takes stage dubbing down with it.
     const charged = await chargeForJob(req, {
       kind: 'tool',
+      ownKeyProvider: 'elevenlabs',
       modelId: action === 'save' ? 'elevenlabs-voice-design-save' : 'elevenlabs-voice-design',
       actionType: `elevenlabs-voice-design-${action}`,
       rateLimit:
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
     });
     if (!charged.ok) return charged.response;
 
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     if (action === 'save') {
@@ -76,6 +76,8 @@ Deno.serve(async (req) => {
       });
 
       if (!response.ok) {
+
+        if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
         const errText = await response.text();
         console.error('ElevenLabs voice save error:', response.status, errText);
         return errorResponse(readProviderError(errText, 'Could not save that voice'), 502);
@@ -119,6 +121,8 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs voice design error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Voice design failed'), 502);

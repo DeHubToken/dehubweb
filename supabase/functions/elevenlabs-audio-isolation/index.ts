@@ -11,8 +11,7 @@ import {
   errorResponse,
   getApiKey,
   readProviderError,
-  readUpload,
-} from '../_shared/elevenlabs.ts';
+  readUpload, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { audioContainer } from '../_shared/speech-audio.ts';
 
@@ -25,6 +24,7 @@ Deno.serve(async (req) => {
   // get to push 100 MB through this function to find out it is going to say no.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-audio-isolation',
     actionType: 'elevenlabs-audio-isolation',
     rateLimit: { limit: 30, windowMs: 60 * 60 * 1000 },
@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
   if (!charged.ok) return charged.response;
 
   try {
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     const upload = await readUpload(req);
@@ -57,6 +57,8 @@ Deno.serve(async (req) => {
     );
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs audio-isolation error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Could not clean that recording'), 502);

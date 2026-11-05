@@ -37,6 +37,7 @@ import { useAsset24hSeries, useResolvedAsset } from '@/hooks/use-asset-ref';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 
 const CARD_HEIGHT = 'min-h-[92px]';
+const OWN_TOKEN = /^(?:DHB|DEHUB|RIFT)$/i;
 
 function formatPrice(value: number | null, currency = 'USD'): string {
   if (value == null) return '—';
@@ -206,8 +207,9 @@ function AssetCard({ asset }: { asset: ResolvedAsset }) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-2">
-            <span className="text-white font-bold text-sm">${asset.symbol}</span>
-            <span className="text-white/50 text-xs truncate">{asset.name}</span>
+            {/* Our own token reads as Riftn; the market feed still calls it DHB / Dehub. */}
+            <span className="text-white font-bold text-sm">${OWN_TOKEN.test(asset.symbol) ? 'RIFT' : asset.symbol}</span>
+            <span className="text-white/50 text-xs truncate">{OWN_TOKEN.test(asset.symbol) ? 'Riftn' : asset.name}</span>
           </div>
           {meta.length > 0 && (
             <p className="text-white/40 text-[11px] mt-0.5 truncate">{meta.join(' · ')}</p>

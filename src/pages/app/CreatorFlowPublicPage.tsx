@@ -19,7 +19,7 @@ export default function CreatorFlowPublicPage() {
   const [flow, setFlow] = useState<PublicFlow | null>(null);
   const onLoaded = useCallback((f: PublicFlow) => setFlow(f), []);
 
-  const title = flow ? `${flow.name} — Riftn Creator Flow` : 'Riftn Creator Flow';
+  const title = flow ? `${flow.name} | Riftn Creator Flow` : 'Riftn Creator Flow';
   const description = flow
     ? t('creatorFlow.publicDescription', { count: flow.nodes.length, name: flow.name })
     : t("copy.e150cb02665b", { defaultValue: "A shared AI generation flow on Riftn." });

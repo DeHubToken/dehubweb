@@ -11,6 +11,7 @@
 import { corsHeaders, handleCorsPreflight } from "../_shared/cors.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
+import { optionalWallet } from "../_shared/byok.ts";
 
 /** Models the picker offers, keyed by the id the client sends. */
 const MODELS: Record<string, string> = {
@@ -123,10 +124,11 @@ Deno.serve(async (req) => {
 
   const upstream = await aiChat(
     { model, messages, stream, max_tokens: 1024 },
-    { label: "creator-prompt-assistant" },
+    { label: "creator-prompt-assistant", ownKeyWallet: await optionalWallet(req) },
   );
 
   if (!upstream.ok) {
+    if (upstream.headers.get("x-own-key-error")) return upstream;
     const detail = await upstream.text().catch(() => "");
     console.error("creator-prompt-assistant gateway error:", upstream.status, detail);
     if (upstream.status === 429) return json({ error: "Rate limit exceeded. Please try again in a moment." }, 429);

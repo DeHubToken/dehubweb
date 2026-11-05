@@ -15,6 +15,8 @@ import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 import { escapeFilterValue } from '@/lib/postgrest-filter';
 import { MAX_FEATURE_ATTACHMENTS } from '@/lib/feature-attachments';
+import { collectWebDeviceInfo } from '@/lib/device-info';
+import i18n from '@/i18n';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 
 /**
@@ -105,7 +107,7 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
   get in_progress() { return _translateCopy("copy.b4cc4b07c300", { defaultValue: "In Progress" }); },
   get completed() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
   get shipped() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
-  get declined() { return _translateCopy("copy.dce083a2c47f", { defaultValue: "Declined" }); },
+  get declined() { return _translateCopy("copy.2ab63e6ced90", { defaultValue: "Not feasible" }); },
 };
 
 export { CATEGORY_LABELS, STATUS_LABELS };
@@ -143,6 +145,7 @@ const FEATURE_ROW_KEYS = [
   ['feature-requests'],
   ['feature-requests-shipped'],
   ['feature-requests-in-progress'],
+  ['feature-requests-not-feasible'],
   ['feature-request'],
 ] as const;
 
@@ -346,6 +349,25 @@ export function useInProgressFeatures() {
   });
 }
 
+// "Not feasible" — requests the board owners have ruled out (status
+// `declined`), with their optional reason in status_note. Few rows, so one
+// query and newest decisions first.
+export function useNotFeasibleFeatures() {
+  return useQuery({
+    queryKey: ['feature-requests-not-feasible'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('status', 'declined')
+        .order('updated_at', { ascending: false });
+      if (error) throw error;
+      return normalizeRows((data || []) as FeatureRequest[]);
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
 
 export function useUserVotes() {
   const { walletAddress } = useAuth();
@@ -458,6 +480,47 @@ export function useMarkShippedNotified() {
   });
 }
 
+/**
+ * Put a request's attachments in the `feature-media` bucket and hand back
+ * their public URLs, in order.
+ */
+async function uploadFeatureFiles(files: File[], walletAddress: string): Promise<string[]> {
+  const urls: string[] = [];
+  // Sequential rather than parallel: the filename is stamped with Date.now(),
+  // and concurrent uploads of same-extension files collide on it.
+  for (const [index, file] of files.entries()) {
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
+    const filePath = `${walletAddress.toLowerCase()}/${Date.now()}-${index}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from('feature-media')
+      .upload(filePath, file, { contentType: file.type, upsert: false });
+    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+    const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
+    urls.push(urlData.publicUrl);
+  }
+  return urls;
+}
+
+/**
+ * Sends the device snapshot for a just-posted request. Fire and forget: a
+ * failure here must never cost the user their post. Board owners read it back
+ * with useFeatureDeviceInfo.
+ */
+function attachDeviceInfo(id: string | undefined, walletAddress: string, username?: string | null) {
+  if (!id) return;
+  try {
+    const info = collectWebDeviceInfo({ username, wallet: walletAddress, language: i18n.language });
+    // attach_feature_request_device_info is newer than the generated types.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    void (supabase as any)
+      .rpc('attach_feature_request_device_info', { p_id: id, p_info: info })
+      .setHeader('x-wallet-address', walletAddress.toLowerCase())
+      .then(({ error }: { error: unknown }) => { if (error) console.warn('Device info not attached', error); });
+  } catch (err) {
+    console.warn('Device info not attached', err);
+  }
+}
+
 export function useSubmitFeatureRequest() {
   const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
@@ -468,20 +531,7 @@ export function useSubmitFeatureRequest() {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
 
       const files = (mediaFiles ?? []).slice(0, MAX_FEATURE_ATTACHMENTS);
-      const imageUrls: string[] = [];
-
-      // Sequential rather than parallel: the filename is stamped with Date.now(),
-      // and concurrent uploads of same-extension files collide on it.
-      for (const [index, file] of files.entries()) {
-        const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
-        const filePath = `${walletAddress.toLowerCase()}/${Date.now()}-${index}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from('feature-media')
-          .upload(filePath, file, { contentType: file.type, upsert: false });
-        if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
-        const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
-        imageUrls.push(urlData.publicUrl);
-      }
+      const imageUrls = await uploadFeatureFiles(files, walletAddress);
 
       const imageUrl = imageUrls[0] ?? null;
 
@@ -539,10 +589,12 @@ export function useSubmitFeatureRequest() {
         if (imageUrls.length > 1) {
           toast.warning(_copy("copy.70db7d7e716b", { defaultValue: "Only the first attachment was saved — attachments are still rolling out" }));
         }
+        attachDeviceInfo(retry.data?.id, walletAddress, user?.username);
         return retry.data;
       }
 
       if (error) throw error;
+      attachDeviceInfo(data?.id, walletAddress, user?.username);
       return data;
     },
     onSuccess: () => {
@@ -675,11 +727,27 @@ export function useEditFeatureRequest() {
   const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ id, title, description, category }: { id: string; title: string; description: string; category: FeatureCategory }) => {
+    mutationFn: async ({ id, title, description, category, keepUrls, newFiles }: {
+      id: string; title: string; description: string; category: FeatureCategory;
+      /** The attachments to keep, in order. Leave out to keep them untouched. */
+      keepUrls?: string[];
+      /** New photos or videos added while editing. */
+      newFiles?: File[];
+    }) => {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
+      const patch: { title: string; description: string; category: FeatureCategory; image_url?: string | null; image_urls?: string[] | null } = {
+        title: title.trim(), description: description.trim(), category,
+      };
+      if (keepUrls || newFiles?.length) {
+        const room = Math.max(0, MAX_FEATURE_ATTACHMENTS - (keepUrls?.length ?? 0));
+        const added = await uploadFeatureFiles((newFiles ?? []).slice(0, room), walletAddress);
+        const urls = [...(keepUrls ?? []), ...added].slice(0, MAX_FEATURE_ATTACHMENTS);
+        patch.image_url = urls[0] ?? null;
+        patch.image_urls = urls.length ? urls : null;
+      }
       const { data, error } = await supabase
         .from('feature_requests')
-        .update({ title: title.trim(), description: description.trim(), category })
+        .update(patch as never)
         .eq('id', id)
         .select()
         .single()
@@ -708,8 +776,8 @@ export function isFeatureStatusEditor(wallet: string | null | undefined): boolea
   return !!wallet && FEATURE_STATUS_EDITOR_WALLETS.includes(wallet.toLowerCase());
 }
 
-/** Statuses the owners set from the page: Requests, Queued, Shipped. */
-export type EditableFeatureStatus = 'open' | 'in_progress' | 'shipped';
+/** Statuses the owners set from the page: Requests, Queued, Shipped, Not feasible. */
+export type EditableFeatureStatus = 'open' | 'in_progress' | 'shipped' | 'declined';
 
 export function useSetFeatureStatus() {
   const { t: _copy } = _useCopy();
@@ -717,12 +785,14 @@ export function useSetFeatureStatus() {
   const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: EditableFeatureStatus }) => {
+    mutationFn: async ({ id, status, note }: { id: string; status: EditableFeatureStatus; note?: string }) => {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       // set_feature_request_status is newer than the generated types.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
-        .rpc('set_feature_request_status', { p_id: id, p_status: status })
+        .rpc('set_feature_request_status', status === 'declined'
+          ? { p_id: id, p_status: status, p_note: note?.trim() || null }
+          : { p_id: id, p_status: status })
         .setHeader('x-wallet-address', walletAddress.toLowerCase());
       if (error) throw error;
       return status;
@@ -734,6 +804,8 @@ export function useSetFeatureStatus() {
           ? _copy("copy.366cb56b38ce", { defaultValue: "Marked Shipped" })
           : status === 'in_progress'
             ? _copy("copy.ae6a0ffbe609", { defaultValue: "Marked Queued" })
+            : status === 'declined'
+              ? _copy("copy.79688f176607", { defaultValue: "Marked Not feasible" })
             : _copy("copy.9db7b5ba03bb", { defaultValue: "Moved back to Requests" }),
       );
     },
@@ -764,6 +836,44 @@ export function useDeleteFeatureRequest() {
     },
     onError: () => {
       toast.error(_copy("copy.b500b2068ac7", { defaultValue: "Failed to delete feature request" }));
+    },
+  });
+}
+
+/** Requests that carry a device snapshot. Board owners only; empty for everyone else. */
+export function useFeatureDeviceInfoIds() {
+  const { walletAddress } = useAuth();
+  const enabled = isFeatureStatusEditor(walletAddress);
+  return useQuery({
+    queryKey: ['feature-device-info-ids', walletAddress],
+    enabled,
+    staleTime: 60_000,
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
+        .rpc('feature_request_device_info_ids')
+        .setHeader('x-wallet-address', (walletAddress ?? '').toLowerCase());
+      if (error) throw error;
+      return new Set<string>(((data ?? []) as (string | { feature_request_device_info_ids: string })[])
+        .map(row => (typeof row === 'string' ? row : row.feature_request_device_info_ids)));
+    },
+  });
+}
+
+/** One request's device snapshot, fetched when the owner opens the row. */
+export function useFeatureDeviceInfo(id: string, open: boolean) {
+  const { walletAddress } = useAuth();
+  return useQuery({
+    queryKey: ['feature-device-info', id, walletAddress],
+    enabled: open && isFeatureStatusEditor(walletAddress),
+    staleTime: Infinity,
+    queryFn: async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase as any)
+        .rpc('get_feature_request_device_info', { p_id: id })
+        .setHeader('x-wallet-address', (walletAddress ?? '').toLowerCase());
+      if (error) throw error;
+      return (data ?? null) as Record<string, unknown> | null;
     },
   });
 }

@@ -58,7 +58,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     : (nft.videoDuration || nft.duration);
   
   // Build audio URL for audio posts
-  const rawAudioUrl = audio.audioUrl;
+  // The API sometimes returns the audio file path in videoUrl/media_url instead of audioUrl.
+  const rawAudioUrl = audio.audioUrl || (isAudioPost ? (nft.videoUrl || nft.media_url) : undefined);
   const audioUrl = isAudioPost && rawAudioUrl
     ? (rawAudioUrl.startsWith('http') ? rawAudioUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioUrl}`)
     : undefined;

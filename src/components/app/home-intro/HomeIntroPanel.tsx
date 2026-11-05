@@ -477,16 +477,21 @@ export function HomeIntroPanel({
           ))}
         </nav>
 
-        {/* Footer HUD: //dehub.io box bottom-left, QR bottom-right. */}
+        {/* Footer HUD: plain white Riftn wordmark bottom-left (no box), QR bottom-right.
+            The card stays a dark plate in every theme, so white reads everywhere. */}
         <div className="dehub-intro-foot mt-5 flex items-end justify-between gap-4">
-          <span
-            className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
-            style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
-          >
-            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>{_copy("copy.ca7842e53ac8", { defaultValue: "riftn.com" })}</span>
           <img
-            src="/brand-kit/brand/qr-dehub-io.png"
-            alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to dehub.io" })}
+            src="/brand-kit/brand/riftn-wordmark-white-web.png"
+            alt="Riftn"
+            width={68}
+            height={20}
+            loading="lazy"
+            decoding="async"
+            className="dehub-intro-foot-mark mb-1 h-[20px] w-auto"
+          />
+          <img
+            src="/brand-kit/brand/qr-riftn.png"
+            alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to riftn.com" })}
             width={56}
             height={56}
             loading="lazy"

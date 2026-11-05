@@ -84,7 +84,7 @@ export default function PromptLanding() {
 
   return (
     <div data-prompt-landing data-glass-page className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none">
-      <SEOHead title={t('prompt.seoTitle', 'Prompt your feed — Riftn')} description={t('prompt.seoDescription', "Tell Riftn what you want to see and we'll tune your timeline.")} />
+      <SEOHead title={t('prompt.seoTitle', 'Prompt your feed | Riftn')} description={t('prompt.seoDescription', "Tell Riftn what you want to see and we'll tune your timeline.")} />
 
       {theme === 'system' && <NebulaBackground />}
 

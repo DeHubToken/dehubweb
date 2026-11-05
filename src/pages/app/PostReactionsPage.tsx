@@ -75,7 +75,7 @@ export default function PostReactionsPage() {
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-4 text-white">
       <SEOHead
-        title={t('reactions.pageTitle', { title, defaultValue: 'Reactions to {{title}} — Riftn' })}
+        title={t('reactions.pageTitle', { title, defaultValue: 'Reactions to {{title}} | Riftn' })}
         description={t('reactions.pageDescription', {
           title,
           creator: creator ? `@${creator}` : 'Riftn',

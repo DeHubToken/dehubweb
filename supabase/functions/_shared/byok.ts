@@ -16,7 +16,7 @@
  *    Riftn credits instead.
  */
 
-import { jsonResponse, serviceClient } from './auth.ts';
+import { jsonResponse, resolveDeHubAddress, serviceClient } from './auth.ts';
 
 export type ByokStatus = 'working' | 'invalid' | 'no_credit' | 'disabled';
 
@@ -118,7 +118,7 @@ export function plausibleKey(key: unknown): key is string {
 }
 
 export function byokProvider(id: unknown): ByokProvider | null {
-  return typeof id === 'string' && Object.hasOwn(BYOK_PROVIDERS, id) ? BYOK_PROVIDERS[id] : null;
+  return typeof id === 'string' && Object.prototype.hasOwnProperty.call(BYOK_PROVIDERS, id) ? BYOK_PROVIDERS[id] : null;
 }
 
 /** What a provider's answer means for the key. `null` = can't tell (provider down). */
@@ -189,7 +189,102 @@ export function byokErrorResponse(provider: string, httpStatus: number): Respons
   const code = httpStatus === 401 || httpStatus === 403 ? 'invalid'
     : httpStatus === 402 ? 'no_credit'
     : httpStatus === 429 ? 'rate_limited' : 'unavailable';
-  return jsonResponse({
+  const res = jsonResponse({
     error: MESSAGES[code](label), code: `OWN_KEY_${code.toUpperCase()}`, provider, ownKey: true, canUseCredits: true,
   }, code === 'rate_limited' ? 429 : 402);
+  // Lets a tool hand this message straight to the client instead of its own
+  // generic "credits exhausted" text.
+  res.headers.set('x-own-key-error', '1');
+  return res;
+}
+
+/** Providers this wallet has a usable key for (no key material read). */
+export async function userKeyProviders(wallet: string): Promise<Set<string>> {
+  const { data, error } = await serviceClient().from('user_provider_keys')
+    .select('provider').eq('wallet_address', wallet.toLowerCase()).in('status', ['working', 'no_credit']);
+  if (error) {
+    console.error('byok providers lookup failed', error.code);
+    return new Set();
+  }
+  return new Set((data ?? []).map(row => row.provider as string));
+}
+
+/** The caller's wallet when they sent a valid session, else null. Never blocks a request. */
+export async function optionalWallet(req: Request): Promise<string | null> {
+  const token = req.headers.get('x-dehub-token');
+  if (!token) return null;
+  try {
+    return (await resolveDeHubAddress(token))?.toLowerCase() ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export interface OwnChatRoute {
+  provider: string;
+  url: string;
+  key: string;
+  model: string;
+  headers: Record<string, string>;
+}
+
+const CHAT_ROUTES: { provider: string; url: string; model: (requested: string) => string; prefers: (requested: string) => boolean }[] = [
+  { provider: 'xai', url: 'https://api.x.ai/v1/chat/completions', prefers: m => m.startsWith('grok-') || m.startsWith('xai/'),
+    model: m => (m.startsWith('grok-') ? m : m.startsWith('xai/') ? m.slice(4) : 'grok-3-mini') },
+  { provider: 'openai', url: 'https://api.openai.com/v1/chat/completions', prefers: m => m.startsWith('openai/') || m.startsWith('gpt-'),
+    model: m => (m.startsWith('openai/') ? m.slice(7) : m.startsWith('gpt-') ? m : 'gpt-5.4-mini') },
+  { provider: 'gemini', url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', prefers: m => m.startsWith('google/') || m.startsWith('gemini-'),
+    model: m => (m.startsWith('google/') ? m.slice(7) : m.startsWith('gemini-') ? m : 'gemini-2.5-flash') },
+  { provider: 'openrouter', url: 'https://openrouter.ai/api/v1/chat/completions', prefers: () => false,
+    model: m => (m.includes('/') ? m : m.startsWith('gemini-') ? `google/${m}` : m.startsWith('gpt-') ? `openai/${m}` : m.startsWith('grok-') ? `x-ai/${m}` : 'google/gemini-2.5-flash') },
+  { provider: 'venice', url: 'https://api.venice.ai/api/v1/chat/completions', prefers: () => false, model: () => 'llama-3.3-70b' },
+  { provider: 'groq', url: 'https://api.groq.com/openai/v1/chat/completions', prefers: () => false, model: () => 'openai/gpt-oss-120b' },
+  { provider: 'mistral', url: 'https://api.mistral.ai/v1/chat/completions', prefers: () => false, model: () => 'mistral-small-latest' },
+];
+
+/**
+ * Which of the creator's own keys should answer a chat request for `requested`
+ * (a gateway id like "google/gemini-2.5-flash" or a bare one like "grok-3").
+ * The provider that makes that model wins; otherwise OpenRouter (it serves the
+ * same ids), then any other chat key. Null = no key, run as before.
+ */
+export async function ownChatRoute(wallet: string | null | undefined, requested: string): Promise<OwnChatRoute | null> {
+  if (!wallet) return null;
+  const have = await userKeyProviders(wallet);
+  if (!have.size) return null;
+  const route = CHAT_ROUTES.find(r => have.has(r.provider) && r.prefers(requested))
+    ?? CHAT_ROUTES.find(r => r.provider === 'openrouter' && have.has('openrouter'))
+    ?? CHAT_ROUTES.find(r => have.has(r.provider));
+  if (!route) return null;
+  const key = await userProviderKey(wallet, route.provider);
+  if (!key) return null;
+  return {
+    provider: route.provider, url: route.url, key, model: route.model(requested),
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+  };
+}
+
+/**
+ * Send an OpenAI-shaped chat body to the creator's own provider. Token limits
+ * are renamed for providers that only read `max_tokens`. On a failure the key's
+ * status is recorded and the caller gets a plain own-key error, never DeHub's
+ * account as a silent fallback.
+ */
+export async function ownChatFetch(wallet: string, route: OwnChatRoute, body: Record<string, unknown>, signal?: AbortSignal): Promise<Response> {
+  const payload: Record<string, unknown> = { ...body, model: route.model };
+  if (route.provider !== 'openai' && payload.max_completion_tokens !== undefined && payload.max_tokens === undefined) {
+    payload.max_tokens = payload.max_completion_tokens;
+    delete payload.max_completion_tokens;
+  }
+  let res: Response;
+  try {
+    res = await fetch(route.url, { method: 'POST', headers: route.headers, body: JSON.stringify(payload), signal });
+  } catch (error) {
+    if (signal?.aborted) throw error;
+    return byokErrorResponse(route.provider, 503);
+  }
+  if (res.ok) return res;
+  await res.body?.cancel();
+  await noteKeyResult(wallet, route.provider, res.status);
+  return byokErrorResponse(route.provider, res.status);
 }

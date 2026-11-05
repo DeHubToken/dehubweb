@@ -20,10 +20,8 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { Loader2 } from "lucide-react";
 import RefreshCw from "@/components/ui/cut-icons/refresh";
-import Eye from "@/components/ui/cut-icons/visibility";
 
 import Play from "@/components/ui/cut-icons/play";
-import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
@@ -53,7 +51,11 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DEFAULT_FEED_SORT, SHORTS_RESET_SORT, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
-import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { ShortsBricks, ShortTile } from '@/components/app/feeds/ShortsBricks';
+import { brickShape, packBricks } from '@/lib/shorts-bricks';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { FILL_LAST_ROW_2, FILL_LAST_ROW_3 } from '@/components/app/feeds/ShortsBricks';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
@@ -72,6 +74,7 @@ const DURATION_FILTERS = [
 ];
 
 // Upload date filters - imported from feed-utils for consistency
+
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
@@ -304,6 +307,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0], DURATION_FILTERS);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('shorts', 'category', null);
+  // Phones mix tall and wide videos in brick rows.
+  const isPhone = useIsMobile();
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -481,18 +486,36 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Apply client-side duration filter
   const shorts = useMemo((): ShortVideo[] => {
+    let list: typeof allShorts = allShorts;
     // Duration filter
     if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
-      return allShorts.filter(short => {
+      list = list.filter(short => {
         return short.durationSeconds >= selectedDuration.min && short.durationSeconds < selectedDuration.max;
       });
     }
-    
-    return allShorts;
+    return list;
   }, [allShorts, selectedDuration]);
 
   // Check if any client-side filters are active
   const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+
+  // Desktop grid: two columns, three when the sidebar is collapsed on a wide
+  // screen. While more pages can still arrive, a part-filled last row waits
+  // for them; the final last row spreads to fill the width (FILL_LAST_ROW_*).
+  const isLarge = useMediaQuery('(min-width: 1024px)');
+  const gridCols = isCollapsed && isLarge ? 3 : 2;
+  const gridShorts = useMemo(() => {
+    if (isPhone || !hasNextPage) return shorts;
+    const liveCount = hasActiveFilters ? 0 : liveShorts.length;
+    const extra = (liveCount + shorts.length) % gridCols;
+    return extra && shorts.length > extra ? shorts.slice(0, shorts.length - extra) : shorts;
+  }, [isPhone, hasNextPage, shorts, hasActiveFilters, liveShorts, gridCols]);
+
+  // Phone brick rows. The tail waits for the next page so rows on screen never reshuffle.
+  const brickRows = useMemo(
+    () => (isPhone ? packBricks(shorts, (short) => brickShape(short.storedAspect), (short) => String(short.id), !hasNextPage) : []),
+    [isPhone, shorts, hasNextPage],
+  );
 
   // What the swipe viewer goes through: the shorts, with a live stream every
   // few slides while someone is on air (none while filters narrow the grid).
@@ -637,8 +660,18 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           <FilteredEmptyState />
         ) : (
           <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-            {/* Shorts Grid - TikTok Style */}
-            <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
+            {isPhone ? (
+              <ShortsBricks
+                shorts={shorts}
+                rows={brickRows}
+                live={!hasActiveFilters ? liveShorts : []}
+                viewerOpen={viewerOpen}
+                onOpenLive={(id) => openViewerAt(`live-${id}`)}
+                onOpen={(short) => openViewerAt(String(short.id))}
+              />
+            ) : (
+            /* Shorts Grid - TikTok Style (desktop and tablets) */
+            <div className={cn("grid gap-2 sm:gap-3", gridCols === 3 ? "grid-cols-3" : "grid-cols-2", gridCols === 3 ? FILL_LAST_ROW_3 : FILL_LAST_ROW_2)}>
               {!hasActiveFilters && liveShorts.map((stream) => (
                 <LiveShortTile
                   key={`live-${stream.id}`}
@@ -647,91 +680,11 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                   onOpen={() => openViewerAt(`live-${stream.id}`)}
                 />
               ))}
-              {shorts.map((short, index) => (
-                <div
-                  key={short.id}
-                  data-media-tile
-                  data-media-scrim
-                  onClick={() => handleShortClick(index)}
-                  className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
-                >
-                  {/* Autoplay when 70% visible, stops when <70% visible */}
-                  {short.videoUrl ? (
-                    <AutoplayVideo
-                      src={short.videoUrl}
-                      hlsSrc={short.hlsUrl}
-                      poster={short.thumbnail}
-                      className="w-full h-full object-cover"
-                      disabled={viewerOpen}
-                      playbackGroup="shorts-grid"
-                      threshold={0.7}
-                      rootMargin="200px"
-                    />
-                  ) : (
-                    <img
-                      src={short.thumbnail}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                  {/* Bottom Info */}
-                  <div className="absolute bottom-[6px] left-2 right-2">
-                    <div className="flex min-w-0 items-end gap-1">
-                      {/* Creator Avatar */}
-                      <div className="w-6 h-6 rounded-[5px] bg-zinc-700 flex-shrink-0 overflow-hidden">
-                        {short.avatar ? (
-                          <img 
-                            src={short.avatar} 
-                            alt="" 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`w-full h-full flex items-center justify-center text-white text-[10px] font-medium ${short.avatar ? 'hidden' : ''}`}>
-                          {short.username?.[0]?.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex min-h-6 min-w-0 flex-1 flex-col justify-between gap-1">
-                        <div className="flex min-w-0 items-center gap-1">
-                          <span className="min-w-0 break-words font-medium text-white text-[10px] leading-[11px] tracking-[-0.1px]">@{(short as any).handle || short.creatorUsername || short.username}</span>
-                          {short.verified && (
-                            <svg className="w-[9px] h-[9px] shrink-0 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                            </svg>
-                          )}
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-white/90 text-[9px] leading-[10px]">
-                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.e90f7c8c03b8", { defaultValue: "{{value1}} views", value1: short.views || '0' })}>
-                            <Eye className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
-                            <span>{short.views || '0'}</span>
-                          </span>
-                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.d4d4c7619589", { defaultValue: "{{value1}} likes", value1: short.likes })}>
-                            <ThumbsUp className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
-                            <span>{short.likes}</span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Play indicator on hover */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                      <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+              {gridShorts.map((short, index) => (
+                <ShortTile key={short.id} short={short} viewerOpen={viewerOpen} onOpen={() => handleShortClick(index)} />
               ))}
             </div>
+            )}
 
             {/* Infinite scroll loader */}
             <div ref={loaderRef} className="flex justify-center py-6">

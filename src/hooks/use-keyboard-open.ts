@@ -77,7 +77,7 @@ export function dismissKeyboard() {
  * Consumers must compensate for that pan or their keyboard-sized container
  * scrolls off-screen. Returns { height: null } until a measurement exists.
  */
-export function useVisualViewportBox(enabled: boolean) {
+export function useVisualViewportBox(enabled: boolean, { keepPageScroll = false }: { keepPageScroll?: boolean } = {}) {
   const [box, setBox] = useState<{ height: number | null; offsetTop: number }>({
     height: null,
     offsetTop: 0,
@@ -98,7 +98,12 @@ export function useVisualViewportBox(enabled: boolean) {
       // Read and write the element that actually scrolls: `window.scrollY` is
       // always 0 here and `window.scrollTo` is a no-op, so this compensation
       // has never once run on the iOS versions it exists for.
-      if (getDocumentScrollTop() > 0) scrollDocumentTo(0);
+      //
+      // Not under a sheet that floats over a scrolled page (the comments
+      // sheet on a feed card): sending the page to the top there scrolled the
+      // card away, the card took its sheet with it, and Reply landed you on
+      // the top of Home.
+      if (!keepPageScroll && getDocumentScrollTop() > 0) scrollDocumentTo(0);
       setBox({ height: Math.round(vv.height), offsetTop: Math.round(vv.offsetTop) });
     };
     update();
@@ -112,7 +117,7 @@ export function useVisualViewportBox(enabled: boolean) {
       vv.removeEventListener('scroll', update);
       document.removeEventListener('scroll', update, { capture: true });
     };
-  }, [enabled]);
+  }, [enabled, keepPageScroll]);
 
   return enabled ? box : { height: null, offsetTop: 0 };
 }

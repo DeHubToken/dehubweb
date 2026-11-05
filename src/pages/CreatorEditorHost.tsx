@@ -100,7 +100,7 @@ export default function CreatorEditorHost() {
     <>
       {isCreator ? (
         <SEOHead
-          title={_copy("copy.266c57b5eb4e", { defaultValue: "Riftn Creator — AI Studio, Agents & Video Tools" })}
+          title={_copy("copy.266c57b5eb4e", { defaultValue: "Riftn Creator: AI Studio, Agents & Video Tools" })}
           description={_copy("copy.34bc1a3f12ae", { defaultValue: "Generate images and videos, edit with AI, and publish to Riftn. A complete AI creator studio with metallic liquid glass design." })}
           url="https://riftn.com/creator"
           jsonLd={{
@@ -116,7 +116,7 @@ export default function CreatorEditorHost() {
           }}
         />
       ) : (
-        <SEOHead title={_copy("copy.002f6e549556", { defaultValue: "Riftn Editor — In-Browser Video Editor" })} description={_copy("copy.909dd646a63c", { defaultValue: "Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to Riftn." })} url="https://riftn.com/editor" />
+        <SEOHead title={_copy("copy.002f6e549556", { defaultValue: "Riftn Editor: In-Browser Video Editor" })} description={_copy("copy.909dd646a63c", { defaultValue: "Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to Riftn." })} url="https://riftn.com/editor" />
       )}
       {mounted.creator && (
         <div style={isCreator ? undefined : { display: "none" }}>

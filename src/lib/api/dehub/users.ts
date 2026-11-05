@@ -369,6 +369,8 @@ export interface SuggestedAccount {
   followers?: number;
   isFollowing?: boolean;
   badgeBalance?: number;
+  /** Grandfathered tier, so the card wears the badge the profile does. */
+  badgeLock?: { tier: string; requirement: number } | null;
   hideBadgeAndBalance?: boolean;
   /** Profile banner path, as the profile API returns it. */
   coverImageUrl?: string | null;

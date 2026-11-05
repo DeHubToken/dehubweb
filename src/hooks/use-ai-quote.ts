@@ -11,6 +11,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 
 /** Matches the gateway peg. Display only — the server prices every charge. */
 export const DHB_USD_PEG = 0.001;
@@ -38,11 +39,12 @@ export interface QuoteRequest {
  * runs straight from its own dialog — and used by the hook below so both read
  * the same number from the same place.
  */
-export async function fetchJobQuote(request: QuoteRequest): Promise<{ priceDhb: number; priceUsd: number }> {
-  const { data, error } = await supabase.functions.invoke('ai-quote', { body: { ...request } });
+export async function fetchJobQuote(request: QuoteRequest): Promise<{ priceDhb: number; priceUsd: number; ownKey?: string }> {
+  // Signed in: the server can tell when this job runs on the creator's own key.
+  const { data, error } = await supabase.functions.invoke('ai-quote', { body: { ...request }, headers: ownKeyHeaders() });
   if (error) throw error;
   if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
-  return data as { priceDhb: number; priceUsd: number };
+  return data as { priceDhb: number; priceUsd: number; ownKey?: string };
 }
 
 /**
@@ -73,6 +75,8 @@ export function useJobQuote(request: QuoteRequest | null, enabled = true) {
   return {
     priceDhb: query.data?.priceDhb ?? 0,
     priceUsd: query.data?.priceUsd ?? 0,
+    /** Set when this job runs on the creator's own provider key: no charge, no paywall. */
+    ownKey: query.data?.ownKey ?? null,
     isLoading: query.isLoading,
     error: query.error instanceof Error ? query.error.message : null,
   };

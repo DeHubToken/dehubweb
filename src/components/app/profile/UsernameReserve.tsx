@@ -133,7 +133,7 @@ export function UsernameReserve({ username, onTaken, preview }: Props) {
       ) : null}
 
       <p className="mb-6 max-w-[340px] text-sm leading-relaxed text-zinc-400 [text-wrap:balance]">
-        {state === 'avail' && t('profile.reserve.availableBody', { defaultValue: 'dehub.io/{{name}} is free right now. Reserve it and we hold it for one minute while you sign up.', name })}
+        {state === 'avail' && t('profile.reserve.availableBody', { defaultValue: 'riftn.com/{{name}} is free right now. Reserve it and we hold it for one minute while you sign up.', name })}
         {state === 'held' && t('profile.reserve.heldBody', { defaultValue: 'Nobody else can take @{{name}} until the timer runs out. Finish sign up to keep it.', name })}
         {state === 'ended' && t('profile.reserve.endedBody', { defaultValue: 'Your minute ran out, so @{{name}} is open to everyone again. It is still free.', name })}
         {state === 'busy' && t('profile.reserve.busyBody', { defaultValue: 'Someone is signing up as @{{name}} right now. If they do not finish, it frees up when the timer ends.', name })}

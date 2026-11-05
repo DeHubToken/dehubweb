@@ -90,7 +90,7 @@ export default function CreatorFlowPage() {
   return (
     <div className="fixed inset-0 flex flex-col bg-[#090a0b] text-white">
       <SEOHead
-        title={_copy("copy.87f6885f02a4", { defaultValue: "Riftn Creator Flow — Visual AI Pipelines" })}
+        title={_copy("copy.87f6885f02a4", { defaultValue: "Riftn Creator Flow: Visual AI Pipelines" })}
         description={_copy("copy.88f1cc09ba80", { defaultValue: "Chain prompts, references, image and video models on an infinite canvas. Build reusable generation flows, run them in one payment and share them with a link." })}
         url="https://riftn.com/creator/flow"
         jsonLd={{

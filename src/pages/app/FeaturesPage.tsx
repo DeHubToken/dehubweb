@@ -30,6 +30,7 @@ import Pencil from "@/components/ui/cut-icons/edit";
 import QueuedIcon from "@/components/ui/cut-icons/clock";
 import ShippedIcon from "@/components/ui/cut-icons/check";
 import BackToRequestsIcon from "@/components/ui/cut-icons/undo";
+import NotFeasibleIcon from "@/components/ui/cut-icons/blocked";
 
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
@@ -55,7 +56,7 @@ import {
   useFeatureRequest,
   useShippedFeatures,
   useInProgressFeatures,
-
+  useNotFeasibleFeatures,
   useUserVotes,
   useFeatureCounts,
   useSubmitFeatureRequest,
@@ -63,6 +64,7 @@ import {
   useEditFeatureRequest,
   useDeleteFeatureRequest,
   useSetFeatureStatus,
+  useFeatureDeviceInfoIds,
   isFeatureStatusEditor,
   CATEGORY_LABELS,
   STATUS_LABELS,
@@ -79,6 +81,7 @@ import {
 } from '@/lib/feature-attachments';
 import { z } from 'zod';
 import { FeatureRequestComments } from '@/components/app/features/FeatureRequestComments';
+import { FeatureDeviceInfo } from '@/components/app/features/FeatureDeviceInfo';
 import { TopBuildersCard } from '@/components/app/features/TopBuildersCard';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -100,6 +103,12 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
 ];
 
 type PageTab = 'requests' | 'shipping' | 'shipped';
+
+// The last chip in the Requests row, after "Other": requests the board owners
+// ruled out. It is a status view rather than a category, so it only exists on
+// the Requests tab and swaps the open list for the Not feasible one.
+const NOT_FEASIBLE = 'not_feasible' as const;
+type CategoryChip = FeatureCategory | 'all' | typeof NOT_FEASIBLE;
 
 const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
 
@@ -250,6 +259,12 @@ function FeatureCard({
   const [editTitle, setEditTitle] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editTitle", feature.title, feature.id);
   const [editDescription, setEditDescription] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editDescription", feature.description, feature.id);
   const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
+  // Attachments while editing: the ones already on the request that stay, and
+  // new photos or videos picked from the phone or computer.
+  const [editKeep, setEditKeep] = useState<string[]>([]);
+  const [editNew, setEditNew] = useState<{ file: File; preview: string }[]>([]);
+  const [editMediaError, setEditMediaError] = useState('');
+  const editFileRef = useRef<HTMLInputElement>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
@@ -262,11 +277,26 @@ function FeatureCard({
   const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
   // The board's owners can move anyone's request to Queued or Shipped.
   const canSetStatus = isFeatureStatusEditor(walletAddress);
+  const { data: deviceInfoIds } = useFeatureDeviceInfoIds();
+  const hasDeviceInfo = canSetStatus && !!deviceInfoIds?.has(feature.id);
   const isQueued = feature.status === 'in_progress';
   const isShipped = feature.status === 'shipped' || feature.status === 'completed';
+  const isNotFeasible = feature.status === 'declined';
+  const notFeasibleReason = isNotFeasible ? feature.status_note?.trim() || '' : '';
+  const [reasonDraft, setReasonDraft] = useState<string | null>(null);
   const setStatus = (status: 'open' | 'in_progress' | 'shipped') => {
     setShowMenu(false);
     statusMutation.mutate({ id: feature.id, status });
+  };
+  const startNotFeasible = () => {
+    setShowMenu(false);
+    setReasonDraft(notFeasibleReason);
+  };
+  const saveNotFeasible = () => {
+    statusMutation.mutate(
+      { id: feature.id, status: 'declined', note: reasonDraft ?? '' },
+      { onSuccess: () => setReasonDraft(null) },
+    );
   };
 
   const dbAvatarUrl = feature.author_avatar
@@ -299,15 +329,45 @@ function FeatureCard({
     setEditTitle(feature.title);
     setEditDescription(feature.description);
     setEditCategory(feature.category);
+    setEditKeep(featureAttachments(feature));
+    clearEditNew();
+    setEditMediaError('');
     setIsEditing(true);
     setShowMenu(false);
   };
 
+  const clearEditNew = () => setEditNew(prev => {
+    prev.forEach(a => URL.revokeObjectURL(a.preview));
+    return [];
+  });
+
+  const addEditFiles = (picked: File[]) => {
+    const valid = picked.filter(file => /^(image|video)\//.test(file.type) && file.size <= MAX_FEATURE_ATTACHMENT_BYTES);
+    const room = Math.max(0, MAX_FEATURE_ATTACHMENTS - editKeep.length - editNew.length);
+    const accepted = valid.slice(0, room);
+    setEditNew(prev => [...prev, ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) }))]);
+    setEditMediaError(valid.length < picked.length
+      ? t('features.promptMediaError', 'Choose images or videos under 50MB each.')
+      : accepted.length < picked.length
+        ? t('features.promptMediaLimit', 'Up to {{max}} attachments.', { max: MAX_FEATURE_ATTACHMENTS }) : '');
+  };
+
+  const removeEditNew = (index: number) => setEditNew(prev => {
+    const gone = prev[index];
+    if (gone) URL.revokeObjectURL(gone.preview);
+    return prev.filter((_, i) => i !== index);
+  });
+
   const handleSaveEdit = () => {
     if (!editTitle.trim() || !editDescription.trim()) return;
+    const before = featureAttachments(feature);
+    const mediaChanged = editNew.length > 0 || editKeep.length !== before.length || editKeep.some((u, i) => u !== before[i]);
     editMutation.mutate(
-      { id: feature.id, title: editTitle, description: editDescription, category: editCategory },
-      { onSuccess: () => setIsEditing(false) }
+      {
+        id: feature.id, title: editTitle, description: editDescription, category: editCategory,
+        ...(mediaChanged ? { keepUrls: editKeep, newFiles: editNew.map(a => a.file) } : {}),
+      },
+      { onSuccess: () => { setIsEditing(false); clearEditNew(); } }
     );
   };
 
@@ -381,7 +441,14 @@ function FeatureCard({
                       >
                         <ShippedIcon className="w-3.5 h-3.5" />{_copy("copy.2fffca525795", { defaultValue: "Mark Shipped" })}</button>
                     )}
-                    {(isQueued || isShipped) && (
+                    <button
+                      type="button"
+                      onClick={startNotFeasible}
+                      disabled={statusMutation.isPending}
+                      className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <NotFeasibleIcon className="w-3.5 h-3.5" />{isNotFeasible ? _copy("copy.0d24977e6943", { defaultValue: "Edit reason" }) : _copy("copy.465fe84f18fc", { defaultValue: "Mark Not feasible" })}</button>
+                    {(isQueued || isShipped || isNotFeasible) && (
                       <button
                         type="button"
                         onClick={() => setStatus('open')}
@@ -436,6 +503,29 @@ function FeatureCard({
         </div>
       )}
 
+      {/* Owner's Not feasible reason, optional */}
+      {reasonDraft !== null && (
+        <div className="mb-3 p-3 rounded-lg border border-white/10 bg-white/[0.04] space-y-2">
+          <label htmlFor={`not-feasible-${feature.id}`} className="text-zinc-400 text-xs block">{_copy("copy.0a54f1d10336", { defaultValue: "Why is this not feasible? (optional)" })}</label>
+          <Input
+            id={`not-feasible-${feature.id}`}
+            value={reasonDraft}
+            onChange={(e) => setReasonDraft(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') saveNotFeasible(); }}
+            maxLength={280}
+            autoFocus
+            placeholder={_copy("copy.3d024b567634", { defaultValue: "Short reason people will see" })}
+            className="bg-zinc-800/50 border-white/10 text-white rounded-lg text-sm"
+          />
+          <div className="flex gap-2">
+            <Button size="sm" variant="glass" onClick={saveNotFeasible} disabled={statusMutation.isPending} className="rounded-lg text-xs">
+              {statusMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : _copy("copy.465fe84f18fc", { defaultValue: "Mark Not feasible" })}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setReasonDraft(null)} className="rounded-lg text-xs text-zinc-400">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
+          </div>
+        </div>
+      )}
+
       {/* Content — editable or read-only */}
       <div className="pt-1 space-y-2">
         {isEditing ? (
@@ -471,6 +561,40 @@ function FeatureCard({
                 ))}
               </select>
             </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">{t('features.editMedia', 'Photos and videos')}</label>
+              {(editKeep.length > 0 || editNew.length > 0) && (
+                <div className="flex flex-wrap gap-2 mb-2" data-edit-attachments>
+                  {[...editKeep.map((url, i) => ({ key: url, src: url, video: isVideoAttachment(url), remove: () => setEditKeep(prev => prev.filter((_, j) => j !== i)) })),
+                    ...editNew.map((a, i) => ({ key: a.preview, src: a.preview, video: a.file.type.startsWith('video/'), remove: () => removeEditNew(i) }))].map(item => (
+                    <div key={item.key} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10 bg-black">
+                      {item.video
+                        ? <video src={item.src} className="w-full h-full object-cover" muted playsInline preload="metadata" />
+                        : <img src={item.src} alt="" className="w-full h-full object-cover" />}
+                      <button
+                        type="button"
+                        onClick={item.remove}
+                        disabled={editMutation.isPending}
+                        aria-label={t('features.removeAttachment', 'Remove attachment')}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-black/70 text-white text-xs leading-none flex items-center justify-center"
+                      >×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <input ref={editFileRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={e => { addEditFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }} />
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="rounded-lg px-2 text-xs"
+                disabled={editMutation.isPending || editKeep.length + editNew.length >= MAX_FEATURE_ATTACHMENTS}
+                onClick={() => editFileRef.current?.click()}
+              >
+                <ImagePlus className="w-4 h-4" />{t('features.editAddMedia', 'Add photo or video')}
+              </Button>
+              {editMediaError && <p role="alert" className="text-xs text-red-400 mt-1">{editMediaError}</p>}
+            </div>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -484,7 +608,7 @@ function FeatureCard({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => setIsEditing(false)}
+                onClick={() => { setIsEditing(false); clearEditNew(); }}
                 className="rounded-lg text-xs text-zinc-400"
               >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>
@@ -510,6 +634,15 @@ function FeatureCard({
             </span>
           )}
         </div>
+        {/* The owners' reason for ruling it out. */}
+        {notFeasibleReason && (
+          <p className="text-zinc-400 text-xs leading-relaxed">
+            <span className="text-zinc-300 font-medium">{_copy("copy.ad389aa4c08e", { defaultValue: "Why:" })}</span>{' '}{notFeasibleReason}
+          </p>
+        )}
+
+        {/* Board owners only: where it was sent from, to reproduce bugs. */}
+        {hasDeviceInfo && <FeatureDeviceInfo featureId={feature.id} />}
 
         {/* Translate control */}
         <PostMetadata
@@ -698,14 +831,15 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
         <span>{description.length}/1000</span><span className="hidden sm:inline">{t('features.promptShortcut', 'Ctrl / ⌘ + Enter to post')}</span>
       </div>
       {error && <p role="alert" className="text-sm text-red-400 mt-2">{error}</p>}
+      <p data-device-info-note className="mt-1 text-[11px] text-zinc-500">{t('features.deviceInfoNote', 'Device info is attached to help us fix bugs.')}</p>
       <details className="mt-2 text-xs text-zinc-400" open={initialCategory === 'bug_fix' ? true : undefined}>
         <summary className="cursor-pointer py-1">{t('features.promptDetails', 'Optional details')}</summary>
         <fieldset disabled={submitMutation.isPending} className="grid gap-3 mt-2">
-          <label>{t('features.titleLabel')}<Input className="mt-1" value={title} maxLength={100} onChange={e => setTitle(e.target.value)} /></label>
+          <label>{t('features.titleLabel')}<Input className="mt-1 bg-zinc-800 border-white/15 text-white placeholder:text-zinc-500 rounded-lg" value={title} maxLength={100} onChange={e => setTitle(e.target.value)} /></label>
           <label>{t('features.categoryLabel')}<select value={category} onChange={e => setCategory(e.target.value as FeatureCategory)} className="block w-full rounded-lg bg-zinc-800 border border-white/15 p-2 mt-1 text-white">
             {CATEGORIES.filter(c => c.id !== 'all').map(cat => <option key={cat.id} value={cat.id}>{t(cat.labelKey)}</option>)}
           </select></label>
-          <label>{t('features.promptDevice', 'Device & OS (for bugs)')}<Input className="mt-1" value={deviceDetails} maxLength={300} onChange={e => setDeviceDetails(e.target.value)} /></label>
+          <label>{t('features.promptDevice', 'Device & OS (for bugs)')}<Input className="mt-1 bg-zinc-800 border-white/15 text-white placeholder:text-zinc-500 rounded-lg" value={deviceDetails} maxLength={300} onChange={e => setDeviceDetails(e.target.value)} /></label>
         </fieldset>
       </details>
     </section>
@@ -817,7 +951,15 @@ export default function FeaturesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('newest');
-  const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
+  const [category, setCategory] = useState<CategoryChip>('all');
+  const showNotFeasible = activeTab === 'requests' && category === NOT_FEASIBLE;
+  // A real category for the queries: the Not feasible chip filters by status.
+  const listCategory: FeatureCategory | 'all' = category === NOT_FEASIBLE ? 'all' : category;
+  // Not feasible only lives on the Requests tab; leaving it falls back to All.
+  const openTab = useCallback((tab: PageTab) => {
+    setActiveTab(tab);
+    if (tab !== 'requests') setCategory((current) => (current === NOT_FEASIBLE ? 'all' : current));
+  }, []);
   // Sort and category chips share one scroll row, so both indicators measure
   // against the same layer. The tab is the layout-shift key for categories:
   // the sort chips in front of them only exist on the Prompts tab.
@@ -856,15 +998,20 @@ export default function FeaturesPage() {
     const requestedTab = searchParams.get('tab');
     if (requestedTab === 'prompts') setActiveTab('requests');
     if (requestedTab === 'queued') setActiveTab('shipping');
+    if (requestedTab === 'not-feasible' || requestedTab === 'unfeasible') {
+      setActiveTab('requests');
+      setCategory(NOT_FEASIBLE);
+    }
     if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped') {
       setActiveTab(requestedTab);
     }
   }, [searchParams, setSearchParams]);
 
-  const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
+  const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, listCategory, search);
   const allFeatures = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+  const { data: notFeasibleFeatures, isLoading: isLoadingNotFeasible } = useNotFeasibleFeatures();
 
   // A notification about one request pins it above the board. The list query
   // could never be relied on to hold it — it may be shipped, declined, outside
@@ -893,18 +1040,31 @@ export default function FeaturesPage() {
   // category aliases, so a plain equality check is enough.
   const matchesFilters = useCallback(
     (row: FeatureRequest) => {
-      if (category !== 'all' && row.category !== category) return false;
+      if (listCategory !== 'all' && row.category !== listCategory) return false;
       const q = search.trim().toLowerCase();
       if (!q) return true;
       return row.title.toLowerCase().includes(q) || row.description.toLowerCase().includes(q);
     },
-    [category, search],
+    [listCategory, search],
   );
-  const isFiltering = search.trim().length > 0 || category !== 'all';
+  const isFiltering = search.trim().length > 0 || listCategory !== 'all';
   const visibleInProgress = useMemo(
     () => withoutFocused(inProgressFeatures).filter(matchesFilters),
     [inProgressFeatures, withoutFocused, matchesFilters],
   );
+  // It sits at the far end of the chip row, so bring it into view when picked
+  // (or deep linked) instead of leaving the selection off screen.
+  useEffect(() => {
+    if (!showNotFeasible) return;
+    requestAnimationFrame(() => {
+      document.querySelector('[data-chip="not-feasible"]')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    });
+  }, [showNotFeasible]);
+  const visibleNotFeasible = useMemo(
+    () => withoutFocused(notFeasibleFeatures).filter(matchesFilters),
+    [notFeasibleFeatures, withoutFocused, matchesFilters],
+  );
+  const notFeasibleCount = notFeasibleFeatures?.length ?? 0;
   const visibleShipped = useMemo(
     () => withoutFocused(shippedFeatures).filter(matchesFilters),
     [shippedFeatures, withoutFocused, matchesFilters],
@@ -925,12 +1085,13 @@ export default function FeaturesPage() {
 
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
+  // A link to one comment scrolls to that comment instead (the thread does it).
   useEffect(() => {
-    if (!focusedId) return;
+    if (!focusedId || focusedCommentId) return;
     requestAnimationFrame(() => {
       document.getElementById(`feature-${focusedId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  }, [focusedId]);
+  }, [focusedId, focusedCommentId]);
 
   useEffect(() => {
     const featureId = searchParams.get('feature');
@@ -961,6 +1122,7 @@ export default function FeaturesPage() {
       return;
     }
     setActiveTab('requests');
+    setCategory((current) => (current === NOT_FEASIBLE ? 'all' : current));
     setComposerFocus(value => value + 1);
   };
 
@@ -980,7 +1142,7 @@ export default function FeaturesPage() {
 
   return (
     <div data-requests-page className="min-h-screen">
-      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — Riftn" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features." })} url="https://riftn.com/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Riftn Feature Requests & Bug Reporting', url: 'https://riftn.com/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
+      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting | Riftn" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap. Track open, in-progress, and shipped features." })} url="https://riftn.com/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Riftn Feature Requests & Bug Reporting', url: 'https://riftn.com/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape Riftn's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
       <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "Riftn Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
           mobile; `data-nav-hide-desktop` opts this one into the same thing on
@@ -1029,7 +1191,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('requests')}
-            onClick={() => setActiveTab('requests')}
+            onClick={() => openTab('requests')}
             role="tab" aria-selected={activeTab === 'requests'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1037,7 +1199,7 @@ export default function FeaturesPage() {
           >
             {t('features.prompts', 'Prompts')}
             {remainingCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
               </span>
             )}
@@ -1045,7 +1207,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('shipping')}
-            onClick={() => setActiveTab('shipping')}
+            onClick={() => openTab('shipping')}
             role="tab" aria-selected={activeTab === 'shipping'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1054,7 +1216,7 @@ export default function FeaturesPage() {
             <Loader2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {inProgressCount}
               </span>
             )}
@@ -1062,7 +1224,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('shipped')}
-            onClick={() => setActiveTab('shipped')}
+            onClick={() => openTab('shipped')}
             role="tab" aria-selected={activeTab === 'shipped'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1071,7 +1233,7 @@ export default function FeaturesPage() {
             <CheckCircle2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.shipped')}
             {shippedCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
               </span>
             )}
@@ -1130,6 +1292,25 @@ export default function FeaturesPage() {
                       <span className="relative z-10">{t(cat.labelKey)}</span>
                     </button>
                   ))}
+                  {activeTab === 'requests' && (
+                    <button
+                      data-chip="not-feasible"
+                      ref={setFeaturesCatRef(NOT_FEASIBLE)}
+                      type="button"
+                      onClick={() => setCategory(NOT_FEASIBLE)}
+                      aria-pressed={category === NOT_FEASIBLE}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 flex items-center gap-1.5 ${
+                        category === NOT_FEASIBLE ? 'text-white' : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="relative z-10">{_copy("copy.2ab63e6ced90", { defaultValue: "Not feasible" })}</span>
+                      {notFeasibleCount > 0 && (
+                        <span className="relative z-10 text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                          {notFeasibleCount}
+                        </span>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1151,8 +1332,9 @@ export default function FeaturesPage() {
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
 <FeedSwallowMotion>
-      <div hidden={activeTab !== 'requests'}>
+      <div hidden={activeTab !== 'requests' || showNotFeasible}>
         <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
+        {!isFiltering && <TopBuildersCard compact />}
       </div>
       {/* The request a notification pointed at, above whichever tab is open. */}
       {focusedRequest && (
@@ -1170,7 +1352,39 @@ export default function FeaturesPage() {
         </div>
       )}
       {/* Feature List (Requests Tab) */}
-      {activeTab === 'requests' && (
+      {/* Not feasible (a chip on the Requests tab) */}
+      {showNotFeasible && (
+        <>
+          {isLoadingNotFeasible ? (
+            <FeatureSkeletons />
+          ) : visibleNotFeasible.length > 0 ? (
+            <div className="space-y-3">
+              {visibleNotFeasible.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
+              <h3 className="text-white font-semibold mb-1">
+                {search.trim()
+                  ? t('follow.noMatches', { query: search.trim() })
+                  : _copy("copy.78b3ae9561ee", { defaultValue: "Nothing ruled out" })}
+              </h3>
+              {!search.trim() && <p className="text-zinc-500 text-sm">{_copy("copy.89b4d1850766", { defaultValue: "Requests we can't build right now show here, with the reason." })}</p>}
+            </div>
+          )}
+        </>
+      )}
+
+      {activeTab === 'requests' && !showNotFeasible && (
         <>
           {isLoading ? (
             <FeatureSkeletons />
@@ -1261,7 +1475,6 @@ export default function FeaturesPage() {
       {/* Shipped Features Tab */}
       {activeTab === 'shipped' && (
         <>
-          {!isFiltering && <TopBuildersCard />}
           {isLoadingShipped ? (
             <FeatureSkeletons />
           ) : visibleShipped.length > 0 ? (

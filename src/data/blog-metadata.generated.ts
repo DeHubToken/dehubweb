@@ -11,12 +11,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "top-100-crypto-projects-2026",
     "slug": "top-100-crypto-projects-2026",
     "title": "Top 100 Crypto Projects 2026, Ranked by GitHub Activity",
-    "seoTitle": "Top 100 Most Active Crypto Projects 2026 by GitHub Activity | DeHub",
+    "seoTitle": "Top 100 Most Active Crypto Projects 2026 by GitHub Activity | Riftn",
     "seoDescription": "The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.",
     "excerpt": "We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.",
     "content": "",
     "bannerImage": "/media/top-100-crypto-projects-2026-banner.png",
-    "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub",
+    "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -33,7 +33,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "Solana",
       "Bitcoin",
       "open source",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 15,
     "featured": true,
@@ -43,12 +43,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "top-50-most-active-open-source-projects-2026",
     "slug": "top-50-most-active-open-source-projects-2026",
     "title": "Top 50 Most Active Open Source Projects 2026, Ranked by GitHub Activity",
-    "seoTitle": "Top 50 Most Active Open Source Projects 2026 (GitHub Data) | DeHub",
+    "seoTitle": "Top 50 Most Active Open Source Projects 2026 (GitHub Data) | Riftn",
     "seoDescription": "The 50 most active open source projects of 2026, ranked on real GitHub commits and contributors over 90 days. Linux, Chromium, Nixpkgs, LLVM, Firefox, vLLM, PyTorch and more.",
     "excerpt": "We measured the GitHub history of 205 of the biggest open source projects and ranked the 50 most active on commits and contributors over the last 90 days. Linux, Chromium and Nixpkgs lead, and AI projects take 12 of the 50 spots.",
     "content": "",
     "bannerImage": "/media/top-50-most-active-open-source-projects-2026-banner.png",
-    "bannerImageAlt": "Top 50 most active open source projects 2026, ranked by GitHub activity, by DeHub",
+    "bannerImageAlt": "Top 50 most active open source projects 2026, ranked by GitHub activity, by Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -64,7 +64,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "vLLM",
       "PyTorch",
       "developer tools",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 10,
     "featured": true,
@@ -74,12 +74,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "top-50-blockchain-projects-2026",
     "slug": "top-50-blockchain-projects-2026",
     "title": "Top 50 Blockchain Projects 2026, Ranked by GitHub Activity",
-    "seoTitle": "Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | DeHub",
+    "seoTitle": "Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | Riftn",
     "seoDescription": "The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.",
     "excerpt": "We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.",
     "content": "",
     "bannerImage": "/media/top-50-blockchain-projects-2026-banner.png",
-    "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub",
+    "bannerImageAlt": "Top 50 blockchain projects 2026 ranked by GitHub activity, by Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -94,7 +94,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "Bitcoin",
       "Layer 2",
       "open source",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 11,
     "featured": true,
@@ -104,12 +104,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "top-50-decentralized-social-apps-2026",
     "slug": "top-50-decentralized-social-apps-2026",
     "title": "Top 50 Decentralized Social Apps 2026: The DeSoc Index",
-    "seoTitle": "Top 50 Decentralized Social Media Apps 2026, Ranked | DeHub",
+    "seoTitle": "Top 50 Decentralized Social Media Apps 2026, Ranked | Riftn",
     "seoDescription": "The 50 most active decentralized and crypto social apps of 2026, scored on real user numbers, features, public GitHub activity and future potential. Bluesky, Farcaster, Lens, Nostr, Mastodon, Zora and more.",
     "excerpt": "We ranked the 50 most active decentralized and crypto social apps of 2026, from Bluesky and Mastodon to Farcaster, Lens, Zora and Nostr, on users, features, public GitHub activity and future potential. Every number is sourced.",
     "content": "",
     "bannerImage": "/media/top-50-decentralized-social-apps-2026-banner.png",
-    "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by DeHub",
+    "bannerImageAlt": "Top 50 decentralized social apps 2026, the DeSoc Index by Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -125,7 +125,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "Nostr",
       "Lens Protocol",
       "Mastodon",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 31,
     "featured": true,
@@ -138,7 +138,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Genjutsu looks like magic, but it is a chain of eight well-known steps. Here is every step in detail, with real frames from each one, plus how to change any scene with Remake and Kling O3, what it all costs, and where the finished clip goes next.",
     "content": "",
     "bannerImage": "/media/maboroshi-how-genjutsu-works-banner.jpg",
-    "bannerImageAlt": "How Higgsfield Genjutsu works, and how DeHub Maboroshi does the same job for less",
+    "bannerImageAlt": "How Higgsfield Genjutsu works, and how Riftn Maboroshi does the same job for less",
     "author": {
       "name": "Riftn Team"
     },
@@ -159,17 +159,17 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 11,
     "featured": true,
     "status": "published",
-    "seoTitle": "How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | DeHub",
+    "seoTitle": "How Does Higgsfield Genjutsu Work? Step by Step, and a Cheaper Way | Riftn",
     "seoDescription": "Genjutsu explained step by step: depth, masks, face mesh, render and original audio, with real frames from each step. Plus Katana-style scene changes and a cheaper per-clip way to do it."
   },
   {
     "id": "higgsfield-genjutsu-alternative",
     "slug": "higgsfield-genjutsu-alternative",
     "title": "Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)",
-    "excerpt": "Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on DeHub Maboroshi, plus the full pipeline behind it.",
+    "excerpt": "Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on Riftn Maboroshi, plus the full pipeline behind it.",
     "content": "",
     "bannerImage": "/media/maboroshi-genjutsu-alternative-banner.jpg",
-    "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription",
+    "bannerImageAlt": "Maboroshi, the Higgsfield Genjutsu alternative on Riftn: swap anyone in a real video, with no subscription",
     "author": {
       "name": "Riftn Team"
     },
@@ -188,17 +188,17 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 9,
     "featured": true,
     "status": "published",
-    "seoTitle": "Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | DeHub",
-    "seoDescription": "Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it."
+    "seoTitle": "Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | Riftn",
+    "seoDescription": "Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs Riftn Maboroshi prices, plus the full pipeline behind it."
   },
   {
     "id": "ready-to-debate-your-side-bring-it-to-dehub",
     "slug": "ready-to-debate-your-side-bring-it-to-dehub",
-    "title": "Ready to Debate Your Side? Bring It to DeHub.",
+    "title": "Ready to Debate Your Side? Bring It to Riftn.",
     "excerpt": "Israel and Palestine. Abortion. Gun rights. Immigration. Religion. AI. Free speech. Climate. Pick the issue people actually disagree about, then make your case with tools built for argument instead of outrage.",
     "content": "",
     "bannerImage": "/media/debate-your-side-banner.jpg",
-    "bannerImageAlt": "Ready to debate your side? Bring it to DeHub.",
+    "bannerImageAlt": "Ready to debate your side? Bring it to Riftn.",
     "author": {
       "name": "Riftn Team"
     },
@@ -213,8 +213,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 7,
     "featured": true,
     "status": "published",
-    "seoTitle": "Ready to Debate Your Side? Bring It to DeHub | Free Speech Debate Platform",
-    "seoDescription": "A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues — with rewards that pay for the persuasive version, not the outrage."
+    "seoTitle": "Ready to Debate Your Side? Bring It to Riftn | Free Speech Debate Platform",
+    "seoDescription": "A decentralised social platform built for real debate: live audio Stages, long-form posts, threaded rebuttals, polls and community-run venues, with rewards that pay for the persuasive version, not the outrage."
   },
   {
     "id": "how-monetization-works-on-social-media-apps",
@@ -242,14 +242,14 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 13,
     "featured": true,
     "status": "published",
-    "seoTitle": "How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | DeHub",
+    "seoTitle": "How Monetization Works on Social Media Apps: 2026 Rules for Every Platform | Riftn",
     "seoDescription": "Follower minimums, activity tests, invite walls and payout floors on Instagram, TikTok, YouTube, Facebook, X, Snap and Twitch, plus the 2026 and 2027 changes that reset the numbers."
   },
   {
     "id": "young-creators-ground-you-own",
     "slug": "young-creators-ground-you-own",
     "title": "A Note for Young Creators, and the Adults Helping Them",
-    "seoTitle": "Young Creators: Build on Ground That Cannot Be Taken Away | DeHub",
+    "seoTitle": "Young Creators: Build on Ground That Cannot Be Taken Away | Riftn",
     "seoDescription": "New laws protect a child creator’s earnings. Nothing protects the asset. A guide for young creators, parents and managers on building where the work is owned.",
     "excerpt": "Illinois and California now force a share of a child creator’s earnings into trust. Nobody has legislated the harder problem: the account itself was never theirs.",
     "content": "",
@@ -277,7 +277,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "nil-ends-your-audience-does-not",
     "slug": "nil-ends-your-audience-does-not",
     "title": "NIL Ends. Your Audience Doesn’t Have To.",
-    "seoTitle": "NIL Money Ends — Build an Audience You Own | DeHub",
+    "seoTitle": "NIL Money Ends: Build an Audience You Own | Riftn",
     "seoDescription": "Revenue sharing and NIL pay you while you are eligible. The audience you build is the only asset that outlives your last game. A guide for college athletes.",
     "excerpt": "Your NIL deal has an expiry date written into it: eligibility. The audience you build during those years does not. Here is the difference, and what to do about it now.",
     "content": "",
@@ -305,7 +305,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "teaching-the-creator-economy",
     "slug": "teaching-the-creator-economy",
     "title": "Are We Teaching Tomorrow’s Creator Economy With Yesterday’s Platforms?",
-    "seoTitle": "Teaching the Creator Economy: A Syllabus Problem | DeHub",
+    "seoTitle": "Teaching the Creator Economy: A Syllabus Problem | Riftn",
     "seoDescription": "Creator economy courses teach students to succeed inside platforms whose terms they will never control. A case for teaching ownership structure, not platform tactics.",
     "excerpt": "A syllabus is a claim about what will still be true when the student graduates. Most creator economy courses quietly teach one company’s business model as though it were physics.",
     "content": "",
@@ -333,8 +333,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "athlete-is-becoming-a-media-platform",
     "slug": "athlete-is-becoming-a-media-platform",
     "title": "The Athlete Is Becoming a Media Platform. Who Owns the Fan?",
-    "seoTitle": "Athletes as Media Brands: Who Owns the Fan Relationship? | DeHub",
-    "seoDescription": "Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship — and the athlete now holds it.",
+    "seoTitle": "Athletes as Media Brands: Who Owns the Fan Relationship? | Riftn",
+    "seoDescription": "Leagues spent forty years perfecting the sale of distribution rights. The one asset they never acquired is the fan relationship, and the athlete now holds it.",
     "excerpt": "Media rights are a lease on attention. The athlete now holds the freehold. A piece for league and team executives on the asset nobody put on the balance sheet.",
     "content": "",
     "bannerImage": "/media/athlete-is-becoming-a-media-platform-banner.png",
@@ -361,12 +361,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "creators-guide-leaving-instagram",
     "slug": "creators-guide-leaving-instagram",
     "title": "The Creator Guide to Leaving Instagram for a Platform You Own (2026)",
-    "seoTitle": "Best Instagram Alternative for Creators 2026 | DeHub",
+    "seoTitle": "Best Instagram Alternative for Creators 2026 | Riftn",
     "seoDescription": "An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.",
-    "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.",
+    "excerpt": "Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight, it is the model.",
     "content": "",
     "bannerImage": "/media/creators-guide-leaving-instagram-banner.png",
-    "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on DeHub",
+    "bannerImageAlt": "A creator moving from Instagram to a Web3 platform they own on Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -389,12 +389,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "creators-guide-leaving-youtube",
     "slug": "creators-guide-leaving-youtube",
     "title": "The Creator Guide to Leaving YouTube for a Platform You Own (2026)",
-    "seoTitle": "Best YouTube Alternative for Creators 2026 | DeHub",
+    "seoTitle": "Best YouTube Alternative for Creators 2026 | Riftn",
     "seoDescription": "A YouTube alternative creators actually own. What the 55% AdSense split, demonetisation and Content ID really cost you, and how a 90% revenue-share Web3 platform compares.",
     "excerpt": "YouTube pays better than most platforms and still keeps 45% of your ad revenue, the right to demonetise you, and the deed to your channel. Here is the alternative.",
     "content": "",
     "bannerImage": "/media/creators-guide-leaving-youtube-banner.png",
-    "bannerImageAlt": "A creator moving from YouTube to a Web3 platform they own on DeHub",
+    "bannerImageAlt": "A creator moving from YouTube to a Web3 platform they own on Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -417,12 +417,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "creators-guide-leaving-tiktok",
     "slug": "creators-guide-leaving-tiktok",
     "title": "The Creator Guide to Leaving TikTok for a Platform You Own (2026)",
-    "seoTitle": "Best TikTok Alternative for Creators 2026 | DeHub",
+    "seoTitle": "Best TikTok Alternative for Creators 2026 | Riftn",
     "seoDescription": "A TikTok alternative creators actually own. How Creator Rewards really pays, why your audience is not yours, and how a 90% revenue-share Web3 platform compares in 2026.",
     "excerpt": "Wherever you post from, the TikTok trade is the same: enormous reach you do not control, on top of an audience you cannot take with you. Here is what to do about it.",
     "content": "",
     "bannerImage": "/media/creators-guide-leaving-tiktok-banner.png",
-    "bannerImageAlt": "A creator moving from TikTok to a Web3 platform they own on DeHub",
+    "bannerImageAlt": "A creator moving from TikTok to a Web3 platform they own on Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -443,11 +443,11 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-creator-vs-higgsfield-ai-credits",
     "slug": "dehub-creator-vs-higgsfield-ai-credits",
-    "title": "DeHub Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
-    "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio — priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
+    "title": "Riftn Creator vs Higgsfield: Same Models, Fairer Credits, Cheaper Veo (2026)",
+    "excerpt": "Veo 3.1, Seedance, Kling and Nano Banana in one studio, priced per job in DHB, with credit that never expires and a free allowance that accrues instead of vanishing at midnight. Here is the honest head-to-head.",
     "content": "",
     "bannerImage": "/media/ai-creator-studio-banner.jpg",
-    "bannerImageAlt": "DeHub Creator — AI credits that never expire, with Veo, Seedance and Kling live",
+    "bannerImageAlt": "Riftn Creator, AI credits that never expire, with Veo, Seedance and Kling live",
     "author": {
       "name": "Riftn Team"
     },
@@ -465,47 +465,19 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 9,
     "featured": true,
     "status": "published",
-    "seoTitle": "DeHub Creator vs Higgsfield 2026: Pricing, Credits & Models Compared | DeHub",
-    "seoDescription": "DeHub Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers."
-  },
-  {
-    "id": "dehub-vs-depaul-rowan-disambiguation",
-    "slug": "dehub-vs-depaul-dehub-vs-rowan-dehub",
-    "title": "DeHub vs DePaul DeHUB vs Rowan DEHub: Which One Are You Looking For?",
-    "seoTitle": "DeHub vs DePaul vs Rowan: Which One? | DeHub",
-    "seoDescription": "Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.",
-    "excerpt": "Searching for \"dehub\" returns three unrelated things. Here is a quick, factual guide to telling the DeHub Web3 social network apart from the DePaul and Rowan university portals.",
-    "content": "",
-    "bannerImage": "/media/dehub-vs-depaul-dehub-vs-rowan-dehub-banner.png",
-    "bannerImageAlt": "DeHub disambiguation: the DeHub Web3 social network at dehub.io compared with DePaul and Rowan university portals of the same name",
-    "author": {
-      "name": "Riftn Team"
-    },
-    "publishedAt": "2026-07-14T09:00:00.000Z",
-    "updatedAt": "2026-07-14T09:00:00.000Z",
-    "tags": [
-      "DeHub",
-      "disambiguation",
-      "Web3 social network",
-      "DePaul",
-      "Rowan",
-      "decentralised social media",
-      "DHB token"
-    ],
-    "readingTime": 6,
-    "featured": false,
-    "status": "published"
+    "seoTitle": "Riftn Creator vs Higgsfield 2026: Pricing, Credits & Models Compared | Riftn",
+    "seoDescription": "Riftn Creator vs Higgsfield in 2026: Veo 3.1 Fast at $0.42, credits that never expire, and 400 DHB free daily. Full price comparison across video, image and plan tiers."
   },
   {
     "id": "how-to-buy-dhb-token-uk",
     "slug": "how-to-buy-dhb-token-uk",
-    "title": "DHB Token Explained + How to Buy DeHub in the UK (Step-by-Step)",
-    "seoTitle": "How to Buy DHB Token in the UK: Step-by-Step | DeHub",
+    "title": "DHB Token Explained + How to Buy Riftn in the UK (Step-by-Step)",
+    "seoTitle": "How to Buy DHB Token in the UK: Step-by-Step | Riftn",
     "seoDescription": "How to buy DHB token in the UK, explained clearly: what $DHB does, which chains it runs on, where it trades, and a careful step-by-step for UK buyers.",
     "excerpt": "A plain-English UK guide to the DHB token: what it does, which chains it runs on, where it trades, and a careful, non-advisory step-by-step for buying it safely.",
     "content": "",
     "bannerImage": "/media/how-to-buy-dhb-token-uk-banner.png",
-    "bannerImageAlt": "A guide to buying the DHB token in the UK on the Base network, with the DeHub logo",
+    "bannerImageAlt": "A guide to buying the DHB token in the UK on the Base network, with the Riftn logo",
     "author": {
       "name": "Riftn Team"
     },
@@ -513,7 +485,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "updatedAt": "2026-07-03T11:30:00.000Z",
     "tags": [
       "DHB token",
-      "DeHub",
+      "Riftn",
       "how to buy DHB",
       "crypto UK",
       "Base",
@@ -527,19 +499,19 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "what-is-dehub-explainer",
     "slug": "what-is-dehub",
-    "title": "What is DeHub?",
-    "seoTitle": "What is DeHub? The Open Source, User-Owned Social Platform Explained",
-    "seoDescription": "DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Who we are, how it works, the DHB token, and how creators earn.",
-    "excerpt": "DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Here is who we are, what that actually means, how it works, and why it exists.",
+    "title": "What is Riftn?",
+    "seoTitle": "What is Riftn? The Open Source, User-Owned Social Platform Explained",
+    "seoDescription": "Riftn is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Who we are, how it works, the DHB token, and how creators earn.",
+    "excerpt": "Riftn is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Here is who we are, what that actually means, how it works, and why it exists.",
     "content": "",
     "bannerImage": "/media/what-is-dehub-banner.png",
-    "bannerImageAlt": "DeHub — the open source, user-owned social platform for creators and communities",
+    "bannerImageAlt": "Riftn | the open source, user-owned social platform for creators and communities",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2026-06-23T10:30:00.000Z",
     "tags": [
-      "DeHub",
+      "Riftn",
       "Explainer",
       "Web3",
       "Social Media",
@@ -552,13 +524,13 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "what-is-watch-to-earn",
     "slug": "what-is-watch-to-earn",
-    "title": "What Is Watch-to-Earn? How DeHub Actually Pays You to Watch (2026)",
-    "seoTitle": "What Is Watch-to-Earn? How It Works in 2026 | DeHub",
-    "seoDescription": "What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how DeHub pays you to watch on-chain.",
-    "excerpt": "Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how DeHub does it honestly.",
+    "title": "What Is Watch-to-Earn? How Riftn Actually Pays You to Watch (2026)",
+    "seoTitle": "What Is Watch-to-Earn? How It Works in 2026 | Riftn",
+    "seoDescription": "What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how Riftn pays you to watch on-chain.",
+    "excerpt": "Watch-to-earn pays viewers a share of the value their attention creates. Here is what watch to earn actually means, how it works, and how Riftn does it honestly.",
     "content": "",
     "bannerImage": "/media/what-is-watch-to-earn-banner.png",
-    "bannerImageAlt": "DeHub watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network",
+    "bannerImageAlt": "Riftn watch-to-earn explained: how viewers earn crypto rewards for watching video on a decentralised social network",
     "author": {
       "name": "Riftn Team"
     },
@@ -568,7 +540,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "watch-to-earn",
       "watch2earn",
       "earn crypto watching videos",
-      "DeHub",
+      "Riftn",
       "Web3 social",
       "attention economy",
       "DHB token"
@@ -581,12 +553,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "best-watch-to-earn-platforms-2026",
     "slug": "best-watch-to-earn-platforms-2026",
     "title": "Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts)",
-    "seoTitle": "Best Watch-to-Earn Platforms 2026: Real Payouts | DeHub",
+    "seoTitle": "Best Watch-to-Earn Platforms 2026: Real Payouts | Riftn",
     "seoDescription": "An honest ranking of the best watch to earn platforms 2026: which watch-to-earn apps pay real money, which have quietly pivoted, and which to avoid.",
-    "excerpt": "A fair, up-to-date look at the best watch-to-earn platforms of 2026 — which apps still pay real crypto, which have gone quiet, and how to avoid the scams.",
+    "excerpt": "A fair, up-to-date look at the best watch-to-earn platforms of 2026, which apps still pay real crypto, which have gone quiet, and how to avoid the scams.",
     "content": "",
     "bannerImage": "/media/best-watch-to-earn-platforms-2026-banner.png",
-    "bannerImageAlt": "Illustration ranking the best watch-to-earn platforms of 2026 with DeHub, Theta, XCAD and others",
+    "bannerImageAlt": "Illustration ranking the best watch-to-earn platforms of 2026 with Riftn, Theta, XCAD and others",
     "author": {
       "name": "Riftn Team"
     },
@@ -597,7 +569,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "best watch to earn platforms 2026",
       "watch2earn",
       "crypto",
-      "DeHub",
+      "Riftn",
       "web3",
       "get paid to watch videos"
     ],
@@ -609,12 +581,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "is-watch-to-earn-legit",
     "slug": "is-watch-to-earn-legit",
     "title": "Is Watch-to-Earn Legit? How Much You Can Really Earn (Honest 2026 Data)",
-    "seoTitle": "Is Watch-to-Earn Legit? The Honest Answer | DeHub",
+    "seoTitle": "Is Watch-to-Earn Legit? The Honest Answer | Riftn",
     "seoDescription": "Is watch to earn legit or a scam? An honest 2026 breakdown of realistic earnings, the red flags to avoid, and a checklist to vet any platform before you sign up.",
     "excerpt": "Some watch-to-earn is legitimate and some is not. Here is the honest 2026 picture: what you can realistically earn, the red flags to spot, and how to vet any platform.",
     "content": "",
     "bannerImage": "/media/is-watch-to-earn-legit-banner.png",
-    "bannerImageAlt": "A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the DeHub decentralised social network",
+    "bannerImageAlt": "A viewer weighing up whether watch-to-earn crypto rewards are legitimate on the Riftn decentralised social network",
     "author": {
       "name": "Riftn Team"
     },
@@ -626,7 +598,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "crypto rewards",
       "watch2earn scam",
       "DHB token",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 8,
     "featured": false,
@@ -635,13 +607,13 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-vs-cheelee-theta-xcad",
     "slug": "dehub-vs-cheelee-theta-xcad-watch-to-earn",
-    "title": "Cheelee Alternative: DeHub vs Cheelee vs Theta.tv vs XCAD (2026)",
-    "seoTitle": "Cheelee Alternative: DeHub vs Cheelee, Theta, XCAD | DeHub",
-    "seoDescription": "Looking for a Cheelee alternative? Compare DeHub vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.",
-    "excerpt": "A head-to-head comparison of DeHub, Cheelee, Theta.tv and XCAD Network on entry cost, payout transparency and features to help you choose the best watch-to-earn app in 2026.",
+    "title": "Cheelee Alternative: Riftn vs Cheelee vs Theta.tv vs XCAD (2026)",
+    "seoTitle": "Cheelee Alternative: Riftn vs Cheelee, Theta, XCAD | Riftn",
+    "seoDescription": "Looking for a Cheelee alternative? Compare Riftn vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.",
+    "excerpt": "A head-to-head comparison of Riftn, Cheelee, Theta.tv and XCAD Network on entry cost, payout transparency and features to help you choose the best watch-to-earn app in 2026.",
     "content": "",
     "bannerImage": "/media/dehub-vs-cheelee-theta-xcad-watch-to-earn-banner.png",
-    "bannerImageAlt": "DeHub compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026",
+    "bannerImageAlt": "Riftn compared with Cheelee, Theta.tv and XCAD Network as watch-to-earn alternatives in 2026",
     "author": {
       "name": "Riftn Team"
     },
@@ -650,7 +622,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "tags": [
       "cheelee alternative",
       "watch-to-earn",
-      "DeHub",
+      "Riftn",
       "Theta",
       "XCAD Network",
       "crypto earning",
@@ -664,12 +636,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "tokenized-subscriptions-explained",
     "slug": "tokenized-subscriptions-explained",
     "title": "Tokenised Subscriptions Explained: On-Chain Memberships You Can Resell for Royalties",
-    "seoTitle": "Tokenised Subscriptions Explained (2026) | DeHub",
+    "seoTitle": "Tokenised Subscriptions Explained (2026) | Riftn",
     "seoDescription": "Tokenised subscriptions are on-chain memberships you own, resell on a secondary market, and that pay the creator a royalty on every resale. Here is how they work.",
     "excerpt": "Tokenised subscriptions turn a creator membership into an on-chain asset you own outright, can resell, and that pays the creator a royalty each time it changes hands.",
     "content": "",
     "bannerImage": "/media/tokenized-subscriptions-explained-banner.png",
-    "bannerImageAlt": "Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties",
+    "bannerImageAlt": "Tokenised subscriptions on Riftn: an on-chain creator membership held in a wallet, resellable with creator royalties",
     "author": {
       "name": "Riftn Team"
     },
@@ -682,7 +654,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "token-gated content",
       "creator economy",
       "web3 social",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 8,
     "featured": false,
@@ -692,12 +664,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "uk-creators-guide-leaving-tiktok",
     "slug": "uk-creators-guide-leaving-tiktok",
     "title": "The UK Creator Guide to Leaving TikTok for a Platform You Own (2026)",
-    "seoTitle": "Best TikTok Alternative UK for Creators 2026 | DeHub",
+    "seoTitle": "Best TikTok Alternative UK for Creators 2026 | Riftn",
     "seoDescription": "Looking for a TikTok alternative UK creators actually own? See how a 90% revenue-share, crypto-paying Web3 platform beats TikTok Creator Rewards in 2026.",
     "excerpt": "A practical guide for British creators leaving TikTok in 2026: why you do not own your audience, what the numbers really are, and where to go instead.",
     "content": "",
     "bannerImage": "/media/uk-creators-guide-leaving-tiktok-banner.png",
-    "bannerImageAlt": "A UK creator moving from TikTok to a Web3 platform they own on DeHub",
+    "bannerImageAlt": "A UK creator moving from TikTok to a Web3 platform they own on Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -720,12 +692,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "free-play-to-earn-no-investment-2026",
     "slug": "free-play-to-earn-games-no-investment-2026",
     "title": "Free Play-to-Earn Games With No Investment (2026): Including a Crypto MMA Battle Royale",
-    "seoTitle": "Play to Earn Games Without Investment 2026 | DeHub",
+    "seoTitle": "Play to Earn Games Without Investment 2026 | Riftn",
     "seoDescription": "The honest 2026 guide to play to earn games without investment: which free P2E titles actually pay, which hide NFT gates, and how to start earning with no deposit.",
     "excerpt": "An honest 2026 rundown of play to earn games without investment: which titles are genuinely free to start, which hide an NFT gate, and how to begin with no deposit.",
     "content": "",
     "bannerImage": "/media/free-play-to-earn-games-no-investment-2026-banner.png",
-    "bannerImageAlt": "DeHub free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base",
+    "bannerImageAlt": "Riftn free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base",
     "author": {
       "name": "Riftn Team"
     },
@@ -737,7 +709,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "no investment",
       "Last Chad Standing",
       "crypto gaming",
-      "DeHub",
+      "Riftn",
       "mobile gaming"
     ],
     "readingTime": 11,
@@ -748,12 +720,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "last-chad-standing-p2e",
     "slug": "last-chad-standing-mma-battle-royale-play-to-earn",
     "title": "Last Chad Standing: Inside the World-First MMA Play-to-Earn Game",
-    "seoTitle": "Last Chad Standing: MMA Play to Earn Game | DeHub",
-    "seoDescription": "Last Chad Standing is the MMA play to earn game from DeHub: a licensed-fighter battle royale where you earn $DHB on Base. How it works and how to play.",
-    "excerpt": "Last Chad Standing is DeHub's flagship MMA play-to-earn game, a licensed-fighter battle royale where skill in the cage converts into $DHB rewards on Base.",
+    "seoTitle": "Last Chad Standing: MMA Play to Earn Game | Riftn",
+    "seoDescription": "Last Chad Standing is the MMA play to earn game from Riftn: a licensed-fighter battle royale where you earn $DHB on Base. How it works and how to play.",
+    "excerpt": "Last Chad Standing is Riftn's flagship MMA play-to-earn game, a licensed-fighter battle royale where skill in the cage converts into $DHB rewards on Base.",
     "content": "",
     "bannerImage": "/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png",
-    "bannerImageAlt": "Last Chad Standing, the DeHub MMA battle-royale play-to-earn game with licensed fighters",
+    "bannerImageAlt": "Last Chad Standing, the Riftn MMA battle-royale play-to-earn game with licensed fighters",
     "author": {
       "name": "Riftn Team"
     },
@@ -765,7 +737,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "crypto mma game",
       "blockchain fighting game",
       "play to earn",
-      "DeHub",
+      "Riftn",
       "DHB"
     ],
     "readingTime": 8,
@@ -776,7 +748,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "x-to-earn",
     "slug": "watch-to-earn-vs-play-to-earn-vs-move-to-earn",
     "title": "Watch-to-Earn vs Play-to-Earn vs Move-to-Earn: The 2026 X-to-Earn Explainer",
-    "seoTitle": "Watch to Earn vs Play to Earn Explained 2026 | DeHub",
+    "seoTitle": "Watch to Earn vs Play to Earn Explained 2026 | Riftn",
     "seoDescription": "Watch to earn vs play to earn vs move-to-earn, explained. What x-to-earn means in 2026, the honest pros, cons and which models actually last.",
     "excerpt": "A plain-English guide to the x-to-earn category: how watch-to-earn, play-to-earn and move-to-earn differ, which models are sustainable, and why real utility wins.",
     "content": "",
@@ -794,7 +766,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "move to earn",
       "play-and-own",
       "crypto rewards",
-      "DeHub"
+      "Riftn"
     ],
     "readingTime": 8,
     "featured": false,
@@ -804,9 +776,9 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "decentralised-social-media-explained",
     "slug": "decentralised-social-media-explained-uk",
     "title": "Decentralised Social Media Explained: A British Guide (2026)",
-    "seoTitle": "Decentralised Social Media Explained (2026) | DeHub",
+    "seoTitle": "Decentralised Social Media Explained (2026) | Riftn",
     "seoDescription": "What is decentralised social media, how does it work, and why it matters for UK creators in 2026. A plain-English guide to user-owned, Web3 social media.",
-    "excerpt": "A plain-English British guide to decentralised social media in 2026: what it is, how it works, the federated versus Web3 models, the honest trade-offs, and where DeHub fits.",
+    "excerpt": "A plain-English British guide to decentralised social media in 2026: what it is, how it works, the federated versus Web3 models, the honest trade-offs, and where Riftn fits.",
     "content": "",
     "bannerImage": "/media/decentralised-social-media-explained-uk-banner.png",
     "bannerImageAlt": "Illustration of a decentralised social media network with user-owned nodes connected across an open protocol",
@@ -820,7 +792,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "web3 social media",
       "user owned social media",
       "decentralised social media uk",
-      "DeHub",
+      "Riftn",
       "creator economy",
       "censorship resistance"
     ],
@@ -831,13 +803,13 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "best-decentralised-social-platforms-2026",
     "slug": "best-decentralised-social-media-platforms-2026",
-    "title": "Best Decentralised Social Media Platforms 2026: DeHub vs Bluesky, Farcaster, Lens & Mastodon",
-    "seoTitle": "Best Decentralized Social Media Platforms 2026 | DeHub",
-    "seoDescription": "The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and DeHub. Which network actually pays creators — and who decides what gets taken down?",
-    "excerpt": "An honest comparison of the best decentralised social media platforms in 2026 — Bluesky, Mastodon, Farcaster, Lens and DeHub — judged on two things most guides skip: how a creator actually gets paid, and who decides what comes down.",
+    "title": "Best Decentralised Social Media Platforms 2026: Riftn vs Bluesky, Farcaster, Lens & Mastodon",
+    "seoTitle": "Best Decentralized Social Media Platforms 2026 | Riftn",
+    "seoDescription": "The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and Riftn. Which network actually pays creators, and who decides what gets taken down?",
+    "excerpt": "An honest comparison of the best decentralised social media platforms in 2026, Bluesky, Mastodon, Farcaster, Lens and Riftn, judged on two things most guides skip: how a creator actually gets paid, and who decides what comes down.",
     "content": "",
     "bannerImage": "/media/best-decentralised-social-media-platforms-2026-banner.png",
-    "bannerImageAlt": "Comparison of the best decentralised social media platforms in 2026 including DeHub, Bluesky, Farcaster, Lens and Mastodon",
+    "bannerImageAlt": "Comparison of the best decentralised social media platforms in 2026 including Riftn, Bluesky, Farcaster, Lens and Mastodon",
     "author": {
       "name": "Riftn Team"
     },
@@ -852,7 +824,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "tradable subscriptions",
       "paid DMs",
       "decentralised moderation",
-      "DeHub",
+      "Riftn",
       "Bluesky"
     ],
     "readingTime": 20,
@@ -863,12 +835,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "web3-live-streaming",
     "slug": "web3-live-streaming-decentralised-twitch-alternative",
     "title": "Web3 Live Streaming: The Decentralised Twitch Alternative That Pays Creators",
-    "seoTitle": "Web3 Live Streaming Platform: Twitch Alternative | DeHub",
+    "seoTitle": "Web3 Live Streaming Platform: Twitch Alternative | Riftn",
     "seoDescription": "A web3 live streaming platform lets creators own their channel, take on-chain tips and avoid sudden demonetisation. How the decentralised Twitch alternative works.",
     "excerpt": "A web3 live streaming platform gives creators ownership, on-chain tips and no surprise demonetisation. Here is how the decentralised Twitch alternative actually works.",
     "content": "",
     "bannerImage": "/media/web3-live-streaming-decentralised-twitch-alternative-banner.png",
-    "bannerImageAlt": "DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips",
+    "bannerImageAlt": "Riftn web3 live streaming platform: a decentralised Twitch alternative with on-chain tips",
     "author": {
       "name": "Riftn Team"
     },
@@ -880,7 +852,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "crypto live streaming",
       "livepeer",
       "stream to earn",
-      "DeHub",
+      "Riftn",
       "creator economy"
     ],
     "readingTime": 9,
@@ -891,12 +863,12 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "play-to-earn-uk-2026",
     "slug": "play-to-earn-uk-2026-earnings-hmrc-tax",
     "title": "Play-to-Earn in the UK 2026: Games, Real Earnings & HMRC Tax Explained",
-    "seoTitle": "Play to Earn UK 2026: Games, Earnings & HMRC Tax | DeHub",
-    "seoDescription": "Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from DeHub.",
+    "seoTitle": "Play to Earn UK 2026: Games, Earnings & HMRC Tax | Riftn",
+    "seoDescription": "Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from Riftn.",
     "excerpt": "Is play-to-earn legal in the UK, which games genuinely pay British players in 2026, and how does HMRC tax the rewards? A practical guide, not tax advice.",
     "content": "",
     "bannerImage": "/media/play-to-earn-uk-2026-earnings-hmrc-tax-banner.png",
-    "bannerImageAlt": "Play-to-earn gaming in the UK with DeHub, showing crypto rewards and HMRC tax considerations",
+    "bannerImageAlt": "Play-to-earn gaming in the UK with Riftn, showing crypto rewards and HMRC tax considerations",
     "author": {
       "name": "Riftn Team"
     },
@@ -908,7 +880,7 @@ export const blogPostsMetadata: BlogPost[] = [
       "crypto gaming",
       "HMRC crypto tax",
       "play to earn games 2026",
-      "DeHub",
+      "Riftn",
       "watch to earn"
     ],
     "readingTime": 9,
@@ -918,11 +890,11 @@ export const blogPostsMetadata: BlogPost[] = [
   {
     "id": "town-hall-feb-2026-major-dehub-update",
     "slug": "were-finally-here-a-major-dehub-update",
-    "title": "We're Finally Here — A Major DeHub Update",
+    "title": "We're Finally Here: A Major Riftn Update",
     "excerpt": "After 5 years of development, we're proud to be in a position to finally challenge the behemoths of legacy media. What was always holding us back is now a superpower.",
     "content": "",
     "bannerImage": "/media/town-hall-feb-2026-banner.png",
-    "bannerImageAlt": "DeHub Town Hall Overview February 2026 - A Major DeHub Update",
+    "bannerImageAlt": "Riftn Town Hall Overview February 2026 - A Major Riftn Update",
     "author": {
       "name": "Riftn Team"
     },
@@ -939,8 +911,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 6,
     "featured": false,
     "status": "published",
-    "seoTitle": "We're Finally Here — A Major DeHub Update | DeHub",
-    "seoDescription": "After 5 years of development, DeHub is ready to challenge legacy media. Web app launch, fighter battle royale, airdrops, and the flywheel begins."
+    "seoTitle": "We're Finally Here: A Major Riftn Update | Riftn",
+    "seoDescription": "After 5 years of development, Riftn is ready to challenge legacy media. Web app launch, fighter battle royale, airdrops, and the flywheel begins."
   },
   {
     "id": "google-play-store-listing-confirmed",
@@ -949,7 +921,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "DApp has been approved and is now live on the Google Play Store, conducting main testing.",
     "content": "",
     "bannerImage": "/media/google-playstore-banner.png",
-    "bannerImageAlt": "DeHub Google Play Store listing announcement banner",
+    "bannerImageAlt": "Riftn Google Play Store listing announcement banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -964,17 +936,17 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": true,
     "status": "published",
-    "seoTitle": "Google Play Store Listing Confirmed | DeHub Official Announcement",
-    "seoDescription": "DeHub DApp has been approved and is now live on the Google Play Store. Learn about our app store journey and upcoming marketing campaigns."
+    "seoTitle": "Google Play Store Listing Confirmed | Riftn Official Announcement",
+    "seoDescription": "Riftn DApp has been approved and is now live on the Google Play Store. Learn about our app store journey and upcoming marketing campaigns."
   },
   {
     "id": "privacy-first-e2ee-dehub",
-    "title": "Privacy First: Open Source End To End Encryption (E2EE) on DeHub",
+    "title": "Privacy First: Open Source End To End Encryption (E2EE) on Riftn",
     "slug": "privacy-first-open-source-e2ee-dehub",
-    "excerpt": "Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how DeHub protects your messages with battle-tested cryptography.",
+    "excerpt": "Military-grade End-to-End Encryption ensures your conversations remain completely private. Learn how Riftn protects your messages with battle-tested cryptography.",
     "content": "",
     "bannerImage": "/media/e2ee-banner.png",
-    "bannerImageAlt": "DeHub End-to-End Encryption Banner - Privacy First Technology",
+    "bannerImageAlt": "Riftn End-to-End Encryption Banner - Privacy First Technology",
     "author": {
       "name": "Riftn Team"
     },
@@ -989,8 +961,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 14,
     "featured": true,
     "status": "published",
-    "seoTitle": "Privacy First: Open Source End-to-End Encryption on DeHub | E2EE Explained",
-    "seoDescription": "Learn how DeHub protects your privacy with military-grade E2EE using XChaCha20-Poly1305, X25519 ECDH, and battle-tested cryptography. Your messages, truly private."
+    "seoTitle": "Privacy First: Open Source End-to-End Encryption on Riftn | E2EE Explained",
+    "seoDescription": "Learn how Riftn protects your privacy with military-grade E2EE using XChaCha20-Poly1305, X25519 ECDH, and battle-tested cryptography. Your messages, truly private."
   },
   {
     "id": "dhb-tradable-on-coinbase-soon",
@@ -1019,16 +991,16 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "dehub-milestone-73-community-champions-",
     "title": "Community Champions: UGC Ambassadorship Program Launched",
     "slug": "community-champions-ugc-ambassadorship-program-launched",
-    "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Launched UGC ambassadorship program with 50 vacancies.",
+    "excerpt": "A Q2 2025 milestone from Riftn's roadmap: Launched UGC ambassadorship program with 50 vacancies.",
     "content": "",
     "bannerImage": "/media/443805df-744b-4ab4-80a7-ae59cafe8baa.png",
-    "bannerImageAlt": "DeHub UGC Programme banner",
+    "bannerImageAlt": "Riftn UGC Programme banner",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-05-10T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22025",
       "2025",
@@ -1037,23 +1009,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "Community Champions: UGC Ambassadorship Program Launched | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2025 progress: Launched UGC ambassadorship program with 50 vacancies. Discover the impact of this community milestone on our journey."
+    "seoTitle": "Community Champions: UGC Ambassadorship Program Launched | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2025 progress: Launched UGC ambassadorship program with 50 vacancies. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "dehub-milestone-76-fresh-experience-rev",
     "title": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces",
     "slug": "fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025",
-    "excerpt": "A rebuilt feed, audio replies, and live talk spaces — aimed squarely at the discovery problem users had been reporting for years.",
+    "excerpt": "A rebuilt feed, audio replies, and live talk spaces, aimed squarely at the discovery problem users had been reporting for years.",
     "content": "",
     "bannerImage": "/media/eeb2e5c9-2347-4865-876e-31f38fe4412a.png",
-    "bannerImageAlt": "DeHub Revamped App Feed",
+    "bannerImageAlt": "Riftn Revamped App Feed",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-05-03T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22025",
       "2025",
@@ -1062,14 +1034,14 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2025 progress: Revamped main app feed, revealed audio replies and live talk spaces. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2025 progress: Revamped main app feed, revealed audio replies and live talk spaces. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-75-transparency-hub-dhb",
     "title": "Transparency Hub: dhbscan.com Launches for Contract Activity Tracking",
     "slug": "transparency-hub-dhbscancom-launches-for-contract-activity-tracking",
-    "excerpt": "dhbscan.com — every DHB contract in one place, so verifying us does not require knowing which addresses to look at.",
+    "excerpt": "dhbscan.com, every DHB contract in one place, so verifying us does not require knowing which addresses to look at.",
     "content": "",
     "bannerImage": "/media/a6f93bd4-c3f4-4d91-abd9-ebdd88e3b884.png",
     "bannerImageAlt": "DHBScan.com banner",
@@ -1078,7 +1050,7 @@ export const blogPostsMetadata: BlogPost[] = [
     },
     "publishedAt": "2025-04-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22025",
       "2025",
@@ -1087,14 +1059,14 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Transparency Hub: dhbscan.com Launches for Contract Activity Tracking | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2025 progress: Released dhbscan.com for users to track activity across all DHB contracts. Discover the impact of this community milestone on our journey."
+    "seoTitle": "Transparency Hub: dhbscan.com Launches for Contract Activity Tracking | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2025 progress: Released dhbscan.com for users to track activity across all DHB contracts. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "dehub-milestone-77-get-ready-players-fi",
     "title": "Get Ready Players: Final Snapshot for Last Chad Standing Airdrop",
     "slug": "get-ready-players-final-snapshot-for-last-chad-standing-airdrop",
-    "excerpt": "A Q2 2025 milestone from DeHub's roadmap: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers.",
+    "excerpt": "A Q2 2025 milestone from Riftn's roadmap: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers.",
     "content": "",
     "bannerImage": "/media/6d868478-769e-4981-b285-4ca5fa215dc5.png",
     "bannerImageAlt": "Last Chad Standing helicopter",
@@ -1103,7 +1075,7 @@ export const blogPostsMetadata: BlogPost[] = [
     },
     "publishedAt": "2025-04-01T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22025",
       "2025",
@@ -1112,23 +1084,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "Get Ready Players: Final Snapshot for Last Chad Standing Airdrop | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2025 progress: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Get Ready Players: Final Snapshot for Last Chad Standing Airdrop | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2025 progress: Final snapshot for Last Chad Standing game airdrop, for both holders and stakers. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-69-reliability-perfecte",
-    "title": "Reliability Perfected: 99.99% Uptime for DeHub Streaming",
+    "title": "Reliability Perfected: 99.99% Uptime for Riftn Streaming",
     "slug": "reliability-perfected-9999-uptime-for-dehub-streaming",
     "excerpt": "99.99% across all streaming services. The fourth nine costs more than the first three combined, and here is why we paid for it.",
     "content": "",
     "bannerImage": "/media/milestone-uptime-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2025 update: Reliability Perfected: 99.99% Uptime for DeHub Streaming",
+    "bannerImageAlt": "Riftn Q1 2025 update: Reliability Perfected: 99.99% Uptime for Riftn Streaming",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-03-30T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1137,23 +1109,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Reliability Perfected: 99.99% Uptime for DeHub Streaming | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Achieved 99.99% uptime across all streaming services. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Reliability Perfected: 99.99% Uptime for Riftn Streaming | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Achieved 99.99% uptime across all streaming services. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-67-scaling-new-heights-",
     "title": "Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
     "slug": "scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers",
-    "excerpt": "Livepeer integration taking us to 50,000+ concurrent viewers, with headroom beyond that on higher tiers — and a delivery layer that is not one company.",
+    "excerpt": "Livepeer integration taking us to 50,000+ concurrent viewers, with headroom beyond that on higher tiers, and a delivery layer that is not one company.",
     "content": "",
     "bannerImage": "/media/milestone-livepeer-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
+    "bannerImageAlt": "Riftn Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-03-14T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1162,8 +1134,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Implemented Livepeer infrastructure supporting 50,000+ concurrent viewers wit.... Discover the impact of this tech milestone on our journey."
+    "seoTitle": "Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Implemented Livepeer infrastructure supporting 50,000+ concurrent viewers wit.... Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-66-interactive-streamin",
@@ -1172,13 +1144,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Live streams where the tip settles on-chain and the animation fires in the same moment. The hard part was making those two things feel like one.",
     "content": "",
     "bannerImage": "/media/a6275c3d-1dab-43a4-9362-93dd9d96f41c.png",
-    "bannerImageAlt": "DeHub Live Streaming logo",
+    "bannerImageAlt": "Riftn Live Streaming logo",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-03-10T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1187,23 +1159,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Interactive Streaming: On-Chain Live Streams with Animated Tips | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Released onchain live streams with real-time tip animations. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Interactive Streaming: On-Chain Live Streams with Animated Tips | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Released onchain live streams with real-time tip animations. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-71-connect-and-converse",
     "title": "Connect and Converse: Advanced Messaging System with Paid/Free DMs",
     "slug": "connect-and-converse-advanced-messaging-system-with-paidfree-dms",
-    "excerpt": "Paid or free DMs and unlockable chat content — a creator-side answer to an inbox that is 95% noise.",
+    "excerpt": "Paid or free DMs and unlockable chat content, a creator-side answer to an inbox that is 95% noise.",
     "content": "",
     "bannerImage": "/media/milestone-messaging-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs",
+    "bannerImageAlt": "Riftn Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-02-25T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1212,8 +1184,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Connect and Converse: Advanced Messaging System with Paid/Free DMs | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Completed messaging system with paid or free DMs and unlockable chat content. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Connect and Converse: Advanced Messaging System with Paid/Free DMs | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Completed messaging system with paid or free DMs and unlockable chat content. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-70-strategic-shift-disc",
@@ -1222,13 +1194,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "We ended Ethereum mainnet support a year after adding it, and concentrated on Base. Fees, not ideology.",
     "content": "",
     "bannerImage": "/media/milestone-ethereum-exit-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
+    "bannerImageAlt": "Riftn Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-02-01T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1237,8 +1209,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Discontinue Ethereum Mainnet support. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Discontinue Ethereum Mainnet support. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-72-main-event-ready-las",
@@ -1253,7 +1225,7 @@ export const blogPostsMetadata: BlogPost[] = [
     },
     "publishedAt": "2025-01-07T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1262,8 +1234,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Main Event Ready: Last Chad Standing Full Trailer Gains MMA Promoter Attention | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Released full trailer for Last Chad Standing, picked up by major MMA promoters. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Main Event Ready: Last Chad Standing Full Trailer Gains MMA Promoter Attention | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Released full trailer for Last Chad Standing, picked up by major MMA promoters. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-68-speed-of-light-custo",
@@ -1272,13 +1244,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Sub-200ms globally, from our own CDN. The word doing the work in that sentence is \"globally\".",
     "content": "",
     "bannerImage": "/media/milestone-cdn-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
+    "bannerImageAlt": "Riftn Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-01-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12025",
       "2025",
@@ -1287,8 +1259,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Speed of Light: Custom CDN Achieves Sub-200ms Global Latency | DeHub 2025 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2025 progress: Built custom CDN reducing latency to sub-200ms globally. Discover the impact of this tech milestone on our journey."
+    "seoTitle": "Speed of Light: Custom CDN Achieves Sub-200ms Global Latency | Riftn 2025 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2025 progress: Built custom CDN reducing latency to sub-200ms globally. Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-65-the-future-of-infras",
@@ -1297,13 +1269,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Phase 1 of decentralised physical infrastructure. The point where \"decentralised streaming\" stops being a description of the token and starts being one of the delivery.",
     "content": "",
     "bannerImage": "/media/milestone-depin-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live",
+    "bannerImageAlt": "Riftn Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-12-13T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42024",
       "2024",
@@ -1312,23 +1284,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Future of Infrastructure: DePIN Phase 1 Goes Live | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2024 progress: Released DePIN Phase 1. Discover the impact of this tech milestone on our journey."
+    "seoTitle": "The Future of Infrastructure: DePIN Phase 1 Goes Live | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2024 progress: Released DePIN Phase 1. Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-64-leading-the-way-dehu",
-    "title": "Leading the Way: DeHub founder's agency Becomes UK #1 with 1,000 Streamers",
+    "title": "Leading the Way: Riftn founder's agency Becomes UK #1 with 1,000 Streamers",
     "slug": "leading-the-way-dehub-agency-becomes-uk-1-with-1000-streamers---a-dehub-milestone-from-q4-2024",
-    "excerpt": "1,000 exclusively signed live streamers and the UK's number one position. Covered at length elsewhere — this is what it meant for the platform.",
+    "excerpt": "1,000 exclusively signed live streamers and the UK's number one position. Covered at length elsewhere, this is what it meant for the platform.",
     "content": "",
     "bannerImage": "/media/milestone-agency-uk-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2024 update: Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers",
+    "bannerImageAlt": "Riftn Q4 2024 update: Leading the Way: Riftn Agency Becomes UK #1 with 1,000 Streamers",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-11-22T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42024",
       "2024",
@@ -1337,8 +1309,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2024 progress: Agency grew to UK #1 with 1,000 live streamers signed exclusively. Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "Leading the Way: Riftn Agency Becomes UK #1 with 1,000 Streamers | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2024 progress: Agency grew to UK #1 with 1,000 live streamers signed exclusively. Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-1-year-review-gate-delist",
@@ -1363,8 +1335,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 2,
     "featured": true,
     "status": "published",
-    "seoTitle": "DeHub's Gate.io Delisting: A 1-Year Review",
-    "seoDescription": "One year after delisting from Gate.io, DeHub reviews the decision and reaffirms its commitment to decentralization. Learn more about our journey."
+    "seoTitle": "Riftn's Gate.io Delisting: A 1-Year Review",
+    "seoDescription": "One year after delisting from Gate.io, Riftn reviews the decision and reaffirms its commitment to decentralization. Learn more about our journey."
   },
   {
     "id": "dehub-milestone-63-the-hype-is-real-las",
@@ -1373,13 +1345,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A million views on the teaser for the first MMA-inspired battle royale. The audience it reached was mostly not a crypto audience.",
     "content": "",
     "bannerImage": "/media/milestone-teaser-1m-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
+    "bannerImageAlt": "Riftn Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-11-05T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42024",
       "2024",
@@ -1388,23 +1360,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2024 progress: Released teaser for Last Chad Standing (first ever MMA battle royale) with 1M.... Discover the impact of this product milestone on our journey."
+    "seoTitle": "The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2024 progress: Released teaser for Last Chad Standing (first ever MMA battle royale) with 1M.... Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-62-revolutionizing-acce",
     "title": "Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
     "slug": "revolutionizing-access-on-chain-tradable-subscriptions-launch",
-    "excerpt": "A Q4 2024 milestone from DeHub's roadmap: Released onchain tradable subscriptions.",
+    "excerpt": "A Q4 2024 milestone from Riftn's roadmap: Released onchain tradable subscriptions.",
     "content": "",
     "bannerImage": "/media/milestone-subscriptions-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
+    "bannerImageAlt": "Riftn Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-10-23T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42024",
       "2024",
@@ -1413,8 +1385,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 6,
     "featured": false,
     "status": "published",
-    "seoTitle": "Revolutionizing Access: On-Chain Tradable Subscriptions Launch | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2024 progress: Released onchain tradable subscriptions. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Revolutionizing Access: On-Chain Tradable Subscriptions Launch | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2024 progress: Released onchain tradable subscriptions. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-town-hall-ama-oct-2024",
@@ -1423,7 +1395,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A summary of our recent Town Hall & AMA session, covering roadmap updates, platform enhancements, and answers to your top questions.",
     "content": "",
     "bannerImage": "/media/ea33e3a2-72d6-4be8-8648-07293e8b806f.png",
-    "bannerImageAlt": "DeHub Town Hall & AMA banner",
+    "bannerImageAlt": "Riftn Town Hall & AMA banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -1439,8 +1411,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Town Hall & AMA - October 2024 Update",
-    "seoDescription": "Summary of the DeHub Town Hall & AMA from October 2024, covering roadmap updates, X (Twitter) status, BNB chain, new features, and more."
+    "seoTitle": "Riftn Town Hall & AMA - October 2024 Update",
+    "seoDescription": "Summary of the Riftn Town Hall & AMA from October 2024, covering roadmap updates, X (Twitter) status, BNB chain, new features, and more."
   },
   {
     "id": "developments-overview-sep-2024",
@@ -1449,7 +1421,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A summary of major upcoming enhancements, including a platform overhaul, BASE tax removal, new LP initiatives, and a major push in community and marketing efforts.",
     "content": "",
     "bannerImage": "/media/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png",
-    "bannerImageAlt": "DeHub Developments Overview",
+    "bannerImageAlt": "Riftn Developments Overview",
     "author": {
       "name": "Riftn Team"
     },
@@ -1464,8 +1436,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Developments Overview - September 2024",
-    "seoDescription": "Get the latest on DeHub's major upcoming upgrades, including a new UI, fiat gateway, on-chain subscriptions, BASE tax removal, and community growth initiatives."
+    "seoTitle": "Riftn Developments Overview - September 2024",
+    "seoDescription": "Get the latest on Riftn's major upcoming upgrades, including a new UI, fiat gateway, on-chain subscriptions, BASE tax removal, and community growth initiatives."
   },
   {
     "id": "dehub-milestone-61-faster-and-sleeker-u",
@@ -1474,13 +1446,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A full interface overhaul and a backend three times faster. Shipped together, because either one alone would have been worse than nothing.",
     "content": "",
     "bannerImage": "/media/milestone-ui-overhaul-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
+    "bannerImageAlt": "Riftn Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-07-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32024",
       "2024",
@@ -1489,23 +1461,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2024 progress: Overhauled user interface & improved back end speed by 200%. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2024 progress: Overhauled user interface & improved back end speed by 200%. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-60-leveling-up-major-ap",
     "title": "Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
     "slug": "leveling-up-major-app-upgrade-earns-95-positive-feedback",
-    "excerpt": "95% positive feedback on a major app upgrade — and the 5% is the part that shaped the following year.",
+    "excerpt": "95% positive feedback on a major app upgrade, and the 5% is the part that shaped the following year.",
     "content": "",
     "bannerImage": "/media/milestone-positive-feedback-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
+    "bannerImageAlt": "Riftn Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-07-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32024",
       "2024",
@@ -1514,8 +1486,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Leveling Up: Major App Upgrade Earns 95% Positive Feedback | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2024 progress: Completed major app upgrade with 95% positive user feedback. Discover the impact of this tech milestone on our journey."
+    "seoTitle": "Leveling Up: Major App Upgrade Earns 95% Positive Feedback | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2024 progress: Completed major app upgrade with 95% positive user feedback. Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-59-worldwide-creators-p",
@@ -1524,13 +1496,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Creator partnerships across 15 countries. The interesting part was how differently each market treats a platform that pays in tokens.",
     "content": "",
     "bannerImage": "/media/milestone-15-countries-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries",
+    "bannerImageAlt": "Riftn Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-04-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22024",
       "2024",
@@ -1539,8 +1511,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Worldwide Creators: Partnerships Spanning 15 Countries | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2024 progress: Established creator partnerships in 15 countries. Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "Worldwide Creators: Partnerships Spanning 15 Countries | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2024 progress: Established creator partnerships in 15 countries. Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-milestone-58-entrepreneurial-spir",
@@ -1549,13 +1521,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Mike Hales and Indi Cammish opened a TikTok agency with TikTok executives directly, after a year topping the UK stream charts at around £1k a day.",
     "content": "",
     "bannerImage": "/media/milestone-tiktok-agency-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
+    "bannerImageAlt": "Riftn Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-04-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22024",
       "2024",
@@ -1564,23 +1536,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Entrepreneurial Spirit: Co-Founders Launch TikTok Agency | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2024 progress: Co-Founders Mike Hales & Indi Cammish Opened TikTok agency in partnership wit.... Discover the impact of this team milestone on our journey."
+    "seoTitle": "Entrepreneurial Spirit: Co-Founders Launch TikTok Agency | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2024 progress: Co-Founders Mike Hales & Indi Cammish Opened TikTok agency in partnership wit.... Discover the impact of this team milestone on our journey."
   },
   {
     "id": "dehub-milestone-57-global-footprint-deh",
-    "title": "Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
+    "title": "Global Footprint: Riftn Expands Middle East Presence via Dubai Event",
     "slug": "global-footprint-dehub-expands-middle-east-presence-via-dubai-event---a-dehub-milestone-from-q2-2024",
-    "excerpt": "A Dubai event and the Middle East expansion behind it. Written up in more detail separately — this is what it was for.",
+    "excerpt": "A Dubai event and the Middle East expansion behind it. Written up in more detail separately, this is what it was for.",
     "content": "",
     "bannerImage": "/media/milestone-dubai-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2024 update: Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
+    "bannerImageAlt": "Riftn Q2 2024 update: Global Footprint: Riftn Expands Middle East Presence via Dubai Event",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-04-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22024",
       "2024",
@@ -1589,23 +1561,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Global Footprint: DeHub Expands Middle East Presence via Dubai Event | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2024 progress: Dubai event expanded Middle East presence. Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "Global Footprint: Riftn Expands Middle East Presence via Dubai Event | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2024 progress: Dubai event expanded Middle East presence. Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-milestone-56-layer-2-expansion-sd",
     "title": "Layer 2 Expansion: SDHB Lists on Base",
     "slug": "layer-2-expansion-sdhb-lists-on-base",
-    "excerpt": "sDHB on Base. The chain where the transaction costs less than the thing you are buying — which is the entire requirement.",
+    "excerpt": "sDHB on Base. The chain where the transaction costs less than the thing you are buying, which is the entire requirement.",
     "content": "",
     "bannerImage": "/media/milestone-base-listing-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base",
+    "bannerImageAlt": "Riftn Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-04-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22024",
       "2024",
@@ -1614,14 +1586,14 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Layer 2 Expansion: SDHB Lists on Base | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2024 progress: Listed SDHB on Base L2. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Layer 2 Expansion: SDHB Lists on Base | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2024 progress: Listed SDHB on Base L2. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-1m-raise-completed",
     "title": "$1,000,000 raise completed",
     "slug": "1-million-dollar-raise-completed",
-    "excerpt": "DeHub's adult fork, Blocjerk (now fan.site) has completed a $1,000,000 raise backed by several notable VCs, influencers, and launchpads.",
+    "excerpt": "Riftn's adult fork, Blocjerk (now fan.site) has completed a $1,000,000 raise backed by several notable VCs, influencers, and launchpads.",
     "content": "",
     "bannerImage": "/media/bdd1dd4c-eb62-44e7-a205-fced995bdf9f.png",
     "bannerImageAlt": "$1,000,000 Fundraise",
@@ -1639,8 +1611,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 6,
     "featured": true,
     "status": "published",
-    "seoTitle": "$1,000,000 Raise Completed for DeHub's Fork, Fan.site",
-    "seoDescription": "DeHub's adult fork, Blocjerk (now fan.site) has completed a $1,000,000 raise backed by several notable VCs, influencers, and launchpads, ensuring a multi-year runway."
+    "seoTitle": "$1,000,000 Raise Completed for Riftn's Fork, Fan.site",
+    "seoDescription": "Riftn's adult fork, Blocjerk (now fan.site) has completed a $1,000,000 raise backed by several notable VCs, influencers, and launchpads, ensuring a multi-year runway."
   },
   {
     "id": "q1-overview-birds-eye-view",
@@ -1664,8 +1636,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": true,
     "status": "published",
-    "seoTitle": "DeHub Q1 2024 Overview: A Bird's Eye View",
-    "seoDescription": "A bird’s eye view of plans for the rest of this quarter, including launches, listings, and marketing schedules for DeHub and its partners."
+    "seoTitle": "Riftn Q1 2024 Overview: A Bird's Eye View",
+    "seoDescription": "A bird’s eye view of plans for the rest of this quarter, including launches, listings, and marketing schedules for Riftn and its partners."
   },
   {
     "id": "dehub-milestone-55-fueling-growth-1m-ra",
@@ -1674,13 +1646,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "$1,000,000 raised for the fork, from VCs, launchpads and public sales. A fork of our app, funded independently, with our stakers airdropped.",
     "content": "",
     "bannerImage": "/media/milestone-fansite-raise-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
+    "bannerImageAlt": "Riftn Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-01-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12024",
       "2024",
@@ -1689,23 +1661,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Fueling Growth: $1M Raised for Fan.site (BJ Fork) | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2024 progress: Raised $1,000,000 for adult fork BJ (now fan.site) from VCs, Launchpads & Pub.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Fueling Growth: $1M Raised for Fan.site (BJ Fork) | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2024 progress: Raised $1,000,000 for adult fork BJ (now fan.site) from VCs, Launchpads & Pub.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-54-expanding-reach-dhb-",
     "title": "Expanding Reach: DHB Lists on Ethereum Mainnet",
     "slug": "expanding-reach-dhb-lists-on-ethereum-mainnet",
-    "excerpt": "DHB listed on Ethereum mainnet. A year later we discontinued it — this post is where the reasoning for both starts.",
+    "excerpt": "DHB listed on Ethereum mainnet. A year later we discontinued it, this post is where the reasoning for both starts.",
     "content": "",
     "bannerImage": "/media/milestone-eth-listing-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
+    "bannerImageAlt": "Riftn Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-01-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12024",
       "2024",
@@ -1714,23 +1686,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Expanding Reach: DHB Lists on Ethereum Mainnet | DeHub 2024 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2024 progress: Listed DHB on Eth mainnet. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Expanding Reach: DHB Lists on Ethereum Mainnet | Riftn 2024 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2024 progress: Listed DHB on Eth mainnet. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-46-expanding-horizons-p",
     "title": "Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
     "slug": "expanding-horizons-partner-airdrop-for-fansite-bj-fork",
-    "excerpt": "A Q3 2023 milestone from DeHub's roadmap: Announced partner airdrop for BJ (now fan.site), the adult fork of DeHub.",
+    "excerpt": "A Q3 2023 milestone from Riftn's roadmap: Announced partner airdrop for BJ (now fan.site), the adult fork of Riftn.",
     "content": "",
     "bannerImage": "/media/milestone-partner-airdrop-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
+    "bannerImageAlt": "Riftn Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-11-21T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32023",
       "2023",
@@ -1739,8 +1711,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub's Partner Airdrop for Fan.site Fork | November Update",
-    "seoDescription": "All the details on the partner airdrop for Fan.site, the adult fork of DeHub. Learn about the airdrop, strategy, and key updates for DeHub stakers."
+    "seoTitle": "Riftn's Partner Airdrop for Fan.site Fork | November Update",
+    "seoDescription": "All the details on the partner airdrop for Fan.site, the adult fork of Riftn. Learn about the airdrop, strategy, and key updates for Riftn stakers."
   },
   {
     "id": "dehub-milestone-53-full-disclosure-dehu",
@@ -1755,7 +1727,7 @@ export const blogPostsMetadata: BlogPost[] = [
     },
     "publishedAt": "2023-10-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42023",
       "2023",
@@ -1764,23 +1736,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub: What's in store for the end of 2023?",
-    "seoDescription": "A quick overview of exciting updates coming before the end of 2023, including Streaming, Arcade, Shop, and general operations for DeHub."
+    "seoTitle": "Riftn: What's in store for the end of 2023?",
+    "seoDescription": "A quick overview of exciting updates coming before the end of 2023, including Streaming, Arcade, Shop, and general operations for Riftn."
   },
   {
     "id": "dehub-milestone-52-smarter-liquidity-au",
     "title": "Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "slug": "smarter-liquidity-automated-liquidity-provision-on-dexs",
-    "excerpt": "Liquidity management moved out of the contract and into a rules-based process — the opposite of where it lived when it broke everything.",
+    "excerpt": "Liquidity management moved out of the contract and into a rules-based process, the opposite of where it lived when it broke everything.",
     "content": "",
     "bannerImage": "/media/milestone-auto-liquidity-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
+    "bannerImageAlt": "Riftn Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-10-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42023",
       "2023",
@@ -1789,23 +1761,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Smarter Liquidity: Automated Liquidity Provision on DEXs | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2023 progress: Implemented automated liquidity provision strategies. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Smarter Liquidity: Automated Liquidity Provision on DEXs | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2023 progress: Implemented automated liquidity provision strategies. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-51-open-and-clear-dex-p",
     "title": "Open and Clear: DEX Policy Implementation and Transparency Commitment",
     "slug": "open-and-clear-dex-policy-implementation-and-transparency-commitment",
-    "excerpt": "A published, specific DEX policy — written so that the next person handling treasury cannot quietly do something different.",
+    "excerpt": "A published, specific DEX policy, written so that the next person handling treasury cannot quietly do something different.",
     "content": "",
     "bannerImage": "/media/milestone-dex-policy-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment",
+    "bannerImageAlt": "Riftn Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-10-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42023",
       "2023",
@@ -1814,8 +1786,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Open and Clear: DEX Policy Implementation and Transparency Commitment | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2023 progress: Commitment to transparency with all DEX policy implementation. Discover the impact of this strategy milestone on our journey."
+    "seoTitle": "Open and Clear: DEX Policy Implementation and Transparency Commitment | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2023 progress: Commitment to transparency with all DEX policy implementation. Discover the impact of this strategy milestone on our journey."
   },
   {
     "id": "dehub-milestone-50-prioritizing-princip",
@@ -1824,13 +1796,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "We asked to be delisted. Projects do not usually do that, and the reasoning was practical as well as ideological.",
     "content": "",
     "bannerImage": "/media/milestone-gate-delisting-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
+    "bannerImageAlt": "Riftn Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-10-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42023",
       "2023",
@@ -1839,8 +1811,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2023 progress: Voluntary delisting from Gate.io to prioritize decentralization. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2023 progress: Voluntary delisting from Gate.io to prioritize decentralization. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "feature-spotlight-ad-tech",
@@ -1849,7 +1821,7 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Taking digital advertising to new horizons.",
     "content": "",
     "bannerImage": "/media/79e6faf5-f135-410b-babd-d2d8611e2d5c.png",
-    "bannerImageAlt": "DeHub ad tech ecosystem stakeholders",
+    "bannerImageAlt": "Riftn ad tech ecosystem stakeholders",
     "author": {
       "name": "Riftn Team"
     },
@@ -1868,16 +1840,16 @@ export const blogPostsMetadata: BlogPost[] = [
     "id": "dehub-milestone-49-paving-the-way-frame",
     "title": "Paving the Way: Framework for Community-Driven Forks",
     "slug": "paving-the-way-framework-for-community-driven-forks",
-    "excerpt": "After one fork went well, we wrote down how it should go — so the next group is not negotiating from scratch.",
+    "excerpt": "After one fork went well, we wrote down how it should go, so the next group is not negotiating from scratch.",
     "content": "",
     "bannerImage": "/media/milestone-fork-framework-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2023 update: Paving the Way: Framework for Community-Driven Forks",
+    "bannerImageAlt": "Riftn Q3 2023 update: Paving the Way: Framework for Community-Driven Forks",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-07-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32023",
       "2023",
@@ -1886,8 +1858,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Paving the Way: Framework for Community-Driven Forks | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2023 progress: Established framework for future community-driven forks. Discover the impact of this community milestone on our journey."
+    "seoTitle": "Paving the Way: Framework for Community-Driven Forks | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2023 progress: Established framework for future community-driven forks. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "dehub-milestone-48-decentralization-in-",
@@ -1896,13 +1868,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Large holders forked our app to target the adult market. We did not stop them, and could not have. Here is why we think that is correct.",
     "content": "",
     "bannerImage": "/media/milestone-fork-story-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story",
+    "bannerImageAlt": "Riftn Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-07-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32023",
       "2023",
@@ -1911,8 +1883,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Decentralization in Practice: The Fan.site Fork Story | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2023 progress: Demonstrated true decentralization principles in action. Discover the impact of this strategy milestone on our journey."
+    "seoTitle": "Decentralization in Practice: The Fan.site Fork Story | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2023 progress: Demonstrated true decentralization principles in action. Discover the impact of this strategy milestone on our journey."
   },
   {
     "id": "dehub-milestone-47-supporting-growth-kn",
@@ -1921,13 +1893,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "We handed engineering knowledge to the team that forked us. The alternative was a worse product carrying our code and our holders.",
     "content": "",
     "bannerImage": "/media/milestone-knowledge-transfer-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team",
+    "bannerImageAlt": "Riftn Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-07-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32023",
       "2023",
@@ -1936,23 +1908,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Supporting Growth: Knowledge Transfer to Fan.site Team | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2023 progress: Facilitated knowledge transfer and technical support to fork team. Discover the impact of this team milestone on our journey."
+    "seoTitle": "Supporting Growth: Knowledge Transfer to Fan.site Team | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2023 progress: Facilitated knowledge transfer and technical support to fork team. Discover the impact of this team milestone on our journey."
   },
   {
     "id": "dehub-milestone-45-protecting-innovatio",
     "title": "Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
     "slug": "protecting-innovation-patent-applications-for-streaming-watch2earn-tech",
-    "excerpt": "Patent applications on the streaming and watch-to-earn mechanics — filed by a team that also open-sources, which needs explaining.",
+    "excerpt": "Patent applications on the streaming and watch-to-earn mechanics, filed by a team that also open-sources, which needs explaining.",
     "content": "",
     "bannerImage": "/media/milestone-patents-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2023 update: Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
+    "bannerImageAlt": "Riftn Q2 2023 update: Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-04-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22023",
       "2023",
@@ -1961,23 +1933,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2023 progress: Patent applications commenced for core streaming technology and watch2earn me.... Discover the impact of this legal milestone on our journey."
+    "seoTitle": "Protecting Innovation: Patent Applications for Streaming & Watch2Earn Tech | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2023 progress: Patent applications commenced for core streaming technology and watch2earn me.... Discover the impact of this legal milestone on our journey."
   },
   {
     "id": "dehub-milestone-44-in-the-spotlight-deh",
-    "title": "In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
+    "title": "In the Spotlight: Riftn Featured in TechCrunch and VentureBeat",
     "slug": "in-the-spotlight-dehub-featured-in-techcrunch-and-venturebeat---a-dehub-milestone-from-q2-2023",
     "excerpt": "Coverage in major tech publications. Useful, and a much weaker signal than the industry treats it as.",
     "content": "",
     "bannerImage": "/media/milestone-press-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2023 update: In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
+    "bannerImageAlt": "Riftn Q2 2023 update: In the Spotlight: Riftn Featured in TechCrunch and VentureBeat",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-04-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22023",
       "2023",
@@ -1986,23 +1958,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "In the Spotlight: DeHub Featured in TechCrunch and VentureBeat | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2023 progress: Featured in major tech publications including TechCrunch and VentureBeat. Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "In the Spotlight: Riftn Featured in TechCrunch and VentureBeat | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2023 progress: Featured in major tech publications including TechCrunch and VentureBeat. Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-milestone-43-innovation-recognize",
-    "title": "Innovation Recognized: DeHub Wins Corporate Livewire Award",
+    "title": "Innovation Recognized: Riftn Wins Corporate Livewire Award",
     "slug": "innovation-recognized-dehub-wins-corporate-livewire-award---a-dehub-milestone-from-q2-2023",
     "excerpt": "Most Innovative Company at Corporate Livewire, from a field of 900+ in a vote-based process backed by Sony, Samsung and others.",
     "content": "",
     "bannerImage": "/media/milestone-award-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2023 update: Innovation Recognized: DeHub Wins Corporate Livewire Award",
+    "bannerImageAlt": "Riftn Q2 2023 update: Innovation Recognized: Riftn Wins Corporate Livewire Award",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-04-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22023",
       "2023",
@@ -2011,23 +1983,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Innovation Recognized: DeHub Wins Corporate Livewire Award | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2023 progress: Won most innovative company award at UK's Corporate Livewire, competing again.... Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "Innovation Recognized: Riftn Wins Corporate Livewire Award | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2023 progress: Won most innovative company award at UK's Corporate Livewire, competing again.... Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-milestone-39-the-vision-unfolds-a",
-    "title": "The Vision Unfolds: Test Beta Launch of the DeHub d'App",
+    "title": "The Vision Unfolds: Test Beta Launch of the Riftn d'App",
     "slug": "the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp",
-    "excerpt": "A Q1 2023 milestone from DeHub's roadmap: Alpha launch of complete d'app integrating all ecosystem components.",
+    "excerpt": "A Q1 2023 milestone from Riftn's roadmap: Alpha launch of complete d'app integrating all ecosystem components.",
     "content": "",
     "bannerImage": "/media/c1cb14e2-cd34-452e-99c2-ad402724885e.png",
-    "bannerImageAlt": "DeHub D'App Test Beta Launch",
+    "bannerImageAlt": "Riftn D'App Test Beta Launch",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-01-16T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12023",
       "2023",
@@ -2036,23 +2008,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Vision Unfolds: Alpha Launch of DeHub's Integrated D'App | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2023 progress: Alpha launch of complete d'app integrating all ecosystem components. Discover the impact of this product milestone on our journey."
+    "seoTitle": "The Vision Unfolds: Alpha Launch of Riftn's Integrated D'App | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2023 progress: Alpha launch of complete d'app integrating all ecosystem components. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-42-back-in-action-dehub",
-    "title": "Back in Action: DeHub V2 Trading Resumes on Gate.io",
+    "title": "Back in Action: Riftn V2 Trading Resumes on Gate.io",
     "slug": "back-in-action-dehub-v2-trading-resumes-on-gateio",
-    "excerpt": "Trading resumed on Gate.io after the v2 relaunch. Ten months later we left voluntarily — both decisions are in this archive.",
+    "excerpt": "Trading resumed on Gate.io after the v2 relaunch. Ten months later we left voluntarily, both decisions are in this archive.",
     "content": "",
     "bannerImage": "/media/milestone-gate-resume-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2023 update: Back in Action: DeHub V2 Trading Resumes on Gate.io",
+    "bannerImageAlt": "Riftn Q1 2023 update: Back in Action: Riftn V2 Trading Resumes on Gate.io",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-01-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12023",
       "2023",
@@ -2061,8 +2033,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Back in Action: DeHub V2 Trading Resumes on Gate.io | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2023 progress: Recommenced trading of DeHub v2 on Gate.io. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Back in Action: Riftn V2 Trading Resumes on Gate.io | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2023 progress: Recommenced trading of Riftn v2 on Gate.io. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-41-insights-for-creator",
@@ -2071,13 +2043,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Work started on creator analytics in Q1 2023. On a platform paying out 90% on-chain, the numbers have to reconcile with the chain exactly.",
     "content": "",
     "bannerImage": "/media/milestone-analytics-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins",
+    "bannerImageAlt": "Riftn Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-01-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12023",
       "2023",
@@ -2086,23 +2058,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Insights for Creators: Advanced Analytics Dashboard Development Begins | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2023 progress: Commenced advanced analytics dashboard for creators. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Insights for Creators: Advanced Analytics Dashboard Development Begins | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2023 progress: Commenced advanced analytics dashboard for creators. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-40-creator-economy-reim",
     "title": "Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "slug": "creator-economy-reimagined-tokenized-uploads-90-ad-revenue-share",
-    "excerpt": "Creators keep 90% of ad revenue, settled on-chain. The number is the easy part — making it structural rather than promotional is not.",
+    "excerpt": "Creators keep 90% of ad revenue, settled on-chain. The number is the easy part, making it structural rather than promotional is not.",
     "content": "",
     "bannerImage": "/media/milestone-tokenized-uploads-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
+    "bannerImageAlt": "Riftn Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2023-01-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12023",
       "2023",
@@ -2111,17 +2083,17 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share | DeHub 2023 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2023 progress: Released tokenised uploads with onchain ad revenue sharing (creators earning .... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Creator Economy Reimagined: Tokenized Uploads & 90% Ad Revenue Share | Riftn 2023 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2023 progress: Released tokenised uploads with onchain ad revenue sharing (creators earning .... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-development-update-dapp-dec-2022",
-    "title": "DeHub Development Update & D'App",
+    "title": "Riftn Development Update & D'App",
     "slug": "dehub-development-update-dapp-dec-2022",
     "excerpt": "Streaming d'app upgrade scheduled for private beta this Friday the 16th, further major developments pipelined for imminent release, and $DHB token listing date proposed for early January.",
     "content": "",
     "bannerImage": "/media/09d36738-4fac-4bec-93ca-12b75da186ae.png",
-    "bannerImageAlt": "DeHub and Binance logos with lightning",
+    "bannerImageAlt": "Riftn and Binance logos with lightning",
     "author": {
       "name": "Riftn Team"
     },
@@ -2143,13 +2115,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "No tax triggers, no reflections, nothing in the transfer path. The boring choice, made immediately after the interesting one broke.",
     "content": "",
     "bannerImage": "/media/milestone-erc20-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
+    "bannerImageAlt": "Riftn Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-10-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42022",
       "2022",
@@ -2158,8 +2130,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Stability First: Adopting Standard ERC20 Tokenomics | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2022 progress: Implemented standard ERC20 tokenomics to avoid future issues. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Stability First: Adopting Standard ERC20 Tokenomics | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2022 progress: Implemented standard ERC20 tokenomics to avoid future issues. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-37-moving-forward-succe",
@@ -2168,13 +2140,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Moving 25,000+ holders onto a new contract, after a failure that was ours, at the point where we had the least credibility to ask anything of them.",
     "content": "",
     "bannerImage": "/media/milestone-v2-migration-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2",
+    "bannerImageAlt": "Riftn Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-10-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42022",
       "2022",
@@ -2183,8 +2155,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Moving Forward: Successful Migration of 25,000+ Holders to V2 | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2022 progress: Migrated 25,000+ token holders to new improved contract. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Moving Forward: Successful Migration of 25,000+ Holders to V2 | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2022 progress: Migrated 25,000+ token holders to new improved contract. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-36-the-unforeseen-navig",
@@ -2193,13 +2165,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "The contract's tax triggers malfunctioned and froze both the token and our liquidity pool. There was no fix short of relaunching.",
     "content": "",
     "bannerImage": "/media/milestone-contract-malfunction-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
+    "bannerImageAlt": "Riftn Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-10-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42022",
       "2022",
@@ -2208,23 +2180,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2022 progress: Contract tax triggers malfunctioned, freezing the token and our LP, forced to.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2022 progress: Contract tax triggers malfunctioned, freezing the token and our LP, forced to.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-35-trust-and-transparen",
     "title": "Trust and Transparency: On-Chain Verified Raffle Mechanics",
     "slug": "trust-and-transparency-on-chain-verified-raffle-mechanics",
-    "excerpt": "The verification layer built for a $1,000,000 raffle — including the part that proved the draw could not be run.",
+    "excerpt": "The verification layer built for a $1,000,000 raffle, including the part that proved the draw could not be run.",
     "content": "",
     "bannerImage": "/media/milestone-raffle-mechanics-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics",
+    "bannerImageAlt": "Riftn Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-07-05T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32022",
       "2022",
@@ -2233,23 +2205,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Trust and Transparency: On-Chain Verified Raffle Mechanics | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2022 progress: Created transparent raffle mechanics with on-chain verification. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Trust and Transparency: On-Chain Verified Raffle Mechanics | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2022 progress: Created transparent raffle mechanics with on-chain verification. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-34-strategic-alliances-",
     "title": "Strategic Alliances: Partnering with Real Estate and Legal Experts",
     "slug": "strategic-alliances-partnering-with-real-estate-and-legal-experts",
-    "excerpt": "The advisers behind the property venture. They did not save it — but they are the reason it ended cleanly rather than badly.",
+    "excerpt": "The advisers behind the property venture. They did not save it, but they are the reason it ended cleanly rather than badly.",
     "content": "",
     "bannerImage": "/media/milestone-alliances-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts",
+    "bannerImageAlt": "Riftn Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-07-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32022",
       "2022",
@@ -2258,8 +2230,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Strategic Alliances: Partnering with Real Estate and Legal Experts | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2022 progress: Established partnerships with real estate and legal firms. Discover the impact of this recognition milestone on our journey."
+    "seoTitle": "Strategic Alliances: Partnering with Real Estate and Legal Experts | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2022 progress: Established partnerships with real estate and legal firms. Discover the impact of this recognition milestone on our journey."
   },
   {
     "id": "dehub-milestone-33-ambitious-ventures-t",
@@ -2268,13 +2240,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Power of attorney over islands and a sea-front strip worth $15m+, and a plan to tokenise the sales. The Philippine SEC ended it.",
     "content": "",
     "bannerImage": "/media/milestone-palawan-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
+    "bannerImageAlt": "Riftn Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-07-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32022",
       "2022",
@@ -2283,23 +2255,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Ambitious Ventures: The Palawan Real Estate Tokenization Attempt | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2022 progress: Secured power of attorney for multiple islands and sea front strip in Palawan.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Ambitious Ventures: The Palawan Real Estate Tokenization Attempt | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2022 progress: Secured power of attorney for multiple islands and sea front strip in Palawan.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-32-dream-big-the-1m-hom",
-    "title": "Dream Big: The $1M Home Crypto Raffle by DeHub",
+    "title": "Dream Big: The $1M Home Crypto Raffle by Riftn",
     "slug": "dream-big-the-1m-home-crypto-raffle-by-dehub",
     "excerpt": "A $1,000,000 house, 15,000+ participants, and a raffle that did not hit its minimum. Everyone was refunded and the NFT kept its place in the app.",
     "content": "",
     "bannerImage": "/media/milestone-home-raffle-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by DeHub",
+    "bannerImageAlt": "Riftn Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by Riftn",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-07-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32022",
       "2022",
@@ -2308,23 +2280,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Dream Big: The $1M Home Crypto Raffle by DeHub | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2022 progress: Acquired $1,000,000 home for largest crypto raffle ever (15,000+ participants). Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Dream Big: The $1M Home Crypto Raffle by Riftn | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2022 progress: Acquired $1,000,000 home for largest crypto raffle ever (15,000+ participants). Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-31-empowering-creators-",
-    "title": "Empowering Creators: DeHub NFT Marketplace with Royalties",
+    "title": "Empowering Creators: Riftn NFT Marketplace with Royalties",
     "slug": "empowering-creators-dehub-nft-marketplace-with-royalties",
     "excerpt": "A marketplace where royalties are enforced by the contract rather than requested by the marketplace. In 2022 that distinction was about to matter enormously.",
     "content": "",
     "bannerImage": "/media/milestone-nft-marketplace-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: Empowering Creators: DeHub NFT Marketplace with Royalties",
+    "bannerImageAlt": "Riftn Q2 2022 update: Empowering Creators: Riftn NFT Marketplace with Royalties",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-06T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2333,8 +2305,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Empowering Creators: DeHub NFT Marketplace with Royalties | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Built NFT marketplace with royalty distribution system. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Empowering Creators: Riftn NFT Marketplace with Royalties | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Built NFT marketplace with royalty distribution system. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-30-efficient-streaming-",
@@ -2343,13 +2315,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A 60% cut in bandwidth costs. Unglamorous, invisible to users, and the reason the streaming product was viable at all.",
     "content": "",
     "bannerImage": "/media/milestone-compression-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs",
+    "bannerImageAlt": "Riftn Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-05T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2358,8 +2330,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Efficient Streaming: Advanced Video Compression Reduces Costs | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Implemented advanced video compression reducing bandwidth costs by 60%. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Efficient Streaming: Advanced Video Compression Reduces Costs | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Implemented advanced video compression reducing bandwidth costs by 60%. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-29-building-bridges-phi",
@@ -2368,13 +2340,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "SEC registration in the Philippines for real estate, construction and brokerage. It was necessary, it was slow, and it was not sufficient.",
     "content": "",
     "bannerImage": "/media/milestone-sec-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: Building Bridges: Philippine SEC Registration Secured",
+    "bannerImageAlt": "Riftn Q2 2022 update: Building Bridges: Philippine SEC Registration Secured",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2383,8 +2355,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Building Bridges: Philippine SEC Registration Secured | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Secured SEC registration with the Philippine Government for real estate, cons.... Discover the impact of this legal milestone on our journey."
+    "seoTitle": "Building Bridges: Philippine SEC Registration Secured | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Secured SEC registration with the Philippine Government for real estate, cons.... Discover the impact of this legal milestone on our journey."
   },
   {
     "id": "dehub-milestone-28-the-chads-arrive-gen",
@@ -2393,13 +2365,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "The genesis mint of the Chads. What the collection was for, and what we would not do again.",
     "content": "",
     "bannerImage": "/media/milestone-chads-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection",
+    "bannerImageAlt": "Riftn Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2408,23 +2380,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Chads Arrive: Genesis Mint of the Chads NFT Collection | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Genesis mint for Chads collection. Discover the impact of this product milestone on our journey."
+    "seoTitle": "The Chads Arrive: Genesis Mint of the Chads NFT Collection | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Genesis mint for Chads collection. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-27-lights-camera-blockc",
-    "title": "Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
+    "title": "Lights, Camera, Blockchain: Riftn's First Tokenized Documentary",
     "slug": "lights-camera-blockchain-dehubs-first-tokenized-documentary",
-    "excerpt": "A documentary by Luke Barnatt featuring Jorge Masvidal and Brad Pickett — and the first time we tokenised something that already had an audience.",
+    "excerpt": "A documentary by Luke Barnatt featuring Jorge Masvidal and Brad Pickett, and the first time we tokenised something that already had an audience.",
     "content": "",
     "bannerImage": "/media/milestone-documentary-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: Lights, Camera, Blockchain: DeHub's First Tokenized Documentary",
+    "bannerImageAlt": "Riftn Q2 2022 update: Lights, Camera, Blockchain: Riftn's First Tokenized Documentary",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2433,23 +2405,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Lights, Camera, Blockchain: DeHub's First Tokenized Documentary | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Produced first tokenised documentary featuring Jorge Masvidal, Brad Pickett &.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Lights, Camera, Blockchain: Riftn's First Tokenized Documentary | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Produced first tokenised documentary featuring Jorge Masvidal, Brad Pickett &.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-26-crystal-clear-dehub-",
-    "title": "Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
+    "title": "Crystal Clear: Riftn Stream App with 4K Support & High Uptime",
     "slug": "crystal-clear-dehub-stream-app-with-4k-support-high-uptime",
     "excerpt": "4K streaming at 99.9% uptime. The uptime figure was the difficult one, and it is the one creators actually judged us on.",
     "content": "",
     "bannerImage": "/media/milestone-4k-streams-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2022 update: Crystal Clear: DeHub Stream App with 4K Support & High Uptime",
+    "bannerImageAlt": "Riftn Q2 2022 update: Crystal Clear: Riftn Stream App with 4K Support & High Uptime",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-04-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22022",
       "2022",
@@ -2458,23 +2430,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Crystal Clear: DeHub Stream App with 4K Support & High Uptime | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2022 progress: Released stream app supporting 4K content with 99.9% uptime. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Crystal Clear: Riftn Stream App with 4K Support & High Uptime | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2022 progress: Released stream app supporting 4K content with 99.9% uptime. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-25-powering-play-dehubs",
-    "title": "Powering Play: DeHub's Custom Mobile Game Engine",
+    "title": "Powering Play: Riftn's Custom Mobile Game Engine",
     "slug": "powering-play-dehubs-custom-mobile-game-engine",
     "excerpt": "Building our own engine is normally the wrong answer. Here is the specific reason it was not, and what it cost us.",
     "content": "",
     "bannerImage": "/media/milestone-game-engine-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2022 update: Powering Play: DeHub's Custom Mobile Game Engine",
+    "bannerImageAlt": "Riftn Q1 2022 update: Powering Play: Riftn's Custom Mobile Game Engine",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-01-05T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12022",
       "2022",
@@ -2483,23 +2455,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Powering Play: DeHub's Custom Mobile Game Engine | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2022 progress: Built custom game engine optimized for mobile devices. Discover the impact of this tech milestone on our journey."
+    "seoTitle": "Powering Play: Riftn's Custom Mobile Game Engine | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2022 progress: Built custom game engine optimized for mobile devices. Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-24-challenge-accepted-s",
     "title": "Challenge Accepted: Social Features and Friend Challenges Arrive",
     "slug": "challenge-accepted-social-features-and-friend-challenges-arrive",
-    "excerpt": "Friend challenges, built deliberately as a light layer over solo play rather than a competitive mode — because that is what the data said people wanted.",
+    "excerpt": "Friend challenges, built deliberately as a light layer over solo play rather than a competitive mode, because that is what the data said people wanted.",
     "content": "",
     "bannerImage": "/media/milestone-challenges-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive",
+    "bannerImageAlt": "Riftn Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-01-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12022",
       "2022",
@@ -2508,23 +2480,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Challenge Accepted: Social Features and Friend Challenges Arrive | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2022 progress: Introduced social features allowing friend challenges. Discover the impact of this challenge milestone on our journey."
+    "seoTitle": "Challenge Accepted: Social Features and Friend Challenges Arrive | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2022 progress: Introduced social features allowing friend challenges. Discover the impact of this challenge milestone on our journey."
   },
   {
     "id": "dehub-milestone-23-on-chain-glory-block",
-    "title": "On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
+    "title": "On-Chain Glory: Blockchain Leaderboards and Rewards in Riftn Arcade",
     "slug": "on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade",
     "excerpt": "Once a score decides a reward, the score is a financial record. It has to be checkable by the person who came second.",
     "content": "",
     "bannerImage": "/media/milestone-leaderboards-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade",
+    "bannerImageAlt": "Riftn Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in Riftn Arcade",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-01-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12022",
       "2022",
@@ -2533,23 +2505,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2022 progress: Implemented blockchain-based leaderboards and rewards. Discover the impact of this product milestone on our journey."
+    "seoTitle": "On-Chain Glory: Blockchain Leaderboards and Rewards in Riftn Arcade | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2022 progress: Implemented blockchain-based leaderboards and rewards. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-22-high-score-dehub-gam",
-    "title": "High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
+    "title": "High Score: Riftn Gaming Hits 5,000+ Monthly Active Users",
     "slug": "high-score-dehub-gaming-hits-5000-monthly-active-users",
     "excerpt": "5,000 monthly active gamers in the arcade's first quarter. The number that mattered was how many came back on quiet days.",
     "content": "",
     "bannerImage": "/media/milestone-5000-players-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2022 update: High Score: DeHub Gaming Hits 5,000+ Monthly Active Users",
+    "bannerImageAlt": "Riftn Q1 2022 update: High Score: Riftn Gaming Hits 5,000+ Monthly Active Users",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-01-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12022",
       "2022",
@@ -2558,23 +2530,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "High Score: DeHub Gaming Hits 5,000+ Monthly Active Users | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2022 progress: Achieved 5,000+ monthly active gamers. Discover the impact of this community milestone on our journey."
+    "seoTitle": "High Score: Riftn Gaming Hits 5,000+ Monthly Active Users | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2022 progress: Achieved 5,000+ monthly active gamers. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "dehub-milestone-21-level-up-dehub-arcad",
-    "title": "Level Up: DeHub Arcade Launches with 5 Games & Predictions",
+    "title": "Level Up: Riftn Arcade Launches with 5 Games & Predictions",
     "slug": "level-up-dehub-arcade-launches-with-5-games-predictions",
-    "excerpt": "Five games — Super Robin Hood and Tomb Runner among them — plus predictions, shipped as one arcade rather than five separate apps.",
+    "excerpt": "Five games, Super Robin Hood and Tomb Runner among them, plus predictions, shipped as one arcade rather than five separate apps.",
     "content": "",
     "bannerImage": "/media/milestone-arcade-launch-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2022 update: Level Up: DeHub Arcade Launches with 5 Games & Predictions",
+    "bannerImageAlt": "Riftn Q1 2022 update: Level Up: Riftn Arcade Launches with 5 Games & Predictions",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2022-01-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12022",
       "2022",
@@ -2583,23 +2555,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Level Up: DeHub Arcade Launches with 5 Games & Predictions | DeHub 2022 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2022 progress: Released arcade with 5 initial games including Super Robin Hood and Tomb Runn.... Discover the impact of this product milestone on our journey."
+    "seoTitle": "Level Up: Riftn Arcade Launches with 5 Games & Predictions | Riftn 2022 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2022 progress: Released arcade with 5 initial games including Super Robin Hood and Tomb Runn.... Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-20-strength-in-numbers-",
-    "title": "Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
+    "title": "Strength in Numbers: Riftn Community Exceeds 8,000 Active Members",
     "slug": "strength-in-numbers-dehub-community-exceeds-8000-active-members",
-    "excerpt": "Past 8,000 active members — in the same quarter the chart was manipulated by our own listing agent. That is when a community is actually tested.",
+    "excerpt": "Past 8,000 active members, in the same quarter the chart was manipulated by our own listing agent. That is when a community is actually tested.",
     "content": "",
     "bannerImage": "/media/milestone-8000-members-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2021 update: Strength in Numbers: DeHub Community Exceeds 8,000 Active Members",
+    "bannerImageAlt": "Riftn Q4 2021 update: Strength in Numbers: Riftn Community Exceeds 8,000 Active Members",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-10-05T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42021",
       "2021",
@@ -2608,23 +2580,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Strength in Numbers: DeHub Community Exceeds 8,000 Active Members | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2021 progress: Community grew to 8,000+ active members. Discover the impact of this team milestone on our journey."
+    "seoTitle": "Strength in Numbers: Riftn Community Exceeds 8,000 Active Members | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2021 progress: Community grew to 8,000+ active members. Discover the impact of this team milestone on our journey."
   },
   {
     "id": "dehub-milestone-19-fair-play-provably-f",
-    "title": "Fair Play: Provably Fair Randomization in DeHub Games",
+    "title": "Fair Play: Provably Fair Randomization in Riftn Games",
     "slug": "fair-play-provably-fair-randomization-in-dehub-games",
     "excerpt": "The test is not whether we picked the winner. It is whether we could have. Provable fairness is what makes that question answerable.",
     "content": "",
     "bannerImage": "/media/milestone-provably-fair-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2021 update: Fair Play: Provably Fair Randomization in DeHub Games",
+    "bannerImageAlt": "Riftn Q4 2021 update: Fair Play: Provably Fair Randomization in Riftn Games",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-10-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42021",
       "2021",
@@ -2633,8 +2605,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Fair Play: Provably Fair Randomization in DeHub Games | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2021 progress: Implemented game mechanics with provably fair randomization. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Fair Play: Provably Fair Randomization in Riftn Games | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2021 progress: Implemented game mechanics with provably fair randomization. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-18-trials-and-tribulati",
@@ -2643,13 +2615,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Our listing agent took the fundraise and dumped our chart instead of airdropping Gate users. Gate investigated, apologised, and said the records were lost.",
     "content": "",
     "bannerImage": "/media/milestone-gate-incident-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident",
+    "bannerImageAlt": "Riftn Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-10-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42021",
       "2021",
@@ -2658,23 +2630,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Trials and Tribulations: The Gate.io Listing Agent Incident | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2021 progress: Discovered listing agent was fraudulent, stole our fundraise and dumped our c.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Trials and Tribulations: The Gate.io Listing Agent Incident | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2021 progress: Discovered listing agent was fraudulent, stole our fundraise and dumped our c.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-17-to-the-moon-gateio-l",
     "title": "To the Moon: Gate.io Listing and $10M LP Milestone",
     "slug": "to-the-moon-gateio-listing-and-10m-lp-milestone",
-    "excerpt": "A near-1000x run, close to $10m in the pool, and a Gate.io listing. This is the high point — and it is inseparable from what happened during it.",
+    "excerpt": "A near-1000x run, close to $10m in the pool, and a Gate.io listing. This is the high point, and it is inseparable from what happened during it.",
     "content": "",
     "bannerImage": "/media/milestone-gate-listing-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
+    "bannerImageAlt": "Riftn Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-10-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42021",
       "2021",
@@ -2683,23 +2655,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "To the Moon: Gate.io Listing and $10M LP Milestone | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2021 progress: Listed on Gate.io after a near 1000x price surge, with close to $10m in our LP. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "To the Moon: Gate.io Listing and $10M LP Milestone | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2021 progress: Listed on Gate.io after a near 1000x price surge, with close to $10m in our LP. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-16-game-on-dehub-launch",
-    "title": "Game On: DeHub Launches Prediction and Raffle Games",
+    "title": "Game On: Riftn Launches Prediction and Raffle Games",
     "slug": "game-on-dehub-launches-prediction-and-raffle-games",
-    "excerpt": "Predictions and raffles were the first things on DeHub where the outcome had to be provable, not promised.",
+    "excerpt": "Predictions and raffles were the first things on Riftn where the outcome had to be provable, not promised.",
     "content": "",
     "bannerImage": "/media/milestone-prediction-games-banner.jpg",
-    "bannerImageAlt": "DeHub Q4 2021 update: Game On: DeHub Launches Prediction and Raffle Games",
+    "bannerImageAlt": "Riftn Q4 2021 update: Game On: Riftn Launches Prediction and Raffle Games",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-10-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q42021",
       "2021",
@@ -2708,23 +2680,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Game On: DeHub Launches Prediction and Raffle Games | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q4 2021 progress: Released prediction and raffle games. Discover the impact of this product milestone on our journey."
+    "seoTitle": "Game On: Riftn Launches Prediction and Raffle Games | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q4 2021 progress: Released prediction and raffle games. Discover the impact of this product milestone on our journey."
   },
   {
     "id": "dehub-milestone-15-global-reach-dehub-t",
-    "title": "Global Reach: DeHub Team Grows to 15 Strong",
+    "title": "Global Reach: Riftn Team Grows to 15 Strong",
     "slug": "global-reach-dehub-team-grows-to-15-strong",
     "excerpt": "Fifteen people across three time zones. The distribution was the point, and it came with costs worth naming.",
     "content": "",
     "bannerImage": "/media/milestone-team-15-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2021 update: Global Reach: DeHub Team Grows to 15 Strong",
+    "bannerImageAlt": "Riftn Q3 2021 update: Global Reach: Riftn Team Grows to 15 Strong",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-07-05T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32021",
       "2021",
@@ -2733,8 +2705,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Global Reach: DeHub Team Grows to 15 Strong | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2021 progress: Expanded team to 15 members across 3 time zones. Discover the impact of this team milestone on our journey."
+    "seoTitle": "Global Reach: Riftn Team Grows to 15 Strong | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Expanded team to 15 members across 3 time zones. Discover the impact of this team milestone on our journey."
   },
   {
     "id": "dehub-milestone-14-fortifying-our-walls",
@@ -2743,13 +2715,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "A full Certik audit after a v1 vulnerability. Worth being precise about what an audit does and does not buy you.",
     "content": "",
     "bannerImage": "/media/milestone-certik-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit",
+    "bannerImageAlt": "Riftn Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-07-04T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32021",
       "2021",
@@ -2758,8 +2730,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Fortifying Our Walls: V1 Security Hardened with Certik Audit | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2021 progress: Addressed security vulnerabilities from v1 with full Certik Audit. Discover the impact of this challenge milestone on our journey."
+    "seoTitle": "Fortifying Our Walls: V1 Security Hardened with Certik Audit | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Addressed security vulnerabilities from v1 with full Certik Audit. Discover the impact of this challenge milestone on our journey."
   },
   {
     "id": "dehub-milestone-13-rewarding-loyalty-au",
@@ -2768,13 +2740,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "Every v1 holder was made whole 1:1, automatically, with no claim page and no deadline. This is what the security fix looked like from the holder side.",
     "content": "",
     "bannerImage": "/media/milestone-auto-airdrop-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders",
+    "bannerImageAlt": "Riftn Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-07-03T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32021",
       "2021",
@@ -2783,8 +2755,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Rewarding Loyalty: Automatic Airdrop for All Holders | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2021 progress: Airdropped all holders automatically. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Rewarding Loyalty: Automatic Airdrop for All Holders | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Airdropped all holders automatically. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-12-building-for-all-app",
@@ -2793,13 +2765,13 @@ export const blogPostsMetadata: BlogPost[] = [
     "excerpt": "The beta proved people wanted it. Rebuilding the whole app in React Native was the admission that the beta could not carry them.",
     "content": "",
     "bannerImage": "/media/milestone-react-native-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2021 update: Building for All: App Rebuild with React Native",
+    "bannerImageAlt": "Riftn Q3 2021 update: Building for All: App Rebuild with React Native",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-07-02T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32021",
       "2021",
@@ -2808,23 +2780,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Building for All: App Rebuild with React Native | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2021 progress: Started full app rebuild using React Native for better cross-platform support. Discover the impact of this tech milestone on our journey."
+    "seoTitle": "Building for All: App Rebuild with React Native | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Started full app rebuild using React Native for better cross-platform support. Discover the impact of this tech milestone on our journey."
   },
   {
     "id": "dehub-milestone-11-a-new-era-the-rebran",
-    "title": "A New Era: The Rebranding to DeHub",
+    "title": "A New Era: The Rebranding to Riftn",
     "slug": "a-new-era-the-rebranding-to-dehub",
     "excerpt": "A rename is usually cosmetic. This one was an argument about what we were building, settled in public.",
     "content": "",
     "bannerImage": "/media/milestone-rebrand-banner.jpg",
-    "bannerImageAlt": "DeHub Q3 2021 update: A New Era: The Rebranding to DeHub",
+    "bannerImageAlt": "Riftn Q3 2021 update: A New Era: The Rebranding to Riftn",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-07-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q32021",
       "2021",
@@ -2833,23 +2805,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "A New Era: The Rebranding to DeHub | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q3 2021 progress: Rebranded to DeHub. Discover the impact of this strategy milestone on our journey."
+    "seoTitle": "A New Era: The Rebranding to Riftn | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Rebranded to Riftn. Discover the impact of this strategy milestone on our journey."
   },
   {
     "id": "dehub-milestone-10-navigating-challenge",
     "title": "Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
     "slug": "navigating-challenges-addressing-a-v1-smart-contract-security-issue",
-    "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Smart contract security issue discovered.",
+    "excerpt": "A Q2 2021 milestone from Riftn's roadmap: Smart contract security issue discovered.",
     "content": "",
     "bannerImage": "/media/milestone-v1-security-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
+    "bannerImageAlt": "Riftn Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-06-19T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22021",
       "2021",
@@ -2858,23 +2830,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Navigating Challenges: Addressing a V1 Smart Contract Security Issue | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2021 progress: Smart contract security issue discovered. Discover the impact of this challenge milestone on our journey."
+    "seoTitle": "Navigating Challenges: Addressing a V1 Smart Contract Security Issue | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2021 progress: Smart contract security issue discovered. Discover the impact of this challenge milestone on our journey."
   },
   {
     "id": "dehub-milestone-7-diving-in-first-dehu",
-    "title": "Diving In: First DeHub Liquidity Pools on Pancake Swap",
+    "title": "Diving In: First Riftn Liquidity Pools on Pancake Swap",
     "slug": "diving-in-first-dehub-liquidity-pools-on-pancake-swap",
     "excerpt": "The community had already voted on the chain, the price, the supply and the market cap. PancakeSwap is where those decisions became real.",
     "content": "",
     "bannerImage": "/media/milestone-pancake-pools-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2021 update: Diving In: First DeHub Liquidity Pools on Pancake Swap",
+    "bannerImageAlt": "Riftn Q2 2021 update: Diving In: First Riftn Liquidity Pools on Pancake Swap",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-05-30T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22021",
       "2021",
@@ -2883,23 +2855,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Diving In: First DeHub Liquidity Pools on Pancake Swap | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2021 progress: Established first liquidity pools on Pancake Swap. Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Diving In: First Riftn Liquidity Pools on Pancake Swap | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2021 progress: Established first liquidity pools on Pancake Swap. Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-6-power-to-the-people-",
     "title": "Power to the People: Community Governed Listings",
     "slug": "power-to-the-people-community-governed-listings",
-    "excerpt": "A Q2 2021 milestone from DeHub's roadmap: Community governed listing chain, price / market cap.",
+    "excerpt": "A Q2 2021 milestone from Riftn's roadmap: Community governed listing chain, price / market cap.",
     "content": "",
     "bannerImage": "/media/milestone-governed-listings-banner.jpg",
-    "bannerImageAlt": "DeHub Q2 2021 update: Power to the People: Community Governed Listings",
+    "bannerImageAlt": "Riftn Q2 2021 update: Power to the People: Community Governed Listings",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-05-15T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22021",
       "2021",
@@ -2908,23 +2880,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Power to the People: Community Governed Listings | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q2 2021 progress: Community governed listing chain, price / market cap.. Discover the impact of this community milestone on our journey."
+    "seoTitle": "Power to the People: Community Governed Listings | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q2 2021 progress: Community governed listing chain, price / market cap.. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "dehub-milestone-2-early-traction-dehub",
-    "title": "Early Traction: DeHub's Alpha App Hits 2,000 DAUs",
+    "title": "Early Traction: Riftn's Alpha App Hits 2,000 DAUs",
     "slug": "early-traction-dehubs-beta-app-hits-2000-daus",
     "excerpt": "500 testers, 2,000 people opening the app every day, and no token yet. The order we did that in explains most of what came after.",
     "content": "",
     "bannerImage": "/media/milestone-2000-daus-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2021 update: Early Traction: DeHub's Beta App Hits 2,000 DAUs",
+    "bannerImageAlt": "Riftn Q1 2021 update: Early Traction: Riftn's Beta App Hits 2,000 DAUs",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-04-20T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12021",
       "2021",
@@ -2933,23 +2905,23 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Early Traction: DeHub's Beta App Hits 2,000 DAUs | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2021 progress: Launched first beta app on App Store with 500+ initial testers and 2,000 DAUs.... Discover the impact of this finance milestone on our journey."
+    "seoTitle": "Early Traction: Riftn's Beta App Hits 2,000 DAUs | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2021 progress: Launched first beta app on App Store with 500+ initial testers and 2,000 DAUs.... Discover the impact of this finance milestone on our journey."
   },
   {
     "id": "dehub-milestone-3-listening-to-our-use",
-    "title": "Listening to Our Users: 50+ Interviews Shape DeHub",
+    "title": "Listening to Our Users: 50+ Interviews Shape Riftn",
     "slug": "listening-to-our-users-50-interviews-shape-dehub",
     "excerpt": "We sat down with more than 50 users one at a time. Several features we were certain about did not survive the conversations.",
     "content": "",
     "bannerImage": "/media/milestone-interviews-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2021 update: Listening to Our Users: 50+ Interviews Shape DeHub",
+    "bannerImageAlt": "Riftn Q1 2021 update: Listening to Our Users: 50+ Interviews Shape Riftn",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-03-30T10:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12021",
       "2021",
@@ -2958,14 +2930,14 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Listening to Our Users: 50+ Interviews Shape DeHub | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2021 progress: Conducted 50+ user interviews to validate product-market fit. Discover the impact of this community milestone on our journey."
+    "seoTitle": "Listening to Our Users: 50+ Interviews Shape Riftn | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2021 progress: Conducted 50+ user interviews to validate product-market fit. Discover the impact of this community milestone on our journey."
   },
   {
     "id": "mvp-app-released-q1-2021",
     "title": "MVP App Released & Listed on Google Play Store",
     "slug": "mvp-app-released-listed-on-google-play-store",
-    "excerpt": "The DeHub MVP app is now live on the Google Play Store, featuring OTT streaming, protocol-uploaded content, and a YouTube aggregator. Discover what's next on our roadmap.",
+    "excerpt": "The Riftn MVP app is now live on the Google Play Store, featuring OTT streaming, protocol-uploaded content, and a YouTube aggregator. Discover what's next on our roadmap.",
     "content": "",
     "bannerImage": "/media/7c5ce318-2248-49d4-bb92-dc686c8609f1.png",
     "bannerImageAlt": "FTV - Futurov app on Google Play Store",
@@ -2985,18 +2957,18 @@ export const blogPostsMetadata: BlogPost[] = [
   },
   {
     "id": "dehub-milestone-1-building-the-dream-d",
-    "title": "Building the Dream: DeHub's Core Team Assembled",
+    "title": "Building the Dream: Riftn's Core Team Assembled",
     "slug": "building-the-dream-dehubs-core-team-assembled",
-    "excerpt": "A Q1 2021 milestone from DeHub's roadmap: Assembled core development team.",
+    "excerpt": "A Q1 2021 milestone from Riftn's roadmap: Assembled core development team.",
     "content": "",
     "bannerImage": "/media/milestone-core-team-banner.jpg",
-    "bannerImageAlt": "DeHub Q1 2021 update: Building the Dream: DeHub's Core Team Assembled",
+    "bannerImageAlt": "Riftn Q1 2021 update: Building the Dream: Riftn's Core Team Assembled",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2021-01-01T00:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q12021",
       "2021",
@@ -3005,8 +2977,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "Building the Dream: DeHub's Core Team Assembled | DeHub 2021 Roadmap",
-    "seoDescription": "Official update on DeHub's Q1 2021 progress: Assembled core development team. Discover the impact of this team milestone on our journey."
+    "seoTitle": "Building the Dream: Riftn's Core Team Assembled | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q1 2021 progress: Assembled core development team. Discover the impact of this team milestone on our journey."
   }
 ];
 
@@ -3018,17 +2990,17 @@ export const newPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
     "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-    "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
-    "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get DeHub relaunched and trading.",
+    "title": "Riftn’s next chapter: Riftn, BNB recovery and the road to relaunch",
+    "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get Riftn relaunched and trading.",
     "content": "",
     "bannerImage": "/media/dehub-to-riftn-transition.png",
-    "bannerImageAlt": "DeHub to Riftn — the next chapter",
+    "bannerImageAlt": "Riftn to Riftn, the next chapter",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2026-10-22T18:00:00.000Z",
     "tags": [
-      "DeHub",
+      "Riftn",
       "Riftn",
       "BNB",
       "Community",
@@ -3037,17 +3009,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 6,
     "featured": true,
     "status": "published",
-    "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
-    "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
+    "seoTitle": "Riftn’s next chapter: Riftn, BNB recovery and relaunch",
+    "seoDescription": "Riftn proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
   },
   {
     "id": "dehub-token-exchange-listings-update-2026",
     "slug": "dehub-token-exchange-listings-update-2026",
-    "title": "DeHub Token and Exchange Listings Update",
+    "title": "Riftn Token and Exchange Listings Update",
     "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
     "content": "",
     "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
-    "bannerImageAlt": "DeHub listing soon announcement banner",
+    "bannerImageAlt": "Riftn listing soon announcement banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3062,17 +3034,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": true,
     "status": "published",
-    "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
-    "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
+    "seoTitle": "Riftn Token and Exchange Listings Update | Riftn",
+    "seoDescription": "Riftn shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
   },
   {
     "id": "q4-development-overview",
     "slug": "q4-development-overview",
     "title": "Q4 Development Overview",
-    "excerpt": "Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub — the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.",
+    "excerpt": "Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub, the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.",
     "content": "",
     "bannerImage": "/media/q4-development-overview-banner.png",
-    "bannerImageAlt": "Q4 Development Overview - DeHub rocket banner",
+    "bannerImageAlt": "Q4 Development Overview - Riftn rocket banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3087,17 +3059,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 12,
     "featured": true,
     "status": "published",
-    "seoTitle": "Q4 Development Overview | DeHub",
-    "seoDescription": "Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout."
+    "seoTitle": "Q4 Development Overview | Riftn",
+    "seoDescription": "Everything Riftn shipped since October across web, mobile, the streaming backend and admin, the video editor, Creator, AI agents, live, profiles, System Light and wallets, with pull request links throughout."
   },
   {
     "id": "q3-development-overview",
     "slug": "q3-development-overview",
     "title": "Q3 Development Overview",
-    "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend — stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
+    "excerpt": "Every distinct thing we shipped since July across dehubweb, dehub-mobile and dehub-stream-backend, stages, AI, ten themes, the arcade, wallets, economy, mobile parity and the plumbing underneath, with the commit next to each entry.",
     "content": "",
     "bannerImage": "/media/q3-development-overview-banner.png",
-    "bannerImageAlt": "Q3 Development Overview - DeHub rocket banner",
+    "bannerImageAlt": "Q3 Development Overview - Riftn rocket banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3113,17 +3085,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 25,
     "featured": false,
     "status": "published",
-    "seoTitle": "Q3 Development Overview | DeHub",
-    "seoDescription": "Every distinct thing DeHub shipped in Q3 across web, mobile and the streaming backend — stages, AI, ten themes, the arcade, self-custody wallets and the economy — with commit links throughout."
+    "seoTitle": "Q3 Development Overview | Riftn",
+    "seoDescription": "Every distinct thing Riftn shipped in Q3 across web, mobile and the streaming backend, stages, AI, ten themes, the arcade, self-custody wallets and the economy, with commit links throughout."
   },
   {
     "id": "development-update-dehub-era-starts-final-updates-bug-fixes",
     "slug": "development-update-dehub-era-starts-final-updates-bug-fixes",
-    "title": "Development Update: The DeHub Era Starts - Final Updates and Bug Fixes Shipping in Coming Days",
+    "title": "Development Update: The Riftn Era Starts - Final Updates and Bug Fixes Shipping in Coming Days",
     "excerpt": "As we prepare to cut the rope and begin app promotions after years of building, there has never been a more exciting time to be here. Final updates and bug fixes are shipping in the coming days.",
     "content": "",
     "bannerImage": "/media/dev-update-jan-2026-banner.png",
-    "bannerImageAlt": "DeHub Development Update January 2026 - The DeHub Era Starts",
+    "bannerImageAlt": "Riftn Development Update January 2026 - The Riftn Era Starts",
     "author": {
       "name": "Riftn Team"
     },
@@ -3139,17 +3111,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "Development Update: The DeHub Era Starts | DeHub",
-    "seoDescription": "DeHub development update — final updates and bug fixes shipping soon as we begin app promotions. Web app and Google Play updates coming in days, with Apple listing to follow."
+    "seoTitle": "Development Update: The Riftn Era Starts | Riftn",
+    "seoDescription": "Riftn development update, final updates and bug fixes shipping soon as we begin app promotions. Web app and Google Play updates coming in days, with Apple listing to follow."
   },
   {
     "id": "town-hall-200k-private-sale-partner-tge-march-2026",
     "slug": "town-hall-200k-private-sale-partner-tge-march-2026",
     "title": "Town Hall Overview: $200,000 Private Sale Complete, Partner TGE March, New Pools, Added LP and More!",
-    "excerpt": "The DeHub team provides a detailed update following the recent Town Hall — covering the completed $200,000 private sale, confirmed TGE timeline, public sale mechanics, and an accelerated growth strategy for 2026.",
+    "excerpt": "The Riftn team provides a detailed update following the recent Town Hall, covering the completed $200,000 private sale, confirmed TGE timeline, public sale mechanics, and an accelerated growth strategy for 2026.",
     "content": "",
     "bannerImage": "/media/town-hall-jan-2026-banner.png",
-    "bannerImageAlt": "DeHub Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement",
+    "bannerImageAlt": "Riftn Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement",
     "author": {
       "name": "Riftn Team"
     },
@@ -3166,17 +3138,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 7,
     "featured": false,
     "status": "published",
-    "seoTitle": "Town Hall: $200K Private Sale Complete & TGE March 2026 | DeHub",
-    "seoDescription": "DeHub Town Hall recap — $200,000 private sale complete, TGE timeline confirmed for March 2026, new liquidity pools, public sale mechanics, and an accelerated growth strategy."
+    "seoTitle": "Town Hall: $200K Private Sale Complete & TGE March 2026 | Riftn",
+    "seoDescription": "Riftn Town Hall recap, $200,000 private sale complete, TGE timeline confirmed for March 2026, new liquidity pools, public sale mechanics, and an accelerated growth strategy."
   },
   {
     "id": "yearly-wrap-up-2025-and-2026-roadmap",
     "slug": "yearly-wrap-up-2025-and-2026-roadmap",
     "title": "Yearly Wrap Up and 2026 Roadmap",
-    "excerpt": "A look back at a defining year for DeHub — from the Coinbase listing and Google Play launch to BNB Chain recognition and the First Class partnership — and a deep dive into the explosive 2026 roadmap ahead.",
+    "excerpt": "A look back at a defining year for Riftn, from the Coinbase listing and Google Play launch to BNB Chain recognition and the First Class partnership, and a deep dive into the explosive 2026 roadmap ahead.",
     "content": "",
     "bannerImage": "/media/yearly-wrap-up-2025-banner.png",
-    "bannerImageAlt": "DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration",
+    "bannerImageAlt": "Riftn 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration",
     "author": {
       "name": "Riftn Team"
     },
@@ -3195,17 +3167,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 8,
     "featured": true,
     "status": "published",
-    "seoTitle": "Yearly Wrap Up 2025 & 2026 Roadmap | DeHub",
-    "seoDescription": "DeHub's 2025 year in review — from Coinbase listing and Google Play launch to BNB Chain recognition — plus the full 2026 roadmap including Last Chad Standing, Apple App Store, DePIN, and more."
+    "seoTitle": "Yearly Wrap Up 2025 & 2026 Roadmap | Riftn",
+    "seoDescription": "Riftn's 2025 year in review, from Coinbase listing and Google Play launch to BNB Chain recognition, plus the full 2026 roadmap including Last Chad Standing, Apple App Store, DePIN, and more."
   },
   {
     "id": "dehub-featured-in-press",
     "slug": "dehub-featured-in-press",
-    "title": "DeHub in the Press: Featured Across Global Publications",
-    "excerpt": "It's been a landmark run for DeHub in the media. From US Weekly to Yahoo Finance, Entrepreneur and Investing.com, some of the world's biggest publications have put a spotlight on our mission to democratise media. Here are the articles.",
+    "title": "Riftn in the Press: Featured Across Global Publications",
+    "excerpt": "It's been a landmark run for Riftn in the media. From US Weekly to Yahoo Finance, Entrepreneur and Investing.com, some of the world's biggest publications have put a spotlight on our mission to democratise media. Here are the articles.",
     "content": "",
     "bannerImage": "/media/dehub-featured-in-press-banner.png",
-    "bannerImageAlt": "DeHub featured in the press — US Weekly, Yahoo Finance, Entrepreneur and Investing.com",
+    "bannerImageAlt": "Riftn featured in the press, US Weekly, Yahoo Finance, Entrepreneur and Investing.com",
     "author": {
       "name": "Riftn Team"
     },
@@ -3220,17 +3192,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub in the Press: Featured in US Weekly, Yahoo Finance, Entrepreneur & Investing.com",
-    "seoDescription": "DeHub has been featured across major global publications including US Weekly, Yahoo Finance, Entrepreneur and Investing.com. Read every article covering DeHub's mission to democratise media."
+    "seoTitle": "Riftn in the Press: Featured in US Weekly, Yahoo Finance, Entrepreneur & Investing.com",
+    "seoDescription": "Riftn has been featured across major global publications including US Weekly, Yahoo Finance, Entrepreneur and Investing.com. Read every article covering Riftn's mission to democratise media."
   },
   {
     "id": "countdown-begins-dehub-app-store-launch",
     "slug": "countdown-begins-dehub-app-store-launch",
     "title": "The Countdown Begins!",
-    "excerpt": "DeHub's app launch across stores is imminent. The countdown is live on dehub.io and the moment we've been building towards for 4 years is finally here.",
+    "excerpt": "Riftn's app launch across stores is imminent. The countdown is live on riftn.com and the moment we've been building towards for 4 years is finally here.",
     "content": "",
     "bannerImage": "/media/countdown-clock-banner.png",
-    "bannerImageAlt": "Countdown clock for DeHub app store launch",
+    "bannerImageAlt": "Countdown clock for Riftn app store launch",
     "author": {
       "name": "Riftn Team"
     },
@@ -3245,17 +3217,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "The Countdown Begins! DeHub App Store Launch Imminent | DeHub",
-    "seoDescription": "DeHub's app launch across stores is imminent. After 4 years of building, the countdown is live on dehub.io. Watch as we prepare to go live on Apple App Store and Google Play Store."
+    "seoTitle": "The Countdown Begins! Riftn App Store Launch Imminent | Riftn",
+    "seoDescription": "Riftn's app launch across stores is imminent. After 4 years of building, the countdown is live on riftn.com. Watch as we prepare to go live on Apple App Store and Google Play Store."
   },
   {
     "id": "dehub-massive-week-bnb-recognition-first-class-partnership-app-store-launch",
     "slug": "dehub-massive-week-bnb-recognition-first-class-partnership-app-store-launch",
-    "title": "DeHub's Special Week: BNB Recognition, First Class Partnership, App Store Launch, and a Pipeline of Game-Changing Features",
-    "excerpt": "What a week! DeHub finally earned serious recognition from the BNB Chain team, launched an official partnership with First Class Agency onboarding 1,200+ streamers, submitted to app stores, and unveiled a special pipeline of game-changing features.",
+    "title": "Riftn's Special Week: BNB Recognition, First Class Partnership, App Store Launch, and a Pipeline of Game-Changing Features",
+    "excerpt": "What a week! Riftn finally earned serious recognition from the BNB Chain team, launched an official partnership with First Class Agency onboarding 1,200+ streamers, submitted to app stores, and unveiled a special pipeline of game-changing features.",
     "content": "",
     "bannerImage": "/media/town-hall-ama-banner-new.png",
-    "bannerImageAlt": "DeHub Town Hall and AMA Highlights showcasing major announcements",
+    "bannerImageAlt": "Riftn Town Hall and AMA Highlights showcasing major announcements",
     "author": {
       "name": "Riftn Team"
     },
@@ -3272,13 +3244,13 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 9,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub's Special Week: BNB Chain Recognition, First Class Partnership & App Store Launch | DeHub Blog",
-    "seoDescription": "DeHub celebrates a special week of milestones: official BNB Chain recognition and DApp Bay integration, First Class Agency partnership bringing 1,200+ streamers, app store submission, and unveiling a pipeline of revolutionary features including AI toolkits, games, and more."
+    "seoTitle": "Riftn's Special Week: BNB Chain Recognition, First Class Partnership & App Store Launch | Riftn Blog",
+    "seoDescription": "Riftn celebrates a special week of milestones: official BNB Chain recognition and DApp Bay integration, First Class Agency partnership bringing 1,200+ streamers, app store submission, and unveiling a pipeline of revolutionary features including AI toolkits, games, and more."
   },
   {
     "id": "leading-the-way-dehub-founders-official-tiktok-partner-agency-becomes-uk-1-with-1000-streamers",
     "slug": "leading-the-way-dehub-founders-official-tiktok-partner-agency-becomes-uk-1-with-1000-streamers",
-    "title": "Leading the Way: DeHub Founder's Official TikTok Partner Agency Becomes UK #1 with 1,000 Streamers",
+    "title": "Leading the Way: Riftn Founder's Official TikTok Partner Agency Becomes UK #1 with 1,000 Streamers",
     "excerpt": "From a bold idea to a national force in livestreaming, Team First Class Agency has officially hit a milestone worth celebrating. Co-founded by Mike Hales and Indi Jay Cammish, the TikTok official partner agency has now grown to over 1,000 active live streamers.",
     "content": "",
     "bannerImage": "/media/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png",
@@ -3298,23 +3270,23 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "Leading the Way: DeHub Founder's Official TikTok Partner Agency Becomes UK #1 with 1,000 Streamers | DeHub",
-    "seoDescription": "Team First Class Agency, co-founded by DeHub's Mike Hales and Indi Jay Cammish, becomes the UK's #1 TikTok agency with over 1,000 active live streamers as an official TikTok partner."
+    "seoTitle": "Leading the Way: Riftn Founder's Official TikTok Partner Agency Becomes UK #1 with 1,000 Streamers | Riftn",
+    "seoDescription": "Team First Class Agency, co-founded by Riftn's Mike Hales and Indi Jay Cammish, becomes the UK's #1 TikTok agency with over 1,000 active live streamers as an official TikTok partner."
   },
   {
     "id": "off-ramp-service-revealed-dehub-card-coming-soon",
     "slug": "off-ramp-service-revealed-dehub-card-coming-soon",
-    "title": "Off-Ramp Service Revealed: DeHub Card Coming Soon!",
-    "excerpt": "With our on-ramp service now live, we're introducing something revolutionary: the DeHub Card. Rather than traditional bank transfers, spend crypto directly anywhere cards are accepted.",
+    "title": "Off-Ramp Service Revealed: Riftn Card Coming Soon!",
+    "excerpt": "With our on-ramp service now live, we're introducing something revolutionary: the Riftn Card. Rather than traditional bank transfers, spend crypto directly anywhere cards are accepted.",
     "content": "",
     "bannerImage": "/media/bde80bf2-8f1d-4c14-9938-1a3080777203.png",
-    "bannerImageAlt": "DeHub Cards in premium gold finish showcasing modern crypto payment solution",
+    "bannerImageAlt": "Riftn Cards in premium gold finish showcasing modern crypto payment solution",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2025-06-18T12:00:00.000Z",
     "tags": [
-      "DeHub Card",
+      "Riftn Card",
       "Off-ramp",
       "Fintech",
       "Crypto Payments",
@@ -3323,14 +3295,14 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 7,
     "featured": false,
     "status": "published",
-    "seoTitle": "Off-Ramp Service Revealed: DeHub Card Coming Soon! | DeHub",
-    "seoDescription": "DeHub introduces the revolutionary DeHub Card - spend crypto directly without traditional banking. No frozen accounts, instant access, global reach."
+    "seoTitle": "Off-Ramp Service Revealed: Riftn Card Coming Soon! | Riftn",
+    "seoDescription": "Riftn introduces the revolutionary Riftn Card - spend crypto directly without traditional banking. No frozen accounts, instant access, global reach."
   },
   {
     "id": "fresh-experience-revamped-app-feed",
     "title": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces",
     "slug": "fresh-experience-revamped-app-feed-with-audio-replies-live-talk-spaces",
-    "excerpt": "We're thrilled to unveil a brand new user interface that brings clarity, performance, and creativity to the forefront of your DeHub experience.",
+    "excerpt": "We're thrilled to unveil a brand new user interface that brings clarity, performance, and creativity to the forefront of your Riftn experience.",
     "content": "",
     "author": {
       "name": "Riftn Team",
@@ -3346,19 +3318,19 @@ export const newPostsMetadata: BlogPost[] = [
       "User Experience"
     ],
     "bannerImage": "/media/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png",
-    "bannerImageAlt": "DeHub's new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections",
+    "bannerImageAlt": "Riftn's new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections",
     "featured": false,
-    "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - DeHub",
-    "seoDescription": "Discover DeHub's brand new user interface with centralized search, AI-powered content feeds, real-time trends, and enhanced creator tools for better content discovery."
+    "seoTitle": "Fresh Experience: Revamped App Feed with Audio Replies & Live Talk Spaces - Riftn",
+    "seoDescription": "Discover Riftn's brand new user interface with centralized search, AI-powered content feeds, real-time trends, and enhanced creator tools for better content discovery."
   },
   {
     "id": "interactive-streaming-on-chain-live-streams-with-animated-tip",
     "slug": "interactive-streaming-on-chain-live-streams-with-animated-tip",
     "title": "Interactive Streaming: On-Chain Live Streams with Animated Tip",
-    "excerpt": "The digital content landscape is evolving rapidly, and live streaming has become the cornerstone of real-time audience engagement. At DeHub, we're introducing Interactive On-Chain Live Streaming - a groundbreaking feature that combines the immediacy of live content with blockchain technology.",
+    "excerpt": "The digital content landscape is evolving rapidly, and live streaming has become the cornerstone of real-time audience engagement. At Riftn, we're introducing Interactive On-Chain Live Streaming - a groundbreaking feature that combines the immediacy of live content with blockchain technology.",
     "content": "",
     "bannerImage": "/media/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png",
-    "bannerImageAlt": "Interactive live streaming with animated tips - DeHub's revolutionary approach to on-chain content creation",
+    "bannerImageAlt": "Interactive live streaming with animated tips - Riftn's revolutionary approach to on-chain content creation",
     "author": {
       "name": "Riftn Team"
     },
@@ -3373,8 +3345,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 8,
     "featured": false,
     "status": "published",
-    "seoTitle": "Interactive Streaming: On-Chain Live Streams with Animated Tips | DeHub",
-    "seoDescription": "Discover DeHub's revolutionary interactive live streaming platform featuring on-chain transactions, animated tips, and text-to-voice generation for the ultimate creator experience."
+    "seoTitle": "Interactive Streaming: On-Chain Live Streams with Animated Tips | Riftn",
+    "seoDescription": "Discover Riftn's revolutionary interactive live streaming platform featuring on-chain transactions, animated tips, and text-to-voice generation for the ultimate creator experience."
   },
   {
     "id": "2022-wrap-up",
@@ -3383,7 +3355,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "Diving back through the year just passed as well as into the one ahead. Thanks to each and every one of the team, community and contributors we have been ploughing through our roadmap and setting ourself up for the biggest year yet.",
     "content": "",
     "bannerImage": "/media/4476fbc3-58ec-467b-8c1b-30570349940c.png",
-    "bannerImageAlt": "2022 Wrap Up - DeHub year in review with fireworks celebration",
+    "bannerImageAlt": "2022 Wrap Up - Riftn year in review with fireworks celebration",
     "author": {
       "name": "Riftn Team"
     },
@@ -3398,8 +3370,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 13,
     "featured": false,
     "status": "published",
-    "seoTitle": "2022 Wrap Up | DeHub Year in Review",
-    "seoDescription": "Diving back through the year just passed as well as into the one ahead. A comprehensive review of DeHub's achievements and milestones in 2022."
+    "seoTitle": "2022 Wrap Up | Riftn Year in Review",
+    "seoDescription": "Diving back through the year just passed as well as into the one ahead. A comprehensive review of Riftn's achievements and milestones in 2022."
   },
   {
     "id": "tokenised-uploads-are-here",
@@ -3408,7 +3380,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "Discover how we've integrated a unique fan token experience into our app. Every upload can now be minted as a fractionalised NFT, sharing ad revenue with its owners!",
     "content": "",
     "bannerImage": "/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png",
-    "bannerImageAlt": "A glowing DeHub token representing tokenized uploads.",
+    "bannerImageAlt": "A glowing Riftn token representing tokenized uploads.",
     "author": {
       "name": "Riftn Team"
     },
@@ -3423,14 +3395,14 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "Tokenised Uploads Are Here! | DeHub Feature Update",
-    "seoDescription": "Learn about DeHub's new Tokenised Uploads feature. Any upload can be minted as a fractionalised NFT that shares ad revenue, creating a new economy for creators and fans."
+    "seoTitle": "Tokenised Uploads Are Here! | Riftn Feature Update",
+    "seoDescription": "Learn about Riftn's new Tokenised Uploads feature. Any upload can be minted as a fractionalised NFT that shares ad revenue, creating a new economy for creators and fans."
   },
   {
     "id": "award-winning-innovation-dehub-recognised",
     "slug": "award-winning-innovation-dehub-recognised",
-    "title": "Award Winning Innovation! DeHub recognised for pioneering efforts",
-    "excerpt": "After 27k votes over the last 12 months, DeHub is officially Corporate LiveWire’s 2023 Innovation and Excellence Winner in the \"Gaming\" category.",
+    "title": "Award Winning Innovation! Riftn recognised for pioneering efforts",
+    "excerpt": "After 27k votes over the last 12 months, Riftn is officially Corporate LiveWire’s 2023 Innovation and Excellence Winner in the \"Gaming\" category.",
     "content": "",
     "bannerImage": "/media/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png",
     "bannerImageAlt": "Corporate LiveWire Innovation & Excellence Awards 2023 Winner badge.",
@@ -3447,23 +3419,23 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 7,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Wins Corporate LiveWire 2023 Innovation & Excellence Award",
-    "seoDescription": "DeHub is recognised as the 2023 winner for Innovation and Excellence in the Gaming category by Corporate LiveWire. Find out more about this prestigious award."
+    "seoTitle": "Riftn Wins Corporate LiveWire 2023 Innovation & Excellence Award",
+    "seoDescription": "Riftn is recognised as the 2023 winner for Innovation and Excellence in the Gaming category by Corporate LiveWire. Find out more about this prestigious award."
   },
   {
     "id": "global-footprint-dehub-expands-middle-east-presence-via-dubai-event",
     "slug": "global-footprint-dehub-expands-middle-east-presence-via-dubai-event",
-    "title": "Global Footprint: DeHub Expands Middle East Presence via Dubai Event",
-    "excerpt": "Hard work and innovation deserve to be recognized. We were incredibly honored in Q2 2024 when DeHub achieved a significant external milestone, expanding our global footprint into the Middle East.",
+    "title": "Global Footprint: Riftn Expands Middle East Presence via Dubai Event",
+    "excerpt": "Hard work and innovation deserve to be recognized. We were incredibly honored in Q2 2024 when Riftn achieved a significant external milestone, expanding our global footprint into the Middle East.",
     "content": "",
     "bannerImage": "/media/2dc5ff27-15fe-4181-b199-8f6941fa3913.png",
-    "bannerImageAlt": "DeHub DeTour Dubai event banner",
+    "bannerImageAlt": "Riftn DeTour Dubai event banner",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2024-04-10T12:00:00.000Z",
     "tags": [
-      "DeHub Journey",
+      "Riftn Journey",
       "Roadmap",
       "Q22024",
       "Events",
@@ -3472,17 +3444,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Expands to Middle East with Dubai Event Presence",
-    "seoDescription": "DeHub marks a major Q2 2024 milestone by expanding its presence in the Middle East, participating in major blockchain events across Dubai."
+    "seoTitle": "Riftn Expands to Middle East with Dubai Event Presence",
+    "seoDescription": "Riftn marks a major Q2 2024 milestone by expanding its presence in the Middle East, participating in major blockchain events across Dubai."
   },
   {
     "id": "base-pool-going-live-soon",
     "title": "Base pool going live soon!",
     "slug": "base-pool-going-live-soon",
-    "excerpt": "Get ready DeHubbers! We are thrilled to announce that we will be deploying on Uniswap on the Base network imminently. Find out how to bridge your tokens for free!",
+    "excerpt": "Get ready Riftners! We are thrilled to announce that we will be deploying on Uniswap on the Base network imminently. Find out how to bridge your tokens for free!",
     "content": "",
     "bannerImage": "/media/068250b6-b4b6-42fc-8633-f686a94990c7.png",
-    "bannerImageAlt": "DeHub launching on Base network announcement banner",
+    "bannerImageAlt": "Riftn launching on Base network announcement banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3496,17 +3468,17 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 2,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub is Launching on Base! Uniswap Pool Going Live Soon",
-    "seoDescription": "DeHub is expanding to the Base network! Get ready for our Uniswap pool launch. Learn about the new contract and how to bridge your tokens for free."
+    "seoTitle": "Riftn is Launching on Base! Uniswap Pool Going Live Soon",
+    "seoDescription": "Riftn is expanding to the Base network! Get ready for our Uniswap pool launch. Learn about the new contract and how to bridge your tokens for free."
   },
   {
     "id": "dehub-takeover",
-    "title": "DeHub Takeover",
+    "title": "Riftn Takeover",
     "slug": "dehub-takeover",
-    "excerpt": "We've been focused on building, but now it's time to turbocharge the DeHub Army. Find out about our new community growth initiatives and how we plan to take over.",
+    "excerpt": "We've been focused on building, but now it's time to turbocharge the Riftn Army. Find out about our new community growth initiatives and how we plan to take over.",
     "content": "",
     "bannerImage": "/media/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png",
-    "bannerImageAlt": "DeHub Takeover announcement banner",
+    "bannerImageAlt": "Riftn Takeover announcement banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3520,8 +3492,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Takeover: A New Era for Community Growth",
-    "seoDescription": "We are turbocharging the DeHub Army with a series of community-focused initiatives. Read about our plans for token-gated chats, daily town halls, and more."
+    "seoTitle": "Riftn Takeover: A New Era for Community Growth",
+    "seoDescription": "We are turbocharging the Riftn Army with a series of community-focused initiatives. Read about our plans for token-gated chats, daily town halls, and more."
   },
   {
     "id": "new-multi-year-sponsorship-crusaders",
@@ -3530,7 +3502,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "We're delighted to reveal a multi-year sponsorship agreement with the only Rugby League club in Wales, The North Wales Crusaders.",
     "content": "",
     "bannerImage": "/media/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png",
-    "bannerImageAlt": "DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team",
+    "bannerImageAlt": "Riftn announces new multi-year sponsorship with North Wales Crusaders rugby team",
     "author": {
       "name": "Riftn Team"
     },
@@ -3544,8 +3516,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 3,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub Announces Multi-Year Sponsorship with North Wales Crusaders",
-    "seoDescription": "DeHub is thrilled to announce a new multi-year sponsorship deal with The North Wales Crusaders, the only professional rugby league club in Wales."
+    "seoTitle": "Riftn Announces Multi-Year Sponsorship with North Wales Crusaders",
+    "seoDescription": "Riftn is thrilled to announce a new multi-year sponsorship deal with The North Wales Crusaders, the only professional rugby league club in Wales."
   },
   {
     "id": "public-beta-dapp-report",
@@ -3554,7 +3526,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "An overview of the beta launch for our main d'app. Our biggest and final core d'app launch now sets us up to focus on scaling users and growth.",
     "content": "",
     "bannerImage": "/media/c799219d-e9da-43e4-938f-54cfbc3a242f.png",
-    "bannerImageAlt": "DeHub Beta Overview banner",
+    "bannerImageAlt": "Riftn Beta Overview banner",
     "author": {
       "name": "Riftn Team"
     },
@@ -3569,14 +3541,14 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "Public Beta D'app Report | DeHub Update",
+    "seoTitle": "Public Beta D'app Report | Riftn Update",
     "seoDescription": "An overview of the beta launch for our main d'app. Our biggest and final core d'app launch now sets us up to focus on scaling users and growth."
   },
   {
     "id": "dehub-flagship-game-launch-partner-airdrop",
     "slug": "dehub-flagship-game-launch-partner-airdrop",
-    "title": "DeHub's Flag Ship Game Launch & Partner Airdrop",
-    "excerpt": "We're thrilled to officially confirm the airdrop allocation for our flagship game, Last Chad Standing (LCS) — and our most anticipated partner launch yet.",
+    "title": "Riftn's Flag Ship Game Launch & Partner Airdrop",
+    "excerpt": "We're thrilled to officially confirm the airdrop allocation for our flagship game, Last Chad Standing (LCS), and our most anticipated partner launch yet.",
     "content": "",
     "bannerImage": "/media/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png",
     "bannerImageAlt": "Military helicopter in flight representing the flagship game launch and strategic partnerships",
@@ -3594,8 +3566,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "DeHub's Flag Ship Game Launch & Partner Airdrop | DeHub",
-    "seoDescription": "Official confirmation of the airdrop allocation for DeHub's flagship game Last Chad Standing (LCS). Learn about OG bonuses, allocation details, and how to participate."
+    "seoTitle": "Riftn's Flag Ship Game Launch & Partner Airdrop | Riftn",
+    "seoDescription": "Official confirmation of the airdrop allocation for Riftn's flagship game Last Chad Standing (LCS). Learn about OG bonuses, allocation details, and how to participate."
   },
   {
     "id": "dhb-now-trading-on-coinbase",
@@ -3604,7 +3576,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "Coinbase officially lists all Base tokens, including $DHB with direct access to hundreds of millions of investors. A monumental step forward for decentralized trading.",
     "content": "",
     "bannerImage": "/media/coinbase-dhb-banner.png",
-    "bannerImageAlt": "$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution",
+    "bannerImageAlt": "$DHB now trading on Coinbase - Riftn leads the decentralized trading revolution",
     "author": {
       "name": "Riftn Team"
     },
@@ -3620,8 +3592,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 5,
     "featured": false,
     "status": "published",
-    "seoTitle": "$DHB now trading on Coinbase! | DeHub Decentralized Trading Revolution",
-    "seoDescription": "Coinbase officially lists all Base tokens including $DHB, providing direct access to hundreds of millions of investors. DeHub leads the way in decentralized, transparent trading."
+    "seoTitle": "$DHB now trading on Coinbase! | Riftn Decentralized Trading Revolution",
+    "seoDescription": "Coinbase officially lists all Base tokens including $DHB, providing direct access to hundreds of millions of investors. Riftn leads the way in decentralized, transparent trading."
   },
   {
     "id": "bnb-pool-update-recovery-876-bnb-stuck-2022-pool",
@@ -3630,7 +3602,7 @@ export const newPostsMetadata: BlogPost[] = [
     "excerpt": "The road to recovering 876 BNB stuck in our old pool from 2022, & what happens if we do.",
     "content": "",
     "bannerImage": "/media/bnb-pool-update-banner-new.png",
-    "bannerImageAlt": "BNB Pool Update - DeHub's journey to recover 876 BNB stuck from 2022 contract issue",
+    "bannerImageAlt": "BNB Pool Update - Riftn's journey to recover 876 BNB stuck from 2022 contract issue",
     "author": {
       "name": "Riftn Team"
     },
@@ -3645,8 +3617,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 7,
     "featured": false,
     "status": "published",
-    "seoTitle": "BNB Pool Update: The Road to Recovering 876 BNB Stuck in Our Old Pool from 2022 | DeHub",
-    "seoDescription": "DeHub provides an update on recovering 876 BNB stuck in our old pool from 2022, including advanced discussions with Binance teams and community governance plans."
+    "seoTitle": "BNB Pool Update: The Road to Recovering 876 BNB Stuck in Our Old Pool from 2022 | Riftn",
+    "seoDescription": "Riftn provides an update on recovering 876 BNB stuck in our old pool from 2022, including advanced discussions with Binance teams and community governance plans."
   }
 ];
 
@@ -3655,12 +3627,12 @@ export const latestPostMetadata: BlogPost | undefined = {
   "id": "top-100-crypto-projects-2026",
   "slug": "top-100-crypto-projects-2026",
   "title": "Top 100 Crypto Projects 2026, Ranked by GitHub Activity",
-  "seoTitle": "Top 100 Most Active Crypto Projects 2026 by GitHub Activity | DeHub",
+  "seoTitle": "Top 100 Most Active Crypto Projects 2026 by GitHub Activity | Riftn",
   "seoDescription": "The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.",
   "excerpt": "We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.",
   "content": "",
   "bannerImage": "/media/top-100-crypto-projects-2026-banner.png",
-  "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub",
+  "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn",
   "author": {
     "name": "Riftn Team"
   },
@@ -3677,7 +3649,7 @@ export const latestPostMetadata: BlogPost | undefined = {
     "Solana",
     "Bitcoin",
     "open source",
-    "DeHub"
+    "Riftn"
   ],
   "readingTime": 15,
   "featured": true,
@@ -3685,9 +3657,9 @@ export const latestPostMetadata: BlogPost | undefined = {
 };
 
 export const excludedTitles: string[] = [
-  "Leading the Way: DeHub founder's agency Becomes UK #1 with 1,000 Streamers",
+  "Leading the Way: Riftn founder's agency Becomes UK #1 with 1,000 Streamers",
   "Fueling Growth: $1M Raised for Fan.site (BJ Fork)",
-  "In the Spotlight: DeHub Featured in TechCrunch and VentureBeat",
-  "Innovation Recognized: DeHub Wins Corporate Livewire Award",
+  "In the Spotlight: Riftn Featured in TechCrunch and VentureBeat",
+  "Innovation Recognized: Riftn Wins Corporate Livewire Award",
   "Interactive Streaming: On-Chain Live Streams with Animated Tips"
 ];

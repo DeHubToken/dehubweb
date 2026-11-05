@@ -62,7 +62,7 @@ export default function LaunchpadCoinPage() {
   return (
     <div className="min-h-screen px-4 md:px-6 py-6 max-w-6xl mx-auto">
       <SEOHead
-        title={_copy("copy.504ef1fa2003", { defaultValue: "${{value1}} {{value2}} — Launchpad", value1: token.symbol, value2: token.name })}
+        title={_copy("copy.504ef1fa2003", { defaultValue: "${{value1}} {{value2}}: Launchpad", value1: token.symbol, value2: token.name })}
         description={t('launchpad.coinSeoDescription', { symbol: token.symbol })}
         noindex
       />

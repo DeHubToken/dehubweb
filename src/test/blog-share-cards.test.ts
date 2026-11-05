@@ -95,7 +95,7 @@ describe('blog share cards', () => {
     const image = meta(res.body, 'og:image');
     expect(image).toContain('/cdn-cgi/image/');
     expect(image).toContain('width=1200,height=630');
-    expect(image.endsWith(`https://riftn.com${post.bannerImage}`)).toBe(true);
+    expect(image.endsWith(`https://dehub.io${post.bannerImage}`)).toBe(true);
     expect(meta(res.body, 'twitter:image')).toBe(image);
     expect(meta(res.body, 'og:image:alt')).toBe(post.bannerImageAlt);
     expect(meta(res.body, 'twitter:card')).toBe('summary_large_image');

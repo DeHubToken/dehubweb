@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { io } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { DEHUB_API_BASE, getAuthToken } from '@/lib/api/dehub';
@@ -40,16 +40,23 @@ export function useNotificationRealtime() {
 
     const token = getAuthToken();
     const identity = { address: walletAddress.toLowerCase(), ...(token ? { token } : {}) };
-    const socket = io(DEHUB_API_BASE, {
-      auth: identity,
-      query: identity,
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionDelay: 1_000,
-      reconnectionDelayMax: 5_000,
-    });
-    socket.on('notification', refresh);
-    socket.on('connect', refresh);
+    // socket.io is loaded on demand so signed-out visitors never download it
+    // and signed-in ones get it after the first paint, not in the boot file.
+    let socket: Socket | null = null;
+    let disposed = false;
+    void import('socket.io-client').then(({ io }) => {
+      if (disposed) return;
+      socket = io(DEHUB_API_BASE, {
+        auth: identity,
+        query: identity,
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionDelay: 1_000,
+        reconnectionDelayMax: 5_000,
+      });
+      socket.on('notification', refresh);
+      socket.on('connect', refresh);
+    }).catch(() => { /* realtime is a bonus; the poll still runs */ });
 
     // A content-free ping the database sends whenever this wallet's
     // custom_notifications rows change; the lists are re-read through the API.
@@ -82,10 +89,13 @@ export function useNotificationRealtime() {
     window.addEventListener('focus', onVisible);
 
     return () => {
+      disposed = true;
       clearTimeout(refreshTimer);
-      socket.off('notification', refresh);
-      socket.off('connect', refresh);
-      socket.disconnect();
+      if (socket) {
+        socket.off('notification', refresh);
+        socket.off('connect', refresh);
+        socket.disconnect();
+      }
       void supabase.removeChannel(channel);
       if (hasWorker) navigator.serviceWorker.removeEventListener('message', onWorkerMessage);
       document.removeEventListener('visibilitychange', onVisible);

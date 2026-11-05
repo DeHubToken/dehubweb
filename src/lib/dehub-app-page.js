@@ -2,9 +2,8 @@
  * /dehub-app — the landing page for the "Riftn app" brand query.
  *
  * People who search for the app by name arrive from CoinGecko, CMC, the Play
- * Store and press coverage, and the name is shared with DePaul's student
- * portal and a handful of other products. This page answers the query
- * directly: what Riftn is, where to get it, and which Riftn it is not.
+ * Store and press coverage, and this page answers the query directly: what Riftn
+ * is and where to get it.
  *
  * Plain JS for the same reason as reserved-usernames.js: the SPA page
  * (src/pages/DehubAppPage.tsx) and the crawler HTML in CLOUDFLARE_WORKER_SEO.js
@@ -18,13 +17,12 @@ export const DEHUB_APP_LINKS = {
   appStore: 'https://apps.apple.com/app/id6770382811',
   web: `${APP_URL}/`,
   apk: `${APP_URL}/apk`,
-  disambiguation: `${APP_URL}/guides/dehub-vs-depaul-dehub-vs-rowan-dehub`,
   whatIsDehub: `${APP_URL}/guides/what-is-dehub`,
 };
 
 export const DEHUB_APP_PAGE = {
   path: '/dehub-app',
-  title: 'Riftn App — Download for Android, iPhone & Web',
+  title: 'Riftn App | Download for Android, iPhone & Web',
   description: 'Get the Riftn app: open-source, user-owned social media with live streaming, encrypted messaging and watch-to-earn. Free on Google Play, the App Store and the web.',
   heading: 'The Riftn App',
   intro: [
@@ -32,10 +30,6 @@ export const DEHUB_APP_PAGE = {
     'It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. The same account works on Android, iPhone and in any modern browser.',
   ],
   faq: [
-    {
-      q: 'Is DeHub the DePaul University app?',
-      a: 'No. DeHub at dehub.io is an independent open-source social media platform. DePaul University’s DeHUB student portal, Rowan’s DEHub and the deHUB Access door-entry app are unrelated products that happen to share the name.',
-    },
     {
       q: 'Is the Riftn app free?',
       a: 'Yes. Riftn is free to download from Google Play and the App Store, and free to use in the browser at riftn.com.',

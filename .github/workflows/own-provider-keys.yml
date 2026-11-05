@@ -1,7 +1,7 @@
 name: Own provider keys
 on:
   pull_request:
-    paths: ['supabase/functions/_shared/byok*.ts', 'supabase/functions/provider-keys/**', 'supabase/functions/builder-api/**', '.github/workflows/own-provider-keys.yml']
+    paths: ['supabase/functions/_shared/byok*.ts', 'supabase/functions/provider-keys/**', 'supabase/functions/builder-api/**', 'supabase/functions/admin-provider-keys/**', 'supabase/functions/_shared/ai-chat.ts', 'supabase/functions/_shared/elevenlabs.ts', 'supabase/functions/_shared/ai-payment-guard.ts', '.github/workflows/own-provider-keys.yml']
   workflow_dispatch:
 jobs:
   check:
@@ -11,4 +11,4 @@ jobs:
       - uses: denoland/setup-deno@v2
         with: { deno-version: v2.x }
       - run: deno test --node-modules-dir=none --allow-env supabase/functions/_shared/byok.test.ts
-      - run: deno check --node-modules-dir=none supabase/functions/provider-keys/index.ts supabase/functions/builder-api/index.ts
+      - run: deno check --node-modules-dir=none supabase/functions/provider-keys/index.ts supabase/functions/builder-api/index.ts supabase/functions/admin-provider-keys/index.ts supabase/functions/general-ai-chat/index.ts supabase/functions/ai-quote/index.ts supabase/functions/stage-caption-token/index.ts supabase/functions/elevenlabs-music/index.ts supabase/functions/elevenlabs-dub/index.ts

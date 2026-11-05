@@ -45,6 +45,10 @@ import { RoomChatText } from './RoomChatText';
 
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
+import { ChatHoldSheet, isTouchHold, type ChatHoldAction } from './ChatHoldSheet';
+import { useHoldMenu } from '@/hooks/use-hold-menu';
+import Copy from '@/components/ui/cut-icons/copy';
+import { toast } from 'sonner';
 
 /**
  * One row of any of the chat tables. The columns are the same across all of
@@ -304,6 +308,38 @@ export function RealtimeChatPanel({
     else onReact(id, emoji);
   };
 
+  // Hold a line on a phone for the reaction + action sheet (hover buttons
+  // never show on an iPhone tap). Desktop keeps the hover buttons.
+  const [held, setHeld] = useState<{ msg: RealtimeChatMessage; el: HTMLElement } | null>(null);
+  const hold = useHoldMenu((_point, target) => {
+    if (!isTouchHold() || editingId) return false;
+    const el = target.closest<HTMLElement>('[data-rt-msg]');
+    const msg = el ? messages.find((m) => m.id === el.dataset.rtMsg) : undefined;
+    if (!el || !msg) return false;
+    setHeld({ msg, el });
+  });
+  const heldMsg = held?.msg;
+  const heldMine = !!heldMsg && !!walletAddress && heldMsg.wallet_address.toLowerCase() === walletAddress.toLowerCase();
+  const holdActions: ChatHoldAction[] = [];
+  if (heldMsg) {
+    if (isAuthenticated) holdActions.push({ key: 'reply', prime: true, icon: <Reply />, label: _copy('copy.c253f451bdd5', { defaultValue: 'Reply' }), onSelect: () => setReplyTo(heldMsg) });
+    if (heldMsg.content?.trim()) holdActions.push({
+      key: 'copy', icon: <Copy />, label: _copy('chatHold.copy', { defaultValue: 'Copy' }),
+      onSelect: () => { void navigator.clipboard?.writeText(heldMsg.content).then(() => toast.success(_copy('chatHold.copied', { defaultValue: 'Copied' })), () => undefined); },
+    });
+    if (heldMine && isAuthenticated) holdActions.push({ key: 'edit', icon: <Pencil />, label: _copy('copy.464c4ffd019e', { defaultValue: 'Edit' }), onSelect: () => { setEditingId(heldMsg.id); setEditInitial(heldMsg.content); } });
+    if ((heldMine || canModerate) && isAuthenticated) holdActions.push({
+      key: 'delete', destructive: true, icon: <Trash2 />,
+      label: heldMine ? _copy('copy.e2d0a54968ea', { defaultValue: 'Delete' }) : _copy('copy.c3812fc4acb8', { defaultValue: 'Remove' }),
+      onSelect: () => { if (confirm(_copy('copy.8f6e2cda49ca', { defaultValue: 'Delete this message?' }))) onDelete(heldMsg.id); },
+    });
+  }
+  const heldMineReactions = heldMsg && walletAddress
+    ? Object.entries(heldMsg.reactions ?? {})
+        .filter(([, addrs]) => addrs?.some((a) => a.toLowerCase() === walletAddress.toLowerCase()))
+        .map(([emoji]) => emoji)
+    : [];
+
   return (
     <div
       className={cn('rounded-xl border border-white/[0.12] bg-white/[0.03] p-3', className)}
@@ -323,6 +359,7 @@ export function RealtimeChatPanel({
             ref={scrollRef}
             onScroll={handleScroll}
             className={cn('overflow-y-auto space-y-1 scrollbar-hide', listClassName)}
+            {...hold}
           >
             {error ? (
               <div className="h-full flex flex-col items-center justify-center gap-1 text-center px-4">
@@ -347,7 +384,7 @@ export function RealtimeChatPanel({
                 const isMine = !!walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase();
 
                 return (
-                  <div key={msg.id} className="group relative">
+                  <div key={msg.id} className="group relative" data-chat-row data-rt-msg={msg.id}>
                     {msg.reply_to && (
                       <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-9 mb-0.5">
                         <CornerDownRight className="w-2.5 h-2.5" />
@@ -428,7 +465,7 @@ export function RealtimeChatPanel({
                         )}
                       </div>
                       {isAuthenticated && (
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
+                        <div data-chat-hover-actions className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
                           {isMine && (
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -526,6 +563,16 @@ export function RealtimeChatPanel({
           )}
         </div>
       </>
+
+      <ChatHoldSheet
+        open={!!held}
+        onOpenChange={(open) => { if (!open) setHeld(null); }}
+        anchor={held?.el ?? null}
+        quickReactions={isAuthenticated ? QUICK_CHAT_REACTIONS.slice(0, 6) : null}
+        mine={heldMineReactions}
+        onReact={(emoji) => { if (heldMsg) handleReact(heldMsg.id, emoji); }}
+        actions={holdActions}
+      />
 
       {/* Reply preview */}
       {replyTo && (

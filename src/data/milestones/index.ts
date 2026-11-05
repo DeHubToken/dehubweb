@@ -13,7 +13,7 @@ export type { MilestoneContent, MilestoneContentMap } from './types';
  *
  * A milestone with no entry here falls back to the generated summary in
  * blogPosts.ts, which is deliberately short and states only what the roadmap
- * bullet says — the nine shared templates it used to fall back to are gone.
+ * bullet says, the nine shared templates it used to fall back to are gone.
  */
 export const MILESTONE_CONTENT: MilestoneContentMap = {
   ...milestones2021,

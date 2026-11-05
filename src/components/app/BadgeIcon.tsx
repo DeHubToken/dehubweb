@@ -13,6 +13,7 @@ import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useInlineBadgeFont } from '@/hooks/use-inline-badge-font';
+import { badgePosterSit } from '@/lib/badge-poster-bounds';
 
 function BadgeAnimation({ src, style, onError }: { src: string; style: CSSProperties; onError: () => void }) {
   const [ready, setReady] = useState(false);
@@ -64,6 +65,13 @@ const BADGE_OPTICS: Record<string, { left: number; top: number; right: number; b
   "Megalodon": { left: 8, top: 15, right: 120, bottom: 117 },
 };
 
+// Optical resting line of the original stills, measured like badgePosterSit.
+const BADGE_SIT: Record<string, number> = {
+  "Crab": 114, "Ghost Lobster": 108, "Piranha": 112, "Giant Tortoise": 112, "King Cobra": 117, "Octopus": 118,
+  "Crocodile": 115, "Dolphin": 117, "Tiger Shark": 113, "Killer Whale": 118, "Great White Shark": 114,
+  "Blue Whale": 115, "Megalodon": 114,
+};
+
 function badgeNameFromAssetUrl(url: string | null): string | undefined {
   if (!url) return undefined;
   let decodedUrl = url;
@@ -98,11 +106,18 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
-  // Enlarge the artwork above the baseline by 10% using the adjacent font's cap height.
-  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.1cap' : '0.8052em';
+  // Each tier's optical resting line (its body, not a dangling claw or tail tip).
+  const sitRow = !visualName ? bounds.bottom
+    : (originalStill || !art ? BADGE_SIT[visualName] : badgePosterSit[visualName]) ?? bounds.bottom;
+  const sit = Math.min(1, Math.max(0, (sitRow - bounds.top) / artworkHeight));
+  // Full artwork height: 1.27x the adjacent font's cap height (cap height,
+  // +10%, +10% on 2026-11-04, +5% on 2026-11-05). Every tier's measured bounds
+  // scale from this one number. The box ends on the tier's resting line, so
+  // that line sits on the name's baseline and thin tips overshoot just below.
+  const cap = typeof CSS !== 'undefined' && typeof CSS.supports === 'function' && CSS.supports('height', '1cap') ? '1.27cap' : '0.93em';
   const opticalStyle: CSSProperties = {
     width: `calc(${(bounds.right - bounds.left) / artworkHeight} * ${cap})`,
-    height: cap,
+    height: `calc(${sit} * ${cap})`,
     position: 'relative',
     display: 'inline-block',
     marginInlineStart: 0,

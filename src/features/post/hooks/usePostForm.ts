@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
@@ -1156,7 +1157,8 @@ export function usePostForm(
     
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
-        body: { text: text.trim(), mode, style }
+        body: { text: text.trim(), mode, style },
+        headers: ownKeyHeaders(),
       });
 
       if (error) {
@@ -2577,6 +2579,37 @@ export function usePostForm(
             thumbnail: media[0].thumbnail || undefined,
           });
         }
+      } else if (postType === 'feed-audio' && media.some(m => m.type === 'audio')) {
+        // Music post: it used to fall through to the text card below, which
+        // showed only the name and "Just now" until a reload.
+        const track = media.find(m => m.type === 'audio')!;
+        const seconds = track.duration || 0;
+        const audioPost: VideoItem = {
+          id: optimisticId,
+          type: 'video',
+          thumbnail: track.thumbnail || '',
+          audioUrl: track.preview,
+          audioDuration: seconds,
+          isAudio: true,
+          duration: `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`,
+          title: submittedTitle.trim(),
+          description: submittedDescription,
+          channel: username,
+          channelAvatar: avatar || '',
+          verified: false,
+          views: '0',
+          uploadedAgo: _copy("copy.66f53417d3b7", { defaultValue: "Just now" }),
+          creatorId: user?.address,
+          creatorUsername: username,
+          creatorBadgeBalance: user?.badgeBalance,
+          createdAt: new Date().toISOString(),
+          isLiked: false,
+          likeCount: 0,
+          dislikeCount: 0,
+          commentCount: 0,
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'video', data: audioPost, createdAt: new Date() });
       } else if (hasImage && media[0]) {
         // Image post
         const imagePost: ImagePost = {

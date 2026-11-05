@@ -20,8 +20,7 @@ import {
   getApiKey,
   jsonResponse,
   readProviderError,
-  readUpload,
-} from '../_shared/elevenlabs.ts';
+  readUpload, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { serviceClient } from '../_shared/auth.ts';
 
@@ -46,6 +45,7 @@ Deno.serve(async (req) => {
   // minute of the upload and nothing here can measure that yet.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-dub',
     actionType: isStart ? 'elevenlabs-dub-start' : 'elevenlabs-dub-poll',
     rateLimit: isStart
@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
   if (!charged.ok) return charged.response;
 
   try {
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     // ── Poll / collect ──────────────────────────────────────────────────────
@@ -85,6 +85,7 @@ Deno.serve(async (req) => {
           { headers: { 'xi-api-key': apiKey } },
         );
         if (!response.ok) {
+          if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
           const errText = await response.text();
           console.error('ElevenLabs dub result error:', response.status, errText);
           return errorResponse(readProviderError(errText, 'Could not fetch the dubbed audio'), 502);
@@ -96,6 +97,7 @@ Deno.serve(async (req) => {
         headers: { 'xi-api-key': apiKey },
       });
       if (!response.ok) {
+        if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
         const errText = await response.text();
         console.error('ElevenLabs dub status error:', response.status, errText);
         return errorResponse(readProviderError(errText, 'Could not read the dub status'), 502);
@@ -148,6 +150,8 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs dub start error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Could not start the dub'), 502);
