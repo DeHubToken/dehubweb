@@ -701,11 +701,11 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
       <details className="mt-2 text-xs text-zinc-400" open={initialCategory === 'bug_fix' ? true : undefined}>
         <summary className="cursor-pointer py-1">{t('features.promptDetails', 'Optional details')}</summary>
         <fieldset disabled={submitMutation.isPending} className="grid gap-3 mt-2">
-          <label>{t('features.titleLabel')}<Input className="mt-1" value={title} maxLength={100} onChange={e => setTitle(e.target.value)} /></label>
+          <label>{t('features.titleLabel')}<Input className="mt-1 bg-zinc-800 border-white/15 text-white placeholder:text-zinc-500 rounded-lg" value={title} maxLength={100} onChange={e => setTitle(e.target.value)} /></label>
           <label>{t('features.categoryLabel')}<select value={category} onChange={e => setCategory(e.target.value as FeatureCategory)} className="block w-full rounded-lg bg-zinc-800 border border-white/15 p-2 mt-1 text-white">
             {CATEGORIES.filter(c => c.id !== 'all').map(cat => <option key={cat.id} value={cat.id}>{t(cat.labelKey)}</option>)}
           </select></label>
-          <label>{t('features.promptDevice', 'Device & OS (for bugs)')}<Input className="mt-1" value={deviceDetails} maxLength={300} onChange={e => setDeviceDetails(e.target.value)} /></label>
+          <label>{t('features.promptDevice', 'Device & OS (for bugs)')}<Input className="mt-1 bg-zinc-800 border-white/15 text-white placeholder:text-zinc-500 rounded-lg" value={deviceDetails} maxLength={300} onChange={e => setDeviceDetails(e.target.value)} /></label>
         </fieldset>
       </details>
     </section>
