@@ -3342,6 +3342,9 @@ const RIFTN_ICON = `${APP_URL}/icon-512.png`;
 function riftnFallbackCard(html) {
   if (!html.includes('new_logo_Dehub')) return html;
   let out = html
+    // cardProxiedImage has already wrapped it in a transform via /_og/storage/.
+    .replace(/https:\/\/[a-z.]+\/cdn-cgi\/image\/[^"\s/]+\/https:\/\/[a-z.]+\/_og\/storage\/logo\/+new_logo_Dehub\.jpg/g, SHARE_IMAGE)
+    .replace(/https:\/\/[a-z.]+\/_og\/storage\/logo\/+new_logo_Dehub\.jpg/g, SHARE_IMAGE)
     .replace(/("logo"\s*:\s*(?:\{[^{}]*?"url"\s*:\s*)?")https:\/\/aigxuutjaqsywioxjefr\.supabase\.co\/storage\/v1\/object\/public\/logo\/+new_logo_Dehub\.jpg/g, `$1${RIFTN_ICON}`)
     .replace(FN_LOGO_ANY, SHARE_IMAGE);
   const m = out.match(/<meta property="og:image" content="([^"]*)">/);
