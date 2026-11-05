@@ -6,19 +6,21 @@
  *
  * - ambient: the frame runs the full column width and the space beside the
  *   picture shows the playing video itself, blurred and dimmed.
- * - rails:   the picture hugs its real shape with curved corners, between two
- *   glass pills: who posted it and what it is on the left, top comments on
- *   the right. Wide videos already fill the column and show as normal.
- * - theatre: like ambient, but the space is matte frosted glass with grain and
- *   the picture sits a little in from the edges, like a screen in a cinema.
+ * - rails:   two panels side by side: the picture at its real shape with
+ *   curved corners, and one glass panel beside it with who posted it, what it
+ *   is and the top comments. Wide videos already fill the column and show as
+ *   normal.
+ *
+ * Theatre was a choice for a day and was dropped; a stored 'theatre' is not a
+ * valid mode any more, so it reads as the default.
  * - standard: the old look, the picture on its own.
  *
  * Phones and tablets never read this. Same small shape as lib/feed-video-shape.
  */
 import { useSyncExternalStore } from 'react';
 
-export type WideVideoMode = 'standard' | 'ambient' | 'rails' | 'theatre';
-export const WIDE_VIDEO_MODES: readonly WideVideoMode[] = ['standard', 'ambient', 'rails', 'theatre'];
+export type WideVideoMode = 'standard' | 'ambient' | 'rails';
+export const WIDE_VIDEO_MODES: readonly WideVideoMode[] = ['standard', 'ambient', 'rails'];
 export const DEFAULT_WIDE_VIDEO_MODE: WideVideoMode = 'ambient';
 
 /** Rails need room beside the picture: anything wider than this shows as normal. */
