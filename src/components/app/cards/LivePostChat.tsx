@@ -13,7 +13,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { Loader2, RotateCcw, Pin } from "lucide-react";
+import { Loader2, RotateCcw, Pin, CornerDownRight } from "lucide-react";
 import Eye from "@/components/ui/cut-icons/visibility";
 import Languages from "@/components/ui/cut-icons/language";
 import Pencil from "@/components/ui/cut-icons/edit";
@@ -56,6 +56,10 @@ import { useStreamChatJoins } from '@/hooks/use-stream-chat-joins';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useHoldMenu } from '@/hooks/use-hold-menu';
+import { ChatHoldSheet, isTouchHold, type ChatHoldAction } from '@/components/app/chat/ChatHoldSheet';
+import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
+import Reply from '@/components/ui/cut-icons/reply';
+import Copy from '@/components/ui/cut-icons/copy';
 import type { ChatCreatorBadge } from '@/lib/live/chat-badges';
 import type { BadgeLock } from '@/lib/staking-badges';
 import { useFocusChatMessage, chatMessageDomId } from '@/hooks/use-focus-chat-message';
@@ -238,7 +242,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  const { messages: chatMessages, isLoading, isSending, send, retrySend, discardSend, editMessage, deleteMessage, isModerator, isBanned: bannedHere, mutedUntil } = useLiveChatMessages(streamId);
+  const { messages: chatMessages, isLoading, isSending, send, retrySend, discardSend, editMessage, deleteMessage, addReaction, removeReaction, isModerator, isBanned: bannedHere, mutedUntil } = useLiveChatMessages(streamId);
   // The stream's creator and the moderators they appointed act on other people's lines.
   const canModerate = isHost || isModerator;
   // A stream timeout quiets this viewer here until it runs out, then lets go.
@@ -301,8 +305,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
   const pinnedMessage = messages.find(m => m.id === pinnedMessageId) ?? null;
 
-  // Auto-scroll on new messages
+  // Auto-scroll on new messages, except while a line is held: the busy room
+  // kept scrolling the held line out from under the finger.
+  const heldRef = useRef(false);
   useEffect(() => {
+    if (heldRef.current) return;
     if (bottomRef.current) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -404,10 +411,23 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // Hold a line on a phone, or right-click it on desktop. Opens for anyone
   // when the line can be translated, for the host (pinning, moderation) and
   // for whoever wrote it (edit, delete). Otherwise the browser keeps its own.
+  // On a phone a hold opens the hold sheet for ANY line, so anyone can react
+  // and reply: it used to open only for the host, your own lines or a line in
+  // another language, so for everyone else holding did nothing at all.
+  const [held, setHeld] = useState<{ msg: SupabaseLiveChatMessage; el: HTMLElement } | null>(null);
+  heldRef.current = !!held;
+  const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
+  useEffect(() => { setReplyTo(null); }, [streamId]);
   const messageHold = useHoldMenu((point, target) => {
-    const id = target.closest('[data-live-msg]')?.getAttribute('data-live-msg');
+    const row = target.closest<HTMLElement>('[data-live-msg]');
+    const id = row?.getAttribute('data-live-msg');
     const msg = id ? messages.find((m) => m.id === id) : undefined;
     if (!msg || msg.message_type === 'system') return false;
+    if (isTouchHold()) {
+      if (editingId === msg.id || !row) return false;
+      setHeld({ msg, el: row });
+      return;
+    }
     if (!canModerate && !isMine(msg) && !translateHandles.current.has(msg.id)) return false;
     setContextMenuPos(point);
     setContextMenuMsg(msg);
@@ -439,9 +459,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     // server's echo left the sent words sitting in the box for as long as the
     // round trip took, which reads as a send that did nothing.
     const sent = newMessage;
+    const answering = replyTo;
     setNewMessage('');
+    setReplyTo(null);
     try {
-      await send(sent.trim());
+      await send(sent.trim(), 'text', undefined, answering?.id);
     } catch {
       // The line stays in the chat marked "Not sent" with Retry on it, and the
       // send has already said why — nothing goes back in the box.
@@ -466,6 +488,63 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const heldMsg = held?.msg;
+  const heldTranslate = heldMsg ? translateHandles.current.get(heldMsg.id) : undefined;
+  const holdActions: ChatHoldAction[] = [];
+  if (heldMsg) {
+    if (isAuthenticated && !isOffline && !bannedHere && !muted) holdActions.push({
+      key: 'reply', prime: true, icon: <Reply />, label: _copy('copy.c253f451bdd5', { defaultValue: 'Reply' }),
+      // Inside the tap, so the phone raises the keyboard.
+      onSelect: () => { setReplyTo(heldMsg); textareaRef.current?.focus(); },
+    });
+    if (heldMsg.content?.trim() && (!heldMsg.message_type || heldMsg.message_type === 'text')) holdActions.push({
+      key: 'copy', icon: <Copy />, label: _copy('chatHold.copy', { defaultValue: 'Copy' }),
+      onSelect: () => {
+        void navigator.clipboard?.writeText(heldMsg.content).then(
+          () => toast.success(_copy('chatHold.copied', { defaultValue: 'Copied' })),
+          () => undefined,
+        );
+      },
+    });
+    if (heldTranslate) holdActions.push(heldTranslate.isTranslated
+      ? { key: 'original', icon: <RotateCcw />, label: _copy('chatHold.showOriginal', { defaultValue: 'Original' }), onSelect: () => heldTranslate.toggle() }
+      : { key: 'translate', icon: <Languages />, label: _copy('chatHold.translate', { defaultValue: 'Translate' }), onSelect: () => heldTranslate.toggle() });
+    if (isMine(heldMsg) && (!heldMsg.message_type || heldMsg.message_type === 'text')) holdActions.push({
+      key: 'edit', icon: <Pencil />, label: _copy('copy.464c4ffd019e', { defaultValue: 'Edit' }), onSelect: () => startEditing(heldMsg),
+    });
+    if (isHost) holdActions.push({
+      key: 'pin', icon: <Pin />,
+      label: heldMsg.id === pinnedMessageId ? _copy('copy.ee3c71613054', { defaultValue: 'Unpin' }) : _copy('chatHold.pin', { defaultValue: 'Pin' }),
+      onSelect: () => { if (heldMsg.id === pinnedMessageId) void handleUnpinMessage(); else void handlePinMessage(heldMsg); },
+    });
+    if (canModerate && !isMine(heldMsg) && heldMsg.sender_address) holdActions.push({
+      key: 'moderate', icon: <ShieldCheck />, label: t('liveChatModeration.title', 'Moderate'),
+      // The full list (timeouts, ban, make moderator) is the existing menu,
+      // opened where the line is once the sheet has gone.
+      onSelect: () => {
+        const box = held!.el.getBoundingClientRect();
+        window.setTimeout(() => {
+          setContextMenuPos({ x: Math.max(8, Math.min(box.left + 16, window.innerWidth - 220)), y: Math.max(8, Math.min(box.top, window.innerHeight - 320)) });
+          setContextMenuMsg(heldMsg);
+        }, 0);
+      },
+    });
+    if (isMine(heldMsg)) holdActions.push({
+      key: 'delete', destructive: true, icon: <Trash2 />, label: _copy('copy.e2d0a54968ea', { defaultValue: 'Delete' }), onSelect: () => handleDeleteMessage(heldMsg),
+    });
+  }
+  const viewer = walletAddress?.toLowerCase();
+  const reactedBy = (msg: SupabaseLiveChatMessage) => viewer
+    ? Object.entries(msg.reactions ?? {})
+        .filter(([, addrs]) => addrs?.some((a) => a.toLowerCase() === viewer))
+        .map(([emoji]) => emoji)
+    : [];
+  const toggleReaction = (msg: SupabaseLiveChatMessage, emoji: string) => {
+    if (!isAuthenticated) return;
+    if (reactedBy(msg).includes(emoji)) removeReaction(msg.id, emoji);
+    else addReaction(msg.id, emoji);
   };
 
   return (
@@ -603,11 +682,23 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                 id={chatMessageDomId(msg.id)}
                 ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
                 data-live-msg={msg.id}
+                data-chat-row
                 className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}${landClass(msg)}`}
               >
                 <div className="flex items-start gap-2">
                   <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />
                   <div className="flex-1 min-w-0">
+                    {msg.reply_to && (
+                      <button
+                        type="button"
+                        onClick={() => scrollToMessage(msg.reply_to!.id)}
+                        className="mb-0.5 flex max-w-full items-center gap-1 text-[10px] text-zinc-400 hover:text-zinc-200"
+                      >
+                        <CornerDownRight className="h-3 w-3 shrink-0" />
+                        <span className="shrink-0 font-semibold">{msg.reply_to.sender_name}</span>
+                        <span className="truncate">{msg.reply_to.content}</span>
+                      </button>
+                    )}
                     <div className="flex items-baseline gap-1.5">
                       <span className="relative inline-flex items-baseline gap-1 shrink min-w-0 pr-3">
                         <span className="text-xs font-semibold text-white truncate max-w-[120px]">
@@ -663,6 +754,27 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                         />
                       )}
                     </span>
+                    {msg.reactions && Object.values(msg.reactions).some((a) => a?.length) && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {Object.entries(msg.reactions).filter(([, a]) => a?.length).map(([emoji, addrs]) => {
+                          const mine = !!viewer && addrs.some((a) => a.toLowerCase() === viewer);
+                          return (
+                            <button
+                              key={emoji}
+                              type="button"
+                              onClick={() => toggleReaction(msg, emoji)}
+                              className={cn(
+                                'inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] leading-none text-white',
+                                mine ? 'bg-sky-400/25 ring-1 ring-sky-400/60' : 'bg-black/30 ring-1 ring-white/10',
+                              )}
+                            >
+                              <span>{emoji}</span>
+                              {addrs.length > 1 && <span className="tabular-nums">{addrs.length}</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                   {/* Your own line — edit and remove, on hover like the host's pin */}
                   {isMine(msg) && editingId !== msg.id && (
@@ -781,6 +893,29 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
           )}
         </div>,
         document.body,
+      )}
+
+      <ChatHoldSheet
+        open={!!held}
+        onOpenChange={(open) => { if (!open) setHeld(null); }}
+        anchor={held?.el ?? null}
+        quickReactions={isAuthenticated ? QUICK_CHAT_REACTIONS.slice(0, 6) : null}
+        mine={heldMsg ? reactedBy(heldMsg) : []}
+        onReact={(emoji) => { if (heldMsg) toggleReaction(heldMsg, emoji); }}
+        actions={holdActions}
+      />
+
+      {replyTo && (
+        <div className={cn('mb-2 flex items-center gap-1.5 rounded-xl px-2.5 py-1.5', overlay ? 'bg-black/45 backdrop-blur-md' : 'bg-white/[0.06]')}>
+          <Reply className="h-3.5 w-3.5 shrink-0 text-white" />
+          <div className="min-w-0 flex-1 text-[11px] leading-tight">
+            <span className="font-semibold text-white">{replyTo.sender_display_name || replyTo.sender_username || replyTo.sender_address.slice(0, 8)}</span>
+            <p className="truncate text-zinc-400">{replyTo.content || _copy('copy.d357175cfe89', { defaultValue: 'Media' })}</p>
+          </div>
+          <button type="button" onClick={() => setReplyTo(null)} aria-label={_copy('copy.19766ed6ccb2', { defaultValue: 'Cancel' })} className="shrink-0 p-0.5 text-zinc-400 hover:text-white">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
       )}
 
       {/* Input */}
