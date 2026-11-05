@@ -77,7 +77,8 @@ function compact(n: number | undefined): string {
  */
 function tileImage(url: string | undefined): string | undefined {
   if (!url || typeof window === 'undefined') return url;
-  return cdnImage(url, { width: deviceWidth(Math.ceil(window.innerWidth / 3) * 1.4) });
+  // The grid is never wider than the profile column (~720px on desktop).
+  return cdnImage(url, { width: deviceWidth(Math.ceil(Math.min(window.innerWidth, 720) / 3) * 1.4) });
 }
 
 /** Strip markdown-ish noise so a poster tile shows words, not syntax. */
