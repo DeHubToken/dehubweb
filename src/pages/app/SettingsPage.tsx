@@ -110,6 +110,8 @@ import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { normaliseFeedVideoShape, useFeedVideoShape, writeFeedVideoShape } from '@/lib/feed-video-shape';
+import { isWideVideoMode, useWideVideoMode, writeWideVideoMode } from '@/lib/wide-video-mode';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -2725,6 +2727,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
           <AutoPlayMutedToggle />
           <DataSaverToggle />
           <ShowAnimationsToggle />
+          <WideVideoModeRow />
           <ShortsEnabledToggle />
           <LeftHandedToggle />
         </div>
@@ -3252,6 +3255,38 @@ function VideoGlitchToggle() {
         writeVideoGlitch(checked);
         prefs?.setPref('videoGlitchLoader', checked);
       }}
+    />
+  );
+}
+
+/**
+ * Settings > Appearance > Media: how a tall or square long video fills the
+ * column on a computer (lib/wide-video-mode). Phones and tablets never use it,
+ * so the row only shows on wide screens.
+ */
+function WideVideoModeRow() {
+  const { t } = useTranslation();
+  const mode = useWideVideoMode();
+  const isDesktop = useIsDesktopViewport();
+  if (!isDesktop) return null;
+  const title = t('settings.wideVideoMode', 'Long form videos on wide screens');
+  return (
+    <SettingsRow
+      icon={<RectangleHorizontal />}
+      anchor="wide-video-mode"
+      title={title}
+      description={t('settings.wideVideoModeDesc', 'What fills the space beside tall and square videos on a computer')}
+      action={<SettingDrawerSelect
+        value={mode}
+        onValueChange={(value) => { if (isWideVideoMode(value)) writeWideVideoMode(value); }}
+        title={title}
+        options={[
+          { value: 'ambient', label: t('settings.wideVideoAmbient', 'Ambient'), description: t('settings.wideVideoAmbientDesc', 'The video fills the width, with a soft blurred glow of itself on each side') },
+          { value: 'rails', label: t('settings.wideVideoRails', 'Glass rails'), description: t('settings.wideVideoRailsDesc', 'The video sits between two glass panels: who posted it on the left, top comments on the right') },
+          { value: 'theatre', label: t('settings.wideVideoTheatre', 'Theatre'), description: t('settings.wideVideoTheatreDesc', 'The video sits on frosted glass, like a screen in a cinema') },
+          { value: 'standard', label: t('settings.wideVideoStandard', 'Standard'), description: t('settings.wideVideoStandardDesc', 'The video on its own, as before') },
+        ]}
+      />}
     />
   );
 }
