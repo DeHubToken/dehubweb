@@ -18,6 +18,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { cn } from '@/lib/utils';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { TokenLaunchNotify } from '@/components/app/token-launch/TokenLaunchNotify';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { BASE_CHAIN_ID, CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
@@ -59,7 +61,24 @@ const routeFor = (mode: Mode, price: number, rate: number | null): Route => mode
  *  Easy trade sells DHB on Base in three steps. A market or at/below-market price sells
  *  instantly; a price above market is listed as a single-sided position on the exchange's own
  *  book. On desktop the sheet rises inside the middle column, like the app's other drawers. */
-export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOpenChange: (open: boolean) => void; tokens: WalletToken[] }) {
+type TradeSheetProps = { open: boolean; onOpenChange: (open: boolean) => void; tokens: WalletToken[] };
+
+/** Not trading yet: Trade opens the launch card instead of a swap. */
+export function TradeSheet(props: TradeSheetProps) {
+  if (DHB_SALES_PAUSED) {
+    return (
+      <Drawer open={props.open} onOpenChange={props.onOpenChange}>
+        <DrawerContent className="px-4 pb-8">
+          <DrawerTitle className="sr-only">Riftn</DrawerTitle>
+          <TokenLaunchNotify compact className="mt-4" />
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+  return <TradeSheetMarket {...props} />;
+}
+
+function TradeSheetMarket({ open, onOpenChange, tokens }: TradeSheetProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
