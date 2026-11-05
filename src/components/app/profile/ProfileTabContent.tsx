@@ -131,7 +131,9 @@ function LoadMoreSentinel({ hasNextPage, isFetchingNextPage, fetchNextPage }: {
       if (entries[0].isIntersecting && s.hasNextPage && !s.isFetchingNextPage) {
         s.fetchNextPage();
       }
-    }, { rootMargin: '800px' });
+    // About half a screen ahead, and only below: a big margin made the first
+      // page's sentinel count as in view at once and pull page 2 on load.
+    }, { rootMargin: '0px 0px 400px 0px' });
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage]);

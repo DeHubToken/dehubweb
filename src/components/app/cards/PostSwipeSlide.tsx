@@ -22,6 +22,7 @@ import { PostBgLayer, postBgHostProps } from '@/components/app/profile/PostBackg
 import { postBgById } from '@/lib/post-backgrounds';
 import { closeBrainrotFeed } from '@/lib/brainrot-feed';
 import { cn } from '@/lib/utils';
+import { VIEWER_CONTROL, VIEWER_PILL } from '@/lib/viewer-chrome';
 
 const ShortsPhotoPager = lazy(() => import('./ShortsPhotoPager').then((m) => ({ default: m.ShortsPhotoPager })));
 const ComicDeck = lazy(() => import('@/components/app/comic/ComicDeck').then((m) => ({ default: m.ComicDeck })));
@@ -55,22 +56,17 @@ function posterSize(length: number): string {
 
 function TextPoster({ short }: { short: ShortVideo }) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const post = short.reelPost!;
   const words = useMemo(() => readable(post.text || ''), [post.text]);
   const bg = postBgById(post.bgId);
-  const bodyRef = useRef<HTMLParagraphElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const [overflows, setOverflows] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   useLayoutEffect(() => {
     const el = bodyRef.current;
     // Big type's descenders poke past the box by a few pixels; that is not a cut.
-    if (el) setOverflows(el.scrollHeight - el.clientHeight > 12);
-  }, [words]);
-
-  const openPost = () => {
-    closeBrainrotFeed();
-    navigate(`/app/post/${short.articleSlug || short.id}`, { state: { fromFeed: true } });
-  };
+    if (el && !expanded) setOverflows(el.scrollHeight - el.clientHeight > 12);
+  }, [words, expanded]);
 
   return (
     <div
@@ -81,31 +77,31 @@ function TextPoster({ short }: { short: ShortVideo }) {
       style={bg ? undefined : { color: '#fff', background: PLAIN_POSTER }}
     >
       <PostBgLayer bg={bg} />
-      <div className="relative flex flex-col px-7 pb-[150px] pr-[76px] pt-[96px]">
+      {/* The shorts frame: 16px sides like the caption, clear of the top row
+          and of the creator row + action row at the foot. */}
+      <div className="relative flex flex-col px-4 pb-[170px] pt-[84px]">
         <span aria-hidden className="mb-2 select-none font-serif text-[64px] leading-[0.6] opacity-40">“</span>
-        <p
+        {/* A long post opens in place the way a short's caption does: "more"
+            under it, then the words scroll and "less" closes them. */}
+        <div
           ref={bodyRef}
+          data-shorts-scrollable={expanded || undefined}
+          style={{ maxHeight: 'calc(100dvh - 330px)', touchAction: expanded ? 'pan-y' : undefined }}
           className={cn(
-            'shrink-0 whitespace-pre-line break-words font-semibold tracking-[-0.01em] [text-wrap:pretty]',
-            posterSize(words.length),
-            overflows && '[mask-image:linear-gradient(to_bottom,#000_78%,transparent)]',
-          )}
-          style={{ maxHeight: 'calc(100dvh - 330px)', overflow: 'hidden' }}
-        >
-          {words}
-        </p>
-        {/* Polls, quoted posts and link cards live on the post page; a long
-            post continues there too. */}
-        <button
-          type="button"
-          onClick={openPost}
-          className={cn(
-            'mt-4 self-start rounded-full px-4 py-2 text-sm font-semibold backdrop-blur-md',
-            overflows ? 'bg-white/20' : 'bg-white/10 opacity-80',
+            'scrollbar-hide',
+            expanded ? 'overflow-y-auto' : 'overflow-hidden',
+            overflows && !expanded && '[mask-image:linear-gradient(to_bottom,#000_78%,transparent)]',
           )}
         >
-          {overflows ? t('reel.readAll', 'Read all') : t('reel.openPost', 'Open post')}
-        </button>
+          <p className={cn('whitespace-pre-line break-words font-semibold tracking-[-0.01em] [text-wrap:pretty]', posterSize(words.length))}>
+            {words}
+          </p>
+        </div>
+        {overflows && (
+          <button type="button" onClick={() => setExpanded((v) => !v)} className="mt-1 self-start text-xs opacity-60">
+            {expanded ? t('copy.4fdd3b6201a2', { defaultValue: 'less' }) : t('copy.187897ce0afc', { defaultValue: 'more' })}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -116,7 +112,7 @@ function ArticleSlide({ short }: { short: ShortVideo }) {
   const navigate = useNavigate();
   const post = short.reelPost!;
   return (
-    <div data-reel-article className="absolute inset-0 flex flex-col justify-center bg-zinc-950 px-6 pb-[150px] pr-[76px] pt-[90px] text-white">
+    <div data-reel-article className="absolute inset-0 flex flex-col justify-center bg-zinc-950 px-4 pb-[170px] pt-[84px] text-white">
       {post.cover && <img src={post.cover} alt="" className="mb-5 aspect-[16/9] w-full rounded-2xl object-cover" />}
       <span className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-white/55">{t('profile.articleShort', 'Article')}</span>
       <h2 className="text-[24px] font-bold leading-tight">{readable(post.title || '')}</h2>
@@ -124,7 +120,7 @@ function ArticleSlide({ short }: { short: ShortVideo }) {
       <button
         type="button"
         onClick={() => { closeBrainrotFeed(); navigate(`/app/post/${short.articleSlug || short.id}`, { state: { fromFeed: true } }); }}
-        className="mt-5 self-start rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+        className={cn(VIEWER_PILL, 'mt-5 self-start')}
       >
         {t('reel.readArticle', 'Read article')}
       </button>
@@ -140,12 +136,12 @@ function LockedSlide({ short }: { short: ShortVideo }) {
     <div data-reel-locked className="absolute inset-0 flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
       {cover && <img src={cover} alt="" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-2xl" />}
       <div className="relative flex flex-col items-center gap-3 px-8 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-black/45 backdrop-blur-md"><Lock className="h-6 w-6" /></span>
+        <span className={cn(VIEWER_CONTROL, 'h-14 w-14 rounded-2xl')}><Lock className="h-6 w-6" /></span>
         <p className="text-base font-semibold">{t('profile.lockedPost', 'Locked post')}</p>
         <button
           type="button"
           onClick={() => { closeBrainrotFeed(); navigate(`/app/post/${short.articleSlug || short.id}`, { state: { fromFeed: true } }); }}
-          className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black"
+          className={cn(VIEWER_PILL, 'mt-1')}
         >
           {t('reel.openToUnlock', 'Open to unlock')}
         </button>
@@ -163,7 +159,7 @@ export const PostSwipeSlide = memo(function PostSwipeSlide({ short, isActive }: 
   const images = post.images || [];
   if (post.kind === 'comic') {
     return (
-      <div data-reel-comic data-keep-dark className="absolute inset-0 flex items-center justify-center bg-black px-4 pb-[120px] pr-[64px] pt-[80px]">
+      <div data-reel-comic data-keep-dark className="absolute inset-0 flex items-center justify-center bg-black px-4 pb-[170px] pt-[84px]">
         <div className="w-full max-w-[420px]">
           <Suspense fallback={<img src={images[0]} alt="" className="mx-auto max-h-[60dvh] rounded-xl object-contain" />}>
             {isActive || images.length < 2
