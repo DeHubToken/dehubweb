@@ -20,6 +20,8 @@ import { cn } from '@/lib/utils';
 import type { BuilderPeriod, TopBuilder } from '@/lib/top-builders';
 
 const SHOWN = 8;
+/** Extra rows added per "Show more" tap once the full list is open. */
+const PAGE = 20;
 const SHIPPED_COLOR = 'var(--top-builders-shipped, var(--tint-accent, rgb(161 161 170)))';
 const VOTES_COLOR = 'rgb(245 200 75)';
 const COMMENTS_COLOR = 'rgb(125 211 252)';
@@ -107,12 +109,13 @@ function BuilderRow({ b, rank, max, open, onToggle, mine }: { b: TopBuilder; ran
 
 /**
  * compact: the version on the main Prompts tab. Top 3 rows with a
- * "Show all" toggle, and the "You" row sits inside the card instead of
+ * "Show all N builders" button that opens the full list 20 rows at a time, and the "You" row sits inside the card instead of
  * floating over the prompt list.
  */
 export function TopBuildersCard({ compact = false }: { compact?: boolean } = {}) {
   const { t } = useTranslation();
-  const [expanded, setExpanded] = useState(false);
+  const base = compact ? 3 : SHOWN;
+  const [visible, setVisible] = useState(base);
   const { walletAddress } = useAuth();
   const [period, setPeriod] = useState<BuilderPeriod>('month');
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -120,7 +123,7 @@ export function TopBuildersCard({ compact = false }: { compact?: boolean } = {})
 
   const me = walletAddress?.toLowerCase() ?? null;
   const myIndex = me ? builders.findIndex((b) => b.wallet === me) : -1;
-  const limit = compact && !expanded ? 3 : SHOWN;
+  const limit = Math.max(base, visible);
   const shown = builders.slice(0, limit);
   const max = builders[0]?.points ?? 1;
 
@@ -176,7 +179,7 @@ export function TopBuildersCard({ compact = false }: { compact?: boolean } = {})
                 key={p}
                 type="button"
                 aria-pressed={period === p}
-                onClick={() => { setPeriod(p); setOpenKey(null); }}
+                onClick={() => { setPeriod(p); setOpenKey(null); setVisible(base); }}
                 className={cn(
                   'rounded-full px-2.5 py-1 text-xs transition-colors',
                   period === p ? 'bg-white text-black' : 'text-zinc-400 hover:text-white',
@@ -207,17 +210,31 @@ export function TopBuildersCard({ compact = false }: { compact?: boolean } = {})
               />
             ))}
           {pin && !isLoading && <div className={cn('mt-1 rounded-xl bg-white/[0.06] p-2 ring-1 ring-white/10', compact ? 'block' : 'hidden md:block')}>{pinBody}</div>}
-          {compact && !isLoading && builders.length > 3 && (
-            <button
-              type="button"
-              data-top-builders-more
-              onClick={() => setExpanded((v) => !v)}
-              className="mt-1.5 self-center rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
-            >
-              {expanded
-                ? t('features.topBuilders.showLess', 'Show less')
-                : t('features.topBuilders.showAll', 'Show top {{n}}', { n: Math.min(SHOWN, builders.length) })}
-            </button>
+          {!isLoading && builders.length > base && (
+            <div className="mt-1.5 flex items-center justify-center gap-2">
+              {limit < builders.length && (
+                <button
+                  type="button"
+                  data-top-builders-more
+                  onClick={() => setVisible(limit === base ? base + PAGE : limit + PAGE)}
+                  className="rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
+                >
+                  {limit === base
+                    ? t('features.topBuilders.showEveryone', 'Show all {{n}} builders', { n: builders.length })
+                    : t('features.topBuilders.showMore', 'Show {{n}} more', { n: Math.min(PAGE, builders.length - limit) })}
+                </button>
+              )}
+              {limit > base && (
+                <button
+                  type="button"
+                  data-top-builders-less
+                  onClick={() => { setVisible(base); setOpenKey(null); }}
+                  className="rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
+                >
+                  {t('features.topBuilders.showLess', 'Show less')}
+                </button>
+              )}
+            </div>
           )}
         </div>
         <p className="mt-2 text-[11px] text-zinc-500">
