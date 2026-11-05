@@ -2454,6 +2454,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         panel={(
           <WideVideoPanel
             video={video}
+            walletAddress={walletAddress}
+            onLogin={openLoginModal}
+            isOwnPost={isOwnPost}
+            hideCaption={contentWarning.hidden}
             onOpenComments={() => {
               if (onOpenComments) { onOpenComments(); return; }
               setCommentsInitialTab(undefined);
@@ -3424,8 +3428,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
 
             return (
               <>
-                {/* Behind a content warning, the caption opens with the post. */}
-                {!contentWarning.hidden && (<>
+                {/* Behind a content warning, the caption opens with the post.
+                    Glass rails show the caption in the panel beside the video. */}
+                {!contentWarning.hidden && !wideRails && (<>
                 {/* auto={false}: the card's own useTranslation above already
                     translated this text and hands the result down. Left on, this
                     asked the edge function to translate the translation. */}
