@@ -39,6 +39,7 @@ import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from '@/components/app/profile/PostBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useProfileViewMode } from '@/lib/profile-view-mode';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
@@ -480,6 +481,8 @@ function HomeTabPanel({
   isContentFiltered?: boolean;
 }) {
   const { t: _copy } = _useCopy();
+  const viewMode = useProfileViewMode();
+  const postBg = useProfilePostBg();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
@@ -496,12 +499,67 @@ function HomeTabPanel({
       })
     : [];
 
-  // Every post type in one grid, on phones and desktop alike.
-  const entries: MixedGridEntry[] = [
-    ...filteredOptimisticPosts.map((op) => ({ key: `op-${op.id}`, type: op.type, data: op.data, isOptimistic: true }) as MixedGridEntry),
-    ...ALL_CONTENT.map((item) => ({ key: `${item.isRepost ? 'rp-' : ''}${item.data.id}`, type: item.type, data: item.data, isPinned: item.isPinned, isRepost: item.isRepost }) as MixedGridEntry),
-  ];
-  return <ProfileMixedGrid entries={entries} />;
+  // Grid: every post type as tiles. List: the full post cards, one under another.
+  if (viewMode === 'grid') {
+    const entries: MixedGridEntry[] = [
+      ...filteredOptimisticPosts.map((op) => ({ key: `op-${op.id}`, type: op.type, data: op.data, isOptimistic: true }) as MixedGridEntry),
+      ...ALL_CONTENT.map((item) => ({ key: `${item.isRepost ? 'rp-' : ''}${item.data.id}`, type: item.type, data: item.data, isPinned: item.isPinned, isRepost: item.isRepost }) as MixedGridEntry),
+    ];
+    return <ProfileMixedGrid entries={entries} />;
+  }
+
+  return (
+    <div data-profile-list-view className="space-y-3">
+      {filteredOptimisticPosts.map((op) => {
+        const card = op.type === 'post'
+          ? <PostCard key={op.id} post={op.data as TextPost} />
+          : op.type === 'image'
+          ? <ImageCard key={op.id} post={op.data as ImagePost} />
+          : <VideoCard key={op.id} video={op.data as VideoItem} />;
+        return (
+          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" {...(op.type === 'post' ? postBgHostProps(postBg) : {})}>
+            {op.type === 'post' && <PostBgLayer bg={postBg} />}
+            {card}
+          </div>
+        );
+      })}
+      {ALL_CONTENT.map((item, index) => {
+        const aboveFold = index < 3;
+        const card = item.type === 'proposal'
+          ? <ProposalLinkEmbed key={item.data.id} proposalId={item.data.proposalId} />
+          : item.type === 'post'
+          ? <PostCard key={item.data.id} post={item.data as TextPost} />
+          : item.type === 'image'
+          ? <ImageCard key={item.data.id} post={item.data as ImagePost} aboveFold={aboveFold} />
+          : <VideoCard key={item.data.id} video={item.data as VideoItem} aboveFold={aboveFold} />;
+        return (
+          <div
+            key={`${item.isRepost ? 'rp-' : ''}${item.data.id}`}
+            data-feed-item
+            data-cinematic={item.type}
+            className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
+            style={offscreenCardStyle(item.type, index)}
+            {...(isPlainTextItem(item) ? postBgHostProps(postBg) : {})}
+          >
+            {isPlainTextItem(item) && <PostBgLayer bg={postBg} />}
+            {item.isPinned && (
+              <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
+                <Pin className="w-3.5 h-3.5 fill-current" />
+                <span className="font-medium">{_copy("copy.79175cb0f6da", { defaultValue: "Pinned post" })}</span>
+              </div>
+            )}
+            {item.isRepost && (
+              <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
+                <Repeat2 className="w-3.5 h-3.5" />
+                <span className="font-medium">{_copy("copy.75a6e90c7240", { defaultValue: "Reposted" })}</span>
+              </div>
+            )}
+            {card}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 /** A text post that is not an article or a proposal link: these get the owner's backdrop. */

@@ -89,3 +89,11 @@ background: currentColor;
 box-shadow: 0 0 9px currentColor, 0 0 2px currentColor;
 pointer-events: none;
 }
+
+/* Grid / list toggle: the chosen view is lit, the other one dimmed. */
+html[data-theme] [data-profile-quiet-row] [data-profile-view-option]:not([data-active]):not(#_):not(#_):not(#_) {
+  color: var(--pqr-sub);
+}
+html[data-theme] [data-profile-quiet-row] [data-profile-view-option]:not([data-active]) svg:not(#_):not(#_):not(#_) {
+  color: var(--pqr-sub);
+}

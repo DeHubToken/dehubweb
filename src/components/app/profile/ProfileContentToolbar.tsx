@@ -24,7 +24,8 @@ import Search from "@/components/ui/cut-icons/search";
 import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 import X from "@/components/ui/cut-icons/close";
 import Check from "@/components/ui/cut-icons/check";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LayoutGrid, List } from "lucide-react";
+import { setProfileViewMode, useProfileViewMode } from '@/lib/profile-view-mode';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
@@ -79,6 +80,39 @@ interface ProfileContentToolbarProps {
   /** Items currently rendered under the toolbar — shown while a search runs. */
   resultCount: number;
   isLoading: boolean;
+}
+
+/**
+ * Grid or list for the All tab: two bare icons, the chosen one lit. Sits on
+ * the side of the row away from search and filters.
+ */
+function ProfileViewToggle() {
+  const { t } = useTranslation();
+  const mode = useProfileViewMode();
+  const items = [
+    { key: 'grid' as const, Icon: LayoutGrid, label: t('profile.viewGrid', 'Grid view') },
+    { key: 'list' as const, Icon: List, label: t('profile.viewList', 'List view') },
+  ];
+  return (
+    <div data-profile-view-toggle role="group" aria-label={t('profile.viewMode', 'View')} className="flex h-9 flex-shrink-0 items-center">
+      {items.map(({ key, Icon, label }) => (
+        <button
+          key={key}
+          type="button"
+          data-profile-quiet-icon
+          data-profile-view-option={key}
+          data-active={mode === key || undefined}
+          aria-pressed={mode === key}
+          aria-label={label}
+          title={label}
+          onClick={() => setProfileViewMode(key)}
+          className="flex h-9 w-8 items-center justify-center"
+        >
+          <Icon className="h-[17px] w-[17px]" strokeWidth={2} />
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export function ProfileContentToolbar({
@@ -191,6 +225,7 @@ export function ProfileContentToolbar({
           >
             {isMobile ? (
               <div data-profile-quiet-row className="flex h-9 items-center gap-1">
+                {showPostType && <ProfileViewToggle />}
                 <Popover open={isSortOpen} onOpenChange={setIsSortOpen}>
                   <PopoverTrigger asChild>
                     <button
@@ -294,6 +329,7 @@ className={cn('relative h-9 flex-shrink-0 px-3 text-xs font-medium transition-co
 </button>
 );
 })}
+{showPostType && <><span className="min-w-2 flex-1" /><ProfileViewToggle /></>}
 </div>
             )}
           </motion.div>
