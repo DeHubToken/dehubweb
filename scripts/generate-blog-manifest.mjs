@@ -31,7 +31,7 @@ import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES, cleanBlogSlug
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC = path.join(ROOT, 'public');
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 // Hand-built React guide pages that also live under /guides/ — never touch
 // their sitemap entries and never treat them as manifest posts. The two older
 // ones now 301 into a post (CONSOLIDATED_GUIDES), so their rows are dropped.
@@ -79,7 +79,7 @@ function applyManifestDisplayOverrides(posts) {
   // in the manifest consistent with what users see in the SPA.
   return posts.map((p) => {
     if (p.title === 'Entrepreneurial Spirit: Co-Founders Launch TikTok Agency') return { ...p, publishedAt: '2024-01-09T12:00:00.000Z' };
-    if (p.title === 'Back in Action: DeHub V2 Trading Resumes on Gate.io') return { ...p, publishedAt: '2023-02-16T12:00:00.000Z' };
+    if (p.title === 'Back in Action: Riftn V2 Trading Resumes on Gate.io') return { ...p, publishedAt: '2023-02-16T12:00:00.000Z' };
     if (p.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
       return { ...p, title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost', publishedAt: '2024-10-28T12:00:00.000Z' };
     }
@@ -204,7 +204,7 @@ const manifest = sorted.map((p) => ({
   seoTitle: p.seoTitle || undefined,
   seoDescription: p.seoDescription || undefined,
   excerpt: p.excerpt || '',
-  author: p.author?.name || 'DeHub Team',
+  author: p.author?.name || 'Riftn Team',
   publishedAt: p.publishedAt,
   updatedAt: p.updatedAt || undefined,
   bannerImage: p.bannerImage || undefined,
@@ -244,7 +244,7 @@ for (const p of sorted) {
     excerpt: p.excerpt ?? '',
     bannerImage: p.bannerImage ?? '',
     bannerImageAlt: p.bannerImageAlt ?? '',
-    author: p.author ?? { name: 'DeHub Team' },
+    author: p.author ?? { name: 'Riftn Team' },
     tags: Array.isArray(p.tags) ? p.tags : [],
     readingTime: p.readingTime ?? 0,
     featured: !!p.featured,
@@ -348,7 +348,7 @@ const xmlEsc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').rep
 const smPath = path.join(PUBLIC, 'sitemap-static.xml');
 let sm = fs.readFileSync(smPath, 'utf8');
 sm = sm.replace(
-  /\s*<url>\s*<loc>https:\/\/dehub\.io\/guides\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
+  /\s*<url>\s*<loc>https:\/\/riftn\.com\/guides\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
   (block, slug) => (STANDALONE_GUIDES.has(decodeURIComponent(slug.trim())) ? block : '')
 );
 const blogUrls = sorted.map((p) => {
@@ -387,11 +387,11 @@ const allDocsRoutes = [...new Set([...docsRoutes, ...DOCS_META_ONLY])];
 // "now", and a sitemap stamping every page with today's date teaches Google to
 // ignore its lastmod.
 const docsLastmod = new Map(
-  [...sm.matchAll(/<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+  [...sm.matchAll(/<loc>https:\/\/riftn\.com\/docs\/([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
     .map(([, route, lastmod]) => [route.trim(), lastmod.trim()]),
 );
 sm = sm.replace(
-  /\s*<url>\s*<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
+  /\s*<url>\s*<loc>https:\/\/riftn\.com\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,
   (block, sub) => (sub.trim() === 'blog' ? block : '')
 );
 const docsUrls = allDocsRoutes.map((r) => {
@@ -409,19 +409,19 @@ const items = sorted.slice(0, 20).map((p) => `    <item>
       <link>${APP_URL}/guides/${xmlEsc(encodeURIComponent(p.slug))}</link>
       <guid>${APP_URL}/guides/${xmlEsc(encodeURIComponent(p.slug))}</guid>
       <pubDate>${rfc822(p.publishedAt)}</pubDate>
-      <dc:creator>${xmlEsc(p.author?.name || 'DeHub Team')}</dc:creator>
+      <dc:creator>${xmlEsc(p.author?.name || 'Riftn Team')}</dc:creator>
     </item>`).join('\n');
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>DeHub Blog</title>
-    <description>News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.</description>
+    <title>Riftn Blog</title>
+    <description>News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.</description>
     <link>${APP_URL}/docs/blog</link>
     <atom:link href="${APP_URL}/rss.xml" rel="self" type="application/rss+xml"/>
     <language>en-US</language>
-    <copyright>Copyright ${new Date(sorted[0]?.publishedAt || Date.now()).getFullYear()} DeHub</copyright>
-    <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
-    <webMaster>team@dehub.io (DeHub Team)</webMaster>
+    <copyright>Copyright ${new Date(sorted[0]?.publishedAt || Date.now()).getFullYear()} Riftn</copyright>
+    <managingEditor>team@dehub.io (Riftn Team)</managingEditor>
+    <webMaster>team@dehub.io (Riftn Team)</webMaster>
     <lastBuildDate>${rfc822(sorted[0]?.publishedAt || Date.now())}</lastBuildDate>
 ${items}
   </channel>

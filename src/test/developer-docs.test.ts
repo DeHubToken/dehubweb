@@ -29,7 +29,7 @@ describe('developer docs', () => {
   });
 
   it.each(pages.map((p) => p.route))('/docs/%s is in the sitemap and survives its rewrite', (route) => {
-    expect(sitemap).toContain(`<loc>https://dehub.io/docs/${route}</loc>`);
+    expect(sitemap).toContain(`<loc>https://riftn.com/docs/${route}</loc>`);
     expect(read('scripts/generate-blog-manifest.mjs')).toContain(`'${route}'`);
   });
 

@@ -41,17 +41,17 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button data-entry-logo onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button data-entry-logo onClick={onClick} onPointerDown={onPointerDown} className="flex h-11 min-w-11 shrink-0 items-center justify-center cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <FeedRefreshLogo>
-      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="dehub" className="block h-9 w-[42px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
+      <ElectricLogo still={theme === 'war' ? <img src={dehubMark} alt="Riftn" className="block h-[36px] w-[42px] object-contain" decoding="async" /> : undefined}>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
-        <WarLogo src={dehubMark} alt="dehub" className="h-9 w-[42px]" />
+        <WarLogo src={dehubMark} alt="Riftn" className="h-[36px] w-[42px]" />
       ) : (
         <img
           src={dehubMark}
-          alt="dehub"
-          className="block h-9 w-[42px] object-contain"
+          alt="Riftn"
+          className="block h-[36px] w-[42px] object-contain"
           loading="eager"
           decoding="async"
           fetchPriority="high"
@@ -116,7 +116,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // With or without the /app prefix — both spellings reach the same page.
   const isPostPage = /^\/(?:app\/)?(?:post|video)\//.test(location.pathname);
   // When the post overlay is opened from the feed, the home page's sticky tab bar hosts
-  // the back button (settings-toggle slot). The top DEHUB bar stays exactly as it was on the feed.
+  // the back button (settings-toggle slot). The top RIFTN bar stays exactly as it was on the feed.
   const isOverlayFromFeed = isPostPage && !!(location.state as any)?.fromFeed;
   // The bar (menu, dehub mark, bell) belongs to the home feed only. Every
   // other page already names itself in its own pill, so the bar there was a
@@ -232,7 +232,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
       </div>
 
       {/* Notifications — right slot, only visible when logged in.
-          When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
+          When the post overlay is opened from the feed, keep the RIFTN header exactly as it was. */}
       <div className="flex items-center">
         {isAuthenticated && (
           <button

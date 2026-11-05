@@ -4,10 +4,10 @@ export const tokenizedSubscriptionsPost: BlogPostType = {
   id: 'tokenized-subscriptions-explained',
   slug: 'tokenized-subscriptions-explained',
   title: 'Tokenised Subscriptions Explained: On-Chain Memberships You Can Resell for Royalties',
-  seoTitle: 'Tokenised Subscriptions Explained (2026) | DeHub',
+  seoTitle: 'Tokenised Subscriptions Explained (2026) | Riftn',
   seoDescription: 'Tokenised subscriptions are on-chain memberships you own, resell on a secondary market, and that pay the creator a royalty on every resale. Here is how they work.',
   excerpt: 'Tokenised subscriptions turn a creator membership into an on-chain asset you own outright, can resell, and that pays the creator a royalty each time it changes hands.',
-  content: `A tokenised subscription is a creator membership issued on-chain as a transferable asset, so the fan owns it outright, can resell it on a secondary market, and the creator earns a resale royalty every time it changes hands. Unlike a Patreon, OnlyFans or Twitch subscription, which is a licence you rent and cannot move, a tokenised subscription (often called a subscription NFT) behaves like property: it lives in your wallet, not in a platform database. On [DeHub, the decentralised social network](/guides/what-is-dehub), these on-chain subscriptions unlock token-gated content while remaining tradable for their whole life.
+  content: `A tokenised subscription is a creator membership issued on-chain as a transferable asset, so the fan owns it outright, can resell it on a secondary market, and the creator earns a resale royalty every time it changes hands. Unlike a Patreon, OnlyFans or Twitch subscription, which is a licence you rent and cannot move, a tokenised subscription (often called a subscription NFT) behaves like property: it lives in your wallet, not in a platform database. On [Riftn, the decentralised social network](/guides/what-is-dehub), these on-chain subscriptions unlock token-gated content while remaining tradable for their whole life.
 
 If you have arrived searching the US spelling "tokenized subscriptions", you are in the right place; British English uses "tokenised", and the two describe exactly the same thing.
 
@@ -23,7 +23,7 @@ That third property is the one that changes everything. A conventional subscript
 
 ### On-chain subscriptions in Web3, in plain terms
 
-"On-chain" simply means the record of who holds the membership lives on a public blockchain rather than inside a company's private server. On DeHub the primary chain is Base, an Ethereum Layer 2, with contracts also deployed on BNB Chain and Polygon. Because the ownership record is public and programmable, the platform does not need to be trusted to honour it. The token itself is the proof of access, and the smart contract enforces the rules automatically, including the resale royalty.
+"On-chain" simply means the record of who holds the membership lives on a public blockchain rather than inside a company's private server. On Riftn the primary chain is Base, an Ethereum Layer 2, with contracts also deployed on BNB Chain and Polygon. Because the ownership record is public and programmable, the platform does not need to be trusted to honour it. The token itself is the proof of access, and the smart contract enforces the rules automatically, including the resale royalty.
 
 This is the defining feature of on-chain subscriptions in Web3: the relationship between creator and fan is written into code that neither a middleman nor a change of company policy can rewrite after the fact.
 
@@ -54,7 +54,7 @@ For creators, the model realigns incentives in three concrete ways.
 
 **Aligned early supporters.** Because an early-supporter pass can appreciate if the creator grows, fans are financially motivated to champion the creator, recruit others and stay loyal. Your biggest fans stop being passive subscribers and become genuine stakeholders in your success. This is a far stronger flywheel than a follower count that means nothing the day you switch platforms, a problem we cover in the [UK creator's guide to leaving TikTok](/guides/uk-creators-guide-leaving-tiktok).
 
-On DeHub this sits alongside the wider creator economy: content can be minted on-chain when you upload it or later, uploads can be free, pay-per-view or token-gated, and the ecosystem shares up to 90% of ad revenue back to creators and the community.
+On Riftn this sits alongside the wider creator economy: content can be minted on-chain when you upload it or later, uploads can be free, pay-per-view or token-gated, and the ecosystem shares up to 90% of ad revenue back to creators and the community.
 
 ## The fan upside: memberships that can appreciate
 
@@ -64,18 +64,18 @@ There is a practical dimension too. If you no longer have time for a creator's c
 
 None of this is a promise that any given membership will rise in value, and you should never treat a subscription NFT as guaranteed investment income. Markets fall as well as rise, and a membership is only worth what another fan will pay for it. The point is optionality: you hold something real, and what you do with it is yours to decide.
 
-## How DeHub implements tokenised subscriptions
+## How Riftn implements tokenised subscriptions
 
-DeHub runs on-chain tradable subscriptions as a first-class feature of the platform, not a bolt-on. The building blocks are:
+Riftn runs on-chain tradable subscriptions as a first-class feature of the platform, not a bolt-on. The building blocks are:
 
-- **Token-gated content.** Creators mark uploads as free, pay-per-view or gated behind a subscription, making DeHub a genuine **token-gated content platform** where the token in your wallet is the key.
+- **Token-gated content.** Creators mark uploads as free, pay-per-view or gated behind a subscription, making Riftn a genuine **token-gated content platform** where the token in your wallet is the key.
 - **On-chain, tradable memberships.** Subscriptions are minted on-chain so they can be resold on a secondary market, with the creator's resale royalty enforced by the contract.
 - **A transparent, chronological feed.** There is no opaque algorithm deciding who sees a creator's paid posts; the feed is chronological and transparent, so a paying member's access is predictable.
-- **Live and interactive.** Gated memberships pair naturally with DeHub's [Web3 live streaming, a decentralised Twitch alternative](/guides/web3-live-streaming-decentralised-twitch-alternative) built on Livepeer that has scaled to 50,000+ concurrent viewers, complete with on-chain animated tips.
+- **Live and interactive.** Gated memberships pair naturally with Riftn's [Web3 live streaming, a decentralised Twitch alternative](/guides/web3-live-streaming-decentralised-twitch-alternative) built on Livepeer that has scaled to 50,000+ concurrent viewers, complete with on-chain animated tips.
 
 The ecosystem token is $DHB, which trades on DEXs and on Coinbase and underpins the on-chain economy across content, subscriptions and the play-to-earn arcade. If you want to participate, our [guide to buying the DHB token in the UK](/guides/how-to-buy-dhb-token-uk) walks through it step by step.
 
-Ready to see on-chain memberships in practice? Open [the DeHub web app](https://dehub.io/app) or grab the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and follow a creator whose content you would actually pay to own.
+Ready to see on-chain memberships in practice? Open [the Riftn web app](https://riftn.com/app) or grab the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) and follow a creator whose content you would actually pay to own.
 
 ## A quick note on getting the model right
 
@@ -101,14 +101,14 @@ They can, but there is no guarantee. An early-supporter pass may appreciate if a
 
 ### Where can I use tokenised subscriptions?
 
-On DeHub, which runs on-chain tradable subscriptions and token-gated content as core features across its content, live streaming and creator tools. You can explore it at https://dehub.io.
+On Riftn, which runs on-chain tradable subscriptions and token-gated content as core features across its content, live streaming and creator tools. You can explore it at https://riftn.com.
 `,
   bannerImage: '/media/tokenized-subscriptions-explained-banner.png',
-  bannerImageAlt: 'Tokenised subscriptions on DeHub: an on-chain creator membership held in a wallet, resellable with creator royalties',
-  author: { name: 'DeHub Team' },
+  bannerImageAlt: 'Tokenised subscriptions on Riftn: an on-chain creator membership held in a wallet, resellable with creator royalties',
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-05-02T13:15:00.000Z',
   updatedAt: '2026-05-02T13:15:00.000Z',
-  tags: ['tokenised subscriptions', 'subscription nft', 'on-chain subscriptions', 'token-gated content', 'creator economy', 'web3 social', 'DeHub'],
+  tags: ['tokenised subscriptions', 'subscription nft', 'on-chain subscriptions', 'token-gated content', 'creator economy', 'web3 social', 'Riftn'],
   readingTime: 8,
   featured: false,
   status: 'published',

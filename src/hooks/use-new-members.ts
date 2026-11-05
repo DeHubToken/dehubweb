@@ -5,7 +5,7 @@
  * next to it, ordered by when people arrived instead of by who is suggested.
  *
  * It lives in Supabase (`public.new_members`) rather than being asked of the
- * DeHub API, because the API cannot answer it: `/api/users_search` ignores
+ * Riftn API, because the API cannot answer it: `/api/users_search` ignores
  * `page`, `limit` and every sort parameter, and hands back the same ten oldest
  * accounts every time. The `register-new-member` edge function is the only
  * writer — see the migration for why `joined_at` is never taken from a client.
@@ -23,7 +23,7 @@
  * @module hooks/use-new-members
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -56,7 +56,7 @@ const NOTICE_KEY = 'dehub_new_member_notice_seen';
  * The setting is on by default, which the feature request asked for — but
  * default-on means the first anyone hears of it should not be someone else's
  * DM. It has to wait, though: a brand new account is looking at a username
- * prompt and a "Welcome to DeHub!" toast at this moment, and a third thing on
+ * prompt and a "Welcome to Riftn!" toast at this moment, and a third thing on
  * top of those is noise nobody reads.
  */
 const NOTICE_DELAY_MS = 12_000;
@@ -282,7 +282,7 @@ export function useNewMemberSelf() {
  *
  * Mounted high in the app rather than called from AuthProvider: this is a
  * cosmetic side effect, and a failure in it must never be able to interrupt a
- * login. Everything it needs is derived server-side from the DeHub token, so
+ * login. Everything it needs is derived server-side from the Riftn token, so
  * there is nothing to pass and nothing to get wrong.
  *
  * The same call is what fills the rest of the roster in — the function follows
@@ -295,9 +295,16 @@ export function useRegisterNewMember() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  // Read through a ref: `t` changes identity when a translation pack lands,
+  // which happens right as sign-in settles for non-English readers. With it in
+  // the deps every pack load cancelled the call in flight and fired a new one
+  // (nine identical requests per Turkish sign-in).
+  const live = useRef({ queryClient, navigate, t });
+  live.current = { queryClient, navigate, t };
 
   useEffect(() => {
     if (!isAuthenticated || !walletAddress) return;
+    const { queryClient, navigate, t } = live.current;
     if (sessionStorage.getItem(REGISTERED_KEY) === walletAddress.toLowerCase()) return;
 
     const token = getAuthToken();
@@ -364,5 +371,5 @@ export function useRegisterNewMember() {
       cancelled = true;
       if (noticeTimer) clearTimeout(noticeTimer);
     };
-  }, [isAuthenticated, walletAddress, queryClient, navigate, t]);
+  }, [isAuthenticated, walletAddress]);
 }

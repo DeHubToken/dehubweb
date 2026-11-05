@@ -140,8 +140,8 @@ export default function CareersPage() {
       {/* Canonical is /jobs — the route this page actually serves (and the one
           in the sitemap). /app/careers was never a route: it canonicalized a
           sitemapped page onto a 404. */}
-      <SEOHead title={_copy("copy.90f2963ac688", { defaultValue: "Careers — Join the DeHub Team" })} description={_copy("copy.55075065cfc5", { defaultValue: "Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." })} url="https://dehub.io/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/jobs', description: _copy("copy.668281a1d0d0", { defaultValue: "Open positions at DeHub — building the future of decentralized media." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">{_copy("copy.0ec80d3905a0", { defaultValue: "DeHub Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.90f2963ac688", { defaultValue: "Careers: Join the Riftn Team" })} description={_copy("copy.55075065cfc5", { defaultValue: "Join the team building the future of decentralized media. Explore open positions at Riftn and help shape Web3 social." })} url="https://riftn.com/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at Riftn', url: 'https://riftn.com/jobs', description: _copy("copy.668281a1d0d0", { defaultValue: "Open positions at Riftn, building the future of decentralized media." }), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
+      <h1 className="sr-only">{_copy("copy.0ec80d3905a0", { defaultValue: "Riftn Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={careersBriefcase} alt={t('careers.title')} className="w-8 h-8 object-contain" />}
         title={t('careers.title')}

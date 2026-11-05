@@ -100,6 +100,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { downloadMedia, messageImageDownloadName } from '@/lib/download-media';
 import { dhbText } from '@/lib/dhb-toast';
 import {
   emitReadReceipt,
@@ -473,8 +474,36 @@ const MessageBubble = memo(function MessageBubble({
   const encMedia = message.encMedia;
   const isLockedMedia = !encMedia && !!primaryMedia?.encrypted;
 
+  // A plain photo, video or document can be saved from the hover actions.
+  // Paid and end-to-end encrypted attachments are left out: one is a blurred
+  // preview, the other downloads from its own tap.
+  const downloadTarget = useMemo(() => {
+    if (message.msgType !== 'media' || message.lock || encMedia || isLockedMedia || !primaryMediaUrl) return null;
+    const url = getMediaUrl(primaryMediaUrl) || primaryMediaUrl;
+    if (!/^(https?:|blob:)/.test(url)) return null;
+    const name = isFileMedia
+      ? (primaryMedia?.name || 'file')
+      : primaryMedia?.type === 'video' || primaryMedia?.mimeType?.startsWith('video/')
+        ? `dehub-chat-${message._id}.mp4`
+        : messageImageDownloadName(url);
+    return { url, name };
+  }, [message.msgType, message.lock, message._id, encMedia, isLockedMedia, primaryMediaUrl, isFileMedia, primaryMedia?.name, primaryMedia?.type, primaryMedia?.mimeType]);
+  const handleDownloadMedia = useCallback(async () => {
+    if (!downloadTarget) return;
+    const toastId = `dm-download-${message._id}`;
+    toast.loading(_copy("copy.757726036c1c", { defaultValue: "Preparing download..." }), { id: toastId });
+    try {
+      await downloadMedia(downloadTarget.url, downloadTarget.name);
+      toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
+    } catch {
+      // A host that refuses the fetch still serves the file to a plain link.
+      window.open(downloadTarget.url, '_blank', 'noopener,noreferrer');
+      toast.dismiss(toastId);
+    }
+  }, [downloadTarget, message._id, _copy]);
+
   // A shared entity: a text message whose content contains a link to something
-  // inside DeHub. Rendered as a rich, tappable card instead of a raw link.
+  // inside Riftn. Rendered as a rich, tappable card instead of a raw link.
   //
   // This used to recognise posts only, which is why sending someone a shop item
   // or a community from the app produced a naked URL in their inbox while a post
@@ -498,16 +527,36 @@ const MessageBubble = memo(function MessageBubble({
   const isUnsent = !!message.sendState || message._id.startsWith('temp-');
   const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
   const editPending = useRef(false);
+  // Drives the Save button's spinner/disabled state. A confirmed edit can take
+  // up to 15s (confirmChatDelivery's socket round-trip) and the ref above never
+  // triggers a re-render, so with nothing else watching it the button used to
+  // sit there looking inert the whole time — indistinguishable from broken.
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const saveEdit = async () => {
     if (editPending.current || !onSaveEdit) return;
     editPending.current = true;
+    setIsSavingEdit(true);
     try { if (await onSaveEdit(message._id, draftText) && setDraftText.complete(draftText, '')) onCancelEdit?.(); }
-    finally { editPending.current = false; }
+    finally { editPending.current = false; setIsSavingEdit(false); }
   };
   const [reactionPickerOpen, setReactionPickerOpen] = useState(false);
   useEffect(() => {
     if (isEditing) setDraftText.initialize(message.content || '');
   }, [isEditing, message.content, setDraftText]);
+  // Grows the edit box to fit the actual wrapped content instead of guessing
+  // rows from newline count (a long single-paragraph message has none, so that
+  // guess never got past its 2-row floor and clipped most of the text). Capped
+  // at 40% of the viewport; past that it scrolls rather than pushing Save off-screen.
+  const editTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useEffect(() => {
+    const el = editTextareaRef.current;
+    if (!el || !isEditing) return;
+    el.style.height = 'auto';
+    const full = el.scrollHeight + (el.offsetHeight - el.clientHeight);
+    const max = Math.round(window.innerHeight * 0.4);
+    el.style.height = `${Math.min(full, max)}px`;
+    el.style.overflowY = full > max ? 'auto' : 'hidden';
+  }, [isEditing, draftText]);
 
   // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
@@ -637,7 +686,7 @@ const MessageBubble = memo(function MessageBubble({
                glass stack: a filled block with no border for own messages, a
                hairline block with no fill for theirs. Geometry matches the
                mobile app — 12px with the tail corner squared to 2px. */
-            className={`inline-block rounded-xl ${
+            className={`inline-block rounded-xl ${isEditing ? 'max-w-full ' : ''}${
               message.msgType === 'media' || message.msgType === 'gif' || isPostShare
                 ? 'text-white'
                 : `px-4 py-2 ${
@@ -650,8 +699,9 @@ const MessageBubble = memo(function MessageBubble({
             {/* Text message — or a shared post rendered as a rich card */}
             {message.msgType === 'msg' && (
               isEditing ? (
-                <div className="flex flex-col gap-1.5 items-stretch min-w-[200px]">
+                <div className="flex flex-col gap-1.5 items-stretch">
                   <textarea
+                    ref={editTextareaRef}
                     autoFocus
                     dir="auto"
                     value={draftText}
@@ -665,14 +715,16 @@ const MessageBubble = memo(function MessageBubble({
                       }
                     }}
                     maxLength={5000}
-                    rows={Math.min(6, Math.max(2, draftText.split('\n').length))}
-                    className="w-full text-sm text-white bg-white/[0.08] border border-white/20 rounded-lg px-3 py-1.5 outline-none focus:border-white/40 resize-none"
+                    rows={1}
+                    disabled={isSavingEdit}
+                    className="w-[28rem] max-w-full text-sm text-white bg-white/[0.08] border border-white/20 rounded-lg px-3 py-1.5 outline-none focus:border-white/40 resize-none disabled:opacity-60"
                   />
                   <div className="flex items-center gap-2 justify-end">
                     <button
                       type="button"
                       onClick={() => onCancelEdit?.()}
-                      className="p-1 text-zinc-400 hover:text-white"
+                      disabled={isSavingEdit}
+                      className="p-1 text-zinc-400 hover:text-white disabled:opacity-40 disabled:pointer-events-none"
                       title={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}
                     >
                       <X className="w-3.5 h-3.5" />
@@ -680,10 +732,11 @@ const MessageBubble = memo(function MessageBubble({
                     <button
                       type="button"
                       onClick={() => void saveEdit()}
-                      className="p-1 text-white hover:text-zinc-300"
+                      disabled={isSavingEdit}
+                      className="p-1 text-white hover:text-zinc-300 disabled:opacity-60 disabled:pointer-events-none"
                       title={_copy("copy.1509f561f241", { defaultValue: "Save" })}
                     >
-                      <Check className="w-3.5 h-3.5" />
+                      {isSavingEdit ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </div>
@@ -900,7 +953,7 @@ const MessageBubble = memo(function MessageBubble({
           </div>
         )}
 
-          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || (onEdit && canEdit)) && (
+          {!message.isDeleted && !isUnsent && message.msgType !== 'tip' && !isEditing && (onReply || onReact || onPin || onForward || downloadTarget || (onEdit && canEdit)) && (
             <div
               className={`absolute top-1/2 -translate-y-1/2 ${isOwnMessage ? 'right-full mr-1' : 'left-full ml-1'} flex items-center gap-1 transition-all opacity-0 group-hover:opacity-100 z-10`}
             >
@@ -957,6 +1010,17 @@ const MessageBubble = memo(function MessageBubble({
                   title={tr('messages.edit')}
                 >
                   <Pencil className="w-3 h-3" />
+                </button>
+              )}
+              {downloadTarget && (
+                <button
+                  type="button"
+                  onClick={() => void handleDownloadMedia()}
+                  className="p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                  title={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                  aria-label={_copy("copy.d6eafe823591", { defaultValue: "Download" })}
+                >
+                  <Download className="w-3 h-3" />
                 </button>
               )}
               {onForward && (
@@ -1317,7 +1381,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     });
   }, [feeRequired, walletAddress]);
 
-  // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns DeHub data), use it
+  // When parent upgrades conversation to one with real dmId (e.g. after getContacts returns Riftn data), use it
   useEffect(() => {
     const convId = conversation.id;
     const isRealId = !convId.startsWith('new_') && !/^0x[0-9a-fA-F]{40}$/i.test(convId);
@@ -2266,7 +2330,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               <h2 className={`font-semibold text-white flex items-center gap-1.5 truncate ${dock ? 'text-sm' : ''}`}>
                 <BadgedName
                   badgeBalance={(otherUser as any)?.badgeBalance}
+                  badgeLock={(otherUser as any)?.badgeLock}
                   username={otherUser?.username}
+                  lookupId={otherUser?.username || otherUser?.address}
                 >
                   {displayName}
                 </BadgedName>
@@ -2698,6 +2764,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         initialIndex={0}
         isOpen={!!fullscreenImage}
         onClose={() => setFullscreenImage(null)}
+        downloadable
       />
 
       {/* Forward message picker */}

@@ -1,7 +1,7 @@
 /**
  * Creator generation engine.
  * ==========================
- * One call path for every generation DeHub can run, shared by the /creator
+ * One call path for every generation Riftn can run, shared by the /creator
  * studio and the /editor Generate panel. Before this existed both surfaces
  * hand-rolled their own `functions.invoke` calls, which is how the editor
  * ended up shipping a video model id the edge function rejects.
@@ -11,6 +11,7 @@
  * functions only after the transfer confirms.
  */
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 import { forgetPayment } from '@/lib/ai-payment';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
@@ -722,7 +723,7 @@ async function functionHeaders(): Promise<Record<string, string>> {
   return {
     apikey: SUPABASE_ANON_KEY,
     Authorization: `Bearer ${token}`,
-    // The paid audio functions authenticate on the DeHub token rather than the
+    // The paid audio functions authenticate on the Riftn token rather than the
     // Supabase session, so it has to travel with these too.
     ...dehubAuthHeaders(),
   };
@@ -1132,6 +1133,7 @@ export async function enhancePrompt(
   // spellcheck and lose the assist entirely.
   const { data, error } = await supabase.functions.invoke('enhance-text', {
     body: { text: trimmed, mode: kind === 'video' ? 'prompt-video' : 'prompt-image' },
+    headers: ownKeyHeaders(),
   });
 
   if (error) throw new Error(await describeInvokeError(error, _translateCopy("copy.f76e490a2382", { defaultValue: "Could not enhance that prompt" })));

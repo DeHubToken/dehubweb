@@ -159,15 +159,15 @@ interface Message {
 }
 
 function buildDeHubBrandPrompt(userRequest: string): string {
-  return `DEHUB BRAND SYSTEM — "SM Template 2.0" (mandatory):
-- The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
+  return `RIFTN BRAND SYSTEM — "SM Template 2.0" (mandatory):
+- The attached image is the official Riftn wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
 - Palette: STRICTLY monochrome. Black and charcoal grounds, brushed-steel and polished-chrome greys, cool off-whites, pure white highlights. NO colour hues at all — no red, orange, yellow, magenta, purple, green, blue, teal — and no neon or tinted ambient glow. Any ambient tint must read as cool near-white, under 10% saturation.
 - Ground: never flat black. Silk / brushed texture with a soft radial vignette, faint starfield dust, and a very faint dotted lattice that rakes across the frame — strongest at the upper-left light catch, gone by the lower-right.
 - Hero: ONE large photoreal chrome or black-metal object matched to the subject matter, lit from the upper-left, radial white glow behind it, deep drop shadow, bleeding off the RIGHT and BOTTOM edges of the frame. Never centred and contained, never clipped at the top, never a generic coin unless the subject really is money.
 - Chrome furniture: mono "// type =" annotation stamps and a "//dehub.io" mark in the corners. Any box around them is four short CORNER BRACKETS (crop marks), never a dashed or solid rectangle.
 - Typography if any: use the Exo / Exo 2 typeface family (geometric technical sans-serif) for ALL rendered text — Light/Regular for body and links, Medium/SemiBold for headings, Bold only for short display words. Display headlines are UPPERCASE with a horizontal grey-to-white sweep across the whole block, brightest nearest the hero's light. Pure white, generous letter-spacing. Never Inter, Poppins, DM Sans, serifs, or script. Fallbacks: Eurostile, Michroma, Rajdhani. No emoji. No generic AI clichés.
 
-OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links, website, QR, or contact info — otherwise omit entirely):
+OFFICIAL RIFTN LINKS (render ONLY if the user explicitly asks for socials, links, website, QR, or contact info — otherwise omit entirely):
 - Website: dehub.io
 - X / Twitter: x.com/dehub_official
 - Telegram (main): t.me/dehub_dhb
@@ -369,7 +369,7 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
 const TOOL_LABELS: Record<string, string> = {
   get lookup_user() { return _translateCopy("copy.f159c06178be", { defaultValue: "Looking up that profile" }); },
   get user_posts() { return _translateCopy("copy.5cc6ab9e7e37", { defaultValue: "Reading their posts" }); },
-  get search() { return _translateCopy("copy.4af83339a6f1", { defaultValue: "Searching DeHub" }); },
+  get search() { return _translateCopy("copy.4af83339a6f1", { defaultValue: "Searching Riftn" }); },
   get get_feed() { return _translateCopy("copy.38e888a3984e", { defaultValue: "Checking the feed" }); },
   get get_post() { return _translateCopy("copy.7a075dd38cf7", { defaultValue: "Opening that post" }); },
   get get_followers() { return _translateCopy("copy.44612f2b9571", { defaultValue: "Checking followers" }); },
@@ -494,7 +494,7 @@ function AssistantPageForAccount() {
     model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
-  // DeHub poster config drawer
+  // Riftn poster config drawer
   const [posterConfigOpen, setPosterConfigOpen] = useState(false);
   const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
   // Skills hub modal
@@ -805,7 +805,7 @@ function AssistantPageForAccount() {
             'Content-Type': 'application/json',
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-            // elevenlabs-tts authenticates on the DeHub token, not this one.
+            // elevenlabs-tts authenticates on the Riftn token, not this one.
             ...dehubAuthHeaders(),
           },
           body: JSON.stringify({ text: cleanText, voiceId: elevenLabsVoiceId }),
@@ -1721,7 +1721,7 @@ function AssistantPageForAccount() {
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
-          setTimeout(() => elevenLabsSpeak(_translateCopy("copy.4cef372919b2", { defaultValue: "Here's the official DeHub logo!" })), 300);
+          setTimeout(() => elevenLabsSpeak(_translateCopy("copy.4cef372919b2", { defaultValue: "Here's the official Riftn logo!" })), 300);
         }
         return;
       }
@@ -2371,8 +2371,8 @@ function AssistantPageForAccount() {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <SEOHead title={_copy("copy.3a1695a9f5a0", { defaultValue: "AI Assistant — Chat, Generate Images & Video" })} description={_copy("copy.f5653f103a71", { defaultValue: "Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." })} url="https://dehub.io/app/assistant" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Assistant', url: 'https://dehub.io/app/assistant', applicationCategory: 'UtilitiesApplication', description: _copy("copy.7798213b19b5", { defaultValue: "AI assistant for chat, image generation, video creation and web search." }), operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }} />
-      <h1 className="sr-only">{_copy("copy.5d34a491a342", { defaultValue: "DeHub AI Assistant — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.3a1695a9f5a0", { defaultValue: "AI Assistant: Chat, Generate Images & Video" })} description={_copy("copy.f5653f103a71", { defaultValue: "Chat with Riftn's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." })} url="https://riftn.com/app/assistant" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Riftn AI Assistant', url: 'https://riftn.com/app/assistant', applicationCategory: 'UtilitiesApplication', description: _copy("copy.7798213b19b5", { defaultValue: "AI assistant for chat, image generation, video creation and web search." }), operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }} />
+      <h1 className="sr-only">{_copy("copy.5d34a491a342", { defaultValue: "Riftn AI Assistant — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Drag overlay */}
       <AnimatePresence>
         {isDragging && (
@@ -3270,7 +3270,7 @@ function AssistantPageForAccount() {
         }}
       />
 
-      {/* DeHub Poster Studio */}
+      {/* Riftn Poster Studio */}
       <PosterConfigDialog
         open={posterConfigOpen}
         onOpenChange={(open) => {

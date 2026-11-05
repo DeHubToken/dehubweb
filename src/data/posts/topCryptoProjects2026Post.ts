@@ -4,7 +4,7 @@ export const topCryptoProjects2026Post: BlogPostType = {
   id: 'top-100-crypto-projects-2026',
   slug: 'top-100-crypto-projects-2026',
   title: 'Top 100 Crypto Projects 2026, Ranked by GitHub Activity',
-  seoTitle: 'Top 100 Most Active Crypto Projects 2026 by GitHub Activity | DeHub',
+  seoTitle: 'Top 100 Most Active Crypto Projects 2026 by GitHub Activity | Riftn',
   seoDescription: 'The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.',
   excerpt: 'We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.',
   content: `Which crypto projects are actually being built right now? Prices move every day, but code is much harder to fake. We counted every commit and every active developer across more than 370 public GitHub repositories behind 270 crypto projects over the last 90 days, then ranked the **100 most active crypto projects by GitHub activity**. Blockchains, wallets, DeFi, Bitcoin and Lightning, developer tools and AI are all in one list, and every number comes from the projects' own public code.
@@ -251,13 +251,13 @@ Ethereum is built by many independent teams on purpose, so that a bug in one cli
 
 Market value and public code do not always match. Uniswap's public repos had 34 commits in 90 days because most of its app is now built in private. Aave (45), Pendle (13), The Graph (4), EigenLayer (1) and Zora (1) were also quiet in public, and Hyperliquid's core code is closed. Among older coins, Litecoin (20 commits), TRON (12) and Dogecoin (8) fall well outside the top 100. Low public activity does not mean a project has stopped working, but it does mean the community cannot see or help with the work.
 
-## For scale: DeHub
+## For scale: Riftn
 
-DeHub is a social and streaming app, so it is not ranked here. But for scale, its public web and mobile apps took 5,525 commits in the same 90 days. On commits alone that would place it #3 of all 270 crypto projects we measured, behind only ElizaOS and Ledger Live. On DeHub, anyone can request a feature on [dehub.io/features](https://dehub.io/features) and watch it get built, which is the community-plus-AI model this article is about.
+Riftn is a social and streaming app, so it is not ranked here. But for scale, its public web and mobile apps took 5,525 commits in the same 90 days. On commits alone that would place it #3 of all 270 crypto projects we measured, behind only ElizaOS and Ledger Live. On Riftn, anyone can request a feature on [riftn.com/features](https://riftn.com/features) and watch it get built, which is the community-plus-AI model this article is about.
 
-![For scale: DeHub 5,525 commits in 90 days, ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704](/media/fig-crypto-dehub.jpg)
+![For scale: Riftn 5,525 commits in 90 days, ElizaOS 17,062, Ledger Live 5,915, MetaMask 4,704](/media/fig-crypto-dehub.jpg)
 
-> Disclosure: DeHub publishes this index. DeHub is not included in the ranking.
+> Disclosure: Riftn publishes this index. Riftn is not included in the ranking.
 
 ## Frequently asked questions
 
@@ -302,14 +302,14 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 - [NethermindEth/nethermind](https://github.com/NethermindEth/nethermind)
 - [paradigmxyz/reth](https://github.com/paradigmxyz/reth)
 
-## Build with DeHub
+## Build with Riftn
 
-Open [dehub.io](https://dehub.io) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-100-crypto-projects-2026-banner.png',
-  bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  bannerImageAlt: 'Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn',
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T23:30:00.000Z',
-  tags: ['crypto', 'top 100', 'GitHub activity', 'crypto developers', 'AI', 'wallets', 'DeFi', 'Ethereum', 'Solana', 'Bitcoin', 'open source', 'DeHub'],
+  tags: ['crypto', 'top 100', 'GitHub activity', 'crypto developers', 'AI', 'wallets', 'DeFi', 'Ethereum', 'Solana', 'Bitcoin', 'open source', 'Riftn'],
   readingTime: 15,
   featured: true,
   status: 'published',

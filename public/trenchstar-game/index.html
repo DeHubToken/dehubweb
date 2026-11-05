@@ -19,7 +19,7 @@
     src:url("./vendor/fonts/jetbrains-mono-var.woff2") format("woff2")}
   @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:700;font-display:swap;
     src:url("./vendor/fonts/jetbrains-mono-var.woff2") format("woff2")}
-  /* Exo Light, for the DeHub mark. Vendored like everything else so it renders
+  /* Exo Light, for the Riftn mark. Vendored like everything else so it renders
      the same for a visitor as it does on a machine with Exo installed. */
   @font-face{font-family:"Exo";font-style:normal;font-weight:300;font-display:swap;
     src:url("./vendor/fonts/exo-300.woff2") format("woff2")}
@@ -52,7 +52,7 @@
   .hud{position:fixed;z-index:5;pointer-events:none}
   #hudTL{top:14px;left:16px}
   #logo{display:block;width:132px;height:88px;object-fit:contain}
-  /* DeHub's own mark: Exo Light, all white, mixed case exactly as written.
+  /* Riftn's own mark: Exo Light, all white, mixed case exactly as written.
      Exo is NOT vendored yet — until the woff2 lands beside the other fonts this
      falls back to Chakra Petch at weight 300, which is close but not it. */
   #ver{font-family:"Exo","Exo 2","Chakra Petch",system-ui,sans-serif;
@@ -533,10 +533,10 @@
   .cs i{display:block;font-style:normal;font-size:8px;letter-spacing:.12em;color:var(--dim);margin-top:2px}
   .cs.loading{pointer-events:none}
 
-  /* ---- the DeHub preloader ----------------------------------------------
+  /* ---- the Riftn preloader ----------------------------------------------
      brand/dehub-loader.gif is the same file the app serves at
      /dehub-loader.gif behind <DeHubLoader>, so a wait in here and a wait
-     anywhere else in DeHub are one object rather than two lookalikes. It is
+     anywhere else in Riftn are one object rather than two lookalikes. It is
      vendored beside this file rather than hot-linked, because the game also
      runs standalone and offline.
 
@@ -1053,7 +1053,7 @@
 
 <div class="hud" id="hudTL">
   <img id="logo" src="/arcade/chartopia-brand-v1.webp" alt="Chartopia" width="1536" height="1024">
-  <div id="ver">Made By DeHub</div>
+  <div id="ver">Made By Riftn</div>
 </div>
 
 <!-- The clock lived here. It is on the TRENCHSTAR panel on the wall, in the
@@ -1183,7 +1183,7 @@
     <h4>BACKDROP</h4>
     <div class="scnHead">PLACES</div>
     <div id="sceneRow"></div>
-    <div class="scnHead" style="margin-top:10px">DEHUB THEMES</div>
+    <div class="scnHead" style="margin-top:10px">RIFTN THEMES</div>
     <div id="themeRow"></div>
     <h4 style="margin-top:14px">THE WALL</h4>
     <div id="customNote" style="display:none;font-size:9px;letter-spacing:.14em;color:var(--amber);
@@ -4261,7 +4261,7 @@ const SCENES={
     }}
 };
 
-/* ---------------------- DeHub theme backdrops ----------------------
+/* ---------------------- Riftn theme backdrops ----------------------
    The eleven shipped app themes, transcribed from their real token blocks so
    the room can wear the same skin as the site. Values are the theme's own
    colours, not approximations. */
@@ -6767,7 +6767,7 @@ function finishWall(){
    A big volumetric number hanging in the air above the ticker. Number only —
    no label, no units of explanation. Built from stacked additive planes so it
    reads as projected light rather than a flat sprite. */
-/* The DeHub mark, for the coin struck under the number. crossOrigin because
+/* The Riftn mark, for the coin struck under the number. crossOrigin because
    in the arcade this document is an opaque origin, so its OWN assets are
    cross-origin to it — public/_headers sends Access-Control-Allow-Origin for
    this directory, and without the attribute the draw would taint the canvas
@@ -6798,7 +6798,7 @@ const PNL_LAYERS=5;
   }
 }
 let pnlShown=0;
-/* A struck gold coin: a lit face, a rim, and the DeHub mark punched into it.
+/* A struck gold coin: a lit face, a rim, and the Riftn mark punched into it.
    Drawn rather than shipped as an asset — at this size an image would be one
    more thing to load, and the coin has to sit inside an ADDITIVE hologram, so
    it is painted at the brightness the projection needs. */
@@ -6822,8 +6822,8 @@ function drawCoin(ctx,cx,cy,r){
     ctx.globalAlpha=1;
   }
 }
-/* The coin row: the DeHub coin and what this account holds, under what it made
-   today. Drawn whenever there is a DeHub session — a holder with nothing in
+/* The coin row: the Riftn coin and what this account holds, under what it made
+   today. Drawn whenever there is a Riftn session — a holder with nothing in
    the bag still gets the coin and a 0, because "0 DHB" is a true statement and
    a missing row is just a missing row. Signed out there is no account to state
    a balance for, so it is left off. */
@@ -6947,14 +6947,14 @@ function pnlSource(){
     return {v:real?wallet.pnlReal:wallet.pnl24,
       label:'WALLET · '+(real?'REAL 24H':'24H MARKET MOVE')};
   }
-  /* Signed in on DeHub with nothing this room can price. The account is not
+  /* Signed in on Riftn with nothing this room can price. The account is not
      in doubt here -- the handle, the bag and the badge balance are all on the
      desk already -- so NO ACCOUNT CONNECTED was simply false, and it was the
      loudest thing in the room. There is still no dollar figure to show and
      none is invented: the hologram falls back to the coin row, which states
      the DHB balance and is true at zero. */
   if(dhData.me)return {v:0,noPnl:true,
-    label:dhData.me.handle?('DEHUB · @'+dhData.me.handle).toUpperCase():'DEHUB ACCOUNT'};
+    label:dhData.me.handle?('RIFTN · @'+dhData.me.handle).toUpperCase():'RIFTN ACCOUNT'};
   return null;
 }
 function pnlTick(dt,t){
@@ -7172,7 +7172,7 @@ function paintTicker(){
 paintTicker();setInterval(paintTicker,15000);
 
 /* ==================== the three screens on the desk ====================
-   The wall is the market; the desk is DeHub. The monitors used to mirror
+   The wall is the market; the desk is Riftn. The monitors used to mirror
    three wall screens, which meant the closest thing to the camera was a
    smaller copy of something already on the wall. Now they are the app you
    are sitting in front of: the home feed, your profile, and the uploader.
@@ -7202,7 +7202,7 @@ function dhSeed(str,mod){
   return n%mod;
 }
 /* ======================= the three desk screens ======================
-   They are the real DeHub pages, framed. Not a painting of them, not a
+   They are the real Riftn pages, framed. Not a painting of them, not a
    rebuilt feed, not a composer written twice: the actual /app, the actual
    /app/upload and the actual /app/profile, running in three iframes pinned to
    the monitors' projected corners — the same machinery the wall uses for live
@@ -7339,7 +7339,7 @@ function paintDeskPage(ctx,w,h,d){
   ctx.textAlign='center';
   ctx.font='300 34px "Exo","Chakra Petch",sans-serif';
   ctx.fillStyle='#fff';
-  ctx.fillText('DeHub',w/2,h/2-16);
+  ctx.fillText('Riftn',w/2,h/2-16);
   ctx.font='700 13px "Chakra Petch"';
   ctx.fillStyle=CYAN;
   ctx.fillText(page.title,w/2,h/2+14);
@@ -7351,9 +7351,9 @@ function paintDeskPage(ctx,w,h,d){
   scanlines(ctx,w,h);crtGlow(ctx,w,h);
 }
 
-/* ===================== the desk talks to DeHub =====================
+/* ===================== the desk talks to Riftn =====================
    The three monitors are the only part of this room that is not about this
-   room, and they were a painting of DeHub. They are controls now: every panel
+   room, and they were a painting of Riftn. They are controls now: every panel
    that looks pressable registers a rectangle here, and a click on the glass is
    raycast back into canvas space to find it.
 
@@ -7365,13 +7365,13 @@ function paintDeskPage(ctx,w,h,d){
      · Inside /app/arcade/trenchstar it is a frame sandboxed WITHOUT
        `allow-same-origin`, which makes it an opaque origin. `window.open` is
        gone, top navigation is gone, and every request leaves with
-       `Origin: null` — which the API's allowlist, pinned to https://dehub.io,
+       `Origin: null` — which the API's allowlist, pinned to https://riftn.com,
        can never match. Nothing about that is an oversight: withholding the
        flag is what keeps game code away from app storage and cookies.
    So in a frame the desk asks the host, in the same {source,type} envelope the
    exit and readiness bridges already use, and does the work itself when there
    is no host. An action that can be done neither way is not offered at all. */
-const DH_ORIGIN='https://dehub.io',DH_API='https://api.dehub.io';
+const DH_ORIGIN='https://riftn.com',DH_API='https://api.dehub.io';
 const dhFramed=(()=>{try{return window.parent!==window;}catch(e){return true;}})();
 function dhSend(type,extra){
   try{parent.postMessage(Object.assign({source:'trenchstar',type},extra||{}),'*');}catch(e){}
@@ -7380,13 +7380,13 @@ function dhSend(type,extra){
    The host answers `navigate` by routing; standalone we open a tab rather than
    replace the room, because leaving costs a nine-second boot to come back. */
 function dhGo(path){
-  if(dhFramed){dhSend('navigate',{to:path});toast('DEHUB · '+path);return;}
+  if(dhFramed){dhSend('navigate',{to:path});toast('RIFTN · '+path);return;}
   const win=window.open(DH_ORIGIN+path,'_blank','noopener');
   if(!win)location.href=DH_ORIGIN+path;
 }
-/* ------------------------ real DeHub on the desk ---------------------
-   The three monitors were a painting of DeHub with two live numbers dropped
-   into it. They are DeHub now: the newest posts with their real pictures, the
+/* ------------------------ real Riftn on the desk ---------------------
+   The three monitors were a painting of Riftn with two live numbers dropped
+   into it. They are Riftn now: the newest posts with their real pictures, the
    account you are signed in as, and the last four things you posted.
 
    WHO FETCHES IT
@@ -7659,7 +7659,7 @@ function deskFire(d,r){
   try{r.fn();}catch(e){console.warn('[TRENCHSTAR] desk action failed',e);}
 }
 /* The trending rail on the home monitor is the one control that acts on this
-   room instead of DeHub: it puts that pair on the wall. Focus what is already
+   room instead of Riftn: it puts that pair on the wall. Focus what is already
    up there, fill an empty frame if there is one, and say so when there is not
    — quietly doing nothing is the worst of the three. */
 function deskToWall(m){
@@ -8336,7 +8336,7 @@ renderer.domElement.addEventListener('pointerdown',e=>{
     return;
   }
   /* the desk stands between you and the wall, so it is asked first — and it
-     arms rather than fires, or a press-and-look would post you to DeHub */
+     arms rather than fires, or a press-and-look would post you to Riftn */
   const dk=pickDesk(e);
   /* A monitor you are not reading yet takes the whole click: it zooms, the
      way every screen on the wall does. Only once it is the screen in front of
@@ -11676,7 +11676,7 @@ function syncWalletUI(){
   /* say who signs, because it is not always the same wallet the bag is read from */
   const signer=evmSigner();
   $('#wlSrc').textContent=on?[
-    localTradingWallet?'TRADING WALLET · '+(localTradingWallet.locked?'LOCKED':'UNLOCKED'):signer==='native'?'DEHUB WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
+    localTradingWallet?'TRADING WALLET · '+(localTradingWallet.locked?'LOCKED':'UNLOCKED'):signer==='native'?'RIFTN WALLET · GAS SPONSORED':signer==='injected'?'BROWSER WALLET':'READ ONLY',
     localTradingWallet?'':sol.addr?'PHANTOM':(sa?'SOLANA READ ONLY':'')].filter(Boolean).join(' · '):'';
   $('#wlConnect').textContent=wallet.addr?'↻ REFRESH':(signer==='native'?'＋ BROWSER WALLET':'CONNECT WALLET');
   $('#wlSol').textContent=sol.addr?(localTradingWallet?'SOLANA WALLET · ':'◎ PHANTOM · ')+sol.addr.slice(0,4)+'…':'◎ CONNECT PHANTOM';
@@ -11700,7 +11700,7 @@ function syncWalletUI(){
     if(go)go.addEventListener('click',()=>{tdTarget(marketFor(a),'sell');});
     list.appendChild(d);
   }
-  if(!wallet.assets.length)list.innerHTML='<div id="tdEmpty">'+(on?'NOTHING HELD ON BASE, ROBINHOOD OR SOLANA YET':'CONNECT A WALLET, OR SIGN IN TO DEHUB')+'</div>';
+  if(!wallet.assets.length)list.innerHTML='<div id="tdEmpty">'+(on?'NOTHING HELD ON BASE, ROBINHOOD OR SOLANA YET':'CONNECT A WALLET, OR SIGN IN TO RIFTN')+'</div>';
   $('#wlNote').innerHTML=on&&wallet.pnlReal==null
     ? 'REAL 24H PNL NEEDS A DAY OF SNAPSHOTS. UNTIL THEN THIS IS THE MARKET MOVE ON YOUR CURRENT BAG, NOT TRADING PERFORMANCE.'
     : '';
@@ -11839,7 +11839,7 @@ function tdRisk(m){
     if(liq>0&&vol/liq>20)out.push('<b>VOLUME '+Math.round(vol/liq)+'× LIQUIDITY</b> — WASH OR MANIA');
     if(!out.length)out.push('<b class="ok">NO RED FLAGS</b> ON DEPTH, AGE OR TURNOVER');
   }else out.push('HELD · NOT ON THE WALL RIGHT NOW');
-  const signer=CHAINS[m.chain].sol?(sol.addr?null:'CONNECT PHANTOM TO SIGN'):(evmSigner()?null:'CONNECT A WALLET, OR OPEN THIS INSIDE DEHUB');
+  const signer=CHAINS[m.chain].sol?(sol.addr?null:'CONNECT PHANTOM TO SIGN'):(evmSigner()?null:'CONNECT A WALLET, OR OPEN THIS INSIDE RIFTN');
   if(signer)out.push('<b>'+signer+'</b>');
   return out.join('<br>');
 }
@@ -11958,7 +11958,7 @@ $('#tdGo').addEventListener('click',async()=>{
       :plan.q.v4?'UNISWAP V4 · '+(plan.q.key.hooks&&plan.q.key.hooks!==ZERO?'HOOKED':'HOOKLESS')+' POOL'
       :'UNISWAP V3 · '+(plan.q.fee/10000)+'% POOL';
     const impact=ch.sol&&plan.q.priceImpactPct!=null?' · IMPACT '+(+plan.q.priceImpactPct*100).toFixed(2)+'%':'';
-    const who=localTradingWallet?'TRADING WALLET · '+localTradingWallet.address:ch.sol?'PHANTOM':(evmSigner()==='native'?'DEHUB WALLET · GAS SPONSORED':'YOUR WALLET');
+    const who=localTradingWallet?'TRADING WALLET · '+localTradingWallet.address:ch.sol?'PHANTOM':(evmSigner()==='native'?'RIFTN WALLET · GAS SPONSORED':'YOUR WALLET');
     plan.review={action:plan.side.toUpperCase()+' '+m.sym,spend:fmtUnits(plan.amountIn,plan.side==='buy'?ch.dec:(tdHeld()||{dec:18}).dec)+' '+(plan.side==='buy'?ch.gas:m.sym),minimum:minOut||plan.minOut.toString()+' token base units',slippage:td.slip+'%',token:m.tokenAddr};
     msg.style.whiteSpace='pre-line';
     msg.textContent='ROUTE '+route+impact+'\nMIN RECEIVED '+(minOut||('per quote, '+td.slip+'% slippage'))+
@@ -12439,7 +12439,7 @@ const SOUNDS={
     for(let i=0;i<3;i++)tone(t+i*0.42,150,0.34,'square',0.14,110);}}
 };
 
-/* The DeHub stage soundboard, re-encoded. Upstream ships these as raw studio
+/* The Riftn stage soundboard, re-encoded. Upstream ships these as raw studio
    exports — 20.4 MB of uncompressed WAV for 98 seconds of audio, one of them
    32-bit float stereo and another 4-channel. As mono 48kHz Opus the same set is
    669 KB, 30x smaller, with every sample kept. Still fetched on first play. */
@@ -12804,7 +12804,7 @@ window.TRENCHSTAR={scene,camera,controls,screens,markets,memes,liqs,positions,
   pvStart,pvStop,pvRender,pvQueueAll,pvPump,pvBuild,warmAvatars,previewSource,
   csGo,csLayout,csApply,csChrome,csEase,csMeasure,pvTick,
   syncDesk,deskMons,pickDesk,deskFire,deskToWall,dhGo,buildWall,
-  /* the desk's DeHub data and its composer, exposed so a change here can be
+  /* the desk's Riftn data and its composer, exposed so a change here can be
      asserted on without a screenshot: dhData holds what the app sent back,
      dhPix the pictures it drew, and the desk page is DESK_PAGES */
   dhData,dhPull,dhPix,dhPostImg,dhAvatarUrl,deskAction,DESK_PAGES,deskMount,deskProbe,deskSiteTick,

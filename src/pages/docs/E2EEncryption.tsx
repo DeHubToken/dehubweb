@@ -17,7 +17,7 @@ const E2EEncryption = () => {
         <p className="text-lg text-muted-foreground">{t('e2ee.subtitle')}</p>
       </div>
 
-      {/* How DeHub's E2EE Works */}
+      {/* How Riftn's E2EE Works */}
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl flex items-center gap-3">
@@ -391,7 +391,7 @@ ${t('e2ee.flowAppearsOnScreen').replace('{message}', '"Hello, world!"')}`}
         </CardContent>
       </Card>
 
-      {/* DeHub's Commitment */}
+      {/* Riftn's Commitment */}
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">{t('e2ee.commitmentTitle')}</CardTitle>

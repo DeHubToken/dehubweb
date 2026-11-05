@@ -11,7 +11,7 @@
  * @module components/app/BrainrotFeedHost
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
@@ -33,7 +33,11 @@ import {
   useBrainrotSession,
   type BrainrotBucket,
   type BrainrotListInput,
+  type BrainrotSession,
+  isBrainrotPlayable,
 } from '@/lib/brainrot-feed';
+import { useDeHubUserContent } from '@/hooks/use-dehub-profile';
+import { peekProfileFeedOrigin, type ProfileFeedOrigin } from '@/lib/profile-feed-origin';
 import type { ShortVideo } from '@/types/feed.types';
 
 /** Show what has arrived after this long, even if a list is still loading. */
@@ -56,9 +60,19 @@ function toList(query: FeedQuery): BrainrotListInput<UnifiedFeedItem> {
   return { items, done: query.isError || (!!query.data && !query.hasNextPage) };
 }
 
+/**
+ * A video opened from a profile tab plays through that tab's videos, in its
+ * order, from the one tapped. Anything else gets the ranked mix.
+ */
 export default function BrainrotFeedHost() {
-  const { t } = useTranslation();
   const session = useBrainrotSession();
+  const origin = useMemo(() => (session?.fromId ? peekProfileFeedOrigin(session.fromId) : null), [session]);
+  if (session && origin) return <ProfileShortsFeed key={session.key} session={session} origin={origin} />;
+  return <MixedBrainrotFeed session={session} />;
+}
+
+function MixedBrainrotFeed({ session }: { session: BrainrotSession | null }) {
+  const { t } = useTranslation();
   const enabled = !!session;
   const options = (bucket: BrainrotBucket) => ({ ...BRAINROT_QUERIES[bucket], limit: BRAINROT_PAGE_SIZE, enabled });
 
@@ -170,6 +184,69 @@ export default function BrainrotFeedHost() {
           closeLabel={t('common.close', 'Close')}
         />
       ) : null}
+    </AnimatePresence>
+  );
+}
+
+/** Pages read past the profile's own while looking for the tapped video. */
+const MAX_SEARCH_PAGES = 5;
+
+function ProfileShortsFeed({ session, origin }: { session: BrainrotSession; origin: ProfileFeedOrigin }) {
+  const { t } = useTranslation();
+  const { data, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useDeHubUserContent({
+    ...origin.query,
+    enabled: !!origin.query.userId,
+  });
+  const items = useMemo(() => data?.pages.flatMap(page => (page.data || []) as UnifiedFeedItem[]) ?? [], [data]);
+  const fromId = String(session.fromId);
+  const index = useMemo(() => items.findIndex(item => String(item.tokenId) === fromId), [items, fromId]);
+
+  const searched = useRef(0);
+  const stillSearching = !!data && index < 0 && !!hasNextPage && searched.current < MAX_SEARCH_PAGES;
+  useEffect(() => {
+    if (!stillSearching || isFetchingNextPage) return;
+    searched.current += 1;
+    fetchNextPage();
+  }, [stillSearching, isFetchingNextPage, fetchNextPage]);
+
+  const shorts = useMemo(() => {
+    const first = session.first ? [session.first] : [];
+    if (index < 0) return first;
+    const seen = new Set([fromId]);
+    const next = items.slice(index + 1).filter(item => {
+      const id = item.tokenId != null ? String(item.tokenId) : '';
+      // The All tab mixes formats; only its videos belong in Shorts.
+      if (item.postType !== 'video') return false;
+      if (!id || seen.has(id) || !isBrainrotPlayable(item)) return false;
+      seen.add(id);
+      return true;
+    });
+    return [...first, ...next.map((item, i) => mapToShortVideo(item, i) as ShortVideo)];
+  }, [session.first, items, index, fromId]);
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Not in the list after all (a repost on the All tab): the ranked mix.
+  if (isError || (!!data && index < 0 && !stillSearching && !isFetchingNextPage)) return <MixedBrainrotFeed session={session} />;
+
+  return (
+    <AnimatePresence>
+      {shorts.length > 0 ? (
+        <ShortsViewer
+          key={`profile-shorts-${session.key}`}
+          shorts={shorts}
+          initialIndex={0}
+          reuseInitialVideo={!!session.first}
+          onClose={closeBrainrotFeed}
+          onLoadMore={loadMore}
+          hasMore={!!hasNextPage || stillSearching}
+          isLoadingMore={isFetchingNextPage}
+        />
+      ) : (
+        <BrainrotPlaceholder key="profile-shorts-loading" closeLabel={t('common.close', 'Close')} />
+      )}
     </AnimatePresence>
   );
 }

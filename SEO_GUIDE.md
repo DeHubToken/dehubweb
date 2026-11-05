@@ -34,7 +34,7 @@ You can test if it's working by using these tools:
 
 Or via command line to simulate a bot:
 ```bash
-curl -H "User-Agent: twitterbot" https://dehub.io/@username
+curl -H "User-Agent: twitterbot" https://riftn.com/@username
 ```
 
 ## How It Works

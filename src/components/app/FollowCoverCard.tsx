@@ -39,7 +39,8 @@ interface FollowCoverCardProps {
   phase?: 'following' | 'leaving';
   onOpen: (user: SuggestedAccount) => void;
   onFollow: (user: SuggestedAccount) => void;
-  onDismiss: (user: SuggestedAccount) => void;
+  /** Leave out to hide the skip X (e.g. search results). */
+  onDismiss?: (user: SuggestedAccount) => void;
   /** Replaces the follower count in the foot, e.g. "joined 6h ago" on the new-members row. */
   meta?: string;
   /** Replaces "Following" on the button once followed, e.g. "Requested" for a private account. */
@@ -81,6 +82,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
           own corner in every theme (the flat themes pad the card, not it). */}
       <div data-fc-cover>
         <img src={cover} alt="" loading="lazy" decoding="async" />
+      {onDismiss && (
       <button
         type="button"
         data-fc-dismiss
@@ -92,6 +94,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
       >
         <X className="w-4 h-4" />
       </button>
+      )}
       </div>
 
       <Avatar data-fc-avatar className="w-14 h-14 rounded-2xl">
@@ -104,6 +107,7 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
       <div data-fc-body>
         <BadgedName
           badgeBalance={user.hideBadgeAndBalance ? 0 : user.badgeBalance}
+          badgeLock={user.hideBadgeAndBalance ? null : user.badgeLock}
           username={user.username}
           className="truncate"
           wrapperClassName="max-w-full"
@@ -143,7 +147,8 @@ function FollowCoverCardInner({ user, phase, onOpen, onFollow, onDismiss, meta, 
           >
             {followed ? (
               <>
-                <Check className="w-3.5 h-3.5" />
+                {/* Drawn inset in its box: pull it out so both sides of the pill match. */}
+                <Check className="w-3.5 h-3.5 -ml-[1.2px]" />
                 {followedLabel ?? _copy('copy.344b4271ca01', { defaultValue: 'Following' })}
               </>
             ) : followsYou ? (

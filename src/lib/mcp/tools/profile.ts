@@ -4,8 +4,8 @@ import { callDeHubTool } from "./dehub-rpc";
 
 export default defineTool({
   name: "dehub_profile",
-  title: "Get DeHub profile",
-  description: "Fetch a DeHub user profile by wallet address or username.",
+  title: "Get Riftn profile",
+  description: "Fetch a Riftn user profile by wallet address or username.",
   inputSchema: {
     user: z.string().min(1).describe("Wallet address (0x...) or username to look up"),
   },

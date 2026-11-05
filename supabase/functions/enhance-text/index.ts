@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { aiChat } from "../_shared/ai-chat.ts";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { optionalWallet } from "../_shared/byok.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -104,9 +105,10 @@ serve(async (req) => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: text }
       ],
-    }, { label: 'enhance-text' });
+    }, { label: 'enhance-text', ownKeyWallet: await optionalWallet(req) });
 
     if (!response.ok) {
+      if (response.headers.get('x-own-key-error')) return response;
       const errorText = await response.text();
       console.error('AI gateway error:', response.status, errorText);
       

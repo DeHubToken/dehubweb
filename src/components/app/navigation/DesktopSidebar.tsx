@@ -32,13 +32,14 @@ import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { isOwnProfilePath } from '@/lib/own-profile-path';
 import { openStageModal } from '@/contexts/StageContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
-import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 // Derived from public/brand/mark-black.png, which stays full-resolution because
@@ -46,6 +47,8 @@ import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 // at 22x22, so pointing at the download asset shipped a 1920x1645 / 146 KB PNG
 // into a 22px box — and, being outside /assets/, without a long cache header.
 import dehubMarkBlack from '@/assets/dehub-mark-black.png';
+import riftnWordmarkWhite from '@/assets/riftn-wordmark-desktop-white.png';
+import riftnWordmarkInk from '@/assets/riftn-wordmark-desktop-ink.png';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { warmPostComposer } from '@/lib/preload-post-composer';
@@ -68,29 +71,26 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
 const LOGOUT_ITEM: NavItem = { icon: LogOut, label: "Log out", path: '', action: 'logout' };
 
 /**
- * The animated wordmark is reached lazily so neither it nor its renderer sits
- * on the boot path. Until its chunk lands, the fallback is the same flat PNG the
- * component shows before its first frame, in the same box, so nothing shifts.
+ * Expanded desktop wordmark: the Riftn mark, still. Same 135x40.6 slot the old
+ * DeHub/Riftn animation used, so nothing around it moves. Light themes get
+ * the ink version instead of an inverted white one.
  */
-const STATIC_WORDMARK = (
-  <span className="inline-block relative w-[135px] h-[40.6px] -top-[3px]">
-    <img
-      src="/dehub-header-logo.png"
-      alt="dehub"
-      width={135}
-      height={40.6}
-      className="h-[40.6px] w-[135px] object-contain"
-      fetchPriority="high"
-      decoding="async"
-    />
-  </span>
-);
-const DesktopGlitchWordmark = React.lazy<React.ComponentType<{ light?: boolean }>>(() =>
-  import('./DesktopGlitchWordmark')
-    .then((m) => ({ default: m.DesktopGlitchWordmark }))
-    // A chunk that fails to load leaves the flat mark, not the rail's error boundary.
-    .catch(() => ({ default: () => STATIC_WORDMARK })),
-);
+function RiftnWordmark({ light = false }: { light?: boolean }) {
+  return (
+    <span className="inline-block relative w-[135px] h-[40.6px] -top-[3px]">
+      <img
+        src={light ? riftnWordmarkInk : riftnWordmarkWhite}
+        alt="Riftn"
+        width={135}
+        height={45}
+        className="absolute left-0 -top-[2.2px] h-[45px] w-[135px] max-w-none pointer-events-none"
+        data-logo-ink={light || undefined}
+        fetchPriority="high"
+        decoding="async"
+      />
+    </span>
+  );
+}
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -272,7 +272,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // Preload both logo variants so collapse/expand swaps are instant
   useEffect(() => {
-    [dehubLogoCompact, dehubMarkBlack, '/dehub-header-logo.png'].forEach((src) => {
+    [dehubLogoCompact, dehubMarkBlack, riftnWordmarkWhite, riftnWordmarkInk].forEach((src) => {
       const img = new Image();
       img.decoding = 'async';
       img.src = src;
@@ -497,7 +497,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[22px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              {!renderCompactLogo ? <React.Suspense fallback={STATIC_WORDMARK}><DesktopGlitchWordmark light={isLightTheme} /></React.Suspense> : <CrumblingLogo still={isWarTheme ? (
+              {!renderCompactLogo ? <RiftnWordmark light={isLightTheme} /> : <CrumblingLogo still={isWarTheme ? (
                 <>
                   <img
                     src={dehubLogoCompact}
@@ -506,8 +506,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     decoding="async"
                   />
                   <img
-                    src="/dehub-header-logo.png"
-                    alt="dehub"
+                    src={riftnWordmarkWhite}
+                    alt="Riftn"
                     className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
                     decoding="async"
                   />
@@ -520,8 +520,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     className={cn("h-[22px] w-[22px]", !renderCompactLogo && "hidden")}
                   />
                   <WarLogo
-                    src="/dehub-header-logo.png"
-                    alt="dehub"
+                    src={riftnWordmarkWhite}
+                    alt="Riftn"
                     className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
                   />
                 </>
@@ -535,8 +535,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     decoding="async"
                   />
                   <img
-                    src="/dehub-header-logo.png"
-                    alt="dehub"
+                    src={riftnWordmarkWhite}
+                    alt="Riftn"
                     className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
                     fetchPriority="high"
                     decoding="async"
@@ -750,7 +750,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isActive = !item.external && !item.action && (
               isHomeItem
                 ? isHomePath(location.pathname)
-                : location.pathname.startsWith(item.path)
+                : item.path === '/app/profile'
+                  ? isOwnProfilePath(location.pathname)
+                  : location.pathname.startsWith(item.path)
             );
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';

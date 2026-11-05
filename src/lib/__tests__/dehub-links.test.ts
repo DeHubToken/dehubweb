@@ -1,5 +1,5 @@
 /**
- * The host rule: a card is a claim that the content is DeHub's, so only our own
+ * The host rule: a card is a claim that the content is Riftn's, so only our own
  * hosts (and host-less paths, which can only be ours) may produce one.
  *
  * findDehubLinks scans twice — once for whole URLs, once for bare in-app paths.
@@ -13,21 +13,21 @@ import { dehubLinkFor, findDehubLinks, parseDehubLink, proposalPath } from '@/li
 
 describe('findDehubLinks /posts short form', () => {
   it('cards the bare short post link', () => {
-    const m = parseDehubLink('https://dehub.io/posts/1');
+    const m = parseDehubLink('https://riftn.com/posts/1');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('post');
     expect(m!.tokenId).toBe('1');
   });
 
   it('cards the thread form and keeps the path as written', () => {
-    const m = parseDehubLink('https://dehub.io/posts/1/b');
+    const m = parseDehubLink('https://riftn.com/posts/1/b');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('post');
     expect(m!.path).toBe('/posts/1/b');
   });
 
   it('carries a thread-entry comment id', () => {
-    const m = parseDehubLink('https://dehub.io/posts/1/b/55');
+    const m = parseDehubLink('https://riftn.com/posts/1/b/55');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('post');
     expect(m!.tokenId).toBe('1');
@@ -41,16 +41,16 @@ describe('findDehubLinks /posts short form', () => {
   });
 
   it('rejects junk under /posts', () => {
-    expect(parseDehubLink('https://dehub.io/posts/abc')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/posts/1/x')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/posts/1/b/notanid')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/posts/abc')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/posts/1/x')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/posts/1/b/notanid')).toBeNull();
   });
 });
 
 describe('findDehubLinks host rule', () => {
   it('cards our own links', () => {
-    expect(findDehubLinks('https://dehub.io/app/post/2')).toHaveLength(1);
-    expect(findDehubLinks('https://dehub.io/app/post/2')[0].tokenId).toBe('2');
+    expect(findDehubLinks('https://riftn.com/app/post/2')).toHaveLength(1);
+    expect(findDehubLinks('https://riftn.com/app/post/2')[0].tokenId).toBe('2');
   });
 
   it('cards a bare in-app path, which can only be ours', () => {
@@ -75,17 +75,17 @@ describe('findDehubLinks host rule', () => {
 
   it('rejects a lookalike host', () => {
     // Suffix matching has to be on a dot boundary, not a substring.
-    expect(findDehubLinks('https://dehub.io.attacker.com/app/post/9')).toEqual([]);
+    expect(findDehubLinks('https://riftn.com.attacker.com/app/post/9')).toEqual([]);
   });
 
   it('still finds our own link when a foreign one sits beside it', () => {
-    const found = findDehubLinks('https://example.com/app/post/1 and https://dehub.io/app/post/2');
+    const found = findDehubLinks('https://example.com/app/post/1 and https://riftn.com/app/post/2');
     expect(found).toHaveLength(1);
     expect(found[0].tokenId).toBe('2');
   });
 
   it('finds a bare path alongside a full URL', () => {
-    const found = findDehubLinks('see /app/post/2 or https://dehub.io/app/events/3');
+    const found = findDehubLinks('see /app/post/2 or https://riftn.com/app/events/3');
     expect(found.map((l) => l.kind).sort()).toEqual(['event', 'post']);
   });
 
@@ -111,7 +111,7 @@ describe('findDehubLinks host rule', () => {
  */
 describe('findDehubLinks /cinema', () => {
   it('cards a film', () => {
-    const m = parseDehubLink('https://dehub.io/cinema/film/12345');
+    const m = parseDehubLink('https://riftn.com/cinema/film/12345');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('film');
     expect(m!.filmId).toBe('12345');
@@ -122,22 +122,22 @@ describe('findDehubLinks /cinema', () => {
     // The URL says series because people read it; the offers endpoint wants
     // 'show'. Getting this backwards fetches the wrong catalogue and the card
     // silently falls back to a chip.
-    const m = parseDehubLink('https://dehub.io/cinema/series/678');
+    const m = parseDehubLink('https://riftn.com/cinema/series/678');
     expect(m!.kind).toBe('film');
     expect(m!.filmObjectType).toBe('show');
   });
 
   it('does not read the hub page as a profile called "cinema"', () => {
-    const m = parseDehubLink('https://dehub.io/cinema');
+    const m = parseDehubLink('https://riftn.com/cinema');
     expect(m).toBeNull();
   });
 
   it('rejects a type segment that is not film or series', () => {
-    expect(parseDehubLink('https://dehub.io/cinema/documentary/12')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/cinema/documentary/12')).toBeNull();
   });
 
   it('rejects a non-numeric id', () => {
-    expect(parseDehubLink('https://dehub.io/cinema/film/dune')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/cinema/film/dune')).toBeNull();
   });
 
   it('does not card a foreign host through the cinema path', () => {
@@ -155,7 +155,7 @@ describe('findDehubLinks /cinema', () => {
  */
 describe('findDehubLinks /bounty and legacy /work', () => {
   it('cards the canonical bounty link', () => {
-    const m = parseDehubLink('https://dehub.io/bounty/7');
+    const m = parseDehubLink('https://riftn.com/bounty/7');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('bounty');
     expect(m!.bountyJobKey).toBe('7');
@@ -169,36 +169,36 @@ describe('findDehubLinks /bounty and legacy /work', () => {
   });
 
   it('cards the legacy uuid detail link', () => {
-    const m = parseDehubLink('https://dehub.io/work/3fa85f64-5717-4562-b3fc-2c963f66afa6');
+    const m = parseDehubLink('https://riftn.com/work/3fa85f64-5717-4562-b3fc-2c963f66afa6');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('bounty');
     expect(m!.bountyJobKey).toBe('3fa85f64-5717-4562-b3fc-2c963f66afa6');
   });
 
   it('keeps the path as written for a legacy edit link', () => {
-    const m = parseDehubLink('https://dehub.io/work/3fa85f64-5717-4562-b3fc-2c963f66afa6/edit');
+    const m = parseDehubLink('https://riftn.com/work/3fa85f64-5717-4562-b3fc-2c963f66afa6/edit');
     expect(m).not.toBeNull();
     expect(m!.kind).toBe('bounty');
     expect(m!.path).toBe('/work/3fa85f64-5717-4562-b3fc-2c963f66afa6/edit');
   });
 
   it('does not card the board or its app pages as entities', () => {
-    expect(parseDehubLink('https://dehub.io/work')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/work/post')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/work/history')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/work')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/work/post')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/work/history')).toBeNull();
   });
 
   it('does not read the bare board as a profile called "work"', () => {
     // Same class of bug as /cinema: bare /bounty and /work are single segments
     // with no id, so without RESERVED_ROOT_SEGMENTS entries they would parse as
     // usernames instead of falling through.
-    expect(parseDehubLink('https://dehub.io/bounty')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/work')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/bounty')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/work')).toBeNull();
   });
 
   it('rejects a non-numeric bounty id and a too-short work key', () => {
-    expect(parseDehubLink('https://dehub.io/bounty/abc')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/work/123')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/bounty/abc')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/work/123')).toBeNull();
   });
 
   it('does not card a foreign host through the bounty or work path', () => {
@@ -211,7 +211,7 @@ describe('governance proposal links', () => {
   const id = '3fa85f64-5717-4562-b3fc-2c963f66afa6';
 
   it('cards /app/governance/<uuid> and the top-level form', () => {
-    for (const url of [`https://dehub.io/app/governance/${id}`, `https://dehub.io/governance/${id}`, `/app/governance/${id}`]) {
+    for (const url of [`https://riftn.com/app/governance/${id}`, `https://riftn.com/governance/${id}`, `/app/governance/${id}`]) {
       const m = parseDehubLink(url);
       expect(m?.kind).toBe('proposal');
       expect(m?.proposalId).toBe(id);
@@ -219,17 +219,17 @@ describe('governance proposal links', () => {
   });
 
   it('keeps a comment deep link in the path', () => {
-    expect(parseDehubLink(`https://dehub.io/app/governance/${id}?comment=9`)?.path).toBe(`/app/governance/${id}?comment=9`);
+    expect(parseDehubLink(`https://riftn.com/app/governance/${id}?comment=9`)?.path).toBe(`/app/governance/${id}?comment=9`);
   });
 
   it('leaves the board, bad ids and foreign hosts alone', () => {
-    expect(parseDehubLink('https://dehub.io/app/governance')).toBeNull();
-    expect(parseDehubLink('https://dehub.io/app/governance/abc')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/app/governance')).toBeNull();
+    expect(parseDehubLink('https://riftn.com/app/governance/abc')).toBeNull();
     expect(parseDehubLink(`https://evil.example/app/governance/${id}`)).toBeNull();
   });
 
   it('cards the short /app/governance/<n> form', () => {
-    for (const url of ['https://dehub.io/app/governance/2', 'https://dehub.io/governance/2', '/app/governance/2']) {
+    for (const url of ['https://riftn.com/app/governance/2', 'https://riftn.com/governance/2', '/app/governance/2']) {
       const m = parseDehubLink(url);
       expect(m?.kind).toBe('proposal');
       expect(m?.proposalId).toBe('2');
@@ -243,6 +243,6 @@ describe('governance proposal links', () => {
   });
 
   it('finds a proposal link in post text', () => {
-    expect(findDehubLinks(`worth a vote https://dehub.io/app/governance/${id}`).map((l) => l.kind)).toEqual(['proposal']);
+    expect(findDehubLinks(`worth a vote https://riftn.com/app/governance/${id}`).map((l) => l.kind)).toEqual(['proposal']);
   });
 });

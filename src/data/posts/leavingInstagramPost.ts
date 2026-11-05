@@ -4,22 +4,22 @@ export const leavingInstagramPost: BlogPostType = {
   id: 'creators-guide-leaving-instagram',
   slug: 'creators-guide-leaving-instagram',
   title: 'The Creator Guide to Leaving Instagram for a Platform You Own (2026)',
-  seoTitle: 'Best Instagram Alternative for Creators 2026 | DeHub',
+  seoTitle: 'Best Instagram Alternative for Creators 2026 | Riftn',
   seoDescription: 'An Instagram alternative creators actually own. Why Instagram still has no reliable native payout, what reach throttling costs you, and how a 90% revenue-share Web3 platform compares.',
-  excerpt: 'Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight — it is the model.',
+  excerpt: 'Instagram is the only major platform where enormous reach still comes with essentially no native way to get paid for it. That is not an oversight, it is the model.',
   content: `Instagram has a problem the other platforms do not: after more than a decade, there is still no dependable way to be paid by Instagram for making things on Instagram.
 
-TikTok has Creator Rewards. YouTube has the Partner Programme. Instagram has had a series of bonus schemes that were invitation-only, region-limited, and then quietly discontinued — the Reels Play bonus among them. What remains for almost everybody is brand deals and affiliate links, which means the platform provides the audience and takes none of the risk while you do the selling.
+TikTok has Creator Rewards. YouTube has the Partner Programme. Instagram has had a series of bonus schemes that were invitation-only, region-limited, and then quietly discontinued, the Reels Play bonus among them. What remains for almost everybody is brand deals and affiliate links, which means the platform provides the audience and takes none of the risk while you do the selling.
 
 This is the Instagram-specific companion to our guides on [leaving TikTok](/guides/creators-guide-leaving-tiktok) and [leaving YouTube](/guides/creators-guide-leaving-youtube).
 
-![Reach you only rent — the reel is not yours and the audience cannot be exported](/media/fig-instagram-reach-you-rent.jpg)
+![Reach you only rent, the reel is not yours and the audience cannot be exported](/media/fig-instagram-reach-you-rent.jpg)
 
 ## The Instagram-specific problems
 
 ### No native payout worth planning around
 
-Bonus programmes have come and gone, never available in most countries, never guaranteed month to month, and never something a sensible person builds an income on. If you are full-time on Instagram, your actual employer is whichever brand emailed you last — and that relationship ends the moment your engagement dips.
+Bonus programmes have come and gone, never available in most countries, never guaranteed month to month, and never something a sensible person builds an income on. If you are full-time on Instagram, your actual employer is whichever brand emailed you last, and that relationship ends the moment your engagement dips.
 
 ### Reach you are asked to buy back
 
@@ -39,33 +39,33 @@ Reels exist because TikTok did. The product direction is set by whatever competi
 
 ## What owning it instead looks like
 
-On [DeHub, the decentralised social network](/guides/what-is-dehub), you can mint an upload on-chain to your wallet, when you post it or later. That record exists whether or not the platform does. The feed is chronological and transparent, so reach is not a lever someone can sell back to you, and the code is open-source, so the rules cannot change under you in private.
+On [Riftn, the decentralised social network](/guides/what-is-dehub), you can mint an upload on-chain to your wallet, when you post it or later. That record exists whether or not the platform does. The feed is chronological and transparent, so reach is not a lever someone can sell back to you, and the code is open-source, so the rules cannot change under you in private.
 
 ### A revenue share, at all
 
-The comparison here is not "90% versus 55%". For most Instagram creators the comparison is a published revenue share versus nothing. DeHub commits up to 90% of ad revenue back to the ecosystem and its creators, with no invitation, no region lock, and no five-figure follower gate.
+The comparison here is not "90% versus 55%". For most Instagram creators the comparison is a published revenue share versus nothing. Riftn commits up to 90% of ad revenue back to the ecosystem and its creators, with no invitation, no region lock, and no five-figure follower gate.
 
 ### Getting paid for attention directly
 
-DeHub's watch-to-earn bounties let you attach rewards that pay viewers in crypto for genuinely watching your work. For a creator whose entire income currently depends on convincing a brand that impressions are worth something, being able to convert attention into payment without a sponsor in the middle is the whole point. Our pillar on [what watch-to-earn is](/guides/what-is-watch-to-earn) covers the mechanics.
+Riftn's watch-to-earn bounties let you attach rewards that pay viewers in crypto for genuinely watching your work. For a creator whose entire income currently depends on convincing a brand that impressions are worth something, being able to convert attention into payment without a sponsor in the middle is the whole point. Our pillar on [what watch-to-earn is](/guides/what-is-watch-to-earn) covers the mechanics.
 
 ### Subscriptions that are assets
 
-DeHub subscriptions are minted on-chain and are tradable, and the creator earns a royalty when one is resold — see [tokenised subscriptions explained](/guides/tokenized-subscriptions-explained). Against Instagram, where the closest equivalent is a broadcast channel with no payment rail attached, this is a category difference rather than a feature difference.
+Riftn subscriptions are minted on-chain and are tradable, and the creator earns a royalty when one is resold, see [tokenised subscriptions explained](/guides/tokenized-subscriptions-explained). Against Instagram, where the closest equivalent is a broadcast channel with no payment rail attached, this is a category difference rather than a feature difference.
 
 ### Per-post monetisation, including for images
 
-Every upload can be free, pay-per-view, or token-gated, and that applies to image posts and carousels, not only video. Photographers, illustrators and designers — the people Instagram was originally for and has monetised least — get a per-piece business model rather than a portfolio that earns only when somebody hires them off it.
+Every upload can be free, pay-per-view, or token-gated, and that applies to image posts and carousels, not only video. Photographers, illustrators and designers, the people Instagram was originally for and has monetised least, get a per-piece business model rather than a portfolio that earns only when somebody hires them off it.
 
 Earnings settle in DHB, primarily on Base, an Ethereum Layer 2, with contracts on BNB Chain and Polygon. It trades on decentralised exchanges and on Coinbase and is listed on CoinGecko and CoinMarketCap.
 
-![Move without the crash — migrate in this order and keep posting to Instagram while you do](/media/fig-instagram-move-without-crash.jpg)
+![Move without the crash, migrate in this order and keep posting to Instagram while you do](/media/fig-instagram-move-without-crash.jpg)
 
 ## How to migrate without torching your reach
 
 1. **Claim your handle.** Free, first-come, and worth doing today rather than the day you need it.
 2. **Mirror the grid.** Your existing images and Reels populate a new home in an afternoon, and they are already made.
-3. **Put the archive somewhere it earns.** Outtakes, full shoots, the unedited set, the process video — the material that never justified a grid slot is exactly what a per-post paywall is for.
+3. **Put the archive somewhere it earns.** Outtakes, full shoots, the unedited set, the process video, the material that never justified a grid slot is exactly what a per-post paywall is for.
 4. **Work around the link problem deliberately.** Bio link, story mentions, and on-image text, because the platform will not help you here and pretending otherwise wastes months.
 5. **Turn the money on first.** Set up subscriptions and revenue share before you start pointing people over, so the first arrivals land on something that works.
 
@@ -79,9 +79,9 @@ Not reliably, and not everywhere. Bonus programmes such as Reels Play have been 
 
 ### What is the best Instagram alternative for creators?
 
-If you want the same photo-and-Reels experience elsewhere, the alternatives keep the same arrangement. If you want a published revenue share and uploads recorded to your wallet, that is a structurally different platform — which is the category DeHub is in.
+If you want the same photo-and-Reels experience elsewhere, the alternatives keep the same arrangement. If you want a published revenue share and uploads recorded to your wallet, that is a structurally different platform, which is the category Riftn is in.
 
-### Can photographers monetise on DeHub, or is it video-first?
+### Can photographers monetise on Riftn, or is it video-first?
 
 Image posts and carousels get the same monetisation options as video: free, pay-per-view, or token-gated, set per upload. For a photographer that means a single archive can carry free work for reach and paid work for income at the same time.
 
@@ -93,8 +93,8 @@ Posts pointing at an external link tend to under-perform, which is a reason to b
 
 Uploads can be minted on-chain to your wallet, so the ownership record does not depend on the platform continuing to exist. That is the difference between owning your work and renting somewhere to keep it.`,
   bannerImage: '/media/creators-guide-leaving-instagram-banner.png',
-  bannerImageAlt: 'A creator moving from Instagram to a Web3 platform they own on DeHub',
-  author: { name: 'DeHub Team' },
+  bannerImageAlt: 'A creator moving from Instagram to a Web3 platform they own on Riftn',
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-08-27T13:00:00.000Z',
   updatedAt: '2026-08-27T13:00:00.000Z',
   tags: ['instagram alternative', 'creator monetisation', 'web3 creators', 'leaving instagram', 'reels', 'watch-to-earn', 'dehub'],

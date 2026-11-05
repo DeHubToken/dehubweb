@@ -108,7 +108,7 @@ async function quoteFor(
     .maybeSingle();
 
   if (!listing) return { error: "Listing not found", status: 404 } as const;
-  // Print-on-demand items are bought on the external site, never on DeHub.
+  // Print-on-demand items are bought on the external site, never on Riftn.
   if (listing.external_url != null) return { error: "external_listing", status: 400 } as const;
   if (listing.status !== "active") return { error: "That item is no longer for sale", status: 400 } as const;
   if (listing.stock_quantity === 0) return { error: "Sold out", status: 400 } as const;
@@ -268,7 +268,7 @@ Deno.serve(async (req) => {
       // Find a DHB Transfer from the buyer to the seller in this transaction.
       //
       // The payer is read off the Transfer event's `from`, never the
-      // transaction's. A DeHub account is a smart wallet, so `tx.from` is the
+      // transaction's. A Riftn account is a smart wallet, so `tx.from` is the
       // bundler that relayed the userOp — asserting on it rejects every
       // sponsored payment while accepting nothing the log check does not.
       // The `topics[1] !== buyer` line below is the real payer check, and it

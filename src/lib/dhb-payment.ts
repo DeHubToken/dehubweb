@@ -1,5 +1,5 @@
 /**
- * Paying DeHub in DHB, from the wallet the user already has
+ * Paying Riftn in DHB, from the wallet the user already has
  * =========================================================
  *
  * One ERC-20 transfer to the treasury, confirmed, on whichever of Base or BNB

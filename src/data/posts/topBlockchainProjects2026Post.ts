@@ -4,7 +4,7 @@ export const topBlockchainProjects2026Post: BlogPostType = {
   id: 'top-50-blockchain-projects-2026',
   slug: 'top-50-blockchain-projects-2026',
   title: 'Top 50 Blockchain Projects 2026, Ranked by GitHub Activity',
-  seoTitle: 'Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | DeHub',
+  seoTitle: 'Top 50 Most Active Blockchain Projects 2026 by GitHub Activity | Riftn',
   seoDescription: 'The 50 most active blockchain projects of 2026, ranked by real GitHub commits and developers over 90 days. Solana, Ethereum, Bitcoin, Zcash, Cardano, Base and more.',
   excerpt: 'We counted every commit and every active developer across 123 public GitHub repos behind 86 blockchains over 90 days, then ranked the 50 most active. Solana leads, Ethereum has the biggest team, and some big names have gone quiet.',
   content: `Which blockchains are actually being built in 2026? Prices and headlines move every day, but code is harder to fake. We counted every commit and every active developer across 123 public GitHub repositories behind 86 blockchain projects over the last 90 days, then ranked the **50 most active blockchain projects by GitHub activity**. Every number below comes from the projects' own public code.
@@ -194,13 +194,13 @@ These projects had zero commits on the default branch of their main public repo 
 - **Neutron:** last commit 14 July 2026 (neutron-org/neutron).
 - **Radix, Moonbeam, Unichain and Story:** one commit each in 90 days.
 
-## For scale: DeHub
+## For scale: Riftn
 
-DeHub is a social and streaming app, not a blockchain, so it is not ranked here. But for scale, its public web and mobile apps took 5,558 commits in the same 90 days, about twice as many as Solana, the busiest blockchain on this list. On DeHub, anyone can request a feature on [dehub.io/features](https://dehub.io/features) and watch the community build it.
+Riftn is a social and streaming app, not a blockchain, so it is not ranked here. But for scale, its public web and mobile apps took 5,558 commits in the same 90 days, about twice as many as Solana, the busiest blockchain on this list. On Riftn, anyone can request a feature on [riftn.com/features](https://riftn.com/features) and watch the community build it.
 
-![For scale: DeHub 5,558 commits in 90 days, Solana 2,618, Dash 1,222, Base 1,185](/media/fig-chains-dehub.jpg)
+![For scale: Riftn 5,558 commits in 90 days, Solana 2,618, Dash 1,222, Base 1,185](/media/fig-chains-dehub.jpg)
 
-> Disclosure: DeHub publishes this index. DeHub is not included in the ranking.
+> Disclosure: Riftn publishes this index. Riftn is not included in the ranking.
 
 ## Frequently asked questions
 
@@ -237,14 +237,14 @@ See our sister ranking, the [Top 50 Decentralized Social Apps 2026](/guides/top-
 - [base/node-reth](https://github.com/base/node-reth)
 - [MystenLabs/sui](https://github.com/MystenLabs/sui)
 
-## Build with DeHub
+## Build with Riftn
 
-Open [dehub.io](https://dehub.io) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
+Open [riftn.com](https://riftn.com) to watch, stream and post, or get the app on [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).`,
   bannerImage: '/media/top-50-blockchain-projects-2026-banner.png',
-  bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by DeHub',
-  author: { name: 'DeHub Team' },
+  bannerImageAlt: 'Top 50 blockchain projects 2026 ranked by GitHub activity, by Riftn',
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-10-26T20:00:00.000Z',
-  tags: ['blockchain', 'top 50', 'GitHub activity', 'crypto developers', 'Solana', 'Ethereum', 'Bitcoin', 'Layer 2', 'open source', 'DeHub'],
+  tags: ['blockchain', 'top 50', 'GitHub activity', 'crypto developers', 'Solana', 'Ethereum', 'Bitcoin', 'Layer 2', 'open source', 'Riftn'],
   readingTime: 11,
   featured: true,
   status: 'published',

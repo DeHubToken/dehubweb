@@ -4,7 +4,7 @@
  * Bounty dispute arbitration for godmode's Bounty Disputes page.
  *
  * The bounty tables live in Supabase while the admin panel authenticates
- * against the Mongo-backed DeHub API, and `work_disputes`' RLS keys every write
+ * against the Mongo-backed Riftn API, and `work_disputes`' RLS keys every write
  * to `get_request_wallet_address()` — a wallet an admin does not have. Wallet
  * headers are client-controlled anyway, so RLS cannot express "is a moderator".
  * So arbitration lives here, behind real admin auth, with the service role doing

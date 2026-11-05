@@ -15,9 +15,9 @@ const corsHeaders = {
 }
 
 // Configuration
-const SITE_NAME = "DeHub"
+const SITE_NAME = "Riftn"
 const SENDER_DOMAIN = "notify.dehub.io"
-const ROOT_DOMAIN = "dehub.io"
+const ROOT_DOMAIN = "riftn.com"
 const FROM_DOMAIN = "dehub.io"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 

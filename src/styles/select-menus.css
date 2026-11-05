@@ -1,0 +1,39 @@
+/* Native dropdown lists (<select> menus).
+
+   Chrome and Edge paint the open list of a <select> with the select's own
+   background, blended onto white when it is see-through. Most themes give
+   selects a glass fill (hazy white/8, osaka, war, jungle, glass...), so the
+   list opened near-white while the options kept the select's white text:
+   white on white. Giving every option a solid, theme-matched fill makes the
+   browser use that instead, in every theme and on every page. */
+select option,
+select optgroup {
+  background-color: #17171a;
+  color: #f4f4f5;
+}
+select option:disabled {
+  color: #8b8b93;
+}
+
+/* Light palettes: paper list, ink text. */
+html:is([data-theme='light'], [data-system-tone='light']) :is(select option, select optgroup) {
+  background-color: #ffffff;
+  color: #0b0b0d;
+}
+html:is([data-theme='light'], [data-system-tone='light']) select option:disabled {
+  color: #6b6b73;
+}
+
+/* A surface that stays dark inside a light theme keeps a dark list. */
+html :is([data-keep-dark], [data-keep-dark] *) :is(select option, select optgroup) {
+  background-color: #17171a;
+  color: #f4f4f5;
+}
+
+/* Canvas themes: the list wears the theme's own night colours. */
+html[data-theme='osaka'] :is(select option, select optgroup) { background-color: #140f22; color: #ece9f5; }
+html[data-theme='war'] :is(select option, select optgroup) { background-color: #0c1210; color: #c5ba9c; }
+html[data-theme='jungle'] :is(select option, select optgroup) { background-color: #261c13; color: #f6f0e3; }
+html[data-theme='hazy'] :is(select option, select optgroup) { background-color: #1a1424; color: #f4f2f8; }
+html[data-theme='horror'] :is(select option, select optgroup) { background-color: #160f0c; color: #efe6dc; }
+html[data-theme='hacker'] :is(select option, select optgroup) { background-color: #050c07; color: #b8f5c4; }

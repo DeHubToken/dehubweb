@@ -108,7 +108,7 @@ export function ensureWalletConnectors(): void {
       },
     ],
     {
-      appName: 'DeHub',
+      appName: 'Riftn',
       projectId: WALLET_CONNECT_PROJECT_ID,
     }
   )

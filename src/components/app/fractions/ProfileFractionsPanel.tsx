@@ -16,7 +16,7 @@ import { Loader2, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { FractionThumb } from './FractionThumb';
 import { useAuth } from '@/contexts/AuthContext';
-import { useFractionPortfolio, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
+import { useFractionPortfolio, livePositions, type PortfolioPosition } from '@/hooks/use-fraction-portfolio';
 import { TOTAL_FRACTIONS } from '@/hooks/use-fraction-marketplace';
 import { SellFractionsDrawer } from './SellFractionsDrawer';
 import fractions3dIcon from '@/assets/icons/fractions-3d-icon.webp';
@@ -31,7 +31,8 @@ export function ProfileFractionsPanel({ profileAddress }: ProfileFractionsPanelP
   const navigate = useNavigate();
   const [selling, setSelling] = useState<PortfolioPosition | null>(null);
 
-  const { data: positions = [], isLoading } = useFractionPortfolio(profileAddress);
+  const { data: allPositions = [], isLoading } = useFractionPortfolio(profileAddress);
+  const positions = livePositions(allPositions);
   const isOwnProfile =
     !!profileAddress && profileAddress.toLowerCase() === walletAddress?.toLowerCase();
 

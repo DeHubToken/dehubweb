@@ -4,7 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * ========================================================================
  * Drawn from the stage's own details (see lib/stage-cover), so the same stage
  * shows the same poster everywhere, on web and in the app: "Chrome Mic", a
- * DeHub banner with the stage's title in chrome and the 3D mic beside it.
+ * Riftn banner with the stage's title in chrome and the 3D mic beside it.
  *
  * The art is a picture, like an uploaded cover, so it stays dark in every
  * theme: [data-keep-dark] keeps the light themes from re-inking its text, and
@@ -159,7 +159,7 @@ export function GeneratedStageCover({
         className="absolute"
         style={{ left: '4.4cqw', bottom: '4.2cqw', padding: '0.6cqw 1.4cqw', border: '0.12cqw solid rgba(255,255,255,0.3)', borderRadius: '0.5cqw', background: 'rgba(0,0,0,0.35)', fontFamily: MONO, fontSize: '1.5cqw', color: 'rgba(255,255,255,0.85)' }}
       >
-        {'// dehub.io/stages'}
+        {'// riftn.com/stages'}
       </span>
     </div>
   );

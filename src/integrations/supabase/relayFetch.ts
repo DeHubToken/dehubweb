@@ -3,7 +3,7 @@
  *
  * The project host sits on Cloudflare address ranges that some networks block.
  * When the browser cannot reach it, the same request can travel through
- * https://dehub.io/_sb/<path>, which the site's own entry point relays to the
+ * https://riftn.com/_sb/<path>, which the site's own entry point relays to the
  * project host. Direct stays the first choice; the relay is a fallback.
  *
  * Rules, mirroring the API relay in src/lib/api/dehub/core.ts:
@@ -31,7 +31,7 @@ export const RELAY_STICKY_MS = 10 * 60 * 1000;
 export const DIRECT_ATTEMPT_TIMEOUT_MS = 20_000;
 const STICKY_STORAGE_KEY = 'dehub.sbRelayUntil';
 
-const RELAY_OWN_ORIGIN_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io']);
+const RELAY_OWN_ORIGIN_HOSTS = new Set(['dehub.io', 'www.dehub.io', 'staging.dehub.io', 'riftn.com', 'www.riftn.com']);
 
 /**
  * Where to send relayed requests, or null to disable the relay. Local and
@@ -48,7 +48,7 @@ export function defaultRelayBase(): string | null {
     hostname === '127.0.0.1' ||
     hostname === '[::1]'
   ) return null;
-  return RELAY_OWN_ORIGIN_HOSTS.has(hostname) ? origin : 'https://dehub.io';
+  return RELAY_OWN_ORIGIN_HOSTS.has(hostname) ? origin : 'https://riftn.com';
 }
 
 type FetchInput = RequestInfo | URL;

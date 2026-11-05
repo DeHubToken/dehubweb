@@ -15,8 +15,7 @@ import {
   getApiKey,
   jsonResponse,
   readProviderError,
-  readUpload,
-} from '../_shared/elevenlabs.ts';
+  readUpload, ownElevenLabsFailure } from '../_shared/elevenlabs.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 
 const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
@@ -37,6 +36,7 @@ Deno.serve(async (req) => {
   // were reasoned about as.
   const charged = await chargeForJob(req, {
     kind: 'tool',
+    ownKeyProvider: 'elevenlabs',
     modelId: 'elevenlabs-transcribe',
     actionType: 'elevenlabs-transcribe',
     rateLimit: { limit: 30, windowMs: 60 * 60 * 1000 },
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
   if (!charged.ok) return charged.response;
 
   try {
-    const apiKey = getApiKey();
+    const apiKey = charged.ownKey ?? getApiKey();
     if (!apiKey) return errorResponse('ElevenLabs API key not configured', 500);
 
     const upload = await readUpload(req);
@@ -77,6 +77,8 @@ Deno.serve(async (req) => {
     });
 
     if (!response.ok) {
+
+      if (charged.ownKey) { const own = await ownElevenLabsFailure(charged.wallet, response); if (own) return own; }
       const errText = await response.text();
       console.error('ElevenLabs transcribe error:', response.status, errText);
       return errorResponse(readProviderError(errText, 'Transcription failed'), 502);

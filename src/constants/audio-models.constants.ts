@@ -3,7 +3,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  * Audio Generation Configuration
  * ==============================
  * Everything the Creator Studio's Audio mode can make, all of it on ElevenLabs.
- * DeHub already pays for that key (ELEVENLABS_API_KEY) and already used it for
+ * Riftn already pays for that key (ELEVENLABS_API_KEY) and already used it for
  * the assistant's voice and Stage transcription, so this opens the rest of the
  * account's surface rather than introducing a second vendor.
  *

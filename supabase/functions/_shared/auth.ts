@@ -1,7 +1,7 @@
-// Shared authentication + rate-limiting helpers for DeHub edge functions.
+// Shared authentication + rate-limiting helpers for Riftn edge functions.
 //
-// DeHub has no Supabase-auth users — identity is wallet-native (Web3Auth). A caller
-// proves identity by presenting the DeHub API token it received at login, together
+// Riftn has no Supabase-auth users — identity is wallet-native (Web3Auth). A caller
+// proves identity by presenting the Riftn API token it received at login, together
 // with its wallet address; we verify the pair against api.dehub.io. Paid/abusable
 // endpoints should gate on requireDeHubAuth() and, where relevant, checkRateLimit().
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -64,7 +64,7 @@ export type AuthResult =
   | { ok: false; response: Response };
 
 /**
- * Require a valid DeHub token. On success returns the wallet the token
+ * Require a valid Riftn token. On success returns the wallet the token
  * actually belongs to; on failure a ready-to-send 401.
  *
  * The returned wallet comes from the verified token, NOT from the
@@ -88,7 +88,7 @@ export async function requireDeHubAuth(req: Request): Promise<AuthResult> {
   }
   const wallet = verified.wallet;
   if (!wallet) {
-    return { ok: false, response: jsonResponse({ error: "Invalid or expired DeHub token." }, 401) };
+    return { ok: false, response: jsonResponse({ error: "Invalid or expired Riftn token." }, 401) };
   }
 
   // A claimed address that disagrees with the token is either a stale client
@@ -184,7 +184,7 @@ export async function rateLimitByIp(
 }
 
 /**
- * One-shot guard for paid/abusable endpoints: require a valid DeHub token, then
+ * One-shot guard for paid/abusable endpoints: require a valid Riftn token, then
  * enforce a per-wallet rate limit. Returns the wallet on success, or a 401/429 response.
  */
 export async function guardPaidEndpoint(

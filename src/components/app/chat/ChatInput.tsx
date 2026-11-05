@@ -20,6 +20,7 @@ import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
 import { useDraft } from '@/hooks/use-draft';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -587,7 +588,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
     setIsEnhancing(true);
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
-        body: { text: message.trim() }
+        body: { text: message.trim() },
+        headers: ownKeyHeaders(),
       });
 
       if (error) {

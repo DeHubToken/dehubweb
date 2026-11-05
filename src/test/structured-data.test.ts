@@ -62,7 +62,7 @@ const json = (value: unknown) =>
 const html = (body: string) => () => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 
 async function crawl(path: string) {
-  const res = await worker.fetch(new Request(`https://dehub.io${path}`, { headers: { 'User-Agent': GOOGLEBOT } }), env, {
+  const res = await worker.fetch(new Request(`https://riftn.com${path}`, { headers: { 'User-Agent': GOOGLEBOT } }), env, {
     waitUntil: () => {},
   });
   return { res, body: await res.text() };
@@ -104,8 +104,8 @@ function expectValidTrail(body: string, last: string) {
   expect(list, 'BreadcrumbList').toBeDefined();
   const items = list!.itemListElement;
   expect(items.map((i) => i.position)).toEqual(items.map((_, i) => i + 1));
-  for (const i of items) expect(i.item).toMatch(/^https:\/\/dehub\.io\//);
-  expect(items[0].item).toBe('https://dehub.io/');
+  for (const i of items) expect(i.item).toMatch(/^https:\/\/riftn\.com\//);
+  expect(items[0].item).toBe('https://riftn.com/');
   expect(items[items.length - 1].item).toBe(last);
 }
 
@@ -121,10 +121,10 @@ describe('edge-rendered pages', () => {
       const { body } = await crawl(`/arcade/${slug}`);
       const game = jsonLd(body).find((b) => b['@type'] === 'VideoGame');
       expect(game, slug).toBeDefined();
-      expect(game!.image, slug).toMatch(/^https:\/\/dehub\.io\/arcade\//);
+      expect(game!.image, slug).toMatch(/^https:\/\/riftn\.com\/arcade\//);
       for (const t of APP_TYPES) expect(types(body), slug).not.toContain(t);
-      expectValidTrail(body, `https://dehub.io/arcade/${slug}`);
-      expect(breadcrumb(body)!.itemListElement[1]).toMatchObject({ name: 'DeHub Arcade', item: 'https://dehub.io/arcade' });
+      expectValidTrail(body, `https://riftn.com/arcade/${slug}`);
+      expect(breadcrumb(body)!.itemListElement[1]).toMatchObject({ name: 'Riftn Arcade', item: 'https://riftn.com/arcade' });
     }
   });
 
@@ -136,7 +136,7 @@ describe('edge-rendered pages', () => {
       expect(meta(body, 'twitter:description'), path).toBe(meta(body, 'og:description'));
       expect(meta(body, 'og:locale'), path).toBe('en_US');
       expect(body.match(/og:locale/g), path).toHaveLength(1);
-      expectValidTrail(body, `https://dehub.io${path}`);
+      expectValidTrail(body, `https://riftn.com${path}`);
     }
   });
 
@@ -146,7 +146,7 @@ describe('edge-rendered pages', () => {
       const { body } = await crawl(path);
       expect(meta(body, 'og:description'), path).toBeTruthy();
       expect(meta(body, 'twitter:description'), path).toBe(meta(body, 'og:description'));
-      expectValidTrail(body, `https://dehub.io${path}`);
+      expectValidTrail(body, `https://riftn.com${path}`);
     }
   });
 
@@ -154,19 +154,19 @@ describe('edge-rendered pages', () => {
     network({});
     const { body } = await crawl('/docs/overview');
     const article = jsonLd(body).find((b) => b['@type'] === 'TechArticle')!;
-    expect(article.image).toBe('https://dehub.io/og/docs-overview.jpg');
-    expect(article.author).toMatchObject({ '@type': 'Organization', name: 'DeHub' });
-    expectValidTrail(body, 'https://dehub.io/docs/overview');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['DeHub', 'Docs', 'DeHub Docs — Overview'.replace(/ — DeHub( Docs)?$/, '')]);
+    expect(article.image).toBe('https://riftn.com/og/docs-overview.jpg?v=3');
+    expect(article.author).toMatchObject({ '@type': 'Organization', name: 'Riftn' });
+    expectValidTrail(body, 'https://riftn.com/docs/overview');
+    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Docs', 'Riftn Docs | Overview'.replace(/ (?:—|\|) Riftn( Docs)?$/, '')]);
   });
 
   it('gives a standalone guide an image, an author and a trail', async () => {
     network({});
     const { body } = await crawl('/guides/best-decentralized-streaming-apps');
     const article = jsonLd(body).find((b) => b['@type'] === 'Article')!;
-    expect(article.image).toBe('https://dehub.io/og/guides-best-decentralized-streaming-apps.jpg');
+    expect(article.image).toBe('https://riftn.com/og/guides-best-decentralized-streaming-apps.jpg?v=3');
     expect(article.author).toMatchObject({ '@type': 'Organization' });
-    expectValidTrail(body, 'https://dehub.io/guides/best-decentralized-streaming-apps');
+    expectValidTrail(body, 'https://riftn.com/guides/best-decentralized-streaming-apps');
   });
 
   it('bylines blog posts to the organisation and serves the card as a transformed JPEG', async () => {
@@ -175,7 +175,7 @@ describe('edge-rendered pages', () => {
     const slug = post.slug;
     const { body } = await crawl(`/guides/${slug}`);
     const [article, trail] = (jsonLd(body)[0]['@graph'] as Ld[]);
-    expect(article.author).toEqual({ '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' });
+    expect(article.author).toEqual({ '@type': 'Organization', name: 'Riftn', url: 'https://riftn.com' });
     expect(trail['@type']).toBe('BreadcrumbList');
     const image = meta(body, 'og:image')!.replace(/&amp;/g, '&');
     // The post's own banner, read straight from /media and made 1200x630.
@@ -187,10 +187,10 @@ describe('edge-rendered pages', () => {
     network({});
     const { res, body } = await crawl('/stream');
     expect(res.status).toBe(200);
-    expect(body).toContain('<link rel="canonical" href="https://dehub.io/stream">');
-    expect(meta(body, 'og:title')).toContain('Stream on DeHub');
+    expect(body).toContain('<link rel="canonical" href="https://riftn.com/stream">');
+    expect(meta(body, 'og:title')).toContain('Stream on Riftn');
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/creators.jpg');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/creators.jpg?v=3');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     const faq = nodes(jsonLd(body)).find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string; acceptedAnswer: { text: string } }[] };
@@ -199,10 +199,10 @@ describe('edge-rendered pages', () => {
       expect(body).toContain(`<h3>${q.name}</h3>`);
       expect(body).toContain(`<p>${q.acceptedAnswer.text}</p>`);
     }
-    for (const href of ['https://dehub.io/app', 'https://dehub.io/app/migrate-youtube', 'https://dehub.io/app/affiliate']) {
+    for (const href of ['https://riftn.com/app', 'https://riftn.com/app/migrate-youtube', 'https://riftn.com/app/affiliate']) {
       expect(body).toContain(`href="${href}"`);
     }
-    expectValidTrail(body, 'https://dehub.io/stream');
+    expectValidTrail(body, 'https://riftn.com/stream');
   });
 
   it('marks a post FAQ section up as FAQPage, and nothing else', async () => {
@@ -219,7 +219,7 @@ describe('edge-rendered pages', () => {
       },
     };
     const get = async (slug: string) => {
-      const res = await worker.fetch(new Request(`https://dehub.io/guides/${slug}`, { headers: { 'User-Agent': GOOGLEBOT } }), withContent, { waitUntil: () => {} });
+      const res = await worker.fetch(new Request(`https://riftn.com/guides/${slug}`, { headers: { 'User-Agent': GOOGLEBOT } }), withContent, { waitUntil: () => {} });
       return res.text();
     };
     const body = await get('what-is-watch-to-earn');
@@ -242,31 +242,31 @@ describe('edge-rendered pages', () => {
     network({});
     const { res, body } = await crawl('/dehub-app');
     expect(res.status).toBe(200);
-    expect(body).toContain('<link rel="canonical" href="https://dehub.io/dehub-app">');
-    expect(meta(body, 'og:title')).toContain('DeHub App');
+    expect(body).toContain('<link rel="canonical" href="https://riftn.com/dehub-app">');
+    expect(meta(body, 'og:title')).toContain('Riftn App');
     expect(meta(body, 'og:description')).toBeTruthy();
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/dehub-social-share.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/riftn-share.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     const all = nodes(jsonLd(body));
     for (const t of APP_TYPES) expect(types(body)).not.toContain(t);
     expect(types(body)).toEqual(expect.arrayContaining(['WebPage', 'Organization']));
     const faq = all.find((n) => n['@type'] === 'FAQPage') as { mainEntity: { name: string }[] };
-    expect(faq.mainEntity.map((q) => q.name)).toContain('Is DeHub the DePaul University app?');
+    expect(faq.mainEntity.map((q) => q.name)).toContain('Is the Riftn app free?');
     for (const q of faq.mainEntity) expect(body).toContain(`<h3>${q.name}</h3>`);
     for (const href of [
       'https://play.google.com/store/apps/details?id=io.dehub.mobile',
       'https://apps.apple.com/app/id6770382811',
-      'https://dehub.io/apk',
+      'https://riftn.com/apk',
     ]) expect(body).toContain(`href="${href}"`);
-    expectValidTrail(body, 'https://dehub.io/dehub-app');
+    expectValidTrail(body, 'https://riftn.com/dehub-app');
   });
 
   it('never emits a SearchAction or a non-square logo', async () => {
     network({});
     const { body } = await crawl('/pricing');
     const org = nodes(jsonLd(body)).find((n) => n['@type'] === 'Organization')!;
-    expect(org.logo).toEqual({ '@type': 'ImageObject', url: 'https://dehub.io/icon-512.png', width: 512, height: 512 });
+    expect(org.logo).toEqual({ '@type': 'ImageObject', url: 'https://riftn.com/icon-512.png', width: 512, height: 512 });
   });
 });
 
@@ -275,9 +275,9 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/duets');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal — DeHub');
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
-    expect(body).toContain('<link rel="canonical" href="https://dehub.io/app/post/6127/duets">');
+    expect(meta(body, 'og:title')).toBe('Duets of Dance by @mal | Riftn');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
+    expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/duets">');
     expect(types(body)).toContain('CollectionPage');
   });
 
@@ -285,9 +285,9 @@ describe('entity pages', () => {
     network({ 'https://api.dehub.io/api/nft_info/6127': json({ result: { tokenId: 6127, name: 'Dance', minterUsername: 'mal', postType: 'video' } }) });
     const { res, body } = await crawl('/app/post/6127/reactions');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal — DeHub');
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
-    expect(body).toContain('<link rel="canonical" href="https://dehub.io/app/post/6127/reactions">');
+    expect(meta(body, 'og:title')).toBe('Reactions to Dance by @mal | Riftn');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
+    expect(body).toContain('<link rel="canonical" href="https://riftn.com/app/post/6127/reactions">');
     expect(types(body)).toContain('CollectionPage');
   });
 
@@ -318,8 +318,8 @@ describe('entity pages', () => {
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
     expect(meta(body, 'twitter:title')).toBe(meta(body, 'og:title'));
-    expectValidTrail(body, 'https://dehub.io/stores/abcdef12-3456');
-    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['DeHub', 'Stores', 'Shop']);
+    expectValidTrail(body, 'https://riftn.com/stores/abcdef12-3456');
+    expect(breadcrumb(body)!.itemListElement.map((i) => i.name)).toEqual(['Riftn', 'Stores', 'Shop']);
   });
 
   it('gives an online event a VirtualLocation, its creator as organizer and a status', async () => {
@@ -332,7 +332,7 @@ describe('entity pages', () => {
     const event = jsonLd(body).find((b) => b['@type'] === 'Event')!;
     expect(event.eventAttendanceMode).toBe('https://schema.org/OnlineEventAttendanceMode');
     expect(event.location).toEqual({ '@type': 'VirtualLocation', url: event.url });
-    expect(event.organizer).toEqual({ '@type': 'Person', name: '@mal', url: 'https://dehub.io/mal' });
+    expect(event.organizer).toEqual({ '@type': 'Person', name: '@mal', url: 'https://riftn.com/mal' });
     expect(event.eventStatus).toBe('https://schema.org/EventScheduled');
   });
 
@@ -369,9 +369,9 @@ describe('entity pages', () => {
     expect(res.status).toBe(200);
     expect(res.headers.get('X-Robots-Tag')).toContain('noindex');
     expect(body).toContain('<meta name="robots" content="noindex, follow">');
-    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co — Built with DeHub Builder');
+    expect(meta(body, 'og:title')).toBe('Tip Jar &amp; Co: Built with Riftn Builder');
     expect(meta(body, 'og:description')).toBe('Collect tips.');
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/builder.jpg');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/builder.jpg?v=3');
     expect(meta(body, 'og:image:width')).toBe('1200');
   });
 
@@ -379,7 +379,7 @@ describe('entity pages', () => {
     network({});
     const { res, body } = await crawl('/builder/preview/proj_missing');
     expect(res.status).toBe(200);
-    expect(meta(body, 'og:title')).toBe('Built with DeHub Builder');
+    expect(meta(body, 'og:title')).toBe('Built with Riftn Builder');
   });
 });
 
@@ -389,20 +389,20 @@ describe('proxied pages', () => {
   it('rewrites a profile Person into a ProfilePage without the self sameAs', async () => {
     const avatar = `${CDN}/avatars/0x9324840523a5d17dd12a2f11a9472e5a199c1937.jpg`;
     network({
-      [FN]: html(`<!DOCTYPE html><html><head><title>Join @maldoteth on DeHub today!</title>
-<meta name="description" content="building DeHub and other things worth building on DeHub.">
-<link rel="canonical" href="https://dehub.io/maldoteth">
+      [FN]: html(`<!DOCTYPE html><html><head><title>Join @maldoteth on Riftn today!</title>
+<meta name="description" content="building Riftn and other things worth building on Riftn.">
+<link rel="canonical" href="https://riftn.com/maldoteth">
 <meta property="og:image" content="${avatar}">
 <meta property="og:image:width" content="400">
 <meta property="og:image:height" content="400">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"mal","url":"https://dehub.io/maldoteth","image":"${avatar}","sameAs":"https://dehub.io/maldoteth"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"mal","url":"https://riftn.com/maldoteth","image":"${avatar}","sameAs":"https://riftn.com/maldoteth"}</script>
 </head><body><h1>mal</h1></body></html>`),
     });
     const { body } = await crawl('/maldoteth');
     const page = jsonLd(body).find((b) => b['@type'] === 'ProfilePage')!;
     expect(page).toBeDefined();
-    expect(page.mainEntity).toMatchObject({ '@type': 'Person', name: 'mal', alternateName: '@maldoteth', url: 'https://dehub.io/maldoteth' });
+    expect(page.mainEntity).toMatchObject({ '@type': 'Person', name: 'mal', alternateName: '@maldoteth', url: 'https://riftn.com/maldoteth' });
     expect((page.mainEntity as Ld).sameAs).toBeUndefined();
     expect(meta(body, 'og:locale')).toBe('en_US');
   });
@@ -412,7 +412,7 @@ describe('proxied pages', () => {
     network({
       [FN]: html(`<!DOCTYPE html><html><head><title>Another Monopoly Video</title>
 <meta name="description" content="Monopoly night">
-<link rel="canonical" href="https://dehub.io/app/post/6126">
+<link rel="canonical" href="https://riftn.com/app/post/6126">
 <meta property="og:image" content="${poster}">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:video" content="${CDN}/videos/6126.mp4">
@@ -422,7 +422,7 @@ describe('proxied pages', () => {
 <meta name="twitter:player:width" content="1280">
 <meta name="twitter:player:height" content="720">
 <meta name="twitter:player:stream" content="${CDN}/videos/6126.mp4">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@context":"https://schema.org","@type":"Article","headline":"Another Monopoly Video","description":"Monopoly night","url":"https://dehub.io/app/post/6126","datePublished":"2026-09-29T00:24:28.953Z","author":{"@type":"Person","name":"Jesse Cochran"},"image":"${poster}"},{"@type":"VideoObject","name":"Another Monopoly Video","thumbnailUrl":"${poster}","contentUrl":"${CDN}/videos/6126.mp4","uploadDate":"2026-09-29T00:24:28.953Z"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@context":"https://schema.org","@type":"Article","headline":"Another Monopoly Video","description":"Monopoly night","url":"https://riftn.com/app/post/6126","datePublished":"2026-09-29T00:24:28.953Z","author":{"@type":"Person","name":"Jesse Cochran"},"image":"${poster}"},{"@type":"VideoObject","name":"Another Monopoly Video","thumbnailUrl":"${poster}","contentUrl":"${CDN}/videos/6126.mp4","uploadDate":"2026-09-29T00:24:28.953Z"}]}</script>
 </head><body><h1>Another Monopoly Video</h1></body></html>`),
       'https://api.dehub.io/api/nft_info/6126': json({
         result: { tokenId: 6126, username: 'jesse', displayName: 'Jesse Cochran', description: 'Monopoly night with the crew', commentCount: 2, reactionCounts: { like: 5 }, postType: 'video' },
@@ -431,7 +431,7 @@ describe('proxied pages', () => {
     const { body } = await crawl('/app/post/6126');
     const [post] = jsonLd(body);
     expect(post['@type']).toBe('SocialMediaPosting');
-    expect(post.author).toEqual({ '@type': 'Person', name: 'Jesse Cochran', url: 'https://dehub.io/jesse' });
+    expect(post.author).toEqual({ '@type': 'Person', name: 'Jesse Cochran', url: 'https://riftn.com/jesse' });
     expect(post.text).toBe('Monopoly night with the crew');
     expect(post.datePublished).toBe('2026-09-29T00:24:28.953Z');
     expect(post.commentCount).toBe(2);
@@ -452,7 +452,7 @@ describe('proxied pages', () => {
   it('gives a video post its rendered card and a mature one the brand card', async () => {
     const poster = `${CDN}/images/6127.jpg`;
     const page = `<!DOCTYPE html><html><head><title>Clip</title>
-<link rel="canonical" href="https://dehub.io/app/post/6127">
+<link rel="canonical" href="https://riftn.com/app/post/6127">
 <meta property="og:image" content="${poster}">
 <meta property="og:video" content="${CDN}/videos/6127.mp4">
 <meta name="twitter:card" content="player">
@@ -461,16 +461,16 @@ describe('proxied pages', () => {
     const record = { tokenId: 6127, mintername: 'jesse', description: 'Clip night', postType: 'video', videoUrl: 'videos/6127.mp4', thumbnail_url: 'images/6127.jpg' };
     network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: record }) });
     let { body } = await crawl('/app/post/6127');
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
-    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/_og/post/v5/6127.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
+    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/_og/post/v6/6127.png');
     expect(meta(body, 'twitter:card')).toBe('summary_large_image');
     expect(meta(body, 'og:image:width')).toBe('1200');
     expect(meta(body, 'og:image:height')).toBe('630');
 
     network({ [FN]: html(page), 'https://api.dehub.io/api/nft_info/6127': json({ result: { ...record, contentRating: 'mature' } }) });
     ({ body } = await crawl('/app/post/6127'));
-    expect(meta(body, 'og:image')).toBe('https://dehub.io/og/dehub-social-share.png');
-    expect(meta(body, 'twitter:image')).toBe('https://dehub.io/og/dehub-social-share.png');
+    expect(meta(body, 'og:image')).toBe('https://riftn.com/og/riftn-share.png');
+    expect(meta(body, 'twitter:image')).toBe('https://riftn.com/og/riftn-share.png');
     expect(body).not.toContain('og:video');
     expect(body).not.toMatch(/<meta [^>]*6127\.jpg/);
   });
@@ -478,21 +478,21 @@ describe('proxied pages', () => {
   it('marks a community as a page, not an Organization, with a true-size card', async () => {
     const avatar = `${STORAGE}/community-media/dehub/avatar.jpg`;
     network({
-      [FN]: html(`<!DOCTYPE html><html><head><title>DeHub community</title>
-<link rel="canonical" href="https://dehub.io/app/communities/dehub">
+      [FN]: html(`<!DOCTYPE html><html><head><title>Riftn community</title>
+<link rel="canonical" href="https://riftn.com/app/communities/dehub">
 <meta property="og:image" content="${avatar}">
 <meta property="og:image:width" content="400">
 <meta property="og:image:height" content="400">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="${avatar}">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"DeHub","url":"https://dehub.io/app/communities/dehub","description":"All things $DHB","image":"${avatar}"}</script>
-</head><body><h1>DeHub</h1></body></html>`),
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Riftn","url":"https://riftn.com/app/communities/dehub","description":"All things $DHB","image":"${avatar}"}</script>
+</head><body><h1>Riftn</h1></body></html>`),
     });
     const { body } = await crawl('/communities/dehub');
     expect(types(body)).not.toContain('Organization');
     const page = jsonLd(body)[0];
     expect(page['@type']).toBe('CollectionPage');
-    expect(page.name).toBe('DeHub — community on DeHub');
+    expect(page.name).toBe('Riftn: community on Riftn');
     expect(meta(body, 'og:image')).toBe(
       'https://dehub.io/cdn-cgi/image/fit=pad,width=1200,height=630,background=%23000000,format=jpeg,quality=80/https://dehub.io/_og/storage/community-media/dehub/avatar.jpg',
     );
@@ -503,20 +503,20 @@ describe('proxied pages', () => {
 
   it('drops the retired SearchAction from the homepage and squares the logo', async () => {
     network({
-      [FN]: html(`<!DOCTYPE html><html><head><title>DeHub — Open Source, User Owned &amp; Censorship Resistant Media</title>
+      [FN]: html(`<!DOCTYPE html><html><head><title>Riftn — Open Source, User Owned &amp; Censorship Resistant Media</title>
 <meta name="description" content="x">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"DeHub","url":"https://dehub.io","description":"x","potentialAction":{"@type":"SearchAction","target":"https://dehub.io/app/explore?q={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"Organization","name":"DeHub","url":"https://dehub.io","logo":"https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg","sameAs":["https://x.com/DeHubApp"]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"Riftn","url":"https://riftn.com","description":"x","potentialAction":{"@type":"SearchAction","target":"https://riftn.com/app/explore?q={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"Organization","name":"Riftn","url":"https://riftn.com","logo":"https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg","sameAs":["https://x.com/DeHubApp"]}]}</script>
 </head><body></body></html>`),
     });
     const { body } = await crawl('/');
     const all = nodes(jsonLd(body));
     expect(all.map((n) => n['@type'])).not.toContain('SearchAction');
     const site = all.find((n) => n['@type'] === 'WebSite')!;
-    expect(site).toMatchObject({ name: 'DeHub', url: 'https://dehub.io' });
+    expect(site).toMatchObject({ name: 'Riftn', url: 'https://riftn.com' });
     expect(site.potentialAction).toBeUndefined();
     expect(all.find((n) => n['@type'] === 'Organization')!.logo).toMatchObject({ '@type': 'ImageObject', width: 512, height: 512 });
     // The money guides are linked from the homepage, not only from /docs/blog.
-    const guides = body.match(/<nav aria-label="DeHub guides">[\s\S]*?<\/nav>/)![0];
+    const guides = body.match(/<nav aria-label="Riftn guides">[\s\S]*?<\/nav>/)![0];
     const links = [...guides.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
     expect(links.length).toBeGreaterThanOrEqual(6);
     for (const slug of [
@@ -525,9 +525,8 @@ describe('proxied pages', () => {
       'dehub-vs-cheelee-theta-xcad-watch-to-earn',
       'web3-live-streaming-decentralised-twitch-alternative',
       'best-decentralised-social-media-platforms-2026',
-      'dehub-vs-depaul-dehub-vs-rowan-dehub',
     ]) {
-      expect(links).toContain(`https://dehub.io/guides/${slug}`);
+      expect(links).toContain(`https://riftn.com/guides/${slug}`);
       expect(readFileSync(resolve(ROOT, `public/blog-content/${slug}.json`), 'utf8'), slug).toBeTruthy();
     }
   });
@@ -538,7 +537,7 @@ describe('share-card source relay', () => {
     const fetchMock = network({
       [`${STORAGE}/community-media/dehub/avatar.jpg`]: () => new Response('jpeg', { headers: { 'Content-Type': 'image/jpeg' } }),
     });
-    const res = await worker.fetch(new Request('https://dehub.io/_og/storage/community-media/dehub/avatar.jpg'), env, {});
+    const res = await worker.fetch(new Request('https://riftn.com/_og/storage/community-media/dehub/avatar.jpg'), env, {});
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Type')).toBe('image/jpeg');
     expect(res.headers.get('X-Content-Type-Options')).toBe('nosniff');
@@ -551,7 +550,7 @@ describe('share-card source relay', () => {
       [`${STORAGE}/community-media/x/logo.svg`]: () => new Response('<svg/>', { headers: { 'Content-Type': 'image/svg+xml' } }),
     });
     for (const path of ['/_og/storage/builder-apps/x/index.html', '/_og/storage/community-media/x/logo.svg', '/_og/elsewhere/x.png']) {
-      const res = await worker.fetch(new Request(`https://dehub.io${path}`), env, {});
+      const res = await worker.fetch(new Request(`https://riftn.com${path}`), env, {});
       expect(res.status, path).toBe(404);
     }
   });
@@ -562,7 +561,7 @@ describe('share-card source relay', () => {
       'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/blog-share-image': () =>
         new Response('png', { headers: { 'Content-Type': 'image/png' } }),
     });
-    const res = await worker.fetch(new Request(`https://dehub.io/_og/blog/${slug}`), env, {});
+    const res = await worker.fetch(new Request(`https://riftn.com/_og/blog/${slug}`), env, {});
     expect(res.status).toBe(200);
     const called = String(fetchMock.mock.calls[0][0]);
     expect(called).toContain(`slug=${slug}`);

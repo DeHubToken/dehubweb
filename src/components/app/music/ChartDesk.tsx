@@ -12,7 +12,9 @@
  * @module components/app/music/ChartDesk
  */
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { readShape, writeShape } from '@/lib/remembered-shape';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import Play from '@/components/ui/cut-icons/play';
@@ -81,6 +83,18 @@ export function ChartDesk<S extends string>({
     if (matchingRows.length > 1) setSelectedId(matchingRows[(selectedIndex + 1) % matchingRows.length].id);
   };
   const scrollRef = useRef<HTMLDivElement>(null);
+  // The loading deck takes the size the real entry had last time, so the
+  // charts below it do not move when it arrives.
+  const shapeKey = `chart-player:${empty.icon}:${sortLabel}`;
+  const playerRef = useRef<HTMLDivElement>(null);
+  const [playerHeight] = useState(() => readShape(shapeKey));
+  useLayoutEffect(() => {
+    const el = playerRef.current;
+    if (!el || isLoading) return;
+    const save = () => { if (el.offsetHeight > 80) writeShape(shapeKey, el.offsetHeight); };
+    const timer = window.setTimeout(save, 1500);
+    return () => { window.clearTimeout(timer); save(); };
+  }, [isLoading, shapeKey, selected?.id]);
 
   // A new order starts at its number one, scrolled back to the top.
   useEffect(() => {
@@ -103,14 +117,20 @@ export function ChartDesk<S extends string>({
         {sorts.map(option => <button key={option.value} type="button" aria-pressed={sort === option.value} onClick={() => onSort(option.value)}>{option.label}</button>)}
       </div>
       {isLoading ? (
-        <div className="flex gap-3 overflow-hidden pr-8">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="w-[280px] flex-shrink-0">
-              <div className="aspect-video rounded-xl theme-skeleton animate-pulse" />
-              <div className="mt-2 h-3 theme-skeleton rounded w-3/4 animate-pulse" />
-              <div className="mt-1 h-2.5 theme-skeleton rounded w-1/2 animate-pulse" />
+        <div data-listening-desk-layout aria-hidden>
+          <div data-listening-desk-player>
+            <Skeleton className="w-full rounded-xl" style={{ height: playerHeight ?? (thumbs === 'none' ? 500 : 340) }} />
+          </div>
+          <div data-listening-desk-tracks>
+            <div data-listening-desk-scroll>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 px-2.5 py-3">
+                  <Skeleton className="h-3 w-5" />
+                  <div className="flex-1 space-y-1.5"><Skeleton className="h-3 w-3/4" /><Skeleton className="h-2.5 w-1/3" /></div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       ) : query && !selected && isSearchingMore ? (
         <div data-listening-desk-searching className="py-6 text-center text-sm opacity-70">{t('explorePage.searching', { defaultValue: 'Searching...' })}</div>
@@ -118,7 +138,7 @@ export function ChartDesk<S extends string>({
         <AppState icon={empty.icon} title={query ? t('explorePage.noResults', { defaultValue: 'No results found' }) : empty.title} size="compact" />
       ) : (
         <div data-listening-desk-layout data-chart-thumbs={thumbs}>
-          <div data-listening-desk-player>
+          <div data-listening-desk-player ref={playerRef}>
             {renderSelected(selected.id, { next })}
           </div>
           <div data-listening-desk-tracks><div data-listening-desk-scroll ref={scrollRef}>

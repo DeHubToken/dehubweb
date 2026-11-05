@@ -17,7 +17,7 @@ export interface MidSessionUnlockInput {
   intent: 'login' | 'add-profile';
   /** The address this browser is currently signed in as, if any. */
   sessionAddress: string | null;
-  /** A DeHub session that is live right now — user, token, and not expired. */
+  /** A Riftn session that is live right now — user, token, and not expired. */
   hasLiveSession: boolean;
   /** Owner EOA of the wallet row the unlocked key belongs to. */
   walletEoa: string | null;

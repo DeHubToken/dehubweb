@@ -175,7 +175,7 @@ function claim(track: AudioPostTrack, el: HTMLAudioElement) {
     {
       title: track.title,
       artist: track.artist,
-      album: 'DeHub • Audio',
+      album: 'Riftn • Audio',
       artwork: track.artworkUrl || null,
     },
     {

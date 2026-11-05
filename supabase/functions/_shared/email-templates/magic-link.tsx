@@ -33,13 +33,13 @@ export const MagicLinkEmail = ({
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;700&display=swap"
       />
     </Head>
-    <Preview>Your DeHub login code{token ? ` — ${token}` : ''}</Preview>
+    <Preview>Your Riftn login code{token ? ` — ${token}` : ''}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={card}>
-          <Text style={brandMark}>DeHub</Text>
+          <Text style={brandMark}>Riftn</Text>
 
-          <Heading style={h1}>Log in to DeHub</Heading>
+          <Heading style={h1}>Log in to Riftn</Heading>
           <Text style={lede}>
             Enter this one-time code in the app to finish logging in.
           </Text>
@@ -72,7 +72,7 @@ export const MagicLinkEmail = ({
           stays secure.
         </Text>
         <Text style={footerBrand}>
-          DeHub — Open source. Censorship resistant. User owned.
+          Riftn — Open source. Censorship resistant. User owned.
         </Text>
       </Container>
     </Body>

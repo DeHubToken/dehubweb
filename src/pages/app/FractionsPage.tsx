@@ -5,7 +5,7 @@
  * read the tape.
  *
  * A minted post is 1000 ERC-1155 units of one token id, so every minted post
- * on DeHub is already divisible — but until this page the only way to trade
+ * on Riftn is already divisible — but until this page the only way to trade
  * them was a panel on `/app/post/:id/info`, which meant you had to know which
  * post you wanted before you could discover it was for sale. This is the front
  * door that was missing.
@@ -43,8 +43,8 @@ export default function FractionsPage() {
       <SEOHead
         title={t('fractions.seoTitle')}
         description={t('fractions.seoDescription')}
-        url="https://dehub.io/app/fractions"
-        image="https://dehub.io/og/fractions.jpg"
+        url="https://riftn.com/app/fractions"
+        image="https://riftn.com/og/fractions.jpg"
       />
 
       <PageIsland

@@ -1,4 +1,4 @@
-// DeHub Builder host — the origin behind https://<slug>.dhb.gg.
+// Riftn Builder host — the origin behind https://<slug>.dhb.gg.
 //
 // Subdomain mode (what the dehub-builder-apps Worker calls):
 //   GET /functions/v1/builder-serve?host=<slug>&path=<file>[&t=<previewToken>]
@@ -64,7 +64,7 @@ async function serveHost(db: Db, url: URL): Promise<Response> {
       name: project.name,
       homeUrl: `${origin}/`,
       iconUrl: `${origin}/icon.svg`,
-      description: `${project.name} — built with DeHub Builder.`,
+      description: `${project.name} — built with Riftn Builder.`,
       category: "utility",
     };
     return new Response(JSON.stringify(manifest), {

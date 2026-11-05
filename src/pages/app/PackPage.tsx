@@ -107,7 +107,7 @@ export default function PackPage() {
   const list = items.data?.[pack.id] ?? [];
   const cap = status.data?.limits.items[pack.kind];
   const room = cap === undefined ? Infinity : Math.max(0, cap - list.length);
-  const shareUrl = `https://dehub.io/packs/${pack.slug}`;
+  const shareUrl = `https://riftn.com/packs/${pack.slug}`;
   const kindLabel = t(KIND_LABEL[pack.kind]);
   const description = t('creatorPacks.seoPackDescription', { name: pack.name, kind: kindLabel, count: pack.item_count });
 
@@ -204,7 +204,7 @@ export default function PackPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${pack.name} — ${kindLabel} — DeHub`}
+        title={`${pack.name}: ${kindLabel} | Riftn`}
         description={description}
         image={pack.cover_url ?? undefined}
         url={shareUrl}

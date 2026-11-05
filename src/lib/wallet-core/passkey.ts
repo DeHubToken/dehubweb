@@ -35,6 +35,15 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 const PRF_SALT_BYTES = 32;
 const WEBAUTHN_TIMEOUT_MS = 60_000;
 
+/**
+ * The relying party for wallet passkeys. riftn.com borrows dehub.io's RP via
+ * WebAuthn related origins (dehub.io/.well-known/webauthn), so passkeys made
+ * on dehub.io and in the app keep unlocking the same wallet there.
+ */
+export function walletPasskeyRpId(hostname = window.location.hostname): string {
+  return hostname === "riftn.com" || hostname.endsWith(".riftn.com") ? "dehub.io" : hostname;
+}
+
 /** The authenticator can't do PRF — caller should fall back to the password. */
 export class PasskeyUnsupportedError extends Error {
   constructor(message = _translateCopy("copy.dcaa47607b9e", { defaultValue: "This device can't use biometrics to unlock your wallet." })) {
@@ -215,13 +224,13 @@ export async function enrollWalletPasskey(opts: {
 
   const prfSalt = crypto.getRandomValues(new Uint8Array(PRF_SALT_BYTES));
   const challenge = crypto.getRandomValues(new Uint8Array(32));
-  const accountLabel = opts.accountLabel?.trim() || "DeHub wallet";
+  const accountLabel = opts.accountLabel?.trim() || "Riftn wallet";
 
   let credential: PublicKeyCredential | null;
   try {
     credential = (await navigator.credentials.create({
       publicKey: {
-        rp: { id: window.location.hostname, name: "DeHub" },
+        rp: { id: walletPasskeyRpId(), name: "Riftn" },
         user: {
           // The Supabase user id, so re-enrolling on the same device replaces
           // the previous credential for this account instead of piling up.
@@ -351,7 +360,7 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
     assertion = (await navigator.credentials.get({
       publicKey: {
         challenge,
-        rpId: window.location.hostname,
+        rpId: walletPasskeyRpId(),
         allowCredentials,
         userVerification: "required",
         timeout: WEBAUTHN_TIMEOUT_MS,
@@ -548,7 +557,7 @@ export async function registerIdentityPasskey(options: CreationOptionsJSON): Pro
 }
 
 /**
- * Sign the server's challenge with whichever DeHub passkey the user picks.
+ * Sign the server's challenge with whichever Riftn passkey the user picks.
  *
  * No `allowCredentials`: the account is not known until the authenticator
  * answers, which is the whole point of a discoverable credential. The result

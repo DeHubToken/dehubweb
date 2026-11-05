@@ -7,7 +7,8 @@
  * are not in the top rows get their own rank pinned above the bottom bar on
  * phones (and as the last row on desktop) with the gap to the next place.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -17,9 +18,12 @@ import { useTopBuilders } from '@/hooks/use-top-builders';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { cn } from '@/lib/utils';
-import type { BuilderPeriod, TopBuilder } from '@/lib/top-builders';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { COMMENT_CAP, COMMENT_POINTS, SHIPPED_POINTS, VOTE_POINTS, type BuilderPeriod, type TopBuilder } from '@/lib/top-builders';
 
 const SHOWN = 8;
+/** Extra rows added per "Show more" tap once the full list is open. */
+const PAGE = 20;
 const SHIPPED_COLOR = 'var(--top-builders-shipped, var(--tint-accent, rgb(161 161 170)))';
 const VOTES_COLOR = 'rgb(245 200 75)';
 const COMMENTS_COLOR = 'rgb(125 211 252)';
@@ -65,6 +69,62 @@ function Breakdown({ b }: { b: TopBuilder }) {
   );
 }
 
+/** "How points work": hover on mouse, tap on touch, Enter/Space on keyboard. */
+function PointsInfo() {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<number | null>(null);
+  const cancelClose = () => { if (closeTimer.current) window.clearTimeout(closeTimer.current); closeTimer.current = null; };
+  const scheduleClose = () => { cancelClose(); closeTimer.current = window.setTimeout(() => setOpen(false), 150); };
+  useEffect(() => cancelClose, []);
+  const hoverOpen = (e: ReactPointerEvent) => { if (e.pointerType === 'mouse') { cancelClose(); setOpen(true); } };
+  const hoverClose = (e: ReactPointerEvent) => { if (e.pointerType === 'mouse') scheduleClose(); };
+  const rows = [
+    { color: SHIPPED_COLOR, pts: SHIPPED_POINTS, label: t('features.topBuilders.infoShipped', 'per shipped request') },
+    { color: VOTES_COLOR, pts: VOTE_POINTS, label: t('features.topBuilders.infoVote', 'per upvote on your requests') },
+    { color: COMMENTS_COLOR, pts: COMMENT_POINTS, label: t('features.topBuilders.infoComment', "per comment on someone else's request") },
+  ];
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          data-top-builders-info
+          aria-label={t('features.topBuilders.infoLabel', 'How points work')}
+          onPointerEnter={hoverOpen}
+          onPointerLeave={hoverClose}
+          className="flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[11px] text-zinc-400 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 data-[state=open]:text-white"
+        >
+          {t('features.topBuilders.points', 'Points')}
+          <Info className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="bottom"
+        align="end"
+        sideOffset={6}
+        onPointerEnter={(e) => { if (e.pointerType === 'mouse') cancelClose(); }}
+        onPointerLeave={hoverClose}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        collisionPadding={{ top: 12, bottom: 96, left: 12, right: 12 }}
+        className="w-64 rounded-xl border border-white/10 p-3"
+      >
+        <p className="text-[12px] font-semibold text-white">{t('features.topBuilders.infoTitle', 'How points work')}</p>
+        <ul className="mt-2 flex flex-col gap-1.5">
+          {rows.map((r) => (
+            <li key={r.label} className="flex items-center gap-2 text-[12px] text-zinc-300">
+              <i className="h-2 w-2 shrink-0 rounded-sm" style={{ background: r.color }} />
+              <span className="w-11 shrink-0 font-semibold tabular-nums text-white">{r.pts === 1 ? t('features.topBuilders.pt', '1 pt') : t('features.topBuilders.pts', '{{n}} pts', { n: r.pts })}</span>
+              <span>{r.label}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-2 text-[11px] text-zinc-500">{t('features.topBuilders.infoCap', 'Comments count up to {{n}} per period.', { n: COMMENT_CAP })}</p>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function BuilderRow({ b, rank, max, open, onToggle, mine }: { b: TopBuilder; rank: number; max: number; open: boolean; onToggle: () => void; mine?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -105,8 +165,15 @@ function BuilderRow({ b, rank, max, open, onToggle, mine }: { b: TopBuilder; ran
   );
 }
 
-export function TopBuildersCard() {
+/**
+ * compact: the version on the main Prompts tab. Top 3 rows with a
+ * "Show all N builders" button that opens the full list 20 rows at a time, and the "You" row sits inside the card instead of
+ * floating over the prompt list.
+ */
+export function TopBuildersCard({ compact = false }: { compact?: boolean } = {}) {
   const { t } = useTranslation();
+  const base = compact ? 3 : SHOWN;
+  const [visible, setVisible] = useState(base);
   const { walletAddress } = useAuth();
   const [period, setPeriod] = useState<BuilderPeriod>('month');
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -114,14 +181,15 @@ export function TopBuildersCard() {
 
   const me = walletAddress?.toLowerCase() ?? null;
   const myIndex = me ? builders.findIndex((b) => b.wallet === me) : -1;
-  const shown = builders.slice(0, SHOWN);
+  const limit = Math.max(base, visible);
+  const shown = builders.slice(0, limit);
   const max = builders[0]?.points ?? 1;
 
   // Signed in but not in the shown rows: pin "You" with the gap to the next place.
   const pin = useMemo(() => {
-    if (!me || (myIndex >= 0 && myIndex < SHOWN)) return null;
+    if (!me || (myIndex >= 0 && myIndex < limit)) return null;
     const mine = myIndex >= 0 ? builders[myIndex] : null;
-    const target = myIndex > 0 ? builders[myIndex - 1] : builders[Math.min(SHOWN, builders.length) - 1];
+    const target = myIndex > 0 ? builders[myIndex - 1] : builders[Math.min(limit, builders.length) - 1];
     const points = mine?.points ?? 0;
     return {
       rank: myIndex >= 0 ? myIndex + 1 : null,
@@ -129,7 +197,7 @@ export function TopBuildersCard() {
       gap: target ? Math.max(1, target.points - points + 1) : null,
       target,
     };
-  }, [me, myIndex, builders]);
+  }, [me, myIndex, builders, limit]);
 
   if (!isLoading && builders.length === 0) return null;
 
@@ -169,7 +237,7 @@ export function TopBuildersCard() {
                 key={p}
                 type="button"
                 aria-pressed={period === p}
-                onClick={() => { setPeriod(p); setOpenKey(null); }}
+                onClick={() => { setPeriod(p); setOpenKey(null); setVisible(base); }}
                 className={cn(
                   'rounded-full px-2.5 py-1 text-xs transition-colors',
                   period === p ? 'bg-white text-black' : 'text-zinc-400 hover:text-white',
@@ -180,10 +248,13 @@ export function TopBuildersCard() {
             ))}
           </div>
         </div>
-        <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-zinc-400">
-          <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: SHIPPED_COLOR }} />{t('features.topBuilders.shipped', 'Shipped')}</span>
-          <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: VOTES_COLOR }} />{t('features.topBuilders.votes', 'Votes')}</span>
-          <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: COMMENTS_COLOR }} />{t('features.topBuilders.comments', 'Comments')}</span>
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-3 text-[11px] text-zinc-400">
+            <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: SHIPPED_COLOR }} />{t('features.topBuilders.shipped', 'Shipped')}</span>
+            <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: VOTES_COLOR }} />{t('features.topBuilders.votes', 'Votes')}</span>
+            <span className="flex items-center gap-1"><i className="h-2 w-2 rounded-sm" style={{ background: COMMENTS_COLOR }} />{t('features.topBuilders.comments', 'Comments')}</span>
+          </div>
+          <PointsInfo />
         </div>
         <div className="mt-1.5 flex flex-col">
           {isLoading
@@ -199,13 +270,36 @@ export function TopBuildersCard() {
                 onToggle={() => setOpenKey((k) => (k === b.wallet ? null : b.wallet))}
               />
             ))}
-          {pin && !isLoading && <div className="mt-1 hidden rounded-xl bg-white/[0.06] p-2 ring-1 ring-white/10 md:block">{pinBody}</div>}
+          {pin && !isLoading && <div className={cn('mt-1 rounded-xl bg-white/[0.06] p-2 ring-1 ring-white/10', compact ? 'block' : 'hidden md:block')}>{pinBody}</div>}
+          {!isLoading && builders.length > base && (
+            <div className="mt-1.5 flex items-center justify-center gap-2">
+              {limit < builders.length && (
+                <button
+                  type="button"
+                  data-top-builders-more
+                  onClick={() => setVisible(limit === base ? base + PAGE : limit + PAGE)}
+                  className="rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
+                >
+                  {limit === base
+                    ? t('features.topBuilders.showEveryone', 'Show all {{n}} builders', { n: builders.length })
+                    : t('features.topBuilders.showMore', 'Show {{n}} more', { n: Math.min(PAGE, builders.length - limit) })}
+                </button>
+              )}
+              {limit > base && (
+                <button
+                  type="button"
+                  data-top-builders-less
+                  onClick={() => { setVisible(base); setOpenKey(null); }}
+                  className="rounded-full bg-white/[0.07] px-3 py-1 text-xs text-zinc-300 transition-colors hover:text-white"
+                >
+                  {t('features.topBuilders.showLess', 'Show less')}
+                </button>
+              )}
+            </div>
+          )}
         </div>
-        <p className="mt-2 text-[11px] text-zinc-500">
-          {t('features.topBuilders.rule', '10 pts per shipped request, 1 per upvote, 2 per comment on someone else\'s request.')}
-        </p>
       </section>
-      {pin && !isLoading && (
+      {pin && !isLoading && !compact && (
         <div
           data-top-builders-pin
           className="fixed inset-x-3 z-30 rounded-2xl border border-white/10 bg-zinc-900/80 p-2.5 backdrop-blur-xl md:hidden"

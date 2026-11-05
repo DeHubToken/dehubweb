@@ -24,7 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
 
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 
 /** slug → the page component that renders /guides/<slug>. */
 export const GUIDE_CONTENT_PAGES = {

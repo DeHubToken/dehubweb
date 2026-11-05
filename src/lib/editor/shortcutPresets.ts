@@ -1,11 +1,11 @@
 /**
  * Keyboard layouts borrowed from other editors, so muscle memory carries over.
- * Only timeline keys change; DeHub's own shortcuts keep working underneath.
+ * Only timeline keys change; Riftn's own shortcuts keep working underneath.
  */
 export const SHORTCUT_PRESETS = ["dehub", "premiere", "resolve", "finalcut", "capcut"] as const;
 export type ShortcutPreset = typeof SHORTCUT_PRESETS[number];
 export const SHORTCUT_PRESET_LABELS: Record<ShortcutPreset, string> = {
-  dehub: "DeHub", premiere: "Premiere Pro", resolve: "DaVinci Resolve", finalcut: "Final Cut Pro", capcut: "CapCut",
+  dehub: "Riftn", premiere: "Premiere Pro", resolve: "DaVinci Resolve", finalcut: "Final Cut Pro", capcut: "CapCut",
 };
 export type ShortcutAction = "split" | "play" | "pause" | "back" | "frameBack" | "frameForward" | "rippleDelete" | "liftDelete" | "start" | "end";
 

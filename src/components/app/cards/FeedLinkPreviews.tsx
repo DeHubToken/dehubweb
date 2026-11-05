@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchLinkPreview, extractUrlsFromText, subscribeLinkPreviewRefresh, type LinkPreviewData } from '@/lib/api/link-preview';
+import { fetchLinkPreview, extractUrlsFromText, peekLinkPreview, subscribeLinkPreviewRefresh, type LinkPreviewData } from '@/lib/api/link-preview';
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
@@ -22,20 +22,30 @@ interface FeedLinkPreviewsProps {
   text: string;
 }
 
-/** Outside links only — DeHub links are rendered as entity cards instead. */
+/** Outside links only — Riftn links are rendered as entity cards instead. */
 function externalUrls(text: string): string[] {
   return extractUrlsFromText(text).filter((url) => !parseDehubLink(url));
 }
 
+function knownPreviews(url: string | undefined): Map<string, LinkPreviewData> {
+  const known = url ? peekLinkPreview(url) : null;
+  return known ? new Map([[url!, known]]) : new Map();
+}
+
 export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
-  const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(new Map());
-  const [loading, setLoading] = useState(true);
+  const url = externalUrls(text)[0];
+  // A link this session already read comes back at full size on the first
+  // paint, with no entrance animation: feed cards unmount far off screen and
+  // mount again on the way back, and a skeleton that grew into the card moved
+  // every post below it.
+  const [previews, setPreviews] = useState<Map<string, LinkPreviewData>>(() => knownPreviews(url));
+  const [loading, setLoading] = useState(() => !!url && !peekLinkPreview(url));
+  const [animateIn] = useState(() => !url || !peekLinkPreview(url));
   // A link to a registered mini app's own site opens the app, the way a
   // shared link does on Farcaster, rather than leaving for the browser.
   const [app, setApp] = useState<MiniAppListing | null>(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const url = externalUrls(text)[0];
   // Bumped when this link is refreshed from a post menu, so the card re-reads it.
   const [refreshes, setRefreshes] = useState(0);
 
@@ -46,15 +56,17 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
 
   useEffect(() => {
     let cancelled = false;
-    setPreviews(new Map());
+    const known = url && refreshes === 0 ? peekLinkPreview(url) : null;
+    setPreviews(known ? new Map([[url!, known]]) : new Map());
     setApp(null);
-    setLoading(!!url);
+    setLoading(!!url && !known);
     if (!url) return;
     try {
       if (!parsePredictionLink(url) && !parseRichLink(url)) void fetchAppByDomain(new URL(url).hostname).then(row => { if (!cancelled) setApp(row); });
     } catch {
       /* not a URL we can read a host from */
     }
+    if (known && !known.prediction) return () => { cancelled = true; };
     fetchLinkPreview(url).then((preview) => {
       if (cancelled) return;
       if (preview) {
@@ -91,7 +103,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
                 tabIndex={0}
                 onClick={open}
                 onKeyDown={(e) => { if (e.key === 'Enter') open(e); }}
-                initial={{ opacity: 0, y: 10 }}
+                initial={animateIn ? { opacity: 0, y: 10 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 className="block cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/5 transition-colors hover:bg-white/[0.08]"
@@ -119,7 +131,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
               href={preview.url}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 10 }}
+              initial={animateIn ? { opacity: 0, y: 10 } : false}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               className="block bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.08] transition-colors"
@@ -133,6 +145,8 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
 
       {loading && (
         <div data-glass-embed className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+          {/* Shaped like the card most links become, so the swap barely moves anything. */}
+          <div className="aspect-[1.91/1] w-full bg-white/5" />
           <div className="px-3 pb-3 pt-3.5 sm:pt-4 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-4 w-full" />

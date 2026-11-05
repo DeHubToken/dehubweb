@@ -13,6 +13,7 @@ import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
 import { ArticleComposer } from './components/ArticleComposer';
 import { ComicPagesEditor } from './components/ComicPagesEditor';
+import { ComicBorderPicker } from './components/ComicBorderPicker';
 import { getComicImageLimitForBadge } from '@/lib/post-image-allowance';
 import { useAuth } from '@/contexts/AuthContext';
 import { CrossPostPicker } from './components/CrossPostPicker';
@@ -256,7 +257,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     actions.setIsSubscribersOnly(false);
   };
 
-  // A banned account can read every post on DeHub and write none of them.
+  // A banned account can read every post on Riftn and write none of them.
   // The API refuses the mint either way; showing the composer first would
   // only mean losing whatever was typed into it.
   const modalContent = isBanned ? (
@@ -376,15 +377,23 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         draftVideo={state.draftVideo}
         hideScheduleAndDrafts={isQuoting}
         mediaSlot={comicMode ? (
-          <ComicPagesEditor
-            media={state.media}
-            limit={comicLimit}
-            onAddPages={actions.addComicPages}
-            onRemove={actions.removeMedia}
-            onMove={actions.moveMedia}
-            onCaption={actions.setMediaCaption}
-            onAlt={actions.setMediaDescription}
-          />
+          <div className="space-y-3">
+            <ComicPagesEditor
+              media={state.media}
+              limit={comicLimit}
+              onAddPages={actions.addComicPages}
+              onRemove={actions.removeMedia}
+              onMove={actions.moveMedia}
+              onCaption={actions.setMediaCaption}
+              onAlt={actions.setMediaDescription}
+            />
+            <ComicBorderPicker
+              value={state.comicBorder}
+              onChange={actions.setComicBorder}
+              cover={state.media.find(m => m.type === 'image')?.preview}
+              title={state.titleText}
+            />
+          </div>
         ) : undefined}
       />
       {quotedPost && (

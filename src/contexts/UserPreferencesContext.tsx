@@ -6,7 +6,7 @@
  *
  * WHY THIS EXISTS
  * ---------------
- * A user's identity in DeHub is their wallet address. Historically every
+ * A user's identity in Riftn is their wallet address. Historically every
  * preference lived in a GLOBAL localStorage key (`dehub.theme`, `autoplay-videos`,
  * …) with no account scoping, so:
  *   - logging out of account A and into account B left B wearing A's settings, and

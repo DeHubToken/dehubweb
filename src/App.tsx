@@ -4,6 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { AvatarPrompt } from "@/components/app/AvatarPrompt";
+import { NonFollowerOffer } from "@/components/app/NonFollowerOffer";
 import { HalloweenGhostPrompt } from "@/components/app/halloween/HalloweenGhostPrompt";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,7 @@ import { SelfBadgeSync } from "@/components/app/SelfBadgeSync";
 import { DefaultChainSync } from "@/components/app/DefaultChainSync";
 import { BadgeShowcaseHost } from "@/components/app/badge-showcase/BadgeShowcaseHost";
 import { ViewingPreferencesSync } from "@/components/app/ViewingPreferencesSync";
+import { AccountLanguageSync } from "@/components/app/AccountLanguageSync";
 import { FeedDefaultsSync } from "@/components/app/FeedDefaultsSync";
 import { useAuth, useLoginSheet } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
@@ -47,6 +49,8 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
+// DM unread total for the nav badges; keeps the messaging stack out of the boot file.
+const DmUnreadBridge = lazyWithRetry(() => import("@/components/app/chat/DmUnreadBridge"));
 const DesktopWordmarkPreview = React.lazy(() => import("@/pages/DesktopWordmarkPreview"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -238,7 +242,7 @@ const CreatorLearningPage = React.lazy(() => import("./pages/app/CreatorLearning
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
 const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
 const MaboroshiPage = React.lazy(() => import("./pages/app/MaboroshiPage"));
-// Eager import — the referral lander is a new user's first touch of DeHub and
+// Eager import — the referral lander is a new user's first touch of Riftn and
 // must paint instantly; it renders outside WalletProviders (see App below) so
 // it never waits on the ~1.5 MB wallet chunk either.
 import ReferralLanding from "./pages/ReferralLanding";
@@ -491,10 +495,12 @@ function AppContent() {
       <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
+      <AccountLanguageSync />
       <FeedDefaultsSync />
       <GiveawayPrizeModal />
       <ConnectLinkedWalletModal />
       <LoginSheetHost />
+      {isAuthenticated && <Suspense fallback={null}><DmUnreadBridge /></Suspense>}
       <Suspense fallback={<PageLoader />}>
         <SurfaceTransition>
           {(loc) => (
@@ -1008,7 +1014,7 @@ const App = () => (
           <Routes>
             <Route path="/maintenance" element={<Suspense fallback={null}><MaintenancePage /></Suspense>} />
             {/*
-             * Referral lander — a new user's first touch of DeHub. Mounted
+             * Referral lander — a new user's first touch of Riftn. Mounted
              * OUTSIDE WalletProviders (it uses no auth/wallet state) so it
              * paints without waiting for the ~1.5 MB wallet chunk.
              */}
@@ -1062,6 +1068,7 @@ const App = () => (
                           {/* Asks accounts with no profile picture to add one,
                               a few times at most. Same provider requirement. */}
                           <AvatarPrompt />
+                          <NonFollowerOffer />
 
                           {/* Halloween 2026 only: once per device while Horror is on. */}
                           <HalloweenGhostPrompt />

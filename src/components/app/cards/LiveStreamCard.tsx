@@ -7,7 +7,7 @@ import { tokenLabel } from '@/lib/token-label';
  * Live Stream Card Component
  * ==========================
  * Displays a live stream with video player and "stream ended" fallback state.
- * Wired to DeHub API for likes, gifts, ending streams, and activity logs.
+ * Wired to Riftn API for likes, gifts, ending streams, and activity logs.
  */
 
 import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
@@ -1081,7 +1081,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
     claimMediaSession(
       videoId,
       {
-        title: stream.title || _copy("copy.fe1ed8de5976", { defaultValue: "DeHub live" }),
+        title: stream.title || _copy("copy.fe1ed8de5976", { defaultValue: "Riftn live" }),
         artist: stream.streamer,
         artwork: stream.thumbnail || null,
       },
@@ -1757,7 +1757,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false, swipeFeed 
             />
           </Suspense>
         )}
-        {/* React live: the DeHub video on screen, credited and one tap away. */}
+        {/* React live: the Riftn video on screen, credited and one tap away. */}
         <ReactingToChip
           streamTokenId={stream.tokenId || stream.id}
           live={!!stream.isLive && !streamEnded}

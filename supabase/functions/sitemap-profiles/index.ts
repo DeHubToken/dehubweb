@@ -2,7 +2,7 @@
 // ?page=1 → rows 0..49999, ?page=2 → 50000..99999, etc.
 // Source: suggested_profiles_cache (profiles known to have content).
 
-const APP_URL = "https://dehub.io";
+const APP_URL = "https://riftn.com";
 const CHUNK_SIZE = 50000;
 
 const corsHeaders = {

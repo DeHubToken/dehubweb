@@ -4,7 +4,7 @@
  * Both are communities with a `kind` (see
  * 20261102060000_community_groups_channels.sql): a group is a chat everyone
  * talks in, a channel is one only the owner and admins post to. Either can
- * charge a one-off entry price in DeHub tokens, paid straight to the owner.
+ * charge a one-off entry price in Riftn tokens, paid straight to the owner.
  * The database reads the transfer from the chain itself before it lets the
  * member in; the client only hands over the transaction hash.
  */
@@ -23,7 +23,7 @@ export function communityKindOf(community: (Partial<Community> & KindColumns) | 
   return kind === 'group' || kind === 'channel' ? kind : 'community';
 }
 
-/** Whole DeHub tokens to get in, or 0 when it is free. */
+/** Whole Riftn tokens to get in, or 0 when it is free. */
 export function entryPriceOf(community: (Partial<Community> & KindColumns) | null | undefined): number {
   const price = Number(community?.entry_price ?? 0);
   return Number.isFinite(price) && price > 0 ? Math.ceil(price) : 0;
@@ -60,7 +60,7 @@ export async function entryStatus(communityId: string, walletAddress: string | n
 }
 
 /**
- * Pay the owner the entry price in DeHub tokens, then have the database
+ * Pay the owner the entry price in Riftn tokens, then have the database
  * confirm it. Resolves 'paid' once the member row may go in.
  */
 export async function payCommunityEntry(community: Community & KindColumns, walletAddress: string | null | undefined): Promise<EntryResult> {

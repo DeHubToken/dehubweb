@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Chat hold menu, phones (ChatHoldSheet).
+   ==========================================================================
+   Holding a chat line keeps that line where it is, as it was (no frame), dims
+   the rest of the list and lifts the list so the line sits just above the sheet.
+   Colours are the post-stage tokens (post-stage.css), set per theme, so the
+   sheet reads on every canvas without the theme nets' class remaps.
+   ========================================================================== */
+
+/* A finger hold opens the sheet, so the browser's own long-press (text
+   selection, the iOS callout) must not start first. Phones only: a mouse can
+   still select text in chat on desktop. */
+@media (pointer: coarse) {
+  [data-chat-row] {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  /* The hover buttons only ever showed by accident on a tap; the hold sheet
+     carries those actions on a phone. */
+  [data-chat-hover-actions] { display: none !important; }
+}
+
+/* !important: comment rows are framer-motion elements that write their own
+   inline transform, which would otherwise pin them in place. */
+[data-chat-holding] [data-chat-row] {
+  transform: translateY(var(--chat-hold-lift, 0px)) !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+}
+[data-chat-holding=''] [data-chat-row]:not([data-chat-held]) { opacity: 0.35 !important; }
+[data-chat-hold-sheet][data-chat-hold-sheet] {
+  color: var(--stage-ink, #f4f4f5);
+  background: color-mix(in srgb, var(--stage-solid, #1b1b1e) 74%, transparent);
+  backdrop-filter: blur(26px) saturate(1.5);
+  border: 1px solid var(--stage-border, rgb(255 255 255 / 0.12));
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.12);
+}
+[data-chat-hold-grab] { background: var(--stage-muted, #9a9aa2); opacity: 0.5; }
+[data-chat-hold-divider] { border-color: var(--stage-border, rgb(255 255 255 / 0.12)); }
+[data-chat-hold-chip],
+[data-chat-hold-tile] {
+  color: var(--stage-ink, #f4f4f5);
+  background: var(--stage-chip, rgb(255 255 255 / 0.08));
+}
+[data-chat-hold-chip='on'] {
+  background: rgb(56 189 248 / 0.25);
+  box-shadow: inset 0 0 0 1.5px rgb(56 189 248 / 0.6);
+}
+[data-chat-hold-tile='prime'] {
+  color: var(--stage-on-accent, #000);
+  background: var(--stage-accent, #fff);
+}
+[data-chat-hold-tile='danger'] { color: #f87171; }

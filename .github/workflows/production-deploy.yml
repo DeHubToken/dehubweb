@@ -58,7 +58,7 @@ jobs:
           test "$(git rev-parse origin/main)" = "$EXPECTED_REVISION"
       - name: Save the live sitemap for IndexNow
         continue-on-error: true
-        run: curl --fail --silent --show-error https://dehub.io/sitemap-static.xml --output /tmp/live-sitemap-static.xml
+        run: curl --fail --silent --show-error https://riftn.com/sitemap-static.xml --output /tmp/live-sitemap-static.xml
       - name: Deploy production worker and assets
         run: pnpm exec wrangler deploy --config wrangler.jsonc
       - name: Verify public routing after deploying
@@ -67,7 +67,7 @@ jobs:
         env:
           EXPECTED_REVISION: ${{ inputs.revision }}
         run: |
-          curl --fail --silent --show-error "https://dehub.io/version.json?commit=$EXPECTED_REVISION" --output /tmp/production-version.json
+          curl --fail --silent --show-error "https://riftn.com/version.json?commit=$EXPECTED_REVISION" --output /tmp/production-version.json
           node --input-type=module <<'JS'
           import fs from 'node:fs';
           const version = JSON.parse(fs.readFileSync('/tmp/production-version.json', 'utf8'));

@@ -392,7 +392,7 @@ function sameWallet(a?: string | null, b?: string | null): boolean {
  * a `blob:` URL — an optimistic preview that resolves only inside the tab that
  * created it. Joining a stage inside that window wrote the preview to the
  * table: one seat in the 2026-08-19 town hall is stored as
- * `blob:https://dehub.io/9680…`, a permanently dead image for every other
+ * `blob:https://riftn.com/9680…`, a permanently dead image for every other
  * person in the room. Null is strictly better than a dead URL, because the
  * readers fall back to the CDN object for the wallet.
  */
@@ -487,7 +487,7 @@ function describeStageFailure(err: unknown): string {
   const message = e.message || '';
 
   if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || /permission denied/i.test(message)) {
-    return _translateCopy("copy.8cf2f5e1ffb4", { defaultValue: "DeHub needs microphone access to put you on air — allow it for dehub.io and try again." });
+    return _translateCopy("copy.8cf2f5e1ffb4", { defaultValue: "Riftn needs microphone access to put you on air — allow it for riftn.com and try again." });
   }
   if (name === 'NotFoundError' || name === 'NotReadableError' || name === 'OverconstrainedError') {
     return _translateCopy("copy.85494984469a", { defaultValue: "No microphone available. Check nothing else is using it and try again." });

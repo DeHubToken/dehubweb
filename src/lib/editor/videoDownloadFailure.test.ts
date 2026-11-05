@@ -15,7 +15,7 @@ describe("video download failure details", () => {
     expect(videoDownloadFailure({ url: "https://cdn.example/private", request: { username: "private" } }, { stage: "download", progress: Number.NaN, width: -1, height: Number.POSITIVE_INFINITY })).toEqual({ stage: "download", name: "Error", message: "Unknown download failure" });
   });
   it("redacts blob and device paths and bounds string diagnostics", () => {
-    const result = videoDownloadFailure("Failed blob:https://dehub.io/private file:///private/cache.mp4 " + "x".repeat(700), { stage: "save", progress: 2 });
+    const result = videoDownloadFailure("Failed blob:https://riftn.com/private file:///private/cache.mp4 " + "x".repeat(700), { stage: "save", progress: 2 });
     expect(result.message).not.toContain("private"); expect(result.message.length).toBe(600); expect(result.progress).toBe(1);
   });
 });

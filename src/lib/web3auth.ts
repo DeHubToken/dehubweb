@@ -1,5 +1,5 @@
 /**
- * COMPAT SHIM — Web3Auth has been replaced by the DeHub self-custody smart
+ * COMPAT SHIM — Web3Auth has been replaced by the Riftn self-custody smart
  * wallet (see @/lib/smart-wallet and @/lib/wallet-core). This module keeps the
  * old import surface alive for existing consumers (aa-utils, wallet send,
  * FullWalletPage, LoginModal) so the migration didn't have to touch every

@@ -291,7 +291,7 @@ describe('getUserOnlineStatus', () => {
   });
 });
 
-// ── Group operations (DeHub backend does not support group DMs — 1:1 only) ──
+// ── Group operations (Riftn backend does not support group DMs — 1:1 only) ──
 
 describe('group operations', () => {
   it('createGroup throws clear error (group not supported)', async () => {

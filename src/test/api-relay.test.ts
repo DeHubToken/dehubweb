@@ -12,7 +12,7 @@ describe('API relay', () => {
         headers: { 'Content-Type': 'application/json' },
       }),
     );
-    const request = new Request('https://dehub.io/_api/api/feed?page=2', {
+    const request = new Request('https://riftn.com/_api/api/feed?page=2', {
       method: 'POST',
       headers: { Authorization: 'Bearer token', 'Content-Type': 'application/json' },
       body: JSON.stringify({ sample: true }),
@@ -33,7 +33,7 @@ describe('API relay', () => {
     vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('offline'));
 
     const response = await proxyApiRequest(
-      new Request('https://dehub.io/_api/api/feed'),
+      new Request('https://riftn.com/_api/api/feed'),
     );
 
     expect(response.status).toBe(502);

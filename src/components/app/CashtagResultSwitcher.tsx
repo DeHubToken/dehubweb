@@ -42,11 +42,11 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
       {
         chainId: 'base',
         dexId: 'dehub',
-        url: 'https://dehub.io',
+        url: 'https://riftn.com',
         pairAddress: '',
         baseToken: {
           address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
-          name: cmcData.name || 'Dehub',
+          name: cmcData.name || 'Riftn',
           symbol: 'DHB',
         },
         quoteToken: { address: '', name: 'USD', symbol: 'USD' },
@@ -66,7 +66,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   // Build options list
   const options: ResultOption[] = [];
 
-  // Stock / commodity option — skip for tokens so we never surface a stock result for Dehub
+  // Stock / commodity option — skip for tokens so we never surface a stock result for Riftn
   if (stockData?.found && !isDhb) {
     const isCommodity = stockData.instrumentType === 'FUTURE' || stockData.symbol?.includes('=F');
     options.push({

@@ -1,7 +1,7 @@
 /**
  * Media URL Utilities
  * ====================
- * Canonical URL construction for DeHub CDN assets.
+ * Canonical URL construction for Riftn CDN assets.
  * Strips folder prefixes (statics/, nfts/, etc.) and builds clean URLs.
  * 
  * @module lib/media-url
@@ -120,7 +120,7 @@ export interface CdnImageOptions {
 }
 
 /**
- * Wrap a DeHub CDN URL in a Cloudflare image transform. Any URL that is not on
+ * Wrap a Riftn CDN URL in a Cloudflare image transform. Any URL that is not on
  * our CDN (dicebear, iHeart station art, blob:/data: previews) is returned
  * untouched.
  */
@@ -229,7 +229,7 @@ export function cdnImageSrcSet(url: string | undefined, widths: number[]): strin
 function isProductionHost(): boolean {
   if (typeof window === 'undefined') return true;
   const host = window.location.hostname;
-  return host === 'dehub.io' || host === 'www.dehub.io';
+  return host === 'riftn.com' || host === 'www.riftn.com' || host === 'dehub.io' || host === 'www.dehub.io';
 }
 
 /**

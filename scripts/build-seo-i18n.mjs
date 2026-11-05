@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url';
 import { buildPublicLocales, writePublicLocales } from './build-public-locales.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 
 /** en.json namespace → crawler route. Add a pair here when a page gains SEO keys. */
 export const SEO_I18N_ROUTES = {

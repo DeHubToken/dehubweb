@@ -51,26 +51,26 @@ export default function ClipPage() {
   if (!clip) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 text-center text-white">
-        <SEOHead title={t('liveClips.notFoundTitle', 'Clip not found — DeHub')} noindex noCanonical />
+        <SEOHead title={t('liveClips.notFoundTitle', 'Clip not found | Riftn')} noindex noCanonical />
         <p className="text-sm text-zinc-400">{t('liveClips.notFound', 'This clip is not available.')}</p>
         <Button asChild variant="secondary"><Link to="/shorts">{t('liveClips.browseShorts', 'Browse Shorts')}</Link></Button>
       </div>
     );
   }
 
-  const streamer = clip.streamer_username ? `@${clip.streamer_username}` : t('liveClips.aStreamer', 'a DeHub streamer');
+  const streamer = clip.streamer_username ? `@${clip.streamer_username}` : t('liveClips.aStreamer', 'a Riftn streamer');
   const title = clip.title || clip.stream_title || t('liveClips.title', 'Clip');
   const description = clip.kind === 'viewer' && clip.clipper_username
-    ? t('liveClips.seoDescriptionBy', 'A clip from {{streamer}}\'s live stream on DeHub, clipped by @{{clipper}}.', { streamer, clipper: clip.clipper_username })
-    : t('liveClips.seoDescription', 'A clip from {{streamer}}\'s live stream on DeHub.', { streamer });
+    ? t('liveClips.seoDescriptionBy', 'A clip from {{streamer}}\'s live stream on Riftn, clipped by @{{clipper}}.', { streamer, clipper: clip.clipper_username })
+    : t('liveClips.seoDescription', 'A clip from {{streamer}}\'s live stream on Riftn.', { streamer });
 
   return (
     <div className="mx-auto flex max-w-md flex-col gap-4 px-4 py-6 text-white">
       <SEOHead
-        title={`${title} — ${t('liveClips.seoSuffix', 'Clip on DeHub')}`}
+        title={`${title}: ${t('liveClips.seoSuffix', 'Clip on Riftn')}`}
         description={description}
         image={clip.card_url ?? undefined}
-        url={`https://dehub.io/clip/${clip.short_id}`}
+        url={`https://riftn.com/clip/${clip.short_id}`}
         type="video.other"
         jsonLd={{
           '@context': 'https://schema.org',

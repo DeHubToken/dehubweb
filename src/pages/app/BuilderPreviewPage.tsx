@@ -69,7 +69,7 @@ export default function BuilderPreviewPage() {
 
   return (
     <div data-theme-page-surface={live ? undefined : true} className="fixed inset-0 z-[1] bg-background text-foreground">
-      <SEOHead title={_copy("copy.a06602146802", { defaultValue: "Built with DeHub Builder" })} description={_copy("copy.6be19fadc3c7", { defaultValue: "An app built on DeHub Builder." })} noindex />
+      <SEOHead title={_copy("copy.a06602146802", { defaultValue: "Built with Riftn Builder" })} description={_copy("copy.6be19fadc3c7", { defaultValue: "An app built on Riftn Builder." })} noindex />
       {view.kind === 'src' && (
         <iframe
           title={_copy("copy.0d04bfeb7d64", { defaultValue: "App" })}

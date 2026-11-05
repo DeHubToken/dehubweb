@@ -49,8 +49,8 @@ const { stylePrerendered, clampEscapedTitle, VIEWPORT_META, TITLE_MAX } = new Fu
   TITLE_MAX: number;
 };
 
-const LONG = "DeHub's Special Week: BNB Chain Recognition, First Class Partnership &amp; App Store Launch | DeHub Blog";
-const SHORT = 'Pricing — DeHub Creator Studio';
+const LONG = "Riftn's Special Week: BNB Chain Recognition, First Class Partnership &amp; App Store Launch | Riftn Blog";
+const SHORT = 'Pricing | Riftn Creator Studio';
 
 const page = (title: string, extraHead = '') => `<!DOCTYPE html>
 <html lang="en">
@@ -126,17 +126,17 @@ const clamp = (plain: string) => decode(clampEscapedTitle(plain.replace(/&/g, '&
 
 describe('title clamp shape', () => {
   it('drops a brand suffix before cutting anything', () => {
-    // Was `Reliability Perfected: 99.99% Uptime for DeHub Streaming | DeHub 2025…`.
-    expect(clamp('Reliability Perfected: 99.99% Uptime for DeHub Streaming | DeHub 2025 Roadmap'))
-      .toBe('Reliability Perfected: 99.99% Uptime for DeHub Streaming');
-    expect(clamp('Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts) — DeHub Blog'))
+    // Was `Reliability Perfected: 99.99% Uptime for Riftn Streaming | Riftn 2025…`.
+    expect(clamp('Reliability Perfected: 99.99% Uptime for Riftn Streaming | Riftn 2025 Roadmap'))
+      .toBe('Reliability Perfected: 99.99% Uptime for Riftn Streaming');
+    expect(clamp('Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts) | Riftn Blog'))
       .toBe('Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts)');
-    expect(clamp('A long docs page title that runs well past the seventy character limit - DeHub Docs'))
+    expect(clamp('A long docs page title that runs well past the seventy character limit - Riftn Docs'))
       .toBe('A long docs page title that runs well past the seventy character limit');
   });
 
   it('cuts at a word boundary, never mid-word, and leaves no separator hanging', () => {
-    // Was `Watch this video give your honest thoughts it's four minutes — DeHub …`.
+    // Was `Watch this video give your honest thoughts it's four minutes — Riftn …`.
     const out = clamp("Watch this video give your honest thoughts on it, all four minutes, then tell us — — what next");
     expect(out.length).toBeLessThanOrEqual(TITLE_MAX);
     expect(out).toMatch(/\w…$/);
@@ -144,7 +144,7 @@ describe('title clamp shape', () => {
   });
 
   it('keeps a brand clause that is not a suffix', () => {
-    const title = 'DeHub — Open Source, User Owned & Censorship Resistant Media';
+    const title = 'Riftn — Open Source, User Owned & Censorship Resistant Media';
     expect(clamp(title)).toBe(title);
   });
 
@@ -157,7 +157,7 @@ describe('title clamp shape', () => {
     }[];
     expect(manifest.length).toBeGreaterThan(100);
     for (const post of manifest) {
-      const title = post.seoTitle || `${post.title} — DeHub Blog`;
+      const title = post.seoTitle || `${post.title} | Riftn Blog`;
       const out = clamp(title);
       expect(out.length, post.slug).toBeLessThanOrEqual(TITLE_MAX);
       expect(out, post.slug).not.toMatch(/(?:[|—–:,-]|\bDe|\bDeH|\bDeHu)\s*…?$/);

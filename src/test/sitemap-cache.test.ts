@@ -16,7 +16,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { cachedSitemap } from '../../CLOUDFLARE_WORKER_SEO.js';
 
-const URL_UNDER_TEST = 'https://dehub.io/sitemap-posts-1.xml';
+const URL_UNDER_TEST = 'https://riftn.com/sitemap-posts-1.xml';
 
 /** The Cache API reduced to what cachedSitemap uses, keyed by URL. */
 function fakeCache() {

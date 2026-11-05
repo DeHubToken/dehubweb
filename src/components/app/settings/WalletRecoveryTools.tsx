@@ -350,7 +350,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
               ) : (
                 <p className="text-white/60 text-sm">{_copy("copy.088468b96b16", { defaultValue: "We could not load the profile list. Use the original sign-in that created the old profile." })}</p>
               )}
-              <p className="text-white/60 text-sm">{_copy("copy.d0d03da52f24", { defaultValue: "Use the original sign-in for the profile you want. We verify its DeHub wallet before switching." })}</p>
+              <p className="text-white/60 text-sm">{_copy("copy.d0d03da52f24", { defaultValue: "Use the original sign-in for the profile you want. We verify its Riftn wallet before switching." })}</p>
               {migrateBusy && migrateBusy !== 'email_passwordless' ? (
                 <p className="text-white/60 text-sm flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.5cbe7783f7b1", { defaultValue: " Retrieving old wallet…" })}</p>
               ) : (
@@ -407,7 +407,7 @@ export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean;
 
           {migratedKey && !safeAddressChecked && (
             <p className="text-white/60 text-sm flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your DeHub profile..." })}</p>
+              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your Riftn profile..." })}</p>
           )}
 
           {migratedKey && safeAddressChecked && profileMatchFailed && (

@@ -4,7 +4,7 @@
  * Lets an existing social/email user log in through the old Web3Auth flow
  * ONCE, reconstructs their private key in the browser (Sapphire DKG — the key
  * never touches our servers), and hands it to the new self-custody wallet
- * system for import. Same key → same Safe smart account → same DeHub account.
+ * system for import. Same key → same Safe smart account → same Riftn account.
  *
  * IMPORTANT:
  * - Everything here is dynamically imported. This module (and @web3auth/modal,

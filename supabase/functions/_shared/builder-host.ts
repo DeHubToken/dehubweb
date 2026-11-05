@@ -1,4 +1,4 @@
-// DeHub Builder app hosting — shared by builder-api and builder-serve.
+// Riftn Builder app hosting — shared by builder-api and builder-serve.
 //
 // Every Builder app is served from its own subdomain, https://<slug>.dhb.gg,
 // by the dehub-builder-apps Cloudflare Worker (workers/builder-apps). dhb.gg

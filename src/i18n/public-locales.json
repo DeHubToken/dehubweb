@@ -1,5 +1,5 @@
 {
-  "version": "b274ead371ef7020",
+  "version": "5ab1ea986a406f37",
   "routes": {
     "/": [
       "ar",
@@ -772,13 +772,6 @@
       "tr"
     ],
     "/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn": [
-      "ar",
-      "es",
-      "fr",
-      "nl",
-      "tr"
-    ],
-    "/guides/dehub-vs-depaul-dehub-vs-rowan-dehub": [
       "ar",
       "es",
       "fr",

@@ -1,5 +1,5 @@
 /**
- * /app/post/:postId/reactions — every reaction to a DeHub video: recorded
+ * /app/post/:postId/reactions — every reaction to a Riftn video: recorded
  * reaction posts and live streams that put it on screen. Newest first.
  */
 import { useParams, Link } from 'react-router-dom';
@@ -69,17 +69,17 @@ export default function PostReactionsPage() {
   const total = counts?.[postId]?.reactions ?? rows.length;
   const title = original?.name?.trim() || t('reactions.thisVideo', 'this video');
   const creator = original?.mintername || original?.minterUsername;
-  const url = `https://dehub.io/app/post/${postId}/reactions`;
+  const url = `https://riftn.com/app/post/${postId}/reactions`;
   const image = original ? buildImageUrl(postId, original.thumbnail_url || original.imageUrl, 1200) : undefined;
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-4 text-white">
       <SEOHead
-        title={t('reactions.pageTitle', { title, defaultValue: 'Reactions to {{title}} — DeHub' })}
+        title={t('reactions.pageTitle', { title, defaultValue: 'Reactions to {{title}} | Riftn' })}
         description={t('reactions.pageDescription', {
           title,
-          creator: creator ? `@${creator}` : 'DeHub',
-          defaultValue: 'Watch creators react to “{{title}}” by {{creator}} on DeHub, recorded and live.',
+          creator: creator ? `@${creator}` : 'Riftn',
+          defaultValue: 'Watch creators react to “{{title}}” by {{creator}} on Riftn, recorded and live.',
         })}
         image={image}
         url={url}
@@ -89,7 +89,7 @@ export default function PostReactionsPage() {
           '@type': 'CollectionPage',
           name: `Reactions to ${title}`,
           url,
-          about: { '@type': 'VideoObject', name: title, url: `https://dehub.io/app/post/${postId}` },
+          about: { '@type': 'VideoObject', name: title, url: `https://riftn.com/app/post/${postId}` },
         }}
       />
       <Link to={`/app/post/${postId}`} className="mb-4 inline-flex items-center gap-2 text-sm text-white/70 hover:text-white">

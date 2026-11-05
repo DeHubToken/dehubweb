@@ -508,7 +508,11 @@ export function PhotoStudio({ photos, startIndex, startTab = 'looks', onClose, o
 
   const body = (
     <div
-      className="fixed inset-0 z-[300] flex flex-col bg-black text-white"
+      // Opened from the composer sheet, which locks clicks to itself while it is
+      // open (body gets pointer-events: none). Portaled to body, this would
+      // inherit that and ignore taps, so take clicks back explicitly.
+      className="pointer-events-auto fixed inset-0 z-[300] flex flex-col bg-black text-white"
+      data-overlay-content
       // Files dropped here stay here, not on the page-wide "new post" drop.
       data-drop-attach
       onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); }}

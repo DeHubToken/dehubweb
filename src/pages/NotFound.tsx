@@ -35,7 +35,7 @@ const NotFound = () => {
 
   return (
     <>
-      <SEOHead title={`${t('notFound.title')} — DeHub`} description={t('notFound.title')} noindex noCanonical />
+      <SEOHead title={`${t('notFound.title')} | Riftn`} description={t('notFound.title')} noindex noCanonical />
       <div data-glass-page className="relative h-screen w-full overflow-hidden bg-black">
       <NebulaParticlesBg />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">

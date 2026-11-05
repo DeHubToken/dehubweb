@@ -7,7 +7,7 @@ const ADDRESS = /^0x[0-9a-f]{40}$/i;
  * Public addresses controlled by the active wallet key.
  *
  * Pre-migration staking positions can be keyed by either the raw owner EOA or
- * the deterministic Safe used by DeHub. The authenticated profile only keeps
+ * the deterministic Safe used by Riftn. The authenticated profile only keeps
  * one of those forms, so legacy reads must check both.
  */
 export async function legacyWalletAddresses(sessionAddress: string): Promise<string[]> {

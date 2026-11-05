@@ -8,7 +8,7 @@
  * it can never follow up on what it just read.
  *
  * This runs a real tool-calling loop instead. The model is handed a catalog of
- * DeHub tools and decides for itself what to look up, in what order, and when
+ * Riftn tools and decides for itself what to look up, in what order, and when
  * it has enough — so "how does my engagement compare to the people I tip most"
  * becomes three tool calls it chose, not a keyword list nobody wrote.
  *
@@ -36,11 +36,12 @@ export function postCompletion(
   body: Record<string, unknown>,
   lovableApiKey: string,
   signal: AbortSignal,
+  ownKeyWallet?: string | null,
 ): Promise<Response> {
   // Assistant conversations may use the training free tier (owner's call);
   // DMs, suggested replies and the coach stay private.
   return aiChat(body, {
-    signal, label: 'assistant', publicContent: body.model === DEFAULT_MODEL, gatewayKey: lovableApiKey,
+    signal, label: 'assistant', publicContent: body.model === DEFAULT_MODEL, gatewayKey: lovableApiKey, ownKeyWallet,
   });
 }
 
@@ -59,7 +60,7 @@ export interface ToolCatalogEntry {
    * What the tool reads, as the API describes it. Nothing here branches on it —
    * the API decides what each surface is offered and the catalog it returns is
    * already cut — so this exists to stay truthful about what arrives.
-   * `code` reads DeHub's own source and no user data at all.
+   * `code` reads Riftn's own source and no user data at all.
    */
   scope: 'public' | 'self' | 'code' | 'admin';
   parameters: { type: 'object'; properties: Record<string, unknown>; required?: string[] };
@@ -85,7 +86,7 @@ export interface AgentOptions {
   systemPrompt: string;
   surface: AgentSurface;
   /**
-   * The asking user's DeHub access token, forwarded to the API so it can verify
+   * The asking user's Riftn access token, forwarded to the API so it can verify
    * it and derive the caller itself.
    *
    * Deliberately a token and not an address: this function is publicly
@@ -95,7 +96,7 @@ export interface AgentOptions {
    */
   userToken: string | null;
   /**
-   * Who is asking, when that was vouched for by the DeHub API itself rather
+   * Who is asking, when that was vouched for by the Riftn API itself rather
    * than by a user token — the @assistant DM bot, which holds the verified
    * sender's address but no token of theirs. Without it every `self` tool in a
    * DM (balance, earnings, tickets, builds) answered as if nobody had signed in.
@@ -115,6 +116,8 @@ export interface AgentOptions {
   model: string;
   lovableApiKey: string;
   perplexityKey?: string;
+  /** The signed-in creator's wallet: rounds run on their own chat key when they saved one. */
+  ownKeyWallet?: string | null;
   maxRounds?: number;
   maxTokens?: number;
   /** Abort the whole loop after this long. Chat needs a tighter budget. */
@@ -164,16 +167,16 @@ export async function fetchToolCatalog(
 
 /**
  * Web search is executed here rather than by the API — it is the one capability
- * that lives outside DeHub's own data, and the Perplexity key lives in this
+ * that lives outside Riftn's own data, and the Perplexity key lives in this
  * function's secrets. The model sees it as just another tool.
  */
 export const WEB_SEARCH_TOOL: ToolCatalogEntry = {
   name: 'web_search',
   scope: 'public',
   description:
-    'Search the live web for current information DeHub does not hold — news, prices, ' +
+    'Search the live web for current information Riftn does not hold — news, prices, ' +
     'events, other platforms, anything after your training cutoff. Do not use it for ' +
-    'questions about DeHub users, posts or stats; those have their own tools.',
+    'questions about Riftn users, posts or stats; those have their own tools.',
   parameters: {
     type: 'object',
     properties: { query: { type: 'string', description: 'What to search for' } },
@@ -255,6 +258,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     model,
     lovableApiKey,
     perplexityKey,
+    ownKeyWallet,
     // An admin question is a chain, not a lookup: reports spiked, so what
     // shipped, so what does that commit do, so what is the log saying. Five
     // rounds runs out halfway through that and the answer arrives half-derived.
@@ -274,7 +278,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     timeoutMs = surface === 'chat' ? 20_000 : surface === 'admin' ? 120_000 : 100_000,
   } = opts;
 
-  // A tool API that is down must cost the DeHub lookups, not the answer. The
+  // A tool API that is down must cost the Riftn lookups, not the answer. The
   // caller's own catch falls all the way back to the single-shot path, which
   // answers with no tools and no idea it lost any — running the loop without
   // the catalog keeps web_search, the platform knowledge and the rules that
@@ -324,6 +328,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
         },
         lovableApiKey,
         controller.signal,
+        ownKeyWallet,
       );
       if (!res.ok) throw new Error(`Gateway ${res.status}: ${(await res.text()).slice(0, 300)}`);
       data = await res.json();
@@ -407,6 +412,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
       },
       lovableApiKey,
       salvage.signal,
+      ownKeyWallet,
     );
     if (!finalRes.ok) throw new Error(`Gateway ${finalRes.status} on final turn`);
     const finalData = await finalRes.json();

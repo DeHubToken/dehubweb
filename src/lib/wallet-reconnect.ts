@@ -7,7 +7,7 @@
  *
  * Such a session exists without its wallet attached in one ordinary case: the
  * account holder signed in through the email link (see EmailSignInSettings and
- * completeLoginWithoutUnlock), which establishes the full DeHub session with
+ * completeLoginWithoutUnlock), which establishes the full Riftn session with
  * zero key material — on a browser that may never have seen the wallet
  * extension at all. Everything token-backed works; the first tip, stake or
  * send then finds no signing provider anywhere. Until this module existed that

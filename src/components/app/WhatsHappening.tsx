@@ -163,7 +163,6 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const [hasTabInteracted, setHasTabInteracted] = useState(false);
   const [tickerPeriod, setTickerPeriod] = useState<TickerPeriod>('all');
   const tickerDirRef = useRef(0);
-  const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countrySearch, setCountrySearch] = useSurfaceDraft("components/app/WhatsHappening.tsx:countrySearch", '');
   const countryDropdownRef = useRef<HTMLDivElement>(null);
@@ -200,7 +199,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     ? COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))
     : COUNTRIES;
 
-  // Warm all ticker periods so the 5s auto-rotation swaps instantly — but
+  // Warm all ticker periods so switching period is instant — but
   // ONLY while the tickers tab is actually visible. This sidebar is mounted
   // on every /app route, and unconditional refetchIntervals here meant five
   // ticker polls running forever in the background on every page.
@@ -218,27 +217,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     placeholderData: (previousData) => previousData,
   });
 
-  // Auto-rotate ticker periods every 5 seconds (skips ticks while the browser
-  // tab is hidden or this instance is the CSS-hidden mobile sidebar copy)
-  useEffect(() => {
-    if (!isTickerAutoRotating || activeTab !== 'tickers' || !isVisibleInstance) return;
-    const interval = setInterval(() => {
-      if (document.hidden) return;
-      setTickerPeriod(prev => {
-        const idx = TICKER_PERIODS.findIndex(p => p.value === prev);
-        const next = TICKER_PERIODS[(idx + 1) % TICKER_PERIODS.length].value;
-        tickerDirRef.current = 1;
-        return next;
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [isTickerAutoRotating, activeTab, isVisibleInstance]);
-
   const handleTickerPeriodChange = useCallback((newPeriod: TickerPeriod) => {
     tickerDirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[tickerPeriod];
     setTickerPeriod(newPeriod);
-    setIsTickerAutoRotating(false);
-    setTimeout(() => setIsTickerAutoRotating(true), 30000);
   }, [tickerPeriod]);
 
   const handleTickerClick = (symbol: string) => {
@@ -466,7 +447,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                         <div className="flex items-center gap-1.5 min-w-0">
                           <TickerLogo symbol={ticker.symbol} size={16} />
                           <span className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
-                            {ticker.symbol}
+                            {/^(?:DHB|DEHUB)$/i.test(ticker.symbol) ? 'RIFT' : ticker.symbol}
                           </span>
                         </div>
                       </div>

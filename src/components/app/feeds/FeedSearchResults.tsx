@@ -89,12 +89,62 @@ function TypeBadge({ postType }: { postType: UnifiedFeedItem['postType'] }) {
   );
 }
 
+/**
+ * Photo mosaic shapes, repeating every 14 tiles: a 2x2 "big", then a 1x2
+ * "tall" a few tiles later, so the grid reads like a magazine, not a sheet.
+ */
+const MOSAIC: Array<'big' | 'tall' | ''> = ['big', '', '', 'tall', '', '', '', 'big', '', '', '', 'tall', '', ''];
+const MOSAIC_GRID = 'grid grid-flow-row-dense grid-cols-3 gap-1 auto-rows-[calc((100cqw-8px)/3)] sm:grid-cols-4 sm:auto-rows-[calc((100cqw-12px)/4)]';
+const mosaicSpan = (shape: string) => (shape === 'big' ? 'col-span-2 row-span-2' : shape === 'tall' ? 'row-span-2' : '');
+
+/** Each tile fades up a beat after the one before; a new page starts its own wave. */
+const tileDelay = (i: number) => ({ '--sr-d': `${Math.min(i % PAGE_SIZE, 14) * 50}ms` }) as React.CSSProperties;
+
+/** A picture that stays blurred and faint until it has loaded, then sharpens in. */
+function RevealImg({ src, className }: { src: string; className?: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <img
+      src={src}
+      alt=""
+      loading="lazy"
+      data-sr-img
+      data-loaded={loaded || undefined}
+      ref={(el) => { if (el?.complete && el.naturalWidth > 0 && !loaded) setLoaded(true); }}
+      onLoad={() => setLoaded(true)}
+      onError={() => setLoaded(true)}
+      className={cn('h-full w-full object-cover', className)}
+    />
+  );
+}
+
+function SearchingRow({ query }: { query: string }) {
+  const { t: _copy } = _useCopy();
+  return (
+    <p className="flex items-center gap-2 px-1 pb-2 text-xs text-zinc-400">
+      <span data-sr-spin aria-hidden />
+      {_copy("copy.90f1afe66801", { defaultValue: "Searching for “{{query}}”…", query })}
+    </p>
+  );
+}
+
+/** Tells the docked lens to spin its rim while a search is on its way. */
+function useLensLoading(loading: boolean) {
+  useEffect(() => {
+    const root = document.documentElement;
+    if (loading) root.dataset.feedSearchLoading = 'true';
+    else delete root.dataset.feedSearchLoading;
+    return () => { delete root.dataset.feedSearchLoading; };
+  }, [loading]);
+}
+
 function ShimmerGrid({ tab }: { tab: FeedSearchTab }) {
-  const tile = 'rounded-lg bg-white/[0.06] animate-pulse';
+  const tile = 'rounded-lg';
+  const shim = (i: number) => ({ 'data-sr-shim': true, 'data-sr-tile': true, style: tileDelay(i) });
   if (tab === 'shorts') {
     return (
       <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
-        {Array.from({ length: 6 }, (_, i) => <div key={i} className={cn(tile, 'aspect-[9/16]')} />)}
+        {Array.from({ length: 6 }, (_, i) => <div key={i} {...shim(i)} className={cn(tile, 'aspect-[9/16]')} />)}
       </div>
     );
   }
@@ -102,7 +152,7 @@ function ShimmerGrid({ tab }: { tab: FeedSearchTab }) {
     return (
       <div className="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-3">
         {Array.from({ length: 6 }, (_, i) => (
-          <div key={i}><div className={cn(tile, 'aspect-[16/10]')} /><div className={cn(tile, 'mt-1.5 h-2.5 w-4/5')} /></div>
+          <div key={i} data-sr-tile style={tileDelay(i)}><div data-sr-shim className={cn(tile, 'aspect-[16/10]')} /><div data-sr-shim className={cn(tile, 'mt-1.5 h-2.5 w-4/5')} /></div>
         ))}
       </div>
     );
@@ -110,14 +160,14 @@ function ShimmerGrid({ tab }: { tab: FeedSearchTab }) {
   if (tab === 'music') {
     return (
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {Array.from({ length: 4 }, (_, i) => <div key={i} className={cn(tile, 'aspect-square rounded-xl')} />)}
+        {Array.from({ length: 4 }, (_, i) => <div key={i} {...shim(i)} className={cn(tile, 'aspect-square rounded-xl')} />)}
       </div>
     );
   }
   return (
-    <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
-      {Array.from({ length: 9 }, (_, i) => <div key={i} className={cn(tile, 'aspect-square', i === 0 && 'col-span-2 row-span-2')} />)}
-    </div>
+    <div className="[container-type:inline-size]"><div className={MOSAIC_GRID}>
+      {Array.from({ length: 10 }, (_, i) => <div key={i} {...shim(i)} className={cn(tile, mosaicSpan(MOSAIC[i]))} />)}
+    </div></div>
   );
 }
 
@@ -187,11 +237,13 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
   const extraCount = (extras?.stages.length ?? 0) + (extras?.stations.length ?? 0);
   const loading = (feed.isLoading && extraCount === 0) || (typing && items.length === 0 && extraCount === 0);
   const stale = typing || (feed.isFetching && !feed.isFetchingNextPage);
+  useLensLoading(loading || stale || !!extras?.isLoading);
+  const total = feed.data?.pages[0]?.pagination?.totalCount ?? 0;
 
   if (loading) {
     return (
       <div data-feed-search-results className="px-0.5 pt-1">
-        <p className="px-1 pb-2 text-xs text-zinc-400">{_copy("copy.90f1afe66801", { defaultValue: "Searching for “{{query}}”…", query })}</p>
+        <SearchingRow query={query} />
         <ShimmerGrid tab={layout} />
       </div>
     );
@@ -213,7 +265,7 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
   if (extras?.isLoading && items.length === 0 && extraCount === 0) {
     return (
       <div data-feed-search-results className="px-0.5 pt-1">
-        <p className="px-1 pb-2 text-xs text-zinc-400">{_copy("copy.90f1afe66801", { defaultValue: "Searching for “{{query}}”…", query })}</p>
+        <SearchingRow query={query} />
         <ShimmerGrid tab={layout} />
       </div>
     );
@@ -260,11 +312,21 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
         <p className="px-1 pb-2 text-[11px] font-semibold uppercase tracking-wider text-zinc-500">{_copy("copy.a80811cf6889", { defaultValue: "Posts" })}</p>
       )}
 
+      {items.length > 0 && (
+        <p data-sr-meta className="flex items-center gap-2 px-1 pb-2 text-xs text-zinc-400">
+          {stale && <span data-sr-spin aria-hidden />}
+          <span className="truncate">
+            <b className="font-semibold text-zinc-100">{_copy("copy.3f9b2c71d0a4", { defaultValue: "{{n}} results", n: Math.max(total, items.length).toLocaleString() })}</b>
+            {' '}{_copy("copy.8c4e1a6b2f57", { defaultValue: "for “{{query}}”", query: q })}
+          </span>
+        </p>
+      )}
+
       {layout === 'shorts' ? (
         <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
           {shorts.map((short, i) => (
-            <button key={short.id} type="button" data-media-tile data-media-scrim onClick={() => setViewerIndex(i)} className="relative aspect-[9/16] min-w-0 overflow-hidden rounded-lg bg-white/[0.06] text-left">
-              {short.thumbnail && <img src={short.thumbnail} alt="" className="h-full w-full object-cover" loading="lazy" />}
+            <button key={short.id} type="button" data-media-tile data-media-scrim data-sr-tile style={tileDelay(i)} onClick={() => setViewerIndex(i)} className="relative aspect-[9/16] min-w-0 overflow-hidden rounded-lg bg-white/[0.06] text-left">
+              {short.thumbnail && <RevealImg src={short.thumbnail} />}
               <span className="absolute inset-0 bg-gradient-to-b from-transparent from-55% to-black/75" />
               <span className="absolute bottom-1.5 left-1.5 right-1.5 block truncate text-[10px] font-semibold text-white">@{short.creatorUsername || short.username}</span>
             </button>
@@ -275,9 +337,9 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
           {items.map((item, i) => {
             const v = mapToVideoItem(item, i);
             return (
-              <button key={item.tokenId} type="button" onClick={() => open(item)} className="min-w-0 text-left">
+              <button key={item.tokenId} type="button" data-sr-tile style={tileDelay(i)} onClick={() => open(item)} className="min-w-0 text-left">
                 <span className="relative block aspect-[16/10] overflow-hidden rounded-lg bg-white/[0.06]">
-                  {v.thumbnail && <img src={v.thumbnail} alt="" className="h-full w-full object-cover" loading="lazy" />}
+                  {v.thumbnail && <RevealImg src={v.thumbnail} />}
                   {v.duration && <span className="absolute bottom-1 right-1 rounded bg-black/70 px-1 text-[10px] font-semibold text-white">{v.duration}</span>}
                 </span>
                 <span className="mt-1 block truncate text-xs font-semibold text-white">{v.title}</span>
@@ -292,9 +354,9 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
             const p = mapToImagePost(item, i);
             const cover = audioCover(item, i);
             return (
-              <button key={item.tokenId} type="button" onClick={() => open(item)} className="min-w-0 overflow-hidden rounded-xl border border-white/[0.12] bg-white/[0.03] text-left">
+              <button key={item.tokenId} type="button" data-sr-tile style={tileDelay(i)} onClick={() => open(item)} className="min-w-0 overflow-hidden rounded-xl border border-white/[0.12] bg-white/[0.03] text-left">
                 <span className="relative block aspect-square" style={{ background: cover.tint }}>
-                  {cover.src && <img src={cover.src} alt="" className="h-full w-full object-cover" loading="lazy" />}
+                  {cover.src && <RevealImg src={cover.src} />}
                   <span className="absolute inset-0 bg-gradient-to-b from-transparent from-40% to-black/70" />
                   <Wave className="absolute bottom-2 left-2 right-9" />
                   <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white text-black">
@@ -308,22 +370,24 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
           })}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-1 sm:grid-cols-4">
+        <div className="[container-type:inline-size]"><div className={MOSAIC_GRID}>
           {items.map((item, i) => {
             const p = mapToImagePost(item, i);
             const audio = isAudio(item) && !p.image;
             const isText = !audio && (item.postType === 'feed-simple' || !p.image);
-            const big = i % 9 === 0 && !isText && !audio;
+            const shape = isText || audio ? '' : MOSAIC[i % MOSAIC.length];
             return (
               <button
                 key={item.tokenId}
                 type="button"
+                data-sr-tile
+                style={tileDelay(i)}
                 onClick={() => open(item)}
-                className={cn('relative aspect-square overflow-hidden rounded-lg bg-white/[0.06] text-left', big && 'col-span-2 row-span-2')}
+                className={cn('relative min-h-0 overflow-hidden rounded-lg bg-white/[0.06] text-left', mosaicSpan(shape))}
               >
                 {audio ? (
                   <span className="relative block h-full" style={{ background: audioCover(item, i).tint }}>
-                    {audioCover(item, i).src && <img src={audioCover(item, i).src} alt="" className="h-full w-full object-cover opacity-80" loading="lazy" />}
+                    {audioCover(item, i).src && <RevealImg src={audioCover(item, i).src} className="opacity-80" />}
                     <Wave className="absolute bottom-2 left-2 right-2" />
                   </span>
                 ) : isText ? (
@@ -332,13 +396,13 @@ function FeedSearchResultsGrid({ tab, query, extras }: { tab: FeedSearchTab; que
                     {p.title || p.caption}
                   </span>
                 ) : (
-                  <img src={p.image} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <RevealImg src={p.image} />
                 )}
                 {tab === 'home' && !isText && <TypeBadge postType={item.postType} />}
               </button>
             );
           })}
-        </div>
+        </div></div>
       )}
       <div ref={moreRef} className="h-10" />
       {tab === 'shorts' && (

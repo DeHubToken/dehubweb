@@ -36,7 +36,7 @@ import { dehubLinkFor } from '@/lib/dehub-links';
 import type { ObjectType } from '@/lib/api/justwatch';
 
 const pageDescription = () =>
-  _translateCopy("copy.9c1b6df8777f", { defaultValue: "Find out where to stream, rent or buy any film or series, with live prices for your country. DeHub Cinema covers every major service in 140+ countries." });
+  _translateCopy("copy.9c1b6df8777f", { defaultValue: "Find out where to stream, rent or buy any film or series, with live prices for your country. Riftn Cinema covers every major service in 140+ countries." });
 
 /** Debounce keeps a burst of keystrokes from becoming a burst of upstream
  *  calls — partner API quota is per-account, not per-visitor. */
@@ -92,18 +92,18 @@ export default function CinemaPage() {
   // hub's copy while the fetch is in flight so the tab never reads "undefined".
   const seo = openTitle
     ? {
-        title: _copy("copy.87a58776c5e4", { defaultValue: "{{value1}}{{value2}} — Where to Watch | DeHub", value1: openTitle.title, value2: openTitle.year ? ` (${openTitle.year})` : '' }),
+        title: _copy("copy.87a58776c5e4", { defaultValue: "{{value1}}{{value2}} — Where to Watch | Riftn", value1: openTitle.title, value2: openTitle.year ? ` (${openTitle.year})` : '' }),
         description:
           openTitle.shortDescription ??
           _copy("copy.9f731f9393a8", { defaultValue: "Where to stream, rent or buy {{value1}} in {{value2}} and 140+ other countries.", value1: openTitle.title, value2: current.country }),
         // Pinned to the production origin on purpose: shareOrigin() reads the
         // current one, which on staging would point every canonical there.
-        url: `https://dehub.io/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
+        url: `https://riftn.com/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
       }
     : {
-        title: _copy("copy.06ce40d90680", { defaultValue: "Cinema | Where to Stream, Rent or Buy Any Film | DeHub" }),
+        title: _copy("copy.06ce40d90680", { defaultValue: "Cinema | Where to Stream, Rent or Buy Any Film | Riftn" }),
         description: pageDescription(),
-        url: 'https://dehub.io/cinema',
+        url: 'https://riftn.com/cinema',
       };
 
   const jsonLd = useMemo(
@@ -112,8 +112,8 @@ export default function CinemaPage() {
       '@graph': [
         {
           '@type': 'WebApplication',
-          name: 'DeHub Cinema',
-          url: 'https://dehub.io/cinema',
+          name: 'Riftn Cinema',
+          url: 'https://riftn.com/cinema',
           applicationCategory: 'EntertainmentApplication',
           operatingSystem: 'Web',
           description: pageDescription(),
@@ -121,10 +121,10 @@ export default function CinemaPage() {
         },
         {
           '@type': 'WebPage',
-          name: 'DeHub Cinema',
-          url: 'https://dehub.io/cinema',
+          name: 'Riftn Cinema',
+          url: 'https://riftn.com/cinema',
           description: pageDescription(),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' },
         },
       ],
     }),
@@ -138,7 +138,7 @@ export default function CinemaPage() {
       <SEOHead
         title={seo.title}
         description={seo.description}
-        image="https://dehub.io/og/cinema.jpg"
+        image="https://riftn.com/og/cinema.jpg"
         url={seo.url}
         jsonLd={jsonLd}
       />

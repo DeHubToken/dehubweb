@@ -22,6 +22,7 @@ import { claimFree, freeEligible, releaseFree } from './ai-free.ts';
 import { quotePriceDhb, type JobKind, type QuoteOptions } from './ai-pricing.ts';
 import { claimDhbPayment } from './dhb-transfer.ts';
 import { debitCredits, refundCredits } from './credits.ts';
+import { userProviderKey } from './byok.ts';
 import { refundJournalledGeneration, transitionGeneration } from './generation-terminal.ts';
 
 export interface ChargeRequest extends QuoteOptions {
@@ -49,6 +50,12 @@ export interface ChargeRequest extends QuoteOptions {
    * before parsing and can leave this out.
    */
   body?: Record<string, unknown>;
+  /**
+   * The provider this job runs on. When the creator saved a working key for it
+   * in Settings, the job runs on their account and nothing is charged; the
+   * result carries `ownKey` so the caller uses it instead of Riftn's.
+   */
+  ownKeyProvider?: string;
 }
 
 export type ChargeResult =
@@ -57,6 +64,8 @@ export type ChargeResult =
       wallet: string;
       priceDhb: number;
       jobId: string;
+      /** The creator's own provider key for this job, when they saved one. */
+      ownKey?: string | null;
       /**
        * Put the price back on the receipt. Call this when the provider fails
        * after the draw, so the same transfer pays for the retry instead of
@@ -75,13 +84,15 @@ export async function chargeForJob(req: Request, opts: ChargeRequest): Promise<C
   const guard = await guardPaidEndpoint(req, opts.actionType, opts.rateLimit);
   if (!guard.ok) return guard;
 
-  if (opts.free) {
-    console.log('[ai-payment] free job, no charge', { kind: opts.kind, modelId: opts.modelId, wallet: guard.wallet });
+  const ownKey = opts.ownKeyProvider ? await userProviderKey(guard.wallet, opts.ownKeyProvider) : null;
+  if (opts.free || ownKey) {
+    console.log('[ai-payment] free job, no charge', { kind: opts.kind, modelId: opts.modelId, wallet: guard.wallet, ownKey: !!ownKey });
     return {
       ok: true,
       wallet: guard.wallet,
       priceDhb: 0,
       jobId: crypto.randomUUID(),
+      ownKey,
       // Nothing was taken, so there is nothing to give back. Kept as a no-op so
       // callers can refund unconditionally on failure without checking price.
       refund: async () => true,

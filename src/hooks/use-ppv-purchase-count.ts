@@ -1,7 +1,7 @@
 /**
  * PPV Purchase Count Hook
  * =======================
- * Fetches the number of purchases for a given PPV token from the DeHub backend.
+ * Fetches the number of purchases for a given PPV token from the Riftn backend.
  */
 
 import { useQuery } from '@tanstack/react-query';

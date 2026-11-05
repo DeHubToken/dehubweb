@@ -169,7 +169,7 @@ export const SHORTS_RESET_SORT: SortOption = SORT_OPTIONS.find(o => o.value === 
 // ============================================================================
 
 /**
- * Map UI sort values to DeHub API sortMode parameter.
+ * Map UI sort values to Riftn API sortMode parameter.
  * - "new" = newest first (default)
  * - "popular" = sorted by views/likes 
  * - "trending" = currently trending

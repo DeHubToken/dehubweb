@@ -373,8 +373,8 @@ const SR_LETTERS = {
   a: 'а', b: 'б', c: 'ц', č: 'ч', ć: 'ћ', d: 'д', đ: 'ђ', e: 'е', f: 'ф', g: 'г', h: 'х', i: 'и', j: 'ј', k: 'к',
   l: 'л', m: 'м', n: 'н', o: 'о', p: 'п', r: 'р', s: 'с', š: 'ш', t: 'т', u: 'у', v: 'в', z: 'з', ž: 'ж',
 };
-/** Tokens that must survive as written: placeholders, tags, URLs, @/#/$ tags, and DeHub/crypto names. */
-const SR_KEEP = /\{\{[^}]+\}\}|\{[a-zA-Z0-9_]+\}|<\/?[a-zA-Z][a-zA-Z0-9]*>|https?:\/\/\S+|[@#$][\w.-]+|\b(?:DeHub|DHB|BNB|BSC|ETH|USDT|USDC|NFTs?|DEX|APY|API|URL|ID|PIN|QR|OTP|AI|RPC|TikTok|YouTube|Google|Apple|Android|iOS|Telegram|Discord|X|MetaMask|WalletConnect|Web3|OK)\b/g;
+/** Tokens that must survive as written: placeholders, tags, URLs, @/#/$ tags, and Riftn/crypto names. */
+const SR_KEEP = /\{\{[^}]+\}\}|\{[a-zA-Z0-9_]+\}|<\/?[a-zA-Z][a-zA-Z0-9]*>|https?:\/\/\S+|[@#$][\w.-]+|\b(?:Riftn|DeHub|DHB|BNB|BSC|ETH|USDT|USDC|NFTs?|DEX|APY|API|URL|ID|PIN|QR|OTP|AI|RPC|TikTok|YouTube|Google|Apple|Android|iOS|Telegram|Discord|X|MetaMask|WalletConnect|Web3|OK)\b/g;
 function toLocaleScript(text, locale) {
   if (text == null) return text;
   // Georgian has no case, but the provider capitalises the first letter of a

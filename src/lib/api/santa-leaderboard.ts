@@ -3,7 +3,7 @@
  * ===================================
  * Backed by the `santa_snake_scores` Supabase table (one row per wallet, holding
  * that player's best run). Reads are direct — the board is public. Writes go
- * through the `santa-score` edge function, which verifies the DeHub token and
+ * through the `santa-score` edge function, which verifies the Riftn token and
  * writes only for that wallet. Every call is defensively wrapped so the game
  * never throws — the board simply stays empty if anything is unavailable.
  */
@@ -44,7 +44,7 @@ export async function submitSantaScore(params: {
   const wallet = params.walletAddress?.toLowerCase();
   if (!wallet || !Number.isFinite(params.score) || params.score <= 0) return false;
   // Writes go through the santa-score function: it takes the wallet off the
-  // verified DeHub token and only keeps a run that beats that wallet's best.
+  // verified Riftn token and only keeps a run that beats that wallet's best.
   // The table no longer accepts direct writes.
   const headers = dehubAuthHeaders();
   if (!headers['x-dehub-token']) return false;

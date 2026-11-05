@@ -2,7 +2,7 @@
  * Replay resolution for ended livestreams.
  *
  * The backend records every stream through Livepeer, then moves the finished
- * file into DeHub's own bucket and deletes the Livepeer copy — so a replay is
+ * file into Riftn's own bucket and deletes the Livepeer copy — so a replay is
  * a plain mp4 on the CDN, not an HLS playlist, and it only exists once that
  * capture reports `ready`.
  *

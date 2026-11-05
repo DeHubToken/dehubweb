@@ -130,6 +130,8 @@ export interface MintPostParams {
   layout?: 'comic';
   /** Comic captions, one per page in file order. */
   mediaCaptions?: string[];
+  /** The comic's border preset; leave out for the theme's foil. */
+  comicBorder?: string;
   /** The poster closed the market card for the $TICKER / address in the text. Only sent when true. */
   hideAssetCards?: boolean;
   /** Content warning: one line shown in place of the post until a viewer opens it. */
@@ -302,6 +304,7 @@ export async function mintPost(
     if (params.mediaCaptions?.some(Boolean)) {
       formData.append('mediaCaptions', JSON.stringify(params.mediaCaptions));
     }
+    if (params.comicBorder) formData.append('comicBorder', params.comicBorder);
   }
 
   if (params.spoilerText?.trim()) {
@@ -520,6 +523,10 @@ export interface EditPostParams {
   mediaDescriptions?: string[];
   /** Comic captions, one per page. `[]` clears them. */
   mediaCaptions?: string[];
+  /** The comic's border preset. `''` goes back to the theme's foil. */
+  comicBorder?: string;
+  /** `'comic'` shows a photo post as collector cards; `''` back to the carousel. */
+  layout?: 'comic' | '';
   /** Replace the content warning. `''` takes it off. */
   spoilerText?: string;
   /** Who may quote it from now on. Quotes already made stay. */

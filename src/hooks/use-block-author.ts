@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Block Author Hook
  * =================
- * Blocking an author is the DeHub block API (`POST /api/block`) plus immediate
+ * Blocking an author is the Riftn block API (`POST /api/block`) plus immediate
  * cache surgery: every feed already filters through the shared ['block-list']
  * query (use-unified-feed, use-dehub-feed, MusicFeed), so a block updates that
  * list and then prunes the author's posts out of the cached infinite feeds in

@@ -236,7 +236,7 @@ export function useStageAlerts() {
         raise({
           type,
           path,
-          heading: row.reference_title || 'DeHub Stages',
+          heading: row.reference_title || 'Riftn Stages',
           sentence:
             type === 'stage_live'
               ? stageLiveSentence(actorName, row.reference_title)

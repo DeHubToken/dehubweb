@@ -17,7 +17,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * plainly what that does and does not prove. See ProvenancePanel below.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,
@@ -29,7 +29,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Activity, ChevronDown, Globe, Loader2 } from "lucide-react";
+import { Activity, ChevronDown, Globe } from "lucide-react";
 import BarChart3 from "@/components/ui/cut-icons/stats";
 import Check from "@/components/ui/cut-icons/check";
 import Copy from "@/components/ui/cut-icons/copy";
@@ -49,7 +49,9 @@ import {
 } from '@/hooks/use-site-stats';
 import { FinanceSection } from '@/components/app/stats/FinanceSection';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
+import { Skeleton } from '@/components/ui/skeleton';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
+import { useFinanceStats } from '@/hooks/use-finance-stats';
 import { cn } from '@/lib/utils';
 import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
@@ -780,13 +782,29 @@ function CommunitySection({ range }: { range: Range }) {
 // Page
 // ---------------------------------------------------------------------------
 
+const LOWER_REVEAL_CAP_MS = 2500;
+
 export default function StatsPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const [range, setRange] = useState<Range>('30d');
+  const [range, setRange] = useState<Range>('all');
 
   const { data, isLoading, isError, isFetching } = useSiteStats();
   const stats: SiteStats | null = data && data.ok ? data : null;
+
+  // The community, money and audience halves come from three endpoints that
+  // answer at different moments. Showing each as it lands slid the ones
+  // under it down the page, so they appear together under the chart once all
+  // three have answered (or after a short cap, so one slow read never hides
+  // the rest).
+  const { isLoading: communityLoading } = useUserStats();
+  const { isLoading: financeLoading } = useFinanceStats();
+  const [lowerCapPassed, setLowerCapPassed] = useState(false);
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLowerCapPassed(true), LOWER_REVEAL_CAP_MS);
+    return () => window.clearTimeout(timer);
+  }, []);
+  const showLower = lowerCapPassed || (!isLoading && !communityLoading && !financeLoading);
   const unavailable: SiteStatsUnavailable | null = isUnavailable(data) ? data : null;
 
   /**
@@ -857,21 +875,21 @@ export default function StatsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.1340eb7a333e", { defaultValue: "Live Site Stats — DeHub Visitors and Members in Real Time" })}
-        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, DeHub's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction." })}
-        url="https://dehub.io/stats"
-        image="https://dehub.io/og/stats.jpg"
+        title={_copy("copy.1340eb7a333e", { defaultValue: "Live Site Stats: Riftn Visitors and Members in Real Time" })}
+        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for riftn.com: visitors measured at Cloudflare's edge, Riftn's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction." })}
+        url="https://riftn.com/stats"
+        image="https://riftn.com/og/stats.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Dataset',
-          name: 'DeHub live site statistics',
-          description: _copy("copy.67ae514e929e", { defaultValue: "Edge-measured visitor statistics for dehub.io alongside the platform’s own community figures — members, active users, signups and growth — published live." }),
-          url: 'https://dehub.io/stats',
-          creator: { '@type': 'Organization', name: 'DeHub' },
+          name: 'Riftn live site statistics',
+          description: _copy("copy.67ae514e929e", { defaultValue: "Edge-measured visitor statistics for riftn.com alongside the platform’s own community figures — members, active users, signups and growth — published live." }),
+          url: 'https://riftn.com/stats',
+          creator: { '@type': 'Organization', name: 'Riftn' },
           isAccessibleForFree: true,
         }}
       />
-      <h1 className="sr-only">{_copy("copy.2baf411ba3c5", { defaultValue: "DeHub Live Site Statistics — Visitors, Page Views, Members and Active Users" })}</h1>
+      <h1 className="sr-only">{_copy("copy.2baf411ba3c5", { defaultValue: "Riftn Live Site Statistics — Visitors, Page Views, Members and Active Users" })}</h1>
 
       <PageIsland
         icon="stats"
@@ -903,9 +921,22 @@ export default function StatsPage() {
       />
 
       <PageBody>
+        {/* Same tiles and chart box as the loaded view, values blank, so the
+            community half below never jumps when the traffic read lands. */}
         {isLoading && (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+          <div aria-hidden className="contents">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+              {[
+                t('stats.tile.visitorsToday', 'Visitors today'),
+                t('stats.tile.peakDay', 'Busiest day'),
+                t('stats.tile.pageViews', 'Page views'),
+                t('stats.tile.served', 'Served'),
+              ].map((label) => <StatTile key={label} label={label} value={'\u00a0'} hint={'\u00a0'} />)}
+            </div>
+            <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
+              <div className="mb-3 h-5" />
+              <Skeleton className="h-[180px] w-full rounded-xl" />
+            </div>
           </div>
         )}
 
@@ -1047,12 +1078,12 @@ export default function StatsPage() {
         {/* Independent of the traffic half: a Cloudflare outage takes the
             charts above with it, and there is no reason for it to take the
             community numbers too. */}
-        <CommunitySection range={range} />
+        {showLower && <CommunitySection range={range} />}
 
         {/* Its own endpoint and its own failure, for the same reason. */}
-        <FinanceSection range={range} />
+        {showLower && <FinanceSection range={range} />}
 
-        {stats && view && (
+        {showLower && stats && view && (
           <>
             {/* Where people are, and what they browse with */}
             <div data-kit-flat-skip className="grid grid-cols-1 lg:grid-cols-2 gap-0 sm:gap-3">
@@ -1202,6 +1233,36 @@ export default function StatsPage() {
                     { max: stats.window.breakdownMaxDays },
                   )}
                 </li>
+                {stats.gapFill && (
+                  <li>
+                    <span className="text-zinc-300">{t('stats.definitions.gapTerm', 'Days since the move')}</span>{' '}
+                    {t(
+                      'stats.definitions.gap',
+                      '— riftn.com’s own counts are not readable yet, so from {{date}} each day shows the median of the {{days}} days before the move ({{visitors}} visitors, {{pageViews}} page views), or the measured count where that is higher. These days are marked as estimated and switch to real numbers on their own once riftn.com can be read.',
+                      {
+                        date: stats.gapFill.since,
+                        days: stats.gapFill.baselineDays,
+                        visitors: formatCount(stats.gapFill.visitors),
+                        pageViews: formatCount(stats.gapFill.pageViews),
+                      },
+                    )}
+                  </li>
+                )}
+                {stats.zones && stats.zones.length > 1 && (
+                  <li>
+                    <span className="text-zinc-300">{t('stats.definitions.addressesTerm', 'Both addresses')}</span>{' '}
+                    {t(
+                      'stats.definitions.addresses',
+                      '— the site moved from dehub.io to riftn.com on 3 November 2026. Cloudflare counts each address separately, so every day here is {{zones}} added together. Someone who arrives on dehub.io and is passed on to riftn.com can be counted on both that day.',
+                      { zones: stats.zones.filter((z) => z.ok).map((z) => z.name).join(' + ') },
+                    )}
+                    {stats.zones.some((z) => !z.ok) && (
+                      <> {t('stats.definitions.addressMissing', 'Not readable right now: {{zones}}.', {
+                        zones: stats.zones.filter((z) => !z.ok).map((z) => z.name).join(', '),
+                      })}</>
+                    )}
+                  </li>
+                )}
                 {stats.estimate && (
                   <li>
                     <span className="text-zinc-300">{t('stats.definitions.estimatedTerm', 'Estimated days')}</span>{' '}

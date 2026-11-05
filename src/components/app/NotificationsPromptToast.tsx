@@ -38,6 +38,9 @@ const SCROLL_THRESHOLD_PX = 1200;
 /** Minimum time on the app before the prompt can appear. */
 const MIN_DWELL_MS = 20_000;
 
+/** The same wait for someone whose earlier "yes" did not carry over. */
+const REASK_DWELL_MS = 6_000;
+
 /** How long a dismissal (X or "Not now") keeps the prompt away. */
 const SNOOZE_MS = 60 * 24 * 60 * 60 * 1000; // 60 days
 
@@ -74,13 +77,24 @@ function snooze(): void {
   writeState({ snoozedUntil: Date.now() + SNOOZE_MS });
 }
 
+/**
+ * Notifications were switched on here, but this browser has never been asked
+ * on this site. That is what the move from dehub.io to riftn.com left behind:
+ * the hand-off carried our stored "on" flag and the "already answered" note
+ * across, while the browser's permission belongs to the old site. Without this
+ * the reader sees nothing at all and is never asked again.
+ */
+function lostPermission(): boolean {
+  return typeof Notification !== 'undefined' && Notification.permission === 'default' && getStoredEnabled();
+}
+
 function isEligible(): boolean {
   if (typeof Notification === 'undefined') return false;
   if (Notification.permission !== 'default') return false;
-  if (getStoredEnabled()) return false;
   const state = readState();
-  if (state.done) return false;
   if (state.snoozedUntil && Date.now() < state.snoozedUntil) return false;
+  if (lostPermission()) return true;
+  if (state.done) return false;
   return true;
 }
 
@@ -117,7 +131,11 @@ function decline(id: string | number): void {
 }
 
 function showPrompt(): void {
-  const id = toast.message('Turn on desktop notifications?', {
+  const reask = lostPermission();
+  const title = reask
+    ? i18n.t('toasts.turn_back_on_desktop_notifications', 'Turn desktop notifications back on?')
+    : i18n.t('toasts.turn_on_desktop_notifications', 'Turn on desktop notifications?');
+  const id = toast.message(title, {
     // Up long enough to answer, then it goes; timing out counts as "not now".
     duration: 15_000,
     onAutoClose: () => snooze(),
@@ -129,10 +147,15 @@ function showPrompt(): void {
     description: (
       <span className="flex flex-col gap-3">
         <span>
-          {i18n.t(
-            'toasts.get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab',
-            "Get a heads-up about replies, tips and DMs while you're in another tab."
-          )}
+          {reask
+            ? i18n.t(
+              'toasts.notifications_moved_to_riftn',
+              'We moved to riftn.com, so your browser needs your OK once more to show replies, tips and DMs here.'
+            )
+            : i18n.t(
+              'toasts.get_a_heads_up_about_replies_tips_and_dms_while_youre_in_another_tab',
+              "Get a heads-up about replies, tips and DMs while you're in another tab."
+            )}
         </span>
         <span className="flex flex-row gap-2">
           <button type="button" className={BUTTON_CLASSES} onClick={() => void accept(id)}>
@@ -164,14 +187,20 @@ export function NotificationsPromptToast() {
     if (isMobile || !isAuthenticated || firedRef.current) return;
     if (!isEligible()) return;
 
+    // Someone who already said yes once only needs asking again, so they are
+    // not made to scroll for it first.
+    const reask = lostPermission();
+    const scrollNeeded = reask ? 0 : SCROLL_THRESHOLD_PX;
+    const dwellNeeded = reask ? REASK_DWELL_MS : MIN_DWELL_MS;
+
     const startedAt = Date.now();
     let lastTop = getDocumentScrollTop();
     let scrolled = 0;
 
     function maybeShow(): void {
       if (firedRef.current) return;
-      if (scrolled < SCROLL_THRESHOLD_PX) return;
-      if (Date.now() - startedAt < MIN_DWELL_MS) return;
+      if (scrolled < scrollNeeded) return;
+      if (Date.now() - startedAt < dwellNeeded) return;
       // Raising a permission ask at a hidden tab wastes the one show.
       if (document.hidden) return;
       cleanup();

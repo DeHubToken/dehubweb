@@ -5,7 +5,7 @@
  * creator can go live from a webcam or a phone instead of installing OBS.
  *
  * The stream key is the same one the RTMP path already hands out — Livepeer
- * accepts either ingest against the same stream — so nothing on the DeHub
+ * accepts either ingest against the same stream — so nothing on the Riftn
  * backend or the HLS playback side has to change. A stream published here
  * comes out of the same `playbackId` the feed cards already read.
  *

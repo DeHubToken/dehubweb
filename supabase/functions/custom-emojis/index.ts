@@ -1,4 +1,4 @@
-// DeHub's custom emoji, in the formats other apps already read.
+// Riftn's custom emoji, in the formats other apps already read.
 //
 //   GET /custom-emojis                  Mastodon /api/v1/custom_emojis shape —
 //                                       what Mastodon, Pleroma, Akkoma and

@@ -3,7 +3,7 @@ import { resvgReady } from './resvg.js';
 import { POST_CARD_TTL, POST_CARD_VERSION, PROFILE_CARD_VERSION, postCardData, profileCardData, renderPostCardSvg, renderProfileCardSvg } from './post-share-card.js';
 import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js';
 
-const SHARE_IMAGE = 'https://dehub.io/og/dehub-social-share.png';
+const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
 let assets;
 let chromeAsset;
 const RENDER_REVISION = 8;
@@ -14,8 +14,8 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png'].map(async (path) => {
-    const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
+  if (!assets) assets = Promise.all(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png'].map(async (path) => {
+    const response = await env.ASSETS.fetch(new Request(`https://riftn.com${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
   })).catch((error) => { assets = undefined; throw error; });
@@ -23,7 +23,7 @@ async function loadAssets(env) {
 }
 
 async function loadProfileChrome(env) {
-  if (!chromeAsset) chromeAsset = env.ASSETS.fetch(new Request('https://dehub.io/brand/share-chrome-edge.png')).then(async response => {
+  if (!chromeAsset) chromeAsset = env.ASSETS.fetch(new Request('https://riftn.com/brand/share-chrome-edge.png')).then(async response => {
     if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png')) throw new Error('Profile artwork unavailable');
     return new Uint8Array(await response.arrayBuffer());
   }).catch(error => { chromeAsset = undefined; throw error; });
@@ -84,7 +84,7 @@ async function brandCard(request, env, headers, reason) {
 }
 
 function renderPng(svg, font) {
-  const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Exo' } });
+  const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Manrope' } });
   let rendered;
   try { rendered = renderer.render(); return rendered.asPng(); }
   finally { rendered?.free(); renderer.free(); }
@@ -106,7 +106,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
     const data = await loadPostShareDetails(base, publicLookups);
     const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify({ revision: RENDER_REVISION, data })));
     const fingerprint = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('');
-    const key = new Request(`https://dehub.io/_og/post/${POST_CARD_VERSION}/${tokenId}.png?data=${fingerprint}`);
+    const key = new Request(`https://riftn.com/_og/post/${POST_CARD_VERSION}/${tokenId}.png?data=${fingerprint}`);
     const cache = typeof caches !== 'undefined' ? caches.default : undefined;
     const publicCache = `public, max-age=60, s-maxage=${POST_CARD_TTL}`;
     const cached = data.detailsComplete ? await cache?.match(key) : null;
@@ -120,7 +120,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       Promise.all(data.badges.map(async badge => {
         if (badge.kind === 'new') return badge;
         if (badge.kind === 'streamer') return { ...badge, uri: bytesToUri(new TextEncoder().encode(streamerShareSvg(badge)), 'image/svg+xml') };
-        const response = await env.ASSETS.fetch(new Request(`https://dehub.io/brand/share-badges/${badge.slug}.png`));
+        const response = await env.ASSETS.fetch(new Request(`https://riftn.com/brand/share-badges/${badge.slug}.png`));
         if (!response.ok || !response.headers.get('Content-Type')?.startsWith('image/png')) throw new Error('Profile badge artwork unavailable');
         return { ...badge, uri: bytesToUri(new Uint8Array(await response.arrayBuffer()), 'image/png') };
       })),
@@ -168,7 +168,7 @@ export async function handleProfileShareImage(request, env, ctx, handle, fetchAc
     if (!data || data.handle.toLowerCase() !== handle.toLowerCase()) return brandCard(request, env, headers, 'unavailable');
     const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify({ revision: RENDER_REVISION, data })));
     const fingerprint = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('');
-    const key = new Request(`https://dehub.io/_og/profile/${PROFILE_CARD_VERSION}/${encodeURIComponent(data.handle)}.png?data=${fingerprint}`);
+    const key = new Request(`https://riftn.com/_og/profile/${PROFILE_CARD_VERSION}/${encodeURIComponent(data.handle)}.png?data=${fingerprint}`);
     const cache = typeof caches !== 'undefined' ? caches.default : undefined;
     const publicCache = `public, max-age=60, s-maxage=${POST_CARD_TTL}`;
     const cached = await cache?.match(key);

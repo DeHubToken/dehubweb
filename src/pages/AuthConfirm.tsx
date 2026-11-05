@@ -14,7 +14,7 @@ const SUPA_LOGIN_PENDING_AT_KEY = "dehub_supa_login_pending_at";
 /**
  * Branded confirmation landing for auth emails.
  *
- * Auth emails send users to `https://dehub.io/auth/confirm?token_hash=…&type=…`
+ * Auth emails send users to `https://riftn.com/auth/confirm?token_hash=…&type=…`
  * instead of the raw Supabase verify URL. We verify the OTP client-side
  * (verifyOtp with token_hash) and then bounce into the app.
  *
@@ -125,14 +125,14 @@ export default function AuthConfirm() {
         </h1>
         <p className="text-sm text-muted-foreground">
           {state === "verifying"
-            ? _copy("copy.59aa2927dbb9", { defaultValue: "Hang tight while we verify your DeHub link." })
+            ? _copy("copy.59aa2927dbb9", { defaultValue: "Hang tight while we verify your Riftn link." })
             : error}
         </p>
         {state === "error" && (
           <button
             onClick={() => navigate("/app")}
             className="inline-flex items-center rounded-xl px-4 py-2 text-sm font-medium bg-foreground text-background"
-          >{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to DeHub" })}</button>
+          >{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to Riftn" })}</button>
         )}
       </div>
     </div>

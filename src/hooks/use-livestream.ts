@@ -1,7 +1,7 @@
 /**
  * Livestream Hooks
  * ================
- * React hooks wrapping the DeHub livestream API endpoints.
+ * React hooks wrapping the Riftn livestream API endpoints.
  * Provides data-fetching, mutations, and state management for live streams.
  */
 

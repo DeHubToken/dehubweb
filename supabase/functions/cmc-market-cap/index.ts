@@ -135,7 +135,7 @@ serve(async (req) => {
 
     const cleanSymbol = symbol.replace(/^\$/, '').toUpperCase();
 
-    // Manual override: $DHB (Dehub) — CMC doesn't list yet, trading paused.
+    // Manual override: $DHB (Riftn) — CMC doesn't list yet, trading paused.
     // Hard-code price/name so the cashtag/search UI surfaces it.
     //
     // Supply is 4.2B, not the 1B this used to claim. That single wrong number
@@ -147,7 +147,7 @@ serve(async (req) => {
     if (cleanSymbol === 'DHB' || cleanSymbol === 'DEHUB') {
       return new Response(JSON.stringify({
         symbol: 'DHB',
-        name: 'Dehub',
+        name: 'Riftn',
         slug: 'dehub',
         cmcRank: null,
         dateAdded: null,
@@ -169,7 +169,7 @@ serve(async (req) => {
         percentChange90d: null,
         marketCapDominance: null,
         logo: null,
-        description: 'Dehub ($DHB) — price pinned to $0.001 until trading resumes.',
+        description: 'Riftn ($DHB) — price pinned to $0.001 until trading resumes.',
         website: 'https://dehub.net',
         twitter: 'https://twitter.com/dehub_official',
         reddit: null,

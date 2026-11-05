@@ -241,7 +241,7 @@ const isCaptionLanguage = (code: string | null | undefined): code is string =>
   !!code && CAPTION_LANGUAGES.some((l) => l.code === code);
 
 /**
- * Until a viewer picks, captions come in the language DeHub is shown in. They
+ * Until a viewer picks, captions come in the language Riftn is shown in. They
  * used to default to the spoken language, so a Turkish listener in an English
  * room saw English captions and took translation for broken.
  */

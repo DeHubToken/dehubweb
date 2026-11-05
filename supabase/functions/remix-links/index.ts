@@ -2,14 +2,14 @@
 //
 // Remix links: duets, stitches and reactions made from another creator's video.
 //
-// The remix itself is an ordinary DeHub post (a duet posts as a quote of its
+// The remix itself is an ordinary Riftn post (a duet posts as a quote of its
 // source). This function keeps the link between the two, which is what the
 // original creator gets back: credit on the remix, the lists and counts, a
 // notification, and split_bps of every tip on the remix (see use-tip-payment).
 //
 // Every write re-checks the source: it must be a public, ungated video, and
 // its creator's allow setting (per post, then account, then 'everyone') must
-// let the caller in. 'followers' asks the DeHub API whether the caller follows.
+// let the caller in. 'followers' asks the Riftn API whether the caller follows.
 //
 // Actions (POST JSON):
 //   check        { sourceTokenId, kind }               may the caller remix it? signed in.

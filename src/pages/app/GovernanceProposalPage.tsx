@@ -99,9 +99,15 @@ export default function GovernanceProposalPage() {
   // The discussion panel sits under the card; the comment action and a
   // comment deep link both bring it into view.
   const discussionRef = useRef<HTMLDivElement>(null);
+  // The discussion brings the linked comment itself on screen. Only when that
+  // comment is gone (deleted since) does the panel scroll to its top instead.
   useEffect(() => {
     if (!focusedCommentId || !proposal) return;
-    discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const timer = window.setTimeout(() => {
+      const row = discussionRef.current?.querySelector(`[data-comment-id="${CSS.escape(focusedCommentId)}"]`);
+      if (!row) discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1500);
+    return () => window.clearTimeout(timer);
   }, [focusedCommentId, proposal]);
 
   const currentVote = userVotes?.[proposalId ?? '']?.type;
@@ -160,7 +166,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io${proposalPath(proposal)}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} | Riftn Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "Riftn governance proposal, vote and discuss." })).slice(0, 155)} url={`https://riftn.com${proposalPath(proposal)}`} type="article" {...(proposal.media_type === 'image' && proposal.media_url ? { image: proposal.media_url } : {})} />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}

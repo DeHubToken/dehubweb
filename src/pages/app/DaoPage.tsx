@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -318,20 +319,20 @@ export default function DaoPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury — Fund DeHub and Earn a Say" })}
-        description={_copy("copy.02ce53459982", { defaultValue: "The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent." })}
-        url="https://dehub.io/dao"
-        image="https://dehub.io/og/dao.jpg"
+        title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury: Fund Riftn and Earn a Say" })}
+        description={_copy("copy.02ce53459982", { defaultValue: "The Riftn DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent." })}
+        url="https://riftn.com/dao"
+        image="https://riftn.com/og/dao.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebPage',
-          name: 'DeHub DAO Treasury',
-          url: 'https://dehub.io/dao',
-          description: _copy("copy.9bab7b8fd081", { defaultValue: "The DeHub DAO treasury — live balance, contributors and their decision-making share." }),
-          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+          name: 'Riftn DAO Treasury',
+          url: 'https://riftn.com/dao',
+          description: _copy("copy.9bab7b8fd081", { defaultValue: "The Riftn DAO treasury — live balance, contributors and their decision-making share." }),
+          isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' },
         }}
       />
-      <h1 className="sr-only">{_copy("copy.730f5eed0d6e", { defaultValue: "DeHub DAO Treasury — Decentralised, User Owned Social Media" })}</h1>
+      <h1 className="sr-only">{_copy("copy.730f5eed0d6e", { defaultValue: "Riftn DAO Treasury — Decentralised, User Owned Social Media" })}</h1>
 
       <PageIsland
         icon="dao"
@@ -356,7 +357,7 @@ export default function DaoPage() {
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500">{t('dao.treasuryBalance')}</div>
               <div className="text-3xl sm:text-4xl font-bold text-white tabular-nums mt-1">
-                {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-zinc-500" /> : <DhbAmount amount={formatDhb(data?.totalBalance ?? 0)} iconClassName="h-7 w-7 sm:h-8 sm:w-8" className="gap-2" />}
+                {isLoading ? <Skeleton className="h-9 sm:h-10 w-44 rounded-lg" aria-hidden /> : <DhbAmount amount={formatDhb(data?.totalBalance ?? 0)} iconClassName="h-7 w-7 sm:h-8 sm:w-8" className="gap-2" />}
               </div>
             </div>
             <button

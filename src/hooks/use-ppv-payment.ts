@@ -4,7 +4,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * ================
  * Pay-Per-View unlock via StreamController.sendFundsForPPV (#44).
  * A wallet short of DHB hands off to the top-up step, which funds the gap
- * from any token — DeHub Pay first, Uniswap as the fallback.
+ * from any token — Riftn Pay first, Uniswap as the fallback.
  *
  * Running out of DHB is a step, not an error. Every shortfall used to end in a
  * toast: the sheet stayed on "Pay 5,000 DHB", the viewer had no way to act on
@@ -206,9 +206,9 @@ export function usePPVPayment({
           setIsPaying(false);
         };
 
-        // The top-up step funds the gap from any token, DeHub Pay first and
+        // The top-up step funds the gap from any token, Riftn Pay first and
         // Uniswap only as its fallback. A silent ETH swap here would skip
-        // DeHub Pay entirely, so every Base shortfall goes to the step.
+        // Riftn Pay entirely, so every Base shortfall goes to the step.
         raiseShortfall(isAutoSwapSupported(chainId));
         return;
       }

@@ -10,8 +10,8 @@
 import { buildStageCover, stageCoverTitleScale } from '../src/lib/stage-cover.ts';
 import { wrapPostText } from './post-share-card.js';
 
-export const STAGE_CARD_VERSION = 'v2';
-const ORIGIN = 'https://dehub.io';
+export const STAGE_CARD_VERSION = 'v5';
+const ORIGIN = 'https://riftn.com';
 
 export function stageShareImageUrl(id) {
   return `${ORIGIN}/_og/stage/${STAGE_CARD_VERSION}/${encodeURIComponent(id)}.png`;
@@ -34,7 +34,7 @@ export function stageCardAssetPaths(stage) {
   return {
     background: `/brand-kit/bg/${m.background}.jpg`,
     mic: '/brand-kit/icons/mic.png',
-    wordmark: '/brand-kit/brand/wordmark-black.png',
+    wordmark: '/brand-kit/brand/riftn-logo-white.png',
   };
 }
 
@@ -90,7 +90,7 @@ export function renderStageCardSvg(stage, images = {}) {
   };
   const tagX = m.status === 'live' ? left + 2 * U : left;
   const wordmarkW = 14.6 * U * 0.62;
-  const wordmarkH = wordmarkW * (417 / 1752);
+  const wordmarkH = wordmarkW * (213 / 720);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
@@ -109,8 +109,7 @@ export function renderStageCardSvg(stage, images = {}) {
   ${images.mic ? `<image href="${images.mic}" xlink:href="${images.mic}" x="${n(micX)}" y="${n(micY)}" width="${n(micW)}" height="${n(micH)}" transform="${micTransform}"/>` : ''}
   ${m.sparkles.map(sparkle).join('')}
 
-  <rect x="${n(left)}" y="${n(4.2 * U)}" width="${n(wordmarkW + 2.8 * U)}" height="${n(wordmarkH + 1.8 * U)}" rx="${n(0.9 * U)}" fill="#f4f4f5"/>
-  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left + 1.4 * U)}" y="${n(5.1 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left + 1.4 * U)}" y="${n(5.1 * U + wordmarkH * 0.85)}" font-family="Exo" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#09090b">DEHUB</text>`}
+  ${images.wordmark ? `<image href="${images.wordmark}" xlink:href="${images.wordmark}" x="${n(left)}" y="${n(4.6 * U)}" width="${n(wordmarkW)}" height="${n(wordmarkH)}"/>` : `<text x="${n(left)}" y="${n(4.6 * U + wordmarkH * 0.85)}" font-family="Exo" font-weight="700" font-size="${n(wordmarkH)}" letter-spacing="${n(0.2 * U)}" fill="#fff">RIFTN</text>`}
   <text x="${n(W - 5.7 * U)}" y="${n(6.2 * U)}" text-anchor="end" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".82">// type = "${escape(t('stageCover.stage'))}"</text>
   <path d="M${n(W - 22 * U)} ${n(5.2 * U)}v-${n(U)}h${n(U)}M${n(W - 4.4 * U)} ${n(6.6 * U)}v${n(U)}h-${n(U)}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5"/>
 
@@ -119,7 +118,6 @@ export function renderStageCardSvg(stage, images = {}) {
   <text font-family="Exo" font-weight="700" font-size="${size}" fill="url(#chrome)">${lines.map((line, i) => `<tspan x="${n(left)}" y="${n(titleY + i * lineH)}">${escape(line)}</tspan>`).join('')}</text>
   ${kv ? `<text x="${n(left)}" y="${kvY}" font-family="Consolas" font-size="${kvSize}" fill="#fff" fill-opacity=".6">${escape(wrapPostText(kv, kvSize, 56 * U, 1)[0] || '')}</text>` : ''}
 
-  <rect x="${n(left)}" y="${n(H - 4.2 * U - 3.1 * U)}" width="${n(18.4 * U)}" height="${n(3.1 * U)}" rx="${n(0.5 * U)}" fill="#000" fill-opacity=".35" stroke="#fff" stroke-opacity=".3" stroke-width="1.5"/>
-  <text x="${n(left + 1.4 * U)}" y="${n(H - 4.2 * U - 1.05 * U)}" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".85">// dehub.io/stages</text>
+  <text x="${n(left)}" y="${n(H - 4.2 * U - 1.05 * U)}" font-family="Consolas" font-size="${n(1.5 * U)}" fill="#fff" fill-opacity=".85">// riftn.com/stages</text>
 </svg>`;
 }

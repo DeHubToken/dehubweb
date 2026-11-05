@@ -5,7 +5,7 @@ import { tokenLabel } from '@/lib/token-label';
 /**
  * /app/migrate-youtube — "Migrate all"
  * =====================================
- * Bulk-import a creator's whole channel or profile as DeHub posts, one paid
+ * Bulk-import a creator's whole channel or profile as Riftn posts, one paid
  * batch at a time. Paste the address, tick the ownership box, pick what to
  * bring over, pay once in DHB, and the import runs in the background.
  *
@@ -120,7 +120,7 @@ import {
 type Stage = 'loading' | 'idle' | 'fetching' | 'listing' | 'quoting' | 'paying' | 'processing' | 'done';
 
 /** Two attempts at a theme-token color (`border-primary`, then
- * `border-foreground`) both went invisible on some DeHub theme — this app
+ * `border-foreground`) both went invisible on some Riftn theme — this app
  * remaps named colors per theme, so any semantic token can end up close to
  * its own background. Bracket syntax below is a literal, unthemed color:
  * black border, white fill, on every theme, full stop.
@@ -548,8 +548,8 @@ export default function YoutubeMigratePage() {
       <SEOHead
         title={t('migrate.seoTitle')}
         description={t('migrate.seoDescription')}
-        url="https://dehub.io/migrate-youtube"
-        image="https://dehub.io/og/migrate-youtube.jpg"
+        url="https://riftn.com/migrate-youtube"
+        image="https://riftn.com/og/migrate-youtube.jpg"
       />
 
       {/* Sticky nav pill — the page's own header bento, pinned below the

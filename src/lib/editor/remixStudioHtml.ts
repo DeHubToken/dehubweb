@@ -234,7 +234,7 @@ source.addEventListener('error',()=>liveError(new Error('This video cannot be lo
 source.addEventListener('waiting',()=>{if(recording && !REACT && (!stitch||(performance.now()-started)/1000<range().cut))liveError(new Error('Source playback stalled. Please retry after it has loaded.'));});
 try {
   if(!['green-screen','duet','sound','stitch','react'].includes(config.mode)||!/^https:\/\//.test(config.videoUrl))throw new Error('Invalid remix source.');
-  if(!navigator.mediaDevices?.getUserMedia || !canvas.captureStream || typeof MediaRecorder==='undefined')throw new Error('Live recording is unavailable in this browser. Use the latest Chrome or the DeHub app.');
+  if(!navigator.mediaDevices?.getUserMedia || !canvas.captureStream || typeof MediaRecorder==='undefined')throw new Error('Live recording is unavailable in this browser. Use the latest Chrome or the Riftn app.');
   await waitMedia(source,'loadeddata',()=>{source.src=config.videoUrl;source.muted=true;});
   if(!Number.isFinite(source.duration)||source.duration<.25)throw new Error('Choose a finished video with a known duration.');
   $('trim').max=String(Math.max(0,source.duration-(stitch?1:.5)));$('sourcePos').max=String(source.duration);if(REACT && source.videoWidth>source.videoHeight){$('layout').value='landscape';applyLayout();}ready=true;$('sample').disabled=false;trimWindow();controls();status(stitch?'Pick the part to stitch, then enable your camera or upload a clip.':'Choose a source range, then enable your camera.');send('ready');animation=requestAnimationFrame(draw);

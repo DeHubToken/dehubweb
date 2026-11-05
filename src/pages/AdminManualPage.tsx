@@ -5,13 +5,13 @@ import ArrowLeft from "@/components/ui/cut-icons/back";
 import { SEOHead } from "@/components/SEOHead";
 import manualHtml from "@/content/godmode-manual.html?raw";
 
-const PAGE_URL = "https://dehub.io/admin-manual";
-const OG_IMAGE = "https://dehub.io/og/admin-manual.jpg";
+const PAGE_URL = "https://riftn.com/admin-manual";
+const OG_IMAGE = "https://riftn.com/og/admin-manual.jpg";
 
 /**
  * The moderation handbook, published.
  *
- * DeHub is community owned and community run, so the rules its moderators work
+ * Riftn is community owned and community run, so the rules its moderators work
  * to are not an internal document — anyone whose post was hidden can read
  * exactly what the person who hid it was told to do, and hold them to it. The
  * same file is served inside the moderation panel at godmode.dehub.io/manual;
@@ -28,24 +28,24 @@ const AdminManualPage = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    headline: "The DeHub Moderation Handbook",
+    headline: "The Riftn Moderation Handbook",
     description:
-      _copy("copy.d9c926ebb693", { defaultValue: "The rules DeHub moderators work to, published in full: what gets banned, what gets marked mature, and what never gets touched." }),
+      _copy("copy.d9c926ebb693", { defaultValue: "The rules Riftn moderators work to, published in full: what gets banned, what gets marked mature, and what never gets touched." }),
     url: PAGE_URL,
     image: OG_IMAGE,
     inLanguage: "en",
     isAccessibleForFree: true,
     publisher: {
       "@type": "Organization",
-      name: "DeHub",
-      url: "https://dehub.io",
+      name: "Riftn",
+      url: "https://riftn.com",
     },
   };
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[#08080b]">
       <SEOHead
-        title={_copy("copy.839863ca3201", { defaultValue: "The DeHub Moderation Handbook" })}
+        title={_copy("copy.839863ca3201", { defaultValue: "The Riftn Moderation Handbook" })}
         description={_copy("copy.df2f6eb384d2", { defaultValue: "The rules our moderators work to, published in full. Only malicious actors get banned, adult content gets marked mature rather than deleted, and everything else is left to the community." })}
         url={PAGE_URL}
         image={OG_IMAGE}
@@ -58,12 +58,12 @@ const AdminManualPage = () => {
           to="/app"
           className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/55 transition-colors hover:text-white"
         >
-          <ArrowLeft className="h-3.5 w-3.5" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to DeHub" })}</Link>
+          <ArrowLeft className="h-3.5 w-3.5" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to Riftn" })}</Link>
       </header>
 
       <iframe
         srcDoc={manualHtml}
-        title={_copy("copy.de6643a18736", { defaultValue: "The DeHub moderation handbook" })}
+        title={_copy("copy.de6643a18736", { defaultValue: "The Riftn moderation handbook" })}
         className="min-h-0 w-full flex-1 border-0 bg-[#08080b]"
       />
     </div>

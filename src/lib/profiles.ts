@@ -1,7 +1,7 @@
 /**
  * Profiles on this device.
  * ========================
- * One browser can hold several DeHub accounts. The list lives in localStorage
+ * One browser can hold several Riftn accounts. The list lives in localStorage
  * (`dehub_profiles_v1`); each entry keeps the account's public identity plus a
  * snapshot of the session keys it had the last time it was active, so switching
  * back is silent instead of a fresh login.
@@ -10,7 +10,7 @@
  * token systems rotate their refresh tokens on use, so a stash written at
  * login time holds a refresh token that the next background refresh will
  * invalidate. Hence the listeners in initProfileTracking: every successful
- * token refresh (DeHub's `dehub:token-refreshed`, Supabase's TOKEN_REFRESHED)
+ * token refresh (Riftn's `dehub:token-refreshed`, Supabase's TOKEN_REFRESHED)
  * and every pagehide re-snapshot the current account, which keeps its stored
  * copy perpetually fresh and means the value left behind when the account goes
  * inactive was never handed to a rotation since.
@@ -140,8 +140,28 @@ export function currentProfileId(): string | null {
   return currentIdentity()?.id ?? null;
 }
 
+/**
+ * One row per Riftn account. Usernames are unique, so two rows sharing one are
+ * the same person under an old and a new address — a wallet reset moves the
+ * profile to a new smart account and leaves the old row behind. The most
+ * recently added row is the address the account lives on now.
+ */
+function withoutStaleDuplicates(profiles: StoredProfile[]): StoredProfile[] {
+  const newest = new Map<string, StoredProfile>();
+  for (const p of profiles) {
+    const key = p.username?.toLowerCase();
+    if (!key) continue;
+    const seen = newest.get(key);
+    if (!seen || p.addedAt > seen.addedAt) newest.set(key, p);
+  }
+  return profiles.filter((p) => {
+    const key = p.username?.toLowerCase();
+    return !key || newest.get(key) === p;
+  });
+}
+
 export function listProfiles(): StoredProfile[] {
-  return readStore().sort((a, b) => b.lastActiveAt - a.lastActiveAt);
+  return withoutStaleDuplicates(readStore()).sort((a, b) => b.lastActiveAt - a.lastActiveAt);
 }
 
 function parseBadgeBalance(value: number | string | null | undefined): number | null {
@@ -416,7 +436,7 @@ export function stageIncomingIdentity(options?: {
   /**
    * For the social / email / phone path, where the INCOMING identity's
    * Supabase session has already landed and been persisted under
-   * `sb-*-auth-token` before the outgoing DeHub keys come down. Wiping it
+   * `sb-*-auth-token` before the outgoing Riftn keys come down. Wiping it
    * there would destroy the very session the login is being built from.
    */
   keepSupabaseSession?: boolean;
@@ -426,7 +446,7 @@ export function stageIncomingIdentity(options?: {
   for (const key of SESSION_KEYS) localStorage.removeItem(key);
   if (!options?.keepWagmiKeys) wipeWagmiKeys();
   // Without this, the Supabase client's next boot hydrates the OUTGOING
-  // user's session while every DeHub key belongs to the new one.
+  // user's session while every Riftn key belongs to the new one.
   if (!options?.keepSupabaseSession) wipeSupabaseStorageKeys();
   localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
   localStorage.removeItem(SUPA_LOGIN_PENDING_AT_KEY);

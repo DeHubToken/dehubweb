@@ -2,7 +2,7 @@
  * Creator Flow — edge and handle styling.
  * =======================================
  *
- * Most node canvases colour every handle role. DeHub's design system is black, white
+ * Most node canvases colour every handle role. Riftn's design system is black, white
  * and zinc only, so a role is told apart by weight and dash instead: text is
  * a thin solid line, media is thicker, video is dashed. The icons on the
  * handles carry the rest.

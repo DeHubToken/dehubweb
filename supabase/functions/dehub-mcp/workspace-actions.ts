@@ -118,7 +118,7 @@ export async function deliverAlert(db: any, agentId: string, webhook: string, re
   let delivered = false;
   try {
     const response = await fetch(webhook, { method: 'POST', redirect: 'error', signal: AbortSignal.timeout(5000), headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: `A DeHub action needs attention (${status}). Review it at https://dehub.io/agents`, allowed_mentions: { parse: [] } }) });
+      body: JSON.stringify({ content: `A Riftn action needs attention (${status}). Review it at https://riftn.com/agents`, allowed_mentions: { parse: [] } }) });
     delivered = response.ok;
   } catch { /* Delivery failures must not retry public actions. */ }
   checked(await db.from('ai_agent_receipts').update({ alert_delivery: delivered ? 'delivered' : 'failed' }).eq('id', receiptId));

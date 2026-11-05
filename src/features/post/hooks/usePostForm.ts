@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
@@ -31,6 +32,7 @@ import { startDraftImage, resolveDraftImages } from '../lib/draftImages';
 import { MEDIA_LIMITS } from '@/constants/post.constants';
 import { splitTitleFromText } from '@/features/post/lib/title-split';
 import { shrinkComicPages } from '@/lib/comic-pages';
+import type { ComicBorder } from '@/lib/comic-borders';
 import { getComicImageLimitForBadge, getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-image-allowance';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
@@ -372,6 +374,8 @@ export function usePostForm(
   const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   // The content warning being written: null is "none", '' is "toggled on, still empty".
   const [contentWarning, setContentWarning] = useState<string | null>(null);
+  /** The comic's border preset; null is the theme's own foil. */
+  const [comicBorder, setComicBorder] = useState<ComicBorder | null>(null);
   // The poster closed the $TICKER / address card, so the post goes out without one.
   const [hideAssetCards, setHideAssetCards] = useState(false);
   /** 'comic' when the Comic tab is open: photos post as collector cards. */
@@ -1153,7 +1157,8 @@ export function usePostForm(
     
     try {
       const { data, error } = await supabase.functions.invoke('enhance-text', {
-        body: { text: text.trim(), mode, style }
+        body: { text: text.trim(), mode, style },
+        headers: ownKeyHeaders(),
       });
 
       if (error) {
@@ -1279,6 +1284,7 @@ export function usePostForm(
     setContentWarning(null);
     setHideAssetCards(false);
     setPostLayout(null);
+    setComicBorder(null);
     setQuotePolicy('public');
     setReplyPolicy('public');
     setStitchPolicy(null);
@@ -2063,6 +2069,7 @@ export function usePostForm(
         mediaCaptions: postLayout === 'comic' && media.some(m => m.caption?.trim())
           ? media.filter(m => m.type === 'image').map(m => m.caption?.trim() || '')
           : undefined,
+        comicBorder: postLayout === 'comic' ? comicBorder ?? undefined : undefined,
         quotePolicy,
         replyPolicy,
         // A livestream and a quote are always public.
@@ -2572,6 +2579,37 @@ export function usePostForm(
             thumbnail: media[0].thumbnail || undefined,
           });
         }
+      } else if (postType === 'feed-audio' && media.some(m => m.type === 'audio')) {
+        // Music post: it used to fall through to the text card below, which
+        // showed only the name and "Just now" until a reload.
+        const track = media.find(m => m.type === 'audio')!;
+        const seconds = track.duration || 0;
+        const audioPost: VideoItem = {
+          id: optimisticId,
+          type: 'video',
+          thumbnail: track.thumbnail || '',
+          audioUrl: track.preview,
+          audioDuration: seconds,
+          isAudio: true,
+          duration: `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`,
+          title: submittedTitle.trim(),
+          description: submittedDescription,
+          channel: username,
+          channelAvatar: avatar || '',
+          verified: false,
+          views: '0',
+          uploadedAgo: _copy("copy.66f53417d3b7", { defaultValue: "Just now" }),
+          creatorId: user?.address,
+          creatorUsername: username,
+          creatorBadgeBalance: user?.badgeBalance,
+          createdAt: new Date().toISOString(),
+          isLiked: false,
+          likeCount: 0,
+          dislikeCount: 0,
+          commentCount: 0,
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'video', data: audioPost, createdAt: new Date() });
       } else if (hasImage && media[0]) {
         // Image post
         const imagePost: ImagePost = {
@@ -2674,7 +2712,7 @@ export function usePostForm(
           tokenId: String(mintResponse.createdTokenId),
           streamKey: provisioned.streamKey,
           ingestUrl: provisioned.ingestUrl || '',
-          playbackUrl: `https://dehub.io/app/post/${mintResponse.createdTokenId}`,
+          playbackUrl: `https://riftn.com/app/post/${mintResponse.createdTokenId}`,
           streamId: String(provisioned._id),
           playbackId: provisioned.playbackId,
           provider: provisioned.provider,
@@ -2859,7 +2897,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
-    isQuoting, quotedPost, contentWarning, hideAssetCards, postLayout, quotePolicy, replyPolicy, visibility, stitchPolicy,
+    isQuoting, quotedPost, contentWarning, hideAssetCards, postLayout, comicBorder, quotePolicy, replyPolicy, visibility, stitchPolicy,
     , _copy
   ]);
 
@@ -2895,6 +2933,7 @@ export function usePostForm(
       contentWarning,
       hideAssetCards,
       postLayout,
+      comicBorder,
       quotePolicy,
       replyPolicy,
       stitchPolicy,
@@ -2966,6 +3005,7 @@ export function usePostForm(
       setMediaDescription,
       setMediaCaption,
       setPostLayout,
+      setComicBorder,
       addComicPages,
       handleEnhanceWithAI,
       insertFormatting,

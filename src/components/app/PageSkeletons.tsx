@@ -7,7 +7,7 @@
  * bentos, sticky headers, sidebars — still renders as skeleton, because that is
  * what holds the layout still across the boot HTML → Suspense fallback → real
  * component handoff. The CONTENT area does not: a stack of grey blocks
- * pretending to be posts reads as a broken page, so it shows the animated DeHub
+ * pretending to be posts reads as a broken page, so it shows the animated Riftn
  * mark instead (ContentLoader below). Content is the part whose shape we can't
  * know anyway.
  *
@@ -26,7 +26,7 @@ const SK = "theme-skeleton";
 const SK_LIGHT = "theme-skeleton";
 
 /**
- * Content-area stand-in: the animated DeHub mark, centred in whatever box the
+ * Content-area stand-in: the animated Riftn mark, centred in whatever box the
  * page's chrome leaves for it.
  *
  * The mark fades in on a 250 ms delay (see index.css `.dehub-loader-mark`), so

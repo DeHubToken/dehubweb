@@ -200,7 +200,7 @@ export function DmTipDialog({
         </DrawerHeader>
         <div className="flex flex-col gap-4">
           {recipientPrivate ? (
-            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">{_copy("copy.1e8349d4cb8e", { defaultValue: "This account has private balance mode on, so DeHub cannot send tokens or tips to it." })}</div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">{_copy("copy.1e8349d4cb8e", { defaultValue: "This account has private balance mode on, so Riftn cannot send tokens or tips to it." })}</div>
           ) : null}
           {/* Quick amounts */}
           <div>

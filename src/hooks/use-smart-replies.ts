@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { ownKeyHeaders } from '@/lib/api/dehub/own-key-headers';
 
 /** One turn of context handed to the drafter. Trimmed by the edge function. */
 export interface SmartReplyTurn {
@@ -74,7 +75,7 @@ export function useSmartReplies(thread: SmartReplyTurn[], peerName?: string) {
 
     const payload = JSON.stringify({ thread, peerName });
     const url = `${FUNCTIONS_BASE}/functions/v1/suggest-replies`;
-    const headers = { 'Content-Type': 'application/json', apikey: ANON_KEY };
+    const headers = { 'Content-Type': 'application/json', apikey: ANON_KEY, ...ownKeyHeaders() };
 
     try {
       let data: { suggestions?: unknown; error?: string } | null = null;

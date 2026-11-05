@@ -472,7 +472,7 @@ function WarBootSequence() {
         data-war-boot-panel
         className="relative z-10 w-full max-w-xl px-6 text-center"
       >
-        <p data-war-boot-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "DEHUB // TACTICAL NETWORK" })}</p>
+        <p data-war-boot-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "RIFTN // TACTICAL NETWORK" })}</p>
         <h1 data-war-boot-title>{_copy("copy.2c01f8850300", { defaultValue: "ESTABLISHING SECURE LINK" })}</h1>
         <p data-war-boot-sub>{_copy("copy.1d1b5289a648", { defaultValue: "STAND BY FOR OPERATOR CLEARANCE" })}</p>
 

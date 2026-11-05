@@ -29,7 +29,7 @@ const CACHE_PREFIX = 'img-translate:';
 
 // Same key/order useUserLanguage resolves with, read directly so the hook stays
 // free of context. Browser locale is only the fallback: reading it first (as
-// this hook used to) meant a user browsing DeHub in Turkish on an English
+// this hook used to) meant a user browsing Riftn in Turkish on an English
 // Chrome got the OCR text handed back untranslated.
 const LANGUAGE_STORAGE_KEY = 'user-preferred-language';
 

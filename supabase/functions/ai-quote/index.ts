@@ -23,6 +23,13 @@ import { quoteVenice } from '../_shared/venice.ts';
 import { seedance2QuoteRoute } from '../_shared/seedance2-input.ts';
 import { AVATAR_MODEL, prepareAvatar } from '../_shared/creator-avatar.ts';
 import { kieKey } from '../_shared/kie.ts';
+import { optionalWallet, userKeyProviders } from '../_shared/byok.ts';
+
+/** Tools that run on a creator's own key when they saved one (see chargeForJob ownKeyProvider). */
+function ownKeyProviderFor(kind: unknown, modelId: string): string | null {
+  if (kind === 'tool' && modelId.startsWith('elevenlabs-')) return 'elevenlabs';
+  return null;
+}
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -32,6 +39,13 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
 
     const modelId = String(body?.modelId ?? '');
+    const ownProvider = ownKeyProviderFor(body?.kind, modelId);
+    if (ownProvider) {
+      const wallet = await optionalWallet(req);
+      if (wallet && (await userKeyProviders(wallet)).has(ownProvider)) {
+        return jsonResponse({ priceDhb: 0, priceUsd: 0, pegUsd: DHB_USD_PEG, ownKey: ownProvider });
+      }
+    }
     if ((body.kind === 'image' && isVeniceImage(modelId)) || (body.kind === 'video' && isVeniceVideo(modelId))) {
       return jsonResponse({ ...await quoteVenice(modelId, body), pegUsd: DHB_USD_PEG });
     }

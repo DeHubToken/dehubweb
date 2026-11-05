@@ -154,7 +154,7 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
   }, []);
   const onReady = useCallback(() => setReady(true), []);
 
-  // Adding and paying both go through a sheet DeHub draws over the app:
+  // Adding and paying both go through a sheet Riftn draws over the app:
   // nothing is added and nothing leaves the wallet without that tap.
   const slug = app.slug;
   const addAppFlow = useCallback(async () => {
@@ -373,7 +373,7 @@ function Unavailable({ message }: { message: string }) {
   const { t } = useTranslation();
   return (
     <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
-      <SEOHead title={`${t('miniApps.store.title')} | DeHub`} noindex />
+      <SEOHead title={`${t('miniApps.store.title')} | Riftn`} noindex />
       <AlertTriangle className="h-8 w-8 text-zinc-600" />
       <p className="max-w-sm text-sm text-zinc-400">{message}</p>
       <Button asChild size="sm" className="rounded-full text-xs">
@@ -391,7 +391,7 @@ export function MiniAppDevRunPage() {
   if (!url) return <Unavailable message={t('miniApps.host.badUrl')} />;
   return (
     <>
-      <SEOHead title={`${t('miniApps.dev.title')} | DeHub`} noindex />
+      <SEOHead title={`${t('miniApps.dev.title')} | Riftn`} noindex />
       <MiniAppFrame
         dev
         app={{
@@ -434,14 +434,14 @@ export default function MiniAppPage() {
   const url = listing ? launchUrl(listing.home_url, searchParams) : null;
   if (!listing || !url) return <Unavailable message={t('miniApps.host.notFound')} />;
 
-  const pageUrl = `https://dehub.io/apps/${listing.slug}`;
+  const pageUrl = `https://riftn.com/apps/${listing.slug}`;
   return (
     <>
       <SEOHead
-        title={`${listing.name} | ${t('miniApps.store.title')} | DeHub`}
+        title={`${listing.name} | ${t('miniApps.store.title')} | Riftn`}
         description={listing.description ?? listing.subtitle ?? undefined}
         url={pageUrl}
-        image="https://dehub.io/og/apps.jpg"
+        image="https://riftn.com/og/apps.jpg"
         noindex={listing.tier === 'unlisted'}
         jsonLd={{
           '@context': 'https://schema.org',

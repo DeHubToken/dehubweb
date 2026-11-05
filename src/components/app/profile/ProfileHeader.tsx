@@ -192,6 +192,8 @@ export function ProfileHeader({
   const [pinMoreOpen, setPinMoreOpen] = useState(false);
   const hasMorePins = pinnedCommunities.filter(pin => pin.communities).length > 1;
 
+  const coverSrc = profile.coverUrl || getDefaultBanner(profile.walletAddress);
+
   return (
     <div data-profile-header data-profile-art={featuredCommunity ? true : undefined} data-keep-dark={featuredCommunity ? true : undefined} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
@@ -199,19 +201,23 @@ export function ProfileHeader({
         <Skeleton data-profile-cover className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
       ) : (
         <button 
-          data-profile-cover className="block aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
+          data-profile-cover data-pull-through className="relative block aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
           onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
         >
           {/* The cover is the profile's LCP element. It was always fetched at
               1500 px wide; a phone renders it at ~375 CSS px. */}
           <img
-            src={profile.coverUrl || getDefaultBanner(profile.walletAddress)}
+            src={coverSrc}
             srcSet={cdnImageSrcSet(profile.coverUrl, [480, 736, 1100, 1500])}
             sizes="(min-width: 1024px) 700px, 100vw"
             alt={_copy("copy.fa8d84566676", { defaultValue: "Cover" })}
             className="w-full h-full object-cover"
             fetchPriority="high"
           />
+          {/* Phone pull-to-refresh: the photo itself stretches up into the gap
+              and two blur panes deepen toward the top (profile-pull.css). */}
+          <span data-profile-cover-blur="soft" aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
+          <span data-profile-cover-blur="deep" aria-hidden style={{ backgroundImage: `url("${coverSrc}")` }} />
         </button>
       )}
       
@@ -220,10 +226,14 @@ export function ProfileHeader({
         {featuredCommunity && <PinnedCommunityWash community={featuredCommunity} />}
         {/* Avatar */}
         <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
-          <div className="relative">
+          <div className="relative" data-profile-avatar>
+              <svg data-profile-pull-ring aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none">
+                <rect x="2" y="2" width="96" height="96" rx="15" pathLength="100" />
+              </svg>
               <LiveRipple ids={[apiProfile?.walletAddress ?? profile.walletAddress, profile.handle]} size="lg" className="rounded-xl">
                 <button 
                   data-keep-dark
+                  data-pull-through
                   className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 backdrop-blur-none p-0.5 cursor-pointer disabled:cursor-default"
                   onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                   disabled={!profile.avatarUrl}
@@ -373,7 +383,7 @@ export function ProfileHeader({
               <button
                 onClick={() => {
                   const username = profile.handle.replace('@', '');
-                  navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${username}`));
+                  navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${username}`));
                   trackShare('copy_link', { kind: 'profile' });
                   toast.success(_copy("copy.04a12cab619d", { defaultValue: "Profile URL copied to clipboard" }));
                 }}
@@ -389,11 +399,11 @@ export function ProfileHeader({
                    the .eth URL because that is the one worth showing off. */
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.ensName}`));
+                    navigator.clipboard.writeText(viewerShareUrl(`https://riftn.com/${profile.ensName}`));
                     trackShare('copy_link', { kind: 'profile' });
                     toast.success(_copy("copy.0877581001b8", { defaultValue: "ENS profile URL copied to clipboard" }));
                   }}
-                  title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name — dehub.io/{{value1}}", value1: profile.ensName })}
+                  title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name: riftn.com/{{value1}}", value1: profile.ensName })}
                   className="rounded-md bg-zinc-800/60 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700/50 hover:text-white"
                 >
                   {profile.ensName}
@@ -505,7 +515,7 @@ export function ProfileHeader({
                   )}
                 </div>
               )}
-              {/* DeHub followers plus the verified counts of the creator's
+              {/* Riftn followers plus the verified counts of the creator's
                   connected socials. Absent until one carries a count. */}
               <TotalReachPill wallet={apiProfile?.walletAddress ?? profile.walletAddress} followers={profile.followers} />
               {/* On a phone the links ride at the end of the counts line and

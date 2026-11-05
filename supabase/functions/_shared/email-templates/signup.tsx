@@ -35,13 +35,13 @@ export const SignupEmail = ({
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;700&display=swap"
       />
     </Head>
-    <Preview>Your DeHub sign-up code{token ? ` — ${token}` : ''}</Preview>
+    <Preview>Your Riftn sign-up code{token ? ` — ${token}` : ''}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Section style={card}>
-          <Text style={brandMark}>DeHub</Text>
+          <Text style={brandMark}>Riftn</Text>
 
-          <Heading style={h1}>Welcome to DeHub</Heading>
+          <Heading style={h1}>Welcome to Riftn</Heading>
           <Text style={lede}>
             Enter this one-time code in the app to finish creating your account
             {recipient ? ` for ${recipient}` : ''}.
@@ -75,7 +75,7 @@ export const SignupEmail = ({
           will be created.
         </Text>
         <Text style={footerBrand}>
-          DeHub — Open source. Censorship resistant. User owned.
+          Riftn — Open source. Censorship resistant. User owned.
         </Text>
       </Container>
     </Body>

@@ -31,7 +31,7 @@ import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } f
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { BadgedName } from '@/components/app/BadgedName';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
 import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
@@ -53,16 +53,22 @@ import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { chatsFromMemberships } from '@/lib/community-kinds';
 
-function ConversationBadge({ user }: { user?: DeHubUser }) {
-  if (!user) return null;
+/**
+ * The other person's name with their badge sitting on its baseline, the same
+ * BadgedName system the feed uses. The badge rides straight after the name
+ * (before the online dot) so it reads as part of the name.
+ */
+function ConversationName({ user, children }: { user?: DeHubUser; children: React.ReactNode }) {
   return (
-    <BadgeIcon
-      badgeBalance={user.badgeBalance}
-      badgeLock={user.badgeLock}
-      username={user.username}
-      lookupId={user.address || user.wallet_address || user.username}
-      className="w-[14px] h-[14px]"
-    />
+    <BadgedName
+      badgeBalance={user?.badgeBalance}
+      badgeLock={user?.badgeLock}
+      username={user?.username}
+      lookupId={user ? user.username || user.address || user.wallet_address : null}
+      className="font-semibold text-white"
+    >
+      {children}
+    </BadgedName>
   );
 }
 
@@ -82,7 +88,7 @@ function ConversationsSkeleton() {
   );
 }
 
-function ConversationItem({
+export function ConversationItem({
   conversation,
   onClick,
   isSelected,
@@ -155,16 +161,14 @@ function ConversationItem({
           <span className="inline-flex items-center gap-1 min-w-0">
             {displayName ? (
               <>
-                <span className="font-semibold text-white truncate">{displayName}</span>
+                <ConversationName user={otherUser}>{displayName}</ConversationName>
                 <OnlineDot address={otherUser?.address} />
-                <ConversationBadge user={otherUser} />
                 {username && <span className="text-zinc-500 text-sm truncate">@{username}</span>}
               </>
             ) : (
               <>
-                <span className="font-semibold text-white truncate">{fallbackName}</span>
+                <ConversationName user={otherUser}>{fallbackName}</ConversationName>
                 <OnlineDot address={otherUser?.address} />
-                <ConversationBadge user={otherUser} />
               </>
             )}
           </span>
@@ -423,8 +427,8 @@ export default function MessagesPage() {
     }
   }, [isAuthenticated, conversations, isLoading, pendingDmTrigger]);
 
-  // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns DeHub data),
-  // upgrade selectedConversation so we use socket/DeHub instead of Supabase
+  // When conversations list gets a real dmId for the same peer (e.g. after getContacts returns Riftn data),
+  // upgrade selectedConversation so we use socket/Riftn instead of Supabase
   useEffect(() => {
     if (!selectedConversation || !conversations?.length) return;
     const selId = selectedConversation.id;
@@ -440,7 +444,7 @@ export default function MessagesPage() {
     }
   }, [selectedConversation, conversations]);
 
-  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from DeHub sooner.
+  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from Riftn sooner.
   // Route-gated: this page stays mounted forever (PersistentPageCache), so
   // without the pathname check the interval would poll for the whole session
   // after the user navigates away mid-handshake.
@@ -610,8 +614,8 @@ export default function MessagesPage() {
 
   return (
     <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
-      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://dehub.io/app/messages" />
-      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages: Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on Riftn, your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
+      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "Riftn Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <div className="h-full lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
             no surface at all — see [data-bento-flat] in index.css. The
@@ -768,7 +772,7 @@ export default function MessagesPage() {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-white truncate">{displayName}</span>
+                          <ConversationName user={user}>{displayName}</ConversationName>
                           {isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
                         </div>
                         {user.username && (

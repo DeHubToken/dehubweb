@@ -1,7 +1,7 @@
 /**
  * Sync Category Log
  * =================
- * Fetches all posts from the DeHub feed API, extracts categories with their
+ * Fetches all posts from the Riftn feed API, extracts categories with their
  * creation dates, and upserts them into category_post_log for accurate
  * time-windowed trending topic calculations (1D/1W/1M/1Y).
  *
@@ -33,7 +33,7 @@ Deno.serve(async (req: Request) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-    // 1. Fetch posts from DeHub feed API, paginating through all content
+    // 1. Fetch posts from Riftn feed API, paginating through all content
     const allRows: Array<{ token_id: number; name: string; posted_at: string }> = [];
     const activeTokenIds = new Set<number>();
     let page = 1;

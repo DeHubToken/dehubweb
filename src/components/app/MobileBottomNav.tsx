@@ -35,6 +35,7 @@ import Gamepad2 from "@/components/ui/cut-icons/arcade";
 import Home from "@/components/ui/cut-icons/home";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import MessageEnvelope from "@/components/ui/cut-icons/message-envelope";
+import { MessagesNavGlyph } from '@/components/app/navigation/MessagesNavGlyph';
 import Plus from "@/components/ui/cut-icons/add";
 import User from "@/components/ui/cut-icons/profile";
 import Search from "@/components/ui/cut-icons/search";
@@ -56,8 +57,9 @@ const PostModal = React.lazy(() =>
 );
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { isOwnProfilePath } from '@/lib/own-profile-path';
 import { openStageModal } from '@/contexts/StageContext';
-import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { useDmUnreadCount as useTotalUnreadCount } from '@/lib/dm-unread-store';
 import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
@@ -233,26 +235,42 @@ export function MobileBottomNav() {
   const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // First-visit scroll hint: nudge right then back to show more options
+  // First-visit scroll hint: nudge right then back to show more options.
+  // Only once the page has settled (no skeleton or loader on screen, nobody
+  // scrolling), so the bar never slides about while the page is still filling in.
   useEffect(() => {
     const HINT_KEY = 'dehub_nav_scroll_hint_seen';
-    if (localStorage.getItem(HINT_KEY)) return;
-    
-    const timer = setTimeout(() => {
+    try { if (localStorage.getItem(HINT_KEY)) return; } catch { return; }
+
+    let timer: number | undefined;
+    let lastScrollAt = 0;
+    const onScroll = () => { lastScrollAt = performance.now(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const pageBusy = () =>
+      !!document.querySelector('[data-skeleton], [data-dehub-loader]') ||
+      performance.now() - lastScrollAt < 1200;
+
+    let tries = 0;
+    const attempt = () => {
       const el = scrollRef.current;
       if (!el || el.scrollWidth <= el.clientWidth) return;
-      
+      if (pageBusy() && ++tries < 20) { timer = window.setTimeout(attempt, 700); return; }
+
       // Smooth scroll right
       el.scrollTo({ left: 120, behavior: 'smooth' });
-      
+
       // Then scroll back after a pause
-      setTimeout(() => {
+      timer = window.setTimeout(() => {
         el.scrollTo({ left: 0, behavior: 'smooth' });
-        localStorage.setItem(HINT_KEY, 'true');
+        try { localStorage.setItem(HINT_KEY, 'true'); } catch { /* private mode */ }
       }, 600);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
+    };
+    timer = window.setTimeout(attempt, 1500);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
 
@@ -382,7 +400,9 @@ export function MobileBottomNav() {
               const drag = barDragProps(id);
               const isActive = item.path === '/app'
                 ? isHomePath(location.pathname)
-                : location.pathname.startsWith(item.path);
+                : item.path === '/app/profile'
+                  ? isOwnProfilePath(location.pathname)
+                  : location.pathname.startsWith(item.path);
               const badge = item.label === 'Messages'
                 ? messagesUnread
                 : item.label === 'Notifications'
@@ -415,6 +435,8 @@ export function MobileBottomNav() {
                   <div className="relative w-5 h-5 md:w-6 md:h-6">
                     {item.label === 'Home' && isHomeRefreshing ? (
                       <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]" />
+                    ) : item.label === 'Messages' ? (
+                      <MessagesNavGlyph unread={messagesUnread} data-messages-nav-glyph className={glyphClass} />
                     ) : item.themedIcon ? (
                       <ThemedIcon icon={item.themedIcon} alt="" className={cn(glyphClass, 'object-contain')} />
                     ) : (
@@ -425,7 +447,7 @@ export function MobileBottomNav() {
                       />
                     )}
                     {badge > 0 && (
-                      <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none whitespace-nowrap">
+                      <span data-unread-chip className={cn(item.label === 'Messages' && 'max-md:hidden', "absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none whitespace-nowrap")}>
                         {badge > 99 ? '99+' : badge}
                       </span>
                     )}

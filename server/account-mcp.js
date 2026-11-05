@@ -13,10 +13,10 @@ const id = z.string().regex(/^\d{1,15}$/);
 const wallet = z.string().regex(/^0x[0-9a-fA-F]{40}$/);
 const media = z.string().url().max(4096).refine(value => {
   const u = new URL(value);
-  // Fetch only DeHub's media hosts. Never fetch caller-selected internal URLs.
+  // Fetch only Riftn's media hosts. Never fetch caller-selected internal URLs.
   return u.protocol === 'https:' && !u.username && !u.password && !u.port &&
     ['dehubcdn.ams3.cdn.digitaloceanspaces.com', 'aigxuutjaqsywioxjefr.supabase.co'].includes(u.hostname);
-}, 'Use a media URL from your DeHub library or uploads.');
+}, 'Use a media URL from your Riftn library or uploads.');
 const page = z.number().int().min(1).max(1000).default(1);
 const limit = z.number().int().min(1).max(50).default(20);
 const enc = encodeURIComponent;
@@ -47,7 +47,7 @@ export async function readJson(response) {
 export async function verifySession(token, fetcher = fetch) {
   const result = await readJson(await fetcher(`${API}/auth/verify`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(12000) }));
   const address = typeof result.address === 'string' ? result.address.toLowerCase() : '';
-  if (!/^0x[a-f0-9]{40}$/.test(address)) throw new Error('Invalid DeHub session. Sign in again.');
+  if (!/^0x[a-f0-9]{40}$/.test(address)) throw new Error('Invalid Riftn session. Sign in again.');
   return address;
 }
 async function api(ctx, path, method = 'GET', body) {
@@ -65,10 +65,10 @@ export async function edge(ctx, name, body) {
 }
 async function file(ctx, url, kind, maxBytes = 12 * 1024 * 1024) {
   const response = await ctx.fetch(media.parse(url), { redirect: 'manual', signal: AbortSignal.timeout(30000) });
-  if (!response.ok) throw new Error('Could not download the DeHub media.');
+  if (!response.ok) throw new Error('Could not download the Riftn media.');
   const mime = (response.headers.get('Content-Type') || '').split(';')[0];
   if (!mime.startsWith(`${kind}/`)) throw new Error(`Expected ${kind} media.`);
-  if (Number(response.headers.get('Content-Length')) > maxBytes) throw new Error('Media is too large for a chat upload. Use DeHub to publish it.');
+  if (Number(response.headers.get('Content-Length')) > maxBytes) throw new Error('Media is too large for a chat upload. Use Riftn to publish it.');
   const reader = response.body.getReader(), chunks = [];
   let size = 0;
   try {
@@ -76,7 +76,7 @@ async function file(ctx, url, kind, maxBytes = 12 * 1024 * 1024) {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > maxBytes) throw new Error('Media is too large for a chat upload. Use DeHub to publish it.');
+      if (size > maxBytes) throw new Error('Media is too large for a chat upload. Use Riftn to publish it.');
       chunks.push(value);
     }
   } finally { await reader.cancel().catch(() => {}); }
@@ -95,7 +95,7 @@ function tool(name, title, description, shape, scope, handler, { destructive = f
   } });
 }
 
-tool('dehub_features', 'Discover DeHub account controls', 'List the chat controls available for each DeHub feature and open the app for features that need its editor, live media or wallet signatures.', {}, null, async () => success({
+tool('dehub_features', 'Discover Riftn account controls', 'List the chat controls available for each Riftn feature and open the app for features that need its editor, live media or wallet signatures.', {}, null, async () => success({
   endpoint: RESOURCE,
   features: [
     { feature: 'Profile and privacy', tools: ['dehub_account','dehub_update_profile'] },
@@ -114,36 +114,36 @@ tool('dehub_features', 'Discover DeHub account controls', 'List the chat control
 
 // Public reads continue through the existing server, including its view accounting.
 for (const [name, title, shape] of [
-  ['dehub_feed', 'Browse DeHub posts', { sort: z.enum(['new','hot','trending','discussed']).optional(), category: text(100).optional(), search: text(200).optional(), limit, offset: z.number().int().min(0).max(10000).default(0) }],
-  ['dehub_post', 'Read a DeHub post', { token_id: id }],
+  ['dehub_feed', 'Browse Riftn posts', { sort: z.enum(['new','hot','trending','discussed']).optional(), category: text(100).optional(), search: text(200).optional(), limit, offset: z.number().int().min(0).max(10000).default(0) }],
+  ['dehub_post', 'Read a Riftn post', { token_id: id }],
   ['dehub_comments', 'Read post comments', { token_id: id, limit, page: z.number().int().min(0).max(1000).default(0) }],
   ['dehub_search', 'Search posts and people', { query: text(200), type: z.enum(['all','posts','users']).default('all'), limit }],
   ['dehub_profile', 'Look up a public profile', { user: text(100) }],
 ]) tool(name, title, `${title}. Public information; no account linking required.`, shape, null, async (args, ctx) => {
   const response = await ctx.fetch(`${EDGE}/dehub-mcp`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json, text/event-stream' },
     body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name, arguments: args } }) });
-  if (!response.ok) throw new Error(`Public DeHub lookup returned HTTP ${response.status}.`);
+  if (!response.ok) throw new Error(`Public Riftn lookup returned HTTP ${response.status}.`);
   const raw = (await response.text()).trim();
   const frame = raw.startsWith('{') ? raw : raw.split(/\r?\n/).filter(line => line.startsWith('data:')).at(-1)?.slice(5).trim();
   const result = JSON.parse(frame || '{}');
-  if (result.error || !result.result) throw new Error('Public DeHub lookup failed.');
+  if (result.error || !result.result) throw new Error('Public Riftn lookup failed.');
   return result.result;
 }, { open: true, read: true });
 
-tool('dehub_account', 'Get my connected DeHub account', 'Identify the connected account and read its profile. Use before changing a profile or publishing to confirm the active identity.', {}, 'dehub:read', async (_, ctx) => {
+tool('dehub_account', 'Get my connected Riftn account', 'Identify the connected account and read its profile. Use before changing a profile or publishing to confirm the active identity.', {}, 'dehub:read', async (_, ctx) => {
   const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
   return success({ id: ctx.wallet, display_name: p.displayName || p.username || ctx.wallet, username: p.username,
     profile: p, url: `${ORIGIN}/${enc(p.username || ctx.wallet)}`, granted_scopes: ctx.scopes });
 }, { read: true });
 
-tool('dehub_connected_profile', 'Identify the linked DeHub profile', 'Return the immutable identity and display label of the profile represented by this request\'s validated credentials.', {}, 'dehub:read', async (_, ctx) => {
+tool('dehub_connected_profile', 'Identify the linked Riftn profile', 'Return the immutable identity and display label of the profile represented by this request\'s validated credentials.', {}, 'dehub:read', async (_, ctx) => {
   const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
   const profileId = p?._id ?? p?.id;
   if (!['string','number'].includes(typeof profileId) || !String(profileId).trim()) throw new Error('The connected profile has no persistent identity.');
   return success({ id: String(profileId), name: p.displayName || p.username || ctx.wallet, ...(p.username ? { nickname: `@${p.username}` } : {}) });
 }, { read: true, profile: true });
 
-tool('dehub_update_profile', 'Update my DeHub profile', 'Change only the connected person\'s profile: bio, display name, username, avatar or cover. Images must come from DeHub uploads or the Creator library. Overwrites the selected profile fields.', {
+tool('dehub_update_profile', 'Update my Riftn profile', 'Change only the connected person\'s profile: bio, display name, username, avatar or cover. Images must come from Riftn uploads or the Creator library. Overwrites the selected profile fields.', {
   username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{1,30}$/).optional(), bio: z.string().max(2000).optional(), display_name: text(100).optional(),
   is_private: z.boolean().optional(), hide_badge_and_balance: z.boolean().optional(), hide_followers: z.boolean().optional(),
   avatar_url: media.optional(), banner_url: media.optional(),
@@ -172,7 +172,7 @@ tool('dehub_update_profile', 'Update my DeHub profile', 'Change only the connect
 }, { destructive: true, open: true });
 
 tool('dehub_my_posts', 'List my posts', 'Read the connected account\'s own published posts.', { page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/myPosts?page=${a.page}&limit=${a.limit}`)), { read: true });
-tool('dehub_create_post', 'Publish a DeHub post', 'Publish an ordinary text, image or video post as the connected person. Requires an explicit request to publish. Does not mint or sign blockchain transactions. Use one request_id for the same publication, including retries. Video needs a thumbnail.', {
+tool('dehub_create_post', 'Publish a Riftn post', 'Publish an ordinary text, image or video post as the connected person. Requires an explicit request to publish. Does not mint or sign blockchain transactions. Use one request_id for the same publication, including retries. Video needs a thumbnail.', {
   request_id: z.string().uuid(), content: text(500), title: text(150).optional(), media_url: media.optional(), media_type: z.enum(['image','video']).optional(), thumbnail_url: media.optional(), category: text(100).default('General'),
 }, 'dehub:social', async (a, ctx) => ctx.once('post', a.request_id, a, async () => {
   if (!!a.media_url !== !!a.media_type) throw new Error('Provide both media_url and media_type together.');
@@ -206,7 +206,7 @@ tool('dehub_follow', 'Follow or unfollow a person', 'Set the connected account\'
 }, { open: true });
 tool('dehub_follow_list', 'Read followers or following', 'List the connected account\'s followers or followed accounts.', { type: z.enum(['followers','following']), page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/follow_list/${ctx.wallet}?type=${a.type}&page=${a.page}&limit=${a.limit}`)), { read: true });
 tool('dehub_agent_welcomes', 'See my agents\' new member welcomes', 'List the agents the connected person owns, whether each follows and/or messages new members, its welcome text, daily number and what it did today.', {}, 'dehub:read', async (_, ctx) => success(await api(ctx, '/agent-welcome')), { read: true });
-tool('dehub_set_agent_welcome', 'Make my agent welcome new members', 'Switch one of the connected person\'s agents to follow and/or message people who just joined DeHub, or switch it off. The message is the person\'s own text ({name} becomes the new member\'s @username, no links). per_day is 1-10 (default 3); the agent never welcomes the same person twice and skips anyone who blocked or muted them, turned off new messages or hid from New members.', {
+tool('dehub_set_agent_welcome', 'Make my agent welcome new members', 'Switch one of the connected person\'s agents to follow and/or message people who just joined Riftn, or switch it off. The message is the person\'s own text ({name} becomes the new member\'s @username, no links). per_day is 1-10 (default 3); the agent never welcomes the same person twice and skips anyone who blocked or muted them, turned off new messages or hid from New members.', {
   agent: text(60), follow: z.boolean().optional(), message: z.boolean().optional(), text: z.string().max(500).optional(), per_day: z.number().int().min(1).max(10).optional(),
 }, 'dehub:social', async (a, ctx) => success(await api(ctx, `/agent-welcome/${enc(a.agent)}`, 'POST', { follow: a.follow, message: a.message, text: a.text, perDay: a.per_day })), { open: true, idempotent: true });
 tool('dehub_agent_welcome_log', 'Read my agent\'s welcome log', 'Who one of the connected person\'s agents followed or messaged as a welcome, and who it skipped and why.', { agent: text(60) }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/agent-welcome/${enc(a.agent)}/log`)), { read: true });
@@ -225,7 +225,7 @@ tool('dehub_bookmark_folders', 'List my bookmark folders', 'Read the connected a
 tool('dehub_bookmark_items', 'Read a bookmark folder', 'Read posts saved in a folder accessible to the connected account.', { folder_id: text(100), page, limit }, 'dehub:read', async (a, ctx) => success(await api(ctx, `/bookmark-folders/${enc(a.folder_id)}/items?page=${a.page}&limit=${a.limit}`)), { read: true });
 tool('dehub_save_bookmark', 'Save a post to a folder', 'Save a post in an existing bookmark folder owned by the connected account.', { folder_id: text(100), token_id: id }, 'dehub:social', async (a, ctx) => success(await api(ctx, `/bookmark-folders/${enc(a.folder_id)}/items`, 'POST', { tokenId: Number(a.token_id) })));
 
-tool('dehub_creator_models', 'Explore Creator Studio models', 'Discover image, video, audio and 3D model IDs and current prices from the same catalogue as DeHub web and mobile. Quote the chosen options before generating.', { kind: z.enum(['image','video','model3d','audio']) }, null, async a => {
+tool('dehub_creator_models', 'Explore Creator Studio models', 'Discover image, video, audio and 3D model IDs and current prices from the same catalogue as Riftn web and mobile. Quote the chosen options before generating.', { kind: z.enum(['image','video','model3d','audio']) }, null, async a => {
   const costs = a.kind === 'image' ? IMAGE_COST_USD : a.kind === 'video' ? VIDEO_COST_USD : a.kind === 'model3d' ? MODEL3D_COST_USD : Object.fromEntries(['ace-step','minimax-music','dia-tts'].map(key => [key, TOOL_COST_USD[key]]));
   return success({ kind: a.kind, models: Object.keys(costs).map(model_id => {
     const v = CREATOR_FAL_VIDEO_MODELS[model_id];
@@ -258,19 +258,19 @@ tool('dehub_generation_status', 'Check one of my content jobs', 'Read a job star
 tool('dehub_creator_library', 'Read my Creator library', 'Read the connected account\'s saved images, videos, audio and 3D assets, shared with web and mobile. Media links expire; request the library again when needed.', { offset: z.number().int().min(0).max(10000).default(0) }, 'dehub:read', async (a, ctx) => success(await edge(ctx, 'creator-library', { action: 'list', offset: a.offset })), { read: true });
 
 export const accountTools = tools;
-const authError = scope => failure('Link your DeHub account to use this tool.', { connect_url: `${ORIGIN}/connect/chatgpt` });
+const authError = scope => failure('Link your Riftn account to use this tool.', { connect_url: `${ORIGIN}/connect/chatgpt` });
 export function challenge(scope = 'dehub:read') {
   return `Bearer resource_metadata="${ORIGIN}/.well-known/oauth-protected-resource", scope="${scope}"`;
 }
 export async function callAccountTool(name, input, ctx) {
   const t = tools.find(item => item.name === name);
-  if (!t) return failure('Unknown DeHub tool.');
+  if (!t) return failure('Unknown Riftn tool.');
   let args;
   try { args = t.schema.parse(input); } catch (error) { return failure('Invalid tool arguments.', { issues: error.issues?.map(({ path, message }) => ({ path, message })) }); }
   if (t.scope && (!ctx.token || !ctx.scopes?.includes(t.scope))) return { ...authError(t.scope), _meta: { 'mcp/www_authenticate': [challenge(t.scope)] } };
   try { return await t.handler(args, ctx); }
   catch (error) {
-    return { ...failure(error.message || 'DeHub could not complete this request.', error.details),
+    return { ...failure(error.message || 'Riftn could not complete this request.', error.details),
       ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge(t.scope)] } } : {}) };
   }
 }
@@ -282,9 +282,9 @@ export async function handleAccountMcp(request, env) {
   const url = new URL(request.url);
   if (url.hostname !== 'dehub.io') return json({ error: 'Use https://dehub.io/mcp' }, 404);
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Authorization, Content-Type, MCP-Protocol-Version, MCP-Session-Id', 'Access-Control-Expose-Headers': 'WWW-Authenticate' } });
-  if (url.pathname.startsWith('/.well-known/oauth-protected-resource')) return json({ resource: RESOURCE, authorization_servers: [ORIGIN], scopes_supported: SCOPES, bearer_methods_supported: ['header'], resource_name: 'DeHub account' });
+  if (url.pathname.startsWith('/.well-known/oauth-protected-resource')) return json({ resource: RESOURCE, authorization_servers: [ORIGIN], scopes_supported: SCOPES, bearer_methods_supported: ['header'], resource_name: 'Riftn account' });
   if (url.pathname.startsWith('/.well-known/oauth-authorization-server')) return json({ issuer: ORIGIN, authorization_endpoint: `${RESOURCE}/oauth/authorize`, token_endpoint: `${RESOURCE}/oauth/token`, registration_endpoint: `${RESOURCE}/oauth/register`, revocation_endpoint: `${RESOURCE}/oauth/revoke`, scopes_supported: SCOPES, response_types_supported: ['code'], grant_types_supported: ['authorization_code','refresh_token'], token_endpoint_auth_methods_supported: ['none'], code_challenge_methods_supported: ['S256'] });
   if (!env.ACCOUNT_MCP) return json({ error: 'Account connection is unavailable.' }, 503);
   try { return await env.ACCOUNT_MCP.get(env.ACCOUNT_MCP.idFromName('account-mcp-v1')).fetch(request); }
-  catch { return json({ error: 'DeHub connection is temporarily unavailable.' }, 503); }
+  catch { return json({ error: 'Riftn connection is temporarily unavailable.' }, 503); }
 }

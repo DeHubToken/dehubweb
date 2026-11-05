@@ -87,7 +87,7 @@ html[data-theme="minimal"] [data-notification-list]:not(#_) {
   box-shadow: none !important;
 }
 
-/* The DeHub mark is white artwork; its tile stays black on the paper themes. */
+/* The Riftn mark is white artwork; its tile stays black on the paper themes. */
 html [data-feed-platform-mark]:not(#_):not(#_) {
   background-color: #000 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;

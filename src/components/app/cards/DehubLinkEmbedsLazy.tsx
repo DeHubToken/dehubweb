@@ -1,5 +1,5 @@
 /**
- * DeHub link embeds, split off the boot path.
+ * Riftn link embeds, split off the boot path.
  * ==========================================
  * Every surface that prints user-written text calls `useDehubLinks` and then
  * renders `<DehubLinkEmbeds>`. The hook is a regex over a string; the embeds
@@ -9,7 +9,7 @@
  * path. See `scripts/boot-path-report.mjs`.
  *
  * So the hook lives here, next to nothing, and the switchboard is reached
- * through `React.lazy`. A post with no DeHub link in it — the overwhelming
+ * through `React.lazy`. A post with no Riftn link in it — the overwhelming
  * majority — renders `null` without ever asking for the chunk, and one that has
  * a link pays for it at the moment it is rendered rather than at boot.
  *

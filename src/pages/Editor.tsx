@@ -1,5 +1,5 @@
 /**
- * /editor — DeHub in-browser video editor.
+ * /editor — Riftn in-browser video editor.
  *
  * Layout is a Canva-style shell: an icon rail, one focused panel, the canvas,
  * and the timeline. The previous layout only rendered its side panels above

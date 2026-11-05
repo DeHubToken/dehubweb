@@ -2,7 +2,7 @@
 //
 // get-pimlico-config used to hand every visitor `api.pimlico.io/...?apikey=`,
 // so the key sat in sessionStorage and in any network log, and anyone who read
-// it could spend DeHub's gas sponsorship on any account on any chain Pimlico
+// it could spend Riftn's gas sponsorship on any account on any chain Pimlico
 // serves. The clients now get a URL pointing here instead, in the same
 // `/v2/{chainId}/rpc` shape, so both apps' per-chain rewrite keeps working and
 // the key never leaves the server.

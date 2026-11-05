@@ -74,7 +74,7 @@ const FAQ = lazy(() => import("./docs/FAQ"));
 const Donate = lazy(() => import("./docs/Donate"));
 const DeveloperDoc = lazy(() => import("./docs/DeveloperDoc"));
 
-// The DeHub mark inverts to black under `html.light`, which next-themes pins
+// The Riftn mark inverts to black under `html.light`, which next-themes pins
 // for the light/minimal app themes — so this reads on paper docs and on the
 // dark/glass ones without a per-theme branch here.
 const PageLoader = () => <DeHubPageLoader minHeight="400px" />;
@@ -177,7 +177,7 @@ export default function DocsSurface() {
             {/* Google indexed the hyphenated typo; it used to soft-404 into the
                 SPA shell. Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
             <Route path="/docs/quick-start" element={<Navigate to="/docs/quickstart" replace />} />
-            {/* Both were template pages for a made-up API. Installing DeHub
+            {/* Both were template pages for a made-up API. Installing Riftn
                 means getting the app; API access is the assistant connector.
                 Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
             <Route path="/docs/installation" element={<Navigate to="/dehub-app" replace />} />
@@ -202,7 +202,7 @@ export default function DocsSurface() {
             <Route path="/docs/donate" element={wrap(Donate)} />
             <Route path="/docs/website" element={<ComingSoonPage title={_copy("copy.b048526ff7d1", { defaultValue: "Website Documentation" })} description={_copy("copy.88324d21e07e", { defaultValue: "Learn about our website features and capabilities." })} />} />
             <Route path="/docs/app" element={<ComingSoonPage title={_copy("copy.f569d8ad4ccc", { defaultValue: "App Documentation" })} description={_copy("copy.2785ac1adc62", { defaultValue: "Mobile and desktop application guides and features." })} />} />
-            <Route path="/docs/dehub" element={<ComingSoonPage title={_copy("copy.e5e1e25f7f1d", { defaultValue: "DeHub Platform" })} description={_copy("copy.87acb1194366", { defaultValue: "Complete guide to using the DeHub decentralized platform." })} />} />
+            <Route path="/docs/dehub" element={<ComingSoonPage title={_copy("copy.e5e1e25f7f1d", { defaultValue: "Riftn Platform" })} description={_copy("copy.87acb1194366", { defaultValue: "Complete guide to using the Riftn decentralized platform." })} />} />
             <Route path="/docs/x" element={<ComingSoonPage title={_copy("copy.deace4186d0f", { defaultValue: "X Integration" })} description={_copy("copy.6f5fcdf9e99b", { defaultValue: "Social media integration and X platform features." })} />} />
             <Route path="/docs/instagram" element={<ComingSoonPage title={_copy("copy.4d10e3879b66", { defaultValue: "Instagram Integration" })} description={_copy("copy.4036f800a55f", { defaultValue: "Instagram connectivity and social features." })} />} />
             <Route path="/docs/architecture" element={<ComingSoonPage title={_copy("copy.cd74053c5481", { defaultValue: "Architecture" })} description={_copy("copy.b12f30287c18", { defaultValue: "System architecture and technical infrastructure details." })} />} />

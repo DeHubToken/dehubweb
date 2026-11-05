@@ -1,8 +1,9 @@
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Repeat2 from "@/components/ui/cut-icons/repost";
 import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed';
@@ -36,6 +37,7 @@ import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { AppState } from '@/components/app/AppState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { PostBgLayer, postBgHostProps, useProfilePostBg } from '@/components/app/profile/PostBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
@@ -53,6 +55,7 @@ import { isPlanPublished } from '@/lib/api/dehub';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { TabValue } from './ProfileConstants';
+import { ProfileFeedOriginContext, isContinuableProfileTab, type ProfileFeedOrigin, type ProfileFeedQuery, type ProfileFeedSource } from '@/lib/profile-feed-origin';
 import type { UserCommentItem, UserCommentParent } from '@/lib/api/dehub/users';
 import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { QuotedPostMedia } from '@/components/app/cards/QuotedPostEmbed';
@@ -181,6 +184,8 @@ interface ProfileTabContentProps {
   isViewingOwnProfile: boolean | undefined;
   /** A sort or search from the channel toolbar is narrowing what's shown. */
   isContentFiltered?: boolean;
+  /** The content query behind the tab lists, so an opened post can continue it. */
+  contentQuery?: ProfileFeedQuery;
   // Optimistic
   optimisticPosts: OptimisticPost[];
   // Subscriptions
@@ -212,6 +217,7 @@ export function ProfileTabContent({
   isPending,
   isViewingOwnProfile,
   isContentFiltered = false,
+  contentQuery,
   optimisticPosts,
   isLoadingPlans,
   hasPlans,
@@ -248,6 +254,14 @@ export function ProfileTabContent({
 
   const allComments = commentsData?.pages.flatMap(p => p.data) ?? [];
 
+  // A post opened from this tab carries on through the same list.
+  const feedOrigin = useMemo<ProfileFeedOrigin | null>(
+    () => (contentQuery?.userId && isContinuableProfileTab(activeTab) ? { tab: activeTab, query: contentQuery } : null),
+    [activeTab, contentQuery],
+  );
+  const feedSource = useRef<ProfileFeedSource>({ current: null });
+  feedSource.current.current = feedOrigin;
+
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -267,12 +281,13 @@ export function ProfileTabContent({
   const showLoading = isLoadingContent && !hasData;
 
   return (
+    <ProfileFeedOriginContext.Provider value={feedSource.current}>
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
       {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
-        <div className="flex flex-col items-center justify-center min-h-[200px]">
-          <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
-        </div>
+        // The same mark, in the same box, as the profile skeleton's content
+        // area, so the hand-off from skeleton to header is one loader, not two.
+        <DeHubPageLoader minHeight="38vh" />
       )}
 
       {/* HOME TAB */}
@@ -441,6 +456,7 @@ export function ProfileTabContent({
         />
       )}
     </div>
+    </ProfileFeedOriginContext.Provider>
   );
 }
 
@@ -463,6 +479,7 @@ function HomeTabPanel({
 }) {
   const { t: _copy } = _useCopy();
   const isMobile = useIsMobile();
+  const postBg = useProfilePostBg();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
@@ -497,7 +514,8 @@ function HomeTabPanel({
           ? <ImageCard key={op.id} post={op.data as ImagePost} />
           : <VideoCard key={op.id} video={op.data as VideoItem} />;
         return (
-          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+          <div key={op.id} data-feed-item data-cinematic={op.type} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" {...(op.type === 'post' ? postBgHostProps(postBg) : {})}>
+            {op.type === 'post' && <PostBgLayer bg={postBg} />}
             {card}
           </div>
         );
@@ -518,7 +536,9 @@ function HomeTabPanel({
             data-cinematic={item.type}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
             style={offscreenCardStyle(item.type, index)}
+            {...(isPlainTextItem(item) ? postBgHostProps(postBg) : {})}
           >
+            {isPlainTextItem(item) && <PostBgLayer bg={postBg} />}
             {item.isPinned && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Pin className="w-3.5 h-3.5 fill-current" />
@@ -537,6 +557,11 @@ function HomeTabPanel({
       })}
     </div>
   );
+}
+
+/** A text post that is not an article or a proposal link: these get the owner's backdrop. */
+function isPlainTextItem(item: ProfileContentItem): boolean {
+  return item.type === 'post' && !(item.data as TextPost).articleBody && !item.isRepost;
 }
 
 function PostsTabPanel({
@@ -566,6 +591,7 @@ function PostsTabPanel({
 }) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
+  const postBg = useProfilePostBg();
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
     const ids = new Set<string>();
@@ -631,8 +657,10 @@ function PostsTabPanel({
       {mergedItems.map((item, index) => {
         const cvStyle = offscreenCardStyle('post', index);
         if (item.type === 'post') {
+          const plain = !(item.data as TextPost).articleBody;
           return (
-            <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle}>
+            <div key={item.data.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={cvStyle} {...(plain ? postBgHostProps(postBg) : {})}>
+              {plain && <PostBgLayer bg={postBg} />}
               <PostCard post={item.data as TextPost} />
             </div>
           );

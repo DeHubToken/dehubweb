@@ -66,7 +66,7 @@
 
 /* 
 ================================================================================
-DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
+RIFTN DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
 ================================================================================
 
 1. BUTTONS: All buttons must match our existing liquid glass style:
@@ -3795,11 +3795,11 @@ html[data-system-tone="light"] [data-login-modal] .bg-black\/20 {
   border-color: var(--hairline) !important;
 }
 
-/* DeHub wordmark in the modal header is a white PNG — invert it on paper. */
-html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
+/* Riftn wordmark in the modal header is a white PNG — invert it on paper. */
+html[data-theme="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-login-modal] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-login-modal] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
@@ -4322,10 +4322,10 @@ html[data-theme="light"] [data-prompt-landing] {
 html[data-system-tone="light"] [data-prompt-landing] {
   color: var(--ink) !important;
 }
-html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-theme="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
-html[data-system-tone="light"] [data-prompt-landing] img[alt="DeHub"] {
+html[data-system-tone="light"] [data-prompt-landing] img[alt="Riftn"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 html[data-theme="light"] [data-prompt-landing] h1,
@@ -5769,7 +5769,7 @@ input[data-hue-slider]:focus-visible {
 
 /*
 ================================================================================
-DEHUB PRELOADER — the animated DeHub mark used for page-level waits.
+RIFTN PRELOADER — the animated Riftn mark used for page-level waits.
 ================================================================================
 See components/app/DeHubLoader.tsx. Two things the component can't express
 inline:
@@ -5807,6 +5807,21 @@ html[data-system-tone="light"] [data-keep-dark] [data-dehub-loader] {
 
 .dehub-loader-mark {
   animation: dehub-loader-in 200ms ease-out 250ms both;
+}
+/* Feed photos fade in once when they first finish downloading (HandoffImage).
+   Opacity only, so it runs on the compositor. */
+@media (prefers-reduced-motion: no-preference) {
+  img[data-fade="pending"] { opacity: 0; }
+  img[data-fade="in"] { animation: img-fade-in 180ms ease-out backwards; }
+}
+@keyframes img-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Replacing a loader that was just on screen: already visible, no blink. */
+.dehub-loader-mark--handoff {
+  animation: none;
 }
 
 @keyframes dehub-loader-in {
@@ -6679,8 +6694,8 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     transform: translateX(-50%);
   }
   .dehub-intro .dehub-intro-top { margin-bottom: 0; align-items: center; }
-  .dehub-intro .dehub-intro-brand { padding: 6px 12px; border-radius: 10px; }
-  .dehub-intro .dehub-intro-brand img { height: 15px; }
+  .dehub-intro .dehub-intro-brand { padding: 2px 0; }
+  .dehub-intro .dehub-intro-brand img { height: 17px; }
   .dehub-intro .dehub-intro-pills { margin-top: 140px; margin-bottom: 14px; justify-content: center; }
   .dehub-intro .dehub-intro-pills > button { width: 36px; height: 4px; }
   .dehub-intro .dehub-intro-stage { padding-right: 0; text-align: center; }
@@ -6721,8 +6736,6 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     background: rgb(255 255 255 / 0.8);
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.09), 0 10px 30px rgb(0 0 0 / 0.08);
   }
-  html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
-  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
   html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-head { background-image: linear-gradient(180deg, #111114 30%, #6b6b72 100%) !important; filter: none !important; }
@@ -7106,4 +7119,28 @@ html[data-theme='minimal'] [data-comment-composer-pin] {
 ::highlight(dehub-cashtag) {
   color: currentColor;
   text-shadow: 0.35px 0 0 currentColor, -0.35px 0 0 currentColor;
+}
+
+/* "Unfollow all" confirm: the destructive glass reads pale on light canvases. */
+html[data-theme="light"] [data-non-follower-confirm],
+html[data-system-tone="light"] [data-non-follower-confirm] {
+  background: rgb(220 38 38);
+  border-color: rgb(185 28 28);
+  color: #fff;
+}
+
+/* Audio deck placeholder sizes its card the way the loaded deck does. */
+html[data-theme] [data-audio-frame]:has([data-audio-studio-placeholder]):not([data-video-fullscreen]):not(#_):not(#_) { height: auto !important; min-height: 0; max-height: none !important; aspect-ratio: auto !important; width: 100% !important; }
+html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(#_):not(#_) { border: 0; border-radius: 28px; }
+[data-audio-backdrop]:has([data-audio-studio-placeholder]) > .absolute { position: relative; }
+
+/* One-line names and @handles: clip only sideways. `truncate` used
+   overflow:hidden, which also cut the tails of g, j, p and y wherever the
+   line height is tighter than Manrope (a 14px @handle on a 16px line).
+   overflow-x:clip keeps the ellipsis and lets the tails hang below. */
+@supports (overflow: clip) {
+  .truncate {
+    overflow: visible;
+    overflow-x: clip;
+  }
 }

@@ -42,7 +42,7 @@ export interface AssistantUserContext {
 export function useAssistantUserContext(): AssistantUserContext | null {
   const { walletAddress, isAuthenticated } = useAuth();
 
-  // Fetch DeHub profile
+  // Fetch Riftn profile
   const { data: profile } = useQuery({
     queryKey: ['assistant-user-context', walletAddress],
     queryFn: async () => {

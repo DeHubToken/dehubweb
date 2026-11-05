@@ -30,7 +30,7 @@ export function downloadStageIcs(stage: AudioSpace): void {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//DeHub//Stages//EN',
+    'PRODID:-//Riftn//Stages//EN',
     'BEGIN:VEVENT',
     `UID:stage-${stage.id}@dehub.io`,
     `DTSTAMP:${icsStamp(new Date())}`,

@@ -129,18 +129,18 @@ export default function ArcadePage() {
         // Both variants must name one image: the worker declares it 1200x630,
         // and a scraper that ran the SPA instead would inherit that claim for
         // whatever this said.
-        image="https://dehub.io/og/arcade.jpg"
+        image="https://riftn.com/og/arcade.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
-          name: 'DeHub Arcade',
-          url: 'https://dehub.io/arcade',
+          name: 'Riftn Arcade',
+          url: 'https://riftn.com/arcade',
           hasPart: ARCADE_GAMES.map((game) => ({
             '@type': 'VideoGame',
             name: game.title,
             description: game.tagline,
-            url: `https://dehub.io/arcade/${game.slug}`,
-            image: `https://dehub.io${game.art}`,
+            url: `https://riftn.com/arcade/${game.slug}`,
+            image: `https://riftn.com${game.art}`,
             applicationCategory: 'Game',
             gamePlatform: 'Web browser',
             operatingSystem: 'Any',

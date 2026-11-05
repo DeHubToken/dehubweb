@@ -4,11 +4,11 @@ export const maboroshiGenjutsuAlternativePost: BlogPostType = {
   id: 'higgsfield-genjutsu-alternative',
   slug: 'higgsfield-genjutsu-alternative',
   title: 'Higgsfield Genjutsu Alternative: Maboroshi Prices Compared, and How We Rebuilt It (2026)',
-  excerpt: 'Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on DeHub Maboroshi, plus the full pipeline behind it.',
+  excerpt: 'Swap anyone in a real video, keep the original audio, and pay per clip with no subscription. Here is what Genjutsu-style editing costs on Higgsfield and on Riftn Maboroshi, plus the full pipeline behind it.',
   content: `
 Higgsfield Genjutsu took over feeds in September: cats rapping, friends dropped into music videos, a stranger on a rollercoaster turned into someone else while the camera, the light and the crowd stay exactly as filmed. It is the most fun AI video trick of the year. It is also a black box that you rent by the month.
 
-[Maboroshi](/creator/maboroshi) is DeHub's version of the same idea, built into [DeHub Creator](/creator). This guide does three things. It shows you what it makes, it puts the prices side by side with Higgsfield's own published numbers, and it opens the box: every step of the pipeline, where it came from, and why each piece is there.
+[Maboroshi](/creator/maboroshi) is Riftn's version of the same idea, built into [Riftn Creator](/creator). This guide does three things. It shows you what it makes, it puts the prices side by side with Higgsfield's own published numbers, and it opens the box: every step of the pipeline, where it came from, and why each piece is there.
 
 ![Maboroshi before and after: the original clip on one side, the swapped subject on the other|/creator-hero/hero-16x9-poster.jpg](/creator-hero/hero-16x9.mp4)
 
@@ -25,7 +25,7 @@ There are two flavours:
 
 Because the motion comes from real footage, the result moves like real footage. That is why these clips look so much better than pure text-to-video, and why they spread so fast.
 
-## Higgsfield Genjutsu vs DeHub Maboroshi at a glance
+## Higgsfield Genjutsu vs Riftn Maboroshi at a glance
 
 - **Source clip:** Higgsfield takes 4–30 seconds. Maboroshi takes 3–15 seconds on Kling, or 2–30 seconds on Seedance Premium.
 - **References:** Higgsfield takes up to 30 images. Maboroshi takes one or two images on Kling, and images or video on Seedance.
@@ -38,17 +38,17 @@ Because the motion comes from real footage, the result moves like real footage. 
 
 ## The price comparison
 
-![Pay per clip with no subscription on DeHub Maboroshi](/media/maboroshi/fig-pay-per-clip.jpg)
+![Pay per clip with no subscription on Riftn Maboroshi](/media/maboroshi/fig-pay-per-clip.jpg)
 
-Higgsfield only publishes Genjutsu prices for a 15-second clip, so that is the length we compare on. Its figures come from its own Genjutsu launch page, checked September 2026, where it converts credits to dollars at about 5 cents a credit. DeHub's figures come straight from the Maboroshi price list.
+Higgsfield only publishes Genjutsu prices for a 15-second clip, so that is the length we compare on. Its figures come from its own Genjutsu launch page, checked September 2026, where it converts credits to dollars at about 5 cents a credit. Riftn's figures come straight from the Maboroshi price list.
 
 **A 15-second clip:**
 
 - Higgsfield Genjutsu, 480p: 40 credits, about **$2.00**
 - Higgsfield Genjutsu, 720p: 104 credits, about **$5.20**
 - Higgsfield Genjutsu, 1080p: 144 credits, about **$7.20**
-- DeHub Maboroshi, Kling route: $0.28 a second plus $0.35 a render = **$4.55**
-- DeHub Maboroshi, Seedance Premium preview: $1 preparation plus $0.16 per billable second = **$5.80**
+- Riftn Maboroshi, Kling route: $0.28 a second plus $0.35 a render = **$4.55**
+- Riftn Maboroshi, Seedance Premium preview: $1 preparation plus $0.16 per billable second = **$5.80**
 
 **Shorter clips are where per-second pricing pays off.** Higgsfield prices by the clip tier. Maboroshi's Kling route charges for the seconds you actually use:
 
@@ -58,14 +58,14 @@ Higgsfield only publishes Genjutsu prices for a 15-second clip, so that is the l
 
 Most viral swaps are 5 to 10 seconds long, so most real jobs land between about $1.75 and $3.15.
 
-**The bigger difference is the subscription.** To get Higgsfield's rates at all, you buy a monthly plan, and those credits work on Higgsfield's timer, not yours. Maboroshi has no plan. You pay for the clip you are making, in DHB or with your DeHub Creator credit, at a fixed rate of 1,000 DHB to $1 of generation. Credit you top up on DeHub [never expires](/guides/dehub-creator-vs-higgsfield-ai-credits).
+**The bigger difference is the subscription.** To get Higgsfield's rates at all, you buy a monthly plan, and those credits work on Higgsfield's timer, not yours. Maboroshi has no plan. You pay for the clip you are making, in DHB or with your Riftn Creator credit, at a fixed rate of 1,000 DHB to $1 of generation. Credit you top up on Riftn [never expires](/guides/dehub-creator-vs-higgsfield-ai-credits).
 
 ### Where Higgsfield is cheaper
 
 A comparison that only shows the flattering rows is an advert, so here are the unflattering ones.
 
 - **480p is cheaper on Higgsfield.** If a low-resolution clip is all you need and you already pay for a plan, $2.00 for 15 seconds beats us.
-- **Full 1080p from Seedance costs much more on DeHub.** Our Seedance Premium route bills $0.85 for every input and output second at 1080p, because that is close to what the model costs us to run. A 15-second clip finished at 1080p comes to about $31. Higgsfield's $7.20 is far lower. We will not pretend otherwise. For most creators the Kling route is the right default, and Seedance Premium is for jobs where you want to check every frame before paying for the final render.
+- **Full 1080p from Seedance costs much more on Riftn.** Our Seedance Premium route bills $0.85 for every input and output second at 1080p, because that is close to what the model costs us to run. A 15-second clip finished at 1080p comes to about $31. Higgsfield's $7.20 is far lower. We will not pretend otherwise. For most creators the Kling route is the right default, and Seedance Premium is for jobs where you want to check every frame before paying for the final render.
 
 ## How we rebuilt it, step by step
 
@@ -119,20 +119,20 @@ Both routes finish by restoring the **complete original audio track**, copied ov
 
 ![Your clips only: private jobs and signed links that expire](/media/maboroshi/fig-your-clips-only.jpg)
 
-- **No public upload hosts.** The original workflow sent media through temporary public file hosts. Maboroshi keeps every file on DeHub and hands the models expiring signed links instead.
+- **No public upload hosts.** The original workflow sent media through temporary public file hosts. Maboroshi keeps every file on Riftn and hands the models expiring signed links instead.
 - **Your clips are private.** Every job belongs to the account that made it. Nobody else can list it, see it or download it.
 - **Real payments with recovery.** Each step has its own quote, and the quote must match the server's price before anything is charged. If a job fails before it is sent to the model, the charge is refunded. If something goes wrong mid-flight, the job is held for a check instead of being blindly retried and billed twice.
 - **Remake for multi-shot clips.** Upload a clip with cuts, mark or auto-detect up to seven cut points, and Maboroshi turns it into up to eight separate shots. Each shot can be redone up to five times, then everything is stitched back together in order with the original audio, at no extra charge.
 
 ## How to make your first swap
 
-![Make your first swap in DeHub Creator](/media/maboroshi/fig-first-swap.jpg)
+![Make your first swap in Riftn Creator](/media/maboroshi/fig-first-swap.jpg)
 
-1. Open [dehub.io/creator/maboroshi](/creator/maboroshi), or pick Maboroshi in the video model search inside [DeHub Creator](/creator).
+1. Open [riftn.com/creator/maboroshi](/creator/maboroshi), or pick Maboroshi in the video model search inside [Riftn Creator](/creator).
 2. Browse the 180 looks if you want a starting direction. You can search and filter them before you even sign in.
 3. Upload a short clip with sound. For the Kling route, use 3–15 seconds with at least 720 pixels on each side.
 4. Add one or two clear images of your new character.
-5. Check the price, confirm, and download your clip. Then post it straight to your DeHub feed, where it can earn [tips and watch-to-earn rewards](/guides/what-is-watch-to-earn) instead of sitting in a downloads folder.
+5. Check the price, confirm, and download your clip. Then post it straight to your Riftn feed, where it can earn [tips and watch-to-earn rewards](/guides/what-is-watch-to-earn) instead of sitting in a downloads folder.
 
 Each account can upload ten source clips a day and keep up to four jobs waiting at once.
 
@@ -150,7 +150,7 @@ Higgsfield lists a 15-second Genjutsu clip at 40 credits for 480p, 104 credits f
 
 ### Do I need a subscription for Maboroshi?
 
-No. Every clip is priced on its own and shown to you before you pay. You can pay in DHB or with DeHub Creator credit, and that credit never expires.
+No. Every clip is priced on its own and shown to you before you pay. You can pay in DHB or with Riftn Creator credit, and that credit never expires.
 
 ### Does Maboroshi keep the original audio?
 
@@ -169,15 +169,15 @@ Yes. Uploads, previews and results belong to your account and are shared with th
 Higgsfield's figures in this guide come from its Genjutsu launch page as checked in September 2026. It prices in credits and changes its plans often, so check its live pricing before you compare. Maboroshi prices are the retail rates at the time of writing. The price you see before each step is always the price you pay.
   `,
   bannerImage: '/media/maboroshi-genjutsu-alternative-banner.jpg',
-  bannerImageAlt: 'Maboroshi, the Higgsfield Genjutsu alternative on DeHub: swap anyone in a real video, with no subscription',
+  bannerImageAlt: 'Maboroshi, the Higgsfield Genjutsu alternative on Riftn: swap anyone in a real video, with no subscription',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2026-10-24T03:00:00.000Z',
   tags: ['AI', 'AI video', 'Creator Studio', 'Higgsfield', 'Genjutsu', 'Maboroshi', 'Kling', 'Seedance', 'Pricing'],
   readingTime: 9,
   featured: true,
   status: 'published',
-  seoTitle: 'Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | DeHub',
-  seoDescription: 'Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs DeHub Maboroshi prices, plus the full pipeline behind it.',
+  seoTitle: 'Higgsfield Genjutsu Alternative 2026: Prices Compared + How It Works | Riftn',
+  seoDescription: 'Swap anyone in a real video from $1.75, keep the original audio, no subscription. Higgsfield Genjutsu vs Riftn Maboroshi prices, plus the full pipeline behind it.',
 };

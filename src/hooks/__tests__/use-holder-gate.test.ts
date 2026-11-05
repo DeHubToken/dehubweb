@@ -21,7 +21,7 @@ describe('holder gate helpers', () => {
     expect(holderRank(holders, '0xcc')).toBeNull();
   });
 
-  it('knows the DeHub token on every chain', () => {
+  it('knows the Riftn token on every chain', () => {
     expect(isDehubToken({ chainId: 56, token: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D' })).toBe(true);
     expect(isDehubToken({ chainId: 8453, token: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d' })).toBe(false);
   });

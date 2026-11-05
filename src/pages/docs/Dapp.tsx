@@ -755,7 +755,7 @@ const Dapp = () => {
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-foreground font-exo">DeHub</td>
+                    <td className="border border-border p-3 font-semibold text-foreground font-exo">Riftn</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.dehubValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubRevenue')}</td>
@@ -863,9 +863,9 @@ const Dapp = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                <a href="https://dehub.io/dpay" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
+                <a href="https://riftn.com/dpay" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
                   <div>
-                    <h4 className="font-semibold text-foreground font-exo">dehub.io/dpay</h4>
+                    <h4 className="font-semibold text-foreground font-exo">riftn.com/dpay</h4>
                     <p className="text-muted-foreground font-exo">{t('dapp.dpayDesc')}</p>
                   </div>
                   <ExternalLink className="w-5 h-5 text-muted-foreground" />

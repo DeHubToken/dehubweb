@@ -59,7 +59,7 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
       <label className="dex-pool-search"><Search size={13} /><input autoFocus placeholder={t('dex.pools.search')} aria-label={t('dex.pools.search')} value={query} onChange={(e) => setQuery(e.target.value)} /></label>
       <div className="dex-pool-list">
         {(!query || `dhb dehub tokens ${tokenLabel()}`.toLowerCase().includes(query.trim().toLowerCase())) && <button type="button" role="option" aria-selected={!current} className="dex-pool-item" onClick={() => go('/dex')}>
-          <PoolAvatar pool={null} size={26} /><span><b>{tokenLabel()}{_copy("copy.3d1d43659027", { defaultValue: " / USD" })}</b><small>{_copy("copy.21ff98f704a6", { defaultValue: "DeHub · Base" })}</small></span>
+          <PoolAvatar pool={null} size={26} /><span><b>{tokenLabel()}{_copy("copy.3d1d43659027", { defaultValue: " / USD" })}</b><small>{_copy("copy.21ff98f704a6", { defaultValue: "Riftn · Base" })}</small></span>
         </button>}
         {filtered.map((pool) => <button type="button" role="option" key={pool.id} aria-selected={current?.id === pool.id} className="dex-pool-item" onClick={() => go(poolPath(pool))}>
           <PoolAvatar pool={pool} size={26} /><span><b>{pool.symbol}{_copy("copy.3d1d43659027", { defaultValue: " / USD" })}</b><small>{pool.name} · {POOL_CHAIN_INFO[pool.chain].name}</small></span>

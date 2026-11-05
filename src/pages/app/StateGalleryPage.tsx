@@ -1,4 +1,11 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
+import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
+import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
+import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
+import { postBgById } from '@/lib/post-backgrounds';
+import type { TextPost as GalleryTextPost } from '@/types/feed.types';
+import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
 import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
@@ -60,6 +67,7 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
+import { NonFollowerOfferSheet, type NonFollowerOfferStage } from '@/components/app/NonFollowerOfferSheet';
 import { PostStatsSheet } from '@/components/app/post-stats/PostStatsSheet';
 import { PostStatsPanel } from '@/components/app/post-stats/PostStatsPanel';
 import { SAMPLE_BEST_TIMES, SAMPLE_POST_STATS } from '@/components/app/post-stats/sample-stats';
@@ -108,6 +116,9 @@ import followAvatarRio from '@/assets/avatars/riooo.png';
 import followCoverEllaverse from '@/assets/banners/agent-ellaverse.png';
 import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
+import { ConversationItem } from '@/pages/app/MessagesPage';
+import type { DeHubDMMessage } from '@/lib/api/dehub/dm';
+import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
 import { ProfileFieldsList } from '@/components/app/profile/ProfileFieldsList';
@@ -154,11 +165,29 @@ function UsernameReserveGallery() {
   );
 }
 
+const OWN_KEY_ROWS: ProviderKeyRow[] = [
+  { id: 'openai', label: 'OpenAI', powers: 'Builder (GPT models)', keysUrl: '#', saved: { last4: '7f3a', status: 'working', checkedAt: '', lastUsedAt: null } },
+  { id: 'fal', label: 'fal', powers: 'Images, video, 3D and photo tools', keysUrl: '#', saved: null },
+  { id: 'elevenlabs', label: 'ElevenLabs', powers: 'Voice, dubbing, music and sound effects', keysUrl: '#', saved: { last4: '91bc', status: 'no_credit', checkedAt: '', lastUsedAt: null } },
+  { id: 'replicate', label: 'Replicate', powers: 'Images and video', keysUrl: '#', saved: { last4: 'x2Qd', status: 'invalid', checkedAt: '', lastUsedAt: null } },
+  { id: 'openrouter', label: 'OpenRouter', powers: 'Hundreds of chat and text models with one key', keysUrl: '#', saved: null },
+];
+
+function OwnKeysGallery() {
+  return (
+    <section data-own-keys-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
+      <OwnAiKeysSetting preview={OWN_KEY_ROWS.filter(row => row.saved)} />
+      <OwnAiKeysSetting preview={OWN_KEY_ROWS} previewEditing="fal" previewShowAll />
+    </section>
+  );
+}
+
 function ComicGallery() {
   const media = GALLERY_COMIC_PAGES.slice(0, 3).map((preview, i) => ({
     file: new File([], `page-${i + 1}.webp`, { type: 'image/webp' }), preview, type: 'image' as const,
     caption: GALLERY_COMIC_CAPTIONS[i], description: i === 0 ? GALLERY_COMIC_ALTS[0] : undefined,
   }));
+  const [pickedBorder, setPickedBorder] = useState<ComicBorder | null>('holographic');
   const noop = () => {};
   return (
     <section data-comic-gallery className="mb-5 space-y-6">
@@ -174,6 +203,18 @@ function ComicGallery() {
       <div className="rounded-2xl bg-zinc-950 p-3">
         <p className="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Comic tab</p>
         <ComicPagesEditor media={media} limit={50} onAddPages={noop} onRemove={noop} onMove={noop} onCaption={noop} onAlt={noop} />
+        <div className="mt-3"><ComicBorderPicker value={pickedBorder} onChange={setPickedBorder} cover={GALLERY_COMIC_PAGES[0]} title="The Walking Bed" /></div>
+      </div>
+      <div data-comic-borders>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Border presets</p>
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1">
+          {COMIC_BORDERS.map(border => (
+            <div key={border} data-comic-border-sample={border}>
+              <p className="text-center text-[11px] text-zinc-400">{border}</p>
+              <ComicDeck images={GALLERY_COMIC_PAGES} captions={GALLERY_COMIC_CAPTIONS} title="The Walking Bed" border={border} onOpen={noop} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -185,6 +226,35 @@ function ComicGallery() {
  * Follow is tapped. Laid out bare, as the feed and Explore carry them, so each
  * theme's own card surface (or none, in System) is what shows.
  */
+/** Name badges in the Messages list: badge on the name's baseline, then the dot. */
+function NameBadgesGallery() {
+  const now = new Date(Date.now() - 2 * 3600_000).toISOString();
+  const people: Array<Partial<DeHubUser> & { address: string }> = [
+    { address: '0x6666666666666666666666666666666666666661', username: 'ellaverse', displayName: 'Ella Verse', badgeBalance: 2_000_000 },
+    { address: '0x6666666666666666666666666666666666666662', username: 'xluna', displayName: 'Luna', badgeBalance: 600_000 },
+    { address: '0x6666666666666666666666666666666666666663', username: 'deepwater', displayName: 'Deep Water', badgeBalance: 120_000_000 },
+    { address: '0x6666666666666666666666666666666666666664', username: 'heldtier', displayName: 'Held Tier', badgeBalance: 60_000, badgeLock: { tier: 'Great White Shark', requirement: 50_000 } },
+  ];
+  const rows = people.map((user, i) => ({
+    id: `gallery-dm-${i}`,
+    participants: [user as DeHubUser],
+    otherUser: user as DeHubUser,
+    unreadCount: i === 0 ? 2 : 0,
+    createdAt: now,
+    updatedAt: now,
+    lastMessage: { id: `gallery-dm-msg-${i}`, conversationId: `gallery-dm-${i}`, sender: user as DeHubUser, content: 'See you on the stream tonight', createdAt: now } as DeHubDMMessage,
+  }));
+  const noop = () => {};
+  return (
+    <section data-page-bento data-name-badges-gallery className="mb-5 max-w-md rounded-3xl border border-white/10 bg-white/[0.04]">
+      <h2 className="px-4 pt-4 text-sm font-semibold">Messages: name badges</h2>
+      {rows.map((c) => (
+        <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={false} onDelete={noop} onBlock={noop} />
+      ))}
+    </section>
+  );
+}
+
 function FollowCardsGallery() {
   const { t: _copy } = _useCopy();
   const abs = (src: string) => new URL(src, window.location.origin).href;
@@ -240,6 +310,8 @@ import { ComicDeck } from '@/components/app/comic/ComicDeck';
 import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
 import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
+import { ComicBorderPicker } from '@/features/post/components/ComicBorderPicker';
+import { COMIC_BORDERS, type ComicBorder } from '@/lib/comic-borders';
 const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeShowcase'));
 
 // The standard public BIP-39 test vector: owns nothing, safe to show.
@@ -251,14 +323,16 @@ const SAMPLE_ARTICLE = {
   cover: '/media/ai-creator-studio-banner.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
-    'Moving to DeHub was not about crypto. It was about owning the relationship with the people who watch us every night.',
+    'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',
+    '![Our first night streaming on Riftn, 214 people in chat](/media/fig-athlete-who-owns-the-fan.jpg#w=1200&h=630)',
     '# What actually changed',
     'Tips land in our wallet the moment they are sent. **Subscribers unlock posts with a tier**, not an algorithm.',
     '> We stopped asking permission to get paid.',
     '# The numbers after 90 days',
     '- Revenue per viewer up 34%\n- Churn down for the first time in a year\n- Zero frozen payouts',
+    '![](/media/fig-chains-bignames.jpg#w=2400&h=1260)',
     '# What we would do differently',
-    'We would have moved our [back catalogue](https://dehub.io) on day one, instead of waiting to see if the audience followed.',
+    'We would have moved our [back catalogue](https://riftn.com) on day one, instead of waiting to see if the audience followed.',
   ].join('\n\n'),
 };
 
@@ -295,7 +369,7 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
         <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.fd5dcf90c053", { defaultValue: "Reading an article" })}</p>
         <ArticleReader
           title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover}
-          createdAt="2026-09-28T12:00:00Z" shareUrl="https://dehub.io/app/post/1" onComment={onAction} onTip={onAction}
+          createdAt="2026-09-28T12:00:00Z" shareUrl="https://riftn.com/app/post/1" onComment={onAction} onTip={onAction}
         >
           <p>{SAMPLE_ARTICLE.summary}</p>
         </ArticleReader>
@@ -598,7 +672,7 @@ function AudioGallery() {
 const GALLERY_STAGES = [
   { id: 'gallery-stage-1', title: 'Town Hall: what ships next', host_username: 'maldoteth', scheduled_at: '2026-10-23T19:00:00Z' },
   { id: 'gallery-stage-2', title: 'Late night lo-fi', host_username: 'juno', started_at: '2026-10-24T23:30:00Z', status: 'live' },
-  { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on DeHub', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
+  { id: 'gallery-stage-3', title: 'Creators AMA: growing from zero to your first thousand fans on Riftn', host_username: 'kira', scheduled_at: '2026-11-02T17:00:00Z' },
   { id: 'gallery-stage-4', title: 'Market open', host_wallet_address: '0x8f3a00000000000000000000000000000000c0de', started_at: '2026-10-30T08:00:00Z', ended_at: '2026-10-30T08:52:00Z', status: 'ended' },
 ];
 
@@ -791,7 +865,7 @@ function MintChainGallery() {
     <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-mint-chain-gallery>
       <h2 className="mb-3 text-sm font-semibold">Mint chain picker</h2>
       <div className="flex flex-wrap gap-3">
-        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>DeHub wallet</Button>
+        <Button variant="glass" size="sm" data-open-mint-sheet="dehub" onClick={() => setOpen('dehub')}>Riftn wallet</Button>
         <Button variant="glass" size="sm" data-open-mint-sheet="own" onClick={() => setOpen('own')}>Own wallet</Button>
       </div>
       <MintChainSheet open={open !== null} onOpenChange={(o) => { if (!o) setOpen(null); }} defaultChainId={8453} sponsored={open === 'dehub'} onConfirm={() => setOpen(null)} />
@@ -818,7 +892,7 @@ function WhenSheetGallery() {
 function ToastsGallery() {
   const { t } = useTranslation();
   const showUpdate = () => {
-    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://dehub.io' } as BuildVersion,
+    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://riftn.com' } as BuildVersion,
       t('toasts.refresh_to_pick_up_the_latest_changes'), false, () => {});
     toast.success(t('toasts.rewards_claimed'), { description: t('toasts.rewards_sent_to_wallet') });
   };
@@ -1072,6 +1146,40 @@ function AvatarPromptGallery({ initiallyOpen }: { initiallyOpen: boolean }) {
   );
 }
 
+/** "Unfollow all N not following you back": every stage, nothing is unfollowed. */
+function NonFollowerOfferGallery({ initialStage }: { initialStage: NonFollowerOfferStage | null }) {
+  const [open, setOpen] = useState(!!initialStage);
+  const [stage, setStage] = useState<NonFollowerOfferStage>(initialStage ?? 'offer');
+  const [done, setDone] = useState(stage === 'done' ? 47 : stage === 'working' ? 18 : 0);
+  const confirm = () => {
+    setStage('working');
+    setDone(0);
+    let n = 0;
+    const tick = window.setInterval(() => {
+      n = Math.min(47, n + 6);
+      setDone(n);
+      if (n >= 47) { window.clearInterval(tick); setStage('done'); }
+    }, 400);
+  };
+  return (
+    <section data-non-follower-gallery className="mb-5">
+      <Button onClick={() => { setStage('offer'); setDone(0); setOpen(true); }}>Unfollow non-followers prompt</Button>
+      <NonFollowerOfferSheet
+        open={open}
+        onOpenChange={setOpen}
+        stage={stage}
+        count={47}
+        done={done}
+        failed={0}
+        onAsk={() => setStage('confirm')}
+        onConfirm={confirm}
+        onBack={() => setStage('offer')}
+        onNotNow={() => setOpen(false)}
+      />
+    </section>
+  );
+}
+
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -1133,18 +1241,27 @@ export default function StateGalleryPage() {
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 
+        <NonFollowerOfferGallery
+          initialStage={params.get('sheet') === 'non-followers'
+            ? ((['offer', 'confirm', 'working', 'done', 'error'] as const).find((s) => s === params.get('stage')) ?? 'offer')
+            : null}
+        />
+
         <VideoProcessingGallery
           docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
         />
 
+        <OwnKeysGallery />
         <ComicGallery />
         <UsernameReserveGallery />
 
+        <NameBadgesGallery />
         <FollowCardsGallery />
 
         <StreamerArtworkGallery />
 
         <PinnedProfileGallery />
+        <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
 
         <PollGallery />
         <LockedChatGallery />
@@ -1523,6 +1640,70 @@ function LiveViewerGallery() {
   );
 }
 
+const GALLERY_TEXT_POSTS: GalleryTextPost[] = [
+  'Shot the whole city in the rain last night. Uploading the best twelve tomorrow.',
+  'Hot take: night photos look better slightly underexposed.',
+  'Who is coming to the meetup on Friday?',
+  'New lens arrived. First walk tonight at 11.',
+  'Thank you for 18k. Every one of you made this real.',
+  'Sunday reset. Coffee, long walk, no notifications.',
+].map((content, i) => ({
+  id: `gallery-text-${i}`, type: 'post', content, createdAt: new Date(Date.now() - (i + 1) * 3_600_000).toISOString(),
+  author: { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false },
+  stats: { comments: 12 + i * 7, reposts: i, likes: 140 + i * 53, dislikes: 0 },
+}) as GalleryTextPost);
+
+/** Profile text-post backgrounds: the owner's hold-to-pick picker, phone grid tiles and a desktop card. */
+function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: string | null; initiallyOpen: boolean }) {
+  const [bgId, setBgId] = useState<string | null>(postBgById(initialBg)?.id ?? 'aurora');
+  const [open, setOpen] = useState(initiallyOpen);
+  const bg = postBgById(bgId);
+  const hold = usePostBgHold(true, () => setOpen(true));
+  const postHold = usePostBgHold(true, () => setOpen(true), '[data-pbg-text]');
+  const entries: MixedGridEntry[] = GALLERY_TEXT_POSTS.map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-post-bg-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Profile post backgrounds</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div
+          ref={(el) => { hold.hostRef.current = el; }}
+          {...hold.handlers}
+          className="relative mb-3 flex items-center gap-3 rounded-2xl border border-white/10 p-3 select-none"
+          data-post-bg-hold
+        >
+          {hold.ringEl}
+          <img src={galleryAvatar} alt="" className="h-12 w-12 rounded-full object-cover" />
+          <div><p className="font-bold text-white">Marco V</p><p className="text-xs text-zinc-400">Hold here to choose a background</p></div>
+        </div>
+        <ProfilePostBgContext.Provider value={bg}>
+          <div ref={postHold.hostRef} {...postHold.handlers} className="relative grid gap-4 md:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+            {postHold.ringEl}
+            <div data-post-bg-phone-grid><ProfileMixedGrid entries={entries} /></div>
+            <div data-post-bg-desktop className="space-y-3">
+              {GALLERY_TEXT_POSTS.slice(0, 2).map((post) => (
+                <div key={post.id} data-feed-item data-cinematic="post" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" data-pbg-text="" data-pbg={bg?.id} data-pbg-tone={bg?.tone} data-pbg-kind={bg?.kind}>
+                  {bg && <span aria-hidden className={`pbg pbg-${bg.id}`} />}
+                  <GalleryPostCard post={post} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </ProfilePostBgContext.Provider>
+        <PostBgPicker
+          open={open}
+          current={bg}
+          name="Marco V"
+          handle="@marco_v"
+          avatarUrl={galleryAvatar}
+          sampleText={GALLERY_TEXT_POSTS[0].content}
+          onCancel={() => setOpen(false)}
+          onSave={(id) => { setBgId(id); setOpen(false); }}
+        />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
 /** The desktop profile header wearing a pinned community (lg and up; phones keep the card). */
 function PinnedProfileGallery() {
   const { t: _copy } = _useCopy();
@@ -1684,7 +1865,7 @@ function GithubLinkGallery() {
 }
 
 const GALLERY_FIELDS = [
-  { name: 'Website', value: 'https://dehub.io', verifiedAt: '2026-11-02T00:00:00Z' },
+  { name: 'Website', value: 'https://riftn.com', verifiedAt: '2026-11-02T00:00:00Z' },
   { name: 'Pronouns', value: 'they/them' },
   { name: 'Location', value: 'Lisbon, Portugal' },
   { name: 'Favourite DJ', value: 'Four Tet' },
@@ -1787,7 +1968,7 @@ function AgentWelcomeGallery() {
     queryClient.setQueryData(['agent-welcomes'], {
       limits: { maxPerDay: 10, defaultPerDay: 3, ownerMessagesPerDay: 20, maxText: 500 },
       agents: [{ address: GALLERY_AGENT, username: 'welcomebot', displayName: 'Welcome Bot', avatarImageUrl: null, follow: true, message: true,
-        text: 'Hey {name}, welcome to DeHub! 👋 Shout if you need a hand finding your people.', perDay: 3, today: { follows: 2, messages: 1 } }],
+        text: 'Hey {name}, welcome to Riftn! 👋 Shout if you need a hand finding your people.', perDay: 3, today: { follows: 2, messages: 1 } }],
     });
     const at = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
     const target = (n: string) => ({ address: `0x${n.padStart(40, '0')}`, username: n, displayName: n, avatarImageUrl: null });

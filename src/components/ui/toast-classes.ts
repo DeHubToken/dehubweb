@@ -29,7 +29,7 @@
  */
 export const TOAST_CLASSES = [
   'flex-col items-stretch text-start',
-  // A loading toast has an icon-sized DeHub mark and one short status label.
+  // A loading toast has an icon-sized Riftn mark and one short status label.
   // Keep those on the same row; the generic column layout used to put the
   // loader above the copy. `data-type` lives on this element, so this must be
   // a direct self-selector rather than a `group-*` descendant selector.

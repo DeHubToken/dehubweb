@@ -13,6 +13,7 @@ import Scroll from "@/components/ui/cut-icons/glossary";
 import Blog from "@/components/ui/cut-icons/blog";
 import Hammer from "@/components/ui/cut-icons/work";
 import Shorts from "@/components/ui/cut-icons/shorts";
+import Quote from "@/components/ui/cut-icons/quote";
 import Handshake from "@/components/ui/cut-icons/affiliate";
 
 import Blocks from "@/components/ui/cut-icons/apps";
@@ -99,7 +100,7 @@ export const NAV_ITEMS: NavItem[] = [
   // The converter's batch twin: one link there, a whole channel here.
   { icon: FolderInput, label: 'Migrate', path: '/migrate-youtube' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
-  { icon: BarChart3, label: 'Compare DeHub', path: '/compare' },
+  { icon: BarChart3, label: 'Compare Riftn', path: '/compare' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },
   { icon: BookOpen, label: 'Docs', path: '/docs' },
@@ -155,6 +156,7 @@ export const FEED_TAB_ICON_SCALE: Record<string, number> = {
   shorts: 1,
   images: 1.16,
   videos: 1.08,
+  text: 1,
   music: 1.09,
   live: 1,
   settings: 1.18,
@@ -168,6 +170,20 @@ export const FEED_TABS: SearchTab[] = [
   { icon: Mic, get label() { return _translateCopy("copy.6eb00b4b2614", { defaultValue: "Music" }); }, value: 'music' },
   { icon: Radio, get label() { return _translateCopy("copy.b64ac05f17e6", { defaultValue: "Live" }); }, value: 'live' },
 ];
+
+/**
+ * Phones swap the Videos tab for this one: the Shorts tab already holds wide
+ * videos there, so the slot goes to text-only posts.
+ */
+export const TEXT_FEED_TAB: SearchTab = {
+  icon: Quote, get label() { return _translateCopy("textFeed.tab", { defaultValue: "Text" }); }, value: 'text',
+};
+
+/** The home tab row: phones show Text where wider screens show Videos. */
+export function feedTabsFor(isPhone: boolean, shortsEnabled: boolean): SearchTab[] {
+  const tabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+  return isPhone ? tabs.map(t => (t.value === 'videos' ? TEXT_FEED_TAB : t)) : tabs;
+}
 
 export const EXPLORE_TABS: SearchTab[] = [
   { icon: Search, get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); }, value: 'all' },

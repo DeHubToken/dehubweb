@@ -1,6 +1,6 @@
-export const POST_CARD_VERSION = 'v5';
+export const POST_CARD_VERSION = 'v6';
 export const POST_CARD_TTL = 300;
-const ORIGIN = 'https://dehub.io';
+const ORIGIN = 'https://riftn.com';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
 
 export function postShareImageUrl(tokenId) {
@@ -24,7 +24,7 @@ export function plainPostText(value) {
 
 const flag = (v) => v === true || v === 1 || v === 'true';
 const count = (v) => Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(v))) : 0;
-const SHARE_IMAGE = `${ORIGIN}/og/dehub-social-share.png`;
+const SHARE_IMAGE = `${ORIGIN}/og/riftn-share.png`;
 const CARD_POST_TYPES = ['feed-simple', 'text', 'video', 'feed-video', 'image', 'feed-images'];
 
 /** An absent rating reads as safe, as it does everywhere else. Mature, blocked and pending posts never show their content to a stranger. */
@@ -81,7 +81,7 @@ export function postCardData(post) {
   const title = plainPostText(post.title) || plainPostText(post.name);
   const body = plainPostText(post.description);
   if (!title && !body && !media) return null;
-  const author = plainPostText(post.minterDisplayName || post.minterUser?.displayName || post.mintername || post.minterUsername || 'DeHub');
+  const author = plainPostText(post.minterDisplayName || post.minterUser?.displayName || post.mintername || post.minterUsername || 'Riftn');
   const handle = plainPostText(post.mintername || post.minterUsername || post.minterUser?.username).replace(/^@/, '');
   const rawAvatar = post.minterAvatarUrl || post.minterUser?.avatarImageUrl || '';
   let avatar = '';
@@ -121,8 +121,8 @@ export function applyPostShareImage(html, post) {
   if (!post || !hasSafeRating(post)) {
     return setShareTags(html.replace(/<meta property="og:video(?::[a-z_:]+)?" content="[^"]*">\s*/g, ''), {
       'og:image': SHARE_IMAGE, 'og:image:secure_url': SHARE_IMAGE, 'og:image:type': 'image/png',
-      'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': 'DeHub',
-      'twitter:card': 'summary_large_image', 'twitter:image': SHARE_IMAGE, 'twitter:image:alt': 'DeHub',
+      'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': 'Riftn',
+      'twitter:card': 'summary_large_image', 'twitter:image': SHARE_IMAGE, 'twitter:image:alt': 'Riftn',
     });
   }
   const data = postCardData(post);
@@ -251,7 +251,7 @@ function renderPoll(poll) {
     const check = row.winner ? `<path d="m0 5 4 4 8-8" transform="translate(428 ${top + 12})" fill="none" stroke="#f1f1f4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>` : '';
     return `<g data-poll-option="${row.index}" data-winner="${row.winner}"><defs><clipPath id="poll-${index}"><rect x="415" y="${top}" width="698" height="${row.height}" rx="7"/></clipPath></defs><rect x="415" y="${top}" width="698" height="${row.height}" rx="7" fill="#15161a" stroke="#2a2b31"/>${barWidth ? `<rect x="415" y="${top}" width="${barWidth}" height="${row.height}" fill="${row.winner ? '#5f6066' : '#34353c'}" clip-path="url(#poll-${index})"/>` : ''}${check}${textLines(row.lines, row.winner ? 451 : 430, top + 24, 17, 21, '#e4e4e9')}${poll.ended ? `<text x="1099" y="${top + 24}" text-anchor="end" font-size="17" fill="#e4e4e9">${row.percent}%</text>` : ''}</g>`;
   }).join('');
-  const label = poll.ended ? `Closed · ${poll.totalVotes} ${poll.totalVotes === 1 ? 'vote' : 'votes'}` : 'Poll open · Vote on DeHub';
+  const label = poll.ended ? `Closed · ${poll.totalVotes} ${poll.totalVotes === 1 ? 'vote' : 'votes'}` : 'Poll open · Vote on Riftn';
   return `<g data-poll-state="${poll.ended ? 'closed' : 'open'}">${textLines(poll.question, 415, poll.top + 19, 19, 25, '#d9dae0')}${rows}<text x="415" y="${y + 17}" font-size="15" fill="#92959f">${escape(label)}</text></g>`;
 }
 
@@ -265,10 +265,10 @@ function renderMediaPanel(data, media) {
     <rect x="390" y="${caption.length ? 324 : 414}" width="742" height="${caption.length ? 220 : 130}" fill="url(#foot)" clip-path="url(#panel)"/>
     <rect x="390" y="84" width="742" height="460" rx="22" fill="none" stroke="#22242a"/>
     ${play}
-    <g font-family="Exo" font-weight="500">
+    <g font-family="Manrope" font-weight="500">
       ${textLines(caption, 415, captionY, 28, 36, '#f4f4f6')}
-      <text x="415" y="524" font-size="18" fill="#c5c6ce">dehub.io</text>
-      <text x="1064" y="524" text-anchor="end" font-size="18" fill="#f1f1f4">${data.media.video ? 'Watch on DeHub' : 'View the post'}</text>
+      <text x="415" y="524" font-size="18" fill="#c5c6ce">riftn.com</text>
+      <text x="1064" y="524" text-anchor="end" font-size="18" fill="#f1f1f4">${data.media.video ? 'Watch on Riftn' : 'View the post'}</text>
       <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#f1f1f4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
   </g>`;
@@ -312,27 +312,27 @@ export function renderPostCardSvg(data, { logo, avatar = '', badges = [], media 
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
-  ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="23">${escape(initials)}</text>`}
-  <g font-family="Exo" font-weight="500">
+  ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="23">${escape(initials)}</text>`}
+  <g font-family="Manrope" font-weight="500">
     ${identity.svg}
     <text x="143" y="${identity.handleY}" font-size="17" fill="#9698a3">${escape(wrapPostText(data.handle ? `@${data.handle}` : '', 17, 184, 1)[0] || '')}</text>
     ${stats}
     <text x="60" y="520" font-size="17" fill="#8b8e99">${escape(dateText)}</text>
   </g>
-  ${showMedia ? renderMediaPanel(data, media) : `<g font-family="Exo" font-weight="500">
+  ${showMedia ? renderMediaPanel(data, media) : `<g font-family="Manrope" font-weight="500">
     <g clip-path="url(#copy)">
       ${textLines(title.lines, 415, title.y, title.size, title.step, '#f4f4f6')}
       ${textLines(body.lines, 415, body.y, body.size, body.step, '#c5c6ce')}
       ${renderPoll(poll)}
     </g>
-    <text x="415" y="524" font-size="18" fill="#9699a3">dehub.io</text>
+    <text x="415" y="524" font-size="18" fill="#9699a3">riftn.com</text>
     <text x="1064" y="524" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
     <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>`}
   </svg>`;
 }
 
-export const PROFILE_CARD_VERSION = 'v1';
+export const PROFILE_CARD_VERSION = 'v2';
 const PROFILE_HANDLE = /^[A-Za-z0-9_][A-Za-z0-9_.-]{0,63}$/;
 
 export function profileShareImageUrl(handle) {
@@ -363,7 +363,7 @@ export function applyProfileShareImage(html, account) {
   const data = profileCardData(account);
   if (!data) return html;
   const image = profileShareImageUrl(data.handle);
-  const alt = `${data.name} (@${data.handle}) on DeHub`;
+  const alt = `${data.name} (@${data.handle}) on Riftn`;
   return setShareTags(html, {
     'og:image': image, 'og:image:secure_url': image, 'og:image:type': 'image/png',
     'og:image:width': '1200', 'og:image:height': '630', 'og:image:alt': alt,
@@ -391,13 +391,13 @@ export function renderProfileCardSvg(data, { logo, avatar = '', chrome = '' }) {
   <rect x="68" y="84" width="1064" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="110" y="190" width="220" height="220" rx="56" fill="#25262c" stroke="#5d5f69"/>
-  ${avatar ? `<image x="110" y="190" width="220" height="220" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="220" y="325" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="76">${escape(initials)}</text>`}
-  <g font-family="Exo" font-weight="500">
+  ${avatar ? `<image x="110" y="190" width="220" height="220" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="220" y="325" text-anchor="middle" fill="#dedee3" font-family="Manrope" font-size="76">${escape(initials)}</text>`}
+  <g font-family="Manrope" font-weight="500">
     ${textLines(name, 380, nameY, 56, 66, '#f4f4f6')}
     <text x="380" y="${handleY}" font-size="28" fill="#9698a3">${escape(wrapPostText(`@${data.handle}`, 28, 640, 1)[0])}</text>
     ${facts ? `<text x="380" y="${handleY + 62}" font-size="26" fill="#d9dae0">${escape(facts)}</text>` : ''}
-    <text x="110" y="508" font-size="18" fill="#9699a3">dehub.io</text>
-    <text x="1064" y="508" text-anchor="end" font-size="18" fill="#bfc1c9">Follow on DeHub</text>
+    <text x="110" y="508" font-size="18" fill="#9699a3">riftn.com</text>
+    <text x="1064" y="508" text-anchor="end" font-size="18" fill="#bfc1c9">Follow on Riftn</text>
     <path d="M1076 507l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   </svg>`;

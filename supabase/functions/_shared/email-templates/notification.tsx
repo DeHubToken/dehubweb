@@ -35,10 +35,10 @@ export const NotificationEmail = ({ heading, body, actionUrl }: NotificationEmai
         <Heading style={h1}>{heading}</Heading>
         <Text style={text}>{body}</Text>
         <Button href={actionUrl} style={button}>
-          Open on DeHub
+          Open on Riftn
         </Button>
         <Text style={footer}>
-          You are getting this because email notifications are on for your DeHub
+          You are getting this because email notifications are on for your Riftn
           account. Turn them off any time in Settings → Notifications.
         </Text>
       </Container>

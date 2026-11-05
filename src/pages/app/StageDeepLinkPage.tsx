@@ -250,10 +250,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.11dfcc380023", { defaultValue: "{{value1}} — Upcoming Stage on DeHub", value1: stage.title })}
+          title={_copy("copy.11dfcc380023", { defaultValue: "{{value1}}: Upcoming Stage on Riftn", value1: stage.title })}
           description={
             stage.description ||
-            _copy("copy.ca52fb25484b", { defaultValue: "An upcoming live audio Stage on DeHub — the decentralized, open source social platform." })
+            _copy("copy.ca52fb25484b", { defaultValue: "An upcoming live audio Stage on Riftn — the decentralized, open source social platform." })
           }
           noindex
         />
@@ -411,10 +411,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.52b73dabadb9", { defaultValue: "{{value1}} — Stage on DeHub", value1: stage.title })}
+          title={_copy("copy.52b73dabadb9", { defaultValue: "{{value1}}: Stage on Riftn", value1: stage.title })}
           description={
             stage.description ||
-            _copy("copy.470e681ef727", { defaultValue: "A past live audio Stage on DeHub — listen back to the recording." })
+            _copy("copy.470e681ef727", { defaultValue: "A past live audio Stage on Riftn — listen back to the recording." })
           }
           noindex
         />
@@ -606,10 +606,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={_copy("copy.82d0da87f78c", { defaultValue: "{{value1}} — Live on DeHub", value1: stage.title })}
+          title={_copy("copy.82d0da87f78c", { defaultValue: "{{value1}}: Live on Riftn", value1: stage.title })}
           description={
             stage.description ||
-            _copy("copy.b7276aae76db", { defaultValue: "A live audio Stage on DeHub — listen in now, no account needed." })
+            _copy("copy.b7276aae76db", { defaultValue: "A live audio Stage on Riftn — listen in now, no account needed." })
           }
           noindex
         />
@@ -767,7 +767,7 @@ export default function StageDeepLinkPage() {
           signal). */}
       <SEOHead
         title={t('stages.joinSeoTitle')}
-        description={_copy("copy.b4cd7935e5a8", { defaultValue: "You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform." })}
+        description={_copy("copy.b4cd7935e5a8", { defaultValue: "You've been invited to a live audio Stage on Riftn. Join the room, listen in and take the mic on the decentralized social platform." })}
         noindex
       />
       <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />

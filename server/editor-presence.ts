@@ -9,7 +9,7 @@ interface Context { getWebSockets(): Socket[]; acceptWebSocket(socket: Socket): 
 interface Namespace { idFromName(name: string): unknown; get(id: unknown): { fetch(request: Request): Promise<Response> } }
 export function presenceRoute(request: Request) {
   const url = new URL(request.url), match = PATH.exec(url.pathname);
-  if (!match || url.search || !["dehub.io", "www.dehub.io"].includes(url.hostname)) return null;
+  if (!match || url.search || !["riftn.com", "www.riftn.com", "dehub.io", "www.dehub.io"].includes(url.hostname)) return null;
   return { owner: match[1], projectId: match[2] };
 }
 export async function handleEditorPresence(request: Request, env: { EDITOR_PRESENCE?: Namespace }) {
@@ -18,7 +18,7 @@ export async function handleEditorPresence(request: Request, env: { EDITOR_PRESE
   if (request.method !== "GET" || request.headers.get("Upgrade")?.toLowerCase() !== "websocket") return new Response("WebSocket required", { status: 426, headers: { "Cache-Control": "no-store" } });
   const origin = request.headers.get("Origin");
   // Native sockets have no Origin. Browser connections must come from the app.
-  if (origin && !["https://dehub.io", "https://www.dehub.io"].includes(origin)) return new Response("Unavailable", { status: 403, headers: { "Cache-Control": "no-store" } });
+  if (origin && !["https://riftn.com", "https://www.riftn.com", "https://dehub.io", "https://www.dehub.io"].includes(origin)) return new Response("Unavailable", { status: 403, headers: { "Cache-Control": "no-store" } });
   if (!env.EDITOR_PRESENCE) return new Response("Live sessions unavailable", { status: 503, headers: { "Cache-Control": "no-store" } });
   const room = env.EDITOR_PRESENCE.get(env.EDITOR_PRESENCE.idFromName(target.owner + ":" + target.projectId));
   return room.fetch(request);

@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Share Entity Drawer
  * ===================
- * One share sheet for everything in DeHub: copy the link, send it in a DM, or
+ * One share sheet for everything in Riftn: copy the link, send it in a DM, or
  * post it to the feed. Every route lands as a card rather than a URL, because
  * the link goes through the same resolver the surfaces read.
  *
@@ -109,7 +109,7 @@ export function ShareEntityDrawer({
   // in-app routes stay reachable everywhere.
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
-  // Links that leave DeHub carry the sharer's referral code; the in-app routes
+  // Links that leave Riftn carry the sharer's referral code; the in-app routes
   // (message, feed) keep the plain link, which renders as a card.
   const handleCopy = () => {
     navigator.clipboard.writeText(viewerShareUrl(url));

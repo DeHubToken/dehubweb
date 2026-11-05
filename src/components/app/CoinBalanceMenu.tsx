@@ -165,7 +165,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     <div className="space-y-1">
       {/* Balance display */}
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
-        {/* DeHub Coin Balance */}
+        {/* Riftn Coin Balance */}
         <div className="flex items-center gap-2">
           <img src={dehubCoin} alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} className="w-5 h-5" />
           <span className="text-white font-semibold">{formatBalance(balance)}</span>

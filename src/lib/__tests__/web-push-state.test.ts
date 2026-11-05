@@ -189,7 +189,7 @@ describe('web push state', () => {
     });
 
     const mod = await freshModule();
-    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(false);
+    await expect(mod.probeNotificationDisplay('Riftn', 'probe')).resolves.toBe(false);
     expect(mod.getWebPushState()).toBe('blocked');
   });
 
@@ -207,7 +207,7 @@ describe('web push state', () => {
     });
 
     const mod = await freshModule();
-    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(false);
+    await expect(mod.probeNotificationDisplay('Riftn', 'probe')).resolves.toBe(false);
     expect(mod.getWebPushState()).toBe('display-failed');
     expect(mod.getWebPushFailureReason()).toContain('could not be persisted');
   });
@@ -226,12 +226,12 @@ describe('web push state', () => {
     });
 
     const mod = await freshModule();
-    await mod.probeNotificationDisplay('DeHub', 'probe');
+    await mod.probeNotificationDisplay('Riftn', 'probe');
     expect(mod.getWebPushState()).toBe('display-failed');
     expect(mod.getWebPushFailureReason()).not.toBeNull();
 
     fail = false;
-    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(true);
+    await expect(mod.probeNotificationDisplay('Riftn', 'probe')).resolves.toBe(true);
     expect(mod.getWebPushState()).toBe('subscribed');
     expect(mod.getWebPushFailureReason()).toBeNull();
   });
@@ -241,7 +241,7 @@ describe('web push state', () => {
 
     const mod = await freshModule();
     await mod.subscribeToWebPush();
-    await expect(mod.probeNotificationDisplay('DeHub', 'probe')).resolves.toBe(true);
+    await expect(mod.probeNotificationDisplay('Riftn', 'probe')).resolves.toBe(true);
     expect(mod.getWebPushState()).toBe('subscribed');
   });
 

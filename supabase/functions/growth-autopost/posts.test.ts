@@ -36,7 +36,7 @@ test('a long quote gives way before the credit, the numbers and the link', () =>
   assert.match(x, /^Creator of the day: Maya Lens/);
   assert.match(x, /125K DHB in tips and 812 likes/);
   assert.match(x, /…”/);
-  assert.ok(x.endsWith('https://dehub.io/post/6552?utm_source=twitter&utm_medium=social&utm_campaign=autopost_creator_of_day'));
+  assert.ok(x.endsWith('https://riftn.com/post/6552?utm_source=twitter&utm_medium=social&utm_campaign=autopost_creator_of_day'));
 });
 
 test('credit is by name, never an @handle that would tag someone else', () => {
@@ -57,7 +57,7 @@ test('every link is tagged for its own platform and kind', () => {
 });
 
 test('utmLink keeps existing parameters and replaces stale tags', () => {
-  const url = new URL(utmLink('https://dehub.io/leaderboard?tab=tips&utm_source=old', 'threads', 'leaderboard'));
+  const url = new URL(utmLink('https://riftn.com/leaderboard?tab=tips&utm_source=old', 'threads', 'leaderboard'));
   assert.equal(url.searchParams.get('tab'), 'tips');
   assert.equal(url.searchParams.get('utm_source'), 'threads');
 });
@@ -82,7 +82,7 @@ test('shorts of the week leaves mature shorts out', () => {
     { tokenId: 1, name: 'spicy', contentRating: 'mature', minterDisplayName: 'A' },
     { tokenId: 2, name: 'Skate line', minterDisplayName: 'B' },
   ], at)!;
-  assert.equal(draft.link, 'https://dehub.io/post/2');
+  assert.equal(draft.link, 'https://riftn.com/post/2');
   assert.doesNotMatch(textFor(draft, 'twitter'), /spicy/);
   assert.equal(shortsOfWeek([{ tokenId: 1, contentRating: 'mature' }], at), null);
 });
@@ -108,8 +108,8 @@ test('dhb update states price, change and volume within X limits', () => {
 });
 
 test('live posts point at the stream or stage', () => {
-  assert.equal(liveStream({ _id: 'a', tokenId: 77, title: 't', account: { displayName: 'Kai' } }, at).link, 'https://dehub.io/post/77');
-  assert.equal(stage({ id: 'u', short_id: 12, title: 'AMA', status: 'live', listener_count: 80 }, at).link, 'https://dehub.io/stages/12');
+  assert.equal(liveStream({ _id: 'a', tokenId: 77, title: 't', account: { displayName: 'Kai' } }, at).link, 'https://riftn.com/post/77');
+  assert.equal(stage({ id: 'u', short_id: 12, title: 'AMA', status: 'live', listener_count: 80 }, at).link, 'https://riftn.com/stages/12');
 });
 
 test('weekly slots open only on their day, from an hour before', () => {
@@ -137,8 +137,8 @@ test('stage clips carry the video and a tagged link back to the stage', () => {
   assert.deepEqual(draft.media, [{ url: 'https://example.supabase.co/storage/v1/object/public/stage-clips/a/b/c.mp4', type: 'video' }]);
   const texts = textsFor(draft, ['tiktok', 'instagram', 'youtube', 'twitter']);
   for (const [platform, text] of Object.entries(texts)) {
-    assert.ok(text.includes(`https://dehub.io/stages/42?utm_source=${platform}&utm_medium=social&utm_campaign=autopost_stage_clip`), platform);
-    assert.ok(text.startsWith('From “Builders hour”, a DeHub Stage hosted by maya'), platform);
+    assert.ok(text.includes(`https://riftn.com/stages/42?utm_source=${platform}&utm_medium=social&utm_campaign=autopost_stage_clip`), platform);
+    assert.ok(text.startsWith('From “Builders hour”, a Riftn Stage hosted by maya'), platform);
   }
   assert.ok(texts.twitter.length <= 280);
 });

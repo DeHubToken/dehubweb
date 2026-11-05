@@ -89,11 +89,11 @@ async function list(db: Db, view: string) {
 }
 
 const MESSAGES: Record<string, (name: string, note: string | null) => string> = {
-  approve: (name) => `${name} is approved and now in the DeHub app store.`,
-  verify: (name) => `${name} is approved and verified in the DeHub app store.`,
+  approve: (name) => `${name} is approved and now in the Riftn app store.`,
+  verify: (name) => `${name} is approved and verified in the Riftn app store.`,
   reject: (name, note) => `${name} was not approved for the store yet${note ? `: ${note}` : '.'} Fix it and submit again.`,
   unlist: (name, note) => `${name} was taken out of the store listing${note ? `: ${note}` : '.'}`,
-  suspend: (name, note) => `${name} was suspended${note ? `: ${note}` : '.'} Contact DeHub support.`,
+  suspend: (name, note) => `${name} was suspended${note ? `: ${note}` : '.'} Contact Riftn support.`,
   restore: (name) => `${name} is live again.`,
 };
 
@@ -126,12 +126,12 @@ async function decide(db: Db, who: Reviewer, action: string, slug: string, note:
       recipients.map((wallet) => ({
         recipient_address: wallet,
         actor_address: ZERO,
-        actor_username: 'DeHub Apps',
+        actor_username: 'Riftn Apps',
         actor_avatar: app.icon_url,
         type: 'miniapp',
         content: MESSAGES[action](app.name, note),
         reference_id: app.slug,
-        reference_title: action === 'reject' || action === 'unlist' ? 'https://dehub.io/apps/dev' : null,
+        reference_title: action === 'reject' || action === 'unlist' ? 'https://riftn.com/apps/dev' : null,
       })),
     );
     if (notifyError) console.error('miniapp-admin notify failed', notifyError.message);
@@ -214,7 +214,7 @@ async function markPaid(db: Db, who: Reviewer, weekStart: string, appId: string,
   const { error: notifyError } = await db.from('custom_notifications').insert({
     recipient_address: row.owner_wallet,
     actor_address: ZERO,
-    actor_username: 'DeHub Apps',
+    actor_username: 'Riftn Apps',
     actor_avatar: row.miniapp_apps?.icon_url ?? null,
     type: 'miniapp',
     content: `${row.miniapp_apps?.name ?? 'Your app'} earned ${amount} DHB in app rewards for the week of ${weekStart}. It is in your wallet.`,

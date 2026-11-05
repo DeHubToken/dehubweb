@@ -9,10 +9,10 @@
  * src/test/route-meta.test.ts fails when either side drifts.
  */
 
-export const SITE_URL = 'https://dehub.io';
+export const SITE_URL = 'https://riftn.com';
 
 /** The worker's default 1200x630 share card (SHARE_IMAGE). */
-export const SHARE_IMAGE = `${SITE_URL}/og/dehub-social-share.png`;
+export const SHARE_IMAGE = `${SITE_URL}/og/riftn-share.png`;
 
 /**
  * Route keys whose /app/<key> twin the worker collapses onto the bare /<key>:
@@ -82,7 +82,7 @@ export function canonicalUrl(urlOrPath: string): string {
   } catch {
     return urlOrPath;
   }
-  if (parsed.hostname !== 'dehub.io') return urlOrPath;
+  if (parsed.hostname !== 'riftn.com' && parsed.hostname !== 'dehub.io') return urlOrPath;
   return `${SITE_URL}${canonicalPath(parsed.pathname)}${parsed.search}`;
 }
 

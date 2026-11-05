@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/drawer';
 import { editPost, replaceVideoFile, getPostQuota } from '@/lib/api/dehub';
 import { BASE_POST_TEXT_CHARS, postTextLimit } from '@/lib/post-text-limit';
-import { ARTICLE_SUMMARY_MAX } from '@/lib/article';
+import { ARTICLE_BODY_MAX, ARTICLE_IMAGE_MAX, ARTICLE_RAW_MAX, ARTICLE_SUMMARY_MAX, articleImages, articleTextLength } from '@/lib/article';
 import type { ContentRating, ShopLink } from '@/lib/api/dehub/types';
 import { ShopSheetLazy, type ShopBoardDraft } from '@/features/post/components/ShopSheetLazy';
 import { useStreamProducts, useStreamProductActions } from '@/hooks/use-stream-shopping';
@@ -270,8 +270,16 @@ export function EditPostModal({
       toast.error(_copy("copy.d8b5fc0e754c", { defaultValue: "Description must be {{value1}} characters or less", value1: descriptionMax.toLocaleString('en-US') }));
       return;
     }
-    if (currentArticleBody !== undefined && articleBody.trim().length < 100) {
+    if (currentArticleBody !== undefined && articleTextLength(articleBody) < 100) {
       toast.error(_copy("copy.1106c76020fa", { defaultValue: "Article body must be at least 100 characters" }));
+      return;
+    }
+    if (currentArticleBody !== undefined && articleTextLength(articleBody) > ARTICLE_BODY_MAX) {
+      toast.error(t('articles.bodyTooLong', { count: articleTextLength(articleBody) - ARTICLE_BODY_MAX, defaultValue: '{{count}} characters over the limit' }));
+      return;
+    }
+    if (currentArticleBody !== undefined && articleImages(articleBody).length > ARTICLE_IMAGE_MAX) {
+      toast.error(t('articles.imageLimit', { count: ARTICLE_IMAGE_MAX, defaultValue: 'Articles can hold up to {{count}} images' }));
       return;
     }
 
@@ -392,8 +400,8 @@ export function EditPostModal({
           {currentArticleBody !== undefined && <div className="space-y-2">
             <Label htmlFor="edit-article-body">{_copy("copy.91090fa36a44", { defaultValue: "Article body" })}</Label>
             <Textarea id="edit-article-body" value={articleBody} onChange={e => setArticleBody(e.target.value)}
-              maxLength={20000} className="min-h-64 bg-white/5 border-white/10 text-white" />
-            <p className="text-xs text-zinc-500 text-right">{articleBody.length}/20,000</p>
+              maxLength={ARTICLE_RAW_MAX} className="min-h-64 bg-white/5 border-white/10 text-white" />
+            <p className="text-xs text-zinc-500 text-right">{articleTextLength(articleBody).toLocaleString('en-US')}/20,000</p>
           </div>}
           <div className="space-y-2">
             <Label htmlFor="edit-description" className="text-sm font-medium text-zinc-300">{_copy("copy.526e0087cc3f", { defaultValue: "Description" })}</Label>

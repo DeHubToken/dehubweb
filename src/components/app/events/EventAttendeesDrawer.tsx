@@ -2,7 +2,7 @@
  * Event Attendees Drawer
  * =======================
  * Shows paginated list of going / interested users with infinite scroll.
- * Resolves profile info (avatar, username, display name) from the DeHub API.
+ * Resolves profile info (avatar, username, display name) from the Riftn API.
  */
 
 import { useTranslation } from 'react-i18next';

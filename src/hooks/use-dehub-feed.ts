@@ -1,7 +1,7 @@
 /**
- * DeHub Feed Hook
+ * Riftn Feed Hook
  * ================
- * Fetches content from the DeHub API and maps it to local feed types.
+ * Fetches content from the Riftn API and maps it to local feed types.
  * Provides loading states, pagination, and error handling.
  * 
  * @module hooks/use-dehub-feed
@@ -95,7 +95,7 @@ export function getContentType(nft: DeHubNFT): 'video' | 'image' | 'audio' {
 }
 
 /**
- * Map DeHub NFT to VideoItem type
+ * Map Riftn NFT to VideoItem type
  * Handles both old and new API response field names
  */
 export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
@@ -271,7 +271,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
 }
 
 /**
- * Map DeHub NFT to ImagePost type
+ * Map Riftn NFT to ImagePost type
  * Handles both old and new API response field names
  * Supports multi-image posts (1-4 images)
  */
@@ -367,7 +367,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
 }
 
 /**
- * Map DeHub NFT to LiveStream type
+ * Map Riftn NFT to LiveStream type
  * Handles live content from the API
  */
 export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
@@ -439,6 +439,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     mediaDescriptions: nft.mediaDescriptions,
     layout: nft.layout,
     mediaCaptions: nft.mediaCaptions,
+    comicBorder: nft.comicBorder,
     hideAssetCards: nft.hideAssetCards,
     spoilerText: nft.spoilerText,
     quotePolicy: nft.quotePolicy,
@@ -463,7 +464,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
 }
 
 /**
- * Map DeHub NFT creator to story user format
+ * Map Riftn NFT creator to story user format
  */
 export function mapNFTToStoryUser(nft: DeHubNFT): { name: string; avatar: string } {
   const name = nft.minterDisplayName ||
@@ -486,7 +487,7 @@ interface UseDeHubFeedOptions extends SearchNFTsParams {
 }
 
 /**
- * Hook to fetch paginated DeHub feed content
+ * Hook to fetch paginated Riftn feed content
  * By default shows all published content — minted and off-chain ('signed') alike.
  */
 export function useDeHubFeed(options: UseDeHubFeedOptions = {}) {

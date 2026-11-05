@@ -13,7 +13,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * and picking the target is the whole job of this drawer.
  *
  * **One box, two behaviours.** The post picker takes a search term *or* a
- * pasted link. Paste `https://dehub.io/app/post/2008`, the path on its own, or
+ * pasted link. Paste `https://riftn.com/app/post/2008`, the path on its own, or
  * the bare number, and it resolves that one post; type anything else and it
  * searches. Two separate inputs was the first draft, and it made the person
  * decide which one they were doing before they had done it.

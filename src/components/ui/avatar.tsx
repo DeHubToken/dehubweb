@@ -3,19 +3,35 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 
 import { cn } from "@/lib/utils";
 
+type ImageLoadingStatus = "idle" | "loading" | "loaded" | "error";
+
+/**
+ * What the avatar's photo is doing, so the initials only show once it has
+ * actually failed (or there is no photo at all). Radix shows the fallback for
+ * the whole download, so every feed author flashed a letter ("J") before the
+ * real photo swapped in. While the photo loads the tile now stays a plain fill.
+ */
+const AvatarStatusContext = React.createContext<((status: ImageLoadingStatus) => void) | null>(null);
+const AvatarStatusValue = React.createContext<ImageLoadingStatus | "none">("none");
+
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Root
-    ref={ref}
-    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const [status, setStatus] = React.useState<ImageLoadingStatus | "none">("none");
+  return (
+    <AvatarStatusContext.Provider value={setStatus}>
+      <AvatarStatusValue.Provider value={status}>
+        <AvatarPrimitive.Root
+          ref={ref}
+          className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg", className)}
+          {...props}
+        />
+      </AvatarStatusValue.Provider>
+    </AvatarStatusContext.Provider>
+  );
+});
 Avatar.displayName = AvatarPrimitive.Root.displayName;
-
-type ImageLoadingStatus = "idle" | "loading" | "loaded" | "error";
 
 type AvatarImageProps = Omit<
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>,
@@ -41,13 +57,17 @@ const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   AvatarImageProps
 >(({ className, loading, decoding, onError, onLoadingStatusChange, alt, ...props }, ref) => {
+  const reportStatus = React.useContext(AvatarStatusContext);
   const handleLoadingStatusChange = React.useCallback(
     (status: ImageLoadingStatus) => {
+      reportStatus?.(status);
       onLoadingStatusChange?.(status);
       if (status === "error") onError?.();
     },
-    [onError, onLoadingStatusChange],
+    [onError, onLoadingStatusChange, reportStatus],
   );
+  // An image that goes away hands the tile back to the initials.
+  React.useEffect(() => () => reportStatus?.("error"), [reportStatus]);
 
   return (
     <AvatarPrimitive.Image
@@ -80,7 +100,10 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => {
+  const status = React.useContext(AvatarStatusValue);
+  const photoPending = status === "idle" || status === "loading";
+  return (
   <AvatarPrimitive.Fallback
     ref={ref}
     /* Initials tile. Callers pass their own `bg-zinc-700`-family fill, which no
@@ -90,8 +113,11 @@ const AvatarFallback = React.forwardRef<
     data-avatar-fallback
     className={cn("flex h-full w-full items-center justify-center rounded-lg bg-muted", className)}
     {...props}
-  />
-));
+  >
+    {photoPending ? null : children}
+  </AvatarPrimitive.Fallback>
+  );
+});
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 export { Avatar, AvatarImage, AvatarFallback };

@@ -4,14 +4,14 @@ export const teachingCreatorEconomyPost: BlogPostType = {
   id: 'teaching-the-creator-economy',
   slug: 'teaching-the-creator-economy',
   title: 'Are We Teaching Tomorrow’s Creator Economy With Yesterday’s Platforms?',
-  seoTitle: 'Teaching the Creator Economy: A Syllabus Problem | DeHub',
+  seoTitle: 'Teaching the Creator Economy: A Syllabus Problem | Riftn',
   seoDescription: 'Creator economy courses teach students to succeed inside platforms whose terms they will never control. A case for teaching ownership structure, not platform tactics.',
   excerpt: 'A syllabus is a claim about what will still be true when the student graduates. Most creator economy courses quietly teach one company’s business model as though it were physics.',
   content: `There is a question worth asking of any course that teaches the creator economy, and it is not a rhetorical one. It has an answer, and the answer is usually uncomfortable.
 
 **If the dominant platforms changed their terms next year, how much of this syllabus would still be true?**
 
-For a lot of well-designed, well-taught courses, the honest answer is: less than half. Not because the teaching is poor — much of it is excellent — but because the material is organised around the operating rules of specific companies, and those rules are neither stable nor neutral. They are commercial decisions, revised unilaterally, by firms with no obligation to tell a curriculum committee first.
+For a lot of well-designed, well-taught courses, the honest answer is: less than half. Not because the teaching is poor, much of it is excellent, but because the material is organised around the operating rules of specific companies, and those rules are neither stable nor neutral. They are commercial decisions, revised unilaterally, by firms with no obligation to tell a curriculum committee first.
 
 This is not a criticism from outside the tent. Higher education has been notably faster than most industries to take the creator economy seriously as a field; Syracuse launched a Center for the Creator Economy in September 2025 as a joint venture between its communications and management schools, and it will not be the last. The question is not whether to teach this. It is what, exactly, is being taught.
 
@@ -21,17 +21,17 @@ A module on audience growth teaches hook structure, posting cadence, retention c
 
 The hidden lesson is the one nobody writes on the slide: that the platform is the environment, that its rules are the physics of the domain, and that the creator's job is to optimise within them. Students absorb the frame far more thoroughly than the tactics, and the frame is the part that dates.
 
-Consider what a student who graduated into the 2017–2019 "Adpocalypse" actually needed to know. Advertisers withdrew over brand-safety concerns; ad rates collapsed; large numbers of channels were removed from monetisation, in some cases over videos years old; creators reported ad revenue falling by up to 80%. The skill that mattered in that moment was not thumbnail optimisation. It was whether you had any relationship with your audience that did not route through the company that had just changed its mind — an email list, a direct payment rail, a second home.
+Consider what a student who graduated into the 2017–2019 "Adpocalypse" actually needed to know. Advertisers withdrew over brand-safety concerns; ad rates collapsed; large numbers of channels were removed from monetisation, in some cases over videos years old; creators reported ad revenue falling by up to 80%. The skill that mattered in that moment was not thumbnail optimisation. It was whether you had any relationship with your audience that did not route through the company that had just changed its mind, an email list, a direct payment rail, a second home.
 
 That is a curriculum question, and it is almost never on the syllabus, because it is not a *tactic*. It is a structural property of how the creator set themselves up years earlier.
 
-![The hidden curriculum — platform tactics expire fast, the underlying structure does not](/media/fig-teaching-hidden-curriculum.jpg)
+![The hidden curriculum, platform tactics expire fast, the underlying structure does not](/media/fig-teaching-hidden-curriculum.jpg)
 
 ## Three questions that generalise
 
 The tactics will change. The following will not, and they can be taught rigorously:
 
-**Who owns the asset?** For any creator business, list the assets — the work, the audience relationship, the payment rail, the brand, the archive — and for each one identify the legal owner and the party with operational control. These are frequently different, and the gap between them is where most creator failure happens. Students can do this for a real channel in an afternoon. Very few have ever been asked to.
+**Who owns the asset?** For any creator business, list the assets, the work, the audience relationship, the payment rail, the brand, the archive, and for each one identify the legal owner and the party with operational control. These are frequently different, and the gap between them is where most creator failure happens. Students can do this for a real channel in an afternoon. Very few have ever been asked to.
 
 **Who sets the price?** In most creator businesses the creator does not set their own rate. It is set by an ad auction, or by an undisclosed formula, or by a platform's revenue-share policy. This is an unusual property for a business to have, and it is worth teaching as such rather than as background. A firm that cannot price its own output is in a weaker strategic position than its revenue implies.
 
@@ -43,21 +43,21 @@ These three questions do more work than a semester of platform-specific techniqu
 
 We build one of the alternatives, so treat the following as an argument rather than an observation.
 
-[DeHub](/guides/what-is-dehub) is an open-source, decentralised social network where a post can be minted on-chain to the creator's wallet, at publication or any time after, the ad revenue share is published — up to 90% — rather than inferred from a dashboard, the feed is chronological rather than ranked in private, and subscriptions are minted as tradable assets that pay the original creator a royalty on resale.
+[Riftn](/guides/what-is-dehub) is an open-source, decentralised social network where a post can be minted on-chain to the creator's wallet, at publication or any time after, the ad revenue share is published, up to 90%, rather than inferred from a dashboard, the feed is chronological rather than ranked in private, and subscriptions are minted as tradable assets that pay the original creator a royalty on resale.
 
-We are not suggesting a course should teach DeHub. We are suggesting that a course which never examines *any* structural alternative has, by omission, taught students that the current arrangement is the only possible one. That is a claim about the world, and it is not obviously true.
+We are not suggesting a course should teach Riftn. We are suggesting that a course which never examines *any* structural alternative has, by omission, taught students that the current arrangement is the only possible one. That is a claim about the world, and it is not obviously true.
 
-A useful classroom exercise, and one that does not require endorsing anything: take one creator business and model it twice. Once under a conventional platform's terms — undisclosed rate, revocable access, no portability. Once under terms where ownership is recorded, the share is fixed and published, and the audience relationship can move. Ask what changes about valuation, risk, negotiating leverage and exit. Students find the results genuinely surprising, largely because the second model has a terminal value and the first mostly does not.
+A useful classroom exercise, and one that does not require endorsing anything: take one creator business and model it twice. Once under a conventional platform's terms, undisclosed rate, revocable access, no portability. Once under terms where ownership is recorded, the share is fixed and published, and the audience relationship can move. Ask what changes about valuation, risk, negotiating leverage and exit. Students find the results genuinely surprising, largely because the second model has a terminal value and the first mostly does not.
 
-![Teach the structure, not this year’s algorithm — three questions that generalise](/media/fig-teaching-structure.jpg)
+![Teach the structure, not this year’s algorithm, three questions that generalise](/media/fig-teaching-structure.jpg)
 
 ## The objection worth taking seriously
 
 The strongest counter-argument is employability. Students need jobs, jobs exist where the audiences are, and the audiences are on the incumbent platforms. Teaching speculative alternatives at the expense of marketable skills would be self-indulgent, and the graduate would be right to resent it.
 
-This is correct, and it is why the argument here is additive rather than substitutive. Teach the platforms. Teach them thoroughly — that is where the internships are. But teach them as *one instance* of a class of arrangements, with their ownership structure made explicit, rather than as the ground truth of the field. The difference costs perhaps two lectures and changes what the student is equipped to notice for the rest of their career.
+This is correct, and it is why the argument here is additive rather than substitutive. Teach the platforms. Teach them thoroughly, that is where the internships are. But teach them as *one instance* of a class of arrangements, with their ownership structure made explicit, rather than as the ground truth of the field. The difference costs perhaps two lectures and changes what the student is equipped to notice for the rest of their career.
 
-There is a second objection: that the alternatives are immature, volatile, and in some cases will not exist in five years. Also true. But the pedagogical value of examining a structural alternative does not depend on that alternative winning. It depends on the student being able to see the structure at all — and you cannot see the structure of an arrangement you have only ever encountered one example of.
+There is a second objection: that the alternatives are immature, volatile, and in some cases will not exist in five years. Also true. But the pedagogical value of examining a structural alternative does not depend on that alternative winning. It depends on the student being able to see the structure at all, and you cannot see the structure of an arrangement you have only ever encountered one example of.
 
 ## The uncomfortable version
 
@@ -79,12 +79,12 @@ The same way economics teaches models that do not perfectly describe any real ma
 
 Two sessions. One mapping asset ownership and operational control for a real creator business, and one running the platform-change counterfactual. Both are assessable, neither requires new technology in the classroom, and together they cover the failure mode that platform tactics do not address.
 
-### Does DeHub work with universities?
+### Does Riftn work with universities?
 
-Yes — the platform is open source, and we are glad to support course material, guest sessions or student projects, including ones that argue against us. If you are building a creator economy programme and want a structural alternative to examine, get in touch.`,
+Yes, the platform is open source, and we are glad to support course material, guest sessions or student projects, including ones that argue against us. If you are building a creator economy programme and want a structural alternative to examine, get in touch.`,
   bannerImage: '/media/teaching-the-creator-economy-banner.png',
   bannerImageAlt: 'A creator economy syllabus examined for what survives a platform change',
-  author: { name: 'DeHub Team' },
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-08-28T11:00:00.000Z',
   updatedAt: '2026-08-28T11:00:00.000Z',
   tags: ['creator economy education', 'higher education', 'media studies', 'platform economics', 'digital ownership', 'web3 curriculum', 'dehub'],

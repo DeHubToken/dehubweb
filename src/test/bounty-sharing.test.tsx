@@ -28,7 +28,7 @@ describe('bounty sharing', () => {
     expect(screen.getByRole('link')).not.toContainElement(screen.getByRole('button', { name: 'comments.share' }));
     fireEvent.click(screen.getByRole('button', { name: 'comments.share' }));
     fireEvent.click(await screen.findByRole('button', { name: /Send in a message/ }));
-    expect(await screen.findByTestId('dm-share-url')).toHaveTextContent('https://dehub.io/bounty/14');
+    expect(await screen.findByTestId('dm-share-url')).toHaveTextContent('https://riftn.com/bounty/14');
     expect(screen.queryByRole('heading', { name: 'Share' })).toBeNull();
   });
 });

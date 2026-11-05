@@ -68,7 +68,7 @@ export const getImageCostDhb = (model: ImageModel, dhbPriceUsd: number): number 
 
 export const IMAGE_MODELS: Record<string, ImageModel> = {
   ...Object.fromEntries(Object.entries(VENICE_IMAGE_MODELS).map(([id, model]) => [id, {
-    id, name: model.name, description: 'Venice provider cost · zero DeHub markup',
+    id, name: model.name, description: 'Venice provider cost · zero Riftn markup',
     emoji: '◈', tier: 'fast' as const, baseCostUsd: model.baseCostUsd, supportsEdit: false,
   }])),
   ...CREATOR_FAL_IMAGE_MODELS,

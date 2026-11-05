@@ -107,7 +107,7 @@ export function isTelegramUser(value: unknown): value is TelegramUser {
  * `origin` and `return_to` both have to sit on the domain registered against
  * the bot with BotFather's /setdomain, or Telegram refuses the request with
  * "Bot domain invalid" before showing anything. Using window.location.origin
- * rather than a hardcoded https://dehub.io is what keeps that check honest:
+ * rather than a hardcoded https://riftn.com is what keeps that check honest:
  * a preview host that is not registered fails loudly at Telegram instead of
  * bouncing back to a page that cannot use the result.
  */

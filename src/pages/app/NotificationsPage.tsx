@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { localizedNotificationContent } from "@/lib/notification-content";
+import appI18n from '@/i18n';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
@@ -279,7 +280,7 @@ const tabs: { value: NotificationTypeFilter; icon: React.ElementType }[] = [
 
 // Map tab filter to notification types.
 //
-// A tab can mix types from both sources: the DeHub API (snake_case types the
+// A tab can mix types from both sources: the Riftn API (snake_case types the
 // backend stores) and the Supabase `custom_notifications` table (feature
 // requests, governance, communities, stores). API_BACKED_TYPES below marks
 // which of them the API can filter on, so each tab can ask the server for its
@@ -287,11 +288,11 @@ const tabs: { value: NotificationTypeFilter; icon: React.ElementType }[] = [
 // unfiltered feed.
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
-  likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
+  likes: ['like', 'comment_like', 'feature_request_like', 'feature_request_comment_like', 'governance_vote', 'governance_comment_like'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote', 'remix'],
-  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new'],
+  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new', 'feature_request_comment_like', 'feature_request_status'],
   communities: ['community_chat', 'community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
@@ -300,7 +301,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
 };
 
 /**
- * Types the DeHub API stores and can filter on via `?types=`. Everything else in
+ * Types the Riftn API stores and can filter on via `?types=`. Everything else in
  * filterTypeMap comes from Supabase and is matched client-side only.
  *
  * Kept as an explicit list rather than derived: sending a name the API does not
@@ -322,7 +323,7 @@ const API_BACKED_TYPES = new Set([
 ]);
 
 /**
- * The bare DeHub fork glyph, white on transparent — the same brand asset the
+ * The bare Riftn fork glyph, white on transparent — the same brand asset the
  * connector pages use. The tile behind it is drawn here rather than baked into
  * the artwork: `/dehub-icon.png` carries its own black *circle*, which reads as
  * a round avatar whatever radius the container has, and nothing else on this
@@ -351,6 +352,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment_like':
     case 'feature_request_like':
+    case 'feature_request_comment_like':
+    case 'governance_comment_like':
       return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment':
     case 'comment_reply':
@@ -419,6 +422,9 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
+    case 'feature_request_status':
+    case 'governance_result':
+      return <Trophy className="w-4 h-4 text-white/70" />;
     case 'dao_proposal_open':
     case 'dao_vote_deadline':
     case 'dao_proposal_accepted':
@@ -651,6 +657,20 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.featureActivityNamed' : 'notifications.custom.featureActivity', { name: actorName, title });
   }
+  if ((notification.type as string) === 'feature_request_comment_like') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureCommentLikeNamed' : 'notifications.custom.featureCommentLike', {
+      name: actorName, title,
+      defaultValue: title ? '{{name}} liked your comment on “{{title}}”' : '{{name}} liked your comment on a request',
+    });
+  }
+  if ((notification.type as string) === 'feature_request_status') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle || '';
+    const state = (notification as any).content;
+    if (state === 'shipped') return tr('notifications.custom.featureShipped', { title, defaultValue: 'Your request “{{title}}” shipped 🎉' });
+    if (state === 'shipped_liked') return tr('notifications.custom.featureShippedLiked', { title, defaultValue: 'A request you liked shipped: “{{title}}” 🎉' });
+    return tr('notifications.custom.featureQueued', { title, defaultValue: 'Your request “{{title}}” is queued to be built' });
+  }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title, tr);
@@ -672,6 +692,26 @@ function getNotificationContent(
   if ((notification.type as string) === 'governance_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.governanceCommentNamed' : 'notifications.custom.governanceComment', { name: actorName, title });
+  }
+  if ((notification.type as string) === 'governance_comment_like') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.governanceCommentLikeNamed' : 'notifications.custom.governanceCommentLike', {
+      name: actorName, title,
+      defaultValue: title ? '{{name}} liked your comment on “{{title}}”' : '{{name}} liked your comment on a proposal',
+    });
+  }
+  if ((notification.type as string) === 'governance_result') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle || '';
+    const state = String((notification as any).content || '');
+    const passed = state.startsWith('passed');
+    if (state.endsWith('_voted')) {
+      return passed
+        ? tr('notifications.custom.governanceVotedPassed', { title, defaultValue: 'A proposal you voted on passed: “{{title}}”' })
+        : tr('notifications.custom.governanceVotedRejected', { title, defaultValue: 'A proposal you voted on did not pass: “{{title}}”' });
+    }
+    return passed
+      ? tr('notifications.custom.governancePassed', { title, defaultValue: 'Your proposal “{{title}}” passed 🎉' })
+      : tr('notifications.custom.governanceRejected', { title, defaultValue: 'Your proposal “{{title}}” did not pass' });
   }
   if ((notification.type as string) === 'governance_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -766,6 +806,7 @@ function getNotificationContent(
   // ahead of the switch rather than as cases — same shape as the routing above.
   // Naming the bounty matters here in a way it doesn't for a like: a poster with
   // several open bounties can't act on "someone applied" alone.
+  if (typeStr === 'new_message') return tr('reactionInfo.newMessage', { name: actorName });
   if (typeStr === 'work_application_reply') {
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
     return tr(jobTitle ? 'notifications.custom.bountyReplyNamed' : 'notifications.custom.bountyReply', { name: actorName, title: jobTitle });
@@ -783,6 +824,7 @@ function getNotificationContent(
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
     case 'comment_reply':
+    case 'creator_comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
     case 'mention': {
       // Where the reader was named. Every mention used to say "in a comment",
@@ -807,10 +849,11 @@ function getNotificationContent(
         ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
       return tr('notifications.custom.followRequest', { name: actorName });
-    // The server's sentence names the milestone ("reached 100 likes"); the
-    // shared translation only says "a new milestone", so it is the fallback.
+    // The server's sentence names the milestone ("reached 100 likes") but is
+    // English, so other languages get the shared "a new milestone" instead.
     case 'video_milestone':
-      return (notification as any).content || tr('notifications.postMilestone');
+      return ((appI18n.language || 'en').startsWith('en') && (notification as any).content)
+        || tr('notifications.postMilestone');
     case 'livestream_start':
       return tr('notifications.startedStreaming', { name: actorName });
     case 'comment_like': {
@@ -831,8 +874,11 @@ function getNotificationContent(
     }
     case 'video_removal':
       return tr('notifications.postRemoved');
+    // Reposts, quotes, flares, badges and accepted requests have a shared
+    // sentence too; the server's English is only for types that do not.
     default:
-      return (notification as any).content || tr('notifications.newNotification');
+      return localizedNotificationContent({ ...notification, actorUsername: actorName } as any, tr)
+        ?? ((notification as any).content || tr('notifications.newNotification'));
   }
 }
 
@@ -864,8 +910,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // and several pages of infinite scroll. `?request=` pins it at the top
   // instead, so the row always opens the thing it names. A comment row also
   // asks for the comments to be open, the same way a post comment does.
-  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity'];
-  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
+  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_comment_like'];
+  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || (notification.type as string) === 'feature_request_status' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
     const requestId = customReferenceId(notification);
     if (!requestId) return '/features';
     if (!FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
@@ -891,8 +937,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
   // A comment or reply row lands on the comment it is about — the proposal
   // page reads the same `?comment=` the features board does.
-  const GOVERNANCE_COMMENT_TYPES = ['governance_comment', 'governance_reply'];
-  if ((notification.type as string) === 'governance_vote' || GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)) {
+  const GOVERNANCE_COMMENT_TYPES = ['governance_comment', 'governance_reply', 'governance_comment_like'];
+  if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_result' || GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)) {
     const refId = customReferenceId(notification);
     if (!refId) return '/governance';
     const commentId = GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)
@@ -1051,7 +1097,7 @@ function announcementTarget(notification: DeHubNotification): AnnouncementTarget
   if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
 
   const host = url.hostname.replace(/^www\./, '');
-  if (host === 'dehub.io' || url.hostname === window.location.hostname) {
+  if (host === 'riftn.com' || host === 'dehub.io' || url.hostname === window.location.hostname) {
     return { kind: 'internal', path: `${url.pathname}${url.search}${url.hash}` };
   }
   return { kind: 'external', url: url.href };
@@ -1187,7 +1233,7 @@ const NotificationItem = memo(function NotificationItem({
 
   // Broadcasts and system notices are sent by the platform, not by a user: they
   // carry no actor, so the letter fallback had nothing to work with and drew an
-  // empty grey circle. Those rows wear the DeHub mark instead. Anything with an
+  // empty grey circle. Those rows wear the Riftn mark instead. Anything with an
   // actor — even one whose picture fails to load — keeps its own avatar.
   const isPlatformNotice = !notification.actorAddress && !notification.actorUsername && !avatarUrl;
     
@@ -1443,7 +1489,7 @@ const NotificationItem = memo(function NotificationItem({
               <div data-feed-platform-mark data-keep-dark className="w-[46px] h-[46px] shrink-0 rounded-lg bg-black border border-white/10 flex items-center justify-center">
                 <img
                   src={DEHUB_MARK_SRC}
-                  alt="DeHub"
+                  alt="Riftn"
                   className="w-6 h-auto object-contain"
                   loading="lazy"
                   decoding="async"
@@ -1852,7 +1898,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   const byNewestFirst = (a: DeHubNotification, b: DeHubNotification) =>
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
 
-  // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
+  // Merge Riftn + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
   const allNotifications = useMemo(
     () => [...dehubNotifications, ...customNotifications].filter(isVisibleNotification).sort(byNewestFirst),
     [dehubNotifications, customNotifications, isVisibleNotification]
@@ -2163,7 +2209,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     }
   };
 
-  // Get total unread count (DeHub + custom)
+  // Get total unread count (Riftn + custom)
   const totalUnread = (unreadCount?.total ?? 0) + (customUnreadCount ?? 0);
   
   // Get count per tab. Counted over the unfiltered feed so the badges stay
@@ -2426,8 +2472,8 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     // portaled settings sheet / actors drawer carry the same attribute
     // (portals escape this subtree).
     <div data-notifications-page className={inDrawer ? "min-h-full" : "min-h-screen"}>
-      {!inDrawer && <SEOHead title={_copy("copy.c598c6a2fa2a", { defaultValue: "Notifications - Stay Updated" })} description={_copy("copy.3ac4d647017f", { defaultValue: "Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." })} url="https://dehub.io/app/notifications" />}
-      <h1 className="sr-only">{_copy("copy.231ec14284fc", { defaultValue: "DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      {!inDrawer && <SEOHead title={_copy("copy.c598c6a2fa2a", { defaultValue: "Notifications - Stay Updated" })} description={_copy("copy.3ac4d647017f", { defaultValue: "Stay on top of likes, comments, follows, tips, mentions and more on Riftn. Never miss an interaction from your community." })} url="https://riftn.com/app/notifications" />}
+      <h1 className="sr-only">{_copy("copy.231ec14284fc", { defaultValue: "Riftn Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header */}
       <div ref={islandHostRef} className="contents">
         <PageIsland

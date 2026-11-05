@@ -8,7 +8,7 @@ import type { MediaItem } from './zernio.ts';
 export const KINDS = ['creator_of_day', 'growth_pulse', 'live_now', 'leaderboard', 'dhb_update', 'shorts_of_week', 'stage_clip'] as const;
 export type Kind = typeof KINDS[number];
 
-export const SITE = 'https://dehub.io';
+export const SITE = 'https://riftn.com';
 
 /** The post share card the SEO worker renders for any post, sized for social previews. */
 export const postCardImage = (tokenId: string | number) => `${SITE}/_og/post/v4/${tokenId}.png`;
@@ -211,10 +211,10 @@ export function slotFor(kind: Kind, now: Date): Date | null {
 // ── Builders ────────────────────────────────────────────────────────────────
 
 const authorOf = (p: ApiPost) =>
-  plainText(p.minterDisplayName || p.minterUser?.displayName || p.mintername || p.minterUsername || p.minterUser?.username) || 'a DeHub creator';
+  plainText(p.minterDisplayName || p.minterUser?.displayName || p.mintername || p.minterUsername || p.minterUser?.username) || 'a Riftn creator';
 
 /**
- * Creator of the day. Credit is by display name, not @handle: a DeHub username
+ * Creator of the day. Credit is by display name, not @handle: a Riftn username
  * written as a mention would tag whoever owns that handle on X or Threads.
  */
 export function creatorOfDay(post: FeaturedPost, at: Date): Draft {
@@ -248,7 +248,7 @@ export function growthPulse(stats: UserStats, at: Date): Draft | null {
   if (!total) return null;
   const growth = stats.growth?.weekly;
   const lines = [
-    `${compact(fresh)} people joined DeHub this week.`,
+    `${compact(fresh)} people joined Riftn this week.`,
     `${compact(active)} were active, and the community is now ${compact(total)} strong.`,
     typeof growth === 'number' && growth > 0 ? `That is ${signed(growth)} week on week.` : '',
   ].filter(Boolean);
@@ -273,12 +273,12 @@ export interface LiveStreamRow {
 }
 
 export function liveStream(stream: LiveStreamRow, at: Date): Draft {
-  const who = plainText(stream.account?.displayName || stream.account?.username) || 'A DeHub creator';
+  const who = plainText(stream.account?.displayName || stream.account?.username) || 'A Riftn creator';
   const link = stream.tokenId ? `${SITE}/post/${stream.tokenId}` : stream.account?.username ? `${SITE}/${stream.account.username}` : `${SITE}/videos`;
   return {
     kind: 'live_now',
     sourceRef: `stream:${stream._id ?? stream.tokenId}`,
-    head: `${who} is live on DeHub right now.`,
+    head: `${who} is live on Riftn right now.`,
     quote: plainText(stream.title),
     tail: 'Tune in, chat and tip.',
     link,
@@ -298,12 +298,12 @@ export interface StageRow {
 }
 
 export function stage(row: StageRow, at: Date): Draft {
-  const host = plainText(row.host_username) || 'A DeHub host';
+  const host = plainText(row.host_username) || 'A Riftn host';
   const soon = row.status === 'scheduled';
   return {
     kind: 'live_now',
     sourceRef: `stage:${row.id}`,
-    head: soon ? `Starting soon on DeHub Stages, hosted by ${host}:` : `Live now on DeHub Stages, hosted by ${host}:`,
+    head: soon ? `Starting soon on Riftn Stages, hosted by ${host}:` : `Live now on Riftn Stages, hosted by ${host}:`,
     quote: plainText(row.title),
     tail: soon ? 'Pull up a chair.' : `${compact(row.listener_count ?? 0)} listening. Pull up a chair.`,
     link: stageLink(row),
@@ -331,14 +331,14 @@ export interface StageClipSource {
  * an admin, because it puts a member's own voice on the brand accounts.
  */
 export function stageClip(src: StageClipSource, at: Date): Draft {
-  const host = plainText(src.stage.host_username) || 'a DeHub host';
+  const host = plainText(src.stage.host_username) || 'a Riftn host';
   const title = clip(plainText(src.stage.title), 80);
   return {
     kind: 'stage_clip',
     sourceRef: `stage:${src.stage.id}:${src.index}`,
-    head: title ? `From “${title}”, a DeHub Stage hosted by ${host}` : `From a DeHub Stage hosted by ${host}`,
+    head: title ? `From “${title}”, a Riftn Stage hosted by ${host}` : `From a Riftn Stage hosted by ${host}`,
     quote: plainText(src.hook),
-    tail: 'Hear the whole conversation on DeHub.',
+    tail: 'Hear the whole conversation on Riftn.',
     link: stageLink(src.stage),
     media: [{ url: src.videoUrl, type: 'video' }],
     scheduledFor: at,
@@ -368,7 +368,7 @@ export function leaderboard(received: BoardEntry[], sent: BoardEntry[], at: Date
   return {
     kind: 'leaderboard',
     sourceRef: `week:${weekKey(at)}`,
-    head: 'This week on the DeHub leaderboard',
+    head: 'This week on the Riftn leaderboard',
     tail: [creators ? `Most tipped creators\n${creators}` : '', tippers ? `Biggest tippers\n${tippers}` : ''].filter(Boolean).join('\n\n'),
     link: `${SITE}/leaderboard`,
     media: [],

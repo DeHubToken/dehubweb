@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 const html = readFileSync('services/maboroshi/static/index.html', 'utf8');
 const script = readFileSync('services/maboroshi/static/studio.js', 'utf8');
 const presetsScript = readFileSync('services/maboroshi/static/presets.js', 'utf8');
-it('permits the registered DeHub source route through the hosted studio policy without provider credits', () => {
+it('permits the registered Riftn source route through the hosted studio policy without provider credits', () => {
   const server = readFileSync('services/maboroshi/server.py', 'utf8');
   expect(server).toContain("connect-src 'self' https://dehub.io;");
   expect(server).toContain("media-src 'self' blob:;");

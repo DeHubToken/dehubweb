@@ -1,6 +1,6 @@
-// Dynamic per-blog DeHub share image.
+// Dynamic per-blog Riftn share image.
 // Renders a 1200x630 social card with the post banner, title, author, date,
-// and DeHub branding. Default format = PNG (required by most platforms).
+// and Riftn branding. Default format = PNG (required by most platforms).
 // Use ?format=svg for lightweight previews.
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
@@ -42,7 +42,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
 };
 
-const SITE = "https://dehub.io";
+const SITE = "https://riftn.com";
 const VALID_SLUG = /^[a-z0-9][a-z0-9-]{0,200}$/i;
 
 async function fetchWithTimeout(url: string, ms = 3500): Promise<Response | null> {
@@ -157,8 +157,8 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const slug = (url.searchParams.get("slug") || "").trim();
-    const title = (url.searchParams.get("title") || "").trim().slice(0, 240) || "DeHub Blog";
-    const author = (url.searchParams.get("author") || "DeHub").trim().slice(0, 60);
+    const title = (url.searchParams.get("title") || "").trim().slice(0, 240) || "Riftn Blog";
+    const author = (url.searchParams.get("author") || "Riftn").trim().slice(0, 60);
     const date = (url.searchParams.get("date") || "").trim().slice(0, 40);
     const banner = (url.searchParams.get("banner") || "").trim() || null;
     const width = Math.min(1920, Math.max(600, Number(url.searchParams.get("width")) || 1200));

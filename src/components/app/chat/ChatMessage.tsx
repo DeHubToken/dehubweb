@@ -1,6 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
-import { useState, useCallback, memo } from 'react';
+import { useState, useCallback, useRef, memo } from 'react';
+import { toast } from 'sonner';
+import Copy from '@/components/ui/cut-icons/copy';
+import { useHoldMenu } from '@/hooks/use-hold-menu';
+import { ChatHoldSheet, isTouchHold, type ChatHoldAction } from './ChatHoldSheet';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { ShieldBan, MoreVertical, Loader2, RotateCcw, SmilePlus, CornerDownRight } from "lucide-react";
 import ShieldCheck from "@/components/ui/cut-icons/security";
@@ -37,6 +41,7 @@ import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
 import { QUICK_CHAT_REACTIONS } from './reaction-options';
 import { MoreReactionsButton } from './MoreReactionsButton';
 import { SendStatus } from './SendStatus';
+import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -221,6 +226,7 @@ export const ChatMessage = memo(function ChatMessage({
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+  const [viewingImage, setViewingImage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useDraftState(`chat:edit:${message.id}`, message.content);
 
@@ -293,8 +299,67 @@ export const ChatMessage = memo(function ChatMessage({
 
   const isClickable = !!message.userHandle;
 
+  // Hold the line on a phone: a sheet with reactions and actions. Safari never
+  // shows the hover buttons on a tap and a long press there only selected the
+  // text, so on an iPhone there was no way to reply or react at all.
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [holdOpen, setHoldOpen] = useState(false);
+  const canHold = !message.sendState;
+  const hold = useHoldMenu(() => {
+    if (!isTouchHold() || isEditing) return false;
+    setHoldOpen(true);
+  }, canHold);
+
+  const holdActions: ChatHoldAction[] = [];
+  if (onReply) holdActions.push({ key: 'reply', prime: true, icon: <Reply />, label: _copy('copy.c253f451bdd5', { defaultValue: 'Reply' }), onSelect: () => onReply(message) });
+  if (message.content?.trim()) holdActions.push({
+    key: 'copy', icon: <Copy />, label: _copy('chatHold.copy', { defaultValue: 'Copy' }),
+    onSelect: () => {
+      void navigator.clipboard?.writeText(message.content).then(
+        () => toast.success(_copy('chatHold.copied', { defaultValue: 'Copied' })),
+        () => undefined,
+      );
+    },
+  });
+  if (message.type === 'text' && message.content?.trim() && !isTooShort) holdActions.push(
+    isTranslated
+      ? { key: 'original', icon: <Languages />, label: _copy('chatHold.showOriginal', { defaultValue: 'Original' }), onSelect: handleShowOriginal }
+      : { key: 'translate', icon: <Languages />, label: _copy('chatHold.translate', { defaultValue: 'Translate' }), onSelect: handleTranslate },
+  );
+  if (canEdit) holdActions.push({ key: 'edit', icon: <Pencil />, label: _copy('copy.464c4ffd019e', { defaultValue: 'Edit' }), onSelect: startEditing });
+  if ((canDelete || showActions) && onDelete) holdActions.push({ key: 'delete', destructive: true, icon: <Trash2 />, label: _copy('copy.e2d0a54968ea', { defaultValue: 'Delete' }), onSelect: () => onDelete(message.id) });
+  if (showActions && !isMine && onBan) holdActions.push({ key: 'ban', destructive: true, icon: <ShieldBan />, label: _copy('chatHold.ban', { defaultValue: 'Ban' }), onSelect: () => onBan(message.userId, message.userName) });
+  if (showActions && !isMine && onUnban) holdActions.push({ key: 'unban', icon: <ShieldCheck />, label: _copy('chatHold.unban', { defaultValue: 'Unban' }), onSelect: () => onUnban(message.userId, message.userName) });
+  const mineReactions = currentUserAddress
+    ? Object.entries(message.reactions ?? {})
+        .filter(([, addrs]) => addrs?.some((a) => a.toLowerCase() === currentUserAddress.toLowerCase()))
+        .map(([emoji]) => emoji)
+    : [];
+
+  // The sheet sits beside the row, not in it: its taps would otherwise bubble
+  // through React into the row's hold handlers.
+  const holdSheet = (
+    <ChatHoldSheet
+      open={holdOpen}
+      onOpenChange={setHoldOpen}
+      anchor={holdOpen ? rowRef.current : null}
+      quickReactions={onReact ? QUICK_CHAT_REACTIONS.slice(0, 6) : null}
+      mine={mineReactions}
+      onReact={handleQuickReact}
+      actions={holdActions}
+    />
+  );
+
   return (
-    <div id={`chat-msg-${message.id}`} className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group">
+    <>
+    {holdSheet}
+    <div
+      ref={rowRef}
+      id={`chat-msg-${message.id}`}
+      data-chat-row
+      className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group"
+      {...hold}
+    >
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
@@ -342,7 +407,7 @@ export const ChatMessage = memo(function ChatMessage({
           <ModeratorBadge address={message.userId} moderators={moderators} />
 
           {/* Action buttons - visible on hover */}
-          <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
+          <div data-chat-hover-actions className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
             {/* Reply button */}
             {onReply && (
               <Tooltip>
@@ -529,7 +594,15 @@ export const ChatMessage = memo(function ChatMessage({
             <img 
               src={message.imageUrl} 
               alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })} 
-              className="max-w-xs max-h-64 rounded-lg object-cover"
+              className="max-w-xs max-h-64 rounded-lg object-cover cursor-zoom-in"
+              onClick={() => setViewingImage(message.imageUrl!)}
+            />
+            <FullscreenImageViewerLazy
+              images={viewingImage ? [viewingImage] : []}
+              initialIndex={0}
+              isOpen={!!viewingImage}
+              onClose={() => setViewingImage(null)}
+              downloadable
             />
             {message.content && (
               <p className="text-zinc-300 text-sm mt-1 whitespace-pre-wrap">
@@ -593,5 +666,6 @@ export const ChatMessage = memo(function ChatMessage({
         )}
       </div>
     </div>
+    </>
   );
 });

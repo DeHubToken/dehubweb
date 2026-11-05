@@ -3,13 +3,13 @@
  * ==============================================
  * An app built for Farcaster talks to its host through
  * `@farcaster/miniapp-sdk`, over Comlink on postMessage. This answers that
- * protocol with Farcaster's own host library, mapped onto what DeHub can do,
+ * protocol with Farcaster's own host library, mapped onto what Riftn can do,
  * so a Farcaster mini app runs here unchanged: its splash clears on ready(),
- * composeCast opens the DeHub composer, openUrl and close work.
+ * composeCast opens the Riftn composer, openUrl and close work.
  *
  * What cannot map, and what it does instead:
  *
- *   - Identity. DeHub users are not Farcaster users and have no FID, and the
+ *   - Identity. Riftn users are not Farcaster users and have no FID, and the
  *     SDK's `user.fid` is required. We hand over a NEGATIVE number derived
  *     from the wallet: stable per user, and never a real FID, so an app can
  *     neither collide two users nor mistake ours for somebody on Farcaster.
@@ -48,12 +48,12 @@ export interface FarcasterHostOptions {
   onReady: () => void;
   onClose: () => void;
   onCompose: (text: string) => void;
-  /** DeHub's own add-app flow; absent for a developer preview. */
+  /** Riftn's own add-app flow; absent for a developer preview. */
   addApp?: () => Promise<{ added: boolean }>;
 }
 
 const unsupported = () => {
-  throw new Error('Not supported on DeHub yet.');
+  throw new Error('Not supported on Riftn yet.');
 };
 
 export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: FarcasterHostOptions): void {
@@ -73,8 +73,8 @@ export function useFarcasterHost(frame: RefObject<HTMLIFrameElement>, options: F
       navigator.vibrate?.(10);
     };
 
-    // Adding goes through DeHub's sheet and notifications. No Farcaster
-    // notificationDetails come back: DeHub delivers them itself, so an app
+    // Adding goes through Riftn's sheet and notifications. No Farcaster
+    // notificationDetails come back: Riftn delivers them itself, so an app
     // that needs them sends through dehub.io instead.
     const addViaDehub = async () => {
       const add = opts.current.addApp;

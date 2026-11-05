@@ -3,7 +3,7 @@ import { handleWorkReceipt, receiptTransfers } from '../../server/work-receipts'
 const hash = '0x' + 'a'.repeat(64);
 const id = '12345678-1234-1234-1234-123456789abc';
 const wallet = '0x' + '1'.repeat(40);
-const request = () => new Request('https://dehub.io/api/work/receipt',{method:'POST',headers:{'x-dehub-token':'session'},body:JSON.stringify({id,hash,chain:8453})});
+const request = () => new Request('https://riftn.com/api/work/receipt',{method:'POST',headers:{'x-dehub-token':'session'},body:JSON.stringify({id,hash,chain:8453})});
 function provider(receipt: unknown, height = '0x11') {
   return vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     if (String(input).includes('/auth/verify')) return Response.json({address:wallet});

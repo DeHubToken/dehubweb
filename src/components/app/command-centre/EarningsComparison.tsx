@@ -4,7 +4,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Earnings Comparison
  * ===================
- * Side-by-side: what this creator actually earned on DeHub, against what the
+ * Side-by-side: what this creator actually earned on Riftn, against what the
  * same view count would have paid on YouTube, Twitch, TikTok or Reels.
  *
  * Two honesty constraints shape the whole component:
@@ -17,13 +17,13 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  *    fixed numbers would make this marketing, and the first creator to check it
  *    against their own dashboard would stop trusting the whole page.
  *
- * 2. The DeHub side is real money, taken from receivedTips and converted at the
+ * 2. The Riftn side is real money, taken from receivedTips and converted at the
  *    live DHB price. It is deliberately not padded with projected or
  *    "potential" earnings — mixing an actual figure with a hypothetical one in
  *    the same comparison is how these charts turn into lies.
  *
  * The estimator underneath serves the second half of the request: someone not
- * on DeHub yet can put in their own view count and see the same maths.
+ * on Riftn yet can put in their own view count and see the same maths.
  */
 
 import { useMemo, useState } from 'react';
@@ -166,7 +166,7 @@ export function EarningsComparison() {
     <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 sm:p-5">
       <div className="mb-4">
         <h3 className="text-white font-semibold">{_copy("copy.a7e8af837a2b", { defaultValue: "Earnings comparison" })}</h3>
-        <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.6b7b77d53839", { defaultValue: "Your real DeHub earnings against what the same views would have paid elsewhere." })}</p>
+        <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.6b7b77d53839", { defaultValue: "Your real Riftn earnings against what the same views would have paid elsewhere." })}</p>
       </div>
 
       {isLoading ? (
@@ -178,7 +178,7 @@ export function EarningsComparison() {
           {/* Your actual numbers */}
           <div className="grid grid-cols-3 gap-2 mb-4">
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
-              <p className="text-zinc-500 text-[11px]">{_copy("copy.1dc1e547e65f", { defaultValue: "Earned on DeHub" })}</p>
+              <p className="text-zinc-500 text-[11px]">{_copy("copy.1dc1e547e65f", { defaultValue: "Earned on Riftn" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">
                 {priceKnown ? usd(dehubUsd) : '—'}
               </p>
@@ -189,7 +189,7 @@ export function EarningsComparison() {
               <p className="text-zinc-600 text-[10px] mt-0.5">{_copy("copy.29aa7a49aa25", { defaultValue: "across " })}{postCount}{_copy("copy.e8468d49b505", { defaultValue: " posts" })}</p>
             </div>
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
-              <p className="text-zinc-500 text-[11px]">{_copy("copy.9f9c6f0d0963", { defaultValue: "Your DeHub RPM" })}</p>
+              <p className="text-zinc-500 text-[11px]">{_copy("copy.9f9c6f0d0963", { defaultValue: "Your Riftn RPM" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">
                 {totalViews > 0 && priceKnown ? usd((dehubUsd / totalViews) * 1000) : '—'}
               </p>
@@ -234,7 +234,7 @@ export function EarningsComparison() {
                           )}
                         >
                           {r.delta >= 0 ? '+' : '−'}
-                          {usd(Math.abs(r.delta))}{_copy("copy.0435a318b3b4", { defaultValue: " on DeHub" })}</p>
+                          {usd(Math.abs(r.delta))}{_copy("copy.0435a318b3b4", { defaultValue: " on Riftn" })}</p>
                       ) : (
                         <p className="text-zinc-600 text-[10px]">—</p>
                       )}
@@ -246,7 +246,7 @@ export function EarningsComparison() {
             ))}
           </div>
 
-          {/* Estimator — the "not on DeHub yet" half of the request */}
+          {/* Estimator — the "not on Riftn yet" half of the request */}
           <div className="mt-4 pt-4 border-t border-white/[0.06]">
             <label className="text-zinc-400 text-xs block mb-2">{_copy("copy.600d1c6e47ab", { defaultValue: "Not your numbers? Try any view count" })}</label>
             <input

@@ -1,4 +1,4 @@
-// Mails a support ticket raised through the DeHub assistant to the dev inbox.
+// Mails a support ticket raised through the Riftn assistant to the dev inbox.
 //
 // Called server-to-server by the NestJS backend when the assistant files a
 // ticket for a signed-in user. Authenticated with the SUPPORT_TICKET_SECRET

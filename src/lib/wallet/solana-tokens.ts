@@ -71,7 +71,7 @@ function formatUnits(raw: bigint, decimals: number): string {
   return `${whole}.${fractionStr}`;
 }
 
-/** Mints DeHub knows by name. Everything else is shown by a truncated mint. */
+/** Mints Riftn knows by name. Everything else is shown by a truncated mint. */
 function knownMints(): Record<string, { symbol: string; name: string }> {
   const map: Record<string, { symbol: string; name: string }> = {
     [SOLANA_TOKENS.USDC]: { symbol: 'USDC', name: 'USD Coin' },
@@ -81,7 +81,7 @@ function knownMints(): Record<string, { symbol: string; name: string }> {
   // page fold this balance into the same row as DHB on Base and BNB — the
   // grouping there keys on symbol.
   const dhb = dhbSolanaMint();
-  if (dhb) map[dhb] = { symbol: 'DHB', name: 'DeHub' };
+  if (dhb) map[dhb] = { symbol: 'DHB', name: 'Riftn' };
   return map;
 }
 

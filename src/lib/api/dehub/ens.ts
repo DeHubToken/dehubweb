@@ -1,7 +1,7 @@
 /**
  * Verified ENS handles
  * ====================
- * Client for `/api/ens/*` on the DeHub API.
+ * Client for `/api/ens/*` on the Riftn API.
  *
  * An account can prove it holds a `.eth` name and be reached at
  * `dehub.io/mal.eth`. It is an alias, not a rename: `username` is untouched by
@@ -11,7 +11,7 @@
  *
  * - **The signing wallet is usually not the logged-in wallet.** The signature
  *   has to come from the address the name resolves to, which for most people
- *   is a different wallet from the one they browse DeHub with. The UI has to
+ *   is a different wallet from the one they browse Riftn with. The UI has to
  *   say so, or the user signs with the wrong account and gets a 401 they
  *   cannot interpret.
  * - **Nothing here is a lookup the client can shortcut.** Resolution and
@@ -29,7 +29,7 @@ export interface EnsPreview {
   name: string;
   /** The address the name currently points at, lowercased. */
   ensAddress: string;
-  /** True when some DeHub account already wears it. */
+  /** True when some Riftn account already wears it. */
   held: boolean;
   heldByUsername: string | null;
 }

@@ -19,7 +19,7 @@
  * ({ event, token }, see _shared/miniapp-webhook.ts) in the background: an
  * app that is down must not stop a person adding, removing or paying.
  *
- * Payments go straight to the developer's wallet — DeHub holds nothing and
+ * Payments go straight to the developer's wallet — Riftn holds nothing and
  * pays nothing out. The fee in the plan (0% on an app's first $10k a year)
  * means no split is taken yet.
  */

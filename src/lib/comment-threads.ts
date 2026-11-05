@@ -7,7 +7,7 @@
  * one visible level of nesting: a reply to a reply joins its root thread rather
  * than starting its own, the same rule the post comment section applies.
  *
- * Post comments live on the DeHub API behind a tokenId and do not come through
+ * Post comments live on the Riftn API behind a tokenId and do not come through
  * here; this is the vocabulary that will make moving these threads there cheap.
  */
 

@@ -1,8 +1,8 @@
 /*!
  * dehub mini app SDK v1
- * https://dehub.io/apps/dev
+ * https://riftn.com/apps/dev
  *
- *   <script src="https://dehub.io/sdk/miniapp.js"></script>
+ *   <script src="https://riftn.com/sdk/miniapp.js"></script>
  *   <script>
  *     dehub.ready();
  *     const { user } = await dehub.context;
@@ -104,7 +104,7 @@
     auth: {
       /**
        * A signed JWT proving who the user is, for YOUR server to verify:
-       * iss https://dehub.io, sub = wallet address, aud = your domain, 1 hour.
+       * iss https://riftn.com, sub = wallet address, aud = your domain, 1 hour.
        * The first call asks the user to share their identity with you.
        */
       getToken: function (options) {

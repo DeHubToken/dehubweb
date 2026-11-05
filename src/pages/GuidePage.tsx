@@ -336,9 +336,9 @@ const GuidePage: React.FC = () => {
   return (
     <>
       <SEOHead
-        title={_copy("copy.7adc6b571ae2", { defaultValue: "DeHub Guide — Visual Walkthrough of the App" })}
-        description={_copy("copy.be9b0ab3584d", { defaultValue: "A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works." })}
-        url="https://dehub.io/guide"
+        title={_copy("copy.7adc6b571ae2", { defaultValue: "Riftn Guide | Visual Walkthrough of the App" })}
+        description={_copy("copy.be9b0ab3584d", { defaultValue: "A visual walkthrough of Riftn: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works." })}
+        url="https://riftn.com/guide"
       />
     <div data-glass-page className="min-h-screen bg-black text-white">
       {/* Sticky nav pill */}

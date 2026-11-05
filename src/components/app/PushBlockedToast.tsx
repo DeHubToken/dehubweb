@@ -71,12 +71,12 @@ function bodyFor(pushState: WebPushState): string {
   if (pushState === 'unavailable') {
     return i18n.t(
       'toasts.push_tab_only_body',
-      'This browser would not register for background notifications, so nothing reaches you while DeHub is closed.',
+      'This browser would not register for background notifications, so nothing reaches you while Riftn is closed.',
     );
   }
   return i18n.t(
     'toasts.push_blocked_body',
-    'Your system is blocking notifications for this browser, so nothing reaches you while DeHub is closed. Turn them back on for your browser in your system notification settings, then switch DeHub notifications off and on again.',
+    'Your system is blocking notifications for this browser, so nothing reaches you while Riftn is closed. Turn them back on for your browser in your system notification settings, then switch Riftn notifications off and on again.',
   );
 }
 

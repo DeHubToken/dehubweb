@@ -24,7 +24,7 @@ import { rssRowIsPublic, warningOf } from './rss-feeds.js';
 
 export const EMBED_WIDTH = 550;
 const MIN_WIDTH = 250;
-const EMBED_HOSTS = /^(?:www\.|staging\.)?dehub\.io$/i;
+const EMBED_HOSTS = /^(?:(?:www\.|staging\.)?dehub\.io|(?:www\.)?riftn\.com)$/i;
 
 function esc(s) {
   return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -159,7 +159,7 @@ export function renderEmbedPage(record, deps) {
 
   const head = `<header class="head">
 <a class="who" href="${esc(profileUrl)}" target="_blank" rel="noopener"><img class="avatar" src="${esc(avatar)}" alt="" width="40" height="40"><span class="names"><span class="name">${esc(name)}</span>${handle ? `<span class="handle">@${esc(handle)}</span>` : ''}</span></a>
-<a class="brand" href="${esc(postUrl)}" target="_blank" rel="noopener" aria-label="DeHub"><img src="${deps.appUrl}/dehub-icon.png" alt="DeHub" width="28" height="28"></a>
+<a class="brand" href="${esc(postUrl)}" target="_blank" rel="noopener" aria-label="Riftn"><img src="${deps.appUrl}/dehub-icon.png" alt="Riftn" width="28" height="28"></a>
 </header>`;
 
   let content = '';
@@ -183,7 +183,7 @@ export function renderEmbedPage(record, deps) {
     } else if (image) {
       content += `<a class="media" href="${esc(postUrl)}" target="_blank" rel="noopener"><img src="${esc(image)}" alt="" loading="lazy"></a>`;
     }
-    // Folded behind its warning, as on DeHub. <details> opens without script,
+    // Folded behind its warning, as on Riftn. <details> opens without script,
     // and the warning itself is the label, so there is nothing to translate.
     if (warning) content = `<details class="cw"><summary>${esc(warning)}</summary>${content}</details>`;
   }
@@ -192,13 +192,13 @@ export function renderEmbedPage(record, deps) {
   const date = Number.isNaN(created.getTime())
     ? ''
     : `<a href="${esc(postUrl)}" target="_blank" rel="noopener"><time datetime="${created.toISOString()}">${created.toISOString().slice(0, 10)}</time></a>`;
-  const foot = `<footer class="foot">${date}<a href="${esc(deps.appUrl)}" target="_blank" rel="noopener">dehub.io</a></footer>`;
+  const foot = `<footer class="foot">${date}<a href="${esc(deps.appUrl)}" target="_blank" rel="noopener">riftn.com</a></footer>`;
 
   const lang = /^[a-z]{2,3}$/.test(String(record.detectedLanguage || '')) && record.detectedLanguage !== 'und'
     ? record.detectedLanguage
     : 'und';
   return page({
-    title: `${warningOf(record) || deps.labelOf(record)} — ${name} on DeHub`,
+    title: `${warningOf(record) || deps.labelOf(record)} — ${name} on Riftn`,
     canonical: postUrl,
     lang,
     body: `<article class="card">${head}${content}${foot}</article>`,
@@ -216,10 +216,10 @@ export async function handleEmbedPage(request, tokenId, deps) {
   const record = await deps.fetchPost(tokenId);
   if (!record || record.isHidden || !Number.isFinite(Number(record.tokenId))) {
     return new Response(page({
-      title: 'DeHub',
+      title: 'Riftn',
       canonical: deps.appUrl,
       lang: 'und',
-      body: `<article class="card"><a class="locked" href="${esc(deps.appUrl)}" target="_blank" rel="noopener"><img src="${deps.appUrl}/dehub-icon.png" alt="DeHub" width="28" height="28"></a></article>`,
+      body: `<article class="card"><a class="locked" href="${esc(deps.appUrl)}" target="_blank" rel="noopener"><img src="${deps.appUrl}/dehub-icon.png" alt="Riftn" width="28" height="28"></a></article>`,
     }), {
       status: 404,
       headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=60', ...FRAMEABLE },
@@ -248,7 +248,7 @@ export async function handleOembed(request, deps) {
   const format = params.get('format');
   if (format && format !== 'json') return json(501, { error: 'Only format=json is supported' });
   const id = postIdFromUrl(params.get('url'));
-  if (!id) return json(404, { error: 'Not a DeHub post URL' });
+  if (!id) return json(404, { error: 'Not a Riftn post URL' });
   const record = await deps.fetchPost(id);
   if (!record || record.isHidden) return json(404, { error: 'No such post' });
   if (!rssRowIsPublic(record)) return json(401, { error: 'This post is not public' });
@@ -259,7 +259,7 @@ export async function handleOembed(request, deps) {
   return json(200, {
     version: '1.0',
     type: mediaKind(record) === 'video' ? 'video' : 'rich',
-    provider_name: 'DeHub',
+    provider_name: 'Riftn',
     provider_url: deps.appUrl,
     title: warningOf(record) || deps.labelOf(record),
     ...(name ? { author_name: name } : {}),

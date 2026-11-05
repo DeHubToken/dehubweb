@@ -12,7 +12,7 @@ import { setFeedRefresh } from '@/lib/feed-refresh';
  * @module pages/app/HomePage
  */
 
-import { useState, useContext, useEffect, useLayoutEffect, useRef, useCallback, useDeferredValue, memo, lazy, Suspense } from 'react';
+import { useState, useContext, useEffect, useLayoutEffect, useRef, useCallback, useMemo, useDeferredValue, memo, lazy, Suspense } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
+import { FEED_TAB_ICON_SCALE, feedTabsFor } from '@/constants/app.constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
@@ -75,12 +76,13 @@ const loadVideosFeed = () => import('@/components/app/feeds/VideosFeed').then(m 
 const loadImagesFeed = () => import('@/components/app/feeds/ImagesFeed').then(m => ({ default: m.ImagesFeed }));
 const loadShortsFeed = () => import('@/components/app/feeds/ShortsFeed').then(m => ({ default: m.ShortsFeed }));
 const loadLiveFeed   = () => import('@/components/app/feeds/LiveFeed').then(m => ({ default: m.LiveFeed }));
+const loadTextFeed   = () => import('@/components/app/feeds/TextFeed').then(m => ({ default: m.TextFeed }));
 const loadMusicFeed  = () => import('@/components/app/feeds/MusicFeed').then(m => ({ default: m.MusicFeed }));
 const loadPPVFeed    = () => import('@/components/app/feeds/PPVFeed').then(m => ({ default: m.PPVFeed }));
 const loadW2EFeed    = () => import('@/components/app/feeds/W2EFeed').then(m => ({ default: m.W2EFeed }));
 
 const feedLoaders: Record<string, () => Promise<unknown>> = {
-  videos: loadVideosFeed, images: loadImagesFeed, shorts: loadShortsFeed,
+  videos: loadVideosFeed, images: loadImagesFeed, shorts: loadShortsFeed, text: loadTextFeed,
   live: loadLiveFeed, music: loadMusicFeed, ppv: loadPPVFeed, w2e: loadW2EFeed,
 };
 let warmingFeed: Promise<unknown> | undefined;
@@ -94,6 +96,7 @@ function warmFeedOnIntent(tab: string, ready: boolean) {
 // (infinite scroll lists, media cards, etc.) stay frozen during drag.
 const MemoHomeFeed    = memo(HomeFeed);
 const MemoVideosFeed  = memo(lazy(loadVideosFeed));
+const MemoTextFeed    = memo(lazy(loadTextFeed));
 const MemoImagesFeed  = memo(lazy(loadImagesFeed));
 const MemoShortsFeed  = memo(lazy(loadShortsFeed));
 const MemoLiveFeed    = memo(lazy(loadLiveFeed));
@@ -226,7 +229,16 @@ export default function HomePage() {
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
   const { shortsEnabled } = useShortsEnabled();
-  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+  const isPhoneWidth = useIsMobile();
+  const feedTabs = useMemo(() => feedTabsFor(isPhoneWidth, shortsEnabled), [isPhoneWidth, shortsEnabled]);
+
+  // Phones have no Videos tab (wide videos live in Shorts), wider screens no
+  // Text tab: a tab restored from the other layout lands on its stand-in.
+  useEffect(() => {
+    if (isPhoneWidth && activeTab === 'videos' && tabFromPathname(location.pathname) !== 'videos') setActiveTab('shorts');
+    else if (!isPhoneWidth && activeTab === 'text') setActiveTab('home');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPhoneWidth, activeTab]);
 
   // If Shorts gets disabled while active, fall back to Home
   useEffect(() => {
@@ -1080,17 +1092,17 @@ export default function HomePage() {
           longer read as the home page. */}
       {tabFromPathname(location.pathname) === 'videos' ? (
         <>
-          <SEOHead title={t('videos.seoTitle')} description={t('videos.seoDescription')} url={HUB_ROUTE_META.videos.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: HUB_ROUTE_META.videos.url, description: t('videos.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('videos.seoTitle')} description={t('videos.seoDescription')} url={HUB_ROUTE_META.videos.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Riftn Video Feed', url: HUB_ROUTE_META.videos.url, description: t('videos.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('videos.heading')}</h1>
         </>
       ) : tabFromPathname(location.pathname) === 'shorts' ? (
         <>
-          <SEOHead title={t('shorts.seoTitle')} description={t('shorts.seoDescription')} url={HUB_ROUTE_META.shorts.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: HUB_ROUTE_META.shorts.url, description: t('shorts.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('shorts.seoTitle')} description={t('shorts.seoDescription')} url={HUB_ROUTE_META.shorts.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Riftn Shorts', url: HUB_ROUTE_META.shorts.url, description: t('shorts.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('shorts.heading')}</h1>
         </>
       ) : (
         <>
-          <SEOHead title={t('home.seoTitle')} description={t('home.seoDescription')} url={HUB_ROUTE_META.home.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: HUB_ROUTE_META.home.url, description: t('home.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+          <SEOHead title={t('home.seoTitle')} description={t('home.seoDescription')} url={HUB_ROUTE_META.home.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Riftn Home Feed', url: HUB_ROUTE_META.home.url, description: t('home.seoDescription'), isPartOf: { '@type': 'WebSite', name: 'Riftn', url: 'https://riftn.com' } }} />
           <h1 className="sr-only">{t('home.seoTitle')}</h1>
         </>
       )}
@@ -1322,6 +1334,15 @@ export default function HomePage() {
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'videos'}>
             <Suspense fallback={<FeedBodySkeleton />}>
               <MemoVideosFeed showFilters={showVideosFilters} refreshKey={refreshKey} searchQuery={deferredTab === 'videos' ? searchQuery : ''} />
+            </Suspense>
+            </CachedPageActiveContext.Provider>
+          </div>
+        )}
+        {visitedTabs.has('text') && (
+          <div style={{ display: deferredTab === 'text' ? 'block' : 'none' }}>
+            <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'text'}>
+            <Suspense fallback={<FeedBodySkeleton />}>
+              <MemoTextFeed refreshKey={refreshKey} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>

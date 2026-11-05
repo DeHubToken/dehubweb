@@ -1,13 +1,13 @@
-// DeHub Builder API — prompt → AI-generated static web app → hosted preview.
+// Riftn Builder API — prompt → AI-generated static web app → hosted preview.
 //
 // Ported from the open-source Rilable build pipeline (github.com/rbrown101010/rilable,
 // MIT): same strict ===FILE=== generation protocol and generate/edit/self-status loop,
-// re-hosted on DeHub's stack — fal's OpenRouter router for codegen (no Anthropic key
+// re-hosted on Riftn's stack — fal's OpenRouter router for codegen (no Anthropic key
 // needed), Postgres for projects/messages/files, and the builder-serve edge function
 // as the static host (no Daytona sandboxes).
 //
 // Auth: wallet-native (x-wallet-address + x-dehub-token, verified against
-// api.dehub.io), or the DeHub API building for someone who asked @assistant in
+// api.dehub.io), or the Riftn API building for someone who asked @assistant in
 // a DM (x-assistant-secret + x-wallet-address). Metering: each generation
 // is paid from the caller's USD credit balance (provider cost + 30%), on the
 // model they picked (builder_prefs) — the same price either way.
@@ -21,6 +21,7 @@ import {
   serviceClient,
 } from "../_shared/auth.ts";
 import { debitCredits, refundCreditsOutcome } from "../_shared/credits.ts";
+import { BYOK_PROVIDERS, noteKeyResult, scrubSecrets, userProviderKey } from "../_shared/byok.ts";
 import { appOrigin, contentTypeFor, signPreviewToken, slugify, slugProblem } from "../_shared/builder-host.ts";
 
 
@@ -120,13 +121,13 @@ const DESIGN_RULES = `RULES:
 - Never embed API keys or secrets of any kind. Do not call external APIs that require keys.
 - Keep the whole app under ~700 lines total.`;
 
-const GENERATE_SYSTEM = `You are DeHub Builder, an elite web-app builder. You produce complete, beautiful, fully-working single-page web apps from a short request.
+const GENERATE_SYSTEM = `You are Riftn Builder, an elite web-app builder. You produce complete, beautiful, fully-working single-page web apps from a short request.
 
 ${OUTPUT_FORMAT}
 
 ${DESIGN_RULES}`;
 
-const EDIT_SYSTEM = `You are DeHub Builder, an elite web-app builder. You are updating an existing app. You receive the app's current files, recent conversation, and a change request. Re-output the ENTIRE app — every file in full, including unchanged files. Files you omit will be DELETED. Keep the existing APP_NAME and APP_EMOJI unless the user asks to change them; SUMMARY should describe what you changed.
+const EDIT_SYSTEM = `You are Riftn Builder, an elite web-app builder. You are updating an existing app. You receive the app's current files, recent conversation, and a change request. Re-output the ENTIRE app — every file in full, including unchanged files. Files you omit will be DELETED. Keep the existing APP_NAME and APP_EMOJI unless the user asks to change them; SUMMARY should describe what you changed.
 
 ${OUTPUT_FORMAT}
 
@@ -204,25 +205,49 @@ async function openAiKey(): Promise<string | null> {
   return data;
 }
 
-async function callOpenAi(system: string, user: string, model: BuilderModel, key: string): Promise<ModelResult> {
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+/** A creator's own key for this run. Riftn charges nothing when one is used. */
+type OwnKey = { provider: "openai" | "openrouter"; key: string };
+
+/** The creator's OpenAI key for GPT models, else their OpenRouter key for any model. */
+async function ownKeyFor(wallet: string, model: BuilderModel): Promise<OwnKey | null> {
+  if (model.id.startsWith("openai/")) {
+    const key = await userProviderKey(wallet, "openai");
+    if (key) return { provider: "openai", key };
+  }
+  const key = await userProviderKey(wallet, "openrouter");
+  return key ? { provider: "openrouter", key } : null;
+}
+
+/** A failed call on the creator's own key: plain reason, status recorded, key never shown. */
+async function ownKeyError(wallet: string, own: OwnKey, res: Response): Promise<Error> {
+  const status = await noteKeyResult(wallet, own.provider, res.status);
+  await res.body?.cancel();
+  const label = BYOK_PROVIDERS[own.provider].label;
+  if (status === "invalid") return new Error(`Your ${label} key was rejected. Replace it in Settings, or remove it to use Riftn credits.`);
+  if (status === "no_credit") return new Error(`Your ${label} account is out of credit. Top it up, or remove the key to use Riftn credits.`);
+  return new Error(`${label} could not run this on your key (${res.status}). Try again soon.`);
+}
+
+async function callOpenAi(system: string, user: string, model: BuilderModel, key: string, own?: { wallet: string; key: OwnKey }): Promise<ModelResult> {
+  const res = await fetch(own?.key.provider === "openrouter" ? "https://openrouter.ai/api/v1/chat/completions" : "https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: model.id.replace(/^openai\//, ""),
+      model: own?.key.provider === "openrouter" ? model.id : model.id.replace(/^openai\//, ""),
       messages: [
         { role: "system", content: system },
         { role: "user", content: user },
       ],
       max_completion_tokens: MAX_OUTPUT_TOKENS,
       // Low reasoning keeps a full build well inside the function time limit.
-      reasoning_effort: "low",
+      ...(own?.key.provider === "openrouter" ? {} : { reasoning_effort: "low" }),
     }),
     signal: AbortSignal.timeout(300_000),
   });
+  if (!res.ok && own) throw await ownKeyError(own.wallet, own.key, res);
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(`AI provider error (${res.status}): ${body.slice(0, 200)}`);
+    throw new Error(`AI provider error (${res.status}): ${scrubSecrets(body, key).slice(0, 200)}`);
   }
   const data = await res.json();
   const text: string = data.choices?.[0]?.message?.content ?? "";
@@ -238,7 +263,10 @@ async function callOpenAi(system: string, user: string, model: BuilderModel, key
 // OpenAI models go straight to OpenAI; everything else (and OpenAI models
 // when no OpenAI key is set) uses fal's OpenRouter router on FAL_KEY.
 // The metered gateway is never used here: one build is up to 32k output tokens.
-async function callModel(system: string, user: string, model: BuilderModel): Promise<ModelResult> {
+async function callModel(system: string, user: string, model: BuilderModel, charge?: Charge): Promise<ModelResult> {
+  if (charge?.ownKey) {
+    return callOpenAi(system, user, model, charge.ownKey.key, { wallet: charge.wallet, key: charge.ownKey });
+  }
   if (model.id.startsWith("openai/")) {
     const openAi = await openAiKey();
     if (openAi) return callOpenAi(system, user, model, openAi);
@@ -276,12 +304,14 @@ async function callModel(system: string, user: string, model: BuilderModel): Pro
 // Charging: hold the worst case before the run, settle to the real cost after.
 // ---------------------------------------------------------------------------
 
-type Charge = { wallet: string; key: string; model: BuilderModel; holdMicros: number };
+type Charge = { wallet: string; key: string; model: BuilderModel; holdMicros: number; ownKey?: OwnKey };
 
 /** Debits the worst case up front. Returns null when the balance is short. */
 async function holdCharge(wallet: string, model: BuilderModel, inputChars: number): Promise<Charge | "short" | "error"> {
-  const holdMicros = quoteFor(model, inputChars).maxMicros;
   const key = `builder:${wallet}:${crypto.randomUUID()}`;
+  const ownKey = await ownKeyFor(wallet, model);
+  if (ownKey) return { wallet, key, model, holdMicros: 0, ownKey };
+  const holdMicros = quoteFor(model, inputChars).maxMicros;
   const outcome = await debitCredits(wallet, holdMicros, `${key}:hold`);
   if (outcome !== "debited") return outcome;
   return { wallet, key, model, holdMicros };
@@ -289,6 +319,7 @@ async function holdCharge(wallet: string, model: BuilderModel, inputChars: numbe
 
 /** Releases the hold, then charges what the run actually cost (nothing on failure). */
 async function settleCharge(charge: Charge, result: ModelResult | null): Promise<number> {
+  if (charge.ownKey) return 0;
   const refund = await refundCreditsOutcome(`${charge.key}:hold`);
   if (refund !== "restored") {
     // A hold that could not be released stands as the charge — never bill twice.
@@ -306,7 +337,7 @@ function formatUsd(micros: number): string {
   return `$${(micros / 1_000_000).toFixed(micros < 10_000 ? 4 : 2)}`;
 }
 
-const TOP_UP_URL = "https://dehub.io/builder?topup=1";
+const TOP_UP_URL = "https://riftn.com/builder?topup=1";
 
 function paymentRequired(outcome: "short" | "error", model: BuilderModel, inputChars: number): Response {
   if (outcome === "error") return jsonResponse({ error: "Could not reach your credit balance. Try again in a moment." }, 503);
@@ -450,7 +481,7 @@ async function runBuild(db: Db, projectId: string, prompt: string, charge: Charg
   try {
     await setStatus(db, projectId, "generating", "The AI is designing your app");
     await log(db, projectId, "🧠 Writing your app…");
-    result = await callModel(GENERATE_SYSTEM, `Build this web app: ${prompt}`, charge.model);
+    result = await callModel(GENERATE_SYSTEM, `Build this web app: ${prompt}`, charge.model, charge);
     const raw = result.text;
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
@@ -486,7 +517,7 @@ async function runBuild(db: Db, projectId: string, prompt: string, charge: Charg
     await log(
       db,
       projectId,
-      `${app.summary ? `✅ ${app.name} is live at ${home} ${app.summary}` : `✅ ${app.name} is live at ${home}`} (${charge.model.label}, ${formatUsd(cost)})`,
+      `${app.summary ? `✅ ${app.name} is live at ${home} ${app.summary}` : `✅ ${app.name} is live at ${home}`} (${charge.model.label}, ${charge.ownKey ? `on your ${BYOK_PROVIDERS[charge.ownKey.provider].label} key` : formatUsd(cost)})`,
       "agent",
     );
   } catch (err) {
@@ -529,7 +560,7 @@ async function runEdit(db: Db, projectId: string, request: string, charge: Charg
 
     await setStatus(db, projectId, "updating", "The AI is applying your changes");
     await log(db, projectId, "🛠️ Updating your app…");
-    result = await callModel(EDIT_SYSTEM, editUserPrompt(files, conversation, request), charge.model);
+    result = await callModel(EDIT_SYSTEM, editUserPrompt(files, conversation, request), charge.model, charge);
     const raw = result.text;
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
@@ -553,7 +584,7 @@ async function runEdit(db: Db, projectId: string, request: string, charge: Charg
     await log(
       db,
       projectId,
-      `${app.summary ? `✅ Updated! ${app.summary}` : "✅ Updated!"} (${charge.model.label}, ${formatUsd(cost)})`,
+      `${app.summary ? `✅ Updated! ${app.summary}` : "✅ Updated!"} (${charge.model.label}, ${charge.ownKey ? `on your ${BYOK_PROVIDERS[charge.ownKey.provider].label} key` : formatUsd(cost)})`,
       "agent",
     );
   } catch (err) {
@@ -618,7 +649,7 @@ function listingFields(project: OwnedProject) {
     home_url: `${origin}/`,
     name: project.name,
     icon_url: `${origin}/icon.svg`,
-    description: `${project.name} — built with DeHub Builder.`,
+    description: `${project.name} — built with Riftn Builder.`,
     manifest: { builderProjectId: project.id, name: project.name, homeUrl: `${origin}/` },
     updated_at: new Date().toISOString(),
   };
@@ -626,7 +657,7 @@ function listingFields(project: OwnedProject) {
 
 /**
  * List the app in the mini app store. A Builder app skips the dehub.json
- * ownership signature other apps need: the wallet that built it on DeHub is
+ * ownership signature other apps need: the wallet that built it on Riftn is
  * its owner by definition. Like any new submission it starts `unlisted`
  * (shareable, marked Unreviewed) until staff promote it.
  */
@@ -639,12 +670,12 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
       .eq("id", project.miniapp_app_id)
       .maybeSingle();
     if (existing) {
-      if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact DeHub support.");
+      if (existing.status === "suspended") throw new Error("This app is suspended from the store. Contact Riftn support.");
       const review = existing.tier === "unlisted"
         ? { review_state: "pending", submitted_at: new Date().toISOString() }
         : {};
       await db.from("miniapp_apps").update({ ...fields, ...review, status: "live", review_note: null }).eq("id", existing.id);
-      return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://dehub.io/apps/${existing.slug}` };
+      return { appSlug: existing.slug, tier: existing.tier, storeUrl: `https://riftn.com/apps/${existing.slug}` };
     }
   }
   let appSlug = project.slug!;
@@ -668,7 +699,7 @@ async function publishListing(db: Db, project: OwnedProject, wallet: string) {
     .single();
   if (error || !created) throw new Error(error?.message ?? "Could not publish this app");
   await db.from("builder_projects").update({ miniapp_app_id: created.id }).eq("id", project.id);
-  return { appSlug: created.slug, tier: created.tier, storeUrl: `https://dehub.io/apps/${created.slug}` };
+  return { appSlug: created.slug, tier: created.tier, storeUrl: `https://riftn.com/apps/${created.slug}` };
 }
 
 /** Take the app out of the store, keeping its listing so republishing restores it. */
@@ -700,7 +731,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "POST only" }, 405);
   }
 
-  // The DeHub API builds on a user's behalf when they ask @assistant in a DM.
+  // The Riftn API builds on a user's behalf when they ask @assistant in a DM.
   // It has already verified who sent that DM and holds no token of theirs, so
   // it vouches for the wallet with the shared assistant secret instead. Every
   // one of those calls leaves the API from the same address, so the per-IP

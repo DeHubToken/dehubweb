@@ -5,7 +5,7 @@ import { callDeHubTool } from "./dehub-rpc";
 export default defineTool({
   name: "dehub_comments",
   title: "Read post comments",
-  description: "Read the comment thread on a DeHub post, with author, body and like count for each comment.",
+  description: "Read the comment thread on a Riftn post, with author, body and like count for each comment.",
   inputSchema: {
     token_id: z.string().min(1).describe("The post's token ID"),
     limit: z.number().int().min(1).max(50).optional().describe("Max comments (1-50)"),

@@ -4,7 +4,7 @@
  * Instant buys and sells are Jupiter swaps (best route across every Solana
  * DEX). Limit orders are Jupiter trigger orders: the maker's tokens sit in an
  * on-chain order account until Jupiter's keepers fill it at the asked price or
- * the maker cancels. Both APIs hand back an unsigned transaction; the DeHub
+ * the maker cancels. Both APIs hand back an unsigned transaction; the Riftn
  * wallet signs it with its derived Solana key, or Phantom does for a
  * Phantom session.
  *

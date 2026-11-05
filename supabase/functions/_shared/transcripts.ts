@@ -1,6 +1,6 @@
 // Shared vocabulary for the transcript stack.
 //
-// Everything DeHub transcribes — a video post, an ended stage, an ended live
+// Everything Riftn transcribes — a video post, an ended stage, an ended live
 // room, an audio post — lands in `public.transcripts` keyed on
 // (source_kind, source_ref). This module owns the parts that used to be
 // duplicated per-caller: how a request names its target, how a language code
@@ -26,7 +26,7 @@ export function json(body: unknown, status = 200): Response {
 }
 
 /**
- * The DeHub REST API, ORIGIN ONLY — paths below add their own `/api`.
+ * The Riftn REST API, ORIGIN ONLY — paths below add their own `/api`.
  *
  * Deliberately not `DEHUB_API_BASE`: that secret is already set on this
  * project to `https://api.dehub.io/api`, because `assistant-agent.ts` appends

@@ -32,10 +32,10 @@ describe('legacy.dehub.io', () => {
     // profiles, so the path-preserving redirect is what makes the move work.
     expect(await redirect('https://legacy.dehub.io/bravenomad_35a9')).toMatchObject({
       status: 301,
-      to: 'https://dehub.io/bravenomad_35a9',
+      to: 'https://riftn.com/bravenomad_35a9',
     });
     expect((await redirect('https://legacy.dehub.io/0x3d9adf576335fcdd66bddaaed6a0ccf676498361')).to)
-      .toBe('https://dehub.io/0x3d9adf576335fcdd66bddaaed6a0ccf676498361');
+      .toBe('https://riftn.com/0x3d9adf576335fcdd66bddaaed6a0ccf676498361');
   });
 
   it('drops the legacy query string instead of minting a duplicate per tab', async () => {
@@ -46,22 +46,22 @@ describe('legacy.dehub.io', () => {
       'https://legacy.dehub.io/raw?tab=user-activity',
       'https://legacy.dehub.io/raw?tab=video',
     ]) {
-      expect((await redirect(from)).to, from).toBe('https://dehub.io/raw');
+      expect((await redirect(from)).to, from).toBe('https://riftn.com/raw');
     }
-    expect((await redirect('https://legacy.dehub.io/?type=latest')).to).toBe('https://dehub.io/');
+    expect((await redirect('https://legacy.dehub.io/?type=latest')).to).toBe('https://riftn.com/');
   });
 
   it('sends the retired live pages to the successor, and keeps the one that has a twin', async () => {
     // /live/<objectid> was the old livestream record; nothing on dehub.io
     // answers that shape. /stream/<id> does.
     expect((await redirect('https://legacy.dehub.io/live/67d15a36d0f2644f4db08001')).to)
-      .toBe('https://dehub.io/videos');
-    expect((await redirect('https://legacy.dehub.io/stream/727')).to).toBe('https://dehub.io/stream/727');
+      .toBe('https://riftn.com/videos');
+    expect((await redirect('https://legacy.dehub.io/stream/727')).to).toBe('https://riftn.com/stream/727');
   });
 
   it('normalises a trailing slash rather than paying for a second hop', async () => {
-    expect((await redirect('https://legacy.dehub.io/bravenomad_35a9/')).to).toBe('https://dehub.io/bravenomad_35a9');
-    expect((await redirect('https://legacy.dehub.io/')).to).toBe('https://dehub.io/');
+    expect((await redirect('https://legacy.dehub.io/bravenomad_35a9/')).to).toBe('https://riftn.com/bravenomad_35a9');
+    expect((await redirect('https://legacy.dehub.io/')).to).toBe('https://riftn.com/');
   });
 
   it('never stamps noindex on the redirect', async () => {
@@ -79,21 +79,21 @@ describe('legacy.dehub.io', () => {
 
 describe('the dehub.net branch it sits beside still behaves', () => {
   it('keeps the path-preserving apex redirect and the subdomain remaps', async () => {
-    expect((await redirect('https://dehub.net/someuser')).to).toBe('https://dehub.io/someuser');
-    expect((await redirect('https://staking.dehub.net/')).to).toBe('https://dehub.io/stake');
-    expect((await redirect('https://dehub.net/web/legal/terms')).to).toBe('https://dehub.io/docs/terms');
+    expect((await redirect('https://dehub.net/someuser')).to).toBe('https://riftn.com/someuser');
+    expect((await redirect('https://staking.dehub.net/')).to).toBe('https://riftn.com/stake');
+    expect((await redirect('https://dehub.net/web/legal/terms')).to).toBe('https://riftn.com/docs/terms');
   });
 
   it('sends the old dApp landers to their successors', async () => {
-    expect((await redirect('https://dehub.net/games')).to).toBe('https://dehub.io/arcade');
-    expect((await redirect('https://dehub.net/stream')).to).toBe('https://dehub.io/videos');
-    expect((await redirect('https://dehub.net/prediction/')).to).toBe('https://dehub.io/arcade');
-    expect((await redirect('https://dehub.net/ad-free')).to).toBe('https://dehub.io/premium');
+    expect((await redirect('https://dehub.net/games')).to).toBe('https://riftn.com/arcade');
+    expect((await redirect('https://dehub.net/stream')).to).toBe('https://riftn.com/videos');
+    expect((await redirect('https://dehub.net/prediction/')).to).toBe('https://riftn.com/arcade');
+    expect((await redirect('https://dehub.net/ad-free')).to).toBe('https://riftn.com/premium');
     // Only the exact paths: a stream id keeps its path.
-    expect((await redirect('https://dehub.net/stream/727')).to).toBe('https://dehub.io/stream/727');
+    expect((await redirect('https://dehub.net/stream/727')).to).toBe('https://riftn.com/stream/727');
   });
 
   it('keeps www.dehub.io folding onto the apex', async () => {
-    expect((await redirect('https://www.dehub.io/docs')).to).toBe('https://dehub.io/docs');
+    expect((await redirect('https://www.dehub.io/docs')).to).toBe('https://riftn.com/docs');
   });
 });

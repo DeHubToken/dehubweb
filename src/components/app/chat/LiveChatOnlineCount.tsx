@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import './live-chat-lens.css';
 
 export function LiveChatOnlineCount({ count }: { count: number }) {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ export function LiveChatOnlineCount({ count }: { count: number }) {
     >
       <span
         aria-hidden="true"
-        className="h-2 w-2 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_6px_2px_rgba(52,211,153,0.7)]"
+        className="live-chat-lens"
       />
       <span aria-hidden="true">{count.toLocaleString()}</span>
     </span>

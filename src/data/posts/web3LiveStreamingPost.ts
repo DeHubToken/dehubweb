@@ -4,7 +4,7 @@ export const web3LiveStreamingPost: BlogPostType = {
   id: 'web3-live-streaming',
   slug: 'web3-live-streaming-decentralised-twitch-alternative',
   title: 'Web3 Live Streaming: The Decentralised Twitch Alternative That Pays Creators',
-  seoTitle: 'Web3 Live Streaming Platform: Twitch Alternative | DeHub',
+  seoTitle: 'Web3 Live Streaming Platform: Twitch Alternative | Riftn',
   seoDescription: 'A web3 live streaming platform lets creators own their channel, take on-chain tips and avoid sudden demonetisation. How the decentralised Twitch alternative works.',
   excerpt: 'A web3 live streaming platform gives creators ownership, on-chain tips and no surprise demonetisation. Here is how the decentralised Twitch alternative actually works.',
   content: `A **web3 live streaming platform** is a service where your channel, your audience relationship and your earnings live on public infrastructure rather than inside one company's database. Instead of a broadcaster owning your account and setting the payout rules, you stream over decentralised video infrastructure, take tips and subscriptions on-chain, and keep the connection to your viewers even if any single platform changes its mind about you. That is the core promise of the decentralised Twitch alternative: the same low-latency live experience, minus the single point of control that can demonetise or delete a channel overnight.
@@ -34,7 +34,7 @@ On Twitch or Kick, monetisation is a privilege the platform grants and can withd
 
 ### The revenue split
 
-Centralised subscription and tip revenue is split with the platform first and paid out later, and the exact split has trended in the platforms' favour over time rather than the creators'. Web3 streaming flips the default: value moves directly to the creator's wallet, and the platform takes a transparent, published share rather than an adjustable cut. On DeHub specifically, the model is built around returning up to 90% of ad revenue to the ecosystem rather than retaining the majority.
+Centralised subscription and tip revenue is split with the platform first and paid out later, and the exact split has trended in the platforms' favour over time rather than the creators'. Web3 streaming flips the default: value moves directly to the creator's wallet, and the platform takes a transparent, published share rather than an adjustable cut. On Riftn specifically, the model is built around returning up to 90% of ad revenue to the ecosystem rather than retaining the majority.
 
 ### Ownership of the audience
 
@@ -52,36 +52,36 @@ For a creator, the mechanics feel familiar. You still get an ingest endpoint, ad
 
 Two things matter for the experience on top of that:
 
-- **Latency.** Live only works if the delay between you and your chat is small enough for real interaction. That depends on both the transcoding layer and the content delivery network in front of it. DeHub pairs its streaming with a custom CDN targeting sub-200ms global latency, so tips and chat land while the moment is still live.
-- **Scale.** Decentralised does not have to mean small. DeHub's live streaming on Livepeer has scaled to 50,000+ concurrent viewers, which is the range where a decentralised Twitch alternative stops being a novelty and starts being a place you can actually build a career.
+- **Latency.** Live only works if the delay between you and your chat is small enough for real interaction. That depends on both the transcoding layer and the content delivery network in front of it. Riftn pairs its streaming with a custom CDN targeting sub-200ms global latency, so tips and chat land while the moment is still live.
+- **Scale.** Decentralised does not have to mean small. Riftn's live streaming on Livepeer has scaled to 50,000+ concurrent viewers, which is the range where a decentralised Twitch alternative stops being a novelty and starts being a place you can actually build a career.
 
-## How DeHub approaches web3 live streaming
+## How Riftn approaches web3 live streaming
 
-Plenty of projects can stream video on-chain. What makes a platform worth building on is everything wrapped around the stream, and this is where [DeHub, the decentralised social network](/guides/what-is-dehub) is deliberately more than a bare broadcaster.
+Plenty of projects can stream video on-chain. What makes a platform worth building on is everything wrapped around the stream, and this is where [Riftn, the decentralised social network](/guides/what-is-dehub) is deliberately more than a bare broadcaster.
 
-**On-chain live streams with animated tips.** When a viewer tips during a DeHub stream, it is an on-chain action with an animated on-screen reaction, so the support is both instant income and part of the show. There is no waiting period and no platform sitting between the viewer's intent and your wallet.
+**On-chain live streams with animated tips.** When a viewer tips during a Riftn stream, it is an on-chain action with an animated on-screen reaction, so the support is both instant income and part of the show. There is no waiting period and no platform sitting between the viewer's intent and your wallet.
 
-**A social feed, not just a channel.** A stream on its own is ephemeral. DeHub attaches live streaming to a full social platform with a chronological, transparent feed rather than an opaque algorithm, so the audience you build while live keeps seeing you afterwards. Content you upload can be minted on-chain when you post it or later, and uploads can be free, pay-per-view or token-gated.
+**A social feed, not just a channel.** A stream on its own is ephemeral. Riftn attaches live streaming to a full social platform with a chronological, transparent feed rather than an opaque algorithm, so the audience you build while live keeps seeing you afterwards. Content you upload can be minted on-chain when you post it or later, and uploads can be free, pay-per-view or token-gated.
 
-**Tokenised subscriptions that you actually own.** Instead of a subscription that only exists inside a platform's billing system, DeHub offers on-chain tradable subscriptions, complete with resale royalties that flow back to the creator. If you want the full mechanics, read our explainer on [how tokenised subscriptions work](/guides/tokenized-subscriptions-explained). For a streamer it means recurring revenue that behaves like an asset rather than a monthly favour from a platform.
+**Tokenised subscriptions that you actually own.** Instead of a subscription that only exists inside a platform's billing system, Riftn offers on-chain tradable subscriptions, complete with resale royalties that flow back to the creator. If you want the full mechanics, read our explainer on [how tokenised subscriptions work](/guides/tokenized-subscriptions-explained). For a streamer it means recurring revenue that behaves like an asset rather than a monthly favour from a platform.
 
-**Private communication that stays private.** DeHub includes open-source, end-to-end encrypted messaging (built on XChaCha20-Poly1305 and X25519 ECDH), so the DMs where creators do their actual business, collaborations, bookings, community management, are not readable by the platform.
+**Private communication that stays private.** Riftn includes open-source, end-to-end encrypted messaging (built on XChaCha20-Poly1305 and X25519 ECDH), so the DMs where creators do their actual business, collaborations, bookings, community management, are not readable by the platform.
 
-**Distribution built in.** DeHub was founded by Mike Hales and Indi Jay Cammish, who also run First Class Agency, the UK's number-one official TikTok LIVE partner agency with 1,200+ live streamers. That is a rare thing for a web3 platform: a genuine, existing streamer network and real operational knowledge of what live creators need, rather than a token looking for an audience.
+**Distribution built in.** Riftn was founded by Mike Hales and Indi Jay Cammish, who also run First Class Agency, the UK's number-one official TikTok LIVE partner agency with 1,200+ live streamers. That is a rare thing for a web3 platform: a genuine, existing streamer network and real operational knowledge of what live creators need, rather than a token looking for an audience.
 
 To see how this stacks up against other decentralised options, our roundup of the [best decentralised social media platforms of 2026](/guides/best-decentralised-social-media-platforms-2026) puts the trade-offs side by side.
 
-## How to start streaming on DeHub
+## How to start streaming on Riftn
 
 Getting live is deliberately close to what you already know from other platforms:
 
-1. **Get the app.** Open the [DeHub web app](https://dehub.io/app) or install it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
+1. **Get the app.** Open the [Riftn web app](https://riftn.com/app) or install it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile).
 2. **Connect a wallet.** This becomes your on-chain identity, the account that owns your channel, your following and your earnings.
 3. **Set up your stream.** Point your broadcasting software at the ingest endpoint, or go live directly from the app for a quick mobile stream.
 4. **Decide how you monetise.** Enable tips, set up tokenised subscriptions, and choose whether specific content is free, pay-per-view or token-gated.
 5. **Go live and keep the audience.** Because your stream sits on a social feed, viewers who find you live can follow, subscribe and keep seeing your posts afterwards, so a single good stream compounds instead of evaporating.
 
-Earnings settle to the wallet you control. The DHB token ($DHB) is the ecosystem token underpinning tips, subscriptions and rewards, and DeHub also runs a card and crypto off-ramp so on-chain earnings can move into everyday spending.
+Earnings settle to the wallet you control. The DHB token ($DHB) is the ecosystem token underpinning tips, subscriptions and rewards, and Riftn also runs a card and crypto off-ramp so on-chain earnings can move into everyday spending.
 
 ## Is web3 live streaming ready for full-time creators?
 
@@ -89,7 +89,7 @@ Honestly, it depends on what you need. If your entire income runs through one ce
 
 What has genuinely changed is that the excuses are gone. The infrastructure scales to tens of thousands of concurrent viewers, latency is low enough for real interaction, payments settle directly to creators, and the tooling is close enough to what streamers already use that the switching cost is mostly habit. For creators tired of building a business on rented land, that is the whole point.
 
-Ready to try it? [Start streaming on the DeHub app](https://dehub.io/app) and keep what you earn.
+Ready to try it? [Start streaming on the Riftn app](https://riftn.com/app) and keep what you earn.
 
 ## Frequently asked questions
 
@@ -103,22 +103,22 @@ The live experience is similar, but the ownership and money are not. On Twitch o
 
 ### Can you really earn crypto by live streaming?
 
-Yes. On DeHub you can earn crypto live streaming through on-chain tips with animated reactions, on-chain tradable subscriptions with resale royalties, and up to 90% ad-revenue share to the ecosystem. Earnings settle to the wallet you control, with no long payout hold in between.
+Yes. On Riftn you can earn crypto live streaming through on-chain tips with animated reactions, on-chain tradable subscriptions with resale royalties, and up to 90% ad-revenue share to the ecosystem. Earnings settle to the wallet you control, with no long payout hold in between.
 
 ### What is Livepeer and why does it matter?
 
 Livepeer is an open, decentralised network for video transcoding, the expensive step of converting one broadcast into the many resolutions viewers need. Running that across a distributed operator network instead of one company's data centres lowers cost and removes the single point of control, which is what makes livepeer live streaming a practical foundation for a decentralised platform.
 
-### How do I start streaming on DeHub?
+### How do I start streaming on Riftn?
 
-Open the DeHub app or install it from Google Play, connect a wallet to create your on-chain identity, point your broadcast software at the ingest endpoint or go live from the app, then enable tips and tokenised subscriptions. Because your stream sits on a social feed, viewers who find you live can follow and subscribe so your audience compounds over time.
+Open the Riftn app or install it from Google Play, connect a wallet to create your on-chain identity, point your broadcast software at the ingest endpoint or go live from the app, then enable tips and tokenised subscriptions. Because your stream sits on a social feed, viewers who find you live can follow and subscribe so your audience compounds over time.
 `,
   bannerImage: '/media/web3-live-streaming-decentralised-twitch-alternative-banner.png',
-  bannerImageAlt: 'DeHub web3 live streaming platform: a decentralised Twitch alternative with on-chain tips',
-  author: { name: 'DeHub Team' },
+  bannerImageAlt: 'Riftn web3 live streaming platform: a decentralised Twitch alternative with on-chain tips',
+  author: { name: 'Riftn Team' },
   publishedAt: '2026-02-26T11:20:00.000Z',
   updatedAt: '2026-02-26T11:20:00.000Z',
-  tags: ['web3 live streaming', 'decentralised twitch alternative', 'crypto live streaming', 'livepeer', 'stream to earn', 'DeHub', 'creator economy'],
+  tags: ['web3 live streaming', 'decentralised twitch alternative', 'crypto live streaming', 'livepeer', 'stream to earn', 'Riftn', 'creator economy'],
   readingTime: 9,
   featured: false,
   status: 'published',

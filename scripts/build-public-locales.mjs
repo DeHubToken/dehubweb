@@ -25,7 +25,7 @@ const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCode
 const normalizeCopy = value => decodeHtml(value).replace(/\s+/g, ' ').trim();
 const neutralCopy = s=>!/\p{L}/u.test(s)||/^(?:#[a-f0-9]{3,8}|0x[a-f0-9]{40}|bc1[a-z0-9]{25,}|[^\s@]+@[^\s@]+\.[^\s@]+|(?:https?:\/\/)?[a-z0-9-]+\.(?:io|com|net|org)(?:\/\S*)?|Exo (?:Black|Semi-bold|Medium|Light) — \d+)$/i.test(s);
 const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|DeHub|ChatGPT|Claude)$/i.test(value);
+const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|Riftn|DeHub|ChatGPT|Claude)$/i.test(value);
 const numbers = value => [...value.replace(/(\d)[\u00a0 ](?=\d{3}(?:\D|$))/g, '$1').matchAll(/\d[\d.,]*/g)].map(match => match[0].replace(/\D/g, ''));
 const accessibleText = (source, normalizedDictionary, route, lang) => {
   const suffix = source.endsWith('|avatar') ? '|avatar' : '';
@@ -77,7 +77,7 @@ export function collectPublicSources(root) {
   const source = fs.readFileSync(path.join(root, 'CLOUDFLARE_WORKER_SEO.js'), 'utf8');
   const ast = ts.createSourceFile('worker.js', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
   const declarations = ast.statements.filter(ts.isVariableStatement).flatMap(statement => [...statement.declarationList.declarations]);
-  const context = { APP_URL: 'https://dehub.io', arcadeGameLd: () => ({}), ...streamerPage, ...dehubAppPage };
+  const context = { APP_URL: 'https://riftn.com', arcadeGameLd: () => ({}), ...streamerPage, ...dehubAppPage };
   const value = name => {
     const declaration = declarations.find(item => item.name.getText(ast) === name);
     if (!declaration?.initializer) throw new Error(`Missing crawler source: ${name}`);
@@ -92,7 +92,7 @@ export function collectPublicSources(root) {
   const en = readJson(path.join(root, 'src/i18n/locales/en.json'));
   const manifest = readJson(path.join(root, 'public/blog-manifest.json'));
   const sitemap = fs.readFileSync(path.join(root, 'public/sitemap-static.xml'), 'utf8');
-  const routes = [...sitemap.matchAll(/<loc>https:\/\/dehub.io([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
+  const routes = [...sitemap.matchAll(/<loc>https:\/\/riftn\.com([^<]*)<\/loc>/g)].map(match => match[1] || '/').filter(route => !route.includes('?'));
   const out = {};
   for (const route of routes) {
     let meta, body = '', md;
@@ -113,7 +113,7 @@ export function collectPublicSources(root) {
       meta = docs[slug];
       if (meta) {
         body = readJson(path.join(root, `public/docs-content/${slug.replaceAll('/', '-')}.json`)).html;
-        meta = { ...meta, heading: meta.title.replace(/ — DeHub( Docs)?$/, '') };
+        meta = { ...meta, heading: meta.title.replace(/ (?:—|\|) Riftn( Docs)?$/, '') };
       }
     } else {
       meta = marketing[route.slice(1)] || sections[route.slice(1)];
@@ -121,9 +121,9 @@ export function collectPublicSources(root) {
     }
     if (meta) out[route] = { title: meta.title, description: meta.description, h1: meta.heading || meta.title, body, ...(md ? { md } : {}), ...(meta.intro ? { lede: meta.intro } : {}) };
   }
-  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'DeHub — Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
-  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'DeHub Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://dehub.io/docs/${slug}">${escapeHtml(page.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
-  out['/docs/blog'] = { title: 'DeHub Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.', h1: 'DeHub Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://dehub.io/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
+  out['/'] = { title: en.home.seoTitle, description: en.home.seoDescription, h1: 'Riftn | Open Source, User Owned & Censorship Resistant Media', body: homeBody, lede: "riftn.com is open source, user owned and censorship resistant media. Join the future of free speech and reach." };
+  out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'Riftn Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://riftn.com/docs/${slug}">${escapeHtml(page.title.replace(/ (?:—|\|) Riftn( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
+  out['/docs/blog'] = { title: 'Riftn Blog | News, Guides & Product Updates', description: 'News, product updates and Web3 guides from Riftn, the open source, user-owned social platform.', h1: 'Riftn Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://riftn.com/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
   for (const route of routes) if (!out[route]?.body) throw new Error(`Public route has no source body: ${route}`);
   return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }
@@ -156,12 +156,53 @@ export function validatePageTranslation(source, translated) {
   return translated;
 }
 
+// DeHub is now Riftn. Pages and their stored translations moved over at
+// different times, so a line may be stored under either name: try both and
+// give the translation the same name the source uses.
+const toRiftn = text => text.replace(/\bDeHubbers\b/g, 'Riftners').replace(/(?<![A-Za-z0-9_])De[Hh]ub(?![A-Z0-9_])/g, 'Riftn').replace(/(?<![A-Za-z0-9_])DEHUB(?![A-Za-z0-9_])/g, 'RIFTN').replace(/(?<![\w.@-])dehub\.io\b/g, 'riftn.com');
+const toDeHub = text => text.replace(/\bRiftners\b/g, 'DeHubbers').replace(/(?<![A-Za-z0-9_])Riftn(?![A-Z0-9_])/g, 'DeHub').replace(/(?<![\w.@-])riftn\.com\b/g, 'dehub.io');
+// Long dashes were later swapped for plain punctuation (" | " in titles,
+// ", " or ": " in prose). Stored lines may still carry them, so a line also
+// matches on its words alone, and the translation gets the same swap.
+const looseKey = text => toRiftn(text).replace(/&mdash;/g, '—').replace(/\s*(?:[—–|,:])\s*/g, ' ').replace(/\s+/g, ' ').trim();
+export const plainDashes = text => text
+  .replace(/&mdash;/g, '—')
+  .replace(/[ \t]+—[ \t]+(?=Riftn(?:[ \t]+[A-Z][\w&]*){0,3}[ \t]*$)/g, ' | ')
+  .replace(/^Riftn([ \t]+(?:App|Blog|Docs|Guide))?[ \t]+—[ \t]+/, (_, word = '') => `Riftn${word} | `)
+  .replace(/[ \t]+[—–][ \t]+/g, ', ')
+  .replace(/(?<=\d)—(?=\d)/g, '-')
+  .replace(/(?<=\S)—(?=\S)/g, ', ')
+  .replace(/[ \t]*—[ \t]*/g, ', ')
+  .replace(/,\s*,/g, ',')
+  .replace(/,(?=[.!?;:])/g, '');
+const looseIndex = new WeakMap();
+function lookupLoose(dictionary, key) {
+  let index = looseIndex.get(dictionary);
+  if (!index) {
+    index = new Map();
+    for (const stored of Object.keys(dictionary)) if (!index.has(looseKey(stored))) index.set(looseKey(stored), stored);
+    looseIndex.set(dictionary, index);
+  }
+  const stored = index.get(looseKey(key));
+  return stored === undefined ? undefined : plainDashes(toRiftn(dictionary[stored]));
+}
+function lookupBranded(dictionary, key) {
+  for (const variant of [key, toRiftn(key), toDeHub(key)]) {
+    const found = dictionary[variant];
+    if (typeof found !== 'string') continue;
+    if (variant === key) return found;
+    return /\bRiftn\b|riftn\.com/.test(key) ? toRiftn(found) : toDeHub(found);
+  }
+  return lookupLoose(dictionary, key);
+}
+const brandedDictionary = entries => new Proxy(entries, { get: (target, key) => typeof key === 'string' && !(key in Object.prototype) ? lookupBranded(target, key) : target[key] });
+
 export function buildPublicLocales(root) {
   const sources = collectPublicSources(root);
   const extras = EXTRA_LOCALES.filter(lang => fs.existsSync(path.join(root, `scripts/public-page-translations/${lang}.json`)));
   const languages = [...PRIORITY_LOCALES, ...extras];
   const dictionaries = Object.fromEntries(languages.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
-  const normalizedDictionaries = Object.fromEntries(languages.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]));
+  const normalizedDictionaries = Object.fromEntries(languages.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]).map(([lang, entries]) => [lang, brandedDictionary(entries)]));
   const version = digest({ sources, dictionaries });
   const table = {}, assets = {}, routes = {};
   for (const [route, source] of Object.entries(sources)) {

@@ -94,7 +94,7 @@ describe('arcade registry', () => {
 
   it('grants same-origin to first-party games only, and names them', () => {
     // Trenchstar is ours, in this repo, and its desk monitors ARE the real
-    // DeHub pages — dehub.io answers SAMEORIGIN, which an opaque parent can
+    // Riftn pages — dehub.io answers SAMEORIGIN, which an opaque parent can
     // never satisfy. It gets the token; a game vendored from outside must
     // never appear on this list without that same argument being true.
     const sameOrigin = ARCADE_GAMES.filter((g) => (g.sandbox ?? '').includes('allow-same-origin'));
@@ -136,7 +136,7 @@ describe('arcade registry', () => {
         for (const token of value.split(/\s+/).filter(Boolean)) {
           expect(SANDBOX_FLAGS, `${where}: '${token}' is not a sandbox flag`).toContain(token);
         }
-        // The authenticated studio is served from a different, fixed DeHub
+        // The authenticated studio is served from a different, fixed Riftn
         // origin. Keeping that origin lets it call its own private API and
         // authenticate postMessage without granting access to the app DOM.
         if (file === repo('src/pages/app/MaboroshiPage.tsx')) {
@@ -248,7 +248,7 @@ describe('arcade assets', () => {
       expect(pages, `MARKETING_PAGES is missing 'arcade/${game.slug}'`).toContain(`  'arcade/${game.slug}': {`);
       expect(grid, `the arcade grid's crawler copy does not link ${game.slug}`).toContain(`/arcade/${game.slug}"`);
       expect(sitemap, `sitemap-static.xml is missing /arcade/${game.slug}`).toContain(
-        `<loc>https://dehub.io/arcade/${game.slug}</loc>`,
+        `<loc>https://riftn.com/arcade/${game.slug}</loc>`,
       );
     }
   });
@@ -594,7 +594,7 @@ describe('arcade headers', () => {
       }),
     );
     const response = await worker.fetch(
-      new Request(`https://dehub.io${path}?v=community-20261011`),
+      new Request(`https://riftn.com${path}?v=community-20261011`),
       { ASSETS: { fetch } },
     );
 

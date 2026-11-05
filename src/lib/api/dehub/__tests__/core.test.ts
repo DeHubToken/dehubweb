@@ -219,7 +219,7 @@ describe('apiCall', () => {
       .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     await expect(apiCall('/api/feed', { params: { page: 2 } })).resolves.toEqual({ ok: true });
     expect(spy.mock.calls.map(call => call[0])).toEqual([
-      'https://api.dehub.io/api/feed?page=2', 'https://dehub.io/_api/api/feed?page=2',
+      'https://api.dehub.io/api/feed?page=2', 'https://riftn.com/_api/api/feed?page=2',
     ]);
   });
 

@@ -79,7 +79,7 @@ export interface EmojiPanelProps {
 
 /**
  * The whole Unicode emoji set: search in the viewer's language, skin tones,
- * recents, a DeHub picks row, and an animated preview of whatever is under
+ * recents, a Riftn picks row, and an animated preview of whatever is under
  * the pointer. Shared by the composer's emoji/GIF popover and the chat
  * reaction trays' "more" button.
  */

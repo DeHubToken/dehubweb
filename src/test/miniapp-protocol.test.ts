@@ -16,16 +16,16 @@ import {
 import { parseDehubLink } from '@/lib/dehub-links';
 
 describe('parseAppUrl', () => {
-  it('rejects embedded credentials and trailing-dot DeHub hosts', () => {
+  it('rejects embedded credentials and trailing-dot Riftn hosts', () => {
     expect(parseAppUrl('https://user:secret@app.example.com')).toBeNull();
-    expect(parseAppUrl('https://dehub.io./app')).toBeNull();
+    expect(parseAppUrl('https://riftn.com./app')).toBeNull();
   });
   it('accepts https apps on their own domains', () => {
     expect(parseAppUrl('https://app.example.com/play?room=1')?.host).toBe('app.example.com');
   });
 
   it('never frames a dehub origin, which would share our storage', () => {
-    expect(parseAppUrl('https://dehub.io/app')).toBeNull();
+    expect(parseAppUrl('https://riftn.com/app')).toBeNull();
     expect(parseAppUrl('https://staging.dehub.io')).toBeNull();
     expect(parseAppUrl('https://evil.dehub.net')).toBeNull();
   });
@@ -117,11 +117,11 @@ describe('syntheticFid', () => {
 
 describe('dehub app links', () => {
   it('cards dehub.io/apps/<slug>, keeps the deep link, and leaves /apps/dev alone', () => {
-    const link = parseDehubLink('https://dehub.io/apps/yoink?room=4');
+    const link = parseDehubLink('https://riftn.com/apps/yoink?room=4');
     expect(link?.kind).toBe('app');
     expect(link?.appSlug).toBe('yoink');
     expect(link?.path).toBe('/apps/yoink?room=4');
-    expect(parseDehubLink('https://dehub.io/apps/dev')?.kind).not.toBe('app');
+    expect(parseDehubLink('https://riftn.com/apps/dev')?.kind).not.toBe('app');
   });
 });
 

@@ -1,5 +1,5 @@
 /**
- * Total reach: DeHub followers plus the follower counts of the social accounts
+ * Total reach: Riftn followers plus the follower counts of the social accounts
  * a creator has connected.
  *
  * Every social count comes from the platform through the account connection
@@ -58,7 +58,7 @@ export interface SocialReachEntry {
 }
 
 export interface SocialReach {
-  /** DeHub followers, as counted by DeHub. */
+  /** Riftn followers, as counted by Riftn. */
   dehub: number;
   /** Connected platforms with a positive verified count, in display order. */
   socials: SocialReachEntry[];
@@ -91,7 +91,7 @@ export function computeSocialReach(
   };
 }
 
-/** True when there is a social count to show on top of DeHub followers. */
+/** True when there is a social count to show on top of Riftn followers. */
 export function hasSocialReach(reach: SocialReach): boolean {
   return reach.socials.length > 0;
 }

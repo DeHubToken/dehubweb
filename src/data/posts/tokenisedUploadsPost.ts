@@ -8,7 +8,7 @@ export const tokenisedUploadsPost: BlogPostType = {
   excerpt: 'Discover how we\'ve integrated a unique fan token experience into our app. Every upload can now be minted as a fractionalised NFT, sharing ad revenue with its owners!',
   content: `
     <h2 class="text-2xl font-bold mb-4 font-exo">Introducing a New Era of Content Monetization</h2>
-    <p class="mb-4 text-lg text-royal-blue/80">How have we built in a seamless & unique fan token experience into our content app? We are incredibly excited to announce a groundbreaking feature on the DeHub platform: <strong>Tokenised Uploads</strong>!</p>
+    <p class="mb-4 text-lg text-royal-blue/80">How have we built in a seamless & unique fan token experience into our content app? We are incredibly excited to announce a groundbreaking feature on the Riftn platform: <strong>Tokenised Uploads</strong>!</p>
     <p class="mb-4 text-royal-blue/80">This innovation fundamentally changes how creators and fans interact with content, creating a shared economy where everyone can participate and benefit.</p>
     
     <h3 class="text-xl font-bold mt-8 mb-4 font-exo">How Tokenised Uploads Work</h3>
@@ -27,15 +27,15 @@ export const tokenisedUploadsPost: BlogPostType = {
     <p class="mt-8 font-semibold text-royal-blue">We believe Tokenised Uploads are the future of the creator economy. It's a system built on transparency, ownership, and shared success. Start exploring this new feature today and be a part of the revolution!</p>
   `,
   bannerImage: '/media/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png',
-  bannerImageAlt: 'A glowing DeHub token representing tokenized uploads.',
+  bannerImageAlt: 'A glowing Riftn token representing tokenized uploads.',
   author: {
-    name: 'DeHub Team',
+    name: 'Riftn Team',
   },
   publishedAt: '2023-06-10T12:00:00.000Z',
   tags: ['Tokenomics', 'NFT', 'Feature', 'Update', 'ERC1155'],
   readingTime: 3,
   featured: false,
   status: 'published',
-  seoTitle: 'Tokenised Uploads: Revolutionary NFT Revenue Sharing on DeHub',
-  seoDescription: 'Learn about DeHub\'s new Tokenised Uploads feature. Any upload can be minted as a fractionalised ERC-1155 NFT that shares ad revenue with holders, creating a new creator economy.',
+  seoTitle: 'Tokenised Uploads: Revolutionary NFT Revenue Sharing on Riftn',
+  seoDescription: 'Learn about Riftn\'s new Tokenised Uploads feature. Any upload can be minted as a fractionalised ERC-1155 NFT that shares ad revenue with holders, creating a new creator economy.',
 };

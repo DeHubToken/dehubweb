@@ -639,7 +639,7 @@ export default function ArcadeChessOnlinePage() {
     const finished = match.status === 'finished';
     return (
       <div className="fixed inset-0 z-[100] bg-black">
-        <SEOHead title={_copy("copy.1b21e44c944d", { defaultValue: "Online match | King's Gambit | DeHub Arcade" })} noindex />
+        <SEOHead title={_copy("copy.1b21e44c944d", { defaultValue: "Online match | King's Gambit | Riftn Arcade" })} noindex />
         <iframe
           ref={frameRef}
           src={FRAME_URL}
@@ -681,7 +681,7 @@ export default function ArcadeChessOnlinePage() {
   return (
     <div data-glass-page data-theme-page-surface className="relative z-[1] min-h-screen bg-black">
       <SEOHead
-        title={_copy("copy.7596c44092d2", { defaultValue: "Play online | King's Gambit | DeHub Arcade" })}
+        title={_copy("copy.7596c44092d2", { defaultValue: "Play online | King's Gambit | Riftn Arcade" })}
         description={_copy("copy.f627491c1ceb", { defaultValue: "Challenge another player to cinematic 3D chess. Open a challenge or accept one from the lobby." })}
         noindex
       />
@@ -742,7 +742,7 @@ export default function ArcadeChessOnlinePage() {
                   className={`rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
                     variant === 'kings-gambit' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                   }`}
-                  title={_copy("copy.c72fc4eba330", { defaultValue: "Every duel opens 1.e4 e5 2.f4 — the gambit the game is named for" })}
+                  title={_copy("copy.c72fc4eba330", { defaultValue: "Every duel opens 1.e4 e5 2.f4: the gambit the game is named for" })}
                 >{_copy("copy.d8548d6fc0b9", { defaultValue: "King's Gambit opening" })}</button>
               </div>
               <button

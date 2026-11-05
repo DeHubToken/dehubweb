@@ -9,7 +9,7 @@ describe('sanitiseTtsText', () => {
   it('drops links rather than spelling them out', () => {
     // A speech engine reads a URL character by character, so one link is half a minute
     // of "aitch tee tee pee colon slash slash".
-    expect(sanitiseTtsText('check https://dehub.io/app now')).toBe('check now');
+    expect(sanitiseTtsText('check https://riftn.com/app now')).toBe('check now');
   });
 
   it('collapses punctuation spam that would stall the synthesiser', () => {

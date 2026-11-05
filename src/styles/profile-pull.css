@@ -1,0 +1,109 @@
+/* Phone pull-to-refresh on profiles (web <768px; desktop unchanged).
+   use-profile-page writes --profile-pull (px), --profile-pull-p (0-1 of the
+   threshold) and --profile-pull-sy (pull / cover height) on the root, so a
+   drag only restyles these few layers and never re-renders the page.
+   Pull: the cover photo stretches up into the gap, blurring more toward the top.
+   Loading: a theme-accent ring runs round the profile photo.
+   Done: the ring closes and the photo pops once. */
+
+[data-profile-cover-blur],
+[data-profile-pull-ring] { display: none; }
+
+@media (max-width: 767px) {
+  [data-profile-pull-root][data-profile-pulling] { overflow-x: clip; }
+  [data-profile-pull-root][data-profile-pulling] [data-profile-pull-body] {
+    transform: translate3d(0, var(--profile-pull, 0px), 0);
+  }
+  [data-profile-pull-root][data-profile-pulling] [data-profile-header] { overflow: visible; }
+
+  /* The cover photo itself stretches: anchored at its bottom edge and scaled
+     so its top stays pinned to where the page started. One element, so there
+     is never a seam between "stretched" and "sharp". */
+  [data-profile-pulling] [data-profile-cover] { overflow: visible; }
+  [data-profile-pulling] [data-profile-cover] > img {
+    transform-origin: 50% 100%;
+    transform: scale(calc(1 + var(--profile-pull-sy, 0)));
+  }
+  /* Progressive blur: two blurred copies of the photo over the stretched one,
+     each fading out further down, so the blur deepens smoothly toward the top
+     like a lens being pulled. They stay painted (invisible) at rest so the
+     first frame of a pull never waits on a blur. The deep copy is scaled 8%
+     past the photo so its soft blur edges sit off screen, not as a band. */
+  [data-profile-cover-blur] {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transform-origin: 50% 100%;
+    will-change: transform, opacity;
+  }
+  [data-profile-cover-blur="soft"] {
+    filter: blur(5px) saturate(1.2);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 30%, transparent 70%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .7) 30%, transparent 70%);
+  }
+  [data-profile-cover-blur="deep"] {
+    filter: blur(20px) saturate(1.45);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 12%, rgba(0, 0, 0, .55) 30%, transparent 50%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 12%, rgba(0, 0, 0, .55) 30%, transparent 50%);
+  }
+  [data-profile-pulling] [data-profile-cover-blur] {
+    opacity: min(1, calc(var(--profile-pull-p, 0) * 1.25));
+  }
+  [data-profile-pulling] [data-profile-cover-blur="soft"] {
+    transform: scale(calc(1 + var(--profile-pull-sy, 0)));
+  }
+  [data-profile-pulling] [data-profile-cover-blur="deep"] {
+    transform: scale(calc((1 + var(--profile-pull-sy, 0)) * 1.08));
+  }
+
+  [data-profile-pull-ring] {
+    position: absolute;
+    inset: -6px;
+    width: calc(100% + 12px);
+    height: calc(100% + 12px);
+    z-index: 2;
+    overflow: visible;
+    pointer-events: none;
+  }
+  [data-profile-pull-ring] rect {
+    fill: none;
+    stroke: var(--stage-accent, #fff);
+    stroke-width: 3;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 100px;
+    stroke-dashoffset: calc(100px - var(--profile-pull-p, 0) * 100px);
+  }
+  [data-profile-pulling] [data-profile-pull-ring],
+  [data-profile-refreshing] [data-profile-pull-ring],
+  [data-profile-refreshed] [data-profile-pull-ring] { display: block; }
+
+  [data-profile-refreshing] [data-profile-pull-ring] rect {
+    stroke-dasharray: 26px 74px;
+    animation: profile-ring-run .9s linear infinite;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-pull-ring] {
+    animation: profile-ring-close .7s ease-out forwards;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-pull-ring] rect {
+    stroke-dasharray: 100px;
+    stroke-dashoffset: 0;
+  }
+  [data-profile-refreshed]:not([data-profile-refreshing]) [data-profile-avatar] {
+    animation: profile-avatar-pop .55s cubic-bezier(.3, 1.6, .5, 1);
+  }
+}
+
+@keyframes profile-ring-run { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -100px; } }
+@keyframes profile-ring-close { 0%, 55% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes profile-avatar-pop { 0% { transform: scale(.94); } 55% { transform: scale(1.07); } 100% { transform: scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-profile-refreshing] [data-profile-pull-ring] rect { animation: none; stroke-dasharray: 100px; stroke-dashoffset: 0; }
+  [data-profile-refreshed] [data-profile-avatar] { animation: none !important; }
+}

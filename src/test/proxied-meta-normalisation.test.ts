@@ -63,7 +63,7 @@ const page = (title: string, description: string) => `<!DOCTYPE html>
 <head>
   <title>${title}</title>
   <meta name="description" content="${description}">
-  <link rel="canonical" href="https://dehub.io/app/post/4676">
+  <link rel="canonical" href="https://riftn.com/app/post/4676">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="https://dehubcdn.ams3.cdn.digitaloceanspaces.com/images/4676.jpg">
@@ -110,7 +110,7 @@ describe('proxied meta normalisation', () => {
   });
 
   it('leaves copy that is already short and single-line exactly as it was', () => {
-    const html = page('First Dehub Stream', 'Post by Top Streamer on DeHub.');
+    const html = page('First Riftn Stream', 'Post by Top Streamer on Riftn.');
     expect(normalizeProxiedMeta(html)).toBe(html);
   });
 
@@ -121,7 +121,7 @@ describe('proxied meta normalisation', () => {
    */
   it('touches no tag outside titles and descriptions', () => {
     const out = normalizeProxiedMeta(page('x'.repeat(200), 'y'.repeat(400)));
-    expect(out).toContain('<link rel="canonical" href="https://dehub.io/app/post/4676">');
+    expect(out).toContain('<link rel="canonical" href="https://riftn.com/app/post/4676">');
     expect(out).toContain('images/4676.jpg');
   });
 
@@ -144,7 +144,7 @@ describe('proxied meta normalisation', () => {
 
   it('is wired into the proxy branch, after the profile-title rewrite', () => {
     const call = WORKER.indexOf('html = normalizeProxiedMeta(html);');
-    const profileTitle = WORKER.indexOf('on DeHub — posts, videos &amp; profile');
+    const profileTitle = WORKER.indexOf('on Riftn, posts, videos &amp; profile');
     expect(profileTitle).toBeGreaterThan(-1);
     expect(call).toBeGreaterThan(profileTitle);
   });

@@ -151,8 +151,8 @@ export default function WorkEditPage() {
   return (
     <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead
-        title={_copy("copy.5fb924a4a79f", { defaultValue: "Edit {{value1}} — DeHub Bounties", value1: job.title })}
-        description={_copy("copy.dbf990b4954b", { defaultValue: "Edit a bounty you posted on DeHub." })}
+        title={_copy("copy.5fb924a4a79f", { defaultValue: "Edit {{value1}} | Riftn Bounties", value1: job.title })}
+        description={_copy("copy.dbf990b4954b", { defaultValue: "Edit a bounty you posted on Riftn." })}
         url={`${bountyUrl(job)}/edit`}
         noindex
       />

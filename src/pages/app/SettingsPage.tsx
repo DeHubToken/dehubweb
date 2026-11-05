@@ -47,6 +47,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import SettingsIcon from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
 import Bell from "@/components/ui/cut-icons/alerts";
+import { setShowNotificationCount, useShowNotificationCount } from "@/lib/notification-count-pref";
 import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import MessageCircle from "@/components/ui/cut-icons/messages";
@@ -110,6 +111,8 @@ import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { normaliseFeedVideoShape, useFeedVideoShape, writeFeedVideoShape } from '@/lib/feed-video-shape';
+import { isWideVideoMode, useWideVideoMode, writeWideVideoMode } from '@/lib/wide-video-mode';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -274,6 +277,7 @@ import { NotificationFiltersSetting } from '@/components/app/settings/Notificati
 import { ProfileFieldsSetting } from '@/components/app/settings/ProfileFieldsSetting';
 import { FediverseHandleSetting } from '@/components/app/settings/FediverseHandleSetting';
 import { ConnectedAppsSetting } from '@/components/app/settings/ConnectedAppsSetting';
+import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 
 export default function SettingsPage() {
   const { t: _copy } = _useCopy();
@@ -339,7 +343,7 @@ export default function SettingsPage() {
   };
 
   // Signing out is a network round trip plus a session teardown, so the button
-  // holds the DeHub mark until it lands rather than looking like a missed tap.
+  // holds the Riftn mark until it lands rather than looking like a missed tap.
   const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
 
   // Drag-to-swipe for settings tab indicator (before conditional return to satisfy hooks rules)
@@ -364,8 +368,8 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://dehub.io/app/settings" />
-      <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings: Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your Riftn experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://riftn.com/app/settings" />
+      <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "Riftn Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}
       <PageIsland
@@ -1266,6 +1270,9 @@ function ProfileSettings() {
           <ProfilesSection />
         </div>
 
+        {/* Creators' own provider keys: Creator tools run on their account. */}
+        <OwnAiKeysSetting />
+
         {/* The Creator studio's way in, now the Assistant header no longer
             carries a shortcut to it. Last on the tab Settings opens on. */}
         <SettingsRow
@@ -1428,6 +1435,8 @@ function NotificationSettings() {
           <div data-setting-anchor="browser-notifications">
             <BrowserNotificationsSetting />
           </div>
+          {/* Off by default: the bell's glow is the standard look. */}
+          <NotificationCountRow />
         </div>
       </div>
 
@@ -1808,7 +1817,7 @@ function PrivacySettings() {
             icon={EyeOff}
             anchor="private-balance"
             title={_copy("copy.e3043f1c05b3", { defaultValue: "Hide badge and balance" })}
-            description={_copy("copy.72bb78fb365d", { defaultValue: "Hides your badge, token balances, and tip history from public view. DeHub will also disable sends and tips to you." })}
+            description={_copy("copy.72bb78fb365d", { defaultValue: "Hides your badge, token balances, and tip history from public view. Riftn will also disable sends and tips to you." })}
             defaultChecked={hideBadgeAndBalance}
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
@@ -2721,6 +2730,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
           <AutoPlayMutedToggle />
           <DataSaverToggle />
           <ShowAnimationsToggle />
+          <WideVideoModeRow />
           <ShortsEnabledToggle />
           <LeftHandedToggle />
         </div>
@@ -2739,7 +2749,7 @@ function DefaultFeedSetting() {
       icon={<HomeCutIcon />}
       anchor="default-feed"
       title={t('settings.defaultFeed', 'Default feed')}
-      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open DeHub')}
+      description={t('settings.defaultFeedDesc', 'Choose which feed opens every time you open Riftn')}
       action={<SettingDrawerSelect
         value={tab}
         onValueChange={(value) => {
@@ -3115,7 +3125,7 @@ function KidsModeToggle() {
  *
  * Kept in the wallet's preference blob, so it follows the account to another
  * device; localStorage mirrors it for instant paint and for signed-out
- * readers. Not the DeHub account row — a named setting there has to be
+ * readers. Not the Riftn account row — a named setting there has to be
  * whitelisted server-side or the write is silently dropped.
  */
 function HideWatchedToggle() {
@@ -3148,6 +3158,21 @@ function HideWatchedToggle() {
  * here. The map rides the wallet's preference blob (ViewingPreferencesSync),
  * so the channels tuned on one device are tuned on the next.
  */
+function NotificationCountRow() {
+  const { t } = useTranslation();
+  const on = useShowNotificationCount();
+  return (
+    <SettingToggle
+      icon={Bell}
+      anchor="notify-show-count"
+      title={t('settings.notificationShowCount', 'Show the number on the bell')}
+      description={t('settings.notificationShowCountDesc', 'See how many notifications are unread instead of just the glow')}
+      defaultChecked={on}
+      onCheckedChange={setShowNotificationCount}
+    />
+  );
+}
+
 function ChannelSpeedRow() {
   const { t } = useTranslation();
   const [count, setCount] = useState(() => getCreatorPlaybackRateCount());
@@ -3248,6 +3273,37 @@ function VideoGlitchToggle() {
         writeVideoGlitch(checked);
         prefs?.setPref('videoGlitchLoader', checked);
       }}
+    />
+  );
+}
+
+/**
+ * Settings > Appearance > Media: how a tall or square long video fills the
+ * column on a computer (lib/wide-video-mode). Phones and tablets never use it,
+ * so the row only shows on wide screens.
+ */
+function WideVideoModeRow() {
+  const { t } = useTranslation();
+  const mode = useWideVideoMode();
+  const isDesktop = useIsDesktopViewport();
+  if (!isDesktop) return null;
+  const title = t('settings.wideVideoMode', 'Long form videos on wide screens');
+  return (
+    <SettingsRow
+      icon={<RectangleHorizontal />}
+      anchor="wide-video-mode"
+      title={title}
+      description={t('settings.wideVideoModeDesc', 'What fills the space beside tall and square videos on a computer')}
+      action={<SettingDrawerSelect
+        value={mode}
+        onValueChange={(value) => { if (isWideVideoMode(value)) writeWideVideoMode(value); }}
+        title={title}
+        options={[
+          { value: 'ambient', label: t('settings.wideVideoAmbient', 'Ambient'), description: t('settings.wideVideoAmbientDesc', 'The video fills the width, with a soft blurred glow of itself on each side') },
+          { value: 'rails', label: t('settings.wideVideoRails', 'Glass rails'), description: t('settings.wideVideoRailsDesc', 'The video beside one glass panel with what it is, a Follow button and the top comments') },
+          { value: 'standard', label: t('settings.wideVideoStandard', 'Standard'), description: t('settings.wideVideoStandardDesc', 'The video on its own, as before') },
+        ]}
+      />}
     />
   );
 }

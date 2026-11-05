@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
 import Eye from "@/components/ui/cut-icons/visibility";
 
@@ -39,6 +39,28 @@ function tilePosterWidth(): number {
 }
 
 /** Small squared-off avatar with image error fallback */
+/**
+ * Tiles built up front. The reel holds ~30 shorts but a phone shows three, and
+ * every full tile (player, observers, badge lookup) was built while the home
+ * page was still starting up, the biggest single block of work on first load.
+ * The rest stand as empty tiles of the same size and become real ones a batch
+ * at a time as the strip is swiped toward them.
+ */
+const FIRST_TILES = 5;
+const TILE_BATCH = 6;
+
+function TileSentinel({ onNear }: { onNear: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') { onNear(); return; }
+    const io = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) onNear(); });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [onNear]);
+  return <div ref={ref} aria-hidden className="absolute inset-0" />;
+}
+
 function ShortAvatar({ avatar, username }: { avatar?: string; username?: string }) {
   const [imgFailed, setImgFailed] = useState(false);
   const showImg = avatar && !imgFailed;
@@ -95,6 +117,8 @@ export function ShortsReel({ shorts, pool, onLoadMore, hasMore, isLoadingMore }:
     if (viewerOpen && pool) setViewerShorts(prev => appendNewShorts(prev, pool));
   }, [viewerOpen, pool]);
   const posterWidth = tilePosterWidth();
+  const [builtTiles, setBuiltTiles] = useState(FIRST_TILES);
+  const buildMoreRef = useRef(() => setBuiltTiles(n => n + TILE_BATCH));
 
   // There used to be a "pre-warm thumbnails" effect here that ran `new Image()`
   // over every short on mount. It was doing the opposite of its name:
@@ -122,7 +146,13 @@ export function ShortsReel({ shorts, pool, onLoadMore, hasMore, isLoadingMore }:
 
         {/* Horizontal scroll */}
         <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-          {shorts.map((short, index) => (
+          {shorts.map((short, index) => index >= builtTiles ? (
+            <div key={short.id} className="flex-shrink-0 w-[120px] md:w-[180px]">
+              <div data-media-scrim className="relative aspect-[9/16] rounded-xl overflow-hidden" style={{ backgroundColor: "#111114" }}>
+                {index === builtTiles && <TileSentinel onNear={buildMoreRef.current} />}
+              </div>
+            </div>
+          ) : (
             <div
               key={short.id}
               onClick={() => handleShortClick(index)}

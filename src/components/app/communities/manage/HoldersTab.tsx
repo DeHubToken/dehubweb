@@ -49,7 +49,7 @@ export function HoldersTab({ community }: HoldersTabProps) {
 
   const [enabled, setEnabled] = useState(!!saved);
   const [chainId, setChainId] = useState<number>(saved?.chainId ?? fallbackChain);
-  // DeHub tokens by default; any other token is one tap away.
+  // Riftn tokens by default; any other token is one tap away.
   const [useDehub, setUseDehub] = useState(!saved || isDehubToken(saved));
   const [otherToken, setOtherToken] = useState(saved && !isDehubToken(saved) ? saved.token : (community.ticker_contract_address ?? ''));
   const token = useDehub ? DEHUB_TOKEN_BY_CHAIN[chainId] : otherToken;
@@ -146,7 +146,7 @@ export function HoldersTab({ community }: HoldersTabProps) {
                   className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs ${useDehub ? 'border-white bg-white text-black' : 'border-white/10 bg-white/[0.04] text-zinc-300'}`}
                 >
                   <img src={dehubCoin} alt="" className="w-4 h-4" />
-                  {t('communities.holderGate.dehubTokens', { defaultValue: 'DeHub tokens' })}
+                  {t('communities.holderGate.dehubTokens', { defaultValue: 'Riftn tokens' })}
                 </button>
                 <button
                   type="button"

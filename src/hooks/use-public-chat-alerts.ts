@@ -2,7 +2,7 @@
  * Public chat alerts — being told the room is talking, without being buried
  * ========================================================================
  *
- * Public chat is the one room on DeHub that anybody can post in, and until now
+ * Public chat is the one room on Riftn that anybody can post in, and until now
  * it was the one feed that could never reach you: no unread badge, no
  * notification, nothing. If you were not looking at the panel it may as well
  * have been off. These alerts are on by default, with two rules that

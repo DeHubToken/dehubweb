@@ -105,7 +105,7 @@ export async function waitForClip(
 }
 
 export function liveClipLink(clip: Pick<LiveClip, 'shortId'>): string {
-  return `https://dehub.io/clip/${clip.shortId}`;
+  return `https://riftn.com/clip/${clip.shortId}`;
 }
 
 /** The Short's caption: the clipper's title, then who it came from and the clip page. */

@@ -1,4 +1,4 @@
-// DeHub "SM Template 2.0" deterministic banner renderer — design language v2.
+// Riftn "SM Template 2.0" deterministic banner renderer — design language v2.
 //
 // Instead of asking a diffusion model to imitate the brand, this renders the
 // official template system directly: silk background (with an opt-in dust/grid/
@@ -23,7 +23,7 @@ import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { aiChat } from "./ai-chat.ts";
 
 // Overridable for local testing (globalThis.DEHUB_KIT_BASE).
-const KIT_BASE: string = (globalThis as Record<string, unknown>)["DEHUB_KIT_BASE"] as string ?? "https://dehub.io/brand-kit";
+const KIT_BASE: string = (globalThis as Record<string, unknown>)["DEHUB_KIT_BASE"] as string ?? "https://riftn.com/brand-kit";
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
@@ -155,7 +155,7 @@ function clampSpec(raw: Partial<BannerSpec>, manifest: KitManifest, format: Bann
     }))
     .filter((l) => l.text)
     .slice(0, 2);
-  if (!lines.length) lines.push({ text: "DEHUB", blurTail: 0 });
+  if (!lines.length) lines.push({ text: "RIFTN", blurTail: 0 });
   const iconRaw = coerceStr(raw.icon), icon2Raw = coerceStr(raw.icon2);
   const icon = iconKeys.has(iconRaw) ? iconRaw : undefined;
   const icon2 = iconKeys.has(icon2Raw) && icon2Raw !== icon ? icon2Raw : undefined;
@@ -187,7 +187,7 @@ function heuristicSpec(prompt: string, manifest: KitManifest, format: BannerForm
   const quoted = prompt.match(/["“”']([^"“”']{2,28})["“”']/)?.[1];
   const base = (quoted || prompt.replace(/\b(dehub|make|create|generate|a|an|the|for|please|banner|poster|graphic|image)\b/gi, " "))
     .trim().split(/\s+/).filter(Boolean);
-  const l1 = (base[0] || "DEHUB").toUpperCase().slice(0, 12);
+  const l1 = (base[0] || "RIFTN").toUpperCase().slice(0, 12);
   const l2 = base.slice(1, 3).join(" ").toUpperCase().slice(0, 13);
   const headline = l2 ? [{ text: l1, blurTail: 0 }, { text: l2, blurTail: 2 }] : [{ text: l1, blurTail: 2 }];
   return clampSpec({ layout: "hero", headline, subtitle: snake(prompt.slice(0, 40)), typeTag: "graphic", icon }, manifest, format);
@@ -203,11 +203,11 @@ export async function buildSpecFromPrompt(opts: {
 }): Promise<BannerSpec> {
   const manifest = await kitManifest();
   const inventory = manifest.icons.map((i) => `${i.key} (${i.tags.join(", ")})`).join("; ");
-  const sys = `You fill a JSON spec for DeHub's official monochrome banner template. Rules:
+  const sys = `You fill a JSON spec for Riftn's official monochrome banner template. Rules:
 - headline: 1-2 lines, UPPERCASE, punchy marketing copy, max 12 chars per line (hard limit 14). blurTail = 1-3 trailing letters to motion-blur on the LAST line, 0 on the first.
 - subtitle: short snake_case descriptor (e.g. get_paid_to_watch). extra: optional tiny snake_case fact (e.g. 2026, no_investment).
 - typeTag: one snake word categorizing it (guide, game, ranking, announcement, product, reward, brand, explainer...).
-- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the DeHub logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
+- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the Riftn logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
 - layout: "wordmark" ONLY for a pure brand/logo card with no other subject; otherwise "hero".
 Icon inventory: ${inventory}.
 Shape (exact — subtitle/extra/typeTag/icon are PLAIN STRINGS, never objects): {"layout":"hero","headline":[{"text":"GO","blurTail":0},{"text":"LIVE","blurTail":1}],"subtitle":"web3_streaming","extra":"2026","typeTag":"product","icon":"mic","icon2":""}
@@ -512,6 +512,14 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   if (maxW) size = Math.min(size, fitSize(subTxt, maxW * 0.82, size, 0.58));
   // -.03em, same side-bearing correction as the headline so the row starts on
   // the shared gutter rather than a hair inside it.
+  const approxW = subTxt.length * size * 0.58;
+  // A centred row is laid out as a left-aligned one starting half its width
+  // back: anchoring each piece "middle" stacked the `//` on top of the word.
+  if (anchor === "middle") {
+    const rowW = approxW + 44 + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0) + size * 0.4;
+    x -= rowW / 2;
+    anchor = "start";
+  }
   const tx = x - size * 0.03;
   const slashW = size * 0.58 * 2;
   // Only exo-700 and exo-500 are loaded as static faces (a variable Exo renders
@@ -522,8 +530,7 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   // rather than as part of the label.
   let out = `<text x="${n1(tx)}" y="${n1(y)}" ${common} fill="rgba(255,255,255,0.42)">//</text>`;
   out += `<text x="${n1(tx + slashW)}" y="${n1(y)}" ${common} fill="url(#subg)">${esc(spec.subtitle.toUpperCase())}</text>`;
-  const approxW = subTxt.length * size * 0.58;
-  const ex = anchor === "middle" ? x + approxW / 2 + 40 : tx + approxW + 44;
+  const ex = tx + approxW + 44;
   if (spec.extra) {
     out += `<text x="${n1(ex)}" y="${n1(y - 2)}" font-family="Consolas" font-size="${Math.round(size * 0.55)}" letter-spacing="${(size * 0.04).toFixed(1)}" fill="rgba(255,255,255,0.72)">${esc(spec.extra)}</text>`;
   }
@@ -550,15 +557,15 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
   const parts: string[] = [];
   const mono = 'font-family="Consolas"';
 
-  // Pill — bottom-left, flush to the inset. Suppressed on wordmark layouts
-  // (the big wordmark IS the logo, so the pill would just repeat it).
+  // Logo — bottom-left: the plain white Riftn wordmark, no pill behind it.
+  // A soft dark halo keeps it readable where the hero or silk runs bright.
+  // Suppressed on wordmark layouts (the big wordmark IS the logo).
   if (showPill) {
-    const ph = 56 * s, pw = 190 * s;
-    const py = H - PAD - ph;
+    const lh2 = 46 * s, lw = lh2 * (720 / 213);
+    const ly = H - PAD - lh2 - 10 * s;
     parts.push(
-      `<rect x="${n1(PAD)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#ffffff" opacity="0.42" filter="url(#pillglow)"/>`,
-      `<rect x="${n1(PAD)}" y="${n1(py)}" width="${n1(pw)}" height="${n1(ph)}" rx="${n1(16 * s)}" fill="#f4f4f2"/>`,
-      `<image x="${n1(PAD + 26 * s)}" y="${n1(py + 13 * s)}" width="${n1(pw - 52 * s)}" height="${n1(ph - 26 * s)}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
+      `<image x="${n1(PAD)}" y="${n1(ly)}" width="${n1(lw)}" height="${n1(lh2)}" preserveAspectRatio="xMinYMid meet" href="${uris.logoBlack}" filter="url(#logohalo)" opacity="0.7"/>`,
+      `<image x="${n1(PAD)}" y="${n1(ly)}" width="${n1(lw)}" height="${n1(lh2)}" preserveAspectRatio="xMinYMid meet" href="${uris.logoWhite}"/>`,
     );
   }
 
@@ -575,17 +582,6 @@ function hudChrome(spec: BannerSpec, F: Frame, uris: Record<string, string>, sho
     bracketBox(tagX, tagY, tagW, tagH, s),
     `<text x="${n1(tagX + padX)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">// type =</text>`,
     `<text x="${n1(tagX + padX + label.length * fs * 0.55)}" y="${n1(tagY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${esc(tagVal)}</text>`,
-  );
-
-  // //dehub.io — bottom, inset from the pill, standing on the same floor.
-  const siteTxt = "dehub.io";
-  const siteW = (siteTxt.length + 2) * fs * 0.55 + padX * 2;
-  const siteH = lh + padY * 2;
-  const siteX = W * (F.land ? 0.475 : 0.40), siteY = H - PAD - siteH;
-  parts.push(
-    bracketBox(siteX, siteY, siteW, siteH, s),
-    `<text x="${n1(siteX + padX)}" y="${n1(siteY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.42)">//</text>`,
-    `<text x="${n1(siteX + padX + fs * 1.1)}" y="${n1(siteY + padY + fs * 0.85)}" ${mono} font-size="${n1(fs)}" fill="rgba(255,255,255,0.72)">${siteTxt}</text>`,
   );
 
   // QR — bottom-right. No border, but a dark backing plate is mandatory: the
@@ -622,10 +618,13 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   const uris: Record<string, string> = {
     bg: await kitDataUri(bgEntry.file),
     grain: await kitDataUri("brand/grain.png"),
-    qr: await kitDataUri("brand/qr-dehub-io.png"),
-    wordmarkBlack: await kitDataUri("brand/wordmark-black.png"),
+    qr: await kitDataUri("brand/qr-riftn.png"),
   };
   if (spec.layout === "wordmark") uris.wordmarkWhite = await kitDataUri("brand/wordmark-white.png");
+  else {
+    uris.logoWhite = await kitDataUri("brand/riftn-logo-white.png");
+    uris.logoBlack = await kitDataUri("brand/riftn-logo-black.png");
+  }
   if (iconEntry) uris.icon = await kitDataUri(iconEntry.file);
   // `spec.icon2` is still accepted so an LLM reply that sets it stays valid, but
   // v2 is ONE big content-matched hero that bleeds off the frame — a second
@@ -685,6 +684,7 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
       <image href="${uris.grain}" width="240" height="240"/>
     </pattern>
     <filter id="sblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="13"/></filter>
+    <filter id="logohalo" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="${n1(6 * s)}"/></filter>
     <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="${n1(12 * s)}"/></filter>
     <filter id="iconfxBright" x="-25%" y="-25%" width="150%" height="160%">
       <feComponentTransfer><feFuncR type="linear" slope="1.55"/><feFuncG type="linear" slope="1.55"/><feFuncB type="linear" slope="1.55"/></feComponentTransfer>

@@ -1,4 +1,4 @@
-// Dynamic per-affiliate DeHub share image.
+// Dynamic per-affiliate Riftn share image.
 // Default: PNG (Facebook/Telegram/WhatsApp/LinkedIn/Discord reject SVG OG images).
 // Use ?format=svg for in-app lightweight preview.
 
@@ -56,21 +56,21 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer",
 };
 
-const SITE = "https://dehub.io";
+const SITE = "https://riftn.com";
 const CDN = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const API = "https://api.dehub.io";
 const VALID_CODE = /^[A-Z0-9_-]{3,40}$/;
 
 const DEFAULT_BANNERS = [
-  "https://dehub.io/__l5e/assets-v1/cd209550-77ef-4c95-b16a-d83ad3adc7ea/default-banner-1.png",
-  "https://dehub.io/__l5e/assets-v1/4be06f0a-849c-44c4-bdc2-7c5f0a261b6c/default-banner-2.png",
-  "https://dehub.io/__l5e/assets-v1/fa63c89b-9a94-4f94-98f3-8eb5e8289350/default-banner-3.png",
-  "https://dehub.io/__l5e/assets-v1/2362a631-0fc5-4a89-8e6b-bf6be734f67b/default-banner-4.png",
-  "https://dehub.io/__l5e/assets-v1/bd3416e0-f49a-4bc6-a758-7443d9dbcd87/default-banner-5.png",
-  "https://dehub.io/__l5e/assets-v1/d3b70189-d07f-43f5-b901-ef4f9aeb24c6/default-banner-6.png",
-  "https://dehub.io/__l5e/assets-v1/fcfba189-8e23-45a0-a96f-bd865f11eb88/default-banner-7.png",
-  "https://dehub.io/__l5e/assets-v1/11cfc96b-88ac-4745-adc1-4ba16c47c0a9/default-banner-8.png",
-  "https://dehub.io/__l5e/assets-v1/fb0303c4-fe1a-4742-93a7-5c612166d7b2/default-banner-9.png",
+  "https://riftn.com/__l5e/assets-v1/cd209550-77ef-4c95-b16a-d83ad3adc7ea/default-banner-1.png",
+  "https://riftn.com/__l5e/assets-v1/4be06f0a-849c-44c4-bdc2-7c5f0a261b6c/default-banner-2.png",
+  "https://riftn.com/__l5e/assets-v1/fa63c89b-9a94-4f94-98f3-8eb5e8289350/default-banner-3.png",
+  "https://riftn.com/__l5e/assets-v1/2362a631-0fc5-4a89-8e6b-bf6be734f67b/default-banner-4.png",
+  "https://riftn.com/__l5e/assets-v1/bd3416e0-f49a-4bc6-a758-7443d9dbcd87/default-banner-5.png",
+  "https://riftn.com/__l5e/assets-v1/d3b70189-d07f-43f5-b901-ef4f9aeb24c6/default-banner-6.png",
+  "https://riftn.com/__l5e/assets-v1/fcfba189-8e23-45a0-a96f-bd865f11eb88/default-banner-7.png",
+  "https://riftn.com/__l5e/assets-v1/11cfc96b-88ac-4745-adc1-4ba16c47c0a9/default-banner-8.png",
+  "https://riftn.com/__l5e/assets-v1/fb0303c4-fe1a-4742-93a7-5c612166d7b2/default-banner-9.png",
 ];
 
 function pickDefaultBanner(address: string | null): string {
@@ -271,7 +271,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
 
   const svg = buildInviteSvg({
     code: rawCode,
-    name: rawCode ? cleanName(displayName || username) : "DeHub",
+    name: rawCode ? cleanName(displayName || username) : "Riftn",
     username,
     avatarDataUri,
     bannerDataUri,

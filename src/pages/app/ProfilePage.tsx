@@ -1,13 +1,14 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
+import { fitIconInk } from '@/lib/optical-icon';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { profileFeedUrl } from '@/lib/profile-feed-url';
 import { useTranslation } from 'react-i18next';
 
-import { Loader2 } from 'lucide-react';
+import '@/styles/profile-pull.css';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { isReservedUsername } from '@/lib/reserved-usernames';
 import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
@@ -34,6 +35,7 @@ import {
 import dehubCoin from '@/assets/dehub-coin.png';
 
 import { useProfilePage } from '@/hooks/use-profile-page';
+import { usePinnedCommunities } from '@/hooks/use-communities';
 import { useProfileFollow } from '@/hooks/use-profile-follow';
 import { useUserPins } from '@/hooks/use-pins';
 import { Pin } from 'lucide-react';
@@ -48,7 +50,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileContentToolbar } from '@/components/app/profile/ProfileContentToolbar';
 import { ProfileSkeleton } from '@/components/app/PageSkeletons';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
-import { getDefaultBanner, parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { parseDefaultProfileTab, isProfileTabValue, type TabValue } from '@/components/app/profile/ProfileConstants';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
@@ -61,6 +63,10 @@ import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButto
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
+import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { mergePostBg, parsePostBg, postBgById } from '@/lib/post-backgrounds';
+import { updateProfile } from '@/lib/api/dehub';
+import { useQueryClient } from '@tanstack/react-query';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos', 'articles'];
@@ -230,6 +236,10 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
   );
 }
 
+
+/** Longest the profile skeleton waits for tab counts and pins after the profile itself. */
+const PROFILE_REVEAL_CAP_MS = 900;
+
 export default function ProfilePage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -255,11 +265,75 @@ export default function ProfilePage() {
   // panel's post-type row only applies on the All tab.
   const data = useProfilePage({ activeTab });
 
+  // One reveal, not four. A fresh profile used to land in steps: header with
+  // "0" tab counts, then counts (re-sorting the tabs), then the pinned
+  // community row pushing everything down. Hold the skeleton until the counts
+  // and pins answer too, capped so a slow side request never holds the page.
+  // A profile painted from cache shows at once, as before.
+  const revealAddress = data.apiProfile?.walletAddress;
+  const { isFetched: pinsFetched } = usePinnedCommunities(revealAddress);
+  const [revealCapPassed, setRevealCapPassed] = useState(false);
+  useEffect(() => {
+    setRevealCapPassed(false);
+    if (!revealAddress) return;
+    const timer = setTimeout(() => setRevealCapPassed(true), PROFILE_REVEAL_CAP_MS);
+    return () => clearTimeout(timer);
+  }, [revealAddress]);
+  const holdForReveal = !!data.profile && !!revealAddress && !data.isProfileFromCache
+    && !revealCapPassed && !(data.isCountsSettled && pinsFetched);
+  // A pull refresh keeps what is on screen; only a first load shows skeletons.
+  const headerFetching = data.isFetchingProfile && !data.isRefreshing;
+  // One short "done" beat after a pull refresh: the avatar ring closes and the photo pops.
+  const [justRefreshed, setJustRefreshed] = useState(false);
+  const wasRefreshing = useRef(false);
+  useEffect(() => {
+    if (data.isRefreshing) { wasRefreshing.current = true; return; }
+    if (!wasRefreshing.current) return;
+    wasRefreshing.current = false;
+    setJustRefreshed(true);
+    const timer = setTimeout(() => setJustRefreshed(false), 700);
+    return () => clearTimeout(timer);
+  }, [data.isRefreshing]);
+
   // Land on the tab the profile owner chose to show first. Applied once per
   // profile (keyed by wallet address) so a visitor's own tab clicks afterwards
   // aren't clobbered, and navigating to a different profile re-applies theirs.
   const appliedDefaultTabFor = useRef<string | null>(null);
   const profileKey = data.apiProfile?.walletAddress || null;
+
+  // Text-post backdrop the owner picked (customs.postBg). A save shows at once
+  // through the override and the profile query catches up behind it.
+  const queryClient = useQueryClient();
+  const [postBgOpen, setPostBgOpen] = useState(false);
+  const [postBgSaving, setPostBgSaving] = useState(false);
+  const [postBgOverride, setPostBgOverride] = useState<{ owner: string; id: string | null } | null>(null);
+  const postBg = postBgOverride && postBgOverride.owner === profileKey
+    ? postBgById(postBgOverride.id)
+    : parsePostBg(data.apiProfile?.customs);
+  const openPostBg = useCallback(() => setPostBgOpen(true), []);
+  const postBgHold = usePostBgHold(!!data.isViewingOwnProfile, openPostBg);
+  // Holding (or right-clicking) one of your own text posts opens it too.
+  const postBgPostHold = usePostBgHold(!!data.isViewingOwnProfile, openPostBg, '[data-pbg-text]');
+  const postBgSample = useMemo(
+    () => data.PROFILE_POSTS.find((p) => !p.articleBody && p.content?.trim())?.content,
+    [data.PROFILE_POSTS],
+  );
+  const savePostBg = useCallback(async (id: string | null) => {
+    if (!profileKey) return;
+    if ((postBg?.id ?? null) === id) { setPostBgOpen(false); return; }
+    setPostBgSaving(true);
+    try {
+      const customs = mergePostBg(data.apiProfile?.customs, id) as Record<string, string | number | boolean>;
+      await updateProfile({ customs });
+      setPostBgOverride({ owner: profileKey, id });
+      setPostBgOpen(false);
+      void queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    } catch {
+      toast.error(t('postBg.saveFailed', "Couldn't save your background. Try again."));
+    } finally {
+      setPostBgSaving(false);
+    }
+  }, [profileKey, postBg, data.apiProfile?.customs, queryClient, t]);
   useEffect(() => {
     if (!profileKey || appliedDefaultTabFor.current === profileKey) return;
     appliedDefaultTabFor.current = profileKey;
@@ -293,16 +367,6 @@ export default function ProfilePage() {
     observer.observe(actions);
     return () => observer.disconnect();
   }, [!!data.profile, profileKey]);
-  const [profileTabsHeight, setProfileTabsHeight] = useState(56);
-  useEffect(() => {
-    const tabs = profileTabsRef.current;
-    if (!tabs) return;
-    const measure = () => setProfileTabsHeight(tabs.getBoundingClientRect().height);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(tabs);
-    return () => observer.disconnect();
-  }, [!!data.profile]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -348,6 +412,19 @@ export default function ProfilePage() {
     if (buttonRect.left < railRect.left) rail.scrollLeft += buttonRect.left - railRect.left;
     else if (buttonRect.right > railRect.right) rail.scrollLeft += buttonRect.right - railRect.right;
   }, [activeTab, isTabsStuck, tabsFadeRef]);
+  // Even out the tab glyphs: each icon set draws its shape at a different share
+  // of the box, so the film strip stood a head taller than the speech bubble.
+  // Re-fit on resize too, which also catches a cached page being shown again.
+  const profileTabKeys = data.PROFILE_TABS.map((tab) => tab.value).join();
+  useEffect(() => {
+    const rail = tabsFadeRef.current;
+    if (!rail) return;
+    const fit = () => rail.querySelectorAll<SVGSVGElement>('svg[data-tab-glyph]').forEach(fitIconInk);
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [profileTabKeys, isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -433,6 +510,7 @@ export default function ProfilePage() {
       isBlocked={data.isBlocked}
       isBlockLoading={data.isBlockLoading}
       handleBlock={data.handleBlock}
+      onPostBackground={data.isViewingOwnProfile ? openPostBg : undefined}
     />
   );
 
@@ -482,15 +560,15 @@ export default function ProfilePage() {
   // skeleton the route shows while its code loads, so there is one loader.
   // Also wait if auth is still loading or the profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
-  if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
+  if (holdForReveal || (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile))) {
     // The loaded page's own top bar, so the back arrow is already where it
     // stays instead of a lone arrow that jumps when the profile arrives.
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><ProfileSkeleton /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><CollapsingProfileHeader headerRef={profileHeaderRef} name="" handle="" /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><CollapsingProfileHeader /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
@@ -514,8 +592,8 @@ export default function ProfilePage() {
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
         <SEOHead
-          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on DeHub', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} — DeHub`}
-          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has dehub.io/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
+          title={showReserve ? t('profile.reserve.seoTitle', { defaultValue: '@{{name}} is available on Riftn', name: displayUsername.toLowerCase() }) : `${t('notFound.title')} | Riftn`}
+          description={showReserve ? t('profile.reserve.seoDescription', { defaultValue: 'Nobody has riftn.com/{{name}} yet. Reserve it and sign up to make it yours.', name: displayUsername.toLowerCase() }) : t('profile.notFound')}
           noindex
           noCanonical
         />
@@ -555,6 +633,9 @@ export default function ProfilePage() {
     <div 
       ref={data.profileContainerRef}
       data-classic-feed-layout={theme === 'system' ? '' : undefined}
+      data-profile-pull-root
+      data-profile-refreshing={data.isRefreshing ? '' : undefined}
+      data-profile-refreshed={justRefreshed ? '' : undefined}
       className="min-h-screen"
       onTouchStart={data.pullHandlers.onTouchStart}
       onTouchMove={data.pullHandlers.onTouchMove}
@@ -563,21 +644,22 @@ export default function ProfilePage() {
       onMouseMove={data.pullHandlers.onMouseMove}
       onMouseUp={data.pullHandlers.onMouseUp}
       onMouseLeave={data.pullHandlers.onMouseLeave}
+      onTouchCancel={data.pullHandlers.onTouchCancel}
     >
       {/* Canonical uses the bare /handle form (no @) — the sitemap-profiles fn
           and the worker's bot HTML both use it, and an @-prefixed canonical
           split the signal between two URLs for every profile. */}
       <SEOHead
-        title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on DeHub — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on DeHub" })}
-        description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
-        url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
+        title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on Riftn — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on Riftn" })}
+        description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on Riftn", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
+        url={`https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
         feed={data.profile?.handle && !data.isTargetPrivate ? { url: profileFeedUrl(data.profile.handle) } : undefined}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',
-          name: data.profile?.name || data.profile?.handle || 'DeHub User',
-          url: `https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`,
+          name: data.profile?.name || data.profile?.handle || 'Riftn User',
+          url: `https://riftn.com/${(data.profile?.handle || '').replace(/^@/, '')}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
           ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),
           // Literal machine-readable field, never translated — a JSON-LD
@@ -602,54 +684,19 @@ export default function ProfilePage() {
             </div>
           </div>
           <div className="shrink-0 pr-1">
-            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={headerFetching} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>
         </> : undefined} />
       </div>
-      <CollapsingProfileHeader
-        headerRef={profileHeaderRef}
-        tabsPinned={isTabsStuck}
-        tabsHeight={profileTabsHeight}
-        name={data.profile.name}
-        handle={data.profile.handle}
-        coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
-        followAction={<ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />}
-      />
-      {/* Pull-to-refresh indicator */}
-      {data.pullDistance > 0 && (
-        <div 
-          className="flex items-center justify-center transition-all duration-150"
-          style={{ height: data.pullDistance, minHeight: data.pullDistance > 0 ? 20 : 0 }}
-        >
-          <div className="relative">
-            <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
-              <circle
-                cx="16" cy="16" r="14" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round"
-                strokeDasharray={2 * Math.PI * 14}
-                strokeDashoffset={2 * Math.PI * 14 * (1 - (data.isHoldingAtThreshold ? data.holdProgress : Math.min(data.pullDistance / data.PULL_THRESHOLD, 1)))}
-                className="transition-all duration-75"
-              />
-            </svg>
-            {data.isHoldingAtThreshold && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-3 h-3 bg-white rounded-full animate-pulse" style={{ opacity: data.holdProgress }} />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Refreshing indicator */}
-      {data.isRefreshing && data.pullDistance === 0 && (
-        <div className="flex items-center justify-center py-4">
-          <Loader2 className="w-6 h-6 text-white animate-spin" />
-        </div>
-      )}
-      
-      <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
+      <CollapsingProfileHeader tabsPinned={isTabsStuck} />
+      <div data-profile-pull-body className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div ref={profileHeaderRef} className="relative max-sm:-mx-2">
+        <div
+          ref={(el) => { (profileHeaderRef as { current: HTMLDivElement | null }).current = el; postBgHold.hostRef.current = el; }}
+          className="relative max-sm:-mx-2"
+          {...postBgHold.handlers}
+        >
+        {postBgHold.ringEl}
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
@@ -678,7 +725,7 @@ export default function ProfilePage() {
           translatedBio={data.translatedBio}
           setTranslatedBio={data.setTranslatedBio}
           isBlocked={data.isBlocked}
-          isFetchingProfile={data.isFetchingProfile}
+          isFetchingProfile={headerFetching}
         />
         </div>
 
@@ -756,7 +803,7 @@ export default function ProfilePage() {
                       isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
                     )}
                   >
-                    <tab.icon className="w-[18px] h-[18px] relative z-10" />
+                    <tab.icon data-tab-glyph className="w-[18px] h-[18px] relative z-10" />
                     <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count ?? '\u00a0'}</span>
                   </button>
                 );
@@ -765,7 +812,7 @@ export default function ProfilePage() {
           </div>
           </div>
           {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
-            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={headerFetching} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>}
         </div>
         </div>
@@ -796,6 +843,9 @@ export default function ProfilePage() {
             isLoading={data.isLoadingContent}
           />
         )}
+        <ProfilePostBgContext.Provider value={postBg}>
+        <div ref={postBgPostHold.hostRef} className="relative" {...postBgPostHold.handlers}>
+        {postBgPostHold.ringEl}
         <StableHeightContainer activeTab={activeTab}>
             <ProfileTabContent
               activeTab={activeTab}
@@ -815,6 +865,7 @@ export default function ProfilePage() {
               isPending={data.isPending}
               isViewingOwnProfile={data.isViewingOwnProfile}
               isContentFiltered={data.isContentFiltered}
+              contentQuery={data.contentQuery}
               optimisticPosts={data.optimisticPosts}
               isLoadingPlans={data.isLoadingPlans}
               hasPlans={data.hasPlans}
@@ -827,7 +878,23 @@ export default function ProfilePage() {
 
         </StableHeightContainer>
         </div>
+        </ProfilePostBgContext.Provider>
+        </div>
       </div>
+
+      {data.isViewingOwnProfile && (
+        <PostBgPicker
+          open={postBgOpen}
+          current={postBg}
+          name={data.profile.name}
+          handle={data.profile.handle}
+          avatarUrl={data.profile.avatarUrl}
+          sampleText={postBgSample}
+          saving={postBgSaving}
+          onCancel={() => setPostBgOpen(false)}
+          onSave={savePostBg}
+        />
+      )}
 
       {/* Make Offer Drawer */}
       <Drawer open={offerDrawerOpen} onOpenChange={setOfferDrawerOpen}>

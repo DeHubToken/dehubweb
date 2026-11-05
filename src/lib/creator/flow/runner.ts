@@ -1,7 +1,7 @@
 /**
  * Creator Flow — running the graph.
  * =================================
- * The pipeline runner, on top of DeHub's pay-per-job model.
+ * The pipeline runner, on top of Riftn's pay-per-job model.
  *
  * A run is priced first and paid ONCE: every paid node in the run is quoted
  * by the server, the total is signed as a single DHB transfer, and each job

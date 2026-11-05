@@ -1,4 +1,4 @@
-const APP_URL = 'https://dehub.io';
+const APP_URL = 'https://riftn.com';
 const escHtml = (s) => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;');

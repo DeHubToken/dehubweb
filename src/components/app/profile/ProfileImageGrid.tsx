@@ -16,6 +16,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ImagePost } from '@/types/feed.types';
 import { ImageCard } from '@/components/app/cards/ImageCard';
+import { ProfileFormatFeed } from '@/components/app/feeds/ProfileFormatFeed';
+import { useProfileFeedContext } from '@/lib/profile-feed-origin';
 
 interface ProfileImageGridProps {
   images: ImagePost[];
@@ -23,6 +25,7 @@ interface ProfileImageGridProps {
 
 export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: ProfileImageGridProps) {
   const [selectedImage, setSelectedImage] = useState<ImagePost | null>(null);
+  const feedOrigin = useProfileFeedContext()?.current ?? null;
 
   return (
     <>
@@ -102,6 +105,8 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
               <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 <ImageCard post={selectedImage} />
               </div>
+              {/* The rest of this creator's images, in the grid's order. */}
+              {feedOrigin && <ProfileFormatFeed origin={feedOrigin} currentPostId={selectedImage.id} />}
             </div>
           </motion.div>
         )}

@@ -21,11 +21,11 @@ export function MaintenanceScreen({ checking = false, failed = false, onRetry }:
     return () => { cancelled = true; detach(); };
   }, []);
   return <ThemePreviewProvider initialTheme="system"><div className="maintenance-page" data-maintenance-screen>
-    <Helmet><title>{t('maintenance.title')} | DeHub</title><meta name="robots" content="noindex, nofollow" /><link rel="stylesheet" href="/brand-kit/maintenance-motion.css" /></Helmet>
+    <Helmet><title>{t('maintenance.title')} | Riftn</title><meta name="robots" content="noindex, nofollow" /><link rel="stylesheet" href="/brand-kit/maintenance-motion.css" /></Helmet>
     <div ref={backdrop} className="maintenance-waves" aria-hidden="true"><div className="maintenance-wave-track"><div className="maintenance-wave-surface" /></div></div>
     <div className="maintenance-frame">
       <header className="maintenance-header">
-        <img src="/brand-kit/brand/mark-white.png" alt="DeHub" width="40" height="40" />
+        <img src="/brand-kit/brand/mark-white.png" alt="Riftn" width="40" height="40" />
         <span>{t('maintenance.mode')}</span>
       </header>
       <main className="maintenance-main">
@@ -40,7 +40,7 @@ export function MaintenanceScreen({ checking = false, failed = false, onRetry }:
         </div>
         <img className="maintenance-clock" src="/brand-kit/icons/clock.png" alt="" aria-hidden="true" width="480" height="504" />
       </main>
-      <footer className="maintenance-bottomline"><span>{t('maintenance.ownership')}</span><span>dehub.io</span></footer>
+      <footer className="maintenance-bottomline"><span>{t('maintenance.ownership')}</span><span>riftn.com</span></footer>
     </div>
   </div></ThemePreviewProvider>;
 }
