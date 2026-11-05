@@ -4355,6 +4355,32 @@ export type Database = {
           },
         ]
       }
+      feature_request_device_info: {
+        Row: {
+          created_at: string
+          feature_request_id: string
+          info: Json
+        }
+        Insert: {
+          created_at?: string
+          feature_request_id: string
+          info: Json
+        }
+        Update: {
+          created_at?: string
+          feature_request_id?: string
+          info?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_request_device_info_feature_request_id_fkey"
+            columns: ["feature_request_id"]
+            isOneToOne: true
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_request_votes: {
         Row: {
           created_at: string
@@ -9869,6 +9895,10 @@ export type Database = {
         Args: { p_dhb: number; p_tx_hash: string; p_wallet: string }
         Returns: number
       }
+      attach_feature_request_device_info: {
+        Args: { p_id: string; p_info: Json }
+        Returns: boolean
+      }
       attribute_affiliate_referral: {
         Args: { p_code: string; p_sub_id?: string }
         Returns: undefined
@@ -10527,6 +10557,7 @@ export type Database = {
         Returns: undefined
       }
       evict_stale_post_translations: { Args: never; Returns: number }
+      feature_request_device_info_ids: { Args: never; Returns: string[] }
       feature_request_status_editor_wallets: { Args: never; Returns: string[] }
       feature_request_watcher_wallets: { Args: never; Returns: string[] }
       finish_provider_attempt: {
@@ -10585,6 +10616,7 @@ export type Database = {
           used_bytes: number
         }[]
       }
+      get_feature_request_device_info: { Args: { p_id: string }; Returns: Json }
       get_my_agents: {
         Args: never
         Returns: {
@@ -10804,7 +10836,7 @@ export type Database = {
         Returns: undefined
       }
       set_feature_request_status: {
-        Args: { p_id: string; p_status: string }
+        Args: { p_id: string; p_note?: string; p_status: string }
         Returns: {
           author_avatar: string | null
           author_username: string | null
