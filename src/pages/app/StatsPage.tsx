@@ -1202,6 +1202,21 @@ export default function StatsPage() {
                     { max: stats.window.breakdownMaxDays },
                   )}
                 </li>
+                {stats.gapFill && (
+                  <li>
+                    <span className="text-zinc-300">{t('stats.definitions.gapTerm', 'Days since the move')}</span>{' '}
+                    {t(
+                      'stats.definitions.gap',
+                      '— riftn.com’s own counts are not readable yet, so from {{date}} each day shows the median of the {{days}} days before the move ({{visitors}} visitors, {{pageViews}} page views), or the measured count where that is higher. These days are marked as estimated and switch to real numbers on their own once riftn.com can be read.',
+                      {
+                        date: stats.gapFill.since,
+                        days: stats.gapFill.baselineDays,
+                        visitors: formatCount(stats.gapFill.visitors),
+                        pageViews: formatCount(stats.gapFill.pageViews),
+                      },
+                    )}
+                  </li>
+                )}
                 {stats.zones && stats.zones.length > 1 && (
                   <li>
                     <span className="text-zinc-300">{t('stats.definitions.addressesTerm', 'Both addresses')}</span>{' '}
