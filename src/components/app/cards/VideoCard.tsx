@@ -175,7 +175,7 @@ import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, getMeasuredMediaAspect, rememberVideoAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape';
-import { useWideVideoMode, WIDE_RAILS_MAX_ASPECT } from '@/lib/wide-video-mode';
+import { useWideVideoMode, WIDE_AMBIENT_MAX_FRAME_ASPECT } from '@/lib/wide-video-mode';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { WideAmbientFill } from '@/components/app/video/WideAmbientFill';
 import { WideVideoPanel } from '@/components/app/video/WideVideoRails';
@@ -1911,7 +1911,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const wideEligible = wideViewport && !isFullscreen && !video.isAudio && !stage && !hideActions
     && !(video.isLivePost && video.isLiveNow) && (desktopFeedHug || (isImmersive && !showComments));
   const wideAmbient = wideEligible && wideVideoMode === 'ambient';
-  const wideRails = wideEligible && wideVideoMode === 'rails' && mediaAspect < WIDE_RAILS_MAX_ASPECT;
+  const wideRails = wideEligible && wideVideoMode === 'rails';
+  // Landscape videos fill the column on their own, so Ambient caps the frame
+  // at 4:3 to leave a glow above and below the picture.
+  const wideAmbientFrameAspect = Math.min(desktopFeedHug ? feedFrameAspect : mediaAspect, WIDE_AMBIENT_MAX_FRAME_ASPECT);
   const wideCentered = wideAmbient || wideRails;
   const wideMaxHeight = desktopFeedHug ? DESKTOP_FEED_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT;
 
@@ -2476,6 +2479,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
+        data-wide-rails-frame={wideRails || undefined}
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
@@ -2488,22 +2492,23 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               ? {
                   // Hugs the picture beside the one info panel, which keeps at
                   // least 260px (plus the 12px gap).
+                  // The control strip under the picture takes 47px of the height.
                   aspectRatio: mediaAspect,
-                  width: `min(calc(${wideMaxHeight} * ${mediaAspect.toFixed(4)}), calc(100% - 272px))`,
-                  maxHeight: wideMaxHeight,
+                  width: `min(calc((${wideMaxHeight}${splitControls ? ' - 47px' : ''}) * ${mediaAspect.toFixed(4)}), calc(100% - 272px))`,
+                  maxHeight: splitControls ? `calc(${wideMaxHeight} - 47px)` : wideMaxHeight,
                   flex: 'none',
                 }
             : wideAmbient && desktopFeedHug
               ? {
                   // Full column width; the picture sits in the middle with the
                   // ambient fill beside it.
-                  aspectRatio: feedFrameAspect,
+                  aspectRatio: wideAmbientFrameAspect,
                   width: '100%',
                   maxHeight: DESKTOP_FEED_MAX_HEIGHT,
                 }
             : isImmersive
               ? {
-                  aspectRatio: mediaAspect,
+                  aspectRatio: wideAmbient ? wideAmbientFrameAspect : mediaAspect,
                   width: '100%',
                   maxHeight: splitControls
                     ? `calc(${isPhone ? FEED_PREVIEW_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)`
