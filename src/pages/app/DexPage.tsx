@@ -1,4 +1,6 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { TokenComingSoonPage } from '@/components/app/token-launch/TokenComingSoonPage';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { dexActionError } from '@/lib/dex/action-error';
@@ -88,7 +90,13 @@ function BookRows({ levels, bid, increment, onPrice, disabled }: { levels: BookL
   </button>)}</div>;
 }
 
+/** Not trading yet: the DEX is replaced by the launch card until DHB_SALES_PAUSED is off. */
 export default function DexPage() {
+  if (DHB_SALES_PAUSED) return <TokenComingSoonPage path="/dex" />;
+  return <DexPageMarket />;
+}
+
+function DexPageMarket() {
   const { t } = useTranslation();
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();

@@ -1,4 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { isDhbSymbol } from '@/lib/market/dhb-market-cap';
+import { isDhbListingQuery } from '@/lib/market/dhb-listing';
+import { TokenLaunchNotify } from '@/components/app/token-launch/TokenLaunchNotify';
 /**
  * SwapActionCard
  * ==============
@@ -45,7 +49,19 @@ function getDecimals(address: string): number {
   return TOKEN_DECIMALS[address] ?? 18;
 }
 
-export function SwapActionCard({ action, autoQuote = false }: SwapActionCardProps) {
+/** Our own token is not trading yet: a swap into or out of it shows the launch card. */
+const isOwnToken = (address?: string, symbol?: string) =>
+  isDhbSymbol(symbol) || isDhbListingQuery(address ?? '');
+
+export function SwapActionCard(props: SwapActionCardProps) {
+  const { action } = props;
+  if (DHB_SALES_PAUSED && (isOwnToken(action.tokenOut, action.tokenOutSymbol) || isOwnToken(action.tokenIn, action.tokenInSymbol))) {
+    return <TokenLaunchNotify compact className="mt-2" />;
+  }
+  return <SwapActionCardMarket {...props} />;
+}
+
+function SwapActionCardMarket({ action, autoQuote = false }: SwapActionCardProps) {
   const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [status, setStatus] = useState<SwapStatus>('idle');
