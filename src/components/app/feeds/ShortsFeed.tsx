@@ -20,10 +20,8 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { Loader2 } from "lucide-react";
 import RefreshCw from "@/components/ui/cut-icons/refresh";
-import Eye from "@/components/ui/cut-icons/visibility";
 
 import Play from "@/components/ui/cut-icons/play";
-import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
@@ -53,7 +51,9 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DEFAULT_FEED_SORT, SHORTS_RESET_SORT, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
-import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { ShortsBricks, ShortTile } from '@/components/app/feeds/ShortsBricks';
+import { brickShape, packBricks } from '@/lib/shorts-bricks';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { orderByInterests, useFeedInterests } from '@/lib/feed-interests';
 
 // ============================================================================
@@ -72,6 +72,9 @@ const DURATION_FILTERS = [
 ];
 
 // Upload date filters - imported from feed-utils for consistency
+
+// Phone shape chips: every video, only tall shorts, or only wide videos.
+const SHAPE_FILTERS = ['all', 'tall', 'wide'] as const;
 
 // Fallback categories if API fails
 const FALLBACK_CATEGORIES: DeHubCategory[] = [
@@ -304,6 +307,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedDuration, setSelectedDuration] = usePersistedFeedFilter<typeof DURATION_FILTERS[number]>('shorts', 'duration', DURATION_FILTERS[0], DURATION_FILTERS);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('shorts', 'date', DATE_FILTER_OPTIONS[0], DATE_FILTER_OPTIONS);
   const [selectedCategory, setSelectedCategory] = usePersistedFeedFilter<string | null>('shorts', 'category', null);
+  // Phones mix tall and wide videos in brick rows and can narrow to one shape.
+  const isPhone = useIsMobile();
+  const [selectedShape, setSelectedShape] = usePersistedFeedFilter<'all' | 'tall' | 'wide'>('shorts', 'shape', 'all', SHAPE_FILTERS);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -481,18 +487,28 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Apply client-side duration filter
   const shorts = useMemo((): ShortVideo[] => {
+    let list: typeof allShorts = allShorts;
     // Duration filter
     if (selectedDuration.max !== Infinity || selectedDuration.min !== 0) {
-      return allShorts.filter(short => {
+      list = list.filter(short => {
         return short.durationSeconds >= selectedDuration.min && short.durationSeconds < selectedDuration.max;
       });
     }
-    
-    return allShorts;
-  }, [allShorts, selectedDuration]);
+    // Shape filter (phones): only shorts, or only wide videos.
+    if (isPhone && selectedShape !== 'all') {
+      list = list.filter(short => brickShape(short.storedAspect) === selectedShape);
+    }
+    return list;
+  }, [allShorts, selectedDuration, isPhone, selectedShape]);
 
   // Check if any client-side filters are active
-  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all';
+  const hasActiveFilters = selectedDuration.label !== 'Any' || selectedUploadDate.value !== 'all' || (isPhone && selectedShape !== 'all');
+
+  // Phone brick rows. The tail waits for the next page so rows on screen never reshuffle.
+  const brickRows = useMemo(
+    () => (isPhone ? packBricks(shorts, (short) => brickShape(short.storedAspect), (short) => String(short.id), !hasNextPage) : []),
+    [isPhone, shorts, hasNextPage],
+  );
 
   // What the swipe viewer goes through: the shorts, with a live stream every
   // few slides while someone is on air (none while filters narrow the grid).
@@ -519,6 +535,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Reset client-side filters
   const clearFilters = () => {
+    setSelectedShape('all');
     selectDuration(DURATION_FILTERS[0]);
     selectUploadDate(DATE_FILTER_OPTIONS[0]);
   };
@@ -622,6 +639,41 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           )}
         </AnimatePresence>
 
+        {/* Phone shape chips: All / Shorts / Wide */}
+        {isPhone && !searchQuery && (
+          <div data-no-swipe data-shorts-shape-chips className="mb-2 flex gap-1.5" role="tablist">
+            {SHAPE_FILTERS.map((shape) => {
+              const on = selectedShape === shape;
+              const label = shape === 'all'
+                ? _copy("copy.a52ace420f21", { defaultValue: "All" })
+                : shape === 'tall'
+                  ? _copy("copy.3c784a16cf27", { defaultValue: "Shorts" })
+                  : _copy("copy.147170e793c6", { defaultValue: "Wide" });
+              return (
+                <button
+                  key={shape}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  data-active={on ? 'true' : undefined}
+                  onClick={() => setSelectedShape(shape)}
+                  className={cn(
+                    "flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
+                    on ? "border-transparent bg-white text-black" : "border-white/[0.14] bg-white/[0.06] text-zinc-200",
+                  )}
+                >
+                  {shape !== 'all' && (
+                    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.4} aria-hidden="true">
+                      {shape === 'tall' ? <rect x="7" y="2" width="10" height="20" rx="2" /> : <rect x="2" y="6" width="20" height="12" rx="2" />}
+                    </svg>
+                  )}
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* Shorts Grid, filter loader or Empty State. The loader sits BELOW the
             filter panel, not in place of the whole feed, so the chips the user
             is working with stay on screen and clickable while the request runs. */}
@@ -637,7 +689,17 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           <FilteredEmptyState />
         ) : (
           <div key={`${selectedSort.value}-${selectedUploadDate.value}`}>
-            {/* Shorts Grid - TikTok Style */}
+            {isPhone ? (
+              <ShortsBricks
+                shorts={shorts}
+                rows={brickRows}
+                live={!hasActiveFilters ? liveShorts : []}
+                viewerOpen={viewerOpen}
+                onOpenLive={(id) => openViewerAt(`live-${id}`)}
+                onOpen={(short) => openViewerAt(String(short.id))}
+              />
+            ) : (
+            /* Shorts Grid - TikTok Style (desktop and tablets) */
             <div className={cn("grid gap-2 sm:gap-3", isCollapsed ? "grid-cols-2 lg:grid-cols-3" : "grid-cols-2")}>
               {!hasActiveFilters && liveShorts.map((stream) => (
                 <LiveShortTile
@@ -648,90 +710,10 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 />
               ))}
               {shorts.map((short, index) => (
-                <div
-                  key={short.id}
-                  data-media-tile
-                  data-media-scrim
-                  onClick={() => handleShortClick(index)}
-                  className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
-                >
-                  {/* Autoplay when 70% visible, stops when <70% visible */}
-                  {short.videoUrl ? (
-                    <AutoplayVideo
-                      src={short.videoUrl}
-                      hlsSrc={short.hlsUrl}
-                      poster={short.thumbnail}
-                      className="w-full h-full object-cover"
-                      disabled={viewerOpen}
-                      playbackGroup="shorts-grid"
-                      threshold={0.7}
-                      rootMargin="200px"
-                    />
-                  ) : (
-                    <img
-                      src={short.thumbnail}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-
-                  {/* Bottom Info */}
-                  <div className="absolute bottom-[6px] left-2 right-2">
-                    <div className="flex min-w-0 items-end gap-1">
-                      {/* Creator Avatar */}
-                      <div className="w-6 h-6 rounded-[5px] bg-zinc-700 flex-shrink-0 overflow-hidden">
-                        {short.avatar ? (
-                          <img 
-                            src={short.avatar} 
-                            alt="" 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                            }}
-                          />
-                        ) : null}
-                        <span className={`w-full h-full flex items-center justify-center text-white text-[10px] font-medium ${short.avatar ? 'hidden' : ''}`}>
-                          {short.username?.[0]?.toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex min-h-6 min-w-0 flex-1 flex-col justify-between gap-1">
-                        <div className="flex min-w-0 items-center gap-1">
-                          <span className="min-w-0 break-words font-medium text-white text-[10px] leading-[11px] tracking-[-0.1px]">@{(short as any).handle || short.creatorUsername || short.username}</span>
-                          {short.verified && (
-                            <svg className="w-[9px] h-[9px] shrink-0 text-white self-end" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                            </svg>
-                          )}
-                        </div>
-                        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-white/90 text-[9px] leading-[10px]">
-                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.e90f7c8c03b8", { defaultValue: "{{value1}} views", value1: short.views || '0' })}>
-                            <Eye className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
-                            <span>{short.views || '0'}</span>
-                          </span>
-                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.d4d4c7619589", { defaultValue: "{{value1}} likes", value1: short.likes })}>
-                            <ThumbsUp className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
-                            <span>{short.likes}</span>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Play indicator on hover */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                      <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                <ShortTile key={short.id} short={short} viewerOpen={viewerOpen} onOpen={() => handleShortClick(index)} />
               ))}
             </div>
+            )}
 
             {/* Infinite scroll loader */}
             <div ref={loaderRef} className="flex justify-center py-6">
