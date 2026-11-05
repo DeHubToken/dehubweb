@@ -19,9 +19,10 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { NftArt, NftCard, formatPrice } from '@/components/app/nft-market/NftCard';
 import { NftSheet, errorText, type NftSheetTarget } from '@/components/app/nft-market/NftSheet';
 import { toast } from 'sonner';
-import { CollectionsRow } from '@/components/app/nft-market/CollectionsRow';
+import { CollectionsRow, formatVolume } from '@/components/app/nft-market/CollectionsRow';
+import { OpenSeaSheet } from '@/components/app/nft-market/OpenSeaSheet';
 import { NftSpotlight, type SpotlightItem } from '@/components/app/nft-market/NftSpotlight';
-import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, fillListings, walletAddress, fetchCollections, fetchOrders, fetchShowcase, fetchWalletNfts, type MarketCollection, type MarketOrder, type ShowcaseNft } from '@/lib/market/market';
+import { CHAIN_LABEL, EXPLORER, MARKET_CHAINS, OPENSEA_CHAINS, fillListings, walletAddress, fetchBestOffers, fetchCollections, fetchOpenSea, fetchOrders, fetchShowcase, fetchWalletNfts, type MarketCollection, type MarketOrder, type OpenSeaListing, type ShowcaseNft } from '@/lib/market/market';
 import SlidersHorizontal from '@/components/ui/cut-icons/settings';
 import { currentPrice } from '@/lib/market/seaport';
 
@@ -173,6 +174,33 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
     queryFn: () => fetchWalletNfts(me, sellChain),
     enabled: tab === 'sell' && !!me,
     staleTime: 60_000,
+  });
+
+  // Best open offer on each NFT you hold, so a good offer is visible without opening each one.
+  const bestOffers = useQuery({
+    queryKey: ['nft-market', 'best-offers', sellChain, (wallet.data?.items ?? []).map((n) => `${n.contract}:${n.tokenId}`).join(',')],
+    queryFn: () => fetchBestOffers(sellChain, (wallet.data?.items ?? []).map((n) => ({ contract: n.contract, tokenId: n.tokenId }))),
+    enabled: tab === 'sell' && !!wallet.data?.items.length,
+    staleTime: 30_000,
+  });
+  const offerOn = useMemo(() => {
+    const m = new Map<string, { amount: string; decimals: number; symbol: string }>();
+    for (const o of bestOffers.data?.items ?? []) m.set(`${o.contract}:${o.tokenId}`, { amount: o.price, decimals: o.currencyDecimals, symbol: o.currencySymbol });
+    return m;
+  }, [bestOffers.data]);
+
+  // OpenSea's best listings on their top collections (Base and Ethereum),
+  // buyable here, so the market is full from day one.
+  const [osOpen, setOsOpen] = useState<OpenSeaListing | null>(null);
+  const osChains = chain === 'all' ? [...OPENSEA_CHAINS] : (OPENSEA_CHAINS as readonly number[]).includes(chain) ? [chain] : [];
+  const openSea = useQuery({
+    queryKey: ['nft-market', 'opensea', osChains.join(',')],
+    queryFn: async () => {
+      const lists = await Promise.all(osChains.map((c) => fetchOpenSea(c).then((r) => r.items, () => [] as OpenSeaListing[])));
+      return lists.flat();
+    },
+    enabled: tab === 'browse' && osChains.length > 0,
+    staleTime: 5 * 60_000,
   });
 
   const mine = useQuery({
@@ -446,7 +474,7 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
         { id: 'browse', label: t('nftMarket.tabBrowse', { defaultValue: 'Browse' }) },
         { id: 'sell', label: t('nftMarket.tabSell', { defaultValue: 'Sell' }) },
         { id: 'mine', label: t('nftMarket.tabMine', { defaultValue: 'My orders' }) },
-        { id: 'activity', label: t('nftMarket.tabActivity', { defaultValue: 'Activity' }) },
+        { id: 'activity', label: t('nftMarket.tabRecent', { defaultValue: 'Recent' }) },
       ]}
     />
   );
@@ -527,15 +555,31 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
 
                   {coll ? (
                     <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
-                      <p className="min-w-0 truncate text-[15px] font-bold text-white">
-                        {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
-                        <span className="text-[13px] font-normal text-zinc-500">
-                          {' · '}
-                          {coll.listed
-                            ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: coll.listed })
-                            : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: coll.minted ?? 0 })}
-                        </span>
-                      </p>
+                      <div className="min-w-0">
+                        <p className="truncate text-[15px] font-bold text-white">
+                          {coll.name || t('nftMarket.thisCollection', { defaultValue: 'This collection' })}
+                        </p>
+                        <p data-nft-coll-stats className="flex flex-wrap gap-x-3 text-[12px] tabular-nums text-zinc-500">
+                          {coll.floor ? (
+                            <span>
+                              {t('nftMarket.floor', { defaultValue: 'Floor' })}{' '}
+                              <span className="font-semibold text-white">{formatPrice(coll.floor.amount, coll.floor.decimals)} {coll.floor.symbol}</span>
+                            </span>
+                          ) : null}
+                          {coll.volume && coll.sales ? (
+                            <span>
+                              {t('nftMarket.volume', { defaultValue: 'Volume' })}{' '}
+                              <span className="font-semibold text-white">{formatVolume(coll.volume)}</span>
+                            </span>
+                          ) : null}
+                          {coll.sales ? <span>{t('nftMarket.salesCount', { defaultValue: '{{n}} sold', n: coll.sales })}</span> : null}
+                          <span>
+                            {coll.listed
+                              ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: coll.listed })
+                              : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: coll.minted ?? 0 })}
+                          </span>
+                        </p>
+                      </div>
                       <div className="flex shrink-0 items-center gap-1.5">
                         {listings[0] || showcaseItems[0] ? (
                           <button
@@ -638,6 +682,30 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
                     </section>
                   ) : null}
 
+                  {!coll && !dehubOnly && !cartMode && openSea.data?.length ? (
+                    <section data-nft-opensea className="flex flex-col gap-2">
+                      <div data-page-bento className="flex items-center justify-between gap-2 rounded-xl bg-zinc-900 px-3 py-2">
+                        <h2 className="text-[15px] font-bold text-white">{t('nftMarket.fromOpenSea', { defaultValue: 'Top collections on OpenSea' })}</h2>
+                        <span className="text-[11.5px] text-zinc-500">{t('nftMarket.buyHere', { defaultValue: 'Buy them here' })}</span>
+                      </div>
+                      <div data-nft-grid className={gridClass}>
+                        {openSea.data.slice(0, 24).map((l, i) => (
+                          <NftCard
+                            key={l.orderHash}
+                            compact
+                            index={i}
+                            name={l.nftName || `${l.collectionName ?? ''} #${l.tokenId}`}
+                            collection={l.collectionName}
+                            image={l.nftImage}
+                            chainId={l.chainId}
+                            price={{ amount: l.price, decimals: l.currencyDecimals, symbol: l.currencySymbol }}
+                            onClick={() => setOsOpen(l)}
+                          />
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
                   {!listings.length && !showcaseItems.length ? (
                     <PageEmpty
                       icon="nfts"
@@ -689,6 +757,8 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
                           image={n.image}
                           chainId={sellChain}
                           badge={picking ? (isPicked ? '✓' : null) : n.standard === 'erc1155' && n.balance !== '1' ? `×${n.balance}` : null}
+                          price={picking ? null : offerOn.get(`${n.contract}:${n.tokenId}`) ?? null}
+                          priceLabel={t('nftMarket.bestOffer', { defaultValue: 'Best offer' })}
                           onClick={() => (picking ? togglePick(target) : setOpen(target))}
                         />
                       );
@@ -803,6 +873,7 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
 
       <NftSheet target={open} onClose={closeSheet} />
       <NftSheet target={collOffer} collectionOffer onClose={() => setCollOffer(null)} />
+      <OpenSeaSheet item={osOpen} onClose={() => setOsOpen(null)} />
       <NftSheet
         target={bundle?.[0] ?? null}
         bundle={bundle}
