@@ -1589,11 +1589,13 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const phoneFeedFrame = (isPhone && shortsEnabled && feedPreview) || liveFeedPreview;
   const [liveSoundOn, setLiveSoundOn] = useState(false);
   useEffect(() => {
-    if (!feedShortsTarget || !bootSettled || !nearViewport || liteMode) return;
-    // Warm the viewer code while its preview is visible. Queries still start
-    // on touch-down so scrolling through cards does not fetch five feeds.
+    if (!feedShortsTarget || !bootSettled || !interacted || !nearViewport || liteMode) return;
+    // Warm the viewer code while its preview is visible, once the visitor has
+    // touched the page: the viewer is ~70 code files, and a visit that never
+    // scrolls or taps should not download them. Queries still start on
+    // touch-down so scrolling through cards does not fetch five feeds.
     import('@/components/app/BrainrotFeedHost').catch(() => {});
-  }, [feedShortsTarget, bootSettled, nearViewport, liteMode]);
+  }, [feedShortsTarget, bootSettled, interacted, nearViewport, liteMode]);
 
   /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
   const swipeIntoShorts = useCallback(() => {
