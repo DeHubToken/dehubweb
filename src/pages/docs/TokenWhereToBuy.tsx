@@ -3,7 +3,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock } from "lucide-react";
-import Bell from "@/components/ui/cut-icons/alerts";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -33,7 +32,6 @@ const TokenWhereToBuy = () => {
             to="/buy"
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
           >
-            <Bell className="w-4 h-4" />
             {_t('tokenLaunch.notifyMe', 'Notify me')}
           </Link>
         </CardContent>
