@@ -25,6 +25,13 @@ export function squeezeBlankLines(text: string): string {
   return text.replace(/\r\n/g, '\n').replace(/\n[ \t]*\n+/g, '\n');
 }
 
+// Measured "Show more" verdicts, by caption text. Feed cards unmount far off
+// screen and mount again on the way back; without this each remount drew the
+// caption without its button, then added it a frame later, nudging every post
+// below by a line. Same idea as the app's FeedCaption cache.
+const overflowVerdicts = new Map<string, boolean>();
+const VERDICT_CACHE_MAX = 500;
+
 interface FeedCaptionExpanderProps {
   /** The full caption. */
   children: ReactNode;
@@ -41,7 +48,8 @@ export function FeedCaptionExpander({ children, preview, textKey, className, lin
   const { t: _copy } = _useCopy();
   const isPhone = useIsMobile();
   const [open, setOpen] = useState(false);
-  const [overflows, setOverflows] = useState(false);
+  const verdictKey = textKey ? `${lines}|${isPhone ? 'p' : 'd'}|${textKey}` : null;
+  const [overflows, setOverflows] = useState(() => (verdictKey ? overflowVerdicts.get(verdictKey) ?? false : false));
   const [fadeTop, setFadeTop] = useState(false);
   const [fadeBottom, setFadeBottom] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -54,7 +62,14 @@ export function FeedCaptionExpander({ children, preview, textKey, className, lin
     if (open) return;
     const el = clampRef.current;
     if (!el) return;
-    const measure = () => setOverflows(el.scrollHeight > el.clientHeight + 2);
+    const measure = () => {
+      const next = el.scrollHeight > el.clientHeight + 2;
+      if (verdictKey) {
+        if (overflowVerdicts.size >= VERDICT_CACHE_MAX) overflowVerdicts.clear();
+        overflowVerdicts.set(verdictKey, next);
+      }
+      setOverflows(next);
+    };
     if (typeof ResizeObserver === 'undefined') { measure(); return; }
     // No first read here: an observer reports every element once right after
     // layout, where reading sizes is free. Reading in the effect forced an
@@ -62,7 +77,7 @@ export function FeedCaptionExpander({ children, preview, textKey, className, lin
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [open, textKey]);
+  }, [open, textKey, verdictKey]);
 
   // A new text (translation) closes the box again.
   useEffect(() => { setOpen(false); }, [textKey]);
