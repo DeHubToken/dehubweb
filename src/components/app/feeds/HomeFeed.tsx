@@ -4,6 +4,7 @@ import { RetainedPostSurface } from '@/components/app/feeds/RetainedPostSurface'
 import { useTranslation as _useCopy } from 'react-i18next';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { useFirstInteraction } from '@/hooks/use-boot-settled';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
@@ -1537,11 +1538,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching) void scrollPhotosFeed.fetchNextPage();
   }, [scrollFeed.hasNextPage, scrollFeed.isFetching, scrollFeed.fetchNextPage,
     scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching, scrollPhotosFeed.fetchNextPage]);
+  // Rows further down the feed need more clips, but nobody sees them before
+  // scrolling: fetch the extra pages (50 videos each) after the first touch.
+  const interacted = useFirstInteraction();
   useEffect(() => {
-    if (!isHomeActive || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
+    if (!isHomeActive || !interacted || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
     if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
     if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching && !scrollPhotosFeed.isError) void scrollPhotosFeed.fetchNextPage();
-  }, [isHomeActive, shortsCount, shortsRotation.batches.length, scrollFeed.hasNextPage, scrollFeed.isFetching,
+  }, [isHomeActive, interacted, shortsCount, shortsRotation.batches.length, scrollFeed.hasNextPage, scrollFeed.isFetching,
     scrollFeed.isError, scrollFeed.fetchNextPage, scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching,
     scrollPhotosFeed.isError, scrollPhotosFeed.fetchNextPage]);
 
