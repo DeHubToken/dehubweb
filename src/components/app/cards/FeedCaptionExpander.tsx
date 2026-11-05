@@ -55,8 +55,10 @@ export function FeedCaptionExpander({ children, preview, textKey, className, lin
     const el = clampRef.current;
     if (!el) return;
     const measure = () => setOverflows(el.scrollHeight > el.clientHeight + 2);
-    measure();
-    if (typeof ResizeObserver === 'undefined') return;
+    if (typeof ResizeObserver === 'undefined') { measure(); return; }
+    // No first read here: an observer reports every element once right after
+    // layout, where reading sizes is free. Reading in the effect forced an
+    // extra layout of the whole feed for every caption as cards mounted.
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
