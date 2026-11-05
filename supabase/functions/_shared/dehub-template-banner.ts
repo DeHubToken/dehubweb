@@ -512,6 +512,14 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   if (maxW) size = Math.min(size, fitSize(subTxt, maxW * 0.82, size, 0.58));
   // -.03em, same side-bearing correction as the headline so the row starts on
   // the shared gutter rather than a hair inside it.
+  const approxW = subTxt.length * size * 0.58;
+  // A centred row is laid out as a left-aligned one starting half its width
+  // back: anchoring each piece "middle" stacked the `//` on top of the word.
+  if (anchor === "middle") {
+    const rowW = approxW + 44 + (spec.extra ? spec.extra.length * size * 0.36 + 40 : 0) + size * 0.4;
+    x -= rowW / 2;
+    anchor = "start";
+  }
   const tx = x - size * 0.03;
   const slashW = size * 0.58 * 2;
   // Only exo-700 and exo-500 are loaded as static faces (a variable Exo renders
@@ -522,8 +530,7 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   // rather than as part of the label.
   let out = `<text x="${n1(tx)}" y="${n1(y)}" ${common} fill="rgba(255,255,255,0.42)">//</text>`;
   out += `<text x="${n1(tx + slashW)}" y="${n1(y)}" ${common} fill="url(#subg)">${esc(spec.subtitle.toUpperCase())}</text>`;
-  const approxW = subTxt.length * size * 0.58;
-  const ex = anchor === "middle" ? x + approxW / 2 + 40 : tx + approxW + 44;
+  const ex = tx + approxW + 44;
   if (spec.extra) {
     out += `<text x="${n1(ex)}" y="${n1(y - 2)}" font-family="Consolas" font-size="${Math.round(size * 0.55)}" letter-spacing="${(size * 0.04).toFixed(1)}" fill="rgba(255,255,255,0.72)">${esc(spec.extra)}</text>`;
   }
@@ -622,7 +629,7 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   const uris: Record<string, string> = {
     bg: await kitDataUri(bgEntry.file),
     grain: await kitDataUri("brand/grain.png"),
-    qr: await kitDataUri("brand/qr-dehub-io.png"),
+    qr: await kitDataUri("brand/qr-riftn.png"),
     wordmarkBlack: await kitDataUri("brand/wordmark-black.png"),
   };
   if (spec.layout === "wordmark") uris.wordmarkWhite = await kitDataUri("brand/wordmark-white.png");

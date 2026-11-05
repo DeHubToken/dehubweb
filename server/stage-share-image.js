@@ -2,7 +2,7 @@ import { Resvg } from '@resvg/resvg-wasm';
 import { resvgReady } from './resvg.js';
 import { STAGE_CARD_VERSION, renderStageCardSvg, stageCardAssetPaths, stageCardSource } from './stage-share-card.js';
 
-const SHARE_IMAGE = 'https://riftn.com/og/dehub-social-share.png';
+const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
 const FONTS = ['/brand-kit/font/exo-500.ttf', '/brand-kit/font/exo-700.ttf', '/brand-kit/font/mono.ttf'];
 let fonts;
 
@@ -38,7 +38,7 @@ function loadFonts(env) {
 }
 
 /**
- * /_og/stage/v3/<id>.png — the generated Chrome Mic banner for a stage with no cover.
+ * /_og/stage/v4/<id>.png — the generated Chrome Mic banner for a stage with no cover.
  * Rendered from the live row, so a stage going live or ending changes its
  * card; cached under a fingerprint of the fields the card reads.
  */

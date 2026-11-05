@@ -24,7 +24,7 @@ export function plainPostText(value) {
 
 const flag = (v) => v === true || v === 1 || v === 'true';
 const count = (v) => Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(v))) : 0;
-const SHARE_IMAGE = `${ORIGIN}/og/dehub-social-share.png`;
+const SHARE_IMAGE = `${ORIGIN}/og/riftn-share.png`;
 const CARD_POST_TYPES = ['feed-simple', 'text', 'video', 'feed-video', 'image', 'feed-images'];
 
 /** An absent rating reads as safe, as it does everywhere else. Mature, blocked and pending posts never show their content to a stranger. */

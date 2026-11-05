@@ -25,7 +25,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
   durableObjects: { EDITOR_PRESENCE: { className: 'EditorPresenceRoom', useSQLite: true } },
   serviceBindings: { ASSETS: request => {
     const path = decodeURIComponent(new URL(request.url).pathname);
-    assert.ok(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png', '/og/dehub-social-share.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
+    assert.ok(['/brand-kit/font/manrope-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png', '/og/riftn-share.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
@@ -101,7 +101,7 @@ try {
   assert.equal(restricted.status, 200);
   assert.equal(restricted.headers.get('X-DeHub-Share-Card'), 'brand');
   assert.equal(restricted.headers.get('Cache-Control'), 'no-store');
-  assert.deepEqual(Buffer.from(await restricted.arrayBuffer()), readFileSync(new URL('../public/og/dehub-social-share.png', import.meta.url)));
+  assert.deepEqual(Buffer.from(await restricted.arrayBuffer()), readFileSync(new URL('../public/og/riftn-share.png', import.meta.url)));
   assert.equal(requests, 4);
   post = { ...original, postType: 'video', videoUrl: 'videos/6501.mp4', thumbnail_url: 'images/6501.jpg', totalTips: 3100 };
   const video = await dispatch(url);
