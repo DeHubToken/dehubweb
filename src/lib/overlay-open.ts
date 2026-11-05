@@ -72,6 +72,8 @@ export function OverlayOpenTracker(): null {
  */
 const SENTINEL = '__dehubOverlay';
 let entryPushed = false;
+/** The address the Back entry was pushed at (it copies the current URL). */
+let entryHref = '';
 let ignoreNextPop = false;
 let backWired = false;
 
@@ -90,6 +92,7 @@ function syncBackEntry() {
   if (want && !entryPushed) {
     window.history.pushState({ ...(window.history.state ?? {}), [SENTINEL]: true }, '');
     entryPushed = true;
+    entryHref = window.location.href;
   } else if (!want && entryPushed) {
     entryPushed = false;
     if (onSentinel()) {
@@ -109,6 +112,16 @@ function wireBack() {
     }
     if (entryPushed && openOverlayCount > 0) {
       entryPushed = false;
+      // Back off the entry lands on the same address it was pushed at. A
+      // different address means something navigated forward on top of it
+      // instead, such as the Google sign-in return clearing its token from the
+      // address bar (location.hash = '') while "Signing you in" is up. That is
+      // not Back: closing the sheet there cancelled the sign-in on every phone.
+      // Keep the sheet and put a fresh entry on top of the new address.
+      if (window.location.href !== entryHref) {
+        syncBackEntry();
+        return;
+      }
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', code: 'Escape', bubbles: true, cancelable: true }));
       // An overlay that refuses Escape (unsaved input) stays up: put the
       // entry back so the next Back is still caught.
