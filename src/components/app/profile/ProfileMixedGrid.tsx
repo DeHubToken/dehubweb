@@ -15,7 +15,8 @@
  * @module components/app/profile/ProfileMixedGrid
  */
 
-import { memo, type ReactNode } from 'react';
+import { memo, useEffect, type ReactNode } from 'react';
+import { warmPostPage } from '@/lib/preload-post-page';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Pin } from 'lucide-react';
@@ -89,6 +90,18 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
   const { t } = useTranslation();
   const postBg = useProfilePostBg();
   const navigate = useNavigate();
+  // Every tile opens a post. Fetch the post page's code while the reader is
+  // still browsing, so a tap shows the post at once instead of a blank page
+  // with a spinner while it downloads.
+  useEffect(() => {
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      const id = idle(() => warmPostPage(), { timeout: 3000 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const timer = window.setTimeout(warmPostPage, 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const profileFeed = useProfileFeedContext();
   const openPost = (id: string, slug?: string) => {

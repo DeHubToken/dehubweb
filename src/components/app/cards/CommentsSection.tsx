@@ -205,6 +205,10 @@ interface CommentsSectionProps {
   stage?: boolean;
   /** The post's comment total, for the stage header. */
   stageCount?: number;
+  /** Comment count the host already knows (the post's own count). Lets the
+   *  page layout skip the loading header when the post has no comments, so
+   *  nothing appears and then vanishes under the post. */
+  knownCount?: number;
   /** Tells the host which list the stage is showing, so it can reopen one. */
   onStageTabChange?: (tab: 'replies' | 'quotes' | 'reposts' | 'search') => void;
 }
@@ -1073,7 +1077,7 @@ function useFloatingPin(
   }, [on, barRef, slotRef, sectionRef]);
 }
 
-function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, replyPolicy, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, knownCount, onStageTabChange }: CommentsSectionProps) {
   const displayStageCount = useCommentCount(stage ? tokenId : undefined, stageCount ?? 0);
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
@@ -2724,8 +2728,12 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // Comments laid on a page (not a sheet someone opened) show nothing at all
   // until there is a comment: no header, no "No comments yet" art. The
   // composer stays, so Comment still opens it.
-  const hideEmptyInline = !!page && !isLoading && !error && activeTab === 'replies'
-    && !isAssistantReplying && filteredGroupedComments.length === 0;
+  // While loading, a post the host knows has no comments stays empty too:
+  // showing the header and a spinner only to remove them a moment later moved
+  // everything under the post up and down on every open.
+  const knownEmpty = (stageCount ?? knownCount) === 0;
+  const hideEmptyInline = !!page && !error && activeTab === 'replies' && !isAssistantReplying
+    && (isLoading ? knownEmpty : filteredGroupedComments.length === 0);
 
   return (
     <PostCreatorContext.Provider value={postCreator}>
@@ -2940,9 +2948,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
         {activeTab === 'replies' && (
           <div className={page ? "pb-2" : "absolute inset-0 overflow-y-auto pt-2 pb-2"}>
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-              </div>
+              hideEmptyInline ? null : (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+                </div>
+              )
             ) : error ? (
               <p className="text-zinc-500 text-sm py-6 text-center">{t('comments.loadFailed')}</p>
             ) : (
