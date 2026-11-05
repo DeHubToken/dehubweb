@@ -1202,6 +1202,21 @@ export default function StatsPage() {
                     { max: stats.window.breakdownMaxDays },
                   )}
                 </li>
+                {stats.zones && stats.zones.length > 1 && (
+                  <li>
+                    <span className="text-zinc-300">{t('stats.definitions.addressesTerm', 'Both addresses')}</span>{' '}
+                    {t(
+                      'stats.definitions.addresses',
+                      '— the site moved from dehub.io to riftn.com on 3 November 2026. Cloudflare counts each address separately, so every day here is {{zones}} added together. Someone who arrives on dehub.io and is passed on to riftn.com can be counted on both that day.',
+                      { zones: stats.zones.filter((z) => z.ok).map((z) => z.name).join(' + ') },
+                    )}
+                    {stats.zones.some((z) => !z.ok) && (
+                      <> {t('stats.definitions.addressMissing', 'Not readable right now: {{zones}}.', {
+                        zones: stats.zones.filter((z) => !z.ok).map((z) => z.name).join(', '),
+                      })}</>
+                    )}
+                  </li>
+                )}
                 {stats.estimate && (
                   <li>
                     <span className="text-zinc-300">{t('stats.definitions.estimatedTerm', 'Estimated days')}</span>{' '}

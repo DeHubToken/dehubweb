@@ -5216,13 +5216,121 @@ function statsTrimMap(rows, keyField, valueField, outKey, outValue, limit) {
     .map((entry) => ({ [outKey]: entry[keyField], [outValue]: entry[valueField] || 0 }));
 }
 
-async function buildStatsPayload(env) {
-  const token = env && env.CF_ANALYTICS_TOKEN;
-  if (!token) {
-    return { status: 501, payload: { ok: false, reason: 'unconfigured' } };
-  }
+/**
+ * Every Cloudflare zone the site has lived on. The site moved from dehub.io to
+ * riftn.com on 3 November 2026: after that, people browse riftn.com (its own
+ * zone) and dehub.io only sees hand-offs, apps and API traffic. Reading one
+ * zone made the chart fall off a cliff on the day of the move, so every zone is
+ * read and the days are added together. dehub.io stays first: its tag is
+ * compiled in and it carries all the history.
+ */
+const STATS_ZONES = [
+  { name: 'dehub.io', tag: STATS_ZONE_TAG, env: 'CF_ZONE_TAG' },
+  { name: 'riftn.com', tag: null, env: 'CF_RIFTN_ZONE_TAG' },
+];
 
-  const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
+const statsZoneTagCache = new Map();
+
+/** A zone's tag: env override, compiled-in tag, or looked up once by name. */
+async function statsResolveZoneTag(token, zone, env) {
+  const fromEnv = env && env[zone.env];
+  if (fromEnv) return String(fromEnv).trim();
+  if (zone.tag) return zone.tag;
+  if (statsZoneTagCache.has(zone.name)) return statsZoneTagCache.get(zone.name);
+  const res = await fetch(`https://api.cloudflare.com/client/v4/zones?name=${encodeURIComponent(zone.name)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const body = await res.json().catch(() => null);
+  const tag = body && body.success && body.result && body.result[0] && body.result[0].id;
+  if (!tag) {
+    const codes = ((body && body.errors) || []).map((e) => e.code).join(',');
+    throw new Error(`zone lookup for ${zone.name} failed (HTTP ${res.status}${codes ? `; codes ${codes}` : ''})`);
+  }
+  statsZoneTagCache.set(zone.name, tag);
+  return tag;
+}
+
+function statsMergeMap(lists, key, value, limit) {
+  const totals = new Map();
+  for (const list of lists) {
+    for (const entry of list || []) totals.set(entry[key], (totals.get(entry[key]) || 0) + (entry[value] || 0));
+  }
+  return [...totals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([k, v]) => ({ [key]: k, [value]: v }));
+}
+
+/** Add rows from several zones that share a bucket key (date or hour). */
+function statsSumByKey(seriesList, keyField, numberFields, mergeExtra) {
+  const byKey = new Map();
+  for (const series of seriesList) {
+    for (const row of series) {
+      const k = row[keyField];
+      if (!byKey.has(k)) byKey.set(k, []);
+      byKey.get(k).push(row);
+    }
+  }
+  return [...byKey.keys()].sort().map((k) => {
+    const rows = byKey.get(k);
+    const out = { [keyField]: k };
+    for (const f of numberFields) out[f] = rows.reduce((n, r) => n + (r[f] || 0), 0);
+    return mergeExtra ? mergeExtra(out, rows) : out;
+  });
+}
+
+async function statsReadZone(token, zone, env, windows) {
+  const zoneTag = await statsResolveZoneTag(token, zone, env);
+  const { since, until, hourSince, hourUntil, breakdownSince } = windows;
+  const [daily, hourly, breakdown] = await Promise.all([
+    statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until }),
+    statsGraphql(token, STATS_QUERY_HOURLY, { zoneTag, since: hourSince, until: hourUntil }),
+    statsGraphql(token, STATS_QUERY_BREAKDOWN, { zoneTag, since: breakdownSince, until }),
+  ]);
+
+  const dailySeries = statsZoneGroups(daily.body, 'httpRequests1dGroups').map((g) => ({
+    date: g.dimensions.date,
+    visitors: g.uniq.uniques,
+    pageViews: g.sum.pageViews,
+    requests: g.sum.requests,
+    bytes: g.sum.bytes,
+  }));
+
+  const hourlySeries = statsZoneGroups(hourly.body, 'httpRequests1hGroups').map((g) => ({
+    hour: g.dimensions.datetime,
+    visitors: g.uniq.uniques,
+    pageViews: g.sum.pageViews,
+    requests: g.sum.requests,
+  }));
+
+  // Per-day rows, not pre-totalled. The page picks a range and adds up the days
+  // inside it, so switching between 7d / 30d / all costs nothing and every
+  // figure on screen is derived from the same rows the reader can see.
+  const breakdownSeries = statsZoneGroups(breakdown.body, 'httpRequests1dGroups').map((g) => ({
+    date: g.dimensions.date,
+    // `requests` rides along with the cached/encrypted counts so a share can
+    // always be taken over the same rows. Dividing a 7-day numerator by a
+    // 30-day denominator would quietly understate caching.
+    requests: g.sum.requests || 0,
+    cachedRequests: g.sum.cachedRequests || 0,
+    encryptedRequests: g.sum.encryptedRequests || 0,
+    threats: g.sum.threats || 0,
+    countries: statsTrimMap(g.sum.countryMap, 'clientCountryName', 'requests', 'code', 'requests', STATS_COUNTRIES_PER_DAY),
+    browsers: statsTrimMap(g.sum.browserMap, 'uaBrowserFamily', 'pageViews', 'name', 'pageViews', STATS_BROWSERS_PER_DAY),
+  }));
+
+  return {
+    name: zone.name,
+    zoneTag,
+    ok: true,
+    daily: dailySeries,
+    hourly: hourlySeries,
+    breakdown: breakdownSeries,
+    cfRay: { daily: daily.cfRay, hourly: hourly.cfRay, breakdown: breakdown.cfRay },
+  };
+}
+
+function statsWindows() {
   const now = new Date();
   const until = statsDayString(now);
   // Asking a year back is the all-time query: Cloudflare accepts the width and
@@ -5236,51 +5344,38 @@ async function buildStatsPayload(env) {
   hourUntil.setUTCMinutes(0, 0, 0);
   hourUntil.setUTCHours(hourUntil.getUTCHours() + 1);
   const hourSince = new Date(hourUntil.getTime() - STATS_HOURLY_HOURS * 3600000);
+  return { since, until, breakdownSince, hourSince: hourSince.toISOString(), hourUntil: hourUntil.toISOString() };
+}
 
-  const [daily, hourly, breakdown] = await Promise.all([
-    statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until }),
-    statsGraphql(token, STATS_QUERY_HOURLY, {
-      zoneTag,
-      since: hourSince.toISOString(),
-      until: hourUntil.toISOString(),
+async function buildStatsPayload(env) {
+  const token = env && env.CF_ANALYTICS_TOKEN;
+  if (!token) {
+    return { status: 501, payload: { ok: false, reason: 'unconfigured' } };
+  }
+
+  const windows = statsWindows();
+  const settled = await Promise.allSettled(STATS_ZONES.map((zone) => statsReadZone(token, zone, env, windows)));
+  // dehub.io holds the history, so it failing is a real outage. Any other zone
+  // failing is reported in `zones` and the page still renders what it has.
+  if (settled[0].status === 'rejected') throw settled[0].reason;
+  const zones = settled.map((r, i) => (r.status === 'fulfilled'
+    ? r.value
+    : { name: STATS_ZONES[i].name, ok: false, error: String((r.reason && r.reason.message) || r.reason) }));
+  const readable = zones.filter((z) => z.ok);
+  const primary = readable[0];
+
+  const dailySeries = statsSumByKey(readable.map((z) => z.daily), 'date', ['visitors', 'pageViews', 'requests', 'bytes']);
+  const hourlySeries = statsSumByKey(readable.map((z) => z.hourly), 'hour', ['visitors', 'pageViews', 'requests']);
+  const breakdownSeries = statsSumByKey(
+    readable.map((z) => z.breakdown),
+    'date',
+    ['requests', 'cachedRequests', 'encryptedRequests', 'threats'],
+    (out, rows) => ({
+      ...out,
+      countries: statsMergeMap(rows.map((r) => r.countries), 'code', 'requests', STATS_COUNTRIES_PER_DAY),
+      browsers: statsMergeMap(rows.map((r) => r.browsers), 'name', 'pageViews', STATS_BROWSERS_PER_DAY),
     }),
-    statsGraphql(token, STATS_QUERY_BREAKDOWN, { zoneTag, since: breakdownSince, until }),
-  ]);
-
-  const dailyGroups = statsZoneGroups(daily.body, 'httpRequests1dGroups');
-  const hourlyGroups = statsZoneGroups(hourly.body, 'httpRequests1hGroups');
-  const breakdownGroups = statsZoneGroups(breakdown.body, 'httpRequests1dGroups');
-
-  const dailySeries = dailyGroups.map((g) => ({
-    date: g.dimensions.date,
-    visitors: g.uniq.uniques,
-    pageViews: g.sum.pageViews,
-    requests: g.sum.requests,
-    bytes: g.sum.bytes,
-  }));
-
-  const hourlySeries = hourlyGroups.map((g) => ({
-    hour: g.dimensions.datetime,
-    visitors: g.uniq.uniques,
-    pageViews: g.sum.pageViews,
-    requests: g.sum.requests,
-  }));
-
-  // Per-day rows, not pre-totalled. The page picks a range and adds up the days
-  // inside it, so switching between 7d / 30d / all costs nothing and every
-  // figure on screen is derived from the same rows the reader can see.
-  const breakdownSeries = breakdownGroups.map((g) => ({
-    date: g.dimensions.date,
-    // `requests` rides along with the cached/encrypted counts so a share can
-    // always be taken over the same rows. Dividing a 7-day numerator by a
-    // 30-day denominator would quietly understate caching.
-    requests: g.sum.requests || 0,
-    cachedRequests: g.sum.cachedRequests || 0,
-    encryptedRequests: g.sum.encryptedRequests || 0,
-    threats: g.sum.threats || 0,
-    countries: statsTrimMap(g.sum.countryMap, 'clientCountryName', 'requests', 'code', 'requests', STATS_COUNTRIES_PER_DAY),
-    browsers: statsTrimMap(g.sum.browserMap, 'uaBrowserFamily', 'pageViews', 'name', 'pageViews', STATS_BROWSERS_PER_DAY),
-  }));
+  );
 
   const payload = {
     ok: true,
@@ -5299,24 +5394,35 @@ async function buildStatsPayload(env) {
       hourlyMaxHours: STATS_HOURLY_HOURS,
       breakdownMaxDays: STATS_BREAKDOWN_DAYS,
     },
+    // Days and hours added up across every zone the site is served from.
     daily: dailySeries,
     hourly: hourlySeries,
     breakdown: breakdownSeries,
+    // Each zone's own rows. Unique visitors are counted per zone, so the page
+    // corrects each zone on its own (see estimateRelayedVisitors) before adding.
+    zones: zones.map((z) => (z.ok
+      ? { name: z.name, zoneTag: z.zoneTag, ok: true, daily: z.daily, hourly: z.hourly }
+      : z)),
     provenance: {
       source: 'Cloudflare GraphQL Analytics API',
       endpoint: STATS_GRAPHQL_ENDPOINT,
       datasets: ['httpRequests1dGroups', 'httpRequests1hGroups'],
       measuredAt: 'Cloudflare edge (server-side, before the page loads)',
-      zoneTag,
+      zoneTag: readable.map((z) => `${z.name} ${z.zoneTag}`).join(' + '),
       // Cloudflare stamps every API response with a unique ray ID. It ties this
       // payload to a real call against their infrastructure at a real time.
-      cfRay: { daily: daily.cfRay, hourly: hourly.cfRay, breakdown: breakdown.cfRay },
+      cfRay: primary.cfRay,
       queries: {
         daily: STATS_QUERY_DAILY,
         hourly: STATS_QUERY_HOURLY,
         breakdown: STATS_QUERY_BREAKDOWN,
       },
-      variables: { zoneTag, since, until, breakdownSince },
+      variables: {
+        zoneTag: readable.map((z) => z.zoneTag).join(','),
+        since: windows.since,
+        until: windows.until,
+        breakdownSince: windows.breakdownSince,
+      },
       rawUrl: '/api/stats/raw',
       // Stated plainly on the page too: this proves the numbers came from
       // Cloudflare's aggregation rather than from application code, and that
@@ -5335,20 +5441,24 @@ async function buildStatsRawPayload(env) {
   if (!token) {
     return { status: 501, payload: { ok: false, reason: 'unconfigured' } };
   }
-  const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
-  const now = new Date();
-  const until = statsDayString(now);
-  const since = statsDayString(new Date(now.getTime() - STATS_ALLTIME_LOOKBACK_DAYS * 86400000));
-  const daily = await statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until });
+  const { since, until } = statsWindows();
+  const replies = await Promise.all(STATS_ZONES.map(async (zone) => {
+    try {
+      const zoneTag = await statsResolveZoneTag(token, zone, env);
+      const daily = await statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until });
+      return {
+        zone: zone.name,
+        request: { endpoint: STATS_GRAPHQL_ENDPOINT, query: STATS_QUERY_DAILY, variables: { zoneTag, since, until } },
+        cfRay: daily.cfRay,
+        response: daily.body,
+      };
+    } catch (err) {
+      return { zone: zone.name, error: String((err && err.message) || err) };
+    }
+  }));
   return {
     status: 200,
-    payload: {
-      ok: true,
-      fetchedAt: new Date().toISOString(),
-      request: { endpoint: STATS_GRAPHQL_ENDPOINT, query: STATS_QUERY_DAILY, variables: { zoneTag, since, until } },
-      cfRay: daily.cfRay,
-      response: daily.body,
-    },
+    payload: { ok: true, fetchedAt: new Date().toISOString(), zones: replies },
   };
 }
 
