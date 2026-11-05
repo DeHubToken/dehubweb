@@ -30,6 +30,7 @@ import Pencil from "@/components/ui/cut-icons/edit";
 import QueuedIcon from "@/components/ui/cut-icons/clock";
 import ShippedIcon from "@/components/ui/cut-icons/check";
 import BackToRequestsIcon from "@/components/ui/cut-icons/undo";
+import NotFeasibleIcon from "@/components/ui/cut-icons/blocked";
 
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
@@ -55,7 +56,7 @@ import {
   useFeatureRequest,
   useShippedFeatures,
   useInProgressFeatures,
-
+  useNotFeasibleFeatures,
   useUserVotes,
   useFeatureCounts,
   useSubmitFeatureRequest,
@@ -100,6 +101,12 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
 ];
 
 type PageTab = 'requests' | 'shipping' | 'shipped';
+
+// The last chip in the Requests row, after "Other": requests the board owners
+// ruled out. It is a status view rather than a category, so it only exists on
+// the Requests tab and swaps the open list for the Not feasible one.
+const NOT_FEASIBLE = 'not_feasible' as const;
+type CategoryChip = FeatureCategory | 'all' | typeof NOT_FEASIBLE;
 
 const DEHUB_GITHUB_URL = 'https://github.com/DeHubToken';
 
@@ -264,9 +271,22 @@ function FeatureCard({
   const canSetStatus = isFeatureStatusEditor(walletAddress);
   const isQueued = feature.status === 'in_progress';
   const isShipped = feature.status === 'shipped' || feature.status === 'completed';
+  const isNotFeasible = feature.status === 'declined';
+  const notFeasibleReason = isNotFeasible ? feature.status_note?.trim() || '' : '';
+  const [reasonDraft, setReasonDraft] = useState<string | null>(null);
   const setStatus = (status: 'open' | 'in_progress' | 'shipped') => {
     setShowMenu(false);
     statusMutation.mutate({ id: feature.id, status });
+  };
+  const startNotFeasible = () => {
+    setShowMenu(false);
+    setReasonDraft(notFeasibleReason);
+  };
+  const saveNotFeasible = () => {
+    statusMutation.mutate(
+      { id: feature.id, status: 'declined', note: reasonDraft ?? '' },
+      { onSuccess: () => setReasonDraft(null) },
+    );
   };
 
   const dbAvatarUrl = feature.author_avatar
@@ -381,7 +401,14 @@ function FeatureCard({
                       >
                         <ShippedIcon className="w-3.5 h-3.5" />{_copy("copy.2fffca525795", { defaultValue: "Mark Shipped" })}</button>
                     )}
-                    {(isQueued || isShipped) && (
+                    <button
+                      type="button"
+                      onClick={startNotFeasible}
+                      disabled={statusMutation.isPending}
+                      className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                    >
+                      <NotFeasibleIcon className="w-3.5 h-3.5" />{isNotFeasible ? _copy("copy.0d24977e6943", { defaultValue: "Edit reason" }) : _copy("copy.465fe84f18fc", { defaultValue: "Mark Not feasible" })}</button>
+                    {(isQueued || isShipped || isNotFeasible) && (
                       <button
                         type="button"
                         onClick={() => setStatus('open')}
@@ -432,6 +459,29 @@ function FeatureCard({
               onClick={() => setShowDeleteConfirm(false)}
               className="rounded-lg text-xs text-zinc-400"
             >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
+          </div>
+        </div>
+      )}
+
+      {/* Owner's Not feasible reason, optional */}
+      {reasonDraft !== null && (
+        <div className="mb-3 p-3 rounded-lg border border-white/10 bg-white/[0.04] space-y-2">
+          <label htmlFor={`not-feasible-${feature.id}`} className="text-zinc-400 text-xs block">{_copy("copy.0a54f1d10336", { defaultValue: "Why is this not feasible? (optional)" })}</label>
+          <Input
+            id={`not-feasible-${feature.id}`}
+            value={reasonDraft}
+            onChange={(e) => setReasonDraft(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') saveNotFeasible(); }}
+            maxLength={280}
+            autoFocus
+            placeholder={_copy("copy.3d024b567634", { defaultValue: "Short reason people will see" })}
+            className="bg-zinc-800/50 border-white/10 text-white rounded-lg text-sm"
+          />
+          <div className="flex gap-2">
+            <Button size="sm" variant="glass" onClick={saveNotFeasible} disabled={statusMutation.isPending} className="rounded-lg text-xs">
+              {statusMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : _copy("copy.465fe84f18fc", { defaultValue: "Mark Not feasible" })}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setReasonDraft(null)} className="rounded-lg text-xs text-zinc-400">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           </div>
         </div>
       )}
@@ -510,6 +560,12 @@ function FeatureCard({
             </span>
           )}
         </div>
+        {/* The owners' reason for ruling it out. */}
+        {notFeasibleReason && (
+          <p className="text-zinc-400 text-xs leading-relaxed">
+            <span className="text-zinc-300 font-medium">{_copy("copy.ad389aa4c08e", { defaultValue: "Why:" })}</span>{' '}{notFeasibleReason}
+          </p>
+        )}
 
         {/* Translate control */}
         <PostMetadata
@@ -817,7 +873,15 @@ export default function FeaturesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('newest');
-  const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
+  const [category, setCategory] = useState<CategoryChip>('all');
+  const showNotFeasible = activeTab === 'requests' && category === NOT_FEASIBLE;
+  // A real category for the queries: the Not feasible chip filters by status.
+  const listCategory: FeatureCategory | 'all' = category === NOT_FEASIBLE ? 'all' : category;
+  // Not feasible only lives on the Requests tab; leaving it falls back to All.
+  const openTab = useCallback((tab: PageTab) => {
+    setActiveTab(tab);
+    if (tab !== 'requests') setCategory((current) => (current === NOT_FEASIBLE ? 'all' : current));
+  }, []);
   // Sort and category chips share one scroll row, so both indicators measure
   // against the same layer. The tab is the layout-shift key for categories:
   // the sort chips in front of them only exist on the Prompts tab.
@@ -856,15 +920,20 @@ export default function FeaturesPage() {
     const requestedTab = searchParams.get('tab');
     if (requestedTab === 'prompts') setActiveTab('requests');
     if (requestedTab === 'queued') setActiveTab('shipping');
+    if (requestedTab === 'not-feasible' || requestedTab === 'unfeasible') {
+      setActiveTab('requests');
+      setCategory(NOT_FEASIBLE);
+    }
     if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped') {
       setActiveTab(requestedTab);
     }
   }, [searchParams, setSearchParams]);
 
-  const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
+  const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, listCategory, search);
   const allFeatures = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+  const { data: notFeasibleFeatures, isLoading: isLoadingNotFeasible } = useNotFeasibleFeatures();
 
   // A notification about one request pins it above the board. The list query
   // could never be relied on to hold it — it may be shipped, declined, outside
@@ -893,18 +962,31 @@ export default function FeaturesPage() {
   // category aliases, so a plain equality check is enough.
   const matchesFilters = useCallback(
     (row: FeatureRequest) => {
-      if (category !== 'all' && row.category !== category) return false;
+      if (listCategory !== 'all' && row.category !== listCategory) return false;
       const q = search.trim().toLowerCase();
       if (!q) return true;
       return row.title.toLowerCase().includes(q) || row.description.toLowerCase().includes(q);
     },
-    [category, search],
+    [listCategory, search],
   );
-  const isFiltering = search.trim().length > 0 || category !== 'all';
+  const isFiltering = search.trim().length > 0 || listCategory !== 'all';
   const visibleInProgress = useMemo(
     () => withoutFocused(inProgressFeatures).filter(matchesFilters),
     [inProgressFeatures, withoutFocused, matchesFilters],
   );
+  // It sits at the far end of the chip row, so bring it into view when picked
+  // (or deep linked) instead of leaving the selection off screen.
+  useEffect(() => {
+    if (!showNotFeasible) return;
+    requestAnimationFrame(() => {
+      document.querySelector('[data-chip="not-feasible"]')?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    });
+  }, [showNotFeasible]);
+  const visibleNotFeasible = useMemo(
+    () => withoutFocused(notFeasibleFeatures).filter(matchesFilters),
+    [notFeasibleFeatures, withoutFocused, matchesFilters],
+  );
+  const notFeasibleCount = notFeasibleFeatures?.length ?? 0;
   const visibleShipped = useMemo(
     () => withoutFocused(shippedFeatures).filter(matchesFilters),
     [shippedFeatures, withoutFocused, matchesFilters],
@@ -961,6 +1043,7 @@ export default function FeaturesPage() {
       return;
     }
     setActiveTab('requests');
+    setCategory((current) => (current === NOT_FEASIBLE ? 'all' : current));
     setComposerFocus(value => value + 1);
   };
 
@@ -1029,7 +1112,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('requests')}
-            onClick={() => setActiveTab('requests')}
+            onClick={() => openTab('requests')}
             role="tab" aria-selected={activeTab === 'requests'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1045,7 +1128,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('shipping')}
-            onClick={() => setActiveTab('shipping')}
+            onClick={() => openTab('shipping')}
             role="tab" aria-selected={activeTab === 'shipping'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1062,7 +1145,7 @@ export default function FeaturesPage() {
           <button
             type="button"
             ref={setPageTabRef('shipped')}
-            onClick={() => setActiveTab('shipped')}
+            onClick={() => openTab('shipped')}
             role="tab" aria-selected={activeTab === 'shipped'}
             className={`relative z-10 flex-auto sm:flex-1 px-1.5 py-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
               activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
@@ -1130,6 +1213,25 @@ export default function FeaturesPage() {
                       <span className="relative z-10">{t(cat.labelKey)}</span>
                     </button>
                   ))}
+                  {activeTab === 'requests' && (
+                    <button
+                      data-chip="not-feasible"
+                      ref={setFeaturesCatRef(NOT_FEASIBLE)}
+                      type="button"
+                      onClick={() => setCategory(NOT_FEASIBLE)}
+                      aria-pressed={category === NOT_FEASIBLE}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 flex items-center gap-1.5 ${
+                        category === NOT_FEASIBLE ? 'text-white' : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="relative z-10">{_copy("copy.2ab63e6ced90", { defaultValue: "Not feasible" })}</span>
+                      {notFeasibleCount > 0 && (
+                        <span className="relative z-10 text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                          {notFeasibleCount}
+                        </span>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -1151,7 +1253,7 @@ export default function FeaturesPage() {
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
 <FeedSwallowMotion>
-      <div hidden={activeTab !== 'requests'}>
+      <div hidden={activeTab !== 'requests' || showNotFeasible}>
         <PromptComposer initialCategory={initialCategory} focusRequest={composerFocus} onPosted={() => { setCategory('all'); setSearchInput(''); setSort('newest'); }} />
       </div>
       {/* The request a notification pointed at, above whichever tab is open. */}
@@ -1170,7 +1272,39 @@ export default function FeaturesPage() {
         </div>
       )}
       {/* Feature List (Requests Tab) */}
-      {activeTab === 'requests' && (
+      {/* Not feasible (a chip on the Requests tab) */}
+      {showNotFeasible && (
+        <>
+          {isLoadingNotFeasible ? (
+            <FeatureSkeletons />
+          ) : visibleNotFeasible.length > 0 ? (
+            <div className="space-y-3">
+              {visibleNotFeasible.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <ThemedIcon icon="features" alt="" className="w-16 h-16 object-contain mx-auto mb-4 opacity-65" />
+              <h3 className="text-white font-semibold mb-1">
+                {search.trim()
+                  ? t('follow.noMatches', { query: search.trim() })
+                  : _copy("copy.78b3ae9561ee", { defaultValue: "Nothing ruled out" })}
+              </h3>
+              {!search.trim() && <p className="text-zinc-500 text-sm">{_copy("copy.89b4d1850766", { defaultValue: "Requests we can't build right now show here, with the reason." })}</p>}
+            </div>
+          )}
+        </>
+      )}
+
+      {activeTab === 'requests' && !showNotFeasible && (
         <>
           {!isFiltering && <TopBuildersCard compact />}
           {isLoading ? (
