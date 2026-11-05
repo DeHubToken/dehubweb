@@ -48,6 +48,11 @@ function scrollParent(el: HTMLElement): HTMLElement | null {
 }
 
 const GAP = 12;
+/** Up to five tiles sit in one row; six make two rows of three. */
+const columns = (n: number) => (n <= 5 ? n : n === 6 ? 3 : 4);
+/** The comments sheet keeps its height while a hold sheet is up. */
+export const HOLD_EVENT = 'chat-hold-sheet';
+let releases = 0;
 const SLIDE = { type: 'tween', duration: 0.26, ease: [0.32, 0.72, 0, 1] } as const;
 
 /**
@@ -83,6 +88,9 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
   useEffect(() => {
     if (!open) setMoreOpen(false);
     pressedOff.current = false;
+    if (!open) return;
+    window.dispatchEvent(new CustomEvent(HOLD_EVENT, { detail: true }));
+    return () => { window.dispatchEvent(new CustomEvent(HOLD_EVENT, { detail: false })); };
   }, [open]);
 
   useEffect(() => {
@@ -101,6 +109,9 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
     const own = scrollParent(anchor);
     const scroller = own ?? (document.scrollingElement as HTMLElement | null);
     const holder = own ?? document.body;
+    // A new hold inside the last one's 0.3s ease-back takes over the list.
+    delete holder.dataset.chatHoldRelease;
+    holder.querySelectorAll('[data-chat-held]').forEach((row) => row.removeAttribute('data-chat-held'));
     anchor.setAttribute('data-chat-held', '');
     holder.setAttribute('data-chat-holding', '');
     const raf = requestAnimationFrame(() => {
@@ -110,18 +121,29 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
       const row = anchor.getBoundingClientRect();
       const overlap = row.bottom - (sheetTop - GAP);
       if (overlap <= 0) return;
-      const room = scroller.scrollHeight - scroller.clientHeight - scroller.scrollTop;
-      const scrolled = Math.max(0, Math.min(overlap, room));
-      if (scrolled) scroller.scrollTop += scrolled;
+      // One motion, not two: the list slides up by the whole overlap (eased
+      // in chat-hold.css) and, once the sheet closes, slides back. Scrolling
+      // first jumped the list in one frame and then slid it again.
       const top = own ? own.getBoundingClientRect().top : 0;
-      const rest = Math.min(overlap - scrolled, row.top - scrolled - top - GAP);
-      if (rest > 0) holder.style.setProperty('--chat-hold-lift', `${-rest}px`);
+      const lift = Math.min(overlap, row.top - top - GAP);
+      if (lift > 0) holder.style.setProperty('--chat-hold-lift', `${-lift}px`);
     });
     return () => {
       cancelAnimationFrame(raf);
-      anchor.removeAttribute('data-chat-held');
-      holder.removeAttribute('data-chat-holding');
-      holder.style.removeProperty('--chat-hold-lift');
+      // Ease back: the list slides down and the others brighten over the same
+      // 0.3s, then the marks come off. Taking them off at once snapped the
+      // list back in a single frame.
+      holder.setAttribute('data-chat-holding', 'out');
+      holder.style.setProperty('--chat-hold-lift', '0px');
+      const token = String(++releases);
+      holder.dataset.chatHoldRelease = token;
+      window.setTimeout(() => {
+        if (holder.dataset.chatHoldRelease !== token) return;
+        anchor.removeAttribute('data-chat-held');
+        holder.removeAttribute('data-chat-holding');
+        holder.style.removeProperty('--chat-hold-lift');
+        delete holder.dataset.chatHoldRelease;
+      }, 320);
     };
   }, [open, anchor]);
 
@@ -194,7 +216,7 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
             {actions.length > 0 && !moreOpen && (
               <div
                 className={cn('grid gap-2', quickReactions && onReact ? 'pt-3.5' : 'pt-1')}
-                style={{ gridTemplateColumns: `repeat(${Math.min(actions.length, 4)}, minmax(0, 1fr))` }}
+                style={{ gridTemplateColumns: `repeat(${columns(actions.length)}, minmax(0, 1fr))` }}
               >
                 {actions.map((a) => (
                   <button

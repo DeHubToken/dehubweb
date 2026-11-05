@@ -2318,8 +2318,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       // the sheet has grown to the space above it.
       const reveal = () => document.querySelector<HTMLElement>(`[data-chat-row="comment"][data-comment-id="${CSS.escape(found.id)}"]`)
         ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      window.setTimeout(reveal, 120);
-      window.setTimeout(reveal, 450);
+      // Once, after the sheet has finished growing (post-stage.css eases it
+      // over 0.32s): scrolling while it grows made the thread jump twice.
+      window.setTimeout(reveal, 380);
     }
   });
 
@@ -2921,7 +2922,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       )}
 
       {/* Search Input - always rendered but hidden when not on search tab to maintain consistent height */}
-      <div className={`mb-3 ${activeTab === 'search' ? 'visible' : 'invisible h-0 mb-0 overflow-hidden'}`}>
+      <div className={activeTab === 'search' ? 'mb-3' : 'invisible h-0 overflow-hidden'}>
         <Input
           type="search"
           placeholder={t('comments.searchPlaceholder')}
