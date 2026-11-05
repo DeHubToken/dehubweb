@@ -22,6 +22,7 @@ import { PostBgLayer, postBgHostProps } from '@/components/app/profile/PostBackg
 import { postBgById } from '@/lib/post-backgrounds';
 import { closeBrainrotFeed } from '@/lib/brainrot-feed';
 import { cn } from '@/lib/utils';
+import { createLinkScanRegex, renderTextWithLinks, splitLeadingUrlBoundary } from '@/components/app/TranslatableText';
 import { PollCard } from './PollCard';
 import { VIEWER_CONTROL, VIEWER_PILL } from '@/lib/viewer-chrome';
 
@@ -44,6 +45,28 @@ function readable(text: string): string {
     .trim();
 }
 
+/**
+ * The poster's words with their links kept: markdown marks dropped, a bare
+ * address written as `<address>` so it prints as tappable text (not the feed's
+ * link icon), and @names, $tags and #tags left for the link renderer.
+ */
+function posterText(text: string): string {
+  return text
+    .replace(/!\[[^\]]*]\([^)]*\)/g, '')
+    .replace(/\[([^\]]+)]\(([^)\s]+)\)/g, '$1 <$2>')
+    .replace(/<([^\s<>]+\.[^\s<>]+)>/g, '$1')
+    .replace(/^\s{0,3}(#{1,6}|>)\s+/gm, '')
+    .replace(/(\*\*|__|`|~~)/g, '')
+    .replace(/\r/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+    .replace(createLinkScanRegex(), (match) => {
+      const { leadingBoundary, url } = splitLeadingUrlBoundary(match);
+      const tail = url.match(/[.,:;?!)]+$/)?.[0] ?? '';
+      return `${leadingBoundary}<${url.slice(0, url.length - tail.length)}>${tail}`;
+    });
+}
+
 /** Behind a text post when the creator has not picked a post background. */
 const PLAIN_POSTER =
   'radial-gradient(120% 70% at 15% 8%, rgba(124,92,255,0.32) 0%, transparent 62%), radial-gradient(110% 70% at 95% 95%, rgba(34,150,190,0.26) 0%, transparent 60%), #0b0b11';
@@ -60,7 +83,8 @@ function posterSize(length: number): string {
 function TextPoster({ short }: { short: ShortVideo }) {
   const { t } = useTranslation();
   const post = short.reelPost!;
-  const words = useMemo(() => readable(post.text || ''), [post.text]);
+  const words = useMemo(() => posterText(post.text || ''), [post.text]);
+  const body = useMemo(() => renderTextWithLinks(words), [words]);
   const bg = postBgById(post.bgId);
   const bodyRef = useRef<HTMLDivElement>(null);
   const [overflows, setOverflows] = useState(false);
@@ -97,7 +121,7 @@ function TextPoster({ short }: { short: ShortVideo }) {
           )}
         >
           <p className={cn('whitespace-pre-line break-words font-semibold tracking-[-0.01em] [text-wrap:pretty]', posterSize(words.length))}>
-            {words}
+            {body}
           </p>
         </div>
         {overflows && (
