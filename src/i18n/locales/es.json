@@ -1,4 +1,11 @@
 {
+  "textFeed": {
+    "errorTitle": "No se pudieron cargar las publicaciones",
+    "errorBody": "Intenta cargar de nuevo el feed de texto.",
+    "emptyTitle": "Aún no hay publicaciones de texto",
+    "emptyBody": "Las publicaciones de texto aparecerán aquí.",
+    "tab": "Texto"
+  },
   "comic": {
     "showAll": "Ver las {{count}} páginas"
   },

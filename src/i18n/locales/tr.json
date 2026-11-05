@@ -1,4 +1,11 @@
 {
+  "textFeed": {
+    "errorTitle": "Gönderiler yüklenemedi",
+    "errorBody": "Metin akışını yeniden yüklemeyi dene.",
+    "emptyTitle": "Henüz metin gönderisi yok",
+    "emptyBody": "Metin gönderileri burada görünecek.",
+    "tab": "Metin"
+  },
   "comic": {
     "showAll": "{{count}} sayfanın tümünü göster"
   },

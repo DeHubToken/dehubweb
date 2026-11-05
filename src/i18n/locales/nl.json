@@ -1,4 +1,11 @@
 {
+  "textFeed": {
+    "errorTitle": "Berichten konden niet laden",
+    "errorBody": "Probeer de tekstfeed opnieuw te laden.",
+    "emptyTitle": "Nog geen tekstberichten",
+    "emptyBody": "Tekstberichten verschijnen hier.",
+    "tab": "Tekst"
+  },
   "comic": {
     "showAll": "Alle {{count}} pagina's tonen"
   },
