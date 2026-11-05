@@ -1,3 +1,4 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -356,7 +357,7 @@ export default function DaoPage() {
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500">{t('dao.treasuryBalance')}</div>
               <div className="text-3xl sm:text-4xl font-bold text-white tabular-nums mt-1">
-                {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-zinc-500" /> : <DhbAmount amount={formatDhb(data?.totalBalance ?? 0)} iconClassName="h-7 w-7 sm:h-8 sm:w-8" className="gap-2" />}
+                {isLoading ? <Skeleton className="h-9 sm:h-10 w-44 rounded-lg" aria-hidden /> : <DhbAmount amount={formatDhb(data?.totalBalance ?? 0)} iconClassName="h-7 w-7 sm:h-8 sm:w-8" className="gap-2" />}
               </div>
             </div>
             <button

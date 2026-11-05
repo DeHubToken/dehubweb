@@ -1,9 +1,11 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
+import { useRememberedCount } from "@/lib/remembered-shape";
 import { Clock3, Loader2, ShoppingCart, WalletCards } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
 import ThumbsDown from "@/components/ui/cut-icons/dislike";
@@ -468,6 +470,7 @@ export function DaoProposalExperience({ proposeOpen, onProposeOpenChange }: {
 }) {
   const { t: _copy } = _useCopy();
   const { proposals, myVotes, myEligibility, isLoading, isError } = useDaoProposals();
+  const placeholderCards = useRememberedCount('dao-proposals', isLoading || isError ? null : proposals.length, 2, 3);
   const [searchParams] = useSearchParams();
   const focusedId = searchParams.get('proposal');
   const [paymentProposal, setPaymentProposal] = useState<DaoProposal | null>(null);
@@ -483,10 +486,16 @@ export function DaoProposalExperience({ proposeOpen, onProposeOpenChange }: {
             <h2 className="text-lg font-semibold text-white">{_copy("copy.554f86eedd6d", { defaultValue: "DAO proposals" })}</h2>
             <p className="text-xs text-zinc-500">{_copy("copy.37bd766fa812", { defaultValue: "Anyone can propose. Contributors accept or reject with their recorded contribution weight." })}</p>
           </div>
-          <span className="text-xs text-zinc-500">{proposals.length}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</span>
+          <span className="text-xs text-zinc-500">{isLoading ? '\u00a0' : <>{proposals.length}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</>}</span>
         </div>
         {isLoading ? (
-          <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-zinc-500" /></div>
+          placeholderCards === 0 ? (
+            <div className="py-10" aria-hidden><Skeleton className="mx-auto h-[76px] w-48 rounded-xl" /></div>
+          ) : (
+            <div className="space-y-3" aria-hidden>
+              {Array.from({ length: placeholderCards }, (_, i) => <Skeleton key={i} className="h-[238px] rounded-xl" />)}
+            </div>
+          )
         ) : isError ? (
           <p className="py-8 text-center text-sm text-rose-300">{_copy("copy.794c8cef5f67", { defaultValue: "Could not load DAO proposals." })}</p>
         ) : ordered.length === 0 ? (

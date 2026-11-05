@@ -15,6 +15,7 @@ import { BUY_PATHS } from '@/lib/buy-route';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { CopyGate } from './CopyGate';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { RetainedPostActivityContext } from '@/lib/retained-post-surface';
 import HomePage from '@/pages/app/HomePage';
@@ -249,7 +250,7 @@ const CachedPage = memo(function CachedPage({
           {/* Only the active page may write document metadata — see the context. */}
           <RetainedPostActivityContext.Provider value={retainedPostKey ?? null}>
             <CachedPageActiveContext.Provider value={contextActive}>
-              <HeldRoute live={shouldStayVisible}>{page}</HeldRoute>
+              <HeldRoute live={shouldStayVisible}><CopyGate skeleton={SkeletonComponent}>{page}</CopyGate></HeldRoute>
             </CachedPageActiveContext.Provider>
           </RetainedPostActivityContext.Provider>
         </Suspense>

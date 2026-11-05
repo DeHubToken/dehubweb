@@ -13,6 +13,8 @@ import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-
 import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
 import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRememberedCount } from '@/lib/remembered-shape';
 import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 
 const FILTERS: { id: LaunchpadFilter; labelKey: string }[] = [
@@ -42,6 +44,9 @@ export default function LaunchpadPage() {
       t.creator_address.toLowerCase().includes(q)
     );
   }, [tokens, search]);
+  // Placeholders match how many coins this list had last time (none = the
+  // empty note's size), so the activity box under it does not jump.
+  const placeholderCoins = useRememberedCount(`launchpad-coins:${filter}`, isLoading || isError ? null : tokens.length, 4, 4);
 
   return (
     <div className="min-h-screen">
@@ -102,9 +107,11 @@ export default function LaunchpadPage() {
       <div data-kit-section className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
         <div>
           {isLoading
-            ? <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-40 rounded-2xl theme-skeleton border border-white/10 animate-pulse" />
+            ? placeholderCoins === 0
+              ? <Skeleton className="h-[92px] rounded-2xl border border-white/10" />
+              : <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: placeholderCoins }, (_, i) => (
+                  <Skeleton key={i} className="h-40 rounded-2xl border border-white/10" />
                 ))}
               </div>
             : isError

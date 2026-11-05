@@ -187,6 +187,10 @@ export default function AppsPage() {
                 </button>
               ))}
             </div>
+          ) : apps === null ? (
+            // Holds the chip row's place while the store loads so the lists
+            // below do not drop when the chips arrive.
+            <div className="h-6" aria-hidden />
           ) : null}
         </div>
 
