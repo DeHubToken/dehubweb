@@ -757,7 +757,7 @@ export default function NftMarketPage({ embedded = false, islandSlot = null }: {
                           image={n.image}
                           chainId={sellChain}
                           badge={picking ? (isPicked ? '✓' : null) : n.standard === 'erc1155' && n.balance !== '1' ? `×${n.balance}` : null}
-                          price={picking ? null : offerOn.get(`${n.contract}:${n.tokenId}`) ?? null}
+                          price={picking ? null : offerOn.get(`${n.contract.toLowerCase()}:${n.tokenId}`) ?? null}
                           priceLabel={t('nftMarket.bestOffer', { defaultValue: 'Best offer' })}
                           onClick={() => (picking ? togglePick(target) : setOpen(target))}
                         />
