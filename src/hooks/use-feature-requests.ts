@@ -105,7 +105,7 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
   get in_progress() { return _translateCopy("copy.b4cc4b07c300", { defaultValue: "In Progress" }); },
   get completed() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
   get shipped() { return _translateCopy("copy.d332dadf1646", { defaultValue: "Shipped" }); },
-  get declined() { return _translateCopy("copy.dce083a2c47f", { defaultValue: "Declined" }); },
+  get declined() { return _translateCopy("copy.2ab63e6ced90", { defaultValue: "Not feasible" }); },
 };
 
 export { CATEGORY_LABELS, STATUS_LABELS };
@@ -143,6 +143,7 @@ const FEATURE_ROW_KEYS = [
   ['feature-requests'],
   ['feature-requests-shipped'],
   ['feature-requests-in-progress'],
+  ['feature-requests-not-feasible'],
   ['feature-request'],
 ] as const;
 
@@ -346,6 +347,25 @@ export function useInProgressFeatures() {
   });
 }
 
+// "Not feasible" — requests the board owners have ruled out (status
+// `declined`), with their optional reason in status_note. Few rows, so one
+// query and newest decisions first.
+export function useNotFeasibleFeatures() {
+  return useQuery({
+    queryKey: ['feature-requests-not-feasible'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('status', 'declined')
+        .order('updated_at', { ascending: false });
+      if (error) throw error;
+      return normalizeRows((data || []) as FeatureRequest[]);
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
 
 export function useUserVotes() {
   const { walletAddress } = useAuth();
@@ -708,8 +728,8 @@ export function isFeatureStatusEditor(wallet: string | null | undefined): boolea
   return !!wallet && FEATURE_STATUS_EDITOR_WALLETS.includes(wallet.toLowerCase());
 }
 
-/** Statuses the owners set from the page: Requests, Queued, Shipped. */
-export type EditableFeatureStatus = 'open' | 'in_progress' | 'shipped';
+/** Statuses the owners set from the page: Requests, Queued, Shipped, Not feasible. */
+export type EditableFeatureStatus = 'open' | 'in_progress' | 'shipped' | 'declined';
 
 export function useSetFeatureStatus() {
   const { t: _copy } = _useCopy();
@@ -717,12 +737,14 @@ export function useSetFeatureStatus() {
   const { walletAddress } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: EditableFeatureStatus }) => {
+    mutationFn: async ({ id, status, note }: { id: string; status: EditableFeatureStatus; note?: string }) => {
       if (!walletAddress) throw new Error(_translateCopy("copy.76d1efbeed2d", { defaultValue: "Not authenticated" }));
       // set_feature_request_status is newer than the generated types.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any)
-        .rpc('set_feature_request_status', { p_id: id, p_status: status })
+        .rpc('set_feature_request_status', status === 'declined'
+          ? { p_id: id, p_status: status, p_note: note?.trim() || null }
+          : { p_id: id, p_status: status })
         .setHeader('x-wallet-address', walletAddress.toLowerCase());
       if (error) throw error;
       return status;
@@ -734,6 +756,8 @@ export function useSetFeatureStatus() {
           ? _copy("copy.366cb56b38ce", { defaultValue: "Marked Shipped" })
           : status === 'in_progress'
             ? _copy("copy.ae6a0ffbe609", { defaultValue: "Marked Queued" })
+            : status === 'declined'
+              ? _copy("copy.79688f176607", { defaultValue: "Marked Not feasible" })
             : _copy("copy.9db7b5ba03bb", { defaultValue: "Moved back to Requests" }),
       );
     },
