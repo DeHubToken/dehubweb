@@ -19,6 +19,7 @@ import { CashtagPriceCard } from '@/components/app/CashtagPriceCard';
 import { useDexScreenerSearchMulti, type DexPair } from '@/hooks/use-dexscreener';
 import { useCmcMarketCap } from '@/hooks/use-cmc-market-cap';
 import { CashtagResultSwitcher } from '@/components/app/CashtagResultSwitcher';
+import { isDhbSymbol } from '@/lib/market/dhb-market-cap';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -128,7 +129,7 @@ export function CommunityFeed({ communityId, wallet, canModerate, communitySlug,
   if (memberPosts.length === 0) {
     return (
       <div className="space-y-3">
-        {tickerSymbol && matchedPair && (
+        {tickerSymbol && !isDhbSymbol(tickerSymbol) && matchedPair && (
           <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
         )}
         <AppState
@@ -144,7 +145,7 @@ export function CommunityFeed({ communityId, wallet, canModerate, communitySlug,
 
   return (
     <div className="space-y-3">
-      {tickerSymbol && matchedPair && (
+      {tickerSymbol && !isDhbSymbol(tickerSymbol) && matchedPair && (
         <CashtagPriceCard pair={matchedPair} symbol={`$${tickerSymbol}`} cmcData={cmcData} />
       )}
       {memberPosts.map((post, index) => {

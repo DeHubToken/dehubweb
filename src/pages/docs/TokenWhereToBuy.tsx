@@ -1,122 +1,41 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Shield, CreditCard } from "lucide-react";
-import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import { Clock } from "lucide-react";
+import Bell from "@/components/ui/cut-icons/alerts";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenWhereToBuy = () => {
-  const { t: _copy } = _useCopy();
+  const { t: _t } = _useCopy();
   const { t } = useLanguage();
 
-  const exchanges = [
-    { name: "Uniswap", network: "Base", url: "https://app.uniswap.org/explore/tokens/base/0xd20ab1015f6a2de4a6fddebab270113f689c2f7c" },
-    { name: "Pancakeswap", network: "BNB", url: "https://pancakeswap.finance/swap?inputCurrency=0x680d3113caf77b61b510f332d5ef4cf5b41a761d&outputCurrency=0x55d398326f99059ff775485246999027b3197955&ref=coingecko&user=Coingecko&discount=0&perps=false" },
-  ];
-
+  // The old token's exchange and contract links are gone. The new token is
+  // not trading yet, so this page says so and points at the launch list.
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
         <h1 className="text-4xl font-bold text-foreground mb-4">{t('tokenWhereToBuy.title')}</h1>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">{t('tokenWhereToBuy.dexs')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {exchanges.map((exchange, index) => (
-              <a key={index} href={exchange.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
-                <div>
-                  <h4 className="font-semibold text-foreground">{exchange.network}</h4>
-                  <p className="text-muted-foreground">{exchange.name}</p>
-                </div>
-                <ExternalLink className="w-5 h-5 text-muted-foreground" />
-              </a>
-            ))}
-          </div>
-          <div className="mt-6 p-4 docs-glass rounded-lg">
-            <p className="text-muted-foreground leading-relaxed">{t('tokenWhereToBuy.dexNote')}</p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">{t('tokenWhereToBuy.cexs')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <a href="https://www.coinbase.com/en-es/trade-crypto/dex" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
-              <div>
-                <h4 className="font-semibold text-foreground">Coinbase</h4>
-                <p className="text-muted-foreground">{t('tokenWhereToBuy.centralizedDex')}</p>
-              </div>
-              <ExternalLink className="w-5 h-5 text-muted-foreground" />
-            </a>
-            <a href="https://www.mexc.com/dex/trade?pair_ca=0xebDeacaf03Ba54Eb18128FD1FD042bc747af9295&chain_id=8453&token_ca=0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c&from=search" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
-              <div>
-                <h4 className="font-semibold text-foreground">{_copy("copy.755e4f22e889", { defaultValue: "MEXC" })}</h4>
-                <p className="text-muted-foreground">{t('tokenWhereToBuy.centralizedDex')}</p>
-              </div>
-              <ExternalLink className="w-5 h-5 text-muted-foreground" />
-            </a>
-            <a href="https://www.okx.com/cedefi" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
-              <div>
-                <h4 className="font-semibold text-foreground">{_copy("copy.b670b091884c", { defaultValue: "OKX CeDeFi" })}</h4>
-                <p className="text-muted-foreground">{t('tokenWhereToBuy.centralizedDefi')}</p>
-              </div>
-              <ExternalLink className="w-5 h-5 text-muted-foreground" />
-            </a>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl flex items-center gap-2">
-            {t('tokenWhereToBuy.direct')}
-            <CreditCard className="w-5 h-5" />
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
-              <div>
-                <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.directPurchase')}</h4>
-                <p className="text-muted-foreground">{t('tokenWhereToBuy.directPurchaseDesc')}</p>
-              </div>
-              <ExternalLink className="w-5 h-5 text-muted-foreground" />
-            </a>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 docs-glass rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-5 h-5 text-foreground" />
-                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.dehubToken')}</h4>
-                </div>
-                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.dehubTokenDesc')}</p>
-              </div>
-
-              <div className="p-4 docs-glass rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <CreditCard className="w-5 h-5 text-foreground" />
-                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.instantPayments')}</h4>
-                </div>
-                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.instantPaymentsDesc')}</p>
-              </div>
-
-              <div className="p-4 docs-glass rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-foreground" />
-                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.secureGateway')}</h4>
-                </div>
-                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.secureGatewayDesc')}</p>
-              </div>
-            </div>
-          </div>
+      <Card data-token-coming-soon>
+        <CardContent className="p-6 sm:p-8 text-center">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <Clock className="w-3.5 h-3.5" />
+            {_t('tokenLaunch.eyebrow', 'Coming soon')}
+          </span>
+          <h2 className="mt-4 text-2xl font-bold text-foreground">{_t('tokenLaunch.title', 'Token launching soon')}</h2>
+          <p className="mt-2 text-muted-foreground leading-relaxed max-w-md mx-auto">
+            {_t('dhbListing.body', "Riftn tokens aren't trading yet. Get an email when trading opens.")}
+          </p>
+          <Link
+            to="/buy"
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            <Bell className="w-4 h-4" />
+            {_t('tokenLaunch.notifyMe', 'Notify me')}
+          </Link>
         </CardContent>
       </Card>
 
