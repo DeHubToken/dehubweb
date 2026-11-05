@@ -787,7 +787,7 @@ const LOWER_REVEAL_CAP_MS = 2500;
 export default function StatsPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const [range, setRange] = useState<Range>('30d');
+  const [range, setRange] = useState<Range>('all');
 
   const { data, isLoading, isError, isFetching } = useSiteStats();
   const stats: SiteStats | null = data && data.ok ? data : null;
