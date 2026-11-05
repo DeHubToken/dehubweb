@@ -104,6 +104,7 @@ import { useRetainedPost, type RetainedPostEntry } from '@/lib/retained-post-sur
 import { RetainedPostDock } from '@/components/app/feeds/RetainedPostSurface';
 import { QuietPostLoading } from '@/components/app/QuietPostLoading';
 import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
+import { rememberScroll, restoreDocumentScroll, savedScroll } from '@/lib/back-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -392,31 +393,51 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     document.addEventListener('scroll', save, { capture: true, passive: true });
     return () => document.removeEventListener('scroll', save, { capture: true });
   }, [onHomeFeed]);
-  const prevHomePathRef = useRef(location.pathname);
-  useLayoutEffect(() => {
-    const prev = prevHomePathRef.current;
-    prevHomePathRef.current = location.pathname;
-    if (!onHomeFeed || isHomeFeedRoute(prev) || isPostRoute) return;
-    if (/^\/(app\/)?(post|video)\//.test(prev)) return;
-    const top = homeScrollTopRef.current;
-    if (top <= 0) return;
-    scrollDocumentTo(top);
-    // Again a frame later, in case the first write landed while the revealed
-    // feed was still settling its height and came back clamped.
-    const frame = requestAnimationFrame(() => scrollDocumentTo(top));
-    return () => cancelAnimationFrame(frame);
-  }, [location.pathname, onHomeFeed, isPostRoute]);
+  // Every history entry keeps its own scroll offset (lib/back-scroll), so
+  // Back lands where the reader left that page: the feed under a post they
+  // opened, a profile grid, Explore, a standalone post. Only the document
+  // scroller counts; the post overlay and other inner scrollers own theirs.
+  const scrollEntryKeyRef = useRef(location.key);
+  useEffect(() => {
+    const save = (e: Event) => {
+      const t = e.target;
+      if (t !== document && t !== document.body && t !== document.documentElement) return;
+      rememberScroll(scrollEntryKeyRef.current, getDocumentScrollTop());
+    };
+    document.addEventListener('scroll', save, { capture: true, passive: true });
+    return () => document.removeEventListener('scroll', save, { capture: true });
+  }, []);
 
-  const prevCachedPathRef = useRef(location.pathname);
+  const prevScrollPathRef = useRef(location.pathname);
   useLayoutEffect(() => {
-    const prev = prevCachedPathRef.current;
+    if (scrollEntryKeyRef.current === location.key) return;
+    scrollEntryKeyRef.current = location.key;
+    const prev = prevScrollPathRef.current;
     const curr = location.pathname;
-    prevCachedPathRef.current = curr;
+    prevScrollPathRef.current = curr;
 
-    if (prev !== curr && isCachedPageRoute(curr) && !isHomeFeedRoute(curr)) {
-      scrollDocumentTo(0);
+    // The overlay is its own scroller: never move the feed beneath it.
+    if (showHomePagePersisted) return;
+
+    // Back / Forward to an entry we have seen: put it back where it was.
+    const saved = savedScroll(location.key);
+    if (saved !== undefined) return restoreDocumentScroll(saved);
+
+    // A fresh visit to the feed (Home tab, logo): the feed hides with
+    // display:none behind other pages and loses its offset, so put back the
+    // last place the reader scrolled it to.
+    if (onHomeFeed) {
+      if (isHomeFeedRoute(prev)) return;
+      const top = homeScrollTopRef.current;
+      if (top > 0) return restoreDocumentScroll(top);
+      return;
     }
-  }, [location.pathname]);
+
+    // A fresh visit to any other kept-alive page starts at its top, before
+    // paint (an effect would show one frame at the old offset first).
+    if (prev !== curr && isCachedPageRoute(curr)) scrollDocumentTo(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- runs once per history entry
+  }, [location.key]);
 
 
   

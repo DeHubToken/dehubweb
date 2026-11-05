@@ -1382,6 +1382,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId, detailsOnly = fa
       forKids={!!(post as { forKids?: boolean }).forKids}
       postAuthorAddress={isTextPost ? post.minter : undefined}
       forceInline
+      knownCount={Number((post as { commentCount?: number; comment_count?: number }).commentCount ?? (post as { comment_count?: number }).comment_count) || 0}
     />
   ) : null;
   const commentsSplitSheet = (
