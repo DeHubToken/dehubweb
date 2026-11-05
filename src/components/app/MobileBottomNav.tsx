@@ -235,26 +235,42 @@ export function MobileBottomNav() {
   const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // First-visit scroll hint: nudge right then back to show more options
+  // First-visit scroll hint: nudge right then back to show more options.
+  // Only once the page has settled (no skeleton or loader on screen, nobody
+  // scrolling), so the bar never slides about while the page is still filling in.
   useEffect(() => {
     const HINT_KEY = 'dehub_nav_scroll_hint_seen';
-    if (localStorage.getItem(HINT_KEY)) return;
-    
-    const timer = setTimeout(() => {
+    try { if (localStorage.getItem(HINT_KEY)) return; } catch { return; }
+
+    let timer: number | undefined;
+    let lastScrollAt = 0;
+    const onScroll = () => { lastScrollAt = performance.now(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const pageBusy = () =>
+      !!document.querySelector('[data-skeleton], [data-dehub-loader]') ||
+      performance.now() - lastScrollAt < 1200;
+
+    let tries = 0;
+    const attempt = () => {
       const el = scrollRef.current;
       if (!el || el.scrollWidth <= el.clientWidth) return;
-      
+      if (pageBusy() && ++tries < 20) { timer = window.setTimeout(attempt, 700); return; }
+
       // Smooth scroll right
       el.scrollTo({ left: 120, behavior: 'smooth' });
-      
+
       // Then scroll back after a pause
-      setTimeout(() => {
+      timer = window.setTimeout(() => {
         el.scrollTo({ left: 0, behavior: 'smooth' });
-        localStorage.setItem(HINT_KEY, 'true');
+        try { localStorage.setItem(HINT_KEY, 'true'); } catch { /* private mode */ }
       }, 600);
-    }, 1500);
-    
-    return () => clearTimeout(timer);
+    };
+    timer = window.setTimeout(attempt, 1500);
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, []);
 
 

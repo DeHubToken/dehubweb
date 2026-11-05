@@ -110,6 +110,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     isError: isProfileError,
     error: profileError,
     isFetchingProfile,
+    isPlaceholderData: isProfileFromCache,
     setFollowStatus,
     refetch: refetchProfile,
   } = useDeHubProfile({
@@ -473,7 +474,9 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // filter its tab lists with, so a badge never says 0 above a full tab. While
   // the visitor has a search or filter running, the tab they are on shows how
   // many of its posts match instead.
-  const { data: serverCounts } = useProfileContentCounts(contentUserId);
+  const { data: serverCounts, isFetched: countsFetched } = useProfileContentCounts(contentUserId);
+  // The header waits for these so tab numbers and their order land with it.
+  const isCountsSettled = !contentUserId || countsFetched;
   const tabCount = (tab: TabValue, fallback: number): number => {
     if (tab === activeTab && isContentFiltered) return contentTotal;
     const server = serverCounts?.[tab as keyof typeof serverCounts];
@@ -529,10 +532,16 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     const dislikesTab = showDislikesTab
       ? [{ icon: ThumbsDown as unknown as typeof Home, label: _copy("profile.tabs.dislikes", { defaultValue: "Dislikes" }), value: 'dislikes' as TabValue, count: dislikesCount }]
       : [];
-    return [homeTab, ...restTabs, ...dislikesTab];
+    // Blank, never a false 0, until the number that tab shows has answered.
+    const answered = (tab: TabValue) =>
+      tab === 'subscribers' ? secondaryEnabled && !isLoadingPlans
+        : tab === 'pinned' || tab === 'playlists' || tab === 'dislikes' || tab === 'fractions' ? true
+        : isCountsSettled;
+    return [homeTab, ...restTabs, ...dislikesTab].map((tab) =>
+      tab.count === 0 && !answered(tab.value) ? { ...tab, count: null } : tab);
     // tabCount reads only the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, fractionsCount, showDislikesTab, dislikesCount, _copy]);
+  }, [isCountsSettled, secondaryEnabled, isLoadingPlans, serverCounts, activeTab, isContentFiltered, contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, plans.length, pinnedCount, playlistCount, articleCount, fractionsCount, showDislikesTab, dislikesCount, _copy]);
   const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
     !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
     secondaryEnabled
@@ -665,6 +674,8 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
     apiProfile,
     isLoadingProfile,
     isFetchingProfile,
+    isProfileFromCache,
+    isCountsSettled,
     isProfileError,
     // Nobody has this handle (the API answers 404, or an empty shell). Not a
     // load failure: the page offers the free name instead of "try again".

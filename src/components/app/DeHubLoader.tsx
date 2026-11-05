@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useLayoutEffect, useState, type CSSProperties } from "react";
 import { useTranslation as _useCopy } from 'react-i18next';
 
 /**
@@ -60,7 +60,26 @@ interface DeHubLoaderProps {
 // img carries an intrinsic size, so a flex row would otherwise shrink its
 // width while the height stayed put and squash the mark into an oval. Callers
 // were papering over that one at a time with `shrink-0`; it belongs here.
-export const DeHubLoader = ({ size = 64, className = "" }: DeHubLoaderProps) => (
+/**
+ * Hand-off: when one loader replaces another (route skeleton → the page's own
+ * content loader), the new one skips the 250 ms fade-in delay. Otherwise the
+ * mark blinks out and back in at the exact moment the page is getting closer.
+ */
+let lastLoaderGoneAt = -Infinity;
+const HANDOFF_WINDOW_MS = 400;
+
+export const DeHubLoader = ({ size = 64, className = "" }: DeHubLoaderProps) => {
+  const [handoff] = useState(() =>
+    typeof performance !== "undefined" && performance.now() - lastLoaderGoneAt < HANDOFF_WINDOW_MS);
+  useLayoutEffect(() => {
+    const mountedAt = performance.now();
+    return () => {
+      // Only a loader that had faded in counts; one still in its delay was never seen.
+      const now = performance.now();
+      if (handoff || now - mountedAt >= 450) lastLoaderGoneAt = now;
+    };
+  }, [handoff]);
+  return (
   <img
     src="/dehub-loader-240.webp"
     alt=""
@@ -70,9 +89,10 @@ export const DeHubLoader = ({ size = 64, className = "" }: DeHubLoaderProps) => 
     height={size}
     style={lockedSquare(size)}
     data-dehub-loader
-    className={`dehub-loader-mark select-none pointer-events-none ${className}`}
+    className={`dehub-loader-mark${handoff ? " dehub-loader-mark--handoff" : ""} select-none pointer-events-none ${className}`}
   />
-);
+  );
+};
 
 interface DeHubPageLoaderProps extends DeHubLoaderProps {
   /** Optional caption under the mark (e.g. "Joining stage…"). */

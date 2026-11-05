@@ -47,6 +47,7 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import SettingsIcon from "@/components/ui/cut-icons/settings";
 import User from "@/components/ui/cut-icons/profile";
 import Bell from "@/components/ui/cut-icons/alerts";
+import { setShowNotificationCount, useShowNotificationCount } from "@/lib/notification-count-pref";
 import ThumbsUp from "@/components/ui/cut-icons/like";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import MessageCircle from "@/components/ui/cut-icons/messages";
@@ -110,6 +111,8 @@ import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
 import { normaliseFeedVideoShape, useFeedVideoShape, writeFeedVideoShape } from '@/lib/feed-video-shape';
+import { isWideVideoMode, useWideVideoMode, writeWideVideoMode } from '@/lib/wide-video-mode';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -1432,6 +1435,8 @@ function NotificationSettings() {
           <div data-setting-anchor="browser-notifications">
             <BrowserNotificationsSetting />
           </div>
+          {/* Off by default: the bell's glow is the standard look. */}
+          <NotificationCountRow />
         </div>
       </div>
 
@@ -2725,6 +2730,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
           <AutoPlayMutedToggle />
           <DataSaverToggle />
           <ShowAnimationsToggle />
+          <WideVideoModeRow />
           <ShortsEnabledToggle />
           <LeftHandedToggle />
         </div>
@@ -3152,6 +3158,21 @@ function HideWatchedToggle() {
  * here. The map rides the wallet's preference blob (ViewingPreferencesSync),
  * so the channels tuned on one device are tuned on the next.
  */
+function NotificationCountRow() {
+  const { t } = useTranslation();
+  const on = useShowNotificationCount();
+  return (
+    <SettingToggle
+      icon={Bell}
+      anchor="notify-show-count"
+      title={t('settings.notificationShowCount', 'Show the number on the bell')}
+      description={t('settings.notificationShowCountDesc', 'See how many notifications are unread instead of just the glow')}
+      defaultChecked={on}
+      onCheckedChange={setShowNotificationCount}
+    />
+  );
+}
+
 function ChannelSpeedRow() {
   const { t } = useTranslation();
   const [count, setCount] = useState(() => getCreatorPlaybackRateCount());
@@ -3252,6 +3273,38 @@ function VideoGlitchToggle() {
         writeVideoGlitch(checked);
         prefs?.setPref('videoGlitchLoader', checked);
       }}
+    />
+  );
+}
+
+/**
+ * Settings > Appearance > Media: how a tall or square long video fills the
+ * column on a computer (lib/wide-video-mode). Phones and tablets never use it,
+ * so the row only shows on wide screens.
+ */
+function WideVideoModeRow() {
+  const { t } = useTranslation();
+  const mode = useWideVideoMode();
+  const isDesktop = useIsDesktopViewport();
+  if (!isDesktop) return null;
+  const title = t('settings.wideVideoMode', 'Long form videos on wide screens');
+  return (
+    <SettingsRow
+      icon={<RectangleHorizontal />}
+      anchor="wide-video-mode"
+      title={title}
+      description={t('settings.wideVideoModeDesc', 'What fills the space beside tall and square videos on a computer')}
+      action={<SettingDrawerSelect
+        value={mode}
+        onValueChange={(value) => { if (isWideVideoMode(value)) writeWideVideoMode(value); }}
+        title={title}
+        options={[
+          { value: 'ambient', label: t('settings.wideVideoAmbient', 'Ambient'), description: t('settings.wideVideoAmbientDesc', 'The video fills the width, with a soft blurred glow of itself on each side') },
+          { value: 'rails', label: t('settings.wideVideoRails', 'Glass rails'), description: t('settings.wideVideoRailsDesc', 'The video sits between two glass panels: who posted it on the left, top comments on the right') },
+          { value: 'theatre', label: t('settings.wideVideoTheatre', 'Theatre'), description: t('settings.wideVideoTheatreDesc', 'The video sits on frosted glass, like a screen in a cinema') },
+          { value: 'standard', label: t('settings.wideVideoStandard', 'Standard'), description: t('settings.wideVideoStandardDesc', 'The video on its own, as before') },
+        ]}
+      />}
     />
   );
 }

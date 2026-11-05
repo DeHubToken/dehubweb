@@ -4,7 +4,8 @@
  * The Shorts tab mixes tall shorts and wide videos. On phones (web, under
  * 768px) they pack into gap-free brick rows (see lib/shorts-bricks): two tall
  * videos side by side, one tall video beside three stacked wide clips, or one
- * wide video across the full width. Desktop keeps the plain 9:16 grid.
+ * wide video across the full width. Desktop keeps the plain 9:16 grid, and
+ * its last row always fills the width.
  *
  * @module components/app/feeds/ShortsBricks
  */
@@ -183,6 +184,14 @@ export function WideShortTile({ short, viewerOpen, onOpen, className, still, her
   );
 }
 
+/**
+ * Close a part-filled last row in a 9:16 grid by letting its last tile spread
+ * across the empty columns. Selectors count what is really rendered, so a live
+ * tile that renders nothing still leaves no hole.
+ */
+export const FILL_LAST_ROW_2 = "[&>*:last-child:nth-child(odd)]:col-span-2 [&>*:last-child:nth-child(odd)]:aspect-video";
+export const FILL_LAST_ROW_3 = "[&>*:last-child:nth-child(3n+1)]:col-span-3 [&>*:last-child:nth-child(3n+1)]:aspect-video [&>*:last-child:nth-child(3n+2)]:col-span-2 [&>*:last-child:nth-child(3n+2)]:aspect-auto";
+
 interface BricksProps {
   shorts: ShortVideo[];
   rows: BrickRow<ShortVideo>[];
@@ -196,7 +205,7 @@ export function ShortsBricks({ rows, live, viewerOpen, onOpen, onOpenLive }: Bri
   return (
     <div data-shorts-bricks className="flex flex-col gap-2">
       {live.length > 0 && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className={cn("grid grid-cols-2 gap-2", FILL_LAST_ROW_2)}>
           {live.map((stream) => (
             <LiveShortTile key={`live-${stream.id}`} stream={stream} disabled={viewerOpen} onOpen={() => onOpenLive(String(stream.id))} />
           ))}
@@ -215,12 +224,18 @@ export function ShortsBricks({ rows, live, viewerOpen, onOpen, onOpenLive }: Bri
             </div>
           );
         }
-        if (row.kind === 'single') {
+        if (row.kind === 'trio') {
           return (
-            <div key={row.key} className="grid grid-cols-2 gap-2">
-              <ShortTile short={row.item} viewerOpen={viewerOpen} onOpen={() => onOpen(row.item)} />
+            <div key={row.key} className="grid grid-cols-3 gap-2">
+              {row.items.map((short) => (
+                <ShortTile key={short.id} short={short} viewerOpen={viewerOpen} onOpen={() => onOpen(short)} />
+              ))}
             </div>
           );
+        }
+        if (row.kind === 'single') {
+          // Only ever the one short in the list: full width, never half a row.
+          return <ShortTile key={row.key} short={row.item} viewerOpen={viewerOpen} onOpen={() => onOpen(row.item)} className="aspect-video w-full" />;
         }
         const tall = <ShortTile key={row.tall.id} short={row.tall} viewerOpen={viewerOpen} onOpen={() => onOpen(row.tall)} />;
         const stack = (

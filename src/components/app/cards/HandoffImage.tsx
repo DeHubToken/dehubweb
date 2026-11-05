@@ -11,7 +11,7 @@ type Claim = {
   failed?: boolean;
   measuredSlot?: HTMLSpanElement;
 };
-type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; stall?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string>; size?: { width: number; height: number }; observer?: ResizeObserver };
+type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; stall?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string>; size?: { width: number; height: number }; observer?: ResizeObserver; revealed?: boolean };
 const images = new Map<string, Entry>();
 /** How often an unfinished on-screen image is checked before switching to the original. */
 const TRANSFORM_STALL_CHECK_MS = 5000;
@@ -91,6 +91,15 @@ function show(entry: Entry) {
     else if (image.getAttribute(attribute) !== String(value)) image.setAttribute(attribute, String(value));
   }
   const loaded = () => {
+    // First paint of this photo fades in once (index.css `img[data-fade]`).
+    // Moving it between slots afterwards never fades again.
+    if (image.dataset.fade === 'pending') {
+      image.dataset.fade = 'in';
+      // Cleared once played: re-inserting the img into another slot would
+      // otherwise restart the animation.
+      setTimeout(() => { if (image.dataset.fade === 'in') delete image.dataset.fade; }, 400);
+    }
+    entry.revealed = true;
     clearTimeout(entry.stall);
     entry.stall = undefined;
     entry.failed = false;
@@ -124,14 +133,22 @@ function show(entry: Entry) {
       return;
     }
     entry.failed = true;
+    delete image.dataset.fade;
     image.style.visibility = 'hidden';
     entry.appliedStyle = { ...entry.appliedStyle, visibility: 'hidden' };
     notifyFailure();
   };
   image.onerror = failed;
   if (image.complete && image.naturalWidth) {
+    if (image.dataset.fade === 'pending') delete image.dataset.fade;
     loaded();
     return;
+  }
+  // Still downloading: hold it clear so it fades in when it lands instead of
+  // painting in strips. Never for the page's lead image (eager / high
+  // priority), so the largest paint is not held back.
+  if (!entry.revealed && !entry.failed && props.src && props.loading !== 'eager' && props.fetchPriority !== 'high') {
+    image.dataset.fade = 'pending';
   }
   // A resize that stalls never errors on its own: one photo's transform hung
   // for over a minute on a phone while the original loaded instantly. A lazy

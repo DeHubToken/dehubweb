@@ -64,6 +64,7 @@ import {
   useEditFeatureRequest,
   useDeleteFeatureRequest,
   useSetFeatureStatus,
+  useFeatureDeviceInfoIds,
   isFeatureStatusEditor,
   CATEGORY_LABELS,
   STATUS_LABELS,
@@ -80,6 +81,7 @@ import {
 } from '@/lib/feature-attachments';
 import { z } from 'zod';
 import { FeatureRequestComments } from '@/components/app/features/FeatureRequestComments';
+import { FeatureDeviceInfo } from '@/components/app/features/FeatureDeviceInfo';
 import { TopBuildersCard } from '@/components/app/features/TopBuildersCard';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -275,6 +277,8 @@ function FeatureCard({
   const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
   // The board's owners can move anyone's request to Queued or Shipped.
   const canSetStatus = isFeatureStatusEditor(walletAddress);
+  const { data: deviceInfoIds } = useFeatureDeviceInfoIds();
+  const hasDeviceInfo = canSetStatus && !!deviceInfoIds?.has(feature.id);
   const isQueued = feature.status === 'in_progress';
   const isShipped = feature.status === 'shipped' || feature.status === 'completed';
   const isNotFeasible = feature.status === 'declined';
@@ -637,6 +641,9 @@ function FeatureCard({
           </p>
         )}
 
+        {/* Board owners only: where it was sent from, to reproduce bugs. */}
+        {hasDeviceInfo && <FeatureDeviceInfo featureId={feature.id} />}
+
         {/* Translate control */}
         <PostMetadata
           timestamp={feature.created_at}
@@ -824,6 +831,7 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
         <span>{description.length}/1000</span><span className="hidden sm:inline">{t('features.promptShortcut', 'Ctrl / ⌘ + Enter to post')}</span>
       </div>
       {error && <p role="alert" className="text-sm text-red-400 mt-2">{error}</p>}
+      <p data-device-info-note className="mt-1 text-[11px] text-zinc-500">{t('features.deviceInfoNote', 'Device info is attached to help us fix bugs.')}</p>
       <details className="mt-2 text-xs text-zinc-400" open={initialCategory === 'bug_fix' ? true : undefined}>
         <summary className="cursor-pointer py-1">{t('features.promptDetails', 'Optional details')}</summary>
         <fieldset disabled={submitMutation.isPending} className="grid gap-3 mt-2">
@@ -1077,12 +1085,13 @@ export default function FeaturesPage() {
 
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
+  // A link to one comment scrolls to that comment instead (the thread does it).
   useEffect(() => {
-    if (!focusedId) return;
+    if (!focusedId || focusedCommentId) return;
     requestAnimationFrame(() => {
       document.getElementById(`feature-${focusedId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  }, [focusedId]);
+  }, [focusedId, focusedCommentId]);
 
   useEffect(() => {
     const featureId = searchParams.get('feature');
@@ -1190,7 +1199,7 @@ export default function FeaturesPage() {
           >
             {t('features.prompts', 'Prompts')}
             {remainingCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
               </span>
             )}
@@ -1207,7 +1216,7 @@ export default function FeaturesPage() {
             <Loader2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.queued', 'Queued')}
             {inProgressCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {inProgressCount}
               </span>
             )}
@@ -1224,7 +1233,7 @@ export default function FeaturesPage() {
             <CheckCircle2 className="w-3.5 h-3.5 shrink-0 max-[359px]:hidden" />
             {t('features.shipped')}
             {shippedCount > 0 && (
-              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
               </span>
             )}
@@ -1296,7 +1305,7 @@ export default function FeaturesPage() {
                     >
                       <span className="relative z-10">{_copy("copy.2ab63e6ced90", { defaultValue: "Not feasible" })}</span>
                       {notFeasibleCount > 0 && (
-                        <span className="relative z-10 text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                        <span className="relative z-10 text-[10px] leading-4 bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                           {notFeasibleCount}
                         </span>
                       )}

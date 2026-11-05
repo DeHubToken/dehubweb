@@ -21,7 +21,7 @@ import { isVideoInPictureInPicture } from '@/lib/picture-in-picture';
  * ```
  */
 
-import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext } from 'react';
+import { useState, useRef, useCallback, memo, useEffect, useId, lazy, Suspense, useContext, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const BountyClaimActions = lazy(() => import('./BountyClaimActions'));
@@ -174,6 +174,10 @@ import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, getMeasuredMediaAspect, rememberVideoAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape';
+import { useWideVideoMode, WIDE_RAILS_MAX_ASPECT } from '@/lib/wide-video-mode';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
+import { WideAmbientFill } from '@/components/app/video/WideAmbientFill';
+import { WideVideoCommentsRail, WideVideoInfoRail } from '@/components/app/video/WideVideoRails';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { GatePreview } from './GatePreview';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
@@ -808,6 +812,22 @@ function readStartAt(): number | null {
   if (typeof window === 'undefined') return null;
   const at = Number(new URLSearchParams(window.location.search).get('t'));
   return Number.isFinite(at) && at > 0 ? at : null;
+}
+
+/**
+ * Desktop only: the row the player sits in, holding the wide-screen rails when
+ * they are on and `display: contents` otherwise. Phones get no wrapper at all,
+ * since their theme rules select the frame as a direct child of the card.
+ */
+function WideRailsRow({ enabled, rails, left, right, children }: { enabled: boolean; rails: boolean; left: ReactNode; right: ReactNode; children: ReactNode }) {
+  if (!enabled) return <>{children}</>;
+  return (
+    <div data-wide-rails-row={rails || undefined} className={rails ? 'flex items-stretch justify-center gap-3' : 'contents'}>
+      {rails && left}
+      {children}
+      {rails && right}
+    </div>
+  );
 }
 
 const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
@@ -1879,6 +1899,21 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
 
+  // Long form videos on wide screens (Settings > Appearance > Media). Desktop
+  // only: the feed card and the post page player. Ambient runs the frame full
+  // width with the blurred picture beside it; rails hug the picture between
+  // two glass pills, and only where there is room beside it.
+  const isDesktopViewport = useIsDesktopViewport();
+  const wideVideoMode = useWideVideoMode();
+  const wideViewport = isDesktopViewport && !isPhone;
+  const wideEligible = wideViewport && !isFullscreen && !video.isAudio && !stage && !hideActions
+    && !(video.isLivePost && video.isLiveNow) && (desktopFeedHug || (isImmersive && !showComments));
+  const wideTheatre = wideEligible && wideVideoMode === 'theatre';
+  const wideAmbient = wideEligible && (wideVideoMode === 'ambient' || wideTheatre);
+  const wideRails = wideEligible && wideVideoMode === 'rails' && mediaAspect < WIDE_RAILS_MAX_ASPECT;
+  const wideCentered = wideAmbient || wideRails; // theatre counts as ambient
+  const wideMaxHeight = desktopFeedHug ? DESKTOP_FEED_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT;
+
   // Before the handoff assigns `src`, so a refreshed signature resumes in place.
   useResumeAcrossRefresh(videoRef, mediaAttached && !isVideoNotReady ? playableVideoUrl : undefined);
 
@@ -1897,7 +1932,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
     preload: videoPreload,
     // Phones crop tall footage to fill the column; desktop shows the whole
     // picture on the left (a short stays a short, not a stretched wide crop).
-    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : 'object-contain object-left'}`,
+    className: `dehub-inline-video w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : wideCentered ? 'object-contain' : 'object-contain object-left'}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2408,7 +2443,25 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
           postHeadSlot,
         )}
 
-        {/* Video Player / Thumbnail */}
+        {/* Video Player / Thumbnail. On desktop it sits in a row that holds the
+            wide-screen rails when they are on (display: contents otherwise, so
+            nothing else sees the wrapper). Phones never get the wrapper: their
+            theme rules select the frame as a direct child of the card. */}
+      <WideRailsRow
+        enabled={wideViewport}
+        rails={wideRails}
+        left={<WideVideoInfoRail video={video} />}
+        right={(
+          <WideVideoCommentsRail
+            video={video}
+            onOpenComments={() => {
+              if (onOpenComments) { onOpenComments(); return; }
+              setCommentsInitialTab(undefined);
+              setShowComments(true);
+            }}
+          />
+        )}
+      >
       <div 
         ref={containerRef}
         tabIndex={0}
@@ -2427,6 +2480,23 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         style={{ ...(
           isFullscreen || (isImmersive && showComments)
             ? undefined
+            : wideRails
+              ? {
+                  // Hugs the picture between the two rails, which keep at least
+                  // 160px each (plus the 12px gaps).
+                  aspectRatio: mediaAspect,
+                  width: `min(calc(${wideMaxHeight} * ${mediaAspect.toFixed(4)}), calc(100% - 344px))`,
+                  maxHeight: wideMaxHeight,
+                  flex: 'none',
+                }
+            : wideAmbient && desktopFeedHug
+              ? {
+                  // Full column width; the picture sits in the middle with the
+                  // ambient fill beside it.
+                  aspectRatio: feedFrameAspect,
+                  width: '100%',
+                  maxHeight: DESKTOP_FEED_MAX_HEIGHT,
+                }
             : isImmersive
               ? {
                   aspectRatio: mediaAspect,
@@ -2495,6 +2565,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         onBlur={() => setIsFocused(false)}
       >
         <div data-video-picture className={splitControls ? "absolute inset-x-0 top-0 bottom-[47px]" : "contents"}>
+        {wideAmbient && <WideAmbientFill videoRef={videoRef} thumbnail={thumbnail || undefined} live={ownsVideoElement} frost={wideTheatre} />}
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
@@ -2740,12 +2811,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : 'object-contain object-left'}`}
+                    className={`absolute ${wideTheatre ? 'left-6 top-4 h-[calc(100%-2rem)] w-[calc(100%-3rem)]' : 'inset-0 w-full h-full'} ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : wideCentered ? 'object-contain' : 'object-contain object-left'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
                 )}
-                <div ref={attachVideoSlot} className={cn("absolute inset-0 w-full h-full", hasError && "invisible")} />
+                <div ref={attachVideoSlot} className={cn(wideTheatre ? "absolute inset-x-6 inset-y-4" : "absolute inset-0 w-full h-full", hasError && "invisible")} />
                 <AltTextBadge text={video.mediaDescriptions?.[0]} className="absolute left-2 top-2" />
               </>
             ) : video.isLivePost && video.isLiveNow ? (
@@ -3231,6 +3302,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         )}
         
       </div>
+      </WideRailsRow>
 
       {/* Compact avatar row for carousel mode (hideActions) - avatar + AI + dots below thumbnail */}
       {hideActions && !isImmersive && (
