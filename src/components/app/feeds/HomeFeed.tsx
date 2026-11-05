@@ -2046,7 +2046,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           if (phoneShowsTagBar || filterLineItems.length === 0) return null;
           const line = (
             <Suspense fallback={null}><FeedFilterLine
-              className={chipsTarget ? 'mt-2' : 'mb-3'}
+              className={chipsTarget ? 'mt-3' : 'mb-3'}
               items={filterLineItems}
               presetName={activePresetName}
               onClearAll={clearAllFilters}
@@ -2061,9 +2061,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         const chipsBar = (
           <div className={cn(
             "flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2",
-            // Below the pill rather than in it, so the row needs its own breathing
-            // space above and none below — the sticky wrapper already pads there.
-            chipsTarget && "pt-2 pb-0",
+            // Below the pill: 12px above to match the 12px the sticky wrapper pads
+            // below, so the gap either side of the row is even.
+            chipsTarget && "pt-3 pb-0",
           )}>
             {optimisticSort.value !== 'latest' && (
               <button
@@ -2237,7 +2237,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           {selectedCategories.length === 1 && (!isPhone || phoneShowsTagBar) && (
             chipsTarget
               ? createPortal(
-                  <FollowTagBar className="mt-2" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
+                  <FollowTagBar className="mt-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
                   chipsTarget,
                 )
               : <FollowTagBar className="mb-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
