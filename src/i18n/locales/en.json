@@ -1,4 +1,11 @@
 {
+  "textFeed": {
+    "errorTitle": "Posts could not load",
+    "errorBody": "Try loading the text feed again.",
+    "emptyTitle": "No text posts yet",
+    "emptyBody": "Text posts will appear here.",
+    "tab": "Text"
+  },
   "comic": {
     "showAll": "Show all {{count}} pages"
   },

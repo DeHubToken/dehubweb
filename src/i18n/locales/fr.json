@@ -1,4 +1,11 @@
 {
+  "textFeed": {
+    "errorTitle": "Impossible de charger les publications",
+    "errorBody": "Réessayez de charger le fil de texte.",
+    "emptyTitle": "Aucune publication texte pour l'instant",
+    "emptyBody": "Les publications texte apparaîtront ici.",
+    "tab": "Texte"
+  },
   "comic": {
     "showAll": "Voir les {{count}} pages"
   },

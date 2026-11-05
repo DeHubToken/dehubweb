@@ -11,13 +11,14 @@ import { useTabLongPress } from '@/hooks/use-tab-long-press';
  * between tabs for a tactile, interactive experience.
  */
 
-import { useRef, useCallback, useState, useEffect, type ReactNode } from 'react';
+import { useRef, useCallback, useState, useEffect, useMemo, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import Settings2 from "@/components/ui/cut-icons/settings";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 
-import { FEED_TABS, FEED_TAB_ICON_SCALE } from '@/constants/app.constants';
+import { FEED_TAB_ICON_SCALE, feedTabsFor } from '@/constants/app.constants';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -85,7 +86,8 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
   const meltOpen = searchOpen && !searchLens;
   const [enableTransition, setEnableTransition] = useState(false);
   const { shortsEnabled } = useShortsEnabled();
-  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+  const isPhone = useIsMobile();
+  const feedTabs = useMemo(() => feedTabsFor(isPhone, shortsEnabled), [isPhone, shortsEnabled]);
 
   const tabLongPress = useTabLongPress(activeTab, () => {
     window.dispatchEvent(new CustomEvent('home-tab-long-press', { detail: activeTab }));
@@ -155,7 +157,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false, compactPr
       if (dist < minDist) { minDist = dist; nearest = tab.value; }
     }
     return nearest;
-  }, [layerRef]);
+  }, [layerRef, feedTabs]);
 
   const applyTab = useCallback((tabValue: string) => {
     if (isHomePage) {
