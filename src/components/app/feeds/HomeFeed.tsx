@@ -25,6 +25,7 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
+import { usePrefetchLinkPreviews } from '@/hooks/use-prefetch-link-previews';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { shortsBatchCount } from '@/lib/shorts-rotation';
 import { homeReelBatchIndex, homeSuggestedAfter } from '@/lib/feed-carousel-layout';
@@ -1323,6 +1324,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // ============================================================================
   // INTERLEAVED ITEMS (from three separate feeds)
   // ============================================================================
+
+  // Text and photo posts carry link previews; warm them as their pages land.
+  const linkPreviewRows = useMemo(() => [
+    ...flattenFeedPages(textsFeed.data?.pages),
+    ...flattenFeedPages(imagesFeed.data?.pages),
+    ...flattenFeedPages(singleFeed.data?.pages),
+  ], [textsFeed.data, imagesFeed.data, singleFeed.data]);
+  usePrefetchLinkPreviews(linkPreviewRows);
 
   const interleavedItems = useMemo((): FeedItemType[] => {
     if (!useInterleavedFeed) return [];

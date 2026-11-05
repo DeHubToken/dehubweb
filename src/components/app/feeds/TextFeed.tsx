@@ -19,6 +19,7 @@ import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { AppState } from '@/components/app/AppState';
 import { useUnifiedFeed, mapToTextPost } from '@/hooks/use-unified-feed';
 import { flattenFeedPages } from '@/lib/feed-pages';
+import { usePrefetchLinkPreviews } from '@/hooks/use-prefetch-link-previews';
 
 /** The frame Home gives each feed card, so themes style text posts the same here. */
 function frameFor(id: string | number) {
@@ -47,9 +48,11 @@ export function TextFeed({ refreshKey = 0 }: TextFeedProps) {
   });
   const { fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = feed;
 
+  const rows = useMemo(() => flattenFeedPages(feed.data?.pages), [feed.data]);
+  usePrefetchLinkPreviews(rows);
   const posts = useMemo(
-    () => flattenFeedPages(feed.data?.pages).map((item, index) => mapToTextPost(item, index)),
-    [feed.data],
+    () => rows.map((item, index) => mapToTextPost(item, index)),
+    [rows],
   );
 
   useEffect(() => {
