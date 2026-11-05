@@ -36,7 +36,32 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   // "typing" counts for a second after the keyboard went.
   const typedAt = useRef(0);
   if (typing) typedAt.current = Date.now();
-  useEffect(() => { if (!typing && typedAt.current) typedAt.current = Date.now(); }, [typing]);
+  // A hold blurs the field on touch, half a second before its sheet opens.
+  // Wait a beat before shrinking so a hold started while typing never drops
+  // the sheet to half and then has to hold it there.
+  const [linger, setLinger] = useState(false);
+  useEffect(() => {
+    if (typing) { setLinger(false); return; }
+    if (!typedAt.current) return;
+    typedAt.current = Date.now();
+    setLinger(true);
+    const timer = window.setTimeout(() => setLinger(false), 700);
+    return () => window.clearTimeout(timer);
+  }, [typing]);
+  // Tall stops under whatever floats at the top (the feed's logo and tabs,
+  // or the post page's pill), not under a fixed 56px that the feed's taller
+  // bar covered.
+  const [chromeBottom, setChromeBottom] = useState(56);
+  const tall = typing || holdTall || linger;
+  useEffect(() => {
+    if (!tall) return;
+    let bottom = 0;
+    for (const el of document.querySelectorAll<HTMLElement>('[data-mobile-header], [data-feed-nav]')) {
+      const box = el.getBoundingClientRect();
+      if (box.height > 0 && box.bottom > 0 && box.top < window.innerHeight / 3) bottom = Math.max(bottom, box.bottom);
+    }
+    setChromeBottom(Math.round(Math.max(56, bottom + 4)));
+  }, [tall]);
   useEffect(() => {
     const onHold = (event: Event) => {
       const open = (event as CustomEvent<boolean>).detail;
@@ -66,7 +91,7 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
     // Typing takes the whole visible area above the keys (less the top bar),
     // so the comment being answered stays in sight above the box, as in the
     // app. Half height left it under the keyboard.
-    const height = Math.max(220, viewport.height - 56);
+    const height = Math.max(220, viewport.height - chromeBottom);
     // Android shrinks the page for the keyboard, so the sheet keeps its
     // bottom on the keyboard edge and only its top moves, which the
     // stylesheet eases. Safari draws the keyboard over the page and pans:
@@ -74,8 +99,8 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
     const overlaid = window.innerHeight - viewport.height > 80 || viewport.offsetTop > 0;
     return overlaid
       ? { top: viewport.offsetTop + viewport.height - height, bottom: 'auto', height }
-      : { top: 56 };
-  })() : holdTall ? { top: 56 } : undefined;
+      : { top: chromeBottom };
+  })() : holdTall || linger ? { top: chromeBottom } : undefined;
   // Portalled: the post page's rise-in animation leaves a transform on an
   // ancestor, which would pin a fixed sheet to the page instead of the screen.
   return createPortal(
