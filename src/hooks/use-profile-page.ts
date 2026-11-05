@@ -404,6 +404,21 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
 
     unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
+    // Reposts come as one list of 50, but the creator's own posts arrive a page
+    // at a time. Show only the reposts that fall inside the pages loaded so
+    // far, so the first screen is the first rows and not 50 extra tiles (and
+    // their pictures) all at once. Older ones join as the next pages load.
+    if (hasNextContentPage) {
+      const ownTimes = unified
+        .filter((item) => !item.isRepost)
+        .map((item) => new Date(item.createdAt).getTime())
+        .filter(Number.isFinite);
+      const floor = ownTimes.length ? Math.min(...ownTimes) : Infinity;
+      const kept = unified.filter((item) => !item.isRepost || new Date(item.createdAt).getTime() >= floor);
+      unified.length = 0;
+      unified.push(...kept);
+    }
+
     // Pinned posts first, newest pin on top, each shown once. A post pinned a
     // moment ago that the pins list has not caught up with yet is lifted out
     // of the feed itself.
@@ -440,7 +455,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
       PROFILE_LIVE: separated.lives,
       ALL_CONTENT: unified,
     };
-  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered, pinnedIds, pinsData]);
+  }, [userContentData, repostsData, proposalRepostsData, isContentFiltered, pinnedIds, pinsData, hasNextContentPage]);
 
   // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
@@ -502,7 +517,17 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
 
   // Fractions: the same portfolio read the tab itself lists (shared cache, so
   // opening the tab is instant). Blank until it answers, never a false 0.
-  const fractionsQuery = useFractionPortfolio(apiProfile?.walletAddress, { enabled: secondaryEnabled });
+  // The read is heavy (the creator's last 50 posts, three market tables, chain
+  // balances and a check per position), so it waits until the first rows and
+  // their pictures are in, unless the Fractions tab itself is opened.
+  const [fractionsWarm, setFractionsWarm] = useState(false);
+  useEffect(() => {
+    setFractionsWarm(false);
+    if (!apiProfile?.walletAddress) return;
+    const timer = setTimeout(() => setFractionsWarm(true), 4000);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+  const fractionsQuery = useFractionPortfolio(apiProfile?.walletAddress, { enabled: secondaryEnabled && (fractionsWarm || activeTab === 'fractions') });
   const fractionsCount: number | null = fractionsQuery.data ? livePositions(fractionsQuery.data).length : null;
 
   const articleCount = tabCount('articles', activeTab === 'articles' ? PROFILE_POSTS.length : 0);
