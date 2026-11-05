@@ -7486,7 +7486,7 @@ async function handleRequest(request, env, ctx) {
       isEntityRoute &&
       (fnSaysNotFound || NOT_FOUND_TITLES.some((t) => html.includes(t)));
     if (looksNotFound) {
-      return guard(new Response(html, {
+      return guard(new Response(riftnFallbackCard(html), {
         status: 404,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
