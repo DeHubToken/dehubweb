@@ -15,6 +15,7 @@ import { installScrollStopTap } from "./lib/scroll-stop-tap";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import { installImageOriginFallback } from "./lib/image-origin-fallback";
 import { installWalletSessionFetch } from "./lib/wallet-session";
+import { installRecentErrorBuffer } from "./lib/device-info";
 import { installTranslatorDomGuard } from "./i18n/translator-dom-guard";
 import "./lib/toast-i18n-interceptor";
 // NOTE: auth-toast translations are no longer imported here — English lives in
@@ -59,6 +60,7 @@ const landing = { path: location.pathname, search: location.search, referrer: do
 void import("./lib/first-touch").then((m) => m.captureFirstTouch(landing)).catch(() => undefined);
 // Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
 installWalletSessionFetch();
+installRecentErrorBuffer();
 
 // Chrome/Edge/Safari's own "translate this page" rewrites the text nodes React
 // is holding, and React's next update then throws NotFoundError and unmounts
