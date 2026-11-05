@@ -2104,6 +2104,9 @@
   },
   "features": {
     "prompts": "Propuestas",
+    "editMedia": "Fotos y vídeos",
+    "editAddMedia": "Añadir foto o vídeo",
+    "removeAttachment": "Quitar adjunto",
     "queued": "En cola",
     "promptPageTitle": "Solicitudes",
     "promptSubtitle": "Construye Riftn con una propuesta",
@@ -5152,6 +5155,12 @@
   },
   "fractions": {
     "seoTitle": "Fracciones | Riftn",
+    "buyersTab": "Compradores",
+    "soldOfListing": "Vendidas {{sold}} de {{total}}",
+    "noBuyersYet": "Nadie ha comprado fracciones de esta publicación todavía",
+    "fromYou": "de ti",
+    "statusInProgress": "En curso",
+    "statusOverdue": "Con retraso",
     "seoDescription": "Compra y vende fracciones de publicaciones de Riftn. Una publicación acuñada son 1000 fracciones on-chain: posee una parte de un vídeo, un tema o una imagen y negóciala en tokens.",
     "title": "Fracciones",
     "perUpload": "1000 por subida",

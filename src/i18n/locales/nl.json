@@ -2294,6 +2294,9 @@
   },
   "features": {
     "prompts": "Voorstellen",
+    "editMedia": "Foto's en video's",
+    "editAddMedia": "Foto of video toevoegen",
+    "removeAttachment": "Bijlage verwijderen",
     "queued": "In de wachtrij",
     "promptPageTitle": "Verzoeken",
     "promptSubtitle": "Bouw mee aan Riftn met een voorstel",
@@ -5342,6 +5345,12 @@
   },
   "fractions": {
     "seoTitle": "Fracties | Riftn",
+    "buyersTab": "Kopers",
+    "soldOfListing": "{{sold}} van {{total}} verkocht",
+    "noBuyersYet": "Nog niemand heeft fracties van deze post gekocht",
+    "fromYou": "van jou",
+    "statusInProgress": "Bezig",
+    "statusOverdue": "Te laat",
     "seoDescription": "Koop en verkoop fracties van Riftn-berichten. Een gemint bericht is 1000 on-chain fracties, bezit een deel van een video, nummer of afbeelding en handel het in tokens.",
     "title": "Fracties",
     "perUpload": "1000 per upload",
