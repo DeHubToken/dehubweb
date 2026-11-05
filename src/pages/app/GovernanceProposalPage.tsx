@@ -99,9 +99,15 @@ export default function GovernanceProposalPage() {
   // The discussion panel sits under the card; the comment action and a
   // comment deep link both bring it into view.
   const discussionRef = useRef<HTMLDivElement>(null);
+  // The discussion brings the linked comment itself on screen. Only when that
+  // comment is gone (deleted since) does the panel scroll to its top instead.
   useEffect(() => {
     if (!focusedCommentId || !proposal) return;
-    discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const timer = window.setTimeout(() => {
+      const row = discussionRef.current?.querySelector(`[data-comment-id="${CSS.escape(focusedCommentId)}"]`);
+      if (!row) discussionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 1500);
+    return () => window.clearTimeout(timer);
   }, [focusedCommentId, proposal]);
 
   const currentVote = userVotes?.[proposalId ?? '']?.type;

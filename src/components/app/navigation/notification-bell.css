@@ -64,3 +64,23 @@ html.reduce-motion .notification-bell :is(.notification-bell__swing, .notificati
 @media (prefers-reduced-motion: reduce) {
   .notification-bell :is(.notification-bell__swing, .notification-bell__wave, .notification-bell__rim, .notification-bell__hot) { animation: none !important; }
 }
+
+/* Opt-in unread number (Settings → Notifications → "Show the number"). */
+.notification-bell__count {
+  position: absolute;
+  top: calc(var(--bell-size) * -0.22);
+  right: calc(var(--bell-size) * -0.38);
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--bell-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}

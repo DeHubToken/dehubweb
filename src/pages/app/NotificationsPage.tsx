@@ -288,11 +288,11 @@ const tabs: { value: NotificationTypeFilter; icon: React.ElementType }[] = [
 // unfiltered feed.
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
-  likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
+  likes: ['like', 'comment_like', 'feature_request_like', 'feature_request_comment_like', 'governance_vote', 'governance_comment_like'],
   follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'community_mention', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'governance_comment', 'governance_reply', 'work_application_reply'],
   reposts: ['repost', 'quote', 'remix'],
-  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new'],
+  features: ['feature_request_like', 'feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_new', 'feature_request_comment_like', 'feature_request_status'],
   communities: ['community_chat', 'community_mention', 'community_here', 'community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased', 'fraction_sold', 'fraction_delivered', 'fraction_settled', 'username_offer', 'username_offer_accepted', 'username_offer_declined'],
   subscriptions: ['subscription', 'ppv_purchase'],
@@ -352,6 +352,8 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment_like':
     case 'feature_request_like':
+    case 'feature_request_comment_like':
+    case 'governance_comment_like':
       return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment':
     case 'comment_reply':
@@ -420,6 +422,9 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
+    case 'feature_request_status':
+    case 'governance_result':
+      return <Trophy className="w-4 h-4 text-white/70" />;
     case 'dao_proposal_open':
     case 'dao_vote_deadline':
     case 'dao_proposal_accepted':
@@ -652,6 +657,20 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.featureActivityNamed' : 'notifications.custom.featureActivity', { name: actorName, title });
   }
+  if ((notification.type as string) === 'feature_request_comment_like') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.featureCommentLikeNamed' : 'notifications.custom.featureCommentLike', {
+      name: actorName, title,
+      defaultValue: title ? '{{name}} liked your comment on “{{title}}”' : '{{name}} liked your comment on a request',
+    });
+  }
+  if ((notification.type as string) === 'feature_request_status') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle || '';
+    const state = (notification as any).content;
+    if (state === 'shipped') return tr('notifications.custom.featureShipped', { title, defaultValue: 'Your request “{{title}}” shipped 🎉' });
+    if (state === 'shipped_liked') return tr('notifications.custom.featureShippedLiked', { title, defaultValue: 'A request you liked shipped: “{{title}}” 🎉' });
+    return tr('notifications.custom.featureQueued', { title, defaultValue: 'Your request “{{title}}” is queued to be built' });
+  }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return stageLiveSentence(actorName, title, tr);
@@ -673,6 +692,26 @@ function getNotificationContent(
   if ((notification.type as string) === 'governance_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return tr(title ? 'notifications.custom.governanceCommentNamed' : 'notifications.custom.governanceComment', { name: actorName, title });
+  }
+  if ((notification.type as string) === 'governance_comment_like') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return tr(title ? 'notifications.custom.governanceCommentLikeNamed' : 'notifications.custom.governanceCommentLike', {
+      name: actorName, title,
+      defaultValue: title ? '{{name}} liked your comment on “{{title}}”' : '{{name}} liked your comment on a proposal',
+    });
+  }
+  if ((notification.type as string) === 'governance_result') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle || '';
+    const state = String((notification as any).content || '');
+    const passed = state.startsWith('passed');
+    if (state.endsWith('_voted')) {
+      return passed
+        ? tr('notifications.custom.governanceVotedPassed', { title, defaultValue: 'A proposal you voted on passed: “{{title}}”' })
+        : tr('notifications.custom.governanceVotedRejected', { title, defaultValue: 'A proposal you voted on did not pass: “{{title}}”' });
+    }
+    return passed
+      ? tr('notifications.custom.governancePassed', { title, defaultValue: 'Your proposal “{{title}}” passed 🎉' })
+      : tr('notifications.custom.governanceRejected', { title, defaultValue: 'Your proposal “{{title}}” did not pass' });
   }
   if ((notification.type as string) === 'governance_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
@@ -871,8 +910,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   // and several pages of infinite scroll. `?request=` pins it at the top
   // instead, so the row always opens the thing it names. A comment row also
   // asks for the comments to be open, the same way a post comment does.
-  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity'];
-  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
+  const FEATURE_COMMENT_TYPES = ['feature_request_comment', 'feature_request_reply', 'feature_request_mention', 'feature_request_activity', 'feature_request_comment_like'];
+  if ((notification.type as string) === 'feature_request_like' || (notification.type as string) === 'feature_request_new' || (notification.type as string) === 'feature_request_status' || FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
     const requestId = customReferenceId(notification);
     if (!requestId) return '/features';
     if (!FEATURE_COMMENT_TYPES.includes(notification.type as string)) {
@@ -898,8 +937,8 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
   // A comment or reply row lands on the comment it is about — the proposal
   // page reads the same `?comment=` the features board does.
-  const GOVERNANCE_COMMENT_TYPES = ['governance_comment', 'governance_reply'];
-  if ((notification.type as string) === 'governance_vote' || GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)) {
+  const GOVERNANCE_COMMENT_TYPES = ['governance_comment', 'governance_reply', 'governance_comment_like'];
+  if ((notification.type as string) === 'governance_vote' || (notification.type as string) === 'governance_result' || GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)) {
     const refId = customReferenceId(notification);
     if (!refId) return '/governance';
     const commentId = GOVERNANCE_COMMENT_TYPES.includes(notification.type as string)

@@ -1015,12 +1015,13 @@ export default function FeaturesPage() {
 
   // Bring the pinned card into view once it has actually rendered. Scrolling on
   // the id alone would fire before the row exists on a cold load.
+  // A link to one comment scrolls to that comment instead (the thread does it).
   useEffect(() => {
-    if (!focusedId) return;
+    if (!focusedId || focusedCommentId) return;
     requestAnimationFrame(() => {
       document.getElementById(`feature-${focusedId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-  }, [focusedId]);
+  }, [focusedId, focusedCommentId]);
 
   useEffect(() => {
     const featureId = searchParams.get('feature');
