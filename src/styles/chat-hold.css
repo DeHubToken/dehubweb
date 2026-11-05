@@ -47,11 +47,14 @@ html .chat-hold-overlay.chat-hold-overlay[data-vaul-overlay] {
   backdrop-filter: none !important;
 }
 
-/* Comment rows have no side padding of their own (the sheet pads them), so
-   the glow reaches out past the words instead of pushing them in. */
+/* A held comment stays exactly as it was: no box, no ring. The other rows
+   dimming is what marks it. */
 [data-chat-row='comment'][data-chat-held] {
-  margin-inline: -10px;
-  padding-inline: 10px;
+  margin-inline: 0;
+  padding-inline: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
 }
 
 [data-chat-hold-sheet][data-chat-hold-sheet] {

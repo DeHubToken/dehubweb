@@ -2302,9 +2302,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       flushSync(() => {
         if (stage) setStageComposerOpen(true);
         setReplyTo(found);
-        setNewComment(current => current.length ? current : `@${found.username} `);
+        // A box holding only the last target's "@name " takes the new one;
+        // anything actually written stays.
+        setNewComment(current => !current.length || /^@\S+\s*$/.test(current) ? `@${found.username} ` : current);
       });
       inputRef.current?.focus({ preventScroll: true });
+      // Once the keyboard is up and the sheet has grown, keep the comment
+      // being answered in sight above the box.
+      window.setTimeout(() => {
+        sectionRef.current
+          ?.querySelector<HTMLElement>(`[data-comment-id="${CSS.escape(commentId)}"]`)
+          ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 400);
     }
   });
 

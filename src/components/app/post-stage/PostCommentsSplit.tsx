@@ -40,8 +40,11 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   // the keys. While typing, place the sheet from what is actually visible:
   // the pan offset plus the visible height. On Android (resizes-content) that
   // is the same spot as bottom 0.
+  // It also grows up to nearly the whole visible area, like the app: held at
+  // half the screen, the keyboard left room for the tabs and the box only,
+  // and the comment being answered went out of sight.
   const keyboardBox = typing && viewport.height !== null ? (() => {
-    const height = Math.max(220, Math.min(window.innerHeight / 2, viewport.height - 96));
+    const height = Math.max(220, viewport.height - 24);
     return { top: viewport.offsetTop + viewport.height - height, bottom: 'auto', height };
   })() : undefined;
   // Portalled: the post page's rise-in animation leaves a transform on an
