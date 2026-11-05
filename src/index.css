@@ -5808,6 +5808,21 @@ html[data-system-tone="light"] [data-keep-dark] [data-dehub-loader] {
 .dehub-loader-mark {
   animation: dehub-loader-in 200ms ease-out 250ms both;
 }
+/* Feed photos fade in once when they first finish downloading (HandoffImage).
+   Opacity only, so it runs on the compositor. */
+@media (prefers-reduced-motion: no-preference) {
+  img[data-fade="pending"] { opacity: 0; }
+  img[data-fade="in"] { animation: img-fade-in 180ms ease-out backwards; }
+}
+@keyframes img-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Replacing a loader that was just on screen: already visible, no blink. */
+.dehub-loader-mark--handoff {
+  animation: none;
+}
 
 @keyframes dehub-loader-in {
   from {

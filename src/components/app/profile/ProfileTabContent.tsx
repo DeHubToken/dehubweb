@@ -1,3 +1,4 @@
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
@@ -284,9 +285,9 @@ export function ProfileTabContent({
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
       {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live', 'articles'].includes(activeTab) && (
-        <div className="flex flex-col items-center justify-center min-h-[200px]">
-          <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
-        </div>
+        // The same mark, in the same box, as the profile skeleton's content
+        // area, so the hand-off from skeleton to header is one loader, not two.
+        <DeHubPageLoader minHeight="38vh" />
       )}
 
       {/* HOME TAB */}
