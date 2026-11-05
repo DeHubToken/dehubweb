@@ -20,8 +20,10 @@ const lowEndDevice = (() => {
  * element that wraps a text post, and render <PostBgLayer> as its first child.
  */
 export function postBgHostProps(bg: PostBg | null): Record<string, string> {
-  if (!bg) return {};
-  return { 'data-pbg': bg.id, 'data-pbg-tone': bg.tone, 'data-pbg-kind': bg.kind };
+  // data-pbg-text marks every text post, with or without a backdrop, so the
+  // owner can hold it to open the picker.
+  if (!bg) return { 'data-pbg-text': '' };
+  return { 'data-pbg-text': '', 'data-pbg': bg.id, 'data-pbg-tone': bg.tone, 'data-pbg-kind': bg.kind };
 }
 
 let sharedObserver: IntersectionObserver | null = null;
@@ -59,13 +61,17 @@ export function PostBgLayer({ bg }: { bg: PostBg | null }) {
   );
 }
 
+const HOLD_SKIP = 'a, button, input, textarea, select, video, audio, [role="button"]';
+
 /**
- * Long-press (450 ms) on the owner's header opens the picker. A small ring
+ * Long-press (450 ms) on the owner's header opens the picker. With a
+ * `selector`, the hold only starts on a matching element inside the host
+ * (e.g. text posts in the profile feed), never on buttons or links inside it. A small ring
  * fills under the finger while holding. Right-click opens it straight away on
  * a computer. The click that ends a completed hold is swallowed so it does not
  * also open the avatar or a link underneath.
  */
-export function usePostBgHold(enabled: boolean, onOpen: () => void) {
+export function usePostBgHold(enabled: boolean, onOpen: () => void, selector?: string) {
   const [ring, setRing] = useState<{ x: number; y: number; p: number } | null>(null);
   const state = useRef<{ t0: number; x: number; y: number; raf: number; fired: boolean; id: number | null }>({ t0: 0, x: 0, y: 0, raf: 0, fired: false, id: null });
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -80,6 +86,13 @@ export function usePostBgHold(enabled: boolean, onOpen: () => void) {
     if (!enabled || (e.pointerType === 'mouse' && e.button !== 0)) return;
     const host = hostRef.current;
     if (!host) return;
+    if (selector) {
+      const target = e.target as HTMLElement;
+      const item = target.closest(selector);
+      if (!item || !host.contains(item)) return;
+      const hit = target.closest(HOLD_SKIP);
+      if (hit && hit !== item && item.contains(hit)) return;
+    }
     const box = host.getBoundingClientRect();
     const s = state.current;
     s.t0 = performance.now();
@@ -104,7 +117,7 @@ export function usePostBgHold(enabled: boolean, onOpen: () => void) {
       s.raf = requestAnimationFrame(tick);
     };
     s.raf = requestAnimationFrame(tick);
-  }, [enabled, onOpen, stop]);
+  }, [enabled, onOpen, stop, selector]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     const s = state.current;
@@ -123,11 +136,17 @@ export function usePostBgHold(enabled: boolean, onOpen: () => void) {
   const onContextMenu = useCallback((e: React.MouseEvent) => {
     if (!enabled) return;
     // Keep the browser menu on links and images people may want to copy.
-    if ((e.target as HTMLElement).closest('a, input, textarea')) return;
+    const target = e.target as HTMLElement;
+    if (selector) {
+      const item = target.closest(selector);
+      if (!item) return;
+      const hit = target.closest(HOLD_SKIP);
+      if (hit && hit !== item && item.contains(hit)) return;
+    } else if (target.closest('a, input, textarea')) return;
     e.preventDefault();
     stop();
     onOpen();
-  }, [enabled, onOpen, stop]);
+  }, [enabled, onOpen, stop, selector]);
 
   const handlers = enabled
     ? {
@@ -138,7 +157,7 @@ export function usePostBgHold(enabled: boolean, onOpen: () => void) {
         onPointerLeave: stop,
         onClickCapture,
         onContextMenu,
-        style: { WebkitTouchCallout: 'none' } as React.CSSProperties,
+        ...(selector ? { 'data-pbg-hold': '' } : { style: { WebkitTouchCallout: 'none' } as React.CSSProperties }),
       }
     : {};
 
