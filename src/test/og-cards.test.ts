@@ -56,7 +56,7 @@ describe('per-route OG cards', () => {
   it('has a card key for every file', () => {
     // SHARE_IMAGE is referenced by the constant, not through the map.
     const orphans = [...files].filter(
-      (f) => f !== 'dehub-social-share' && ![...cardKeys].some((k) => fileFor(k) === f),
+      (f) => f !== 'riftn-share' && ![...cardKeys].some((k) => fileFor(k) === f),
     );
     expect(orphans).toEqual([]);
   });

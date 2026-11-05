@@ -12,7 +12,7 @@
 export const SITE_URL = 'https://riftn.com';
 
 /** The worker's default 1200x630 share card (SHARE_IMAGE). */
-export const SHARE_IMAGE = `${SITE_URL}/og/dehub-social-share.png`;
+export const SHARE_IMAGE = `${SITE_URL}/og/riftn-share.png`;
 
 /**
  * Route keys whose /app/<key> twin the worker collapses onto the bare /<key>:

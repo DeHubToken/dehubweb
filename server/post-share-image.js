@@ -3,7 +3,7 @@ import { resvgReady } from './resvg.js';
 import { POST_CARD_TTL, POST_CARD_VERSION, PROFILE_CARD_VERSION, postCardData, profileCardData, renderPostCardSvg, renderProfileCardSvg } from './post-share-card.js';
 import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js';
 
-const SHARE_IMAGE = 'https://riftn.com/og/dehub-social-share.png';
+const SHARE_IMAGE = 'https://riftn.com/og/riftn-share.png';
 let assets;
 let chromeAsset;
 const RENDER_REVISION = 8;

@@ -61,7 +61,7 @@ test('mature posts and unreadable records share the brand card without their vid
   const html = '<head><meta property="og:image" content="https://cdn/images/6501.jpg"><meta property="og:video" content="https://cdn/videos/6501.mp4"><meta name="twitter:image" content="https://cdn/images/6501.jpg"></head>';
   for (const record of [{ ...post, postType: 'video', contentRating: 'mature' }, null]) {
     const result = applyPostShareImage(html, record);
-    assert.equal((result.match(/https:\/\/riftn\.com\/og\/dehub-social-share.png/g) || []).length, 3);
+    assert.equal((result.match(/https:\/\/riftn\.com\/og\/riftn-share.png/g) || []).length, 3);
     assert.ok(!result.includes('6501.jpg') && !result.includes('og:video'));
     assert.ok(result.includes('summary_large_image') && result.includes('content="630"'));
   }

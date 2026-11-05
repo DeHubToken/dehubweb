@@ -144,7 +144,7 @@ const OG_LOCALE = 'en_US';
 // Legacy CDN paths (`/__l5e/assets-v1/...`) that nothing serves since the
 // Cloudflare migration, and the SPA catch-all answered them 200 text/html, so
 // crawlers downloaded the React shell where a PNG should be and drew no image.
-const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
+const SHARE_IMAGE = `${APP_URL}/og/riftn-share.png`;
 
 /** Search Console property ownership. Must stay identical to the tag in
  *  index.html — the two are the same claim served to different user agents,
@@ -195,9 +195,14 @@ const OG_CARD_ROUTES = new Set([
   'live-studio',
 ]);
 
+/** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
+ *  Telegram cache a share image by its URL, so new art under the old URL keeps
+ *  showing the old picture until their cache expires. */
+const OG_CARD_REV = '2';
+
 /** A route's own share card, or the shared one when it has none. */
 function shareImage(key) {
-  return OG_CARD_ROUTES.has(key) ? `${APP_URL}/og/${key.replace(/\//g, '-')}.jpg` : SHARE_IMAGE;
+  return OG_CARD_ROUTES.has(key) ? `${APP_URL}/og/${key.replace(/\//g, '-')}.jpg?v=${OG_CARD_REV}` : SHARE_IMAGE;
 }
 
 /** og:image + twitter block. Every card is a 1200x630 banner, so the size
@@ -6735,7 +6740,7 @@ async function handleRequest(request, env, ctx) {
     const { handleProfileShareImage } = await import('./server/post-share-image.js');
     return handleProfileShareImage(request, env, ctx, profileCard[1], fetchAccountInfo);
   }
-  const stageCard = pathname.match(/^\/_og\/stage\/v[123]\/([0-9a-fA-F-]{16,64})\.png$/);
+  const stageCard = pathname.match(/^\/_og\/stage\/v[1234]\/([0-9a-fA-F-]{16,64})\.png$/);
   if (stageCard) {
     const { handleStageShareImage } = await import('./server/stage-share-image.js');
     return handleStageShareImage(request, env, ctx, stageCard[1], supabaseLookup);

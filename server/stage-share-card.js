@@ -10,7 +10,7 @@
 import { buildStageCover, stageCoverTitleScale } from '../src/lib/stage-cover.ts';
 import { wrapPostText } from './post-share-card.js';
 
-export const STAGE_CARD_VERSION = 'v3';
+export const STAGE_CARD_VERSION = 'v4';
 const ORIGIN = 'https://riftn.com';
 
 export function stageShareImageUrl(id) {

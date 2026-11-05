@@ -894,7 +894,7 @@ serve(async (req) => {
         // These routes are rendered by the worker now (MARKETING_PAGES in
         // CLOUDFLARE_WORKER_SEO.js) and no longer reach this function; this stays
         // correct so a future redeploy can't resurrect the broken URLs.
-        const DEFAULT_OG_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
+        const DEFAULT_OG_IMAGE = `${APP_URL}/og/riftn-share.png`;
 
         const rawKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
         // Product pages live under /app/*; accept both `/slug` and `/app/slug`.

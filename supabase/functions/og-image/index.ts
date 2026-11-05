@@ -28,7 +28,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/new_logo_Dehub.jpg";
 // 1200x630 brand card, the same image the SEO worker serves when this function fails
-const FALLBACK_CARD = "https://riftn.com/og/dehub-social-share.png";
+const FALLBACK_CARD = "https://riftn.com/og/riftn-share.png";
 
 // Inter font — cached in module scope (survives across requests in the same worker).
 // Must be TTF/OTF/WOFF: satori cannot parse WOFF2. Pinned so the file never changes under us.

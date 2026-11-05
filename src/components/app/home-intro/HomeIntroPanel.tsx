@@ -490,7 +490,7 @@ export function HomeIntroPanel({
             className="dehub-intro-foot-mark mb-1 h-[20px] w-auto"
           />
           <img
-            src="/brand-kit/brand/qr-dehub-io.png"
+            src="/brand-kit/brand/qr-riftn.png"
             alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to riftn.com" })}
             width={56}
             height={56}

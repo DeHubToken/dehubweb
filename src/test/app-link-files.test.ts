@@ -78,7 +78,7 @@ describe('apple-app-site-association', () => {
       '/', '/docs', '/Docs', '/blog', '/explore', '/shorts', '/videos', '/terms', '/privacy',
       '/communities', '/stores', '/bounty', '/posts',
       '/docs/getting-started', '/blog/some-post', '/guides/x', '/mal/videos',
-      '/favicon.ico', '/robots.txt', '/sitemap.xml', '/og/dehub-social-share.png',
+      '/favicon.ico', '/robots.txt', '/sitemap.xml', '/og/riftn-share.png',
     ]) {
       expect(opensApp(path), path).toBe(false);
     }
