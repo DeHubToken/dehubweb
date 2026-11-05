@@ -3331,6 +3331,27 @@ function logoCardDimensions(html) {
 }
 
 /**
+ * The deployed fn still names its old DeHub artwork (logo/new_logo_Dehub.jpg,
+ * the big DEHUB wordmark) as the share image for a profile with no avatar, an
+ * unknown handle, and as the Organization logo in its JSON-LD. Point every
+ * mention at the Riftn card instead (and the logo slots at the Riftn icon),
+ * here at the edge, so it does not wait on an edge-function deploy.
+ */
+const FN_LOGO_ANY = /https:\/\/aigxuutjaqsywioxjefr\.supabase\.co\/storage\/v1\/object\/public\/logo\/+new_logo_Dehub\.jpg/g;
+const RIFTN_ICON = `${APP_URL}/icon-512.png`;
+function riftnFallbackCard(html) {
+  if (!html.includes('new_logo_Dehub')) return html;
+  let out = html
+    .replace(/("logo"\s*:\s*(?:\{[^{}]*?"url"\s*:\s*)?")https:\/\/aigxuutjaqsywioxjefr\.supabase\.co\/storage\/v1\/object\/public\/logo\/+new_logo_Dehub\.jpg/g, `$1${RIFTN_ICON}`)
+    .replace(FN_LOGO_ANY, SHARE_IMAGE);
+  const m = out.match(/<meta property="og:image" content="([^"]*)">/);
+  if (m && m[1] === SHARE_IMAGE) {
+    out = out.replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, '$1image/png$2');
+  }
+  return out;
+}
+
+/**
  * The fn titles a community `Join <name>'s community on Riftn today`, which
  * reads `Join Riftn Whales's community` for any name ending in s. English
  * drops the second s there.
@@ -7693,6 +7714,8 @@ async function handleRequest(request, env, ctx) {
         }
       }
     }
+
+    html = riftnFallbackCard(html);
 
     // Footer nav in the deployed fn's HTML links /app/* twins of canonical
     // pages; route internal link equity straight to the canonical URLs. The

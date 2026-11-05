@@ -430,9 +430,10 @@ describe('profiles', () => {
     expect(robotsOf(await serve('flaky', 'Flaky', { address: '0x00000000000000000000000000000000000000cc', uploads: 4 }, null))).toBe('');
   });
 
-  it('declares the logo fallback at its real 1200x630 as a large card', async () => {
+  it('swaps the old DeHub logo fallback for the Riftn card, as a large card', async () => {
     const html = await serve('ghost', 'Ghost', null, null);
-    expect(html).toContain(`<meta property="og:image" content="${LOGO}">`);
+    expect(html).toContain(`<meta property="og:image" content="https://riftn.com/og/riftn-share.png">`);
+    expect(html).not.toContain("new_logo_Dehub");
     expect(html).toContain('<meta property="og:image:width" content="1200">');
     expect(html).toContain('<meta property="og:image:height" content="630">');
     expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
