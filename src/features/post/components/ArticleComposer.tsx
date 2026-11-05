@@ -136,10 +136,11 @@ export function ArticleComposer(props: ArticleComposerProps) {
   const canPublish = canContinue && summary.trim().length > 0 && formReady && !isPosting;
 
   // The summary starts as the article's first paragraph until the writer
-  // types their own.
+  // types their own. Text carried over from the post composer can be longer
+  // than the summary cap, which would block publishing, so swap it out too.
   useEffect(() => {
     if (step !== 'publish' || summaryTouched.current) return;
-    if (!summary.trim()) setSummary(articleSummaryFromBody(body));
+    if (!summary.trim() || summary.length > ARTICLE_SUMMARY_MAX) setSummary(articleSummaryFromBody(body) || summary.slice(0, ARTICLE_SUMMARY_MAX));
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const format = (tool: Tool) => {
