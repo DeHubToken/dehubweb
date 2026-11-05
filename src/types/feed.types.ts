@@ -492,7 +492,26 @@ export interface LiveStream extends BaseFeedItem {
 /**
  * Short-form video content
  */
+/**
+ * A non-video post shown as a slide in the profile reel (lib/profile-reel).
+ * Drawn by PostSwipeSlide instead of a video player.
+ */
+export interface ReelPost {
+  kind: 'text' | 'photo' | 'comic' | 'article' | 'locked';
+  text?: string;
+  title?: string;
+  images?: string[];
+  captions?: string[];
+  alts?: string[];
+  border?: string;
+  cover?: string;
+  /** The creator's profile post background (lib/post-backgrounds). */
+  bgId?: string;
+}
+
 export interface ShortVideo extends BaseFeedItem {
+  /** Set on profile-reel slides that are not videos. */
+  reelPost?: ReelPost;
   imageUrls?: string[];
   soundtrackUrl?: string;
   soundtrackTitle?: string;

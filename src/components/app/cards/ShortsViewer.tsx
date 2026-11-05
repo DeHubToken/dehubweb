@@ -101,6 +101,7 @@ import type { ShortVideo } from '@/types/feed.types';
 import { useQueryClient } from '@tanstack/react-query';
 import { VideoSlide } from './VideoSlide';
 import { LiveSwipeSlide } from './LiveSwipeSlide';
+import { PostSwipeSlide } from './PostSwipeSlide';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { useInAppVideoMini } from '@/hooks/use-in-app-video-mini';
@@ -1709,6 +1710,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <motion.div className="absolute inset-0" style={{ y: dragOffset }}>
                     {short.live ? (
                       <LiveSwipeSlide stream={short.live} isActive={isActive} onClose={onClose} />
+                    ) : short.reelPost ? (
+                      <PostSwipeSlide short={short} isActive={isActive} />
                     ) : (
                     <VideoSlide
                       short={short}
@@ -2401,6 +2404,9 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           
           {/* Right side controls */}
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+            {/* A profile-reel slide that is not a video (text, photo, comic)
+                has nothing to play, so it keeps only the options button. */}
+            {!currentShort?.reelPost && <>
             {document.pictureInPictureEnabled && !currentShort?.imageUrls?.length && <button
               className={VIEWER_CONTROL}
               aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
@@ -2440,7 +2446,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 <Volume2 className="w-5 h-5 text-white" />
               )}
             </button>
-            
+            </>}
+
             {/* More options button */}
             <button
               onClick={() => setShareSheetOpen(true)}

@@ -289,6 +289,11 @@ export interface BrainrotSession {
   fromId?: string;
   /** Played first, before the mix: the feed video the person tapped. */
   first?: ShortVideo;
+  /**
+   * Opened from a profile grid on a phone: every post of the profile list in
+   * order, not only its videos, starting at the tapped one (lib/profile-reel).
+   */
+  reel?: { bgId?: string | null };
 }
 
 let session: BrainrotSession | null = null;
@@ -299,8 +304,8 @@ function emit() {
   for (const notify of listeners) notify();
 }
 
-export function openBrainrotFeed(fromId?: string, first?: ShortVideo): void {
-  session = { key: Date.now(), fromId, first };
+export function openBrainrotFeed(fromId?: string, first?: ShortVideo, reel?: BrainrotSession['reel']): void {
+  session = { key: Date.now(), fromId, first, reel };
   everOpened = true;
   emit();
 }
