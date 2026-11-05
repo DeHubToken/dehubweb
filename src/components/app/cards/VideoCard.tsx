@@ -177,7 +177,7 @@ import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape
 import { useWideVideoMode, WIDE_RAILS_MAX_ASPECT } from '@/lib/wide-video-mode';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { WideAmbientFill } from '@/components/app/video/WideAmbientFill';
-import { WideVideoCommentsRail, WideVideoInfoRail } from '@/components/app/video/WideVideoRails';
+import { WideVideoPanel } from '@/components/app/video/WideVideoRails';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { GatePreview } from './GatePreview';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
@@ -815,17 +815,16 @@ function readStartAt(): number | null {
 }
 
 /**
- * Desktop only: the row the player sits in, holding the wide-screen rails when
+ * Desktop only: the row the player sits in, holding the wide-screen panel when
  * they are on and `display: contents` otherwise. Phones get no wrapper at all,
  * since their theme rules select the frame as a direct child of the card.
  */
-function WideRailsRow({ enabled, rails, left, right, children }: { enabled: boolean; rails: boolean; left: ReactNode; right: ReactNode; children: ReactNode }) {
+function WideRailsRow({ enabled, rails, panel, children }: { enabled: boolean; rails: boolean; panel: ReactNode; children: ReactNode }) {
   if (!enabled) return <>{children}</>;
   return (
-    <div data-wide-rails-row={rails || undefined} className={rails ? 'flex items-stretch justify-center gap-3' : 'contents'}>
-      {rails && left}
+    <div data-wide-rails-row={rails || undefined} className={rails ? 'flex items-stretch gap-3' : 'contents'}>
       {children}
-      {rails && right}
+      {rails && panel}
     </div>
   );
 }
@@ -1908,10 +1907,9 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const wideViewport = isDesktopViewport && !isPhone;
   const wideEligible = wideViewport && !isFullscreen && !video.isAudio && !stage && !hideActions
     && !(video.isLivePost && video.isLiveNow) && (desktopFeedHug || (isImmersive && !showComments));
-  const wideTheatre = wideEligible && wideVideoMode === 'theatre';
-  const wideAmbient = wideEligible && (wideVideoMode === 'ambient' || wideTheatre);
+  const wideAmbient = wideEligible && wideVideoMode === 'ambient';
   const wideRails = wideEligible && wideVideoMode === 'rails' && mediaAspect < WIDE_RAILS_MAX_ASPECT;
-  const wideCentered = wideAmbient || wideRails; // theatre counts as ambient
+  const wideCentered = wideAmbient || wideRails;
   const wideMaxHeight = desktopFeedHug ? DESKTOP_FEED_MAX_HEIGHT : IMMERSIVE_MAX_MEDIA_HEIGHT;
 
   // Before the handoff assigns `src`, so a refreshed signature resumes in place.
@@ -2450,9 +2448,8 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       <WideRailsRow
         enabled={wideViewport}
         rails={wideRails}
-        left={<WideVideoInfoRail video={video} />}
-        right={(
-          <WideVideoCommentsRail
+        panel={(
+          <WideVideoPanel
             video={video}
             onOpenComments={() => {
               if (onOpenComments) { onOpenComments(); return; }
@@ -2482,10 +2479,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
             ? undefined
             : wideRails
               ? {
-                  // Hugs the picture between the two rails, which keep at least
-                  // 160px each (plus the 12px gaps).
+                  // Hugs the picture beside the one info panel, which keeps at
+                  // least 260px (plus the 12px gap).
                   aspectRatio: mediaAspect,
-                  width: `min(calc(${wideMaxHeight} * ${mediaAspect.toFixed(4)}), calc(100% - 344px))`,
+                  width: `min(calc(${wideMaxHeight} * ${mediaAspect.toFixed(4)}), calc(100% - 272px))`,
                   maxHeight: wideMaxHeight,
                   flex: 'none',
                 }
@@ -2565,7 +2562,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         onBlur={() => setIsFocused(false)}
       >
         <div data-video-picture className={splitControls ? "absolute inset-x-0 top-0 bottom-[47px]" : "contents"}>
-        {wideAmbient && <WideAmbientFill videoRef={videoRef} thumbnail={thumbnail || undefined} live={ownsVideoElement} frost={wideTheatre} />}
+        {wideAmbient && <WideAmbientFill videoRef={videoRef} thumbnail={thumbnail || undefined} live={ownsVideoElement} />}
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
@@ -2811,12 +2808,12 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute ${wideTheatre ? 'left-6 top-4 h-[calc(100%-2rem)] w-[calc(100%-3rem)]' : 'inset-0 w-full h-full'} ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : wideCentered ? 'object-contain' : 'object-contain object-left'}`}
+                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : isPhone ? 'object-cover' : wideCentered ? 'object-contain' : 'object-contain object-left'}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
                 )}
-                <div ref={attachVideoSlot} className={cn(wideTheatre ? "absolute inset-x-6 inset-y-4" : "absolute inset-0 w-full h-full", hasError && "invisible")} />
+                <div ref={attachVideoSlot} className={cn("absolute inset-0 w-full h-full", hasError && "invisible")} />
                 <AltTextBadge text={video.mediaDescriptions?.[0]} className="absolute left-2 top-2" />
               </>
             ) : video.isLivePost && video.isLiveNow ? (

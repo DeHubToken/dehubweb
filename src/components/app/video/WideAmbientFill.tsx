@@ -3,50 +3,76 @@
  *
  * Sits under the picture inside the player frame. The cover image, blurred and
  * dimmed, fills the frame straight away; once the video has a frame, a tiny
- * canvas copy of the playing picture takes over a few times a second, so the
- * space beside a tall or square video moves with it. The canvas is 32px wide
- * and the browser does the blur, so this costs next to nothing.
+ * canvas copy of the playing picture fades in over it and follows the video.
  *
- * Theatre mode reuses it with a matte frost and grain instead of the glow.
+ * Three things keep it calm:
+ * - The canvas has the frame's own shape and copies the middle of the picture
+ *   the way `object-cover` crops the cover image, so the two line up and
+ *   nothing looks stretched when the live copy takes over.
+ * - Each draw blends 18% of the new frame into the last one, so cuts and
+ *   flashes in the video turn into a slow colour drift beside it.
+ * - Its size never changes the layout: it is absolutely placed, and a resize
+ *   only resets the canvas when the frame's shape really changes.
  *
  * Drawing a cross-origin video only marks the canvas as unreadable; it still
  * shows, which is all this needs.
  */
 import { useEffect, useRef, type RefObject } from 'react';
 
-const DRAW_EVERY_MS = 160;
+const DRAW_EVERY_MS = 120;
+const BLEND = 0.18;
+const CANVAS_WIDTH = 48;
 const FILL_FILTER = 'blur(40px) saturate(150%) brightness(0.55)';
-/** Theatre: matte frost, less colour, a fine grain on top. */
-const FROST_FILTER = 'blur(44px) saturate(105%) brightness(0.42)';
-const GRAIN = "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
 
 interface WideAmbientFillProps {
   videoRef: RefObject<HTMLVideoElement | null>;
   thumbnail?: string;
   /** This card holds the shared video element right now. */
   live: boolean;
-  /** Theatre look: frosted, grainy, quieter colour. */
-  frost?: boolean;
 }
 
-export function WideAmbientFill({ videoRef, thumbnail, live, frost = false }: WideAmbientFillProps) {
-  const filter = frost ? FROST_FILTER : FILL_FILTER;
+export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillProps) {
+  const boxRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const shownRef = useRef(false);
 
   useEffect(() => {
+    const box = boxRef.current;
     const canvas = canvasRef.current;
-    if (!canvas || !live) return;
+    if (!box || !canvas || !live) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    let painted = false;
+
+    const fitCanvas = () => {
+      const { width, height } = box.getBoundingClientRect();
+      if (!width || !height) return;
+      const h = Math.max(8, Math.round(CANVAS_WIDTH * (height / width)));
+      if (canvas.height !== h) {
+        canvas.width = CANVAS_WIDTH;
+        canvas.height = h;
+        painted = false;
+      }
+    };
 
     const draw = () => {
       const video = videoRef.current;
-      if (!video || video.readyState < 2 || !video.videoWidth) return;
+      if (!video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
+      const cw = canvas.width;
+      const ch = canvas.height;
+      // object-cover crop: the middle of the picture at the canvas's shape.
+      const target = cw / ch;
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+      let sw = vw;
+      let sh = vh;
+      if (vw / vh > target) sw = vh * target;
+      else sh = vw / target;
       try {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        if (!shownRef.current) {
-          shownRef.current = true;
+        ctx.globalAlpha = painted ? BLEND : 1;
+        ctx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, cw, ch);
+        ctx.globalAlpha = 1;
+        if (!painted) {
+          painted = true;
           canvas.style.opacity = '1';
         }
       } catch {
@@ -54,6 +80,9 @@ export function WideAmbientFill({ videoRef, thumbnail, live, frost = false }: Wi
       }
     };
 
+    fitCanvas();
+    const resize = new ResizeObserver(fitCanvas);
+    resize.observe(box);
     draw();
     let timer: ReturnType<typeof setInterval> | null = null;
     const start = () => {
@@ -62,7 +91,6 @@ export function WideAmbientFill({ videoRef, thumbnail, live, frost = false }: Wi
     const stop = () => {
       if (timer != null) clearInterval(timer);
       timer = null;
-      draw();
     };
     const video = videoRef.current;
     if (video && !video.paused) start();
@@ -72,6 +100,7 @@ export function WideAmbientFill({ videoRef, thumbnail, live, frost = false }: Wi
     video?.addEventListener('loadeddata', draw);
     return () => {
       stop();
+      resize.disconnect();
       video?.removeEventListener('playing', start);
       video?.removeEventListener('pause', stop);
       video?.removeEventListener('seeked', draw);
@@ -80,27 +109,24 @@ export function WideAmbientFill({ videoRef, thumbnail, live, frost = false }: Wi
   }, [videoRef, live]);
 
   return (
-    <div data-wide-ambient aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div ref={boxRef} data-wide-ambient aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
       {thumbnail && (
         <img
           src={thumbnail}
           alt=""
           decoding="async"
-          loading="lazy"
           className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] max-w-none object-cover"
-          style={{ filter }}
+          style={{ filter: FILL_FILTER }}
         />
       )}
       <canvas
         ref={canvasRef}
-        width={32}
-        height={32}
-        className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] opacity-0 transition-opacity duration-500"
-        style={{ filter }}
+        width={CANVAS_WIDTH}
+        height={27}
+        className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] opacity-0 transition-opacity duration-700"
+        style={{ filter: FILL_FILTER }}
       />
-      {frost
-        ? <div className="absolute inset-0 bg-white/[0.055]" style={{ backgroundImage: GRAIN }} />
-        : <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_50%_50%,transparent_40%,rgba(0,0,0,0.5))]" />}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_50%_50%,transparent_40%,rgba(0,0,0,0.5))]" />
     </div>
   );
 }
