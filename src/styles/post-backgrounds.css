@@ -111,7 +111,7 @@ html [data-profile-mixed-grid] .pmg-poster[data-pbg] { color: var(--pbg-ink); bo
 @keyframes pbg-breathe { 0%, 100% { transform: scale(.8); opacity: .55; } 50% { transform: scale(1.12); opacity: 1; } }
 
 .pbg-spin { background: #0d0d12; }
-.pbg-spin::before { width: 180%; aspect-ratio: 1; left: -40%; top: 50%; translate: 0 -50%; background: conic-gradient(from 0deg, #ff6b6b, #ffd166, #06d6a0, #4cc9f0, #7b61ff, #ff6b6b); animation: pbg-spin 36s linear infinite; }
+.pbg-spin::before { width: 150vmax; height: 150vmax; left: 50%; top: 50%; translate: -50% -50%; background: conic-gradient(from 0deg, #ff6b6b, #ffd166, #06d6a0, #4cc9f0, #7b61ff, #ff6b6b); animation: pbg-spin 36s linear infinite; }
 .pbg-spin::after { inset: 0; background: rgba(10,10,16,.55); }
 @keyframes pbg-spin { to { transform: rotate(1turn); } }
 
@@ -169,7 +169,7 @@ html:is([data-theme='light'], [data-system-tone='light']) .pbg-picker-panel { ba
 .pbg-picker-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .pbg-picker-top h2 { font-size: 15px; font-weight: 800; margin: 0; color: inherit !important; }
 .pbg-picker-btn { border: 0; background: transparent; color: inherit; font-weight: 700; font-size: 14px; padding: 8px 10px; border-radius: 999px; cursor: pointer; }
-.pbg-picker-btn--done { background: currentColor; }
+.pbg-picker-btn--done { background: currentColor; border-radius: 12px; }
 .pbg-picker-btn--done span { color: #0b0b0f; }
 html:is([data-theme='light'], [data-system-tone='light']) .pbg-picker-btn--done span { color: #fff; }
 .pbg-picker-btn:disabled { opacity: 0.5; cursor: default; }
@@ -223,3 +223,6 @@ html:is([data-theme='light'], [data-system-tone='light']) .pbg-picker-btn--done 
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* Full-screen text viewer: the host is laid out absolute inset-0, so the backdrop must fill the whole panel rather than shrink to the text height. */
+[data-reel-text][data-pbg] { position: absolute; }
