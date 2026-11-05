@@ -30,7 +30,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ProfileFilterPanel } from '@/components/app/profile/ProfileFilterPanel';
 import { getCategories } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
@@ -254,46 +253,48 @@ export function ProfileContentToolbar({
                 </button>
               </div>
             ) : (
-            <GlassFilterRow
-              items={sortItems}
-              activeKey={sort}
-              onSelect={onSortChange}
-              className="-mx-2 min-w-0"
-              borderRadius="0.75rem"
-              buttonClassName="h-9 max-md:flex-1 max-md:min-w-0 max-md:px-1 px-3 py-0 rounded-xl text-xs text-white"
-              leadingContent={(
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setIsSearchOpen(true)}
-                    aria-label={t('profile.searchThisChannel', 'Search this channel')}
-                    className="flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-xl bg-zinc-800 border border-zinc-700 text-white hover:bg-zinc-700 transition-colors"
-                  >
-                    <Search className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onFiltersOpenChange(!filtersOpen)}
-                    aria-expanded={filtersOpen}
-                    aria-label={t('explorePage.filters', 'Filters')}
-                    className={cn(
-                      'relative flex-shrink-0 flex items-center justify-center gap-1.5 h-9 px-3 rounded-xl text-white transition-colors',
-                      filtersOpen || activeFilterCount > 0
-                        ? 'text-white'
-                        : 'bg-zinc-800 border border-zinc-700 hover:bg-zinc-700',
-                    )}
-                  >
-                    {(filtersOpen || activeFilterCount > 0) && (
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]" />
-                    )}
-                    <SlidersHorizontal className="relative z-10 w-4 h-4" />
-                    {activeFilterCount > 0 && (
-                      <span className="relative z-10 text-xs font-medium">{activeFilterCount}</span>
-                    )}
-                  </button>
-                </>
-              )}
-            />
+            <div data-profile-quiet-row data-profile-quiet-desktop className="-mx-1 flex h-9 min-w-0 items-center justify-start gap-1 overflow-x-auto scrollbar-hide whitespace-nowrap">
+<button
+type="button"
+data-profile-quiet-icon
+onClick={() => setIsSearchOpen(true)}
+aria-label={t('profile.searchThisChannel', 'Search this channel')}
+className="flex h-9 w-9 flex-shrink-0 items-center justify-center"
+>
+<Search className="h-[18px] w-[18px]" />
+</button>
+<button
+type="button"
+data-profile-quiet-icon
+onClick={() => onFiltersOpenChange(!filtersOpen)}
+aria-expanded={filtersOpen}
+aria-label={t('explorePage.filters', 'Filters')}
+className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center"
+>
+<SlidersHorizontal className="h-[18px] w-[18px]" />
+{activeFilterCount > 0 && (
+<span data-profile-quiet-count className="absolute right-0.5 top-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] font-bold leading-none">
+{activeFilterCount}
+</span>
+)}
+</button>
+{sortItems.map((item) => {
+const active = item.key === sort;
+return (
+<button
+key={item.key}
+type="button"
+data-profile-sort-tab
+data-active={active || undefined}
+aria-pressed={active}
+onClick={() => onSortChange(item.key)}
+className={cn('relative h-9 flex-shrink-0 px-3 text-xs font-medium transition-colors', active ? 'text-white' : 'text-zinc-400 hover:text-white')}
+>
+{item.label}
+</button>
+);
+})}
+</div>
             )}
           </motion.div>
         )}
