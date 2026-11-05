@@ -231,11 +231,20 @@ export function FeedPresetsRow({
   activeName?: string | null;
   onApply: (name: string) => void;
   onDelete: (name: string) => void;
-  onSaveCurrent: () => void;
+  onSaveCurrent: (name: string) => void;
   canSaveCurrent: boolean;
 }) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
+  const [naming, setNaming] = useState(false);
+  const [name, setName] = useState('');
+  const commit = () => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    onSaveCurrent(trimmed);
+    setNaming(false);
+    setName('');
+  };
   if (presets.length === 0 && !canSaveCurrent) return null;
 
   return (
@@ -275,15 +284,38 @@ export function FeedPresetsRow({
             </button>
           );
         })}
-        {canSaveCurrent && !editing && (
+        {canSaveCurrent && !editing && (naming ? (
+          <form
+            className="flex shrink-0 items-center gap-1.5"
+            onSubmit={(e) => { e.preventDefault(); commit(); }}
+          >
+            <input
+              autoFocus
+              value={name}
+              maxLength={MAX_PRESET_NAME}
+              onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Escape') setNaming(false); }}
+              placeholder={t('feedFilters.presetName', 'Preset name')}
+              aria-label={t('feedFilters.presetName', 'Preset name')}
+              className="h-9 w-36 rounded-xl border border-white/30 bg-transparent px-3 text-sm text-white placeholder:text-zinc-500 focus:outline-none"
+            />
+            <button
+              type="submit"
+              disabled={!name.trim()}
+              className="h-9 shrink-0 rounded-xl bg-white px-3 text-sm font-semibold text-black disabled:opacity-50"
+            >
+              {t('feedFilters.save', 'Save')}
+            </button>
+          </form>
+        ) : (
           <button
             type="button"
-            onClick={onSaveCurrent}
+            onClick={() => setNaming(true)}
             className="shrink-0 rounded-xl border border-dashed border-white/30 px-3 py-2 text-sm text-white"
           >
             {t('feedFilters.saveCurrent', '+ Save current')}
           </button>
-        )}
+        ))}
       </div>
     </div>
   );

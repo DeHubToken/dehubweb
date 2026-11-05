@@ -27,10 +27,10 @@ describe('feed filter portal order', () => {
   });
 
   it('keeps the active-filter chips outside the nav pill', () => {
-    // The chips describe the feed; they are not another row of the navigation.
-    // Rendering them into the filter panel's target put a row of badges inside
-    // the pill and grew the bar every time a filter was on.
-    expect(HOME_FEED).toContain('createPortal(chipsBar, chipsTarget)');
+    // The filters describe the feed; they are not another row of the
+    // navigation. They ride the drawer under the pill, and the room the feed
+    // leaves for it goes below the pill, never into the filter panel's target.
+    expect(HOME_FEED).toContain('createPortal(room, chipsTarget)');
 
     for (const { name, source, filters, chips } of NAVS) {
       const filtersIndex = source.indexOf(filters);

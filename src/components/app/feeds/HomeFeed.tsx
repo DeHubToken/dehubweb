@@ -36,7 +36,6 @@ const shortsHistoryStore: ShortsHistoryStore = {
   read: async key => localStorage.getItem(key),
   write: async (key, value) => { localStorage.setItem(key, value); },
 };
-import { ArrowUp } from "lucide-react";
 import RefreshCw from "@/components/ui/cut-icons/refresh";
 import Radio from "@/components/ui/cut-icons/live";
 
@@ -49,7 +48,7 @@ import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { useFeedIslandPortal } from '@/lib/feed-island-portal';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { NewPostsBead } from '@/components/app/navigation/NewPostsBead';
+import { NewPostsBead, FEED_DRAWER_HEIGHT, type FeedDrawerFilters } from '@/components/app/navigation/NewPostsBead';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from '@/components/app/navigation/feed-drawer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -124,15 +123,12 @@ import { useServedAds } from '@/hooks/use-ad-serving';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { toStoryboard } from '@/lib/storyboard';
 import { storedVideoAspect } from '@/lib/video-aspect';
-import { FollowTagBar } from './FollowTagBar';
+import { useFollowTag } from './FollowTagBar';
 import type { FeedFilterLineItem } from './FeedFilterLine';
-// Phone-only and shown once a filter is on: kept off the boot path.
-const FeedFilterLine = lazy(() => import('./FeedFilterLine'));
+// Inside the filter panel: kept off the boot path.
 const FeedPresetsRow = lazy(() => import('./FeedFilterLine').then((m) => ({ default: m.FeedPresetsRow })));
-import { useIsMobile } from '@/hooks/use-mobile';
 import {
   FEED_PRESETS_CHANGED_EVENT,
-  FEED_FILTER_LINE_SAVE_EVENT,
   deleteFeedPreset,
   presetMatches,
   readFeedPresets,
@@ -595,9 +591,9 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   const islandPortal = useFeedIslandPortal();
   const isIslandViewport = useMediaQuery('(max-width: 1023px)');
   const newPostsTarget = isIslandViewport ? islandPortal : null;
-  // The phone tab bar the bead hangs from. System puts the filters portal
+  // The tab bar the drawer hangs from (phones and desktop). System puts the filters portal
   // beside the bar rather than inside it, so look among its siblings too.
-  const mobileNavTarget = isIslandViewport && !newPostsTarget
+  const navTarget = !newPostsTarget
     ? portalTarget?.closest<HTMLElement>('[data-feed-nav]')
       ?? portalTarget?.parentElement?.querySelector<HTMLElement>(':scope > [data-feed-nav]')
     : null;
@@ -712,9 +708,8 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     startTransition(() => resetContentFiltersRaw());
   }, [resetContentFiltersRaw, beginFilterTransition]);
 
-  // Phone feeds show every active filter in one line and keep saved presets
-  // (FeedFilterLine). Desktop keeps its chips and hashtag bar as they were.
-  const isPhone = useIsMobile();
+  // Every active filter shows as words in the drawer under the nav pill, and
+  // the filter panel keeps saved presets (FeedPresetsRow).
   const [feedPresets, setFeedPresets] = useState<FeedFilterPreset[]>(readFeedPresets);
   useEffect(() => {
     const reload = () => setFeedPresets(readFeedPresets());
@@ -795,7 +790,18 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     return items;
   }, [t, optimisticPostType, optimisticCategories, optimisticDate, optimisticSort, optimisticContentFilters, setSelectedPostType, setSelectedCategories, setSelectedDate, setSelectedSort, toggleContentFilter]);
   // One hashtag and nothing else keeps the hashtag bar with its Follow button.
-  const phoneShowsTagBar = filterLineItems.length === 1 && optimisticCategories.length === 1;
+  const onlyTag = filterLineItems.length === 1 && optimisticCategories.length === 1 ? optimisticCategories[0] : '';
+  const tagFollow = useFollowTag(onlyTag);
+  const showFilterDrawer = filterLineItems.length > 0;
+  const drawerFilters = useMemo<FeedDrawerFilters>(() => ({
+    labels: filterLineItems.map((item) => item.label),
+    presetName: activePresetName,
+    onOpen: () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: 'home' })),
+    onClearAll: clearAllFilters,
+    follow: onlyTag && tagFollow.isAuthenticated
+      ? { following: tagFollow.following, pending: tagFollow.pending, onToggle: tagFollow.toggle }
+      : null,
+  }), [filterLineItems, activePresetName, clearAllFilters, onlyTag, tagFollow.isAuthenticated, tagFollow.following, tagFollow.pending, tagFollow.toggle]);
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar).
   // setSelectedCategories arms the filter loader itself, so this path gets the
@@ -2016,16 +2022,16 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 }}
                 contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
-                presetsRow={isPhone ? (
+                presetsRow={(
                   <Suspense fallback={null}><FeedPresetsRow
                     presets={feedPresets}
                     activeName={activePresetName}
                     onApply={applyPreset}
                     onDelete={deleteFeedPreset}
                     canSaveCurrent={filterLineItems.length > 0 && !activePresetName}
-                    onSaveCurrent={() => window.dispatchEvent(new CustomEvent(FEED_FILTER_LINE_SAVE_EVENT))}
+                    onSaveCurrent={(name) => saveFeedPreset({ name, ...currentPresetShape })}
                   /></Suspense>
-                ) : undefined}
+                )}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
@@ -2052,168 +2058,55 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         );
       })()}
 
-      {/* Active filter chips bar (sort, date, content access). Hashtags/categories
-          never show here — FollowTagBar under the live pill owns that. */}
+      {/* Active filters ride the drawer under the pill (below). The feed
+          leaves it room so the first post starts 12px under the drawer, the
+          same gap it keeps from the bare pill. */}
       {(() => {
-        if (isPhone) {
-          if (phoneShowsTagBar || filterLineItems.length === 0) return null;
-          const line = (
-            <Suspense fallback={null}><FeedFilterLine
-              className={chipsTarget ? 'mt-3' : 'mb-3'}
-              items={filterLineItems}
-              presetName={activePresetName}
-              onClearAll={clearAllFilters}
-              onSavePreset={(name) => saveFeedPreset({ name, ...currentPresetShape })}
-            /></Suspense>
-          );
-          return chipsTarget ? createPortal(line, chipsTarget) : line;
-        }
-        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked;
-        if (!hasChips) return null;
-
-        const chipsBar = (
-          <div className={cn(
-            "flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2",
-            // Below the pill: 12px above to match the 12px the sticky wrapper pads
-            // below, so the gap either side of the row is even.
-            chipsTarget && "pt-3 pb-0",
-          )}>
-            {optimisticSort.value !== 'latest' && (
-              <button
-                data-filter-chip
-                data-active="true"
-                onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
-                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-              >
-                <span className="leading-[1]">{optimisticSort.label}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-              </button>
-            )}
-            {optimisticDate.value !== 'all' && (
-              <button
-                data-filter-chip
-                data-active="true"
-                onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
-                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-              >
-                <span className="leading-[1]">{optimisticDate.label}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-              </button>
-            )}
-            {optimisticContentFilters.ppv && (
-              <button
-                data-filter-chip
-                data-active="true"
-                onClick={() => toggleContentFilter('ppv')}
-                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-              >
-                <span className="leading-[1]">{_copy("copy.bd9e3879bc60", { defaultValue: "PPV" })}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-              </button>
-            )}
-            {optimisticContentFilters.w2e && (
-              <button
-                data-filter-chip
-                data-active="true"
-                onClick={() => toggleContentFilter('w2e')}
-                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-              >
-                <span className="leading-[1]">{_copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-              </button>
-            )}
-            {optimisticContentFilters.locked && (
-              <button
-                data-filter-chip
-                data-active="true"
-                onClick={() => toggleContentFilter('locked')}
-                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-              >
-                <span className="leading-[1]">{_copy("copy.ad91f5e4de4b", { defaultValue: "Gated" })}</span>
-                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-              </button>
-            )}
-            <button
-              onClick={() => {
-                setSelectedSort(DEFAULT_HOME_SORT);
-                setSelectedDate(DATE_FILTER_OPTIONS[0]);
-                resetContentFilters();
-              }}
-              className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
-            >{_copy("copy.29a390f9237e", { defaultValue: "Clear all" })}</button>
-          </div>
-        );
-
-        if (chipsTarget) {
-          return createPortal(chipsBar, chipsTarget);
-        }
-        return chipsBar;
+        if (!showFilterDrawer) return null;
+        const room = <div data-feed-drawer-room aria-hidden="true" style={{ height: FEED_DRAWER_HEIGHT }} />;
+        return chipsTarget ? createPortal(room, chipsTarget) : room;
       })()}
 
-      {/* The chip floats under the phone nav (the capsule, or the tab bar).
-          Portaling keeps it riding the collapsing header and above the feed's
-          swallow clip; its slot clips at the nav's bottom edge so it tucks
-          behind the nav when that hides. Desktop keeps its own pill below. */}
+      {/* One drawer pulls out from under the nav pill: the active filters as
+          words, or "N new posts" until tapped. Portaling keeps it riding the
+          collapsing header and above the feed's swallow clip; its slot clips
+          at the nav's bottom edge so it tucks behind the nav when that hides.
+          Only on the feed route, so it is gone while a post is open. */}
       {(() => {
-        const bead = (
+        const drawer = (
           <AnimatePresence initial={false}>
-            {isHomeActive && newPostCount > 0 && (
+            {isHomeActive && (newPostCount > 0 || showFilterDrawer) && (
               <NewPostsBead
                 key="new-posts-bead"
                 count={newPostCount}
                 authors={newPostAuthors}
                 onShow={showNewPosts}
+                filters={showFilterDrawer ? drawerFilters : null}
               />
             )}
           </AnimatePresence>
         );
         if (newPostsTarget) {
-          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center mt-11">{bead}</div>, newPostsTarget);
+          return createPortal(<div data-feed-new-posts-slot="island" className="pointer-events-none flex justify-center mt-11">{drawer}</div>, newPostsTarget);
         }
-        if (mobileNavTarget) {
+        if (navTarget) {
           // System wraps the bar in an anchor exactly its size. Hang the chip
           // from that, not from inside the bar: System Light's bar blurs
           // itself, and a blur inside it only sees the bar, so the chip came
           // out clear. Under the bar and the filter drawer, never over them.
-          const anchor = mobileNavTarget.parentElement?.closest<HTMLElement>('[data-home-filter-anchor]');
+          const anchor = navTarget.parentElement?.closest<HTMLElement>('[data-home-filter-anchor]');
           return createPortal(
-            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className={cn("pointer-events-none absolute inset-x-0 top-full flex justify-center", anchor ? "-z-10" : "z-20")}>{bead}</div>,
-            anchor ?? mobileNavTarget,
+            <div data-feed-new-posts-anchor data-feed-new-posts-slot="bar" className={cn("pointer-events-none absolute inset-x-0 top-full flex justify-center", anchor ? "-z-10" : "z-20")}>{drawer}</div>,
+            anchor ?? navTarget,
           );
         }
-        if (newPostCount <= 0) return null;
-
-        const pill = (
-          <div
-            className={cn(
-              "flex justify-center px-1 pt-1 pb-2",
-              portalTarget && "absolute inset-x-0 top-full pt-1 pb-0 pointer-events-none"
-            )}
-          >
-            <button
-              type="button"
-              onClick={showNewPosts}
-              className={cn(
-                "inline-flex items-center gap-1.5 pl-2.5 pr-3 py-[6px] rounded-full text-xs font-semibold bg-zinc-900/90 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50",
-                portalTarget && "pointer-events-auto"
-              )}
-            >
-              <ArrowUp className="w-3.5 h-3.5" />
-              <span className="leading-[1]">
-                {t('feed.newPosts', {
-                  defaultValue: '{{count}} new posts',
-                  count: newPostCount,
-                })}
-                {newPostsAtCap ? '+' : ''}
-              </span>
-            </button>
-          </div>
-        );
-
         if (portalTarget) {
-          return createPortal(pill, portalTarget);
+          return createPortal(
+            <div data-feed-new-posts-slot="desktop" className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{drawer}</div>,
+            portalTarget,
+          );
         }
-        return pill;
+        return <div data-feed-new-posts-slot="inline" className="pointer-events-none flex justify-center pt-3">{drawer}</div>;
       })()}
 
 
@@ -2242,18 +2135,6 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 buttonClassName="px-3 py-1.5 rounded-xl text-xs"
               />
             </div>
-          )}
-
-          {/* One hashtag picked — where a tapped #tag lands: offer to follow it. */}
-          {/* Portaled into the sticky header slot (where filter chips sit) so it
-              stays pinned while the feed scrolls. */}
-          {selectedCategories.length === 1 && (!isPhone || phoneShowsTagBar) && (
-            chipsTarget
-              ? createPortal(
-                  <FollowTagBar className="mt-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />,
-                  chipsTarget,
-                )
-              : <FollowTagBar className="mb-3" tag={selectedCategories[0]} onClear={() => setSelectedCategories([])} />
           )}
 
           {/*
