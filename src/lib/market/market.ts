@@ -289,6 +289,48 @@ export async function fillOrder(order: MarketOrder, me: string, tokenId?: string
   return tx.hash;
 }
 
+/**
+ * Buy several listings at once (the cart). One Seaport transaction for the
+ * lot; a listing that sold in the meantime is skipped and its share of the
+ * payment comes back. All listings must be on one chain and in one currency.
+ */
+export async function fillListings(orders: MarketOrder[], me: string): Promise<string> {
+  if (!orders.length) throw new Error('Nothing to buy');
+  const chainId = orders[0].chainId;
+  if (orders.some((o) => o.kind !== 'listing' || o.chainId !== chainId || o.currency !== orders[0].currency)) {
+    throw new Error('Pick listings on one chain, in one currency');
+  }
+  if (orders.length === 1) return fillOrder(orders[0], me);
+  await ensureSignerOnChain(chainId as ChainId);
+  const value = orders.reduce((sum, o) => sum + nativeValue(o.components), 0n);
+  let tokenSpend: { token: string; amount: bigint } | null = null;
+  for (const o of orders) {
+    const s = fillerTokenSpend(o.components, 'listing');
+    if (s) tokenSpend = { token: s.token, amount: (tokenSpend?.amount ?? 0n) + s.amount };
+  }
+  if (tokenSpend && tokenSpend.amount > 0n) await ensureTokenAllowance(tokenSpend.token, me, tokenSpend.amount, chainId);
+  // One fulfillment per item keeps each listing independent of the others.
+  const offerFulfillments = orders.flatMap((o, i) => o.components.offer.map((_, j) => [{ orderIndex: i, itemIndex: j }]));
+  const considerationFulfillments = orders.flatMap((o, i) => o.components.consideration.map((_, j) => [{ orderIndex: i, itemIndex: j }]));
+  const tx = await writeContractAA(
+    SEAPORT_ADDRESS,
+    SEAPORT_IFACE,
+    'fulfillAvailableOrders',
+    [
+      orders.map((o) => ({ parameters: toOrderParameters(o.components), signature: o.signature })),
+      offerFulfillments,
+      considerationFulfillments,
+      '0x' + '0'.repeat(64),
+      orders.length,
+    ],
+    { chainId, value, context: `buy ${orders.length} NFTs` },
+  );
+  const receipt = await tx.wait();
+  if (receipt.status !== 1) throw new Error('The transaction failed');
+  await Promise.all(orders.map((o) => syncOrder(o.orderHash, tx.hash).catch(() => undefined)));
+  return tx.hash;
+}
+
 /** Cancel on-chain, so a copy of the signed order can never be filled later. */
 export async function cancelOrder(order: MarketOrder): Promise<string> {
   const tx = await writeContractAA(SEAPORT_ADDRESS, SEAPORT_IFACE, 'cancel', [[order.components]], {
