@@ -29,6 +29,7 @@ import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { hideDislikedPost, restoreDislikedPost } from '@/lib/disliked-posts-store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { showUndoToast } from '@/components/ui/undo-toast';
 import { showUpdateToast } from '@/components/app/NewVersionToast';
 import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
@@ -992,6 +993,15 @@ function ToastsGallery() {
       <h2 className="mb-3 text-sm font-semibold">{t('toasts.new_version_available')}</h2>
       <button type="button" data-kit-button="primary" onClick={showUpdate} className="rounded-xl px-4 py-2 text-sm font-medium">
         {t('toasts.refresh')}
+      </button>
+      <button
+        type="button"
+        data-kit-button="quiet"
+        data-undo-toast
+        onClick={() => showUndoToast(t('toasts.conversation_deleted'), { id: 'gallery-undo', duration: 60_000, undoLabel: t('common.undo'), closeLabel: t('common.close'), onUndo: () => {} })}
+        className="ml-2 rounded-xl px-4 py-2 text-sm font-medium"
+      >
+        {t('common.undo')}
       </button>
     </section>
   );
