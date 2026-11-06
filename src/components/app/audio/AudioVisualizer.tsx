@@ -247,6 +247,24 @@ const EMPTY_DATA = new Uint8Array(0);
 // Shared across all AudioVisualizer instances — see setupAudio for why.
 let sharedVisualizerContext: AudioContext | null = null;
 
+/** True for a file on another host, which needs a CORS load to be tapped. */
+function needsCors(url: string): boolean {
+  if (!url || /^(blob|data):/i.test(url)) return false;
+  try {
+    return new URL(url, window.location.href).origin !== window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Whether Web Audio can hear this element. A cross-host file loaded without
+ * CORS comes out of a source node as silence, so it must play on its own.
+ */
+function canTapElement(el: HTMLAudioElement): boolean {
+  return !needsCors(el.currentSrc || el.src) || el.crossOrigin != null;
+}
+
 const formatTime = (seconds: number) => {
   if (!Number.isFinite(seconds) || seconds <= 0) return '0:00';
   const m = Math.floor(seconds / 60);
@@ -469,10 +487,21 @@ export function AudioVisualizer({
       if (!isHandoffAudioActive(handoffKey, claimRef.current)) return null;
     }
     const el = new Audio();
-    // No crossOrigin: the media CDN sends no CORS headers, and requesting it
-    // here made the browser refuse to load the file at all (NotSupportedError).
-    // Playback works without it; only the live frequency analyser loses data,
-    // which decodeAudioWaveform() already degrades without.
+    // A file from another host has to be fetched in CORS mode to go through
+    // Web Audio: without it Chrome plays the element but the source node
+    // outputs silence, so the track runs with no sound. The media CDN sends
+    // CORS headers for our sites, so ask for it. If a host refuses, drop back
+    // to a plain load and keep the element out of the graph (see setupAudio).
+    if (needsCors(audioUrl)) {
+      el.crossOrigin = 'anonymous';
+      const onCorsError = () => {
+        if (isConnectedRef.current || el.crossOrigin == null) return;
+        el.removeAttribute('crossorigin');
+        el.src = audioUrl;
+        el.load();
+      };
+      el.addEventListener('error', onCorsError, { once: true });
+    }
     el.preload = 'metadata';
     el.muted = mutedRef.current;
     el.src = audioUrl;
@@ -585,6 +614,10 @@ export function AudioVisualizer({
     try {
       const el = ensureAudioElement();
       if (!el) return;
+      // A cross-host file loaded without CORS would play silent through the
+      // graph. Leave it out: the speaker gets it straight from the element and
+      // the visualizer falls back to its decoded / seeded pattern.
+      if (!canTapElement(el)) return;
 
       // ONE AudioContext shared by every visualizer instance: Chrome caps ~6
       // live contexts per page, and feed cards live forever in persistent
@@ -874,8 +907,12 @@ export function AudioVisualizer({
       toggleAudioPost();
       return;
     }
-    if (!isPlayingRef.current && !isConnectedRef.current) {
-      setupAudio();
+    if (!isPlayingRef.current) {
+      if (!isConnectedRef.current) setupAudio();
+      // A context the browser parked (tab in the background, phone call)
+      // keeps the track silent until it is resumed inside a tap.
+      const ctx = audioContextRef.current;
+      if (isConnectedRef.current && ctx?.state === 'suspended') void ctx.resume();
     }
     onPlayPauseRef.current();
   }, [setupAudio]);
