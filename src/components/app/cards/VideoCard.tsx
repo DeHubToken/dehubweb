@@ -2751,6 +2751,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
                       onMuteChange={setIsMuted}
                       seed={video.id}
                       decodeEnabled={nearViewport}
+                      waveformOnPlay={!postPage}
                       durationHint={video.audioDuration || video.durationSeconds || 0}
                       /* The card's own fullscreen, so the element that goes to
                          the top layer is the media container — the one holding

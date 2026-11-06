@@ -106,6 +106,13 @@ interface AudioVisualizerProps {
    */
   decodeEnabled?: boolean;
   /**
+   * Feed cards: draw the real waveform only once the track is played. The
+   * decode downloads the WHOLE file (a long recording is tens of MB) and holds
+   * its decoded samples in memory, which scrolling past a post never needs;
+   * the seeded pattern stands in until then.
+   */
+  waveformOnPlay?: boolean;
+  /**
    * Track length in seconds when the caller already knows it (the feed payload
    * carries `audioDuration`), so the scrubber can show a real total before
    * anything has been downloaded.
@@ -292,6 +299,7 @@ export function AudioVisualizer({
   muted = false,
   seed = 'default',
   decodeEnabled = true,
+  waveformOnPlay = false,
   durationHint = 0,
   onFullscreen,
   isFullscreen = false,
@@ -441,13 +449,13 @@ export function AudioVisualizer({
   // the card is near the viewport (or playing) so a feed of audio posts
   // doesn't download + PCM-decode every track on mount.
   useEffect(() => {
-    if (!decodeEnabled && !isPlaying) return;
+    if (!isPlaying && (waveformOnPlay || !decodeEnabled)) return;
     let stale = false;
     decodeAudioWaveform(audioUrl, STATIC_BAR_COUNT, (peaks) => {
       if (!stale) setWaveformPeaks(peaks);
     });
     return () => { stale = true; };
-  }, [audioUrl, decodeEnabled, isPlaying]);
+  }, [audioUrl, decodeEnabled, waveformOnPlay, isPlaying]);
 
   /**
    * Point this card's refs at `graph` — the shared player, arriving from the
