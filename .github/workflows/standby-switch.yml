@@ -33,7 +33,11 @@ jobs:
           echo
           grep -qi '^x-dehub-standby: 1' /tmp/h
           curl --fail --silent --show-error --max-time 15 --resolve riftn.com:443:138.68.188.224 \
-            -o /dev/null -w 'Home page %{http_code}\n' https://riftn.com/
+            -o /tmp/home.html -w 'Home page %{http_code}\n' https://riftn.com/
+          entry=$(grep -oE '/assets/[A-Za-z0-9_.-]+\.js' /tmp/home.html | head -1)
+          test -n "$entry"
+          curl --fail --silent --show-error --max-time 15 --resolve riftn.com:443:138.68.188.224 \
+            -o /dev/null -w "App script %{http_code} %{size_download} bytes\n" "https://riftn.com$entry"
       - name: Switch
         run: node scripts/standby-switch.mjs "${{ inputs.target }}"
         env:
