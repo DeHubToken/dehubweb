@@ -260,35 +260,76 @@ html[data-theme='hazy'] [data-profile-mixed-grid] {
 [data-profile-mixed-grid] .pmg-stats span { display: inline-flex; align-items: center; gap: 0.3em; }
 [data-profile-mixed-grid] .pmg-stats svg { width: 1.2em; height: 1.2em; }
 
-/* Articles: cover on top, title under it. */
-[data-profile-mixed-grid] .pmg-article { display: flex; flex-direction: column; }
-[data-profile-mixed-grid] .pmg-article-img {
-  display: block;
-  width: 100%;
-  height: 52%;
-  object-fit: cover;
-  flex: none;
-}
-[data-profile-mixed-grid] .pmg-article-img--empty { display: grid; place-items: center; background: var(--pmg-poster); }
-[data-profile-mixed-grid] .pmg-article-img--empty svg { width: 30%; height: 30%; opacity: 0.4; }
-[data-profile-mixed-grid] .pmg-article-body {
-  flex: 1;
-  min-height: 0;
+/* Articles. The owner picks the look by holding one of their articles
+   (customs.articleTile). Cover (default): the cover fills the tile and a glass
+   bar holds the title, reading time and views, like a video tile's meta row.
+   Drop cap: a big serif first letter and the title over a soft cover. */
+[data-profile-mixed-grid] .pmg-acov-empty { display: grid; place-items: center; background: var(--pmg-poster); color: var(--pmg-sub); }
+[data-profile-mixed-grid] .pmg-acov-empty svg { width: 30%; height: 30%; opacity: 0.5; transform: translateY(-40%); }
+[data-profile-mixed-grid] .pmg-acov-bar {
+  position: absolute;
+  left: 0.45em;
+  right: 0.45em;
+  bottom: 0.45em;
+  padding: 0.6em 0.65em 0.55em;
+  border-radius: 0.7em;
   display: flex;
   flex-direction: column;
-  gap: 0.3em;
-  padding: 0.6em 0.75em 0.7em;
+  gap: 0.4em;
+  color: #fff;
+  background: rgba(10, 10, 14, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px) saturate(1.5);
+  -webkit-backdrop-filter: blur(14px) saturate(1.5);
 }
-[data-profile-mixed-grid] .pmg-article-body b {
-  font-size: 1.25em;
-  line-height: 1.2;
+html:is([data-theme='light'], [data-system-tone='light']) [data-profile-mixed-grid] .pmg-acov-bar { color: #15141a; background: rgba(255, 255, 255, 0.8); border-color: rgba(13, 13, 18, 0.1); }
+html[data-theme='osaka'] [data-profile-mixed-grid] .pmg-acov-bar { background: rgba(17, 14, 28, 0.7); border-color: rgba(255, 111, 181, 0.4); }
+[data-profile-mixed-grid] .pmg-acov-bar b {
+  font-size: 1.3em;
+  line-height: 1.18;
+  font-weight: 800;
+  overflow-wrap: anywhere;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-[data-profile-mixed-grid] .pmg-article-body .pmg-meta { margin-top: auto; }
+[data-profile-mixed-grid] .pmg-acov-meta { display: flex; justify-content: space-between; gap: 0.5em; font-size: 1em; font-weight: 700; opacity: 0.68; white-space: nowrap; }
 
+[data-profile-mixed-grid] .pmg-adrop { background: var(--pmg-poster); }
+[data-profile-mixed-grid] .pmg-adrop-bg { position: absolute; inset: -6%; width: 112%; height: 112%; max-width: none; object-fit: cover; filter: blur(3px) saturate(1.3); }
+[data-profile-mixed-grid] .pmg-adrop-tint { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8, 8, 12, 0.3), rgba(8, 8, 12, 0.62) 45%, rgba(8, 8, 12, 0.92)); }
+html:is([data-theme='light'], [data-system-tone='light']) [data-profile-mixed-grid] .pmg-adrop-tint { background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.75) 45%, rgba(255, 255, 255, 0.95)); }
+html[data-theme='osaka'] [data-profile-mixed-grid] .pmg-adrop-tint { background: linear-gradient(180deg, rgba(26, 12, 22, 0.3), rgba(26, 12, 22, 0.65) 45%, rgba(26, 12, 22, 0.92)); }
+[data-profile-mixed-grid] .pmg-adrop-body { position: absolute; inset: 0; padding: 0.8em 0.8em 0.75em; display: flex; flex-direction: column; color: #fff; }
+html:is([data-theme='light'], [data-system-tone='light']) [data-profile-mixed-grid] .pmg-adrop-body { color: #15141a; }
+[data-profile-mixed-grid] .pmg-adrop-cap { font-family: Georgia, 'Times New Roman', serif; font-size: 5.4em; line-height: 0.9; font-weight: 700; }
+html[data-theme='osaka'] [data-profile-mixed-grid] .pmg-adrop-cap { color: #ff6fb5; }
+[data-profile-mixed-grid] .pmg-adrop-body b {
+  margin-top: 0.35em;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.45em;
+  line-height: 1.12;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+[data-profile-mixed-grid] .pmg-adrop-rule { margin-top: auto; width: 2.2em; height: 2px; border-radius: 2px; background: currentColor; opacity: 0.5; flex: none; }
+[data-profile-mixed-grid] .pmg-adrop-meta { margin-top: 0.5em; display: inline-flex; align-items: center; gap: 0.35em; font-size: 1em; font-weight: 700; opacity: 0.75; }
+[data-profile-mixed-grid] .pmg-adrop-meta svg { width: 1.25em; height: 1.25em; }
+
+/* The picker: both looks side by side at a readable size. */
+.atp-stage[data-profile-mixed-grid] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-content: center; overflow: visible; border-radius: 0; font-size: 13px; }
+.atp-option { display: flex; flex-direction: column; gap: 10px; align-items: center; border: 0; padding: 0; background: none; color: inherit; cursor: pointer; }
+.atp-stage[data-profile-mixed-grid] .atp-tile { font-size: 12.5px; }
+.atp-tile { width: 100%; pointer-events: none; border-radius: 10px; box-shadow: 0 0 0 2px transparent; transition: box-shadow 0.15s ease-out; }
+.atp-option[aria-checked='true'] .atp-tile { box-shadow: 0 0 0 3px currentColor; }
+.atp-label { font-size: 14px; font-weight: 800; opacity: 0.6; }
+.atp-option[aria-checked='true'] .atp-label { opacity: 1; }
+.atp-option:focus-visible { outline: 2px solid #8b7cff; outline-offset: 4px; border-radius: 12px; }
 @media (prefers-reduced-motion: reduce) {
   [data-profile-mixed-grid] .pmg-chip--live i { animation: none; }
   [data-profile-mixed-grid] .pmg-tile { transition: none; }
