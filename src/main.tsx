@@ -6,7 +6,7 @@ import { seedDefaultFeedTab } from "./lib/feed-defaults";
 import { beginMobileBootWait } from "./lib/mobile-boot-cover";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { recoverFromChunkError } from "./lib/lazy-with-retry";
+import { isChunkLoadError, recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installTapPendingLogo } from "./lib/tap-pending-logo";
@@ -95,7 +95,14 @@ if (dhHost !== "riftn.com" && dhHost !== "localhost" && dhHost !== "127.0.0.1") 
 // `undefined` instead of rejecting, and any React.lazy() that renders before
 // the reload lands crashes on `undefined.default`. Letting the error through
 // is safe — the ErrorBoundary keeps recovery controls visible until it lands.
-window.addEventListener('vite:preloadError', () => {
+//
+// Only a real chunk failure reloads. The bundler can fold a module into the
+// entry and leave the code chained after its `import()` inside the preload
+// wrapper, so `import('./api').then(m => m.call())` reports the API's own
+// rejection here too: an audio post's listen count failing reloaded the page
+// on the first tap of play.
+window.addEventListener('vite:preloadError', (event) => {
+  if (!isChunkLoadError((event as Event & { payload?: unknown }).payload)) return;
   recoverFromChunkError();
 });
 
