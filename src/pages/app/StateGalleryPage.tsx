@@ -1192,7 +1192,7 @@ const ICONS: ThemeIconKey[] = [
   'harpoon', 'home', 'images', 'live', 'lock', 'messages', 'notifications', 'pinned',
   'posts', 'precision-strike', 'profile', 'search', 'second-wind', 'settings', 'signal-flare', 'stages',
   'staking', 'stats', 'stores', 'subscriptions', 'superpowers', 'team-up', 'timeline-bomber', 'trend-jacker',
-  'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
+  'trophy', 'tv', 'usernames', 'videos', 'wallet', 'wand', 'paint',
 ];
 
 /** Post stats: the Quick Peek sheet (tap the view pill) and the full Post Info panel, on example numbers. */

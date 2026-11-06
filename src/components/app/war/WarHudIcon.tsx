@@ -3,6 +3,7 @@ import { AudioLines, AtSign, Crosshair, Gem, Film, Layers, Mail, Rocket, Star, W
 import BarChart3 from "@/components/ui/cut-icons/stats";
 import CalendarDays from "@/components/ui/cut-icons/events";
 import Coins from "@/components/ui/cut-icons/coins";
+import WalletGlyph from "@/components/ui/cut-icons/wallet";
 import ImageIcon from "@/components/ui/cut-icons/images";
 import Landmark from "@/components/ui/cut-icons/dao";
 import Link2 from "@/components/ui/cut-icons/link";
@@ -130,7 +131,7 @@ export type ThemeIconKey =
   | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
   | 'assistant' | 'lock' | 'profile' | 'arcade' | 'stores' | 'bounties'
   | 'events' | 'stats' | 'ads' | 'command' | 'email' | 'accounts'
-  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy' | 'nfts'
+  | 'usernames' | 'tv' | 'superpowers' | 'boost' | 'dao' | 'staking' | 'bridge' | 'buy' | 'nfts' | 'wallet'
   | 'second-wind' | 'comment-anchor' | 'trend-jacker' | 'timeline-bomber'
   | 'signal-flare' | 'flak-jacket' | 'precision-strike' | 'harpoon'
   | 'team-up' | 'front-row' | 'deep-current';
@@ -201,7 +202,7 @@ const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
   'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
   'arcade', 'stores', 'bounties', 'events', 'stats', 'ads', 'command',
   'email', 'accounts', 'usernames', 'tv', 'superpowers', 'boost',
-  'dao', 'staking', 'bridge', 'buy', 'nfts',
+  'dao', 'staking', 'bridge', 'buy', 'nfts', 'wallet',
   'second-wind', 'comment-anchor', 'trend-jacker', 'timeline-bomber',
   'signal-flare', 'flak-jacket', 'precision-strike', 'harpoon',
   'team-up', 'front-row', 'deep-current',
@@ -272,6 +273,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   bridge: Link2,
   buy: Coins,
   nfts: Gem,
+  wallet: WalletGlyph,
 };
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
