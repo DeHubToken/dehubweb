@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Pause, Trash2, Check, Type, Palette, SlidersHorizontal, Music, Upload } from 'lucide-react';
+import { Crop, Image as ImageIcon, Scissors, FlipHorizontal2, RotateCw, EyeOff, Lock, Eye, Timer, Plus, Play, Pause, Trash2, Check, Type, Palette, SlidersHorizontal, Music, Upload } from 'lucide-react';
 import { ADJUST_RANGES, DEFAULT_ADJUST, STUDIO_LOOKS, studioColorMatrix, type StudioAdjust, type StudioAdjustKey } from '@/features/post/lib/studioColor';
 import { POST_DESTRUCT_CHOICES, postDestructLabel, svgMatrixValues, vignetteBackground } from '@/features/post/lib/video-edits';
+import { VIDEO_CROP_RATIOS, cropRatioValue, dragCropRect, fitCropRect, isFullCrop, type CropHandle, type CropRatioId, type VideoCropRect } from '@/features/post/lib/video-crop';
 import X from '@/components/ui/cut-icons/close';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
@@ -19,7 +20,7 @@ import { DmVideoFrame } from './DmVideo';
 import { LockPriceControl } from './LockPriceControl';
 import { LOCK_DEFAULT_USD, formatLockUsd } from '@/lib/dm-lock-price';
 
-export type Tab = 'cover' | 'trim' | 'mirror' | 'rotate' | 'looks' | 'adjust' | 'hide' | 'timer' | 'expire' | 'alt' | 'music';
+export type Tab = 'cover' | 'trim' | 'crop' | 'mirror' | 'rotate' | 'looks' | 'adjust' | 'hide' | 'timer' | 'expire' | 'alt' | 'music';
 const ADJUST_ORDER: StudioAdjustKey[] = ['light', 'contrast', 'warmth', 'tint', 'colour', 'fade', 'vignette'];
 const FRAME_COUNT = 10;
 const MIN_KEEP = 1;
@@ -147,6 +148,9 @@ export interface DmStudioItem {
   adjust?: StudioAdjust;
   /** Post videos: a cover picture chosen from the device instead of a frame. */
   coverUrl?: string;
+  /** Post videos: the part of the turned, mirrored frame to keep, and its shape. */
+  crop?: VideoCropRect;
+  cropRatio?: CropRatioId;
 }
 
 export function DmMediaStudio({
@@ -224,6 +228,29 @@ export function DmMediaStudio({
   const colorMatrix = isVideo ? studioColorMatrix(item?.look, strength, adjust) : null;
   const filterId = `dm-studio-fx-${(item?.id ?? '').replace(/[^a-z0-9]/gi, '').slice(-12)}`;
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  // The video's own size, for the crop box's shapes.
+  const [videoSize, setVideoSize] = useState<{ w: number; h: number } | null>(null);
+  const sideways = options.rotate === 90 || options.rotate === 270;
+  const frameAspect = videoSize ? (sideways ? videoSize.h / videoSize.w : videoSize.w / videoSize.h) : 16 / 9;
+  const crop = item?.crop;
+  const cropRatio: CropRatioId = item?.cropRatio ?? 'original';
+  const pickCropRatio = (id: CropRatioId) =>
+    onItemChange(active, { cropRatio: id, crop: id === 'free' ? crop : fitCropRect(cropRatioValue(id, frameAspect), frameAspect) });
+  const rotateCrop = () => {
+    const rotate = nextQuarterTurn(options.rotate) || undefined;
+    const side = rotate === 90 || rotate === 270;
+    const fa = videoSize ? (side ? videoSize.h / videoSize.w : videoSize.w / videoSize.h) : frameAspect;
+    onItemChange(active, {
+      options: { ...options, rotate },
+      crop: cropRatio === 'free' ? undefined : fitCropRect(cropRatioValue(cropRatio, fa), fa),
+    });
+  };
+  const flipCrop = () =>
+    onItemChange(active, {
+      options: { ...options, mirror: options.mirror ? undefined : true },
+      // Keep the same part of the picture inside the box.
+      crop: crop ? { ...crop, x: 1 - crop.x - crop.w } : crop,
+    });
   // Watch and scrub the picked video right here.
   const [now, setNow] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -268,6 +295,7 @@ export function DmMediaStudio({
   const allTabs: { key: Tab; label: string; icon: typeof Scissors }[] = [
     { key: 'cover', label: _copy('dmVideo.cover', { defaultValue: 'Cover' }), icon: ImageIcon },
     { key: 'trim', label: _copy('dmVideo.trim', { defaultValue: 'Trim' }), icon: Scissors },
+    { key: 'crop', label: _copy('copy.studio.crop', { defaultValue: 'Crop' }), icon: Crop },
     { key: 'mirror', label: _copy('dmVideo.mirror', { defaultValue: 'Mirror' }), icon: FlipHorizontal2 },
     { key: 'rotate', label: _copy('dmVideo.rotate', { defaultValue: 'Rotate' }), icon: RotateCw },
     { key: 'looks', label: _copy('copy.studio.looks', { defaultValue: 'Looks' }), icon: Palette },
@@ -289,7 +317,7 @@ export function DmMediaStudio({
       vignette: _copy('copy.studio.vignette', { defaultValue: 'Vignette' }),
     })[k];
   // Photos keep Hide (price) and Timer; the rest only means something for a video.
-  const tabs = allTabs.filter((t) => (!onlyTabs || onlyTabs.includes(t.key)) && (t.key !== 'alt' || allowAlt) &&
+  const tabs = allTabs.filter((t) => (!onlyTabs || onlyTabs.includes(t.key)) && (t.key !== 'crop' || !!onlyTabs?.includes('crop')) && (t.key !== 'alt' || allowAlt) &&
     (t.key !== 'timer' || allowTimer) && (t.key !== 'expire' || !!postTimer) && (t.key !== 'music' || !!music)
     && (isVideo || (t.key === 'hide' && allowLock) || t.key === 'timer'));
   if (!item || !file) return null;
@@ -367,7 +395,11 @@ export function DmMediaStudio({
             key={item.id}
             onTimeUpdate={setNow}
             onPlayState={setPlaying}
-            onMeta={(m) => { if (!item.duration && Number.isFinite(m.dur)) onItemChange(active, { duration: m.dur }); }}
+            onMeta={(m) => {
+              if (m.w && m.h && (videoSize?.w !== m.w || videoSize?.h !== m.h)) setVideoSize({ w: m.w, h: m.h });
+              if (!item.duration && Number.isFinite(m.dur)) onItemChange(active, { duration: m.dur });
+            }}
+            crop={tab === 'crop' ? null : crop}
             src={url}
             options={{ ...options, coverAt: undefined }}
             maxW={Math.min(360, typeof window !== 'undefined' ? window.innerWidth - 24 : 360)}
@@ -392,6 +424,14 @@ export function DmMediaStudio({
                 <Lock className="h-3.5 w-3.5" /> {_copy('dmVideo.lockedForUsd', { defaultValue: 'Unlock for {{value1}}', value1: formatLockUsd(lockPrice) })}
               </span>
             )}
+            {tab === 'crop' ? (
+              <VideoCropOverlay
+                rect={crop ?? { x: 0, y: 0, w: 1, h: 1 }}
+                ratio={cropRatioValue(cropRatio, frameAspect)}
+                frameAspect={frameAspect}
+                onChange={(r) => onItemChange(active, { crop: isFullCrop(r) ? undefined : r })}
+              />
+            ) : (
             <button
               type="button"
               onClick={togglePlay}
@@ -404,6 +444,7 @@ export function DmMediaStudio({
                 </span>
               )}
             </button>
+            )}
           </DmVideoFrame>
           {dur > 0 && (
             <div className="flex w-full max-w-[440px] items-center gap-2">
@@ -540,6 +581,48 @@ export function DmMediaStudio({
                   </button>
                 )}
               </>
+            )}
+            {tab === 'crop' && (
+              <div className="flex items-center gap-2">
+                <div className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto [scrollbar-width:none]">
+                  {VIDEO_CROP_RATIOS.map((r) => {
+                    const on = cropRatio === r.id;
+                    return (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => pickCropRatio(r.id)}
+                        aria-pressed={on}
+                        className={cn(
+                          'shrink-0 rounded-full border px-3 py-1.5 text-xs transition-colors',
+                          on ? 'border-white bg-white font-semibold text-black' : 'border-white/15 text-white/60 hover:text-white',
+                        )}
+                      >
+                        {r.id === 'original' ? _copy('copy.studio.ratioOriginal', { defaultValue: 'Original' }) : r.id === 'free' ? _copy('copy.studio.ratioFree', { defaultValue: 'Free' }) : r.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  type="button"
+                  onClick={rotateCrop}
+                  aria-label={_copy('copy.studio.rotate', { defaultValue: 'Rotate' })}
+                  title={_copy('copy.studio.rotate', { defaultValue: 'Rotate' })}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-zinc-300 hover:text-white"
+                >
+                  <RotateCw className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={flipCrop}
+                  aria-pressed={!!options.mirror}
+                  aria-label={_copy('copy.studio.flip', { defaultValue: 'Flip' })}
+                  title={_copy('copy.studio.flip', { defaultValue: 'Flip' })}
+                  className={cn('flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border text-zinc-300', options.mirror ? 'border-white/50 bg-white/20 text-white' : 'border-white/15 bg-white/5 hover:text-white')}
+                >
+                  <FlipHorizontal2 className="h-4 w-4" />
+                </button>
+              </div>
             )}
             {tab === 'mirror' && (
               <div className="flex overflow-hidden rounded-full border border-white/15">
@@ -786,3 +869,69 @@ function HideOption({ active, onClick, icon, title, body, disabled }: { active?:
 }
 
 export { cleanVideoOptions };
+
+/** The photo editor's crop box over the playing video: shade outside, thirds, corner dots. */
+function VideoCropOverlay({ rect, ratio, frameAspect, onChange }: {
+  rect: VideoCropRect;
+  ratio: number | null;
+  frameAspect: number;
+  onChange: (r: VideoCropRect) => void;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const start = (handle: CropHandle) => (ev: ReactPointerEvent) => {
+    const box = ref.current?.getBoundingClientRect();
+    if (!box) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    const x0 = ev.clientX;
+    const y0 = ev.clientY;
+    const r0 = { ...rect };
+    const move = (e: PointerEvent) => {
+      const next = dragCropRect(r0, handle, (e.clientX - x0) / box.width, (e.clientY - y0) / box.height, ratio, frameAspect);
+      if (next) onChange(next);
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  };
+  const p = (v: number) => `${v * 100}%`;
+  return (
+    <div ref={ref} data-video-crop className="absolute inset-0 touch-none select-none">
+      <div className="pointer-events-none absolute inset-x-0 top-0 bg-black/60" style={{ height: p(rect.y) }} />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/60" style={{ height: p(1 - rect.y - rect.h) }} />
+      <div className="pointer-events-none absolute left-0 bg-black/60" style={{ top: p(rect.y), height: p(rect.h), width: p(rect.x) }} />
+      <div className="pointer-events-none absolute right-0 bg-black/60" style={{ top: p(rect.y), height: p(rect.h), width: p(1 - rect.x - rect.w) }} />
+      <div
+        className="absolute cursor-move border-2 border-white"
+        style={{ left: p(rect.x), top: p(rect.y), width: p(rect.w), height: p(rect.h), touchAction: 'none' }}
+        onPointerDown={start('move')}
+      >
+        <div className="pointer-events-none absolute inset-y-0 left-1/3 w-px bg-white/35" />
+        <div className="pointer-events-none absolute inset-y-0 left-2/3 w-px bg-white/35" />
+        <div className="pointer-events-none absolute inset-x-0 top-1/3 h-px bg-white/35" />
+        <div className="pointer-events-none absolute inset-x-0 top-2/3 h-px bg-white/35" />
+        {(['tl', 'tr', 'bl', 'br'] as const).map((c) => (
+          <div
+            key={c}
+            onPointerDown={start(c)}
+            className={cn(
+              'absolute h-7 w-7',
+              c === 'tl' && '-left-3.5 -top-3.5 cursor-nwse-resize',
+              c === 'tr' && '-right-3.5 -top-3.5 cursor-nesw-resize',
+              c === 'bl' && '-bottom-3.5 -left-3.5 cursor-nesw-resize',
+              c === 'br' && '-bottom-3.5 -right-3.5 cursor-nwse-resize',
+            )}
+            style={{ touchAction: 'none' }}
+          >
+            <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-[3px] bg-white" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
