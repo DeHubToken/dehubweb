@@ -25,7 +25,7 @@ import { isOwnHandlePath } from '@/lib/own-profile-path';
 import {
   FeedSkeleton,
   ExploreSkeleton,
-  ProfileSkeleton,
+  SeededProfileSkeleton,
   MessagesSkeleton,
   NotificationsSkeleton,
   LeaderboardSkeleton,
@@ -130,7 +130,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
   { key: 'ads', path: ['/app/ads', '/ads'], component: AdsPage, skeleton: GenericPageSkeleton },
   { key: 'arcade', path: ['/arcade', '/app/arcade'], component: ArcadePage, skeleton: GridSkeleton },
-  { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: ProfileSkeleton },
+  { key: 'profile', path: ['/app/profile', '/profile'], component: ProfilePage, skeleton: SeededProfileSkeleton },
 ];
 
 function matchesPath(config: CachedPageConfig, pathname: string): boolean {

@@ -24,7 +24,9 @@ import { ChatLinkPreviews } from './ChatLinkPreviews';
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
+import { useQueryClient } from '@tanstack/react-query';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
 import type { BadgeLock } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
@@ -230,7 +232,8 @@ export const ChatMessage = memo(function ChatMessage({
     />
   ) : null;
   const { t: _copy } = _useCopy();
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
+  const queryClient = useQueryClient();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [viewingImage, setViewingImage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -285,6 +288,7 @@ export const ChatMessage = memo(function ChatMessage({
 
   const handleProfileClick = () => {
     if (message.userHandle) {
+      seedProfileCache(queryClient, { address: message.userId, username: message.userHandle, displayName: message.userName, avatarUrl: message.userAvatar }, currentUserAddress || undefined);
       navigate(`/${message.userHandle}`);
     }
   };

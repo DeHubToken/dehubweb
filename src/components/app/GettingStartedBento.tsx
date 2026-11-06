@@ -23,7 +23,7 @@
  */
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { useTranslation } from 'react-i18next';
 import Check from "@/components/ui/cut-icons/check";
 import PenLine from "@/components/ui/cut-icons/edit";
@@ -67,7 +67,7 @@ const TOUR_ICON = '/theme-icons/system/guide.webp';
 
 export function GettingStartedBento() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
   const onboarding = useOnboarding();
   const dropZone = useOptionalGlobalDropZone();
 

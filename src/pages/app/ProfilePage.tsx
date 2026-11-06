@@ -604,7 +604,10 @@ return () => rail.removeEventListener('wheel', onWheel);
   if (holdForReveal || (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile))) {
     // The loaded page's own top bar, so the back arrow is already where it
     // stays instead of a lone arrow that jumps when the profile arrives.
-    return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton /></div>;
+    // While the reveal holds, the name and photo are already known (seeded by
+    // the tap or fetched): show them, so the page never opens faceless.
+    const seed = data.profile ? { name: data.profile.name, handle: data.profile.handle, avatarUrl: data.profile.avatarUrl, coverUrl: data.profile.coverUrl } : null;
+    return <div className="relative"><CollapsingProfileHeader /><ProfileSkeleton seed={seed} /></div>;
   }
 
   // Auth gate for own profile
