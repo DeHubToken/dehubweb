@@ -28,6 +28,10 @@ import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
+// Not lazy: the lanes and headline are plain boxes and text, so the sheet's
+// first frame is already the sheet people see. Clips are built only once a
+// tile is on screen (see Clip), so this costs nothing in the tap.
+import { LoginShortsStack } from '@/components/app/login/LoginShortsStack';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useAuth, useLoginSheet } from '@/contexts/AuthContext';
@@ -60,21 +64,6 @@ function preloadable<P extends object>(load: () => Promise<React.ComponentType<P
   return Object.assign(Preloadable, { preload });
 }
 
-// Phone sign-in hero (three fanned clips + headline). Lazy so its CSS and
-// clips stay off the entry bundle; the option list renders without it.
-const LoginShortsStack = preloadable(() =>
-  import('@/components/app/login/LoginShortsStack').then(m => m.LoginShortsStack),
-);
-
-/**
- * Holds the hero's space until the clips mount, so nothing below jumps. Sized
- * inline because login-stack.css arrives with the clips' chunk, and on a first
- * open the placeholder can paint before it.
- */
-function LoginShortsStackPlaceholder() {
-  return <div className="login-stack" aria-hidden="true" style={{ flex: '1 0 200px', minHeight: 200 }} />;
-}
-
 const LoginModalBody = preloadable(() =>
   import('@/components/app/login/LoginModalBody').then(m => m.LoginModalBody),
 );
@@ -91,7 +80,6 @@ const LoginProfileStep = React.lazy(() =>
  */
 export function prefetchLoginModal(): void {
   void LoginModalBody.preload().catch(() => {});
-  void LoginShortsStack.preload().catch(() => {});
 }
 
 /**
@@ -356,11 +344,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className={`login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 ${stackSheet ? 'pb-2' : 'pb-4'}`}>
-        <AfterSheetFrame immediate={mountedOpen} fallback={<LoginShortsStackPlaceholder />}>
-          <Suspense fallback={<LoginShortsStackPlaceholder />}>
-            <LoginShortsStack />
-          </Suspense>
-        </AfterSheetFrame>
+        <LoginShortsStack />
         <div className="login-stack-form mt-5">
           <AfterSheetFrame immediate={mountedOpen} fallback={fallback}>
             <Suspense fallback={fallback}>
