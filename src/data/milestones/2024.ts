@@ -20,7 +20,7 @@ That is not a throwaway line. After the [contract malfunction in Q4 2022](/guide
 
 The [automated liquidity provision](/guides/smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023) built the previous quarter was the other half. Listing on a chain is trivial. Having usable depth on it is the actual work, and by early 2024 that had become a process rather than a manual effort.
 
-![Riftn card reading "gas over the tip", mainnet fees exceeded the transactions DHB is used for](/media/inbody-mainnet-cost.jpg)
+![Riftn card reading "gas over the tip", mainnet fees exceeded the transactions DHB is used for](/media/inbody-mainnet-cost-riftn.jpg)
 
 ### The problem we walked into
 
@@ -386,7 +386,7 @@ An MMA-inspired battle royale, hyper-realistic, gory and gritty, built as a figh
 
 It grew out of the [Chads NFT collection minted in Q2 2022](/guides/the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022), which is an unusual outcome for a 2022 collection. Most did not become anything. This one became a property with a trailer that people outside the industry watched.
 
-![Riftn card reading "players first", the Last Chad Standing teaser never mentioned the chain](/media/inbody-lcs-audience.jpg)
+![Riftn card reading "players first", the Last Chad Standing teaser never mentioned the chain](/media/inbody-lcs-audience-riftn.jpg)
 
 ### Why the number matters
 

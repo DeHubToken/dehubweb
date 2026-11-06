@@ -118,7 +118,7 @@ Riftn is an independent DAO, co-founded by Mike Hales and Indi Jay Cammish, who 
 ### Are crypto earnings from Riftn taxable in the UK?
 
 Generally, yes. HMRC treats crypto income and capital gains under existing tax rules, and the specifics depend on how you earn and dispose of tokens. Keep accurate records of your earnings and take professional advice for your circumstances, exactly as you would with any other self-employed creator income.`,
-  bannerImage: '/media/uk-creators-guide-leaving-tiktok-banner.png',
+  bannerImage: '/media/uk-creators-guide-leaving-tiktok-banner-riftn.png',
   bannerImageAlt: 'A UK creator moving from TikTok to a Web3 platform they own on Riftn',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-04-23T11:00:00.000Z',
