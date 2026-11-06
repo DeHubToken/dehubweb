@@ -167,9 +167,11 @@ export default function PayWithCoinSheet({
 
   return (
     <Dialog open={open} onOpenChange={(next) => { if (!busy) onOpenChange(next); }}>
+      {/* Opens from the paywall drawer (z-100), so it has to sit above it. */}
       <DialogContent
         data-glass-menu
-        className="max-w-md gap-0 border border-white/10 bg-zinc-950/80 p-4 backdrop-blur-[28px] sm:p-5"
+        overlayClassName="z-[120]"
+        className="z-[120] max-w-md gap-0 border border-white/10 bg-zinc-950/80 p-4 backdrop-blur-[28px] sm:p-5"
       >
         <DialogTitle className="text-[19px] font-extrabold text-white">
           {t('coinPay.title', { defaultValue: 'Not enough DHB' })}
