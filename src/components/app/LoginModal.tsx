@@ -321,22 +321,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     />
   );
 
-  // riftn.com took over from dehub.io. Anyone whose login still sits on
-  // dehub.io (opened riftn.com directly, skipping the forward) can carry it
-  // across: dehub.io's hand-off page reads it there and lands back here.
-  const onRiftn = typeof window !== 'undefined' && /(?:^|\.)riftn\.com$/.test(window.location.hostname);
-  const bringLoginOver = onRiftn && step === 'main' ? (
-    <p className="text-xs text-white/40 text-center mt-2">
-      <Trans
-        i18nKey="loginModal.bringLoginOver"
-        defaults="Used Riftn on dehub.io? <bring>Bring your login over</bring>"
-        components={{
-          bring: <a href={`https://dehub.io/_handoff-out?next=${encodeURIComponent(`${window.location.pathname}${window.location.search}`)}`} className="underline hover:text-white/60 transition-colors" />,
-        }}
-      />
-    </p>
-  ) : null;
-
   const sheetBody = stackLayout ? (
     <>
       <DrawerHeader className="sr-only">
@@ -359,8 +343,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <div className={stackSheet
         ? "shrink-0 px-6 pt-2 pb-[calc(1rem+env(safe-area-inset-bottom))]"
         : "shrink-0 px-6 pt-6 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"}>
-        <p className="text-xs text-white/40 text-center">{(step === 'main' || step === 'email' || step === 'email-waiting') && <>{t('loginStack.codeNote', 'We email you a code, no password needed.')} </>}{termsNotice}</p>
-        {bringLoginOver}
+        <p className="text-xs text-white/40 text-center">{termsNotice}</p>
       </div>
     </>
   ) : (
@@ -405,7 +388,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <p className="text-xs text-white/40 text-center">{termsNotice}</p>
-        {bringLoginOver}
       </div>
     </>
   );
