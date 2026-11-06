@@ -201,6 +201,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # Auth is the DeHub token in x-dehub-token, verified by requireDeHubAuth.
   [functions.fraction-checkout]
     verify_jwt = false
+  # Called only by the Riftn API with the service secret.
+  [functions.agent-voice]
+    verify_jwt = false
   [functions.general-ai-chat]
     verify_jwt = false
   [functions.generate-3d]
