@@ -20,6 +20,7 @@ import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from 
 import { kieKey, kieUsableUrl, kieCreateTask, kieWaitForResult } from '../_shared/kie.ts';
 import { isVeniceImage } from '../_shared/venice-catalog.ts';
 import { generateVeniceImage, quoteVenice, VeniceError } from '../_shared/venice.ts';
+import { isStoreAppRequest, WEB_ONLY_MODEL_CODE, WEB_ONLY_MODEL_MESSAGE } from '../_shared/client-surface.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
@@ -383,6 +384,7 @@ const handleGenerateImage = async (req: Request): Promise<Response> => {
     }
 
     if (isVeniceImage(model)) {
+      if (isStoreAppRequest(req)) throw new VeniceError(WEB_ONLY_MODEL_MESSAGE, 403);
       const result = await generateVeniceImage(model, prompt, aspectRatio);
       return new Response(JSON.stringify({ ...result, success: true }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
@@ -843,6 +845,10 @@ serve(async (req) => {
   const peek = await req.clone().json().catch(() => ({})) as Partial<GenerateImageRequest>;
   let providerPriceDhb: number | undefined;
   if (peek.model && isVeniceImage(peek.model)) {
+    // Venice models are web only: the store apps must not be able to make adult images.
+    if (isStoreAppRequest(req)) {
+      return new Response(JSON.stringify({ error: WEB_ONLY_MODEL_MESSAGE, code: WEB_ONLY_MODEL_CODE }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
     if (!peek.prompt?.trim() || peek.sourceImage || peek.referenceImageUrls?.length || peek.bannerRenderer) {
       return new Response(JSON.stringify({ error: 'Venice image models require a text prompt without attached images.' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
