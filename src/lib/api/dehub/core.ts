@@ -41,10 +41,14 @@ export function getMediaUrl(relativePath?: string): string | undefined {
   if (relativePath.startsWith("http://") || relativePath.startsWith("https://")) {
     return relativePath;
   }
-  // Old posts carry `videos/{tokenId}` with no extension. The file lives at
-  // `videos/{tokenId}.mp4`; the bare key 403s, and Safari retries it before
+  // Old posts carry `videos/{tokenId}` with no extension, and the first 2023
+  // videos the old stream route `streams/video/{tokenId}`. Both files live at
+  // `videos/{tokenId}.mp4`; the other keys 403, and Safari retries them before
   // falling back.
-  const path = relativePath.replace(/^\/+/, '').replace(/^(videos\/\d+)$/, '$1.mp4');
+  const path = relativePath
+    .replace(/^\/+/, '')
+    .replace(/^streams\/video\/(\d+)$/, 'videos/$1')
+    .replace(/^(videos\/\d+)$/, '$1.mp4');
   return `${DEHUB_CDN_BASE}${path}`;
 }
 

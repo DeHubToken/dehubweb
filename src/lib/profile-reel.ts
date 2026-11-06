@@ -39,13 +39,23 @@ function imagesOf(row: Row): string[] {
   return buildFeedImageUrls(raw.filter((url) => /^https?:/i.test(url) || !/^[a-z][a-z\d+.-]*:/i.test(url))) || [];
 }
 
+/**
+ * A video post. The first videos (2024) were minted before posts had a
+ * postType, so theirs is empty: a video file on the row is what marks them.
+ */
+export function isReelVideo(row: Row): boolean {
+  const type = row.postType;
+  if (type === 'video' || type === 'short') return true;
+  return !type && !!(row.videoUrl || row.videoExt);
+}
+
 /** One feed row as a viewer slide, or null when it has nothing to show. */
 export function toReelShort(row: Row, index: number, bgId?: string | null): ShortVideo | null {
   const base = mapToShortVideo(row, index) as ShortVideo;
   const text = String(row.description || '').replace(/\[soundtrack:[^\]]*\]/g, '').trim();
   const title = String(row.name || row.title || '').trim();
 
-  if (row.postType === 'video') {
+  if (isReelVideo(row)) {
     if (isBrainrotPlayable(row)) return base;
     const reelPost: ReelPost = { kind: 'locked', cover: base.thumbnail || undefined };
     return { ...base, reelPost };
