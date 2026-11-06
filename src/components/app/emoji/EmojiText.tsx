@@ -99,9 +99,10 @@ export function expandEmojiTokens(parts: ReactNode[]): ReactNode[] {
       out.push(part);
       return;
     }
-    const tokens = tokenizeEmoji(part);
+    // Straight after a link/mention element: a face at the start belongs to it.
+    const tokens = tokenizeEmoji(part, { glued: pi > 0 && typeof parts[pi - 1] !== 'string' });
     if (tokens.length === 1 && tokens[0].kind === 'text') {
-      out.push(part);
+      out.push(tokens[0].text);
       return;
     }
     tokens.forEach((t, ti) => {

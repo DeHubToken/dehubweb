@@ -2089,6 +2089,9 @@
     "returnHome": "חזור לדף הבית"
   },
   "profile": {
+    "viewGrid": "תצוגת רשת",
+    "viewList": "תצוגת רשימה",
+    "viewMode": "הצגה",
     "back": "חזור",
     "usernameAvailable": "שם המשתמש זמין!",
     "signUpToClaim": "הירשם כדי לתפוס",

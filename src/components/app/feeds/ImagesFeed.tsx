@@ -33,6 +33,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ImageCard } from '@/components/app/cards/ImageCard';
+import { cdnImage, cdnImageSrcSet, deviceWidth } from '@/lib/media-url';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { useAuth } from '@/contexts/AuthContext';
@@ -216,6 +217,29 @@ function ContentTypeFilterSection({
 // SUB-COMPONENTS
 // ============================================================================
 
+// The grid used to show every tile with the post's full-width picture (1080
+// px), so a phone pulled ~12 MB of pictures over one scroll and decoded each
+// one at full size while the list moved. Tiles now ask for their own size
+// (a third, or two thirds for the big tile, of the column) and only the first
+// rows load before they are near the screen.
+const TILE_WIDTHS = [192, 256, 360, 480, 736];
+const EAGER_TILES = 9;
+
+/** CSS width of a tile: the feed column is the window on a phone, ~600px wider up. */
+function tileCssWidth(isLarge: boolean, cols: number): number {
+  const column = typeof window === 'undefined' ? 412 : Math.min(window.innerWidth, 640);
+  return Math.ceil(((column - 16) / cols) * (isLarge ? 2 : 1));
+}
+
+function tileSrc(url: string | undefined, isLarge: boolean, cols: number): string | undefined {
+  return cdnImage(url, { width: deviceWidth(tileCssWidth(isLarge, cols)) });
+}
+
+function tileSizes(isLarge: boolean, cols: number): string {
+  const share = Math.round(((isLarge ? 2 : 1) / cols) * 100);
+  return `(min-width: 768px) ${Math.round(640 * share / 100)}px, ${share}vw`;
+}
+
 interface CollageViewProps {
   posts: ImagePost[];
   onImageClick: (postId: string) => void;
@@ -228,6 +252,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
+  const cols = isCollapsed ? 4 : 3;
   return (
     <div data-grid-feed className="px-2 pb-2 sm:px-3 sm:pb-3">
       <div 
@@ -247,15 +272,20 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
               data-media-tile
               onClick={() => onImageClick(post.id)}
               className={cn(
-                'relative aspect-square bg-zinc-800 rounded-xl overflow-hidden group cursor-pointer',
+                'relative aspect-square bg-zinc-800 rounded-xl overflow-hidden group cursor-pointer [contain:layout_paint]',
                 isLargeTile && 'col-span-2 row-span-2'
               )}
             >
               <img
-                src={post.image}
+                src={tileSrc(post.image, isLargeTile, cols)}
+                srcSet={cdnImageSrcSet(post.image, TILE_WIDTHS)}
+                sizes={tileSizes(isLargeTile, cols)}
                 alt=""
+                loading={index < EAGER_TILES ? 'eager' : 'lazy'}
+                decoding="async"
+                draggable={false}
                 className={cn(
-                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  "w-full h-full object-cover md:transition-transform md:duration-300 md:group-hover:scale-105",
                   post.isPPV && "blur-lg"
                 )}
               />

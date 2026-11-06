@@ -313,19 +313,9 @@ const getMenuItems = (t: (key: string) => string) => [{
       icon: '/media/b39e5777-ed91-489c-a58a-3639ea5bf3bc.png',
       external: true,
       isImage: true
-    }, {
-      title: 'CoinMarketCap',
-      path: 'https://coinmarketcap.com/currencies/dehub/',
-      icon: '/media/df505550-7e48-4148-acbb-1617520a6abc.png',
-      external: true,
-      isImage: true
-    }, {
-      title: 'CoinGecko',
-      path: 'https://www.coingecko.com/en/coins/dehub',
-      icon: '/media/coingecko-logo.png',
-      external: true,
-      isImage: true
     }
+    // CoinMarketCap and CoinGecko listed the old token; the new one is not
+    // trading yet, so there is nothing to link to.
   ]
 }, {
   title: t('nav.keyInfo'),

@@ -6,6 +6,7 @@ import Replicate from "https://esm.sh/replicate@0.25.2";
 import { corsHeaders, rateLimitByIp, serviceClient } from "../_shared/auth.ts";
 import { isVeniceVideo, VENICE_VIDEO_MODELS, veniceVideoOptions } from '../_shared/venice-catalog.ts';
 import { quoteVenice, veniceFetch, VeniceError } from '../_shared/venice.ts';
+import { isStoreAppRequest, WEB_ONLY_MODEL_CODE, WEB_ONLY_MODEL_MESSAGE } from '../_shared/client-surface.ts';
 import { recordGeneration, settleGeneration } from '../_shared/generation-jobs.ts';
 import { authorizeGenerationPoll } from '../_shared/generation-poll-auth.ts';
 import { chargeForJob } from "../_shared/ai-payment-guard.ts";
@@ -1008,6 +1009,10 @@ serve(async (req) => {
       }
     }
     if (isVeniceVideo(model)) {
+      // Venice models are web only: the store apps must not be able to make adult content.
+      if (isStoreAppRequest(req)) {
+        return new Response(JSON.stringify({ status: 'failed', error: WEB_ONLY_MODEL_MESSAGE, code: WEB_ONLY_MODEL_CODE }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
       const seconds = Number(String(duration).replace(/s$/, ''));
       try {
         if (VENICE_VIDEO_MODELS[model].imageRequired !== !!sourceImage) throw new Error(VENICE_VIDEO_MODELS[model].imageRequired ? 'Attach an image to animate.' : 'Choose Wan Animate to animate an attached image.');

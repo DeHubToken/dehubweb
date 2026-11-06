@@ -77,6 +77,14 @@ html[data-system-tone="light"] .login-stack-corner {
   transition: opacity 450ms ease-out;
 }
 .login-stack__video.is-ready { opacity: 1; }
+/* Empty tile while its clip is not ready: pulses on the shared skeleton beat,
+   under the video so the clip fades in over it. */
+.login-stack__skeleton {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.login-stack__video { position: relative; }
 .login-stack__ai {
   position: absolute;
   left: 8px;

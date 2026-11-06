@@ -68,6 +68,8 @@ export interface UnifiedFeedItem {
   name: string;
   description?: string;
   articleBody?: string;
+  /** Article cover key (nfts/images/<id>-article-1.jpg). */
+  articleImageUrl?: string;
   imageUrl: string;
   imageUrls?: string[];
   videoUrl?: string;
@@ -509,6 +511,7 @@ function mapTextPost(item: UnifiedFeedItem, index: number): TextPost {
     rawName,
     rawDescription,
     articleBody: item.articleBody,
+    articleImageUrl: item.articleImageUrl ? buildFeedImageUrls([item.articleImageUrl])?.[0] : undefined,
     articleSlug: (item as any).articleSlug,
     createdAt: item.createdAt,
     views: formatViews(resolveViewCount(item)).replace(' views', ''),

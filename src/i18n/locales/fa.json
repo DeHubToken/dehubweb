@@ -2094,6 +2094,9 @@
     "returnHome": "بازگشت به خانه"
   },
   "profile": {
+    "viewGrid": "نمای شبکه‌ای",
+    "viewList": "نمای فهرست",
+    "viewMode": "مشاهده",
     "back": "بازگشت",
     "usernameAvailable": "نام کاربری موجود است!",
     "signUpToClaim": "امروز ثبت‌نام کنید تا",

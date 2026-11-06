@@ -8,7 +8,8 @@
   overflow: hidden;
   isolation: isolate;
   background: linear-gradient(140deg, #c8d3cb, #4a554d 24%, #18221a 60%, #829282);
-  box-shadow: 0 .4px .8px #000b;
+  box-shadow: inset 0 0 0 1px #b5ff91, 0 0 4px 1px #45ff4880;
+  animation: live-chat-lens-glow 2.2s ease-in-out infinite;
 }
 .live-chat-lens::before {
   content: '';
@@ -17,7 +18,7 @@
   border-radius: 50%;
   background: radial-gradient(ellipse at 62% 78%, #d6ff73 0%, #89ee27 22%, #23b729 46%, #075021 66%, #001f12 90%);
   box-shadow: 0 0 0 .4px #020a05;
-  animation: live-chat-lens-pulse 4.4s ease-in-out infinite;
+  animation: live-chat-lens-pulse 2.2s ease-in-out infinite;
 }
 .live-chat-lens::after {
   content: '';
@@ -28,9 +29,13 @@
   box-shadow: inset 0 .4px .4px #c7ffdb88;
 }
 @keyframes live-chat-lens-pulse {
-  0%, 100% { opacity: .62; filter: brightness(.82); }
-  50% { opacity: 1; filter: brightness(1.18); }
+  0%, 100% { opacity: .38; filter: brightness(.9); }
+  50% { opacity: 1; filter: brightness(1.4); }
+}
+@keyframes live-chat-lens-glow {
+  0%, 100% { box-shadow: inset 0 0 0 1px #b5ff91, 0 0 2px 0 #45ff485c; }
+  50% { box-shadow: inset 0 0 0 1px #b5ff91, 0 0 5px 2px #45ff48bf; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .live-chat-lens::before { animation: none; }
+  .live-chat-lens, .live-chat-lens::before { animation: none; }
 }

@@ -307,7 +307,8 @@ const GALLERY_AUTH = {
 } as unknown as AuthContextType;
 
 import { ComicDeck } from '@/components/app/comic/ComicDeck';
-import { FeedFilterLine, FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
+import { FeedPresetsRow } from '@/components/app/feeds/FeedFilterLine';
+import { NewPostsBead as FeedDrawer } from '@/components/app/navigation/NewPostsBead';
 import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { ComicPagesEditor } from '@/features/post/components/ComicPagesEditor';
 import { ComicBorderPicker } from '@/features/post/components/ComicBorderPicker';
@@ -524,23 +525,37 @@ function PostOptionsGallery() {
   );
 }
 
-/** Phone feed filter line: every active filter in one line, plus presets. Tap a line to open it. */
+/** Feed drawer under the nav pill: active filters as words, a hashtag with
+ *  Follow, and new posts taking the drawer over until tapped. Plus presets. */
 function FeedFilterLineGallery() {
-  const base = [
-    { key: 'type', group: 'Type', label: 'Articles' },
-    { key: 'tag', group: 'Tag', label: '#music' },
-    { key: 'date', group: 'Date', label: '1w' },
-    { key: 'sort', group: 'Sort', label: 'Most Liked' },
-    { key: 'ppv', group: 'Access', label: 'PPV' },
-  ];
-  const [items, setItems] = useState(base);
-  const live = items.map((i) => ({ ...i, onRemove: () => setItems((xs) => xs.filter((x) => x.key !== i.key)) }));
+  const [labels, setLabels] = useState(['Articles', '1w', 'Most liked', 'PPV']);
+  const [following, setFollowing] = useState(false);
+  const [newCount, setNewCount] = useState(4);
+  const pill = (
+    <div data-feed-nav className="relative z-10 flex h-9 items-center justify-center rounded-xl text-xs text-zinc-400">
+      <span data-nav-glass-backdrop aria-hidden="true" />
+      Nav pill
+    </div>
+  );
+  const slot = (drawer: ReactNode) => (
+    <div className="relative">
+      {pill}
+      <div data-feed-new-posts-slot="gallery" className="pointer-events-none flex justify-center">{drawer}</div>
+    </div>
+  );
+  const filters = (extra?: object) => ({
+    labels,
+    onOpen: () => {},
+    onClearAll: () => setLabels(['Articles', '1w', 'Most liked', 'PPV']),
+    ...extra,
+  });
   return (
     <section data-page-bento data-feed-filter-line-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <h2 className="mb-3 text-sm font-semibold">Feed filter line</h2>
-      <div className="flex max-w-[390px] flex-col gap-3">
-        <FeedFilterLine items={live} onClearAll={() => setItems(base)} onSavePreset={() => {}} />
-        <FeedFilterLine items={live.slice(0, 3)} presetName="Long reads" onClearAll={() => {}} onSavePreset={() => {}} />
+      <h2 className="mb-3 text-sm font-semibold">Feed drawer</h2>
+      <div className="flex max-w-[390px] flex-col gap-4">
+        {slot(<FeedDrawer count={0} authors={[]} onShow={() => {}} filters={filters({ onClearAll: () => setLabels((l) => l.slice(1)) })} />)}
+        {slot(<FeedDrawer count={0} authors={[]} onShow={() => {}} filters={{ ...filters(), labels: ['#music'], follow: { following, pending: false, onToggle: () => setFollowing((v) => !v) } }} />)}
+        {slot(<FeedDrawer count={newCount} authors={[]} onShow={() => setNewCount(0)} filters={filters({ presetName: 'Long reads' })} />)}
         <div className="rounded-2xl border border-white/10 bg-black/60 p-4">
           <FeedPresetsRow
             presets={[{ name: 'Long reads' }, { name: 'Music this week' }, { name: 'Bounties' }]}

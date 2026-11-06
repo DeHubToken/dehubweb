@@ -126,7 +126,8 @@ html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-ca
 [data-feed-video-frame][data-video-split-controls]:not(#_) {
   max-height: calc(75svh - 47px) !important;
 }
-html[data-theme] body [data-video-card] [data-video-split-controls] {
+/* Glass rails size the frame beside their panel, so they keep their own width. */
+html[data-theme] body [data-video-card] [data-video-split-controls]:not([data-wide-rails-frame]) {
   width: 100% !important;
   margin-top: 0 !important;
 }

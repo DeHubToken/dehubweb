@@ -2231,7 +2231,6 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
   // The header count corresponds to the active tab's name, so it counts the
   // same thing that name does. Showing the all-tabs total beside "Mentions" read
   // as "42 mentions" when 42 was every unread notification on the account.
-  const headerUnread = getTabCount(activeTab);
   const settingsTrigger = (
     <button
       type="button"
@@ -2480,9 +2479,6 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           className={inDrawer ? 'top-0 lg:top-0' : undefined}
           icon="notifications"
           title={<span aria-live="polite">{activeTabLabel}</span>}
-          actions={headerUnread > 0 ? (
-            <span data-notification-unread-total className="text-[17px] font-medium tabular-nums text-white">{headerUnread}</span>
-          ) : undefined}
           tabs={
             <PageTabs
               beforeTabs={

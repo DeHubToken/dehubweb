@@ -2107,6 +2107,9 @@
     "returnHome": "होम पर लौटें"
   },
   "profile": {
+    "viewGrid": "ग्रिड व्यू",
+    "viewList": "लिस्ट व्यू",
+    "viewMode": "दृश्य",
     "back": "वापस",
     "usernameAvailable": "यूज़रनेम उपलब्ध है!",
     "signUpToClaim": "क्लेम करने के लिए आज ही साइन अप करें",

@@ -2087,6 +2087,9 @@
     "returnHome": "முகப்புக்குத் திரும்பு"
   },
   "profile": {
+    "viewGrid": "கட்டக் காட்சி",
+    "viewList": "பட்டியல் காட்சி",
+    "viewMode": "காண்க",
     "back": "பின்செல்",
     "usernameAvailable": "பயனர்பெயர் கிடைக்கிறது!",
     "signUpToClaim": "பெற பதிவு செய்யுங்கள்",

@@ -2085,6 +2085,9 @@
     "returnHome": "హోమ్‌కు తిరిగి వెళ్ళు"
   },
   "profile": {
+    "viewGrid": "గ్రిడ్ వీక్షణ",
+    "viewList": "జాబితా వీక్షణ",
+    "viewMode": "చూడండి",
     "back": "వెనక్కి",
     "usernameAvailable": "యూజర్‌నేమ్ అందుబాటులో ఉంది!",
     "signUpToClaim": "పొందడానికి సైన్ అప్ చేయండి",

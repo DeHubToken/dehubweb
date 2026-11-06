@@ -2038,6 +2038,9 @@
     "returnHome": "回首页"
   },
   "profile": {
+    "viewGrid": "网格视图",
+    "viewList": "列表视图",
+    "viewMode": "看",
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "今天注册来认领",

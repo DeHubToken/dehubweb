@@ -2093,6 +2093,9 @@
     "returnHome": "Нүүр хуудас руу буцах"
   },
   "profile": {
+    "viewGrid": "Хүснэгт",
+    "viewList": "Жагсаалтын харагдац",
+    "viewMode": "Харах",
     "back": "Буцах",
     "usernameAvailable": "Хэрэглэгчийн нэр боломжтой!",
     "signUpToClaim": "Авахын тулд бүртгүүлнэ үү",

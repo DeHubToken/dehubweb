@@ -53,7 +53,7 @@ const HOLD_IFACE = new Interface([
 
 const DAYS = [7, 30, 90];
 
-function errorText(e: unknown): string {
+export function errorText(e: unknown): string {
   const err = e as { shortMessage?: string; message?: string } | null;
   const msg = err?.shortMessage || err?.message || String(e);
   if (/user rejected|denied|cancell?ed by user/i.test(msg)) return 'Cancelled in your wallet';

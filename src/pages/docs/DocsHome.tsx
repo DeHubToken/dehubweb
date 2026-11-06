@@ -1,11 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Book, Code, Zap, Shield, Database, Rocket, Star, CheckCircle } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
 import ExternalLink from "@/components/ui/cut-icons/open-externally";
-import Copy from "@/components/ui/cut-icons/copy";
-import Check from "@/components/ui/cut-icons/check";
 
 import { toast } from 'sonner';
 import { usePerformance } from '@/hooks/usePerformance';
@@ -19,7 +17,6 @@ import { localizedPageUrl } from '@/lib/seo/public-locales';
 declare const __BUILD_TIME__: string;
 const DocsHome = () => {
   const { t: _copy } = _useCopy();
-  const [copiedAddress, setCopiedAddress] = useState<string>('');
   const { t, language } = useLanguage();
 
   // Monitor performance for this page
@@ -53,20 +50,6 @@ const DocsHome = () => {
       bannerImageAlt = t('home.bannerAltCoinbase');
     }
   }
-  const copyToClipboard = async (address: string) => {
-    try {
-      await navigator.clipboard.writeText(address);
-      setCopiedAddress(address);
-      toast.success(t('common.contractAddressCopied'), {
-        description: t('common.contractAddressCopiedDesc'),
-      });
-      setTimeout(() => setCopiedAddress(''), 2000);
-    } catch (err) {
-      toast.error(t('common.copyFailed'), {
-        description: t('common.copyFailedDesc'),
-      });
-    }
-  };
   const handleComingSoonClick = (e: React.MouseEvent) => {
     e.preventDefault();
     toast.message(t('common.comingSoon'), {
@@ -88,26 +71,14 @@ const DocsHome = () => {
   };
 
   // Quick Links
+  // The old token's explorer pages and contract addresses are gone: the new
+  // token is not trading yet, so the docs point at its coming-soon page.
   const quickLinks = [{
-    title: _copy("copy.6a53133d5d71", { defaultValue: "Basescan" }),
-    icon: ExternalLink,
-    path: 'https://basescan.org/token/0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
+    title: _copy('tokenLaunch.title', { defaultValue: 'Token launching soon' }),
+    icon: Zap,
+    path: '/docs/token/where-to-buy',
     color: 'from-middle-blue to-sky-blue',
-    external: true,
-    contractAddress: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c'
-  }, {
-    title: _copy("copy.b635325d40c2", { defaultValue: "BSCScan" }),
-    icon: ExternalLink,
-    path: 'https://bscscan.com/token/0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
-    color: 'from-sky-blue to-middle-blue',
-    external: true,
-    contractAddress: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d'
-  }, {
-    title: _copy("copy.993d23ce5b8b", { defaultValue: "DHBScan" }),
-    icon: ExternalLink,
-    path: 'https://dhbscan.com',
-    color: 'from-royal-blue to-sky-blue',
-    external: true
+    external: false
   }, {
     title: _copy("copy.2b9910127168", { defaultValue: "Riftn App" }),
     icon: ExternalLink,
@@ -159,28 +130,14 @@ const DocsHome = () => {
 
         {/* Quick Links */}
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-sm sm:max-w-none">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-sm sm:max-w-2xl">
             {quickLinks.map(link => link.external ? <a key={link.path} href={link.path} target="_blank" rel="noopener noreferrer" className="group block p-6 bg-card rounded-xl border border-border hover:border-primary/40 transition-all duration-200 hover:shadow-lg text-center">
                   <div className={`w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200`}>
                     <link.icon className="w-6 h-6 text-foreground" />
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2 font-exo">{link.title}</h3>
-                  <div className="flex flex-row lg:flex-col items-center justify-center gap-2 mt-3">
-                    {!link.contractAddress && <div className="flex items-center justify-center text-sm text-muted-foreground group-hover:text-foreground font-exo">{_copy("copy.5e2fa934ec16", { defaultValue: "Visit site" })}<ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
-                      </div>}
-                    {link.contractAddress && <button onClick={e => {
-                e.preventDefault();
-                e.stopPropagation();
-                copyToClipboard(link.contractAddress!);
-              }} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted">
-                        {copiedAddress === link.contractAddress ? <>
-                            <Check className="w-3 h-3 text-foreground" />
-                            <span className="text-foreground">{t('common.copied')}</span>
-                          </> : <>
-                            <Copy className="w-3 h-3" />
-                            <span>{t('common.copyCA')}</span>
-                          </>}
-                      </button>}
+                  <div className="flex items-center justify-center mt-3 text-sm text-muted-foreground group-hover:text-foreground font-exo">
+                    {_copy("copy.5e2fa934ec16", { defaultValue: "Visit site" })}<ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
                   </div>
                 </a> : <Link key={link.path} to={link.path} className="group block p-6 bg-card rounded-xl border border-border hover:border-primary/40 transition-all duration-200 hover:shadow-lg text-center">
                   <div className={`w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200`}>

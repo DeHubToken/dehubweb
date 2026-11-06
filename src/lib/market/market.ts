@@ -134,7 +134,51 @@ export interface MarketCollection {
   floor: { amount: string; symbol: string; decimals: number } | null;
   /** Riftn Posts: how many are minted (listed or not). */
   minted?: number;
+  /** Sales so far and their total, in the coin it sells in most. */
+  sales?: number;
+  volume?: { amount: number; symbol: string } | null;
 }
+
+export interface BestOffer {
+  contract: string;
+  tokenId: string;
+  orderHash: string;
+  price: string;
+  currencySymbol: string;
+  currencyDecimals: number;
+  isCollection: boolean;
+}
+
+/** The best open offer on each NFT given (one chain, up to 100). */
+export const fetchBestOffers = (chainId: number, items: { contract: string; tokenId: string }[]) =>
+  apiCall<{ items: BestOffer[] }>('/api/market/best-offers', {
+    method: 'POST',
+    body: { chainId, items: items.slice(0, 100) } as unknown as Record<string, unknown>,
+  });
+
+/** A listing on OpenSea, bought through their fulfillment API. */
+export interface OpenSeaListing {
+  source: 'opensea';
+  orderHash: string;
+  protocolAddress: string;
+  chainId: number;
+  contract: string;
+  tokenId: string;
+  standard: 'erc721' | 'erc1155';
+  price: string;
+  currencySymbol: string;
+  currencyDecimals: number;
+  collectionName: string | null;
+  collectionSlug: string;
+  nftName: string | null;
+  nftImage: string | null;
+}
+
+/** Chains OpenSea lists that the market also runs on. */
+export const OPENSEA_CHAINS = [8453, 1] as const;
+
+export const fetchOpenSea = (chainId: number) =>
+  apiCall<{ items: OpenSeaListing[] }>('/api/market/opensea', { params: { chainId } });
 
 export interface ShowcaseNft {
   chainId: number;
@@ -287,6 +331,67 @@ export async function fillOrder(order: MarketOrder, me: string, tokenId?: string
   if (receipt.status !== 1) throw new Error('The transaction failed');
   await syncOrder(order.orderHash, tx.hash).catch(() => undefined);
   return tx.hash;
+}
+
+/**
+ * Buy several listings at once (the cart). One Seaport transaction for the
+ * lot; a listing that sold in the meantime is skipped and its share of the
+ * payment comes back. All listings must be on one chain and in one currency.
+ */
+export async function fillListings(orders: MarketOrder[], me: string): Promise<string> {
+  if (!orders.length) throw new Error('Nothing to buy');
+  const chainId = orders[0].chainId;
+  if (orders.some((o) => o.kind !== 'listing' || o.chainId !== chainId || o.currency !== orders[0].currency)) {
+    throw new Error('Pick listings on one chain, in one currency');
+  }
+  if (orders.length === 1) return fillOrder(orders[0], me);
+  await ensureSignerOnChain(chainId as ChainId);
+  const value = orders.reduce((sum, o) => sum + nativeValue(o.components), 0n);
+  let tokenSpend: { token: string; amount: bigint } | null = null;
+  for (const o of orders) {
+    const s = fillerTokenSpend(o.components, 'listing');
+    if (s) tokenSpend = { token: s.token, amount: (tokenSpend?.amount ?? 0n) + s.amount };
+  }
+  if (tokenSpend && tokenSpend.amount > 0n) await ensureTokenAllowance(tokenSpend.token, me, tokenSpend.amount, chainId);
+  // One fulfillment per item keeps each listing independent of the others.
+  const offerFulfillments = orders.flatMap((o, i) => o.components.offer.map((_, j) => [{ orderIndex: i, itemIndex: j }]));
+  const considerationFulfillments = orders.flatMap((o, i) => o.components.consideration.map((_, j) => [{ orderIndex: i, itemIndex: j }]));
+  const tx = await writeContractAA(
+    SEAPORT_ADDRESS,
+    SEAPORT_IFACE,
+    'fulfillAvailableOrders',
+    [
+      orders.map((o) => ({ parameters: toOrderParameters(o.components), signature: o.signature })),
+      offerFulfillments,
+      considerationFulfillments,
+      '0x' + '0'.repeat(64),
+      orders.length,
+    ],
+    { chainId, value, context: `buy ${orders.length} NFTs` },
+  );
+  const receipt = await tx.wait();
+  if (receipt.status !== 1) throw new Error('The transaction failed');
+  await Promise.all(orders.map((o) => syncOrder(o.orderHash, tx.hash).catch(() => undefined)));
+  return tx.hash;
+}
+
+/** Buy one OpenSea listing: OpenSea hands back the transaction, the wallet sends it. */
+export async function buyOpenSea(l: OpenSeaListing, me: string): Promise<string> {
+  await ensureSignerOnChain(l.chainId as ChainId);
+  const tx = await apiCall<{ to: string; value: string; data: `0x${string}`; chainId: number }>('/api/market/opensea/fulfill', {
+    method: 'POST',
+    body: { chainId: l.chainId, orderHash: l.orderHash, protocolAddress: l.protocolAddress, fulfiller: me },
+  });
+  if (tx.to.toLowerCase() !== l.protocolAddress.toLowerCase()) throw new Error('That listing cannot be bought here');
+  const sent = await writeContractAA(tx.to, SEAPORT_IFACE, '', [], {
+    chainId: l.chainId,
+    value: BigInt(tx.value),
+    calldata: tx.data,
+    context: 'buy this NFT',
+  });
+  const receipt = await sent.wait();
+  if (receipt.status !== 1) throw new Error('The transaction failed');
+  return sent.hash;
 }
 
 /** Cancel on-chain, so a copy of the signed order can never be filled later. */

@@ -58,7 +58,6 @@ import { useUsernameMarketConfig } from '@/hooks/use-username-market';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 import { PageHeader } from '@/components/app/PageHeader';
-import { GlobalFeedNav } from '@/components/app/GlobalFeedNav';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -356,17 +355,6 @@ export default function ProfilePage() {
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileTabsRef = useRef<HTMLDivElement>(null);
-  const [showDesktopIdentity, setShowDesktopIdentity] = useState(false);
-  useEffect(() => {
-    const actions = profileHeaderRef.current?.querySelector('[data-profile-actions]');
-    if (!actions) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowDesktopIdentity(entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 44)),
-      { rootMargin: '-44px 0px 0px 0px', threshold: 0 },
-    );
-    observer.observe(actions);
-    return () => observer.disconnect();
-  }, [!!data.profile, profileKey]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -386,7 +374,7 @@ export default function ProfilePage() {
     let observer: IntersectionObserver;
     const observe = () => {
       observer?.disconnect();
-      const top = desktop.matches ? 44 : 4;
+      const top = 4;
       observer = new IntersectionObserver(
         ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? top)),
         { rootMargin: `-${top}px 0px 0px 0px`, threshold: 0 },
@@ -399,7 +387,7 @@ export default function ProfilePage() {
       desktop.removeEventListener('change', observe);
       observer?.disconnect();
     };
-  }, [!!data.profile]);
+  }, [!!data.profile, holdForReveal]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
   const { ref: tabsFadeRef, style: tabsFadeStyle } = useScrollFadeMask<HTMLDivElement>();
@@ -425,6 +413,20 @@ export default function ProfilePage() {
     observer.observe(rail);
     return () => observer.disconnect();
   }, [profileTabKeys, isTabsStuck, tabsFadeRef]);
+// Let a mouse wheel scroll the tab bar sideways when the tabs overflow.
+useEffect(() => {
+const rail = tabsFadeRef.current;
+if (!rail) return;
+const onWheel = (e: WheelEvent) => {
+if (Math.abs(e.deltaY) <= Math.abs(e.deltaX) || rail.scrollWidth <= rail.clientWidth) return;
+const max = rail.scrollWidth - rail.clientWidth;
+if ((e.deltaY < 0 && rail.scrollLeft <= 0) || (e.deltaY > 0 && rail.scrollLeft >= max)) return;
+e.preventDefault();
+rail.scrollLeft = Math.max(0, Math.min(max, rail.scrollLeft + e.deltaY));
+};
+rail.addEventListener('wheel', onWheel, { passive: false });
+return () => rail.removeEventListener('wheel', onWheel);
+}, [isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -670,25 +672,7 @@ export default function ProfilePage() {
           }),
         }}
       />
-      <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav data-joined={isTabsStuck}>
-        <GlobalFeedNav profilePage compactProfileContent={showDesktopIdentity ? <>
-          <div className="flex min-w-0 flex-1 items-center gap-2">
-            <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
-            <div className="min-w-0">
-              <div className="flex items-center gap-1 text-sm font-bold leading-tight text-white">
-                <span className="truncate">{data.profile.name}</span>
-                <BadgeIcon src={data.badgeUrl} className="h-[1em] w-[1em] shrink-0" />
-                <StreamerBadge address={data.profile.walletAddress} />
-              </div>
-              <p className="truncate text-[10px] leading-tight text-zinc-400">{data.profile.handle}</p>
-            </div>
-          </div>
-          <div className="shrink-0 pr-1">
-            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={headerFetching} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
-          </div>
-        </> : undefined} />
-      </div>
-      <CollapsingProfileHeader tabsPinned={isTabsStuck} />
+            <CollapsingProfileHeader tabsPinned={isTabsStuck} />
       <div data-profile-pull-body className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
         <div
@@ -743,8 +727,9 @@ export default function ProfilePage() {
           <div data-nav-glass-backdrop aria-hidden />
           {isTabsStuck && <>
             <div className="relative shrink-0 w-9 h-11">
-              <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
+              <PageHeader overlay plainBack className="!top-1/2 !-translate-y-1/2 !left-0 !right-auto" />
             </div>
+<span aria-hidden data-profile-back-divider className="mx-1 h-6 w-px shrink-0 bg-white/20" />
             {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
               <div className="hidden min-w-0 max-w-24 md:block">

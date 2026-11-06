@@ -2074,6 +2074,9 @@
     "returnHome": "Koma Gida"
   },
   "profile": {
+    "viewGrid": "Ra'ayin Grid",
+    "viewList": "Lissafin Lissafi",
+    "viewMode": "Duba",
     "back": "Koma baya",
     "usernameAvailable": "Sunan mai amfani yana samuwa!",
     "signUpToClaim": "Yi rajista yau don ɗauka",

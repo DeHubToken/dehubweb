@@ -2468,6 +2468,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
       >
       <div 
         ref={containerRef}
+        data-wide-rails-frame={wideRails || undefined}
         tabIndex={0}
         data-feed-preview={(phoneFeedFrame && !tabletPortrait) || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
@@ -2488,9 +2489,10 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
               ? {
                   // Hugs the picture beside the one info panel, which keeps at
                   // least 260px (plus the 12px gap).
+                  // The control strip under the picture takes 47px of the height.
                   aspectRatio: mediaAspect,
-                  width: `min(calc(${wideMaxHeight} * ${mediaAspect.toFixed(4)}), calc(100% - 272px))`,
-                  maxHeight: wideMaxHeight,
+                  width: `min(calc((${wideMaxHeight}${splitControls ? ' - 47px' : ''}) * ${mediaAspect.toFixed(4)}), calc(100% - 272px))`,
+                  maxHeight: splitControls ? `calc(${wideMaxHeight} - 47px)` : wideMaxHeight,
                   flex: 'none',
                 }
             : wideAmbient && desktopFeedHug

@@ -2100,6 +2100,9 @@
     "returnHome": "Torna alla home"
   },
   "profile": {
+    "viewGrid": "Vista griglia",
+    "viewList": "Visualizzazione elenco",
+    "viewMode": "Visualizza",
     "back": "Indietro",
     "usernameAvailable": "Nome utente disponibile!",
     "signUpToClaim": "Registrati oggi per richiederlo",

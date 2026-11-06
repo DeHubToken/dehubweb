@@ -2106,6 +2106,9 @@
     "returnHome": "Miverina any amin'ny fandraisana"
   },
   "profile": {
+    "viewGrid": "Seho an-kavia",
+    "viewList": "Fijerin'ny lisitra",
+    "viewMode": "Seho",
     "back": "Miverina",
     "usernameAvailable": "Misy io anaram-pikambana io!",
     "signUpToClaim": "Misorata mba haka azy",

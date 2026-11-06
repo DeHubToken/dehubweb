@@ -2076,6 +2076,9 @@
     "returnHome": "Laghachi Ụlọ"
   },
   "profile": {
+    "viewGrid": "Ngosi grid",
+    "viewList": "Ngosi ndesịta",
+    "viewMode": "Ngosi",
     "back": "Laghachi",
     "usernameAvailable": "Aha onye ọrụ dị!",
     "signUpToClaim": "Debanye aha taa iji nweta",

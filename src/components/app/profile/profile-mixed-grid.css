@@ -293,3 +293,8 @@ html[data-theme='hazy'] [data-profile-mixed-grid] {
   [data-profile-mixed-grid] .pmg-chip--live i { animation: none; }
   [data-profile-mixed-grid] .pmg-tile { transition: none; }
 }
+
+/* Desktop: a tile is ~230px wide, so its type and badges scale up with it. */
+@media (min-width: 1024px) {
+  [data-profile-mixed-grid] .pmg-tile { font-size: 11px; }
+}

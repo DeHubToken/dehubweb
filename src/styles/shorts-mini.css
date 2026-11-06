@@ -49,3 +49,12 @@
   0%, 40% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* The page's sticky feed pills (z 80-90) sit above the open viewer (z 60):
+   on a scrolled profile the pinned back/tabs/Follow row covered the viewer's
+   own back and menu buttons, on phones as well as desktop. Hide them while the
+   full viewer is open; the mini player leaves the page in use, so they stay
+   for that. */
+body:has([data-shorts-viewer]:not([data-shorts-mini]), [data-shorts-placeholder]) :is([data-feed-nav-outer], [data-profile-desktop-feed-nav]) {
+  visibility: hidden;
+}

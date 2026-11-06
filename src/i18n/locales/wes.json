@@ -2022,6 +2022,9 @@
     "returnHome": "Go Back Home"
   },
   "profile": {
+    "viewGrid": "Grid view",
+    "viewList": "Lis view",
+    "viewMode": "Yu go see am.",
     "back": "Go back",
     "usernameAvailable": "Username dey available!",
     "signUpToClaim": "Sign up today for claim am",

@@ -2044,6 +2044,9 @@
     "returnHome": "返回主页"
   },
   "profile": {
+    "viewGrid": "格子视图",
+    "viewList": "列表视图",
+    "viewMode": "看",
     "back": "返回",
     "usernameAvailable": "用户名可用！",
     "signUpToClaim": "注册来拿",

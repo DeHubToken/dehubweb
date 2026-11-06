@@ -2079,6 +2079,9 @@
     "returnHome": "Hoki ki te kāinga"
   },
   "profile": {
+    "viewGrid": "Tirohanga Grid",
+    "viewList": "Tirohanga rārangi",
+    "viewMode": "Tirohia",
     "back": "Hoki",
     "usernameAvailable": "Kei te wātea te ingoa kaiwhakamahi!",
     "signUpToClaim": "Rēhitatia āianei ki te pupuri",

@@ -385,7 +385,8 @@ export function useDeHubUserContent({
   userId,
   viewerAddress,
   enabled = true,
-  limit = 15,
+  // 10 fills a phone screen; the rest comes in as the visitor scrolls.
+  limit = 10,
   sortMode = 'newest',
   search = '',
   filters = EMPTY_PROFILE_FILTERS,

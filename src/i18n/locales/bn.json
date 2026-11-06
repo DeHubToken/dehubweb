@@ -2092,6 +2092,9 @@
     "returnHome": "হোমে ফিরুন"
   },
   "profile": {
+    "viewGrid": "গ্রিড ভিউ",
+    "viewList": "লিস্ট ভিউ",
+    "viewMode": "দেখুন",
     "back": "ফিরুন",
     "usernameAvailable": "ব্যবহারকারীর নাম উপলব্ধ!",
     "signUpToClaim": "দাবি করতে আজই সাইন আপ করুন",

@@ -1,4 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
+import { TokenComingSoonPage } from '@/components/app/token-launch/TokenComingSoonPage';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useParams } from 'react-router-dom';
@@ -62,7 +64,13 @@ function BookRows({ levels, bid, increment, onPrice, disabled }: { levels: BookL
   </button>)}</div>;
 }
 
+/** Not trading yet: the DEX is replaced by the launch card until DHB_SALES_PAUSED is off. */
 export default function DexPoolPage() {
+  if (DHB_SALES_PAUSED) return <TokenComingSoonPage path="/dex" />;
+  return <DexPoolPageMarket />;
+}
+
+function DexPoolPageMarket() {
   const { t } = useTranslation();
   const params = useParams<{ chain: string; address: string }>();
   const chain = isPoolChain(params.chain) ? params.chain : null;

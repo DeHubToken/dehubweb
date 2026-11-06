@@ -38,7 +38,7 @@ describe('DhbListingSoonCard', () => {
     listing.joinDhbListingWaitlist.mockResolvedValue({ alreadyJoined: false });
 
     render(<DhbListingSoonCard />);
-    expect(screen.getByText('Token listing soon!')).toBeTruthy();
+    expect(screen.getByText('Token launching soon')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: /notify me/i }));
 
     await waitFor(() => expect(screen.getByText(/We'll email mal@example.com/)).toBeTruthy());

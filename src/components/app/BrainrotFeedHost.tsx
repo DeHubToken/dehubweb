@@ -13,6 +13,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import X from "@/components/ui/cut-icons/close";
@@ -23,6 +24,7 @@ import { ShortsViewer } from '@/components/app/cards/ShortsViewer';
 import { prefetchUnifiedFeed, useUnifiedFeed, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { useWatchedVideoIds } from '@/hooks/use-watched-videos';
 import { mapToShortVideo } from '@/lib/short-video';
+import { toReelShorts } from '@/lib/profile-reel';
 import {
   BRAINROT_BUCKETS,
   BRAINROT_PAGE_SIZE,
@@ -67,6 +69,7 @@ function toList(query: FeedQuery): BrainrotListInput<UnifiedFeedItem> {
 export default function BrainrotFeedHost() {
   const session = useBrainrotSession();
   const origin = useMemo(() => (session?.fromId ? peekProfileFeedOrigin(session.fromId) : null), [session]);
+  if (session && origin && session.reel) return <ProfileReelFeed key={session.key} session={session} origin={origin} />;
   if (session && origin) return <ProfileShortsFeed key={session.key} session={session} origin={origin} />;
   return <MixedBrainrotFeed session={session} />;
 }
@@ -251,6 +254,73 @@ function ProfileShortsFeed({ session, origin }: { session: BrainrotSession; orig
   );
 }
 
+/**
+ * A tap on a profile grid tile (phone): the profile's whole list, every kind of
+ * post, in its own order, opened at the tapped one. Swiping up goes on to older
+ * posts and pages in more as it nears the end; swiping down goes back to newer.
+ */
+function ProfileReelFeed({ session, origin }: { session: BrainrotSession; origin: ProfileFeedOrigin }) {
+  const { t } = useTranslation();
+  const { data, isError, fetchNextPage, hasNextPage, isFetchingNextPage } = useDeHubUserContent({
+    ...origin.query,
+    enabled: !!origin.query.userId,
+  });
+  const fromId = String(session.fromId);
+  const bgId = session.reel?.bgId;
+  // Fixed at the first answer that holds the tapped post. The viewer is
+  // index-based, so later pages may only ever add to the end.
+  const [opened, setOpened] = useState<{ start: number } | null>(null);
+  const shorts = useMemo(() => {
+    const rows = data?.pages.flatMap(page => (page.data || []) as Record<string, any>[]) ?? [];
+    return toReelShorts(rows, bgId);
+  }, [data, bgId]);
+  const index = useMemo(() => shorts.findIndex(short => short.id === fromId), [shorts, fromId]);
+  useEffect(() => {
+    if (!opened && index >= 0) setOpened({ start: index });
+  }, [opened, index]);
+
+  const searched = useRef(0);
+  const stillSearching = !!data && index < 0 && !!hasNextPage && searched.current < MAX_SEARCH_PAGES;
+  useEffect(() => {
+    if (!stillSearching || isFetchingNextPage) return;
+    searched.current += 1;
+    fetchNextPage();
+  }, [stillSearching, isFetchingNextPage, fetchNextPage]);
+
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // The tapped post is not in the list after all (an old pinned post, a post
+  // with nothing to draw as a slide): open its own page instead of closing to
+  // nothing, which read as "the tap did nothing".
+  const navigate = useNavigate();
+  const lost = isError || (!!data && index < 0 && !stillSearching && !isFetchingNextPage);
+  useEffect(() => {
+    if (!lost) return;
+    closeBrainrotFeed();
+    navigate(`/app/post/${fromId}`, { state: { fromFeed: true } });
+  }, [lost, navigate, fromId]);
+
+  return (
+    <AnimatePresence>
+      {opened && shorts.length > 0 ? (
+        <ShortsViewer
+          key={`profile-reel-${session.key}`}
+          shorts={shorts}
+          initialIndex={opened.start}
+          onClose={closeBrainrotFeed}
+          onLoadMore={loadMore}
+          hasMore={!!hasNextPage}
+          isLoadingMore={isFetchingNextPage}
+        />
+      ) : (
+        <BrainrotPlaceholder key="profile-reel-loading" closeLabel={t('common.close', 'Close')} />
+      )}
+    </AnimatePresence>
+  );
+}
+
 /** Black screen with a spinner (or a message) while the lists come in. */
 function BrainrotPlaceholder({ label, closeLabel }: { label?: string; closeLabel: string }) {
   useEffect(() => {
@@ -266,6 +336,7 @@ function BrainrotPlaceholder({ label, closeLabel }: { label?: string; closeLabel
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      data-shorts-placeholder
       role="dialog"
       aria-modal="true"
       aria-busy={!label}

@@ -2097,6 +2097,9 @@
     "returnHome": "홈으로 돌아가기"
   },
   "profile": {
+    "viewGrid": "그리드 보기",
+    "viewList": "목록 보기",
+    "viewMode": "보기",
     "back": "뒤로",
     "usernameAvailable": "사용 가능한 사용자명!",
     "signUpToClaim": "가입하여 획득",

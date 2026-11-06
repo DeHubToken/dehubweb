@@ -2083,6 +2083,9 @@
     "returnHome": "Ku Noqo Guriga"
   },
   "profile": {
+    "viewGrid": "Muuqaalka Grid",
+    "viewList": "Muuqaalka Liiska",
+    "viewMode": "Eeg",
     "back": "Dib",
     "usernameAvailable": "Magaca isticmaalaha waa la heli karaa!",
     "signUpToClaim": "Maanta isdiiwaangeli si aad u hesho",

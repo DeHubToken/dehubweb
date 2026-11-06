@@ -2109,6 +2109,9 @@
     "returnHome": "მთავარზე დაბრუნება"
   },
   "profile": {
+    "viewGrid": "ბადის ხედი",
+    "viewList": "სიის ხედი",
+    "viewMode": "მონახება",
     "back": "უკან",
     "usernameAvailable": "მომხმარებლის სახელი თავისუფალია!",
     "signUpToClaim": "დარეგისტრირდით მისაღებად",

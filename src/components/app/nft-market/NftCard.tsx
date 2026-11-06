@@ -54,8 +54,14 @@ export function NftCard({
   badge,
   compact,
   index = 0,
+  selected,
+  dimmed,
   onClick,
 }: {
+  /** In the cart (bulk buy). */
+  selected?: boolean;
+  /** Cannot join the cart (other chain or currency, or your own). */
+  dimmed?: boolean;
   /** Art first, name and price on the image: the market grids. */
   compact?: boolean;
   name: string;
@@ -75,8 +81,10 @@ export function NftCard({
       type="button"
       data-page-bento
       data-nft-card
+      data-selected={selected ? 'true' : undefined}
+      aria-pressed={selected === undefined ? undefined : selected}
       onClick={onClick}
-      className="group flex min-w-0 flex-col overflow-hidden rounded-xl bg-zinc-900 text-left transition-[transform,box-shadow] duration-300 animate-in zoom-in-95 fill-mode-both hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] active:scale-[0.98]"
+      className={`${selected ? 'ring-2 ring-white ring-offset-2 ring-offset-black ' : ''}${dimmed ? 'opacity-40 ' : ''}group flex min-w-0 flex-col overflow-hidden rounded-xl bg-zinc-900 text-left transition-[transform,box-shadow] duration-300 animate-in zoom-in-95 fill-mode-both hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] active:scale-[0.98]`}
       style={{ animationDelay: `${Math.min(index, 18) * 35}ms` }}
     >
       <div className="relative aspect-square w-full overflow-hidden">
@@ -88,7 +96,15 @@ export function NftCard({
           className="absolute left-1.5 top-1.5 h-2 w-2 rounded-full ring-2 ring-black/40"
           style={{ background: CHAIN_DOT[chainId] ?? '#fff' }}
         />
-        {badge ? (
+        {selected !== undefined ? (
+          <span
+            aria-hidden="true"
+            className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold"
+            style={selected ? { background: '#fff', color: '#000' } : { background: 'rgba(0,0,0,0.55)', boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,0.85)', color: 'transparent' }}
+          >
+            ✓
+          </span>
+        ) : badge ? (
           <span className="absolute right-1.5 top-1.5 rounded-md px-1.5 py-0.5 text-[10px] font-semibold" style={BADGE}>{badge}</span>
         ) : null}
         {compact ? (

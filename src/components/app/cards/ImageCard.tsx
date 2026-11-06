@@ -107,6 +107,10 @@ import { cacheImageForNavigation } from '@/lib/post-cache';
 import { useRetainedPostPinned } from '@/lib/retained-post-surface';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
+import { useWideVideoMode, WIDE_RAILS_MAX_ASPECT, type WideVideoMode } from '@/lib/wide-video-mode';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
+import { WideVideoPanel } from '@/components/app/video/WideVideoRails';
+import type { VideoItem } from '@/types/feed.types';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
@@ -224,9 +228,12 @@ function ImageSlide({
   pinned = false,
   knownRatio,
   fill = false,
+  centered = false,
 }: {
   /** A framed gallery's shorter photo: cropped to fill the whole frame. */
   fill?: boolean;
+  /** Wide-screen Ambient: the photo sits in the middle of the glow. */
+  centered?: boolean;
   pinned?: boolean;
   /** The shape the gallery measured ahead, or its tallest photo's while this one is unknown. */
   knownRatio?: number;
@@ -316,7 +323,7 @@ function ImageSlide({
   return (
     <div
       ref={slideRef}
-      className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start', fill && 'h-full w-full')}
+      className={cn('relative flex cursor-pointer select-none', immersive || centered ? 'justify-center' : 'justify-start', fill && 'h-full w-full')}
       data-feed-image-frame={!immersive || undefined}
       data-media-frame-key={!immersive ? `image:${postId ?? img}:${idx}` : undefined}
       // Still stops the click reaching the card's navigate handler; the ladder
@@ -375,6 +382,7 @@ function ImageSlide({
  * photo until it was tapped.
  */
 const EAGER_SHAPE_PROBES = 6;
+const NO_IMAGES: string[] = [];
 
 function whenIdle(run: () => void): () => void {
   if (typeof window.requestIdleCallback === 'function') {
@@ -426,7 +434,16 @@ function ImageCarousel({
   immersive = false,
   overlay,
   soundPlaying = false,
+  wide,
+  railPanel,
 }: {
+  /**
+   * Desktop "Long form videos on wide screens" setting, applied to a single
+   * tall photo the same way: Ambient fills the space beside it with the photo
+   * blurred, Rails puts the info panel beside it. Undefined everywhere else.
+   */
+  wide?: WideVideoMode;
+  railPanel?: ReactNode;
   images: string[];
   /** Alt text per image, by position. */
   descriptions?: string[];
@@ -576,15 +593,27 @@ function ImageCarousel({
   };
   // A framed gallery centres its photos, so the frame's middle is theirs.
   const arrowTop = activeHeight && !framed ? { top: activeHeight / 2 } : undefined;
-  
-  return (
-    <div ref={rootRef} data-media-full data-gallery-frame={framed || undefined} data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
+  const singleRatio = !hasMultiple ? measuredAspects[0] : undefined;
+  const wideShape = !!wide && !!singleRatio && singleRatio < WIDE_RAILS_MAX_ASPECT;
+  const wideAmbient = wideShape && wide === 'ambient';
+  const wideRails = wideShape && wide === 'rails' && !!railPanel;
+  const wideCap = immersive ? IMMERSIVE_IMAGE_MAX_HEIGHT : FEED_IMAGE_CAP;
+
+  const gallery = (
+    <div ref={rootRef} data-media-full data-wide-ambient-photo={wideAmbient || undefined}
+      style={wideRails && singleRatio ? { flex: 'none', width: `min(calc(${wideCap} * ${singleRatio.toFixed(4)}), calc(100% - 272px))` } : undefined} data-gallery-frame={framed || undefined} data-sound-playing={soundPlaying || undefined} className={cn('relative overflow-hidden', immersive && !wideRails && !wideAmbient ? 'rounded-none' : 'rounded-2xl')} onWheel={handleWheel} data-no-navigate data-no-swipe={hasMultiple ? true : undefined}>
+      {wideAmbient && (
+        // The photo itself, blurred and dimmed, fills the space beside it.
+        <div aria-hidden="true" data-keep-dark className="pointer-events-none absolute inset-0 overflow-hidden bg-black">
+          <img src={cdnImage(images[0], { width: 160 })} alt="" decoding="async" className="h-full w-full scale-125 object-cover opacity-60 blur-[40px] saturate-150" />
+        </div>
+      )}
       {/* Carousel container */}
       <div
         ref={scrollRef}
         onScroll={updateCurrentIndex}
         style={{ height: immersive ? activeHeight : undefined }}
-        className={cn("flex gap-2 scrollbar-hide", framed ? 'items-stretch' : 'items-start', hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
+        className={cn("flex gap-2 scrollbar-hide", wideAmbient && "relative", framed ? 'items-stretch' : 'items-start', hasMultiple ? "overflow-x-auto overscroll-x-contain touch-auto" : "overflow-x-hidden touch-pan-y")}
       >
         {images.map((img, idx) => (
           <div
@@ -608,6 +637,7 @@ function ImageCarousel({
               pinned={images.length <= 1 || (idx >= currentIndex - 1 && idx <= currentIndex + 2)}
               knownRatio={measuredAspects[idx] ?? tallestAspect}
               fill={fillsFrame(idx)}
+              centered={wideAmbient || wideRails}
             />
           </div>
         ))}
@@ -652,6 +682,7 @@ function ImageCarousel({
       )}
     </div>
   );
+  return wideRails ? <div data-wide-rails-row className="flex items-stretch gap-3">{gallery}{railPanel}</div> : gallery;
 }
 
 /**
@@ -966,6 +997,15 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
   const images = useMemo(() => post.imageUrls && post.imageUrls.length > 0 
     ? post.imageUrls 
     : [post.image], [post.imageUrls, post.image]);
+
+  // Long form videos on wide screens (Settings > Appearance > Media) covers a
+  // single tall photo too: desktop feed card and post page only.
+  const isDesktopViewport = useIsDesktopViewport();
+  const wideVideoMode = useWideVideoMode();
+  const widePhoto = isDesktopViewport && !isPhone && !stage && images.length === 1 && layout !== 'comic' && wideVideoMode !== 'standard'
+    ? wideVideoMode : undefined;
+  const [singlePhotoRatio] = useGalleryAspects(widePhoto ? images : NO_IMAGES, !!widePhoto);
+  const widePhotoRails = widePhoto === 'rails' && !!singlePhotoRatio && singlePhotoRatio < WIDE_RAILS_MAX_ASPECT;
 
   const [isDownloading, setIsDownloading] = useState(false);
   const handleDownloadImage = useCallback(async () => {
@@ -1495,6 +1535,21 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
               immersive={isImmersive}
               overlay={fullscreenOpen ? undefined : soundtrackControl}
               soundPlaying={soundtrack.playing && !fullscreenOpen}
+              wide={widePhoto}
+              railPanel={widePhoto === 'rails' ? (
+                <WideVideoPanel
+                  video={{ id: post.id, title: post.title, description: post.description, commentCount: post.comments, creatorId: post.creatorId, channel: post.username, creatorUsername: post.username } as unknown as VideoItem}
+                  walletAddress={walletAddress}
+                  onLogin={openLoginModal}
+                  isOwnPost={isOwnPost}
+                  hideCaption={contentWarning.hidden}
+                  onOpenComments={() => {
+                    if (onOpenComments) { onOpenComments(); return; }
+                    setCommentsInitialTab(undefined);
+                    setShowComments(true);
+                  }}
+                />
+              ) : undefined}
             />
           );
           // Only a gallery keeps sideways swipes; a single photo lets the
@@ -1529,8 +1584,8 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
           brings its own gutter — the same px-3 the immersive video card uses. */}
       <div data-card-info className={cn('pt-3 space-y-2', isImmersive && 'px-3')}>
         {isImmersive && headerRow}
-        {/* Title & Description */}
-        {!contentWarning.hidden && (
+        {/* Title & Description (in the rails panel when rails are on) */}
+        {!contentWarning.hidden && !widePhotoRails && (
         <FeedDescription 
           postId={post.id}
           onOpen={openPost}

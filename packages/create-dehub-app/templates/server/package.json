@@ -3,5 +3,5 @@
   "private": true,
   "type": "module",
   "scripts": { "dev": "node --watch src/server.js", "start": "node src/server.js" },
-  "dependencies": { "dehub-sdk": "^1.0.0", "express": "^4.21.2", "jose": "^5.9.6" }
+  "dependencies": { "dehub-sdk": "https://riftn.com/sdk/dehub-sdk-1.0.0.tgz", "express": "^4.21.2", "jose": "^5.9.6" }
 }

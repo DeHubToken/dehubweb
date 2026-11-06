@@ -72,3 +72,28 @@ html[data-theme] [data-profile-search-quiet] :is(svg, button):not(#_):not(#_) {
 html[data-theme] [data-profile-search-quiet] > svg:not(#_):not(#_) {
   left: 0.125rem;
 }
+
+/* Desktop sort row: bare icons, active sort marked by the same Beam underline. */
+html[data-theme] [data-profile-quiet-row] [data-profile-sort-tab]:not([data-active]):not(#_):not(#_):not(#_) {
+color: var(--pqr-sub);
+}
+[data-profile-sort-tab][data-active]::after {
+content: '';
+position: absolute;
+left: 0.75rem;
+right: 0.75rem;
+bottom: 3px;
+height: 2px;
+border-radius: 2px;
+background: currentColor;
+box-shadow: 0 0 9px currentColor, 0 0 2px currentColor;
+pointer-events: none;
+}
+
+/* Grid / list toggle: the chosen view is lit, the other one dimmed. */
+html[data-theme] [data-profile-quiet-row] [data-profile-view-option]:not([data-active]):not(#_):not(#_):not(#_) {
+  color: var(--pqr-sub);
+}
+html[data-theme] [data-profile-quiet-row] [data-profile-view-option]:not([data-active]) svg:not(#_):not(#_):not(#_) {
+  color: var(--pqr-sub);
+}

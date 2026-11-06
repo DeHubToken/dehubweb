@@ -13,7 +13,8 @@ export const FOLLOWED_TAGS_QUERY_KEY = ['followed-tags'] as const;
  * beside the people you follow (Mastodon's tag follows); the server does the
  * mixing, this only keeps the list.
  */
-export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear: () => void; className?: string }) {
+/** Follow state for one hashtag: whether the viewer follows it and a toggle. */
+export function useFollowTag(tag: string) {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -22,7 +23,7 @@ export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear
   const { data: followed = [] } = useQuery({
     queryKey: FOLLOWED_TAGS_QUERY_KEY,
     queryFn: async () => (await import('@/lib/api/dehub/followed-tags')).getFollowedTags(),
-    enabled: isAuthenticated,
+    enabled: isAuthenticated && !!name,
     staleTime: 5 * 60 * 1000,
   });
   const following = followed.includes(name);
@@ -53,6 +54,18 @@ export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear
     },
   });
 
+  return {
+    name,
+    following,
+    isAuthenticated,
+    pending: mutation.isPending,
+    toggle: () => mutation.mutate(!following),
+  };
+}
+
+export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear: () => void; className?: string }) {
+  const { t } = useTranslation();
+  const { name, following, isAuthenticated, pending, toggle } = useFollowTag(tag);
   // One chip on the right holds both actions, so the ✕ lives inside it.
   // Bar is rounded-xl (12px) with a 6px inset around the chip, so the chip
   // takes 12 - 6 = 6px corners (rounded-md) and sits evenly on every side.
@@ -80,8 +93,8 @@ export function FollowTagBar({ tag, onClear, className }: { tag: string; onClear
         {isAuthenticated && (
           <button
             type="button"
-            onClick={() => mutation.mutate(!following)}
-            disabled={mutation.isPending}
+            onClick={toggle}
+            disabled={pending}
             aria-pressed={following}
             aria-label={following ? t('followedTags.unfollow', { tag: name }) : t('followedTags.follow', { tag: name })}
             className={cn('flex items-center pl-3 pr-2 transition-colors disabled:opacity-60', chipHover)}

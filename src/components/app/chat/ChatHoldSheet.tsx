@@ -15,6 +15,8 @@ export interface ChatHoldAction {
   /** The one filled tile (Reply). */
   prime?: boolean;
   destructive?: boolean;
+  /** A wide pill under the tiles (Delete, Ban) instead of a tile. */
+  secondary?: boolean;
 }
 
 interface ChatHoldSheetProps {
@@ -30,6 +32,8 @@ interface ChatHoldSheetProps {
   /** Show the "+" for the full emoji panel. Off where only a fixed set exists (comment reactions). */
   allowMore?: boolean;
   actions: ChatHoldAction[];
+  /** Draw a soft frame around the held row (live chat). */
+  frame?: boolean;
 }
 
 /** Phones with a finger, not a mouse. Desktop keeps hover buttons and the browser's own right-click. */
@@ -79,7 +83,7 @@ const KEEP = {
  * back and the keyboard dropped), and nothing here closes the sheet it sits
  * in.
  */
-export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine = [], onReact, allowMore = true, actions }: ChatHoldSheetProps) {
+export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine = [], onReact, allowMore = true, actions, frame = false }: ChatHoldSheetProps) {
   const { t } = useTranslation();
   const sheetRef = useRef<HTMLDivElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -112,7 +116,7 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
     // A new hold inside the last one's 0.3s ease-back takes over the list.
     delete holder.dataset.chatHoldRelease;
     holder.querySelectorAll('[data-chat-held]').forEach((row) => row.removeAttribute('data-chat-held'));
-    anchor.setAttribute('data-chat-held', '');
+    anchor.setAttribute('data-chat-held', frame ? 'frame' : '');
     holder.setAttribute('data-chat-holding', '');
     const raf = requestAnimationFrame(() => {
       const sheet = sheetRef.current;
@@ -145,9 +149,11 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
         delete holder.dataset.chatHoldRelease;
       }, 320);
     };
-  }, [open, anchor]);
+  }, [open, anchor, frame]);
 
   const close = () => onOpenChange(false);
+  const mainActions = actions.filter((a) => !a.secondary);
+  const sideActions = actions.filter((a) => a.secondary);
   const pick = (emoji: string) => {
     onReact?.(emoji);
     close();
@@ -213,12 +219,12 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
               )
             )}
 
-            {actions.length > 0 && !moreOpen && (
+            {mainActions.length > 0 && !moreOpen && (
               <div
                 className={cn('grid gap-2', quickReactions && onReact ? 'pt-3.5' : 'pt-1')}
-                style={{ gridTemplateColumns: `repeat(${columns(actions.length)}, minmax(0, 1fr))` }}
+                style={{ gridTemplateColumns: `repeat(${columns(mainActions.length)}, minmax(0, 1fr))` }}
               >
-                {actions.map((a) => (
+                {mainActions.map((a) => (
                   <button
                     key={a.key}
                     type="button"
@@ -231,6 +237,23 @@ export function ChatHoldSheet({ open, onOpenChange, anchor, quickReactions, mine
                   >
                     <span className="grid h-5 w-5 place-items-center [&>svg]:h-5 [&>svg]:w-5">{a.icon}</span>
                     <span className="w-full truncate text-center">{a.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            {sideActions.length > 0 && !moreOpen && (
+              <div className="grid grid-cols-2 gap-2 pt-2">
+                {sideActions.map((a) => (
+                  <button
+                    key={a.key}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { a.onSelect(); close(); }}
+                    className="flex h-11 min-w-0 items-center justify-center gap-2 rounded-2xl px-3 text-[13px] font-semibold transition-transform active:scale-95"
+                    data-chat-hold-tile={a.destructive ? 'danger' : ''}
+                  >
+                    <span className="grid h-4 w-4 shrink-0 place-items-center [&>svg]:h-4 [&>svg]:w-4">{a.icon}</span>
+                    <span className="truncate">{a.label}</span>
                   </button>
                 ))}
               </div>

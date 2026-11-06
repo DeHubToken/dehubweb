@@ -9,14 +9,15 @@
  * chip. Anything that isn't a plain photo carries one small glass badge in the
  * same top-right spot saying what it is.
  *
- * Every tile opens its own post page (likes, comments, save, share), which Back returns from to the same
- * spot. Desktop keeps the feed cards — this is only mounted below `md`.
+ * A tile opens the profile reel: this creator's posts one by one, full screen,
+ * from the tapped one (lib/profile-reel). A repost opens its own post page. Desktop keeps the feed cards — this is only mounted below `md`.
  *
  * @module components/app/profile/ProfileMixedGrid
  */
 
 import { memo, useEffect, type ReactNode } from 'react';
 import { warmPostPage } from '@/lib/preload-post-page';
+import { cdnImage, deviceWidth } from '@/lib/media-url';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Pin } from 'lucide-react';
@@ -32,6 +33,7 @@ import { ProposalLinkEmbed } from '@/components/app/governance/ProposalLinkEmbed
 import type { ProfileContentItem } from '@/hooks/use-profile-page';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
+import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from './PostBackground';
 import './profile-mixed-grid.css';
 
@@ -65,6 +67,18 @@ function compact(n: number | undefined): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`;
   return String(n);
+}
+
+/**
+ * A tile is a third of the screen (about 130 CSS px on a phone), but feed
+ * pictures arrive sized for a full-width card (1080 px), so a profile pulled
+ * ~1.8 MB of pictures for its first rows. Ask for the tile's own size instead,
+ * with room for a wide picture cropped to the 3:4 tile.
+ */
+function tileImage(url: string | undefined): string | undefined {
+  if (!url || typeof window === 'undefined') return url;
+  // The grid is never wider than the profile column (~720px on desktop).
+  return cdnImage(url, { width: deviceWidth(Math.ceil(Math.min(window.innerWidth, 720) / 3) * 1.4) });
 }
 
 /** Strip markdown-ish noise so a poster tile shows words, not syntax. */
@@ -104,7 +118,22 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
   }, []);
 
   const profileFeed = useProfileFeedContext();
-  const openPost = (id: string, slug?: string) => {
+  /**
+   * A post of this profile's own list opens the reel: their posts one by one,
+   * full screen, from this one (lib/profile-reel). A repost belongs to someone
+   * else's list, so it still opens its post page.
+   */
+  const openReel = (entry: MixedGridEntry, id: string): boolean => {
+    if (entry.isRepost || entry.isOptimistic || !profileFeed?.current) return false;
+    // A pinned post that is not also in the loaded list is usually an old one:
+    // the reel would have to page back through the whole history to find it.
+    if (entry.isPinned && !entries.some((other) => !other.isPinned && !other.isRepost && other.data.id === entry.data.id)) return false;
+    noteProfileFeedOpen(profileFeed, id);
+    openBrainrotFeed(id, undefined, { bgId: postBg?.id ?? null });
+    return true;
+  };
+  const openPost = (id: string, slug?: string, entry?: MixedGridEntry) => {
+    if (entry && openReel(entry, id)) return;
     noteProfileFeedOpen(profileFeed, id);
     navigate(`/app/post/${slug || id}`, { state: { fromFeed: true } });
   };
@@ -140,10 +169,10 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
                 data-tile="photo"
                 className="pmg-tile"
                 disabled={entry.isOptimistic}
-                onClick={() => openPost(post.id, post.articleSlug)}
+                onClick={() => openPost(post.id, post.articleSlug, entry)}
                 aria-label={post.caption || post.title || t('profile.tabs.images', 'Image')}
               >
-                <img src={post.image} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className={post.isPPV ? 'pmg-img pmg-img--locked' : 'pmg-img'} />
+                <img src={tileImage(post.image)} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className={post.isPPV ? 'pmg-img pmg-img--locked' : 'pmg-img'} />
                 {(multi || pinChip) && <span className="pmg-shade" />}
                 {multi && <Badge label={t('profile.multiPhoto', 'Photos')}><Images /></Badge>}
                 {post.isPPV && <span className="pmg-lock"><Lock /></span>}
@@ -160,7 +189,7 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             if (video.isAudio) {
               const cover = video.thumbnail;
               return (
-                <button key={entry.key} type="button" data-tile="audio" className="pmg-tile pmg-audio" disabled={entry.isOptimistic} onClick={() => openPost(video.id, video.articleSlug)} aria-label={video.title}>
+                <button key={entry.key} type="button" data-tile="audio" className="pmg-tile pmg-audio" disabled={entry.isOptimistic} onClick={() => openPost(video.id, video.articleSlug, entry)} aria-label={video.title}>
                   {cover ? <span className="pmg-audio-blur" style={{ backgroundImage: `url(${cover})` }} /> : <span className="pmg-audio-blur pmg-audio-blur--empty" />}
                   <span className="pmg-audio-cover" style={cover ? { backgroundImage: `url(${cover})` } : undefined}>{!cover && <Music />}</span>
                   <Badge label={t('profile.tabs.songs', 'Audio')}><Music /></Badge>
@@ -174,8 +203,8 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             }
 
             return (
-              <button key={entry.key} type="button" data-tile={isLive ? 'live' : 'video'} className={isLive ? 'pmg-tile pmg-live' : 'pmg-tile'} disabled={entry.isOptimistic} onClick={() => openPost(video.id, video.articleSlug)} aria-label={video.title}>
-                {video.thumbnail ? <img src={video.thumbnail} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className={locked ? 'pmg-img pmg-img--locked' : 'pmg-img'} /> : <span className="pmg-img pmg-img--empty" />}
+              <button key={entry.key} type="button" data-tile={isLive ? 'live' : 'video'} className={isLive ? 'pmg-tile pmg-live' : 'pmg-tile'} disabled={entry.isOptimistic} onClick={() => openPost(video.id, video.articleSlug, entry)} aria-label={video.title}>
+                {video.thumbnail ? <img src={tileImage(video.thumbnail)} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className={locked ? 'pmg-img pmg-img--locked' : 'pmg-img'} /> : <span className="pmg-img pmg-img--empty" />}
                 <span className="pmg-shade" />
                 {isLive ? (
                   <span className="pmg-chip pmg-chip--live"><i />{t('live.liveBadge', 'LIVE')}</span>
@@ -195,6 +224,7 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
           const post = entry.data as TextPost;
           const isArticle = !!post.articleBody;
           const openThis = () => {
+            if (openReel(entry, post.id)) return;
             noteProfileFeedOpen(profileFeed, post.id);
             navigate(post.articleSlug ? `/app/post/${post.articleSlug}` : post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`, { state: { fromFeed: true } });
           };
@@ -203,7 +233,7 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
             const cover = post.articleImageUrl;
             return (
               <button key={entry.key} type="button" data-tile="article" className="pmg-tile pmg-poster pmg-article" disabled={entry.isOptimistic} onClick={openThis} aria-label={post.title || post.content}>
-                {cover ? <img src={cover} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className="pmg-article-img" /> : <span className="pmg-article-img pmg-article-img--empty"><Blog /></span>}
+                {cover ? <img src={tileImage(cover)} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className="pmg-article-img" /> : <span className="pmg-article-img pmg-article-img--empty"><Blog /></span>}
                 <Badge label={t('profile.tabs.articles', 'Article')}><Blog /></Badge>
                 <span className="pmg-article-body">
                   <b>{plainText(post.title || post.content)}</b>

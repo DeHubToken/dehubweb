@@ -2067,6 +2067,9 @@
     "returnHome": "घर वापस जाव"
   },
   "profile": {
+    "viewGrid": "ग्रिड दृस्य",
+    "viewList": "सूची दृस्य",
+    "viewMode": "दृस्य",
     "back": "पाछू",
     "usernameAvailable": "यूजरनेम उपलब्ध हे!",
     "signUpToClaim": "दावा करे बर आज साइन अप करव",

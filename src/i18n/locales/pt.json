@@ -2176,6 +2176,9 @@
     "returnHome": "Voltar ao início"
   },
   "profile": {
+    "viewGrid": "Vista de grelha",
+    "viewList": "Visualização de lista",
+    "viewMode": "Ver",
     "mutualsOne": "{{count}} Mútuo:",
     "mutualsMany": "{{count}} Mútuos:",
     "back": "Voltar",

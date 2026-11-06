@@ -2059,6 +2059,9 @@
     "returnHome": "ارجع للرئيسية"
   },
   "profile": {
+    "viewGrid": "عرض الشبكة",
+    "viewList": "قائمة العرض",
+    "viewMode": "عرض",
     "back": "ارجع",
     "usernameAvailable": "اسم المستخدم متاح!",
     "signUpToClaim": "سجّل للحصول عليهو",

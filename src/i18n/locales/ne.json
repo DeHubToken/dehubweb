@@ -2105,6 +2105,9 @@
     "returnHome": "गृहपृष्ठमा फर्कनुहोस्"
   },
   "profile": {
+    "viewGrid": "ग्रिड दृश्य",
+    "viewList": "सूची दृश्य",
+    "viewMode": "हेर्नुहोस्",
     "back": "पछाडि",
     "usernameAvailable": "प्रयोगकर्तानाम उपलब्ध छ!",
     "signUpToClaim": "दाबी गर्न आजै साइन अप गर्नुहोस्",

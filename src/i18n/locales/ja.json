@@ -2097,6 +2097,9 @@
     "returnHome": "ホームに戻る"
   },
   "profile": {
+    "viewGrid": "グリッドビュー",
+    "viewList": "リストビュー",
+    "viewMode": "表示",
     "back": "戻る",
     "usernameAvailable": "ユーザー名が利用可能です！",
     "signUpToClaim": "登録して取得",

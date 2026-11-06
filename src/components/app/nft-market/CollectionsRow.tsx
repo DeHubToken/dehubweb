@@ -6,6 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { NftArt, formatPrice } from '@/components/app/nft-market/NftCard';
 import { CHAIN_LABEL, type MarketCollection } from '@/lib/market/market';
 
+/** "1.24 ETH" style, short. */
+export function formatVolume(v: { amount: number; symbol: string }): string {
+  const n = v.amount;
+  const s = n >= 1000 ? n.toLocaleString(undefined, { maximumFractionDigits: 0 }) : n.toLocaleString(undefined, { maximumSignificantDigits: 3 });
+  return `${s} ${v.symbol}`;
+}
+
 export function CollectionsRow({
   items,
   selected,
@@ -50,10 +57,11 @@ export function CollectionsRow({
                     ? `${t('nftMarket.floor', { defaultValue: 'Floor' })} ${formatPrice(c.floor.amount, c.floor.decimals)} ${c.floor.symbol}`
                     : t('nftMarket.offersOpen', { defaultValue: 'Open to offers' })}
                 </p>
-                <p className="text-[11px] text-zinc-500">
+                <p className="truncate text-[11px] text-zinc-500">
                   {c.listed
                     ? t('nftMarket.listedCount', { defaultValue: '{{n}} for sale', n: c.listed })
                     : t('nftMarket.mintedCount', { defaultValue: '{{n}} minted', n: c.minted ?? 0 })}
+                  {c.volume && c.sales ? ` · ${t('nftMarket.volShort', { defaultValue: 'Vol' })} ${formatVolume(c.volume)}` : ''}
                 </p>
               </div>
             </button>

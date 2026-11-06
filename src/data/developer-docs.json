@@ -383,6 +383,26 @@
       "intro": "Small, complete examples for the things most apps need first. Each one works as it is.",
       "sections": [
         {
+          "id": "starters",
+          "heading": "Start from a template",
+          "blocks": [
+            {
+              "p": "Make a new app folder with one command. Pick plain HTML, React or a Node server."
+            },
+            {
+              "code": "npx https://riftn.com/sdk/create-dehub-app.tgz my-app",
+              "lang": "bash"
+            },
+            {
+              "p": "Add the SDK to an app you already have. The server helpers check sign-in tokens, payment receipts and webhooks for you."
+            },
+            {
+              "code": "npm i https://riftn.com/sdk/dehub-sdk.tgz\n\n// or in the browser, no build step\nimport { dehub } from 'https://riftn.com/sdk/dehub-sdk.mjs';",
+              "lang": "bash"
+            }
+          ]
+        },
+        {
           "id": "hello",
           "heading": "A complete mini app page",
           "blocks": [

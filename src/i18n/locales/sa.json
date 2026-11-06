@@ -2069,6 +2069,9 @@
     "returnHome": "गृहं प्रतिगच्छतु"
   },
   "profile": {
+    "viewGrid": "रेषा दृश्यम्",
+    "viewList": "सूचि दृश्यम्",
+    "viewMode": "दृश्यम्",
     "back": "प्रतिगच्छतु",
     "usernameAvailable": "उपयोक्तृनाम उपलभ्यते!",
     "signUpToClaim": "दावीकर्तुं अद्य पञ्जीकुर्वन्तु",

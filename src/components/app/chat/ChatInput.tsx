@@ -2,6 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import BarChart3 from "@/components/ui/cut-icons/stats";
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useIsMobile } from '@/hooks/use-mobile';
+import '@/styles/chat-hold.css';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Wand2, MessageCircleQuestion, FileText, Play, Lock, EyeOff, Timer, Plus } from "lucide-react";
@@ -183,6 +185,8 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   // the space. Same rail, same drafting, both sides of the breakpoint.
   // Gated on VIEWPORT, not pointer type — a desktop window narrowed to phone
   // width has the same layout and the same dead band, so it gets the strip.
+  // Phones get the slim "Replying to" bar; desktop keeps its old preview.
+  const phone = useIsMobile();
   const [narrowViewport, setNarrowViewport] = useState(
     () => window.matchMedia('(max-width: 1023px)').matches,
   );
@@ -702,7 +706,28 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
        `#app-root` class nets, which outrank any re-declaration here. */}
     <div {...dropProps} data-drop-hover={dropHover || undefined} className={cn("shrink-0 p-3 lg:pl-4 border-t border-white/25 transition-shadow", dropHover && "ring-2 ring-inset ring-white/40 rounded-xl")}>
       {/* Reply preview */}
-      {replyTo && (
+      {replyTo && phone && (
+        <div data-reply-bar className="mb-2 flex items-center gap-2.5 rounded-2xl border py-2 pl-2 pr-1.5">
+          <span aria-hidden data-reply-bar-accent className="h-8 w-[3px] shrink-0 rounded-full" />
+          <Reply data-reply-bar-icon className="h-4 w-4 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p data-reply-bar-name className="truncate text-[13px] font-semibold leading-tight">
+              {_copy('features.replyingTo', { defaultValue: 'Replying to {{name}}', name: replyTo.userName })}
+            </p>
+            <p data-reply-bar-text className="truncate text-xs leading-tight">{replyTo.content || (replyTo.type === 'gif' ? 'GIF' : _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }))}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancelReply}
+            aria-label={_copy('common.close', { defaultValue: 'Close' })}
+            data-reply-bar-icon
+            className="grid h-8 w-8 shrink-0 place-items-center rounded-full active:scale-90"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+      {replyTo && !phone && (
         <div className="flex items-center gap-2 mb-2 px-2 py-1.5 bg-zinc-800/70 rounded-lg">
           <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
@@ -827,7 +852,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       <div>
         <Textarea
           ref={textareaRef}
-          placeholder={_copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
+          placeholder={replyTo && phone ? _copy("governance.discussion.writeReply", { defaultValue: "Write a reply" }) : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
           value={message}
           onChange={(e) => {
             const val = e.target.value;

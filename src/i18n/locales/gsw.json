@@ -2074,6 +2074,9 @@
     "returnHome": "Zrugg zur Startsyte"
   },
   "profile": {
+    "viewGrid": "Gitter‑Ansicht",
+    "viewList": "Listä Ansicht",
+    "viewMode": "Blick",
     "back": "Zrugg",
     "usernameAvailable": "Benutzername verfüegbar!",
     "signUpToClaim": "Mäld di aa zum",

@@ -22,6 +22,9 @@ import { useEffect, useRef, type RefObject } from 'react';
 const DRAW_EVERY_MS = 120;
 const BLEND = 0.18;
 const CANVAS_WIDTH = 48;
+// The blur fades each layer to clear over about three times its radius, so
+// both layers run 140px past every edge. At 10% they stopped inside that
+// fade and a thin dark line showed along the edges of the frame.
 const FILL_FILTER = 'blur(40px) saturate(150%) brightness(0.55)';
 
 interface WideAmbientFillProps {
@@ -115,7 +118,7 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
           src={thumbnail}
           alt=""
           decoding="async"
-          className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] max-w-none object-cover"
+          className="absolute left-[-140px] top-[-140px] h-[calc(100%+280px)] w-[calc(100%+280px)] max-w-none object-cover"
           style={{ filter: FILL_FILTER }}
         />
       )}
@@ -123,7 +126,7 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
         ref={canvasRef}
         width={CANVAS_WIDTH}
         height={27}
-        className="absolute left-[-10%] top-[-10%] h-[120%] w-[120%] opacity-0 transition-opacity duration-700"
+        className="absolute left-[-140px] top-[-140px] h-[calc(100%+280px)] w-[calc(100%+280px)] opacity-0 transition-opacity duration-700"
         style={{ filter: FILL_FILTER }}
       />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_50%_50%,transparent_40%,rgba(0,0,0,0.5))]" />

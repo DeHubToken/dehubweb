@@ -2659,6 +2659,12 @@ export function usePostForm(
             likes: 0,
             dislikes: 0,
           },
+          // An article lands as its article card, not as a bare summary line.
+          ...(!isQuoting && extra?.articleBody ? {
+            title: titleText.trim(),
+            articleBody: extra.articleBody,
+            articleImageUrl: extra.articleImage ? URL.createObjectURL(extra.articleImage) : undefined,
+          } : {}),
           isOptimistic: true,
           ...(isQuoting ? { isQuotePost: true, quotedPost } : {}),
         };

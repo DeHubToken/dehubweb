@@ -39,6 +39,7 @@ import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from '@/components/app/profile/PostBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useProfileViewMode } from '@/lib/profile-view-mode';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
@@ -131,7 +132,9 @@ function LoadMoreSentinel({ hasNextPage, isFetchingNextPage, fetchNextPage }: {
       if (entries[0].isIntersecting && s.hasNextPage && !s.isFetchingNextPage) {
         s.fetchNextPage();
       }
-    }, { rootMargin: '800px' });
+    // About half a screen ahead, and only below: a big margin made the first
+      // page's sentinel count as in view at once and pull page 2 on load.
+    }, { rootMargin: '0px 0px 400px 0px' });
     observer.observe(el);
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage]);
@@ -478,7 +481,7 @@ function HomeTabPanel({
   isContentFiltered?: boolean;
 }) {
   const { t: _copy } = _useCopy();
-  const isMobile = useIsMobile();
+  const viewMode = useProfileViewMode();
   const postBg = useProfilePostBg();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
@@ -496,8 +499,8 @@ function HomeTabPanel({
       })
     : [];
 
-  // Phones get every post type in one grid; desktop keeps the feed cards.
-  if (isMobile) {
+  // Grid: every post type as tiles. List: the full post cards, one under another.
+  if (viewMode === 'grid') {
     const entries: MixedGridEntry[] = [
       ...filteredOptimisticPosts.map((op) => ({ key: `op-${op.id}`, type: op.type, data: op.data, isOptimistic: true }) as MixedGridEntry),
       ...ALL_CONTENT.map((item) => ({ key: `${item.isRepost ? 'rp-' : ''}${item.data.id}`, type: item.type, data: item.data, isPinned: item.isPinned, isRepost: item.isRepost }) as MixedGridEntry),
@@ -506,7 +509,7 @@ function HomeTabPanel({
   }
 
   return (
-    <div className="space-y-3">
+    <div data-profile-list-view className="space-y-3">
       {filteredOptimisticPosts.map((op) => {
         const card = op.type === 'post'
           ? <PostCard key={op.id} post={op.data as TextPost} />
@@ -531,7 +534,7 @@ function HomeTabPanel({
           : <VideoCard key={item.data.id} video={item.data as VideoItem} aboveFold={aboveFold} />;
         return (
           <div
-            key={item.data.id}
+            key={`${item.isRepost ? 'rp-' : ''}${item.data.id}`}
             data-feed-item
             data-cinematic={item.type}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
