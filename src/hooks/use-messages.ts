@@ -632,7 +632,7 @@ export function useMessages(conversationId: string | null) {
           const pages = old.pages.map((page: any) => ({
             ...page,
             items: page.items.map((m: DmMessage) =>
-              m._id === data._id
+              m._id === (data.messageId ?? data._id)
                 ? {
                     ...m,
                     content,

@@ -41,7 +41,9 @@ export interface SendMessagePayload {
 }
 
 export interface EditedMessage {
-  _id: string;
+  /** Older events carry `_id`, the server now sends `messageId`. */
+  _id?: string;
+  messageId?: string;
   dmId: string;
   content: string;
   editedAt: string;
@@ -402,7 +404,9 @@ export async function emitEditMessage(payload: EditMessagePayload): Promise<void
     emit: () => { socket.emit('editMessage', payload); },
     messageEvent: 'editMessage',
     errorEvent: 'error',
-    matches: (event: EditedMessage) => event._id === payload.messageId && event.dmId === payload.dmId && event.content === payload.content,
+    // The server answers with `messageId` (not `_id`) and stores the text
+    // trimmed, so match on either id and compare the trimmed text.
+    matches: (event: EditedMessage) => (event.messageId ?? event._id) === payload.messageId && event.dmId === payload.dmId && event.content === payload.content.trim(),
   });
   if (!saved) throw new Error(_translateCopy("copy.f02d9391febf", { defaultValue: "The edit was not confirmed. Your text is still here." }));
 }
