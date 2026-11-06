@@ -15,6 +15,14 @@ type ScrubArgs = {
   eventRef?: RefObject<HTMLDivElement>;
 };
 
+/**
+ * True for an event that React delivered from a drawer or dialog portaled out of
+ * this element. It bubbles through the React tree, but it did not happen on the
+ * card, so the card's gestures must leave it alone.
+ */
+const fromPortal = (event: { currentTarget: Element; target: EventTarget | null }) =>
+  !event.currentTarget.contains(event.target as Node | null);
+
 /** Invisible target: 64px above the rail, plus 24px below inside its post. */
 export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElement> {
   const gesture = useRef<{
@@ -61,6 +69,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
 
   return {
     onPointerDownCapture(event) {
+      if (fromPortal(event)) return;
       swallowClick.current = false;
       if (!event.isPrimary || event.button !== 0) {
         if (gesture.current) cancel();
@@ -122,6 +131,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
     onPointerCancelCapture() { if (gesture.current) cancel(); },
     onLostPointerCaptureCapture() { if (gesture.current?.dragging) cancel(); },
     onTouchStartCapture(event) {
+      if (fromPortal(event)) return;
       const touch = event.touches[0];
       bottomTouch.current = !!touch && inZone(event.currentTarget, touch.clientX, touch.clientY)
         && !(args.ignoreSelector && (event.target as Element).closest(args.ignoreSelector));
@@ -140,6 +150,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       if (gesture.current) cancel();
     },
     onClickCapture(event) {
+      if (fromPortal(event)) return;
       // Keyboard activation has no pointer gesture and keeps working.
       if (swallowClick.current && event.detail !== 0) {
         event.preventDefault();
