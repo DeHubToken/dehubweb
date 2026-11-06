@@ -2377,6 +2377,7 @@
     "loginRequired": "Inloggen vereist"
   },
   "messages": {
+    "newDrawer": {"to": "Aan", "placeholder": "Naam of @gebruikersnaam", "recent": "Recent", "suggested": "Voorgesteld", "youFollow": "Mensen die je volgt", "chattedBefore": "Jullie praten", "mutual": "Wederzijds", "dmsOff": "DM's uit", "keepTyping": "Typ verder om iedereen te zoeken", "noOne": "Niemand gevonden", "tryUsername": "Probeer hun exacte @gebruikersnaam", "sayHi": "Zeg hallo tegen iemand", "typeAny": "Typ een naam of @gebruikersnaam"},
     "reply": "Beantwoorden",
     "react": "Reageren",
     "edit": "Bewerken",

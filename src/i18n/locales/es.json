@@ -2187,6 +2187,7 @@
     "loginRequired": "Inicio de sesión requerido"
   },
   "messages": {
+    "newDrawer": {"to": "Para", "placeholder": "Nombre o @usuario", "recent": "Recientes", "suggested": "Sugeridos", "youFollow": "Personas que sigues", "chattedBefore": "Ya hablan", "mutual": "Mutuo", "dmsOff": "MD desactivados", "keepTyping": "Sigue escribiendo para buscar a todos", "noOne": "No se encontró a nadie", "tryUsername": "Prueba con su @usuario exacto", "sayHi": "Saluda a alguien", "typeAny": "Escribe cualquier nombre o @usuario"},
     "reply": "Responder",
     "react": "Reaccionar",
     "edit": "Editar",

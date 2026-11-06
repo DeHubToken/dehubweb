@@ -20,6 +20,8 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector } from '@/components/app/chat';
+import { NewMessageDrawer, type NewMessageDrawerHandle } from '@/components/app/chat/NewMessageDrawer';
+import { flushSync } from 'react-dom';
 import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -240,6 +242,11 @@ export default function MessagesPage() {
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
+  // Phones: the + opens the New message drawer directly, keyboard up.
+  const [showNewMessageDrawer, setShowNewMessageDrawer] = useState(false);
+  const newMessageDrawerRef = useRef<NewMessageDrawerHandle>(null);
+  // The chat opened from that drawer, whose composer takes the caret on arrival.
+  const [composerFocusFor, setComposerFocusFor] = useState<string | null>(null);
   const [newChatKind, setNewChatKind] = useState<NewChatKind | null>(null);
   const { data: myMemberships } = useUserCommunities();
   
@@ -264,6 +271,47 @@ export default function MessagesPage() {
   } = useConversations(debouncedSearchQuery);
 
   const createConversation = useCreateConversation();
+
+  const openNewMessage = useCallback(() => {
+    const phone = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    if (!phone) {
+      setShowMessageSelector(true);
+      return;
+    }
+    // Inside the tap, so iOS lets the keyboard come up with the drawer.
+    newMessageDrawerRef.current?.primeKeyboard();
+    setShowNewMessageDrawer(true);
+  }, []);
+
+  /**
+   * A person picked in the drawer: open the chat in place right away (a thread
+   * you have never had starts as the usual virtual `new_0x…` one, which the
+   * chat creates on the server itself), then let the drawer slide away and
+   * hand the caret to the composer while the keyboard is still up.
+   */
+  const pickFromDrawer = useCallback((user: DeHubUser) => {
+    const addr = (user.address || '').toLowerCase();
+    if (!addr) return;
+    const existing = conversations?.find(c => c.otherUser?.address?.toLowerCase() === addr);
+    const now = new Date().toISOString();
+    const conv: DeHubConversation = existing ?? {
+      id: `new_${addr}`,
+      participants: [user],
+      otherUser: user,
+      unreadCount: 0,
+      createdAt: now,
+      updatedAt: now,
+    } as DeHubConversation;
+    setComposerFocusFor(conversationIdentity(conv));
+    flushSync(() => setSelectedConversation(conv));
+    window.setTimeout(() => {
+      setShowNewMessageDrawer(false);
+      requestAnimationFrame(() => {
+        const box = document.querySelector<HTMLTextAreaElement>('[data-chat-composer-input]');
+        box?.focus({ preventScroll: true });
+      });
+    }, 60);
+  }, [conversations]);
   const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(debouncedSearchQuery);
 
   /*
@@ -588,11 +636,25 @@ export default function MessagesPage() {
     );
   }
 
+  const newMessageDrawer = (
+    <NewMessageDrawer
+        ref={newMessageDrawerRef}
+        open={showNewMessageDrawer}
+        onOpenChange={setShowNewMessageDrawer}
+        conversations={conversations ?? []}
+        myAddress={walletAddress}
+        onPick={pickFromDrawer}
+        onGroup={() => { setShowNewMessageDrawer(false); setNewChatKind('group'); }}
+        onChannel={() => { setShowNewMessageDrawer(false); setNewChatKind('channel'); }}
+      />
+  );
+
   // If a DM conversation is selected, show it
   if (selectedConversation) {
+    /* No horizontal padding: the chat surfaces run to the column edges on
+       every theme. The rows and composer carry their own inner padding. */
     return (
-      /* No horizontal padding: the chat surfaces run to the column edges on
-         every theme. The rows and composer carry their own inner padding. */
+      <>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-0 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden`}>
         <DirectMessageChat
           /*
@@ -606,13 +668,17 @@ export default function MessagesPage() {
           key={conversationIdentity(selectedConversation)}
           conversation={selectedConversation}
           initialComposerText={composerPrefill?.convId === selectedConversation.id ? composerPrefill.text : undefined}
+          focusComposer={composerFocusFor === conversationIdentity(selectedConversation)}
           onBack={closeChat}
         />
       </div>
+      {newMessageDrawer}
+      </>
     );
   }
 
   return (
+    <>
     <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
       <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages: Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on Riftn, your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
       <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "Riftn Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
@@ -655,7 +721,7 @@ export default function MessagesPage() {
                 <button
                   type="button"
                   data-messages-search-action
-                  onClick={() => setShowMessageSelector(true)}
+                  onClick={openNewMessage}
                   aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
@@ -827,5 +893,7 @@ export default function MessagesPage() {
         }}
       />
     </div>
+    {newMessageDrawer}
+    </>
   );
 }

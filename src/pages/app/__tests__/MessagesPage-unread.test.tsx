@@ -29,6 +29,7 @@ vi.mock('@/components/app/chat', () => ({
   DirectMessageChat: ({ onBack }: { onBack: () => void }) => <button onClick={onBack}>Back to messages</button>,
   PublicChat: () => null, NewConversationModal: () => null, NewMessageSelector: () => null,
 }));
+vi.mock('@/components/app/chat/NewMessageDrawer', () => ({ NewMessageDrawer: () => null }));
 vi.mock('@/components/app/page-kit/PageKit', () => ({
   PageIsland: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   IslandAction: () => null,

@@ -61,6 +61,8 @@ export interface ChatInputSendArgs {
 }
 
 interface ChatInputProps {
+  /** Put the caret in the box on mount (a chat just opened from New message, keyboard already up). */
+  autoFocus?: boolean;
   onSendMessage: (args: ChatInputSendArgs) => Promise<boolean>;
   onTipClick?: () => void;
   /** Opens the create-poll drawer. */
@@ -123,7 +125,7 @@ interface ChatInputProps {
   allowLock?: boolean;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59, allowLock = false }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59, allowLock = false, autoFocus = false }: ChatInputProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
@@ -153,6 +155,9 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
   const [audioPreview, setAudioPreview] = useState<{ file: File; blob: Blob; duration: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (autoFocus) textareaRef.current?.focus({ preventScroll: true });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   // Choosing Reply means about to type — put the caret there.
   useEffect(() => {
     if (replyTo) textareaRef.current?.focus();
@@ -852,6 +857,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
       <div>
         <Textarea
           ref={textareaRef}
+          data-chat-composer-input
           placeholder={replyTo && phone ? _copy("governance.discussion.writeReply", { defaultValue: "Write a reply" }) : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
           value={message}
           onChange={(e) => {
