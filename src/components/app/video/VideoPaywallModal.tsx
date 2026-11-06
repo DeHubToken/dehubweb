@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
@@ -30,6 +30,9 @@ import { dhbText } from '@/lib/dhb-toast';
 import { AvatarVideoPaywall } from './AvatarVideoPaywall';
 import { Slider } from '@/components/ui/slider';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+// Opens when Create is pressed without enough DHB: pay the same amount in another coin.
+const PayWithCoinSheet = lazy(() => import('@/components/app/credits/PayWithCoinSheet'));
 
 export interface VideoGenerationOptions {
   avatar?: import('@/lib/creator/avatar').AvatarSubmission;
@@ -220,6 +223,7 @@ function StandardVideoPaywallModal({
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
+  const [coinPayOpen, setCoinPayOpen] = useState(false);
 
   const hasAdvancedFeatures = !model.requiresVideoInput && (model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed);
 
@@ -266,7 +270,7 @@ function StandardVideoPaywallModal({
     e.target.value = '';
   };
 
-  const handlePayAndGenerate = async () => {
+  const handlePayAndGenerate = async (funded = false) => {
     if (costDhb <= 0 || isQuoting || quoteError) return;
     if (model.supportsSeed && seed.trim() && (!/^\d+$/.test(seed.trim()) || !Number.isSafeInteger(Number(seed)) || Number(seed) > 2147483647)) {
       toast.error(_copy('creator.invalidSeed', { defaultValue: 'Seed must be a whole number from 0 to 2147483647.' }));
@@ -323,13 +327,12 @@ function StandardVideoPaywallModal({
         setIsUploading(false);
       }
 
-      if (needsTokens) {
+      if (needsTokens && !funded) {
         // The upload phase claims this toast id and sonner loading toasts
         // never auto-dismiss, so an early return has to clear it or a
         // spinner is left running forever.
         toast.dismiss('video-gen-payment');
-        onOpenChange(false);
-        navigate('/app/buy');
+        setCoinPayOpen(true);
         setIsPaying(false);
         return;
       }
@@ -355,6 +358,7 @@ function StandardVideoPaywallModal({
     // Locked while uploading or paying: dismissing mid-transfer only unmounts
     // the UI, it cannot recall the on-chain transfer, and the generation would
     // be lost with the money already gone.
+    <>
     <Drawer
       open={open}
       onOpenChange={(next) => {
@@ -840,9 +844,9 @@ function StandardVideoPaywallModal({
                   variant="outline"
                   size="sm"
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
-                  onClick={() => { onOpenChange(false); clientNavigate('/app/buy'); }}
+                  onClick={() => setCoinPayOpen(true)}
                 >
-                  {t('nav.buyDhb')}
+                  {t('coinPay.open', { defaultValue: 'Pay with another coin' })}
                 </Button>
               </div>
             )}
@@ -860,7 +864,7 @@ function StandardVideoPaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium h-10"
-            onClick={handlePayAndGenerate}
+            onClick={() => handlePayAndGenerate()}
             disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying || isUploading}
           >
             {isUploading ? (
@@ -879,6 +883,18 @@ function StandardVideoPaywallModal({
         </div>
       </DrawerContent>
     </Drawer>
+      {coinPayOpen && (
+        <Suspense fallback={null}>
+          <PayWithCoinSheet
+            open={coinPayOpen}
+            onOpenChange={setCoinPayOpen}
+            costDhb={costDhb}
+            walletDhb={walletDhb}
+            onFunded={() => { setCoinPayOpen(false); void handlePayAndGenerate(true); }}
+          />
+        </Suspense>
+      )}
+    </>
   );
 }
 

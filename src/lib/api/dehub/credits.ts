@@ -53,10 +53,12 @@ export async function getSubscriptionCreditTopUpTarget(
 export async function claimSubscriptionCreditTopUp(
   hash: string,
   chainId: number,
-): Promise<{ credited: boolean; pending?: boolean }> {
+  /** The coin sent, when it was not DHB: USDT, USDC, BNB, ETH or USDFC. */
+  asset?: string,
+): Promise<{ credited: boolean; pending?: boolean; usd?: number }> {
   return apiCall('/api/subscription-credits/topup', {
     method: 'POST',
-    body: { hash, chainId },
+    body: asset ? { hash, chainId, asset } : { hash, chainId },
     requiresAuth: true,
   });
 }
@@ -71,6 +73,8 @@ interface PendingCreditTopUp {
   chainId: number;
   /** The account that sent it. Another profile on this device must never claim it. */
   address: string;
+  /** Set when the top-up was paid in a coin other than DHB. */
+  asset?: string;
   /** When it was sent. A hash still unresolved after a week is given up on. */
   at: number;
 }
@@ -126,7 +130,7 @@ async function reconcilePendingCreditTopUps(address: string): Promise<void> {
     }
     if ((item.address || '').toLowerCase() !== owner) continue;
     try {
-      const result = await claimSubscriptionCreditTopUp(item.hash, item.chainId);
+      const result = await claimSubscriptionCreditTopUp(item.hash, item.chainId, item.asset);
       if (!result?.pending) clearPendingCreditTopUp(item.hash);
     } catch (err) {
       const status = (err as { httpStatus?: number })?.httpStatus;

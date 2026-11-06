@@ -11,6 +11,7 @@ import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
+import PayWithCoinSheet from '@/components/app/credits/PayWithCoinSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
@@ -873,6 +874,37 @@ function UnlockRevealGallery() {
   );
 }
 
+const GALLERY_COINS = [
+  { symbol: 'USDT', chainId: 56, address: '0x55d398326f99059ff775485246999027b3197955', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'USDC', chainId: 56, address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'BNB', chainId: 56, address: null, decimals: 18, priceUsd: 626, treasuryAddress: '0x0' },
+  { symbol: 'USDC', chainId: 8453, address: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', decimals: 6, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'ETH', chainId: 8453, address: null, decimals: 18, priceUsd: 3100, treasuryAddress: '0x0' },
+  { symbol: 'USDFC', chainId: 314, address: '0x80b98d3aa09ffff255c3ba4a241111ff1262f045', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+] as const;
+
+/** Not enough DHB: Create pressed short of DHB, pay the same amount in another coin. */
+function CoinPayGallery() {
+  const [open, setOpen] = useState(false);
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-coin-pay-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Not enough DHB</h2>
+      <Button variant="glass" size="sm" data-open-coin-pay onClick={() => setOpen(true)}>Create (1,890 DHB)</Button>
+      <PayWithCoinSheet
+        open={open}
+        onOpenChange={setOpen}
+        costDhb={1890}
+        walletDhb={520}
+        onFunded={() => setOpen(false)}
+        preview={{
+          coins: GALLERY_COINS.map((c) => ({ ...c })),
+          balances: { 'USDT:56': 42.1, 'USDC:56': 0, 'BNB:56': 0.41, 'USDC:8453': 12, 'ETH:8453': 0.02, 'USDFC:314': 0 },
+        }}
+      />
+    </section>
+  );
+}
+
 /** Mint chain picker: Mint on an off-chain post, with each chain's live price. */
 function MintChainGallery() {
   const [open, setOpen] = useState<null | 'dehub' | 'own'>(null);
@@ -1401,6 +1433,7 @@ export default function StateGalleryPage() {
         <LockedDmGallery />
         <UnlockRevealGallery />
         <MintChainGallery />
+        <CoinPayGallery />
         <WhenSheetGallery />
         <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
         <ToastsGallery />

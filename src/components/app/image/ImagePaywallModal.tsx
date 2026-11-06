@@ -1,5 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 import { useJobQuote, formatDhb, DHB_USD_PEG } from '@/hooks/use-ai-quote';
 import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
+
+// Opens when Create is pressed without enough DHB: pay the same amount in another coin.
+const PayWithCoinSheet = lazy(() => import('@/components/app/credits/PayWithCoinSheet'));
 
 interface ImagePaywallModalProps {
   open: boolean;
@@ -59,6 +62,7 @@ export function ImagePaywallModal({
   // Someone without the DHB cannot pay at all, so the honest answer is to send
   // them to buy rather than offer a payment that is guaranteed to fail.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
+  const [coinPayOpen, setCoinPayOpen] = useState(false);
 
   /**
    * One way to pay: sign a DHB transfer for the price and hand the hash on.
@@ -67,12 +71,11 @@ export function ImagePaywallModal({
    * anything with a provider, so nothing here is taken on trust — and there is
    * no balance in between that could hold value no token stands behind.
    */
-  const handlePayAndGenerate = async () => {
+  const handlePayAndGenerate = async (funded = false) => {
     if (costDhb <= 0) return;
 
-    if (needsTokens) {
-      onOpenChange(false);
-      navigate('/app/buy');
+    if (needsTokens && !funded) {
+      setCoinPayOpen(true);
       return;
     }
 
@@ -94,6 +97,7 @@ export function ImagePaywallModal({
     // Locked shut while a transfer is in flight. It cannot be recalled once
     // signed, and a modal that unmounts mid-payment takes the hash with it —
     // which is money paid for a generation that then never starts.
+    <>
     <Dialog open={open} onOpenChange={(next) => { if (!isPaying) onOpenChange(next); }}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
@@ -249,7 +253,7 @@ export function ImagePaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={handlePayAndGenerate}
+            onClick={() => handlePayAndGenerate()}
             disabled={isQuoting || isWalletLoading || isGenerating || isPaying}
           >
             {isPaying ? (
@@ -259,7 +263,7 @@ export function ImagePaywallModal({
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : needsTokens ? (
-              t('nav.buyDhb')
+              t('coinPay.open', { defaultValue: 'Pay with another coin' })
             ) : (
               t('tokenPaywall.payAndGenerate', { amount: formatDhb(costDhb) })
             )}
@@ -267,5 +271,17 @@ export function ImagePaywallModal({
         </div>
       </DialogContent>
     </Dialog>
+      {coinPayOpen && (
+        <Suspense fallback={null}>
+          <PayWithCoinSheet
+            open={coinPayOpen}
+            onOpenChange={setCoinPayOpen}
+            costDhb={costDhb}
+            walletDhb={walletDhb}
+            onFunded={() => { setCoinPayOpen(false); void handlePayAndGenerate(true); }}
+          />
+        </Suspense>
+      )}
+    </>
   );
 }
