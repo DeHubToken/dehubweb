@@ -39,6 +39,7 @@ import { conversationIdentity } from '@/lib/conversation-identity';
 import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
 import { useDraftText } from '@/hooks/use-draft';
 import { SwipeableRow } from '@/components/ui/swipeable-row';
+import { showUndoToast } from '@/components/ui/undo-toast';
 import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@/lib/undoable-delete';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
@@ -331,10 +332,12 @@ export default function MessagesPage() {
         onError: () => toast.error(t('messages.deleteConversationFailed')),
       }),
     );
-    toast(t('toasts.conversation_deleted'), {
+    showUndoToast(t('toasts.conversation_deleted'), {
       id: `dm-delete-${conv.id}`,
       duration: UNDO_WINDOW_MS,
-      action: { label: t('common.undo'), onClick: () => undoDelete(conv.id) },
+      undoLabel: t('common.undo'),
+      closeLabel: t('common.close'),
+      onUndo: () => undoDelete(conv.id),
     });
   }, [deleteConversationMutation, t]);
 
