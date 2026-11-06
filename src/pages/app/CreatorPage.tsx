@@ -13,7 +13,7 @@ import { MarketingWorkspace } from '@/components/app/creator/MarketingWorkspace'
 import { useMarketingHandoff } from '@/hooks/use-marketing-handoff';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
-import { ArrowUpRight, Bot, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
+import { ArrowUpRight, Bot, ChevronDown, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
 import Blocks from "@/components/ui/cut-icons/apps";
 import Megaphone from "@/components/ui/cut-icons/advertising";
 import Music2 from "@/components/ui/cut-icons/music";
@@ -197,6 +197,76 @@ const tools: Tool[] = [
   },
 ];
 
+/**
+ * The logo in the top-left corner opens every page link the header used to
+ * line up, so the bar itself only carries the logo, the balance and Create.
+ */
+function CreatorLogoMenu({ active, onPick, onPricing, onEditor, onHome }: {
+  active: typeof navItems[number];
+  onPick: (item: typeof navItems[number]) => void;
+  onPricing: () => void;
+  onEditor: () => void;
+  onHome: () => void;
+}) {
+  const { t } = useTranslation();
+  const _copy = _useCopy().t;
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: PointerEvent) => { if (!rootRef.current?.contains(e.target as Node)) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('pointerdown', away);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('pointerdown', away); document.removeEventListener('keydown', esc); };
+  }, [open]);
+  const row = 'flex w-full items-center justify-between rounded-[10px] px-2.5 py-2 text-left text-[14px] font-semibold transition-colors';
+  const pick = (fn: () => void) => () => { setOpen(false); fn(); };
+  return (
+    <div ref={rootRef} className="relative shrink-0">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-label={_copy('copy.b40b3713b43d', { defaultValue: 'Open menu' })}
+        className="flex h-10 items-center gap-1.5 rounded-[14px] border border-white/10 bg-white/[0.07] px-2.5 hover:bg-white/[0.11]"
+      >
+        <span
+          className="h-5 w-5"
+          style={{
+            backgroundColor: 'currentColor',
+            maskImage: `url(${dehubIcon})`, WebkitMaskImage: `url(${dehubIcon})`,
+            maskSize: 'contain', WebkitMaskSize: 'contain',
+            maskRepeat: 'no-repeat', WebkitMaskRepeat: 'no-repeat',
+            maskPosition: 'center', WebkitMaskPosition: 'center',
+          }}
+        />
+        <ChevronDown className={cn('h-3.5 w-3.5 text-white/60 transition-transform', open && 'rotate-180')} />
+      </button>
+      {open && (
+        <div role="menu" className="absolute left-0 top-full z-[80] mt-2 w-60 rounded-[18px] border border-white/10 bg-[#0e0f11]/[0.98] p-2 text-white shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
+          {navItems.map((item, index) => (
+            <div key={item}>
+              {index === 4 && <div className="mx-1 my-1.5 border-t border-white/[0.08]" />}
+              <button type="button" role="menuitem" onClick={pick(() => onPick(item))} className={cn(row, active === item ? 'bg-white/[0.08] text-white' : 'text-white/80 hover:bg-white/[0.05]')}>
+                {t(NAV_KEYS[item])}
+              </button>
+            </div>
+          ))}
+          <div className="mx-1 my-1.5 border-t border-white/[0.08]" />
+          <button type="button" role="menuitem" onClick={pick(onPricing)} className={cn(row, 'text-white/80 hover:bg-white/[0.05]')}>
+            {t('creator.pricing')}
+            <span className="rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>{t('creator.thirtyOff')}</span>
+          </button>
+          <button type="button" role="menuitem" onClick={pick(onEditor)} className={cn(row, 'text-white/80 hover:bg-white/[0.05]')}>{t('creator.editor')}</button>
+          <button type="button" role="menuitem" onClick={pick(onHome)} className={cn(row, 'text-white/80 hover:bg-white/[0.05]')}>{t('creator.openApp')}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CreatorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -213,6 +283,14 @@ export default function CreatorPage() {
   const [headerHeight, setHeaderHeight] = useState(60);
 
   const openEditor = useCallback(() => navigate('/editor'), [navigate]);
+  const [composerParked, setComposerParked] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -261,6 +339,17 @@ export default function CreatorPage() {
     }
   };
 
+  const goPricing = () => document.querySelector('[data-creator-pricing]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const logoMenu = (
+    <CreatorLogoMenu
+      active={activeNav}
+      onPick={pickNavigation}
+      onPricing={goPricing}
+      onEditor={() => navigate('/editor')}
+      onHome={() => navigate('/app')}
+    />
+  );
+
   return (
     <>
       {/* Page metadata lives in CreatorEditorHost: /creator and /editor stay
@@ -280,71 +369,28 @@ export default function CreatorPage() {
       <main data-creator-page data-glass-page className="relative z-[1] min-h-screen overflow-x-clip text-white" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">{t('creator.srHeading')}</h1>
 
-        <div ref={headerRef} className="sticky top-0 z-50">
-          <header data-clear-top-bar className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
+        {/* Scrolled: the bar turns solid dark. Once the composer scrolls
+            away it hides, and the composer floats as one dark island that
+            carries this same logo menu. */}
+        <div
+          ref={headerRef}
+          className={cn('sticky top-0 z-50 transition-[transform,opacity] duration-200', composerParked && 'pointer-events-none -translate-y-full opacity-0')}
+          aria-hidden={composerParked || undefined}
+        >
+          <header
+            data-clear-top-bar={scrolled ? undefined : ''}
+            className={cn('px-3 py-3 sm:px-4 transition-colors duration-200', scrolled && 'border-b border-white/[0.08] shadow-[0_10px_30px_rgba(0,0,0,0.5)]')}
+            style={{ backgroundColor: scrolled ? '#0b0c0d' : 'transparent' }}
+          >
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate('/app')}
-                className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] hover:bg-white/[0.10]"
-                aria-label={t('creator.openApp')}
-              >
-                <div
-                  className="h-5 w-5 bg-cover bg-center bg-no-repeat transition-transform duration-200 group-hover:scale-105"
-                  style={{
-                    backgroundColor: 'currentColor',
-                    maskImage: `url(${dehubIcon})`,
-                    WebkitMaskImage: `url(${dehubIcon})`,
-                    maskSize: 'contain',
-                    WebkitMaskSize: 'contain',
-                    maskRepeat: 'no-repeat',
-                    WebkitMaskRepeat: 'no-repeat',
-                    maskPosition: 'center',
-                    WebkitMaskPosition: 'center',
-                  }}
-                />
-              </button>
-
-              <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {navItems.map((item, index) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => pickNavigation(item)}
-                    aria-pressed={activeNav === item}
-                    className={cn(
-                      'relative shrink-0 inline-flex items-start gap-1 text-[14px] font-medium tracking-wide transition-colors',
-                      activeNav === item ? 'text-white' : 'text-white/55 hover:text-white'
-                    )}
-                  >
-                    {index === 4 && <span className="mr-2 text-white/40">••</span>}
-                    {t(NAV_KEYS[item])}
-                  </button>
-                ))}
-              </nav>
+              {logoMenu}
+              <div className="min-w-0 flex-1" />
 
               {isAuthenticated && (
                 // Subscription tokens: the balance AI generation here is paid from.
                 <SubscriptionCreditsPill />
               )}
               <div className="hidden items-center gap-2 sm:flex">
-                <button
-                  type="button"
-                  // The AI credit plans live at the bottom of this page, so
-                  // Pricing scrolls there instead of leaving for /premium.
-                  onClick={() => document.querySelector('[data-creator-pricing]')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  className="relative rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
-                >
-                  {t('creator.pricing')}
-                  <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>{t('creator.thirtyOff')}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/editor')}
-                  className="rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
-                >
-                  {t('creator.editor')}
-                </button>
                 {/* Signed-in people get here from the app, so no "My account" /
                     "Open app" buttons; the logo still goes back to /app. */}
                 {!isAuthenticated && (
@@ -373,7 +419,7 @@ export default function CreatorPage() {
 
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
-        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} generationDraft={activeMarketingDraft?.draft}
+        <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} onParkedChange={setComposerParked} compactLead={logoMenu} compactTrail={isAuthenticated ? <SubscriptionCreditsPill /> : null} generationDraft={activeMarketingDraft?.draft}
           snapshotScope={activeMarketingDraft ? `campaign:${activeMarketingDraft.id}` : 'main'} generationDraftId={activeMarketingDraft?.id} />
         {activeMarketingDraft && <button type="button" className="mx-4 mt-2 text-sm underline" onClick={leaveMarketingDraft}>{t('creator.marketing.return')}</button>}
         <Link to="/creator/learn" className="mx-4 mt-5 inline-block rounded-xl border border-current px-4 py-2 text-sm">{t('creator.learn.title')}</Link>
