@@ -74,6 +74,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
+import { DmSafetyBanner, hasLink } from './DmSafetyBanner';
 import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -1561,6 +1562,17 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const messagesRef = useRef(messages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
 
+  // Any link from the other person brings up the scam warning above the thread.
+  const peerSentLink = useMemo(() => {
+    const ownAddress = walletAddress?.toLowerCase();
+    return messages.some(m => {
+      if (m.author === 'me') return false;
+      const sender = m.sender?.address?.toLowerCase();
+      if (sender && ownAddress && sender === ownAddress) return false;
+      return hasLink(m.content);
+    });
+  }, [messages, walletAddress]);
+
   const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
   /**
@@ -2502,6 +2514,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           </button>
         </div>
       )}
+
+      <DmSafetyBanner peer={otherUser as any} peerSentLink={peerSentLink} />
 
       {/* Messages */}
       {isLoading ? (

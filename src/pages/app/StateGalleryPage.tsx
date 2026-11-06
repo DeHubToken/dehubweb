@@ -17,6 +17,7 @@ import PayWithCoinSheet from '@/components/app/credits/PayWithCoinSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
+import { DmSafetyBanner } from '@/components/app/chat/DmSafetyBanner';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { PostActionBar } from '@/features/post/components/PostActionBar';
@@ -1944,6 +1945,10 @@ function LockedChatGallery() {
         <div className="flex flex-col justify-center rounded-2xl border border-white/10 px-4">
           <DmUndecryptableRun count={3} />
         </div>
+      </div>
+      <div data-dm-safety-gallery className="mt-4 grid gap-2 pb-2 md:grid-cols-2">
+        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} peerSentLink />
+        <DmSafetyBanner peer={{ address: '0x2222222222222222222222222222222222222222', displayName: 'Tad' }} peerSentLink />
       </div>
     </section>
   );
