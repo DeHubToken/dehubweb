@@ -146,6 +146,7 @@ import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useLeftHanded } from '@/hooks/use-left-handed';
 import { BrowserNotificationsSetting } from '@/components/app/settings/BrowserNotificationsSetting';
 import { PostLandingSetting } from '@/components/app/settings/PostLandingSetting';
+import { ChatTextSizeSetting } from '@/components/app/settings/ChatTextSizeSetting';
 import { PublicChatAlertsSetting } from '@/components/app/settings/PublicChatAlertsSetting';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { useDhbHoldings } from '@/hooks/use-dhb-holdings';
@@ -2703,6 +2704,7 @@ function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; t
           <DefaultFeedSetting />
           <FeedTogglesSetting />
           <PostLandingSetting />
+          <ChatTextSizeSetting />
           <SettingsRow
             icon={<LayoutGrid />}
             anchor="default-profile-tab"

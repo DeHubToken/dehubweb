@@ -358,7 +358,7 @@ export function RealtimeChatPanel({
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className={cn('overflow-y-auto space-y-1 scrollbar-hide', listClassName)}
+            className={cn('chat-text-zone overflow-y-auto space-y-1 scrollbar-hide', listClassName)}
             {...hold}
           >
             {error ? (
@@ -611,7 +611,7 @@ export function RealtimeChatPanel({
                 }}
                 onKeyDown={handleKeyDown}
                 maxLength={maxLength}
-                className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+                className="chat-text-input min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
                 rows={1}
               />
             </div>
