@@ -1740,7 +1740,7 @@
     "receive": "Al",
     "send": "Gönder",
     "buy": "Satın al",
-    "trade": "Tic.",
+    "trade": "Al-Sat",
     "import": "İçe aktar",
     "noTokensToSend": "Gönderilebilecek bakiyeli token yok",
     "unableOpenGateway": "Ödeme ağ geçidi açılamıyor",

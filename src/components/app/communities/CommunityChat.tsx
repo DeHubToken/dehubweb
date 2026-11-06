@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useHoldBottomNav } from '@/lib/bottom-nav-hold';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -733,6 +734,8 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
         : t('communities.chat.pinnedMedia', { defaultValue: 'Media' })))
     : '';
 
+  // Members get a message box at the bottom: the phone bottom bar stands down.
+  useHoldBottomNav(active && isMember);
   const translateSignal = 0;
   const originalSignal = 0;
 
