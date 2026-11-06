@@ -542,9 +542,9 @@ setModelSearch('');
 
             {/* Model Tips */}
 {model.tips && model.tips.length > 0 && (
-<div className="flex flex-wrap gap-1.5">
+<div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 {model.tips.map((tip, idx) => (
-<span key={idx} className="rounded-full border border-white/10 bg-zinc-800/60 px-3 py-1.5 text-[11px] leading-snug text-zinc-300">{tip}</span>
+<span key={idx} className="shrink-0 whitespace-nowrap rounded-full border border-white/10 bg-zinc-800/60 px-3 py-1.5 text-[11px] leading-snug text-zinc-300">{tip}</span>
 ))}
 </div>
 )}
@@ -860,31 +860,43 @@ setModelSearch('');
           </div>
         </ScrollArea>
 
-        {/* Actions - sticky footer */}
-        <div className="flex gap-3 p-4 pt-2 border-t border-white/5">
+        {/* Actions - sticky footer. Same size and layout as the studio Create button. */}
+        <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-white/5">
           <Button
             variant="outline"
-            className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 h-10"
+            className="h-10 rounded-xl px-3 text-[14px] font-bold bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
             onClick={() => onOpenChange(false)}
             disabled={isGenerating || isPaying || isUploading}
           >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
-            className="flex-1 font-medium h-10"
+            className="h-10 gap-2 rounded-xl px-2.5 font-bold"
             onClick={() => handlePayAndGenerate()}
             disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying || isUploading}
           >
             {isUploading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })}</>
             ) : isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : (
-              _copy("copy.49e49bb4401e", { defaultValue: "Generate" })
+              <>
+                <span className="relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)]">
+                  <img src={dhbCoinImage} alt="" className="h-6 w-6" />
+                </span>
+                <span className="grid min-w-0 text-left leading-none">
+                  <span className="font-exo text-[14px] font-black tracking-tight">{_copy("copy.49e49bb4401e", { defaultValue: "Generate" })}</span>
+                  {costDhb > 0 && (
+                    <span className="mt-1 truncate text-[10px] font-semibold tabular-nums opacity-80">
+                      {_copy("creator.generateCost", { defaultValue: "{{tokens}} tokens · ≈ ${{usd}}", tokens: costDhb.toLocaleString(), usd: costUsd.toFixed(2) })}
+                    </span>
+                  )}
+                </span>
+              </>
             )}
           </Button>
         </div>
