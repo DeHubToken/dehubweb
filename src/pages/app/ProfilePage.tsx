@@ -15,6 +15,7 @@ import { UsernameReserve } from '@/components/app/profile/UsernameReserve';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -399,7 +400,7 @@ export default function ProfilePage() {
     profileContentRef,
     '[data-profile-tabs] > [data-feed-nav]',
     [!!data.profile, data.isAuthenticated],
-    { allThemes: true, edge: 'bottom' },
+    { allThemes: true },
   );
 
   // At the top edge, the tabs become the single profile navigation row.
@@ -842,7 +843,9 @@ return () => rail.removeEventListener('wheel', onWheel);
         </div>
 
         {/* Tab Content - all panels rendered, inactive hidden via CSS */}
+        <div data-feed-swallow-bounds>
         <div ref={profileContentRef} data-profile-content>
+        <FeedSwallowMotion>
         {/* Sort + search, on the four tabs actually backed by this creator's
             content. The other tabs (plans, live, fractions, pinned) come from
             their own endpoints and the toolbar would do nothing there. */}
@@ -904,6 +907,8 @@ return () => rail.removeEventListener('wheel', onWheel);
             />
 
         </StableHeightContainer>
+        </FeedSwallowMotion>
+        </div>
         </div>
         </div>
         </ProfileArticleTileContext.Provider>
