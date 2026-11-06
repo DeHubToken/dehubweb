@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { FullscreenImageViewerLazy } from '@/components/app/cards/FullscreenImageViewerLazy';
 import SmilePlus from "@/components/ui/cut-icons/packs";
 import CornerDownRight from "@/components/ui/cut-icons/reply";
@@ -596,7 +597,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                       ) : msg.message_type === 'image' && msg.image_url ? (
                         <img src={getMediaUrl(msg.image_url)} alt="" className="max-w-full max-h-24 rounded mt-0.5 cursor-zoom-in" onClick={() => setViewingImage(getMediaUrl(msg.image_url) || msg.image_url)} />
                       ) : msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
-                        <img src={msg.image_url || msg.content} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
+                        <img src={outsideImage(msg.image_url || msg.content)} alt="GIF" className="max-w-full max-h-20 rounded mt-0.5" />
                       ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
                         <div className="mt-1">
                           <VoiceWaveformPlayer src={msg.audio_url || msg.image_url || ''} />

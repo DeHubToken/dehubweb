@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useCallback, useRef, memo } from 'react';
@@ -639,7 +640,7 @@ export const ChatMessage = memo(function ChatMessage({
         {message.type === 'gif' && message.imageUrl && (
           <div className="mt-1">
             <img 
-              src={message.imageUrl} 
+              src={outsideImage(message.imageUrl)} 
               alt="GIF" 
               className="max-w-xs max-h-48 rounded-lg"
             />

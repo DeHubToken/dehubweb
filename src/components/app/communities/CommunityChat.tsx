@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useHoldBottomNav } from '@/lib/bottom-nav-hold';
 import { useDraftState } from '@/hooks/use-draft-state';
@@ -958,7 +959,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
                           )}
                         </span>
                         {msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
-                          <img src={msg.image_url || msg.content} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                          <img src={outsideImage(msg.image_url || msg.content)} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
                         ) : msg.message_type === 'voice' && msg.image_url ? (
                           <div className="mt-1">
                             <VoiceWaveformPlayer src={msg.image_url} />

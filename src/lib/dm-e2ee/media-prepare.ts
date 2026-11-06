@@ -11,6 +11,7 @@
  * the browser cannot decode (HEIC, say) still goes out encrypted.
  */
 import type { MediaDescriptor, MediaKind } from './media';
+import { scrubMp4MetadataInPlace, stripJpegMetadata } from '@/lib/media-privacy';
 
 const MAX_IMAGE_SIDE = 2048;
 const IMAGE_QUALITY = 0.85;
@@ -110,21 +111,28 @@ async function bytesOf(blob: Blob): Promise<Uint8Array> {
 async function prepareImage(file: File): Promise<PreparedMedia> {
   const mime = file.type || 'image/jpeg';
   const img = await decodeImage(file);
-  if (!img) return { bytes: await bytesOf(file), descriptor: { kind: 'image', mime, size: file.size, name: file.name } };
+  if (!img) {
+    const raw = stripJpegMetadata(await bytesOf(file));
+    return { bytes: raw, descriptor: { kind: 'image', mime, size: raw.length, name: file.name } };
+  }
   try {
     const thumb = thumbnailOf(img);
-    // GIFs keep their animation; anything already within bounds keeps its
-    // original bytes (and so its format and transparency).
-    if (mime !== 'image/gif' && Math.max(img.width, img.height) > MAX_IMAGE_SIDE) {
+    // GIFs keep their animation and PNGs their transparency (neither carries
+    // camera data). Every other photo is redrawn, which drops the EXIF block:
+    // GPS location, phone make and model, capture time. The file is sealed
+    // for the other person, so it is the only chance to remove them.
+    const keepsOriginal = mime === 'image/gif' || mime === 'image/png';
+    const big = Math.max(img.width, img.height) > MAX_IMAGE_SIDE;
+    if (mime !== 'image/gif' && (!keepsOriginal || big)) {
       const canvas = draw(img, MAX_IMAGE_SIDE);
-      const shrunk = canvas ? await canvasToBlob(canvas, 'image/jpeg', IMAGE_QUALITY) : null;
-      if (canvas && shrunk && shrunk.size < file.size) {
+      const redrawn = canvas ? await canvasToBlob(canvas, 'image/jpeg', IMAGE_QUALITY) : null;
+      if (canvas && redrawn && (!keepsOriginal || redrawn.size < file.size)) {
         return {
-          bytes: await bytesOf(shrunk),
+          bytes: await bytesOf(redrawn),
           descriptor: {
             kind: 'image',
             mime: 'image/jpeg',
-            size: shrunk.size,
+            size: redrawn.size,
             name: file.name.replace(/\.[^./]+$/, '') + '.jpg',
             w: canvas.width,
             h: canvas.height,
@@ -133,9 +141,10 @@ async function prepareImage(file: File): Promise<PreparedMedia> {
         };
       }
     }
+    const raw = stripJpegMetadata(await bytesOf(file));
     return {
-      bytes: await bytesOf(file),
-      descriptor: { kind: 'image', mime, size: file.size, name: file.name, w: img.width, h: img.height, ...(thumb ? { thumb } : {}) },
+      bytes: raw,
+      descriptor: { kind: 'image', mime, size: raw.length, name: file.name, w: img.width, h: img.height, ...(thumb ? { thumb } : {}) },
     };
   } finally {
     img.close?.();
@@ -199,7 +208,10 @@ export async function prepareMediaPlaintext(
   if (kind === 'image') return prepareImage(file);
   if (kind === 'video') {
     const meta = await probeVideo(file, opts.coverAt);
-    return { bytes: await bytesOf(file), descriptor: { kind, mime: file.type || 'video/mp4', size: file.size, name: file.name, ...meta } };
+    // Phone videos carry GPS and the phone model in their header.
+    const bytes = await bytesOf(file);
+    scrubMp4MetadataInPlace(bytes);
+    return { bytes, descriptor: { kind, mime: file.type || 'video/mp4', size: file.size, name: file.name, ...meta } };
   }
   if (kind === 'audio') {
     return {

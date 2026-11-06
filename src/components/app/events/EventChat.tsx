@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -266,7 +267,7 @@ export function EventChat({ eventId }: EventChatProps) {
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
-                          <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                          <img src={outsideImage(msg.image_url)} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
                         ) : msg.message_type === 'voice' && msg.image_url ? (
                           <div className="mt-1">
                             <VoiceWaveformPlayer src={msg.image_url} />
