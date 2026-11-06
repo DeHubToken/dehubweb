@@ -151,7 +151,9 @@ export function CardHeader({
   const warmProfilePage = () => preloadRoute('/app/profile');
 
   return (
-    <div className={`flex items-center gap-3 pr-3 flex-1 min-w-0 ${contentType === 'image' ? 'pb-2' : 'pb-3'}`}>
+    // One gap under the name row for every post type, so photos, videos,
+    // lives and text all start their media at the same height.
+    <div className="flex items-center gap-3 pr-3 flex-1 min-w-0 pb-3">
       <ProfileHoverCard
         creatorId={creatorId}
         creatorUsername={creatorUsername}
