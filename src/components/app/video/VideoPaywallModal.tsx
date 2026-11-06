@@ -12,7 +12,6 @@ import Volume2 from "@/components/ui/cut-icons/volume";
 import Upload from "@/components/ui/cut-icons/upload";
 import Image from "@/components/ui/cut-icons/images";
 import Music from "@/components/ui/cut-icons/music";
-import Lightbulb from "@/components/ui/cut-icons/feature-requests";
 
 import X from "@/components/ui/cut-icons/close";
 import Plus from "@/components/ui/cut-icons/add";
@@ -29,6 +28,7 @@ import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { AvatarVideoPaywall } from './AvatarVideoPaywall';
 import { Slider } from '@/components/ui/slider';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Opens when Create is pressed without enough DHB: pay the same amount in another coin.
@@ -93,6 +93,7 @@ function StandardVideoPaywallModal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+const [modelSearch, setModelSearch] = useState('');
   const [isPaying, setIsPaying] = useState(false);
 
   // Basic Seedance 2.0 options
@@ -366,10 +367,10 @@ function StandardVideoPaywallModal({
         onOpenChange(next);
       }}
     >
-      <DrawerContent column glass hideHandle={false} className="max-h-[85dvh]">
+      <DrawerContent column glass hideHandle={false} className="max-h-[85dvh] md:w-[min(40rem,var(--app-main-width,100vw))] md:left-[calc(var(--app-main-left,0px)_+_(var(--app-main-width,100vw)_-_min(40rem,var(--app-main-width,100vw)))_/_2)]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Video className="w-5 h-5 text-purple-400" />{_copy("copy.2fd59b9cdec1", { defaultValue: "Generate Video" })}</DrawerTitle>
+            <BrandIcon src="/theme-icons/system/videos.webp" alt="" className="h-6 w-6 shrink-0 object-contain" />{_copy("copy.2fd59b9cdec1", { defaultValue: "Generate Video" })}</DrawerTitle>
           <DrawerDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DrawerDescription>
         </DrawerHeader>
 
@@ -385,13 +386,12 @@ function StandardVideoPaywallModal({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">{model.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-white text-sm">{model.name}</p>
                         {model.hasAudio && (
-                          <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] rounded-md">
-                            <Volume2 className="w-2.5 h-2.5" />{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</span>
+                          <span className="flex items-center gap-1 px-1.5 py-0.5 bg-zinc-700/60 text-zinc-300 text-[10px] rounded-md">
+                            <Volume2 className="w-2.5 h-2.5" />{_copy("creator.withSound", { defaultValue: "With sound" })}</span>
                         )}
                       </div>
                       <p className="text-xs text-zinc-500">{model.description}</p>
@@ -402,8 +402,20 @@ function StandardVideoPaywallModal({
               </button>
               
               {modelSelectorOpen && model.id !== 'pixverse-effects' && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-52 overflow-y-auto">
-                  {VIDEO_MODEL_OPTIONS.map((option) => {
+                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-72 overflow-y-auto">
+                  <div className="sticky top-0 z-10 bg-zinc-800 p-2 border-b border-zinc-700">
+<input
+type="search"
+value={modelSearch}
+onChange={(e) => setModelSearch(e.target.value)}
+placeholder={_copy("creator.searchModels", { defaultValue: "Search models" })}
+className="w-full bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
+/>
+</div>
+{VIDEO_MODEL_OPTIONS.filter((option) => {
+const q = modelSearch.trim().toLowerCase();
+return !q || `${option.name} ${option.description || ''}`.toLowerCase().includes(q);
+}).map((option) => {
                     const optionModel = VIDEO_MODELS[option.id as VideoModelKey];
                     const optionCostUsd = getVideoCostUsd(optionModel);
                     const optionCostDhb = dhbPrice ? getVideoCostDhb(optionModel, dhbPrice) : 0;
@@ -415,18 +427,18 @@ function StandardVideoPaywallModal({
                         onClick={() => {
                           onModelChange(option.id as VideoModelKey);
                           setModelSelectorOpen(false);
+setModelSearch('');
                         }}
                         className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-zinc-700 transition-colors ${
                           selectedModelKey === option.id ? 'bg-zinc-700/50' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="text-lg">{option.emoji}</span>
                           <div>
                             <div className="flex items-center gap-1.5">
                               <p className="font-medium text-white text-xs">{option.name}</p>
                               {option.hasAudio && (
-                                <span className="flex items-center gap-0.5 px-1 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] rounded">
+                                <span className="flex items-center gap-0.5 px-1 py-0.5 bg-zinc-700/60 text-zinc-300 text-[9px] rounded">
                                   <Volume2 className="w-2 h-2" />
                                 </span>
                               )}
@@ -529,19 +541,14 @@ function StandardVideoPaywallModal({
             )}
 
             {/* Model Tips */}
-            {model.tips && model.tips.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-3 border border-blue-500/10">
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.c6e2d44e31f0", { defaultValue: "Tips for {{value1}}", value1: model.name })}</span>
-                </div>
-                <div className="space-y-0.5">
-                  {model.tips.map((tip, idx) => (
-                    <p key={idx} className="text-[11px] text-zinc-400 leading-relaxed">{tip}</p>
-                  ))}
-                </div>
-              </div>
-            )}
+{model.tips && model.tips.length > 0 && (
+<div className="flex flex-wrap gap-1.5">
+{model.tips.map((tip, idx) => (
+<span key={idx} className="rounded-full border border-white/10 bg-zinc-800/60 px-3 py-1.5 text-[11px] leading-snug text-zinc-300">{tip}</span>
+))}
+</div>
+)}
+
 
             {/* Negative Prompt (for supported models) */}
             {model.supportsNegativePrompt && (
@@ -792,7 +799,7 @@ function StandardVideoPaywallModal({
             </div>
 
             {/* DHB Cost */}
-            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-xl p-3 border border-purple-500/20">
+            <div className="bg-zinc-800/50 rounded-xl p-3 border border-white/10">
               {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
