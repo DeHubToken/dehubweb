@@ -159,7 +159,7 @@ export default function AppsPage() {
 
       <PageBody className="mx-auto max-w-4xl">
         <div data-feed-item className="space-y-2">
-          <div data-kit-section className="flex items-center gap-2 rounded-xl bg-zinc-900/60 px-3 ring-1 ring-white/[0.06]">
+          <div data-kit-section className="flex items-center gap-2 rounded-xl bg-zinc-900/60 pl-3 pr-2 ring-1 ring-white/[0.06]">
             <Search className="h-4 w-4 shrink-0 text-zinc-500" />
             <input
               value={query}
@@ -168,30 +168,24 @@ export default function AppsPage() {
               aria-label={t('miniApps.store.search')}
               className="h-10 min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none"
             />
-          </div>
           {categories.length > 0 ? (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex shrink-0 items-center gap-0.5 border-l border-white/10 pl-2" role="group">
               {['all', ...categories].map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setCategory(c)}
                   aria-pressed={category === c}
-                  data-filter-chip
-                  data-active={category === c ? 'true' : 'false'}
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    category === c ? 'bg-white text-black' : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800'
+                  className={`rounded-md px-2 py-1 text-xs font-medium transition-colors ${
+                    category === c ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                   }`}
                 >
                   {c === 'all' ? t('miniApps.store.all') : t(`miniApps.category.${c}`)}
                 </button>
               ))}
             </div>
-          ) : apps === null ? (
-            // Holds the chip row's place while the store loads so the lists
-            // below do not drop when the chips arrive.
-            <div className="h-6" aria-hidden />
           ) : null}
+          </div>
         </div>
 
         {!query && category === 'all' && added.length > 0 ? (
@@ -232,9 +226,6 @@ export default function AppsPage() {
 
         {!query && category === 'all' ? (
           <section data-feed-item>
-            <h2 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-              {t('miniApps.store.fromDehub')}
-            </h2>
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {ARCADE_GAMES.map((game) => (
                 <Link
