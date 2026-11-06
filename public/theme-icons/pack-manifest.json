@@ -50,6 +50,7 @@
     "live",
     "lock",
     "messages",
+    "nfts",
     "notifications",
     "paint",
     "pinned",
@@ -73,8 +74,8 @@
     "tv",
     "usernames",
     "videos",
-    "wand",
-    "nfts"
+    "wallet",
+    "wand"
   ],
   "pngKeys": [
     "boost",

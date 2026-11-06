@@ -336,6 +336,7 @@ export default function FullWalletPage() {
       <h1 className="sr-only">{_copy("copy.112e22b0fd15", { defaultValue: "Riftn Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Back square only when navigated from command centre */}
       <PageIsland
+        icon="wallet"
         title={t('wallet.title')}
         back={location.state?.from === 'command-centre'}
         onBack={() => navigate('/app/command-centre')}
@@ -352,8 +353,8 @@ export default function FullWalletPage() {
               <img src={dehubCoin} alt={tokenLabel()} className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
                 {appTokensOn
-                  ? Math.floor(appDhb).toLocaleString()
-                  : isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
+                  ? Math.floor(appDhb).toLocaleString('en-US')
+                  : isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString('en-US')}
               </p>
               <button
                 onClick={() => setShowBalanceBreakdown(!showBalanceBreakdown)}
@@ -404,20 +405,20 @@ export default function FullWalletPage() {
                 <>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">Base</span>
-                    <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString()} <DhbCoin /></span>
+                    <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString('en-US')} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">{_copy("copy.5dc85dbc155e", { defaultValue: "BNB Chain" })}</span>
-                    <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString()} <DhbCoin /></span>
+                    <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString('en-US')} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-zinc-500">{_copy("copy.6b8a9141538a", { defaultValue: "Staked" })}</span>
-                    <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} <DhbCoin /></span>
+                    <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString('en-US')} <DhbCoin /></span>
                   </div>
                   {giveaway && (
                     <div className="flex justify-between text-xs">
                       <span className="text-zinc-500">{_copy("copy.228fc4afbce4", { defaultValue: "Giveaway (locked)" })}</span>
-                      <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString()} <DhbCoin /></span>
+                      <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString('en-US')} <DhbCoin /></span>
                     </div>
                   )}
                 </>
