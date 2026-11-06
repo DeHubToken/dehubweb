@@ -1209,7 +1209,7 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} hue={hue} theme={theme} seed={seed} />}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style', { defaultValue: 'Style' })} hue={hue} theme={theme} seed={seed} />}
           {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}
