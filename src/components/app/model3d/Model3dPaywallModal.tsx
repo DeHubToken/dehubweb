@@ -10,7 +10,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * toast is always dismissed on an early return, and the drawer cannot be closed
  * mid-transfer).
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import {
@@ -44,6 +44,9 @@ import { useJobQuote } from '@/hooks/use-ai-quote';
 import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+
+// Opens when Create is pressed without enough DHB: pay the same amount in another coin.
+const PayWithCoinSheet = lazy(() => import('@/components/app/credits/PayWithCoinSheet'));
 
 export interface Model3dGenerationOptions {
   textureQuality?: TextureQuality;
@@ -145,6 +148,7 @@ export function Model3dPaywallModal({
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
+  const [coinPayOpen, setCoinPayOpen] = useState(false);
 
   const formatDhb = (amount: number) => {
     if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(2)}M`;
@@ -166,16 +170,15 @@ export function Model3dPaywallModal({
     return options;
   };
 
-  const handlePayAndGenerate = async () => {
+  const handlePayAndGenerate = async (funded = false) => {
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
       const options = buildOptions();
 
-      if (needsTokens) {
+      if (needsTokens && !funded) {
         toast.dismiss('model3d-gen-payment');
-        onOpenChange(false);
-        navigate('/app/buy');
+        setCoinPayOpen(true);
         setIsPaying(false);
         return;
       }
@@ -198,6 +201,7 @@ export function Model3dPaywallModal({
     // Locked while paying: dismissing mid-transfer only unmounts the UI, it
     // cannot recall the on-chain transfer, and the generation would be lost with
     // the money already gone.
+    <>
     <Drawer
       open={open}
       onOpenChange={(next) => {
@@ -495,12 +499,9 @@ export function Model3dPaywallModal({
                   variant="outline"
                   size="sm"
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
-                  onClick={() => {
-                    onOpenChange(false);
-                    clientNavigate('/app/buy');
-                  }}
+                  onClick={() => setCoinPayOpen(true)}
                 >
-                  {t('nav.buyDhb')}
+                  {t('coinPay.open', { defaultValue: 'Pay with another coin' })}
                 </Button>
               </div>
             )}
@@ -517,7 +518,7 @@ export function Model3dPaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium h-10"
-            onClick={handlePayAndGenerate}
+            onClick={() => handlePayAndGenerate()}
             disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying}
           >
             {isPaying ? (
@@ -534,5 +535,17 @@ export function Model3dPaywallModal({
         </div>
       </DrawerContent>
     </Drawer>
+      {coinPayOpen && (
+        <Suspense fallback={null}>
+          <PayWithCoinSheet
+            open={coinPayOpen}
+            onOpenChange={setCoinPayOpen}
+            costDhb={costDhb}
+            walletDhb={walletDhb}
+            onFunded={() => { setCoinPayOpen(false); void handlePayAndGenerate(true); }}
+          />
+        </Suspense>
+      )}
+    </>
   );
 }
