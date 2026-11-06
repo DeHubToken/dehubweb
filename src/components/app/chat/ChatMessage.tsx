@@ -116,6 +116,9 @@ interface ChatMessageProps {
   /** Resend / drop one of your own lines that failed, by its client key. */
   onRetrySend?: (clientKey: string) => void;
   onDiscardSend?: (clientKey: string) => void;
+  /** Live chat on phones: frame the held line, and outline the line being answered. */
+  holdFrame?: boolean;
+  replying?: boolean;
 }
 
 /** Inline moderator badge shown next to the username */
@@ -212,6 +215,8 @@ export const ChatMessage = memo(function ChatMessage({
   onReply,
   onRetrySend,
   onDiscardSend,
+  holdFrame,
+  replying,
 }: ChatMessageProps) {
   // Your own line carries a small ring while it is going out; when it lands
   // the ring stops in its fixed box, so the line never shifts.
@@ -327,9 +332,9 @@ export const ChatMessage = memo(function ChatMessage({
       : { key: 'translate', icon: <Languages />, label: _copy('chatHold.translate', { defaultValue: 'Translate' }), onSelect: handleTranslate },
   );
   if (canEdit) holdActions.push({ key: 'edit', icon: <Pencil />, label: _copy('copy.464c4ffd019e', { defaultValue: 'Edit' }), onSelect: startEditing });
-  if ((canDelete || showActions) && onDelete) holdActions.push({ key: 'delete', destructive: true, icon: <Trash2 />, label: _copy('copy.e2d0a54968ea', { defaultValue: 'Delete' }), onSelect: () => onDelete(message.id) });
-  if (showActions && !isMine && onBan) holdActions.push({ key: 'ban', destructive: true, icon: <ShieldBan />, label: _copy('chatHold.ban', { defaultValue: 'Ban' }), onSelect: () => onBan(message.userId, message.userName) });
-  if (showActions && !isMine && onUnban) holdActions.push({ key: 'unban', icon: <ShieldCheck />, label: _copy('chatHold.unban', { defaultValue: 'Unban' }), onSelect: () => onUnban(message.userId, message.userName) });
+  if ((canDelete || showActions) && onDelete) holdActions.push({ key: 'delete', destructive: true, secondary: true, icon: <Trash2 />, label: _copy('copy.e2d0a54968ea', { defaultValue: 'Delete' }), onSelect: () => onDelete(message.id) });
+  if (showActions && !isMine && onBan) holdActions.push({ key: 'ban', destructive: true, secondary: true, icon: <ShieldBan />, label: _copy('chatHold.ban', { defaultValue: 'Ban' }), onSelect: () => onBan(message.userId, message.userName) });
+  if (showActions && !isMine && onUnban) holdActions.push({ key: 'unban', secondary: true, icon: <ShieldCheck />, label: _copy('chatHold.unban', { defaultValue: 'Unban' }), onSelect: () => onUnban(message.userId, message.userName) });
   const mineReactions = currentUserAddress
     ? Object.entries(message.reactions ?? {})
         .filter(([, addrs]) => addrs?.some((a) => a.toLowerCase() === currentUserAddress.toLowerCase()))
@@ -347,6 +352,7 @@ export const ChatMessage = memo(function ChatMessage({
       mine={mineReactions}
       onReact={handleQuickReact}
       actions={holdActions}
+      frame={holdFrame}
     />
   );
 
@@ -357,6 +363,7 @@ export const ChatMessage = memo(function ChatMessage({
       ref={rowRef}
       id={`chat-msg-${message.id}`}
       data-chat-row
+      data-chat-replying={replying || undefined}
       className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group"
       {...hold}
     >

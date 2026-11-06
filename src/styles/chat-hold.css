@@ -51,3 +51,41 @@
   background: var(--stage-accent, #fff);
 }
 [data-chat-hold-tile='danger'] { color: #f87171; }
+
+/* Live chat: the held line glows in place inside a soft frame. */
+[data-chat-held='frame'] { position: relative; }
+[data-chat-held='frame']::before {
+  content: '';
+  position: absolute;
+  inset: 0 8px;
+  border-radius: 18px;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--stage-ink, #f4f4f5) 16%, transparent);
+  background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 6%, transparent);
+}
+[data-chat-held='frame']::before {
+  box-shadow: 0 0 24px rgb(255 255 255 / 0.08);
+}
+/* The line being answered keeps a quiet outline while the reply bar is up. Phones only. */
+@media (max-width: 767px) {
+  [data-chat-replying] { position: relative; }
+  [data-chat-replying]::before {
+    content: '';
+    position: absolute;
+    inset: 0 8px;
+    border-radius: 18px;
+    pointer-events: none;
+    border: 1px solid color-mix(in srgb, var(--stage-ink, #f4f4f5) 16%, transparent);
+    background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 6%, transparent);
+  }
+}
+
+/* Phone composer: slim "Replying to" bar. Stage tokens so it reads on every theme. */
+[data-reply-bar][data-reply-bar] {
+  border-color: color-mix(in srgb, var(--stage-ink, #f4f4f5) 14%, transparent);
+  background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 6%, transparent);
+}
+[data-reply-bar-accent] { background: color-mix(in srgb, var(--stage-ink, #f4f4f5) 75%, transparent); }
+[data-reply-bar-name][data-reply-bar-name] { color: var(--stage-ink, #f4f4f5); }
+[data-reply-bar-text][data-reply-bar-text] { color: color-mix(in srgb, var(--stage-ink, #f4f4f5) 55%, transparent); }
+[data-reply-bar-icon][data-reply-bar-icon] { color: color-mix(in srgb, var(--stage-ink, #f4f4f5) 75%, transparent); }
