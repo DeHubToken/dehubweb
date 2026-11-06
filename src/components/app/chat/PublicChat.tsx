@@ -549,6 +549,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onReply={isAuthenticated ? handleReply : undefined}
                 onRetrySend={retrySend}
                 onDiscardSend={discardSend}
+                holdFrame
+                replying={!!replyTo && replyTo.id === message.id}
               />
               )
             ))
