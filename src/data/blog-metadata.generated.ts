@@ -2988,6 +2988,32 @@ export const blogPostsMetadata: BlogPost[] = [
 // arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
 export const newPostsMetadata: BlogPost[] = [
   {
+    "id": "open-appeal-binance-recover-876-bnb-pioneer-burn",
+    "slug": "open-appeal-binance-recover-876-bnb-pioneer-burn",
+    "title": "Dear Binance: Our Open Appeal to Recover 876 BNB",
+    "excerpt": "Thousands of retail holders have 876 BNB, worth over $600,000, stuck in a bugged contract. It meets every criterion of the Binance Pioneer Burn Program. This is our public appeal.",
+    "content": "",
+    "bannerImage": "/media/open-appeal-binance-876-bnb-banner-riftn.png",
+    "bannerImageAlt": "Dear Binance, an open appeal from Riftn to recover 876 BNB through the Pioneer Burn",
+    "author": {
+      "name": "Riftn Team"
+    },
+    "publishedAt": "2026-11-06T19:26:20.000Z",
+    "tags": [
+      "Riftn",
+      "BNB",
+      "Binance",
+      "Pioneer Burn",
+      "BNB Chain",
+      "Community"
+    ],
+    "readingTime": 3,
+    "featured": true,
+    "status": "published",
+    "seoTitle": "Dear Binance: Open Appeal to Recover 876 BNB | Riftn",
+    "seoDescription": "876 BNB, worth over $600,000, is stuck in a bugged contract that meets every Binance Pioneer Burn criterion. Read the Riftn community's open appeal."
+  },
+  {
     "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
     "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
     "title": "Riftn’s next chapter: Riftn, BNB recovery and the road to relaunch",
@@ -3624,36 +3650,30 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "top-100-crypto-projects-2026",
-  "slug": "top-100-crypto-projects-2026",
-  "title": "Top 100 Crypto Projects 2026, Ranked by GitHub Activity",
-  "seoTitle": "Top 100 Most Active Crypto Projects 2026 by GitHub Activity | Riftn",
-  "seoDescription": "The 100 most active crypto projects of 2026, ranked by real GitHub commits and developers over 90 days. ElizaOS, DefiLlama, MetaMask, Ledger, Solana, Ethereum and more.",
-  "excerpt": "We counted every commit and every active developer across more than 370 public GitHub repos behind 270 crypto projects over 90 days, then ranked the 100 most active. An AI agent framework leads, wallets are the busiest corner, and about 1 in 6 commits now credit AI.",
+  "id": "open-appeal-binance-recover-876-bnb-pioneer-burn",
+  "slug": "open-appeal-binance-recover-876-bnb-pioneer-burn",
+  "title": "Dear Binance: Our Open Appeal to Recover 876 BNB",
+  "excerpt": "Thousands of retail holders have 876 BNB, worth over $600,000, stuck in a bugged contract. It meets every criterion of the Binance Pioneer Burn Program. This is our public appeal.",
   "content": "",
-  "bannerImage": "/media/top-100-crypto-projects-2026-banner-riftn.png",
-  "bannerImageAlt": "Top 100 crypto projects 2026 ranked by GitHub activity, by Riftn",
+  "bannerImage": "/media/open-appeal-binance-876-bnb-banner-riftn.png",
+  "bannerImageAlt": "Dear Binance, an open appeal from Riftn to recover 876 BNB through the Pioneer Burn",
   "author": {
     "name": "Riftn Team"
   },
-  "publishedAt": "2026-10-26T23:30:00.000Z",
+  "publishedAt": "2026-11-06T19:26:20.000Z",
   "tags": [
-    "crypto",
-    "top 100",
-    "GitHub activity",
-    "crypto developers",
-    "AI",
-    "wallets",
-    "DeFi",
-    "Ethereum",
-    "Solana",
-    "Bitcoin",
-    "open source",
-    "Riftn"
+    "Riftn",
+    "BNB",
+    "Binance",
+    "Pioneer Burn",
+    "BNB Chain",
+    "Community"
   ],
-  "readingTime": 15,
+  "readingTime": 3,
   "featured": true,
-  "status": "published"
+  "status": "published",
+  "seoTitle": "Dear Binance: Open Appeal to Recover 876 BNB | Riftn",
+  "seoDescription": "876 BNB, worth over $600,000, is stuck in a bugged contract that meets every Binance Pioneer Burn criterion. Read the Riftn community's open appeal."
 };
 
 export const excludedTitles: string[] = [

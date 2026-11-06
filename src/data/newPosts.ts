@@ -1,5 +1,6 @@
 import { BlogPost as BlogPostType } from '@/types/blog';
 import { riftnRelaunchPost } from './posts/riftnRelaunchPost';
+import { binancePioneerBurnAppealPost } from './posts/binancePioneerBurnAppealPost';
 import { yearlyWrapUp2025Post } from './posts/yearlyWrapUp2025Post';
 import { townHallJan2026Post } from './posts/townHallJan2026Post';
 import { devUpdateJan2026Post } from './posts/devUpdateJan2026Post';
@@ -1415,6 +1416,7 @@ const bnbPoolUpdatePost: BlogPostType = {
 };
 
 export const newPosts: BlogPostType[] = [
+  binancePioneerBurnAppealPost,
   riftnRelaunchPost,
   tokenExchangeListingsUpdatePost,
   q4DevelopmentOverviewPost,
