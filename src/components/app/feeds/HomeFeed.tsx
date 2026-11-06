@@ -149,14 +149,23 @@ type FeedItemType =
   | { type: 'shorts'; data: ShortVideo[] }
   | { type: 'ad'; data: ServedAd };
 
-const PAGE_SIZE = 20;
-// Start the next page while several cards are still below the fold. At 600px a
-// fast wheel/trackpad gesture could reach the document bottom before the
-// request completed, so subsequent wheel deltas had nowhere to go and appeared
-// to freeze until another input arrived.
-const INFINITE_SCROLL_PREFETCH_MARGIN = '2400px 0px';
+// Ten posts a page: the first paint carries half the cards it used to, and
+// every later page lands in small steps instead of twenty heavy cards at once.
+// Must match the boot fetch in index.html (isBootDefaultFeedParams).
+const PAGE_SIZE = 10;
+// Start the next page about three cards before the end. At 600px a fast
+// wheel/trackpad gesture could reach the document bottom before the request
+// completed, so later wheel deltas had nowhere to go; 2400px with 20-post pages
+// pulled the next page in almost as soon as the first had painted.
+const INFINITE_SCROLL_PREFETCH_MARGIN = '1500px 0px';
 
 const SCROLL_REEL_FETCH_LIMIT = 50;
+/** First-render height of a carousel before it has been measured. */
+function insertEstimate(key: string): number {
+  if (key.startsWith('shorts-')) return 300;
+  if (key === 'live-now') return 260;
+  return 220;
+}
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 
@@ -1822,6 +1831,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         key={key}
         {...(retained ? {} : frameProps)}
         eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
+        // A card arriving with a new page eases in once (the slot outlives
+        // windowing, so scrolling back never replays it). Single column only:
+        // masonry re-packs columns and would replay it.
+        data-feed-arrive={index >= 3 && colCount <= 1 ? '' : undefined}
         vanishOnDislike={item.type === 'ad' ? undefined : (item.data as any)?.id}
       >
         <BoostedPostContext.Provider value={boosted}>
@@ -1956,7 +1969,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       </div>,
       // Carousel keys live beside the segments so an arriving radio/live row
       // cannot remount a Shorts viewer or reset its horizontal scroll.
-      ...segment.inserts.map(node => <div key={node.key} className="my-3">{node}</div>),
+      // Shorts rows and carousels hold the most media on the page; windowed like
+      // the cards so a row far above lets go of its videos and posters.
+      ...segment.inserts.map(node => (
+        <WindowedFeedItem key={node.key} className="my-3" estimatedHeight={insertEstimate(String(node.key))}>{node}</WindowedFeedItem>
+      )),
     ])}</>;
   };
 
@@ -2179,16 +2196,17 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
               <div
                 ref={loaderRef}
                 className={cn(
-                  'py-4 flex justify-center',
+                  'py-4 flex flex-col items-center',
                   // Preserve scroll runway while the request is in flight so
                   // wheel momentum is not discarded at the old document end.
                   isFetchingNextPage && 'min-h-[50vh]',
                 )}
               >
                 {isFetchingNextPage && (
-                  <div className="flex items-center gap-2 text-zinc-400">
-                    <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
-                    <span className="text-sm">{t('common.loadingMore')}</span>
+                  // The next posts' own shape holds their place, so a fast
+                  // scroll meets cards being filled in, not an empty gap.
+                  <div className="w-full" data-feed-loading-more role="status" aria-label={t('common.loadingMore')}>
+                    <FeedCardSkeletonList count={colCount > 1 ? 3 : 2} columns={colCount} />
                   </div>
                 )}
                 {!hasNextPage && items.length > 0 && (

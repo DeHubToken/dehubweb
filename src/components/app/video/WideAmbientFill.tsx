@@ -26,6 +26,8 @@ const CANVAS_WIDTH = 48;
 // both layers run 140px past every edge. At 10% they stopped inside that
 // fade and a thin dark line showed along the edges of the frame.
 const FILL_FILTER = 'blur(40px) saturate(150%) brightness(0.55)';
+// The same look at the canvas's 48px scale (40px of a ~900px frame is ~2px).
+const CANVAS_FILTER = 'blur(2px) saturate(150%) brightness(0.55)';
 
 interface WideAmbientFillProps {
   videoRef: RefObject<HTMLVideoElement | null>;
@@ -45,9 +47,18 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     let painted = false;
+    // Blur and tint the 48px copy itself, so stretching it is the blur. A CSS
+    // blur(40px) on the stretched canvas re-rasterised a frame-sized layer on
+    // every draw (8 a second) and made scrolling past a playing video stutter.
+    const inCanvasFilter = 'filter' in ctx;
+    canvas.style.filter = inCanvasFilter ? '' : FILL_FILTER;
 
-    const fitCanvas = () => {
-      const { width, height } = box.getBoundingClientRect();
+    // Sized from the observer's own measurement: reading the box here forced a
+    // full layout every time a card took the video over mid-scroll.
+    const fitCanvas = (entries: ResizeObserverEntry[]) => {
+      const rect = entries[entries.length - 1]?.contentRect;
+      const width = rect?.width ?? 0;
+      const height = rect?.height ?? 0;
       if (!width || !height) return;
       const h = Math.max(8, Math.round(CANVAS_WIDTH * (height / width)));
       if (canvas.height !== h) {
@@ -71,6 +82,7 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
       if (vw / vh > target) sw = vh * target;
       else sh = vw / target;
       try {
+        if (inCanvasFilter) ctx.filter = CANVAS_FILTER;
         ctx.globalAlpha = painted ? BLEND : 1;
         ctx.drawImage(video, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, cw, ch);
         ctx.globalAlpha = 1;
@@ -83,7 +95,6 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
       }
     };
 
-    fitCanvas();
     const resize = new ResizeObserver(fitCanvas);
     resize.observe(box);
     draw();
@@ -127,7 +138,6 @@ export function WideAmbientFill({ videoRef, thumbnail, live }: WideAmbientFillPr
         width={CANVAS_WIDTH}
         height={27}
         className="absolute left-[-140px] top-[-140px] h-[calc(100%+280px)] w-[calc(100%+280px)] opacity-0 transition-opacity duration-700"
-        style={{ filter: FILL_FILTER }}
       />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_90%_at_50%_50%,transparent_40%,rgba(0,0,0,0.5))]" />
     </div>
