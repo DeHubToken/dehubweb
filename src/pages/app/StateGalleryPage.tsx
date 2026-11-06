@@ -1,6 +1,8 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
+import type { ArticleTileLook } from '@/lib/article-tile';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
 import { postBgById } from '@/lib/post-backgrounds';
@@ -1309,6 +1311,7 @@ export default function StateGalleryPage() {
 
         <PinnedProfileGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
+        <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
 
         <PollGallery />
         <LockedChatGallery />
@@ -1746,6 +1749,46 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
           sampleText={GALLERY_TEXT_POSTS[0].content}
           onCancel={() => setOpen(false)}
           onSave={(id) => { setBgId(id); setOpen(false); }}
+        />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const GALLERY_ARTICLE_BODY = Array.from({ length: 460 }, () => 'word').join(' ');
+const GALLERY_ARTICLES: GalleryTextPost[] = [
+  { title: 'Open Letter For Pioneer Burn', cover: 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7389-article-1.jpg', views: '541' },
+  { title: 'Why we shoot on film again in 2026', cover: undefined, views: '1.2K' },
+].map((a, i) => ({
+  id: `gallery-article-${i}`, type: 'post', title: a.title, content: 'A short summary of the article.', articleBody: GALLERY_ARTICLE_BODY,
+  articleImageUrl: a.cover, views: a.views, createdAt: new Date(Date.now() - (i + 1) * 7_200_000).toISOString(),
+  author: { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false },
+  stats: { comments: 4, reposts: 0, likes: 90, dislikes: 0 },
+}) as GalleryTextPost);
+
+/** Article tiles in the profile grid: Cover (default) or Drop cap, picked by holding one of your articles. */
+function ArticleTilesGallery({ initialLook, initiallyOpen }: { initialLook: string | null; initiallyOpen: boolean }) {
+  const [look, setLook] = useState<ArticleTileLook>(initialLook === 'dropcap' ? 'dropcap' : 'cover');
+  const [open, setOpen] = useState(initiallyOpen);
+  const hold = usePostBgHold(true, () => setOpen(true), '[data-tile="article"]');
+  const entries: MixedGridEntry[] = [GALLERY_ARTICLES[0], GALLERY_TEXT_POSTS[0], GALLERY_ARTICLES[1]]
+    .map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-article-tile-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Article tiles (hold an article to choose)</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <ProfileArticleTileContext.Provider value={look}>
+          <div ref={hold.hostRef} {...hold.handlers} className="relative max-w-[360px]">
+            {hold.ringEl}
+            <ProfileMixedGrid entries={entries} />
+          </div>
+        </ProfileArticleTileContext.Provider>
+        <ArticleTilePicker
+          open={open}
+          current={look}
+          sample={{ cover: GALLERY_ARTICLES[0].articleImageUrl, title: GALLERY_ARTICLES[0].title || '', minutes: 2, views: '541' }}
+          onCancel={() => setOpen(false)}
+          onSave={(next) => { setLook(next); setOpen(false); }}
         />
       </AuthContext.Provider>
     </section>
