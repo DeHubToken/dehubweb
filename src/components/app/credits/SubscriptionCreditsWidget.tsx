@@ -6,6 +6,7 @@ import Plus from "@/components/ui/cut-icons/add";
 import { cn } from '@/lib/utils';
 import { useSubscriptionCredits } from '@/hooks/use-subscription-credits';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { useUsableUsd } from '@/hooks/use-usable-usd';
 
 // Carries the wallet and funding stack, so it only loads when opened.
 const TopUpDialog = lazy(() => import('./SubscriptionCreditsTopUpDialog'));
@@ -100,6 +101,7 @@ function TopUp({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boo
 /** Header pill on /creator; tapping it shows the full card. */
 export function SubscriptionCreditsPill() {
   const usage = useCreditUsage();
+  const usable = useUsableUsd();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -113,12 +115,13 @@ export function SubscriptionCreditsPill() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={t('credits.subscriptionTokens')}
-        className="flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 pl-1 pr-2.5 py-1"
+        className="flex h-7 items-center gap-1.5 rounded-full bg-white/10 border border-white/10 pl-1 pr-2.5"
       >
         <img src={dehubCoin} alt="" className="w-[18px] h-[18px]" />
-        <span className="text-right tabular-nums">
-          <span className="block text-xs font-semibold text-white">{usage.tokens.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
-          <span className="block text-[9px] text-zinc-400">≈ {usdFormat(usage.left)} USD</span>
+        {/* One line: what the wallet can spend here, in dollars — Studio
+            balance, DHB and every coin a job can be paid with. */}
+        <span className="text-xs font-semibold leading-none text-white tabular-nums">
+          ≈ {usdFormat(usable.usd ?? usage.left)}
         </span>
       </button>
       {open && (

@@ -35,6 +35,8 @@ import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import { noteProfileFeedOpen, useProfileFeedContext } from '@/lib/profile-feed-origin';
 import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { PostBgLayer, postBgHostProps, useProfilePostBg } from './PostBackground';
+import { ArticleTileFace, useProfileArticleTile } from './ArticleTile';
+import { articleReadMinutes } from '@/lib/article-tile';
 import './profile-mixed-grid.css';
 
 /** One cell's worth of content. Optimistic posts arrive in the same shape. */
@@ -103,6 +105,7 @@ function Badge({ children, label }: { children: ReactNode; label: string }) {
 export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: ProfileMixedGridProps) {
   const { t } = useTranslation();
   const postBg = useProfilePostBg();
+  const articleLook = useProfileArticleTile();
   const navigate = useNavigate();
   // Every tile opens a post. Fetch the post page's code while the reader is
   // still browsing, so a tap shows the post at once instead of a blank page
@@ -230,15 +233,27 @@ export const ProfileMixedGrid = memo(function ProfileMixedGrid({ entries }: Prof
           };
 
           if (isArticle) {
-            const cover = post.articleImageUrl;
+            const title = plainText(post.title || post.content);
             return (
-              <button key={entry.key} type="button" data-tile="article" className="pmg-tile pmg-poster pmg-article" disabled={entry.isOptimistic} onClick={openThis} aria-label={post.title || post.content}>
-                {cover ? <img src={tileImage(cover)} alt="" loading={eager ? 'eager' : 'lazy'} decoding="async" className="pmg-article-img" /> : <span className="pmg-article-img pmg-article-img--empty"><Blog /></span>}
-                <Badge label={t('profile.tabs.articles', 'Article')}><Blog /></Badge>
-                <span className="pmg-article-body">
-                  <b>{plainText(post.title || post.content)}</b>
-                  <span className="pmg-meta">{t('profile.articleShort', 'Article')}</span>
-                </span>
+              <button
+                key={entry.key}
+                type="button"
+                data-tile="article"
+                data-article-tile={articleLook}
+                className={articleLook === 'dropcap' ? 'pmg-tile pmg-adrop' : 'pmg-tile'}
+                disabled={entry.isOptimistic}
+                onClick={openThis}
+                aria-label={title}
+              >
+                <ArticleTileFace
+                  look={articleLook}
+                  cover={post.articleImageUrl ? tileImage(post.articleImageUrl) : undefined}
+                  title={title}
+                  minutes={articleReadMinutes(post.articleBody)}
+                  views={post.views && post.views !== '0' ? post.views : undefined}
+                  eager={eager}
+                />
+                {articleLook === 'cover' && <Badge label={t('profile.tabs.articles', 'Article')}><Blog /></Badge>}
                 {pinChip}
               </button>
             );

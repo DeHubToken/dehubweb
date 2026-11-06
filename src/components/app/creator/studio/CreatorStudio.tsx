@@ -20,7 +20,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * The full composer stays in the document. A single-line bar takes over below
  * the navigation after scrolling past it, without changing the page height.
  */
-import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
 import { appendCinemaDirection, normalizeCinemaDirection, type CinemaDirection } from '@/lib/creator/cinemaDirection';
 import { CinemaDirectionControls } from './CinemaDirectionControls';
@@ -117,6 +117,7 @@ import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
+import { RecentGenerationsStrip } from './RecentGenerationsStrip';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { readStudioSnapshot, writeStudioSnapshot, StudioDraftScope } from './StudioDraftScope';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -482,6 +483,12 @@ interface CreatorStudioProps {
    * underneath it, and collapses at exactly the point it would slide beneath.
    */
   stickyTop?: number;
+  /** Told when the composer parks as the floating island, so the page can hide its own bar. */
+  onParkedChange?: (parked: boolean) => void;
+  /** Shown at the island's left edge (the page's logo menu). */
+  compactLead?: ReactNode;
+  /** Shown before Create on wider screens (the balance chip). */
+  compactTrail?: ReactNode;
 }
 
 export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioProps) {
@@ -490,7 +497,7 @@ export const CreatorStudio = memo(function CreatorStudio(props: CreatorStudioPro
   return <StudioDraftScope owner={walletAddress} scope={props.snapshotScope}>{storageKey => <CreatorStudioWorkspace {...props} generationDraft={draft} storageKey={storageKey} />}</StudioDraftScope>;
 });
 
-const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, snapshotScope, onJobStarted, storageKey }: CreatorStudioProps & { storageKey: string }) {
+const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, generationDraftId, snapshotScope, onJobStarted, storageKey, onParkedChange, compactLead, compactTrail }: CreatorStudioProps & { storageKey: string }) {
   const promptId = useId();
   const navigate = useNavigate();
   const { t: _copy } = _useCopy();
@@ -650,6 +657,7 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
     observer.observe(composer);
     return () => observer.disconnect();
   }, [embedded, stickyTop]);
+  useEffect(() => { onParkedChange?.(composerParked); }, [composerParked, onParkedChange]);
   const effectMode = mode === 'video' && videoModel === VIRAL_EFFECT_MODEL;
   const selectedEffect = VIRAL_EFFECTS.find(effect => effect.name === prompts.video) ?? VIRAL_EFFECTS.find(effect => effect.id === 'earth-zoom')!;
   useEffect(() => {
@@ -1173,7 +1181,15 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       if (!model) return t('creator.pickVideoModel');
       if (model.requiresVideoInput && !currentClip) return t(model.referenceMode === 'extend' ? 'creator.extensionNeedsClip' : 'creator.referenceNeedsClip');
       if (currentClip && !model.requiresVideoInput) return t('creator.referenceVideoModel');
-      if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
+      if (currentImages.length > (model.maxReferenceImages ?? 1)) {
+        // Say how many this model takes and where to go for more, rather than a
+        // bare "cannot use all the images" that leaves the creator guessing.
+        const max = model.maxReferenceImages ?? 1;
+        const vars = { model: model.name, count: max, attached: currentImages.length };
+        if (max >= 9) return t('creator.validation.videoImageLimitMax', { ...vars, defaultValue: '{{model}} takes up to {{count}} images and you have {{attached}}. Remove the extras.' });
+        if (max === 1) return t('creator.validation.videoImageLimitOne', { ...vars, defaultValue: '{{model}} takes 1 image and you have {{attached}}. Remove the extras, or switch to Seedance 2.5 for up to 9.' });
+        return t('creator.validation.videoImageLimitSome', { ...vars, defaultValue: '{{model}} takes up to {{count}} images and you have {{attached}}. Remove the extras, or switch to Seedance 2.5 for up to 9.' });
+      }
       if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxSourceDuration ?? model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
         return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
@@ -1835,13 +1851,16 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
           header and the composer with the page scrolling through it. */}
       <div ref={composerAnchorRef} aria-hidden className="h-px" />
       {!embedded && composerParked && (
-        <div data-creator-compact className="fixed inset-x-0 z-40 px-3 sm:px-4" style={{ top: stickyTop }}>
-          <div className="mx-auto flex h-12 max-w-[1040px] items-center gap-2 rounded-2xl border border-white/15 bg-black/85 px-2 backdrop-blur-xl">
-            <button type="button" onClick={openComposer} aria-label={t('creator.promptLabel')} className="min-w-0 flex-1 truncate px-2 text-left text-sm text-white/85">
+        // The floating island: the page's bar hides and this dark pill takes
+        // its place, holding the logo menu, the prompt and Create.
+        <div data-creator-compact className="fixed inset-x-0 top-2 z-[55] px-2 sm:top-3 sm:px-4">
+          <div className="mx-auto flex max-w-[860px] items-center gap-2 rounded-[20px] border border-white/[0.12] bg-[#0a0b0c]/[0.96] p-1.5 shadow-[0_18px_50px_rgba(0,0,0,0.7)] backdrop-blur-xl">
+            {compactLead}
+            <button type="button" onClick={openComposer} aria-label={t('creator.promptLabel')} className="min-w-0 flex-1 truncate px-1 text-left text-sm text-white/70">
               {prompt || placeholder}
             </button>
-            <button type="button" onClick={openComposer} className="hidden max-w-40 truncate text-xs text-white/60 sm:block">{currentModelName}</button>
-            <span className="shrink-0 text-[11px] text-white/60">{priceLoading ? t('common.loading') : priceMain}</span>
+            <button type="button" onClick={openComposer} className="hidden max-w-40 truncate text-xs text-white/55 md:block">{currentModelName}</button>
+            {compactTrail && <div className="hidden shrink-0 sm:block [&>div]:mr-0">{compactTrail}</div>}
             {generateButton(true)}
           </div>
         </div>
@@ -2275,6 +2294,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                 </button>
               )}
           </>
+        </div>
+      </div>
+
+      {/* Latest generations, one sideways row under the composer. Live: a new
+          run shows as a skeleton here the moment it starts. */}
+      <div className="px-3 sm:px-4">
+        <div className="mx-auto max-w-[1040px]">
+          <RecentGenerationsStrip />
         </div>
       </div>
 

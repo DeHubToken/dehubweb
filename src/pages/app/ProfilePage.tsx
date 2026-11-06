@@ -64,6 +64,9 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
 import { mergePostBg, parsePostBg, postBgById } from '@/lib/post-backgrounds';
+import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
+import { articleReadMinutes, mergeArticleTile, parseArticleTile, type ArticleTileLook } from '@/lib/article-tile';
+import { buildFeedImageUrls as articleTileCover } from '@/lib/media-url';
 import { updateProfile } from '@/lib/api/dehub';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -333,6 +336,42 @@ export default function ProfilePage() {
       setPostBgSaving(false);
     }
   }, [profileKey, postBg, data.apiProfile?.customs, queryClient, t]);
+
+  // How the owner's articles look as grid tiles (customs.articleTile). Holding
+  // one of your own articles opens the picker, like text posts and backdrops.
+  const [articleTileOpen, setArticleTileOpen] = useState(false);
+  const [articleTileSaving, setArticleTileSaving] = useState(false);
+  const [articleTileOverride, setArticleTileOverride] = useState<{ owner: string; look: ArticleTileLook } | null>(null);
+  const articleTile: ArticleTileLook = articleTileOverride && articleTileOverride.owner === profileKey
+    ? articleTileOverride.look
+    : parseArticleTile(data.apiProfile?.customs);
+  const openArticleTile = useCallback(() => setArticleTileOpen(true), []);
+  const articleTileHold = usePostBgHold(!!data.isViewingOwnProfile, openArticleTile, '[data-tile="article"]');
+  const articleTileSample = useMemo(() => {
+    const a = data.PROFILE_POSTS.find((p) => !!p.articleBody);
+    return {
+      cover: a?.articleImageUrl ? articleTileCover([a.articleImageUrl], 480)?.[0] : undefined,
+      title: (a?.title || a?.content || t('articleTile.sampleTitle', 'Your article title')).trim(),
+      minutes: articleReadMinutes(a?.articleBody),
+      views: a?.views && a.views !== '0' ? a.views : undefined,
+    };
+  }, [data.PROFILE_POSTS, t]);
+  const saveArticleTile = useCallback(async (look: ArticleTileLook) => {
+    if (!profileKey) return;
+    if (articleTile === look) { setArticleTileOpen(false); return; }
+    setArticleTileSaving(true);
+    try {
+      const customs = mergeArticleTile(data.apiProfile?.customs, look) as Record<string, string | number | boolean>;
+      await updateProfile({ customs });
+      setArticleTileOverride({ owner: profileKey, look });
+      setArticleTileOpen(false);
+      void queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    } catch {
+      toast.error(t('articleTile.saveFailed', "Couldn't save. Try again."));
+    } finally {
+      setArticleTileSaving(false);
+    }
+  }, [profileKey, articleTile, data.apiProfile?.customs, queryClient, t]);
   useEffect(() => {
     if (!profileKey || appliedDefaultTabFor.current === profileKey) return;
     appliedDefaultTabFor.current = profileKey;
@@ -829,8 +868,11 @@ return () => rail.removeEventListener('wheel', onWheel);
           />
         )}
         <ProfilePostBgContext.Provider value={postBg}>
+        <ProfileArticleTileContext.Provider value={articleTile}>
         <div ref={postBgPostHold.hostRef} className="relative" {...postBgPostHold.handlers}>
         {postBgPostHold.ringEl}
+        <div ref={articleTileHold.hostRef} className="relative" {...articleTileHold.handlers}>
+        {articleTileHold.ringEl}
         <StableHeightContainer activeTab={activeTab}>
             <ProfileTabContent
               activeTab={activeTab}
@@ -863,6 +905,8 @@ return () => rail.removeEventListener('wheel', onWheel);
 
         </StableHeightContainer>
         </div>
+        </div>
+        </ProfileArticleTileContext.Provider>
         </ProfilePostBgContext.Provider>
         </div>
       </div>
@@ -878,6 +922,16 @@ return () => rail.removeEventListener('wheel', onWheel);
           saving={postBgSaving}
           onCancel={() => setPostBgOpen(false)}
           onSave={savePostBg}
+        />
+      )}
+      {data.isViewingOwnProfile && (
+        <ArticleTilePicker
+          open={articleTileOpen}
+          current={articleTile}
+          sample={articleTileSample}
+          saving={articleTileSaving}
+          onCancel={() => setArticleTileOpen(false)}
+          onSave={saveArticleTile}
         />
       )}
 

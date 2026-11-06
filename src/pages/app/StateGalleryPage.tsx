@@ -1,6 +1,8 @@
 import { NewGroupChannelSheet, type NewChatKind } from '@/components/app/chat/NewGroupChannelSheet';
 import { OwnAiKeysSetting } from '@/components/app/settings/OwnAiKeysSetting';
 import { ProfilePostBgContext, PostBgPicker, usePostBgHold } from '@/components/app/profile/PostBackground';
+import { ArticleTilePicker, ProfileArticleTileContext } from '@/components/app/profile/ArticleTile';
+import type { ArticleTileLook } from '@/lib/article-tile';
 import { ProfileMixedGrid, type MixedGridEntry } from '@/components/app/profile/ProfileMixedGrid';
 import { PostCard as GalleryPostCard } from '@/components/app/cards/PostCard';
 import { postBgById } from '@/lib/post-backgrounds';
@@ -11,6 +13,7 @@ import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { MintChainSheet } from '@/components/app/mint/MintChainSheet';
+import PayWithCoinSheet from '@/components/app/credits/PayWithCoinSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
@@ -873,6 +876,76 @@ function UnlockRevealGallery() {
   );
 }
 
+const GALLERY_COINS = [
+  { symbol: 'USDT', chainId: 56, address: '0x55d398326f99059ff775485246999027b3197955', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'USDC', chainId: 56, address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'BNB', chainId: 56, address: null, decimals: 18, priceUsd: 626, treasuryAddress: '0x0' },
+  { symbol: 'USDC', chainId: 8453, address: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', decimals: 6, priceUsd: 1, treasuryAddress: '0x0' },
+  { symbol: 'ETH', chainId: 8453, address: null, decimals: 18, priceUsd: 3100, treasuryAddress: '0x0' },
+  { symbol: 'USDFC', chainId: 314, address: '0x80b98d3aa09ffff255c3ba4a241111ff1262f045', decimals: 18, priceUsd: 1, treasuryAddress: '0x0' },
+] as const;
+
+/** Not enough DHB: Create pressed short of DHB, pay the same amount in another coin. */
+const GALLERY_ANY_COINS = [
+  { assetId: 'nep141:btc.omft.near', symbol: 'BTC', blockchain: 'btc', decimals: 8, price: 101200 },
+  { assetId: 'nep141:sol.omft.near', symbol: 'SOL', blockchain: 'sol', decimals: 9, price: 88 },
+  { assetId: 'nep141:eth.omft.near', symbol: 'ETH', blockchain: 'eth', decimals: 18, price: 3100 },
+  { assetId: 'nep141:sol-usdc', symbol: 'USDC', blockchain: 'sol', decimals: 6, price: 1 },
+  { assetId: 'nep141:tron-usdt', symbol: 'USDT', blockchain: 'tron', decimals: 6, price: 1 },
+  { assetId: 'nep141:doge.omft.near', symbol: 'DOGE', blockchain: 'doge', decimals: 8, price: 0.17 },
+  { assetId: 'nep141:xrp.omft.near', symbol: 'XRP', blockchain: 'xrp', decimals: 6, price: 2.3 },
+  { assetId: 'nep141:ltc.omft.near', symbol: 'LTC', blockchain: 'ltc', decimals: 8, price: 92 },
+];
+
+const GALLERY_ANY_INTENT = {
+  id: 'gallery', originAsset: 'nep141:sol.omft.near', originSymbol: 'SOL', originBlockchain: 'sol',
+  depositAddress: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU', depositMemo: null,
+  amountInFormatted: '0.0215', timeEstimateSeconds: 24, refundTo: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
+  usd: 1.89, expiresAt: 4102444800, settlement: 'PENDING_DEPOSIT', credited: false,
+};
+
+function CoinPayGallery() {
+  const [open, setOpen] = useState(false);
+  const [anyView, setAnyView] = useState<null | 'list' | 'send'>(null);
+  return (
+    <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-coin-pay-gallery>
+      <h2 className="mb-3 text-sm font-semibold">Not enough DHB</h2>
+      <Button variant="glass" size="sm" data-open-coin-pay onClick={() => setOpen(true)}>Create (1,890 DHB)</Button>
+      <PayWithCoinSheet
+        open={open}
+        onOpenChange={setOpen}
+        costDhb={1890}
+        walletDhb={520}
+        onFunded={() => setOpen(false)}
+        preview={{
+          coins: GALLERY_COINS.map((c) => ({ ...c })),
+          balances: { 'USDT:56': 42.1, 'USDC:56': 0, 'BNB:56': 0.41, 'USDC:8453': 12, 'ETH:8453': 0.02, 'USDFC:314': 0 },
+          anyCoins: GALLERY_ANY_COINS,
+        }}
+      />
+      <div className="mt-3 flex gap-2">
+        <Button variant="glass" size="sm" data-open-any-coin="list" onClick={() => setAnyView('list')}>Any coin</Button>
+        <Button variant="glass" size="sm" data-open-any-coin="send" onClick={() => setAnyView('send')}>Any coin: send</Button>
+      </div>
+      <PayWithCoinSheet
+        key={anyView || 'closed'}
+        open={anyView !== null}
+        onOpenChange={(o) => { if (!o) setAnyView(null); }}
+        costDhb={1890}
+        walletDhb={0}
+        onFunded={() => setAnyView(null)}
+        preview={{
+          coins: [],
+          balances: {},
+          view: 'any',
+          anyCoins: GALLERY_ANY_COINS,
+          anyIntent: anyView === 'send' ? GALLERY_ANY_INTENT : undefined,
+        }}
+      />
+    </section>
+  );
+}
+
 /** Mint chain picker: Mint on an off-chain post, with each chain's live price. */
 function MintChainGallery() {
   const [open, setOpen] = useState<null | 'dehub' | 'own'>(null);
@@ -1277,6 +1350,7 @@ export default function StateGalleryPage() {
 
         <PinnedProfileGallery />
         <PostBackgroundsGallery initialBg={params.get('pbg')} initiallyOpen={params.get('sheet') === 'post-bg'} />
+        <ArticleTilesGallery initialLook={params.get('atile')} initiallyOpen={params.get('sheet') === 'article-tile'} />
 
         <PollGallery />
         <LockedChatGallery />
@@ -1401,6 +1475,7 @@ export default function StateGalleryPage() {
         <LockedDmGallery />
         <UnlockRevealGallery />
         <MintChainGallery />
+        <CoinPayGallery />
         <WhenSheetGallery />
         <PostStatsGallery initiallyOpen={params.get('open') === 'post-stats'} />
         <ToastsGallery />
@@ -1713,6 +1788,46 @@ function PostBackgroundsGallery({ initialBg, initiallyOpen }: { initialBg: strin
           sampleText={GALLERY_TEXT_POSTS[0].content}
           onCancel={() => setOpen(false)}
           onSave={(id) => { setBgId(id); setOpen(false); }}
+        />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const GALLERY_ARTICLE_BODY = Array.from({ length: 460 }, () => 'word').join(' ');
+const GALLERY_ARTICLES: GalleryTextPost[] = [
+  { title: 'Open Letter For Pioneer Burn', cover: 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/feed-images/7389-article-1.jpg', views: '541' },
+  { title: 'Why we shoot on film again in 2026', cover: undefined, views: '1.2K' },
+].map((a, i) => ({
+  id: `gallery-article-${i}`, type: 'post', title: a.title, content: 'A short summary of the article.', articleBody: GALLERY_ARTICLE_BODY,
+  articleImageUrl: a.cover, views: a.views, createdAt: new Date(Date.now() - (i + 1) * 7_200_000).toISOString(),
+  author: { id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false },
+  stats: { comments: 4, reposts: 0, likes: 90, dislikes: 0 },
+}) as GalleryTextPost);
+
+/** Article tiles in the profile grid: Cover (default) or Drop cap, picked by holding one of your articles. */
+function ArticleTilesGallery({ initialLook, initiallyOpen }: { initialLook: string | null; initiallyOpen: boolean }) {
+  const [look, setLook] = useState<ArticleTileLook>(initialLook === 'dropcap' ? 'dropcap' : 'cover');
+  const [open, setOpen] = useState(initiallyOpen);
+  const hold = usePostBgHold(true, () => setOpen(true), '[data-tile="article"]');
+  const entries: MixedGridEntry[] = [GALLERY_ARTICLES[0], GALLERY_TEXT_POSTS[0], GALLERY_ARTICLES[1]]
+    .map((p) => ({ key: p.id, type: 'post', data: p }) as MixedGridEntry);
+  return (
+    <section data-page-bento data-article-tile-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Article tiles (hold an article to choose)</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <ProfileArticleTileContext.Provider value={look}>
+          <div ref={hold.hostRef} {...hold.handlers} className="relative max-w-[360px]">
+            {hold.ringEl}
+            <ProfileMixedGrid entries={entries} />
+          </div>
+        </ProfileArticleTileContext.Provider>
+        <ArticleTilePicker
+          open={open}
+          current={look}
+          sample={{ cover: GALLERY_ARTICLES[0].articleImageUrl, title: GALLERY_ARTICLES[0].title || '', minutes: 2, views: '541' }}
+          onCancel={() => setOpen(false)}
+          onSave={(next) => { setLook(next); setOpen(false); }}
         />
       </AuthContext.Provider>
     </section>

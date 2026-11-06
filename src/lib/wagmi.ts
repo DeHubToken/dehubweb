@@ -20,7 +20,7 @@
 
 import { http, createConfig } from 'wagmi'
 import { injected } from 'wagmi/connectors'
-import { base, bsc, mainnet } from 'wagmi/chains'
+import { base, bsc, filecoin, mainnet } from 'wagmi/chains'
 import { robinhood, ROBINHOOD_PUBLIC_RPC } from '@/lib/chains/robinhood'
 import { arc, ARC_PUBLIC_RPC } from '@/lib/chains/arc'
 
@@ -65,7 +65,8 @@ export const wagmiConfig = createConfig({
   // rather than reported as an unsupported network. What gates the user-facing
   // pickers is ROBINHOOD_ENABLED in lib/chains/constants.
   // BNB first: it is the chain a fresh WalletConnect session starts on.
-  chains: [bsc, base, mainnet, robinhood, arc],
+  // Filecoin is only here so USDFC can top up a Studio balance (lib/coin-topup).
+  chains: [bsc, base, mainnet, robinhood, arc, filecoin],
   connectors: [
     // Hidden fallback for mobile in-app browsers (Trust, MetaMask, etc.)
     // that inject window.ethereum but may not support EIP-6963 discovery.
@@ -79,6 +80,7 @@ export const wagmiConfig = createConfig({
     [mainnet.id]: http('https://ethereum-rpc.publicnode.com'),
     [robinhood.id]: http(ROBINHOOD_PUBLIC_RPC),
     [arc.id]: http(ARC_PUBLIC_RPC),
+    [filecoin.id]: http('https://api.node.glif.io/rpc/v1'),
   },
   // Default is 4000ms — way too aggressive. We don't watch blocks actively.
   pollingInterval: 30_000,

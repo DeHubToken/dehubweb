@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { loginClipLanes } from '@/lib/login-clip-lanes';
 import { LOGIN_CLIP_IDS } from './login-clip-assets';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Skeleton } from '@/components/ui/skeleton';
 import '@/styles/login-stack.css';
 
 type ClipName = typeof LOGIN_CLIP_IDS[number];
@@ -19,8 +18,7 @@ type ClipName = typeof LOGIN_CLIP_IDS[number];
  * lanes drift them in. A <video> is not cheap even empty: Chrome gives each
  * one ~100 elements of built-in controls to style, and 16 of them in the
  * opening frame were most of the delay between tap and sheet. Until its first
- * frame is ready a tile pulses on the shared skeleton beat; the clip then
- * fades in over it. Once built, a clip stays so drifting back does not refetch.
+ * frame is ready the tile stays plain; the clip then fades in over it. Once built, a clip stays so drifting back does not refetch.
  */
 function Clip({ name }: { name: ClipName }) {
   const tileRef = useRef<HTMLDivElement>(null);
@@ -56,7 +54,6 @@ function Clip({ name }: { name: ClipName }) {
   }, [loaded, visible, still]);
   return (
     <div ref={tileRef} className="login-stack__tile">
-      {!ready && <Skeleton className="login-stack__skeleton" />}
       {loaded && (
         <video
           ref={ref}

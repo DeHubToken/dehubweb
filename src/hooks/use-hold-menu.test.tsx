@@ -4,8 +4,8 @@ import { useHoldMenu } from './use-hold-menu';
 
 const target = document.createElement('div');
 const pointer = (over: Record<string, unknown> = {}) =>
-  ({ pointerType: 'touch', isPrimary: true, clientX: 10, clientY: 20, pointerId: 1, target, ...over }) as never;
-const mouse = () => ({ clientX: 5, clientY: 6, target, preventDefault: vi.fn(), stopPropagation: vi.fn() });
+  ({ pointerType: 'touch', isPrimary: true, clientX: 10, clientY: 20, pointerId: 1, target, currentTarget: target, ...over }) as never;
+const mouse = () => ({ clientX: 5, clientY: 6, target, currentTarget: target, preventDefault: vi.fn(), stopPropagation: vi.fn() });
 
 describe('useHoldMenu', () => {
   beforeEach(() => { vi.useFakeTimers(); });
@@ -51,5 +51,16 @@ describe('useHoldMenu', () => {
     result.current.onContextMenu(ctx as never);
     expect(onHold).toHaveBeenCalledTimes(1);
     expect(ctx.preventDefault).toHaveBeenCalled();
+  });
+
+  it('leaves events from a portaled drawer alone', () => {
+    const onHold = vi.fn();
+    const { result } = renderHook(() => useHoldMenu(onHold));
+    const outside = document.createElement('input');
+    act(() => { result.current.onPointerDown(pointer({ target: outside })); vi.advanceTimersByTime(600); });
+    const ctx = { ...mouse(), target: outside };
+    result.current.onContextMenu(ctx as never);
+    expect(onHold).not.toHaveBeenCalled();
+    expect(ctx.preventDefault).not.toHaveBeenCalled();
   });
 });

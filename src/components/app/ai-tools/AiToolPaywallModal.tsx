@@ -1,5 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -15,6 +15,9 @@ import { payForJob, useSpendableDhb } from '@/lib/ai-payment';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
+
+// Opens when Create is pressed without enough DHB: pay the same amount in another coin.
+const PayWithCoinSheet = lazy(() => import('@/components/app/credits/PayWithCoinSheet'));
 
 interface AiToolPaywallModalProps {
   open: boolean;
@@ -89,6 +92,7 @@ export function AiToolPaywallModal({
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
+  const [coinPayOpen, setCoinPayOpen] = useState(false);
 
   const formatDhb = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
@@ -96,14 +100,13 @@ export function AiToolPaywallModal({
     return amount.toFixed(0);
   };
 
-  const handlePayAndExecute = async () => {
+  const handlePayAndExecute = async (funded = false) => {
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      if (needsTokens) {
+      if (needsTokens && !funded) {
         toast.dismiss('ai-tool-payment');
-        onOpenChange(false);
-        navigate('/app/buy');
+        setCoinPayOpen(true);
         setIsPaying(false);
         return;
       }
@@ -133,6 +136,7 @@ export function AiToolPaywallModal({
   return (
     // Locked shut while a transfer is in flight: it cannot be recalled once
     // signed, and a modal that unmounts mid-payment takes the hash with it.
+    <>
     <Dialog open={open} onOpenChange={(next) => { if (!isPaying) onOpenChange(next); }}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
@@ -284,9 +288,9 @@ export function AiToolPaywallModal({
                 variant="outline"
                 size="sm"
                 className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs"
-                onClick={() => { onOpenChange(false); clientNavigate('/app/buy'); }}
+                onClick={() => setCoinPayOpen(true)}
               >
-                {t('nav.buyDhb')}
+                {t('coinPay.open', { defaultValue: 'Pay with another coin' })}
               </Button>
             </div>
           )}
@@ -303,7 +307,7 @@ export function AiToolPaywallModal({
           <Button
             variant="glass"
             className="flex-1 font-medium"
-            onClick={handlePayAndExecute}
+            onClick={() => handlePayAndExecute()}
             disabled={loading || isQuoting || isWalletLoading || isProcessing || isPaying}
           >
             {isPaying ? (
@@ -319,5 +323,17 @@ export function AiToolPaywallModal({
         </div>
       </DialogContent>
     </Dialog>
+      {coinPayOpen && (
+        <Suspense fallback={null}>
+          <PayWithCoinSheet
+            open={coinPayOpen}
+            onOpenChange={setCoinPayOpen}
+            costDhb={costDhb}
+            walletDhb={walletDhb}
+            onFunded={() => { setCoinPayOpen(false); void handlePayAndExecute(true); }}
+          />
+        </Suspense>
+      )}
+    </>
   );
 }

@@ -4,6 +4,10 @@ import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent }
 const HOLD_MS = 500;
 const SLOP_PX = 8;
 
+/** An event React delivered from a drawer or dialog portaled out of the row, not one that happened on it. */
+const fromPortal = (event: { currentTarget: Element; target: EventTarget | null }) =>
+  !event.currentTarget.contains(event.target as Node | null);
+
 /**
  * Open a row's menu by holding it on a touch screen, or right-clicking it with
  * a mouse. Spread the returned handlers on the row.
@@ -35,6 +39,7 @@ export function useHoldMenu(
   useEffect(() => cancel, [cancel]);
 
   const onPointerDown = useCallback((event: ReactPointerEvent) => {
+    if (fromPortal(event)) return;
     cancel();
     swallowClick.current = false;
     if (!enabled || event.pointerType !== 'touch' || !event.isPrimary) return;
@@ -55,6 +60,7 @@ export function useHoldMenu(
   }, [cancel]);
 
   const onContextMenu = useCallback((event: ReactMouseEvent) => {
+    if (fromPortal(event)) return;
     if (!enabled) return;
     cancel();
     if (Date.now() - firedAt.current < 1500) {

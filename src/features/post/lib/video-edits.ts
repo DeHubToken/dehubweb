@@ -4,6 +4,7 @@
  * the video (user_mint `videoEdits`), so every player shows the edited clip.
  */
 import { DEFAULT_ADJUST, studioColorMatrix, type StudioAdjust } from './studioColor';
+import { cropPayload, type CropRatioId, type VideoCropRect } from './video-crop';
 
 export interface PostVideoEdits {
   mirror?: boolean;
@@ -12,6 +13,10 @@ export interface PostVideoEdits {
   /** Look strength, 0..100. */
   strength?: number;
   adjust?: StudioAdjust;
+  /** The part of the turned, mirrored frame to keep. */
+  crop?: VideoCropRect;
+  /** The shape picked for the crop box (Original, Free, 1:1...). */
+  cropRatio?: CropRatioId;
 }
 
 export interface VideoEditsPayload {
@@ -19,6 +24,7 @@ export interface VideoEditsPayload {
   rotate?: 90 | 180 | 270;
   matrix?: number[];
   vignette?: number;
+  crop?: VideoCropRect;
 }
 
 /** The colour matrix the edits paint with, or null for none. */
@@ -37,6 +43,8 @@ export function videoEditsPayload(e?: PostVideoEdits | null): VideoEditsPayload 
   if (matrix) out.matrix = matrix.map((v) => Math.round(v * 10000) / 10000);
   const vignette = e.adjust?.vignette ?? 0;
   if (vignette > 0) out.vignette = vignette;
+  const crop = cropPayload(e.crop);
+  if (crop) out.crop = crop;
   return Object.keys(out).length ? out : null;
 }
 
@@ -73,7 +81,7 @@ export function postDestructLabel(s: number): string {
 
 /**
  * Paints `source` (a video frame) with the edits onto a new canvas: turn,
- * mirror, colour and vignette, so the cover matches the baked video.
+ * mirror, crop, colour and vignette, so the cover matches the baked video.
  */
 export function paintEditedFrame(source: CanvasImageSource, w: number, h: number, e?: PostVideoEdits | null): HTMLCanvasElement {
   const rot = e?.rotate ?? 0;
@@ -89,6 +97,23 @@ export function paintEditedFrame(source: CanvasImageSource, w: number, h: number
   if (e?.mirror) ctx.scale(-1, 1);
   ctx.drawImage(source, -w / 2, -h / 2, w, h);
   ctx.restore();
+  const crop = cropPayload(e?.crop);
+  if (crop) {
+    const cw = Math.max(2, Math.round(c.width * crop.w));
+    const ch = Math.max(2, Math.round(c.height * crop.h));
+    const cut = document.createElement('canvas');
+    cut.width = cw;
+    cut.height = ch;
+    cut.getContext('2d')?.drawImage(c, Math.round(c.width * crop.x), Math.round(c.height * crop.y), cw, ch, 0, 0, cw, ch);
+    return paintColour(cut, e);
+  }
+  return paintColour(c, e);
+}
+
+/** Colour matrix and vignette, painted in place. */
+function paintColour(c: HTMLCanvasElement, e?: PostVideoEdits | null): HTMLCanvasElement {
+  const ctx = c.getContext('2d');
+  if (!ctx) return c;
   const m = videoEditsMatrix(e);
   if (m) {
     const img = ctx.getImageData(0, 0, c.width, c.height);

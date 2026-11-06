@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
@@ -12,7 +12,6 @@ import Volume2 from "@/components/ui/cut-icons/volume";
 import Upload from "@/components/ui/cut-icons/upload";
 import Image from "@/components/ui/cut-icons/images";
 import Music from "@/components/ui/cut-icons/music";
-import Lightbulb from "@/components/ui/cut-icons/feature-requests";
 
 import X from "@/components/ui/cut-icons/close";
 import Plus from "@/components/ui/cut-icons/add";
@@ -29,7 +28,11 @@ import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { AvatarVideoPaywall } from './AvatarVideoPaywall';
 import { Slider } from '@/components/ui/slider';
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+// Opens when Create is pressed without enough DHB: pay the same amount in another coin.
+const PayWithCoinSheet = lazy(() => import('@/components/app/credits/PayWithCoinSheet'));
 
 export interface VideoGenerationOptions {
   avatar?: import('@/lib/creator/avatar').AvatarSubmission;
@@ -90,6 +93,7 @@ function StandardVideoPaywallModal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+const [modelSearch, setModelSearch] = useState('');
   const [isPaying, setIsPaying] = useState(false);
 
   // Basic Seedance 2.0 options
@@ -220,6 +224,7 @@ function StandardVideoPaywallModal({
   // Offering a payment someone cannot make would only fail at the signature,
   // so a wallet short of the price is sent to buy instead.
   const needsTokens = !isWalletLoading && costDhb > 0 && walletDhb < costDhb;
+  const [coinPayOpen, setCoinPayOpen] = useState(false);
 
   const hasAdvancedFeatures = !model.requiresVideoInput && (model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed);
 
@@ -266,7 +271,7 @@ function StandardVideoPaywallModal({
     e.target.value = '';
   };
 
-  const handlePayAndGenerate = async () => {
+  const handlePayAndGenerate = async (funded = false) => {
     if (costDhb <= 0 || isQuoting || quoteError) return;
     if (model.supportsSeed && seed.trim() && (!/^\d+$/.test(seed.trim()) || !Number.isSafeInteger(Number(seed)) || Number(seed) > 2147483647)) {
       toast.error(_copy('creator.invalidSeed', { defaultValue: 'Seed must be a whole number from 0 to 2147483647.' }));
@@ -323,13 +328,12 @@ function StandardVideoPaywallModal({
         setIsUploading(false);
       }
 
-      if (needsTokens) {
+      if (needsTokens && !funded) {
         // The upload phase claims this toast id and sonner loading toasts
         // never auto-dismiss, so an early return has to clear it or a
         // spinner is left running forever.
         toast.dismiss('video-gen-payment');
-        onOpenChange(false);
-        navigate('/app/buy');
+        setCoinPayOpen(true);
         setIsPaying(false);
         return;
       }
@@ -355,6 +359,7 @@ function StandardVideoPaywallModal({
     // Locked while uploading or paying: dismissing mid-transfer only unmounts
     // the UI, it cannot recall the on-chain transfer, and the generation would
     // be lost with the money already gone.
+    <>
     <Drawer
       open={open}
       onOpenChange={(next) => {
@@ -362,10 +367,10 @@ function StandardVideoPaywallModal({
         onOpenChange(next);
       }}
     >
-      <DrawerContent column glass hideHandle={false} className="max-h-[85dvh]">
+      <DrawerContent column glass hideHandle={false} className="max-h-[85dvh] md:w-[min(40rem,var(--app-main-width,100vw))] md:left-[calc(var(--app-main-left,0px)_+_(var(--app-main-width,100vw)_-_min(40rem,var(--app-main-width,100vw)))_/_2)]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Video className="w-5 h-5 text-purple-400" />{_copy("copy.2fd59b9cdec1", { defaultValue: "Generate Video" })}</DrawerTitle>
+            <BrandIcon src="/theme-icons/system/videos.webp" alt="" className="h-6 w-6 shrink-0 object-contain" />{_copy("copy.2fd59b9cdec1", { defaultValue: "Generate Video" })}</DrawerTitle>
           <DrawerDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DrawerDescription>
         </DrawerHeader>
 
@@ -381,13 +386,12 @@ function StandardVideoPaywallModal({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">{model.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-white text-sm">{model.name}</p>
                         {model.hasAudio && (
-                          <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] rounded-md">
-                            <Volume2 className="w-2.5 h-2.5" />{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</span>
+                          <span className="flex items-center gap-1 px-1.5 py-0.5 bg-zinc-700/60 text-zinc-300 text-[10px] rounded-md">
+                            <Volume2 className="w-2.5 h-2.5" />{_copy("creator.withSound", { defaultValue: "With sound" })}</span>
                         )}
                       </div>
                       <p className="text-xs text-zinc-500">{model.description}</p>
@@ -398,8 +402,20 @@ function StandardVideoPaywallModal({
               </button>
               
               {modelSelectorOpen && model.id !== 'pixverse-effects' && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-52 overflow-y-auto">
-                  {VIDEO_MODEL_OPTIONS.map((option) => {
+                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-72 overflow-y-auto">
+                  <div className="sticky top-0 z-10 bg-zinc-800 p-2 border-b border-zinc-700">
+<input
+type="search"
+value={modelSearch}
+onChange={(e) => setModelSearch(e.target.value)}
+placeholder={_copy("creator.searchModels", { defaultValue: "Search models" })}
+className="w-full bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
+/>
+</div>
+{VIDEO_MODEL_OPTIONS.filter((option) => {
+const q = modelSearch.trim().toLowerCase();
+return !q || `${option.name} ${option.description || ''}`.toLowerCase().includes(q);
+}).map((option) => {
                     const optionModel = VIDEO_MODELS[option.id as VideoModelKey];
                     const optionCostUsd = getVideoCostUsd(optionModel);
                     const optionCostDhb = dhbPrice ? getVideoCostDhb(optionModel, dhbPrice) : 0;
@@ -411,18 +427,18 @@ function StandardVideoPaywallModal({
                         onClick={() => {
                           onModelChange(option.id as VideoModelKey);
                           setModelSelectorOpen(false);
+setModelSearch('');
                         }}
                         className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-zinc-700 transition-colors ${
                           selectedModelKey === option.id ? 'bg-zinc-700/50' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="text-lg">{option.emoji}</span>
                           <div>
                             <div className="flex items-center gap-1.5">
                               <p className="font-medium text-white text-xs">{option.name}</p>
                               {option.hasAudio && (
-                                <span className="flex items-center gap-0.5 px-1 py-0.5 bg-purple-500/20 text-purple-400 text-[9px] rounded">
+                                <span className="flex items-center gap-0.5 px-1 py-0.5 bg-zinc-700/60 text-zinc-300 text-[9px] rounded">
                                   <Volume2 className="w-2 h-2" />
                                 </span>
                               )}
@@ -525,19 +541,14 @@ function StandardVideoPaywallModal({
             )}
 
             {/* Model Tips */}
-            {model.tips && model.tips.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-3 border border-blue-500/10">
-                <div className="flex items-center gap-1.5 mb-1.5">
-                  <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.c6e2d44e31f0", { defaultValue: "Tips for {{value1}}", value1: model.name })}</span>
-                </div>
-                <div className="space-y-0.5">
-                  {model.tips.map((tip, idx) => (
-                    <p key={idx} className="text-[11px] text-zinc-400 leading-relaxed">{tip}</p>
-                  ))}
-                </div>
-              </div>
-            )}
+{model.tips && model.tips.length > 0 && (
+<div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+{model.tips.map((tip, idx) => (
+<span key={idx} className="shrink-0 whitespace-nowrap rounded-full border border-white/10 bg-zinc-800/60 px-3 py-1.5 text-[11px] leading-snug text-zinc-300">{tip}</span>
+))}
+</div>
+)}
+
 
             {/* Negative Prompt (for supported models) */}
             {model.supportsNegativePrompt && (
@@ -788,7 +799,7 @@ function StandardVideoPaywallModal({
             </div>
 
             {/* DHB Cost */}
-            <div className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 rounded-xl p-3 border border-purple-500/20">
+            <div className="bg-zinc-800/50 rounded-xl p-3 border border-white/10">
               {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
@@ -840,45 +851,69 @@ function StandardVideoPaywallModal({
                   variant="outline"
                   size="sm"
                   className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs h-7"
-                  onClick={() => { onOpenChange(false); clientNavigate('/app/buy'); }}
+                  onClick={() => setCoinPayOpen(true)}
                 >
-                  {t('nav.buyDhb')}
+                  {t('coinPay.open', { defaultValue: 'Pay with another coin' })}
                 </Button>
               </div>
             )}
           </div>
         </ScrollArea>
 
-        {/* Actions - sticky footer */}
-        <div className="flex gap-3 p-4 pt-2 border-t border-white/5">
+        {/* Actions - sticky footer. Same size and layout as the studio Create button. */}
+        <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-white/5">
           <Button
             variant="outline"
-            className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 h-10"
+            className="h-10 rounded-xl px-3 text-[14px] font-bold bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
             onClick={() => onOpenChange(false)}
             disabled={isGenerating || isPaying || isUploading}
           >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
-            className="flex-1 font-medium h-10"
-            onClick={handlePayAndGenerate}
+            className="h-10 gap-2 rounded-xl px-2.5 font-bold"
+            onClick={() => handlePayAndGenerate()}
             disabled={loading || isQuoting || isWalletLoading || isGenerating || isPaying || isUploading}
           >
             {isUploading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })}</>
             ) : isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : (
-              _copy("copy.49e49bb4401e", { defaultValue: "Generate" })
+              <>
+                <span className="relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)]">
+                  <img src={dhbCoinImage} alt="" className="h-6 w-6" />
+                </span>
+                <span className="grid min-w-0 text-left leading-none">
+                  <span className="font-exo text-[14px] font-black tracking-tight">{_copy("copy.49e49bb4401e", { defaultValue: "Generate" })}</span>
+                  {costDhb > 0 && (
+                    <span className="mt-1 truncate text-[10px] font-semibold tabular-nums opacity-80">
+                      {_copy("creator.generateCost", { defaultValue: "{{tokens}} tokens · ≈ ${{usd}}", tokens: costDhb.toLocaleString(), usd: costUsd.toFixed(2) })}
+                    </span>
+                  )}
+                </span>
+              </>
             )}
           </Button>
         </div>
       </DrawerContent>
     </Drawer>
+      {coinPayOpen && (
+        <Suspense fallback={null}>
+          <PayWithCoinSheet
+            open={coinPayOpen}
+            onOpenChange={setCoinPayOpen}
+            costDhb={costDhb}
+            walletDhb={walletDhb}
+            onFunded={() => { setCoinPayOpen(false); void handlePayAndGenerate(true); }}
+          />
+        </Suspense>
+      )}
+    </>
   );
 }
 
