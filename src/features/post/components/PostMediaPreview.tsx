@@ -34,6 +34,8 @@ import { DraftVideoProgress } from './DraftVideoProgress';
 import { AltTextButton, AltTextDialog } from './AltTextEditor';
 import type { DraftVideoSnapshot } from '../lib/draft-video';
 import { DmMediaStudio, type DmStudioItem } from '@/components/app/chat/DmVideoStudio';
+import { cropPayload } from '../lib/video-crop';
+import { cn } from '@/lib/utils';
 import { hasVideoEdits, paintEditedFrame, svgMatrixValues, videoEditsMatrix, vignetteBackground, type PostVideoEdits } from '../lib/video-edits';
 
 /** The frame at `at` seconds, with the video's edits painted on, as a JPEG blob URL for the post's cover. */
@@ -53,6 +55,30 @@ function grabVideoFrame(url: string, at: number, edits?: PostVideoEdits | null):
       c.toBlob((b) => done(b ? URL.createObjectURL(b) : null), 'image/jpeg', 0.9);
     }, { once: true });
   });
+}
+
+/**
+ * The composer tile for a video: the shape of the picture after its turn and
+ * crop, and where the <video> sits so only the kept part shows. `placed` is
+ * false for an untouched video, which keeps the plain fill.
+ */
+function videoTileGeometry(ratio: number, e?: PostVideoEdits | null): { aspect: number; placed: boolean; style?: React.CSSProperties } {
+  const side = e?.rotate === 90 || e?.rotate === 270;
+  const shown = side ? 1 / ratio : ratio;
+  const c = cropPayload(e?.crop);
+  if (!side && !c) return { aspect: ratio, placed: false };
+  const r = c ?? { x: 0, y: 0, w: 1, h: 1 };
+  const aspect = shown * (r.w / r.h);
+  return {
+    aspect,
+    placed: true,
+    style: {
+      left: `${((0.5 - r.x) / r.w) * 100}%`,
+      top: `${((0.5 - r.y) / r.h) * 100}%`,
+      width: side ? `${100 / (aspect * r.h)}%` : `${100 / r.w}%`,
+      height: side ? `${(100 * aspect) / r.w}%` : `${100 / r.h}%`,
+    },
+  };
 }
 
 interface PostMediaPreviewProps {
@@ -191,6 +217,7 @@ export function PostMediaPreview({
         destruct: null, lockPrice: null,
         description: m.description ?? '',
         look: e?.look, strength: e?.strength, adjust: e?.adjust,
+        crop: e?.crop, cropRatio: e?.cropRatio,
       },
     });
   }, [media]);
@@ -230,11 +257,14 @@ export function PostMediaPreview({
       look: item.look && item.look !== 'normal' ? item.look : undefined,
       strength: item.strength,
       adjust: item.adjust,
+      crop: item.crop,
+      cropRatio: item.crop ? item.cropRatio : undefined,
     };
     const editsOn = hasVideoEdits(edits);
     const editsChanged = JSON.stringify(videoEditsMatrix(edits)) !== JSON.stringify(videoEditsMatrix(m?.videoEdits))
       || !!edits.mirror !== !!m?.videoEdits?.mirror || (edits.rotate ?? 0) !== (m?.videoEdits?.rotate ?? 0)
-      || (edits.adjust?.vignette ?? 0) !== (m?.videoEdits?.adjust?.vignette ?? 0);
+      || (edits.adjust?.vignette ?? 0) !== (m?.videoEdits?.adjust?.vignette ?? 0)
+      || JSON.stringify(edits.crop ?? null) !== JSON.stringify(m?.videoEdits?.crop ?? null);
     onUpdateMedia?.(index, { videoEdits: editsOn ? edits : undefined, destructSeconds: timer, isMusicVideo: music });
     if (!onAddThumbnail) return;
     if (item.coverUrl) {
@@ -999,7 +1029,7 @@ export function PostMediaPreview({
                     {/* Same height as a 16:9 preview always had, with the width taken
                         from the video itself, so tall, square and extra-wide
                         clips show whole instead of cropped into a 16:9 box. */}
-                    <div className="relative self-start max-w-full min-w-[150px] h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900" style={{ aspectRatio: videoRatios[m.preview] ?? 16 / 9 }}>
+                    <div className={cn('relative self-start max-w-full h-[158px] sm:h-[180px] md:h-[214px] rounded-2xl overflow-hidden bg-zinc-900', videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).placed ? 'min-w-[88px]' : 'min-w-[150px]')} style={{ aspectRatio: videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).aspect }}>
                       {/* Processing overlay */}
                       {processingVideos.has(index) && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
@@ -1023,13 +1053,14 @@ export function PostMediaPreview({
                         src={m.preview} 
                         playsInline
                         {...{"webkit-playsinline": ""}}
-                        poster={m.thumbnail}
-                        className="w-full h-full object-contain rounded-2xl pointer-events-none"
+                        poster={videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).placed ? undefined : m.thumbnail}
+                        className={cn('pointer-events-none', videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).placed ? 'absolute max-w-none object-cover' : 'w-full h-full object-contain rounded-2xl')}
                         style={{ 
                           filter: videoEditsMatrix(m.videoEdits) ? `url(#post-video-fx-${index})` : m.filterSettings ? generateFilterCSS(m.filterSettings) : undefined,
+                          ...videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).style,
                           transform: [
+                            videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).placed ? 'translate(-50%, -50%)' : '',
                             m.videoEdits?.rotate ? `rotate(${m.videoEdits.rotate}deg)` : '',
-                            m.videoEdits?.rotate === 90 || m.videoEdits?.rotate === 270 ? `scale(${Math.min(videoRatios[m.preview] ?? 16 / 9, 1 / (videoRatios[m.preview] ?? 16 / 9))})` : '',
                             m.videoEdits?.mirror ? 'scaleX(-1)' : '',
                             generateCropTransform(m.cropSettings) ?? '',
                           ].filter(Boolean).join(' ') || undefined,
@@ -1041,6 +1072,10 @@ export function PostMediaPreview({
                         }}
                       />
                       
+                      {/* The cover is already turned and cropped: show it as is until the video plays. */}
+                      {videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).placed && m.thumbnail && playingVideoIndex !== index && (
+                        <img src={m.thumbnail} alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover" />
+                      )}
                       {videoEditsMatrix(m.videoEdits) && (
                         <svg aria-hidden width="0" height="0" className="absolute">
                           <filter id={`post-video-fx-${index}`} colorInterpolationFilters="sRGB">
@@ -1131,7 +1166,7 @@ export function PostMediaPreview({
                                 hover:bg-black/70 hover:border-white/40"
                             >
                               <Pencil className="w-3 h-3 text-white" />
-                              {(videoRatios[m.preview] ?? 16 / 9) >= 1 && _copy("post.media.edit", { defaultValue: "Edit" })}
+                              {videoTileGeometry(videoRatios[m.preview] ?? 16 / 9, m.videoEdits).aspect >= 1 && _copy("post.media.edit", { defaultValue: "Edit" })}
                             </button>
                           </TooltipTrigger>
                           <TooltipContent>{_copy("post.media.editVideoHint", { defaultValue: "Cover, trim, looks, timer, alt text and more" })}</TooltipContent>
@@ -1255,7 +1290,7 @@ export function PostMediaPreview({
           onRemoveItem={() => { const i = videoEdit.index; setVideoEdit(null); onRemove(i); }}
           onClose={() => setVideoEdit(null)}
           onConfirm={() => { void confirmVideoEdit(); }}
-          onlyTabs={['cover', 'trim', 'mirror', 'rotate', 'looks', 'adjust', 'expire', 'alt', 'music']}
+          onlyTabs={['cover', 'trim', 'crop', 'looks', 'adjust', 'expire', 'alt', 'music']}
           allowAlt={!!onSetDescription}
           initialTab="cover"
           allowTimer={false}

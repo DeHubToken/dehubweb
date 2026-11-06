@@ -37,7 +37,10 @@ export function DmVideoFrame({
   onPlayState,
   poster,
   colorFilter,
+  crop,
 }: {
+  /** Post videos: the part of the (turned, mirrored) frame to show. */
+  crop?: { x: number; y: number; w: number; h: number } | null;
   /** A CSS filter for the picture (a post's colour edits). */
   colorFilter?: string;
   /** Still shown while there is no source yet (an encrypted video before it opens). */
@@ -62,7 +65,30 @@ export function DmVideoFrame({
   const own = useRef<HTMLVideoElement | null>(null);
   const ref = videoRef ?? own;
   const [meta, setMeta] = useState<{ w: number; h: number } | null>(width && height ? { w: width, h: height } : null);
-  const { boxW, boxH, innerW, innerH } = fitVideoBox(meta?.w, meta?.h, options, maxW, maxH);
+  const fit = fitVideoBox(meta?.w, meta?.h, options, maxW, maxH);
+  // A crop shows only part of the frame: the box takes the kept part's shape
+  // and the whole frame sits behind it, shifted so the kept part fills it.
+  const cut = crop && (crop.w < 0.998 || crop.h < 0.998) ? crop : null;
+  let { boxW, boxH, innerW, innerH } = fit;
+  let frameW = boxW;
+  let frameH = boxH;
+  let frameX = 0;
+  let frameY = 0;
+  if (cut) {
+    const aspect = (fit.boxW / fit.boxH) * (cut.w / cut.h);
+    boxW = Math.min(maxW, maxH * aspect);
+    boxH = boxW / aspect;
+    frameW = boxW / cut.w;
+    frameH = boxH / cut.h;
+    frameX = -cut.x * frameW;
+    frameY = -cut.y * frameH;
+    const side = options?.rotate === 90 || options?.rotate === 270;
+    innerW = side ? frameH : frameW;
+    innerH = side ? frameW : frameH;
+    boxW = Math.round(boxW);
+    boxH = Math.round(boxH);
+  }
+  const at = { left: `${((frameX + frameW / 2) / boxW) * 100}%`, top: `${((frameY + frameH / 2) / boxH) * 100}%` };
   const start = options?.trimStart ?? 0;
   const end = options?.trimEnd;
 
@@ -114,8 +140,8 @@ export function DmVideoFrame({
         <img
           src={poster}
           alt=""
-          className={cn('absolute left-1/2 top-1/2 object-cover', blurred && 'blur-xl scale-110 brightness-75')}
-          style={{ width: innerW, height: innerH, transform: `translate(-50%, -50%) ${videoTransform(options) ?? ''}` }}
+          className={cn('absolute max-w-none object-cover', blurred && 'blur-xl scale-110 brightness-75')}
+          style={{ ...at, width: innerW, height: innerH, transform: `translate(-50%, -50%) ${videoTransform(options) ?? ''}` }}
         />
       )}
       {src && (
@@ -134,8 +160,9 @@ export function DmVideoFrame({
               onMeta?.({ w: v.videoWidth, h: v.videoHeight, dur: v.duration });
             }
           }}
-          className={cn('absolute left-1/2 top-1/2 object-cover transition-[filter,transform] duration-500', blurred && 'blur-xl scale-110 brightness-75')}
+          className={cn('absolute max-w-none object-cover transition-[filter,transform] duration-500', blurred && 'blur-xl scale-110 brightness-75')}
           style={{
+            ...at,
             width: innerW,
             height: innerH,
             transform: `translate(-50%, -50%) ${videoTransform(options) ?? ''}`,
