@@ -87,6 +87,7 @@ scripts/*
 !scripts/edge-route-recovery.mjs
 !scripts/patch-vaul-scroll.mjs
 !scripts/patch-radix-focus-guards.mjs
+!scripts/patch-remove-scroll-bar.mjs
 !scripts/build-seo-i18n.mjs
 !scripts/build-developer-docs-content.mjs
 !scripts/seo-i18n-copy/

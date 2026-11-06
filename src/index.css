@@ -1023,9 +1023,11 @@ body:has([id^="w3a-"]) {
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Opening any modal sheet sets this on <body> (react-remove-scroll-bar).
-   Nothing reads it, and as an inherited custom property it restyled every
-   element on the page, ~140ms on a phone, on each open and each close. */
+/* Opening any modal sheet used to set this on <body> (react-remove-scroll-bar).
+   Nothing reads it, and it restyled every element on the page, ~100-140ms on a
+   phone, on each open and each close. Registering it non-inherited turned out
+   not to stop that in Chrome; scripts/patch-remove-scroll-bar.mjs now drops the
+   declaration itself. Kept as a second line of defence. */
 @property --removed-body-scroll-bar-size {
   syntax: '*';
   inherits: false;
