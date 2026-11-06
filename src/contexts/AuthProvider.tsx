@@ -2137,7 +2137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // the same empty wallet, which the server refuses every time: new
         // users tapped it six times in a row and read it as a sign-up loop.
         window.dispatchEvent(new CustomEvent(WALLET_SIGNUP_BLOCKED_EVENT, { detail: { address: authAddress } }));
-      } else if (authError?.code === 'PROFILE_MOVED' && authError?.message) {
+      } else if ((authError?.code === 'PROFILE_MOVED' || authError?.code === 'PROFILE_ON_WALLET') && authError?.message) {
         // This wallet's profile followed a Google/email/phone login; the API
         // names which one. Retrying the wallet would never help.
         toast.error(authError.message, { id: 'profile-moved', duration: 15000 });
