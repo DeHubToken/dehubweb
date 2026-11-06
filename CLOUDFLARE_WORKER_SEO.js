@@ -6042,7 +6042,22 @@ function ssrCachePut(ctx, key, resp) {
   }
 }
 
+// The standby copy of riftn.com on the DigitalOcean server (ops/STANDBY.md)
+// needs its own certificate so it can take over if Cloudflare goes down.
+// Let's Encrypt checks riftn.com/.well-known/acme-challenge/<token>, which
+// lands here while riftn.com runs on this Worker, so pass those requests to
+// the server's challenge folder (dehub.io port 80 is that same server).
+function standbyAcmeChallenge(request) {
+  const url = new URL(request.url);
+  if (url.hostname !== 'riftn.com' && url.hostname !== 'www.riftn.com') return null;
+  const match = /^\/\.well-known\/acme-challenge\/([A-Za-z0-9_-]{16,128})$/.exec(url.pathname);
+  if (!match || request.method !== 'GET') return null;
+  return fetch(`http://dehub.io/.well-known/acme-challenge/${match[1]}`, { redirect: 'manual' });
+}
+
 async function handleRequest(request, env, ctx) {
+  const acme = standbyAcmeChallenge(request);
+  if (acme) return acme;
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
   if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(canonicalOriginRequest(request), env);
