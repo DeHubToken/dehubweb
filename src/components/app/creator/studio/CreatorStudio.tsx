@@ -117,6 +117,7 @@ import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
+import { RecentGenerationsStrip } from './RecentGenerationsStrip';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { readStudioSnapshot, writeStudioSnapshot, StudioDraftScope } from './StudioDraftScope';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -1180,7 +1181,15 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
       if (!model) return t('creator.pickVideoModel');
       if (model.requiresVideoInput && !currentClip) return t(model.referenceMode === 'extend' ? 'creator.extensionNeedsClip' : 'creator.referenceNeedsClip');
       if (currentClip && !model.requiresVideoInput) return t('creator.referenceVideoModel');
-      if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
+      if (currentImages.length > (model.maxReferenceImages ?? 1)) {
+        // Say how many this model takes and where to go for more, rather than a
+        // bare "cannot use all the images" that leaves the creator guessing.
+        const max = model.maxReferenceImages ?? 1;
+        const vars = { model: model.name, count: max, attached: currentImages.length };
+        if (max >= 9) return t('creator.validation.videoImageLimitMax', { ...vars, defaultValue: '{{model}} takes up to {{count}} images and you have {{attached}}. Remove the extras.' });
+        if (max === 1) return t('creator.validation.videoImageLimitOne', { ...vars, defaultValue: '{{model}} takes 1 image and you have {{attached}}. Remove the extras, or switch to Seedance 2.5 for up to 9.' });
+        return t('creator.validation.videoImageLimitSome', { ...vars, defaultValue: '{{model}} takes up to {{count}} images and you have {{attached}}. Remove the extras, or switch to Seedance 2.5 for up to 9.' });
+      }
       if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxSourceDuration ?? model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
         return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
@@ -2285,6 +2294,14 @@ const CreatorStudioWorkspace = memo(function CreatorStudioWorkspace({ onOpenEdit
                 </button>
               )}
           </>
+        </div>
+      </div>
+
+      {/* Latest generations, one sideways row under the composer. Live: a new
+          run shows as a skeleton here the moment it starts. */}
+      <div className="px-3 sm:px-4">
+        <div className="mx-auto max-w-[1040px]">
+          <RecentGenerationsStrip />
         </div>
       </div>
 
