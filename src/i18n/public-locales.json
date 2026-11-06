@@ -1,5 +1,5 @@
 {
-  "version": "0c68d126340fa89b",
+  "version": "4ec9012470f6cd5f",
   "routes": {
     "/": [
       "ar",
@@ -1136,6 +1136,13 @@
       "tr"
     ],
     "/guides/open-and-clear-dex-policy-implementation-and-transparency-commitment": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/open-appeal-binance-recover-876-bnb-pioneer-burn": [
       "ar",
       "es",
       "fr",
