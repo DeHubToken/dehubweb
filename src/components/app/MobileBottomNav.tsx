@@ -1,4 +1,5 @@
 import FileText from "@/components/ui/cut-icons/blog";
+import { useBottomNavHeld } from '@/lib/bottom-nav-hold';
 import { getFeedSearchState, parkFeedSearch } from '@/lib/feed-search';
 import Film from "@/components/ui/cut-icons/editor";
 import Wand2 from "@/components/ui/cut-icons/prompt";
@@ -223,6 +224,8 @@ export function MobileBottomNav() {
   const chatOpen =
     location.pathname === '/app/messages' &&
     new URLSearchParams(location.search).get('chat') === '1';
+  // A community chat's message box sits where the pill floats.
+  const navHeld = useBottomNavHeld();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
   // Mount on first open, keep mounted afterwards (close animation).
@@ -351,7 +354,7 @@ export function MobileBottomNav() {
       <div
         data-bottom-nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ease-in-out"
-        style={{ transform: navVisible && !keyboardOpen && !chatOpen ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
+        style={{ transform: navVisible && !keyboardOpen && !chatOpen && !navHeld ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
       >
         <nav
           className={cn("relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl", hasStageChip && "flex items-center")}
