@@ -130,7 +130,7 @@ const massiveWeekPost: BlogPostType = {
 
     We had no questions submitted, and nobody has raised their hand to speak for the open mic, so we'll wrap it up there everyone. **Have an amazing night, Riftn family. The best is yet to come.**
   `,
-  bannerImage: '/media/town-hall-ama-banner-new.png',
+  bannerImage: '/media/town-hall-ama-banner-new-riftn.png',
   bannerImageAlt: 'Riftn Town Hall and AMA Highlights showcasing major announcements',
   author: {
     name: 'Riftn Team',

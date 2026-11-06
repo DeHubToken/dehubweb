@@ -131,7 +131,7 @@ Federated networks decentralise hosting through an open protocol but usually hav
 
 On federated networks, rarely, as they are mostly not built to pay creators. On Web3 networks it is a core feature. Riftn, for instance, offers tokenised pay-per-view and token-gated uploads, tradable subscriptions with resale royalties, watch-to-earn bounties and up to a 90% ad-revenue share to the ecosystem.
 `,
-  bannerImage: '/media/decentralised-social-media-explained-uk-banner.png',
+  bannerImage: '/media/decentralised-social-media-explained-uk-banner-riftn.png',
   bannerImageAlt: 'Illustration of a decentralised social media network with user-owned nodes connected across an open protocol',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-03-16T09:30:00.000Z',
