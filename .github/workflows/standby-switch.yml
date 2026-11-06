@@ -1,0 +1,41 @@
+name: Switch riftn.com (Cloudflare / backup)
+# Emergency switch, see ops/STANDBY.md.
+#   backup     = Cloudflare is down: point riftn.com at the standby copy on the DigitalOcean server
+#   cloudflare = Cloudflare is fine again: put riftn.com back on the Worker
+#   check      = change nothing, prove the switch would work
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Where riftn.com should point
+        type: choice
+        options: [check, backup, cloudflare]
+        default: check
+permissions:
+  contents: read
+concurrency:
+  group: standby-switch
+  cancel-in-progress: false
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Standby copy answers for riftn.com
+        if: inputs.target != 'cloudflare'
+        run: |
+          curl --fail --silent --show-error --max-time 15 --resolve riftn.com:443:138.68.188.224 \
+            -D /tmp/h https://riftn.com/version.json
+          echo
+          grep -qi '^x-dehub-standby: 1' /tmp/h
+          curl --fail --silent --show-error --max-time 15 --resolve riftn.com:443:138.68.188.224 \
+            -o /dev/null -w 'Home page %{http_code}\n' https://riftn.com/
+      - name: Switch
+        run: node scripts/standby-switch.mjs "${{ inputs.target }}"
+        env:
+          CLOUDFLARE_APITOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
