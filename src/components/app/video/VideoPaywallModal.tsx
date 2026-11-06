@@ -93,6 +93,7 @@ function StandardVideoPaywallModal({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+const [modelSearch, setModelSearch] = useState('');
   const [isPaying, setIsPaying] = useState(false);
 
   // Basic Seedance 2.0 options
@@ -385,7 +386,6 @@ function StandardVideoPaywallModal({
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">{model.emoji}</span>
                     <div>
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-white text-sm">{model.name}</p>
@@ -402,8 +402,20 @@ function StandardVideoPaywallModal({
               </button>
               
               {modelSelectorOpen && model.id !== 'pixverse-effects' && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-52 overflow-y-auto">
-                  {VIDEO_MODEL_OPTIONS.map((option) => {
+                <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-72 overflow-y-auto">
+                  <div className="sticky top-0 z-10 bg-zinc-800 p-2 border-b border-zinc-700">
+<input
+type="search"
+value={modelSearch}
+onChange={(e) => setModelSearch(e.target.value)}
+placeholder={_copy("creator.searchModels", { defaultValue: "Search models" })}
+className="w-full bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500"
+/>
+</div>
+{VIDEO_MODEL_OPTIONS.filter((option) => {
+const q = modelSearch.trim().toLowerCase();
+return !q || `${option.name} ${option.description || ''}`.toLowerCase().includes(q);
+}).map((option) => {
                     const optionModel = VIDEO_MODELS[option.id as VideoModelKey];
                     const optionCostUsd = getVideoCostUsd(optionModel);
                     const optionCostDhb = dhbPrice ? getVideoCostDhb(optionModel, dhbPrice) : 0;
@@ -415,13 +427,13 @@ function StandardVideoPaywallModal({
                         onClick={() => {
                           onModelChange(option.id as VideoModelKey);
                           setModelSelectorOpen(false);
+setModelSearch('');
                         }}
                         className={`w-full flex items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-zinc-700 transition-colors ${
                           selectedModelKey === option.id ? 'bg-zinc-700/50' : ''
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="text-lg">{option.emoji}</span>
                           <div>
                             <div className="flex items-center gap-1.5">
                               <p className="font-medium text-white text-xs">{option.name}</p>
