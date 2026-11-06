@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { AppState } from '@/components/app/AppState';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
@@ -18,7 +18,7 @@ const MAX_PAGES = 10;
 
 export function WhoToFollow() {
   const { t: _copy } = _useCopy();
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
   const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();

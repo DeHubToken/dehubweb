@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { useQuery } from '@tanstack/react-query';
 import Search from '@/components/ui/cut-icons/search';
 import { Input } from '@/components/ui/input';
@@ -64,7 +64,7 @@ export function toPeopleMatches(users: DeHubUser[] | undefined): PeopleMatch[] {
 export function DesktopPeopleSearch({ compact }: { compact?: boolean }) {
   const { t: _copy } = _useCopy();
   const [searchValue, setSearchValue] = useSurfaceDraft('components/app/RightSidebar.tsx:searchValue', '');
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
   const { addToHistory } = useSearchHistory();
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState(false);

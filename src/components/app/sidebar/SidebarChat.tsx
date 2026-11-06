@@ -37,7 +37,10 @@ import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePublicChatReading } from '@/hooks/use-public-chat-unread';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
+import { useQueryClient } from '@tanstack/react-query';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { preloadRoute } from '@/lib/route-preload';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppState } from '@/components/app/AppState';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
@@ -201,7 +204,8 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     setImagePreview(url);
     return () => URL.revokeObjectURL(url);
   }, [imageFile]);
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
+  const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
@@ -523,7 +527,12 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
               const handle = msg.sender_username;
-              const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
+              const goToProfile = handle ? () => {
+                // Seed what the row already shows, so the profile opens with
+                // this person's photo and name instead of a blank placeholder.
+                seedProfileCache(queryClient, { address: msg.sender_address || undefined, username: handle, displayName: name, avatarUrl }, walletAddress || undefined);
+                navigate(`/${handle}`);
+              } : undefined;
               return (
                 <div key={msg.client_key ?? msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   {/* Reply indicator – click to scroll to original */}
@@ -546,7 +555,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                     </button>
                   )}
                   <div className="relative flex items-start gap-2">
-                    <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
+                    <button onClick={goToProfile} onPointerEnter={handle ? () => preloadRoute('/app/profile') : undefined} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
                       <SidebarAvatar src={avatarUrl} address={msg.sender_address} name={name} />
                     </button>
                     <div className="min-w-0 flex-1">

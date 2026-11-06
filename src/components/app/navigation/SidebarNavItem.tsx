@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
-import { useRef, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { memo, useRef, useEffect } from 'react';
+import { StableLink } from './StableLink';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -57,7 +58,8 @@ interface SidebarNavItemProps {
   item: NavItem;
   isActive: boolean;
   isHome: boolean;
-  currentPath: string;
+  /** Unused for rendering; kept so callers need no change. */
+  currentPath?: string;
   onNavigate?: () => void;
   onClick?: (e: React.MouseEvent) => void;
   variant?: 'mobile' | 'desktop';
@@ -79,13 +81,12 @@ function getDesktopTextColor(theme?: string) {
   return 'text-white';
 }
 
-export function SidebarNavItem({ 
+function SidebarNavItemInner({ 
   item, 
   isActive, 
   isHome, 
-  currentPath, 
-  onNavigate,
-  onClick,
+  onNavigate: onNavigateProp,
+  onClick: onClickProp,
   variant = 'desktop',
   collapsed = false,
   forceCollapsed = false,
@@ -93,10 +94,17 @@ export function SidebarNavItem({
   avatarFallback,
   notificationCount,
   layoutId = 'sidebar-nav',
-  registerActiveRef,
+  registerActiveRef: registerActiveRefProp,
 }: SidebarNavItemProps) {
   const { t: _copy } = _useCopy();
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
+  // The parent hands new callbacks every render; the memo below ignores their
+  // identity, so read the latest ones through a ref instead of a stale closure.
+  const latest = useRef({ onClick: onClickProp, onNavigate: onNavigateProp, registerActiveRef: registerActiveRefProp });
+  latest.current = { onClick: onClickProp, onNavigate: onNavigateProp, registerActiveRef: registerActiveRefProp };
+  const onClick = (e: React.MouseEvent) => latest.current.onClick?.(e);
+  const onNavigate = () => latest.current.onNavigate?.();
+  const hasRegister = !!registerActiveRefProp;
   const { t } = useTranslation();
   const { theme, themeChoice } = useAppTheme();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label, item.label);
@@ -107,11 +115,12 @@ export function SidebarNavItem({
   const desktopHoverClass = isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50';
 
   useEffect(() => {
-    if (isDesktop && isActive && registerActiveRef) {
-      registerActiveRef(itemRef.current);
-      return () => registerActiveRef(null);
+    const register = latest.current.registerActiveRef;
+    if (isDesktop && isActive && hasRegister && register) {
+      register(itemRef.current);
+      return () => register(null);
     }
-  }, [isDesktop, isActive, registerActiveRef]);
+  }, [isDesktop, isActive, hasRegister]);
   
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
@@ -129,7 +138,7 @@ export function SidebarNavItem({
       // Coming from another page, Home is a plain move — it lands on a fresh
       // render already. On Home the first click only returns to the top; a
       // second click refreshes. See lib/home-nav-intent.
-      const intent = resolveHomeNavIntent(isHomePath(currentPath));
+      const intent = resolveHomeNavIntent(isHomePath(window.location.pathname));
       if (intent === 'refresh') {
         window.dispatchEvent(new CustomEvent('home-refresh'));
       } else if (intent === 'scrollToTop') {
@@ -253,9 +262,10 @@ export function SidebarNavItem({
   }
 
   return (
-    <NavLink
+    <StableLink
       ref={itemRef as React.Ref<HTMLAnchorElement>}
       to={item.path}
+      aria-current={isActive ? 'page' : undefined}
       aria-label={isNotifications ? `${translatedLabel}${notificationCount ? ` (${notificationCount})` : ''}` : undefined}
       onClick={handleClick}
       onPointerEnter={() => preloadRoute(item.path)}
@@ -266,7 +276,7 @@ export function SidebarNavItem({
         isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
         isDesktop ? desktopTextColor : 'text-white',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-        isActive ? 'font-semibold' : '',
+        isActive ? 'font-semibold active' : '',
         !isActive && isDesktop && desktopHoverClass
       )}
     >
@@ -305,6 +315,22 @@ export function SidebarNavItem({
         </div>
       )}
       <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
-    </NavLink>
+    </StableLink>
   );
 }
+
+/**
+ * Memoised so a route change re-renders only the items whose active state or
+ * badge changed, not the whole list. `currentPath` and the callbacks change
+ * identity on every parent render, so they are left out of the comparison
+ * (the item reads the path at click time and the callbacks through a ref).
+ */
+export const SidebarNavItem = memo(SidebarNavItemInner, (prev, next) => {
+  for (const key of Object.keys({ ...prev, ...next }) as (keyof SidebarNavItemProps)[]) {
+    if (key === 'currentPath') continue;
+    const a = prev[key], b = next[key];
+    if (typeof a === 'function' && typeof b === 'function') continue;
+    if (a !== b) return false;
+  }
+  return true;
+});
