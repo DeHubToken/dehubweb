@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy, Trans } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -906,7 +907,7 @@ const MessageBubble = memo(function MessageBubble({
             {/* GIF */}
             {message.msgType === 'gif' && primaryMediaUrl && (
               <img
-                src={primaryMediaUrl}
+                src={outsideImage(primaryMediaUrl)}
                 alt={tr('emojiPicker.tabGif', 'GIF')}
                 className="max-w-full max-h-48 rounded-lg"
               />

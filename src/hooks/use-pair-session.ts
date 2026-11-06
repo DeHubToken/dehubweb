@@ -169,6 +169,8 @@ export function usePairSession() {
   const createPeer = useCallback(() => {
     const pc = new RTCPeerConnection({
       iceServers: iceServersRef.current as RTCIceServer[],
+      // Relay only: a direct connection hands the stranger your IP address.
+      iceTransportPolicy: 'relay',
     });
 
     pc.onicecandidate = (e) => {

@@ -5,6 +5,7 @@
  * Fetches OG data for URLs found in post content.
  */
 
+import { outsideImage } from '@/lib/outside-image';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -110,7 +111,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
               >
                 {preview.image && (
                   <div className="aspect-[3/2] w-full bg-white/5">
-                    <img src={preview.image} alt={preview.title} className="h-full w-full object-cover" loading="lazy" />
+                    <img src={outsideImage(preview.image)} alt={preview.title} className="h-full w-full object-cover" loading="lazy" />
                   </div>
                 )}
                 <div className="flex items-center gap-3 p-3">

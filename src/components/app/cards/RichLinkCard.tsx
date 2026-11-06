@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { reportPostEvent } from '@/lib/api/dehub/post-stats';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,13 +29,13 @@ export function RichLinkCard({ preview, onRemove }: { preview: RichPreview; onRe
           <ExternalLink className="ml-auto mr-5 h-3 w-3 shrink-0" />
         </div>
         <div className="mt-3 flex gap-3">
-          {preview.image && data.provider !== 'ipfs' && <img src={preview.image} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-16 w-16 shrink-0 rounded-lg object-cover" onError={e => { e.currentTarget.style.display = 'none'; }} />}
+          {preview.image && data.provider !== 'ipfs' && <img src={outsideImage(preview.image)} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-16 w-16 shrink-0 rounded-lg object-cover" onError={e => { e.currentTarget.style.display = 'none'; }} />}
           <div className="min-w-0 flex-1">
             <h4 className="break-words text-sm font-semibold leading-snug">{preview.title}</h4>
             {preview.description && <p className="mt-1 line-clamp-2 break-words text-xs text-white/65">{preview.description}</p>}
           </div>
         </div>
-        {data.provider === 'ipfs' && preview.image && <img src={preview.image} alt={preview.title} loading="lazy" referrerPolicy="no-referrer" className="mt-3 max-h-64 w-full rounded-lg object-contain" />}
+        {data.provider === 'ipfs' && preview.image && <img src={outsideImage(preview.image)} alt={preview.title} loading="lazy" referrerPolicy="no-referrer" className="mt-3 max-h-64 w-full rounded-lg object-contain" />}
         {data.identifier && <p className="mt-3 break-all font-mono text-[11px] text-white/70">{data.identifier}</p>}
         {!!data.metrics.length && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
           {data.metrics.map(item => <div key={item.kind} className="flex items-center gap-1.5 text-xs">
