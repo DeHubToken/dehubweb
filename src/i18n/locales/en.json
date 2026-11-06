@@ -2187,6 +2187,21 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "newDrawer": {
+      "to": "To",
+      "placeholder": "Name or @username",
+      "recent": "Recent",
+      "suggested": "Suggested",
+      "youFollow": "People you follow",
+      "chattedBefore": "You talk",
+      "mutual": "Mutual",
+      "dmsOff": "DMs off",
+      "keepTyping": "Keep typing to search everyone",
+      "noOne": "No one found",
+      "tryUsername": "Try their exact @username",
+      "sayHi": "Say hi to someone",
+      "typeAny": "Type any name or @username"
+    },
     "reply": "Reply",
     "react": "React",
     "edit": "Edit",

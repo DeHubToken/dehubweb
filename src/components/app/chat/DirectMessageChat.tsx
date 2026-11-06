@@ -140,6 +140,8 @@ interface DirectMessageChatProps {
   dock?: boolean;
   /** Window controls (minimise/close) for dock mode, pinned to the header end. */
   headerActions?: ReactNode;
+  /** Opened from the New message drawer: the composer takes the caret at once. */
+  focusComposer?: boolean;
 }
 
 /** A tip that just arrived or was just sent plays its diamond swirl; history stays still. */
@@ -1221,7 +1223,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
   return { pinnedMessageId, pinMessage, unpinMessage };
 }
 
-export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
+export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions, focusComposer = false }: DirectMessageChatProps) {
   const { t: _copy } = _useCopy();
   const { user, walletAddress, openLoginModal } = useAuth();
   const { isBanned: accountBanned } = useBannedAccount();
@@ -2673,6 +2675,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       {/* Chat Input — disabled send when insufficient balance; hidden while
           the thread is locked, since anything typed would go out in the clear */}
       {!showLockedState && <ChatInput
+        autoFocus={focusComposer}
         initialText={initialComposerText}
         draftKey={draftScope}
         thread={smartReplyThread}

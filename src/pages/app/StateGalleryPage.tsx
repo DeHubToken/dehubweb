@@ -9,6 +9,8 @@ import { postBgById } from '@/lib/post-backgrounds';
 import type { TextPost as GalleryTextPost } from '@/types/feed.types';
 import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
 import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
+import { NewMessageDrawer } from '@/components/app/chat/NewMessageDrawer';
+import type { DeHubConversation } from '@/lib/api/dehub';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -1360,6 +1362,7 @@ export default function StateGalleryPage() {
         <LiveViewerGallery />
         <HolderGroupGallery />
         <GroupsChannelsGallery />
+        <NewMessageDrawerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -1614,6 +1617,41 @@ function GroupsChannelsGallery() {
       <NewMessageSelector open={selector} onOpenChange={setSelector} onSelectDM={noop} onSelectGroup={noop} onSelectChannel={noop} />
       <AuthContext.Provider value={GALLERY_AUTH}>
         <NewGroupChannelSheet kind={sheet ?? 'group'} open={!!sheet} onOpenChange={(open) => { if (!open) setSheet(null); }} />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const GALLERY_DM_PEOPLE = [
+  ['juno', 'Juno', 'b3'], ['kira', 'Kira', 'b1'], ['dexdoes', 'Dex', 'b2'], ['oto', 'Oto', 'b4'], ['tadpole', 'Tad', 'b5'], ['mira', 'Mira', 'b6'],
+].map(([username, displayName, tail]) => ({
+  id: `gallery-dm-${username}`,
+  participants: [],
+  otherUser: { address: `0x00000000000000000000000000000000000000${tail}`, username, displayName },
+  unreadCount: 0,
+  createdAt: '2026-11-06T00:00:00.000Z',
+  updatedAt: '2026-11-06T00:00:00.000Z',
+})) as unknown as DeHubConversation[];
+
+/** The phone + in Messages: New message drawer with recents, and the empty first-run state. */
+function NewMessageDrawerGallery() {
+  const [open, setOpen] = useState<'recents' | 'empty' | null>(null);
+  return (
+    <section data-page-bento data-new-message-drawer-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">New message drawer</h2>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" data-open-new-message="recents" onClick={() => setOpen('recents')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">With recent chats</button>
+        <button type="button" data-open-new-message="empty" onClick={() => setOpen('empty')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">First chat</button>
+      </div>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <NewMessageDrawer
+          open={!!open}
+          onOpenChange={(o) => { if (!o) setOpen(null); }}
+          conversations={open === 'empty' ? [] : GALLERY_DM_PEOPLE}
+          onPick={() => setOpen(null)}
+          onGroup={() => setOpen(null)}
+          onChannel={() => setOpen(null)}
+        />
       </AuthContext.Provider>
     </section>
   );
