@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, ChevronRight, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 // Context, not useAuth: the state gallery shows this sheet with no AuthProvider.
@@ -21,6 +21,10 @@ import {
   topUpWithCoin,
   type TopUpCoin,
 } from '@/lib/coin-topup';
+import AnyCoinPay from '@/components/app/credits/AnyCoinPay';
+import type { AnyCoin, AnyCoinIntent } from '@/lib/studio-coin-intent';
+import btcLogo from '@/assets/btc-logo.png';
+import solLogo from '@/assets/icons/solana-logo.png';
 import dhbCoin from '@/assets/dehub-coin.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -84,7 +88,14 @@ export default function PayWithCoinSheet({
   preview,
 }: {
   /** State gallery only: fixed coins and balances, nothing is read or sent. */
-  preview?: { coins: TopUpCoin[]; balances: Record<string, number | null>; creditsUsd?: number };
+  preview?: {
+    coins: TopUpCoin[];
+    balances: Record<string, number | null>;
+    creditsUsd?: number;
+    anyCoins?: AnyCoin[];
+    anyIntent?: AnyCoinIntent;
+    view?: 'list' | 'any';
+  };
   open: boolean;
   onOpenChange: (open: boolean) => void;
   costDhb: number;
@@ -113,6 +124,7 @@ export default function PayWithCoinSheet({
   const balances = balancesQuery.data || {};
   const [picked, setPicked] = useState<string | null>(null);
   const [stage, setStage] = useState<'idle' | 'signing' | 'arriving'>('idle');
+  const [view, setView] = useState<'list' | 'any'>(preview?.view || 'list');
 
   // What the coin has to cover: the job's dollar price less what the Studio
   // balance already holds, never under a cent.
@@ -135,7 +147,7 @@ export default function PayWithCoinSheet({
   }, [open, coins, balancesQuery.isLoading]);
 
   useEffect(() => {
-    if (!open) { setPicked(null); setStage('idle'); }
+    if (!open) { setPicked(null); setStage('idle'); setView(preview?.view || 'list'); }
   }, [open]);
 
   const best = coins.find((c) => c.address && enough(c));
@@ -192,16 +204,25 @@ export default function PayWithCoinSheet({
           </span>
         </div>
 
+        {view === 'any' ? (
+          <div className="mt-3">
+            <AnyCoinPay
+              usdNeeded={usdNeeded}
+              onBack={() => setView('list')}
+              onFunded={async () => {
+                await queryClient.invalidateQueries({ queryKey: ['spendable-dhb'] });
+                onFunded();
+              }}
+              preview={preview ? { coins: preview.anyCoins || [], intent: preview.anyIntent } : undefined}
+            />
+          </div>
+        ) : (<>
         <div className="mt-3 flex max-h-[46vh] flex-col gap-1.5 overflow-y-auto [scrollbar-width:none]">
           {(!preview && coinsQuery.isLoading) || (balancesQuery.isLoading && !coins.length) ? (
             <div className="flex items-center justify-center py-8 text-zinc-400">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
-          ) : coins.length === 0 ? (
-            <p className="py-6 text-center text-sm text-zinc-400">
-              {t('coinPay.unavailable', { defaultValue: 'Other coins are not available right now. Try again shortly.' })}
-            </p>
-          ) : (
+          ) : coins.length === 0 ? null : (
             coins.map((coin) => {
               const key = coinKey(coin);
               const held = balances[key];
@@ -251,6 +272,22 @@ export default function PayWithCoinSheet({
               );
             })
           )}
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => setView('any')}
+            className="flex items-center gap-3 rounded-[18px] border border-dashed border-white/15 bg-white/[0.03] px-3 py-2.5 text-left transition-colors hover:bg-white/[0.08]"
+          >
+            <span className="relative h-8 w-8 shrink-0">
+              <img src={btcLogo} alt="" className="absolute left-0 top-0 h-[22px] w-[22px] rounded-full ring-2 ring-zinc-950" />
+              <img src={solLogo} alt="" className="absolute bottom-0 right-0 h-[22px] w-[22px] rounded-full ring-2 ring-zinc-950" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-extrabold text-white">{t('coinPay.anyCoin', { defaultValue: 'Any other coin' })}</span>
+              <span className="block text-[12px] text-zinc-400">{t('coinPay.anyCoinHint', { defaultValue: 'BTC, SOL, DOGE, XRP and 200+ more, from any wallet or exchange' })}</span>
+            </span>
+            <ChevronRight className="h-4 w-4 shrink-0 text-zinc-400" />
+          </button>
         </div>
 
         {(credits?.usd || 0) > 0 && (
@@ -277,6 +314,7 @@ export default function PayWithCoinSheet({
         <p className="mt-2 text-center text-[11px] text-zinc-500">
           {t('coinPay.changeNote', { defaultValue: 'One signature. Anything left over stays in your Studio balance.' })}
         </p>
+        </>)}
       </DialogContent>
     </Dialog>
   );

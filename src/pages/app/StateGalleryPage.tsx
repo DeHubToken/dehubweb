@@ -884,8 +884,27 @@ const GALLERY_COINS = [
 ] as const;
 
 /** Not enough DHB: Create pressed short of DHB, pay the same amount in another coin. */
+const GALLERY_ANY_COINS = [
+  { assetId: 'nep141:btc.omft.near', symbol: 'BTC', blockchain: 'btc', decimals: 8, price: 101200 },
+  { assetId: 'nep141:sol.omft.near', symbol: 'SOL', blockchain: 'sol', decimals: 9, price: 88 },
+  { assetId: 'nep141:eth.omft.near', symbol: 'ETH', blockchain: 'eth', decimals: 18, price: 3100 },
+  { assetId: 'nep141:sol-usdc', symbol: 'USDC', blockchain: 'sol', decimals: 6, price: 1 },
+  { assetId: 'nep141:tron-usdt', symbol: 'USDT', blockchain: 'tron', decimals: 6, price: 1 },
+  { assetId: 'nep141:doge.omft.near', symbol: 'DOGE', blockchain: 'doge', decimals: 8, price: 0.17 },
+  { assetId: 'nep141:xrp.omft.near', symbol: 'XRP', blockchain: 'xrp', decimals: 6, price: 2.3 },
+  { assetId: 'nep141:ltc.omft.near', symbol: 'LTC', blockchain: 'ltc', decimals: 8, price: 92 },
+];
+
+const GALLERY_ANY_INTENT = {
+  id: 'gallery', originAsset: 'nep141:sol.omft.near', originSymbol: 'SOL', originBlockchain: 'sol',
+  depositAddress: '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU', depositMemo: null,
+  amountInFormatted: '0.0215', timeEstimateSeconds: 24, refundTo: '9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM',
+  usd: 1.89, expiresAt: 4102444800, settlement: 'PENDING_DEPOSIT', credited: false,
+};
+
 function CoinPayGallery() {
   const [open, setOpen] = useState(false);
+  const [anyView, setAnyView] = useState<null | 'list' | 'send'>(null);
   return (
     <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-coin-pay-gallery>
       <h2 className="mb-3 text-sm font-semibold">Not enough DHB</h2>
@@ -899,6 +918,26 @@ function CoinPayGallery() {
         preview={{
           coins: GALLERY_COINS.map((c) => ({ ...c })),
           balances: { 'USDT:56': 42.1, 'USDC:56': 0, 'BNB:56': 0.41, 'USDC:8453': 12, 'ETH:8453': 0.02, 'USDFC:314': 0 },
+          anyCoins: GALLERY_ANY_COINS,
+        }}
+      />
+      <div className="mt-3 flex gap-2">
+        <Button variant="glass" size="sm" data-open-any-coin="list" onClick={() => setAnyView('list')}>Any coin</Button>
+        <Button variant="glass" size="sm" data-open-any-coin="send" onClick={() => setAnyView('send')}>Any coin: send</Button>
+      </div>
+      <PayWithCoinSheet
+        key={anyView || 'closed'}
+        open={anyView !== null}
+        onOpenChange={(o) => { if (!o) setAnyView(null); }}
+        costDhb={1890}
+        walletDhb={0}
+        onFunded={() => setAnyView(null)}
+        preview={{
+          coins: [],
+          balances: {},
+          view: 'any',
+          anyCoins: GALLERY_ANY_COINS,
+          anyIntent: anyView === 'send' ? GALLERY_ANY_INTENT : undefined,
         }}
       />
     </section>
