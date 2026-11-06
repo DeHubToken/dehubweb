@@ -21,6 +21,7 @@ import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
+import { afterNextFrame, useSheetFlickClose } from '@/hooks/use-sheet-flick-close';
 import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
 import { useBannedAccount } from '@/hooks/use-banned-account';
 import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
@@ -529,10 +530,21 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   );
 
   // Prevent drawer from closing when camera is open
+  const canDismiss = () => !state.isCameraModalOpen && !mediaFullscreenOpen;
+  const closePendingRef = useRef(false);
   const handleDrawerChange = (open: boolean) => {
-    if (!open && (state.isCameraModalOpen || mediaFullscreenOpen)) return;
-    if (!open) closeKeepingDraft();
+    if (!open && !canDismiss()) return;
+    if (open || closePendingRef.current) return;
+    // A frame late, so a swipe's slide-out is already running on the
+    // compositor before the close re-renders the page around it.
+    closePendingRef.current = true;
+    afterNextFrame(() => {
+      closePendingRef.current = false;
+      closeKeepingDraft();
+    });
   };
+  // A pull that is still moving down when let go closes in one motion.
+  const flick = useSheetFlickClose(() => handleDrawerChange(false), canDismiss);
 
   // Use Drawer/Sheet on ALL devices (mobile, tablet, desktop)
   return (
@@ -542,11 +554,16 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onOpenChange={handleDrawerChange}
         repositionInputs={false}
         dismissible={!mediaFullscreenOpen}
+        onRelease={flick.onRelease}
+        // Slide away from wherever the finger let go, instead of vanishing.
+        animatedExit
       >
         <DrawerContent
           glass
           hideHandle
           data-post-modal
+          onPointerDown={flick.onPointerDown}
+          onPointerMove={flick.onPointerMove}
           style={keyboardStyle ?? undefined}
           // The composer opens over the feed it posts into, so on desktop it
           // takes that column rather than the whole viewport — see `column` in
