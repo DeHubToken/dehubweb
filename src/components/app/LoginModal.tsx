@@ -137,6 +137,25 @@ export function warmLoginSheet(): void {
   void import('@/lib/login-probes').then(m => m.warmLoginProbes()).catch(() => {});
 }
 
+/**
+ * Paints `fallback` on the sheet's first frame and builds `children` two
+ * frames later. It lives INSIDE the sheet, so its clock starts when the sheet
+ * itself mounts: a gate on LoginModal counted from the tap, and the drawer's
+ * own dormant -> mounting -> live hand-off used up those frames, so on a first
+ * open the options and every clip were built inside the frame that should
+ * only have slid the sheet up (~200 ms of tap delay on a mid phone).
+ */
+function AfterSheetFrame({ immediate, fallback, children }: { immediate?: boolean; fallback: React.ReactNode; children: React.ReactNode }) {
+  const [ready, setReady] = useState(!!immediate);
+  useEffect(() => {
+    if (ready) return;
+    let next = 0;
+    const first = requestAnimationFrame(() => { next = requestAnimationFrame(() => setReady(true)); });
+    return () => { cancelAnimationFrame(first); cancelAnimationFrame(next); };
+  }, [ready]);
+  return <>{ready ? children : fallback}</>;
+}
+
 // Holds html[data-login-sheet] (see index.css) while a login sheet is up. The
 // newest open owns it, so a quick close and reopen cannot drop it early.
 let loginSheetHold = 0;
@@ -182,22 +201,9 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     () => resumingStep(walletPhase, isProcessingRedirect) ?? 'main',
   );
   const wasOpen = useRef(open);
-  // A tap paints the sheet itself (backdrop, frame, placeholders) on the next
-  // frame, and only then builds the options and clips into it. Building them
-  // inside the tap is what held the sheet back. A sheet that mounts already
-  // open (a sign-in resuming after a redirect) is filled straight away.
-  const [shownOpen, setShownOpen] = useState(open);
-  const [filled, setFilled] = useState(open);
-  if (open !== shownOpen) {
-    setShownOpen(open);
-    if (open) setFilled(false);
-  }
-  useEffect(() => {
-    if (!open || filled) return;
-    let next = 0;
-    const first = requestAnimationFrame(() => { next = requestAnimationFrame(() => setFilled(true)); });
-    return () => { cancelAnimationFrame(first); cancelAnimationFrame(next); };
-  }, [open, filled]);
+  // A sheet that mounts already open (a sign-in resuming after a redirect) is
+  // filled straight away; every tap-opened sheet fills after its first frame.
+  const [mountedOpen] = useState(open);
   // Before Radix's own effects lock <body>, so the hold is already in place.
   useLayoutEffect(() => (open ? holdLoginSheet() : undefined), [open]);
   useEffect(() => {
@@ -350,17 +356,17 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className={`login-stack-scroll flex flex-col flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-2.5 ${stackSheet ? 'pb-2' : 'pb-4'}`}>
-        {filled ? (
+        <AfterSheetFrame immediate={mountedOpen} fallback={<LoginShortsStackPlaceholder />}>
           <Suspense fallback={<LoginShortsStackPlaceholder />}>
             <LoginShortsStack />
           </Suspense>
-        ) : <LoginShortsStackPlaceholder />}
+        </AfterSheetFrame>
         <div className="login-stack-form mt-5">
-          {filled ? (
+          <AfterSheetFrame immediate={mountedOpen} fallback={fallback}>
             <Suspense fallback={fallback}>
               <LoginModalBody open={open} step={step} setStep={setStep} layout="stack" />
             </Suspense>
-          ) : fallback}
+          </AfterSheetFrame>
         </div>
       </div>
 
@@ -402,7 +408,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </DrawerHeader>
 
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
-        {!filled ? fallback : <Suspense fallback={fallback}>
+        <AfterSheetFrame immediate={mountedOpen} fallback={fallback}><Suspense fallback={fallback}>
           {/* Kept out of LoginModalBody deliberately: that chunk carries
               wagmi, and the profile step is reached on a plain session
               restore (an account saved without a username) where no wallet
@@ -410,7 +416,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {step === 'profile'
             ? <LoginProfileStep />
             : <LoginModalBody open={open} step={step} setStep={setStep} />}
-        </Suspense>}
+        </Suspense></AfterSheetFrame>
       </div>
 
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
