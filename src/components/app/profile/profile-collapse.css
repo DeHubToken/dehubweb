@@ -30,7 +30,21 @@ html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_)
    a corner 4px tighter than the rail's (12 -> 8). Square themes win on
    specificity and stay at 0. */
 .profile-rail-follow button { height: 44px; border-radius: 8px; }
-html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_) {
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
+/* Back over the cover sits on a squared dark glass chip so it reads on white
+   and busy banners as well as dark ones. Corners follow the house 10px button
+   radius; square themes stay square. */
+html[data-theme] [data-profile-collapse] [data-swipe-back]:not(#_):not(#_):not(#_) {
+  width: 36px;
+  height: 36px;
+  margin: 2px 0 0 2px;
+  border-radius: 10px !important;
+  background: rgba(10, 10, 12, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  opacity: 1 !important;
 }
+html[data-theme] [data-profile-collapse] [data-swipe-back]:not(#_):not(#_):not(#_):hover { background: rgba(10, 10, 12, 0.62) !important; }
+html[data-theme] [data-profile-collapse] [data-swipe-back]:not(#_):not(#_):not(#_) :is(*, svg) { color: #fff !important; }
+html:is([data-theme='war'], [data-theme='hacker'], [data-theme='minimal']) [data-profile-collapse] [data-swipe-back]:not(#_):not(#_):not(#_):not(#_) { border-radius: 0 !important; }
