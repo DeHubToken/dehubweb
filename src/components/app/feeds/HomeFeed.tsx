@@ -1779,7 +1779,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   }, [landPending, optimisticIdsKey]);
   useEffect(() => onPostLandingBegin(() => { landPending(); }), [landPending]);
 
-  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false) => {
+  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false, afterShorts = false) => {
     const firstFeedPost = isFirstVisibleFeedCard(section, index, visibleOptimisticPosts.length, !!pinnedItem);
     const card = (() => {
       switch (item.type) {
@@ -1819,6 +1819,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       'data-feed-item': true,
       'data-feed-token-id': item.type === 'ad' ? undefined : (item.data as any)?.id,
       'data-feed-before-shorts': beforeShorts ? '' : undefined,
+      'data-feed-after-shorts': afterShorts ? '' : undefined,
       'data-cinematic': item.type,
       'data-cinematic-first': firstFeedPost ? '' : undefined,
       className: 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3',
@@ -1959,6 +1960,26 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       }
     });
     if (start < listedItems.length) segments.push({ items: listedItems.slice(start), start, inserts: [], shorts: false });
+    // One column: every card and insert is a sibling in one list, each under
+    // its own key. Grouping them into segments keyed by start index meant a
+    // row arriving late (a Shorts batch, the live row) re-keyed every segment
+    // after it, so React rebuilt those cards from scratch: an open comments
+    // sheet vanished with its card, and the windowed cards came back at their
+    // estimated heights, throwing the reader thousands of pixels up the feed.
+    if (colCount <= 1) {
+      return (
+        <div className="mb-3 space-y-3">
+          {segments.flatMap((segment, index) => [
+            ...segment.items.map((item, offset) => renderFeedItem(item, segment.start + offset, 'feed',
+              segment.shorts && offset === segment.items.length - 1,
+              offset === 0 && index > 0 && segments[index - 1].shorts)),
+            ...segment.inserts.map(node => (
+              <WindowedFeedItem key={node.key} className="my-3" estimatedHeight={insertEstimate(String(node.key))}>{node}</WindowedFeedItem>
+            )),
+          ])}
+        </div>
+      );
+    }
     return <>{segments.flatMap((segment, index) => [
       <div key={`feed-segment-${segment.start}`} className="mb-3">
         {renderMasonryGrid(
