@@ -7156,3 +7156,23 @@ html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(
 @media (prefers-reduced-motion: reduce) {
   [data-feed-arrive] { animation: none; }
 }
+
+/* Chat text size (Settings → Accessibility, or the Aa button in a chat).
+   Every chat's message list and composer carries .chat-text-zone; the sizes
+   below are rem so the reader's own browser/phone text size still applies,
+   then multiplied by their in-app choice. Line height is unitless so taller
+   text never overlaps. Body text sits at 15px by default, like Telegram. */
+.chat-text-zone { --cts: var(--chat-text-scale, 1); }
+.chat-text-zone :is(.text-\[8px\], .text-\[9px\]) { font-size: calc(0.625rem * var(--cts)); line-height: 1.3; }
+.chat-text-zone :is(.text-\[10px\], .text-\[11px\]) { font-size: calc(0.6875rem * var(--cts)); line-height: 1.35; }
+.chat-text-zone .text-xs { font-size: calc(0.78rem * var(--cts)); line-height: 1.4; }
+.chat-text-zone .text-\[13px\] { font-size: calc(0.875rem * var(--cts)); line-height: 1.45; }
+.chat-text-zone .text-sm { font-size: calc(0.9375rem * var(--cts)); line-height: 1.45; }
+.chat-text-zone .text-base { font-size: calc(1rem * var(--cts)); line-height: 1.45; }
+.chat-text-zone .chat-body { font-size: calc(0.9375rem * var(--cts)); line-height: 1.45; }
+.chat-text-input { font-size: calc(0.9375rem * var(--chat-text-scale, 1)) !important; line-height: 1.4 !important; }
+@media (max-width: 767px) {
+  textarea.chat-text-input.chat-text-input, input.chat-text-input.chat-text-input {
+    font-size: max(16px, calc(0.9375rem * var(--chat-text-scale, 1))) !important;
+  }
+}

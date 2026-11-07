@@ -628,7 +628,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         data-shorts-scrollable
         {...messageHold}
         className={cn(
-          'overflow-y-auto overscroll-contain scrollbar-hide',
+          'chat-text-zone overflow-y-auto overscroll-contain scrollbar-hide',
           overlay
             // The mask lives on the scroller, so the dissolve stays pinned to
             // the top edge while messages travel under it. -webkit- kept for
@@ -661,7 +661,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                           <DhbAmount amount={moment.giftAmount} currency={moment.giftCurrency} iconClassName="h-3 w-3" />
                         </span>
                         {msg.content && (
-                          <p className="text-zinc-300 break-words whitespace-pre-wrap mt-0.5"><InlineEmoji value={msg.content} /></p>
+                          <p className="chat-body text-zinc-300 break-words whitespace-pre-wrap mt-0.5"><InlineEmoji value={msg.content} /></p>
                         )}
                       </>
                     ) : (
@@ -942,7 +942,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             placeholder={isOffline ? _copy("copy.17529a437b97", { defaultValue: "Chat is offline" }) : bannedHere ? t('liveChatModeration.youAreBanned') : muted ? t('liveChatModeration.youAreTimedOut') : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
             disabled={isOffline || !isAuthenticated || bannedHere || muted}
             className={cn(
-              'max-h-32 resize-none text-white text-sm',
+              'chat-text-input max-h-32 resize-none text-white text-sm',
               overlay ? (newMessage.trim() ? 'pr-14' : 'pr-4') : 'pr-24',
               overlay
                 ? 'min-h-[46px] rounded-xl border-white/15 bg-black/40 py-3 pl-4 backdrop-blur-md placeholder:text-white/50'

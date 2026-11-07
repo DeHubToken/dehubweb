@@ -875,7 +875,7 @@ export function ChatInput({ onSendMessage, onTipClick, onPollClick, sendDisabled
           onPaste={handlePaste}
           onFocus={() => setComposerFocused(true)}
           onBlur={() => setComposerFocused(false)}
-          className="min-h-[52px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="chat-text-input min-h-[52px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={1}
         />
 
