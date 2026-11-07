@@ -125,6 +125,8 @@ import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
 import { ConversationItem } from '@/pages/app/MessagesPage';
 import type { DeHubDMMessage } from '@/lib/api/dehub/dm';
+import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
+import { DmMessageBubble, CozyDayPill } from '@/components/app/chat/DirectMessageChat';
 import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
@@ -258,6 +260,78 @@ function NameBadgesGallery() {
       {rows.map((c) => (
         <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={false} onDelete={noop} onBlock={noop} />
       ))}
+    </section>
+  );
+}
+
+/**
+ * The full-screen chat at /chat: the list beside a cozy thread (grouped
+ * bubbles, one avatar and one time line per run, a day pill, the wallpaper).
+ * Laid out by hand from the real bubble, since the live chat needs a session.
+ */
+function FullScreenChatGallery() {
+  const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
+  const yesterday = (h: number) => { const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(h, 12, 0, 0); return d.toISOString(); };
+  const people: Array<Partial<DeHubUser> & { address: string }> = [
+    { address: '0x7777777777777777777777777777777777777771', username: 'ellaverse', displayName: 'Ella Verse', badgeBalance: 2_000_000 },
+    { address: '0x7777777777777777777777777777777777777772', username: 'xluna', displayName: 'Luna', badgeBalance: 600_000 },
+    { address: '0x7777777777777777777777777777777777777773', username: 'deepwater', displayName: 'Deep Water' },
+    { address: '0x7777777777777777777777777777777777777774', username: 'nova', displayName: 'Nova' },
+  ];
+  const lines = ['Sending the cut now', 'See you on the stream tonight', 'haha yes', 'Voice note'];
+  const rows = people.map((user, i) => ({
+    id: `gallery-fsc-${i}`,
+    participants: [user as DeHubUser],
+    otherUser: user as DeHubUser,
+    unreadCount: i === 1 ? 3 : 0,
+    createdAt: ago(10 + i * 50),
+    updatedAt: ago(10 + i * 50),
+    lastMessage: { id: `gallery-fsc-msg-${i}`, conversationId: `gallery-fsc-${i}`, sender: user as DeHubUser, content: lines[i], createdAt: ago(10 + i * 50) } as DeHubDMMessage,
+  }));
+  const me = { _id: 'me', address: '0x0000000000000000000000000000000000000001', username: 'me' };
+  const ella = { _id: 'ella', address: people[0].address, username: 'ellaverse', displayName: 'Ella Verse' };
+  const msg = (id: string, mine: boolean, content: string, createdAt: string): DmMessage => ({
+    _id: id, conversation: 'gallery', sender: (mine ? me : ella) as DmMessage['sender'], author: mine ? 'me' : 'other', content,
+    msgType: 'msg', mediaUrls: [], voiceDuration: null, isRead: mine, isEdited: false, editedAt: null, isForwarded: false,
+    replyTo: null, paymentStatus: null, paymentTxHash: null, tipAmount: null, tipSymbol: null, createdAt,
+  } as unknown as DmMessage);
+  const thread: Array<{ m: DmMessage; mine: boolean; first: boolean; last: boolean; day?: boolean }> = [
+    { m: msg('a', false, 'did you finish the edit?', yesterday(21)), mine: false, first: true, last: true, day: true },
+    { m: msg('b', true, 'almost, colour pass left', yesterday(21)), mine: true, first: true, last: true },
+    { m: msg('c', false, 'morning!', ago(14)), mine: false, first: true, last: false, day: true },
+    { m: msg('d', false, 'the intro is perfect', ago(13)), mine: false, first: false, last: false },
+    { m: msg('e', false, 'can you send the full cut when it is ready?', ago(12)), mine: false, first: false, last: true },
+    { m: msg('f', true, 'yes, rendering now', ago(9)), mine: true, first: true, last: false },
+    { m: msg('g', true, 'Sending the cut now', ago(8)), mine: true, first: false, last: true },
+  ];
+  const noop = () => {};
+  const list = (
+    <div className="flex h-full flex-col">
+      <div className="px-4 pb-2 pt-4 text-base font-semibold">Chat</div>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {rows.map((c, i) => (
+          <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={i === 0} onDelete={noop} onBlock={noop} />
+        ))}
+      </div>
+    </div>
+  );
+  const chat = (
+    <div data-chat-wallpaper className="chat-text-zone h-full overflow-y-auto px-4 pb-4">
+      <div className="mx-auto w-full max-w-[47.5rem]">
+        {thread.map(({ m, mine, first, last, day }) => (
+          <div key={m._id}>
+            {day && <CozyDayPill iso={m.createdAt} />}
+            <DmMessageBubble message={m} isOwnMessage={mine} cozy={{ first, last }} currentUserAddress={me.address} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+  return (
+    <section data-fullscreen-chat-gallery className="mb-5 space-y-3">
+      <h2 className="text-sm font-semibold">Full-screen chat (/chat)</h2>
+      <FullScreenChatShell inline chatOpen list={list} chat={chat} />
+      <FullScreenChatShell inline chatOpen={false} list={list} chat={null} />
     </section>
   );
 }
@@ -1357,6 +1431,7 @@ export default function StateGalleryPage() {
         <UsernameReserveGallery />
 
         <NameBadgesGallery />
+        <FullScreenChatGallery />
         <FollowCardsGallery />
 
         <StreamerArtworkGallery />
