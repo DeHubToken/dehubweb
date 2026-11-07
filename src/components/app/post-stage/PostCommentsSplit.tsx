@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type SyntheticEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { useCommentsPullDismiss } from '@/hooks/use-comments-pull-dismiss';
@@ -8,6 +8,24 @@ import { HOLD_EVENT } from '@/components/app/chat/ChatHoldSheet';
 
 // Same tween as the Shorts comments sheet, so both open the same way.
 const SLIDE = { type: 'tween', duration: 0.35, ease: [0.32, 0.72, 0, 1] } as const;
+
+/*
+ * The sheet is portalled to <body>, but React still bubbles its events up
+ * the component tree: through the feed card it belongs to and on into the
+ * Home feed. There a sideways drag in the comments read as the feed's
+ * swipe-between-tabs (Videos, Images, Text... jumped to Home at the top), a
+ * pull read as pull-to-refresh, and taps and keys reached the card. Nothing
+ * outside the sheet has any business with them, so they stop at its edge.
+ * Native listeners (page swipe-back, Back) are unaffected.
+ */
+const stop = (event: SyntheticEvent) => event.stopPropagation();
+const KEEP_INSIDE = {
+  onTouchStart: stop, onTouchMove: stop, onTouchEnd: stop, onTouchCancel: stop,
+  onPointerDown: stop, onPointerMove: stop, onPointerUp: stop, onPointerCancel: stop,
+  onMouseDown: stop, onMouseMove: stop, onMouseUp: stop, onMouseLeave: stop,
+  onClick: stop, onDoubleClick: stop, onContextMenu: stop, onWheel: stop,
+  onKeyDown: stop, onKeyUp: stop,
+};
 
 /**
  * Comments in the bottom half of a phone post page, under the post, in the
@@ -104,7 +122,7 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
   // Portalled: the post page's rise-in animation leaves a transform on an
   // ancestor, which would pin a fixed sheet to the page instead of the screen.
   return createPortal(
-    <>
+    <div data-comments-split-root style={{ display: 'contents' }} {...KEEP_INSIDE}>
     {closeOnTapAbove && (
       <div
         data-comments-split-catch
@@ -135,7 +153,7 @@ export function PostCommentsSplit({ onClose, children, closeOnTapAbove = false }
       </motion.div>
       <CommentsSplitContext.Provider value>{children}</CommentsSplitContext.Provider>
     </motion.div>
-    </>,
+    </div>,
     document.body,
   );
 }
