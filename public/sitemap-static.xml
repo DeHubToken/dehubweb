@@ -3271,6 +3271,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://riftn.com/apk"/>
   </url>
   <url>
+    <loc>https://riftn.com/chat</loc>
+    <lastmod>2026-11-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://riftn.com/connect</loc>
     <lastmod>2026-08-04T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
