@@ -7176,3 +7176,26 @@ html[data-theme] [data-audio-backdrop]:has([data-audio-studio-placeholder]):not(
     font-size: max(16px, calc(0.9375rem * var(--chat-text-scale, 1))) !important;
   }
 }
+
+/* Full-screen chat (/chat). A soft dot pattern behind the thread so bubbles
+   read as objects on a surface; it follows the theme's own text colour, so
+   light and dark themes both get a faint version of themselves. */
+[data-chat-wallpaper] {
+  background-image: radial-gradient(color-mix(in srgb, currentColor 9%, transparent) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+
+/* Phones: the open chat slides in over the list instead of appearing. */
+@media (max-width: 767px) {
+  [data-fsc-chat-open] {
+    animation: fsc-slide-in 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+}
+@keyframes fsc-slide-in {
+  from { transform: translate3d(100%, 0, 0); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-fsc-chat-open] { animation: none; }
+}

@@ -1,5 +1,5 @@
 {
-  "version": "4ec9012470f6cd5f",
+  "version": "53f6b6efd969e98d",
   "routes": {
     "/": [
       "ar",
@@ -135,6 +135,13 @@
       "tr"
     ],
     "/buy": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/chat": [
       "ar",
       "es",
       "fr",

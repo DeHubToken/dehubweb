@@ -192,7 +192,7 @@ const OG_CARD_ROUTES = new Set([
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
   'dex', 'ads', 'buy',
-  'live-studio',
+  'live-studio', 'chat',
 ]);
 
 /** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
@@ -1224,6 +1224,17 @@ const MARKETING_PAGES = {
 <h2>Variable, revenue-funded rewards</h2>
 <p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future tokens settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
 <p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
+  },
+  'chat': {
+    title: 'Chat: Full-Screen Messages on Riftn',
+    description: 'Your Riftn messages full screen: every conversation on the left, the open chat on the right, grouped bubbles and day markers. Direct messages, group chats and the public chat in one place.',
+    heading: 'Riftn Chat',
+    bodyHtml: `<p>Riftn Chat is your inbox with nothing else on screen. On a computer your conversations sit on the left and the open chat on the right, so you can jump between people without losing your place. On a phone the chat slides in over the list and back slides it away.</p>
+<h2>Built to be easy to read</h2>
+<p>Messages from the same person sent close together join into one block with a single time stamp, each day gets its own marker, and the text size can be raised from the Aa button for anyone who reads better with larger type.</p>
+<h2>Everything in one place</h2>
+<p>Direct messages, group chats, channels and the public chat all open here. Messages can carry photos, videos, voice notes, polls and tips in tokens, and private chats are end-to-end encrypted.</p>
+<p><a href="${APP_URL}/chat">Open Riftn Chat</a> or <a href="${APP_URL}/messages">go to Messages</a>.</p>`,
   },
   'connect': {
     title: 'Connect Riftn to your AI assistant',
