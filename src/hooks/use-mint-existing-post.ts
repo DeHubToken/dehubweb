@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { mintExistingPost, getMintFee, type MintFeeQuoteResponse } from '@/lib/api/dehub';
 import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { isSmartWalletSession } from '@/lib/connection-source';
+import { formatMintFee, mintFeeShortfall, mintFeeTopUpPath } from '@/lib/mint-fee-balance';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { getNFTInfo } from '@/lib/api/dehub/feed';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -48,10 +49,9 @@ export function useMintExistingPost() {
         !Number.isInteger(viewers) || viewers < 0 || !Number.isInteger(commenters) || commenters < 0 || viewers + commenters === 0 ||
         info?.addBountyTokenSymbol !== 'DHB')) throw new Error(_copy("copy.038a8e5ff421", { defaultValue: "Invalid bounty terms. Funding cannot be skipped." }));
 
-      const [{ mintOnChainWithFee }, { getDHBBalance, mintWithBounty }, { getERC20Balance }] = await Promise.all([
+      const [{ mintOnChainWithFee }, { mintWithBounty }] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
-        import('@/lib/contracts/aa-utils'),
       ]);
 
       // Price and affordability first: finding out after the signature has been
@@ -60,21 +60,21 @@ export function useMintExistingPost() {
       let fee: MintFeeQuoteResponse | null = null;
       if (!hasBounty && isSmartWalletSession()) {
         fee = await getMintFee(targetChain);
-        if (fee?.chargeable && fee.amount > 0 && !fee.isNative) {
+        if (fee?.chargeable && fee.amount > 0) {
+          // Paid in the quote's own coin: BNB / ETH by default, DHB if the
+          // server is switched back. An unreadable balance decides nothing.
           const { getWeb3AuthSigner } = await import('@/lib/contracts/stream-collection');
           const address = await getWeb3AuthSigner();
-          // Balance of the QUOTE's token at the QUOTE's decimals — hardcoding
-          // chainConfig.dhbToken at 1e18 broke any non-18-dp fee token.
-          const balance = fee.tokenAddress
-            ? await getERC20Balance(fee.tokenAddress, address, targetChain)
-            : await getDHBBalance(address, targetChain);
-          const needed =
-            (BigInt(Math.ceil(fee.amount * 1e6)) * BigInt(10) ** BigInt(fee.decimals ?? 18)) /
-            BigInt(1e6);
-          if (balance < needed) {
+          if (await mintFeeShortfall(fee, address, targetChain)) {
+            const topUp = mintFeeTopUpPath(fee);
             toast.error(t('postComposer.notEnoughTokensToMint'), {
-              description: _copy("copy.ec486a9f842c", { defaultValue: "Minting this post costs {{value1}} {{value2}}.", value1: fee.amount, value2: fee.symbol }),
-              action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
+              description: _copy("copy.ec486a9f842c", { defaultValue: "Minting this post costs {{value1}} {{value2}}.", value1: formatMintFee(fee.amount), value2: fee.symbol }),
+              action: {
+                label: fee.isNative
+                  ? _copy("copy.79f52e0ce619", { defaultValue: "Top up" })
+                  : t('postComposer.getTokens'),
+                onClick: () => navigate(topUp),
+              },
               duration: 10000,
             });
             return false;
