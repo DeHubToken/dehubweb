@@ -86,6 +86,7 @@ scripts/*
 !scripts/locale-retention.mjs
 !scripts/edge-route-recovery.mjs
 !scripts/standby-switch.mjs
+!scripts/indexnow-submit.mjs
 !scripts/patch-vaul-scroll.mjs
 !scripts/patch-radix-focus-guards.mjs
 !scripts/patch-remove-scroll-bar.mjs
