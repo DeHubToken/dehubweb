@@ -2749,6 +2749,7 @@
     "passkeyFailed": "Fingerprint sign-in failed. Please try again.",
     "passkeyBackupHint": "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.",
     "walletBlockedTitle": "This wallet is brand new",
+    "profileMovedTitle": "Your profile moved",
     "walletBlockedBody": "New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings.",
     "checkYourEmail": "Check your email",
     "continuePhone": "Continue with phone",
