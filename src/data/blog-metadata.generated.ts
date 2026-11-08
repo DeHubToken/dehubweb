@@ -2785,12 +2785,12 @@ export const blogPostsMetadata: BlogPost[] = [
   },
   {
     "id": "dehub-milestone-11-a-new-era-the-rebran",
-    "title": "A New Era: The Rebranding to DeHub",
+    "title": "A New Era: The Rebranding to Riftn",
     "slug": "a-new-era-the-rebranding-to-dehub",
     "excerpt": "A rename is usually cosmetic. This one was an argument about what we were building, settled in public.",
     "content": "",
     "bannerImage": "/media/milestone-rebrand-banner-riftn.jpg",
-    "bannerImageAlt": "Riftn Q3 2021 update: A New Era: The Rebranding to DeHub",
+    "bannerImageAlt": "Riftn Q3 2021 update: A New Era: The Rebranding to Riftn",
     "author": {
       "name": "Riftn Team"
     },
@@ -2805,8 +2805,8 @@ export const blogPostsMetadata: BlogPost[] = [
     "readingTime": 4,
     "featured": false,
     "status": "published",
-    "seoTitle": "A New Era: The Rebranding to DeHub | Riftn 2021 Roadmap",
-    "seoDescription": "Official update on Riftn's Q3 2021 progress: Rebranded to DeHub. Discover the impact of this strategy milestone on our journey."
+    "seoTitle": "A New Era: The Rebranding to Riftn | Riftn 2021 Roadmap",
+    "seoDescription": "Official update on Riftn's Q3 2021 progress: Rebranded to Riftn. Discover the impact of this strategy milestone on our journey."
   },
   {
     "id": "dehub-milestone-10-navigating-challenge",

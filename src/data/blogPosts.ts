@@ -338,7 +338,7 @@ export const blogPosts: BlogPost[] = [
   createPost("Q2 2021", 2021, 2, 4, "Implemented basic governance voting mechanism", "A Voice for All: Riftn's Basic Governance Voting Arrives"),
   createPost("Q2 2021", 2021, 2, 5, "Smart contract security issue discovered", "Navigating Challenges: Addressing a V1 Smart Contract Security Issue"),
   // Q3 2021
-  createPost("Q3 2021", 2021, 3, 0, "Rebranded to DeHub", "A New Era: The Rebranding to DeHub"),
+  createPost("Q3 2021", 2021, 3, 0, "Rebranded to Riftn", "A New Era: The Rebranding to Riftn"),
   createPost("Q3 2021", 2021, 3, 1, "Started full app rebuild using React Native for better cross-platform support", "Building for All: App Rebuild with React Native"),
   createPost("Q3 2021", 2021, 3, 2, "Airdropped all holders automatically", "Rewarding Loyalty: Automatic Airdrop for All Holders"),
   createPost("Q3 2021", 2021, 3, 3, "Addressed security vulnerabilities from v1 with full Certik Audit", "Fortifying Our Walls: V1 Security Hardened with Certik Audit"),
