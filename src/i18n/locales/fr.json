@@ -2739,6 +2739,7 @@
     "passkeyFailed": "La connexion par empreinte digitale a échoué. Veuillez réessayer.",
     "passkeyBackupHint": "Votre compte réside dans la clé d'accès de cet appareil. Sur la plupart des téléphones, elle est synchronisée avec votre compte Google ou Apple, et vous pouvez ajouter une sauvegarde de mot de passe dans les Paramètres.",
     "walletBlockedTitle": "Ce portefeuille est tout neuf",
+    "profileMovedTitle": "Votre profil a été déplacé",
     "walletBlockedBody": "Les nouveaux portefeuilles doivent avoir un solde ou une transaction passée pour ouvrir un compte. Inscrivez-vous avec l'une des options ci-dessous, puis connectez ce portefeuille depuis les Paramètres.",
     "checkYourEmail": "Vérifiez votre e‑mail",
     "continuePhone": "Continuer avec le téléphone",

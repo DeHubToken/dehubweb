@@ -36,7 +36,7 @@ import { type LoginStep, isInlineLoginStep } from './steps';
 import type { DiscoveredWallet, WalletId } from './LoginWalletsStep';
 import { createLogger } from '@/lib/logger';
 import { toast } from 'sonner';
-import { WALLET_SIGNUP_BLOCKED_EVENT } from '@/lib/api/dehub/auth';
+import { PROFILE_MOVED_EVENT, WALLET_SIGNUP_BLOCKED_EVENT } from '@/lib/api/dehub/auth';
 
 const flowLog = createLogger('LoginFlow');
 
@@ -204,6 +204,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
   // signed with because it has no on-chain history. Shown on the options list
   // so the next tap is one of the ways in that work.
   const [walletSignupBlocked, setWalletSignupBlocked] = useState(false);
+  const [profileMovedMessage, setProfileMovedMessage] = useState<string | null>(null);
   /**
    * Resolve device support before offering passkey sign-in. Telegram remains
    * a stable option even if its background availability request fails; the
@@ -475,6 +476,40 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setStep]);
 
+  // This wallet's profile moved to a Google/email/phone login. Signing with
+  // the wallet again gets the same answer, so go back to the options (where
+  // that login is) with the reason on screen, and let go of the wallet.
+  useEffect(() => {
+    const onMoved = (event: Event) => {
+      const message = (event as CustomEvent<{ message?: string }>).detail?.message;
+      if (!message) return;
+      setProfileMovedMessage(message);
+      setStep('main');
+      void handleUseDifferentWallet();
+    };
+    window.addEventListener(PROFILE_MOVED_EVENT, onMoved);
+    return () => window.removeEventListener(PROFILE_MOVED_EVENT, onMoved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setStep]);
+
+  const profileMovedNotice = profileMovedMessage ? (
+    <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
+      <Wallet className="w-4 h-4 mt-0.5 shrink-0" />
+      <div className="flex-1 min-w-0 space-y-1">
+        <p className="font-medium">{t('loginModal.profileMovedTitle', 'Your profile moved')}</p>
+        <p className="text-white/70">{profileMovedMessage}</p>
+      </div>
+      <button
+        type="button"
+        onClick={() => setProfileMovedMessage(null)}
+        aria-label={t('common.close', 'Close')}
+        className="p-1 -m-1 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors shrink-0"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  ) : null;
+
   const handleWalletConnect = async (wallet: WalletId, _connect: () => void) => {
     setActiveProvider(wallet);
 
@@ -582,6 +617,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {/* The chosen intent stays visible while they pick a sign-in method:
           any of the options below reaches the wallet step, which then opens
           straight on Migrate or Import instead of a new account. */}
+      {profileMovedNotice}
       {walletSignupBlocked && (
         <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           <Wallet className="w-4 h-4 mt-0.5 shrink-0" />
@@ -835,6 +871,7 @@ function LoginModalBodyInner({ open, step, setStep, layout = 'default' }: LoginM
       {!isAuthenticated && (
         <LoginSavedProfiles disabled={isConnecting} onSwitch={handleSwitchProfile} />
       )}
+      {profileMovedNotice}
       {walletSignupBlocked && (
         <div role="alert" className="flex items-start gap-2 rounded-xl border border-white/15 bg-white/10 p-3 text-sm text-white">
           <Wallet className="w-4 h-4 mt-0.5 shrink-0" />

@@ -36,6 +36,7 @@ import {
   WalletNotLinkedError,
   WalletSignupBlockedError,
   WALLET_SIGNUP_BLOCKED_EVENT,
+  PROFILE_MOVED_EVENT,
   getAccountInfo,
   getAuthToken,
   getRefreshToken,
@@ -2141,6 +2142,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // This wallet's profile followed a Google/email/phone login; the API
         // names which one. Retrying the wallet would never help.
         toast.error(authError.message, { id: 'profile-moved', duration: 15000 });
+        // A toast alone was missed: on a phone the wallet app hands back to the
+        // page after the toast has gone, and all that is left is the Connect
+        // button again, which reads as a sign-in loop (@martvader, 2026-11-08).
+        // The login sheet keeps the reason on screen next to the options.
+        window.dispatchEvent(new CustomEvent(PROFILE_MOVED_EVENT, { detail: { message: authError.message } }));
       } else {
         toast.error(_copy("copy.f764b902534d", { defaultValue: "Could not complete sign-in. Please try again." }));
       }

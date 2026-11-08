@@ -2735,6 +2735,7 @@
     "passkeyFailed": "Parmak iziyle oturum açma başarısız oldu. Lütfen tekrar deneyin.",
     "passkeyBackupHint": "Hesabınız bu cihazın parolası içinde yaşar. Çoğu telefonda Google veya Apple hesabınızla eşitlenir ve Ayarlar'da bir şifre yedeği ekleyebilirsiniz.",
     "walletBlockedTitle": "Bu cüzdan yepyeni",
+    "profileMovedTitle": "Profilin taşındı",
     "walletBlockedBody": "Yeni cüzdanların hesap açabilmesi için bakiyesi veya geçmiş bir işlemi olmalı. Aşağıdaki seçeneklerden biriyle kaydol, ardından bu cüzdanı Ayarlar'dan bağla.",
     "checkYourEmail": "E - postanızı kontrol edin",
     "continuePhone": "Telefonla devam et",

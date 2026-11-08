@@ -2925,6 +2925,7 @@
     "passkeyFailed": "Inloggen met vingerafdruk mislukt. Probeer het opnieuw.",
     "passkeyBackupHint": "Je account staat in de passkey van dit apparaat. Op de meeste telefoons synchroniseert deze met je Google- of Apple-account, en je kunt een back-upwachtwoord toevoegen in Instellingen.",
     "walletBlockedTitle": "Deze wallet is gloednieuw",
+    "profileMovedTitle": "Je profiel is verplaatst",
     "walletBlockedBody": "Nieuwe wallets hebben een saldo of een eerdere transactie nodig om een account te openen. Meld je aan met een van de opties hieronder en koppel deze wallet daarna via Instellingen.",
     "checkYourEmail": "Controleer uw e-mail",
     "continuePhone": "Doorgaan met telefoon",
