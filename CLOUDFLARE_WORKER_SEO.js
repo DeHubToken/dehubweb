@@ -169,7 +169,7 @@ const OG_CARD_ROUTES = new Set([
   'docs/developers',
   'docs/terms-of-service', 'docs/advertising', 'docs/security', 'docs/featured-in',
   'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
-  'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
+  'videos', 'images', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
   'guides/best-decentralized-streaming-apps',
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'guide', 'features', 'pricing', 'depin',
@@ -290,6 +290,8 @@ const ORG_SAME_AS = [
 // The old name and address, so search engines and assistants keep treating
 // Riftn as the same site that used to be DeHub at dehub.io.
 const FORMER_NAMES = ['DeHub', 'dehub.io'];
+// What the site may be called above a search result. Never a former name.
+const SITE_ALTERNATE_NAMES = ['riftn.com'];
 const ORG_JSONLD = {
   '@type': 'Organization',
   name: 'Riftn',
@@ -1021,13 +1023,17 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 // the bot HTML pointed crawlers at these sections. This nav is injected on the
 // homepage AND every section page so the internal-link graph consistently
 // promotes them. Each path is a real SPA route + a sitemap-static.xml entry.
+//
+// These six are the main pages we want under the riftn.com result, in order.
+// Keep the list short: every extra link here dilutes the ones that matter.
+// Live points at /stream, the go-live page: /live is a member's username.
 const PRIMARY_NAV = [
-  { path: '/', label: 'Home Feed' },
-  { path: '/explore', label: 'Explore' },
-  { path: '/videos', label: 'Video Feed' },
-  { path: '/shorts', label: 'Shorts' },
-  { path: '/music', label: 'Music' },
-  { path: '/tv', label: 'Riftn TV' },
+  { path: '/', label: 'Home' },
+  { path: '/videos', label: 'Videos' },
+  { path: '/images', label: 'Images' },
+  { path: '/arcade', label: 'Arcade' },
+  { path: '/stream', label: 'Live' },
+  { path: '/docs', label: 'Docs' },
 ];
 
 // The keyword-targeted guides, linked from the homepage. Before this the
@@ -1096,6 +1102,16 @@ const SECTION_PAGES = {
 <h2>What you can do with a video here</h2>
 <p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan, and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
 <p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">Riftn TV</a> as a continuous lean-back channel.</p>`,
+  },
+  images: {
+    title: 'Images: Photos and Art on Riftn',
+    heading: 'Riftn Images',
+    description: 'Browse the latest photos, art and image posts from creators on Riftn, the open-source, user-owned social platform where every post can be minted on-chain.',
+    intro: 'Browse photos, art, comics and memes from Riftn creators in one image feed. Posts can be minted on-chain, so the creator keeps a permanent record of the work and can sell, collect or be tipped for it.',
+    bodyHtml: `<p>The image feed is the photo side of Riftn: every public image post, newest first, shown as a grid you can open one by one. It sits beside the <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/shorts">Shorts</a> on the same home page.</p>
+<h2>Posting images</h2>
+<p>A post can carry several images, a caption for each, and a comic layout that reads page by page. Like every post on Riftn it can be free, pay-per-view in tokens, or unlocked only for holders of a badge or subscription, and anyone who sees it can tip the creator.</p>
+<p>You can browse signed out. Signing in with an email, a social account, a passkey or a wallet gives you a wallet with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
   },
   shorts: {
     title: 'Shorts: Short-Form Videos on Riftn',
@@ -2826,6 +2842,7 @@ function shortsOf(rows, max = 12) {
 
 async function sectionLiveHtml(key) {
   if (key === 'videos') return postListHtml('Latest videos', await fetchFeedRows('postType=video'));
+  if (key === 'images') return postListHtml('Latest images', await fetchFeedRows('postType=feed-images'));
   if (key === 'shorts') return postListHtml('Latest shorts', shortsOf(await fetchFeedRows('postType=video', 100)));
   if (key === 'explore') return postListHtml('Latest on Riftn', await fetchFeedRows(''));
   if (key === 'music') return postListHtml('Latest tracks', await fetchFeedRows('postType=feed-audio'));
@@ -3209,8 +3226,17 @@ function homeJsonLd(value) {
       node.logo = ORG_LOGO;
       changed = true;
     }
-    if ((node['@type'] === 'Organization' || node['@type'] === 'WebSite') && !node.alternateName) {
+    // The company keeps its former names so "DeHub" searches still find it.
+    // The WebSite node must not: Google picks the site name shown above the
+    // result from WebSite name/alternateName, and an alternate of "dehub.io"
+    // kept the old domain showing there after the move.
+    if (node['@type'] === 'Organization' && !node.alternateName) {
       node.alternateName = FORMER_NAMES;
+      changed = true;
+    }
+    if (node['@type'] === 'WebSite') {
+      node.name = 'Riftn';
+      node.alternateName = SITE_ALTERNATE_NAMES;
       changed = true;
     }
   }

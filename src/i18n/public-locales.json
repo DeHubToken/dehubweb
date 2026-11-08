@@ -1,5 +1,5 @@
 {
-  "version": "9f269d8e99337e3b",
+  "version": "deb43419dbc74010",
   "routes": {
     "/": [
       "ar",
@@ -1500,6 +1500,13 @@
       "tr"
     ],
     "/guides/young-creators-ground-you-own": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/images": [
       "ar",
       "es",
       "fr",
