@@ -1648,11 +1648,9 @@ export function usePostForm(
       const [
         { getWeb3AuthSigner, mintOnChain, mintOnChainWithFee },
         { mintWithBounty, calculateTotalBounty, getDHBBalance },
-        { getERC20Balance },
       ] = await Promise.all([
         import('@/lib/contracts/stream-collection'),
         import('@/lib/contracts/stream-controller'),
-        import('@/lib/contracts/aa-utils'),
       ]);
 
       // Publishing off-chain touches no wallet at all.
@@ -1893,45 +1891,30 @@ export function usePostForm(
 
       if (mintingThisPost && !postingOnSolana && isSmartWalletSession()) {
         feeForMint = mintFee ?? (await getMintFee(chainId));
-        if (feeForMint?.chargeable && feeForMint.amount > 0 && !feeForMint.isNative) {
-          try {
-            // Balance of the QUOTE's token at the QUOTE's decimals — reading
-            // chainConfig.dhbToken at a hardcoded 1e18 made any non-18-dp fee
-            // token look 10^12 more expensive and silently downgraded every
-            // post to off-chain.
-            const balance = feeForMint.tokenAddress
-              ? await getERC20Balance(
-                  feeForMint.tokenAddress,
-                  minterAddress,
-                  chainId as import('@/components/app/ChainSelector').ChainId,
-                )
-              : await getDHBBalance(
-                  minterAddress,
-                  chainId as import('@/components/app/ChainSelector').ChainId,
-                );
-            const needed =
-              (BigInt(Math.ceil(feeForMint.amount * 1e6)) *
-                BigInt(10) ** BigInt(feeForMint.decimals ?? 18)) /
-              BigInt(1e6);
-            if (balance < needed) {
-              if (mintRequired) {
-                // A bounty post must mint — downgrading here would publish a
-                // post advertising a bounty with no tokens locked behind it.
-                toast.error(
-                  _copy("copy.a9b0f4f416f0", { defaultValue: "Insufficient {{value1}} for the mint fee — top up to publish this bounty post.", value1: feeForMint.symbol }),
-                  { id: 'mint-progress' },
-                );
-                setIsPosting(false);
-                return;
-              }
-              console.log('[Mint] Short of DHB for the mint fee — publishing off-chain');
-              shortfall = feeForMint;
-              mintingThisPost = false;
+        if (feeForMint?.chargeable && feeForMint.amount > 0) {
+          // The quote's own coin: BNB / ETH by default, DHB if switched back.
+          // A balance that could not be read must not decide the post's fate;
+          // let the transfer itself be the judge.
+          const { mintFeeShortfall } = await import('@/lib/mint-fee-balance');
+          const short = await mintFeeShortfall(
+            feeForMint,
+            minterAddress,
+            chainId as import('@/components/app/ChainSelector').ChainId,
+          );
+          if (short) {
+            if (mintRequired) {
+              // A bounty post must mint — downgrading here would publish a
+              // post advertising a bounty with no tokens locked behind it.
+              toast.error(
+                _copy("copy.a9b0f4f416f0", { defaultValue: "Insufficient {{value1}} for the mint fee — top up to publish this bounty post.", value1: feeForMint.symbol }),
+                { id: 'mint-progress' },
+              );
+              setIsPosting(false);
+              return;
             }
-          } catch (err) {
-            // A balance read that fails must not decide the post's fate; let
-            // the transfer itself be the judge.
-            console.warn('[Mint] Could not read DHB balance:', err);
+            console.log(`[Mint] Short of ${feeForMint.symbol} for the mint fee — publishing off-chain`);
+            shortfall = feeForMint;
+            mintingThisPost = false;
           }
         }
       }
@@ -2520,7 +2503,9 @@ export function usePostForm(
       if (shortfall) {
         toast.info(_copy("copy.c94920b1b46e", { defaultValue: "Posted — but not minted" }), {
           description: _copy("copy.183a6f2db673", { defaultValue: "Minting costs {{value1}} {{value2}} and your balance is short. Top up and you can mint it from the post's menu any time.", value1: formatFeeAmount(shortfall.amount), value2: shortfall.symbol }),
-          action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
+          action: shortfall.isNative
+            ? { label: _copy("copy.79f52e0ce619", { defaultValue: "Top up" }), onClick: () => navigate('/app/wallet') }
+            : { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
         });
       }
