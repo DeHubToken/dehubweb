@@ -6251,6 +6251,13 @@ async function handleRequest(request, env, ctx) {
   if (aliasHost === 'dehub.io' && (request.method === 'GET' || request.method === 'HEAD') && !isEmbeddedWebView(request)) {
     const fetchMode = request.headers.get('Sec-Fetch-Mode');
     const keep = DEHUB_IO_KEEP_PATHS.some((re) => re.test(url.pathname));
+    // A search crawler always gets the permanent 301, whatever fetch headers
+    // it sends. Crawlers that start sending browser-style Sec-Fetch-Mode would
+    // otherwise land on the noindex hand-off page through a 302, and the
+    // ranking would never move to riftn.com.
+    if (!keep && isSearchBotUa(request.headers.get('User-Agent'))) {
+      return new Response(null, { status: 301, headers: { Location: `https://riftn.com${url.pathname}${url.search}`, 'Cache-Control': 'public, max-age=3600' } });
+    }
     if (!keep && fetchMode === 'navigate') {
       return new Response(null, {
         status: 302,
