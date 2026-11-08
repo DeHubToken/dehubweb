@@ -2268,7 +2268,7 @@ export const it = {
     q18: 'Qual è la roadmap di Riftn?',
     a18: 'La nostra roadmap include l\'espansione dell\'ecosistema d\'App, il lancio di nuovi giochi, il potenziamento dell\'infrastruttura DePIN, lo sviluppo dei toolkit AI e il lancio ufficiale della governance all\'inizio del 2026.',
     q19: 'Come posso contattare il team Riftn?',
-    a19: 'Puoi raggiungerci tramite i nostri canali ufficiali: tech@dehub.net per problemi tecnici, o seguici su Twitter e Instagram @dehub_official per aggiornamenti.',
+    a19: 'Puoi raggiungerci tramite i nostri canali ufficiali: tech@dehub.net per problemi tecnici, o seguici su Twitter e Instagram @riftn_com per aggiornamenti.',
     q20: 'I token Riftn sono un investimento?',
     a20: 'No, i token Riftn sono strettamente per scopi di utilità all\'interno dell\'ecosistema Riftn, simili alle valute digitali in-game o in-app. Non sono strumenti di investimento e i mercati sono altamente volatili.',
     q21: 'Come funziona la moderazione dei contenuti su Riftn?',

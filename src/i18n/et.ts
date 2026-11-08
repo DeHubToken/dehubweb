@@ -2068,7 +2068,7 @@ export const et = {
     q18: 'Milline on Riftni tegevuskava?',
     a18: "Meie tegevuskava sisaldab d'appi ökosüsteemi laiendamist, uute mängude käivitamist, DePIN infrastruktuuri täiustamist, AI tööriistade arendamist ja juhtimise ametlikku käivitamist 2026. aasta alguses.",
     q19: 'Kuidas saan Riftni meeskonnaga ühendust?',
-    a19: 'Saad meiega ühendust võtta ametlike kanalite kaudu: tech@dehub.net tehniliste probleemide jaoks, või jälgi meid Twitteris ja Instagramis @dehub_official.',
+    a19: 'Saad meiega ühendust võtta ametlike kanalite kaudu: tech@dehub.net tehniliste probleemide jaoks, või jälgi meid Twitteris ja Instagramis @riftn_com.',
     q20: 'Kas Riftni märgid on investeering?',
     a20: 'Ei, Riftni märgid on mõeldud kasutamiseks ainult Riftni ökosüsteemis, sarnaselt mängusisestele või rakendusesisestele digitaalsetele valuutadele. Need ei ole investeerimisvahendid ja turud on väga volatiilsed.',
     q21: 'Kuidas sisu modereerimine Riftnis töötab?',

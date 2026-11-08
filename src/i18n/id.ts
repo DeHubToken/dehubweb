@@ -2191,7 +2191,7 @@ export const id = {
     q18: 'Apa peta jalan Riftn?',
     a18: "Peta jalan kami mencakup perluasan ekosistem d'App, pengenalan game baru, pengembangan infrastruktur DePIN, dan peluncuran resmi tata kelola di awal 2026.",
     q19: 'Bagaimana saya menghubungi tim Riftn?',
-    a19: 'Anda dapat menghubungi kami melalui saluran resmi: tech@dehub.net untuk masalah teknis, atau ikuti kami di Twitter dan Instagram @dehub_official.',
+    a19: 'Anda dapat menghubungi kami melalui saluran resmi: tech@dehub.net untuk masalah teknis, atau ikuti kami di Twitter dan Instagram @riftn_com.',
     q20: 'Apakah token Riftn merupakan investasi?',
     a20: 'Tidak, token Riftn hanya untuk keperluan utilitas dalam ekosistem Riftn, mirip dengan mata uang digital dalam game atau dalam aplikasi. Mereka bukan instrumen investasi dan pasar sangat fluktuatif.',
     q21: 'Bagaimana moderasi konten bekerja di Riftn?',

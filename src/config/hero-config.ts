@@ -57,10 +57,10 @@ export const FEATURED_BUZZWORDS = [
 ];
 
 export const SOCIAL_LINKS = [
-  { icon: "send", url: "https://t.me/dehub_dhb", label: "Telegram" },
-  { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
-  { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
-  { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
+  { icon: "send", url: "https://t.me/riftn_com", label: "Telegram" },
+  { icon: "music", url: "https://tiktok.com/@riftn_com", label: "TikTok" },
+  { icon: "instagram", url: "https://instagram.com/riftn_com", label: "Instagram" },
+  { icon: "twitter", url: "https://x.com/riftn_com", label: "Twitter" },
   { icon: "scroll", url: "https://riftn.com/docs", get label() { return _translateCopy("copy.c205924de0fe", { defaultValue: "Documentation" }); } },
 ];
 

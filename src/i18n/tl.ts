@@ -2234,7 +2234,7 @@ export const tl = {
     q18: 'Ano ang roadmap ng Riftn?',
     a18: 'Kasama sa aming roadmap ang pagpapalawak ng d\'App ecosystem, paglulunsad ng mga bagong laro, pagpapahusay ng imprastraktura ng DePIN, pagbuo ng mga toolkit ng AI, at pagpapatuloy ng rollout ng pamamahala sa buong platform.',
     q19: 'Paano ako makikipag - ugnayan sa pangkat ng Riftn?',
-    a19: 'Maaari kang makipag - ugnayan sa amin sa pamamagitan ng aming mga opisyal na channel: tech@dehub.net para sa mga teknikal na isyu, o sundan kami sa Twitter at Instagram @dehub_official para sa mga update at pakikipag - ugnayan sa komunidad.',
+    a19: 'Maaari kang makipag - ugnayan sa amin sa pamamagitan ng aming mga opisyal na channel: tech@dehub.net para sa mga teknikal na isyu, o sundan kami sa Twitter at Instagram @riftn_com para sa mga update at pakikipag - ugnayan sa komunidad.',
     q20: 'Ang mga token ba ng Riftn ay isang pamumuhunan?',
     a20: 'Hindi, ang mga token ng Riftn ay mahigpit para sa mga layunin ng utility sa loob ng ecosystem ng Riftn, katulad ng in - game o in - app na mga digital na pera. Ang mga ito ay hindi mga instrumento sa pamumuhunan at ang mga merkado ay lubos na pabagu - bago ng isip.',
     q21: 'Paano gumagana ang pag - moderate ng nilalaman sa Riftn?',

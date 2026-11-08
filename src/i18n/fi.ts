@@ -2231,7 +2231,7 @@ export const fi = {
     q18: 'Mikä on Riftnin tiekartta?',
     a18: 'Tiekarttamme sisältää hajautetun sovellusekosysteemin laajentamisen, uusien pelien julkaisun, DePIN-infrastruktuurin parantamisen ja AI-työkalujen kehittämisen.',
     q19: 'Miten otan yhteyttä Riftn-tiimiin?',
-    a19: 'Voit tavoittaa meidät virallisten kanavien kautta: tech@dehub.net teknisiin ongelmiin, tai seuraa meitä Twitterissä ja Instagramissa @dehub_official.',
+    a19: 'Voit tavoittaa meidät virallisten kanavien kautta: tech@dehub.net teknisiin ongelmiin, tai seuraa meitä Twitterissä ja Instagramissa @riftn_com.',
     q20: 'Ovatko Riftn-poletit sijoitus?',
     a20: 'Ei, Riftn-poletit ovat yksinomaan hyödyllisyystarkoituksiin Riftn-ekosysteemissä, samankaltaisia kuin pelin tai sovelluksen sisäiset digitaaliset valuutat. Ne eivät ole sijoitusinstrumentteja, ja markkinat ovat erittäin epävakaat.',
     q21: 'Miten sisällön moderointi toimii Riftnissa?',

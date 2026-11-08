@@ -2238,7 +2238,7 @@ export const gsw = {
     q18: 'Was isch d Roadmap vo Riftn?',
     a18: "Üsi Roadmap umfasst d Erwiiterig vom d'App-Ökosystem, nöii Spili, DePIN-Infrastruktur, KI-Wärchzüüg und de offizielli Governance-Launch Afang 2026.",
     q19: 'Wie cha ich s Riftn-Team kontaktiere?',
-    a19: "Si chönd üs über üsi offizielle Kanäl erreiche: tech@dehub.net für technischi Problem, oder folged Si üs uf Twitter und Instagram @dehub_official.",
+    a19: "Si chönd üs über üsi offizielle Kanäl erreiche: tech@dehub.net für technischi Problem, oder folged Si üs uf Twitter und Instagram @riftn_com.",
     q20: 'Sind Riftn Tokens en Investition?',
     a20: "Nei, Riftn Tokens sind strikt für Nutzungszwecki im Riftn Ökosystem, ähnlich wie In-Game oder In-App digitale Währige. Si sind kei Investitionsinstrument und d'Märkt sind sehr volatil.",
     q21: 'Wie funktioniert d Inhaltsmoderation uf Riftn?',

@@ -2192,7 +2192,7 @@ export const zh_tw = {
     joinDiscord: '加入 Discord',
   },
   faq: {
-    a19: '你可以透過我們的官方管道聯繫我們：技術問題請寄信至 tech@dehub.net，或在 Twitter 和 Instagram 追蹤 @dehub_official，掌握最新消息並參與社群互動。',
+    a19: '你可以透過我們的官方管道聯繫我們：技術問題請寄信至 tech@dehub.net，或在 Twitter 和 Instagram 追蹤 @riftn_com，掌握最新消息並參與社群互動。',
     a2: 'Riftn 代幣在整個 Riftn 生態系中都有用途，包括取得遊戲與內容、全球交易、打賞創作者、在 NFT 市集購物、治理投票、質押賺取獎勵，以及維護網路安全。',
     a7: '六款遊戲直接在 Riftn 內以瀏覽器分頁執行，無需安裝也無需購買：King\'s Gambit（附線上 Elo 天梯的 3D 西洋棋）、Claude of Duty（在你的裝置上自行生成所有美術的射擊遊戲）、Jungle Trail（程序生成的熱帶雨林漫步）、Street Slayer（專為 Riftn 打造的橫向捲軸清關格鬥遊戲）、Chartopia（可以走進去、也能在 VR 頭戴裝置中執行的交易大廳）以及 God\'s Eye（Riftn 社群的即時 3D 地球）。我們的旗艦 MMA 大逃殺遊戲 Last Chad Standing 正在開發中。',
     commonQuestions: '常見問題',

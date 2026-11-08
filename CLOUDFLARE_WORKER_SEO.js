@@ -275,16 +275,16 @@ function crumbsFromHtml(html) {
 // rewrites it until the fn is redeployed.
 const ORG_SAME_AS = [
   'https://www.wikidata.org/wiki/Q140518527',
-  'https://x.com/dehub_official',
+  'https://x.com/riftn_com',
   'https://github.com/DeHubToken',
   'https://www.linkedin.com/company/dehub-dao',
-  'https://t.me/dehub_dhb',
+  'https://t.me/riftn_com',
   'https://play.google.com/store/apps/details?id=io.dehub.mobile',
   // Instagram and TikTok as recorded on the Wikidata item (P2003, P7085). The
   // CoinGecko coin page is gone: it now redirects to CoinGecko's home page,
   // which says nothing about who Riftn is.
-  'https://www.instagram.com/dehub_official/',
-  'https://www.tiktok.com/@dehub_official',
+  'https://www.instagram.com/riftn_com/',
+  'https://www.tiktok.com/@riftn_com',
   'https://coinmarketcap.com/currencies/dehub/',
 ];
 // The old name and address, so search engines and assistants keep treating
@@ -547,7 +547,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
@@ -588,7 +588,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${DOCS_INDEX_DESCRIPTION}">
 ${twitterTextTags('Riftn Documentation', DOCS_INDEX_DESCRIPTION)}
 ${shareMetaTags('docs', 'Riftn Documentation')}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'CollectionPage',
   name: 'Riftn Documentation', url: canonicalUrl,
@@ -932,7 +932,7 @@ ${tagMeta}
 <meta name="twitter:description" content="${escHtml(ogDescription)}">
 <meta name="twitter:image" content="${escHtml(image)}">
 <meta name="twitter:image:alt" content="${escHtml(imageAlt)}">
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body>
@@ -1001,7 +1001,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(blogDescription)}">
 ${twitterTextTags('Riftn Blog | News, Guides & Product Updates', blogDescription)}
 ${shareMetaTags('blog', 'Riftn Blog | news, guides and product updates')}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 </head>
@@ -1135,7 +1135,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(key, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 </head>
@@ -1918,7 +1918,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(meta.og || key, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript(trail)}
 ${(meta.extraJsonLd || []).map((node) => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...node })}</script>\n`).join('')}</head>
@@ -2081,7 +2081,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(description)}">
 ${twitterTextTags(title, description)}
 ${entityImageMetaTags(image, title)}
-<meta name="twitter:site" content="@dehub_official">${extraHead}
+<meta name="twitter:site" content="@riftn_com">${extraHead}
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([...crumbsFromHtml(breadcrumb), { name: truncate(heading, 110), url: canonicalUrl }])}
 </head>
@@ -4203,7 +4203,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(`guides/${slug}`, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
@@ -4257,7 +4257,7 @@ ${canonicalizePath(pathname) === '/' ? `  <meta name="google-site-verification" 
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${image}">
-  <meta name="twitter:site" content="@dehub_official">
+  <meta name="twitter:site" content="@riftn_com">
   <link rel="canonical" href="${url}">
 </head>
 <body>
@@ -7580,14 +7580,21 @@ async function handleRequest(request, env, ctx) {
 
     let html = await response.text();
 
-    // The deployed Supabase fn still references the dead @DeHubApp X handle;
+    // The deployed Supabase fn still references old X handles (@DeHubApp, @dehub_official);
     // rewrite to the real account until the fn is redeployed. Scoped to meta
     // tags and profile URLs so user content quoting the old handle (or a
     // handle like @DeHubApp2) is never rewritten.
     html = html
-      .replaceAll('content="@DeHubApp"', 'content="@dehub_official"')
-      .replaceAll('x.com/DeHubApp', 'x.com/dehub_official')
-      .replaceAll('twitter.com/DeHubApp', 'twitter.com/dehub_official');
+      .replaceAll('content="@DeHubApp"', 'content="@riftn_com"')
+      .replaceAll('x.com/DeHubApp', 'x.com/riftn_com')
+      .replaceAll('twitter.com/DeHubApp', 'x.com/riftn_com')
+      // Socials moved to riftn_com; the deployed fn may still print the old ones.
+      .replaceAll('content="@dehub_official"', 'content="@riftn_com"')
+      .replaceAll('x.com/dehub_official"', 'x.com/riftn_com"')
+      .replaceAll('twitter.com/dehub_official"', 'x.com/riftn_com"')
+      .replaceAll('t.me/dehub_dhb"', 't.me/riftn_com"')
+      .replaceAll('instagram.com/dehub_official/"', 'instagram.com/riftn_com/"')
+      .replaceAll('tiktok.com/@dehub_official"', 'tiktok.com/@riftn_com"');
 
     // The site moved to riftn.com. Until the fn is redeployed it still writes
     // dehub.io page URLs into structured data, og:url and links, which tells

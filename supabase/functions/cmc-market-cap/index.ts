@@ -171,7 +171,7 @@ serve(async (req) => {
         logo: null,
         description: 'Riftn ($DHB) — price pinned to $0.001 until trading resumes.',
         website: 'https://dehub.net',
-        twitter: 'https://twitter.com/dehub_official',
+        twitter: 'https://x.com/riftn_com',
         reddit: null,
         chat: [],
         explorer: [],
