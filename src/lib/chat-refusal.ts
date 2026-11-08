@@ -29,6 +29,14 @@ export function chatRefusalText(data: ChatRefusalPayload | null | undefined): st
   return data?.message || translateCopy('copy.4e957da5c208', { defaultValue: 'Message was not sent' });
 }
 
+/**
+ * The server took the connection as signed out. Not the person's doing: the
+ * connection came back with an expired token. Callers sign in again and retry
+ * instead of showing it. Older servers send only the message, no code.
+ */
+export const isAuthRefusal = (data: ChatRefusalPayload | null | undefined): boolean =>
+  data?.code === 'AUTH_REQUIRED' || /^authentication required\.?$/i.test(String(data?.message || '').trim());
+
 /** An error the chat already showed the user, so callers should not toast it again. */
 export class ShownChatError extends Error {
   readonly shown = true;
