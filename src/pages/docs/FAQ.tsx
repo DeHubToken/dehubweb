@@ -57,7 +57,7 @@ const FAQ = () => {
                 <strong>{t('faq.techSupport')}:</strong> <a href="mailto:tech@dehub.net" className="underline text-primary hover:text-primary/80">{_copy("copy.886e533d7364", { defaultValue: "tech@dehub.net" })}</a>
               </p>
               <p className="text-muted-foreground">
-                <strong>{t('faq.followUs')}:</strong> <a href="https://x.com/dehub_official" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">{_copy("copy.e8921bdee214", { defaultValue: "@dehub_official" })}</a>
+                <strong>{t('faq.followUs')}:</strong> <a href="https://x.com/riftn_com" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">{_copy("copy.e8921bdee214", { defaultValue: "@riftn_com" })}</a>
               </p>
             </div>
           </CardContent>

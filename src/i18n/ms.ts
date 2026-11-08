@@ -2069,7 +2069,7 @@ export const ms = {
     q18: 'Apakah peta hala tuju Riftn?',
     a18: 'Pengembangan ekosistem, permainan baharu, DePIN, AI dan pelancaran tadbir urus 2026.',
     q19: 'Bagaimana menghubungi pasukan Riftn?',
-    a19: 'E-mel tech@dehub.net atau ikuti @dehub_official.',
+    a19: 'E-mel tech@dehub.net atau ikuti @riftn_com.',
     q20: 'Adakah token Riftn merupakan pelaburan?',
     a20: 'Tidak, token Riftn hanya untuk tujuan utiliti dalam ekosistem Riftn, sama seperti mata wang digital dalam permainan atau dalam aplikasi. Ia bukan instrumen pelaburan dan pasaran sangat tidak menentu.',
     q21: 'Bagaimana moderasi kandungan berfungsi?',

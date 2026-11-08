@@ -2378,7 +2378,7 @@ export const pl = {
     q18: 'Czym jest mapa drogowa Riftn?',
     a18: 'Nasz plan działania obejmuje rozszerzenie ekosystemu d\'App, wprowadzenie nowych gier, ulepszenie infrastruktury DePIN, opracowanie zestawów narzędzi AI i kontynuację wdrażania zarządzania na całej platformie.',
     q19: 'Jak mogę skontaktować się z zespołem Riftn?',
-    a19: 'Możesz skontaktować się z nami za pośrednictwem naszych oficjalnych kanałów: tech@dehub.net w przypadku problemów technicznych lub śledzić nas na Twitterze i Instagramie @ dehub_official w celu uzyskania aktualizacji i zaangażowania społeczności.',
+    a19: 'Możesz skontaktować się z nami za pośrednictwem naszych oficjalnych kanałów: tech@dehub.net w przypadku problemów technicznych lub śledzić nas na Twitterze i Instagramie @riftn_com w celu uzyskania aktualizacji i zaangażowania społeczności.',
     q20: 'Czy tokeny Riftn to inwestycja?',
     a20: 'Nie, tokeny Riftn służą wyłącznie do celów użytkowych w ekosystemie Riftn, podobnie jak waluty cyfrowe w grze lub w aplikacji. Nie są to instrumenty inwestycyjne, a rynki są bardzo niestabilne.',
     q21: 'Jak działa moderacja treści na Riftn?',

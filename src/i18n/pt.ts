@@ -2380,7 +2380,7 @@ export const pt = {
     q18: 'Qual é o roteiro do Riftn?',
     a18: 'Nosso roteiro inclui a expansão do ecossistema d\'App, o lançamento de novos jogos, o aprimoramento da infraestrutura DePIN, o desenvolvimento de kits de ferramentas de IA e a continuação da implantação da governança em toda a plataforma.',
     q19: 'Como posso contactar a equipa Riftn?',
-    a19: 'Pode contactar-nos através dos nossos canais oficiais: tech@dehub.net para problemas técnicos ou siga-nos no Twitter e Instagram @ dehub_official para atualizações e envolvimento da comunidade.',
+    a19: 'Pode contactar-nos através dos nossos canais oficiais: tech@dehub.net para problemas técnicos ou siga-nos no Twitter e Instagram @riftn_com para atualizações e envolvimento da comunidade.',
     q20: 'Os tokens Riftn são um investimento?',
     a20: 'Não, os tokens Riftn são estritamente para fins de utilidade dentro do ecossistema Riftn, semelhantes às moedas digitais no jogo ou no aplicativo. Não são instrumentos de investimento e os mercados são altamente voláteis.',
     q21: 'Como funciona a moderação de conteúdo no Riftn?',

@@ -2184,7 +2184,7 @@ export const ha = {
     q18: 'Menene taswirar hanya ta Riftn?',
     a18: 'Taswirar hanyar mu ta haɗa da faɗaɗa tsarin halittar manhaja, ƙaddamar da sababbin wasanni, inganta kayan aikin DePIN, haɓaka kayan aikin AI, da ƙaddamar da mulki a farkon 2026.',
     q19: 'Yaya zan tuntubi tawagar Riftn?',
-    a19: 'Kuna iya tuntubar mu ta hanyoyin mu na hukuma: tech@dehub.net don matsalolin fasaha, ko ku bi mu a kan Twitter da Instagram @dehub_official don sabuntawa.',
+    a19: 'Kuna iya tuntubar mu ta hanyoyin mu na hukuma: tech@dehub.net don matsalolin fasaha, ko ku bi mu a kan Twitter da Instagram @riftn_com don sabuntawa.',
     q20: 'Shin alamun Riftn saka hannun jari ne?',
     q21: 'Yaya tsarin abun ciki ke aiki a kan Riftn?',
     a21: 'Riftn yana amfani da tsarin abun ciki mara cibiya inda membobin al\'umma za su iya shiga cikin sarrafa rikici da tsarin abun ciki don samun lada yayin da ake kula da ingancin dandamali.',

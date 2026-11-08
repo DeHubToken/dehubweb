@@ -2191,7 +2191,7 @@ export const ht = {
     q18: 'Kisa kat wout Riftn ye?',
     a18: "Kat wout nou enkli elaji ekosistèm d'App, lanse nouvo jwèt, amelyore enfrastrikti DePIN ak lanse ofisyèl gouvènans nan kòmansman 2026.",
     q19: 'Kijan pou kontakte ekip Riftn?',
-    a19: 'Ou ka kontakte nou atravè kanal ofisyèl nou: tech@dehub.net pou pwoblèm teknik, oswa swiv nou sou Twitter ak Instagram @dehub_official.',
+    a19: 'Ou ka kontakte nou atravè kanal ofisyèl nou: tech@dehub.net pou pwoblèm teknik, oswa swiv nou sou Twitter ak Instagram @riftn_com.',
     q20: 'Èske siy Riftn se yon envestisman?',
     a20: 'Non, token Riftn yo estrikteman pou rezon sèvis piblik nan ekosistèm Riftn la, menm jan ak lajan dijital nan-jwèt oswa nan-app. Yo pa enstriman envestisman ak mache yo trè temèt.',
     q21: 'Kijan moderasyon kontni mache sou Riftn?',

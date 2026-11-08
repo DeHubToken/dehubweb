@@ -2549,7 +2549,7 @@ export const ayn = {
     q20: 'فين أقدر ألقى الكود المصدري؟',
     a20: 'الكود المصدري متوفر على GitHub. زور الروابط حقنا للمزيد.',
     q21: 'كيف أتواصل مع فريق الدعم؟',
-    a21: 'تقدر تراسلنا على tech@dehub.net أو تتابعنا على @dehub_official في Twitter.',
+    a21: 'تقدر تراسلنا على tech@dehub.net أو تتابعنا على @riftn_com في Twitter.',
     stillHaveQuestions: 'لسه عندك أسئلة؟',
     stillHaveQuestionsDesc: 'تواصل معنا وبنكون سعيدين بمساعدتك.',
     techSupport: 'الدعم التقني',

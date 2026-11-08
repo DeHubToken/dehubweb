@@ -2225,7 +2225,7 @@ export const mnp = {
     q18: '什麼是 Riftn 的路線圖？',
     a18: '我们的路线图包括扩展 dApp 生态系统、推出新游戏、增强 DePIN 基础设施、开发 AI 工具包和继续平台级治理的推广。',
     q19: '如何联系 Riftn 团队？',
-    a19: '您可以通过以下官方渠道联系我们：tech@dehub.net（技术问题）或关注我们在 Twitter 和 Instagram 上的账号 @dehub_official（获取更新和社区参与）。',
+    a19: '您可以通过以下官方渠道联系我们：tech@dehub.net（技术问题）或关注我们在 Twitter 和 Instagram 上的账号 @riftn_com（获取更新和社区参与）。',
     q20: 'Riftn 代币是投资吗？',
     a20: '不，Riftn 代币仅用于 Riftn 生态系统的实用目的，类似于游戏或应用程序中的数字货币。它们不是投资工具，市场波动性很大。',
     q21: 'Riftn 内容审查如何工作？',

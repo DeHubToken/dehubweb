@@ -2076,7 +2076,7 @@ export const wes = {
     a14: 'Benefit wey you get include: access to feature wey better, transaction wey go global, tip for creator, buy NFT from marketplace, right to say how thing go (governance), reward for stake, join for network security, and more use wey come later.',
     a16: 'Marketplace wey we dey allow user fi buy digital collectible, physical asset, na service wey use Riftn token fi pay for dem. Na wey wey bridge gap between physical na digital ownership.',
     a18: 'Wetin we dey do be expand d’App ecosystem, launch game wey new, make DePIN infrastructure wey strong, develop AI toolkit, and continue governance rollout wey cross d’platform.',
-    a19: 'Wetin wey you go reach we be: tech@dehub.net fi any technical problem, or follow we on Twitter and Instagram @dehub_official fi update and community engagement.',
+    a19: 'Wetin wey you go reach we be: tech@dehub.net fi any technical problem, or follow we on Twitter and Instagram @riftn_com fi update and community engagement.',
     a20: 'No, Riftn token dem be for use inside Riftn system only, like game money or app money. Dem no be for invest, and market dem be very shakey.',
     a21: 'Riftn use one system wey no centralize fo’ manage content, na community member wey go join in fo’ handle dispute, manage content, earn reward, but still keep platform good fo’ everybody.',
     q23: 'Is posting free?',

@@ -12,7 +12,7 @@ const Contact = () => {
   const { t } = useLanguage();
 
   const contactOptions = [
-    { title: t('contact.telegram'), description: t('contact.telegramDesc'), link: 'https://t.me/dehub_dhb', icon: Send, color: 'from-sky-blue to-middle-blue' },
+    { title: t('contact.telegram'), description: t('contact.telegramDesc'), link: 'https://t.me/riftn_com', icon: Send, color: 'from-sky-blue to-middle-blue' },
     { title: t('contact.discord'), description: t('contact.discordDesc'), link: 'https://discord.gg/dehub', iconImage: '/media/71547e53-6be8-428a-b088-3c07a9c9a1ff.png', color: 'from-middle-blue to-royal-blue' },
     { title: t('contact.directMessage'), description: t('contact.directMessageDesc'), link: 'https://riftn.com/d', icon: MessageCircle, color: 'from-royal-blue to-sky-blue' },
   ];
@@ -136,7 +136,7 @@ const Contact = () => {
           <h3 className="text-2xl font-bold text-plain-white mb-4 font-exo">{t('contact.needHelp')}</h3>
           <p className="text-plain-white mb-6 font-exo">{t('contact.needHelpDesc')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://t.me/dehub_dhb" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-6 py-3 bg-plain-white text-royal-blue font-semibold rounded-lg hover:bg-sky-blue/10 transition-all duration-200 font-exo">
+            <a href="https://t.me/riftn_com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-6 py-3 bg-plain-white text-royal-blue font-semibold rounded-lg hover:bg-sky-blue/10 transition-all duration-200 font-exo">
               <Send className="w-4 h-4 mr-2" />
               {t('contact.joinTelegram')}
             </a>

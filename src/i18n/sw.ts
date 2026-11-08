@@ -2364,7 +2364,7 @@ export const sw = {
     q18: 'Nini ni roadmap ya Riftn?',
     a18: 'Roadmap yetu inahusu kuongeza mfumo wa d\'Apps, kuanzisha majukumu mpya, kuongeza infrastruktura ya DePIN, kuundwa kwa kitengo cha AI, na kuendelea na kuanzisha utawala wa kila mfumo.',
     q19: 'Nini ni njia ya kuingia katika timu ya Riftn?',
-    a19: 'Unaweza kuingia kwa kutumia mfumo wenu wa rasmi: tech@dehub.net kwa masuala ya teknolojia, au fua timu yetu kwa Twitter na Instagram @dehub_official kwa habari na mawasiliano ya jamii.',
+    a19: 'Unaweza kuingia kwa kutumia mfumo wenu wa rasmi: tech@dehub.net kwa masuala ya teknolojia, au fua timu yetu kwa Twitter na Instagram @riftn_com kwa habari na mawasiliano ya jamii.',
     q20: 'Je, ishara za Riftn ni uwekezaji?',
     a20: 'Hapana, ishara za Riftn ni madhubuti kwa madhumuni ya matumizi ndani ya mfumo wa ikolojia wa Riftn, sawa na sarafu za kidijitali za ndani ya mchezo au ndani ya programu. Si vyombo vya uwekezaji na masoko ni tete sana.',
     q21: 'Je, uwiano wa maudhui hufanyaje kazi kwenye Riftn?',

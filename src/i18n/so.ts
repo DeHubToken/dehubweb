@@ -2364,7 +2364,7 @@ export const so = {
     q18: 'Waa maxay Riftn\'s roadmap?',
     a18: 'Roadmap-kayagu waxa uu ku jiraa kordhinta nidaamka d\'App, furista ciyaaro cusub, hagaajinta kaabayaasha DePIN, horumarinta qalabka AI, iyo sii wadida hirgelinta maamulka guud ee madal.',
     q19: 'Sideen ula xiriiri karaa kooxda Riftn?',
-    a19: 'Waxaad noogu soo gaari kartaa kanaalada rasmiga ah: tech@dehub.net wixii arrimo farsamo ah, ama nala soco Twitter iyo Instagram @dehub_official wixii warar ah iyo ka qayb qaadashada bulshada.',
+    a19: 'Waxaad noogu soo gaari kartaa kanaalada rasmiga ah: tech@dehub.net wixii arrimo farsamo ah, ama nala soco Twitter iyo Instagram @riftn_com wixii warar ah iyo ka qayb qaadashada bulshada.',
     q20: 'Ma calaamadaha Riftn waa maalgashi?',
     a20: 'Maya, calaamadaha Riftn ayaa si adag loogu talagalay ujeeddooyinka adeegsiga ee nidaamka deegaanka Riftn, oo la mid ah lacagaha dhijitaalka ah ee gudaha ama gudaha app. Ma aha qalab maalgashi iyo suuqyada waa mid aad u kacsan.',
     q21: 'Sidee u shaqeeyaa dhexdhexaadinta nuxurka Riftn?',

@@ -2191,7 +2191,7 @@ export const hr = {
     q18: 'Koji je Riftnov plan razvoja?',
     a18: "Naš plan razvoja uključuje proširenje d'App ekosustava, pokretanje novih igara, unapređenje DePIN infrastrukture i službeno pokretanje upravljanja početkom 2026.",
     q19: 'Kako kontaktirati Riftn tim?',
-    a19: 'Možete nas kontaktirati putem naših službenih kanala: tech@dehub.net za tehničke probleme, ili nas pratite na Twitteru i Instagramu @dehub_official.',
+    a19: 'Možete nas kontaktirati putem naših službenih kanala: tech@dehub.net za tehničke probleme, ili nas pratite na Twitteru i Instagramu @riftn_com.',
     q20: 'Jesu li Riftn tokeni ulaganje?',
     a20: 'Ne, Riftn tokeni služe isključivo u komunalne svrhe unutar Riftn ekosustava, slično digitalnim valutama u igri ili u aplikaciji. To nisu investicijski instrumenti, a tržišta su vrlo volatilna.',
     q21: 'Kako funkcionira moderiranje sadržaja na Riftnu?',

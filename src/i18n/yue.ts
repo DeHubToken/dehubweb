@@ -2233,7 +2233,7 @@ export const yue = {
     q18: 'Riftn 嘅路線圖係點？',
     a18: '我哋嘅路線圖包括擴大 d&#39;App 生態系統、推出新遊戲、增強 DePIN 基礎架構、開發 AI 工具包，同埋繼續全平台治理推出。',
     q19: '我點樣可以聯絡 Riftn 團隊？',
-    a19: '你可以透過我哋嘅官方渠道： tech @ dehub . net 聯絡我哋，了解技術問題，或者喺 Twitter 同 Instagram @dehub_official 追蹤我哋，獲取最新消息同社群參與。',
+    a19: '你可以透過我哋嘅官方渠道： tech @ dehub . net 聯絡我哋，了解技術問題，或者喺 Twitter 同 Instagram @riftn_com 追蹤我哋，獲取最新消息同社群參與。',
     q20: 'Riftn 代幣係咪投資？',
     a20: '唔係， Riftn 代幣嚴格嚟講係喺 Riftn 生態系統入面嘅實用用途，同遊戲內或者應用程式內嘅數碼貨幣類似。佢哋唔係投資工具，市場波動性高。',
     q21: '內容審核係點樣喺 Riftn 上面運作？',

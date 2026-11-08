@@ -2166,7 +2166,7 @@ export const ig = {
     q18: 'Gịnị bụ ụzọ map Riftn?',
     a18: "Ụzọ map anyị gụnyere mgbasawanye ekosistem d'App, mbipụta egwuregwu ọhụrụ, mmepe akụrụngwa DePIN, na mmalite ọchịchị nke gọọmentị na mmalite 2026.",
     q19: 'Kedu ka m ga-esi kpọtụrụ ndị otu Riftn?',
-    a19: 'Ị nwere ike ịkpọtụrụ anyị site na ọwa gọọmentị anyị: tech@dehub.net maka nsogbu teknụzụ, ma ọ bụ soro anyị na Twitter na Instagram @dehub_official.',
+    a19: 'Ị nwere ike ịkpọtụrụ anyị site na ọwa gọọmentị anyị: tech@dehub.net maka nsogbu teknụzụ, ma ọ bụ soro anyị na Twitter na Instagram @riftn_com.',
     q20: 'Tokeni Riftn ọ̀ bụ itinye ego?',
     a20: 'Mba, Riftn tokens bụ nditịm maka ịba uru nzube n \'ime Riftn ilekota, yiri na-game ma ọ bụ na-ngwa digital ego. Ha abụghị ngwa itinye ego na ahịa anaghị agbanwe agbanwe.',
     q21: 'Kedu ka nlekọta ọdịnaya si arụ ọrụ na Riftn?',

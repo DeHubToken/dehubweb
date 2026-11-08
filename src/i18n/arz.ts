@@ -2557,7 +2557,7 @@ export const arz = {
     q20: 'فين أقدر ألاقي الكود المصدري؟',
     a20: 'الكود المصدري متوفر على GitHub. زور الروابط بتاعتنا للمزيد.',
     q21: 'إزاي أتواصل مع فريق الدعم؟',
-    a21: 'تقدر تراسلنا على tech@dehub.net أو تتابعنا على @dehub_official في Twitter.',
+    a21: 'تقدر تراسلنا على tech@dehub.net أو تتابعنا على @riftn_com في Twitter.',
     stillHaveQuestions: 'لسه عندك أسئلة؟',
     stillHaveQuestionsDesc: 'اتصل بينا وهنكون سعداء بمساعدتك.',
     techSupport: 'الدعم التقني',

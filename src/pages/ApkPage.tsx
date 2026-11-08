@@ -207,8 +207,8 @@ export default function ApkPage() {
       name: "Riftn",
       url: "https://riftn.com",
       sameAs: [
-        "https://x.com/dehub_official",
-        "https://t.me/dehub_dhb",
+        "https://x.com/riftn_com",
+        "https://t.me/riftn_com",
         "https://github.com/DeHubToken",
         PLAY_URL,
       ],

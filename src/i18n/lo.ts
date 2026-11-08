@@ -2068,7 +2068,7 @@ export const lo = {
     q18: 'Roadmap ຂອງ Riftn ແມ່ນຫຍັງ?',
     a18: 'ລວມການຂະຫຍາຍ ecosystem, ເກມໃໝ່, DePIN, AI toolkits ແລະ governance ໃນ 2026.',
     q19: 'ຕິດຕໍ່ທີມ Riftn ແນວໃດ?',
-    a19: 'ຕິດຕໍ່ຜ່ານ tech@dehub.net ຫຼື ຕິດຕາມ @dehub_official.',
+    a19: 'ຕິດຕໍ່ຜ່ານ tech@dehub.net ຫຼື ຕິດຕາມ @riftn_com.',
     q20: 'ໂທເຄັນ Riftn ເປັນການລົງທຶນບໍ?',
     a20: 'ບໍ່, ໂທເຄັນ Riftn ແມ່ນສຳລັບຜົນປະໂຫຍດເທົ່ານັ້ນ.',
     q21: 'ການດູແລເນື້ອຫາເຮັດວຽກແນວໃດ?',
