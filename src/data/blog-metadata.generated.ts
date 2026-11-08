@@ -3016,17 +3016,17 @@ export const newPostsMetadata: BlogPost[] = [
   {
     "id": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
     "slug": "dehub-next-chapter-riftn-bnb-recovery-relaunch",
-    "title": "Riftn’s next chapter: Riftn, BNB recovery and the road to relaunch",
+    "title": "DeHub’s next chapter: Riftn, BNB recovery and the road to relaunch",
     "excerpt": "Our proposed move to Riftn, the push for a proper assessment of our stuck BNB, and the plan to get Riftn relaunched and trading.",
     "content": "",
     "bannerImage": "/media/dehub-to-riftn-transition.png",
-    "bannerImageAlt": "Riftn to Riftn, the next chapter",
+    "bannerImageAlt": "DeHub to Riftn, the next chapter",
     "author": {
       "name": "Riftn Team"
     },
     "publishedAt": "2026-10-22T18:00:00.000Z",
     "tags": [
-      "Riftn",
+      "DeHub",
       "Riftn",
       "BNB",
       "Community",
@@ -3035,8 +3035,8 @@ export const newPostsMetadata: BlogPost[] = [
     "readingTime": 6,
     "featured": true,
     "status": "published",
-    "seoTitle": "Riftn’s next chapter: Riftn, BNB recovery and relaunch",
-    "seoDescription": "Riftn proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
+    "seoTitle": "DeHub’s next chapter: Riftn, BNB recovery and relaunch",
+    "seoDescription": "DeHub proposes the Riftn name, a renewed focus on BNB, a public recovery campaign, and a relaunch timetable. Recovery remains subject to Binance’s assessment."
   },
   {
     "id": "dehub-token-exchange-listings-update-2026",
