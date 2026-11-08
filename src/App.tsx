@@ -929,6 +929,7 @@ function AppContent() {
             <Route path="/arcade" element={null} />
             <Route path="/stages" element={null} />
             <Route path="/videos" element={null} />
+            <Route path="/images" element={null} />
             <Route path="/shorts" element={null} />
             <Route path="/music" element={null} />
             <Route path="/tv" element={null} />
