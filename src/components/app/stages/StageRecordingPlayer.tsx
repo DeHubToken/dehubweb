@@ -128,6 +128,7 @@ export function StageRecordingPlayer({
   return (
     <div
       data-glass-playback-surface
+      data-audio-player
       data-no-navigate
       role="group"
       aria-label={t('stages.stageRecording')}
