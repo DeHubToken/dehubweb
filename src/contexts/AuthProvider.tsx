@@ -68,6 +68,7 @@ import { predictSafeAddress } from '@/lib/smart-account-address';
 import { isMidSessionUnlock } from '@/lib/session-unlock';
 import { authenticateProfileSession, SupabaseSessionMissingError } from '@/lib/profile-login';
 import { advanceAuthTrace, beginAuthTrace, clearAuthTrace, readAuthTrace } from '@/lib/auth-trace';
+import { isSessionForEmail } from '@/lib/magic-link-session';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { clearPersistedQueryCache } from '@/lib/query-persist';
 import { supabase } from '@/integrations/supabase/client';
@@ -2763,11 +2764,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const access_token = payload.access_token as string | undefined;
         const refresh_token = payload.refresh_token as string | undefined;
         if (!access_token || !refresh_token) return;
+        // Anyone holding the emailed link can send here. Only a session for
+        // the email this tab asked a link for is taken (lib/magic-link-session).
+        if (!isSessionForEmail(access_token, email)) {
+          authLogger.warn('magic-link-sync:other-identity-ignored');
+          return;
+        }
         try {
           supaLoginHandledRef.current = true;
           setIsProcessingRedirect(true);
           const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
           if (error) throw error;
+          // Same check on the user the server confirmed, not just the token.
+          if (data?.session?.user?.email?.trim().toLowerCase() !== email.trim().toLowerCase()) {
+            await supabase.auth.signOut({ scope: 'local' });
+            throw new Error('Magic link session was for a different email');
+          }
           const uid = data?.session?.user?.id;
           if (uid) await proceedToWalletPhase(uid);
           toast.success(_copy("copy.a551108d059e", { defaultValue: "Signed in — link confirmed on another device" }));
