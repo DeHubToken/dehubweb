@@ -7,7 +7,7 @@
  * shared, and a tap opens the proposal.
  */
 
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Governance from '@/components/ui/cut-icons/governance';
@@ -27,6 +27,7 @@ export function ProposalLinkEmbed({ proposalId, path, fallback = null }: Proposa
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: proposal, isLoading } = useGovernanceProposal(proposalId);
+  const [failedImage, setImageFailed] = useState<string | null>(null);
 
   if (isLoading) {
     return <div className="mt-2 h-32 rounded-xl theme-skeleton animate-pulse" />;
@@ -47,6 +48,7 @@ export function ProposalLinkEmbed({ proposalId, path, fallback = null }: Proposa
     ? buildAvatarUrl(proposal.author_wallet_address, proposal.author_avatar)
     : null;
   const image = proposal.media_type === 'image' ? proposal.media_url : null;
+  const imageFailed = image !== null && failedImage === image;
 
   return (
     <button
@@ -60,9 +62,9 @@ export function ProposalLinkEmbed({ proposalId, path, fallback = null }: Proposa
       data-proposal-embed
       className="mt-2 block w-full overflow-hidden rounded-xl border border-white/10 bg-white/5 text-left transition-colors hover:bg-white/[0.08]"
     >
-      {image && (
+      {image && !imageFailed && (
         <div className="aspect-[2/1] w-full bg-black/40">
-          <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" />
+          <img src={image} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setImageFailed(image)} />
         </div>
       )}
       <div className="p-3">
