@@ -182,10 +182,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: Peri
                   )}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-zinc-500 truncate">{getHandle(entry)}</span>
-                <span className="flex-1" />
-                <span className="text-zinc-400 shrink-0 tabular-nums">{formatValue(entry)}</span>
+              <div className="flex items-center gap-2 text-xs min-w-0">
+                {/* A long handle ellipsizes instead of pushing the value past the row's padding. */}
+                <span className="text-zinc-500 truncate min-w-0 flex-1">{getHandle(entry)}</span>
+                <span className="text-zinc-400 shrink-0 tabular-nums text-right">{formatValue(entry)}</span>
               </div>
             </div>
           </Link>
