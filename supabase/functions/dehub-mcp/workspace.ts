@@ -4,6 +4,7 @@ import { agentSettings, blockedReason, checked, settingsSchema, writingContext }
 import { currentNews, newsReaction, newsTopicsFor } from './news.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
 import { reversalLabel, reverseReceipt } from './workspace-actions.ts';
+import { lifeStatus } from './life.ts';
 
 const STARTERS = [
   { id: 'daily', name: 'Daily poster', prompt: 'Post once per day about music with a conversational voice.' },
@@ -55,6 +56,22 @@ export async function handleWorkspace(req: Request, context: Context, wallet: st
       checks: ['Supported actions', 'Valid targets and time windows', 'Schedule within posting limits'], scope: 'Plan validation only; not a quality or safety certification.' };
     const template = checked(await db.from('ai_agent_templates').insert({ owner_wallet: wallet, name: input.name.trim(), prompt: input.prompt.trim(), published: input.published, evaluation }).select('id').single());
     return Response.json({ template });
+  }
+  if (input.operation === 'workspace_details') {
+    // Every agent's life and settings in one call, so an overview of the team is not two calls per agent.
+    const agents = checked(await db.from('ai_agents').select('id,is_active').eq('human_owner_wallet', wallet));
+    const details: Array<Record<string, unknown>> = [];
+    for (let i = 0; i < agents.length; i += 8) {
+      details.push(...await Promise.all(agents.slice(i, i + 8).map(async (agent: any) => {
+        const failed = (reason: unknown) => ({ error: reason instanceof Error ? reason.message : 'Unavailable.' });
+        const [life, settings] = await Promise.all([
+          agent.is_active ? lifeStatus(db, agent.id).catch(failed) : { error: 'Select an active agent you own.' },
+          agentSettings(db, agent.id).then(value => ({ settings: value })).catch(failed),
+        ]);
+        return { id: agent.id, life, controls: settings };
+      })));
+    }
+    return Response.json({ agents: details });
   }
   if (!uuid(input.agent_id)) return error('Select an agent.');
   const agent = checked(await db.from('ai_agents').select('id,name,api_key,is_active,description,owner_wallet_address,wallet_private_key').eq('id', input.agent_id).eq('human_owner_wallet', wallet).maybeSingle());

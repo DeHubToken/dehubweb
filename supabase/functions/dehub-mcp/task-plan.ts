@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-export const AGENT_OWNER = "0x9324840523a5d17dd12a2f11a9472e5a199c1937";
+/** The team wallet the agents are filed under: @maldoteth's account. */
+export const AGENT_OWNER = "0xec4e2c7417f781b35d830671f013b3b91f29ba64";
+/** His erased account's wallet, kept so agents still filed under it keep working until they are moved. */
+export const PREVIOUS_AGENT_OWNER = "0x9324840523a5d17dd12a2f11a9472e5a199c1937";
 export const agentOwnerAllowed = (wallet: unknown): boolean =>
-  typeof wallet === "string" && wallet.toLowerCase() === AGENT_OWNER;
+  typeof wallet === "string" && [AGENT_OWNER, PREVIOUS_AGENT_OWNER].includes(wallet.toLowerCase());
 
 const tools = ["dehub_post_create", "dehub_follow", "dehub_vote", "dehub_comment", "dehub_update_profile", "dehub_view"] as const;
 /** How far ahead a post window may end. Until then the task keeps checking for new posts. */
