@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react';
+
 /**
- * The image or video attached to a governance proposal, if any.
+ * The image or video attached to a governance proposal, if any. A file that
+ * no longer loads (deleted with its account, moved) hides the whole frame
+ * instead of leaving an empty box above the tally.
  */
 export function ProposalMedia({
   url,
@@ -12,16 +16,18 @@ export function ProposalMedia({
   alt: string;
   className?: string;
 }) {
-  if (!url || !type) return null;
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [url]);
+  if (!url || !type || failed) return null;
   return (
     <div
       className={`overflow-hidden rounded-xl border border-white/[0.08] bg-black/40 ${className}`}
       onClick={(e) => e.stopPropagation()}
     >
       {type === 'video' ? (
-        <video src={url} controls playsInline preload="metadata" className="block w-full max-h-[480px] object-contain" />
+        <video src={url} onError={() => setFailed(true)} controls playsInline preload="metadata" className="block w-full max-h-[480px] object-contain" />
       ) : (
-        <img src={url} alt={alt} loading="lazy" decoding="async" className="block w-full max-h-[480px] object-contain" />
+        <img src={url} alt={alt} onError={() => setFailed(true)} loading="lazy" decoding="async" className="block w-full max-h-[480px] object-contain" />
       )}
     </div>
   );
