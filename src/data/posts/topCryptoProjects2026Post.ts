@@ -93,7 +93,7 @@ GitHub activity is not the same as price, users or security. Some teams build in
 ### #10 Riftn: 70/100
 
 - **Activity:** 5,525 commits from 25 developers.
-- **Repos:** DeHubToken/dehubweb and DeHubToken/dehub-mobile, plus the public request board at [riftn.com/features](https://riftn.com/features).
+- **Repos:** Riftn/riftn-web and Riftn/riftn-mobile, plus the public request board at [riftn.com/features](https://riftn.com/features).
 - **How we counted developers:** only 1 person commits to Riftn's GitHub. The other 24 are community members whose feature requests were filed or shipped on the request board between 28 July and 26 October 2026. They describe the feature, it gets built with AI, and it ships, so they are counted as builders even though they never open GitHub. Counted on GitHub alone, Riftn would score 44 and miss the top 100. Over all time, 30 people have shipped features this way.
 - **What they are building:** a social and streaming app where posts, tips and subscriptions run on chain, and where the roadmap is whatever the community asks for. Riftn publishes this index, so check its numbers the same way you would check anyone else's.
 - **Website:** [riftn.com](https://riftn.com)
@@ -109,7 +109,7 @@ GitHub activity is not the same as price, users or security. Some teams build in
 7. **Ethereum**: 72/100. Layer 1. 697 commits, 126 developers. The biggest smart contract chain: Geth plus the protocol specs (ethereum/go-ethereum, ethereum/consensus-specs, ethereum/execution-specs).
 8. **Foundry**: 72/100. Developer tools. 1,340 commits, 75 developers. The most popular toolkit for writing and testing smart contracts (foundry-rs/foundry).
 9. **Nethermind**: 70/100. Ethereum client. 1,765 commits, 54 developers. Ethereum execution client written in C# (NethermindEth/nethermind).
-10. **Riftn**: 70/100. Social and streaming app. 5,525 commits, 25 developers (1 committing on GitHub plus 24 community builders whose feature requests were filed or shipped in the window). The social app where anyone can request a feature and watch it get built (DeHubToken/dehubweb, DeHubToken/dehub-mobile, riftn.com/features).
+10. **Riftn**: 70/100. Social and streaming app. 5,525 commits, 25 developers (1 committing on GitHub plus 24 community builders whose feature requests were filed or shipped in the window). The social app where anyone can request a feature and watch it get built (Riftn/riftn-web, Riftn/riftn-mobile, riftn.com/features).
 11. **Reth**: 69/100. Ethereum client. 813 commits, 75 developers. Paradigm's Rust Ethereum client, also used by Base and Tempo (paradigmxyz/reth).
 12. **Erigon**: 69/100. Ethereum client. 1,413 commits, 49 developers. Ethereum client built for archive nodes and speed (erigontech/erigon).
 13. **Bitcoin**: 68/100. Layer 1. 699 commits, 76 developers. Bitcoin Core, the reference Bitcoin node (bitcoin/bitcoin).
@@ -311,7 +311,7 @@ See our sister ranking, the [Top 50 Blockchain Projects 2026](/guides/top-50-blo
 - [foundry-rs/foundry](https://github.com/foundry-rs/foundry)
 - [NethermindEth/nethermind](https://github.com/NethermindEth/nethermind)
 - [paradigmxyz/reth](https://github.com/paradigmxyz/reth)
-- [DeHubToken/dehubweb](https://github.com/DeHubToken/dehubweb), [DeHubToken/dehub-mobile](https://github.com/DeHubToken/dehub-mobile) and the [Riftn request board](https://riftn.com/features)
+- [Riftn/riftn-web](https://github.com/Riftn/riftn-web), [Riftn/riftn-mobile](https://github.com/Riftn/riftn-mobile) and the [Riftn request board](https://riftn.com/features)
 
 ## Build with Riftn
 
