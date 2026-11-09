@@ -1186,7 +1186,7 @@ export function TranslatableText({
     <Component
       ref={elementRef as React.Ref<never>}
       key={isTranslated ? 'translated' : 'original'}
-      className={cn("whitespace-pre-wrap animate-in fade-in duration-150", className)}
+      className={cn("whitespace-pre-wrap break-words animate-in fade-in duration-150", className)}
     >
       {renderTextWithLinks(isTranslated ? translatedText : text, { flagged })}
     </Component>
