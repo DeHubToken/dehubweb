@@ -1378,7 +1378,7 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
   const contentWarning = useContentWarning(video.spoilerText);
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
-  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated || contentWarning.hidden;
   // A gated post's file is private: once the viewer is through the gate it
   // plays from a signed URL the API hands out. An open post whose file fails
   // is asked about once too, in case its gate was just removed and the file is
@@ -2575,9 +2575,11 @@ const VideoCardBody = memo(function VideoCard({ video, postPage = false, onBack,
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
         {contentWarning.hidden ? (
-          <div className="flex w-full h-full min-h-[180px] items-center justify-center rounded-lg bg-zinc-900 p-4">
-            <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className="w-full" />
-          </div>
+          <ContentWarningGate
+            preview={thumbnail}
+            onReveal={contentWarning.reveal}
+            className="w-full h-full rounded-lg [&>img]:h-full [&>img]:max-h-none"
+          />
         ) : matureGate.isGated ? (
           <MatureContentGate
             preview={thumbnail}

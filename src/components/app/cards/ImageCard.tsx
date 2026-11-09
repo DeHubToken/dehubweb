@@ -1352,7 +1352,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
         {contentWarning.hidden ? (
-          <ContentWarningGate text={contentWarning.text} onReveal={contentWarning.reveal} className={isImmersive ? 'mx-3' : undefined} />
+          <ContentWarningGate preview={images[0]} onReveal={contentWarning.reveal} className={isImmersive ? 'rounded-none' : undefined} />
         ) : matureGate.isGated ? (
           <MatureContentGate preview={images[0]} onReveal={matureGate.reveal} />
         ) : isComboLocked ? (
