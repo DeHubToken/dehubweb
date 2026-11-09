@@ -73,6 +73,9 @@ import MessagesSquare from '@/components/ui/cut-icons/chat';
 import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
+import { SpotifyMiniPlayer } from '@/components/app/spotify/SpotifyMiniPlayer';
+import { RadioPlayerProvider } from '@/hooks/use-radio-player';
+import { useSpotifyPlayer } from '@/lib/spotify-player';
 import { AgentWelcomePanel } from './AgentWelcomePanel';
 import { AvatarPromptSheet } from '@/components/app/AvatarPromptSheet';
 import { NonFollowerOfferSheet, type NonFollowerOfferStage } from '@/components/app/NonFollowerOfferSheet';
@@ -372,6 +375,26 @@ function FollowCardsGallery() {
           ))}
         </div>
       </div>
+    </section>
+  );
+}
+
+/** ?spotify=1 — Spotify cards in a post and a chat, and the corner player. */
+function SpotifyGallery() {
+  const open = useSpotifyPlayer().current !== null;
+  const links = [
+    'https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC',
+    'https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv',
+    'https://open.spotify.com/episode/4rOoJ6Egrf8K2IrywzwOMk',
+  ];
+  return (
+    <section data-spotify-gallery className="mb-5 space-y-4 rounded-2xl border border-white/10 bg-background/80 p-4">
+      <h2 className="text-lg font-semibold">Spotify</h2>
+      <div className="grid items-start gap-5 lg:grid-cols-2">
+        <div className="min-w-0 space-y-3"><h3>Post</h3>{links.map((url) => <FeedLinkPreviews key={url} text={url} />)}</div>
+        <div className="min-w-0 space-y-3"><h3>Chat</h3>{links.slice(0, 1).map((url) => <ChatLinkPreviews key={url} content={url} />)}</div>
+      </div>
+      {open && <RadioPlayerProvider><SpotifyMiniPlayer /></RadioPlayerProvider>}
     </section>
   );
 }
@@ -1428,6 +1451,7 @@ export default function StateGalleryPage() {
         </div>
 
         {params.get('predictions') === '1' && <PredictionGallery />}
+        {params.get('spotify') === '1' && <SpotifyGallery />}
 
         <AvatarPromptGallery initiallyOpen={params.get('sheet') === 'avatar-prompt'} />
 

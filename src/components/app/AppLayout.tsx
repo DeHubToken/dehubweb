@@ -92,6 +92,14 @@ const AudioPostMiniPlayer = React.lazy(() =>
     default: m.AudioPostMiniPlayer,
   })),
 );
+// Spotify's corner player, same gate: nothing loads until a Spotify card's
+// Play is pressed.
+const SpotifyMiniPlayer = React.lazy(() =>
+  import('@/components/app/spotify/SpotifyMiniPlayer').then((m) => ({
+    default: m.SpotifyMiniPlayer,
+  })),
+);
+import { useSpotifyPlayer } from '@/lib/spotify-player';
 import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 import { DmDockMount } from '@/components/app/chat/DmDockMount';
@@ -242,6 +250,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const mainRef = useRef<HTMLElement | null>(null);
   // Gate for the corner player's chunk — see its lazy import above.
   const hasPoppedOutAudio = useAudioPostPoppedOut();
+  const spotifyOpen = useSpotifyPlayer().current !== null;
   const brainrotOpened = useBrainrotEverOpened();
 
   // "A stage you set a reminder for is starting soon / just started" — announced
@@ -633,6 +642,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       {hasPoppedOutAudio && (
         <Suspense fallback={null}>
           <AudioPostMiniPlayer />
+        </Suspense>
+      )}
+      {spotifyOpen && (
+        <Suspense fallback={null}>
+          <SpotifyMiniPlayer />
         </Suspense>
       )}
       <AudioSpacesModal />
