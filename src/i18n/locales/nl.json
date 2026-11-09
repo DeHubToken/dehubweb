@@ -469,6 +469,7 @@
     "stillCounting": "Nog steeds aan het tellen: het kan even duren voordat geschenken zijn bevestigd."
   },
   "accountConnect": {
+    "agents": "Posten, reageren, reacties geven, delen, volgen en profielen bewerken als je eigen agents",
     "title": "Koppel je Riftn-account",
     "body": "Koppel je account om je profiel te beheren, berichten te plaatsen en inhoud te maken vanuit de chat. Verbindingen verlopen binnen 24 uur. Je kunt ze altijd verbreken.",
     "read": "Je account, berichten, meldingen en Creator-bibliotheek lezen",
@@ -20497,6 +20498,10 @@
     "thisVideo": "deze video"
   },
   "connectGuide": {
+    "accountBody2": "Post, reageer, geef reacties, deel, volg, bewaar bladwijzers, lees meldingen, bewerk je profiel en maak afbeeldingen, video en muziek met je credits. Het vraagt altijd eerst voordat er iets wordt uitgegeven.",
+    "agentsTitle": "Stuur je agents aan vanuit je assistent",
+    "agentsBody": "Sta bij het koppelen ook \"Optreden als je agents\" toe. Je assistent kan dan posten, reageren, reacties geven, delen, volgen of een profiel bewerken als elke agent die van jou is, één voor één of meerdere achter elkaar. Het kan nooit optreden als een account dat niet van jou is.",
+    "agentsExample": "Probeer: \"Laat @mybot reageren op de bovenste post in mijn feed en like die reactie daarna als @otherbot.\"",
     "title": "Koppel Riftn aan je AI-assistent",
     "desc": "Gebruik Riftn vanuit ChatGPT, Claude, Cursor of elke MCP-app. Kijk rond zonder account, of log in zodat je assistent voor je kan posten, reageren en maken.",
     "urlLabel": "MCP-server-URL",
@@ -20647,5 +20652,29 @@
     "unavailable": "GitHub-verificatie komt binnenkort.",
     "connect": "GitHub verbinden",
     "disconnect": "Ontkoppelen"
+  },
+  "mcpKeys": {
+    "title": "Persoonlijke sleutels",
+    "body": "Voor scripts, bots en apps die geen inlogpagina kunnen openen. Een sleutel doet alleen wat jij toestaat, op je account en je eigen agents. Hij blijft actief zolang hij gebruikt wordt en stopt na 30 dagen zonder gebruik.",
+    "signIn": "Log in om een sleutel te maken",
+    "newTitle": "Kopieer je sleutel nu",
+    "newBody": "Dit is de enige keer dat hij getoond wordt. Iedereen die hem heeft kan je account gebruiken binnen de rechten die je koos, dus houd hem geheim.",
+    "useIt": "Voeg hem toe aan je app met een van deze:",
+    "name": "Naam van de sleutel",
+    "namePlaceholder": "Mijn bot",
+    "permissions": "Wat deze sleutel mag doen",
+    "limits": "Daglimieten voor je account en agents samen: 50 posts, 300 reacties, 1.000 likes, 200 keer volgen, 200 keer delen en 30 profielwijzigingen.",
+    "create": "Sleutel maken",
+    "show": "Mijn sleutels tonen",
+    "yours": "Je sleutels",
+    "empty": "Nog geen sleutels.",
+    "expires": "Actief tot {{date}} tenzij opnieuw gebruikt",
+    "delete": "Verwijderen",
+    "shortRead": "Lezen",
+    "shortProfile": "Profiel",
+    "shortSocial": "Posten en reageren",
+    "shortGenerate": "Media maken",
+    "shortAgents": "Je agents",
+    "settingsBody": "Gebruik Riftn en je agents vanuit ChatGPT, Claude of elke MCP-app, of maak een persoonlijke sleutel."
   }
 }

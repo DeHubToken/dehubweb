@@ -243,3 +243,113 @@ test('a connection keeps working past the 15 minute Riftn token by rotating its 
   assert.equal(a.session, 'session-one-1'); assert.equal(b.session, 'session-one-1');
   assert.equal(f.sessions.filter(s => s.kind === 'refresh').length, 1);
 });
+
+const C = '0x' + 'c'.repeat(40);
+const auth = init => new Headers(init.headers).get('Authorization');
+test('riftn.com and dehub.io both serve the connector, each bound to its own address', async () => {
+  for (const origin of ['https://riftn.com', 'https://dehub.io']) {
+    const meta = await handleAccountMcp(new Request(`${origin}/.well-known/oauth-protected-resource/mcp`), {});
+    assert.equal((await meta.json()).resource, `${origin}/mcp`);
+    const server = await (await handleAccountMcp(new Request(`${origin}/.well-known/oauth-authorization-server`), {})).json();
+    assert.equal(server.issuer, origin);
+    assert.equal(server.token_endpoint, `${origin}/mcp/oauth/token`);
+  }
+  assert.equal((await handleAccountMcp(new Request('https://evil.example/mcp'), {})).status, 404);
+  // A dehub.io authorization cannot be exchanged as riftn.com (and the reverse).
+  const f = fixture(), flow = await pending(f);
+  assert.equal(new URL((await f.service.fetch(req('/mcp/oauth/authorize?' + flow.params))).headers.get('Location')).origin, 'https://riftn.com');
+  const consent = await approve(f, flow);
+  const code = new URL((await consent.json()).redirect).searchParams.get('code');
+  const body = new URLSearchParams({ grant_type: 'authorization_code', code, client_id: flow.client_id, redirect_uri: flow.redirect, code_verifier: flow.verifier });
+  assert.equal((await f.service.fetch(new Request('https://dehub.io/mcp/oauth/token', { method: 'POST', body: body.toString() }))).status, 400);
+  // Old dehub.io pages may still approve.
+  const old = await pending(f);
+  const legacy = await f.service.fetch(req('/mcp/oauth/approve', 'POST', { request_id: old.request_id, approve: true }, { Origin: 'https://dehub.io', 'x-dehub-token': 'one' }));
+  assert.equal(legacy.status, 200);
+});
+test('personal keys: made on the site, shown once, work as a bearer, listed and revocable', async () => {
+  const f = fixture(async (url, init) => {
+    if (url.endsWith('/account_info/' + A)) return Response.json({ result: { username: 'alice', _id: 'u1' } });
+    throw new Error(`Unexpected upstream request: ${url}`);
+  });
+  const make = (body, headers = { Origin: ORIGIN, 'x-dehub-token': 'one' }) => f.service.fetch(req('/mcp/oauth/keys', 'POST', body, headers));
+  assert.equal((await make({ name: 'Bot', scopes: ['dehub:read'] }, { Origin: 'https://evil.example', 'x-dehub-token': 'one' })).status, 403);
+  assert.equal((await make({ name: 'Bot', scopes: ['admin'] })).status, 400);
+  const created = await make({ name: 'My bot', scopes: ['dehub:read'] });
+  assert.equal(created.status, 201);
+  const { key, id } = await created.json();
+  assert.match(key, /^dhk_[a-f0-9]{64}$/);
+  assert.ok(![...f.store.data.keys()].some(k => k.includes(key)), 'the key itself is never stored');
+  const account = await (await rpc(f, 'dehub_account', {}, key)).json();
+  assert.equal(account.result.structuredContent.username, 'alice');
+  const write = await (await rpc(f, 'dehub_update_profile', { bio: 'x' }, key)).json();
+  assert.equal(write.result.isError, true);
+  const list = await (await f.service.fetch(req('/mcp/oauth/connections', 'POST', {}, { Origin: ORIGIN, 'x-dehub-token': 'one' }))).json();
+  assert.equal(list.connections[0].kind, 'key');
+  assert.equal(list.connections[0].hint, key.slice(-4));
+  // Someone else cannot remove it; the owner can.
+  await f.service.fetch(req('/mcp/oauth/disconnect', 'POST', { id }, { Origin: ORIGIN, 'x-dehub-token': 'two' }));
+  assert.equal((await rpc(f, 'dehub_account', {}, key)).status, 200);
+  await f.service.fetch(req('/mcp/oauth/disconnect', 'POST', { id }, { Origin: ORIGIN, 'x-dehub-token': 'one' }));
+  assert.equal((await rpc(f, 'dehub_account', {}, key)).status, 401);
+});
+test('acting as an agent needs the agents permission and a server-issued session for an owned agent', async () => {
+  const sessions = [];
+  const f = fixture(async (url, init) => {
+    if (url.endsWith('/my-agents/helper/session')) { sessions.push(auth(init)); return Response.json({ status: true, token: 'agent', address: C, username: 'helper' }); }
+    if (url.endsWith('/my-agents/stranger/session')) return Response.json({ statusCode: 404, message: 'That is not one of your agents.' }, { status: 404 });
+    if (url.endsWith('/my-agents')) return Response.json({ status: true, result: [{ address: C, username: 'helper', displayName: 'Helper' }] });
+    if (url.includes('/request_follow')) return Response.json({ status: true, auth: auth(init), body: JSON.parse(init.body) });
+    if (url.endsWith('/account_info/' + B)) return Response.json({ result: { isFollowing: false } });
+    throw new Error(`Unexpected upstream request: ${url}`);
+  });
+  const social = await connect(f, { scope: 'dehub:read dehub:social' });
+  const blocked = await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow', as_agent: 'helper' }, social.access_token)).json();
+  assert.equal(blocked.result.isError, true);
+  assert.match(blocked.result._meta['mcp/www_authenticate'][0], /dehub:agents/);
+  assert.equal(sessions.length, 0);
+  const full = await connect(f, { scope: 'dehub:read dehub:social dehub:agents' });
+  const agents = await (await rpc(f, 'dehub_my_agents', {}, full.access_token)).json();
+  assert.equal(agents.result.structuredContent.agents[0].username, 'helper');
+  const followed = await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow', as_agent: '@helper' }, full.access_token)).json();
+  assert.equal(followed.result.structuredContent.auth, 'Bearer agent');
+  assert.equal(followed.result.structuredContent.acting_as.address, C);
+  assert.deepEqual(sessions, ['Bearer one']);
+  const stranger = await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow', as_agent: 'stranger' }, full.access_token)).json();
+  assert.equal(stranger.result.isError, true);
+  // The tool input can never pick a wallet to act as.
+  assert.equal((await callAccountTool('dehub_follow', { target_wallet: B, action: 'follow', as_agent: B, wallet: C }, { token: 'one', scopes: SCOPES })).isError, true);
+});
+test('writes stop at the daily limit, counted across the account and its agents', async () => {
+  const f = fixture(async (url, init) => {
+    if (url.endsWith('/my-agents/helper/session')) return Response.json({ status: true, token: 'agent', address: C, username: 'helper' });
+    if (url.includes('/account_info/')) return Response.json({ result: { isFollowing: false } });
+    if (url.includes('/request_follow')) return Response.json({ status: true });
+    throw new Error(`Unexpected upstream request: ${url}`);
+  });
+  const c = await connect(f);
+  const { DAILY_LIMITS } = await import('./account-mcp.js');
+  const before = DAILY_LIMITS.follow;
+  DAILY_LIMITS.follow = 2;
+  try {
+    assert.equal((await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow' }, c.access_token)).json()).result.isError, undefined);
+    assert.equal((await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow', as_agent: 'helper' }, c.access_token)).json()).result.isError, undefined);
+    const third = await (await rpc(f, 'dehub_follow', { target_wallet: B, action: 'follow' }, c.access_token)).json();
+    assert.equal(third.result.isError, true);
+    assert.match(third.result.structuredContent.error, /Daily limit/);
+  } finally { DAILY_LIMITS.follow = before; }
+});
+test('repost checks the current state and never toggles by accident', async () => {
+  let reposted = true, posts = 0;
+  const f = fixture(async (url) => {
+    if (url.endsWith('/nft_info/42')) return Response.json({ result: { tokenId: 42, isReposted: reposted } });
+    if (url.endsWith('/repost')) { posts++; reposted = !reposted; return Response.json({ status: true, reposted, repostCount: 3 }); }
+    throw new Error(`Unexpected upstream request: ${url}`);
+  });
+  const c = await connect(f);
+  const again = await (await rpc(f, 'dehub_repost', { token_id: '42' }, c.access_token)).json();
+  assert.equal(again.result.structuredContent.skipped, true);
+  const undo = await (await rpc(f, 'dehub_repost', { token_id: '42', action: 'undo' }, c.access_token)).json();
+  assert.equal(undo.result.structuredContent.reposted, false);
+  assert.equal(posts, 1);
+});

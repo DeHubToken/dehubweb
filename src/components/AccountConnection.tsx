@@ -5,11 +5,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ensureFreshToken } from '@/lib/api/dehub/core';
 import { Button } from '@/components/ui/button';
 
-interface Connection { id: string; client_name: string; scopes: string[]; expires_at: number }
+interface Connection { id: string; client_name: string; scopes: string[]; expires_at: number; kind?: string }
 interface Pending { client_name: string; callback_origin: string; scopes: string[] }
 const permissionKeys: Record<string, string> = {
   'dehub:read': 'accountConnect.read', 'dehub:profile': 'accountConnect.profile',
-  'dehub:social': 'accountConnect.social', 'dehub:generate': 'accountConnect.generate',
+  'dehub:social': 'accountConnect.social', 'dehub:generate': 'accountConnect.generate', 'dehub:agents': 'accountConnect.agents',
 };
 export default function AccountConnection() {
   const { walletAddress } = useAuth();
@@ -45,7 +45,7 @@ function AccountConnectionPanel() {
   // Existing connections are fetched only when the person opens this panel.
   async function loadConnections() {
     setBusy(true); setError('');
-    try { const data = await call('connections', {}); setConnections(data.connections); setLoaded(true); }
+    try { const data = await call('connections', {}); setConnections((data.connections as Connection[]).filter(item => item.kind !== 'key')); setLoaded(true); }
     catch (e) { setError(e instanceof Error ? e.message : t('accountConnect.failed')); }
     finally { setBusy(false); }
   }
