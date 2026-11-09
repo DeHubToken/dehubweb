@@ -86,7 +86,7 @@ describe('staffImpersonated', () => {
   const STRANGER = '0x1111111111111111111111111111111111111111';
 
   it('flags copies of Mal from another wallet', () => {
-    for (const displayName of ['Mal', 'MaI', 'Mal | Riftn Founder', 'mal.eth', 'Мal']) {
+    for (const displayName of ['Mal | Riftn Founder', 'mal.eth', 'Real MaI', 'Мal Official', 'maldoteth']) {
       expect(staffImpersonated({ address: STRANGER, displayName })).toBe('Mal');
     }
     expect(staffImpersonated({ address: STRANGER, username: 'real_maldoteth' })).toBe('Mal');
@@ -95,7 +95,9 @@ describe('staffImpersonated', () => {
 
   it('never flags the real owner or ordinary names', () => {
     expect(staffImpersonated({ address: MAL, displayName: 'mal', username: 'maldoteth' })).toBeNull();
-    for (const displayName of ['Malek', 'Malik', 'Kemal', 'Mal Jones', 'Normal']) {
+    // His new wallet: the @maldoteth username is his
+    expect(staffImpersonated({ address: STRANGER, displayName: 'Mal | Founder', username: 'maldoteth' })).toBeNull();
+    for (const displayName of ['Mal', 'MaI', 'Мal', 'Its Mal', 'Malek', 'Malik', 'Kemal', 'Mal Jones', 'Normal']) {
       expect(staffImpersonated({ address: STRANGER, displayName })).toBeNull();
     }
   });
