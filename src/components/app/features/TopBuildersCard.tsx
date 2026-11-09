@@ -44,7 +44,8 @@ function BuilderAvatar({ builder, size = 30 }: { builder: TopBuilder; size?: num
 }
 
 function ScoreBar({ builder, max }: { builder: TopBuilder; max: number }) {
-  const pct = (n: number) => `${(n / builder.points) * 100}%`;
+  // 0-point rows (nothing yet this period) get an empty track.
+  const pct = (n: number) => (builder.points > 0 ? `${(n / builder.points) * 100}%` : '0%');
   return (
     <span
       className="mt-1 flex h-1.5 overflow-hidden rounded-full bg-white/10"
@@ -183,7 +184,7 @@ export function TopBuildersCard({ compact = false }: { compact?: boolean } = {})
   const myIndex = me ? builders.findIndex((b) => b.wallet === me) : -1;
   const limit = Math.max(base, visible);
   const shown = builders.slice(0, limit);
-  const max = builders[0]?.points ?? 1;
+  const max = Math.max(1, builders[0]?.points ?? 0);
 
   // Signed in but not in the shown rows: pin "You" with the gap to the next place.
   const pin = useMemo(() => {
