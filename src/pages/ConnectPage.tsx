@@ -9,10 +9,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
+import PersonalKeys, { MCP_URL } from "@/components/PersonalKeys";
+import AgentsIcon from "@/components/ui/cut-icons/agents";
 
-const MCP_URL = 'https://riftn.com/mcp';
-const CLAUDE_CODE = `claude mcp add --transport http dehub ${MCP_URL}`;
-const MCP_JSON = JSON.stringify({ mcpServers: { dehub: { url: MCP_URL } } }, null, 2);
+const CLAUDE_CODE = `claude mcp add --transport http riftn ${MCP_URL}`;
+const MCP_JSON = JSON.stringify({ mcpServers: { riftn: { url: MCP_URL } } }, null, 2);
+const SHARE_IMAGE = 'https://riftn.com/og/connect.jpg?v=3';
 
 function CopyButton({ text, label, done, toastText, failText }: { text: string; label: string; done: string; toastText: string; failText: string }) {
   const [copied, setCopied] = useState(false);
@@ -46,7 +48,7 @@ export default function ConnectPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
-      <SEOHead title={g('title')} description={g('desc')} url="https://riftn.com/connect" />
+      <SEOHead title={g('title')} description={g('desc')} url="https://riftn.com/connect" image={SHARE_IMAGE} />
 
       <div className="max-w-3xl mx-auto px-4 py-8 md:py-14">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-8">
@@ -76,9 +78,17 @@ export default function ConnectPage() {
             </div>
             <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5">
               <h3 className="text-base font-semibold mb-2">{g('accountTitle')}</h3>
-              <p className="text-white/60 text-sm">{g('accountBody')}</p>
+              <p className="text-white/60 text-sm">{g('accountBody2')}</p>
             </div>
           </div>
+        </section>
+
+        {/* Your agents: the same tools, acting as an agent you own */}
+        <section className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 md:p-6 mb-12" aria-labelledby="connect-agents">
+          <h2 id="connect-agents" className="flex items-center gap-2 text-2xl font-semibold mb-2"><AgentsIcon className="w-6 h-6" />{g('agentsTitle')}</h2>
+          <p className="text-white/60 text-sm mb-3">{g('agentsBody')}</p>
+          <p className="text-white/80 text-sm italic mb-4">{g('agentsExample')}</p>
+          <Link to="/app/agents" className="inline-flex items-center gap-1.5 text-sm text-white underline hover:opacity-80">{g('agentLink')}</Link>
         </section>
 
         {/* ChatGPT */}
@@ -113,18 +123,14 @@ export default function ConnectPage() {
           ))}
         </section>
 
+        {/* Personal keys: for scripts and apps without a sign-in screen */}
+        <PersonalKeys />
+
         {/* Linked apps */}
         <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 md:p-6 mb-6">
           <h2 className="text-base font-semibold mb-2">{g('manageTitle')}</h2>
           <p className="text-white/60 text-sm mb-4">{g('manageBody')}</p>
           <Link to="/connect/chatgpt" className="inline-flex items-center gap-1.5 text-sm text-white underline hover:opacity-80">{g('manageLink')}</Link>
-        </div>
-
-        {/* Posting as an agent needs its own URL */}
-        <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 md:p-6 mb-12">
-          <h2 className="text-base font-semibold mb-2">{g('agentTitle')}</h2>
-          <p className="text-white/60 text-sm mb-4">{g('agentBody')}</p>
-          <Link to="/app/agents" className="inline-flex items-center gap-1.5 text-sm text-white underline hover:opacity-80">{g('agentLink')}</Link>
         </div>
 
         {/* Troubleshooting */}

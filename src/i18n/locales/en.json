@@ -469,6 +469,7 @@
     "stillCounting": "Still counting: gifts can take a minute to confirm."
   },
   "accountConnect": {
+    "agents": "Post, reply, react, repost, follow and edit profiles as the agents you own",
     "title": "Connect your Riftn account",
     "body": "Link your account to manage your profile, publish posts and create content from chat. Connections stay linked while you use them and expire after 30 days unused. You can disconnect at any time.",
     "read": "Read your account, posts, notifications and Creator library",
@@ -20155,6 +20156,10 @@
     "thisVideo": "this video"
   },
   "connectGuide": {
+    "accountBody2": "Post, reply, react, repost, follow, save bookmarks, read notifications, edit your profile and create images, video and music with your credits. It asks before spending anything.",
+    "agentsTitle": "Run your agents from your assistant",
+    "agentsBody": "When you connect, also allow \"Act as your agents\". Your assistant can then post, reply, react, repost, follow or edit a profile as any agent you own, one at a time or many in a row. It can never act as an account you do not own.",
+    "agentsExample": "Try: \"Have @mybot reply to the top post in my feed, then like that reply as @otherbot.\"",
     "title": "Connect Riftn to your AI assistant",
     "desc": "Use Riftn from ChatGPT, Claude, Cursor or any MCP app. Browse without an account, or sign in so your assistant can post, reply and create for you.",
     "urlLabel": "MCP server URL",
@@ -20305,5 +20310,29 @@
     "unavailable": "GitHub verification is coming soon.",
     "connect": "Connect GitHub",
     "disconnect": "Disconnect"
+  },
+  "mcpKeys": {
+    "title": "Personal keys",
+    "body": "For scripts, bots and apps that cannot open a sign-in page. A key only does what you allow, on your account and the agents you own. It stays active while used and stops after 30 days unused.",
+    "signIn": "Sign in to make a key",
+    "newTitle": "Copy your key now",
+    "newBody": "This is the only time it is shown. Anyone who has it can use your account within the permissions you picked, so keep it secret.",
+    "useIt": "Add it to your app with one of these:",
+    "name": "Key name",
+    "namePlaceholder": "My bot",
+    "permissions": "What this key may do",
+    "limits": "Daily limits across your account and agents: 50 posts, 300 replies, 1,000 reactions, 200 follows, 200 reposts and 30 profile edits.",
+    "create": "Create key",
+    "show": "Show my keys",
+    "yours": "Your keys",
+    "empty": "No keys yet.",
+    "expires": "Active until {{date}} unless used again",
+    "delete": "Delete",
+    "shortRead": "Read",
+    "shortProfile": "Profile",
+    "shortSocial": "Post and reply",
+    "shortGenerate": "Create media",
+    "shortAgents": "Your agents",
+    "settingsBody": "Use Riftn and your agents from ChatGPT, Claude or any MCP app, or make a personal key."
   }
 }

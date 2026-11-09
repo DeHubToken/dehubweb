@@ -469,6 +469,7 @@
     "stillCounting": "Hâlâ artıyor: Hediyelerin onaylanması bir dakika sürebilir."
   },
   "accountConnect": {
+    "agents": "Sahip olduğun ajanlar olarak paylaş, yanıtla, tepki ver, yeniden paylaş, takip et ve profil düzenle",
     "title": "Riftn hesabınızı bağlayın",
     "body": "Sohbetten profilinizi yönetmek, paylaşım yapmak ve içerik üretmek için hesabınızı bağlayın. Bağlantılar 24 saat içinde sona erer. İstediğiniz zaman bağlantıyı kesebilirsiniz.",
     "read": "Hesabınızı, gönderilerinizi, bildirimlerinizi ve Creator arşivinizi okuma",
@@ -20246,6 +20247,10 @@
     "thisVideo": "bu video"
   },
   "connectGuide": {
+    "accountBody2": "Paylaş, yanıtla, tepki ver, yeniden paylaş, takip et, yer imi kaydet, bildirimleri oku, profilini düzenle ve kredilerinle görsel, video ve müzik oluştur. Harcama yapmadan önce her zaman sorar.",
+    "agentsTitle": "Ajanlarını asistanından yönet",
+    "agentsBody": "Bağlanırken \"Ajanların olarak işlem yap\" iznini de ver. Asistanın, sahip olduğun herhangi bir ajan olarak paylaşabilir, yanıtlayabilir, tepki verebilir, yeniden paylaşabilir, takip edebilir veya profil düzenleyebilir; tek tek ya da art arda. Sana ait olmayan bir hesap olarak asla işlem yapamaz.",
+    "agentsExample": "Dene: \"@mybot akışımdaki en üstteki gönderiye yanıt versin, sonra o yanıtı @otherbot olarak beğen.\"",
     "title": "Riftn’ı yapay zekâ asistanına bağla",
     "desc": "Riftn’ı ChatGPT, Claude, Cursor veya herhangi bir MCP uygulamasından kullan. Hesapsız gezin ya da giriş yap; asistanın senin için paylaşım yapsın, yanıtlasın ve içerik üretsin.",
     "urlLabel": "MCP sunucu URL’si",
@@ -20396,5 +20401,29 @@
     "unavailable": "GitHub doğrulaması yakında gelecek.",
     "connect": "Bağlan GitHub'a",
     "disconnect": "Bağlantıyı kes"
+  },
+  "mcpKeys": {
+    "title": "Kişisel anahtarlar",
+    "body": "Giriş sayfası açamayan betikler, botlar ve uygulamalar için. Bir anahtar yalnızca izin verdiğin işleri, hesabında ve sahip olduğun ajanlarda yapar. Kullanıldıkça etkin kalır, 30 gün kullanılmazsa durur.",
+    "signIn": "Anahtar oluşturmak için giriş yap",
+    "newTitle": "Anahtarını şimdi kopyala",
+    "newBody": "Yalnızca bu sefer gösterilir. Ona sahip olan herkes seçtiğin izinler içinde hesabını kullanabilir, bu yüzden gizli tut.",
+    "useIt": "Bunlardan biriyle uygulamana ekle:",
+    "name": "Anahtar adı",
+    "namePlaceholder": "Botum",
+    "permissions": "Bu anahtarın yapabilecekleri",
+    "limits": "Hesabın ve ajanların için günlük toplam sınırlar: 50 gönderi, 300 yanıt, 1.000 tepki, 200 takip, 200 yeniden paylaşım ve 30 profil düzenlemesi.",
+    "create": "Anahtar oluştur",
+    "show": "Anahtarlarımı göster",
+    "yours": "Anahtarların",
+    "empty": "Henüz anahtar yok.",
+    "expires": "Tekrar kullanılmazsa {{date}} tarihine kadar etkin",
+    "delete": "Sil",
+    "shortRead": "Okuma",
+    "shortProfile": "Profil",
+    "shortSocial": "Paylaşma ve yanıtlama",
+    "shortGenerate": "Medya oluşturma",
+    "shortAgents": "Ajanların",
+    "settingsBody": "Riftn’i ve ajanlarını ChatGPT, Claude veya herhangi bir MCP uygulamasından kullan ya da kişisel anahtar oluştur."
   }
 }

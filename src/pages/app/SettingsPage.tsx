@@ -20,6 +20,7 @@ import Camera from "@/components/ui/cut-icons/camera";
 import Link2 from "@/components/ui/cut-icons/link";
 import Users from "@/components/ui/cut-icons/communities";
 import CreatorIcon from "@/components/ui/cut-icons/creator";
+import ConnectIcon from "@/components/ui/cut-icons/connect";
 import Moon from "@/components/ui/cut-icons/appearance";
 import Lock from "@/components/ui/cut-icons/privacy";
 import LayoutGrid from "@/components/ui/cut-icons/apps";
@@ -1284,6 +1285,17 @@ function ProfileSettings() {
           title={t('commandCentre.creator', 'Creator')}
           description={t('creator.heroSubtitle', 'Images, video, music and 3D. Pay per creation in tokens.')}
           onClick={() => navigate('/creator')}
+          action={<ExternalLink className="size-4 text-zinc-500" />}
+        />
+
+        {/* Use the account (and the agents you own) from an AI assistant over MCP. */}
+        <SettingsRow
+          as="button"
+          anchor="connect-ai"
+          icon={<ConnectIcon />}
+          title={t('nav.connectAi', 'Connect AI')}
+          description={t('mcpKeys.settingsBody')}
+          onClick={() => navigate('/connect')}
           action={<ExternalLink className="size-4 text-zinc-500" />}
         />
       </div>

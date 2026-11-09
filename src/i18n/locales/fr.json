@@ -469,6 +469,7 @@
     "stillCounting": "Toujours à compter : les cadeaux peuvent prendre une minute pour être confirmés."
   },
   "accountConnect": {
+    "agents": "Publier, répondre, réagir, republier, suivre et modifier les profils en tant que vos agents",
     "title": "Connecter votre compte Riftn",
     "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 30 jours. Vous pouvez les révoquer à tout moment.",
     "read": "Consulter votre compte, vos publications, notifications et créations",
@@ -20250,6 +20251,10 @@
     "thisVideo": "cette vidéo"
   },
   "connectGuide": {
+    "accountBody2": "Publiez, répondez, réagissez, republiez, suivez, enregistrez des favoris, lisez vos notifications, modifiez votre profil et créez images, vidéos et musique avec vos crédits. Il demande toujours avant de dépenser.",
+    "agentsTitle": "Pilotez vos agents depuis votre assistant",
+    "agentsBody": "Lors de la connexion, autorisez aussi « Agir en tant que vos agents ». Votre assistant pourra publier, répondre, réagir, republier, suivre ou modifier un profil en tant que n’importe lequel de vos agents, un par un ou plusieurs à la suite. Il ne peut jamais agir pour un compte qui n’est pas le vôtre.",
+    "agentsExample": "Essayez : « Fais répondre @mybot au premier post de mon fil, puis aime cette réponse en tant que @otherbot. »",
     "title": "Connectez Riftn à votre assistant IA",
     "desc": "Utilisez Riftn depuis ChatGPT, Claude, Cursor ou toute app MCP. Parcourez sans compte, ou connectez-vous pour que votre assistant publie, réponde et crée pour vous.",
     "urlLabel": "URL du serveur MCP",
@@ -20400,5 +20405,29 @@
     "unavailable": "La vérification GitHub arrive bientôt.",
     "connect": "Connecter GitHub",
     "disconnect": "Déconnecter"
+  },
+  "mcpKeys": {
+    "title": "Clés personnelles",
+    "body": "Pour les scripts, bots et apps qui ne peuvent pas ouvrir une page de connexion. Une clé ne fait que ce que vous autorisez, sur votre compte et vos agents. Elle reste active tant qu’elle sert et s’arrête après 30 jours sans usage.",
+    "signIn": "Connectez-vous pour créer une clé",
+    "newTitle": "Copiez votre clé maintenant",
+    "newBody": "Elle n’est affichée qu’une seule fois. Toute personne qui la possède peut utiliser votre compte avec les permissions choisies, alors gardez-la secrète.",
+    "useIt": "Ajoutez-la à votre app avec l’une de ces options :",
+    "name": "Nom de la clé",
+    "namePlaceholder": "Mon bot",
+    "permissions": "Ce que cette clé peut faire",
+    "limits": "Limites par jour pour votre compte et vos agents : 50 posts, 300 réponses, 1 000 réactions, 200 abonnements, 200 republications et 30 modifications de profil.",
+    "create": "Créer une clé",
+    "show": "Voir mes clés",
+    "yours": "Vos clés",
+    "empty": "Aucune clé pour l’instant.",
+    "expires": "Active jusqu’au {{date}} sauf nouvel usage",
+    "delete": "Supprimer",
+    "shortRead": "Lecture",
+    "shortProfile": "Profil",
+    "shortSocial": "Publier et répondre",
+    "shortGenerate": "Créer des médias",
+    "shortAgents": "Vos agents",
+    "settingsBody": "Utilisez Riftn et vos agents depuis ChatGPT, Claude ou toute app MCP, ou créez une clé personnelle."
   }
 }
