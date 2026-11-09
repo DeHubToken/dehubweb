@@ -62,11 +62,11 @@ once monthly transcription passes about 10,000 minutes (Deepgram is $4.30 per
 1,000): RunPod Serverless 16 GB GPU at $0.58/hour billed per second (about $1
 per 1,000 minutes), or a DigitalOcean 4 vCPU / 8 GB droplet at $48/month flat.
 
-- **RunPod Serverless (GPU):** image `ghcr.io/dehubtoken/dehub-whisper:gpu`,
+- **RunPod Serverless (GPU):** image `ghcr.io/riftn/dehub-whisper:gpu`,
   container start command `python handler.py`, 16 GB tier, 0 idle workers,
   at most 2 workers, execution timeout 900 s. `transcribe` posts to
   `/v2/<endpoint>/run` with the callback secret inside the job.
-- **Any Docker host (CPU):** `ghcr.io/dehubtoken/dehub-whisper:cpu`, with port
+- **Any Docker host (CPU):** `ghcr.io/riftn/dehub-whisper:cpu`, with port
   7860 behind TLS and `WHISPER_WORKER_SECRET` set. Give it its own machine.
   `WHISPER_THREADS` defaults to every core.
 

@@ -10,7 +10,7 @@
   },
   "/apk": {
     "h1": "Descarga el APK de Riftn",
-    "body": "<p>Olvídate de las tiendas y consigue aquí la última versión de Riftn, directamente de nosotros: sin cuenta en ninguna tienda y sin esperar a que se revise.</p>\n<p><a href=\"https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk\">Descargar el APK de Riftn</a>: Android 8 o superior. Cuando Android lo pida, permite la instalación desde tu navegador.</p>\n<p>¿Prefieres la tienda? Riftn también está <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">en Google Play</a>.</p>"
+    "body": "<p>Olvídate de las tiendas y consigue aquí la última versión de Riftn, directamente de nosotros: sin cuenta en ninguna tienda y sin esperar a que se revise.</p>\n<p><a href=\"https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk\">Descargar el APK de Riftn</a>: Android 8 o superior. Cuando Android lo pida, permite la instalación desde tu navegador.</p>\n<p>¿Prefieres la tienda? Riftn también está <a href=\"https://play.google.com/store/apps/details?id=io.dehub.mobile\">en Google Play</a>.</p>"
   },
   "/converter": {
     "h1": "Importar un vídeo",

@@ -2,7 +2,7 @@
 
 The phone layout at https://riftn.com is the reference for the Android app. Changes to native presentation must preserve existing navigation, keyboard handling, uploads, recording, calls, payments, polls, privacy, and accessibility actions.
 
-Web's reference implementation is `src/components/app/page-kit/PageKit.tsx`, `src/styles/page-kit.css`, the messaging pages, and the active theme's surface styles. Native coverage is recorded in [dehub-mobile/docs/mobile-page-appearance.md](https://github.com/DeHubToken/dehub-mobile/blob/main/docs/mobile-page-appearance.md).
+Web's reference implementation is `src/components/app/page-kit/PageKit.tsx`, `src/styles/page-kit.css`, the messaging pages, and the active theme's surface styles. Native coverage is recorded in [dehub-mobile/docs/mobile-page-appearance.md](https://github.com/Riftn/riftn-mobile/blob/main/docs/mobile-page-appearance.md).
 
 ## Shared rules
 

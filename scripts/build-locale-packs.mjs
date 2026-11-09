@@ -67,7 +67,7 @@ async function fetchText(url) {
 async function pinnedMobileSource() {
   const pin = JSON.parse(fs.readFileSync('scripts/mobile-locale-source.json', 'utf8'));
   if (!/^[a-f0-9]{40}$/.test(pin.ref)) throw new Error('An immutable mobile source commit is required');
-  const origin = `https://raw.githubusercontent.com/DeHubToken/dehub-mobile/${pin.ref}/i18n`;
+  const origin = `https://raw.githubusercontent.com/Riftn/riftn-mobile/${pin.ref}/i18n`;
   const manifest = JSON.parse(await fetchText(`${origin}/locale-manifest.json`));
   const source = new Array(manifest.languages.length);
   let next = 0;
@@ -79,7 +79,7 @@ async function pinnedMobileSource() {
     }
   }));
   source.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-  const sourcePolicyText = await fetchText(`https://raw.githubusercontent.com/DeHubToken/dehub-mobile/${pin.ref}/scripts/locale-policy.json`);
+  const sourcePolicyText = await fetchText(`https://raw.githubusercontent.com/Riftn/riftn-mobile/${pin.ref}/scripts/locale-policy.json`);
   return { source, version: manifest.version, sourcePolicyText };
 }
 

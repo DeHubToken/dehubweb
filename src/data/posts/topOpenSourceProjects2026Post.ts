@@ -144,7 +144,7 @@ Yes. Every project on this list accepts contributions, and most label easy start
 
 - Public commit history on GitHub for all 205 projects measured, pulled on 26 October 2026. Each repository is linked in the list above.
 - [Open Source Initiative list of approved licenses](https://opensource.org/licenses)
-- [Riftn on GitHub](https://github.com/DeHubToken/dehubweb)
+- [Riftn on GitHub](https://github.com/Riftn/riftn-web)
 
 ## Build with us
 

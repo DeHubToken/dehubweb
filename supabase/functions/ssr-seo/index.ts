@@ -964,7 +964,7 @@ serve(async (req) => {
                         sameAs: [
                             'https://www.wikidata.org/wiki/Q140518527',
                             'https://x.com/riftn_com',
-                            'https://github.com/DeHubToken',
+                            'https://github.com/Riftn',
                             'https://www.linkedin.com/company/dehub-dao',
                             'https://t.me/riftn_com',
                             'https://play.google.com/store/apps/details?id=io.dehub.mobile',

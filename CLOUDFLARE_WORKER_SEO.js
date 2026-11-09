@@ -276,7 +276,7 @@ function crumbsFromHtml(html) {
 const ORG_SAME_AS = [
   'https://www.wikidata.org/wiki/Q140518527',
   'https://x.com/riftn_com',
-  'https://github.com/DeHubToken',
+  'https://github.com/Riftn',
   'https://www.linkedin.com/company/dehub-dao',
   'https://t.me/riftn_com',
   'https://play.google.com/store/apps/details?id=io.dehub.mobile',
@@ -1462,11 +1462,11 @@ const MARKETING_PAGES = {
     // and without one Search Console lists the page as an invalid item.
     jsonLdExtra: {
       alternateName: 'Riftn APK',
-      significantLink: 'https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk',
+      significantLink: 'https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk',
       about: { '@type': 'Thing', name: 'Riftn for Android', sameAs: 'https://play.google.com/store/apps/details?id=io.dehub.mobile' },
     },
     bodyHtml: `<p>Skip the stores and get the latest version of Riftn right here, straight from us, no store account and no waiting on a review queue.</p>
-<p><a href="https://github.com/DeHubToken/dehub-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a>, Android 8 and up. Allow installs from your browser when Android asks.</p>
+<p><a href="https://github.com/Riftn/riftn-mobile/releases/latest/download/dehub.apk">Download the Riftn APK</a>, Android 8 and up. Allow installs from your browser when Android asks.</p>
 <p>Prefer the store? Riftn is also <a href="https://play.google.com/store/apps/details?id=io.dehub.mobile">on Google Play</a>.</p>`,
   },
   // The streamer landing page, and where affiliates send streamers
