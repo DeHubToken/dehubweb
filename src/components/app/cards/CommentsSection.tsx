@@ -33,7 +33,6 @@ import Trash2 from "@/components/ui/cut-icons/delete";
 import Link from "@/components/ui/cut-icons/link";
 import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
-import Check from "@/components/ui/cut-icons/check";
 import { useHoldMenu } from '@/hooks/use-hold-menu';
 import { ChatHoldSheet, isTouchHold, type ChatHoldAction } from '@/components/app/chat/ChatHoldSheet';
 import { reactionMeta as holdReactionMeta, type PostReaction as HoldReaction } from '@/lib/reactions';
@@ -415,6 +414,26 @@ const PostCreatorContext = createContext<{
  * module constant, and the per-row figures (tip total, tipped, highlighted) as
  * primitives. A new inline function here would quietly undo all of it.
  */
+/** Character offset inside `root` under the pointer, for placing an edit caret. */
+function caretOffsetAt(root: HTMLElement, x: number, y: number): number | null {
+  const doc = document as Document & {
+    caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null;
+  };
+  let node: Node | null = null;
+  let offset = 0;
+  const pos = doc.caretPositionFromPoint?.(x, y);
+  if (pos) { node = pos.offsetNode; offset = pos.offset; }
+  else {
+    const range = document.caretRangeFromPoint?.(x, y);
+    if (range) { node = range.startContainer; offset = range.startOffset; }
+  }
+  if (!node || !root.contains(node)) return null;
+  const before = document.createRange();
+  before.selectNodeContents(root);
+  before.setEnd(node, offset);
+  return before.toString().length;
+}
+
 /** The reactions a held comment offers on a phone: the common faces, then 👎. */
 const HOLD_REACTIONS: HoldReaction[] = ['like', 'love', 'hot', 'lol', 'hundred', 'sad', 'dislike'];
 
@@ -427,14 +446,73 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
     return subscribePostTipped((id) => { if (id === key) setTipBurst((n) => n + 1); });
   }, [comment.id]);
   const [editText, setEditText] = useDraftState(`comment:${tokenId}:edit:${comment.id}`, comment.text);
+  // Editing is in place, like a notes pad: the text itself becomes the field,
+  // a pause in typing saves, and leaving the field (blur, Enter, Esc) finishes.
   const editPending = useRef(false);
-  const saveEdit = async () => {
+  const editTextRef = useRef(editText);
+  editTextRef.current = editText;
+  const lastSavedEdit = useRef(comment.text);
+  const closeAfterSave = useRef(false);
+  const editCaret = useRef<number | null>(null);
+  const editFieldRef = useRef<HTMLTextAreaElement>(null);
+  const saveEdit = async (): Promise<void> => {
     if (editPending.current) return;
+    const text = editTextRef.current;
+    if (!text.trim() || text === lastSavedEdit.current) {
+      if (closeAfterSave.current) { closeAfterSave.current = false; setEditText.clear(); setIsEditing(false); }
+      return;
+    }
     editPending.current = true;
-    try { if (await onEdit(comment.id, editText) && setEditText.complete(editText, editText)) setIsEditing(false); }
+    let ok = false;
+    try { ok = await onEdit(comment.id, text); }
     finally { editPending.current = false; }
+    if (!ok) { closeAfterSave.current = false; return; }
+    lastSavedEdit.current = text;
+    toast.success(i18n.t('comments.editSaved', 'Comment updated'), { id: `comment-edit-${comment.id}` });
+    // Typed more while that was saving: save the newer text too.
+    if (editTextRef.current !== text && editTextRef.current.trim()) { void saveEdit(); return; }
+    setEditText.clear();
+    if (closeAfterSave.current) { closeAfterSave.current = false; setIsEditing(false); }
+  };
+  const finishEdit = () => {
+    if (!editTextRef.current.trim()) {
+      // Emptied out: a comment can't be blank, so put back what was saved.
+      setEditText(lastSavedEdit.current); setEditText.clear(); setIsEditing(false);
+      return;
+    }
+    closeAfterSave.current = true;
+    void saveEdit();
+  };
+  const startEdit = (caret: number | null = null) => {
+    if (isPending) return;
+    editCaret.current = caret;
+    lastSavedEdit.current = comment.text;
+    setIsEditing(true);
   };
   useEffect(() => { if (isEditing) setEditText.initialize(comment.text); }, [isEditing, comment.text, setEditText]);
+  // Save a couple of seconds after the last keystroke.
+  useEffect(() => {
+    if (!isEditing || !editText.trim() || editText === lastSavedEdit.current) return;
+    const timer = window.setTimeout(() => { void saveEdit(); }, 1500);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing, editText]);
+  // The field grows with its text, so it sits exactly where the comment was.
+  useLayoutEffect(() => {
+    const el = editFieldRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [isEditing, editText]);
+  // Land the caret where the text was clicked, or at the end.
+  useLayoutEffect(() => {
+    const el = editFieldRef.current;
+    if (!isEditing || !el) return;
+    const at = Math.min(editCaret.current ?? el.value.length, el.value.length);
+    el.focus({ preventScroll: true });
+    el.setSelectionRange(at, at);
+    editCaret.current = null;
+  }, [isEditing]);
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
   const i18n = useI18n();
@@ -510,7 +588,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
   holdActions.push({ key: 'link', icon: <Link />, label: i18n.t('chatHold.link', 'Link'), onSelect: () => { void navigator.clipboard?.writeText(commentUrl()); trackShare('copy_link', { kind: 'comment' }); toast.success(i18n.t('comments.linkCopied')); } });
   if (onPin) holdActions.push({ key: 'pin', icon: comment.isPinned ? <PinOff /> : <Pin />, label: comment.isPinned ? i18n.t('chatHold.unpin', 'Unpin') : i18n.t('chatHold.pin', 'Pin'), onSelect: () => onPin(comment.id) });
   if (isOwnComment) {
-    holdActions.push({ key: 'edit', icon: <Pencil />, label: i18n.t('common.edit'), onSelect: () => setIsEditing(true) });
+    holdActions.push({ key: 'edit', icon: <Pencil />, label: i18n.t('common.edit'), onSelect: () => startEdit() });
     holdActions.push({ key: 'delete', destructive: true, icon: <Trash2 />, label: i18n.t('common.delete'), onSelect: () => onDelete(comment.id) });
   } else if (onReport) {
     holdActions.push({ key: 'report', icon: <Flag />, label: i18n.t('chatHold.report', 'Report'), onSelect: () => onReport(comment.id) });
@@ -687,52 +765,54 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
           </div>
         )}
         {isEditing ? (
-          <div className="flex items-center gap-2 mt-1">
-            <input
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              className="flex-1 bg-zinc-800 text-white text-sm rounded-lg px-3 py-1.5 border border-zinc-700 focus:outline-none focus:border-zinc-500"
-              autoFocus
-              onKeyDown={(e) => {
-                // An IME confirms its candidate with Enter, and that keystroke
-                // is the composition ending, not the edit being saved — Safari
-                // reports it as keyCode 229 with isComposing already false.
-                if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) {
-                  void saveEdit();
-                } else if (e.key === 'Escape') {
-                  setEditText(comment.text); setEditText.clear();
-                  setIsEditing(false);
-                }
-              }}
-            />
-            <button
-              onClick={() => { void saveEdit(); }}
-              className="text-green-400 hover:text-green-300 transition-colors"
-              aria-label={i18n.t('common.save')}
-            >
-              <Check className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => { setEditText(comment.text); setEditText.clear(); setIsEditing(false); }}
-              className="text-zinc-400 hover:text-white transition-colors"
-              aria-label={i18n.t('common.cancel')}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+          <textarea
+            ref={editFieldRef}
+            data-keep-dark
+            data-no-navigate
+            rows={1}
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onBlur={finishEdit}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={i18n.t('common.edit')}
+            className="block w-full resize-none overflow-hidden bg-transparent border-0 p-0 m-0 shadow-none outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 text-zinc-300 text-base leading-6 break-words caret-white"
+            onKeyDown={(e) => {
+              // An IME confirms its candidate with Enter, and that keystroke
+              // is the composition ending, not the edit being finished —
+              // Safari reports it as keyCode 229 with isComposing already false.
+              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
+                e.preventDefault();
+                e.currentTarget.blur();
+              } else if (e.key === 'Escape') {
+                e.currentTarget.blur();
+              }
+            }}
+          />
         ) : (
           <>
             {/* auto={false}: the `translation` hook above already translates
                 this comment and its output is what gets rendered here. Left on,
                 every comment in the thread was translated twice. */}
             {commentDisplayText && (
-              <TranslatableText publicContent
-                text={commentDisplayText}
-                className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow", isPending && "dh-sent-text-glow")}
-                as="p"
-                hideControls
-                auto={false}
-              />
+              <div
+                className={cn(isOwnComment && !isPending && !translation.isTranslated && "cursor-text")}
+                onClick={isOwnComment && !isPending && !translation.isTranslated ? (e) => {
+                  // Your own words edit in place: click into them and type.
+                  // Links and a drag that selected text keep their behaviour.
+                  if ((e.target as HTMLElement).closest('a, button')) return;
+                  if (window.getSelection()?.toString()) return;
+                  e.stopPropagation();
+                  startEdit(commentDisplayText === comment.text ? caretOffsetAt(e.currentTarget, e.clientX, e.clientY) : null);
+                } : undefined}
+              >
+                <TranslatableText publicContent
+                  text={commentDisplayText}
+                  className={cn("text-zinc-300 text-base leading-6 break-words", highlighted && "reply-text-glow", isPending && "dh-sent-text-glow")}
+                  as="p"
+                  hideControls
+                  auto={false}
+                />
+              </div>
             )}
             {/* No Translate button on the row — that is in the menu. The row
                 only says what happened: translating, or translated with the
@@ -912,7 +992,7 @@ const CommentItemBody = memo(function CommentItem({ comment, tokenId, onLike, on
             {isOwnComment && !isEditing && (
               <>
                 <button
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => startEdit()}
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
                   aria-label={i18n.t('common.edit')}
                 >
