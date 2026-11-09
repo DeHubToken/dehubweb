@@ -160,7 +160,7 @@ export function StageRecordingPlayer({
         ) : isPlaying ? (
           <Pause className="w-4 h-4" fill="currentColor" />
         ) : (
-          <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+          <Play className="w-4 h-4" fill="currentColor" />
         )}
       </span>
 
