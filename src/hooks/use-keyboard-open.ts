@@ -90,7 +90,16 @@ export function useVisualViewportBox(enabled: boolean, { keepPageScroll = false 
     }
     const vv = window.visualViewport;
     if (!vv) return;
-    const update = () => {
+    const update = (event?: Event) => {
+      // Only the page's own scroll matters here. The capture listener also
+      // hears every inner scroller: the message list, and the text box itself
+      // as each typed line scrolls it. Reacting to those re-rendered the whole
+      // chat on every keystroke and could snap the page back mid-type, which
+      // showed as a line flickering by the composer.
+      if (event?.type === 'scroll' && event.currentTarget === document) {
+        const t = event.target;
+        if (t !== document && t !== document.body && t !== document.documentElement) return;
+      }
       // Some iOS versions surface the keyboard pan as a window scroll instead
       // of (or on top of) vv.offsetTop — undo it so offsetTop is the whole
       // story. The chat layout fits inside the visual viewport, so there is
@@ -104,7 +113,10 @@ export function useVisualViewportBox(enabled: boolean, { keepPageScroll = false 
       // card away, the card took its sheet with it, and Reply landed you on
       // the top of Home.
       if (!keepPageScroll && getDocumentScrollTop() > 0) scrollDocumentTo(0);
-      setBox({ height: Math.round(vv.height), offsetTop: Math.round(vv.offsetTop) });
+      const height = Math.round(vv.height);
+      const offsetTop = Math.round(vv.offsetTop);
+      // Same box, same object: no re-render for a scroll that moved nothing.
+      setBox((prev) => (prev.height === height && prev.offsetTop === offsetTop ? prev : { height, offsetTop }));
     };
     update();
     vv.addEventListener('resize', update);

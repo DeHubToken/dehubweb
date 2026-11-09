@@ -24,7 +24,7 @@
 
 import type { ChatRefusalPayload } from '@/lib/chat-refusal';
 import { io, Socket } from 'socket.io-client';
-import { DEHUB_API_BASE, getAuthToken } from './core';
+import { DEHUB_API_BASE, getAuthToken, ensureFreshToken } from './core';
 import { reviveOnReturn } from '@/lib/socket-revive';
 
 export const GLOBAL_ROOM = 'global';
@@ -50,7 +50,8 @@ export function getSocket(roomId?: string): Socket {
   if (existing) return existing;
 
   const socket = io(`${DEHUB_API_BASE}/livechat`, {
-    auth: token ? { token } : {},
+    // Read on every handshake, not once: see handshakeAuth.
+    auth: handshakeAuth,
     query: token ? { token } : {},
     transports: ['polling', 'websocket'],
     upgrade: true,
@@ -90,6 +91,9 @@ export function getSocket(roomId?: string): Socket {
 
   const pongHandler = (data: any) => {
     if (data?.connected && roomRefCounts.get(key)) emitJoin(socket, key);
+    // Signed in here but the server took this connection as a guest: its
+    // handshake carried a token that had already expired. Sign it back in.
+    if (data?.isAuthenticated === false) signBackIn(socket);
   };
   socket.on('pong', pongHandler);
   socket.on('livechat:pong', pongHandler);
@@ -101,6 +105,40 @@ export function getSocket(roomId?: string): Socket {
   socket.on('livechat:error', errorHandler);
 
   return socket;
+}
+
+/**
+ * The token for a (re)connect, read at the moment of the handshake.
+ *
+ * It used to be fixed when the connection was made and only updated when
+ * something else happened to ask for a socket. After a laptop sleep or a
+ * network drop the connection came back on its own with the token it had,
+ * long expired, and the server took it as a guest: every message then failed
+ * with "Authentication required" until the page was reloaded.
+ */
+function handshakeAuth(cb: (data: Record<string, string>) => void) {
+  if (!getAuthToken()) { cb({}); return; }
+  ensureFreshToken()
+    .then((token) => cb({ token }))
+    .catch(() => { const token = getAuthToken(); cb(token ? { token } : {}); });
+}
+
+/** Connections already asked to sign back in, so a refusal cannot loop. */
+const signInTried = new WeakMap<Socket, string>();
+
+/** Sign a connection that came back as a guest in again, in place. */
+function signBackIn(socket: Socket) {
+  if (!getAuthToken() || !socket.id || signInTried.get(socket) === socket.id) return;
+  signInTried.set(socket, socket.id);
+  ensureFreshToken()
+    .then((token) => { if (socket.connected) socket.emit('livechat:authenticate', { token }); })
+    .catch(() => { /* signed out for real; the send path says so */ });
+}
+
+/** The current token for a payload, so the server can sign a guest connection in on the spot. */
+function withToken<T extends Record<string, unknown>>(payload: T): T & { token?: string } {
+  const token = getAuthToken();
+  return token ? { ...payload, token } : payload;
 }
 
 /** The wallet a JWT was issued to, or '' when it cannot be read. */
@@ -131,7 +169,7 @@ function tokenAddress(token: string | null): string {
 function rekeySockets(prev: string | null, next: string | null) {
   const sameUser = !!prev && !!next && tokenAddress(prev) !== '' && tokenAddress(prev) === tokenAddress(next);
   for (const s of sockets.values()) {
-    s.auth = next ? { token: next } : {};
+    // `auth` reads the token itself on every handshake; only the query copy is fixed.
     s.io.opts.query = next ? { token: next } : {};
     if (sameUser) continue;
     if (s.connected) s.io.engine?.close();
@@ -228,8 +266,10 @@ export function emitSendMessage(payload: {
   }
 
   console.log('[LiveChat Socket] Sending message:', sendPayload);
+  // The token rides along so a connection that lost its sign-in heals on the
+  // send itself. Only on the event the server reads, and never logged.
   s.emit('sendMessage', sendPayload);
-  s.emit('livechat:sendMessage', sendPayload);
+  s.emit('livechat:sendMessage', withToken(sendPayload));
 }
 
 /** Subscribe to one room's events on both the prefixed and bare event names. */
@@ -266,7 +306,7 @@ export function emitEditMessage(roomId: string | undefined, messageId: string, c
   const s = getSocket(keyOf(roomId));
   const payload = { messageId, content };
   s.emit('editMessage', payload);
-  s.emit('livechat:editMessage', payload);
+  s.emit('livechat:editMessage', withToken(payload));
 }
 
 /** Delete a message — your own, or anyone's if you moderate the room. */
@@ -274,7 +314,7 @@ export function emitDeleteMessage(roomId: string | undefined, messageId: string)
   const s = getSocket(keyOf(roomId));
   const payload = { messageId };
   s.emit('deleteMessage', payload);
-  s.emit('livechat:deleteMessage', payload);
+  s.emit('livechat:deleteMessage', withToken(payload));
 }
 
 /** Subscribe to message edited events */
@@ -332,7 +372,7 @@ export function emitAddReaction(roomId: string, messageId: string, emoji: string
   const payload = { roomId: key, room_id: key, messageId, emoji };
   console.log('[LiveChat Socket] Emitting addReaction', payload);
   s.emit('addReaction', payload);
-  s.emit('livechat:addReaction', payload);
+  s.emit('livechat:addReaction', withToken(payload));
 }
 
 export function emitRemoveReaction(roomId: string, messageId: string, emoji: string) {
@@ -340,7 +380,7 @@ export function emitRemoveReaction(roomId: string, messageId: string, emoji: str
   const s = getSocket(key);
   const payload = { roomId: key, room_id: key, messageId, emoji };
   s.emit('removeReaction', payload);
-  s.emit('livechat:removeReaction', payload);
+  s.emit('livechat:removeReaction', withToken(payload));
 }
 
 /** Typing indicator */

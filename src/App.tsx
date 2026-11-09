@@ -42,7 +42,7 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { ClientNavigateBridge } from "@/components/app/ClientNavigateBridge";
-import { HomeShellSkeleton, ProfileSkeleton } from "@/components/app/PageSkeletons";
+import { HomeShellSkeleton, SeededProfileSkeleton } from "@/components/app/PageSkeletons";
 import { ThemePreviewProvider, ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -256,6 +256,7 @@ const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
 const ApkPage = React.lazy(() => import("./pages/ApkPage"));
+const FullScreenChatPage = React.lazy(() => import("./pages/app/FullScreenChatPage"));
 const StreamPage = React.lazy(() => import("./pages/StreamPage"));
 const DehubAppPage = React.lazy(() => import("./pages/DehubAppPage"));
 const AdminManualPage = React.lazy(() => import("./pages/AdminManualPage"));
@@ -654,6 +655,11 @@ function AppContent() {
               single non-scrolling screen that owns the viewport, and it is
               reached from outside the app far more often than from inside it. */}
           <Route path="/apk" element={<Suspense fallback={<PageLoader />}><ApkPage /></Suspense>} />
+          {/* Messages full screen, Telegram-style: list and chat side by side,
+              no app chrome. Standalone for the same reason as /apk: it owns
+              the viewport. Reached from the button in Messages. */}
+          <Route path="/chat" element={<Suspense fallback={<PageLoader />}><FullScreenChatPage /></Suspense>} />
+          <Route path="/app/chat" element={<Navigate to="/chat" replace />} />
           <Route path="/stream" element={<StreamPage />} />
 
           <Route path="/dehub-app" element={<Suspense fallback={<PageLoader />}><DehubAppPage /></Suspense>} />
@@ -923,6 +929,7 @@ function AppContent() {
             <Route path="/arcade" element={null} />
             <Route path="/stages" element={null} />
             <Route path="/videos" element={null} />
+            <Route path="/images" element={null} />
             <Route path="/shorts" element={null} />
             <Route path="/music" element={null} />
             <Route path="/tv" element={null} />
@@ -938,7 +945,7 @@ function AppContent() {
             <Route path="/radio" element={<Navigate to="/music" replace />} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
-            <Route path="/:username" element={<Suspense fallback={<ProfileSkeleton />}><ProfilePage /></Suspense>} />
+            <Route path="/:username" element={<Suspense fallback={<SeededProfileSkeleton />}><ProfilePage /></Suspense>} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

@@ -16,36 +16,39 @@ export function FeedCardSkeleton({ variant = 'video', first = false, className }
       data-home-skeleton-card={variant}
       data-skeleton-first={first || undefined}
       className={cn(
-        'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3',
+        'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3 pb-6',
         className
       )}
       aria-hidden="true"
     >
-      <div className="home-skeleton-header flex items-start gap-2 mb-3">
+      {/* Measured from the real card (412px phone): 44px header row with a
+          36px avatar, media straight after it, then a 12px gap, a 23px
+          caption line, the 16px time/views row and the 25px action row. */}
+      <div className="home-skeleton-header flex items-start gap-3 h-11">
         <div className="home-skeleton-block w-9 h-9 rounded-md shrink-0" />
         <div className="flex-1 min-w-0 space-y-1.5 pt-0.5">
           <div className="home-skeleton-block h-3.5 w-32 max-w-[70%] rounded" />
           <div className="home-skeleton-block h-3 w-20 max-w-[50%] rounded" />
         </div>
-        <div className="home-skeleton-block w-5 h-5 rounded shrink-0" />
+        <div className="home-skeleton-block w-1 h-4 mr-2 mt-1 rounded shrink-0" />
       </div>
       {variant !== 'text' && (
         <div data-media-full className={cn(
-          'home-skeleton-block home-skeleton-media w-full rounded-xl mb-3',
-          variant === 'video' ? 'aspect-video' : 'aspect-[4/3]',
+          'home-skeleton-block home-skeleton-media w-full rounded-2xl',
+          variant === 'video' ? 'aspect-video' : 'aspect-[3/4]',
         )} />
       )}
-      <div className="home-skeleton-caption space-y-2 mb-3">
-        <div className="home-skeleton-block h-3.5 w-[85%] rounded" />
-        <div className="home-skeleton-block h-3 w-[60%] rounded" />
-        {variant === 'text' && <div className="home-skeleton-block h-3 w-[72%] rounded" />}
-        <div className="home-skeleton-block h-2.5 w-24 rounded" />
-      </div>
-      <div className="home-skeleton-actions flex items-center gap-3">
-        <div className="home-skeleton-block h-8 w-8 rounded-xl" />
-        <div className="home-skeleton-block h-8 w-8 rounded-xl" />
-        <div className="home-skeleton-block h-8 w-12 rounded-xl" />
-        <div className="home-skeleton-block ml-auto h-8 w-16 rounded-xl" />
+      <div className={cn('home-skeleton-caption space-y-2', variant === 'text' ? 'pt-1' : 'pt-3')}>
+        <div className="h-[23px] mt-1 flex items-center"><div className="home-skeleton-block h-3.5 w-[80%] rounded" /></div>
+        {variant === 'text' && <div className="h-[23px] -mt-2 flex items-center"><div className="home-skeleton-block h-3.5 w-[60%] rounded" /></div>}
+        <div className="h-4 flex items-center gap-3">
+          <div className="home-skeleton-block h-3 w-8 rounded" />
+          <div className="home-skeleton-block h-3 w-8 rounded" />
+        </div>
+        <div className="home-skeleton-actions h-[25px] flex items-center justify-between">
+          {[0, 1, 2, 3].map(i => <div key={i} className="home-skeleton-block h-5 w-9 rounded-md" />)}
+          <div className="flex gap-3"><div className="home-skeleton-block h-5 w-5 rounded-md" /><div className="home-skeleton-block h-5 w-5 rounded-md" /></div>
+        </div>
       </div>
     </div>
   );

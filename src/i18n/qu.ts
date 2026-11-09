@@ -2378,7 +2378,7 @@ export const qu = {
     q18: '¿Imataq Riftnpa ñannin?',
     a18: 'Ñan ruwasqaykuqa d&#39;App ecosistema mast&#39;ariy, musuq pukllaykunata qallariy, DePIN infraestructura allinchay, AI yanapakuykunata wiñachiy, chaymanta plataforma-niraq kamachiy mast&#39;ariyta qatiy.',
     q19: '¿Imaynatataq Riftn equipowan rimayman?',
-    a19: 'Qam chayayta atikunki canales oficialesniykuwan: tech@dehub.net técnicos sasachakuykunapaq, utaq qatiwayku Twitter kaqpi chaymanta Instagram kaqpi @dehub_official kaqpi musuqyachiykunapaq chaymanta ayllu yanapakuypaq.',
+    a19: 'Qam chayayta atikunki canales oficialesniykuwan: tech@dehub.net técnicos sasachakuykunapaq, utaq qatiwayku Twitter kaqpi chaymanta Instagram kaqpi @riftn_com kaqpi musuqyachiykunapaq chaymanta ayllu yanapakuypaq.',
     q20: '¿Riftn tokenkuna huk qullqi churaychu?',
     a20: 'Manan, Riftn tokenkuna Riftn ecosistema ukhupi utilidad propósitos kaqpaq sinchita kanku, pukllay ukhupi utaq app ukhupi digital qullqikunaman rikch&#39;akuq. Manan qolqe churay instrumentokunachu, qhatukunapas anchatan kuyurinku.',
     q21: '¿Imaynatataq Riftn kaqpi contenido moderación llamkan?',

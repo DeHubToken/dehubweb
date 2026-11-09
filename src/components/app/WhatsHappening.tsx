@@ -13,7 +13,7 @@ import React, { Suspense, memo, useState, useRef, useCallback, useEffect } from 
 const GoLiveModal = React.lazy(() =>
   import('@/components/app/modals/GoLiveModal').then(m => ({ default: m.GoLiveModal }))
 );
-import { useNavigate } from 'react-router-dom';
+import { useStableNavigate } from '@/hooks/use-stable-navigate';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
@@ -156,7 +156,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     return () => mql.removeEventListener('change', onChange);
   }, []);
   const isVisibleInstance = isDesktopViewport || showCountrySelector;
-  const navigate = useNavigate();
+  const navigate = useStableNavigate();
   const { openModal: openStagesModal, joinSpace } = useStage();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useDiscoveryTab(surface);

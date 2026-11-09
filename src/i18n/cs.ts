@@ -2205,7 +2205,7 @@ export const cs = {
     q18: 'Jaký je plán Riftn?',
     a18: "Náš plán zahrnuje rozšíření ekosystému d'App, spuštění nových her, vylepšení infrastruktury DePIN, vývoj AI nástrojů a oficiální spuštění správy počátkem roku 2026.",
     q19: 'Jak mohu kontaktovat tým Riftn?',
-    a19: 'Můžete nás kontaktovat prostřednictvím našich oficiálních kanálů: tech@dehub.net pro technické problémy, nebo nás sledujte na Twitter a Instagram @dehub_official.',
+    a19: 'Můžete nás kontaktovat prostřednictvím našich oficiálních kanálů: tech@dehub.net pro technické problémy, nebo nás sledujte na Twitter a Instagram @riftn_com.',
     q20: 'Jsou tokeny Riftn investicí?',
     a20: 'Ne, tokeny Riftn slouží výhradně k účelům v rámci ekosystému Riftn, podobně jako digitální měny ve hře nebo v aplikaci. Nejedná se o investiční nástroje a trhy jsou vysoce volatilní.',
     q21: 'Jak funguje moderace obsahu na Riftn?',

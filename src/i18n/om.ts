@@ -2220,7 +2220,7 @@ export const om = {
     q18: 'Kaartaan karooraa Riftn maali?',
     a18: "Kaartaan karooraa keenya eekosisteemii d'app bal'isuu, taphawwan haaraa eegaluu, bu'uura DePIN cimsuu, meeshaalee AI misomsuu, fi bulchiinsa ifaan bara 2026 jalqabatti eegaluu of keessaa qaba.",
     q19: 'Garee Riftn akkamittin quunnamuu danda\'a?',
-    a19: 'Chaanaalota ofiishelii keenyaan nu qaqqabuu dandeessa: tech@dehub.net rakkoo teeknikaaf, yookiin Twitter fi Instagram @dehub_official irratti nu hordofaa.',
+    a19: 'Chaanaalota ofiishelii keenyaan nu qaqqabuu dandeessa: tech@dehub.net rakkoo teeknikaaf, yookiin Twitter fi Instagram @riftn_com irratti nu hordofaa.',
     q20: 'Tookiin Riftn invastimantiidhaa?',
     a20: "Lakki, mallattoon Riftn cimsee kaayyoo faayidaa sirna ikoo Riftn keessatti, maallaqa dijitaalaa tapha keessaa ykn appii keessaa wajjin wal fakkaata. Meeshaa invastimantii waan hin taaneef gabaan jijjiirama guddaa qaba.",
     q21: "To'annoon qabiyyee Riftn irratti akkamitti hojjeta?",

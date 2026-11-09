@@ -2377,6 +2377,7 @@
     "loginRequired": "Inloggen vereist"
   },
   "messages": {
+    "newDrawer": {"to": "Aan", "placeholder": "Naam of @gebruikersnaam", "recent": "Recent", "suggested": "Voorgesteld", "youFollow": "Mensen die je volgt", "chattedBefore": "Jullie praten", "mutual": "Wederzijds", "dmsOff": "DM's uit", "keepTyping": "Typ verder om iedereen te zoeken", "noOne": "Niemand gevonden", "tryUsername": "Probeer hun exacte @gebruikersnaam", "sayHi": "Zeg hallo tegen iemand", "typeAny": "Typ een naam of @gebruikersnaam"},
     "reply": "Beantwoorden",
     "react": "Reageren",
     "edit": "Bewerken",
@@ -2924,6 +2925,7 @@
     "passkeyFailed": "Inloggen met vingerafdruk mislukt. Probeer het opnieuw.",
     "passkeyBackupHint": "Je account staat in de passkey van dit apparaat. Op de meeste telefoons synchroniseert deze met je Google- of Apple-account, en je kunt een back-upwachtwoord toevoegen in Instellingen.",
     "walletBlockedTitle": "Deze wallet is gloednieuw",
+    "profileMovedTitle": "Je profiel is verplaatst",
     "walletBlockedBody": "Nieuwe wallets hebben een saldo of een eerdere transactie nodig om een account te openen. Meld je aan met een van de opties hieronder en koppel deze wallet daarna via Instellingen.",
     "checkYourEmail": "Controleer uw e-mail",
     "continuePhone": "Doorgaan met telefoon",
@@ -17608,7 +17610,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Uitgelicht in",
     "ee1c1eecf1b6": "Riftn is gedekt door enkele van's werelds grootste en meest vertrouwde publicaties. Hier zijn de artikelen die onze missie om de media te democratiseren in de schijnwerpers zetten.",
     "6ccae4bbf68d": "De uitgever heeft het origineel verwijderd; dit opent de Wayback Machine-opname.",

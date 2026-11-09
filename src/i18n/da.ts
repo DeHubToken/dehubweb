@@ -2218,7 +2218,7 @@ export const da = {
     q18: 'Hvad er Riftns køreplan?',
     a18: "Vores køreplan inkluderer udvidelse af d'App-økosystemet, lancering af nye spil, forbedring af DePIN-infrastruktur, udvikling af AI-værktøjer og officiel lancering af governance i starten af 2026.",
     q19: 'Hvordan kan jeg kontakte Riftn-teamet?',
-    a19: 'Du kan nå os via vores officielle kanaler: tech@dehub.net for tekniske problemer, eller følg os på Twitter og Instagram @dehub_official for opdateringer og fællesskabsengagement.',
+    a19: 'Du kan nå os via vores officielle kanaler: tech@dehub.net for tekniske problemer, eller følg os på Twitter og Instagram @riftn_com for opdateringer og fællesskabsengagement.',
     q20: 'Er Riftn-tokens en investering?',
     a20: 'Nej, Riftn-tokens er udelukkende til brug inden for Riftn-økosystemet, svarende til digitale valutaer i spillet eller i appen. De er ikke investeringsinstrumenter, og markederne er meget volatile.',
     q21: 'Hvordan fungerer indholdsmoderering på Riftn?',

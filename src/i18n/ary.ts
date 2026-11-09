@@ -2559,7 +2559,7 @@ export const ary = {
     q20: 'فين نقدر نلقى الكود المصدري؟',
     a20: 'الكود المصدري متوفر على GitHub. زور الروابط ديالنا للمزيد.',
     q21: 'كيفاش نتواصل مع فريق الدعم؟',
-    a21: 'تقدر تراسلنا على tech@dehub.net أو تتبعنا على @dehub_official فـ Twitter.',
+    a21: 'تقدر تراسلنا على tech@dehub.net أو تتبعنا على @riftn_com فـ Twitter.',
     stillHaveQuestions: 'مازال عندك أسئلة؟',
     stillHaveQuestionsDesc: 'تواصل معانا وغادي نكونو مسرورين بمساعدتك.',
     techSupport: 'الدعم التقني',

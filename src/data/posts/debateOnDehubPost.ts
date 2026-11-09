@@ -90,7 +90,7 @@ Open a Stage. Set a motion. Invite someone who will push back. Post the long ver
 
 Think you can defend your side? Bring the debate to Riftn.
   `,
-  bannerImage: '/media/debate-your-side-banner.jpg',
+  bannerImage: '/media/debate-your-side-banner-riftn.jpg',
   bannerImageAlt: 'Ready to debate your side? Bring it to Riftn.',
   author: {
     name: 'Riftn Team',

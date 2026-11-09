@@ -9,6 +9,8 @@ import { postBgById } from '@/lib/post-backgrounds';
 import type { TextPost as GalleryTextPost } from '@/types/feed.types';
 import type { ProviderKeyRow } from '@/lib/api/dehub/provider-keys';
 import { NewMessageSelector } from '@/components/app/chat/NewMessageSelector';
+import { NewMessageDrawer } from '@/components/app/chat/NewMessageDrawer';
+import type { DeHubConversation } from '@/lib/api/dehub';
 import { GroupChatRow } from '@/components/app/chat/GroupChatRow';
 import { CommunityKindChip } from '@/components/app/communities/CommunityKindChip';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
@@ -17,6 +19,7 @@ import PayWithCoinSheet from '@/components/app/credits/PayWithCoinSheet';
 import { VoiceStripPlayer } from '@/components/app/audio/VoiceStripPlayer';
 import { LiveMicBars } from '@/components/app/audio/LiveMicBars';
 import { DmLockedState, DmUndecryptableRun } from '@/components/app/chat/DmLockedState';
+import { DmSafetyBanner } from '@/components/app/chat/DmSafetyBanner';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { PostActionBar } from '@/features/post/components/PostActionBar';
@@ -26,6 +29,7 @@ import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { hideDislikedPost, restoreDislikedPost } from '@/lib/disliked-posts-store';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { showUndoToast } from '@/components/ui/undo-toast';
 import { showUpdateToast } from '@/components/app/NewVersionToast';
 import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
@@ -121,6 +125,8 @@ import followCoverLuna from '@/assets/banners/agent-xluna.png';
 import { FollowCoverCard } from '@/components/app/FollowCoverCard';
 import { ConversationItem } from '@/pages/app/MessagesPage';
 import type { DeHubDMMessage } from '@/lib/api/dehub/dm';
+import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
+import { DmMessageBubble, CozyDayPill } from '@/components/app/chat/DirectMessageChat';
 import type { DeHubUser } from '@/lib/api/dehub';
 import { GithubLinkSetting } from '@/components/app/settings/GithubLinkSetting';
 import { ProfileLinksPill } from '@/components/app/profile/ProfileSocialLinks';
@@ -258,6 +264,78 @@ function NameBadgesGallery() {
   );
 }
 
+/**
+ * The full-screen chat at /chat: the list beside a cozy thread (grouped
+ * bubbles, one avatar and one time line per run, a day pill, the wallpaper).
+ * Laid out by hand from the real bubble, since the live chat needs a session.
+ */
+function FullScreenChatGallery() {
+  const ago = (min: number) => new Date(Date.now() - min * 60_000).toISOString();
+  const yesterday = (h: number) => { const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(h, 12, 0, 0); return d.toISOString(); };
+  const people: Array<Partial<DeHubUser> & { address: string }> = [
+    { address: '0x7777777777777777777777777777777777777771', username: 'ellaverse', displayName: 'Ella Verse', badgeBalance: 2_000_000 },
+    { address: '0x7777777777777777777777777777777777777772', username: 'xluna', displayName: 'Luna', badgeBalance: 600_000 },
+    { address: '0x7777777777777777777777777777777777777773', username: 'deepwater', displayName: 'Deep Water' },
+    { address: '0x7777777777777777777777777777777777777774', username: 'nova', displayName: 'Nova' },
+  ];
+  const lines = ['Sending the cut now', 'See you on the stream tonight', 'haha yes', 'Voice note'];
+  const rows = people.map((user, i) => ({
+    id: `gallery-fsc-${i}`,
+    participants: [user as DeHubUser],
+    otherUser: user as DeHubUser,
+    unreadCount: i === 1 ? 3 : 0,
+    createdAt: ago(10 + i * 50),
+    updatedAt: ago(10 + i * 50),
+    lastMessage: { id: `gallery-fsc-msg-${i}`, conversationId: `gallery-fsc-${i}`, sender: user as DeHubUser, content: lines[i], createdAt: ago(10 + i * 50) } as DeHubDMMessage,
+  }));
+  const me = { _id: 'me', address: '0x0000000000000000000000000000000000000001', username: 'me' };
+  const ella = { _id: 'ella', address: people[0].address, username: 'ellaverse', displayName: 'Ella Verse' };
+  const msg = (id: string, mine: boolean, content: string, createdAt: string): DmMessage => ({
+    _id: id, conversation: 'gallery', sender: (mine ? me : ella) as DmMessage['sender'], author: mine ? 'me' : 'other', content,
+    msgType: 'msg', mediaUrls: [], voiceDuration: null, isRead: mine, isEdited: false, editedAt: null, isForwarded: false,
+    replyTo: null, paymentStatus: null, paymentTxHash: null, tipAmount: null, tipSymbol: null, createdAt,
+  } as unknown as DmMessage);
+  const thread: Array<{ m: DmMessage; mine: boolean; first: boolean; last: boolean; day?: boolean }> = [
+    { m: msg('a', false, 'did you finish the edit?', yesterday(21)), mine: false, first: true, last: true, day: true },
+    { m: msg('b', true, 'almost, colour pass left', yesterday(21)), mine: true, first: true, last: true },
+    { m: msg('c', false, 'morning!', ago(14)), mine: false, first: true, last: false, day: true },
+    { m: msg('d', false, 'the intro is perfect', ago(13)), mine: false, first: false, last: false },
+    { m: msg('e', false, 'can you send the full cut when it is ready?', ago(12)), mine: false, first: false, last: true },
+    { m: msg('f', true, 'yes, rendering now', ago(9)), mine: true, first: true, last: false },
+    { m: msg('g', true, 'Sending the cut now', ago(8)), mine: true, first: false, last: true },
+  ];
+  const noop = () => {};
+  const list = (
+    <div className="flex h-full flex-col">
+      <div className="px-4 pb-2 pt-4 text-base font-semibold">Chat</div>
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {rows.map((c, i) => (
+          <ConversationItem key={c.id} conversation={c} onClick={noop} isSelected={i === 0} onDelete={noop} onBlock={noop} />
+        ))}
+      </div>
+    </div>
+  );
+  const chat = (
+    <div data-chat-wallpaper className="chat-text-zone h-full overflow-y-auto px-4 pb-4">
+      <div className="mx-auto w-full max-w-[47.5rem]">
+        {thread.map(({ m, mine, first, last, day }) => (
+          <div key={m._id}>
+            {day && <CozyDayPill iso={m.createdAt} />}
+            <DmMessageBubble message={m} isOwnMessage={mine} cozy={{ first, last }} currentUserAddress={me.address} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+  return (
+    <section data-fullscreen-chat-gallery className="mb-5 space-y-3">
+      <h2 className="text-sm font-semibold">Full-screen chat (/chat)</h2>
+      <FullScreenChatShell inline chatOpen list={list} chat={chat} />
+      <FullScreenChatShell inline chatOpen={false} list={list} chat={null} />
+    </section>
+  );
+}
+
 function FollowCardsGallery() {
   const { t: _copy } = _useCopy();
   const abs = (src: string) => new URL(src, window.location.origin).href;
@@ -324,17 +402,17 @@ const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon a
 const SAMPLE_ARTICLE = {
   get title() { return _translateCopy("copy.b91b0545d5a2", { defaultValue: "Why we moved our streams on-chain" }); },
   summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
-  cover: '/media/ai-creator-studio-banner.jpg',
+  cover: '/media/ai-creator-studio-banner-riftn.jpg',
   body: [
     'The first time a platform froze our payouts, we lost three weeks of income over a copyright claim that turned out to be wrong.',
     'Moving to Riftn was not about crypto. It was about owning the relationship with the people who watch us every night.',
-    '![Our first night streaming on Riftn, 214 people in chat](/media/fig-athlete-who-owns-the-fan.jpg#w=1200&h=630)',
+    '![Our first night streaming on Riftn, 214 people in chat](/media/fig-athlete-who-owns-the-fan-riftn.jpg#w=1200&h=630)',
     '# What actually changed',
     'Tips land in our wallet the moment they are sent. **Subscribers unlock posts with a tier**, not an algorithm.',
     '> We stopped asking permission to get paid.',
     '# The numbers after 90 days',
     '- Revenue per viewer up 34%\n- Churn down for the first time in a year\n- Zero frozen payouts',
-    '![](/media/fig-chains-bignames.jpg#w=2400&h=1260)',
+    '![](/media/fig-chains-bignames-riftn.jpg#w=2400&h=1260)',
     '# What we would do differently',
     'We would have moved our [back catalogue](https://riftn.com) on day one, instead of waiting to see if the audience followed.',
   ].join('\n\n'),
@@ -990,6 +1068,15 @@ function ToastsGallery() {
       <button type="button" data-kit-button="primary" onClick={showUpdate} className="rounded-xl px-4 py-2 text-sm font-medium">
         {t('toasts.refresh')}
       </button>
+      <button
+        type="button"
+        data-kit-button="quiet"
+        data-undo-toast
+        onClick={() => showUndoToast(t('toasts.conversation_deleted'), { id: 'gallery-undo', duration: 60_000, undoLabel: t('common.undo'), closeLabel: t('common.close'), onUndo: () => {} })}
+        className="ml-2 rounded-xl px-4 py-2 text-sm font-medium"
+      >
+        {t('common.undo')}
+      </button>
     </section>
   );
 }
@@ -1192,7 +1279,7 @@ const ICONS: ThemeIconKey[] = [
   'harpoon', 'home', 'images', 'live', 'lock', 'messages', 'notifications', 'pinned',
   'posts', 'precision-strike', 'profile', 'search', 'second-wind', 'settings', 'signal-flare', 'stages',
   'staking', 'stats', 'stores', 'subscriptions', 'superpowers', 'team-up', 'timeline-bomber', 'trend-jacker',
-  'trophy', 'tv', 'usernames', 'videos', 'wand', 'paint',
+  'trophy', 'tv', 'usernames', 'videos', 'wallet', 'wand', 'paint',
 ];
 
 /** Post stats: the Quick Peek sheet (tap the view pill) and the full Post Info panel, on example numbers. */
@@ -1344,6 +1431,7 @@ export default function StateGalleryPage() {
         <UsernameReserveGallery />
 
         <NameBadgesGallery />
+        <FullScreenChatGallery />
         <FollowCardsGallery />
 
         <StreamerArtworkGallery />
@@ -1359,6 +1447,7 @@ export default function StateGalleryPage() {
         <LiveViewerGallery />
         <HolderGroupGallery />
         <GroupsChannelsGallery />
+        <NewMessageDrawerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -1613,6 +1702,41 @@ function GroupsChannelsGallery() {
       <NewMessageSelector open={selector} onOpenChange={setSelector} onSelectDM={noop} onSelectGroup={noop} onSelectChannel={noop} />
       <AuthContext.Provider value={GALLERY_AUTH}>
         <NewGroupChannelSheet kind={sheet ?? 'group'} open={!!sheet} onOpenChange={(open) => { if (!open) setSheet(null); }} />
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
+const GALLERY_DM_PEOPLE = [
+  ['juno', 'Juno', 'b3'], ['kira', 'Kira', 'b1'], ['dexdoes', 'Dex', 'b2'], ['oto', 'Oto', 'b4'], ['tadpole', 'Tad', 'b5'], ['mira', 'Mira', 'b6'],
+].map(([username, displayName, tail]) => ({
+  id: `gallery-dm-${username}`,
+  participants: [],
+  otherUser: { address: `0x00000000000000000000000000000000000000${tail}`, username, displayName },
+  unreadCount: 0,
+  createdAt: '2026-11-06T00:00:00.000Z',
+  updatedAt: '2026-11-06T00:00:00.000Z',
+})) as unknown as DeHubConversation[];
+
+/** The phone + in Messages: New message drawer with recents, and the empty first-run state. */
+function NewMessageDrawerGallery() {
+  const [open, setOpen] = useState<'recents' | 'empty' | null>(null);
+  return (
+    <section data-page-bento data-new-message-drawer-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">New message drawer</h2>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" data-open-new-message="recents" onClick={() => setOpen('recents')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">With recent chats</button>
+        <button type="button" data-open-new-message="empty" onClick={() => setOpen('empty')} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs">First chat</button>
+      </div>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <NewMessageDrawer
+          open={!!open}
+          onOpenChange={(o) => { if (!o) setOpen(null); }}
+          conversations={open === 'empty' ? [] : GALLERY_DM_PEOPLE}
+          onPick={() => setOpen(null)}
+          onGroup={() => setOpen(null)}
+          onChannel={() => setOpen(null)}
+        />
       </AuthContext.Provider>
     </section>
   );
@@ -1944,6 +2068,10 @@ function LockedChatGallery() {
         <div className="flex flex-col justify-center rounded-2xl border border-white/10 px-4">
           <DmUndecryptableRun count={3} />
         </div>
+      </div>
+      <div data-dm-safety-gallery className="mt-4 grid gap-2 pb-2 md:grid-cols-2">
+        <DmSafetyBanner peer={{ address: '0x1111111111111111111111111111111111111111', displayName: 'Mal | Riftn Founder' }} peerSentLink />
+        <DmSafetyBanner peer={{ address: '0x2222222222222222222222222222222222222222', displayName: 'Tad' }} peerSentLink />
       </div>
     </section>
   );

@@ -24,6 +24,14 @@ describe('dehub.io forwards to riftn.com', () => {
     expect(await hit('https://dehub.io/mal?tab=posts')).toEqual({ status: 301, to: 'https://riftn.com/mal?tab=posts' });
   });
 
+  it('301s search crawlers even when they send browser fetch headers', async () => {
+    const googlebot = 'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+    expect(await hit('https://dehub.io/guides/x?a=1', { 'Sec-Fetch-Mode': 'navigate', 'User-Agent': googlebot }))
+      .toEqual({ status: 301, to: 'https://riftn.com/guides/x?a=1' });
+    expect(await hit('https://dehub.io/mal', { 'Sec-Fetch-Mode': 'navigate', 'User-Agent': 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)' }))
+      .toEqual({ status: 301, to: 'https://riftn.com/mal' });
+  });
+
   it('sends a browser through the hand-off first', async () => {
     expect(await hit('https://dehub.io/mal?tab=posts', { 'Sec-Fetch-Mode': 'navigate' }))
       .toEqual({ status: 302, to: '/_handoff-out?next=%2Fmal%3Ftab%3Dposts' });

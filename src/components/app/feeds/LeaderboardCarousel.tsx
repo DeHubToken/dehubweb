@@ -140,7 +140,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
           to="/app/leaderboard"
           className={cn('text-zinc-400 text-sm hover:text-white flex items-center gap-1 rounded', FOCUS_RING)}
         >
-          {t('leaderboard.seeAll')} <ChevronRight className="w-4 h-4" aria-hidden="true" />
+          {t('leaderboard.seeAll', { defaultValue: 'See all' })} <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </Link>
       </div>
       <div className="relative">

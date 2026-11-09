@@ -106,6 +106,13 @@ interface AudioVisualizerProps {
    */
   decodeEnabled?: boolean;
   /**
+   * Feed cards: draw the real waveform only once the track is played. The
+   * decode downloads the WHOLE file (a long recording is tens of MB) and holds
+   * its decoded samples in memory, which scrolling past a post never needs;
+   * the seeded pattern stands in until then.
+   */
+  waveformOnPlay?: boolean;
+  /**
    * Track length in seconds when the caller already knows it (the feed payload
    * carries `audioDuration`), so the scrubber can show a real total before
    * anything has been downloaded.
@@ -292,6 +299,7 @@ export function AudioVisualizer({
   muted = false,
   seed = 'default',
   decodeEnabled = true,
+  waveformOnPlay = false,
   durationHint = 0,
   onFullscreen,
   isFullscreen = false,
@@ -441,13 +449,13 @@ export function AudioVisualizer({
   // the card is near the viewport (or playing) so a feed of audio posts
   // doesn't download + PCM-decode every track on mount.
   useEffect(() => {
-    if (!decodeEnabled && !isPlaying) return;
+    if (!isPlaying && (waveformOnPlay || !decodeEnabled)) return;
     let stale = false;
     decodeAudioWaveform(audioUrl, STATIC_BAR_COUNT, (peaks) => {
       if (!stale) setWaveformPeaks(peaks);
     });
     return () => { stale = true; };
-  }, [audioUrl, decodeEnabled, isPlaying]);
+  }, [audioUrl, decodeEnabled, waveformOnPlay, isPlaying]);
 
   /**
    * Point this card's refs at `graph` — the shared player, arriving from the
@@ -1201,7 +1209,7 @@ export function AudioVisualizer({
         </div>
       </div>
       <div data-audio-studio-options>
-          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style')} hue={hue} theme={theme} seed={seed} />}
+          {showStylePicker && <StudioStylePicker style={style} onPick={setStyle} title={t('creator.style', { defaultValue: 'Style' })} hue={hue} theme={theme} seed={seed} />}
           {popoutTrack && <button type="button" data-audio-lyrics-toggle aria-label={t('audioPost.lyrics')} aria-pressed={showLyrics} data-active={showLyrics || undefined} onClick={() => setShowLyrics(v => !v)}><MicVocal /></button>}
           {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           {showVolume && <button type="button" aria-label={isEffectivelyMuted ? _copy('copy.ce4ee4efc5e3', { defaultValue: 'Unmute' }) : _copy('copy.8dd6857baf02', { defaultValue: 'Mute' })} onClick={() => { const next = !isEffectivelyMuted; if (!next && volume === 0) setVolume(.8); setSelfMuted(next); videoPlaybackManager.globalMuted = next; onMuteChange?.(next); }}><Volume2 /></button>}

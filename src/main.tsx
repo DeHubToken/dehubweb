@@ -3,6 +3,7 @@ import "./lib/storage-quota-guard"; // Must run first: keeps localStorage writab
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import "./lib/media-session"; // Install page-close cleanup before any player mounts.
 import { seedDefaultFeedTab } from "./lib/feed-defaults";
+import { applyChatTextSize } from "./lib/chat-text-size";
 import { beginMobileBootWait } from "./lib/mobile-boot-cover";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -122,6 +123,7 @@ window.addEventListener('vite:preloadError', (event) => {
 //   handling inside lazyWithRetry and the ErrorBoundary take it from there).
 // A fresh session opens on the viewer's default feed tab (Settings > Appearance).
 seedDefaultFeedTab();
+applyChatTextSize();
 
 const render = () => {
   createRoot(document.getElementById("root")!).render(

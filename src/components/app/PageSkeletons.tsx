@@ -21,6 +21,8 @@ import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SK = "theme-skeleton";
 const SK_LIGHT = "theme-skeleton";
@@ -235,21 +237,49 @@ export function ExploreSkeleton() {
 // ─── Profile ────────────────────────────────────────────────────────────────
 
 /** Profile page skeleton — cover photo + avatar + glass tabs with icon/count stacks */
-export function ProfileSkeleton() {
+/** What the tap already knows about the person: drawn instead of grey bars. */
+export interface ProfileSkeletonSeed {
+  name?: string;
+  handle?: string;
+  avatarUrl?: string;
+  coverUrl?: string;
+}
+
+export function ProfileSkeleton({ seed }: { seed?: ProfileSkeletonSeed | null } = {}) {
+  const handle = seed?.handle ? `@${seed.handle.replace(/^@/, '')}` : '';
   return (
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card Bento */}
       <div data-page-bento data-glass-loading-surface className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
-        <Skeleton className={`aspect-[3/1] w-full ${SK}`} />
+        {seed?.coverUrl ? (
+          <img src={seed.coverUrl} alt="" className="aspect-[3/1] w-full object-cover" decoding="async" />
+        ) : (
+          <Skeleton className={`aspect-[3/1] w-full ${SK}`} />
+        )}
         <div className="px-4 sm:px-6 pb-4">
           <div className="flex items-end justify-between -mt-12 sm:-mt-14 mb-4">
-            <Skeleton className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-2 border-zinc-900 ${SK}`} />
+            {seed?.avatarUrl ? (
+              <img data-profile-seed-avatar src={seed.avatarUrl} alt="" className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-2 border-zinc-900 object-cover bg-zinc-800" decoding="async" />
+            ) : seed?.name ? (
+              <div data-profile-seed-avatar className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-2 border-zinc-900 bg-zinc-700 flex items-center justify-center text-white text-2xl font-medium">
+                {seed.name.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <Skeleton className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-2 border-zinc-900 ${SK}`} />
+            )}
             <Skeleton className={`-mr-1 h-9 w-24 rounded-xl ${SK}`} />
           </div>
-          <div className="space-y-2">
-            <Skeleton className={`h-5 w-40 ${SK}`} />
-            <Skeleton className={`h-4 w-28 ${SK}`} />
-          </div>
+          {seed?.name || handle ? (
+            <div data-profile-seed-name className="min-w-0">
+              {seed?.name && <div className="text-xl font-bold text-white truncate leading-7">{seed.name}</div>}
+              {handle && <div className="text-zinc-400 truncate leading-6">{handle}</div>}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Skeleton className={`h-5 w-40 ${SK}`} />
+              <Skeleton className={`h-4 w-28 ${SK}`} />
+            </div>
+          )}
           <div className="mt-3 space-y-1.5">
             <Skeleton className={`h-4 w-full ${SK}`} />
             <Skeleton className={`h-4 w-3/4 ${SK}`} />
@@ -277,6 +307,26 @@ export function ProfileSkeleton() {
       <ContentLoader minHeight="38vh" />
     </div>
   );
+}
+
+/**
+ * The profile route's loading state. A tap on a name or avatar seeds the
+ * profile cache (lib/profile-cache-seed) before navigating, so the person's
+ * photo and name are known the moment the page opens: draw them, rather than a
+ * faceless skeleton, while the page code and the rest of the profile load.
+ */
+export function SeededProfileSkeleton() {
+  const { username } = useParams<{ username?: string }>();
+  const [params] = useSearchParams();
+  const queryClient = useQueryClient();
+  const key = username || params.get('id') || '';
+  let seed: ProfileSkeletonSeed | null = null;
+  if (key) {
+    for (const [, value] of queryClient.getQueriesData<{ name?: string; handle?: string; avatarUrl?: string; coverUrl?: string }>({ queryKey: ['dehub-profile', key] })) {
+      if (value && (value.name || value.avatarUrl)) { seed = value; break; }
+    }
+  }
+  return <ProfileSkeleton seed={seed} />;
 }
 
 // ─── Messages ───────────────────────────────────────────────────────────────

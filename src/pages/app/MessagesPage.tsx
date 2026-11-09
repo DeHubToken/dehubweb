@@ -15,11 +15,17 @@ import Ban from "@/components/ui/cut-icons/blocked";
 import Search from "@/components/ui/cut-icons/search";
 import Plus from "@/components/ui/cut-icons/add";
 import MessageCircle from "@/components/ui/cut-icons/message-envelope";
+import Fullscreen from "@/components/ui/cut-icons/fullscreen";
+import ExitFullscreen from "@/components/ui/cut-icons/exit-fullscreen";
+import { FullScreenChatShell } from '@/components/app/chat/FullScreenChatShell';
+import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector } from '@/components/app/chat';
+import { NewMessageDrawer, type NewMessageDrawerHandle } from '@/components/app/chat/NewMessageDrawer';
+import { flushSync } from 'react-dom';
 import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -37,6 +43,7 @@ import { conversationIdentity } from '@/lib/conversation-identity';
 import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
 import { useDraftText } from '@/hooks/use-draft';
 import { SwipeableRow } from '@/components/ui/swipeable-row';
+import { showUndoToast } from '@/components/ui/undo-toast';
 import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@/lib/undoable-delete';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
@@ -207,7 +214,12 @@ export function ConversationItem({
   );
 }
 
-export default function MessagesPage() {
+/**
+ * `fullscreen` is riftn.com/chat: the same inbox with nothing else on screen,
+ * the list and the open chat side by side on a computer, and the cozy thread
+ * layout (grouped bubbles, day pills, wallpaper). See FullScreenChatShell.
+ */
+export default function MessagesPage({ fullscreen = false }: { fullscreen?: boolean } = {}) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const location = useLocation();
@@ -240,6 +252,11 @@ export default function MessagesPage() {
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
+  // Phones: the + opens the New message drawer directly, keyboard up.
+  const [showNewMessageDrawer, setShowNewMessageDrawer] = useState(false);
+  const newMessageDrawerRef = useRef<NewMessageDrawerHandle>(null);
+  // The chat opened from that drawer, whose composer takes the caret on arrival.
+  const [composerFocusFor, setComposerFocusFor] = useState<string | null>(null);
   const [newChatKind, setNewChatKind] = useState<NewChatKind | null>(null);
   const { data: myMemberships } = useUserCommunities();
   
@@ -264,6 +281,47 @@ export default function MessagesPage() {
   } = useConversations(debouncedSearchQuery);
 
   const createConversation = useCreateConversation();
+
+  const openNewMessage = useCallback(() => {
+    const phone = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    if (!phone) {
+      setShowMessageSelector(true);
+      return;
+    }
+    // Inside the tap, so iOS lets the keyboard come up with the drawer.
+    newMessageDrawerRef.current?.primeKeyboard();
+    setShowNewMessageDrawer(true);
+  }, []);
+
+  /**
+   * A person picked in the drawer: open the chat in place right away (a thread
+   * you have never had starts as the usual virtual `new_0x…` one, which the
+   * chat creates on the server itself), then let the drawer slide away and
+   * hand the caret to the composer while the keyboard is still up.
+   */
+  const pickFromDrawer = useCallback((user: DeHubUser) => {
+    const addr = (user.address || '').toLowerCase();
+    if (!addr) return;
+    const existing = conversations?.find(c => c.otherUser?.address?.toLowerCase() === addr);
+    const now = new Date().toISOString();
+    const conv: DeHubConversation = existing ?? {
+      id: `new_${addr}`,
+      participants: [user],
+      otherUser: user,
+      unreadCount: 0,
+      createdAt: now,
+      updatedAt: now,
+    } as DeHubConversation;
+    setComposerFocusFor(conversationIdentity(conv));
+    flushSync(() => setSelectedConversation(conv));
+    window.setTimeout(() => {
+      setShowNewMessageDrawer(false);
+      requestAnimationFrame(() => {
+        const box = document.querySelector<HTMLTextAreaElement>('[data-chat-composer-input]');
+        box?.focus({ preventScroll: true });
+      });
+    }, 60);
+  }, [conversations]);
   const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(debouncedSearchQuery);
 
   /*
@@ -283,10 +341,12 @@ export default function MessagesPage() {
         onError: () => toast.error(t('messages.deleteConversationFailed')),
       }),
     );
-    toast(t('toasts.conversation_deleted'), {
+    showUndoToast(t('toasts.conversation_deleted'), {
       id: `dm-delete-${conv.id}`,
       duration: UNDO_WINDOW_MS,
-      action: { label: t('common.undo'), onClick: () => undoDelete(conv.id) },
+      undoLabel: t('common.undo'),
+      closeLabel: t('common.close'),
+      onUndo: () => undoDelete(conv.id),
     });
   }, [deleteConversationMutation, t]);
 
@@ -450,7 +510,10 @@ export default function MessagesPage() {
   // after the user navigates away mid-handshake.
   const hasVirtualSelected = selectedConversation &&
     (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
-  const isMessagesRouteActive = location.pathname === '/app/messages';
+  // The route this instance answers on. /chat mounts its own copy outside the
+  // app layout, so each copy only polls and pushes history while it is shown.
+  const routeBase = fullscreen ? '/chat' : '/app/messages';
+  const isMessagesRouteActive = location.pathname === routeBase;
   const publicUnread = usePublicChatUnreadCount();
   usePublicChatReading(isMessagesRouteActive && showPublicChat);
 
@@ -475,9 +538,9 @@ export default function MessagesPage() {
     if (!isMessagesRouteActive) return;
     if (chatOpen && !chatEntryRef.current) {
       chatEntryRef.current = true;
-      navigate('/app/messages?chat=1');
+      navigate(`${routeBase}?chat=1`);
     }
-  }, [chatOpen, isMessagesRouteActive, navigate]);
+  }, [chatOpen, isMessagesRouteActive, navigate, routeBase]);
 
   // Back was pressed: the param is gone, so close the chat rather than leave
   // the route. This also clears a selection that would otherwise survive —
@@ -568,15 +631,45 @@ export default function MessagesPage() {
     setComposerPrefill({ convId: dmId, text: pending.body });
   }, [selectedConversation]);
 
+  // /chat's own title, card and canonical. Shown signed out too, so a shared
+  // riftn.com/chat link unfurls as the chat page rather than the homepage.
+  const chatSeo = fullscreen ? (
+    <>
+      <SEOHead
+        title="Chat: Full-Screen Messages on Riftn"
+        description="Your Riftn messages full screen: every conversation on the left, the open chat on the right, grouped bubbles and day markers. Direct messages, group chats and the public chat in one place."
+        url="https://riftn.com/chat"
+        image="https://riftn.com/og/chat.jpg"
+      />
+      <h1 className="sr-only">{_copy('fullscreenChat.h1', { defaultValue: 'Riftn Chat: full-screen messages' })}</h1>
+    </>
+  ) : null;
+  // The shell is fixed to the window, so on iOS (which covers the page with
+  // the keyboard instead of resizing it) it follows the visible area.
+  const shellKeyboardStyle: CSSProperties | undefined = keyboardOpen && vvHeight
+    ? { top: vvOffsetTop, height: vvHeight, bottom: 'auto' }
+    : undefined;
+
   // Block access for unauthenticated users
   if (!isAuthenticated) {
-    return (
+    const gate = (
       <AuthGate description={_copy("copy.b38dabfa0639", { defaultValue: "Log in to access your messages and chat with others." })} />
     );
+    return fullscreen ? (
+      <div id="app-root" data-fullscreen-chat className="fixed inset-0 z-[70] flex flex-col overflow-y-auto bg-black text-white">
+        {chatSeo}
+        <div className="m-auto w-full max-w-md p-4">{gate}</div>
+      </div>
+    ) : gate;
   }
 
   // If Public Chat is open, show full-screen chat
-  if (showPublicChat) {
+  const publicChatPane = fullscreen && showPublicChat ? (
+    <div className="h-full overflow-hidden pt-1">
+      <PublicChat onBack={closeChat} />
+    </div>
+  ) : null;
+  if (showPublicChat && !fullscreen) {
     return (
       /* No horizontal padding: the chat surfaces run to the column edges on
          every theme. The rows and composer carry their own inner padding. */
@@ -588,11 +681,36 @@ export default function MessagesPage() {
     );
   }
 
+  const newMessageDrawer = (
+    <NewMessageDrawer
+        ref={newMessageDrawerRef}
+        open={showNewMessageDrawer}
+        onOpenChange={setShowNewMessageDrawer}
+        conversations={conversations ?? []}
+        myAddress={walletAddress}
+        onPick={pickFromDrawer}
+        onGroup={() => { setShowNewMessageDrawer(false); setNewChatKind('group'); }}
+        onChannel={() => { setShowNewMessageDrawer(false); setNewChatKind('channel'); }}
+      />
+  );
+
+  const dmPane = fullscreen && selectedConversation && !showPublicChat ? (
+    <DirectMessageChat
+      key={conversationIdentity(selectedConversation)}
+      conversation={selectedConversation}
+      initialComposerText={composerPrefill?.convId === selectedConversation.id ? composerPrefill.text : undefined}
+      focusComposer={composerFocusFor === conversationIdentity(selectedConversation)}
+      onBack={closeChat}
+      cozy
+    />
+  ) : null;
+
   // If a DM conversation is selected, show it
-  if (selectedConversation) {
+  if (selectedConversation && !fullscreen) {
+    /* No horizontal padding: the chat surfaces run to the column edges on
+       every theme. The rows and composer carry their own inner padding. */
     return (
-      /* No horizontal padding: the chat surfaces run to the column edges on
-         every theme. The rows and composer carry their own inner padding. */
+      <>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] pt-1 pb-0 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden`}>
         <DirectMessageChat
           /*
@@ -606,17 +724,17 @@ export default function MessagesPage() {
           key={conversationIdentity(selectedConversation)}
           conversation={selectedConversation}
           initialComposerText={composerPrefill?.convId === selectedConversation.id ? composerPrefill.text : undefined}
+          focusComposer={composerFocusFor === conversationIdentity(selectedConversation)}
           onBack={closeChat}
         />
       </div>
+      {newMessageDrawer}
+      </>
     );
   }
 
-  return (
-    <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
-      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages: Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on Riftn, your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
-      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "Riftn Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
-      <div className="h-full lg:h-[calc(100dvh-32px)] max-h-full">
+  const listColumn = (
+      <div className={fullscreen ? 'h-full' : 'h-full lg:h-[calc(100dvh-32px)] max-h-full'}>
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
             no surface at all — see [data-bento-flat] in index.css. The
             [data-page-bento] hook stays: the Osaka and Jungle `#app-root` class
@@ -625,9 +743,24 @@ export default function MessagesPage() {
         <div data-page-bento data-bento-flat className="w-full h-full flex flex-col overflow-hidden">
           {/* Header */}
           <PageIsland
-            className="shrink-0"
+            className={fullscreen ? 'shrink-0 top-0 lg:top-0 px-2 pt-2' : 'shrink-0'}
             icon={<BrandIcon src={messagesBubbleIcon} alt={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} className="h-8 w-8 object-contain" />}
-            title={t('messages.title')}
+            title={fullscreen ? _copy('fullscreenChat.title', { defaultValue: 'Chat' }) : t('messages.title')}
+            actions={fullscreen ? (
+              <>
+                <ChatTextSizeButton />
+                <button
+                  type="button"
+                  data-kit-square
+                  data-chat-exit-fullscreen
+                  onClick={() => navigate('/app/messages')}
+                  aria-label={_copy('fullscreenChat.exit', { defaultValue: 'Leave full screen' })}
+                  title={_copy('fullscreenChat.exit', { defaultValue: 'Leave full screen' })}
+                >
+                  <ExitFullscreen className="h-[18px] w-[18px]" />
+                </button>
+              </>
+            ) : undefined}
           >
             <div className="relative flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -636,7 +769,7 @@ export default function MessagesPage() {
                 placeholder={t('messages.searchConversations')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-[68px] bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg"
+                className={`pl-10 ${fullscreen ? 'pr-[68px]' : 'pr-[100px]'} bg-white/[0.06] border-0 text-white placeholder:text-zinc-500 rounded-lg`}
               />
               {/* Refresh and new message sit quietly inside the search field
                   instead of as island squares next to the title. */}
@@ -655,23 +788,37 @@ export default function MessagesPage() {
                 <button
                   type="button"
                   data-messages-search-action
-                  onClick={() => setShowMessageSelector(true)}
+                  onClick={openNewMessage}
                   aria-label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   title={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}
                   className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
+                {!fullscreen && (
+                  <button
+                    type="button"
+                    data-messages-search-action
+                    data-open-fullscreen-chat
+                    onClick={() => navigate('/chat')}
+                    aria-label={_copy('fullscreenChat.open', { defaultValue: 'Open full screen chat' })}
+                    title={_copy('fullscreenChat.open', { defaultValue: 'Open full screen chat' })}
+                    className="h-7 w-7 flex items-center justify-center rounded-md text-zinc-500 hover:text-white transition-colors"
+                  >
+                    <Fullscreen className="h-4 w-4" />
+                  </button>
+                )}
               </div>
             </div>
           </PageIsland>
 
           {/* Conversation List */}
-          <div className="flex-1 min-h-0 overflow-y-auto pt-3 pb-[76px] lg:pb-0">
+          <div className={`flex-1 min-h-0 overflow-y-auto pt-3 ${fullscreen ? 'pb-4' : 'pb-[76px] lg:pb-0'}`}>
             {/* Public Chat (pinned) */}
             <button
-              onClick={() => setShowPublicChat(true)}
-              className="w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left"
+              onClick={() => { setSelectedConversation(null); setShowPublicChat(true); }}
+              data-selected={fullscreen && showPublicChat ? '' : undefined}
+              className={`w-full flex items-center gap-3 p-4 border-t border-white/[0.07] hover:bg-white/[0.04] transition-colors text-left ${fullscreen && showPublicChat ? 'bg-white/[0.06]' : ''}`}
             >
               <div data-keep-dark className="w-12 h-12 rounded-lg bg-black flex items-center justify-center flex-shrink-0">
                 <img 
@@ -729,6 +876,7 @@ export default function MessagesPage() {
                 key={conv.id}
                 conversation={conv}
                 onClick={() => {
+                  setShowPublicChat(false);
                   setSelectedConversation({ ...conv, unreadCount: 0 });
                 }}
                 isSelected={selectedConversation?.id === conv.id}
@@ -803,7 +951,10 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
+  );
 
+  const dialogs = (
+    <>
       {/* Message Type Selector */}
       <NewMessageSelector
         open={showMessageSelector}
@@ -823,9 +974,31 @@ export default function MessagesPage() {
         open={showNewConversation}
         onOpenChange={setShowNewConversation}
         onConversationCreated={(conversation) => {
+          setShowPublicChat(false);
           setSelectedConversation(conversation);
         }}
       />
+      {newMessageDrawer}
+    </>
+  );
+
+  if (fullscreen) {
+    return (
+      <FullScreenChatShell
+        style={shellKeyboardStyle}
+        chatOpen={chatOpen}
+        chat={publicChatPane ?? dmPane}
+        list={<>{chatSeo}{listColumn}{dialogs}</>}
+      />
+    );
+  }
+
+  return (
+    <div style={keyboardStyle} className={`${mobileChatHeight} pt-1 lg:h-full lg:pt-2 lg:pb-3 overflow-hidden`}>
+      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages: Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on Riftn, your inbox on the user-owned social platform." })} url="https://riftn.com/app/messages" />
+      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "Riftn Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
+      {listColumn}
+      {dialogs}
     </div>
   );
 }

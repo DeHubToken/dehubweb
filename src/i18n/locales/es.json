@@ -2187,6 +2187,7 @@
     "loginRequired": "Inicio de sesión requerido"
   },
   "messages": {
+    "newDrawer": {"to": "Para", "placeholder": "Nombre o @usuario", "recent": "Recientes", "suggested": "Sugeridos", "youFollow": "Personas que sigues", "chattedBefore": "Ya hablan", "mutual": "Mutuo", "dmsOff": "MD desactivados", "keepTyping": "Sigue escribiendo para buscar a todos", "noOne": "No se encontró a nadie", "tryUsername": "Prueba con su @usuario exacto", "sayHi": "Saluda a alguien", "typeAny": "Escribe cualquier nombre o @usuario"},
     "reply": "Responder",
     "react": "Reaccionar",
     "edit": "Editar",
@@ -2734,6 +2735,7 @@
     "passkeyFailed": "Fallo al iniciar sesión con huella dactilar. Inténtalo de nuevo.",
     "passkeyBackupHint": "Tu cuenta reside en la clave de acceso de este dispositivo. En la mayoría de los teléfonos se sincroniza con tu cuenta de Google o Apple, y puedes añadir una copia de seguridad de contraseña en Configuración.",
     "walletBlockedTitle": "Esta billetera es totalmente nueva",
+    "profileMovedTitle": "Tu perfil se ha movido",
     "walletBlockedBody": "Las billeteras nuevas necesitan saldo o una transacción anterior para abrir una cuenta. Regístrate con una de las opciones de abajo y luego conecta esta billetera desde Ajustes.",
     "checkYourEmail": "Revisa tu correo electrónico",
     "continuePhone": "Continuar con el teléfono",
@@ -17359,7 +17361,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Destacado en",
     "ee1c1eecf1b6": "Riftn ha sido cubierto por algunas de las publicaciones más grandes y confiables del mundo. Aquí están los artículos que ponen el foco en nuestra misión de democratizar los medios.",
     "6ccae4bbf68d": "El editor ha eliminado el original; esto abre la captura de Wayback Machine.",

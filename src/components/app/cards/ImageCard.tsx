@@ -1171,7 +1171,7 @@ const ImageCardBody = memo(function ImageCard({ post, aboveFold = false, onOpenC
       />
       )}
       {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
-      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
+      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-3'}>
         {(isOwnPost || boosted) && (
           <PostHeaderBoostButton
             rowGap={4}

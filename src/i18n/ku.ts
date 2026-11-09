@@ -2567,7 +2567,7 @@ export const ku = {
     q18: 'Nexşeya rê ya Riftn çi ye?',
     a18: "Nexşeya rê ya me berfirehkirina ekosîstema d'App, destpêkirina lîstikên nû, baştirkirina bingeha DePIN û destpêkirina fermî ya rêveberiyê di destpêka 2026-an de dihewîne.",
     q19: 'Ez çawa dikarim bi tîma Riftn re têkiliyê deynîm?',
-    a19: 'Hûn dikarin bi kanalên fermî yên me re bigihîjin me: tech@dehub.net ji bo pirsgirêkên teknîkî, an li ser Twitter û Instagram @dehub_official me bişopînin.',
+    a19: 'Hûn dikarin bi kanalên fermî yên me re bigihîjin me: tech@dehub.net ji bo pirsgirêkên teknîkî, an li ser Twitter û Instagram @riftn_com me bişopînin.',
     q20: 'Ma nîşanekanên Riftn veberhênanek in?',
     a20: 'Na, nîşanekanên Riftn bi tenê ji bo armancên bikêrhatî di nav ekosîstema Riftn de ne, dişibin pereyên dîjîtal ên di nav lîstikê an jî di nav sepanê de. Ew ne amûrên veberhênanê ne û bazar pir ne aram in.',
     q21: 'Moderasyona naveroka li ser Riftn çawa dixebite?',

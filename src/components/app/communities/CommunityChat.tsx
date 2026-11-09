@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useHoldBottomNav } from '@/lib/bottom-nav-hold';
 import { useDraftState } from '@/hooks/use-draft-state';
@@ -43,6 +44,7 @@ import { toast } from 'sonner';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { ChatTextSizeButton } from '@/components/app/chat/ChatTextSizeButton';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { AppState } from '@/components/app/AppState';
@@ -100,7 +102,7 @@ function CommunityMessageBody({ content }: { content: string }) {
         </div>
       )}
       {displayText.trim() && (
-        <TranslatableText text={displayText} className="text-xs text-zinc-300 break-words" as="p" />
+        <TranslatableText text={displayText} className="chat-body text-xs text-zinc-300 break-words" as="p" />
       )}
     </>
   );
@@ -774,7 +776,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
         </div>
         {/* Messages area */}
         <div className="relative flex-1">
-          <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 chat-text-zone overflow-y-auto py-2 space-y-2">
             {historyError && (
               <button onClick={() => void refreshHistory()} className="mx-3 px-3 py-2 text-sm" role="alert">
                 {t('common.failedToLoad')} — {t('common.retry')}
@@ -958,7 +960,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
                           )}
                         </span>
                         {msg.message_type === 'gif' && (msg.image_url || msg.content) ? (
-                          <img src={msg.image_url || msg.content} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                          <img src={outsideImage(msg.image_url || msg.content)} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
                         ) : msg.message_type === 'voice' && msg.image_url ? (
                           <div className="mt-1">
                             <VoiceWaveformPlayer src={msg.image_url} />
@@ -1229,7 +1231,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
                 }}
                 onKeyDown={handleKeyDown}
                 maxLength={500}
-                className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+                className="chat-text-input min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
                 rows={1}
                 style={{ fieldSizing: 'content' } as React.CSSProperties}
               />
@@ -1244,6 +1246,7 @@ export function CommunityChat({ communityId, community, membership, isMember, ac
               />
             </div>
             <div className="flex items-center justify-end pt-1">
+              <ChatTextSizeButton className="mr-auto" />
               <div className="flex items-center gap-1">
                 <Button
                   variant="ghost"

@@ -2230,7 +2230,7 @@ export const zu = {
     q18: 'Iyini imephu yomgwaqo ye-Riftn?',
     a18: 'Imephu yethu yomgwaqo ihlanganisa ukwandisa i-d\'App ecosystem, ukwethula imidlalo emisha, ukuthuthukisa ingqalasizinda ye-DePIN, ukusungula amathuluzi we-AI, nokuqhubeka nokukhishwa kokubusa kwepulatifomu yonke.',
     q19: 'Ngingathintana kanjani neqembu le-Riftn?',
-    a19: 'Ungasithinta ngeziteshi zethu ezisemthethweni: tech@dehub.net ngezinkinga zobuchwepheshe, noma usilandele ku-Twitter naku-Instagram @ dehub_official ukuze uthole izilungiso nokuzibandakanya komphakathi.',
+    a19: 'Ungasithinta ngeziteshi zethu ezisemthethweni: tech@dehub.net ngezinkinga zobuchwepheshe, noma usilandele ku-Twitter naku-Instagram @riftn_com ukuze uthole izilungiso nokuzibandakanya komphakathi.',
     q20: 'Ingabe amathokheni e-Riftn awukutshala imali?',
     a20: 'Cha, amathokheni e-Riftn aqondene nezinjongo zosizo kuphela ohlelweni lwezinto eziphilayo lwe-Riftn, afana namakharensi edijithali angaphakathi komdlalo noma angaphakathi kwe-app. Akuzona izinsimbi zokutshala imali futhi izimakethe ziyaguquguquka kakhulu.',
     q21: 'Ukulinganisela kokuqukethwe kusebenza kanjani ku-Riftn?',

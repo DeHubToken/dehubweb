@@ -1,3 +1,4 @@
+import { outsideImage } from '@/lib/outside-image';
 import { useTranslation as _useCopy, Trans } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -7,7 +8,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Full-screen 1:1 direct message chat view.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo, type ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, useReducer, memo, Fragment, type ReactNode } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
@@ -73,6 +74,7 @@ import { DmTipDialog } from './DmTipDialog';
 import { DmPollDialog } from './DmPollDialog';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
+import { DmSafetyBanner, hasLink } from './DmSafetyBanner';
 import { LockedMediaBubble } from './LockedMediaBubble';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -138,6 +140,40 @@ interface DirectMessageChatProps {
   dock?: boolean;
   /** Window controls (minimise/close) for dock mode, pinned to the header end. */
   headerActions?: ReactNode;
+  /** Opened from the New message drawer: the composer takes the caret at once. */
+  focusComposer?: boolean;
+  /**
+   * The full-screen chat at /chat: back-to-back messages from one person
+   * group into one block (tight corners, one avatar, one time line), a day
+   * pill between days, a soft wallpaper behind, and the thread held to a
+   * readable width on wide screens.
+   */
+  cozy?: boolean;
+}
+
+/** Where a message sits in a run from one sender, for the cozy layout. */
+export type CozyGroupPos = { first: boolean; last: boolean };
+
+const COZY_GROUP_GAP_MS = 5 * 60_000;
+const COZY_GROUPABLE = new Set(['msg', 'media', 'gif']);
+
+function cozyDayKey(iso: string) {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+/** "Today", "Yesterday", "Nov 5", or "Nov 5, 2025" for another year. */
+function cozyDayLabel(iso: string, copy: (key: string, opts: Record<string, unknown>) => string) {
+  const d = new Date(iso);
+  const now = new Date();
+  const key = cozyDayKey(iso);
+  if (key === cozyDayKey(now.toISOString())) return copy('fullscreenChat.today', { defaultValue: 'Today' });
+  const y = new Date(now);
+  y.setDate(now.getDate() - 1);
+  if (key === cozyDayKey(y.toISOString())) return copy('fullscreenChat.yesterday', { defaultValue: 'Yesterday' });
+  return d.toLocaleDateString(undefined, d.getFullYear() === now.getFullYear()
+    ? { month: 'short', day: 'numeric' }
+    : { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 /** A tip that just arrived or was just sent plays its diamond swirl; history stays still. */
@@ -389,6 +425,18 @@ function SettledImg({ src, ...rest }: React.ImgHTMLAttributes<HTMLImageElement> 
   return <img src={shown} {...rest} />;
 }
 
+/** The day marker between days in the cozy thread; sticks to the top while scrolling. */
+export function CozyDayPill({ iso }: { iso: string }) {
+  const { t: _copy } = _useCopy();
+  return (
+    <div data-chat-day-pill className="sticky top-2 z-10 flex justify-center py-2 pointer-events-none">
+      <span className="rounded-full bg-black/55 px-3 py-1 text-xs font-medium text-white/85 backdrop-blur-md">
+        {cozyDayLabel(iso, _copy)}
+      </span>
+    </div>
+  );
+}
+
 const MessageBubble = memo(function MessageBubble({
   message,
   isOwnMessage,
@@ -407,9 +455,12 @@ const MessageBubble = memo(function MessageBubble({
   onRemoveReaction,
   onRetrySend,
   onDiscardSend,
+  cozy,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
+  /** Set in the cozy layout: where this bubble sits in its sender's run. */
+  cozy?: CozyGroupPos;
   highlightText?: string;
   /** Locally-confirmed payment tx for this message (prop, not ref — memo-safe). */
   txConfirmed?: boolean;
@@ -429,6 +480,11 @@ const MessageBubble = memo(function MessageBubble({
   onDiscardSend?: (clientKey: string) => void;
 }) {
   const { t: _copy } = _useCopy();
+  // Cozy layout: the avatar and the time line belong to the run, so only its
+  // last bubble carries them. A failed or sending bubble keeps its line, since
+  // that is where Retry and the spinner live.
+  const cozyShowMeta = !cozy || cozy.last || message.sendState === 'failed' || message.sendState === 'sending';
+  const cozyShowAvatar = !cozy || cozy.last;
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
   // "give up waiting" fallback schedules its own re-render at the boundary
   // instead of relying on unrelated parent state changes to sweep it away.
@@ -613,9 +669,12 @@ const MessageBubble = memo(function MessageBubble({
   return (
     <div
       id={`dm-msg-${message._id}`}
-      className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
+      data-cozy-first={cozy?.first ? '' : undefined}
+      data-cozy-last={cozy?.last ? '' : undefined}
+      className={`flex ${cozy ? `gap-2 items-end ${cozy.first ? 'pt-2' : 'pt-0.5'} ${cozy.last ? 'pb-1' : 'pb-0'}` : 'gap-3 py-2'} ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
     >
-      {!isOwnMessage && (() => {
+      {!isOwnMessage && !cozyShowAvatar && <div aria-hidden className="w-8 flex-shrink-0" />}
+      {!isOwnMessage && cozyShowAvatar && (() => {
         const avatar = (
           <Avatar className="w-8 h-8 flex-shrink-0">
             {avatarUrl && <AvatarImage src={avatarUrl} />}
@@ -627,7 +686,7 @@ const MessageBubble = memo(function MessageBubble({
         return senderProfilePath ? (
           <Link
             to={senderProfilePath}
-            className="flex-shrink-0 self-start"
+            className={`flex-shrink-0 ${cozy ? 'self-end mb-6' : 'self-start'}`}
             aria-label={_copy("copy.648c99c43631", { defaultValue: "View {{value1}}'s profile", value1: displayName })}
             onClick={(e) => e.stopPropagation()}
           >
@@ -639,7 +698,11 @@ const MessageBubble = memo(function MessageBubble({
       {/* Shrinks to the bubble rather than filling 75% of the row, so the hover
           toolbar pinned to its side lands next to a short message instead of at
           the far edge of the thread. The calc() keeps room for that toolbar. */}
-      <div className={`min-w-0 ${isOwnMessage ? 'max-w-[min(75%,calc(100%_-_9rem))] text-right' : 'max-w-[min(75%,calc(100%_-_12rem))]'}`}>
+      <div className={`min-w-0 ${cozy
+        // Cozy: phones give a bubble most of the row (the hover toolbar is a
+        // computer thing); wide screens keep room for it.
+        ? (isOwnMessage ? 'max-w-[85%] md:max-w-[min(75%,calc(100%_-_9rem))] text-right' : 'max-w-[85%] md:max-w-[min(75%,calc(100%_-_12rem))]')
+        : (isOwnMessage ? 'max-w-[min(75%,calc(100%_-_9rem))] text-right' : 'max-w-[min(75%,calc(100%_-_12rem))]')}`}>
         {/* Reply preview */}
         {message.replyTo && (
           <div>
@@ -693,6 +756,8 @@ const MessageBubble = memo(function MessageBubble({
                     isOwnMessage
                       ? 'bg-white/[0.11] text-white rounded-br-sm'
                       : 'border border-white/[0.16] text-zinc-100 rounded-bl-sm'
+                  }${cozy && !cozy.first ? (isOwnMessage ? ' rounded-tr-md' : ' rounded-tl-md') : ''}${
+                    cozy && !cozy.last ? (isOwnMessage ? ' !rounded-br-md' : ' !rounded-bl-md') : ''
                   }`
             }`}
           >
@@ -906,7 +971,7 @@ const MessageBubble = memo(function MessageBubble({
             {/* GIF */}
             {message.msgType === 'gif' && primaryMediaUrl && (
               <img
-                src={primaryMediaUrl}
+                src={outsideImage(primaryMediaUrl)}
                 alt={tr('emojiPicker.tabGif', 'GIF')}
                 className="max-w-full max-h-48 rounded-lg"
               />
@@ -1073,8 +1138,11 @@ const MessageBubble = memo(function MessageBubble({
           <div className={`text-xs text-zinc-500 mb-0.5 ${isOwnMessage ? 'text-right' : ''}`}>{_copy("copy.2345d3702d65", { defaultValue: "↪ Forwarded" })}</div>
         )}
 
-        <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
-          <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
+        {cozyShowMeta && (
+        <div data-cozy-meta={cozy ? '' : undefined} className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
+          <span>{cozy
+            ? new Date(message.createdAt).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+            : formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
           {/* Image captions get the control too. They had none: the gate was
               msgType === 'msg', so a caption was auto-translated on mount and
               could not be put back. */}
@@ -1119,10 +1187,14 @@ const MessageBubble = memo(function MessageBubble({
             </span>
           )}
         </div>
+        )}
       </div>
     </div>
   );
 });
+
+/** Exported for the state gallery, which lays out a cozy thread by hand. */
+export { MessageBubble as DmMessageBubble };
 
 function MessagesSkeleton() {
   return (
@@ -1219,7 +1291,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
   return { pinnedMessageId, pinMessage, unpinMessage };
 }
 
-export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
+export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions, focusComposer = false, cozy = false }: DirectMessageChatProps) {
   const { t: _copy } = _useCopy();
   const { user, walletAddress, openLoginModal } = useAuth();
   const { isBanned: accountBanned } = useBannedAccount();
@@ -1559,6 +1631,17 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const messagesRef = useRef(messages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
+
+  // Any link from the other person brings up the scam warning above the thread.
+  const peerSentLink = useMemo(() => {
+    const ownAddress = walletAddress?.toLowerCase();
+    return messages.some(m => {
+      if (m.author === 'me') return false;
+      const sender = m.sender?.address?.toLowerCase();
+      if (sender && ownAddress && sender === ownAddress) return false;
+      return hasLink(m.content);
+    });
+  }, [messages, walletAddress]);
 
   const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
@@ -2502,6 +2585,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         </div>
       )}
 
+      <DmSafetyBanner peer={otherUser as any} peerSentLink={peerSentLink} />
+
       {/* Messages */}
       {isLoading ? (
         <MessagesSkeleton />
@@ -2524,8 +2609,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           ref={scrollContainerRef}
           onScroll={handleScroll}
           onPointerDown={dismissKeyboard}
-          className="flex-1 min-h-0 overflow-y-auto px-4"
+          data-chat-wallpaper={cozy ? '' : undefined}
+          className="flex-1 min-h-0 chat-text-zone overflow-y-auto px-4"
         >
+          <div className={cozy ? 'mx-auto w-full max-w-[47.5rem]' : 'contents'}>
           {isFetchingNextPage && (
             <div className="flex justify-center py-4">
               <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -2577,20 +2664,39 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 while (filtered[index + count]?.undecryptable && !filtered[index + count].isDeleted) count++;
                 return <DmUndecryptableRun key={message._id} count={count} />;
               }
-              const senderAddress = message.sender?.address?.toLowerCase();
-              const senderId = message.sender?._id;
               const ownAddress = walletAddress?.toLowerCase();
               const ownId = user?._id;
-              const isOwnMessage =
-                message.author === 'me' ||
-                (!!senderAddress && !!ownAddress && senderAddress === ownAddress) ||
-                (!!senderId && !!ownId && senderId === ownId);
+              const isOwn = (m: DmMessage) => {
+                const a = m.sender?.address?.toLowerCase();
+                const id = m.sender?._id;
+                return m.author === 'me' || (!!a && !!ownAddress && a === ownAddress) || (!!id && !!ownId && id === ownId);
+              };
+              const isOwnMessage = isOwn(message);
+
+              // Cozy: a run is back-to-back plain messages from one side,
+              // each within 5 minutes of the last, on the same day.
+              const joins = (a: DmMessage | undefined, b: DmMessage | undefined) =>
+                !!a && !!b && !a.undecryptable && !b.undecryptable && !a.isDeleted && !b.isDeleted &&
+                COZY_GROUPABLE.has(a.msgType || 'msg') && COZY_GROUPABLE.has(b.msgType || 'msg') &&
+                isOwn(a) === isOwn(b) &&
+                (isOwn(a) || (a.sender?.address || a.sender?._id) === (b.sender?.address || b.sender?._id)) &&
+                cozyDayKey(a.createdAt) === cozyDayKey(b.createdAt) &&
+                Math.abs(new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) < COZY_GROUP_GAP_MS;
+              const prevMsg = filtered[index - 1];
+              const cozyPos: CozyGroupPos | undefined = cozy
+                ? { first: !joins(prevMsg, message), last: !joins(message, filtered[index + 1]) }
+                : undefined;
+              const dayPill = cozy && (!prevMsg || cozyDayKey(prevMsg.createdAt) !== cozyDayKey(message.createdAt))
+                ? <CozyDayPill iso={message.createdAt} />
+                : null;
 
               return (
+              <Fragment key={message.clientKey ?? message._id}>
+              {dayPill}
               <MessageBubble
-                key={message.clientKey ?? message._id}
                 message={message}
                 isOwnMessage={isOwnMessage}
+                cozy={cozyPos}
                 highlightText={searchLower}
                 txConfirmed={
                   !!(message.paymentTxHash &&
@@ -2610,10 +2716,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 onRetrySend={handleRetrySend}
                 onDiscardSend={handleDiscardSend}
               />
+              </Fragment>
             )});
           })()}
 
           <div ref={bottomRef} />
+          </div>
         </div>
       )}
 
@@ -2658,6 +2766,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       {/* Chat Input — disabled send when insufficient balance; hidden while
           the thread is locked, since anything typed would go out in the clear */}
       {!showLockedState && <ChatInput
+        autoFocus={focusComposer}
         initialText={initialComposerText}
         draftKey={draftScope}
         thread={smartReplyThread}

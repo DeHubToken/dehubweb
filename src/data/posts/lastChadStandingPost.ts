@@ -55,7 +55,7 @@ Getting started is straightforward:
 
 1. **Get the Riftn app.** Head to [the Riftn app](https://riftn.com/app) on the web, or download it from [Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile). One account gives you the feed, the arcade and your wallet.
 2. **Set up your wallet and $DHB.** The arcade runs on the ecosystem token. If you are in Britain and new to buying it, our guide to acquiring the token walks through the process end to end.
-3. **Follow the official channels for the game.** Roster reveals, launch timing and event details are announced on Riftn's [X account](https://x.com/dehub_official) and [Telegram](https://t.me/dehub_dhb). We are not going to pre-empt those dates here, so the official feeds are where to watch.
+3. **Follow the official channels for the game.** Roster reveals, launch timing and event details are announced on Riftn's [X account](https://x.com/riftn_com) and [Telegram](https://t.me/riftn_com). We are not going to pre-empt those dates here, so the official feeds are where to watch.
 
 If you want to line up other titles to play alongside it, our roundup of [free play-to-earn games with no investment in 2026](/guides/free-play-to-earn-games-no-investment-2026) is a sensible next read, and if you are earning in the UK, do read our breakdown of [play-to-earn earnings and HMRC tax](/guides/play-to-earn-uk-2026-earnings-hmrc-tax) before you cash anything out, because crypto rewards can carry tax consequences and the sensible move is to keep records from day one.
 
@@ -85,7 +85,7 @@ The Riftn ecosystem token, **$DHB**, runs primarily on **Base**, an Ethereum Lay
 
 You earn by competing and performing well, outlasting the field in the battle royale converts into **$DHB** rewards that settle to your wallet on-chain. Because the token is a real, tradable asset rather than internal points, what you earn can be traded or spent across the Riftn platform. If you are earning in the UK, read our [play-to-earn and HMRC tax guide](/guides/play-to-earn-uk-2026-earnings-hmrc-tax) first.
 `,
-  bannerImage: '/media/last-chad-standing-mma-battle-royale-play-to-earn-banner.png',
+  bannerImage: '/media/last-chad-standing-mma-battle-royale-play-to-earn-banner-riftn.png',
   bannerImageAlt: 'Last Chad Standing, the Riftn MMA battle-royale play-to-earn game with licensed fighters',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-04-03T10:15:00.000Z',

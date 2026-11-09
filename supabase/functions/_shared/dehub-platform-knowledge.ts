@@ -144,7 +144,7 @@ The team also runs **First Class**, the UK's largest TikTok partner agency: 400+
 
 ## LINKS AND CONTACT
 - App: dehub.io · Docs: docs.dhb.gg · Explorer: dhbscan.com
-- Telegram t.me/dehub_dhb · Discord discord.gg/dehub · X, TikTok and Instagram @dehub_official
+- Telegram t.me/riftn_com · Discord discord.gg/dehub · X, TikTok and Instagram @riftn_com
 - Turkish t.me/DeHubTurkish · Arabic t.me/DeHubArabic
 - Holder groups: t.me/DHBHolders (10M+ DHB) and t.me/DHBWhales (100M+ DHB)
 - Anything that needs a human: **dev@dehub.io**. That is the same inbox a support ticket lands in, so raising the ticket is the better route — it arrives with the detail already attached.

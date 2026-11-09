@@ -2195,7 +2195,7 @@ export const vi = {
     q18: 'Lộ trình của Riftn là gì?',
     a18: 'Lộ trình của chúng tôi bao gồm mở rộng hệ sinh thái d \'App, ra mắt các trò chơi mới, tăng cường cơ sở hạ tầng DePIN, phát triển bộ công cụ AI và tiếp tục triển khai quản trị trên toàn nền tảng.',
     q19: 'Làm cách nào để liên hệ với nhóm Riftn?',
-    a19: 'Bạn có thể liên hệ với chúng tôi thông qua các kênh chính thức của chúng tôi: tech@dehub.net về các vấn đề kỹ thuật hoặc theo dõi chúng tôi trên Twitter và Instagram @ dehub_official để biết thông tin cập nhật và sự tham gia của cộng đồng.',
+    a19: 'Bạn có thể liên hệ với chúng tôi thông qua các kênh chính thức của chúng tôi: tech@dehub.net về các vấn đề kỹ thuật hoặc theo dõi chúng tôi trên Twitter và Instagram @riftn_com để biết thông tin cập nhật và sự tham gia của cộng đồng.',
     q20: 'Token Riftn có phải là một khoản đầu tư không?',
     a20: 'Không, mã thông báo Riftn chỉ dành cho các mục đích tiện ích trong hệ sinh thái Riftn, tương tự như các loại tiền kỹ thuật số trong trò chơi hoặc trong ứng dụng. Chúng không phải là công cụ đầu tư và thị trường rất biến động.',
     q21: 'Kiểm duyệt nội dung hoạt động như thế nào trên Riftn?',

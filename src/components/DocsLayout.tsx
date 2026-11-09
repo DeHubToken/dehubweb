@@ -297,13 +297,13 @@ const getMenuItems = (t: (key: string) => string) => [{
       isImage: true
     }, {
       title: 'Twitter',
-      path: 'https://x.com/dehub_official',
+      path: 'https://x.com/riftn_com',
       icon: '/media/4c5f32a0-dc0b-4846-a78d-cd3381206fa9.png',
       external: true,
       isImage: true
     }, {
       title: 'Instagram',
-      path: 'https://www.instagram.com/dehub_official/',
+      path: 'https://www.instagram.com/riftn_com/',
       icon: '/media/3fb7f494-e111-4949-b66d-9269f163c74e.png',
       external: true,
       isImage: true

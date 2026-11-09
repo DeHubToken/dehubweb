@@ -2425,7 +2425,7 @@ export const tr = {
     q18: "Riftn'ın yol haritası nedir?",
     a18: "Yol haritamız; merkeziyetsiz uygulama ekosistemini genişletmeyi, yeni oyunlar çıkarmayı, DePIN altyapısını geliştirmeyi, yapay zekâ araç setleri kurmayı ve platform geneli yönetişim yayılımını sürdürmeyi içerir.",
     q19: "Riftn ekibiyle nasıl iletişime geçebilirim?",
-    a19: "Resmî kanallarımızdan bize ulaşabilirsiniz: teknik sorunlar için tech@dehub.net ya da güncellemeler ve topluluk etkileşimi için Twitter ve Instagram'da @dehub_official.",
+    a19: "Resmî kanallarımızdan bize ulaşabilirsiniz: teknik sorunlar için tech@dehub.net ya da güncellemeler ve topluluk etkileşimi için Twitter ve Instagram'da @riftn_com.",
     q20: "Riftn tokenleri bir yatırım mıdır?",
     a20: "Hayır, Riftn tokenleri kesinlikle oyun içi veya uygulama içi dijital para birimlerine benzer şekilde Riftn ekosistemindeki fayda amaçlıdır. Bunlar yatırım araçları değildir ve piyasalar oldukça istikrarsızdır.",
     q21: "Riftn'da içerik denetimi nasıl işler?",

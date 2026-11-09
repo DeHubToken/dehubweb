@@ -118,7 +118,7 @@ Often, yes. Crypto received from playing can be treated as income when you recei
 ### Where can I start for free right now?
 
 Open [the Riftn app](https://riftn.com/app) in a browser to try Last Chad Standing and the arcade with no deposit, or install the [Riftn app on Google Play](https://play.google.com/store/apps/details?id=io.dehub.mobile) for the mobile-first experience with the arcade, watch-to-earn and the social feed in one place.`,
-  bannerImage: '/media/free-play-to-earn-games-no-investment-2026-banner.png',
+  bannerImage: '/media/free-play-to-earn-games-no-investment-2026-banner-riftn.png',
   bannerImageAlt: 'Riftn free play-to-earn arcade featuring the Last Chad Standing MMA battle royale on Base',
   author: { name: 'Riftn Team' },
   publishedAt: '2026-04-13T15:30:00.000Z',

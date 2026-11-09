@@ -17,7 +17,7 @@
  */
 
 /** '/app/' (trailing slash) renders the home feed too — routers hand it through as-is. */
-export const HOME_FEED_ROUTES = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
+export const HOME_FEED_ROUTES = new Set(['/', '/app', '/app/', '/videos', '/images', '/shorts']);
 
 export const isHomeFeedRoute = (pathname: string | null | undefined): boolean =>
   !!pathname && HOME_FEED_ROUTES.has(pathname);

@@ -21,7 +21,7 @@ export const SHARE_IMAGE = `${SITE_URL}/og/riftn-share.png`;
  */
 export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
   // SECTION_PAGES
-  'explore', 'videos', 'shorts',
+  'explore', 'videos', 'images', 'shorts',
   // SSR_STATIC_ROUTES
   'features', 'pricing', 'depin', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100', 'dao',
@@ -33,7 +33,7 @@ export const BARE_CANONICAL_KEYS: ReadonlySet<string> = new Set([
   'stages', 'apps', 'apps/dev', 'arcade/gods-eye', 'arcade/kings-gambit',
   'arcade/claude-of-duty', 'arcade/jungle-trail', 'arcade/street-slayer',
   'arcade/trenchstar', 'arcade/love-lock-bridge', 'guide', 'apk', 'admin-manual', 'packs', 'cinema', 'stake',
-  'raffle', 'live-studio', 'dehub-app', 'stream', 'compare',
+  'raffle', 'live-studio', 'dehub-app', 'stream', 'compare', 'chat',
 ]);
 
 /**

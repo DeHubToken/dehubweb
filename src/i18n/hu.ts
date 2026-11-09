@@ -2191,7 +2191,7 @@ export const hu = {
     q18: 'Mi a Riftn ütemterve?',
     a18: "Ütemtervünk magában foglalja a d'App ökoszisztéma bővítését, új játékok bevezetését, a DePIN infrastruktúra fejlesztését és az irányítás hivatalos bevezetését 2026 elején.",
     q19: 'Hogyan lépjek kapcsolatba a Riftn csapattal?',
-    a19: 'Hivatalos csatornáinkon léphet kapcsolatba velünk: tech@dehub.net technikai problémákra, vagy kövessen minket Twitteren és Instagramon @dehub_official.',
+    a19: 'Hivatalos csatornáinkon léphet kapcsolatba velünk: tech@dehub.net technikai problémákra, vagy kövessen minket Twitteren és Instagramon @riftn_com.',
     q20: 'A Riftn tokenek befektetésnek számítanak?',
     a20: 'Nem, a Riftn tokenek kizárólag a Riftn ökoszisztémán belüli használati célokat szolgálnak, hasonlóan a játékon belüli vagy alkalmazáson belüli digitális valutákhoz. Nem befektetési eszközök, és a piac rendkívül ingadozó.',
     q21: 'Hogyan működik a tartalom moderálás a Riftn-on?',

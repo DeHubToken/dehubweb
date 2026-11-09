@@ -2327,7 +2327,7 @@ export const zh = {
     q18: 'Riftn的路线图是什么？',
     a18: '我们的路线图包括扩展d \'App生态系统、推出新游戏、增强DePIN基础设施、开发AI工具包以及继续在平台范围内推出治理。',
     q19: '如何联系Riftn团队？',
-    a19: '您可以通过我们的官方渠道联系我们： tech@dehub.net ，了解技术问题，或在Twitter和Instagram @ dehub_official上关注我们，了解最新动态和社区参与度。',
+    a19: '您可以通过我们的官方渠道联系我们： tech@dehub.net ，了解技术问题，或在Twitter和Instagram @riftn_com上关注我们，了解最新动态和社区参与度。',
     q20: 'Riftn代币是一种投资吗？',
     a20: '不， Riftn代币严格用于Riftn生态系统内的实用目的，类似于游戏内或应用内数字货币。它们不是投资工具，市场波动很大。',
     q21: '如何在Riftn上进行内容审核？',

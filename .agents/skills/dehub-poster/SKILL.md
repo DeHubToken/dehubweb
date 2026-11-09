@@ -7,7 +7,7 @@ description: Generate DeHub-branded posters, social images, banners and OG cards
 
 Use this skill whenever the user asks for a DeHub-branded image: posters, social cards, announcements, banners, blog art, OG cards, thumbnails.
 
-**The house style is SM Template 2.0** — the same design language as the blog banners, the per-route OG cards and the @dehub_official social posts. It is a *deterministic code render*, not a diffusion picture. Read `assets/reference/sm-template-2-landscape.jpg` and `assets/reference/sm-template-2-portrait.jpg` before generating anything: that is what "on brand" means here, and every rule below exists to reproduce it.
+**The house style is SM Template 2.0** — the same design language as the blog banners, the per-route OG cards and the @riftn_com social posts. It is a *deterministic code render*, not a diffusion picture. Read `assets/reference/sm-template-2-landscape.jpg` and `assets/reference/sm-template-2-portrait.jpg` before generating anything: that is what "on brand" means here, and every rule below exists to reproduce it.
 
 ## Two renderers — pick the right one first
 
@@ -162,8 +162,8 @@ Dimensions: 1024×1024 square default; 1536×1024 poster/banner; 1024×1536 stor
 Include these only if the user explicitly asks for socials, website, links, contact or QR. Otherwise omit — the template already carries `//dehub.io` and the QR.
 
 - **Website**: `dehub.io`
-- **X / Twitter**: `x.com/dehub_official`
-- **Telegram (main)**: `t.me/dehub_dhb`
+- **X / Twitter**: `x.com/riftn_com`
+- **Telegram (main)**: `t.me/riftn_com`
 - **Discord**: `discord.gg/dehub`
 - **Regional Telegrams**: Turkish `t.me/Dehub_Turkish` · Arabic `t.me/Dehub_Arabic` · Hindi `t.me/dehub_hindi` · China `t.me/dehub_china` · Indonesia `t.me/dehub_indonesia` · Germany `t.me/dehub_dach` · Vietnam `t.me/dehub_vietnam` · Philippines `t.me/DeHub_Philippines`
 
@@ -171,7 +171,7 @@ Rendering rules: pure white, Exo / Exo 2 Light or Regular, small, along the bott
 
 ## Caption voice (when the image ships as a social post)
 
-The graphic is half the post. Match @dehub_official or it reads as an ad:
+The graphic is half the post. Match @riftn_com or it reads as an ad:
 
 - **No hashtags.** Zero in first-party posts; they appear only in retweeted community posts.
 - **No `$DHB` shilling.** Say "tokens", "contracts", "coin purchase". Save the cashtag for when the contract genuinely is the news. No price, TA, or moon talk, ever.

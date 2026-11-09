@@ -2364,7 +2364,7 @@ export const sk = {
     q18: 'Čo je Riftn roadmap?',
     a18: 'Naša roadmap obsahuje rozšírenie ekosystému d\'App, spustenie nových hier, zlepšenie infraštruktúry DePIN, vývoj AI toolkitov a pokračovanie vo šírení správy na celoplošnej úrovni.',
     q19: 'Akým spôsobom môžem kontaktovať tím Riftn?',
-    a19: 'Môžete nás kontaktovať cez oficiálne kanály: tech@dehub.net pre technické problémy, alebo nás sledujte na Twitteri a Instagramu @dehub_official pre aktualizácie a angažovanie komunity.',
+    a19: 'Môžete nás kontaktovať cez oficiálne kanály: tech@dehub.net pre technické problémy, alebo nás sledujte na Twitteri a Instagramu @riftn_com pre aktualizácie a angažovanie komunity.',
     q20: 'Sú tokeny Riftn investíciou?',
     a20: 'Nie, tokeny Riftn slúžia výhradne na obslužné účely v rámci ekosystému Riftn, podobne ako digitálne meny v hre alebo v aplikácii. Nie sú to investičné nástroje a trhy sú vysoko volatilné.',
     q21: 'Ako funguje moderovanie obsahu v službe Riftn?',

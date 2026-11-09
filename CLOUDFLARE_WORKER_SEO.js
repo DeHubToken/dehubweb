@@ -169,7 +169,7 @@ const OG_CARD_ROUTES = new Set([
   'docs/developers',
   'docs/terms-of-service', 'docs/advertising', 'docs/security', 'docs/featured-in',
   'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
-  'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
+  'videos', 'images', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
   'guides/best-decentralized-streaming-apps',
   'connect', 'connect/chatgpt', 'connect/claude', 'communities',
   'stages', 'guide', 'features', 'pricing', 'depin',
@@ -192,7 +192,7 @@ const OG_CARD_ROUTES = new Set([
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
   'dex', 'ads', 'buy',
-  'live-studio',
+  'live-studio', 'chat',
 ]);
 
 /** Bump when the cards in public/og are re-rendered: X, Facebook, LinkedIn and
@@ -275,21 +275,23 @@ function crumbsFromHtml(html) {
 // rewrites it until the fn is redeployed.
 const ORG_SAME_AS = [
   'https://www.wikidata.org/wiki/Q140518527',
-  'https://x.com/dehub_official',
+  'https://x.com/riftn_com',
   'https://github.com/DeHubToken',
   'https://www.linkedin.com/company/dehub-dao',
-  'https://t.me/dehub_dhb',
+  'https://t.me/riftn_com',
   'https://play.google.com/store/apps/details?id=io.dehub.mobile',
   // Instagram and TikTok as recorded on the Wikidata item (P2003, P7085). The
   // CoinGecko coin page is gone: it now redirects to CoinGecko's home page,
   // which says nothing about who Riftn is.
-  'https://www.instagram.com/dehub_official/',
-  'https://www.tiktok.com/@dehub_official',
+  'https://www.instagram.com/riftn_com/',
+  'https://www.tiktok.com/@riftn_com',
   'https://coinmarketcap.com/currencies/dehub/',
 ];
 // The old name and address, so search engines and assistants keep treating
 // Riftn as the same site that used to be DeHub at dehub.io.
 const FORMER_NAMES = ['DeHub', 'dehub.io'];
+// What the site may be called above a search result. Never a former name.
+const SITE_ALTERNATE_NAMES = ['riftn.com'];
 const ORG_JSONLD = {
   '@type': 'Organization',
   name: 'Riftn',
@@ -547,7 +549,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(meta.og || `docs/${route}`, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'TechArticle',
   headline: meta.title, description: meta.description,
@@ -588,7 +590,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${DOCS_INDEX_DESCRIPTION}">
 ${twitterTextTags('Riftn Documentation', DOCS_INDEX_DESCRIPTION)}
 ${shareMetaTags('docs', 'Riftn Documentation')}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'CollectionPage',
   name: 'Riftn Documentation', url: canonicalUrl,
@@ -932,7 +934,7 @@ ${tagMeta}
 <meta name="twitter:description" content="${escHtml(ogDescription)}">
 <meta name="twitter:image" content="${escHtml(image)}">
 <meta name="twitter:image:alt" content="${escHtml(imageAlt)}">
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 </head>
 <body>
@@ -1001,7 +1003,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(blogDescription)}">
 ${twitterTextTags('Riftn Blog | News, Guides & Product Updates', blogDescription)}
 ${shareMetaTags('blog', 'Riftn Blog | news, guides and product updates')}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 </head>
@@ -1021,13 +1023,17 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: canonicalUrl }])}
 // the bot HTML pointed crawlers at these sections. This nav is injected on the
 // homepage AND every section page so the internal-link graph consistently
 // promotes them. Each path is a real SPA route + a sitemap-static.xml entry.
+//
+// These six are the main pages we want under the riftn.com result, in order.
+// Keep the list short: every extra link here dilutes the ones that matter.
+// Live points at /stream, the go-live page: /live is a member's username.
 const PRIMARY_NAV = [
-  { path: '/', label: 'Home Feed' },
-  { path: '/explore', label: 'Explore' },
-  { path: '/videos', label: 'Video Feed' },
-  { path: '/shorts', label: 'Shorts' },
-  { path: '/music', label: 'Music' },
-  { path: '/tv', label: 'Riftn TV' },
+  { path: '/', label: 'Home' },
+  { path: '/videos', label: 'Videos' },
+  { path: '/images', label: 'Images' },
+  { path: '/arcade', label: 'Arcade' },
+  { path: '/stream', label: 'Live' },
+  { path: '/docs', label: 'Docs' },
 ];
 
 // The keyword-targeted guides, linked from the homepage. Before this the
@@ -1097,6 +1103,16 @@ const SECTION_PAGES = {
 <p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan, and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
 <p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">Riftn TV</a> as a continuous lean-back channel.</p>`,
   },
+  images: {
+    title: 'Images: Photos and Art on Riftn',
+    heading: 'Riftn Images',
+    description: 'Browse the latest photos, art and image posts from creators on Riftn, the open-source, user-owned social platform where every post can be minted on-chain.',
+    intro: 'Browse photos, art, comics and memes from Riftn creators in one image feed. Posts can be minted on-chain, so the creator keeps a permanent record of the work and can sell, collect or be tipped for it.',
+    bodyHtml: `<p>The image feed is the photo side of Riftn: every public image post, newest first, shown as a grid you can open one by one. It sits beside the <a href="${APP_URL}/videos">video feed</a> and <a href="${APP_URL}/shorts">Shorts</a> on the same home page.</p>
+<h2>Posting images</h2>
+<p>A post can carry several images, a caption for each, and a comic layout that reads page by page. Like every post on Riftn it can be free, pay-per-view in tokens, or unlocked only for holders of a badge or subscription, and anyone who sees it can tip the creator.</p>
+<p>You can browse signed out. Signing in with an email, a social account, a passkey or a wallet gives you a wallet with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
+  },
   shorts: {
     title: 'Shorts: Short-Form Videos on Riftn',
     heading: 'Riftn Shorts',
@@ -1135,7 +1151,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(key, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 </head>
@@ -1224,6 +1240,17 @@ const MARKETING_PAGES = {
 <h2>Variable, revenue-funded rewards</h2>
 <p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future tokens settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
 <p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
+  },
+  'chat': {
+    title: 'Chat: Full-Screen Messages on Riftn',
+    description: 'Your Riftn messages full screen: every conversation on the left, the open chat on the right, grouped bubbles and day markers. Direct messages, group chats and the public chat in one place.',
+    heading: 'Riftn Chat',
+    bodyHtml: `<p>Riftn Chat is your inbox with nothing else on screen. On a computer your conversations sit on the left and the open chat on the right, so you can jump between people without losing your place. On a phone the chat slides in over the list and back slides it away.</p>
+<h2>Built to be easy to read</h2>
+<p>Messages from the same person sent close together join into one block with a single time stamp, each day gets its own marker, and the text size can be raised from the Aa button for anyone who reads better with larger type.</p>
+<h2>Everything in one place</h2>
+<p>Direct messages, group chats, channels and the public chat all open here. Messages can carry photos, videos, voice notes, polls and tips in tokens, and private chats are end-to-end encrypted.</p>
+<p><a href="${APP_URL}/chat">Open Riftn Chat</a> or <a href="${APP_URL}/messages">go to Messages</a>.</p>`,
   },
   'connect': {
     title: 'Connect Riftn to your AI assistant',
@@ -1907,7 +1934,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(meta.og || key, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript(trail)}
 ${(meta.extraJsonLd || []).map((node) => `<script type="application/ld+json">${jsonLdScript({ '@context': 'https://schema.org', ...node })}</script>\n`).join('')}</head>
@@ -2070,7 +2097,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(description)}">
 ${twitterTextTags(title, description)}
 ${entityImageMetaTags(image, title)}
-<meta name="twitter:site" content="@dehub_official">${extraHead}
+<meta name="twitter:site" content="@riftn_com">${extraHead}
 <script type="application/ld+json">${jsonLdScript(jsonLd)}</script>
 ${breadcrumbScript([...crumbsFromHtml(breadcrumb), { name: truncate(heading, 110), url: canonicalUrl }])}
 </head>
@@ -2815,6 +2842,7 @@ function shortsOf(rows, max = 12) {
 
 async function sectionLiveHtml(key) {
   if (key === 'videos') return postListHtml('Latest videos', await fetchFeedRows('postType=video'));
+  if (key === 'images') return postListHtml('Latest images', await fetchFeedRows('postType=feed-images'));
   if (key === 'shorts') return postListHtml('Latest shorts', shortsOf(await fetchFeedRows('postType=video', 100)));
   if (key === 'explore') return postListHtml('Latest on Riftn', await fetchFeedRows(''));
   if (key === 'music') return postListHtml('Latest tracks', await fetchFeedRows('postType=feed-audio'));
@@ -3198,8 +3226,17 @@ function homeJsonLd(value) {
       node.logo = ORG_LOGO;
       changed = true;
     }
-    if ((node['@type'] === 'Organization' || node['@type'] === 'WebSite') && !node.alternateName) {
+    // The company keeps its former names so "DeHub" searches still find it.
+    // The WebSite node must not: Google picks the site name shown above the
+    // result from WebSite name/alternateName, and an alternate of "dehub.io"
+    // kept the old domain showing there after the move.
+    if (node['@type'] === 'Organization' && !node.alternateName) {
       node.alternateName = FORMER_NAMES;
+      changed = true;
+    }
+    if (node['@type'] === 'WebSite') {
+      node.name = 'Riftn';
+      node.alternateName = SITE_ALTERNATE_NAMES;
       changed = true;
     }
   }
@@ -4192,7 +4229,7 @@ ${ogLocaleTag()}
 <meta property="og:description" content="${escHtml(meta.description)}">
 ${twitterTextTags(meta.title, meta.description)}
 ${shareMetaTags(`guides/${slug}`, meta.title)}
-<meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:site" content="@riftn_com">
 <script type="application/ld+json">${jsonLdScript({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
@@ -4246,7 +4283,7 @@ ${canonicalizePath(pathname) === '/' ? `  <meta name="google-site-verification" 
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${image}">
-  <meta name="twitter:site" content="@dehub_official">
+  <meta name="twitter:site" content="@riftn_com">
   <link rel="canonical" href="${url}">
 </head>
 <body>
@@ -6042,7 +6079,22 @@ function ssrCachePut(ctx, key, resp) {
   }
 }
 
+// The standby copy of riftn.com on the DigitalOcean server (ops/STANDBY.md)
+// needs its own certificate so it can take over if Cloudflare goes down.
+// Let's Encrypt checks riftn.com/.well-known/acme-challenge/<token>, which
+// lands here while riftn.com runs on this Worker, so pass those requests to
+// the server's challenge folder (dehub.io port 80 is that same server).
+function standbyAcmeChallenge(request) {
+  const url = new URL(request.url);
+  if (url.hostname !== 'riftn.com' && url.hostname !== 'www.riftn.com') return null;
+  const match = /^\/\.well-known\/acme-challenge\/([A-Za-z0-9_-]{16,128})$/.exec(url.pathname);
+  if (!match || request.method !== 'GET') return null;
+  return fetch(`http://dehub.io/.well-known/acme-challenge/${match[1]}`, { redirect: 'manual' });
+}
+
 async function handleRequest(request, env, ctx) {
+  const acme = standbyAcmeChallenge(request);
+  if (acme) return acme;
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
   if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(canonicalOriginRequest(request), env);
@@ -6225,6 +6277,13 @@ async function handleRequest(request, env, ctx) {
   if (aliasHost === 'dehub.io' && (request.method === 'GET' || request.method === 'HEAD') && !isEmbeddedWebView(request)) {
     const fetchMode = request.headers.get('Sec-Fetch-Mode');
     const keep = DEHUB_IO_KEEP_PATHS.some((re) => re.test(url.pathname));
+    // A search crawler always gets the permanent 301, whatever fetch headers
+    // it sends. Crawlers that start sending browser-style Sec-Fetch-Mode would
+    // otherwise land on the noindex hand-off page through a 302, and the
+    // ranking would never move to riftn.com.
+    if (!keep && isSearchBotUa(request.headers.get('User-Agent'))) {
+      return new Response(null, { status: 301, headers: { Location: `https://riftn.com${url.pathname}${url.search}`, 'Cache-Control': 'public, max-age=3600' } });
+    }
     if (!keep && fetchMode === 'navigate') {
       return new Response(null, {
         status: 302,
@@ -7554,14 +7613,21 @@ async function handleRequest(request, env, ctx) {
 
     let html = await response.text();
 
-    // The deployed Supabase fn still references the dead @DeHubApp X handle;
+    // The deployed Supabase fn still references old X handles (@DeHubApp, @dehub_official);
     // rewrite to the real account until the fn is redeployed. Scoped to meta
     // tags and profile URLs so user content quoting the old handle (or a
     // handle like @DeHubApp2) is never rewritten.
     html = html
-      .replaceAll('content="@DeHubApp"', 'content="@dehub_official"')
-      .replaceAll('x.com/DeHubApp', 'x.com/dehub_official')
-      .replaceAll('twitter.com/DeHubApp', 'twitter.com/dehub_official');
+      .replaceAll('content="@DeHubApp"', 'content="@riftn_com"')
+      .replaceAll('x.com/DeHubApp', 'x.com/riftn_com')
+      .replaceAll('twitter.com/DeHubApp', 'x.com/riftn_com')
+      // Socials moved to riftn_com; the deployed fn may still print the old ones.
+      .replaceAll('content="@dehub_official"', 'content="@riftn_com"')
+      .replaceAll('x.com/dehub_official"', 'x.com/riftn_com"')
+      .replaceAll('twitter.com/dehub_official"', 'x.com/riftn_com"')
+      .replaceAll('t.me/dehub_dhb"', 't.me/riftn_com"')
+      .replaceAll('instagram.com/dehub_official/"', 'instagram.com/riftn_com/"')
+      .replaceAll('tiktok.com/@dehub_official"', 'tiktok.com/@riftn_com"');
 
     // The site moved to riftn.com. Until the fn is redeployed it still writes
     // dehub.io page URLs into structured data, og:url and links, which tells

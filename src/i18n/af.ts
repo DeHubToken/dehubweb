@@ -2233,7 +2233,7 @@ export const af = {
     q18: 'Wat is Riftn se padkaart?',
     a18: 'Ons padkaart sluit in die uitbreiding van die app-ekosisteem, die bekendstelling van nuwe speletjies, die verbetering van DePIN-infrastruktuur, die ontwikkeling van AI-gereedskapstelle en die voortsetting van die platformwye bestuursuitvoering.',
     q19: 'Hoe kan ek die Riftn-span kontak?',
-    a19: 'U kan ons bereik deur ons amptelike kanale: tech@dehub.net vir tegniese probleme, of volg ons op Twitter en Instagram @ dehub_official vir opdaterings en gemeenskapsbetrokkenheid.',
+    a19: 'U kan ons bereik deur ons amptelike kanale: tech@dehub.net vir tegniese probleme, of volg ons op Twitter en Instagram @riftn_com vir opdaterings en gemeenskapsbetrokkenheid.',
     q20: 'Is Riftn \'n belegging?',
     a20: 'Nee, Riftn-tokens is streng vir nutdoeleindes binne die Riftn-ekosisteem, soortgelyk aan in-game of in-app digitale geldeenhede. Hulle is nie beleggingsinstrumente nie en markte is baie wisselvallig.',
     q21: 'Hoe werk inhoud moderering op Riftn?',

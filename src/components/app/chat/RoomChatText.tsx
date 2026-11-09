@@ -10,7 +10,7 @@ export function RoomChatText({ text }: { text: string }) {
   const translation = useTranslation(text, 'chat', ref);
   return (
     <div>
-      <p ref={ref} className="whitespace-pre-wrap text-xs text-zinc-300 break-words">
+      <p ref={ref} className="chat-body whitespace-pre-wrap text-xs text-zinc-300 break-words">
         {renderTextWithLinks(translation.isTranslated ? translation.translatedText : text)}
       </p>
       {!translation.isTooShort && (

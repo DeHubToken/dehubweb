@@ -127,8 +127,8 @@ const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 // sitelink targets). The mapping is bidirectional: landing on the URL selects
 // the tab, and selecting the tab reflects the URL. Every other tab shares the
 // canonical /app URL.
-const FEED_ROUTE_TO_TAB: Record<string, string> = { '/videos': 'videos', '/shorts': 'shorts' };
-const TAB_TO_FEED_ROUTE: Record<string, string> = { videos: '/videos', shorts: '/shorts' };
+const FEED_ROUTE_TO_TAB: Record<string, string> = { '/videos': 'videos', '/images': 'images', '/shorts': 'shorts' };
+const TAB_TO_FEED_ROUTE: Record<string, string> = { videos: '/videos', images: '/images', shorts: '/shorts' };
 const tabFromPathname = (pathname: string): string | null => FEED_ROUTE_TO_TAB[pathname] ?? null;
 const feedRouteForTab = (tab: string): string => TAB_TO_FEED_ROUTE[tab] ?? '/app';
 

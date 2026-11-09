@@ -179,8 +179,8 @@ describe('homepage canonical', () => {
 
   it('publishes the current brand profiles and not the dead CoinGecko page', async () => {
     const { body } = await get('/');
-    expect(body).toContain('https://www.instagram.com/dehub_official/');
-    expect(body).toContain('https://www.tiktok.com/@dehub_official');
+    expect(body).toContain('https://www.instagram.com/riftn_com/');
+    expect(body).toContain('https://www.tiktok.com/@riftn_com');
     expect(body).not.toContain('coingecko.com');
   });
 });

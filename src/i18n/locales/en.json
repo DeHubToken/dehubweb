@@ -2187,6 +2187,21 @@
     "loginRequired": "Log in required"
   },
   "messages": {
+    "newDrawer": {
+      "to": "To",
+      "placeholder": "Name or @username",
+      "recent": "Recent",
+      "suggested": "Suggested",
+      "youFollow": "People you follow",
+      "chattedBefore": "You talk",
+      "mutual": "Mutual",
+      "dmsOff": "DMs off",
+      "keepTyping": "Keep typing to search everyone",
+      "noOne": "No one found",
+      "tryUsername": "Try their exact @username",
+      "sayHi": "Say hi to someone",
+      "typeAny": "Type any name or @username"
+    },
     "reply": "Reply",
     "react": "React",
     "edit": "Edit",
@@ -2734,6 +2749,7 @@
     "passkeyFailed": "Fingerprint sign-in failed. Please try again.",
     "passkeyBackupHint": "Your account lives in this device's passkey. On most phones it syncs with your Google or Apple account, and you can add a password backup in Settings.",
     "walletBlockedTitle": "This wallet is brand new",
+    "profileMovedTitle": "Your profile moved",
     "walletBlockedBody": "New wallets need a balance or a past transaction to open an account. Sign up with one of the options below, then connect this wallet from Settings.",
     "checkYourEmail": "Check your email",
     "continuePhone": "Continue with phone",
@@ -17284,7 +17300,7 @@
     "8731790030df": "@noble/curves",
     "e745d68f7240": "@noble/hashes",
     "886e533d7364": "tech@dehub.net",
-    "e8921bdee214": "@dehub_official",
+    "e8921bdee214": "@riftn_com",
     "dbc2def4603a": "Featured In",
     "ee1c1eecf1b6": "Riftn has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media.",
     "6ccae4bbf68d": "The publisher has removed the original; this opens the Wayback Machine capture.",

@@ -149,14 +149,23 @@ type FeedItemType =
   | { type: 'shorts'; data: ShortVideo[] }
   | { type: 'ad'; data: ServedAd };
 
-const PAGE_SIZE = 20;
-// Start the next page while several cards are still below the fold. At 600px a
-// fast wheel/trackpad gesture could reach the document bottom before the
-// request completed, so subsequent wheel deltas had nowhere to go and appeared
-// to freeze until another input arrived.
-const INFINITE_SCROLL_PREFETCH_MARGIN = '2400px 0px';
+// Ten posts a page: the first paint carries half the cards it used to, and
+// every later page lands in small steps instead of twenty heavy cards at once.
+// Must match the boot fetch in index.html (isBootDefaultFeedParams).
+const PAGE_SIZE = 10;
+// Start the next page about three cards before the end. At 600px a fast
+// wheel/trackpad gesture could reach the document bottom before the request
+// completed, so later wheel deltas had nowhere to go; 2400px with 20-post pages
+// pulled the next page in almost as soon as the first had painted.
+const INFINITE_SCROLL_PREFETCH_MARGIN = '1500px 0px';
 
 const SCROLL_REEL_FETCH_LIMIT = 50;
+/** First-render height of a carousel before it has been measured. */
+function insertEstimate(key: string): number {
+  if (key.startsWith('shorts-')) return 300;
+  if (key === 'live-now') return 260;
+  return 220;
+}
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 
@@ -1219,7 +1228,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         dislikes: item.totalVotes?.against || 0,
         thumbnail: getMediaUrl(item.imageUrl) || '',
         videoUrl: item.videoUrl
-          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
+          ? getMediaUrl(item.videoUrl)!
           : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
         hlsUrl: buildHlsUrl(item.hlsUrl),
         transcodingStatus: item.transcodingStatus,
@@ -1770,7 +1779,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   }, [landPending, optimisticIdsKey]);
   useEffect(() => onPostLandingBegin(() => { landPending(); }), [landPending]);
 
-  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false) => {
+  const renderFeedItem = (item: FeedItemType, index: number, section: 'optimistic' | 'pinned' | 'feed' = 'feed', beforeShorts = false, afterShorts = false) => {
     const firstFeedPost = isFirstVisibleFeedCard(section, index, visibleOptimisticPosts.length, !!pinnedItem);
     const card = (() => {
       switch (item.type) {
@@ -1810,6 +1819,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       'data-feed-item': true,
       'data-feed-token-id': item.type === 'ad' ? undefined : (item.data as any)?.id,
       'data-feed-before-shorts': beforeShorts ? '' : undefined,
+      'data-feed-after-shorts': afterShorts ? '' : undefined,
       'data-cinematic': item.type,
       'data-cinematic-first': firstFeedPost ? '' : undefined,
       className: 'rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3',
@@ -1822,6 +1832,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         key={key}
         {...(retained ? {} : frameProps)}
         eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
+        // A card arriving with a new page eases in once (the slot outlives
+        // windowing, so scrolling back never replays it). Single column only:
+        // masonry re-packs columns and would replay it.
+        data-feed-arrive={index >= 3 && colCount <= 1 ? '' : undefined}
         vanishOnDislike={item.type === 'ad' ? undefined : (item.data as any)?.id}
       >
         <BoostedPostContext.Provider value={boosted}>
@@ -1946,6 +1960,26 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       }
     });
     if (start < listedItems.length) segments.push({ items: listedItems.slice(start), start, inserts: [], shorts: false });
+    // One column: every card and insert is a sibling in one list, each under
+    // its own key. Grouping them into segments keyed by start index meant a
+    // row arriving late (a Shorts batch, the live row) re-keyed every segment
+    // after it, so React rebuilt those cards from scratch: an open comments
+    // sheet vanished with its card, and the windowed cards came back at their
+    // estimated heights, throwing the reader thousands of pixels up the feed.
+    if (colCount <= 1) {
+      return (
+        <div className="mb-3 space-y-3">
+          {segments.flatMap((segment, index) => [
+            ...segment.items.map((item, offset) => renderFeedItem(item, segment.start + offset, 'feed',
+              segment.shorts && offset === segment.items.length - 1,
+              offset === 0 && index > 0 && segments[index - 1].shorts)),
+            ...segment.inserts.map(node => (
+              <WindowedFeedItem key={node.key} className="my-3" estimatedHeight={insertEstimate(String(node.key))}>{node}</WindowedFeedItem>
+            )),
+          ])}
+        </div>
+      );
+    }
     return <>{segments.flatMap((segment, index) => [
       <div key={`feed-segment-${segment.start}`} className="mb-3">
         {renderMasonryGrid(
@@ -1956,7 +1990,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       </div>,
       // Carousel keys live beside the segments so an arriving radio/live row
       // cannot remount a Shorts viewer or reset its horizontal scroll.
-      ...segment.inserts.map(node => <div key={node.key} className="my-3">{node}</div>),
+      // Shorts rows and carousels hold the most media on the page; windowed like
+      // the cards so a row far above lets go of its videos and posters.
+      ...segment.inserts.map(node => (
+        <WindowedFeedItem key={node.key} className="my-3" estimatedHeight={insertEstimate(String(node.key))}>{node}</WindowedFeedItem>
+      )),
     ])}</>;
   };
 
@@ -2179,16 +2217,17 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
               <div
                 ref={loaderRef}
                 className={cn(
-                  'py-4 flex justify-center',
+                  'py-4 flex flex-col items-center',
                   // Preserve scroll runway while the request is in flight so
                   // wheel momentum is not discarded at the old document end.
                   isFetchingNextPage && 'min-h-[50vh]',
                 )}
               >
                 {isFetchingNextPage && (
-                  <div className="flex items-center gap-2 text-zinc-400">
-                    <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
-                    <span className="text-sm">{t('common.loadingMore')}</span>
+                  // The next posts' own shape holds their place, so a fast
+                  // scroll meets cards being filled in, not an empty gap.
+                  <div className="w-full" data-feed-loading-more role="status" aria-label={t('common.loadingMore')}>
+                    <FeedCardSkeletonList count={colCount > 1 ? 3 : 2} columns={colCount} />
                   </div>
                 )}
                 {!hasNextPage && items.length > 0 && (

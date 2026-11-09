@@ -2460,7 +2460,7 @@ export const nl = {
     q18: 'Wat is Riftn\'s roadmap?',
     a18: 'Onze routekaart omvat het uitbreiden van het d\'App-ecosysteem, het lanceren van nieuwe games, het verbeteren van de DePIN-infrastructuur, het ontwikkelen van AI-toolkits en het voortzetten van de uitrol van het platformbrede bestuur.',
     q19: 'Hoe kan ik contact opnemen met het Riftn-team?',
-    a19: 'Je kunt ons bereiken via onze officiële kanalen: tech@dehub.net voor technische problemen, of volg ons op Twitter en Instagram @ dehub_official voor updates en betrokkenheid van de community.',
+    a19: 'Je kunt ons bereiken via onze officiële kanalen: tech@dehub.net voor technische problemen, of volg ons op Twitter en Instagram @riftn_com voor updates en betrokkenheid van de community.',
     q20: 'Zijn Riftn-tokens een investering?',
     a20: 'Nee, Riftn-tokens zijn strikt voor nutsdoeleinden binnen het Riftn-ecosysteem, vergelijkbaar met in-game of in-app digitale valuta\'s. Het zijn geen beleggingsinstrumenten en de markten zijn zeer volatiel.',
     q21: 'Hoe werkt contentmoderatie op Riftn?',
