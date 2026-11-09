@@ -115,7 +115,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'two-factor', label: 'Two-Factor Auth', labelKey: 'settings.twoFactorAuth', keywords: '2fa mfa authenticator security' },
   { tab: 'privacy', anchor: 'wallet-unlock', label: 'Wallet unlock prompt', labelKey: 'settings.walletUnlockInterval', keywords: 'password timeout lock wallet' },
   { tab: 'privacy', anchor: 'biometric-unlock', label: 'Biometric unlock', labelKey: 'copy.18e709a14cb1', keywords: 'fingerprint face id passkey' },
-  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', labelKey: 'copy.ef9ec257e675', keywords: 'backup recovery 12 words seed phrase mnemonic private key export old account' },
+  { tab: 'privacy', anchor: 'wallet-recovery', label: 'Back up wallet', labelKey: 'copy.ef9ec257e675', keywords: 'backup recovery 12 words seed phrase mnemonic private key export' },
   { tab: 'privacy', anchor: 'active-sessions', label: 'Active sessions', labelKey: 'settings.activeSessions', keywords: 'devices logged in sign out revoke' },
   { tab: 'privacy', anchor: 'your-data', label: 'Your Data', labelKey: 'settings.yourData', keywords: 'export download import gdpr' },
   { tab: 'privacy', anchor: 'blocked-users', label: 'Blocked Users', labelKey: 'copy.34e1447eb1e2', keywords: 'block unblock mute' },

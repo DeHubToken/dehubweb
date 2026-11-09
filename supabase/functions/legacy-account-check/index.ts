@@ -1,35 +1,25 @@
 /**
- * legacy-account-check
- * ====================
- * Tells the wallet-create step whether the CURRENT user's verified email
- * belongs to pre-migration (Web3Auth-era) Riftn account(s), so the UI can
- * auto-select the Migrate tab and preview what's known about them, instead
- * of the user blind-guessing which old login to use.
+ * legacy-account-check (retired)
+ * ==============================
+ * This used to look the caller's email up in public.legacy_accounts, a
+ * one-time snapshot of the Web3Auth-era accounts, so the wallet-create step
+ * could offer to bring an old account over. An email match is not proof of
+ * whose account it is, and the migration route it fed has been removed from
+ * the app. Old accounts that were never moved over are handled by support.
  *
- * A person can have MORE than one old account for the same email: Supabase
- * links Google/Email logins that share a verified email into ONE new
- * identity, but on the old system each login method could be its own
- * separate account with its own balance/profile. This returns ALL matches.
+ * It stays deployed because builds already on people's devices still call it
+ * during sign-up. The answer is always `{ exists: false }`, which lets those
+ * builds go straight on to a new account. It must never answer
+ * `exists: null`: they read that as "could not check" and stop on the old
+ * migrate screen instead.
  *
- * Security model:
- * - verify_jwt = true (config.toml): only authenticated Supabase users reach
- *   this function at all.
- * - The email is resolved SERVER-SIDE from the caller's JWT — it is never a
- *   request parameter, so this cannot be used to enumerate other people's
- *   accounts.
- *
- * Data source: public.legacy_accounts — a ONE-TIME, static import of the old
- * MongoDB backend's accounts (email -> signup method + wallet address +
- * username + badge balance). Old accounts don't change going forward
- * (Web3Auth is being retired), so this is a snapshot, not a live sync.
+ * Nothing is read and nothing about anyone is returned, so the answer is the
+ * same for every caller. It still requires a signed-in user: verify_jwt = true
+ * (config.toml) rejects a missing or invalid token before this code runs, and
+ * the anon key is turned away below.
  */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address, x-dehub-token, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version, x-request-id, prefer',
-};
+import { corsHeaders, handleCorsPreflight } from "../_shared/cors.ts";
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -38,53 +28,32 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
+/**
+ * True when the bearer token is a signed-in user's session rather than the
+ * anon key. Only the claims are read: the platform has already checked the
+ * signature and expiry (verify_jwt), and no lookup here can fail for a real
+ * user, which an older build would treat as blocking.
+ */
+function isSignedInUser(jwt: string): boolean {
+  const payload = jwt.split('.')[1];
+  if (!payload) return false;
   try {
-    // Resolve the caller's verified email from their JWT (verify_jwt already
-    // rejected anonymous calls; this recovers WHO is calling).
-    const jwt = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
-    if (!jwt) return json({ exists: null, reason: 'no-auth' }, 401);
-
-    const admin = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-    );
-    const { data: userData, error: userError } = await admin.auth.getUser(jwt);
-    const email = userData?.user?.email?.trim().toLowerCase();
-    if (userError || !email) {
-      // Phone-only identities etc. — nothing to look up.
-      return json({ exists: null, reason: 'no-email' });
-    }
-
-    const { data, error } = await admin
-      .from('legacy_accounts')
-      .select('signup_method, eth_address, username, badge_balance')
-      .ilike('email', email);
-
-    if (error) {
-      console.error('[legacy-account-check] Query error:', error);
-      return json({ exists: null, reason: 'query-error' });
-    }
-    if (!data || data.length === 0) {
-      return json({ exists: false, email });
-    }
-
-    return json({
-      exists: true,
-      email,
-      accounts: data.map((row) => ({
-        signupMethod: row.signup_method ?? undefined,
-        ethAddress: row.eth_address,
-        username: row.username ?? undefined,
-        badgeBalance: row.badge_balance ?? undefined,
-      })),
-    });
-  } catch (error: unknown) {
-    console.error('[legacy-account-check] Error:', error);
-    return json({ exists: null, reason: 'error' });
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    const bytes = Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
+    const claims = JSON.parse(new TextDecoder().decode(bytes));
+    return claims?.role === 'authenticated' && typeof claims?.sub === 'string' && claims.sub.length > 0;
+  } catch {
+    return false;
   }
+}
+
+serve((req) => {
+  const preflight = handleCorsPreflight(req);
+  if (preflight) return preflight;
+
+  const jwt = (req.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+  if (!isSignedInUser(jwt)) return json({ error: 'Authentication required' }, 401);
+
+  return json({ exists: false });
 });

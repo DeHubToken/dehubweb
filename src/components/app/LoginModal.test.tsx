@@ -9,7 +9,6 @@ const auth = vi.hoisted(() => ({
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => auth, useLoginSheet: () => auth }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }), Trans: ({ defaults }: { defaults?: string }) => <>{defaults}</> }));
 vi.mock('@/hooks/use-keyboard-open', () => ({ useKeyboardSafeSheet: () => ({ style: null }) }));
-vi.mock('@/lib/wallet-setup-intent', () => ({ getWalletSetupIntent: () => null, setWalletSetupIntent: vi.fn() }));
 vi.mock('@/components/app/login/LoginModalBody', () => ({ LoginModalBody: () => <button>Sign in with Apple</button> }));
 vi.mock('@/components/app/login/LoginProfileStep', () => ({ LoginProfileStep: () => <input aria-label="Username" /> }));
 vi.mock('@/components/app/login/LoginBodySkeleton', () => ({ LoginBodySkeleton: () => <span>Loading</span> }));

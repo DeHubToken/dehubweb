@@ -92,7 +92,7 @@ import {
   WALLET_UNLOCK_INTERVAL_KEY,
   DEFAULT_WALLET_UNLOCK_INTERVAL,
 } from '@/hooks/use-wallet-unlock-interval';
-import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
+import { clearPasskeyCache } from '@/lib/wallet-core/passkey-store';
 
 import type { WalletBackup } from '@/lib/wallet-core/export';
 
@@ -117,8 +117,6 @@ import {
 } from '@/lib/profiles';
 import { AuthContext, LoginSheetContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
-import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
-import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
 import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 
 const authLogger = createLogger('Auth');
@@ -162,38 +160,22 @@ function readsEnglish(): boolean {
  * and "Secure your wallet" waits for the first action that uses it
  * (lib/wallet-secure-flow.ts). Backing up stays the later reminder.
  *
- * Returns the key to sign in with, or null to keep the visible setup step:
- *  - "Migrate account" / "Import" was chosen on the login sheet;
- *  - this login may have an older Riftn account (the step offers to bring it
- *    back — a silent wallet here would be a second account), or the check
- *    could not answer (old Web3Auth storage on this browser only matters
- *    then: a definite "none" from the backend outranks it);
- *  - this browser cannot hold the words, so nothing could reopen the wallet.
+ * Returns the key to sign in with, or null when this browser cannot hold the
+ * words — nothing could reopen the wallet, so the visible setup step asks for
+ * a password or biometrics instead. That is the only reason: a brand-new
+ * identity is never routed anywhere else, and in particular never to an older
+ * account. Old accounts that were not moved over are a support matter.
  */
 async function makeSilentSignupWallet(userId: string): Promise<string | null> {
-  // Each way out is traced: people stuck on the visible step were otherwise
-  // indistinguishable in the logs from people who simply left.
-  const keepVisibleStep = (reason: string) => {
-    authLogger.trace?.('wallet-setup-visible', { reason });
-    return null;
-  };
-  if (getWalletSetupIntent()) return keepVisibleStep('intent');
-  // WalletCreateStep's MIGRATE_PENDING_KEY: a legacy migration redirect is
-  // mid-flight and lands on that step.
-  try { if (sessionStorage.getItem('dehub_legacy_migration_pending')) return keepVisibleStep('migration-pending'); } catch { /* storage blocked */ }
-  const hint = await checkLegacyAccount().catch(() => null);
-  // Old Web3Auth storage on this browser is only a guess that an old account
-  // exists. A definite "none for this login" from the backend outranks it,
-  // exactly as it does on the visible step, which then retreats to a new
-  // account anyway. Stopping here only put a password form between these
-  // people and the app, and the logs show them leaving at it.
-  if (hint?.exists !== false) {
-    return keepVisibleStep(hint?.exists === true ? 'old-account' : hasLegacyBrowserResidue() ? 'residue-unchecked' : 'check-unavailable');
-  }
   const { generateMnemonic12, deriveFromSecret } = await import('@/lib/wallet-core/derive');
   const derived = deriveFromSecret(generateMnemonic12());
   const { saveDeviceSeed } = await loadDeviceSeed();
-  if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) return keepVisibleStep('no-device-storage');
+  if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) {
+    // Traced: people on the visible step were otherwise indistinguishable in
+    // the logs from people who simply left.
+    authLogger.trace?.('wallet-setup-visible', { reason: 'no-device-storage' });
+    return null;
+  }
   // No password wrap yet, exactly like a biometrics-only wallet.
   await saveWallet(userId, derived.ethAddress, null);
   authLogger.trace?.('wallet-created-silently');
@@ -480,7 +462,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Hydrated from storage rather than left null until some login flow happens
   // to run. This is the identity that OWNS the wallet row, and it is needed on
   // an ordinary page load where no login is in progress: BiometricUnlockSettings
-  // renders nothing without it, exportPrivateKey and switchActiveWallet throw
+  // renders nothing without it, exportPrivateKey and replaceLostWallet throw
   // "Not signed in" on it, and applyAuthenticatedSession skips writing the
   // last-session record when it is null — so a background re-sign left no trace
   // of itself and the next page load had to start over.
@@ -968,10 +950,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Only a matching pending archive authorizes resuming the reset.
         const replacementAddress = await getReplacementToResume(userId);
         if (!replacementAddress && error instanceof ProfileLinkMismatchError) {
-          // The saved wallet is not the one the profile lives on — typically
-          // a newer wallet replaced the one from the original sign-in. A
-          // retry can never pass, so offer to bring the original back.
-          authLogger.warn('Profile lives on a different wallet; offering restore', {});
+          // The saved wallet is not the one the profile lives on. A retry can
+          // never pass and nothing on this device can safely fix it, so the
+          // step says so and points to support; nothing is adopted or moved.
+          authLogger.warn('Profile lives on a different wallet; refusing it', {});
           setWalletPhase('restore');
           openLoginModal();
           return;
@@ -2400,9 +2382,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * registers as a new signup, and the account, its username, its posts and its
    * messages stay behind at an address nobody can sign for.
    *
-   * Runs only when completeLoginWithoutUnlock actually saw the drift. A normal
-   * login never reaches it, and neither does switchActiveWallet, which is a
-   * deliberate move to a DIFFERENT account and must not drag this one onto it.
+   * Runs only when a wallet replacement armed driftedLinkRef. A normal login
+   * never reaches it.
    *
    * Recovery and login each sign a separate, operation-bound challenge.
    *
@@ -2536,78 +2517,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Replace the active wallet with a DIFFERENT one — e.g. a second old
-   * Web3Auth-era account under the same email (Supabase links Google/Email
-   * logins that share a verified email into one identity, so only one
-   * wallet can be active at a time; this lets the user swap which one that
-   * is). Re-encrypts `secret` under `password` and overwrites the
-   * user_wallets row. The PREVIOUS wallet's encrypted seed is gone once this
-   * completes — callers must have the user export/back it up first.
-   */
-  const switchActiveWallet = async (
-    secret: string,
-    password: string,
-    expectedProfileAddress?: string,
-  ) => {
-    if (!supabaseUserId) throw new AuthCopyError(_translateCopy("copy.491fc91cd76e", { defaultValue: "Not signed in" }));
-    // Reaching a DIFFERENT account on purpose. Any drift recorded earlier in
-    // this session must not turn that into a move of the account being left.
-    driftedLinkRef.current = null;
-    const toastId = 'auth-switch-wallet';
-    setIsConnecting(true);
-    try {
-      const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
-      const derived = deriveFromSecret(secret);
-      if (expectedProfileAddress) {
-        const expected = expectedProfileAddress.toLowerCase();
-        const predictedSafe = await predictSafeAddress(derived.ethAddress);
-        const matchesExpected =
-          expected === derived.ethAddress.toLowerCase() || expected === predictedSafe;
-        if (!matchesExpected) {
-          throw new AuthCopyError(
-            predictedSafe
-              ? _translateCopy("copy.258b822fbbb6", { defaultValue: "This login recovered a different wallet from the selected Riftn profile. Nothing was changed." })
-              : _translateCopy("copy.06157a92311c", { defaultValue: "We could not verify this wallet against the selected Riftn profile. Try the recovery again." }),
-          );
-        }
-      }
-      const encrypted = await (await import('@/lib/wallet-core/crypto')).encryptString(derived.secret, password);
-      await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
-      // Every biometric wrap still holds the PREVIOUS wallet's seed, so they
-      // would now unlock the wrong wallet. Drop them all — the user re-enrols
-      // from Settings — rather than leave credentials that silently disagree
-      // with the active wallet.
-      //
-      // Best-effort by design: the switch itself already succeeded above, so
-      // throwing here would report a completed switch as a failure. If cleanup
-      // does fail, biometric unlock refuses any wrap whose address doesn't
-      // match the wallet row, so the worst case is a clear error rather than
-      // signing in to the wrong wallet.
-      try {
-        await deleteAllPasskeyWraps(supabaseUserId);
-      } catch (e) {
-        console.warn('[Auth] Could not clear biometric wraps after wallet switch:', e);
-      }
-      clearWalletCache();
-      clearPasskeyCache();
-      lockWallet();
-      // Drop the stale address so signAndAuthenticateSmartWallet's "address
-      // changed" guard (meant to catch accidental switches during a session
-      // refresh) doesn't block this INTENTIONAL switch.
-      setWalletAddress(null);
-      await activateWalletKey(derived.ethPrivateKey);
-      await signAndAuthenticateSmartWallet(toastId);
-      toast.success(_copy("copy.03736977d1b4", { defaultValue: "Switched to the other wallet" }), { id: toastId });
-    } catch (err: any) {
-      console.error('[Auth] Wallet switch failed:', err);
-      toast.error(authErrorText(err, _translateCopy("copy.a47169437cd2", { defaultValue: "Failed to switch wallet" })), { id: toastId });
-      throw err;
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  /**
    * The wallet is gone — mint a new one and bring the ACCOUNT with it.
    *
    * For the person whose only key was a passkey on a handset they no longer
@@ -2617,10 +2526,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * account onto a new address — but nothing on the web ever asked it to
    * outside the automatic drift path, so the capability was unreachable.
    *
-   * Deliberately the MIRROR of switchActiveWallet, which sets driftedLinkRef to
-   * null because it is going to a different account on purpose. Here the whole
-   * point is that the account must follow, so the ref is armed with the address
-   * being left. moveAccountToThisWallet then fires inside
+   * The whole point is that the account must follow, so driftedLinkRef is
+   * armed with the address being left. moveAccountToThisWallet then fires inside
    * signAndAuthenticateSmartWallet, which is the only place the ordering is
    * right: the rotate has to happen BEFORE authenticateWallet, because a
    * signature login makes the Supabase link exclusive and would unset the very
@@ -3526,7 +3433,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     completeSmartWalletLogin,
     exportPrivateKey,
     exportPrivateKeyWithBiometrics,
-    switchActiveWallet,
     replaceLostWallet,
     switchToProfile,
     disconnect,

@@ -10,20 +10,23 @@ vi.mock('wagmi', () => ({
   useConnect: () => ({ connectAsync: vi.fn() }), useDisconnect: () => ({ disconnectAsync: vi.fn() }),
 }));
 vi.mock('@/components/app/WagmiScope', () => ({ WagmiScope: ({ children }: any) => children }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isConnecting: false, isAuthenticated: false, cancelEmailMagicLink: vi.fn() }) }));
+const auth = vi.hoisted(() => ({ isConnecting: false, isAuthenticated: false, cancelEmailMagicLink: vi.fn(), supabaseUserId: null as string | null }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => auth }));
 vi.mock('@/hooks/use-surface-draft', () => ({ useSurfaceDraft: (_key: string, value: string) => useState(value) }));
 vi.mock('@/lib/web3auth', () => ({ getWalletDeepLink: vi.fn(), isMobileDevice: () => false, isWalletInAppBrowser: () => false }));
 vi.mock('@/lib/wagmi', () => ({ clearWagmiStorage: vi.fn() }));
 vi.mock('@/lib/passkey-login', () => ({ PasskeyCancelledError: class extends Error {}, PasskeyLoginError: class extends Error {}, PasskeyUnsupportedError: class extends Error {} }));
 vi.mock('@/lib/login-probes', () => ({ loginProbesSnapshot: () => ({ passkey: true, telegram: false }), resolveLoginProbes: vi.fn() }));
-vi.mock('@/lib/wallet-setup-intent', () => ({ getWalletSetupIntent: () => null, setWalletSetupIntent: vi.fn() }));
 vi.mock('./LoginSavedProfiles', () => ({ LoginSavedProfiles: () => null }));
 
-function SheetBody({ layout = 'default' }: { layout?: 'default' | 'stack' }) {
-  const [step, setStep] = useState<LoginStep>('main');
+function SheetBody({ layout = 'default', initialStep = 'main' }: { layout?: 'default' | 'stack'; initialStep?: LoginStep }) {
+  const [step, setStep] = useState<LoginStep>(initialStep);
   return <LoginModalBody open step={step} setStep={setStep} layout={layout} />;
 }
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  auth.supabaseUserId = null;
+});
 
 it.each(['default', 'stack'] as const)('keeps Telegram before Wallet when availability probing fails in %s layout', (layout) => {
   render(<SheetBody layout={layout} />);
@@ -37,14 +40,20 @@ it('Import Wallet immediately replaces sign-in options with the secret form', as
   fireEvent.click(screen.getByRole('button', { name: 'copy.a865110e919b' }));
   expect(await screen.findByRole('textbox')).toHaveAttribute('autocomplete', 'off');
   expect(screen.queryByRole('button', { name: 'loginModal.continueGoogle' })).toBeNull();
-  expect(screen.queryByText('loginModal.importIntentHint')).toBeNull();
 });
 
-it('account migration keeps its identity sign-in flow separate', () => {
-  render(<SheetBody />);
-  fireEvent.click(screen.getByRole('button', { name: 'loginModal.migrateAccount' }));
-  expect(screen.getByText('loginModal.migrateIntentHint')).toBeInTheDocument();
+it.each(['default', 'stack'] as const)('offers no old-account migration in %s layout', (layout) => {
+  render(<SheetBody layout={layout} />);
   expect(screen.getByRole('button', { name: 'loginModal.continueGoogle' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'loginModal.migrateAccount' })).toBeNull();
+  expect(screen.queryByText('loginModal.migrateIntentHint')).toBeNull();
+});
+
+it('a profile on another wallet gets a support message and a way out, nothing to recover with', () => {
+  auth.supabaseUserId = 'user-1';
+  render(<SheetBody initialStep="wallet-restore" />);
+  expect(screen.getByText('loginModal.restoreContactSupport')).toBeInTheDocument();
+  expect(screen.getAllByRole('button').map(button => button.textContent)).toEqual(['loginModal.useAnotherLogin']);
   expect(screen.queryByRole('textbox')).toBeNull();
 });
 

@@ -83,11 +83,6 @@ vi.mock('@/lib/passkey-login', () => ({
   takePendingPasskeyEnrollment: () => null,
 }));
 
-vi.mock('@/lib/wallet-core/legacy-detect', () => ({
-  hasLegacyBrowserResidue: () => false,
-  checkLegacyAccount: async () => ({ exists: false }),
-}));
-
 vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 const markBackedUp = vi.hoisted(() => vi.fn(async (_userId: string, _ethAddress: string) => {}));
