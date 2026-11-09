@@ -399,7 +399,8 @@ export default function ProfilePage() {
   useFeedSwallowClip(
     profileContentRef,
     '[data-profile-tabs] > [data-feed-nav]',
-    [!!data.profile, data.isAuthenticated],
+    // holdForReveal: the content mounts only once the reveal hold ends.
+    [!!data.profile, data.isAuthenticated, holdForReveal],
     { allThemes: true },
   );
 
