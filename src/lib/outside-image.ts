@@ -23,6 +23,9 @@ const DIRECT_HOSTS = [
   'ytimg.com',
   'ggpht.com',
   'googleusercontent.com',
+  // Spotify cover art (Spotify cards): Spotify's own CDN.
+  'scdn.co',
+  'spotifycdn.com',
 ];
 
 const PROXY_PREFIX = `${DEHUB_API_BASE}/api/image-proxy?url=`;
