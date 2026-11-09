@@ -33,6 +33,19 @@ describe('rankBuilders', () => {
     const since = periodStart('month', new Date('2026-11-15T12:00:00'));
     const requests = [req('1', '0xa', 'ann', 'shipped', 0, '2026-09-01T00:00:00Z', '2026-11-03T00:00:00Z')];
     expect(rankBuilders(requests, [], since)[0].points).toBe(10);
-    expect(rankBuilders(requests, [], periodStart('month', new Date('2026-12-15T12:00:00')))).toEqual([]);
+    expect(rankBuilders(requests, [], periodStart('month', new Date('2026-12-15T12:00:00')))).toMatchObject([{ username: 'ann', points: 0 }]);
+  });
+
+  it('keeps everyone on the list even with 0 points this period', () => {
+    const since = periodStart('month', new Date('2026-11-15T12:00:00'));
+    const requests = [
+      req('1', '0xa', 'ann', 'open', 4, '2026-11-02T00:00:00Z'),
+      req('2', '0xb', 'bob', 'open', 9, '2026-08-01T00:00:00Z'),
+    ];
+    const comments: BuilderCommentRow[] = [
+      { wallet_address: '0xc', username: 'cat', feature_request_id: '1', created_at: '2026-07-01T00:00:00Z' },
+    ];
+    const out = rankBuilders(requests, comments, since);
+    expect(out.map((b) => [b.username, b.points])).toEqual([['ann', 4], ['bob', 0], ['cat', 0]]);
   });
 });
